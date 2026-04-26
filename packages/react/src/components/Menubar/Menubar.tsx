@@ -1,0 +1,230 @@
+import * as React from 'react';
+import * as RadixMenubar from '@radix-ui/react-menubar';
+import { Check, ChevronRight } from '@nexub/icons';
+import { cn } from '../../utils/cn.js';
+
+const Menu = RadixMenubar.Menu;
+const Portal = RadixMenubar.Portal;
+const Group = RadixMenubar.Group;
+const RadioGroup = RadixMenubar.RadioGroup;
+const Sub = RadixMenubar.Sub;
+
+const Root = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarProps>(
+  function MenubarRoot({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Root
+        ref={ref}
+        className={cn(
+          'flex h-9 items-center gap-1 rounded-md border border-[var(--color-border-default)]',
+          'bg-[var(--color-bg-default)] px-3',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+Root.displayName = 'Menubar.Root';
+
+const Trigger = React.forwardRef<HTMLButtonElement, RadixMenubar.MenubarTriggerProps>(
+  function MenubarTrigger({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Trigger
+        ref={ref}
+        className={cn(
+          'relative flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium',
+          'outline-none focus:bg-[var(--color-bg-subtle)]',
+          'data-[state=open]:bg-[var(--color-bg-subtle)]',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+Trigger.displayName = 'Menubar.Trigger';
+
+const contentBaseClasses = cn(
+  'z-[var(--z-popover)] min-w-48 rounded-lg border border-[var(--color-border-default)]',
+  'bg-[var(--color-bg-default)] p-1 shadow-md outline-none',
+  'data-[state=open]:animate-in data-[state=closed]:animate-out',
+  'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
+  'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
+  'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
+  'data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+);
+
+const Content = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarContentProps>(
+  function MenubarContent({ className, sideOffset = 8, ...props }, ref) {
+    return (
+      <RadixMenubar.Content
+        ref={ref}
+        sideOffset={sideOffset}
+        className={cn(contentBaseClasses, className)}
+        {...props}
+      />
+    );
+  },
+);
+Content.displayName = 'Menubar.Content';
+
+const itemBaseClasses = cn(
+  'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none',
+  'transition-colors hover:bg-[var(--color-bg-subtle)] focus:bg-[var(--color-bg-subtle)]',
+  'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+);
+
+const Item = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarItemProps>(
+  function MenubarItem({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Item
+        ref={ref}
+        className={cn(itemBaseClasses, className)}
+        {...props}
+      />
+    );
+  },
+);
+Item.displayName = 'Menubar.Item';
+
+const Label = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarLabelProps>(
+  function MenubarLabel({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Label
+        ref={ref}
+        className={cn(
+          'px-2 py-1 text-xs font-semibold text-[var(--color-text-muted)]',
+          className,
+        )}
+        {...props}
+      />
+    );
+  },
+);
+Label.displayName = 'Menubar.Label';
+
+const Separator = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarSeparatorProps>(
+  function MenubarSeparator({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Separator
+        ref={ref}
+        className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+        {...props}
+      />
+    );
+  },
+);
+Separator.displayName = 'Menubar.Separator';
+
+const CheckboxItem = React.forwardRef<
+  HTMLDivElement,
+  RadixMenubar.MenubarCheckboxItemProps
+>(function MenubarCheckboxItem({ className, children, checked, ...props }, ref) {
+  return (
+    <RadixMenubar.CheckboxItem
+      ref={ref}
+      className={cn(itemBaseClasses, 'pl-8', className)}
+      checked={checked}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-4 w-4 items-center justify-center">
+        <RadixMenubar.ItemIndicator>
+          <Check className="h-4 w-4" />
+        </RadixMenubar.ItemIndicator>
+      </span>
+      {children}
+    </RadixMenubar.CheckboxItem>
+  );
+});
+CheckboxItem.displayName = 'Menubar.CheckboxItem';
+
+const RadioItem = React.forwardRef<
+  HTMLDivElement,
+  RadixMenubar.MenubarRadioItemProps
+>(function MenubarRadioItem({ className, children, ...props }, ref) {
+  return (
+    <RadixMenubar.RadioItem
+      ref={ref}
+      className={cn(itemBaseClasses, 'pl-8', className)}
+      {...props}
+    >
+      <span className="absolute left-2 flex h-4 w-4 items-center justify-center">
+        <RadixMenubar.ItemIndicator>
+          <svg className="h-2 w-2 fill-current" viewBox="0 0 8 8" aria-hidden="true">
+            <circle cx="4" cy="4" r="4" />
+          </svg>
+        </RadixMenubar.ItemIndicator>
+      </span>
+      {children}
+    </RadixMenubar.RadioItem>
+  );
+});
+RadioItem.displayName = 'Menubar.RadioItem';
+
+const SubTrigger = React.forwardRef<
+  HTMLDivElement,
+  RadixMenubar.MenubarSubTriggerProps
+>(function MenubarSubTrigger({ className, children, ...props }, ref) {
+  return (
+    <RadixMenubar.SubTrigger
+      ref={ref}
+      className={cn(
+        itemBaseClasses,
+        'data-[state=open]:bg-[var(--color-bg-subtle)]',
+        className,
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronRight className="ml-auto h-4 w-4" />
+    </RadixMenubar.SubTrigger>
+  );
+});
+SubTrigger.displayName = 'Menubar.SubTrigger';
+
+const SubContent = React.forwardRef<
+  HTMLDivElement,
+  RadixMenubar.MenubarSubContentProps
+>(function MenubarSubContent({ className, ...props }, ref) {
+  return (
+    <RadixMenubar.SubContent
+      ref={ref}
+      className={cn(contentBaseClasses, className)}
+      {...props}
+    />
+  );
+});
+SubContent.displayName = 'Menubar.SubContent';
+
+const Arrow = React.forwardRef<SVGSVGElement, RadixMenubar.MenubarArrowProps>(
+  function MenubarArrow({ className, ...props }, ref) {
+    return (
+      <RadixMenubar.Arrow
+        ref={ref}
+        className={cn('fill-[var(--color-border-default)]', className)}
+        {...props}
+      />
+    );
+  },
+);
+Arrow.displayName = 'Menubar.Arrow';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const Menubar: Record<string, any> = {
+  Root,
+  Menu,
+  Trigger,
+  Portal,
+  Content,
+  Item,
+  Group,
+  Label,
+  Separator,
+  CheckboxItem,
+  RadioGroup,
+  RadioItem,
+  Sub,
+  SubTrigger,
+  SubContent,
+  Arrow,
+};

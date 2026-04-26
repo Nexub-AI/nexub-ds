@@ -1,0 +1,17 @@
+{
+  "z": {
+    "hide":     { "$value": "-1",   "$type": "number" },
+    "base":     { "$value": "0",    "$type": "number" },
+    "raised":   { "$value": "10",   "$type": "number" },
+    "dropdown": { "$value": "1000", "$type": "number" },
+    "sticky":   { "$value": "1100", "$type": "number" },
+    "banner":   { "$value": "1200", "$type": "number" },
+    "overlay":  { "$value": "1300", "$type": "number" },
+    "modal":    { "$value": "1400", "$type": "number" },
+    "popover":  { "$value": "1500", "$type": "number" },
+    "skipLink": { "$value": "1600", "$type": "number" },
+    "toast":    { "$value": "1700", "$type": "number" },
+    "tooltip":  { "$value": "1800", "$type": "number" },
+    "commandK": { "$value": "1900", "$type": "number" }
+  }
+}

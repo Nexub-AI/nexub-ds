@@ -1,0 +1,22 @@
+{
+  "name": "@nexub/themes",
+  "version": "0.0.1",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["src"],
+  "sideEffects": ["./src/*.css"],
+  "exports": {
+    "./base":      "./src/base.css",
+    "./light":     "./src/light.css",
+    "./dark":      "./src/dark.css",
+    "./leap":      "./src/leap.css",
+    "./bookub":    "./src/bookub.css",
+    "./payub":     "./src/payub.css",
+    "./founderub": "./src/founderub.css"
+  },
+  "dependencies": {
+    "@nexub/tokens": "workspace:*"
+  }
+}

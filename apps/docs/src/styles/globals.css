@@ -1,0 +1,72 @@
+@import '@nexub/themes/base';
+@import '@nexub/themes/light';
+@import '@nexub/themes/dark';
+@import '@nexub/themes/leap';
+@import '@nexub/themes/bookub';
+@import '@nexub/themes/payub';
+@import '@nexub/themes/founderub';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Docs-site layout vars ────────────────────────────────────────────────── */
+:root {
+  --docs-sidebar-width: 260px;
+  --docs-header-height: 60px;
+  --docs-content-max-width: 860px;
+
+  /* Code block background — stays dark in both light and dark modes */
+  --docs-code-bg: #0d1117;
+}
+
+/* ── Base resets ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-default);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  line-height: 1.5;
+}
+
+/* ── Text selection ───────────────────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-brand-primary-500);
+  color: #fff;
+}
+
+/* ── Scrollbar (webkit) ───────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+
+/* ── Prose area inside docs pages ─────────────────────────────────────────── */
+.docs-prose h1 { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); margin-bottom: 0.5rem; color: var(--color-text-primary); }
+.docs-prose h2 { font-size: var(--font-size-h3); font-weight: var(--font-weight-semibold); margin-top: 2rem; margin-bottom: 0.5rem; color: var(--color-text-primary); }
+.docs-prose h3 { font-size: var(--font-size-h4); font-weight: var(--font-weight-semibold); margin-top: 1.5rem; margin-bottom: 0.25rem; color: var(--color-text-primary); }
+.docs-prose p  { color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1rem; }
+.docs-prose code { font-family: var(--font-family-mono); font-size: 0.85em; background: var(--color-bg-muted); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0.1em 0.35em; color: var(--color-text-primary); }
+
+/* ── Shiki code block ─────────────────────────────────────────────────────── */
+.shiki { background: transparent !important; }
+
+/* ── Command-K search item hover ──────────────────────────────────────────── */
+.search-item[data-selected='true'],
+.search-item[data-selected] {
+  background: var(--color-bg-muted) !important;
+  outline: none;
+}
+
+/* ── Link base ────────────────────────────────────────────────────────────── */
+a { color: inherit; }

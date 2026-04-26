@@ -1,0 +1,41 @@
+{
+  "spacing": {
+    "0":   { "$value": "0px",    "$type": "dimension" },
+    "px":  { "$value": "1px",    "$type": "dimension" },
+    "0-5": { "$value": "2px",    "$type": "dimension" },
+    "1":   { "$value": "4px",    "$type": "dimension" },
+    "1-5": { "$value": "6px",    "$type": "dimension" },
+    "2":   { "$value": "8px",    "$type": "dimension" },
+    "2-5": { "$value": "10px",   "$type": "dimension" },
+    "3":   { "$value": "12px",   "$type": "dimension" },
+    "3-5": { "$value": "14px",   "$type": "dimension" },
+    "4":   { "$value": "16px",   "$type": "dimension" },
+    "5":   { "$value": "20px",   "$type": "dimension" },
+    "6":   { "$value": "24px",   "$type": "dimension" },
+    "7":   { "$value": "28px",   "$type": "dimension" },
+    "8":   { "$value": "32px",   "$type": "dimension" },
+    "9":   { "$value": "36px",   "$type": "dimension" },
+    "10":  { "$value": "40px",   "$type": "dimension" },
+    "11":  { "$value": "44px",   "$type": "dimension" },
+    "12":  { "$value": "48px",   "$type": "dimension" },
+    "14":  { "$value": "56px",   "$type": "dimension" },
+    "16":  { "$value": "64px",   "$type": "dimension" },
+    "20":  { "$value": "80px",   "$type": "dimension" },
+    "24":  { "$value": "96px",   "$type": "dimension" },
+    "28":  { "$value": "112px",  "$type": "dimension" },
+    "32":  { "$value": "128px",  "$type": "dimension" },
+    "40":  { "$value": "160px",  "$type": "dimension" },
+    "48":  { "$value": "192px",  "$type": "dimension" },
+    "56":  { "$value": "224px",  "$type": "dimension" },
+    "64":  { "$value": "256px",  "$type": "dimension" }
+  },
+  "container": {
+    "sm":    { "$value": "640px",  "$type": "dimension" },
+    "md":    { "$value": "768px",  "$type": "dimension" },
+    "lg":    { "$value": "1024px", "$type": "dimension" },
+    "xl":    { "$value": "1280px", "$type": "dimension" },
+    "2xl":   { "$value": "1536px", "$type": "dimension" },
+    "nexub": { "$value": "1440px", "$type": "dimension" },
+    "prose": { "$value": "65ch",   "$type": "dimension" }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "font": {
+    "family": {
+      "sans":       { "$value": "'Geist', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily" },
+      "mono":       { "$value": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "$type": "fontFamily" },
+      "devanagari": { "$value": "'Noto Sans Devanagari', 'Geist', ui-sans-serif, sans-serif", "$type": "fontFamily" },
+      "tamil":      { "$value": "'Noto Sans Tamil', 'Geist', ui-sans-serif, sans-serif", "$type": "fontFamily" }
+    },
+    "weight": {
+      "regular":   { "$value": "400", "$type": "fontWeight" },
+      "medium":    { "$value": "500", "$type": "fontWeight" },
+      "semibold":  { "$value": "600", "$type": "fontWeight" },
+      "bold":      { "$value": "700", "$type": "fontWeight" },
+      "extrabold": { "$value": "800", "$type": "fontWeight" }
+    }
+  },
+  "text": {
+    "display": {
+      "size":          { "$value": "72px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.1", "$type": "number" },
+      "letterSpacing": { "$value": "-0.02em", "$type": "dimension" },
+      "weight":        { "$value": "800", "$type": "fontWeight" }
+    },
+    "h1": {
+      "size":          { "$value": "56px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.15", "$type": "number" },
+      "letterSpacing": { "$value": "-0.02em", "$type": "dimension" },
+      "weight":        { "$value": "700", "$type": "fontWeight" }
+    },
+    "h2": {
+      "size":          { "$value": "40px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.2", "$type": "number" },
+      "letterSpacing": { "$value": "-0.015em", "$type": "dimension" },
+      "weight":        { "$value": "700", "$type": "fontWeight" }
+    },
+    "h3": {
+      "size":          { "$value": "32px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.25", "$type": "number" },
+      "letterSpacing": { "$value": "-0.01em", "$type": "dimension" },
+      "weight":        { "$value": "600", "$type": "fontWeight" }
+    },
+    "h4": {
+      "size":          { "$value": "24px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.3", "$type": "number" },
+      "letterSpacing": { "$value": "-0.005em", "$type": "dimension" },
+      "weight":        { "$value": "600", "$type": "fontWeight" }
+    },
+    "h5": {
+      "size":          { "$value": "20px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.35", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "600", "$type": "fontWeight" }
+    },
+    "h6": {
+      "size":          { "$value": "16px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.4", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "600", "$type": "fontWeight" }
+    },
+    "body-lg": {
+      "size":          { "$value": "18px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.7", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "400", "$type": "fontWeight" }
+    },
+    "body": {
+      "size":          { "$value": "16px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.6", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "400", "$type": "fontWeight" }
+    },
+    "body-sm": {
+      "size":          { "$value": "14px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.5", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "400", "$type": "fontWeight" }
+    },
+    "caption": {
+      "size":          { "$value": "12px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.5", "$type": "number" },
+      "letterSpacing": { "$value": "0.01em", "$type": "dimension" },
+      "weight":        { "$value": "400", "$type": "fontWeight" }
+    },
+    "label": {
+      "size":          { "$value": "12px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.4", "$type": "number" },
+      "letterSpacing": { "$value": "0.05em", "$type": "dimension" },
+      "weight":        { "$value": "600", "$type": "fontWeight" }
+    },
+    "code": {
+      "size":          { "$value": "14px", "$type": "dimension" },
+      "lineHeight":    { "$value": "1.6", "$type": "number" },
+      "letterSpacing": { "$value": "0", "$type": "dimension" },
+      "weight":        { "$value": "400", "$type": "fontWeight" }
+    }
+  }
+}

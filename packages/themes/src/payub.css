@@ -1,0 +1,17 @@
+/* @nexub/themes — payub.css
+   Overrides --color-accent-* to Payub's violet scale when [data-product='payub'] is set. */
+
+[data-product='payub'] {
+  --color-accent-50:  var(--color-accent-payub-50);
+  --color-accent-100: var(--color-accent-payub-100);
+  --color-accent-200: var(--color-accent-payub-200);
+  --color-accent-300: var(--color-accent-payub-300);
+  --color-accent-400: var(--color-accent-payub-400);
+  --color-accent-500: var(--color-accent-payub-500);
+  --color-accent-600: var(--color-accent-payub-600);
+  --color-accent-700: var(--color-accent-payub-700);
+  --color-accent-800: var(--color-accent-payub-800);
+  --color-accent-900: var(--color-accent-payub-900);
+  --color-accent-950: var(--color-accent-payub-950);
+  --color-ring-default: var(--color-accent-payub-500);
+}

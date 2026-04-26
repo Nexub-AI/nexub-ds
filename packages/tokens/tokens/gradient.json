@@ -1,0 +1,36 @@
+{
+  "gradient": {
+    "brand": {
+      "$value": "linear-gradient(135deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)",
+      "$type": "other"
+    },
+    "brand-horizontal": {
+      "$value": "linear-gradient(90deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)",
+      "$type": "other"
+    },
+    "hero-ambient": {
+      "$value": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(64,153,241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(28,206,102,0.06) 0%, transparent 50%), #ffffff",
+      "$type": "other"
+    },
+    "button-primary": {
+      "$value": "linear-gradient(135deg, #4099f1 0%, #2563eb 100%)",
+      "$type": "other"
+    },
+    "button-primary-hover": {
+      "$value": "linear-gradient(135deg, #60a5fa 0%, #4099f1 100%)",
+      "$type": "other"
+    },
+    "surface-soft": {
+      "$value": "linear-gradient(135deg, rgba(64,153,241,0.04) 0%, rgba(28,206,102,0.03) 100%)",
+      "$type": "other"
+    },
+    "surface-muted": {
+      "$value": "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+      "$type": "other"
+    },
+    "eyebrow-chip": {
+      "$value": "linear-gradient(90deg, rgba(64,153,241,0.12) 0%, rgba(28,206,102,0.08) 100%)",
+      "$type": "other"
+    }
+  }
+}

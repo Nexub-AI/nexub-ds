@@ -1,0 +1,17 @@
+/* @nexub/themes — leap.css
+   Overrides --color-accent-* to Leap's indigo scale when [data-product='leap'] is set on an ancestor. */
+
+[data-product='leap'] {
+  --color-accent-50:  var(--color-accent-leap-50);
+  --color-accent-100: var(--color-accent-leap-100);
+  --color-accent-200: var(--color-accent-leap-200);
+  --color-accent-300: var(--color-accent-leap-300);
+  --color-accent-400: var(--color-accent-leap-400);
+  --color-accent-500: var(--color-accent-leap-500);
+  --color-accent-600: var(--color-accent-leap-600);
+  --color-accent-700: var(--color-accent-leap-700);
+  --color-accent-800: var(--color-accent-leap-800);
+  --color-accent-900: var(--color-accent-leap-900);
+  --color-accent-950: var(--color-accent-leap-950);
+  --color-ring-default: var(--color-accent-leap-500);
+}

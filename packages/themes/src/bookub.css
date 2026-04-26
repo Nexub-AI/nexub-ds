@@ -1,0 +1,17 @@
+/* @nexub/themes — bookub.css
+   Overrides --color-accent-* to Bookub's emerald scale when [data-product='bookub'] is set. */
+
+[data-product='bookub'] {
+  --color-accent-50:  var(--color-accent-bookub-50);
+  --color-accent-100: var(--color-accent-bookub-100);
+  --color-accent-200: var(--color-accent-bookub-200);
+  --color-accent-300: var(--color-accent-bookub-300);
+  --color-accent-400: var(--color-accent-bookub-400);
+  --color-accent-500: var(--color-accent-bookub-500);
+  --color-accent-600: var(--color-accent-bookub-600);
+  --color-accent-700: var(--color-accent-bookub-700);
+  --color-accent-800: var(--color-accent-bookub-800);
+  --color-accent-900: var(--color-accent-bookub-900);
+  --color-accent-950: var(--color-accent-bookub-950);
+  --color-ring-default: var(--color-accent-bookub-500);
+}

@@ -1,0 +1,191 @@
+/* @nexub/themes — base.css
+   Global resets, focus ring, body, scrollbar, reduced-motion.
+   Import this once at the root of your app before light.css or dark.css. */
+
+@import '@nexub/tokens/css';
+
+/* ─── Semantic shorthand aliases ───────────────────────────────────────────
+   Components reference these shorter names. They proxy the full token names
+   so you only need to update one place if the palette shifts.              */
+:root {
+  /* success */
+  --color-success-500:    var(--color-semantic-success-default);
+  --color-success-600:    var(--color-semantic-success-strong);
+  --color-success-bg:     var(--color-semantic-success-bg);
+  --color-success-border: var(--color-semantic-success-border);
+
+  /* error / danger */
+  --color-error-500:      var(--color-semantic-error-default);
+  --color-error-600:      var(--color-semantic-error-strong);
+  --color-error-bg:       var(--color-semantic-error-bg);
+  --color-error-border:   var(--color-semantic-error-border);
+  --color-danger-500:     var(--color-semantic-error-default);
+  --color-danger-600:     var(--color-semantic-error-strong);
+  --color-danger-bg:      var(--color-semantic-error-bg);
+  --color-danger-border:  var(--color-semantic-error-border);
+
+  /* warning */
+  --color-warning-500:    var(--color-semantic-warning-default);
+  --color-warning-600:    var(--color-semantic-warning-strong);
+  --color-warning-bg:     var(--color-semantic-warning-bg);
+  --color-warning-border: var(--color-semantic-warning-border);
+
+  /* info */
+  --color-info-500:       var(--color-semantic-info-default);
+  --color-info-600:       var(--color-semantic-info-strong);
+  --color-info-bg:        var(--color-semantic-info-bg);
+  --color-info-border:    var(--color-semantic-info-border);
+
+  /* placeholder text (PKG-B01) */
+  --color-text-placeholder: var(--color-text-subtle);
+
+  /* tone text aliases — used by Heading tone prop + HelperText (PKG-H01) */
+  --color-text-info:    var(--color-semantic-info-default);
+  --color-text-success: var(--color-semantic-success-default);
+  --color-text-warning: var(--color-semantic-warning-default);
+  --color-text-danger:  var(--color-semantic-error-default);
+
+  /* accent fallback — used without any brand theme applied (PKG-B03) */
+  --color-accent-500: var(--color-brand-primary-500);
+  --color-accent-600: var(--color-brand-primary-600);
+
+  /* brand tone shorthands — aliased from full token names (PKG-B02) */
+  --color-leap-50:          var(--color-accent-leap-50);
+  --color-leap-100:         var(--color-accent-leap-100);
+  --color-leap-500:         var(--color-accent-leap-500);
+  --color-leap-600:         var(--color-accent-leap-600);
+  --color-leap-700:         var(--color-accent-leap-700);
+  --color-leap-bg:          rgba(99, 102, 241, 0.10);
+  --color-leap-border:      rgba(99, 102, 241, 0.25);
+
+  --color-bookub-50:        var(--color-accent-bookub-50);
+  --color-bookub-100:       var(--color-accent-bookub-100);
+  --color-bookub-500:       var(--color-accent-bookub-500);
+  --color-bookub-600:       var(--color-accent-bookub-600);
+  --color-bookub-700:       var(--color-accent-bookub-700);
+  --color-bookub-bg:        rgba(16, 185, 129, 0.10);
+  --color-bookub-border:    rgba(16, 185, 129, 0.25);
+
+  --color-payub-50:         var(--color-accent-payub-50);
+  --color-payub-100:        var(--color-accent-payub-100);
+  --color-payub-500:        var(--color-accent-payub-500);
+  --color-payub-600:        var(--color-accent-payub-600);
+  --color-payub-700:        var(--color-accent-payub-700);
+  --color-payub-bg:         rgba(139, 92, 246, 0.10);
+  --color-payub-border:     rgba(139, 92, 246, 0.25);
+
+  --color-founderub-50:     var(--color-accent-founderub-50);
+  --color-founderub-100:    var(--color-accent-founderub-100);
+  --color-founderub-500:    var(--color-accent-founderub-500);
+  --color-founderub-600:    var(--color-accent-founderub-600);
+  --color-founderub-700:    var(--color-accent-founderub-700);
+  --color-founderub-bg:     rgba(245, 158, 11, 0.10);
+  --color-founderub-border: rgba(245, 158, 11, 0.25);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-color: var(--color-border-default);
+}
+
+html {
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-default);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--gradient-hero-ambient);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-ring-default);
+  outline-offset: 3px;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+/* Paragraphs / lists */
+p, ul, ol {
+  margin: 0;
+}
+
+/* Links */
+a {
+  color: var(--color-text-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Images */
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Code */
+code, kbd, pre, samp {
+  font-family: var(--font-family-mono);
+  font-size: 0.875em;
+}
+
+/* Selection */
+::selection {
+  background-color: color-mix(in srgb, var(--color-brand-primary-500) 20%, transparent);
+  color: var(--color-text-primary);
+}
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-subtle);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Logo-scroll marquee keyframe (used by LogoWall) */
+@keyframes logo-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
