@@ -70,3 +70,9 @@ body {
 
 /* ── Link base ────────────────────────────────────────────────────────────── */
 a { color: inherit; }
+
+/* ── Skeleton shimmer animation (loading.tsx + LivePreviewWrapper) ─────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

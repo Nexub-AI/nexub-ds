@@ -7,6 +7,10 @@ import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
 
+// All component pages are fully static — pre-render every slug at build time
+// and serve from CDN. No per-request server work after the initial build.
+export const dynamic = 'force-static';
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
