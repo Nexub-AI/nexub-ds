@@ -1,7 +1,14 @@
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { ClientProviders } from '@/components/ClientProviders';
-import { SearchModal } from '@/components/docs/SearchModal';
 import '@/styles/globals.css';
+
+// Lazy-load SearchModal — it pulls in cmdk + full registry search index.
+// Never needed on first paint; loads only when CMD+K is pressed.
+const SearchModal = dynamic(
+  () => import('@/components/docs/SearchModal').then((m) => m.SearchModal),
+  { ssr: false },
+);
 
 export const metadata: Metadata = {
   title: { default: 'Nexub DS', template: '%s — Nexub DS' },
