@@ -88,7 +88,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             onClick={onClose}
             className={cn(
               'shrink-0 inline-flex items-center justify-center rounded-md w-6 h-6 opacity-60 hover:opacity-100 transition-opacity',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-bg-default)]',
             )}
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">

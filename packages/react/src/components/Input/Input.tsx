@@ -26,7 +26,9 @@ export const inputWrapperVariants = cva(
   [
     'flex items-center w-full rounded-md border bg-[var(--color-bg-default)] transition-colors',
     'border-[var(--color-border-default)]',
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-[var(--color-ring-default)] focus-within:ring-offset-2',
+    // No ring-offset — offset defaults to white, which looks broken in dark mode.
+    // Instead: border snaps to brand colour + a direct ring-1 sits flush on it.
+    'focus-within:outline-none focus-within:border-[var(--color-ring-default)] focus-within:ring-2 focus-within:ring-[var(--color-ring-default)]/25',
     'has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed',
   ],
   {
@@ -37,7 +39,7 @@ export const inputWrapperVariants = cva(
         lg: 'h-10 px-4 gap-2',
       },
       invalid: {
-        true: 'border-[var(--color-danger-500)] focus-within:ring-[var(--color-danger-500)]',
+        true: 'border-[var(--color-danger-500)] focus-within:border-[var(--color-danger-500)] focus-within:ring-[var(--color-danger-500)]/25',
       },
     },
     defaultVariants: {

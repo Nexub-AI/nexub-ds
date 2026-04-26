@@ -11,7 +11,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
       ref={ref}
       className={cn(
         'peer h-4 w-4 shrink-0 rounded-sm border border-[var(--color-border-default)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-bg-default)]',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'data-[state=checked]:bg-[var(--color-brand-primary-500)] data-[state=checked]:border-[var(--color-brand-primary-500)] data-[state=checked]:text-white',
         'data-[state=indeterminate]:bg-[var(--color-brand-primary-500)] data-[state=indeterminate]:border-[var(--color-brand-primary-500)] data-[state=indeterminate]:text-white',

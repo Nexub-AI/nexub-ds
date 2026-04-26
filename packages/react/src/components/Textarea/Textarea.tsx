@@ -7,7 +7,7 @@ export const textareaVariants = cva(
     'w-full rounded-md border bg-[var(--color-bg-default)] text-[var(--color-text-primary)]',
     'placeholder:text-[var(--color-text-placeholder)]',
     'border-[var(--color-border-default)] transition-colors',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+    'focus-visible:outline-none focus-visible:border-[var(--color-ring-default)] focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]/25',
     'disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed',
   ],
   {
@@ -18,7 +18,7 @@ export const textareaVariants = cva(
         lg: 'px-4 py-2.5 text-base min-h-[96px]',
       },
       invalid: {
-        true: 'border-[var(--color-danger-500)] focus-visible:ring-[var(--color-danger-500)]',
+        true: 'border-[var(--color-danger-500)] focus-visible:border-[var(--color-danger-500)] focus-visible:ring-[var(--color-danger-500)]/25',
       },
       resize: {
         none: 'resize-none',
