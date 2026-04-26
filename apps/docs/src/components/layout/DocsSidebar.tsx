@@ -9,7 +9,11 @@ import type { NavGroup } from '@/registry/types';
 
 /* ─── Sub-group (category inside Components) ─────────────────────────────── */
 
-function SubGroup({
+// React.memo: prevents re-render when pathname changes but this group's
+// active state hasn't changed. usePathname() in DocsSidebar triggers a
+// parent re-render on every navigation — memo ensures only the group that
+// actually became active/inactive re-renders.
+const SubGroup = React.memo(function SubGroup({
   group,
   pathname,
 }: {
@@ -103,11 +107,11 @@ function SubGroup({
       </ul>
     </div>
   );
-}
+});
 
 /* ─── Top-level group ─────────────────────────────────────────────────────── */
 
-function TopGroup({
+const TopGroup = React.memo(function TopGroup({
   group,
   pathname,
   defaultOpen,
@@ -210,7 +214,7 @@ function TopGroup({
       </div>
     </div>
   );
-}
+});
 
 /* ─── Sidebar ─────────────────────────────────────────────────────────────── */
 

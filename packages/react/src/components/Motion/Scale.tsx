@@ -54,6 +54,7 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
         opacity: isEntered ? 1 : 0,
         transform: isEntered ? 'scale(1)' : `scale(${initialScale})`,
         transformOrigin: 'top center',
+        willChange: 'opacity, transform',
         ...transitionStyle,
         ...style,
       }}

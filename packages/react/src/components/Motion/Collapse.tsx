@@ -58,11 +58,17 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
 
     if (!changed) return;
 
+    // Track RAF IDs so we can cancel them if the component unmounts while
+    // an animation frame is still pending (prevents state updates on unmounted
+    // components and the associated memory leak / React warning).
+    let raf1 = 0;
+    let raf2 = 0;
+
     if (visible) {
       // Mount first if unmountOnExit
       setMounted(true);
       // Measure after mount
-      requestAnimationFrame(() => {
+      raf1 = requestAnimationFrame(() => {
         const el = innerRef.current;
         if (el) {
           setHeight(el.scrollHeight);
@@ -76,13 +82,18 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
         setHeight(el.scrollHeight);
         setOverflow('hidden');
         // Give browser one frame to paint, then animate
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
+        raf1 = requestAnimationFrame(() => {
+          raf2 = requestAnimationFrame(() => {
             setHeight(typeof collapsedHeight === 'number' ? collapsedHeight : 0);
           });
         });
       }
     }
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
   }, [visible, collapsedHeight]);
 
   const handleTransitionEnd = React.useCallback(

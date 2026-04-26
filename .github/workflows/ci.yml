@@ -29,7 +29,6 @@ jobs:
       - run: pnpm typecheck
 
       - run: pnpm lint
-        continue-on-error: true
 
       - run: pnpm test
-        continue-on-error: true
+        continue-on-error: true  # tests are still being written; don't block CI

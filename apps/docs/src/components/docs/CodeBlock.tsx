@@ -20,6 +20,11 @@ function getHighlighter(): Promise<Highlighter> {
     globalThis.__shikiHighlighter = createHighlighter({
       themes: ['github-dark'],
       langs: ['tsx', 'typescript', 'javascript', 'html', 'bash', 'css', 'json'],
+    }).catch((err) => {
+      // Clear the cached rejected promise so the next render retries instead
+      // of returning the same rejection forever for the process lifetime.
+      globalThis.__shikiHighlighter = undefined;
+      throw err;
     });
   }
   return globalThis.__shikiHighlighter;
