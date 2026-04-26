@@ -1,5 +1,11 @@
 name: Release
 
+# Runs on every push to main.
+# changesets/action will either:
+#   (a) open/update a "Version Packages" PR, or
+#   (b) when that PR is merged, publish to npm.
+# After a successful publish we build + deploy the docs to Vercel production.
+
 on:
   push:
     branches: [main]
@@ -10,6 +16,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,7 +34,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # Create Version PR or publish packages to npm
       - name: Create Release PR or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
           publish: pnpm release
@@ -36,3 +45,35 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Only deploy docs to production when packages were actually published
+      # (not when a Version PR was created/updated)
+      - name: Build docs for production
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm turbo build --filter='@nexub/docs'
+
+      - name: Pull Vercel production environment
+        if: steps.changesets.outputs.published == 'true'
+        run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build Vercel output
+        if: steps.changesets.outputs.published == 'true'
+        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy docs to Vercel production
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          URL=$(npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "Production docs deployed to: $URL"
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
