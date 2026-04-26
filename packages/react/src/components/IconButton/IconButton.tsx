@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn.js';
 export const iconButtonVariants = cva(
   [
     'inline-flex items-center justify-center rounded-md transition-colors flex-shrink-0',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-bg-default)]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
     'disabled:opacity-50 disabled:pointer-events-none',
     'select-none',
   ],

@@ -17,7 +17,7 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
       {(props.defaultValue ?? props.value ?? [0]).map((val, i) => (
         <RadixSlider.Thumb
           key={`thumb-${i}-${val}`}
-          className="block h-5 w-5 rounded-full border-2 border-[var(--color-brand-primary-500)] bg-[var(--color-bg-default)] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-bg-default)] disabled:pointer-events-none disabled:opacity-50"
+          className="block h-5 w-5 rounded-full border-2 border-[var(--color-brand-primary-500)] bg-[var(--color-bg-default)] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
     </RadixSlider.Root>

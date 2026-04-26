@@ -24,7 +24,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           type="button"
           className={cn(
             'inline-flex items-center gap-1 bg-transparent border-0 p-0 m-0 cursor-pointer',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-bg-default)] rounded-sm',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] rounded-sm',
             selected ? 'text-white' : 'text-[var(--color-text-primary)]',
             className,
           )}
