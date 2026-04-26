@@ -26,9 +26,9 @@ export const inputWrapperVariants = cva(
   [
     'flex items-center w-full rounded-md border bg-[var(--color-bg-default)] transition-colors',
     'border-[var(--color-border-default)]',
-    // No ring-offset on field inputs — a gap over the dot-pattern preview
-    // background always looks wrong. The ring sits flush on the border instead.
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-[var(--color-ring-default)]',
+    // Border turns ring-colour on focus so border + ring merge into one
+    // clean blue outline. No ring-offset — ring sits flush on the border.
+    'focus-within:outline-none focus-within:border-[var(--color-ring-default)] focus-within:ring-2 focus-within:ring-[var(--color-ring-default)]',
     'has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed',
   ],
   {

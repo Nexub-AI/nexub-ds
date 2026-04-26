@@ -28,6 +28,14 @@
    token so the ring gap always matches the page background. */
 * { --tw-ring-offset-color: var(--color-ring-offset, #fff); }
 
+/* Field input focus: border + ring both turn the ring colour so they merge
+   into one clean outline. Targets the wrapper div used by Input, Textarea,
+   and Select. CSS-level fallback — works even without a package rebuild. */
+.focus-within\:ring-2.border:focus-within,
+.focus\:ring-2.border:focus {
+  border-color: var(--color-ring-default);
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
