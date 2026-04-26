@@ -14,10 +14,23 @@ const brands: { value: Brand; label: string; color: string }[] = [
 
 const STORAGE_KEY = 'nexub-brand';
 
-export function BrandSwitcher() {
+// Stable, module-level helper — never recreated
+function applyBrand(b: Brand) {
+  const root = document.documentElement;
+  if (b === 'base') {
+    root.removeAttribute('data-product');
+  } else {
+    root.setAttribute('data-product', b);
+  }
+  localStorage.setItem(STORAGE_KEY, b);
+}
+
+// Wrapped in React.memo so DocsHeader re-renders (e.g. on route change) do
+// not cascade down into this component when brand state hasn't changed.
+export const BrandSwitcher = React.memo(function BrandSwitcher() {
   const [brand, setBrand] = React.useState<Brand>('base');
 
-  // Read from localStorage on mount
+  // Read persisted brand from localStorage on mount only
   React.useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Brand | null;
     if (stored && brands.some((b) => b.value === stored)) {
@@ -26,45 +39,56 @@ export function BrandSwitcher() {
     }
   }, []);
 
-  const applyBrand = (b: Brand) => {
-    const root = document.documentElement;
-    if (b === 'base') {
-      root.removeAttribute('data-product');
-    } else {
-      root.setAttribute('data-product', b);
-    }
-    localStorage.setItem(STORAGE_KEY, b);
-  };
-
-  const handleSelect = (b: Brand) => {
+  // Stable callback — applyBrand is module-level so no closure deps needed
+  const handleSelect = React.useCallback((b: Brand) => {
     applyBrand(b);
     setBrand(b);
-  };
+  }, []);
 
   return (
     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
       <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', marginRight: '2px', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Brand</span>
       {brands.map((b) => (
-        <button
+        <BrandButton
           key={b.value}
-          onClick={() => handleSelect(b.value)}
-          title={b.label}
-          style={{
-            width: '18px',
-            height: '18px',
-            borderRadius: '50%',
-            background: b.color,
-            border: brand === b.value ? `2px solid var(--color-text-primary)` : '2px solid transparent',
-            outline: brand === b.value ? `2px solid ${b.color}` : 'none',
-            outlineOffset: '1px',
-            cursor: 'pointer',
-            transition: 'border var(--duration-fast) var(--ease-out)',
-            padding: 0,
-          }}
-          aria-pressed={brand === b.value}
-          aria-label={b.label}
+          brand={b}
+          isActive={brand === b.value}
+          onSelect={handleSelect}
         />
       ))}
     </div>
   );
+});
+
+BrandSwitcher.displayName = 'BrandSwitcher';
+
+// Separate memoized sub-component so individual brand buttons don't re-render
+// when an unrelated brand is selected (only the newly active + deactivated buttons update)
+interface BrandButtonProps {
+  brand: { value: Brand; label: string; color: string };
+  isActive: boolean;
+  onSelect: (b: Brand) => void;
 }
+
+const BrandButton = React.memo(function BrandButton({ brand: b, isActive, onSelect }: BrandButtonProps) {
+  return (
+    <button
+      onClick={() => onSelect(b.value)}
+      title={b.label}
+      style={{
+        width: '18px',
+        height: '18px',
+        borderRadius: '50%',
+        background: b.color,
+        border: isActive ? `2px solid var(--color-text-primary)` : '2px solid transparent',
+        outline: isActive ? `2px solid ${b.color}` : 'none',
+        outlineOffset: '1px',
+        cursor: 'pointer',
+        transition: 'border var(--duration-fast) var(--ease-out)',
+        padding: 0,
+      }}
+      aria-pressed={isActive}
+      aria-label={b.label}
+    />
+  );
+});
