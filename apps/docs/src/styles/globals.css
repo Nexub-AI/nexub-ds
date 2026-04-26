@@ -23,6 +23,11 @@
 /* ── Base resets ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Tailwind initialises --tw-ring-offset-color to #fff (white), which creates
+   an ugly light halo in dark mode. Override globally with the design-system
+   token so the ring gap always matches the page background. */
+* { --tw-ring-offset-color: var(--color-ring-offset, #fff); }
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
