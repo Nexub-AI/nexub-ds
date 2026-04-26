@@ -1,9 +1,9 @@
 name: Staging Deploy
 
-# Runs on every push to the development branch.
-# Builds all packages + the docs site, then deploys to a Vercel
-# preview/staging environment.  The resulting URL is posted back to the
-# commit as a status check so you can click straight through to review.
+# Triggered on every push to the development branch.
+# 1. Builds all packages + the docs site locally to verify the build is green.
+# 2. Triggers a new deployment on the DigitalOcean App Platform staging app.
+#    DO clones the branch, runs its own build command, and publishes the URL.
 
 on:
   push:
@@ -11,15 +11,12 @@ on:
 
 concurrency:
   group: staging-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: true   # cancel queued runs; only the latest matters
 
 jobs:
   staging:
     name: Build & deploy to staging
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: ${{ steps.deploy.outputs.url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -35,38 +32,21 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Build all library packages first (docs depends on them)
+      # Verify the build passes before telling DO to deploy
       - name: Build packages
         run: pnpm turbo build --filter='./packages/*'
 
-      # Build the docs Next.js app
       - name: Build docs
         run: pnpm turbo build --filter='@nexub/docs'
 
-      # Pull Vercel project settings (creates .vercel/project.json)
-      - name: Pull Vercel environment
-        run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Trigger a new deployment on the DO staging app
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      # Build with Vercel's build system (uses the .next output we already have)
-      - name: Build Vercel output
-        run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      # Deploy to preview (staging) — captures the URL for the environment link above
-      - name: Deploy to Vercel staging
-        id: deploy
+      - name: Deploy to DigitalOcean staging
         run: |
-          URL=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
-          echo "url=$URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $URL"
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          doctl apps create-deployment ${{ secrets.DO_STAGING_APP_ID }} \
+            --wait \
+            --no-color

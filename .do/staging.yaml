@@ -1,0 +1,30 @@
+# DigitalOcean App Platform — STAGING
+# Create with: doctl apps create --spec .do/staging.yaml
+# After creation, copy the app ID into GitHub Secret: DO_STAGING_APP_ID
+
+name: nexub-ds-docs-staging
+region: sgp   # Singapore — change to nyc3 / lon1 / fra1 if preferred
+
+services:
+  - name: docs
+    github:
+      repo: Nexub-AI/nexub-ds      # update if your org/repo differs
+      branch: development
+      deploy_on_push: false         # GitHub Actions controls when to deploy
+    build_command: >
+      pnpm install --frozen-lockfile &&
+      pnpm turbo build --filter='./packages/*' &&
+      pnpm turbo build --filter='@nexub/docs'
+    run_command: sh -c "cd apps/docs && ./node_modules/.bin/next start -p ${PORT}"
+    source_dir: /
+    http_port: 8080
+    environment_slug: node-js
+    instance_size_slug: basic-xxs   # ~$5/mo — upgrade to basic-xs for prod
+    instance_count: 1
+    envs:
+      - key: NODE_ENV
+        value: production
+        scope: RUN_AND_BUILD_TIME
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+        scope: BUILD_TIME
