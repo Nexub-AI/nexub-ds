@@ -32,7 +32,6 @@ export default function ColorsPage() {
             key={shade}
             name={`primary-${shade}`}
             value={`var(--color-brand-primary-${shade})`}
-            textColor={shade < 500 ? 'var(--color-text-primary)' : 'var(--color-text-inverse)'}
           />
         ))}
       </div>
@@ -45,7 +44,6 @@ export default function ColorsPage() {
               key={t.name}
               name={t.name.replace('--color-semantic-', '')}
               value={t.value}
-              textColor={t.name.endsWith('-bg') ? 'var(--color-text-primary)' : 'var(--color-text-inverse)'}
             />
         ))}
       </div>

@@ -3,10 +3,9 @@ import * as React from 'react';
 interface ColorSwatchProps {
   name: string;
   value: string;
-  textColor?: string;
 }
 
-export function ColorSwatch({ name, value, textColor = '#fff' }: ColorSwatchProps) {
+export function ColorSwatch({ name, value }: ColorSwatchProps) {
   return (
     <div
       style={{
@@ -20,23 +19,8 @@ export function ColorSwatch({ name, value, textColor = '#fff' }: ColorSwatchProp
         style={{
           height: '64px',
           background: value,
-          display: 'flex',
-          alignItems: 'flex-end',
-          padding: '6px 10px',
         }}
-      >
-        <span
-          style={{
-            color: textColor,
-            fontFamily: 'var(--font-family-mono)',
-            fontWeight: 600,
-            fontSize: '0.7rem',
-            opacity: 0.85,
-          }}
-        >
-          {value}
-        </span>
-      </div>
+      />
       <div
         style={{
           padding: '6px 10px',
