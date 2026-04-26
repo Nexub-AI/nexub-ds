@@ -1,0 +1,72 @@
+name: Staging Deploy
+
+# Runs on every push to the development branch.
+# Builds all packages + the docs site, then deploys to a Vercel
+# preview/staging environment.  The resulting URL is posted back to the
+# commit as a status check so you can click straight through to review.
+
+on:
+  push:
+    branches: [development]
+
+concurrency:
+  group: staging-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  staging:
+    name: Build & deploy to staging
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Build all library packages first (docs depends on them)
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      # Build the docs Next.js app
+      - name: Build docs
+        run: pnpm turbo build --filter='@nexub/docs'
+
+      # Pull Vercel project settings (creates .vercel/project.json)
+      - name: Pull Vercel environment
+        run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Build with Vercel's build system (uses the .next output we already have)
+      - name: Build Vercel output
+        run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Deploy to preview (staging) — captures the URL for the environment link above
+      - name: Deploy to Vercel staging
+        id: deploy
+        run: |
+          URL=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $URL"
+        working-directory: apps/docs
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
