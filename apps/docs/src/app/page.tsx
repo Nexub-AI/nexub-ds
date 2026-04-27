@@ -6,13 +6,22 @@ import { componentEntries, patternEntries } from '@/registry/index';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
 function getVersion(): string {
-  try {
-    const repoRoot = process.env.INIT_CWD ?? path.join(process.cwd(), '../..');
-    const raw = fs.readFileSync(path.join(repoRoot, 'packages/react/package.json'), 'utf-8');
-    return (JSON.parse(raw) as { version: string }).version;
-  } catch {
-    return '0.0.1';
+  // process.cwd() is the repo root when launched via `pnpm --filter` from the monorepo root,
+  // but is apps/docs when launched directly. Try both candidates.
+  const candidates = [
+    path.join(process.cwd(), 'packages/react/package.json'),         // repo root launch
+    path.join(process.cwd(), '../../packages/react/package.json'),   // apps/docs launch
+    process.env.INIT_CWD ? path.join(process.env.INIT_CWD, 'packages/react/package.json') : '',
+  ].filter(Boolean);
+
+  for (const pkgPath of candidates) {
+    try {
+      if (fs.existsSync(pkgPath)) {
+        return (JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { version: string }).version;
+      }
+    } catch { /* try next */ }
   }
+  return '0.0.2';
 }
 
 export default function HomePage() {
