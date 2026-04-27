@@ -92,6 +92,20 @@ const entry: ComponentEntry = {
 }`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Confirming a non-blocking action (file saved, message sent)",
+    "Reporting a background event the user should know about",
+    "Providing brief feedback that disappears automatically",
+    "Offering an undo action immediately after a destructive operation",
+    ],
+    whenNotToUse: [
+    "Critical errors that block the user — use Alert or AlertDialog",
+    "Information the user must read and acknowledge — use Dialog",
+    "Persistent status that should remain visible — use Banner or Alert",
+    "Long messages with multiple lines of text",
+    ],
+  },
 };
 
 export default entry;

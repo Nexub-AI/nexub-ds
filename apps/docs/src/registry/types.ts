@@ -22,10 +22,16 @@ export interface ComponentMeta {
   addedIn?: string; // semver e.g. '0.0.1' — shown as "Added in v0.0.1" badge
 }
 
+export interface UsageDef {
+  whenToUse: string[];
+  whenNotToUse: string[];
+}
+
 export interface ComponentEntry {
   meta: ComponentMeta;
   props: PropDef[];
   examples: ExampleDef[];
+  usage?: UsageDef; // optional — shown as "When to use / When not to use" on the doc page
 }
 
 export interface NavItem {

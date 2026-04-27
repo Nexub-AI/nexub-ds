@@ -47,6 +47,20 @@ const entry: ComponentEntry = {
 </div>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Capturing short free-form text (name, email, search term)",
+    "Single-line data entry within a form",
+    "Filtering or searching a list of items",
+    "Inline editing of a single value",
+    ],
+    whenNotToUse: [
+    "Multi-line text — use Textarea instead",
+    "Choosing from a fixed list of options — use Select or Combobox",
+    "Numeric stepping — use NumberInput for increment/decrement control",
+    "Passwords — use PasswordInput which toggles visibility",
+    ],
+  },
 };
 
 export default entry;

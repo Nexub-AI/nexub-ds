@@ -53,6 +53,20 @@ const entry: ComponentEntry = {
 </div>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Triggering a primary or secondary action (submit, save, confirm)",
+    "Navigating users to another page or step in a flow",
+    "Opening a dialog, drawer, or modal overlay",
+    "Destructive actions that need a visible, labelled control",
+    ],
+    whenNotToUse: [
+    "Inline text navigation — use a Link instead",
+    "Icon-only controls — use IconButton for touch target compliance",
+    "Selecting among multiple options — use ToggleGroup or SegmentedControl",
+    "Passive information display with no action",
+    ],
+  },
 };
 
 export default entry;

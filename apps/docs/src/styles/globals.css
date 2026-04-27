@@ -214,6 +214,43 @@ a { color: inherit; }
   flex-wrap: wrap;
 }
 
+/* ── Usage guidance grid (When to use / When not to use) ────────────────── */
+.docs-usage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.docs-usage-col {
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+.docs-usage-col h4 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+}
+.docs-usage-col ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+.docs-usage-col li { margin-bottom: 0.25rem; }
+.docs-usage-do {
+  background: var(--color-semantic-success-bg);
+  border: 1px solid var(--color-semantic-success-border);
+}
+.docs-usage-dont {
+  background: var(--color-semantic-error-bg);
+  border: 1px solid var(--color-semantic-error-border);
+}
+@media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
+
 /* ── Component preview pane — responsive padding ────────────────────────── */
 @media (max-width: 639px) {
   .docs-preview-pane { padding: 1rem !important; }

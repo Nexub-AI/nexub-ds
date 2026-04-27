@@ -37,6 +37,20 @@ const entry: ComponentEntry = {
 </Tabs.Root>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Switching between related views within the same page context",
+    "Organising content that belongs to the same entity",
+    "Reducing visual clutter by hiding secondary content behind tabs",
+    "Horizontal navigation within a bounded section",
+    ],
+    whenNotToUse: [
+    "Global site navigation — use the sidebar or top nav",
+    "Sequential steps in order — use StepIndicator",
+    "Comparing content side-by-side — keep both views visible",
+    "More than 5–7 tabs — consider a Select or sub-navigation",
+    ],
+  },
 };
 
 export default entry;

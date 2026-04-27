@@ -29,7 +29,7 @@ export default async function PatternPage({ params }: Props) {
   const entry = getPatternEntry(slug);
   if (!entry) notFound();
 
-  const { meta, props, examples } = entry;
+  const { meta, props, examples, usage } = entry;
 
   return (
     <div className="docs-prose">
@@ -82,6 +82,23 @@ export default async function PatternPage({ params }: Props) {
         </div>
       </div>
       <p>{meta.description}</p>
+
+      {usage && (
+        <div className="docs-usage-grid">
+          <div className="docs-usage-col docs-usage-do">
+            <h4>✅ When to use</h4>
+            <ul>
+              {usage.whenToUse.map((u) => <li key={u}>{u}</li>)}
+            </ul>
+          </div>
+          <div className="docs-usage-col docs-usage-dont">
+            <h4>❌ When not to use</h4>
+            <ul>
+              {usage.whenNotToUse.map((u) => <li key={u}>{u}</li>)}
+            </ul>
+          </div>
+        </div>
+      )}
 
       <h2>Import</h2>
       <Suspense fallback={<CodeBlockSkeleton />}>
