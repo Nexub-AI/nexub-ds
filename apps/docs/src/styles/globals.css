@@ -28,13 +28,10 @@
    token so the ring gap always matches the page background. */
 * { --tw-ring-offset-color: var(--color-ring-offset, #fff); }
 
-/* Field input focus: border + ring both turn the ring colour so they merge
-   into one clean outline. Targets the wrapper div used by Input, Textarea,
-   and Select. CSS-level fallback — works even without a package rebuild. */
-.focus-within\:ring-2.border:focus-within,
-.focus\:ring-2.border:focus {
-  border-color: var(--color-ring-default);
-}
+/* Field input focus: the component-level Tailwind classes shift the border
+   to the ring color and apply a semi-transparent ring halo on focus, so no
+   global override is required here. One 1 px colored border + one soft
+   2 px glow = a single clean focus indicator with no double-ring artifact. */
 
 html {
   -webkit-font-smoothing: antialiased;

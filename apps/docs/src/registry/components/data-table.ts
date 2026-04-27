@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'data-table',
-    title: 'DataTable',
+    title: 'Data Table',
     description: 'Feature-rich data table with sorting and row selection powered by TanStack Table.',
     category: 'Data Display',
     package: '@nexub/react',

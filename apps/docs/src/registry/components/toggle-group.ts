@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'toggle-group',
-    title: 'ToggleGroup',
+    title: 'Toggle Group',
     description: 'Group of toggle buttons where one or many can be active.',
     category: 'Interactive',
     package: '@nexub/react',

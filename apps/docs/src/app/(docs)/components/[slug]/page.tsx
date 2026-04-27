@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
+import { Suspense } from 'react'; // kept for Import CodeBlock Suspense
 import { notFound } from 'next/navigation';
 import { componentEntries, getComponentEntry } from '@/registry/index';
 import { CodeBlock } from '@/components/docs/CodeBlock';
@@ -49,9 +49,9 @@ export default async function ComponentPage({ params }: Props) {
       </p>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '0.75rem' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '0.75rem' }}>
         <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', paddingTop: '6px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
           {meta.status === 'stable' && (
             <span
               style={{
@@ -92,21 +92,25 @@ export default async function ComponentPage({ params }: Props) {
         <CodeBlock code={`import { ${meta.title} } from '${meta.package}';`} />
       </Suspense>
 
-      {/* Examples with live preview */}
+      {/* Examples with live preview.
+          No codeSlot here — omitting it keeps Shiki out of the RSC render path
+          for example blocks. In dev mode, force-static caching is invalidated on
+          every HMR cycle, so passing codeSlot={<CodeBlock />} per example would
+          re-run Shiki 3-5× on every navigation after a file change.
+          ComponentPreview falls back to a plain <pre> on the Code tab — instant,
+          no server round-trip. The Import block above is the only place that needs
+          syntax-highlighted output, and it's a single short line. */}
       <h2>Examples</h2>
       {examples.map((ex, i) => (
         <div key={ex.title} style={{ marginBottom: '2rem' }}>
           <h3>{ex.title}</h3>
           {ex.description && <p>{ex.description}</p>}
-          <Suspense fallback={<PreviewSkeleton />}>
-            <ComponentPreview
-              code={ex.code}
-              /* @ts-ignore — async RSC passed via composition pattern */
-              codeSlot={<CodeBlock code={ex.code} />}
-            >
-              <ComponentLivePreview slug={slug} idx={i} />
-            </ComponentPreview>
-          </Suspense>
+          {/* No Suspense needed here: ComponentPreview is a pure client component
+              and ComponentLivePreview manages its own loading state (shimmer skeleton
+              while the dynamic chunk loads). */}
+          <ComponentPreview code={ex.code}>
+            <ComponentLivePreview slug={slug} idx={i} />
+          </ComponentPreview>
         </div>
       ))}
 
@@ -136,30 +140,3 @@ function CodeBlockSkeleton() {
   );
 }
 
-function PreviewSkeleton() {
-  return (
-    <div
-      style={{
-        border: '1px solid var(--color-border-default)',
-        borderRadius: 'var(--radius-xl)',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Tab bar */}
-      <div
-        style={{
-          height: '40px',
-          background: 'var(--color-bg-subtle)',
-          borderBottom: '1px solid var(--color-border-default)',
-        }}
-      />
-      {/* Preview area */}
-      <div
-        style={{
-          height: '120px',
-          background: 'var(--color-bg-default)',
-        }}
-      />
-    </div>
-  );
-}

@@ -86,7 +86,11 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           disabled={disabled}
           aria-invalid={invalid ?? undefined}
           className={cn(
-            'flex-1 min-w-0 bg-transparent outline-none text-[var(--color-text-primary)]',
+            // Wrapper owns ALL focus styling — strip every indicator from the inner input.
+            'flex-1 min-w-0 bg-transparent text-[var(--color-text-primary)]',
+            'border-0 shadow-none',
+            'outline-none focus:outline-none focus-visible:outline-none',
+            'ring-0 focus:ring-0 focus-visible:ring-0',
             'placeholder:text-[var(--color-text-placeholder)]',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',

@@ -1,3 +1,19 @@
+// Bundle analysis — install manually when needed:
+//   pnpm add -D @next/bundle-analyzer   (in apps/docs, after workspace packages are published)
+//   ANALYZE=true pnpm build
+//
+// The treemap reveals:
+//   • ComponentLivePreview chunk should NOT appear in initial client JS
+//   • shiki should be server-only (not in any client chunk)
+//   • lucide-react / @nexub/icons should be tree-shaken (only used icons)
+let withBundleAnalyzer = (config) => config;
+try {
+  const { default: BundleAnalyzer } = await import('@next/bundle-analyzer');
+  withBundleAnalyzer = BundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
+} catch {
+  // @next/bundle-analyzer not installed — normal dev/CI builds skip analysis
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: [
@@ -45,4 +61,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

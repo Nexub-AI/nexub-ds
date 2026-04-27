@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { ColorSwatch } from '@/components/docs/ColorSwatch';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Colors' };
 
 const brandShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];

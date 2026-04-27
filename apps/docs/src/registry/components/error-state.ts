@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'error-state',
-    title: 'ErrorState',
+    title: 'Error State',
     description: 'Full-page or section error view with retry action.',
     category: 'Data Display',
     package: '@nexub/react',

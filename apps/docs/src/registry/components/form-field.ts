@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'form-field',
-    title: 'FormField',
+    title: 'Form Field',
     description: 'Wraps Label, Input, HelperText and FormError into a single accessible group.',
     category: 'Form & Input',
     package: '@nexub/react',

@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'hover-card',
-    title: 'HoverCard',
+    title: 'Hover Card',
     description: 'Rich tooltip card revealed on hover.',
     category: 'Overlays',
     package: '@nexub/react',

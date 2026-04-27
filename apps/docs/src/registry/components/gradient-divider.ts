@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'gradient-divider',
-    title: 'GradientDivider',
+    title: 'Gradient Divider',
     description: 'A decorative gradient-faded horizontal rule.',
     category: 'Dividers',
     package: '@nexub/react',

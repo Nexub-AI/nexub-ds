@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'date-range-picker',
-    title: 'DateRangePicker',
+    title: 'Date Range Picker',
     description: 'Dual-calendar date range selector.',
     category: 'Form & Input',
     package: '@nexub/react',

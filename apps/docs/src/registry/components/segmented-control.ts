@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'segmented-control',
-    title: 'SegmentedControl',
+    title: 'Segmented Control',
     description: 'Tab-style control for mutually exclusive selections.',
     category: 'Interactive',
     package: '@nexub/react',

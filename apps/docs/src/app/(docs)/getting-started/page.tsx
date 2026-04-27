@@ -52,6 +52,8 @@ export default function App({ children }) {
       <CodeBlock code={`'use client';
 import { useTheme } from '@nexub/react';
 
+export const dynamic = 'force-static';
+
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 

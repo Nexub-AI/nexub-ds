@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'number-input',
-    title: 'NumberInput',
+    title: 'Number Input',
     description: 'A numeric input with increment and decrement controls, supporting min/max clamping and step.',
     category: 'Form & Input',
     package: '@nexub/react',
