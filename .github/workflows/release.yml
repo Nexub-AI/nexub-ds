@@ -1,27 +1,35 @@
 name: Release
 
-# Triggered on every push to main.
-# changesets/action will either:
-#   (a) open/update a "Version Packages" PR, or
-#   (b) when that PR is merged, publish all packages to npm.
-# After a successful publish we trigger a new deployment on the
-# DigitalOcean App Platform production app.
+# Triggered on every push to production.
+#
+# Two-phase behaviour via changesets/action:
+#   Phase A — no pending changesets: nothing to publish, just deploys docs.
+#   Phase B — pending changesets exist:
+#     1. Opens/updates a "Version Packages" PR against production.
+#     2. When THAT PR is merged → publishes all @nexub/* packages to npm.
+#     3. Deploys docs to Cloudflare Pages production.
+#
+# Flow: development → staging → PR → production (this workflow)
 
 on:
   push:
-    branches: [main]
+    branches: [production]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Release
+    name: Publish to npm & deploy docs
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # changesets needs to push version commits
+      pull-requests: write  # changesets opens the Version Packages PR
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # changesets needs full history to detect changes
 
       - uses: pnpm/action-setup@v4
         with:
@@ -33,31 +41,49 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      # Create "Version Packages" PR or publish to npm
-      - name: Create Release PR or Publish
+      # Build packages in dependency order (required before publish)
+      - name: Build @nexub/tokens
+        run: pnpm --filter @nexub/tokens build
+
+      - name: Build @nexub/icons
+        run: pnpm --filter @nexub/icons build
+
+      - name: Build @nexub/react
+        run: pnpm --filter @nexub/react build
+
+      - name: Build @nexub/patterns
+        run: pnpm --filter @nexub/patterns build
+
+      # changesets/action:
+      #   - If .changeset/*.md files exist → opens/updates "Version Packages" PR
+      #   - If already versioned (PR was merged) → runs `pnpm release` to publish
+      - name: Create Release PR or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           publish: pnpm release
-          commit: "chore: version packages"
-          title: "chore: version packages"
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Only deploy docs to production when packages were actually published
-      # (not when a Version PR was merely created or updated)
-      - name: Install doctl
-        if: steps.changesets.outputs.published == 'true'
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # Build docs static export (always, not just on publish)
+      # We deploy on every production push so the site always matches the code.
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
 
-      - name: Deploy docs to DigitalOcean production
-        if: steps.changesets.outputs.published == 'true'
-        run: |
-          doctl apps create-deployment ${{ secrets.DO_PRODUCTION_APP_ID }} \
-            --wait \
-            --no-color
+      # Deploy to Cloudflare Pages production.
+      # The production alias maps to your custom domain (e.g. docs.nexub.com).
+      - name: Deploy to Cloudflare Pages (production)
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: nexub-ds-docs
+          directory: apps/docs/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: production
