@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data',
     package: '@nexub/patterns',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'searchPlaceholder', type: 'string', default: "'Search…'", required: false, description: 'Placeholder text for the search input.' },

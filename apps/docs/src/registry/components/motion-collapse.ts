@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Motion',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'in', type: 'boolean', required: true, description: 'When true, expands the content to its natural height. When false, collapses it to zero height.' },

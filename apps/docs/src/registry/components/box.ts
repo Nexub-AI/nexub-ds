@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Layout',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'padding', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", required: false, description: 'Padding applied to all sides using design tokens.' },

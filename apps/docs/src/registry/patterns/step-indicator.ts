@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Navigation',
     package: '@nexub/patterns',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'steps', type: 'StepIndicatorStep[]', required: true, description: 'Array of step definitions.' },

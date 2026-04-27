@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Disclosure',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'type', type: "'auto' | 'always' | 'scroll' | 'hover'", default: "'hover'", required: false, description: 'Controls when the scrollbar is visible. "hover" shows it on mouse-over, "scroll" while scrolling, "always" always, "auto" when content overflows.' },

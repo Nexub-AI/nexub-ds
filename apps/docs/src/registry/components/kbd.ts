@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Inline Primitives',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: '...props', type: 'React.HTMLAttributes<HTMLElement>', required: false, description: 'All standard kbd HTML attributes are forwarded.' },

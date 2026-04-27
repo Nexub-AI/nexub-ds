@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data Display',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'EmptyState.Root layout', type: "'centered' | 'inline'", default: "'centered'", required: false, description: '"centered" stacks content vertically in the middle of its container; "inline" aligns content to the start.' },

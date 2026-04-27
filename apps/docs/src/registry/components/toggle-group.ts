@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Interactive',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'type', type: "'single' | 'multiple'", required: true, description: "Controls whether one or multiple items can be active at a time." },

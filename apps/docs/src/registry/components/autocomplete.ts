@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form Controls',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'options', type: '{ value: string; label: string }[]', required: true, description: 'Array of options available for selection.' },

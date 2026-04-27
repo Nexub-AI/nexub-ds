@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Navigation',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'defaultValue', type: 'string', required: false, description: 'Initially active tab value (uncontrolled).' },

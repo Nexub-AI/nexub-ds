@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Dividers',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [],
   examples: [

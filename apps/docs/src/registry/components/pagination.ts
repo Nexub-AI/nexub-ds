@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Navigation',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'page', type: 'number', required: true, description: 'The currently active page (1-indexed).' },

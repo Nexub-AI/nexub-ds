@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Actions',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle' | 'link' | 'destructive'", default: "'primary'", required: false, description: 'Visual style of the button.' },

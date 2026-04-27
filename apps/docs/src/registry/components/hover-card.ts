@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Overlays',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'HoverCard.Root', type: 'compound', required: false, description: 'Root provider that manages open/close state.' },

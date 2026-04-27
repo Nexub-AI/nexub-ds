@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form Controls',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'checked', type: 'boolean', required: false, description: 'The controlled checked state.' },

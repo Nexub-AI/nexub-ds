@@ -8,3 +8,5 @@ coverage/
 .env
 .env.local
 .next
+apps/docs/out/
+.claude/
