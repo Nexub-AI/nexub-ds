@@ -30,6 +30,7 @@ export default function HomePage() {
     <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
+        className="landing-hero"
         style={{
           minHeight: '100vh',
           display: 'flex',
@@ -66,10 +67,10 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Link href="/getting-started" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
-            <Link href="/components" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
-            <Link href="/patterns" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
+          <div className="landing-nav-links">
+            <Link href="/getting-started" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
+            <Link href="/components" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
+            <Link href="/patterns" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
             <ThemeSwitcher />
           </div>
         </nav>
@@ -170,7 +171,7 @@ export default function HomePage() {
         </div>
 
         {/* Stats strip */}
-        <div style={{ display: 'flex', gap: '48px', marginTop: '5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="landing-stats" style={{ display: 'flex', gap: '48px', marginTop: '5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           {[
             { num: `${componentEntries.length}+`, label: 'Components' },
             { num: `${patternEntries.length}`, label: 'Patterns' },

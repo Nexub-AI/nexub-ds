@@ -86,3 +86,148 @@ a { color: inherit; }
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ── Docs layout — mobile-first responsive ─────────────────────────────────── */
+
+/* Sidebar: sticky on desktop, off-canvas on mobile */
+.docs-sidebar {
+  width: var(--docs-sidebar-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--docs-header-height);
+  height: calc(100vh - var(--docs-header-height));
+}
+
+/* Main content area */
+.docs-main {
+  flex: 1;
+  min-width: 0;
+  padding: 2.5rem 3rem;
+  max-width: calc(var(--docs-content-max-width) + 6rem);
+}
+
+/* Hamburger: hidden on desktop */
+.docs-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+.docs-hamburger:hover { background: var(--color-bg-muted); }
+
+/* Search icon button (mobile only) — hidden on desktop */
+.docs-header-search-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+}
+.docs-header-search-icon:hover { background: var(--color-bg-muted); }
+
+/* Mobile overlay (behind sidebar) */
+.docs-sidebar-overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  top: var(--docs-header-height);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 199;
+}
+
+/* ── Mobile breakpoint (< 768px) ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .docs-sidebar {
+    position: fixed;
+    top: var(--docs-header-height);
+    left: 0;
+    height: calc(100vh - var(--docs-header-height));
+    z-index: 200;
+    width: min(280px, 85vw) !important;
+    transform: translateX(-100%);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+
+  .docs-sidebar[data-open="true"] {
+    transform: translateX(0);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .docs-main {
+    padding: 1.25rem 1rem !important;
+    max-width: 100% !important;
+  }
+
+  .docs-hamburger {
+    display: flex;
+  }
+
+  .docs-header-search {
+    display: none !important;
+  }
+
+  .docs-header-search-icon {
+    display: flex;
+  }
+
+  .docs-header-brand-switcher {
+    display: none !important;
+  }
+}
+
+/* ── Small mobile (< 640px) — prose typography scale-down ──────────────────── */
+@media (max-width: 639px) {
+  .docs-prose h1 { font-size: var(--font-size-h3, 1.875rem); }
+  .docs-prose h2 { font-size: var(--font-size-h4, 1.5rem); }
+  .docs-prose h3 { font-size: 1.125rem; }
+}
+
+/* ── Component/pattern page header — badges wrap on narrow screens ─────────── */
+.docs-page-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.docs-page-header-badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* ── Component preview pane — responsive padding ────────────────────────── */
+@media (max-width: 639px) {
+  .docs-preview-pane { padding: 1rem !important; }
+}
+
+/* ── Landing page responsive ─────────────────────────────────────────────── */
+.landing-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+@media (max-width: 639px) {
+  .landing-nav-link { display: none; }
+  .landing-stats { gap: 24px !important; margin-top: 3rem !important; }
+  .landing-hero { padding: 5rem 1.25rem 2rem !important; }
+}

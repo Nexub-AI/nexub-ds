@@ -46,9 +46,9 @@ export default async function PatternPage({ params }: Props) {
         Patterns · {meta.category}
       </p>
 
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '0.75rem' }}>
+      <div className="docs-page-header">
         <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+        <div className="docs-page-header-badges">
           <span
             style={{
               padding: '2px 8px',
