@@ -19,6 +19,10 @@ jobs:
     name: Build & deploy to Cloudflare Pages (staging)
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      deployments: write  # cloudflare/pages-action needs this to create GitHub Deployments
+
     steps:
       - uses: actions/checkout@v4
 

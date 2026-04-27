@@ -25,6 +25,7 @@ jobs:
     permissions:
       contents: write       # changesets needs to push version commits
       pull-requests: write  # changesets opens the Version Packages PR
+      deployments: write    # cloudflare/pages-action needs this to create GitHub Deployments
 
     steps:
       - uses: actions/checkout@v4
