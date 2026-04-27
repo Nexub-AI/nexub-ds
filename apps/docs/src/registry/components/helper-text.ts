@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'helper-text',
-    title: 'HelperText',
+    title: 'Helper Text',
     description: 'Small supporting text placed beneath a form field to provide hints or validation feedback.',
     category: 'Form & Input',
     package: '@nexub/react',

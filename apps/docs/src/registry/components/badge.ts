@@ -5,7 +5,7 @@ const entry: ComponentEntry = {
     slug: 'badge',
     title: 'Badge',
     description: 'Small status indicator or label. Communicates state, category, or count.',
-    category: 'Data Display',
+    category: 'Labels & Badges',
     package: '@nexub/react',
     status: 'stable',
   },

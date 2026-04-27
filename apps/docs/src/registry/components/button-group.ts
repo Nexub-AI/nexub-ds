@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'button-group',
-    title: 'ButtonGroup',
+    title: 'Button Group',
     description: 'Groups related buttons together with optional attachment and orientation.',
     category: 'Actions',
     package: '@nexub/react',

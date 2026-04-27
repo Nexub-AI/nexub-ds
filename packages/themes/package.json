@@ -1,19 +1,37 @@
 {
   "name": "@nexub/themes",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (Leap, Bookub, Payub, Founderub) as importable CSS.",
   "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/themes"
+  },
+  "keywords": [
+    "themes",
+    "css",
+    "dark-mode",
+    "design-system",
+    "nexub"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "files": ["src"],
-  "sideEffects": ["./src/*.css"],
+  "files": [
+    "src"
+  ],
+  "sideEffects": [
+    "./src/*.css"
+  ],
   "exports": {
-    "./base":      "./src/base.css",
-    "./light":     "./src/light.css",
-    "./dark":      "./src/dark.css",
-    "./leap":      "./src/leap.css",
-    "./bookub":    "./src/bookub.css",
-    "./payub":     "./src/payub.css",
+    "./base": "./src/base.css",
+    "./light": "./src/light.css",
+    "./dark": "./src/dark.css",
+    "./leap": "./src/leap.css",
+    "./bookub": "./src/bookub.css",
+    "./payub": "./src/payub.css",
     "./founderub": "./src/founderub.css"
   },
   "dependencies": {

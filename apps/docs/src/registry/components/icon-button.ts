@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'icon-button',
-    title: 'IconButton',
+    title: 'Icon Button',
     description: 'A square button designed to hold a single icon, with an accessible label.',
     category: 'Actions',
     package: '@nexub/react',

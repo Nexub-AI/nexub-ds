@@ -230,12 +230,18 @@ export const patternEntries: ComponentEntry[] = [
 ];
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
+// Pre-build Maps at module-load time so every lookup is O(1).
+// With .find() the cost was O(n) per call — called twice per page render
+// (generateMetadata + ComponentPage). Maps pay the build cost once.
+const _componentMap = new Map(componentEntries.map((e) => [e.meta.slug, e]));
+const _patternMap = new Map(patternEntries.map((e) => [e.meta.slug, e]));
+
 export function getComponentEntry(slug: string): ComponentEntry | undefined {
-  return componentEntries.find((e) => e.meta.slug === slug);
+  return _componentMap.get(slug);
 }
 
 export function getPatternEntry(slug: string): ComponentEntry | undefined {
-  return patternEntries.find((e) => e.meta.slug === slug);
+  return _patternMap.get(slug);
 }
 
 // ─── Flat search index ────────────────────────────────────────────────────────

@@ -4,7 +4,13 @@ import { cn } from '../../utils/cn.js';
 
 export const inputVariants = cva(
   [
-    'flex-1 min-w-0 bg-transparent outline-none placeholder:text-[var(--color-text-placeholder)]',
+    // The wrapper owns ALL focus styling (border + ring). Strip every possible
+    // focus indicator from the inner <input> so we never get a double ring.
+    'flex-1 min-w-0 bg-transparent',
+    'border-0 shadow-none',
+    'outline-none focus:outline-none focus-visible:outline-none',
+    'ring-0 focus:ring-0 focus-visible:ring-0',
+    'placeholder:text-[var(--color-text-placeholder)]',
     'text-[var(--color-text-primary)]',
     'disabled:opacity-50 disabled:cursor-not-allowed',
   ],
@@ -26,7 +32,10 @@ export const inputWrapperVariants = cva(
   [
     'flex items-center w-full rounded-md border bg-[var(--color-bg-default)] transition-colors',
     'border-[var(--color-border-default)]',
-    'focus-within:outline-none focus-within:ring-2 focus-within:ring-[var(--color-ring-default)] focus-within:ring-offset-2',
+    // On focus: the border shifts to the ring color and the ring is a
+    // semi-transparent halo. One hard 1 px border + one soft 2 px glow =
+    // a single clean focus indicator. No double ring.
+    'focus-within:outline-none focus-within:border-[var(--color-ring-default)] focus-within:ring-2 focus-within:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',
     'has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed',
   ],
   {
@@ -37,7 +46,7 @@ export const inputWrapperVariants = cva(
         lg: 'h-10 px-4 gap-2',
       },
       invalid: {
-        true: 'border-[var(--color-danger-500)] focus-within:ring-[var(--color-danger-500)]',
+        true: 'border-[var(--color-danger-500)] focus-within:border-[var(--color-danger-500)] focus-within:ring-[color-mix(in_srgb,var(--color-danger-500)_25%,transparent)]',
       },
     },
     defaultVariants: {

@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react'; // kept for Import CodeBlock Suspense
 import { notFound } from 'next/navigation';
 import { patternEntries, getPatternEntry } from '@/registry/index';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
+
+// Pre-render every pattern page at build time — same strategy as component pages.
+export const dynamic = 'force-static';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -42,9 +46,9 @@ export default async function PatternPage({ params }: Props) {
         Patterns · {meta.category}
       </p>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '0.75rem' }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '0.75rem' }}>
         <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', paddingTop: '6px', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
           <span
             style={{
               padding: '2px 8px',
@@ -64,20 +68,19 @@ export default async function PatternPage({ params }: Props) {
       <p>{meta.description}</p>
 
       <h2>Import</h2>
-      {/* @ts-ignore */}
-      <CodeBlock code={`import { ${meta.title} } from '@nexub/patterns';`} />
+      <Suspense fallback={<CodeBlockSkeleton />}>
+        {/* @ts-ignore */}
+        <CodeBlock code={`import { ${meta.title} } from '@nexub/patterns';`} />
+      </Suspense>
 
+      {/* No codeSlot on examples — keeps Shiki out of the navigation render path.
+          See components/[slug]/page.tsx for the rationale. */}
       <h2>Examples</h2>
       {examples.map((ex, i) => (
         <div key={ex.title} style={{ marginBottom: '2rem' }}>
           <h3>{ex.title}</h3>
           {ex.description && <p>{ex.description}</p>}
-          <ComponentPreview
-            code={ex.code}
-            minHeight="180px"
-            /* @ts-ignore — async RSC passed via composition pattern */
-            codeSlot={<CodeBlock code={ex.code} />}
-          >
+          <ComponentPreview code={ex.code} minHeight="180px">
             <ComponentLivePreview slug={slug} idx={i} isPattern />
           </ComponentPreview>
         </div>
@@ -90,5 +93,18 @@ export default async function PatternPage({ params }: Props) {
         </>
       )}
     </div>
+  );
+}
+
+function CodeBlockSkeleton() {
+  return (
+    <div
+      style={{
+        height: '52px',
+        borderRadius: 'var(--radius-lg)',
+        background: 'var(--docs-code-bg, #0d1117)',
+        opacity: 0.6,
+      }}
+    />
   );
 }

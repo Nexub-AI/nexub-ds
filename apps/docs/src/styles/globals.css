@@ -23,6 +23,16 @@
 /* ── Base resets ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Tailwind initialises --tw-ring-offset-color to #fff (white), which creates
+   an ugly light halo in dark mode. Override globally with the design-system
+   token so the ring gap always matches the page background. */
+* { --tw-ring-offset-color: var(--color-ring-offset, #fff); }
+
+/* Field input focus: the component-level Tailwind classes shift the border
+   to the ring color and apply a semi-transparent ring halo on focus, so no
+   global override is required here. One 1 px colored border + one soft
+   2 px glow = a single clean focus indicator with no double-ring artifact. */
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -70,3 +80,9 @@ body {
 
 /* ── Link base ────────────────────────────────────────────────────────────── */
 a { color: inherit; }
+
+/* ── Skeleton shimmer animation (loading.tsx + LivePreviewWrapper) ─────────── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

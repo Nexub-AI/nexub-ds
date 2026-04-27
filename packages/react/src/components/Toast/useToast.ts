@@ -15,16 +15,28 @@ export interface ToastItem {
 
 type Listener = (items: ToastItem[]) => void;
 
-// Store state on globalThis so it survives HMR in development.
+// Store state so it survives HMR in development.
+// On the CLIENT we attach to globalThis so that multiple mounted <Toaster>
+// instances share the same queue (cross-component communication).
+// On the SERVER each module evaluation gets a fresh local object — this
+// prevents toast state from leaking across concurrent SSR requests, which
+// share the same Node.js process and therefore the same globalThis.
 type ToastGlobal = {
   __nexub_toast_items: ToastItem[];
   __nexub_toast_listeners: Set<Listener>;
   __nexub_toast_counter: number;
 };
-const g = globalThis as typeof globalThis & ToastGlobal;
-g.__nexub_toast_items ??= [];
-g.__nexub_toast_listeners ??= new Set();
-g.__nexub_toast_counter ??= 0;
+
+const g: ToastGlobal =
+  typeof window !== 'undefined'
+    ? (() => {
+        const _g = globalThis as typeof globalThis & ToastGlobal;
+        _g.__nexub_toast_items ??= [];
+        _g.__nexub_toast_listeners ??= new Set();
+        _g.__nexub_toast_counter ??= 0;
+        return _g;
+      })()
+    : { __nexub_toast_items: [], __nexub_toast_listeners: new Set(), __nexub_toast_counter: 0 };
 
 function notify() {
   g.__nexub_toast_listeners.forEach((l) => l([...g.__nexub_toast_items]));

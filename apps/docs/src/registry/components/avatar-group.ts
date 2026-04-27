@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'avatar-group',
-    title: 'AvatarGroup',
+    title: 'Avatar Group',
     description: 'Stacked group of avatars with overflow count.',
     category: 'Avatar',
     package: '@nexub/react',

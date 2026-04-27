@@ -1,26 +1,35 @@
 name: Release
 
-# Runs on every push to main.
-# changesets/action will either:
-#   (a) open/update a "Version Packages" PR, or
-#   (b) when that PR is merged, publish to npm.
-# After a successful publish we build + deploy the docs to Vercel production.
+# Triggered on every push to production.
+#
+# Two-phase behaviour via changesets/action:
+#   Phase A — no pending changesets: nothing to publish, just deploys docs.
+#   Phase B — pending changesets exist:
+#     1. Opens/updates a "Version Packages" PR against production.
+#     2. When THAT PR is merged → publishes all @nexub/* packages to npm.
+#     3. Deploys docs to Cloudflare Pages production.
+#
+# Flow: development → staging → PR → production (this workflow)
 
 on:
   push:
-    branches: [main]
+    branches: [production]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Release
+    name: Publish to npm & deploy docs
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # changesets needs to push version commits
+      pull-requests: write  # changesets opens the Version Packages PR
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # changesets needs full history to detect changes
 
       - uses: pnpm/action-setup@v4
         with:
@@ -28,52 +37,53 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      # Create Version PR or publish packages to npm
-      - name: Create Release PR or Publish
+      # Build packages in dependency order (required before publish)
+      - name: Build @nexub/tokens
+        run: pnpm --filter @nexub/tokens build
+
+      - name: Build @nexub/icons
+        run: pnpm --filter @nexub/icons build
+
+      - name: Build @nexub/react
+        run: pnpm --filter @nexub/react build
+
+      - name: Build @nexub/patterns
+        run: pnpm --filter @nexub/patterns build
+
+      # changesets/action:
+      #   - If .changeset/*.md files exist → opens/updates "Version Packages" PR
+      #   - If already versioned (PR was merged) → runs `pnpm release` to publish
+      - name: Create Release PR or Publish to npm
         id: changesets
         uses: changesets/action@v1
         with:
           publish: pnpm release
-          commit: "chore: version packages"
-          title: "chore: version packages"
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Only deploy docs to production when packages were actually published
-      # (not when a Version PR was created/updated)
-      - name: Build docs for production
-        if: steps.changesets.outputs.published == 'true'
-        run: pnpm turbo build --filter='@nexub/docs'
+      # Build docs static export (always, not just on publish)
+      # We deploy on every production push so the site always matches the code.
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
 
-      - name: Pull Vercel production environment
-        if: steps.changesets.outputs.published == 'true'
-        run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Build Vercel output
-        if: steps.changesets.outputs.published == 'true'
-        run: npx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
-      - name: Deploy docs to Vercel production
-        if: steps.changesets.outputs.published == 'true'
-        run: |
-          URL=$(npx vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
-          echo "Production docs deployed to: $URL"
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Deploy to Cloudflare Pages production.
+      # The production alias maps to your custom domain (e.g. docs.nexub.com).
+      - name: Deploy to Cloudflare Pages (production)
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: nexub-ds-docs
+          directory: apps/docs/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: production

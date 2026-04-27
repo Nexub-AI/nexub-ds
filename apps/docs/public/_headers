@@ -1,0 +1,13 @@
+# Cloudflare Pages headers
+# Equivalent to the headers() function in next.config.mjs (which is ignored in static export).
+
+# Immutable cache for all hashed Next.js static assets
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Short cache + security headers for all HTML pages
+/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=600
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin

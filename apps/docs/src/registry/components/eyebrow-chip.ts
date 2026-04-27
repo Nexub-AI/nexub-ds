@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'eyebrow-chip',
-    title: 'EyebrowChip',
+    title: 'Eyebrow Chip',
     description: 'A compact eyebrow label, typically used above headings.',
     category: 'Labels & Badges',
     package: '@nexub/react',

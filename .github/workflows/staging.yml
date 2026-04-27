@@ -1,25 +1,23 @@
 name: Staging Deploy
 
-# Runs on every push to the development branch.
-# Builds all packages + the docs site, then deploys to a Vercel
-# preview/staging environment.  The resulting URL is posted back to the
-# commit as a status check so you can click straight through to review.
+# Triggered on every push to the staging branch.
+# Builds all packages + docs (static export) then deploys to Cloudflare Pages
+# staging environment. Preview URL: staging.nexub-ds-docs.pages.dev
+#
+# Flow: development → PR → staging (this workflow) → PR → production
 
 on:
   push:
-    branches: [development]
+    branches: [staging]
 
 concurrency:
-  group: staging-${{ github.ref }}
-  cancel-in-progress: true
+  group: staging-deploy
+  cancel-in-progress: true  # only the latest push to staging matters
 
 jobs:
-  staging:
-    name: Build & deploy to staging
+  deploy-staging:
+    name: Build & deploy to Cloudflare Pages (staging)
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: ${{ steps.deploy.outputs.url }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,43 +28,38 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      # Build all library packages first (docs depends on them)
-      - name: Build packages
-        run: pnpm turbo build --filter='./packages/*'
+      # Build packages in dependency order
+      - name: Build @nexub/tokens
+        run: pnpm --filter @nexub/tokens build
 
-      # Build the docs Next.js app
-      - name: Build docs
-        run: pnpm turbo build --filter='@nexub/docs'
+      - name: Build @nexub/icons
+        run: pnpm --filter @nexub/icons build
 
-      # Pull Vercel project settings (creates .vercel/project.json)
-      - name: Pull Vercel environment
-        run: npx vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Build @nexub/react
+        run: pnpm --filter @nexub/react build
 
-      # Build with Vercel's build system (uses the .next output we already have)
-      - name: Build Vercel output
-        run: npx vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Build @nexub/patterns
+        run: pnpm --filter @nexub/patterns build
 
-      # Deploy to preview (staging) — captures the URL for the environment link above
-      - name: Deploy to Vercel staging
-        id: deploy
-        run: |
-          URL=$(npx vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1 | tail -1)
-          echo "url=$URL" >> $GITHUB_OUTPUT
-          echo "Deployed to: $URL"
-        working-directory: apps/docs
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Static export → apps/docs/out/
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      # Deploy to Cloudflare Pages under the "staging" branch alias.
+      # This creates a preview URL: staging.nexub-ds-docs.pages.dev
+      # Does NOT affect the production URL.
+      - name: Deploy to Cloudflare Pages (staging)
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: nexub-ds-docs
+          directory: apps/docs/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: staging

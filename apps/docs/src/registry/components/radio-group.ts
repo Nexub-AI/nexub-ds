@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'radio-group',
-    title: 'RadioGroup',
+    title: 'Radio Group',
     description: 'Group of mutually exclusive radio inputs.',
     category: 'Form Controls',
     package: '@nexub/react',

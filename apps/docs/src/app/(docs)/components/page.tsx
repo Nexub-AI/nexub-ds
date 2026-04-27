@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { componentEntries } from '@/registry/index';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Components' };
 
 const categories = Array.from(new Set(componentEntries.map((e) => e.meta.category)));

@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'text-gradient',
-    title: 'TextGradient',
+    title: 'Text Gradient',
     description: 'Renders text with a brand gradient fill.',
     category: 'Inline Primitives',
     package: '@nexub/react',

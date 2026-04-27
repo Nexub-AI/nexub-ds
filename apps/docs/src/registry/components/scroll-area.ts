@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'scroll-area',
-    title: 'ScrollArea',
+    title: 'Scroll Area',
     description: 'Scrollable container with custom styled scrollbars.',
     category: 'Disclosure',
     package: '@nexub/react',

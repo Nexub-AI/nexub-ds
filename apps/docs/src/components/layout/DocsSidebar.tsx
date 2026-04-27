@@ -2,14 +2,41 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { navGroups } from '@/registry/index';
 import { ChevronDown } from 'lucide-react';
 import type { NavGroup } from '@/registry/types';
 
+// Collect every href from the nav tree once at module load.
+// Used to prefetch all routes on sidebar mount so that links inside
+// collapsed groups (display:none → invisible to IntersectionObserver)
+// are ready before the user ever expands them.
+const ALL_HREFS: string[] = navGroups.flatMap((g) => [
+  ...g.items.map((i) => i.href),
+  ...(g.children ?? []).flatMap((sub) => sub.items.map((i) => i.href)),
+]);
+
 /* ─── Sub-group (category inside Components) ─────────────────────────────── */
 
-function SubGroup({
+// Custom memo comparator: re-render this SubGroup ONLY when the href that
+// is active inside it changes. Every navigation dispatches a new `pathname`
+// string, so default shallow comparison would re-render all 17 SubGroups.
+// With this comparator, only the 1–2 groups whose active link changed fire.
+//
+// Comparator logic:
+//   prevActive = the href in this group that was active before navigation
+//   nextActive = the href in this group that is active after navigation
+//   If prevActive === nextActive → nothing in this group changed → skip.
+function subGroupEqual(
+  prev: { group: NavGroup; pathname: string },
+  next: { group: NavGroup; pathname: string },
+) {
+  const prevActive = prev.group.items.find((i) => i.href === prev.pathname)?.href;
+  const nextActive = next.group.items.find((i) => i.href === next.pathname)?.href;
+  return prevActive === nextActive;
+}
+
+const SubGroup = React.memo(function SubGroup({
   group,
   pathname,
 }: {
@@ -103,11 +130,30 @@ function SubGroup({
       </ul>
     </div>
   );
-}
+}, subGroupEqual);
 
 /* ─── Top-level group ─────────────────────────────────────────────────────── */
 
-function TopGroup({
+// Custom memo comparator for TopGroup: skip re-render unless the active
+// state *within this specific top-level group* actually changed.
+// Covers both flat items and nested SubGroup items.
+function topGroupEqual(
+  prev: { group: NavGroup; pathname: string; defaultOpen: boolean },
+  next: { group: NavGroup; pathname: string; defaultOpen: boolean },
+) {
+  if (prev.defaultOpen !== next.defaultOpen) return false;
+
+  // Which href in this top-level group was active before / after?
+  const findActive = (g: NavGroup, path: string) =>
+    g.items.find((i) => i.href === path)?.href ??
+    (g.children ?? [])
+      .flatMap((sub) => sub.items)
+      .find((i) => i.href === path)?.href;
+
+  return findActive(prev.group, prev.pathname) === findActive(next.group, next.pathname);
+}
+
+const TopGroup = React.memo(function TopGroup({
   group,
   pathname,
   defaultOpen,
@@ -210,12 +256,38 @@ function TopGroup({
       </div>
     </div>
   );
-}
+}, topGroupEqual);
 
 /* ─── Sidebar ─────────────────────────────────────────────────────────────── */
 
 export function DocsSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Prefetch every sidebar route once after the sidebar mounts.
+  // Links inside collapsed groups (display:none) are not visible to the
+  // IntersectionObserver that Next.js uses for automatic prefetching, so
+  // they would never be cached until clicked. This runs during idle time
+  // so it doesn't compete with the initial page render.
+  React.useEffect(() => {
+    if (typeof requestIdleCallback !== 'undefined') {
+      const id = requestIdleCallback(() => {
+        for (const href of ALL_HREFS) {
+          router.prefetch(href);
+        }
+      });
+      return () => cancelIdleCallback(id);
+    } else {
+      // Safari fallback
+      const t = setTimeout(() => {
+        for (const href of ALL_HREFS) {
+          router.prefetch(href);
+        }
+      }, 0);
+      return () => clearTimeout(t);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // run once on mount — ALL_HREFS is stable (module-level constant)
 
   return (
     <aside

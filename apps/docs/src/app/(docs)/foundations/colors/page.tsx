@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { ColorSwatch } from '@/components/docs/ColorSwatch';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Colors' };
 
 const brandShades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -32,7 +34,6 @@ export default function ColorsPage() {
             key={shade}
             name={`primary-${shade}`}
             value={`var(--color-brand-primary-${shade})`}
-            textColor={shade < 500 ? 'var(--color-text-primary)' : 'var(--color-text-inverse)'}
           />
         ))}
       </div>
@@ -45,7 +46,6 @@ export default function ColorsPage() {
               key={t.name}
               name={t.name.replace('--color-semantic-', '')}
               value={t.value}
-              textColor={t.name.endsWith('-bg') ? 'var(--color-text-primary)' : 'var(--color-text-inverse)'}
             />
         ))}
       </div>

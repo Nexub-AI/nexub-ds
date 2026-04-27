@@ -12,7 +12,7 @@ export const cardVariants = cva(
         flat: '',
         surface: 'shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1),0_1px_2px_-1px_rgb(0_0_0/0.1))]',
         interactive:
-          'cursor-pointer shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1))] transition-all duration-200 hover:shadow-[var(--shadow-card-hover,0_4px_12px_0_rgb(0_0_0/0.15))] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+          'cursor-pointer shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1))] transition-all duration-200 hover:shadow-[var(--shadow-card-hover,0_4px_12px_0_rgb(0_0_0/0.15))] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
       },
     },
     defaultVariants: {

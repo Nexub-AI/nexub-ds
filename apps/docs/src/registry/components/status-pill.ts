@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'status-pill',
-    title: 'StatusPill',
+    title: 'Status Pill',
     description: 'A pill indicator for status values like active, pending, error.',
     category: 'Labels & Badges',
     package: '@nexub/react',

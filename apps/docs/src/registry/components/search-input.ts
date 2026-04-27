@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'search-input',
-    title: 'SearchInput',
+    title: 'Search Input',
     description: 'A text input pre-wired with a search icon and a clear button for filtering content.',
     category: 'Form & Input',
     package: '@nexub/react',

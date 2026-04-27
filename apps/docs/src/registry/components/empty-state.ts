@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'empty-state',
-    title: 'EmptyState',
+    title: 'Empty State',
     description: 'Placeholder UI shown when a list or page has no content.',
     category: 'Data Display',
     package: '@nexub/react',
