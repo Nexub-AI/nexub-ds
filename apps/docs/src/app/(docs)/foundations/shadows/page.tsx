@@ -22,7 +22,7 @@ export default function ShadowsPage() {
       <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
       <h1>Shadows</h1>
       <p>
-        Shadow tokens create a consistent elevation system. They're exposed as <code>--shadow-*</code> CSS custom properties
+        Shadow tokens create a consistent elevation system. They&apos;re exposed as <code>--shadow-*</code> CSS custom properties
         and adapt to light/dark mode automatically.
       </p>
 
