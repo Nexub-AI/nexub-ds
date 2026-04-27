@@ -1,9 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { componentEntries, patternEntries } from '@/registry/index';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
+function getVersion(): string {
+  try {
+    const repoRoot = process.env.INIT_CWD ?? path.join(process.cwd(), '../..');
+    const raw = fs.readFileSync(path.join(repoRoot, 'packages/react/package.json'), 'utf-8');
+    return (JSON.parse(raw) as { version: string }).version;
+  } catch {
+    return '0.0.1';
+  }
+}
+
 export default function HomePage() {
+  const version = getVersion();
   return (
     <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -77,7 +90,7 @@ export default function HomePage() {
               display: 'inline-block',
             }}
           />
-          Now in v0.0.1 — {componentEntries.length}+ components, {patternEntries.length} patterns
+          Now in v{version} — {componentEntries.length}+ components, {patternEntries.length} patterns
         </div>
 
         {/* Headline */}
