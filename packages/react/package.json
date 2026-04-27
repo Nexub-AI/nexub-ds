@@ -1,12 +1,30 @@
 {
   "name": "@nexub/react",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/react"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "radix-ui",
+    "tailwind",
+    "design-system",
+    "nexub"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {

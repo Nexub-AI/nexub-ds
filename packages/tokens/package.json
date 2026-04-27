@@ -1,13 +1,31 @@
 {
   "name": "@nexub/tokens",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/tokens"
+  },
+  "keywords": [
+    "design-tokens",
+    "css-variables",
+    "tailwind",
+    "design-system",
+    "nexub"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
-  "sideEffects": ["./dist/css/*.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "./dist/css/*.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/js/index.d.ts",
