@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { navGroups } from '@/registry/index';
 import { ChevronDown } from 'lucide-react';
 import type { NavGroup } from '@/registry/types';
+import { useSidebar } from './SidebarContext';
 
 // Collect every href from the nav tree once at module load.
 // Used to prefetch all routes on sidebar mount so that links inside
@@ -263,6 +264,7 @@ const TopGroup = React.memo(function TopGroup({
 export function DocsSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { isOpen, close } = useSidebar();
 
   // Prefetch every sidebar route once after the sidebar mounts.
   // Links inside collapsed groups (display:none) are not visible to the
@@ -292,16 +294,17 @@ export function DocsSidebar() {
   return (
     <aside
       aria-label="Documentation navigation"
+      className="docs-sidebar"
+      data-open={isOpen ? 'true' : 'false'}
       style={{
-        width: 'var(--docs-sidebar-width)',
-        flexShrink: 0,
-        position: 'sticky',
-        top: 'var(--docs-header-height)',
-        height: 'calc(100vh - var(--docs-header-height))',
         overflowY: 'auto',
         borderRight: '1px solid var(--color-border-default)',
         padding: '1rem 0',
         background: 'var(--color-bg-subtle)',
+      }}
+      // Close sidebar on mobile when any link is clicked (event delegation)
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest('a')) close();
       }}
     >
       {navGroups.map((group, i) => (
@@ -309,7 +312,7 @@ export function DocsSidebar() {
           key={group.title}
           group={group}
           pathname={pathname}
-          defaultOpen={i < 2} // Getting Started + Foundations open by default
+          defaultOpen={i < 2}
         />
       ))}
     </aside>

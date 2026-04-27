@@ -14,7 +14,7 @@ const List = React.forwardRef<HTMLDivElement, RadixTabs.TabsListProps>(
     <RadixTabs.List
       ref={ref}
       className={cn(
-        'inline-flex h-9 items-center justify-start rounded-lg bg-[var(--color-bg-subtle)] p-1 text-[var(--color-text-muted)] gap-0.5',
+        'flex h-9 w-full items-center justify-start overflow-x-auto rounded-lg bg-[var(--color-bg-subtle)] p-1 text-[var(--color-text-muted)] gap-0.5',
         className,
       )}
       {...props}

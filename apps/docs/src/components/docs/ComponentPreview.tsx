@@ -50,6 +50,8 @@ export function ComponentPreview({
             onClick={() => setTab(t)}
             style={{
               padding: '4px 12px',
+              minHeight: '44px',
+              minWidth: '44px',
               fontSize: '0.8rem',
               fontFamily: 'var(--font-family-sans)',
               fontWeight: tab === t ? 600 : 400,
@@ -73,6 +75,7 @@ export function ComponentPreview({
           role="tabpanel"
           id="tabpanel-preview"
           aria-labelledby="tab-preview"
+          className="docs-preview-pane"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -82,6 +85,7 @@ export function ComponentPreview({
             background: 'var(--color-bg-default)',
             backgroundImage: 'radial-gradient(var(--color-border-default) 1px, transparent 1px)',
             backgroundSize: '20px 20px',
+            overflow: 'auto',
           }}
         >
           {children}

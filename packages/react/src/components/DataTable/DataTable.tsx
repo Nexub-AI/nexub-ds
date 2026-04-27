@@ -226,7 +226,7 @@ export function DataTable<TData>({
       </TableRoot>
 
       {pagination && (
-        <div className="flex items-center justify-between text-sm text-[var(--color-text-muted)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--color-text-muted)]">
           <span>
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
@@ -234,14 +234,14 @@ export function DataTable<TData>({
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="rounded border border-[var(--color-border-default)] px-3 py-1 disabled:opacity-50"
+              className="rounded border border-[var(--color-border-default)] px-3 py-2 min-h-[44px] disabled:opacity-50"
             >
               Previous
             </button>
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="rounded border border-[var(--color-border-default)] px-3 py-1 disabled:opacity-50"
+              className="rounded border border-[var(--color-border-default)] px-3 py-2 min-h-[44px] disabled:opacity-50"
             >
               Next
             </button>
