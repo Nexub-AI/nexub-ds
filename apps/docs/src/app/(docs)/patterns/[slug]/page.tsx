@@ -69,7 +69,7 @@ export default async function PatternPage({ params }: Props) {
 
       <h2>Import</h2>
       <Suspense fallback={<CodeBlockSkeleton />}>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error — async Server Component */}
         <CodeBlock code={`import { ${meta.title} } from '@nexub/patterns';`} />
       </Suspense>
 

@@ -88,7 +88,7 @@ export default async function ComponentPage({ params }: Props) {
       {/* Import */}
       <h2>Import</h2>
       <Suspense fallback={<CodeBlockSkeleton />}>
-        {/* @ts-ignore */}
+        {/* @ts-expect-error — async Server Component */}
         <CodeBlock code={`import { ${meta.title} } from '${meta.package}';`} />
       </Suspense>
 

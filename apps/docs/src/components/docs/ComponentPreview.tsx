@@ -8,7 +8,6 @@ interface ComponentPreviewProps {
   /** Pre-rendered server-side highlighted code block (React element).
    *  When provided, shown in the Code tab instead of raw code. */
   codeSlot?: React.ReactNode;
-  lang?: string;
   minHeight?: string;
 }
 
@@ -16,7 +15,6 @@ export function ComponentPreview({
   children,
   code,
   codeSlot,
-  lang: _lang = 'tsx',
   minHeight = '140px',
 }: ComponentPreviewProps) {
   const [tab, setTab] = React.useState<'preview' | 'code'>('preview');
