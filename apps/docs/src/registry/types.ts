@@ -19,6 +19,7 @@ export interface ComponentMeta {
   category: string;
   package: '@nexub/react' | '@nexub/patterns';
   status?: 'stable' | 'beta' | 'deprecated';
+  addedIn?: string; // semver e.g. '0.0.1' — shown as "Added in v0.0.1" badge
 }
 
 export interface ComponentEntry {

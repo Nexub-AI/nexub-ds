@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Feedback',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'tone', type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'", required: false, description: 'Semantic colour tone of the banner.' },

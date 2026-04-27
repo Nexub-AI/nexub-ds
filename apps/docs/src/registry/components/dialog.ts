@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Overlays',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'open', type: 'boolean', required: false, description: 'Controlled open state.' },

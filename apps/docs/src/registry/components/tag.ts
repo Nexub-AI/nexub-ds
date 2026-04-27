@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Labels & Badges',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'variant', type: "'solid' | 'soft' | 'outline'", default: "'soft'", required: false, description: 'Visual style of the tag.' },

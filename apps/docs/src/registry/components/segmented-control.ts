@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Interactive',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", required: false, description: 'Size of the segmented control.' },

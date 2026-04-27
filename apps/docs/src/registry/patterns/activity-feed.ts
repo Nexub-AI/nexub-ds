@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data',
     package: '@nexub/patterns',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'title', type: 'React.ReactNode', required: true, description: 'Activity event title.' },

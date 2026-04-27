@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", required: false, description: 'Control height and font size.' },

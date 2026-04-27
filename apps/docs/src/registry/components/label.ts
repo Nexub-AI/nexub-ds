@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'htmlFor', type: 'string', required: false, description: 'Associates the label with a form control by its id.' },

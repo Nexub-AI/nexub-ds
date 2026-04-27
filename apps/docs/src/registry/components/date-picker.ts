@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'value', type: 'Date | undefined', required: false, description: 'Controlled selected date value.' },

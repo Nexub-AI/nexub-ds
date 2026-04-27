@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Layout',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'cols', type: 'number | string', required: false, description: 'Number of columns or a custom grid-template-columns value.' },

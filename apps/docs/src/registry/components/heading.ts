@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Typography',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '2', required: false, description: 'The semantic HTML heading level rendered.' },

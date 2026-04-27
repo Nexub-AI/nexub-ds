@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Labels & Badges',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'selected', type: 'boolean', required: false, description: 'Controlled selected state of the chip.' },

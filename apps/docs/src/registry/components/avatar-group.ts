@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Avatar',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'max', type: 'number', default: '4', required: false, description: 'Maximum number of avatars shown before an overflow count is rendered.' },

@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Loading States',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'shape', type: "'line' | 'rect' | 'circle'", default: "'line'", required: false, description: 'Shape of the skeleton placeholder.' },

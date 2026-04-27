@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Feedback',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Toaster position', type: "'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center'", default: "'bottom-right'", required: false, description: 'Where toasts appear on screen.' },

@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Inline Primitives',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'from', type: 'string', required: false, description: 'Starting color of the gradient (CSS color value or token).' },

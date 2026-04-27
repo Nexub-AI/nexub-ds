@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form Controls',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'value', type: 'string', required: false, description: 'Controlled selected value.' },

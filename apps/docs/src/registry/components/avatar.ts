@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Avatar',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'src', type: 'string', required: false, description: 'URL of the profile image.' },

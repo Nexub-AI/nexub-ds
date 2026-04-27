@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Marketing',
     package: '@nexub/patterns',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'name', type: 'string', required: true, description: 'Plan name (e.g. "Pro").' },

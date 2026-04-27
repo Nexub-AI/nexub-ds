@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Actions',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", required: false, description: 'Lays out child buttons horizontally or vertically.' },

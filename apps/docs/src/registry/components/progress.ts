@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Loading States',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'value', type: 'number', required: false, description: 'Current progress value between 0 and max.' },
