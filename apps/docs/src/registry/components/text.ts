@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Typography',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'size', type: "'body-lg' | 'body' | 'body-sm' | 'caption' | 'label'", default: "'body'", required: false, description: 'Controls the font size and line height.' },

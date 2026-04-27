@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Layout',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'variant', type: "'flat' | 'surface' | 'interactive'", default: "'flat'", required: false, description: 'Visual style of the card surface.' },

@@ -56,7 +56,7 @@ const Action = React.forwardRef<HTMLButtonElement, RadixToast.ToastActionProps>(
     <RadixToast.Action
       ref={ref}
       className={cn(
-        'inline-flex h-8 items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors hover:bg-[var(--color-bg-subtle)]',
+        'inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors hover:bg-[var(--color-bg-subtle)]',
         className,
       )}
       {...props}

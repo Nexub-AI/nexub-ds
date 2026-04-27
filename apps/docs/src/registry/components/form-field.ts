@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'name', type: 'string', required: true, description: 'Name attribute forwarded to the underlying input.' },

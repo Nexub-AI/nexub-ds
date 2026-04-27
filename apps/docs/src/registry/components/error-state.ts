@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data Display',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'title', type: 'string', required: true, description: 'Primary error heading shown to the user.' },

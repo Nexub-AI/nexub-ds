@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Auth',
     package: '@nexub/patterns',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'title', type: 'string', required: true, description: 'Card heading (e.g. "Sign in to Nexub").' },

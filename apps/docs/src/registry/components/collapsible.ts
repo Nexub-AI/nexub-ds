@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Disclosure',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Collapsible.Root open', type: 'boolean', required: false, description: 'Controlled open state.' },

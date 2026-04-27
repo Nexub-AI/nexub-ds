@@ -1,13 +1,36 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import { componentEntries, patternEntries } from '@/registry/index';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
+function getVersion(): string {
+  // process.cwd() is the repo root when launched via `pnpm --filter` from the monorepo root,
+  // but is apps/docs when launched directly. Try both candidates.
+  const candidates = [
+    path.join(process.cwd(), 'packages/react/package.json'),         // repo root launch
+    path.join(process.cwd(), '../../packages/react/package.json'),   // apps/docs launch
+    process.env.INIT_CWD ? path.join(process.env.INIT_CWD, 'packages/react/package.json') : '',
+  ].filter(Boolean);
+
+  for (const pkgPath of candidates) {
+    try {
+      if (fs.existsSync(pkgPath)) {
+        return (JSON.parse(fs.readFileSync(pkgPath, 'utf-8')) as { version: string }).version;
+      }
+    } catch { /* try next */ }
+  }
+  return '0.0.2';
+}
+
 export default function HomePage() {
+  const version = getVersion();
   return (
     <main>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
+        className="landing-hero"
         style={{
           minHeight: '100vh',
           display: 'flex',
@@ -44,10 +67,10 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Link href="/getting-started" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
-            <Link href="/components" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
-            <Link href="/patterns" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
+          <div className="landing-nav-links">
+            <Link href="/getting-started" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
+            <Link href="/components" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
+            <Link href="/patterns" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
             <ThemeSwitcher />
           </div>
         </nav>
@@ -77,7 +100,7 @@ export default function HomePage() {
               display: 'inline-block',
             }}
           />
-          Now in v0.0.1 — {componentEntries.length}+ components, {patternEntries.length} patterns
+          Now in v{version} — {componentEntries.length}+ components, {patternEntries.length} patterns
         </div>
 
         {/* Headline */}
@@ -148,7 +171,7 @@ export default function HomePage() {
         </div>
 
         {/* Stats strip */}
-        <div style={{ display: 'flex', gap: '48px', marginTop: '5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="landing-stats" style={{ display: 'flex', gap: '48px', marginTop: '5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           {[
             { num: `${componentEntries.length}+`, label: 'Components' },
             { num: `${patternEntries.length}`, label: 'Patterns' },
@@ -162,6 +185,40 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ── Footer ───────────────────────────────────────────────────────── */}
+      <footer
+        style={{
+          borderTop: '1px solid var(--color-border-default)',
+          padding: '1.5rem 2rem',
+          textAlign: 'center',
+          color: 'var(--color-text-muted)',
+          fontSize: '0.78rem',
+          lineHeight: 1.6,
+        }}
+      >
+        Built on{' '}
+        <span style={{ color: 'var(--color-brand-primary-500)', fontWeight: 600 }}>
+          Nexub Design System
+        </span>
+        {' '}·{' '}
+        © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
+        {' '}·{' '}
+        Crafted by{' '}
+        <a
+          href="https://github.com/sasinex"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            color: 'var(--color-brand-primary-500)',
+            textDecoration: 'none',
+            fontWeight: 500,
+          }}
+        >
+          Sasidharan
+        </a>
+        {' '}— shipped with vibe coding energy ⚡
+      </footer>
     </main>
   );
 }

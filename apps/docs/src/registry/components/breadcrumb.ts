@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Navigation',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Breadcrumb.Root aria-label', type: 'string', default: "'breadcrumb'", required: false, description: 'Accessible label for the nav landmark.' },

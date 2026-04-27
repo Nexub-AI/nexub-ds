@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Layout',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'direction', type: "'row' | 'column' | 'row-reverse' | 'column-reverse'", required: false, description: 'Sets the flex-direction CSS property.' },

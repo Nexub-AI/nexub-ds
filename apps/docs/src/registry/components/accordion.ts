@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Disclosure',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Accordion.Root type', type: "'single' | 'multiple'", default: "'single'", required: false, description: 'Whether one or multiple items can be open at the same time.' },

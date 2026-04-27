@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Motion',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'in', type: 'boolean', required: true, description: 'When true, slides content in. When false, slides it out.' },

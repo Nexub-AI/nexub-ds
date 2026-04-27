@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data Display',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'columns', type: 'ColumnDef<TData>[]', required: true, description: 'TanStack Table column definitions. Use the createColumnHelper() utility for type-safe definitions.' },

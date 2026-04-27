@@ -43,9 +43,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
       <RadixDialog.Content
         ref={ref}
         className={cn(
-          'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-full -translate-x-1/2 -translate-y-1/2',
+          'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2',
           'rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-xl',
-          'p-6 focus:outline-none',
+          'max-h-[90vh] overflow-y-auto p-6 focus:outline-none',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
           'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
@@ -101,7 +101,7 @@ Header.displayName = 'Dialog.Header';
 const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function DialogFooter({ className, ...props }, ref) {
     return (
-      <div ref={ref} className={cn('mt-6 flex justify-end gap-2', className)} {...props} />
+      <div ref={ref} className={cn('mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)} {...props} />
     );
   },
 );

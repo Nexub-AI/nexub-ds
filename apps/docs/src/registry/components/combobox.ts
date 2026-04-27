@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form Controls',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Combobox.Root', type: 'compound', required: false, description: 'Root cmdk command container.' },

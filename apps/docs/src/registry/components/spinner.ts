@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Feedback',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", required: false, description: 'Diameter of the spinner.' },

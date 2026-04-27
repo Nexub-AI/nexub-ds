@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'placeholder', type: 'string', required: false, description: 'Placeholder text shown when the field is empty.' },

@@ -49,9 +49,9 @@ export default async function ComponentPage({ params }: Props) {
       </p>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '0.75rem' }}>
+      <div className="docs-page-header">
         <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexShrink: 0 }}>
+        <div className="docs-page-header-badges">
           {meta.status === 'stable' && (
             <span
               style={{
@@ -81,6 +81,22 @@ export default async function ComponentPage({ params }: Props) {
           >
             {meta.package}
           </span>
+          {meta.addedIn && (
+            <span
+              style={{
+                padding: '2px 8px',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--color-bg-muted)',
+                color: 'var(--color-text-muted)',
+                fontSize: '0.7rem',
+                fontWeight: 600,
+                border: '1px solid var(--color-border-default)',
+                fontFamily: 'var(--font-family-mono)',
+              }}
+            >
+              Added in v{meta.addedIn}
+            </span>
+          )}
         </div>
       </div>
       <p>{meta.description}</p>

@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Labels & Badges',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'label', type: 'string', required: true, description: 'Text displayed inside the pill.' },

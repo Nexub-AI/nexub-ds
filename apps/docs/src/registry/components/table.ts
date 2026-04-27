@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Data Display',
     package: '@nexub/react',
     status: 'stable',
+    addedIn: '0.0.1',
   },
   props: [
     { name: 'Table.Root striped', type: 'boolean', default: 'false', required: false, description: 'Applies alternating row background colours.' },
