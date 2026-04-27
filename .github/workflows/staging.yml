@@ -1,0 +1,68 @@
+name: Staging Deploy
+
+# Triggered on every push to the staging branch.
+# Builds all packages + docs (static export) then deploys to Cloudflare Pages
+# staging environment. Preview URL: staging.nexub-ds-docs.pages.dev
+#
+# Flow: development → PR → staging (this workflow) → PR → production
+
+on:
+  push:
+    branches: [staging]
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: true  # only the latest push to staging matters
+
+jobs:
+  deploy-staging:
+    name: Build & deploy to Cloudflare Pages (staging)
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      deployments: write  # cloudflare/pages-action needs this to create GitHub Deployments
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        # version is read from packageManager field in package.json (pnpm@9.12.0)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build packages in dependency order
+      - name: Build @nexub/tokens
+        run: pnpm --filter @nexub/tokens build
+
+      - name: Build @nexub/icons
+        run: pnpm --filter @nexub/icons build
+
+      - name: Build @nexub/react
+        run: pnpm --filter @nexub/react build
+
+      - name: Build @nexub/patterns
+        run: pnpm --filter @nexub/patterns build
+
+      # Static export → apps/docs/out/
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      # Deploy to Cloudflare Pages under the "staging" branch alias.
+      # This creates a preview URL: staging.nexub-ds-docs.pages.dev
+      # Does NOT affect the production URL.
+      - name: Deploy to Cloudflare Pages (staging)
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: nexub-ds-docs
+          directory: apps/docs/out
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: staging

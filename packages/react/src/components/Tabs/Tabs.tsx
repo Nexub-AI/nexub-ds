@@ -29,7 +29,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixTabs.TabsTriggerProps>(
       ref={ref}
       className={cn(
         'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
         'disabled:pointer-events-none disabled:opacity-50',
         'data-[state=active]:bg-[var(--color-bg-default)] data-[state=active]:text-[var(--color-text-primary)] data-[state=active]:shadow-sm',
         className,
@@ -45,7 +45,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixTabs.TabsContentProps>(
     <RadixTabs.Content
       ref={ref}
       className={cn(
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
         className,
       )}
       {...props}

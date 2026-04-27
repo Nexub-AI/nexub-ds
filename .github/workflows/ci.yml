@@ -1,35 +1,62 @@
 name: CI
 
+# Runs on direct pushes to development and on PRs targeting staging/production.
+# staging/production are excluded from push triggers — their own deploy workflows
+# already build everything post-merge, so a second CI run would be redundant.
 on:
   push:
-    branches: [main]
+    branches: [development]
   pull_request:
-    branches: [main]
+    branches: [staging, production]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   ci:
-    name: Build, typecheck, lint, test
+    name: Build, typecheck & lint
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
+        # version is read from packageManager field in package.json (pnpm@9.12.0)
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .nvmrc
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - run: pnpm build
+      # Build packages in dependency order to avoid DTS resolution errors.
+      # Turbo parallel build can start patterns before icons DTS finishes.
+      - name: Build @nexub/tokens
+        run: pnpm --filter @nexub/tokens build
 
-      - run: pnpm typecheck
+      - name: Build @nexub/icons
+        run: pnpm --filter @nexub/icons build
 
-      - run: pnpm lint
-        continue-on-error: true
+      - name: Build @nexub/react
+        run: pnpm --filter @nexub/react build
 
-      - run: pnpm test
-        continue-on-error: true
+      - name: Build @nexub/patterns
+        run: pnpm --filter @nexub/patterns build
+
+      # Docs static export — verifies all pages pre-render without errors.
+      # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      - name: Typecheck all packages
+        run: pnpm turbo typecheck
+
+      - name: Lint
+        run: pnpm turbo lint
+
+      - name: Test
+        run: pnpm turbo test
+        continue-on-error: true  # tests still being written

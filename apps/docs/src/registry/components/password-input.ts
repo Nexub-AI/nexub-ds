@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'password-input',
-    title: 'PasswordInput',
+    title: 'Password Input',
     description: 'A password field with a built-in toggle to reveal or hide the entered value.',
     category: 'Form & Input',
     package: '@nexub/react',

@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'alert-dialog',
-    title: 'AlertDialog',
+    title: 'Alert Dialog',
     description: 'Confirmation dialog that requires an explicit user action before proceeding.',
     category: 'Overlays',
     package: '@nexub/react',

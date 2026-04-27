@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Typography' };
 
 const typeScale = [
@@ -24,7 +26,7 @@ export default function TypographyPage() {
       <h1>Typography</h1>
       <p>
         Nexub DS uses <strong>Geist</strong> as the primary typeface and <strong>Geist Mono</strong> for code.
-        Both are loaded via the token system's CSS custom properties.
+        Both are loaded via the token system&apos;s CSS custom properties.
       </p>
 
       <h2>Type Scale</h2>

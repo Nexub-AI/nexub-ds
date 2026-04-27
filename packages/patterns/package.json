@@ -1,12 +1,28 @@
 {
   "name": "@nexub/patterns",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "description": "Composite UI patterns for Nexub Design System — pre-built, production-ready layouts and widgets built on @nexub/react.",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/patterns"
+  },
+  "keywords": [
+    "react",
+    "patterns",
+    "ui",
+    "design-system",
+    "nexub"
+  ],
   "publishConfig": {
     "access": "public"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {
@@ -33,15 +49,22 @@
     "@nexub/tokens": "*"
   },
   "peerDependenciesMeta": {
-    "@nexub/icons": { "optional": true },
-    "@nexub/tokens": { "optional": true }
+    "@nexub/icons": {
+      "optional": true
+    },
+    "@nexub/tokens": {
+      "optional": true
+    }
   },
   "devDependencies": {
+    "@nexub/icons": "workspace:*",
+    "@nexub/react": "workspace:*",
+    "@nexub/tokens": "workspace:*",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "jsdom": "^25.0.1",
     "tsup": "^8.3.5",
     "typescript": "^5.6.3",

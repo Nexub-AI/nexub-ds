@@ -6,17 +6,28 @@ interface CodeBlockProps {
   lang?: string;
 }
 
-// Module-level singleton — created once per server process, reused for every
-// subsequent CodeBlock render. Eliminates the per-render grammar + wasm reload.
-let _highlighter: Promise<Highlighter> | null = null;
+// Persist the Shiki instance on globalThis so it survives Next.js hot-module
+// replacement in dev mode. Without this, every file save re-imports the module,
+// resets the module-level variable, and forces Shiki to reload its WASM + grammars
+// (~800 ms cold start). globalThis persists for the lifetime of the Node process.
+declare global {
+  // eslint-disable-next-line no-var
+  var __shikiHighlighter: Promise<Highlighter> | undefined;
+}
+
 function getHighlighter(): Promise<Highlighter> {
-  if (!_highlighter) {
-    _highlighter = createHighlighter({
+  if (!globalThis.__shikiHighlighter) {
+    globalThis.__shikiHighlighter = createHighlighter({
       themes: ['github-dark'],
       langs: ['tsx', 'typescript', 'javascript', 'html', 'bash', 'css', 'json'],
+    }).catch((err) => {
+      // Clear the cached rejected promise so the next render retries instead
+      // of returning the same rejection forever for the process lifetime.
+      globalThis.__shikiHighlighter = undefined;
+      throw err;
     });
   }
-  return _highlighter;
+  return globalThis.__shikiHighlighter;
 }
 
 export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {

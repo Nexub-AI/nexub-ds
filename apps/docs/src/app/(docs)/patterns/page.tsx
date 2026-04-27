@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { patternEntries } from '@/registry/index';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Patterns' };
 
 const categories = Array.from(new Set(patternEntries.map((e) => e.meta.category)));

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-static';
+
 export const metadata: Metadata = { title: 'Motion' };
 
 const durations = [
@@ -26,7 +28,7 @@ export default function MotionPage() {
       <h1>Motion</h1>
       <p>
         Motion tokens define the duration and easing curves used across all transition animations.
-        They're exposed as <code>--duration-*</code> and <code>--ease-*</code> CSS custom properties,
+        They&apos;re exposed as <code>--duration-*</code> and <code>--ease-*</code> CSS custom properties,
         and used by the <code>Fade</code>, <code>Slide</code>, <code>Scale</code>, and <code>Collapse</code> motion components.
       </p>
 

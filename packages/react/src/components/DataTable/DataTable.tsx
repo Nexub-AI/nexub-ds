@@ -129,14 +129,22 @@ export function DataTable<TData>({
     pageSize: pagination?.pageSize ?? 20,
   });
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
+  // Memoize the state bag so a parent re-render with stable sort/selection/pagination
+  // values doesn't hand a new object reference to TanStack on every render.
+  const tableState = React.useMemo(
+    () => ({
       sorting: enableSorting ? sorting : undefined,
       rowSelection: enableRowSelection ? rowSelection : undefined,
       pagination: pagination ? paginationState : undefined,
-    },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [enableSorting, sorting, enableRowSelection, rowSelection, pagination, paginationState],
+  );
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: tableState,
     onSortingChange: enableSorting ? setSorting : undefined,
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onPaginationChange: pagination ? setPaginationState : undefined,

@@ -3,7 +3,7 @@ import type { ComponentEntry } from '../types';
 const entry: ComponentEntry = {
   meta: {
     slug: 'filter-chip',
-    title: 'FilterChip',
+    title: 'Filter Chip',
     description: 'Interactive chip for filtering, supports selected/unselected state.',
     category: 'Labels & Badges',
     package: '@nexub/react',

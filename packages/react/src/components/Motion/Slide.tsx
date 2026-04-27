@@ -72,6 +72,7 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
       style={{
         opacity: isEntered ? 1 : 0,
         transform: isEntered ? dt.to : fromTransform,
+        willChange: 'opacity, transform',
         ...transitionStyle,
         ...style,
       }}

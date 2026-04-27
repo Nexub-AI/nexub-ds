@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn.js';
 export const linkVariants = cva(
   [
     'inline-flex items-center gap-1 transition-colors',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 rounded-sm',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] rounded-sm',
   ],
   {
     variants: {

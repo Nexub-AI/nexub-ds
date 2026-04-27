@@ -54,19 +54,15 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
       [onFilesChange],
     );
 
+    // Memoize the context value so that consumers only re-render when one of
+    // the tracked values actually changes — not on every parent render cycle.
+    const contextValue = React.useMemo(
+      () => ({ accept, maxFiles, onFilesChange, files, addFiles, removeFile, isDragging, setIsDragging }),
+      [accept, maxFiles, onFilesChange, files, addFiles, removeFile, isDragging, setIsDragging],
+    );
+
     return (
-      <FileUploadContext.Provider
-        value={{
-          accept,
-          maxFiles,
-          onFilesChange,
-          files,
-          addFiles,
-          removeFile,
-          isDragging,
-          setIsDragging,
-        }}
-      >
+      <FileUploadContext.Provider value={contextValue}>
         <div ref={ref} className={cn('flex flex-col gap-4', className)} {...props}>
           {children}
         </div>

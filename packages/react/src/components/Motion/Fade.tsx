@@ -46,6 +46,7 @@ export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
       onTransitionEnd={handleTransitionEnd}
       style={{
         opacity,
+        willChange: 'opacity',
         ...transitionStyle,
         ...style,
       }}
