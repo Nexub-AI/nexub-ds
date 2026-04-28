@@ -33,7 +33,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   }, []);
 
   const stats = [
-    { num: `${componentCount}+`, label: 'Components' },
+    { num: `${componentCount}`, label: 'Components' },
     { num: `${patternCount}`, label: 'Patterns' },
     { num: '5', label: 'Brand themes' },
     { num: '100%', label: 'TypeScript' },

@@ -6,7 +6,7 @@ import { componentEntries, patternEntries } from '@/registry/index';
 const features = [
   {
     icon: '◈',
-    stat: `${componentEntries.length}+`,
+    stat: `${componentEntries.length}`,
     title: 'Components',
     desc: 'Accessible, token-driven React components built on Radix UI primitives. Every edge case handled.',
   },
