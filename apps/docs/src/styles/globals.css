@@ -268,3 +268,80 @@ a { color: inherit; }
   .landing-stats { gap: 24px !important; margin-top: 3rem !important; }
   .landing-hero { padding: 5rem 1.25rem 2rem !important; }
 }
+
+/* ── Landing page — orbital rings ────────────────────────────────────────── */
+@keyframes ring-orbit-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes ring-orbit-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+.logo-ring-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary-500) 30%, transparent);
+  pointer-events: none;
+}
+.logo-ring-1 {
+  width: 58px;
+  height: 58px;
+  margin-top: -29px;
+  margin-left: -29px;
+  animation: ring-orbit-cw 7s linear infinite;
+}
+.logo-ring-2 {
+  width: 80px;
+  height: 80px;
+  margin-top: -40px;
+  margin-left: -40px;
+  border-color: color-mix(in srgb, var(--color-brand-primary-500) 14%, transparent);
+  animation: ring-orbit-ccw 13s linear infinite;
+}
+.logo-ring-1::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand-primary-500);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-brand-primary-500) 70%, transparent);
+}
+
+/* ── Landing page — CTA shimmer ───────────────────────────────────────────── */
+@keyframes btn-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.landing-cta-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.landing-cta-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: btn-shimmer 2.5s linear infinite;
+  border-radius: inherit;
+  pointer-events: none;
+}

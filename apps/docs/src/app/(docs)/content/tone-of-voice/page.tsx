@@ -73,8 +73,8 @@ export default function ToneOfVoicePage() {
       <h2>What we are not</h2>
       <p>The voice is <strong>not</strong> overly formal, robotic, or corporate. It is also <strong>not</strong> casual to the point of being flippant — especially in error states or when money is involved.</p>
       <ul>
-        <li>Not "Please be advised that your session has expired" → "Your session expired. Sign in again."</li>
-        <li>Not "Oops! Something went totally bonkers 🙈" for a payment failure</li>
+        <li>Not &ldquo;Please be advised that your session has expired&rdquo; → &ldquo;Your session expired. Sign in again.&rdquo;</li>
+        <li>Not &ldquo;Oops! Something went totally bonkers 🙈&rdquo; for a payment failure</li>
         <li>Not passive voice → active voice always</li>
       </ul>
 
