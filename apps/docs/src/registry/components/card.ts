@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    related: ['callout', 'banner', 'alert'],
   },
   props: [
     { name: 'variant', type: "'flat' | 'surface' | 'interactive'", default: "'flat'", required: false, description: 'Visual style of the card surface.' },
@@ -32,6 +33,25 @@ const entry: ComponentEntry = {
 </div>`,
     },
   ],
+  playground: {
+    controls: [
+      { kind: 'select', name: 'variant', options: ['flat', 'surface', 'interactive'], default: 'surface' },
+      { kind: 'text', name: 'title', default: 'Card title', placeholder: 'Title', omitFromCode: true },
+      { kind: 'text', name: 'body', default: 'Cards group related content on a raised surface.', placeholder: 'Body', omitFromCode: true },
+    ],
+  },
+  a11y: {
+    roles: ['region (when used as a landmark)'],
+    keyboard: [
+      { key: 'Tab', description: 'Focuses interactive children. Card itself is not focusable unless `variant="interactive"` wraps a `<Link>` or `<button>`.' },
+    ],
+    focus: [
+      'Use `<Card asChild>` with a `<Link>` or `<button>` inside to make the whole surface clickable while preserving correct focus semantics.',
+    ],
+    screenReader: [
+      'Group related content with a heading inside the Card so AT users can navigate by heading level.',
+    ],
+  },
 };
 
 export default entry;

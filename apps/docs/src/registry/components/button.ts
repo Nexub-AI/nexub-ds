@@ -9,6 +9,8 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '0.0.2',
+    related: ['icon-button', 'button-group', 'link'],
   },
   props: [
     { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle' | 'link' | 'destructive'", default: "'primary'", required: false, description: 'Visual style of the button.' },
@@ -65,6 +67,44 @@ const entry: ComponentEntry = {
     "Icon-only controls — use IconButton for touch target compliance",
     "Selecting among multiple options — use ToggleGroup or SegmentedControl",
     "Passive information display with no action",
+    ],
+  },
+  playground: {
+    controls: [
+      { kind: 'select', name: 'variant', options: ['primary', 'secondary', 'outline', 'ghost', 'subtle', 'link', 'destructive'], default: 'primary' },
+      { kind: 'select', name: 'size', options: ['xs', 'sm', 'md', 'lg', 'xl'], default: 'md' },
+      { kind: 'select', name: 'tone', options: ['none', 'neutral', 'info', 'success', 'warning', 'danger'], default: 'none' },
+      { kind: 'switch', name: 'loading', default: false },
+      { kind: 'switch', name: 'disabled', default: false },
+      { kind: 'switch', name: 'fullWidth', default: false },
+      { kind: 'text', name: 'children', default: 'Click me', placeholder: 'Button label' },
+    ],
+    childrenProp: 'children',
+  },
+  matrix: {
+    rowsProp: 'variant',
+    rows: ['primary', 'outline', 'ghost', 'subtle', 'link'],
+    colsProp: 'size',
+    cols: ['xs', 'sm', 'md', 'lg', 'xl'],
+    childrenDefault: 'Button',
+  },
+  a11y: {
+    roles: ['button'],
+    keyboard: [
+      { key: 'Space', description: 'Activates the focused button.' },
+      { key: 'Enter', description: 'Activates the focused button.' },
+      { key: 'Tab', description: 'Moves focus to the button in document order.' },
+    ],
+    focus: [
+      'Receives focus in document order; `disabled` removes it from the tab sequence.',
+      'Visible focus ring uses `--color-border-focus` and meets WCAG 2.4.7 contrast.',
+    ],
+    screenReader: [
+      'Announces the visible label plus the implicit "button" role.',
+      '`loading` toggles `aria-busy="true"` so AT users hear the pending state.',
+    ],
+    notes: [
+      'Pair icon-only triggers with `IconButton` for a 44×44 touch target.',
     ],
   },
 };
