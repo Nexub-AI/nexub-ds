@@ -106,7 +106,7 @@ The Function is intentionally one file. When you're ready to grow:
 - **PII scrub**: strip the user-agent or coarsen viewport before persisting,
   if you start storing.
 
-All of these slot into `apps/docs/pages-functions/api/feedback.ts` without
+All of these slot into `apps/docs/functions/api/feedback.ts` without
 touching the client form.
 
 ---
@@ -120,7 +120,7 @@ touching the client form.
 | `apps/docs/src/components/feedback/Turnstile.tsx` | Client-side widget |
 | `apps/docs/src/components/feedback/submit.ts` | `submitFeedback()` + browser context |
 | `apps/docs/src/components/ClientProviders.tsx` | Mount point (lazy) |
-| `apps/docs/pages-functions/api/feedback.ts` | Server: verify, R2 upload, Chat POST |
-| `apps/docs/pages-functions/api/feedback/screenshot/[key].ts` | Streams R2 image |
-| `apps/docs/scripts/copy-pages-functions.mjs` | Postbuild: `pages-functions/` → `out/functions/` |
+| `apps/docs/functions/api/feedback.ts` | Server: verify, R2 upload, Chat POST |
+| `apps/docs/functions/api/feedback/screenshot/[key].ts` | Streams R2 image |
 | `apps/docs/next.config.mjs` | Surfaces `NEXT_PUBLIC_TURNSTILE_SITE_KEY` |
+| `.github/workflows/{staging,release}.yml` | Run `wrangler pages deploy out` from `apps/docs/`; wrangler picks up `apps/docs/functions/` automatically |
