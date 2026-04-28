@@ -296,7 +296,10 @@ a { color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  /* Explicitly sized to fully contain both rings (ring-2 = 148px) */
+  width: 164px;
+  height: 164px;
+  margin-bottom: 1.5rem;
 }
 .logo-ring {
   position: absolute;
