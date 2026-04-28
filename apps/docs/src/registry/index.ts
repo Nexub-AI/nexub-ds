@@ -261,6 +261,10 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
   { id: 'foundations-motion', label: 'Motion', description: 'Duration and easing tokens', href: '/foundations/motion', category: 'Foundations' },
   { id: 'foundations-shadows', label: 'Shadows', description: 'Elevation and shadow tokens', href: '/foundations/shadows', category: 'Foundations' },
+  { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
+  { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
+  { id: 'content-vocabulary', label: 'Vocabulary', description: 'Approved terms and words to avoid', href: '/content/vocabulary', category: 'Content' },
+  { id: 'content-illustration', label: 'Illustration', description: 'When and how to use illustrations', href: '/content/illustration', category: 'Content' },
   // Components
   ...componentEntries.map((e) => ({
     id: `component-${e.meta.slug}`,
@@ -329,5 +333,14 @@ export const navGroups: NavGroup[] = [
       title: e.meta.title,
       href: `/patterns/${e.meta.slug}`,
     })),
+  },
+  {
+    title: 'Content',
+    items: [
+      { title: 'Tone of Voice',    href: '/content/tone-of-voice',  description: 'How Nexub products sound' },
+      { title: 'Grammar & Style',  href: '/content/grammar-style',  description: 'UI copy conventions and rules' },
+      { title: 'Vocabulary',       href: '/content/vocabulary',     description: 'Approved terms and words to avoid' },
+      { title: 'Illustration',     href: '/content/illustration',   description: 'When and how to use illustrations' },
+    ],
   },
 ];

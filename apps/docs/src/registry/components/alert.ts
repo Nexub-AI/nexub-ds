@@ -36,6 +36,20 @@ const entry: ComponentEntry = {
       code: `<Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Communicating system status, errors, or success after an action",
+    "Showing inline validation feedback inside a form",
+    "Warning the user about a potentially risky operation",
+    "Providing contextual information relevant to the current page",
+    ],
+    whenNotToUse: [
+    "Transient messages — use Toast for ephemeral notifications",
+    "Blocking the user for a required decision — use AlertDialog",
+    "Marketing or promotional messaging",
+    "Replacing empty states — use EmptyState instead",
+    ],
+  },
 };
 
 export default entry;

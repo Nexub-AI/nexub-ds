@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    related: ['textarea', 'number-input', 'password-input', 'search-input'],
   },
   props: [
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", required: false, description: 'Control height and font size.' },
@@ -47,6 +48,46 @@ const entry: ComponentEntry = {
 </div>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Capturing short free-form text (name, email, search term)",
+    "Single-line data entry within a form",
+    "Filtering or searching a list of items",
+    "Inline editing of a single value",
+    ],
+    whenNotToUse: [
+    "Multi-line text — use Textarea instead",
+    "Choosing from a fixed list of options — use Select or Combobox",
+    "Numeric stepping — use NumberInput for increment/decrement control",
+    "Passwords — use PasswordInput which toggles visibility",
+    ],
+  },
+  playground: {
+    controls: [
+      { kind: 'select', name: 'size', options: ['sm', 'md', 'lg'], default: 'md' },
+      { kind: 'text', name: 'placeholder', default: 'Enter value…', placeholder: 'Placeholder text' },
+      { kind: 'switch', name: 'invalid', default: false },
+      { kind: 'switch', name: 'disabled', default: false },
+      { kind: 'switch', name: 'showLabel', default: false, omitFromCode: true },
+      { kind: 'text', name: 'labelText', default: 'Email address', omitFromCode: true },
+      { kind: 'switch', name: 'showHelper', default: false, omitFromCode: true },
+      { kind: 'text', name: 'helperText', default: "We'll never share your email.", omitFromCode: true },
+    ],
+  },
+  a11y: {
+    roles: ['textbox'],
+    keyboard: [
+      { key: 'Tab', description: 'Moves focus to the input.' },
+      { key: 'Esc', description: 'Browsers may revert recent changes (autofill suggestions).' },
+    ],
+    focus: [
+      'Visible focus ring on `:focus-visible`. Pair with a `<Label htmlFor>` so clicking the label moves focus into the field.',
+    ],
+    screenReader: [
+      '`invalid` toggles `aria-invalid="true"` so AT users hear the error state.',
+      'Use `aria-describedby` to associate `HelperText` or error messages.',
+    ],
+  },
 };
 
 export default entry;

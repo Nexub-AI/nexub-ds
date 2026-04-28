@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react'; // kept for Import CodeBlock Suspense
 import { notFound } from 'next/navigation';
 import { componentEntries, getComponentEntry } from '@/registry/index';
-import { CodeBlock } from '@/components/docs/CodeBlock';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
+import { ComponentHero } from '@/components/docs/ComponentHero';
+import { UsageGrid } from '@/components/docs/UsageGrid';
+import { Playground } from '@/components/docs/Playground';
+import { VariantMatrix } from '@/components/docs/VariantMatrix';
+import { A11yPanel } from '@/components/docs/A11yPanel';
+import { DocsTOC, type TocItem } from '@/components/docs/DocsTOC';
+import { RelatedComponents } from '@/components/docs/RelatedComponents';
 
 // All component pages are fully static — pre-render every slug at build time
 // and serve from CDN. No per-request server work after the initial build.
@@ -30,128 +35,101 @@ export default async function ComponentPage({ params }: Props) {
   const entry = getComponentEntry(slug);
   if (!entry) notFound();
 
-  const { meta, props, examples } = entry;
+  const { meta, props, examples, usage, playground, matrix, a11y } = entry;
+
+  // Build TOC from the sections actually rendered on this page.
+  // Import is intentionally not in the TOC — the hero copy-import strip
+  // already exposes it right under the title.
+  const toc: TocItem[] = [];
+  if (usage) toc.push({ id: 'usage', label: 'Usage', level: 2 });
+  if (playground) toc.push({ id: 'playground', label: 'Playground', level: 2 });
+  if (examples.length) {
+    toc.push({ id: 'examples', label: 'Examples', level: 2 });
+    examples.forEach((ex, i) =>
+      toc.push({ id: exampleId(ex.title, i), label: ex.title, level: 3 })
+    );
+  }
+  if (matrix) toc.push({ id: 'matrix', label: 'Variant matrix', level: 2 });
+  if (props.length) toc.push({ id: 'props', label: 'Props', level: 2 });
+  if (a11y) toc.push({ id: 'accessibility', label: 'Accessibility', level: 2 });
+  if (meta.related?.length) toc.push({ id: 'related', label: 'Related', level: 2 });
 
   return (
-    <div className="docs-prose">
-      {/* Breadcrumb */}
-      <p
-        style={{
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          color: 'var(--color-brand-primary-500)',
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          marginBottom: '0.5rem',
-        }}
-      >
-        Components · {meta.category}
-      </p>
+    <div className="docs-layout-with-toc">
+      <div className="docs-prose">
+        <ComponentHero entry={entry} />
 
-      {/* Header */}
-      <div className="docs-page-header">
-        <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div className="docs-page-header-badges">
-          {meta.status === 'stable' && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 'var(--radius-full)',
-                background: 'var(--color-semantic-success-bg)',
-                color: 'var(--color-semantic-success-default)',
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                border: '1px solid var(--color-semantic-success-border)',
-              }}
-            >
-              Stable
-            </span>
-          )}
-          <span
-            style={{
-              padding: '2px 8px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-semantic-info-bg)',
-              color: 'var(--color-semantic-info-default)',
-              fontSize: '0.7rem',
-              fontWeight: 600,
-              border: '1px solid var(--color-semantic-info-border)',
-              fontFamily: 'var(--font-family-mono)',
-            }}
-          >
-            {meta.package}
-          </span>
-          {meta.addedIn && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 'var(--radius-full)',
-                background: 'var(--color-bg-muted)',
-                color: 'var(--color-text-muted)',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                border: '1px solid var(--color-border-default)',
-                fontFamily: 'var(--font-family-mono)',
-              }}
-            >
-              Added in v{meta.addedIn}
-            </span>
-          )}
-        </div>
+        {usage && (
+          <section data-reveal>
+            <h2 id="usage">Usage</h2>
+            <UsageGrid usage={usage} />
+          </section>
+        )}
+
+        {playground && (
+          <section data-reveal>
+            <h2 id="playground">Playground</h2>
+            <Playground slug={slug} componentName={meta.title} def={playground} />
+          </section>
+        )}
+
+        {examples.length > 0 && (
+          <section data-reveal>
+            <h2 id="examples">Examples</h2>
+            {examples.map((ex, i) => {
+              const a11ySlot = a11y && i === 0 ? <A11yPanel a11y={a11y} /> : undefined;
+              return (
+                <div key={ex.title} style={{ marginBottom: '2rem' }}>
+                  <h3 id={exampleId(ex.title, i)}>{ex.title}</h3>
+                  {ex.description && <p>{ex.description}</p>}
+                  <ComponentPreview code={ex.code} a11ySlot={a11ySlot}>
+                    <ComponentLivePreview slug={slug} idx={i} />
+                  </ComponentPreview>
+                </div>
+              );
+            })}
+          </section>
+        )}
+
+        {matrix && (
+          <section data-reveal>
+            <h2 id="matrix">Variant matrix</h2>
+            <VariantMatrix slug={slug} def={matrix} />
+          </section>
+        )}
+
+        {props.length > 0 && (
+          <section data-reveal>
+            <h2 id="props">Props</h2>
+            <PropsTable props={props} />
+          </section>
+        )}
+
+        {a11y && (
+          <section data-reveal>
+            <h2 id="accessibility">Accessibility</h2>
+            <A11yPanel a11y={a11y} />
+          </section>
+        )}
+
+        {meta.related?.length ? (
+          <section data-reveal>
+            <h2 id="related">Related components</h2>
+            <RelatedComponents slugs={meta.related} />
+          </section>
+        ) : null}
       </div>
-      <p>{meta.description}</p>
 
-      {/* Import */}
-      <h2>Import</h2>
-      <Suspense fallback={<CodeBlockSkeleton />}>
-        <CodeBlock code={`import { ${meta.title} } from '${meta.package}';`} />
-      </Suspense>
-
-      {/* Examples with live preview.
-          No codeSlot here — omitting it keeps Shiki out of the RSC render path
-          for example blocks. In dev mode, force-static caching is invalidated on
-          every HMR cycle, so passing codeSlot={<CodeBlock />} per example would
-          re-run Shiki 3-5× on every navigation after a file change.
-          ComponentPreview falls back to a plain <pre> on the Code tab — instant,
-          no server round-trip. The Import block above is the only place that needs
-          syntax-highlighted output, and it's a single short line. */}
-      <h2>Examples</h2>
-      {examples.map((ex, i) => (
-        <div key={ex.title} style={{ marginBottom: '2rem' }}>
-          <h3>{ex.title}</h3>
-          {ex.description && <p>{ex.description}</p>}
-          {/* No Suspense needed here: ComponentPreview is a pure client component
-              and ComponentLivePreview manages its own loading state (shimmer skeleton
-              while the dynamic chunk loads). */}
-          <ComponentPreview code={ex.code}>
-            <ComponentLivePreview slug={slug} idx={i} />
-          </ComponentPreview>
-        </div>
-      ))}
-
-      {/* Props */}
-      {props.length > 0 && (
-        <>
-          <h2>Props</h2>
-          <PropsTable props={props} />
-        </>
-      )}
+      <DocsTOC items={toc} />
     </div>
   );
 }
 
-/* ── Skeleton fallbacks for Suspense boundaries ─────────────────────────── */
-
-function CodeBlockSkeleton() {
-  return (
-    <div
-      style={{
-        height: '52px',
-        borderRadius: 'var(--radius-lg)',
-        background: 'var(--docs-code-bg, #0d1117)',
-        opacity: 0.6,
-      }}
-    />
-  );
+function exampleId(title: string, idx: number): string {
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  return `example-${slug || idx}`;
 }
 
