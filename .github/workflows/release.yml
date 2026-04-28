@@ -25,7 +25,7 @@ jobs:
     permissions:
       contents: write       # changesets needs to push version commits
       pull-requests: write  # changesets opens the Version Packages PR
-      deployments: write    # cloudflare/pages-action needs this to create GitHub Deployments
+      deployments: write    # cloudflare/wrangler-action needs this to create GitHub Deployments
 
     steps:
       - uses: actions/checkout@v4
@@ -78,12 +78,15 @@ jobs:
 
       # Deploy to Cloudflare Pages production.
       # The production alias maps to your custom domain (e.g. docs.nexub.com).
+      #
+      # We use cloudflare/wrangler-action@v3 (latest wrangler) instead of the
+      # deprecated cloudflare/pages-action@v1 — the older action ships
+      # wrangler@2 which does not upload Pages Functions properly. See
+      # apps/docs/pages-functions/ for the Function source.
       - name: Deploy to Cloudflare Pages (production)
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: nexub-ds-docs
-          directory: apps/docs/out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: production
+          command: pages deploy apps/docs/out --project-name=nexub-ds-docs --branch=production --commit-dirty=true
