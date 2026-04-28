@@ -37,6 +37,15 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['@nexub/react', '@nexub/icons', 'lucide-react'],
   },
+
+  // Public client-side env. NEXT_PUBLIC_TURNSTILE_SITE_KEY is read by
+  // src/components/feedback/FeedbackDialog.tsx. The site key is safe to
+  // expose; the matching secret key stays server-side in the Pages Function.
+  // Set this in Cloudflare Pages → Settings → Env vars (Plain) for both
+  // Production and Preview environments. See apps/docs/FEEDBACK_SETUP.md.
+  env: {
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '',
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);

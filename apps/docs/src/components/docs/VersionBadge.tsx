@@ -1,19 +1,34 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-export function VersionBadge() {
-  let version = '0.0.1';
-  try {
-    // __dirname is the compiled output dir; resolve relative to repo root via INIT_CWD or fallback
-    const repoRoot = process.env.INIT_CWD ?? path.join(process.cwd(), '../..');
-    const pkgPath = path.join(repoRoot, 'packages/react/package.json');
-    const raw = fs.readFileSync(pkgPath, 'utf-8');
-    const pkg = JSON.parse(raw) as { version: string };
-    version = pkg.version;
-  } catch {
-    // fallback
-  }
+/**
+ * Reads the library version from `packages/react/package.json` once at module
+ * load. All five workspace packages publish at the same version (see
+ * PUBLISHING.md), so reading any one is fine.
+ *
+ * Anchored on `process.cwd()`, which is `apps/docs` during both `next build`
+ * and `next dev`. This is more reliable than the previous `INIT_CWD` lookup,
+ * which fell through to a hardcoded fallback whenever the env var wasn't set.
+ *
+ * The fallback below MUST be kept in sync with the real workspace version so
+ * the docs never silently lie if the read ever fails again.
+ */
+const FALLBACK_VERSION = '0.0.2';
 
+function readLibVersion(): string {
+  try {
+    const pkgPath = path.resolve(process.cwd(), '../../packages/react/package.json');
+    const raw = fs.readFileSync(pkgPath, 'utf-8');
+    const pkg = JSON.parse(raw) as { version?: string };
+    return pkg.version ?? FALLBACK_VERSION;
+  } catch {
+    return FALLBACK_VERSION;
+  }
+}
+
+const VERSION = readLibVersion();
+
+export function VersionBadge() {
   return (
     <span
       style={{
@@ -30,7 +45,7 @@ export function VersionBadge() {
         letterSpacing: '0.02em',
       }}
     >
-      v{version}
+      v{VERSION}
     </span>
   );
 }

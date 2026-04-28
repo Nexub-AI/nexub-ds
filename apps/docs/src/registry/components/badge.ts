@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    related: ['chip', 'tag', 'status-pill'],
   },
   props: [
     { name: 'variant', type: "'solid' | 'soft' | 'outline'", default: "'solid'", required: false, description: 'Visual fill style.' },
@@ -43,6 +44,48 @@ const entry: ComponentEntry = {
 </div>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Labelling a status, category, or tag on an item",
+    "Showing a count or numeric indicator alongside an element",
+    "Highlighting new, featured, or updated content",
+    "Communicating a stage in a workflow (draft, published, archived)",
+    ],
+    whenNotToUse: [
+    "Interactive filtering — use FilterChip or Chip instead",
+    "Long text labels that exceed 2–3 words",
+    "Critical alerts requiring user action — use Alert or Toast",
+    "Replacing a button — badges are non-interactive by design",
+    ],
+  },
+  playground: {
+    controls: [
+      { kind: 'select', name: 'variant', options: ['solid', 'soft', 'outline'], default: 'soft' },
+      { kind: 'select', name: 'tone', options: ['success', 'danger', 'warning', 'info', 'neutral'], default: 'neutral' },
+      { kind: 'text', name: 'children', default: 'Badge', placeholder: 'Badge label' },
+    ],
+    childrenProp: 'children',
+  },
+  matrix: {
+    rowsProp: 'tone',
+    rows: ['success', 'danger', 'warning', 'info', 'neutral'],
+    colsProp: 'variant',
+    cols: ['solid', 'soft', 'outline'],
+    childrenDefault: 'Badge',
+  },
+  a11y: {
+    roles: ['status (when conveying live state)'],
+    keyboard: [
+      { key: '—', description: 'Badges are non-interactive and have no keyboard handlers.' },
+    ],
+    focus: ['Skipped in tab order. Decorative — never trap focus on a Badge.'],
+    screenReader: [
+      'Reads as inline text. For live status changes, wrap in an element with `role="status"` and `aria-live="polite"`.',
+    ],
+    notes: [
+      'For interactive equivalents (filtering, dismissing) reach for `Chip` or `FilterChip`.',
+    ],
+  },
 };
 
 export default entry;

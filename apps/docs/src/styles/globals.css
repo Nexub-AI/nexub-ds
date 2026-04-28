@@ -16,8 +16,17 @@
   --docs-header-height: 60px;
   --docs-content-max-width: 860px;
 
-  /* Code block background — stays dark in both light and dark modes */
+  /* Code block background — stays dark in both light and dark modes.
+     Used by the Shiki-highlighted Import block, which targets `github-dark`. */
   --docs-code-bg: #0d1117;
+
+  /* Plain (non-Shiki) snippet treatment — adapts to theme via existing tokens.
+     Used by the Hero copy-import strip, the Playground generated-code pre,
+     and the ComponentPreview fallback pre. Light mode: paper-tone; dark mode:
+     dark slate (already swapped by --color-bg-subtle in @nexub/themes). */
+  --docs-snippet-bg: var(--color-bg-subtle);
+  --docs-snippet-fg: var(--color-text-primary);
+  --docs-snippet-border: var(--color-border-default);
 }
 
 /* ── Base resets ──────────────────────────────────────────────────────────── */
@@ -214,9 +223,255 @@ a { color: inherit; }
   flex-wrap: wrap;
 }
 
+/* ── Usage guidance grid (When to use / When not to use) ────────────────── */
+.docs-usage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.docs-usage-card {
+  position: relative;
+  padding: 1.1rem 1.1rem 1.15rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid;
+  overflow: hidden;
+  transition: transform var(--duration-fast, 180ms) var(--ease-out, ease),
+              box-shadow var(--duration-fast, 180ms) var(--ease-out, ease);
+}
+.docs-usage-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, var(--docs-usage-glow, transparent) 0%, transparent 55%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.docs-usage-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -10px var(--docs-usage-shadow, rgba(0, 0, 0, 0.18));
+}
+.docs-usage-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 0.85rem;
+  position: relative;
+}
+.docs-usage-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  color: #fff;
+  box-shadow: 0 4px 10px -4px var(--docs-usage-shadow, rgba(0,0,0,0.25));
+}
+.docs-usage-card-title {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.25;
+}
+.docs-usage-card-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+.docs-usage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative;
+}
+.docs-usage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+.docs-usage-bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #fff;
+}
+
+/* Do tone — success palette */
+.docs-usage-do {
+  background:
+    linear-gradient(135deg, var(--color-semantic-success-bg) 0%, transparent 100%),
+    var(--color-bg-default);
+  border-color: var(--color-semantic-success-border);
+  --docs-usage-glow: var(--color-semantic-success-default);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-success-default) 35%, transparent);
+}
+.docs-usage-do .docs-usage-card-icon,
+.docs-usage-do .docs-usage-bullet {
+  background: var(--color-semantic-success-default);
+}
+
+/* Don't tone — error palette */
+.docs-usage-dont {
+  background:
+    linear-gradient(135deg, var(--color-semantic-error-bg) 0%, transparent 100%),
+    var(--color-bg-default);
+  border-color: var(--color-semantic-error-border);
+  --docs-usage-glow: var(--color-semantic-error-default);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-error-default) 35%, transparent);
+}
+.docs-usage-dont .docs-usage-card-icon,
+.docs-usage-dont .docs-usage-bullet {
+  background: var(--color-semantic-error-default);
+}
+
+@media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
+
 /* ── Component preview pane — responsive padding ────────────────────────── */
 @media (max-width: 639px) {
   .docs-preview-pane { padding: 1rem !important; }
+}
+
+/* ── Plain snippet wrapper (Hero import strip, Playground generated code) ── */
+.docs-snippet {
+  /* Override CopyButton's white-on-dark defaults so it reads on light snippets too. */
+  --docs-copy-btn-bg: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  --docs-copy-btn-border: var(--color-border-default);
+}
+.docs-snippet code {
+  /* Reset the global .docs-prose code pill treatment when inside a snippet pre */
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+/* Inline (single-line) variant — Hero copy-import strip */
+.docs-snippet-inline {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+}
+
+/* ── Component page layout (content + right-rail TOC) ───────────────────── */
+.docs-layout-with-toc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+@media (min-width: 1024px) {
+  .docs-layout-with-toc {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 2.5rem;
+  }
+}
+.docs-toc {
+  position: sticky;
+  top: 5rem;
+  align-self: start;
+  display: none;
+}
+@media (min-width: 1024px) {
+  .docs-toc { display: block; }
+}
+
+/* ── Hero accent bar ────────────────────────────────────────────────────── */
+.docs-hero-bar {
+  height: 3px;
+  width: 72px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-primary-500),
+    var(--color-semantic-info-default, var(--color-brand-primary-600, var(--color-brand-primary-500)))
+  );
+}
+
+/* ── Scroll-reveal animation ────────────────────────────────────────────── */
+@keyframes docs-reveal-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    animation: docs-reveal-up 420ms var(--ease-out, cubic-bezier(0.2, 0, 0, 1)) both;
+  }
+}
+
+/* ── Playground grid ────────────────────────────────────────────────────── */
+.docs-playground-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 768px) {
+  .docs-playground-grid {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+}
+
+/* ── Variant matrix scroll container ────────────────────────────────────── */
+.docs-matrix-scroll {
+  overflow-x: auto;
+}
+.docs-matrix-table th,
+.docs-matrix-table td { vertical-align: middle; }
+
+/* ── A11y panel grid ────────────────────────────────────────────────────── */
+.docs-a11y-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+}
+@media (min-width: 640px) {
+  .docs-a11y-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Related components grid ────────────────────────────────────────────── */
+.docs-related-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+@media (min-width: 640px) {
+  .docs-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.docs-related-card:hover {
+  border-color: var(--color-brand-primary-500) !important;
+  transform: translateY(-1px);
+}
+
+/* ── Feedback floating action button ────────────────────────────────────── */
+.docs-feedback-fab:hover {
+  border-color: var(--color-brand-primary-500);
+  color: var(--color-brand-primary-500);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .docs-feedback-fab:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 8px 24px -8px color-mix(in srgb, var(--color-brand-primary-500) 35%, transparent),
+      0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  }
+}
+.docs-feedback-fab:focus-visible {
+  outline: 2px solid var(--color-ring-default);
+  outline-offset: 2px;
 }
 
 /* ── Landing page responsive ─────────────────────────────────────────────── */
@@ -230,4 +485,97 @@ a { color: inherit; }
   .landing-nav-link { display: none; }
   .landing-stats { gap: 24px !important; margin-top: 3rem !important; }
   .landing-hero { padding: 5rem 1.25rem 2rem !important; }
+}
+
+/* ── Landing page — hero entrance (CSS, SSR-safe) ────────────────────────── */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-anim-1 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.1s; }
+.hero-anim-2 { opacity: 0; animation: hero-fade-up 0.6s ease forwards; animation-delay: 0.25s; }
+.hero-anim-3 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.4s; }
+.hero-anim-4 { opacity: 0; animation: hero-fade-up 0.45s ease forwards; animation-delay: 0.55s; }
+.hero-stats { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.7s; }
+
+/* ── Landing page — orbital rings ────────────────────────────────────────── */
+@keyframes ring-orbit-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes ring-orbit-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* Hero icon orbital rings */
+.hero-icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Explicitly sized to fully contain both rings (ring-2 = 148px) */
+  width: 164px;
+  height: 164px;
+  margin-bottom: 1.5rem;
+}
+.logo-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--color-brand-primary-500) 30%, transparent);
+  pointer-events: none;
+}
+.logo-ring-1 {
+  width: 110px;
+  height: 110px;
+  margin-top: -55px;
+  margin-left: -55px;
+  animation: ring-orbit-cw 7s linear infinite;
+}
+.logo-ring-2 {
+  width: 148px;
+  height: 148px;
+  margin-top: -74px;
+  margin-left: -74px;
+  border-color: color-mix(in srgb, var(--color-brand-primary-500) 14%, transparent);
+  animation: ring-orbit-ccw 13s linear infinite;
+}
+.logo-ring-1::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-brand-primary-500);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-brand-primary-500) 70%, transparent);
+}
+
+/* ── Landing page — CTA shimmer ───────────────────────────────────────────── */
+@keyframes btn-shimmer {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.landing-cta-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.landing-cta-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: btn-shimmer 2.5s linear infinite;
+  border-radius: inherit;
+  pointer-events: none;
 }

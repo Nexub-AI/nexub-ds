@@ -29,6 +29,20 @@ const entry: ComponentEntry = {
 </Select.Root>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Choosing a single option from a list of 5+ items",
+    "When screen space is limited and a dropdown collapses the options",
+    "Selecting a region, country, currency, or other enumerated value",
+    "Filtering or configuring a setting with predefined choices",
+    ],
+    whenNotToUse: [
+    "Fewer than 5 options — use RadioGroup to keep choices visible",
+    "Searching or typing to find an option — use Combobox instead",
+    "Multi-select — use Combobox or a checkbox list",
+    "Boolean on/off choices — use Switch or Checkbox",
+    ],
+  },
 };
 
 export default entry;

@@ -42,6 +42,20 @@ const entry: ComponentEntry = {
 </Dialog.Root>`,
     },
   ],
+  usage: {
+    whenToUse: [
+    "Confirming a destructive or irreversible action",
+    "Collecting a small form without leaving the current page",
+    "Displaying critical information that requires acknowledgement",
+    "Previewing content before taking an action",
+    ],
+    whenNotToUse: [
+    "Long multi-step flows — use a Drawer or a dedicated page instead",
+    "Quick contextual info — use a Tooltip or Popover",
+    "Non-blocking side panels — use Sheet or Drawer",
+    "Stacking multiple dialogs — always limit to one at a time",
+    ],
+  },
 };
 
 export default entry;
