@@ -107,6 +107,12 @@ After the next push to the `staging` branch deploys:
 3. Submit a test "Bug" with message + screenshot → confirm a Google Chat card
    lands in the configured space with the message body, page URL, viewport,
    theme, and a "View screenshot" button.
+   The screenshot field offers three sources:
+   - **Capture page** — instant, captures the visible viewport via `html-to-image`
+   - **Capture screen…** — native OS picker (browser/window/screen)
+   - **Upload** — manual file fallback for PNG/JPEG/WebP up to 2 MB
+   After capture, drag on the thumbnail to mark up red strokes, then click
+   **Save annotations** to bake them into the image before submit.
 4. Click the screenshot button → it streams the image from R2 via
    `/api/feedback/screenshot/<uuid>`.
 

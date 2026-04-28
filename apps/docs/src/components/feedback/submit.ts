@@ -17,7 +17,9 @@ export interface FeedbackPayload {
   category: FeedbackCategory;
   message: string;
   email?: string;
-  screenshot?: File | null;
+  /** Accepts both File (from <input type="file">) and Blob (from in-browser
+   *  capture / annotation flatten). Server only cares about MIME + size. */
+  screenshot?: Blob | File | null;
   turnstileToken: string;
   /** Hidden honeypot — must be empty. */
   website?: string;
@@ -33,7 +35,17 @@ export async function submitFeedback(payload: FeedbackPayload): Promise<Feedback
   fd.set('category', payload.category);
   fd.set('message', payload.message);
   if (payload.email) fd.set('email', payload.email);
-  if (payload.screenshot) fd.set('screenshot', payload.screenshot);
+  if (payload.screenshot) {
+    // FormData requires a filename for raw Blobs (Files already carry one).
+    // Pick from the MIME so the R2 + Chat link extension matches the bytes.
+    const mime = payload.screenshot.type || 'image/png';
+    const ext = mime === 'image/jpeg' ? 'jpg' : mime === 'image/webp' ? 'webp' : 'png';
+    const filename =
+      payload.screenshot instanceof File && payload.screenshot.name
+        ? payload.screenshot.name
+        : `screenshot.${ext}`;
+    fd.set('screenshot', payload.screenshot, filename);
+  }
   fd.set('cf-turnstile-response', payload.turnstileToken);
   fd.set('website', payload.website ?? '');
   fd.set('context', JSON.stringify(payload.context));
