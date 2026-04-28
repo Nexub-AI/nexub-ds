@@ -73,7 +73,14 @@ jobs:
 
       # Build docs static export (always, not just on publish)
       # We deploy on every production push so the site always matches the code.
+      # NEXT_PUBLIC_* values are baked into the JS bundle at build time, so we
+      # must inject them HERE (in the GH Actions runner) — Cloudflare Pages
+      # dashboard env vars only reach the Pages runtime, not the build.
+      # The Turnstile *site* key is public by design (it lands in every page's
+      # HTML), so it's stored as a repo Variable, not a Secret.
       - name: Build docs (static export)
+        env:
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
         run: pnpm --filter @nexub/docs build
 
       # Deploy to Cloudflare Pages production.
