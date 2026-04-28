@@ -25,7 +25,7 @@ jobs:
     permissions:
       contents: write       # changesets needs to push version commits
       pull-requests: write  # changesets opens the Version Packages PR
-      deployments: write    # cloudflare/pages-action needs this to create GitHub Deployments
+      deployments: write    # required so wrangler can register a GitHub Deployment for the Pages production URL
 
     steps:
       - uses: actions/checkout@v4
@@ -78,12 +78,15 @@ jobs:
 
       # Deploy to Cloudflare Pages production.
       # The production alias maps to your custom domain (e.g. docs.nexub.com).
+      #
+      # Wrangler 3 expects two siblings at the cwd it runs from:
+      #   - <deploy-dir>/        ← static files (here: out/)
+      #   - functions/           ← Pages Functions source (sibling of out/)
+      # That's why we cd into apps/docs first, then point wrangler at out/.
+      # The Functions live at apps/docs/functions/ in source.
       - name: Deploy to Cloudflare Pages (production)
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: nexub-ds-docs
-          directory: apps/docs/out
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: production
+        working-directory: apps/docs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx -y wrangler@3 pages deploy out --project-name=nexub-ds-docs --branch=production --commit-dirty=true
