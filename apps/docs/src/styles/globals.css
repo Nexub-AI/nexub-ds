@@ -290,11 +290,13 @@ a { color: inherit; }
   to   { transform: rotate(-360deg); }
 }
 
-.logo-ring-wrap {
+/* Hero icon orbital rings */
+.hero-icon-wrap {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2rem;
 }
 .logo-ring {
   position: absolute;
@@ -305,17 +307,17 @@ a { color: inherit; }
   pointer-events: none;
 }
 .logo-ring-1 {
-  width: 58px;
-  height: 58px;
-  margin-top: -29px;
-  margin-left: -29px;
+  width: 110px;
+  height: 110px;
+  margin-top: -55px;
+  margin-left: -55px;
   animation: ring-orbit-cw 7s linear infinite;
 }
 .logo-ring-2 {
-  width: 80px;
-  height: 80px;
-  margin-top: -40px;
-  margin-left: -40px;
+  width: 148px;
+  height: 148px;
+  margin-top: -74px;
+  margin-left: -74px;
   border-color: color-mix(in srgb, var(--color-brand-primary-500) 14%, transparent);
   animation: ring-orbit-ccw 13s linear infinite;
 }

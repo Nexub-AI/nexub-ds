@@ -137,19 +137,15 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Logo with orbital rings */}
-          <div className="logo-ring-wrap" style={{ width: '39px', height: '28px' }}>
-            <Image
-              src="/nexub-icon.svg"
-              alt="Nexub"
-              width={39}
-              height={28}
-              priority
-              style={{ display: 'block', position: 'relative', zIndex: 2 }}
-            />
-            <div className="logo-ring logo-ring-1" />
-            <div className="logo-ring logo-ring-2" />
-          </div>
+          {/* Static nav logo */}
+          <Image
+            src="/nexub-icon.svg"
+            alt="Nexub"
+            width={39}
+            height={28}
+            priority
+            style={{ display: 'block' }}
+          />
           <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-text-primary)' }}>
             Nexub<span style={{ color: 'var(--color-brand-primary-500)' }}> DS</span>
           </span>
@@ -162,6 +158,34 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           <ThemeSwitcher />
         </div>
       </nav>
+
+      {/* ── Hero icon with orbital rings ──────────────────────────────────── */}
+      <div className="hero-icon-wrap" style={{ position: 'relative', zIndex: 2 }}>
+        {/* Soft glow behind the icon */}
+        <div
+          style={{
+            position: 'absolute',
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            background: 'var(--color-brand-primary-500)',
+            opacity: 0.18,
+            filter: 'blur(24px)',
+          }}
+        />
+        {/* The icon itself */}
+        <Image
+          src="/nexub-icon.svg"
+          alt="Nexub"
+          width={72}
+          height={52}
+          priority
+          style={{ display: 'block', position: 'relative', zIndex: 2 }}
+        />
+        {/* Orbital rings */}
+        <div className="logo-ring logo-ring-1" />
+        <div className="logo-ring logo-ring-2" />
+      </div>
 
       {/* ── Eyebrow — CSS animation, SSR-safe ─────────────────────────────── */}
       <div
