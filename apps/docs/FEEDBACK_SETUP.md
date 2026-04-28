@@ -49,15 +49,40 @@ Cloudflare dashboard → **Workers & Pages** → `nexub-ds-docs` → **Settings*
 
 ### Environment variables (apply to both **Production** and **Preview**)
 
+These are read by the **Pages Functions runtime** (server-side):
+
 | Variable | Type | Value |
 |---|---|---|
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Plain | the Turnstile **site key** from step 2 |
 | `TURNSTILE_SECRET_KEY` | Encrypted | the Turnstile **secret key** from step 2 |
 | `GOOGLE_CHAT_WEBHOOK_URL` | Encrypted | the webhook URL from step 1 |
+
+> **Important — `NEXT_PUBLIC_TURNSTILE_SITE_KEY` does NOT go here.**
+> Public Next.js env vars are baked into the JS bundle at **build time**,
+> and we build in **GitHub Actions** (not in Cloudflare Pages). Setting it
+> in the Pages dashboard has no effect. See step 4½ below.
 
 After saving, redeploy the latest Pages production build (Settings →
 **Deployments** → "Retry deployment") so the new env vars are baked into the
 Functions runtime.
+
+### 4½. GitHub Actions repository variable
+
+Add the **public** Turnstile site key as a repo variable so the build step
+in `.github/workflows/{staging,release}.yml` can inject it:
+
+GitHub repo → **Settings → Secrets and variables → Actions → Variables tab**
+→ **New repository variable**:
+
+| Name | Value |
+|---|---|
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | the Turnstile **site key** from step 2 |
+
+> Use a **Variable**, not a Secret — the site key is public by design (it
+> ends up in every page's HTML), and Variables show their values in the
+> dashboard which makes debugging easier.
+
+After adding, **re-run the latest Staging Deploy / Release workflow** so the
+new value is baked into the next Pages deploy.
 
 ### Bindings
 
