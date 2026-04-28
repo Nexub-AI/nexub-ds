@@ -21,7 +21,7 @@ jobs:
 
     permissions:
       contents: read
-      deployments: write  # cloudflare/pages-action needs this to create GitHub Deployments
+      deployments: write  # cloudflare/wrangler-action needs this to create GitHub Deployments
 
     steps:
       - uses: actions/checkout@v4
@@ -57,12 +57,15 @@ jobs:
       # Deploy to Cloudflare Pages under the "staging" branch alias.
       # This creates a preview URL: staging.nexub-ds-docs.pages.dev
       # Does NOT affect the production URL.
+      #
+      # We use cloudflare/wrangler-action@v3 (latest wrangler) instead of the
+      # deprecated cloudflare/pages-action@v1 — the older action ships
+      # wrangler@2 which does not upload Pages Functions properly. See
+      # apps/docs/pages-functions/ for the Function source.
       - name: Deploy to Cloudflare Pages (staging)
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: nexub-ds-docs
-          directory: apps/docs/out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: staging
+          command: pages deploy apps/docs/out --project-name=nexub-ds-docs --branch=staging --commit-dirty=true
