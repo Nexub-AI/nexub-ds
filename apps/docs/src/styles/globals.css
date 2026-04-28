@@ -269,6 +269,17 @@ a { color: inherit; }
   .landing-hero { padding: 5rem 1.25rem 2rem !important; }
 }
 
+/* ── Landing page — hero entrance (CSS, SSR-safe) ────────────────────────── */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-anim-1 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.1s; }
+.hero-anim-2 { opacity: 0; animation: hero-fade-up 0.6s ease forwards; animation-delay: 0.25s; }
+.hero-anim-3 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.4s; }
+.hero-anim-4 { opacity: 0; animation: hero-fade-up 0.45s ease forwards; animation-delay: 0.55s; }
+.hero-stats { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.7s; }
+
 /* ── Landing page — orbital rings ────────────────────────────────────────── */
 @keyframes ring-orbit-cw {
   from { transform: rotate(0deg); }

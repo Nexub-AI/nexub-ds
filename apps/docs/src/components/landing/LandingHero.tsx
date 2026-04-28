@@ -12,11 +12,6 @@ interface LandingHeroProps {
   patternCount: number;
 }
 
-const statVariants = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0 },
-};
-
 export function LandingHero({ version, componentCount, patternCount }: LandingHeroProps) {
   const heroRef = React.useRef<HTMLElement>(null);
   const [cursor, setCursor] = React.useState({ x: 0, y: 0, active: false });
@@ -61,7 +56,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         overflow: 'hidden',
       }}
     >
-      {/* ── Cursor spotlight ──────────────────────────────────────────────── */}
+      {/* ── Cursor spotlight (pure client, no SSR impact) ─────────────────── */}
       <div
         style={{
           position: 'absolute',
@@ -74,7 +69,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       />
 
-      {/* ── Floating gradient orbs ────────────────────────────────────────── */}
+      {/* ── Floating gradient orbs — Framer Motion, no initial opacity ────── */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
         <motion.div
           animate={{ y: [0, -30, 0], x: [0, 15, 0] }}
@@ -144,7 +139,14 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* Logo with orbital rings */}
           <div className="logo-ring-wrap" style={{ width: '39px', height: '28px' }}>
-            <Image src="/nexub-icon.svg" alt="Nexub" width={39} height={28} priority style={{ display: 'block', position: 'relative', zIndex: 2 }} />
+            <Image
+              src="/nexub-icon.svg"
+              alt="Nexub"
+              width={39}
+              height={28}
+              priority
+              style={{ display: 'block', position: 'relative', zIndex: 2 }}
+            />
             <div className="logo-ring logo-ring-1" />
             <div className="logo-ring logo-ring-2" />
           </div>
@@ -161,11 +163,9 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         </div>
       </nav>
 
-      {/* ── Eyebrow ───────────────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+      {/* ── Eyebrow — CSS animation, SSR-safe ─────────────────────────────── */}
+      <div
+        className="hero-anim-1"
         style={{
           position: 'relative',
           zIndex: 2,
@@ -185,13 +185,11 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       >
         <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} />
         v{version} · {componentCount} components · {patternCount} patterns
-      </motion.div>
+      </div>
 
-      {/* ── Headline ──────────────────────────────────────────────────────── */}
-      <motion.h1
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.25 }}
+      {/* ── Headline — CSS animation ───────────────────────────────────────── */}
+      <h1
+        className="hero-anim-2"
         style={{
           position: 'relative',
           zIndex: 2,
@@ -208,13 +206,11 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       >
         Design system for<br />ambitious SaaS teams
-      </motion.h1>
+      </h1>
 
-      {/* ── Subheading ────────────────────────────────────────────────────── */}
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
+      {/* ── Subheading — CSS animation ────────────────────────────────────── */}
+      <p
+        className="hero-anim-3"
         style={{
           position: 'relative',
           zIndex: 2,
@@ -227,13 +223,11 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       >
         A complete library of accessible, token-driven React components and patterns.
         Build faster, ship consistently, look great everywhere.
-      </motion.p>
+      </p>
 
-      {/* ── CTAs ──────────────────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, delay: 0.55 }}
+      {/* ── CTAs — CSS animation ──────────────────────────────────────────── */}
+      <div
+        className="hero-anim-4"
         style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}
       >
         <Link
@@ -268,16 +262,11 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         >
           Browse components
         </Link>
-      </motion.div>
+      </div>
 
-      {/* ── Stats strip ───────────────────────────────────────────────────── */}
-      <motion.div
-        className="landing-stats"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: { transition: { staggerChildren: 0.08, delayChildren: 0.7 } },
-        }}
+      {/* ── Stats strip — CSS animation ───────────────────────────────────── */}
+      <div
+        className="landing-stats hero-stats"
         style={{
           position: 'relative',
           zIndex: 2,
@@ -289,12 +278,12 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       >
         {stats.map((s) => (
-          <motion.div key={s.label} variants={statVariants} style={{ textAlign: 'center' }}>
+          <div key={s.label} style={{ textAlign: 'center' }}>
             <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-brand-primary-500)' }}>{s.num}</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', fontWeight: 500, marginTop: '2px' }}>{s.label}</div>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }
