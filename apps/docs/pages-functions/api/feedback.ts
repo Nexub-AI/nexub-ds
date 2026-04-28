@@ -298,13 +298,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   return jsonResponse(200, { ok: true });
 };
 
-// Block other methods loud enough that the staging smoke test
-// (GET /api/feedback) returns a clear 405 instead of a generic 404.
-export const onRequest: PagesFunction<Env> = async ({ request }) => {
-  if (request.method === 'POST') {
-    // Already handled by onRequestPost. This branch is unreachable in
-    // practice but keeps the type system happy.
-    return new Response(null, { status: 405 });
-  }
-  return jsonResponse(405, { error: 'method_not_allowed' }, { allow: 'POST' });
-};
+/* IMPORTANT: do NOT export `onRequest` from this module.
+ * Cloudflare Pages Functions treat `onRequest` as a catch-all that intercepts
+ * EVERY method — including POST — before the method-specific `onRequestPost`
+ * gets a chance to run. Earlier we exported a no-op `onRequest` to render a
+ * cleaner 405 for the GET smoke test, and it ate live POST traffic in
+ * production. Cloudflare's default 405 for unhandled methods is already fine. */
