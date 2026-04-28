@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Dialog, Button, Textarea, Select, FormField, toast } from '@nexub/react';
 import { Turnstile, type TurnstileHandle } from './Turnstile';
+import { ScreenshotPicker } from './ScreenshotPicker';
 import {
   submitFeedback,
   readBrowserContext,
@@ -16,8 +17,6 @@ interface Props {
 
 const MAX_MESSAGE = 2000;
 const MIN_MESSAGE = 10;
-const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024; // 2 MB
-const ACCEPTED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
 
 const CATEGORIES: { value: FeedbackCategory; label: string }[] = [
   { value: 'bug', label: '🐞 Bug' },
@@ -33,11 +32,11 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
   const [category, setCategory] = React.useState<FeedbackCategory>('bug');
   const [message, setMessage] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const [screenshot, setScreenshot] = React.useState<File | null>(null);
+  const [screenshot, setScreenshot] = React.useState<Blob | File | null>(null);
   const [website, setWebsite] = React.useState(''); // honeypot — should stay empty
   const [token, setToken] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
-  const [errors, setErrors] = React.useState<{ message?: string; email?: string; screenshot?: string }>({});
+  const [errors, setErrors] = React.useState<{ message?: string; email?: string }>({});
 
   const turnstileRef = React.useRef<TurnstileHandle | null>(null);
 
@@ -53,26 +52,6 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
       setSubmitting(false);
     }
   }, [open]);
-
-  const handleScreenshot = (file: File | null) => {
-    if (!file) {
-      setScreenshot(null);
-      setErrors((e) => ({ ...e, screenshot: undefined }));
-      return;
-    }
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      setErrors((e) => ({ ...e, screenshot: 'Use PNG, JPEG, or WebP.' }));
-      setScreenshot(null);
-      return;
-    }
-    if (file.size > MAX_SCREENSHOT_BYTES) {
-      setErrors((e) => ({ ...e, screenshot: 'Image must be under 2 MB.' }));
-      setScreenshot(null);
-      return;
-    }
-    setScreenshot(file);
-    setErrors((e) => ({ ...e, screenshot: undefined }));
-  };
 
   const validate = (): boolean => {
     const next: typeof errors = {};
@@ -234,22 +213,13 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
               <FormField.Error>{errors.email}</FormField.Error>
             </FormField.Root>
 
-            <FormField.Root invalid={Boolean(errors.screenshot)}>
+            <FormField.Root>
               <FormField.Label>Screenshot (optional)</FormField.Label>
-              <input
-                type="file"
-                accept={ACCEPTED_IMAGE_TYPES.join(',')}
-                onChange={(e) => handleScreenshot(e.target.files?.[0] ?? null)}
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--color-text-secondary)',
-                  fontFamily: 'inherit',
-                }}
+              <ScreenshotPicker
+                value={screenshot}
+                onChange={setScreenshot}
+                onError={(msg) => toast.error(msg)}
               />
-              <FormField.Description>
-                PNG, JPEG, or WebP up to 2 MB. {screenshot ? `Attached: ${screenshot.name}` : ''}
-              </FormField.Description>
-              <FormField.Error>{errors.screenshot}</FormField.Error>
             </FormField.Root>
 
             {/* Turnstile widget — invisible/interaction-only, mounts only when site key exists. */}
