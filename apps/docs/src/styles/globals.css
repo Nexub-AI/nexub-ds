@@ -71,10 +71,44 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
 
 /* ── Prose area inside docs pages ─────────────────────────────────────────── */
-.docs-prose h1 { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); margin-bottom: 0.5rem; color: var(--color-text-primary); }
-.docs-prose h2 { font-size: var(--font-size-h3); font-weight: var(--font-weight-semibold); margin-top: 2rem; margin-bottom: 0.5rem; color: var(--color-text-primary); }
-.docs-prose h3 { font-size: var(--font-size-h4); font-weight: var(--font-weight-semibold); margin-top: 1.5rem; margin-bottom: 0.25rem; color: var(--color-text-primary); }
-.docs-prose p  { color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1rem; }
+/* Headings use clamp() so they scale smoothly between mobile and desktop
+ * instead of hard-jumping at the 639px breakpoint. Min/max anchors:
+ *   h1: 28px → 44px   (cite-anchor 1.75rem→2.75rem)
+ *   h2: 22px → 32px   (1.375rem→2rem)
+ *   h3: 18px → 24px   (1.125rem→1.5rem)
+ * The middle term scales the size by viewport width so the curve is smooth
+ * across every screen, not just the canonical breakpoints. */
+.docs-prose h1 {
+  font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+.docs-prose h2 {
+  font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+.docs-prose h3 {
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.5rem);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  margin-top: 1.5rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-text-primary);
+}
+.docs-prose p  {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  /* Cap paragraph reading width so prose stays comfortable on wide monitors,
+   * while wide blocks (Playground, Matrix, examples, code) still go edge-to-edge. */
+  max-width: 75ch;
+}
 .docs-prose code { font-family: var(--font-family-mono); font-size: 0.85em; background: var(--color-bg-muted); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0.1em 0.35em; color: var(--color-text-primary); }
 
 /* ── Shiki code block ─────────────────────────────────────────────────────── */
@@ -107,12 +141,19 @@ a { color: inherit; }
   height: calc(100vh - var(--docs-header-height));
 }
 
-/* Main content area */
+/* Main content area
+ *
+ * Fills all horizontal space after the sidebar — no artificial cap. Wide
+ * elements (Playground, Variant matrix, code blocks, examples, hero) get
+ * the full width on big monitors. Paragraph reading width is constrained
+ * separately on `.docs-prose p` so prose stays comfortable.
+ *
+ * Padding scales fluidly so content never touches the viewport edge but
+ * doesn't waste space on smaller monitors either. */
 .docs-main {
   flex: 1;
   min-width: 0;
-  padding: 2.5rem 3rem;
-  max-width: calc(var(--docs-content-max-width) + 6rem);
+  padding: 2.5rem clamp(1.25rem, 2.5vw, 3rem);
 }
 
 /* Hamburger: hidden on desktop */
@@ -197,14 +238,27 @@ a { color: inherit; }
   .docs-header-brand-switcher {
     display: none !important;
   }
+
+  /* Hide the theme switcher on mobile — three icon-buttons + segmented bg
+   * blow out the header width at <=375 px. We target it via its existing
+   * ARIA shape so the React component stays untouched. Users on mobile get
+   * the OS-level theme by default; explicit selection moves to a future
+   * settings menu if needed. */
+  header > [role="group"][aria-label="Theme"] {
+    display: none !important;
+  }
 }
 
-/* ── Small mobile (< 640px) — prose typography scale-down ──────────────────── */
-@media (max-width: 639px) {
-  .docs-prose h1 { font-size: var(--font-size-h3, 1.875rem); }
-  .docs-prose h2 { font-size: var(--font-size-h4, 1.5rem); }
-  .docs-prose h3 { font-size: 1.125rem; }
+/* Stop the page from scrolling sideways on narrow viewports. Individual
+ * scrolling regions (variant matrix, code blocks, preview pane) keep their
+ * own overflow:auto so their inner content is still reachable. */
+html, body {
+  overflow-x: hidden;
 }
+
+/* The prose-heading mobile scale-down used to live here as a hard jump at
+ * 639 px. It's now handled by clamp() on .docs-prose h1/h2/h3 (above), so
+ * sizes glide between viewports instead of snapping at the breakpoint. */
 
 /* ── Component/pattern page header — badges wrap on narrow screens ─────────── */
 .docs-page-header {
