@@ -456,6 +456,24 @@ a { color: inherit; }
   transform: translateY(-1px);
 }
 
+/* ── Feedback floating action button ────────────────────────────────────── */
+.docs-feedback-fab:hover {
+  border-color: var(--color-brand-primary-500);
+  color: var(--color-brand-primary-500);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .docs-feedback-fab:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 8px 24px -8px color-mix(in srgb, var(--color-brand-primary-500) 35%, transparent),
+      0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  }
+}
+.docs-feedback-fab:focus-visible {
+  outline: 2px solid var(--color-ring-default);
+  outline-offset: 2px;
+}
+
 /* ── Landing page responsive ─────────────────────────────────────────────── */
 .landing-nav-links {
   display: flex;
