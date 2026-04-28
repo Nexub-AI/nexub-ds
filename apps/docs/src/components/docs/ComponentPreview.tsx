@@ -138,9 +138,11 @@ export function ComponentPreview({
         <div role="tabpanel" id="tabpanel-code" aria-labelledby="tab-code" style={{ padding: '12px' }}>
           {codeSlot ?? (
             <pre
+              className="docs-snippet"
               style={{
-                background: 'var(--docs-code-bg)',
-                color: '#e1e4e8',
+                background: 'var(--docs-snippet-bg)',
+                color: 'var(--docs-snippet-fg)',
+                border: '1px solid var(--docs-snippet-border)',
                 borderRadius: 'var(--radius-lg)',
                 padding: '1.25rem 1.5rem',
                 overflowX: 'auto',

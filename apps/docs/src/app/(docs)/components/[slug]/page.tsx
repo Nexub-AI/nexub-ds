@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react'; // kept for Import CodeBlock Suspense
 import { notFound } from 'next/navigation';
 import { componentEntries, getComponentEntry } from '@/registry/index';
-import { CodeBlock } from '@/components/docs/CodeBlock';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
 import { ComponentHero } from '@/components/docs/ComponentHero';
+import { UsageGrid } from '@/components/docs/UsageGrid';
 import { Playground } from '@/components/docs/Playground';
 import { VariantMatrix } from '@/components/docs/VariantMatrix';
 import { A11yPanel } from '@/components/docs/A11yPanel';
@@ -39,9 +38,10 @@ export default async function ComponentPage({ params }: Props) {
   const { meta, props, examples, usage, playground, matrix, a11y } = entry;
 
   // Build TOC from the sections actually rendered on this page.
+  // Import is intentionally not in the TOC — the hero copy-import strip
+  // already exposes it right under the title.
   const toc: TocItem[] = [];
   if (usage) toc.push({ id: 'usage', label: 'Usage', level: 2 });
-  toc.push({ id: 'import', label: 'Import', level: 2 });
   if (playground) toc.push({ id: 'playground', label: 'Playground', level: 2 });
   if (examples.length) {
     toc.push({ id: 'examples', label: 'Examples', level: 2 });
@@ -62,33 +62,9 @@ export default async function ComponentPage({ params }: Props) {
         {usage && (
           <section data-reveal>
             <h2 id="usage">Usage</h2>
-            <div className="docs-usage-grid">
-              <div className="docs-usage-col docs-usage-do">
-                <h4>✅ When to use</h4>
-                <ul>
-                  {usage.whenToUse.map((u) => (
-                    <li key={u}>{u}</li>
-                  ))}
-                </ul>
-              </div>
-              <div className="docs-usage-col docs-usage-dont">
-                <h4>❌ When not to use</h4>
-                <ul>
-                  {usage.whenNotToUse.map((u) => (
-                    <li key={u}>{u}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <UsageGrid usage={usage} />
           </section>
         )}
-
-        <section data-reveal>
-          <h2 id="import">Import</h2>
-          <Suspense fallback={<CodeBlockSkeleton />}>
-            <CodeBlock code={`import { ${meta.title} } from '${meta.package}';`} />
-          </Suspense>
-        </section>
 
         {playground && (
           <section data-reveal>
@@ -157,17 +133,3 @@ function exampleId(title: string, idx: number): string {
   return `example-${slug || idx}`;
 }
 
-/* ── Skeleton fallbacks for Suspense boundaries ─────────────────────────── */
-
-function CodeBlockSkeleton() {
-  return (
-    <div
-      style={{
-        height: '52px',
-        borderRadius: 'var(--radius-lg)',
-        background: 'var(--docs-code-bg, #0d1117)',
-        opacity: 0.6,
-      }}
-    />
-  );
-}

@@ -16,8 +16,17 @@
   --docs-header-height: 60px;
   --docs-content-max-width: 860px;
 
-  /* Code block background — stays dark in both light and dark modes */
+  /* Code block background — stays dark in both light and dark modes.
+     Used by the Shiki-highlighted Import block, which targets `github-dark`. */
   --docs-code-bg: #0d1117;
+
+  /* Plain (non-Shiki) snippet treatment — adapts to theme via existing tokens.
+     Used by the Hero copy-import strip, the Playground generated-code pre,
+     and the ComponentPreview fallback pre. Light mode: paper-tone; dark mode:
+     dark slate (already swapped by --color-bg-subtle in @nexub/themes). */
+  --docs-snippet-bg: var(--color-bg-subtle);
+  --docs-snippet-fg: var(--color-text-primary);
+  --docs-snippet-border: var(--color-border-default);
 }
 
 /* ── Base resets ──────────────────────────────────────────────────────────── */
@@ -221,39 +230,138 @@ a { color: inherit; }
   gap: 1rem;
   margin-bottom: 1.75rem;
 }
-.docs-usage-col {
-  padding: 1rem;
-  border-radius: var(--radius-lg);
+.docs-usage-card {
+  position: relative;
+  padding: 1.1rem 1.1rem 1.15rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid;
+  overflow: hidden;
+  transition: transform var(--duration-fast, 180ms) var(--ease-out, ease),
+              box-shadow var(--duration-fast, 180ms) var(--ease-out, ease);
 }
-.docs-usage-col h4 {
-  font-size: 0.75rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text-secondary);
+.docs-usage-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, var(--docs-usage-glow, transparent) 0%, transparent 55%);
+  opacity: 0.6;
+  pointer-events: none;
 }
-.docs-usage-col ul {
+.docs-usage-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px -10px var(--docs-usage-shadow, rgba(0, 0, 0, 0.18));
+}
+.docs-usage-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 0.85rem;
+  position: relative;
+}
+.docs-usage-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  color: #fff;
+  box-shadow: 0 4px 10px -4px var(--docs-usage-shadow, rgba(0,0,0,0.25));
+}
+.docs-usage-card-title {
   margin: 0;
-  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  line-height: 1.25;
+}
+.docs-usage-card-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.01em;
+}
+.docs-usage-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative;
+}
+.docs-usage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
   font-size: 0.84rem;
+  line-height: 1.55;
   color: var(--color-text-secondary);
-  line-height: 1.7;
 }
-.docs-usage-col li { margin-bottom: 0.25rem; }
+.docs-usage-bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #fff;
+}
+
+/* Do tone — success palette */
 .docs-usage-do {
-  background: var(--color-semantic-success-bg);
-  border: 1px solid var(--color-semantic-success-border);
+  background:
+    linear-gradient(135deg, var(--color-semantic-success-bg) 0%, transparent 100%),
+    var(--color-bg-default);
+  border-color: var(--color-semantic-success-border);
+  --docs-usage-glow: var(--color-semantic-success-default);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-success-default) 35%, transparent);
 }
+.docs-usage-do .docs-usage-card-icon,
+.docs-usage-do .docs-usage-bullet {
+  background: var(--color-semantic-success-default);
+}
+
+/* Don't tone — error palette */
 .docs-usage-dont {
-  background: var(--color-semantic-error-bg);
-  border: 1px solid var(--color-semantic-error-border);
+  background:
+    linear-gradient(135deg, var(--color-semantic-error-bg) 0%, transparent 100%),
+    var(--color-bg-default);
+  border-color: var(--color-semantic-error-border);
+  --docs-usage-glow: var(--color-semantic-error-default);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-error-default) 35%, transparent);
 }
+.docs-usage-dont .docs-usage-card-icon,
+.docs-usage-dont .docs-usage-bullet {
+  background: var(--color-semantic-error-default);
+}
+
 @media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
 
 /* ── Component preview pane — responsive padding ────────────────────────── */
 @media (max-width: 639px) {
   .docs-preview-pane { padding: 1rem !important; }
+}
+
+/* ── Plain snippet wrapper (Hero import strip, Playground generated code) ── */
+.docs-snippet {
+  /* Override CopyButton's white-on-dark defaults so it reads on light snippets too. */
+  --docs-copy-btn-bg: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+  --docs-copy-btn-border: var(--color-border-default);
+}
+.docs-snippet code {
+  /* Reset the global .docs-prose code pill treatment when inside a snippet pre */
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+/* Inline (single-line) variant — Hero copy-import strip */
+.docs-snippet-inline {
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
 }
 
 /* ── Component page layout (content + right-rail TOC) ───────────────────── */

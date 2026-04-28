@@ -144,9 +144,10 @@ export function Playground({ slug, componentName, def }: Props) {
 
           <div style={{ position: 'relative', borderTop: '1px solid var(--color-border-default)' }}>
             <pre
+              className="docs-snippet"
               style={{
-                background: 'var(--docs-code-bg)',
-                color: '#e1e4e8',
+                background: 'var(--docs-snippet-bg)',
+                color: 'var(--docs-snippet-fg)',
                 margin: 0,
                 padding: '1rem 1.25rem',
                 overflowX: 'auto',

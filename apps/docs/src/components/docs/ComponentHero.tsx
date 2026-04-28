@@ -46,14 +46,16 @@ export function ComponentHero({ entry }: Props) {
 
       {/* Inline copy-import strip */}
       <div
+        className="docs-snippet docs-snippet-inline"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: 8,
           padding: '6px 8px 6px 12px',
           borderRadius: 'var(--radius-md)',
-          background: 'var(--docs-code-bg)',
-          color: '#e1e4e8',
+          background: 'var(--docs-snippet-bg)',
+          color: 'var(--docs-snippet-fg)',
+          border: '1px solid var(--docs-snippet-border)',
           fontFamily: 'var(--font-family-mono)',
           fontSize: '0.78rem',
           marginTop: '0.25rem',
