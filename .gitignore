@@ -10,3 +10,6 @@ coverage/
 .next
 apps/docs/out/
 .claude/
+
+# npm lockfile — this is a pnpm workspace
+package-lock.json
