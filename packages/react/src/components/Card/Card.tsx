@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { glassSurfaceClass } from '../../utils/glass.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const cardVariants = cva(
@@ -20,8 +21,7 @@ export const cardVariants = cva(
       // the other. Listed after `variant` so tailwind-merge lets it win on bg/border.
       surface: {
         solid: '',
-        glass:
-          'bg-[var(--glass-bg)] border-[var(--glass-border)] backdrop-blur-[var(--glass-blur)] [box-shadow:inset_0_1px_0_0_var(--glass-highlight),var(--glass-shadow)]',
+        glass: glassSurfaceClass,
       },
     },
     defaultVariants: {

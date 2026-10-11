@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 const Root = RadixDialog.Root;
 const Trigger = RadixDialog.Trigger;
@@ -28,10 +29,11 @@ Overlay.displayName = 'Dialog.Overlay';
 
 interface ContentProps extends RadixDialog.DialogContentProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  surface?: SurfaceValue;
 }
 
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(
-  function DialogContent({ className, size = 'md', children, ...props }, ref) {
+  function DialogContent({ className, size = 'md', surface = 'solid', children, ...props }, ref) {
     const sizeMap = {
       sm: 'max-w-sm',
       md: 'max-w-lg',
@@ -52,8 +54,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
           'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
           'data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]',
           sizeMap[size],
+          surface === 'glass' && glassSurfaceClass,
           className,
         )}
+        data-material={surface === 'glass' ? 'glass' : undefined}
         {...props}
       >
         {children}

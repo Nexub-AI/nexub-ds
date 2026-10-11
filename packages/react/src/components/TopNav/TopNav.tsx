@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
-const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
-  ({ className, children, ...props }, ref) => (
+const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { surface?: SurfaceValue }>(
+  ({ className, children, surface = 'solid', ...props }, ref) => (
     <header
       ref={ref}
       className={cn(
         'sticky top-0 z-[var(--z-sticky,100)] flex h-[var(--size-nav-header,64px)] items-center border-b border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-4',
+        surface === 'glass' && glassSurfaceClass,
         className,
       )}
+      data-material={surface === 'glass' ? 'glass' : undefined}
       {...props}
     >
       <div className="flex w-full items-center gap-4">{children}</div>
