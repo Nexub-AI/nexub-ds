@@ -19,6 +19,7 @@ const entry: ComponentEntry = {
     { name: 'side', type: "'top' | 'right' | 'bottom' | 'left'", required: false, description: 'Preferred side of the trigger to render the content.' },
     { name: 'align', type: "'start' | 'center' | 'end'", required: false, description: 'Alignment of the content relative to the trigger.' },
     { name: 'sideOffset', type: 'number', required: false, description: 'Distance in pixels between the trigger and the content.' },
+    { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material on Popover.Content — see Foundations → Materials.' },
   ],
   examples: [
     {
