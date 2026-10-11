@@ -68,3 +68,25 @@ export const Default: Story = {
     </TopNav.Root>
   ),
 };
+
+export const Glass: Story = {
+  render: () => (
+    <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #ec4899 50%, #f59e0b 100%)', minHeight: 320 }}>
+      <TopNav.Root surface="glass">
+        <TopNav.Logo>
+          <span style={{ fontWeight: 700, fontSize: 18 }}>Nexub</span>
+        </TopNav.Logo>
+        <TopNav.Menu>
+          <TopNav.Item href="#" active>
+            Dashboard
+          </TopNav.Item>
+          <TopNav.Item href="#">Analytics</TopNav.Item>
+          <TopNav.Item href="#">Projects</TopNav.Item>
+        </TopNav.Menu>
+      </TopNav.Root>
+      <div style={{ padding: 24, color: 'white', fontSize: 14 }}>
+        Scroll content sits behind the frosted nav — surface=&quot;glass&quot;.
+      </div>
+    </div>
+  ),
+};
