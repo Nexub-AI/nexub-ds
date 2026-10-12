@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
-import { X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 

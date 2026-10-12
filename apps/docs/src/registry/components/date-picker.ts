@@ -18,7 +18,8 @@ const entry: ComponentEntry = {
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },
     { name: 'maxDate', type: 'Date', required: false, description: 'Latest selectable date. Dates after this are greyed out.' },
     { name: 'format', type: 'string', default: "'dd/MM/yyyy'", required: false, description: 'Date format string for the text input display.' },
-    { name: 'label', type: 'string', required: false, description: 'Visible label rendered above the input.' },
+    { name: 'aria-label', type: 'string', required: false, description: 'Field name for screen readers; the selected value is appended.' },
+    { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
     { name: 'error', type: 'string', required: false, description: 'Error message displayed below the input.' },
   ],
   examples: [
@@ -32,7 +33,7 @@ const entry: ComponentEntry = {
   const [date, setDate] = React.useState(new Date('2026-01-15'));
   return (
     <DatePicker
-      label="Appointment date"
+      aria-label="Appointment date"
       value={date}
       onChange={setDate}
       placeholder="Select a date…"
@@ -43,7 +44,7 @@ const entry: ComponentEntry = {
     {
       title: 'With constraints',
       code: `<DatePicker
-  label="Schedule for"
+  aria-label="Schedule for"
   placeholder="Select a future date…"
   minDate={new Date()}
   maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}

@@ -15,6 +15,10 @@ export interface DateRangePickerProps {
   minDate?: Date;
   maxDate?: Date;
   className?: string;
+  /** Id for the trigger button, e.g. to pair with a `<label htmlFor>`. */
+  id?: string;
+  /** Field name for screen readers; the current value is appended. */
+  'aria-label'?: string;
 }
 
 function formatRange(
@@ -71,17 +75,21 @@ export const DateRangePicker = React.forwardRef<
     minDate,
     maxDate,
     className,
+    id,
+    'aria-label': ariaLabel,
   },
   ref,
 ) {
   const [open, setOpen] = React.useState(false);
-  const label = formatRange(value, placeholder);
+  const display = formatRange(value, placeholder);
+  const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
   return (
     <RadixPopover.Root open={open} onOpenChange={setOpen}>
       <RadixPopover.Trigger asChild>
         <button
           ref={ref}
+          id={id}
           disabled={disabled}
           aria-label={label}
           className={cn(
@@ -93,7 +101,7 @@ export const DateRangePicker = React.forwardRef<
           )}
         >
           <CalendarDays size="sm" aria-hidden="true" />
-          {label}
+          {display}
         </button>
       </RadixPopover.Trigger>
       <RadixPopover.Portal>

@@ -1,5 +1,5 @@
 import { forwardRef, type SVGProps } from 'react';
-import { createIcon, type IconComponent } from '../createIcon.js';
+import { createIcon } from '../createIcon.js';
 import type { IconProps } from '../Icon.js';
 
 const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(

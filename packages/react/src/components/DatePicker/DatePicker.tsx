@@ -13,6 +13,10 @@ export interface DatePickerProps {
   minDate?: Date;
   maxDate?: Date;
   className?: string;
+  /** Id for the trigger button, e.g. to pair with a `<label htmlFor>`. */
+  id?: string;
+  /** Field name for screen readers; the current value is appended. */
+  'aria-label'?: string;
 }
 
 const calendarClassNames = {
@@ -62,18 +66,22 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       minDate,
       maxDate,
       className,
+      id,
+      'aria-label': ariaLabel,
     },
     ref,
   ) {
     const [open, setOpen] = React.useState(false);
+    const display = value ? format(value, 'PP') : placeholder;
 
     return (
       <RadixPopover.Root open={open} onOpenChange={setOpen}>
         <RadixPopover.Trigger asChild>
           <button
             ref={ref}
+            id={id}
             disabled={disabled}
-            aria-label={value ? format(value, 'PP') : placeholder}
+            aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
             className={cn(
               'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
               'hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',

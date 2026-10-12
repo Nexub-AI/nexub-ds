@@ -55,3 +55,5 @@ export function Toaster() {
     </RadixToast.Provider>
   );
 }
+
+Toaster.displayName = 'Toaster';
