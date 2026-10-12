@@ -41,6 +41,7 @@ export interface TagProps
   tone?: ToneValue;
 }
 
+/** @deprecated Use `Badge` instead: `<Badge size="sm">` covers it. Will be removed in 1.0. */
 export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
   ({ className, size, tone = 'neutral', children, ...props }, ref) => {
     return (
