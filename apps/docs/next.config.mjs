@@ -1,6 +1,4 @@
-// Bundle analysis — install manually when needed:
-//   pnpm add -D @next/bundle-analyzer
-//   ANALYZE=true pnpm build
+// Bundle analysis: ANALYZE=true pnpm build
 let withBundleAnalyzer = (config) => config;
 try {
   const { default: BundleAnalyzer } = await import('@next/bundle-analyzer');
@@ -29,13 +27,10 @@ const nextConfig = {
     // Required for static export — Next.js image optimisation needs a server.
     // Cloudflare Images or Cloudflare's Polish handles optimisation at the CDN layer.
     unoptimized: true,
-    dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
   experimental: {
-    optimizePackageImports: ['@nexub/react', '@nexub/icons', 'lucide-react'],
+    optimizePackageImports: ['@nexub/react', '@nexub/icons'],
   },
 
   // Public client-side env. NEXT_PUBLIC_TURNSTILE_SITE_KEY is read by

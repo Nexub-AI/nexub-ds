@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
-import { createIcon, type IconComponent } from '../createIcon.js';
+import { createIcon } from '../createIcon.js';
 
-const LeapMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const LeapMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function LeapMarkSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -26,4 +26,4 @@ const LeapMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const LeapMark = createIcon(LeapMarkSvg , 'LeapMark');
+export const LeapMark = /* @__PURE__ */ createIcon(LeapMarkSvg , 'LeapMark');

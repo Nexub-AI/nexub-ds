@@ -3,11 +3,22 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [
-    ["@nexub/tokens", "@nexub/themes", "@nexub/icons", "@nexub/react", "@nexub/patterns"]
+    [
+      "@nexub/tokens",
+      "@nexub/themes",
+      "@nexub/icons",
+      "@nexub/react",
+      "@nexub/patterns"
+    ]
   ],
   "linked": [],
   "access": "public",
-  "baseBranch": "main",
+  "baseBranch": "development",
   "updateInternalDependencies": "patch",
-  "ignore": ["@nexub/docs"]
+  "ignore": [
+    "@nexub/docs"
+  ],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  }
 }

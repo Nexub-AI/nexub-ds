@@ -1,15 +1,8 @@
-'use client';
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
 export function LandingCallout() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+    <section data-reveal-scroll
       style={{
         padding: '5rem 2rem',
         background: 'var(--color-bg-default)',
@@ -58,6 +51,6 @@ export function LandingCallout() {
           Start building →
         </Link>
       </div>
-    </motion.section>
+    </section>
   );
 }

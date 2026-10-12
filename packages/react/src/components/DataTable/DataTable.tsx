@@ -137,7 +137,7 @@ export function DataTable<TData>({
       rowSelection: enableRowSelection ? rowSelection : undefined,
       pagination: pagination ? paginationState : undefined,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [enableSorting, sorting, enableRowSelection, rowSelection, pagination, paginationState],
   );
 

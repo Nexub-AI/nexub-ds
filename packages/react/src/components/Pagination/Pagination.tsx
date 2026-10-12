@@ -81,7 +81,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
               className={cn(
                 'inline-flex h-11 w-11 items-center justify-center rounded-md text-sm font-medium transition-colors',
                 p === page
-                  ? 'bg-[var(--color-brand-primary-500)] text-white'
+                  ? 'bg-[var(--color-fill-primary)] text-white'
                   : 'border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
               )}
             >

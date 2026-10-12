@@ -1,7 +1,7 @@
 {
   "name": "@nexub/tokens",
   "version": "1.0.0",
-  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
+  "description": "Design tokens for Nexub Design System \u2014 colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -29,25 +29,36 @@
   "exports": {
     ".": {
       "types": "./dist/js/index.d.ts",
-      "import": "./dist/js/index.js"
+      "default": "./dist/js/index.js"
     },
     "./css": "./dist/css/variables.css",
-    "./css/light": "./dist/css/light.css",
-    "./css/dark": "./dist/css/dark.css",
     "./tailwind": {
       "types": "./dist/tailwind/preset.d.ts",
-      "import": "./dist/tailwind/preset.js"
+      "default": "./dist/tailwind/preset.js"
     },
-    "./json": "./dist/json/tokens.json"
+    "./json": "./dist/json/tokens.json",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "build": "node scripts/build.mjs && tsc -p tsconfig.json",
     "dev": "node scripts/build.mjs --watch",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "style-dictionary": "^4.3.0",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
+    }
   }
 }

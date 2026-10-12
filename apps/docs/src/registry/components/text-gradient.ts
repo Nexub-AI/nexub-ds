@@ -27,14 +27,6 @@ const entry: ComponentEntry = {
   <TextGradient>Nexub</TextGradient>
 </Heading>`,
     },
-    {
-      title: 'Custom direction',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <TextGradient direction="to-r">Horizontal gradient</TextGradient>
-  <TextGradient direction="to-br">Diagonal gradient</TextGradient>
-  <TextGradient direction="to-b">Vertical gradient</TextGradient>
-</div>`,
-    },
   ],
 };
 

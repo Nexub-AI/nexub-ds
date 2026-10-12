@@ -101,7 +101,7 @@ const Action = React.forwardRef<HTMLButtonElement, RadixAlertDialog.AlertDialogA
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium',
-          'bg-red-600 text-white hover:bg-red-700 focus:outline-none',
+          'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)] focus:outline-none',
           'focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
           'disabled:pointer-events-none disabled:opacity-50',
           className,

@@ -104,7 +104,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
           'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-8 text-center transition-colors',
           isDragging
             ? 'border-[var(--color-brand-primary-500)] bg-[var(--color-brand-primary-500)]/5'
-            : 'border-[var(--color-border-default)] hover:border-[var(--color-brand-primary-500)] hover:bg-[var(--color-bg-subtle)]',
+            : 'border-[var(--color-border-input)] hover:border-[var(--color-brand-primary-500)] hover:bg-[var(--color-bg-subtle)]',
           className,
         )}
         {...props}

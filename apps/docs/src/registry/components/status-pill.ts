@@ -4,10 +4,10 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'status-pill',
     title: 'Status Pill',
-    description: 'A pill indicator for status values like active, pending, error.',
+    description: 'Deprecated — use Badge. A pill indicator for status values like active, pending, error.',
     category: 'Labels & Badges',
     package: '@nexub/react',
-    status: 'stable',
+    status: 'deprecated',
     addedIn: '0.0.1',
   },
   props: [

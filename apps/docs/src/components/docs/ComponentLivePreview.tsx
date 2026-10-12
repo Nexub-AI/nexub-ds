@@ -252,7 +252,7 @@ function DialogDemo() {
 }
 
 function DialogExamples({ idx }: { idx: number }) {
-  if (idx === 0 || idx === 1) return <DialogDemo />;
+  if (idx === 0) return <DialogDemo />;
   return null;
 }
 
@@ -265,23 +265,11 @@ function TooltipExamples({ idx }: { idx: number }) {
         </Tooltip>
       </TooltipProvider>
     );
-  if (idx === 2)
-    return (
-      <TooltipProvider>
-        <div style={row(12)}>
-          {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
-            <Tooltip key={s} label={s.charAt(0).toUpperCase() + s.slice(1)} side={s}>
-              <Button variant="ghost" size="sm">{s.charAt(0).toUpperCase() + s.slice(1)}</Button>
-            </Tooltip>
-          ))}
-        </div>
-      </TooltipProvider>
-    );
   return null;
 }
 
 function SelectExamples({ idx }: { idx: number }) {
-  if (idx === 0 || idx === 1)
+  if (idx === 0)
     return (
       <div style={{ width: 220 }}>
         <Select.Root>
@@ -325,17 +313,6 @@ function TabsExamples({ idx }: { idx: number }) {
 function SwitchExamples({ idx }: { idx: number }) {
   if (idx === 0) return <div style={row(16)}><Switch defaultChecked /><Switch /></div>;
   if (idx === 1) return <div style={row(16)}><Switch size="sm" defaultChecked /><Switch size="md" defaultChecked /><Switch size="lg" defaultChecked /></div>;
-  if (idx === 2)
-    return (
-      <div style={col(12)}>
-        {['Notifications', 'Marketing emails', 'Product updates'].map((label, i) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: 240 }}>
-            <span style={{ fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>{label}</span>
-            <Switch defaultChecked={i === 0} />
-          </div>
-        ))}
-      </div>
-    );
   return null;
 }
 
@@ -393,14 +370,6 @@ function IconButtonExamples({ idx }: { idx: number }) {
         <IconButton variant="solid" label="Solid">{icon}</IconButton>
         <IconButton variant="outline" label="Outline">{icon}</IconButton>
         <IconButton variant="subtle" label="Subtle">{icon}</IconButton>
-      </div>
-    );
-  if (idx === 2)
-    return (
-      <div style={row(8)}>
-        {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => (
-          <IconButton key={s} size={s} variant="outline" label={`Size ${s}`}>{icon}</IconButton>
-        ))}
       </div>
     );
   return null;
@@ -532,14 +501,6 @@ function TagExamples({ idx }: { idx: number }) {
         <Tag tone="success">Deployed</Tag>
         <Tag tone="warning">Review</Tag>
         <Tag tone="danger">Blocked</Tag>
-      </div>
-    );
-  if (idx === 1)
-    return (
-      <div style={row(8)}>
-        <Tag size="sm" tone="info">Small</Tag>
-        <Tag size="md" tone="info">Medium</Tag>
-        <Tag size="lg" tone="info">Large</Tag>
       </div>
     );
   return null;
@@ -948,6 +909,14 @@ function FlexExamples({ idx }: { idx: number }) {
       <Flex justify="between" style={{ width: '100%', maxWidth: 320 }}>
         <Badge tone="success">Active</Badge>
         <Badge tone="neutral">Draft</Badge>
+      </Flex>
+    );
+  if (idx === 2)
+    return (
+      <Flex gap="sm" wrap style={{ maxWidth: 260 }}>
+        {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
+          <Badge key={t} tone="info">{t}</Badge>
+        ))}
       </Flex>
     );
   return null;
@@ -1584,6 +1553,15 @@ function ErrorStateExamples({ idx }: { idx: number }) {
 function DatePickerExamples({ idx }: { idx: number }) {
   if (idx === 0) return <DatePicker placeholder="Select a date…" />;
   if (idx === 1) return <DatePicker value={new Date('2026-01-15')} onChange={() => {}} />;
+  if (idx === 2)
+    return (
+      <DatePicker
+        aria-label="Schedule for"
+        placeholder="Select a future date…"
+        minDate={new Date()}
+        maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+      />
+    );
   return null;
 }
 
@@ -1615,6 +1593,15 @@ function MotionFadeExamples({ idx }: { idx: number }) {
         </Button>
         <Fade in={visible} unmountOnExit>
           <Card style={{ width: 200 }}><Text size="body-sm">Animated content</Text></Card>
+        </Fade>
+      </div>
+    );
+  if (idx === 2)
+    return (
+      <div style={col(12)}>
+        <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+        <Fade in={visible} duration="slow" easing="spring">
+          <Card style={{ width: 200 }}><Text size="body-sm">Slow spring fade animation.</Text></Card>
         </Fade>
       </div>
     );
@@ -1795,13 +1782,6 @@ function PlanCardExamples({ idx }: { idx: number }) {
           cta="Get started"
           onSelect={() => {}}
         />
-      </div>
-    );
-  if (idx === 1)
-    return (
-      <div style={row(12)}>
-        <PlanCard name="Free" price="$0" period="/ month" features={['5 seats', 'Basic analytics']} cta="Get started" />
-        <PlanCard name="Pro" price="$49" period="/ month" features={['Unlimited seats', 'Advanced analytics']} cta="Upgrade" highlighted />
       </div>
     );
   return null;

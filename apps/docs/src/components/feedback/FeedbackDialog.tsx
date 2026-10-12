@@ -104,7 +104,7 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
       toast.error('Too many submissions. Try again in a minute.');
     } else if (result.error === 'turnstile_failed') {
       toast.error('Verification failed. Please retry.');
-    } else if (result.error === 'bad_image') {
+    } else if (result.error === 'bad_image' || result.error === 'too_large') {
       toast.error('That image was rejected. Try a smaller PNG/JPEG.');
     } else if (result.error === 'invalid' || result.error === 'too_long') {
       toast.error('Some fields look off. Please review and resubmit.');

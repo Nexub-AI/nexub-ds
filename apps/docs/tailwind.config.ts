@@ -7,7 +7,7 @@ const config: Config = {
     '../../packages/patterns/src/**/*.{ts,tsx}',
   ],
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  presets: [require('../../packages/tokens/dist/tailwind/preset.js')],
+  presets: [require('@nexub/tokens/tailwind')],
   theme: {
     extend: {},
   },

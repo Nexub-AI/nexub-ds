@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { ExternalLink } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
@@ -29,29 +30,37 @@ export interface LinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof linkVariants> {
   external?: boolean;
+  /** Render the child element (e.g. a router `<Link>`) instead of an `<a>`. */
+  asChild?: boolean;
 }
 
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
-  ({ variant, external = false, className, children, ...rest }, ref) => {
-    const externalProps = external
-      ? { target: '_blank', rel: 'noopener noreferrer' }
-      : {};
+  ({ variant, external = false, asChild, className, children, target, rel, ...rest }, ref) => {
+    const resolvedTarget = external ? '_blank' : target;
+    // Any new-tab link always gets noopener/noreferrer, merged with caller's rel.
+    const resolvedRel =
+      resolvedTarget === '_blank'
+        ? [...new Set([...(rel?.split(/\s+/).filter(Boolean) ?? []), 'noopener', 'noreferrer'])].join(' ')
+        : rel;
+    const Comp = asChild ? Slot : 'a';
 
     return (
-      <a
+      <Comp
         ref={ref}
         className={cn(linkVariants({ variant }), className)}
-        {...externalProps}
         {...rest}
+        target={resolvedTarget}
+        rel={resolvedRel}
       >
-        {children}
-        {external && (
-          <ExternalLink
-            className="h-3.5 w-3.5 shrink-0"
-            aria-hidden="true"
-          />
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {children}
+            {external && <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+          </>
         )}
-      </a>
+      </Comp>
     );
   },
 );

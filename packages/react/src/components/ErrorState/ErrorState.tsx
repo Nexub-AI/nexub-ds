@@ -48,7 +48,7 @@ export const ErrorState = React.forwardRef<HTMLDivElement, ErrorStateProps>(
         {onRetry && (
           <button
             onClick={onRetry}
-            className="inline-flex h-9 items-center justify-center rounded-md bg-[var(--color-brand-primary-500)] px-4 text-sm font-medium text-white hover:bg-[var(--color-brand-primary-600)] transition-colors"
+            className="inline-flex h-9 items-center justify-center rounded-md bg-[var(--color-fill-primary)] px-4 text-sm font-medium text-white hover:bg-[var(--color-fill-primary-hover)] transition-colors"
           >
             Try again
           </button>

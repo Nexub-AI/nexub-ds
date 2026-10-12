@@ -48,26 +48,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build packages in dependency order (required before publish)
-      - name: Build @nexub/tokens
-        run: pnpm --filter @nexub/tokens build
-
-      - name: Build @nexub/icons
-        run: pnpm --filter @nexub/icons build
-
-      - name: Build @nexub/react
-        run: pnpm --filter @nexub/react build
-
-      - name: Build @nexub/patterns
-        run: pnpm --filter @nexub/patterns build
+      # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
 
       # changesets/action:
       #   - If .changeset/*.md files exist → opens/updates "Version Packages" PR
       #   - If already versioned (PR was merged) → runs `pnpm release` to publish
       - name: Create Release PR or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
+          # `changeset version` + minor rollover (1.9.x → 2.0.0), see PUBLISHING.md.
+          version: pnpm version-packages
           publish: pnpm release
           commit: "chore(release): version packages"
           title: "chore(release): version packages"
@@ -79,6 +72,22 @@ jobs:
           # `repo` scope). Falls back to GITHUB_TOKEN only for the publish phase.
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # After a publish, the version commit (bumped package.json + CHANGELOGs)
+      # only exists on production. Open a PR merging it back into development
+      # so the next promotion doesn't conflict on the version lines.
+      - name: Open back-merge PR (production → development)
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          version=$(node -p "require('./packages/react/package.json').version")
+          existing=$(gh pr list --base development --head production --state open --json number --jq 'length')
+          if [ "$existing" = "0" ]; then
+            gh pr create --base development --head production \
+              --title "chore(release): back-merge v$version into development" \
+              --body "Brings the v$version version bump and CHANGELOGs back into development. Merge before the next promotion."
+          fi
 
       # Build docs static export (always, not just on publish)
       # We deploy on every production push so the site always matches the code.
@@ -105,4 +114,4 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx -y wrangler@3 pages deploy out --project-name=nexub-ds-docs --branch=production --commit-dirty=true
+        run: npx -y wrangler@3.114.17 pages deploy out --project-name=nexub-ds-docs --branch=production --commit-dirty=true

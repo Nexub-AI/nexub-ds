@@ -1,6 +1,17 @@
 import * as React from 'react';
 import type { MotionDuration, MotionEasing } from './motion.types.js';
 
+// Mirrors the --duration-* tokens. Used for the exit fallback timer: a 0ms
+// transition (or a hidden / display:none element) never fires transitionend.
+export const DURATION_MS: Record<MotionDuration, number> = {
+  instant: 0,
+  fast: 150,
+  normal: 200,
+  slow: 300,
+  slower: 500,
+};
+const FALLBACK_MARGIN_MS = 50;
+
 export type TransitionPhase = 'exited' | 'entering' | 'entered' | 'exiting';
 
 export interface UseMotionReturn {
@@ -66,9 +77,18 @@ export function useMotion({
     }
   }, [visible]);
 
+  // Fallback so an exit always completes even if transitionend never fires.
+  React.useEffect(() => {
+    if (phase !== 'exiting') return;
+    const t = setTimeout(() => setPhase('exited'), DURATION_MS[duration] + FALLBACK_MARGIN_MS);
+    return () => clearTimeout(t);
+  }, [phase, duration]);
+
   /** Call this from the element's onTransitionEnd to finalise exit. */
-  const handleTransitionEnd = React.useCallback(() => {
+  const handleTransitionEnd = React.useCallback((e?: React.TransitionEvent) => {
     if (!isMounted.current) return;
+    // Ignore transitionend bubbling up from children.
+    if (e && e.target !== e.currentTarget) return;
     setPhase((prev) => (prev === 'exiting' ? 'exited' : prev));
   }, []);
 

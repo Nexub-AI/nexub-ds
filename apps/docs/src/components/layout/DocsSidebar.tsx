@@ -3,19 +3,19 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { navGroups } from '@/registry/index';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown } from '@nexub/icons';
 import type { NavGroup } from '@/registry/types';
 import { useSidebar } from './SidebarContext';
 
-// Collect every href from the nav tree once at module load.
-// Used to prefetch all routes on sidebar mount so that links inside
-// collapsed groups (display:none → invisible to IntersectionObserver)
-// are ready before the user ever expands them.
-const ALL_HREFS: string[] = navGroups.flatMap((g) => [
-  ...g.items.map((i) => i.href),
-  ...(g.children ?? []).flatMap((sub) => sub.items.map((i) => i.href)),
-]);
+// Every href in the nav tree. Used to prefetch all routes on sidebar mount so
+// links inside collapsed groups (display:none → invisible to
+// IntersectionObserver) are ready before the user ever expands them.
+function allHrefs(groups: NavGroup[]): string[] {
+  return groups.flatMap((g) => [
+    ...g.items.map((i) => i.href),
+    ...(g.children ?? []).flatMap((sub) => sub.items.map((i) => i.href)),
+  ]);
+}
 
 /* ─── Sub-group (category inside Components) ─────────────────────────────── */
 
@@ -261,7 +261,9 @@ const TopGroup = React.memo(function TopGroup({
 
 /* ─── Sidebar ─────────────────────────────────────────────────────────────── */
 
-export function DocsSidebar() {
+// `navGroups` is passed from the server layout so the full registry (props,
+// code strings, a11y notes) never ships to the client just to draw links.
+export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
   const pathname = usePathname();
   const router = useRouter();
   const { isOpen, close } = useSidebar();
@@ -274,7 +276,7 @@ export function DocsSidebar() {
   React.useEffect(() => {
     if (typeof requestIdleCallback !== 'undefined') {
       const id = requestIdleCallback(() => {
-        for (const href of ALL_HREFS) {
+        for (const href of allHrefs(navGroups)) {
           router.prefetch(href);
         }
       });
@@ -282,14 +284,14 @@ export function DocsSidebar() {
     } else {
       // Safari fallback
       const t = setTimeout(() => {
-        for (const href of ALL_HREFS) {
+        for (const href of allHrefs(navGroups)) {
           router.prefetch(href);
         }
       }, 0);
       return () => clearTimeout(t);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once on mount — ALL_HREFS is stable (module-level constant)
+  }, []); // run once on mount — navGroups is static build-time data
 
   return (
     <aside
