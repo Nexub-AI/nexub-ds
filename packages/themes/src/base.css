@@ -2,6 +2,11 @@
    Global resets, focus ring, body, scrollbar, reduced-motion.
    Import this once at the root of your app before light.css or dark.css. */
 
+/* Plus Jakarta Sans — the Nexub DS typeface. Self-hosted (OFL-1.1) via
+   Fontsource; variable weights 200–800, normal + italic. Subsets load on
+   demand via unicode-range, so only the glyphs a page uses are fetched. */
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght-italic.css';
 @import '@nexub/tokens/css';
 
 /* ─── Semantic shorthand aliases ───────────────────────────────────────────
@@ -130,6 +135,13 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
+}
+
+/* Form controls don't inherit fonts by default — without this, apps that
+   don't use Tailwind's preflight would render buttons/inputs in the system UI
+   font instead of Plus Jakarta Sans. */
+button, input, select, textarea, optgroup {
+  font-family: inherit;
 }
 
 body {
