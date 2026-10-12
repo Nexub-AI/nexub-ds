@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
 interface LandingHeroProps {
@@ -69,12 +68,15 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       />
 
-      {/* ── Floating gradient orbs — Framer Motion, no initial opacity ────── */}
+      {/* ── Floating gradient orbs — CSS keyframes (.landing-orb in globals.css) ────── */}
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-        <motion.div
-          animate={{ y: [0, -30, 0], x: [0, 15, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        <div
+          className="landing-orb"
           style={{
+            ['--orb-y' as string]: '-30px',
+            ['--orb-x' as string]: '15px',
+            animationDuration: '8s',
+            animationDelay: '0s',
             position: 'absolute',
             top: '8%',
             left: '12%',
@@ -86,10 +88,13 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             filter: 'blur(80px)',
           }}
         />
-        <motion.div
-          animate={{ y: [0, 25, 0], x: [0, -20, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        <div
+          className="landing-orb"
           style={{
+            ['--orb-y' as string]: '25px',
+            ['--orb-x' as string]: '-20px',
+            animationDuration: '11s',
+            animationDelay: '2s',
             position: 'absolute',
             bottom: '12%',
             right: '8%',
@@ -101,10 +106,13 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             filter: 'blur(70px)',
           }}
         />
-        <motion.div
-          animate={{ y: [0, -18, 0], x: [0, 10, 0] }}
-          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
+        <div
+          className="landing-orb"
           style={{
+            ['--orb-y' as string]: '-18px',
+            ['--orb-x' as string]: '10px',
+            animationDuration: '14s',
+            animationDelay: '5s',
             position: 'absolute',
             top: '20%',
             right: '20%',

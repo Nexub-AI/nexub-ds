@@ -32,8 +32,6 @@
       "default": "./dist/js/index.js"
     },
     "./css": "./dist/css/variables.css",
-    "./css/light": "./dist/css/light.css",
-    "./css/dark": "./dist/css/dark.css",
     "./tailwind": {
       "types": "./dist/tailwind/preset.d.ts",
       "default": "./dist/tailwind/preset.js"

@@ -3,10 +3,10 @@
 import * as React from 'react';
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { searchIndex } from '@/registry/index';
-import { Search, FileText, Layers } from 'lucide-react';
+import type { SearchEntry } from '@/registry/index';
+import { Search, FileText, Layers } from '@nexub/icons';
 
-export function SearchModal() {
+export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
 

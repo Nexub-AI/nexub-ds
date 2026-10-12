@@ -1,8 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { MessageSquare } from 'lucide-react';
-import { FeedbackDialog } from './FeedbackDialog';
+import { MessageSquare } from '@nexub/icons';
+
+// Dialog + Turnstile + screenshot/annotation code loads on first click only.
+const FeedbackDialog = React.lazy(() =>
+  import('./FeedbackDialog').then((m) => ({ default: m.FeedbackDialog })),
+);
 
 /**
  * Floating action pill anchored bottom-right on every docs page. Opens the
@@ -11,13 +15,18 @@ import { FeedbackDialog } from './FeedbackDialog';
  */
 export function FeedbackButton() {
   const [open, setOpen] = React.useState(false);
+  // Stays true after first open so the dialog can animate closed.
+  const [loaded, setLoaded] = React.useState(false);
 
   return (
     <>
       {!open && (
         <button
           type="button"
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setLoaded(true);
+            setOpen(true);
+          }}
           aria-label="Send feedback"
           className="docs-feedback-fab"
           style={{
@@ -48,7 +57,11 @@ export function FeedbackButton() {
         </button>
       )}
 
-      <FeedbackDialog open={open} onOpenChange={setOpen} />
+      {loaded && (
+        <React.Suspense fallback={null}>
+          <FeedbackDialog open={open} onOpenChange={setOpen} />
+        </React.Suspense>
+      )}
     </>
   );
 }
