@@ -14,4 +14,6 @@
   --color-accent-900: var(--color-accent-founderub-900);
   --color-accent-950: var(--color-accent-founderub-950);
   --color-ring-default: var(--color-accent-founderub-500);
+  --color-fill-accent: var(--color-fill-founderub);
+  --color-fill-accent-hover: var(--color-fill-founderub-hover);
 }

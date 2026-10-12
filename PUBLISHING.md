@@ -75,20 +75,7 @@ Short description of what changed and why.
 npx changeset version
 ```
 
-Then manually align any linked packages that were not bumped:
-```bash
-# All packages in the linked group must be at the same version
-node -e "
-  const fs = require('fs');
-  const v = '0.0.X';  // ← target version
-  ['tokens','themes','icons','patterns'].forEach(pkg => {
-    const f = \`packages/\${pkg}/package.json\`;
-    const j = JSON.parse(fs.readFileSync(f));
-    j.version = v;
-    fs.writeFileSync(f, JSON.stringify(j, null, 2) + '\n');
-  });
-"
-```
+All five packages are in a changesets `fixed` group, so they always bump together.
 
 ---
 

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import * as React from 'react';
 import { Fade } from './Fade.js';
@@ -158,5 +158,27 @@ describe('Collapse', () => {
     const el = container.firstChild as HTMLElement;
     // overflow should be hidden during transition
     expect(el.style.overflow).toBe('hidden');
+  });
+});
+
+describe('Motion exit fallback', () => {
+  it('unmounts on exit even when transitionend never fires (0ms duration)', () => {
+    vi.useFakeTimers();
+    const { rerender, queryByText } = render(
+      <Fade in duration="instant" unmountOnExit>
+        <p>bye</p>
+      </Fade>,
+    );
+    rerender(
+      <Fade in={false} duration="instant" unmountOnExit>
+        <p>bye</p>
+      </Fade>,
+    );
+    expect(queryByText('bye')).toBeInTheDocument(); // still exiting
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(queryByText('bye')).not.toBeInTheDocument();
+    vi.useRealTimers();
   });
 });

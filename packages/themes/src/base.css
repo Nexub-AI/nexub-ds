@@ -36,14 +36,42 @@
   --color-info-bg:        var(--color-semantic-info-bg);
   --color-info-border:    var(--color-semantic-info-border);
 
+  /* Focus ring follows the theme's ring tokens (the tokens default is a fixed
+     white/blue pair, wrong in dark mode and brand themes). */
+  --shadow-focus: 0 0 0 2px var(--color-ring-offset), 0 0 0 4px var(--color-ring-default);
+
   /* placeholder text (PKG-B01) */
-  --color-text-placeholder: var(--color-text-subtle);
+  --color-text-placeholder: var(--color-text-muted);
 
   /* tone text aliases — used by Heading tone prop + HelperText (PKG-H01) */
-  --color-text-info:    var(--color-semantic-info-default);
-  --color-text-success: var(--color-semantic-success-default);
-  --color-text-warning: var(--color-semantic-warning-default);
-  --color-text-danger:  var(--color-semantic-error-default);
+  /* -strong passes WCAG AA as text in both light (dark shade) and dark (light shade). */
+  --color-text-info:    var(--color-semantic-info-strong);
+  --color-text-success: var(--color-semantic-success-strong);
+  --color-text-warning: var(--color-semantic-warning-strong);
+  --color-text-danger:  var(--color-semantic-error-strong);
+
+  /* Solid fills under white text. Fixed shades (they do NOT flip in dark mode)
+     chosen so white text is >= 4.5:1 (WCAG AA). Brand themes override accent. */
+  --color-fill-primary:         var(--color-brand-primary-600);
+  --color-fill-primary-hover:   var(--color-brand-primary-700);
+  --color-fill-info:            var(--color-brand-primary-600);
+  --color-fill-info-hover:      var(--color-brand-primary-700);
+  --color-fill-success:         #047857;
+  --color-fill-success-hover:   #065f46;
+  --color-fill-warning:         #b45309;
+  --color-fill-warning-hover:   #92400e;
+  --color-fill-danger:          #b91c1c;
+  --color-fill-danger-hover:    #991b1b;
+  --color-fill-leap:            var(--color-accent-leap-600);
+  --color-fill-leap-hover:      var(--color-accent-leap-700);
+  --color-fill-bookub:          var(--color-accent-bookub-700);
+  --color-fill-bookub-hover:    var(--color-accent-bookub-800);
+  --color-fill-payub:           var(--color-accent-payub-600);
+  --color-fill-payub-hover:     var(--color-accent-payub-700);
+  --color-fill-founderub:       var(--color-accent-founderub-700);
+  --color-fill-founderub-hover: var(--color-accent-founderub-800);
+  --color-fill-accent:          var(--color-fill-primary);
+  --color-fill-accent-hover:    var(--color-fill-primary-hover);
 
   /* accent fallback — used without any brand theme applied (PKG-B03) */
   --color-accent-500: var(--color-brand-primary-500);

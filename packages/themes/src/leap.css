@@ -14,4 +14,6 @@
   --color-accent-900: var(--color-accent-leap-900);
   --color-accent-950: var(--color-accent-leap-950);
   --color-ring-default: var(--color-accent-leap-500);
+  --color-fill-accent: var(--color-fill-leap);
+  --color-fill-accent-hover: var(--color-fill-leap-hover);
 }

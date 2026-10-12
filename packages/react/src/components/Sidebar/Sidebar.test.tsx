@@ -4,9 +4,32 @@ import { describe, it, expect } from 'vitest';
 import { Sidebar } from './Sidebar.js';
 
 describe('Sidebar', () => {
-  it('renders aside element', () => {
-    render(<Sidebar.Root data-testid="sidebar" />);
-    expect(screen.getByTestId('sidebar').tagName).toBe('ASIDE');
+  it('renders a labelled navigation landmark', () => {
+    render(<Sidebar.Root />);
+    expect(screen.getByRole('navigation', { name: 'Sidebar' })).toBeInTheDocument();
+  });
+
+  it('asChild renders the router link element with the item content', () => {
+    render(
+      <Sidebar.Root>
+        <Sidebar.Item asChild active icon={<svg />}>
+          <button type="button">Dashboard</button>
+        </Sidebar.Item>
+      </Sidebar.Root>,
+    );
+    const el = screen.getByRole('button', { name: 'Dashboard' });
+    expect(el).toHaveAttribute('aria-current', 'page');
+    expect(el.querySelector('svg')).toBeInTheDocument();
+  });
+
+  it('keeps an accessible name and tooltip when collapsed', () => {
+    render(
+      <Sidebar.Root collapsed>
+        <Sidebar.Item href="#" icon={<svg />}>Settings</Sidebar.Item>
+      </Sidebar.Root>,
+    );
+    const link = screen.getByRole('link', { name: 'Settings' });
+    expect(link).toHaveAttribute('title', 'Settings');
   });
 
   it('renders group with label', () => {

@@ -45,7 +45,7 @@ const calendarClassNames = {
     'aria-selected:opacity-100',
   ),
   selected:
-    'bg-[var(--color-brand-primary-500)] text-white hover:bg-[var(--color-brand-primary-600)] hover:text-white focus:bg-[var(--color-brand-primary-500)] focus:text-white',
+    'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)] hover:text-white focus:bg-[var(--color-fill-primary)] focus:text-white',
   today: 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]',
   outside: 'text-[var(--color-text-muted)] opacity-50',
   disabled: 'text-[var(--color-text-muted)] opacity-50',

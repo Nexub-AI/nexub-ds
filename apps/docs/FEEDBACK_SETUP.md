@@ -42,6 +42,9 @@ a `warning: webhook_not_configured` and silently drop.
 3. Default storage class: **Standard**.
 4. Public access: **leave disabled**. Screenshots are served via a same-origin
    Pages Function (`/api/feedback/screenshot/[key]`), not directly from R2.
+5. **Settings → Object lifecycle rules → Add rule**: delete objects after
+   **30 days**. Screenshot links are unauthenticated bearer URLs, so they
+   should not live forever.
 
 ## 4. Wire the Pages project
 
@@ -55,6 +58,17 @@ These are read by the **Pages Functions runtime** (server-side):
 |---|---|---|
 | `TURNSTILE_SECRET_KEY` | Encrypted | the Turnstile **secret key** from step 2 |
 | `GOOGLE_CHAT_WEBHOOK_URL` | Encrypted | the webhook URL from step 1 |
+
+`TURNSTILE_SECRET_KEY` is **required**: without it the function fails closed
+and returns `503 not_configured` for every submission.
+
+### Rate limiting (WAF)
+
+The in-function rate limit is per Worker isolate, so it is only a speed bump.
+Add the real limit in the Cloudflare dashboard → **Security → WAF →
+Rate limiting rules**: match `URI Path equals /api/feedback` and
+`Request Method equals POST`, **5 requests per 1 minute per IP**, action
+**Block** for 10 minutes.
 
 > **Important — `NEXT_PUBLIC_TURNSTILE_SITE_KEY` does NOT go here.**
 > Public Next.js env vars are baked into the JS bundle at **build time**,

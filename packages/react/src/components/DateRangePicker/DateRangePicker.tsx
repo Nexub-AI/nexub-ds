@@ -48,7 +48,7 @@ const calendarClassNames = {
   day_button:
     'inline-flex h-8 w-8 items-center justify-center rounded-md text-sm hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
   selected:
-    'bg-[var(--color-brand-primary-500)] text-white hover:bg-[var(--color-brand-primary-600)]',
+    'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
   range_start: 'rounded-l-md',
   range_end: 'rounded-r-md',
   range_middle:

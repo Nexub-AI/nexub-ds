@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { MotionBaseProps } from './motion.types.js';
+import { DURATION_MS } from './useMotion.js';
 
 export interface CollapseProps extends Omit<MotionBaseProps, 'easing'>, React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -96,18 +97,35 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
     };
   }, [visible, collapsedHeight]);
 
+  const finish = React.useCallback(() => {
+    if (visible) {
+      setHeight('auto');
+      setOverflow('visible');
+    } else if (unmountOnExit) {
+      setMounted(false);
+    }
+  }, [visible, unmountOnExit]);
+
   const handleTransitionEnd = React.useCallback(
     (e: React.TransitionEvent<HTMLDivElement>) => {
-      if (e.propertyName !== 'max-height') return;
-      if (visible) {
-        setHeight('auto');
-        setOverflow('visible');
-      } else {
-        if (unmountOnExit) setMounted(false);
-      }
+      // Ignore transitionend bubbling up from children.
+      if (e.target !== e.currentTarget || e.propertyName !== 'max-height') return;
+      finish();
     },
-    [visible, unmountOnExit],
+    [finish],
   );
+
+  // Fallback so the animation always settles even if transitionend never
+  // fires (0ms duration, hidden element, reduced motion).
+  const firstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const t = setTimeout(finish, DURATION_MS[duration] + 100);
+    return () => clearTimeout(t);
+  }, [visible, duration, finish]);
 
   if (!mounted) return null;
 

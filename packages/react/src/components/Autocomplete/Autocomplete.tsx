@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Combobox } from '../Combobox/Combobox.js';
-import { cn } from '../../utils/cn.js';
 
 export interface AutocompleteOption {
   value: string;
@@ -26,27 +25,31 @@ export function Autocomplete({
   loading = false,
   className,
 }: AutocompleteProps) {
-  // Sync controlled `value` into internal search state so callers can
-  // drive the input display from outside (controlled mode).
-  const [search, setSearch] = React.useState(value ?? '');
-
-  React.useEffect(() => {
-    if (value !== undefined) setSearch(value);
-  }, [value]);
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
+  // Input text. Follows the selected option's label when `value` changes from
+  // outside (adjusted during render, not in an effect).
+  const [search, setSearch] = React.useState(selectedLabel);
+  const [prevValue, setPrevValue] = React.useState(value);
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setSearch(selectedLabel);
+  }
 
   return (
-    <Combobox.Root value={search} onValueChange={setSearch} className={className}>
-      <Combobox.Input placeholder={placeholder} />
+    <Combobox.Root className={className}>
+      <Combobox.Input placeholder={placeholder} value={search} onValueChange={setSearch} />
       <Combobox.List>
         {loading ? (
-          <div className="py-6 text-center text-sm text-[var(--color-text-muted)]">Loading\u2026</div>
+          <div className="py-6 text-center text-sm text-[var(--color-text-muted)]">Loading…</div>
         ) : (
           <>
             <Combobox.Empty>{emptyText}</Combobox.Empty>
             {options.map((opt) => (
               <Combobox.Item
                 key={opt.value}
-                value={opt.value}
+                // cmdk filters on `value`, so match the visible label (id as keyword).
+                value={opt.label}
+                keywords={[opt.value]}
                 onSelect={() => {
                   onValueChange?.(opt.value);
                   setSearch(opt.label);

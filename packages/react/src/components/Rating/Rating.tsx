@@ -46,6 +46,21 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
     const [hovered, setHovered] = React.useState<number | null>(null);
 
     const displayValue = hovered ?? value ?? 0;
+    const starRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
+    // Radio-group pattern: one tab stop (the checked star, else the first).
+    const tabStop = value && value > 0 ? value : 1;
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, starValue: number) => {
+      const next =
+        e.key === 'ArrowRight' || e.key === 'ArrowUp' ? Math.min(max, starValue + 1) :
+        e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? Math.max(1, starValue - 1) :
+        e.key === 'Home' ? 1 :
+        e.key === 'End' ? max : null;
+      if (next === null) return;
+      e.preventDefault();
+      setValue(next);
+      starRefs.current[next - 1]?.focus();
+    };
 
     return (
       <div
@@ -53,6 +68,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
         className={cn(ratingVariants({ size }), className)}
         role="radiogroup"
         aria-label="Rating"
+        aria-readonly={readOnly || undefined}
         {...props}
       >
         {Array.from({ length: max }, (_, i) => {
@@ -62,12 +78,15 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
           return (
             <button
               key={starValue}
+              ref={(el) => { starRefs.current[i] = el; }}
               type="button"
               role="radio"
+              tabIndex={starValue === tabStop ? 0 : -1}
               aria-checked={starValue === (value ?? 0)}
               aria-label={`${starValue} star${starValue !== 1 ? 's' : ''}`}
               disabled={readOnly}
               onClick={() => !readOnly && setValue(starValue)}
+              onKeyDown={(e) => !readOnly && handleKeyDown(e, starValue)}
               onMouseEnter={() => !readOnly && setHovered(starValue)}
               onMouseLeave={() => !readOnly && setHovered(null)}
               className={cn(

@@ -14,4 +14,6 @@
   --color-accent-900: var(--color-accent-payub-900);
   --color-accent-950: var(--color-accent-payub-950);
   --color-ring-default: var(--color-accent-payub-500);
+  --color-fill-accent: var(--color-fill-payub);
+  --color-fill-accent-hover: var(--color-fill-payub-hover);
 }

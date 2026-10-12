@@ -27,3 +27,25 @@ describe('Slider', () => {
     expect(screen.getAllByRole('slider')).toHaveLength(2);
   });
 });
+
+describe('Slider stability & a11y', () => {
+  it('keeps the same thumb element (and focus) across controlled value changes', () => {
+    const { rerender } = render(<Slider value={[10]} aria-label="Volume" />);
+    const thumb = screen.getByRole('slider');
+    thumb.focus();
+    rerender(<Slider value={[20]} aria-label="Volume" />);
+    expect(screen.getByRole('slider')).toBe(thumb);
+    expect(document.activeElement).toBe(thumb);
+  });
+
+  it('labels each thumb', () => {
+    render(<Slider defaultValue={[20, 80]} thumbLabels={['Minimum', 'Maximum']} />);
+    expect(screen.getByRole('slider', { name: 'Minimum' })).toBeInTheDocument();
+    expect(screen.getByRole('slider', { name: 'Maximum' })).toBeInTheDocument();
+  });
+
+  it('uses aria-label as the thumb name', () => {
+    render(<Slider defaultValue={[50]} aria-label="Volume" />);
+    expect(screen.getByRole('slider', { name: 'Volume' })).toBeInTheDocument();
+  });
+});

@@ -27,7 +27,7 @@ export const EyebrowChip = React.forwardRef<HTMLSpanElement, EyebrowChipProps>(
         className={cn(
           'inline-flex items-center gap-1.5 rounded-full px-3 py-1',
           'text-xs font-semibold uppercase tracking-wider select-none',
-          'bg-[var(--color-gradient-eyebrow-chip,var(--color-bg-subtle))]',
+          'bg-[var(--color-bg-subtle)]',
           toneTextMap[tone],
           className,
         )}

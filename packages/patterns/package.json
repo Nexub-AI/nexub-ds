@@ -43,9 +43,9 @@
   "peerDependencies": {
     "react": ">=18 <20",
     "react-dom": ">=18 <20",
-    "@nexub/react": "*",
-    "@nexub/icons": "*",
-    "@nexub/tokens": "*"
+    "@nexub/react": "workspace:^",
+    "@nexub/icons": "workspace:^",
+    "@nexub/tokens": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@nexub/icons": {
