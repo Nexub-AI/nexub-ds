@@ -7,7 +7,17 @@ const Root = VaulDrawer.Root;
 const Trigger = VaulDrawer.Trigger;
 const Portal = VaulDrawer.Portal;
 const Close = VaulDrawer.Close;
-const Overlay = VaulDrawer.Overlay;
+
+const Overlay = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof VaulDrawer.Overlay>>(
+  ({ className, ...props }, ref) => (
+    <VaulDrawer.Overlay
+      ref={ref}
+      className={cn('fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)]', className)}
+      {...props}
+    />
+  ),
+);
+Overlay.displayName = 'Drawer.Overlay';
 
 const Content = React.forwardRef<
   HTMLDivElement,
@@ -16,9 +26,12 @@ const Content = React.forwardRef<
     surface?: SurfaceValue;
   }
 >(({ className, children, side = 'right', surface = 'solid', ...props }, ref) => {
+  // Side panels clip x: vaul's ::after (a 200%-wide strip past the edge, for
+  // over-drag) otherwise makes the panel scroll sideways. Hidden x also makes
+  // y scroll, so long content works without extra classes.
   const sideMap = {
-    right: 'inset-y-0 right-0 h-full w-3/4 max-w-sm border-l',
-    left: 'inset-y-0 left-0 h-full w-3/4 max-w-sm border-r',
+    right: 'inset-y-0 right-0 h-full w-3/4 max-w-sm border-l overflow-x-hidden',
+    left: 'inset-y-0 left-0 h-full w-3/4 max-w-sm border-r overflow-x-hidden',
     top: 'inset-x-0 top-0 w-full border-b',
     bottom: 'inset-x-0 bottom-0 w-full border-t rounded-t-2xl',
   };

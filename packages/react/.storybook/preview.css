@@ -4,7 +4,7 @@
 @import '@nexub/themes/base';
 @import '@nexub/themes/light';
 @import '@nexub/themes/dark';
-/* @import '@nexub/themes/glass';  ← enable once @nexub/themes ships the glass export (Liquid Glass PR #29) */
+@import '@nexub/themes/glass';
 
 @tailwind base;
 @tailwind components;

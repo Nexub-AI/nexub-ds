@@ -65,3 +65,33 @@ export const Glass: Story = {
     </Drawer.Root>
   ),
 };
+
+/**
+ * Side sheet with a long, scrolling list (the phone nav case). `direction`
+ * matches `side`. The panel scrolls vertically only: before the fix, vaul's
+ * over-drag strip made it scroll sideways too.
+ */
+export const SideSheetLongContent: Story = {
+  render: () => (
+    <Drawer.Root direction="left" defaultOpen>
+      <Drawer.Trigger className="rounded-md border border-[var(--color-border-default)] px-4 py-2 text-sm">
+        Open left sheet
+      </Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Overlay />
+        <Drawer.Content side="left" aria-describedby={undefined}>
+          <Drawer.Header>
+            <Drawer.Title>Sections</Drawer.Title>
+          </Drawer.Header>
+          <ul className="flex flex-col gap-1 px-6 pb-6">
+            {Array.from({ length: 40 }, (_, i) => (
+              <li key={i} className="rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-subtle)]">
+                Section {i + 1}
+              </li>
+            ))}
+          </ul>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
+  ),
+};

@@ -107,6 +107,12 @@ importers:
         specifier: ^5.6.0
         version: 5.9.3
 
+  packages/brand:
+    devDependencies:
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
+
   packages/icons:
     dependencies:
       lucide-react:
@@ -276,9 +282,6 @@ importers:
       tailwind-merge:
         specifier: ^2.5.4
         version: 2.6.1
-      vaul:
-        specifier: ^1.1.2
-        version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
     devDependencies:
       '@nexub/themes':
         specifier: workspace:*
@@ -337,6 +340,9 @@ importers:
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
+      vaul:
+        specifier: 1.1.2
+        version: 1.1.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@20.19.39)(jsdom@25.0.1)
@@ -5697,8 +5703,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@img/colour@1.1.0':
-    optional: true
+  '@img/colour@1.1.0': {}
 
   '@img/sharp-darwin-arm64@0.34.5':
     optionalDependencies:
@@ -7861,8 +7866,7 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
-  detect-libc@2.1.2:
-    optional: true
+  detect-libc@2.1.2: {}
 
   detect-node-es@1.1.0: {}
 
@@ -9596,7 +9600,6 @@ snapshots:
       '@img/sharp-win32-arm64': 0.34.5
       '@img/sharp-win32-ia32': 0.34.5
       '@img/sharp-win32-x64': 0.34.5
-    optional: true
 
   shebang-command@2.0.0:
     dependencies:

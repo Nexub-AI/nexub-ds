@@ -14,8 +14,9 @@ Update the [Release History](#release-history) table after every publish.
 | `@nexub/icons` | [![npm](https://img.shields.io/npm/v/@nexub/icons)](https://www.npmjs.com/package/@nexub/icons) | Tree-shakeable icon components |
 | `@nexub/react` | [![npm](https://img.shields.io/npm/v/@nexub/react)](https://www.npmjs.com/package/@nexub/react) | 90+ React UI components |
 | `@nexub/patterns` | [![npm](https://img.shields.io/npm/v/@nexub/patterns)](https://www.npmjs.com/package/@nexub/patterns) | Composite UI patterns |
+| `@nexub/brand` | [![npm](https://img.shields.io/npm/v/@nexub/brand)](https://www.npmjs.com/package/@nexub/brand) | Brand files (mark SVGs, app icons, favicon) |
 
-All five packages are in a changesets **`fixed`** group — they always publish at the same version number.
+All six packages are in a changesets **`fixed`** group — they always publish at the same version number.
 `@nexub/docs` is excluded from publishing (it's the docs website, not a library).
 
 ---
@@ -32,7 +33,7 @@ All five packages are in a changesets **`fixed`** group — they always publish 
 
 ## Versioning Policy
 
-Nexub DS uses **one rolling version** for all five packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
+Nexub DS uses **one rolling version** for all six packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
 
 ```
 1.0.0 → 1.1.0 → 1.2.0 → … → 1.9.0 → 2.0.0 → 2.1.0 → … → 2.9.0 → 3.0.0
@@ -121,6 +122,7 @@ npm CDN propagates in ~30 seconds. Wait and re-run `npm view`.
 | `@nexub/icons` | `dist/` (ESM + types) | `src/`, tests |
 | `@nexub/react` | `dist/` (ESM, one entry per component, + types) | `src/`, tests, stories |
 | `@nexub/patterns` | `dist/` (ESM + types) | `src/`, tests |
+| `@nexub/brand` | `assets/` (SVG, PNG, ICO) | `scripts/`, `glyphs/` |
 
 ---
 
@@ -133,5 +135,6 @@ npm CDN propagates in ~30 seconds. Wait and re-run `npm view`.
 | `@nexub/icons` | `react`, `react-dom` `>=18 <20` |
 | `@nexub/tokens` | optional `tailwindcss ^3` (only for the Tailwind preset) |
 | `@nexub/themes` | none |
+| `@nexub/brand` | none |
 
 All packages are **ESM-only**. Loading the Tailwind preset with `require()` needs Node ≥ 20.19.

@@ -11,6 +11,7 @@ The shared UI foundation for all Nexub surfaces — marketing site, product app,
 | [`@nexub/icons`](./packages/icons) | Lucide re-export + custom Nexub icons |
 | [`@nexub/react`](./packages/react) | ~85 React components |
 | [`@nexub/patterns`](./packages/patterns) | Opinionated brand composites |
+| [`@nexub/brand`](./packages/brand) | Official brand files: Nexub mark (colour + mono SVG), app icon tiles, PNG icons, favicon |
 
 ## Getting started
 
