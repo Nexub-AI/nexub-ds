@@ -83,7 +83,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             disabled={disabled}
             aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
             className={cn(
-              'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
+              'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-input)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
               'hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
               'disabled:cursor-not-allowed disabled:opacity-50',
               !value && 'text-[var(--color-text-muted)]',

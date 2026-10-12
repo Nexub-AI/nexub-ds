@@ -66,7 +66,7 @@ Effort: S = under half a day, M = 1–3 days, L = about a week.
 
 1. **Sprint A (consumer-breaking): done 2026-10-12.** 1, 2, 3, 4, 5, 6, 7, 9 (ESM-only chosen for #4)
 2. **Sprint B (security + a11y): done 2026-10-12.** 8, 10–18 (+ SSR/keyboard tests from 19).
-   Left open: input-border 3:1 contrast (design call), npm provenance (repo is private), icon SIZE_MAP/GradientDivider hex dedupe, vitest-axe.
+   Input borders: done (decided 2026-10-12, `--color-border-input`). Left open: npm provenance (repo is private), icon SIZE_MAP/GradientDivider hex dedupe, vitest-axe.
 3. **Sprint C (lighten + simplify): done 2026-10-12.** 20, 21, 23, 24, 25, 27, 31; 22 won't-do. Also documented the Tailwind preset setup.
    Docs `/` First Load 192 → 129 kB; registry data no longer ships to the client; framer-motion removed.
 4. **Sprint D (larger refactors): in progress 2026-10-12.** 28 and 29 done; 26 and 30 partial (see rows). Full example single-sourcing deferred by decision.

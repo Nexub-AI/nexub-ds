@@ -40,6 +40,10 @@
      white/blue pair, wrong in dark mode and brand themes). */
   --shadow-focus: 0 0 0 2px var(--color-ring-offset), 0 0 0 4px var(--color-ring-default);
 
+  /* Form-control boundaries (WCAG 1.4.11 needs >= 3:1 against the page).
+     Separate from --color-border-default, which cards/dividers keep light. */
+  --color-border-input: #848e9f;
+
   /* placeholder text (PKG-B01) */
   --color-text-placeholder: var(--color-text-muted);
 

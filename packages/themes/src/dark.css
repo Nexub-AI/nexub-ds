@@ -25,6 +25,7 @@
   --color-border-subtle:  #162032;
   --color-border-strong:  #334155;
   --color-border-inverse: #cbd5e1;
+  --color-border-input:   #64748b;
 
   /* ── Ring ────────────────────────────────────────────────────────────── */
   --color-ring-default: #60a5fa;
@@ -85,6 +86,7 @@
     --color-border-subtle:  #162032;
     --color-border-strong:  #334155;
     --color-border-inverse: #cbd5e1;
+    --color-border-input:   #64748b;
 
     --color-ring-default: #60a5fa;
     --color-ring-offset:  #0b1220;
