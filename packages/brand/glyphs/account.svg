@@ -1,0 +1,7 @@
+<!-- Account glyph: a person inside a ring, drawn in the 512×512 tile space. -->
+<defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset=".55" stop-color="#4099f1"/><stop offset="1" stop-color="#8b6cff"/></linearGradient>
+</defs>
+<circle cx="256" cy="256" r="150" fill="none" stroke="url(#glyph)" stroke-width="22"/>
+<circle cx="256" cy="214" r="58" fill="url(#glyph)"/>
+<path d="M152 362c18-52 58-82 104-82s86 30 104 82c-28 26-64 42-104 42s-76-16-104-42z" fill="url(#glyph)"/>

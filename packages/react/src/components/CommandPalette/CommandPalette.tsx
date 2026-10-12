@@ -10,7 +10,7 @@ const Root = React.forwardRef<
 >(({ children, ...props }, ref) => (
   <RadixDialog.Root {...props}>
     <RadixDialog.Portal>
-      <RadixDialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+      <RadixDialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)] backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
       <RadixDialog.Content
         ref={ref}
         className={cn(
