@@ -61,7 +61,7 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
 4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, using the `NPM_TOKEN` secret) and deploys the docs to production.
 5. **Add a row** to the [Release History](#release-history) table.
 
-> The version PR is opened with `GITHUB_TOKEN`, so CI does not run on it. The packages were already built and tested in the same workflow run.
+> The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.
 
 ### Pre-flight check (optional)
 
