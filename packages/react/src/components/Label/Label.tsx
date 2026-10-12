@@ -32,11 +32,15 @@ export interface LabelProps
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
-  ({ className, size, required, disabled, tone, children, ...props }, ref) => {
+  ({ className, size, required, disabled, tone, style, children, ...props }, ref) => {
+    // Inline var() so Tailwind JIT never sees `${tone}`; only semantic tones
+    // resolve a --color-text-* var, brand tones fall back to the primary class.
+    const toneStyle: React.CSSProperties = tone ? { color: `var(--color-text-${tone})` } : {};
     return (
       <label
         ref={ref}
         data-tone={tone}
+        style={{ ...toneStyle, ...style }}
         className={cn(
           labelVariants({ size, disabled }),
           'text-[var(--color-text-primary)]',

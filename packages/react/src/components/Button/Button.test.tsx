@@ -43,4 +43,9 @@ describe('Button', () => {
     render(<Button fullWidth>Button</Button>);
     expect(screen.getByRole('button')).toHaveClass('w-full');
   });
+
+  it('recolors with a semantic tone', () => {
+    render(<Button tone="success">Save</Button>);
+    expect(screen.getByRole('button')).toHaveClass('bg-[var(--color-success-500)]');
+  });
 });

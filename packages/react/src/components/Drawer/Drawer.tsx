@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Drawer as VaulDrawer } from 'vaul';
 import { X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 const Root = VaulDrawer.Root;
 const Trigger = VaulDrawer.Trigger;
@@ -11,8 +12,11 @@ const Overlay = VaulDrawer.Overlay;
 
 const Content = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof VaulDrawer.Content> & { side?: 'left' | 'right' | 'top' | 'bottom' }
->(({ className, children, side = 'right', ...props }, ref) => {
+  React.ComponentProps<typeof VaulDrawer.Content> & {
+    side?: 'left' | 'right' | 'top' | 'bottom';
+    surface?: SurfaceValue;
+  }
+>(({ className, children, side = 'right', surface = 'solid', ...props }, ref) => {
   const sideMap = {
     right: 'inset-y-0 right-0 h-full w-3/4 max-w-sm border-l',
     left: 'inset-y-0 left-0 h-full w-3/4 max-w-sm border-r',
@@ -25,8 +29,10 @@ const Content = React.forwardRef<
       className={cn(
         'fixed z-[var(--z-modal)] flex flex-col bg-[var(--color-bg-default)] shadow-xl focus:outline-none',
         sideMap[side],
+        surface === 'glass' && glassSurfaceClass,
         className,
       )}
+      data-material={surface === 'glass' ? 'glass' : undefined}
       {...props}
     >
       {side === 'bottom' && (

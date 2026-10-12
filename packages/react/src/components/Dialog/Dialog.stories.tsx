@@ -40,3 +40,29 @@ export const Default: Story = {
     </Dialog.Root>
   ),
 };
+
+export const Glass: Story = {
+  render: () => (
+    <Dialog.Root defaultOpen>
+      <Dialog.Trigger asChild>
+        <button>Open Dialog</button>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay />
+        <Dialog.Content surface="glass">
+          <Dialog.Header>
+            <Dialog.Title>Glass dialog</Dialog.Title>
+            <Dialog.Description>
+              surface=&quot;glass&quot; — the content behind blurs through the panel.
+            </Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Footer>
+            <Dialog.Close asChild>
+              <button>Close</button>
+            </Dialog.Close>
+          </Dialog.Footer>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  ),
+};

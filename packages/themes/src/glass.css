@@ -1,0 +1,44 @@
+/* @nexub/themes — glass.css
+   Liquid-glass MATERIAL layer. Orthogonal to light/dark: set data-material="glass"
+   on a surface (components do this via surface="glass") IN ADDITION to the normal
+   theme. Import once, after base/light/dark. Selectors mirror dark.css so the
+   dark palette resolves both for an explicit [data-theme='dark'] and for the
+   prefers-color-scheme auto case. */
+
+[data-material='glass'] {
+  --glass-bg:        rgba(255, 255, 255, 0.55);
+  --glass-border:    rgba(255, 255, 255, 0.35);
+  --glass-highlight: rgba(255, 255, 255, 0.65);
+  --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.12);
+  --glass-blur:      16px;
+}
+
+/* glass-on-dark — explicit theme */
+[data-theme='dark'] [data-material='glass'],
+[data-theme='dark'][data-material='glass'] {
+  --glass-bg:        rgba(20, 20, 24, 0.55);
+  --glass-border:    rgba(255, 255, 255, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.10);
+  --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* glass-on-dark — auto (no explicit theme + OS dark) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) [data-material='glass'],
+  :root:not([data-theme])[data-material='glass'] {
+    --glass-bg:        rgba(20, 20, 24, 0.55);
+    --glass-border:    rgba(255, 255, 255, 0.12);
+    --glass-highlight: rgba(255, 255, 255, 0.10);
+    --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* a11y: drop translucency + blur when the user opts out — fall back to the
+   solid surface tokens Card/Dialog/etc. already use. Load-bearing, not polish. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  [data-material='glass'] {
+    --glass-bg:     var(--color-bg-default);
+    --glass-border: var(--color-border-default);
+    --glass-blur:   0px;
+  }
+}

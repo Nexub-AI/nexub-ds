@@ -29,3 +29,24 @@ export const Default: Story = {
     </Popover.Root>
   ),
 };
+
+export const Glass: Story = {
+  render: () => (
+    <Popover.Root defaultOpen>
+      <Popover.Trigger asChild>
+        <button>Open Popover</button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content surface="glass">
+          <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+            Glass popover
+          </p>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+            surface=&quot;glass&quot; frosts the content behind the panel.
+          </p>
+          <Popover.Arrow />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  ),
+};
