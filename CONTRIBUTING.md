@@ -17,7 +17,7 @@ Every change that affects a published package must include a changeset:
 pnpm changeset
 ```
 
-All five `@nexub/*` packages are **linked** — bumping any one with `minor` bumps all five to the same new version.
+Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it, and the major rolls over automatically after `x.9`. All five `@nexub/*` packages share one version. See [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy).
 
 ### Semver guide
 

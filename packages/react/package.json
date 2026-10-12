@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "React component library for Nexub Design System \u2014 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",

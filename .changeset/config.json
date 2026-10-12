@@ -17,5 +17,8 @@
   "updateInternalDependencies": "patch",
   "ignore": [
     "@nexub/docs"
-  ]
+  ],
+  "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
+  }
 }
