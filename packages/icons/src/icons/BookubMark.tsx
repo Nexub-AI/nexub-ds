@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
 import { createIcon, type IconComponent } from '../createIcon.js';
 
-const BookubMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const BookubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function BookubMarkSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -26,4 +26,4 @@ const BookubMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const BookubMark = createIcon(BookubMarkSvg , 'BookubMark');
+export const BookubMark = /* @__PURE__ */ createIcon(BookubMarkSvg , 'BookubMark');

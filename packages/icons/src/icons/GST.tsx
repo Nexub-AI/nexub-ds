@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
 import { createIcon, type IconComponent } from '../createIcon.js';
 
-const GSTSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const GSTSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function GSTSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -30,4 +30,4 @@ const GSTSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const GST = createIcon(GSTSvg , 'GST');
+export const GST = /* @__PURE__ */ createIcon(GSTSvg , 'GST');
