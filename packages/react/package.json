@@ -1,7 +1,7 @@
 {
   "name": "@nexub/react",
-  "version": "1.0.0",
-  "description": "React component library for Nexub Design System \u2014 90+ accessible, themeable UI components built on Radix UI primitives.",
+  "version": "1.1.0",
+  "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
