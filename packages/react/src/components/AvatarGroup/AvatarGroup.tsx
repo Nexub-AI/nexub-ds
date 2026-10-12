@@ -48,7 +48,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
           );
           return (
             <span
-              key={index}
+              key={child.key ?? index}
               className="ring-2 ring-[var(--color-bg-default)] rounded-full inline-flex"
             >
               {childWithSize}

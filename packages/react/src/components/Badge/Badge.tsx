@@ -41,56 +41,56 @@ const toneClasses: Record<
   },
   info: {
     solid:
-      'bg-[var(--color-semantic-info-default)] text-white',
-    soft: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-semantic-info-default)]',
+      'bg-[var(--color-fill-info)] text-white',
+    soft: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-text-info)]',
     outline:
-      'border-[var(--color-semantic-info-default)] text-[var(--color-semantic-info-default)]',
+      'border-[var(--color-semantic-info-default)] text-[var(--color-text-info)]',
   },
   success: {
     solid:
-      'bg-[var(--color-semantic-success-default)] text-white',
-    soft: 'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-semantic-success-default)]',
+      'bg-[var(--color-fill-success)] text-white',
+    soft: 'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-text-success)]',
     outline:
-      'border-[var(--color-semantic-success-default)] text-[var(--color-semantic-success-default)]',
+      'border-[var(--color-semantic-success-default)] text-[var(--color-text-success)]',
   },
   warning: {
     solid:
-      'bg-[var(--color-semantic-warning-default)] text-white',
-    soft: 'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-semantic-warning-default)]',
+      'bg-[var(--color-fill-warning)] text-white',
+    soft: 'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-text-warning)]',
     outline:
-      'border-[var(--color-semantic-warning-default)] text-[var(--color-semantic-warning-default)]',
+      'border-[var(--color-semantic-warning-default)] text-[var(--color-text-warning)]',
   },
   danger: {
     solid:
-      'bg-[var(--color-semantic-error-default)] text-white',
-    soft: 'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-semantic-error-default)]',
+      'bg-[var(--color-fill-danger)] text-white',
+    soft: 'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-text-danger)]',
     outline:
-      'border-[var(--color-semantic-error-default)] text-[var(--color-semantic-error-default)]',
+      'border-[var(--color-semantic-error-default)] text-[var(--color-text-danger)]',
   },
   leap: {
     solid:
-      'bg-[var(--color-leap-500)] text-white',
+      'bg-[var(--color-fill-leap)] text-white',
     soft: 'bg-[var(--color-leap-500)]/10 text-[var(--color-leap-700)]',
     outline:
       'border-[var(--color-leap-500)] text-[var(--color-leap-700)]',
   },
   bookub: {
     solid:
-      'bg-[var(--color-bookub-500)] text-white',
+      'bg-[var(--color-fill-bookub)] text-white',
     soft: 'bg-[var(--color-bookub-500)]/10 text-[var(--color-bookub-700)]',
     outline:
       'border-[var(--color-bookub-500)] text-[var(--color-bookub-700)]',
   },
   payub: {
     solid:
-      'bg-[var(--color-payub-500)] text-white',
+      'bg-[var(--color-fill-payub)] text-white',
     soft: 'bg-[var(--color-payub-500)]/10 text-[var(--color-payub-700)]',
     outline:
       'border-[var(--color-payub-500)] text-[var(--color-payub-700)]',
   },
   founderub: {
     solid:
-      'bg-[var(--color-founderub-500)] text-white',
+      'bg-[var(--color-fill-founderub)] text-white',
     soft: 'bg-[var(--color-founderub-500)]/10 text-[var(--color-founderub-700)]',
     outline:
       'border-[var(--color-founderub-500)] text-[var(--color-founderub-700)]',

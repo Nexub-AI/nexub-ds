@@ -15,7 +15,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
         className={cn(
           'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium select-none transition-colors',
           selected
-            ? 'bg-[var(--color-accent-500)] text-white border-[var(--color-accent-500)]'
+            ? 'bg-[var(--color-fill-accent)] text-white border-[var(--color-fill-accent)]'
             : 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-muted)]',
         )}
       >

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
 
 export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
@@ -7,11 +8,12 @@ export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
 
 const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
   ({ className, collapsed = false, ...props }, ref) => (
-    <aside
+    <nav
       ref={ref}
+      aria-label="Sidebar"
       data-collapsed={collapsed}
       className={cn(
-        'flex flex-col gap-1 bg-[var(--color-bg-default)] border-r border-[var(--color-border-default)] transition-all duration-200',
+        'group/sidebar flex flex-col gap-1 bg-[var(--color-bg-default)] border-r border-[var(--color-border-default)] transition-all duration-200',
         collapsed
           ? 'w-[var(--size-nav-sidebar-collapsed,56px)]'
           : 'w-[var(--size-nav-sidebar,240px)]',
@@ -45,26 +47,41 @@ Group.displayName = 'Sidebar.Group';
 export interface SidebarItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   icon?: React.ReactNode;
   active?: boolean;
+  /** Render the child element (e.g. a router `<Link>`) instead of an `<a>`. */
+  asChild?: boolean;
 }
 
 const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
-  ({ className, icon, active, children, ...props }, ref) => (
-    <a
-      ref={ref}
-      aria-current={active ? 'page' : undefined}
-      className={cn(
+  ({ className, icon, active, asChild, children, ...props }, ref) => {
+    const child = asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? children : null;
+    const label = child ? child.props.children : children;
+    const content = (
+      <>
+        {icon && <span className="shrink-0" aria-hidden="true">{icon}</span>}
+        {/* Visually hidden (still announced) when the sidebar is collapsed. */}
+        <span className="flex-1 truncate group-data-[collapsed=true]/sidebar:sr-only">{label}</span>
+      </>
+    );
+    const itemProps = {
+      ref,
+      'aria-current': active ? ('page' as const) : undefined,
+      // Native tooltip for the icon-only collapsed state.
+      title: typeof label === 'string' ? label : undefined,
+      className: cn(
         'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
         active
-          ? 'bg-[var(--color-brand-primary-500)] text-white'
+          ? 'bg-[var(--color-fill-primary)] text-white'
           : 'text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
         className,
-      )}
-      {...props}
-    >
-      {icon && <span className="shrink-0">{icon}</span>}
-      <span className="flex-1 truncate">{children}</span>
-    </a>
-  ),
+      ),
+      ...props,
+    };
+    return child ? (
+      <Slot {...itemProps}>{React.cloneElement(child, undefined, content)}</Slot>
+    ) : (
+      <a {...itemProps}>{content}</a>
+    );
+  },
 );
 Item.displayName = 'Sidebar.Item';
 

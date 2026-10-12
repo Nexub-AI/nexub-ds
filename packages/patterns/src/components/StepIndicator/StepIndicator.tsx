@@ -34,7 +34,7 @@ export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorPro
               className={cn(
                 'relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
                 status === 'complete' &&
-                  'bg-[var(--color-brand-primary-500)] text-white',
+                  'bg-[var(--color-fill-primary)] text-white',
                 status === 'current' &&
                   'border-2 border-[var(--color-brand-primary-500)] text-[var(--color-brand-primary-500)] bg-[var(--color-bg-default)]',
                 status === 'upcoming' &&

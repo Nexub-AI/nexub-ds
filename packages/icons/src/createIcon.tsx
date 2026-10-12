@@ -15,10 +15,10 @@ const TONE_MAP = {
   muted: 'var(--color-text-muted)',
   primary: 'var(--color-text-primary)',
   accent: 'var(--color-accent-500)',
-  success: 'var(--color-semantic-success-default)',
-  danger: 'var(--color-semantic-error-default)',
-  warning: 'var(--color-semantic-warning-default)',
-  info: 'var(--color-semantic-info-default)',
+  success: 'var(--color-text-success)',
+  danger: 'var(--color-text-danger)',
+  warning: 'var(--color-text-warning)',
+  info: 'var(--color-text-info)',
 } as const;
 
 // Accepts both Lucide icons and custom SVG forwardRef components

@@ -33,3 +33,15 @@ describe('Link', () => {
     expect(link).not.toHaveAttribute('target');
   });
 });
+
+describe('Link rel hardening', () => {
+  it('callers cannot drop noopener on external links', () => {
+    render(<Link href="https://x.io" external rel="author">x</Link>);
+    expect(screen.getByRole('link')).toHaveAttribute('rel', 'author noopener noreferrer');
+  });
+
+  it('adds noopener to target=_blank without `external`', () => {
+    render(<Link href="https://x.io" target="_blank">x</Link>);
+    expect(screen.getByRole('link')).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+});

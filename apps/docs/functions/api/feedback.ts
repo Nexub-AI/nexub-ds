@@ -43,17 +43,24 @@ interface BrowserContext {
 const ALLOWED_CATEGORIES = new Set(['bug', 'suggestion', 'question', 'other']);
 const ALLOWED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+// Image + text fields + multipart overhead. Checked before parsing the body.
+const MAX_BODY_BYTES = MAX_IMAGE_BYTES + 256 * 1024;
 const MIN_MESSAGE = 10;
 const MAX_MESSAGE = 2000;
 
-// Per-IP rate limit. In-memory `Map` lives for the Worker isolate's lifetime —
-// good enough for an MVP. Migrate to Workers KV when traffic warrants it.
+// Per-IP rate limit, per Worker isolate only — Cloudflare runs many isolates, so
+// this is a speed bump, not a guarantee. The real limit is the WAF rate-limiting
+// rule documented in FEEDBACK_SETUP.md.
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 3;
 const recentByIp = new Map<string, number[]>();
+const RATE_LIMIT_MAX_IPS = 1000;
 
 function rateLimit(ip: string): { ok: boolean; retryAfter: number } {
   const now = Date.now();
+  // Bound memory: drop the map when it grows past the cap (all entries are at
+  // most one window old anyway).
+  if (recentByIp.size > RATE_LIMIT_MAX_IPS) recentByIp.clear();
   const bucket = (recentByIp.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
   if (bucket.length >= RATE_LIMIT_MAX) {
     const oldest = bucket[0]!;
@@ -71,11 +78,41 @@ function jsonResponse(status: number, body: unknown, extraHeaders?: HeadersInit)
   });
 }
 
+/** Google Chat textParagraph/keyValue render a subset of HTML — escape all user input. */
+export function escapeHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+const EMAIL_RE = /^[^\s@<>"'&]+@[^\s@<>"'&]+\.[^\s@<>"'&]+$/;
+export function isValidEmail(s: string): boolean {
+  return s.length <= 254 && EMAIL_RE.test(s);
+}
+
+function httpUrlOrUndefined(s: string): string | undefined {
+  try {
+    const u = new URL(s);
+    return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Returns the real image MIME type from magic bytes, or null if not png/jpeg/webp. */
+export function sniffImageType(b: Uint8Array): string | null {
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return 'image/png';
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (
+    b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
+    b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50
+  ) return 'image/webp';
+  return null;
+}
+
 function pickContext(raw: unknown): BrowserContext | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
   const out: BrowserContext = {};
-  if (typeof r.url === 'string') out.url = r.url.slice(0, 500);
+  if (typeof r.url === 'string') out.url = httpUrlOrUndefined(r.url.slice(0, 500));
   if (typeof r.ua === 'string') out.ua = r.ua.slice(0, 300);
   if (typeof r.viewport === 'string') out.viewport = r.viewport.slice(0, 50);
   if (typeof r.theme === 'string') out.theme = r.theme.slice(0, 30);
@@ -150,27 +187,27 @@ function buildChatCard(input: ChatCardInput): unknown {
 
   const chips: { keyValue: { topLabel: string; content: string } }[] = [];
   if (input.context?.url) {
-    chips.push({ keyValue: { topLabel: 'Page', content: input.context.url } });
+    chips.push({ keyValue: { topLabel: 'Page', content: escapeHtml(input.context.url) } });
   }
   if (input.context?.viewport) {
-    chips.push({ keyValue: { topLabel: 'Viewport', content: input.context.viewport } });
+    chips.push({ keyValue: { topLabel: 'Viewport', content: escapeHtml(input.context.viewport) } });
   }
   if (input.context?.theme) {
-    chips.push({ keyValue: { topLabel: 'Theme', content: input.context.theme } });
+    chips.push({ keyValue: { topLabel: 'Theme', content: escapeHtml(input.context.theme) } });
   }
   if (input.context?.locale) {
-    chips.push({ keyValue: { topLabel: 'Locale', content: input.context.locale } });
+    chips.push({ keyValue: { topLabel: 'Locale', content: escapeHtml(input.context.locale) } });
   }
   if (input.context?.ua) {
-    chips.push({ keyValue: { topLabel: 'User agent', content: input.context.ua } });
+    chips.push({ keyValue: { topLabel: 'User agent', content: escapeHtml(input.context.ua) } });
   }
   if (input.email) {
-    chips.push({ keyValue: { topLabel: 'Email', content: input.email } });
+    chips.push({ keyValue: { topLabel: 'Email', content: escapeHtml(input.email) } });
   }
 
   const sections: unknown[] = [
     {
-      widgets: [{ textParagraph: { text: input.message } }],
+      widgets: [{ textParagraph: { text: escapeHtml(input.message) } }],
     },
   ];
   if (chips.length > 0) {
@@ -217,6 +254,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return jsonResponse(429, { error: 'rate_limited' }, { 'retry-after': String(limit.retryAfter) });
   }
 
+  // Reject oversized bodies before buffering them in formData().
+  const contentLength = Number(request.headers.get('content-length'));
+  if (!contentLength) return jsonResponse(411, { error: 'length_required' });
+  if (contentLength > MAX_BODY_BYTES) return jsonResponse(413, { error: 'too_large' });
+
   const parsed = await parseBody(request);
   if (!parsed) return jsonResponse(400, { error: 'invalid' });
 
@@ -229,35 +271,42 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const trimmed = parsed.message.trim();
   if (trimmed.length < MIN_MESSAGE) return jsonResponse(400, { error: 'invalid' });
   if (trimmed.length > MAX_MESSAGE) return jsonResponse(400, { error: 'too_long' });
-  if (parsed.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(parsed.email)) {
+  if (parsed.email && !isValidEmail(parsed.email)) {
     return jsonResponse(400, { error: 'invalid' });
   }
 
-  // Turnstile is required if the secret is set. If the secret isn't set
-  // (e.g. unconfigured staging env), skip verification but still process —
-  // useful during initial setup. The setup doc warns about this.
-  if (env.TURNSTILE_SECRET_KEY) {
-    const ok = await verifyTurnstile(parsed.turnstileToken, env.TURNSTILE_SECRET_KEY, ip);
-    if (!ok) return jsonResponse(400, { error: 'turnstile_failed' });
-  }
-
-  // Optional screenshot → R2
-  let screenshotUrl: string | null = null;
+  // Cheap local checks first, then the Turnstile round-trip.
+  let imageType: string | null = null;
   if (parsed.screenshot) {
-    if (!ALLOWED_IMAGE_TYPES.has(parsed.screenshot.type)) {
-      return jsonResponse(400, { error: 'bad_image' });
-    }
     if (parsed.screenshot.size > MAX_IMAGE_BYTES) {
       return jsonResponse(400, { error: 'bad_image' });
     }
+    // Trust the bytes, not the client-declared MIME type.
+    imageType = sniffImageType(new Uint8Array(await parsed.screenshot.slice(0, 12).arrayBuffer()));
+    if (!imageType || !ALLOWED_IMAGE_TYPES.has(imageType)) {
+      return jsonResponse(400, { error: 'bad_image' });
+    }
+  }
+
+  // Fail closed: a missing secret must not silently disable the CAPTCHA.
+  if (!env.TURNSTILE_SECRET_KEY) {
+    console.error('[feedback] TURNSTILE_SECRET_KEY not set — rejecting submission');
+    return jsonResponse(503, { error: 'not_configured' });
+  }
+  const ok = await verifyTurnstile(parsed.turnstileToken, env.TURNSTILE_SECRET_KEY, ip);
+  if (!ok) return jsonResponse(400, { error: 'turnstile_failed' });
+
+  // Optional screenshot → R2
+  let screenshotUrl: string | null = null;
+  if (parsed.screenshot && imageType) {
     if (!env.FEEDBACK_SCREENSHOTS) {
       // Bucket not bound yet — drop the screenshot but accept the rest.
       // Reviewer will wire R2 in the dashboard before relying on this.
     } else {
       try {
-        const key = `${crypto.randomUUID()}${extFromMime(parsed.screenshot.type)}`;
+        const key = `${crypto.randomUUID()}${extFromMime(imageType)}`;
         await env.FEEDBACK_SCREENSHOTS.put(key, parsed.screenshot.stream(), {
-          httpMetadata: { contentType: parsed.screenshot.type },
+          httpMetadata: { contentType: imageType },
         });
         const origin = new URL(request.url).origin;
         screenshotUrl = `${origin}/api/feedback/screenshot/${key}`;
