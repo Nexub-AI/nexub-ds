@@ -48,18 +48,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build packages in dependency order (required before publish)
-      - name: Build @nexub/tokens
-        run: pnpm --filter @nexub/tokens build
-
-      - name: Build @nexub/icons
-        run: pnpm --filter @nexub/icons build
-
-      - name: Build @nexub/react
-        run: pnpm --filter @nexub/react build
-
-      - name: Build @nexub/patterns
-        run: pnpm --filter @nexub/patterns build
+      # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
 
       # changesets/action:
       #   - If .changeset/*.md files exist → opens/updates "Version Packages" PR

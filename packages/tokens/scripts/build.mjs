@@ -173,17 +173,6 @@ const sd = new StyleDictionary({
 
 await sd.buildAllPlatforms();
 
-// Emit stub CSS files for light/dark — Phase 2 fills them in
-mkdirSync(`${root}/dist/css`, { recursive: true });
-writeFileSync(
-  `${root}/dist/css/light.css`,
-  `/* Light mode token overrides — filled in by @nexub/themes in Phase 2. */\n@import './variables.css';\n`,
-);
-writeFileSync(
-  `${root}/dist/css/dark.css`,
-  `/* Dark mode token overrides — filled in by @nexub/themes in Phase 2. */\n`,
-);
-
 // Emit tailwind preset type declaration
 mkdirSync(`${root}/dist/tailwind`, { recursive: true });
 writeFileSync(

@@ -1,6 +1,3 @@
-'use client';
-
-import { motion } from 'framer-motion';
 import { componentEntries, patternEntries } from '@/registry/index';
 
 const features = [
@@ -30,19 +27,6 @@ const features = [
   },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.45,
-      delay: i * 0.08,
-      ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number],
-    },
-  }),
-};
-
 export function LandingFeatures() {
   return (
     <section
@@ -55,11 +39,7 @@ export function LandingFeatures() {
     >
       <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
         {/* Section label */}
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+        <p data-reveal-scroll
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
@@ -71,13 +51,9 @@ export function LandingFeatures() {
           }}
         >
           What&apos;s inside
-        </motion.p>
+        </p>
 
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.1 }}
+        <h2 data-reveal-scroll
           style={{
             fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
             fontWeight: 800,
@@ -88,7 +64,7 @@ export function LandingFeatures() {
           }}
         >
           Everything you need to ship faster
-        </motion.h2>
+        </h2>
 
         <div
           style={{
@@ -97,15 +73,11 @@ export function LandingFeatures() {
             gap: '20px',
           }}
         >
-          {features.map((f, i) => (
-            <motion.div
+          {features.map((f) => (
+            <div
               key={f.title}
-              custom={i}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              whileHover={{ y: -4, boxShadow: 'var(--shadow-lg, 0 8px 24px rgba(0,0,0,0.12))' }}
-              viewport={{ once: true, margin: '-60px' }}
+              className="landing-card"
+              data-reveal-scroll
               style={{
                 background: 'var(--color-bg-raised)',
                 border: '1px solid var(--color-border-default)',
@@ -142,7 +114,7 @@ export function LandingFeatures() {
               <div style={{ fontSize: '0.84rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
                 {f.desc}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -15,7 +15,7 @@ Update the [Release History](#release-history) table after every publish.
 | `@nexub/react` | [![npm](https://img.shields.io/npm/v/@nexub/react)](https://www.npmjs.com/package/@nexub/react) | 90+ React UI components |
 | `@nexub/patterns` | [![npm](https://img.shields.io/npm/v/@nexub/patterns)](https://www.npmjs.com/package/@nexub/patterns) | Composite UI patterns |
 
-All five packages are **linked** — they always publish at the same version number.
+All five packages are in a changesets **`fixed`** group — they always publish at the same version number.
 `@nexub/docs` is excluded from publishing (it's the docs website, not a library).
 
 ---
@@ -39,143 +39,49 @@ We follow **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
 | New component, new prop, backward-compatible feature | `minor` | `0.0.3` → `0.1.0` |
 | Renamed/removed export, breaking prop change, peer dep bump | `major` | `0.1.0` → `1.0.0` |
 
-All packages in the linked group always bump to the **same version** even if only one package changed.
+All packages in the fixed group always bump to the **same version** even if only one package changed.
 
 ---
 
-## Full Release Process
+## Release Process
 
-### Step 1 — Write a changeset (AI or human)
+Publishing is automated by `.github/workflows/release.yml` (changesets/action). Nobody runs `npm publish` by hand.
+
+1. **Add a changeset in your PR.** Run `pnpm changeset` (pick packages and bump type), or write `.changeset/<name>.md` by hand:
+   ```markdown
+   ---
+   "@nexub/react": patch
+   ---
+
+   Short description of what changed and why.
+   ```
+   Use one changeset per logical change. Bump types follow the table above.
+2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
+3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, using the `NPM_TOKEN` secret) and deploys the docs to production.
+5. **Add a row** to the [Release History](#release-history) table.
+
+> The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.
+
+### Pre-flight check (optional)
 
 ```bash
-# Interactive — prompts you to pick packages and bump type
-npx changeset
-
-# Or: write the file manually in .changeset/your-description.md
+pnpm turbo build --filter='./packages/*'
+for pkg in tokens themes icons react patterns; do (cd packages/$pkg && npm pack --dry-run); done
 ```
 
-Changeset file format:
-```markdown
----
-"@nexub/react": patch
----
+Check that only `dist/` (or `src/` for themes) is listed and that react stays under ~150 KB packed.
 
-Short description of what changed and why.
-```
+### Break-glass: manual publish
 
-**One changeset per logical change.** Multiple changesets accumulate and are consumed together when you run `changeset version`.
-
----
-
-### Step 2 — Version bump (AI does this)
-
-```bash
-# Consumes all pending .changeset/*.md files,
-# bumps package.json versions, writes CHANGELOG.md
-npx changeset version
-```
-
-All five packages are in a changesets `fixed` group, so they always bump together.
-
----
-
-### Step 3 — Build all packages (AI does this)
-
-Must be done in dependency order to avoid DTS resolution errors:
-
-```bash
-npx pnpm --filter @nexub/tokens   build
-npx pnpm --filter @nexub/icons    build
-npx pnpm --filter @nexub/react    build
-npx pnpm --filter @nexub/patterns build
-# @nexub/themes has no build step (ships raw CSS from src/)
-```
-
----
-
-### Step 4 — Dry-run verify (AI does this)
-
-```bash
-for pkg in tokens themes icons react patterns; do
-  echo "=== @nexub/$pkg ==="
-  cd packages/$pkg && npm pack --dry-run && cd ../..
-done
-```
-
-Check:
-- [ ] Only `dist/` files listed (no `src/`, `node_modules/`, `*.test.*`)
-- [ ] Package sizes are reasonable (react < 150 KB packed)
-- [ ] Version number matches the intended release
-
----
-
-### Step 5 — npm login (YOU do this)
-
-```bash
-npm login
-# Enter: npm username → password → OTP (if 2FA enabled)
-npm whoami   # confirm you're logged in
-```
-
----
-
-### Step 6 — Publish (YOU do this)
-
-```bash
-# From the repo root, publish all packages in order:
-npx pnpm --filter @nexub/tokens   publish --access public --no-git-checks
-npx pnpm --filter @nexub/themes   publish --access public --no-git-checks
-npx pnpm --filter @nexub/icons    publish --access public --no-git-checks
-npx pnpm --filter @nexub/react    publish --access public --no-git-checks
-npx pnpm --filter @nexub/patterns publish --access public --no-git-checks
-```
-
-> `--access public` — required for scoped `@nexub/*` packages on npm.
-> `--no-git-checks` — skips the "clean working tree" check (safe since we committed).
-
-After publish, verify on npm:
-```bash
-npm view @nexub/react version   # should show new version
-npm view @nexub/tokens version
-```
-
----
-
-### Step 7 — Commit, tag, push (AI does this)
-
-```bash
-git add packages/*/package.json packages/*/CHANGELOG.md .changeset/
-git commit -m "chore(release): vX.X.X"
-git tag vX.X.X
-git push origin development
-git push origin vX.X.X
-```
-
----
-
-### Step 8 — Update this file
-
-Add a row to the [Release History](#release-history) table above with:
-- Version
-- Date
-- Bump type (patch/minor/major)
-- One-line summary
-- Link to GitHub tag
+Use this only if the workflow is broken. Run `npm login` (`npm whoami` to confirm), then `pnpm changeset version`, `pnpm release`, and commit the version bump.
 
 ---
 
 ## Troubleshooting
 
 ### `workspace:*` dependencies in published package
-pnpm automatically rewrites `workspace:*` to the real version number on publish.
-No manual action needed. Verify with `npm pack --dry-run` and inspect `package.json` in the tarball.
-
-### DTS build error: "Could not find declaration file for @nexub/icons"
-Build packages in dependency order (tokens → icons → react → patterns).
-Turbo's parallel build can start `patterns` before `icons` DTS finishes.
-
-### "You must be logged in to publish packages"
-Run `npm login` and confirm with `npm whoami` before publishing.
+pnpm rewrites `workspace:*` and `workspace:^` to real versions on publish. Verify with `npm pack --dry-run`.
 
 ### "Package name too similar to existing package" / 403 on first publish
 The `@nexub` scope must exist on npm and you must have publish rights.
@@ -192,24 +98,20 @@ npm CDN propagates in ~30 seconds. Wait and re-run `npm view`.
 |---|---|---|
 | `@nexub/tokens` | `dist/` (CSS vars, JS, Tailwind preset, JSON) | `src/`, `scripts/`, tests |
 | `@nexub/themes` | `src/` (raw CSS files) | nothing extra — CSS is the source |
-| `@nexub/icons` | `dist/` (ESM + CJS + types) | `src/`, tests |
-| `@nexub/react` | `dist/` (ESM + CJS + types) | `src/`, tests, stories |
-| `@nexub/patterns` | `dist/` (ESM + CJS + types) | `src/`, tests |
+| `@nexub/icons` | `dist/` (ESM + types) | `src/`, tests |
+| `@nexub/react` | `dist/` (ESM, one entry per component, + types) | `src/`, tests, stories |
+| `@nexub/patterns` | `dist/` (ESM + types) | `src/`, tests |
 
 ---
 
 ## Peer Dependencies
 
-Consumers of `@nexub/react` must have:
-```json
-"react": ">=18 <20",
-"react-dom": ">=18 <20"
-```
+| Package | Peers |
+|---|---|
+| `@nexub/react` | `react`, `react-dom` `>=18 <20`; `@nexub/tokens` |
+| `@nexub/patterns` | `react`, `react-dom`; `@nexub/react` (+ optional `@nexub/icons`, `@nexub/tokens`) |
+| `@nexub/icons` | `react`, `react-dom` `>=18 <20` |
+| `@nexub/tokens` | optional `tailwindcss ^3` (only for the Tailwind preset) |
+| `@nexub/themes` | none |
 
-Consumers of `@nexub/patterns` must also have:
-```json
-"@nexub/react": "*"
-```
-
-`@nexub/tokens` and `@nexub/themes` have no peer deps.
-`@nexub/icons` requires `react >=18 <20`.
+All packages are **ESM-only**. Loading the Tailwind preset with `require()` needs Node ≥ 20.19.

@@ -11,7 +11,6 @@ interface CodeBlockProps {
 // resets the module-level variable, and forces Shiki to reload its WASM + grammars
 // (~800 ms cold start). globalThis persists for the lifetime of the Node process.
 declare global {
-  // eslint-disable-next-line no-var
   var __shikiHighlighter: Promise<Highlighter> | undefined;
 }
 

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useTheme } from '@nexub/react';
-import { Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor } from '@nexub/icons';
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();

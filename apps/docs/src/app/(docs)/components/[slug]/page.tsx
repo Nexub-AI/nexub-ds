@@ -27,7 +27,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const entry = getComponentEntry(slug);
-  return { title: entry?.meta.title ?? 'Component' };
+  return { title: entry?.meta.title ?? 'Component', description: entry?.meta.description };
 }
 
 export default async function ComponentPage({ params }: Props) {

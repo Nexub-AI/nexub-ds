@@ -1,10 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 import { ClientProviders } from '@/components/ClientProviders';
+import { searchIndex } from '@/registry/index';
+import { SITE_URL } from './site';
 import '@/styles/globals.css';
 
+const description =
+  'The official design system for Nexub products. Components, tokens, and patterns for building beautiful SaaS interfaces.';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Nexub DS', template: '%s — Nexub DS' },
-  description: 'The official design system for Nexub products. Components, tokens, and patterns for building beautiful SaaS interfaces.',
+  description,
+  openGraph: { type: 'website', siteName: 'Nexub DS', title: 'Nexub DS', description },
+  twitter: { card: 'summary', title: 'Nexub DS', description },
   icons: {
     icon: '/nexub-icon.svg',
     shortcut: '/nexub-icon.svg',
@@ -29,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: prePaintScript }} />
       </head>
       <body style={{ margin: 0 }} suppressHydrationWarning>
-        <ClientProviders>
+        <ClientProviders searchIndex={searchIndex}>
           {children}
         </ClientProviders>
       </body>

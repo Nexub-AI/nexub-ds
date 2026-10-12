@@ -32,6 +32,8 @@ import {
   LucideSettings,
   LucideSettings2,
   LucideCommand,
+  LucideCamera,
+  LucideLayers,
   LucideCalendar,
   LucideCalendarDays,
   LucideClock,
@@ -150,6 +152,8 @@ export const SlidersHorizontal = /* @__PURE__ */ createIcon(LucideSlidersHorizon
 export const Settings        = /* @__PURE__ */ createIcon(LucideSettings,        'Settings');
 export const Settings2       = /* @__PURE__ */ createIcon(LucideSettings2,       'Settings2');
 export const Command         = /* @__PURE__ */ createIcon(LucideCommand,         'Command');
+export const Camera          = /* @__PURE__ */ createIcon(LucideCamera,          'Camera');
+export const Layers          = /* @__PURE__ */ createIcon(LucideLayers,          'Layers');
 
 // Time & calendar
 export const Calendar        = /* @__PURE__ */ createIcon(LucideCalendar,        'Calendar');

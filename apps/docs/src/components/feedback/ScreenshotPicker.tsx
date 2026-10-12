@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Camera, Monitor, Upload as UploadIcon } from 'lucide-react';
+import { Camera, Monitor, Upload as UploadIcon } from '@nexub/icons';
 import { capturePage, captureScreen, isScreenCaptureSupported } from './capture';
 import { Annotator } from './Annotator';
 
