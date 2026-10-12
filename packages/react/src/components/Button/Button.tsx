@@ -15,6 +15,22 @@ export type ToneValue =
   | 'payub'
   | 'founderub';
 
+// Tone overrides the variant colour with a solid semantic/brand palette.
+// Static strings (no interpolation) so Tailwind's JIT scans them literally;
+// appended after the variant classes so tailwind-merge lets tone win.
+// ponytail: white text on warning-500 is borderline contrast — revisit if WCAG AA fails.
+const toneClasses: Record<ToneValue, string> = {
+  neutral: 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
+  info: 'bg-[var(--color-info-500)] text-white hover:bg-[var(--color-info-600)]',
+  success: 'bg-[var(--color-success-500)] text-white hover:bg-[var(--color-success-600)]',
+  warning: 'bg-[var(--color-warning-500)] text-white hover:bg-[var(--color-warning-600)]',
+  danger: 'bg-[var(--color-danger-500)] text-white hover:bg-[var(--color-danger-600)]',
+  leap: 'bg-[var(--color-leap-500)] text-white hover:bg-[var(--color-leap-600)]',
+  bookub: 'bg-[var(--color-bookub-500)] text-white hover:bg-[var(--color-bookub-600)]',
+  payub: 'bg-[var(--color-payub-500)] text-white hover:bg-[var(--color-payub-600)]',
+  founderub: 'bg-[var(--color-founderub-500)] text-white hover:bg-[var(--color-founderub-600)]',
+};
+
 export const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors',
@@ -89,7 +105,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const sharedProps = {
-      className: cn(buttonVariants({ variant, size, fullWidth }), className),
+      className: cn(
+        buttonVariants({ variant, size, fullWidth }),
+        tone ? toneClasses[tone] : '',
+        className,
+      ),
       'data-tone': tone,
       ...props,
     };

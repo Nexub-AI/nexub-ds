@@ -29,6 +29,7 @@
     "./base": "./src/base.css",
     "./light": "./src/light.css",
     "./dark": "./src/dark.css",
+    "./glass": "./src/glass.css",
     "./leap": "./src/leap.css",
     "./bookub": "./src/bookub.css",
     "./payub": "./src/payub.css",

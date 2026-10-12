@@ -39,4 +39,9 @@ describe('Label', () => {
     );
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
   });
+
+  it('tints text with the tone colour', () => {
+    render(<Label tone="danger">Required field</Label>);
+    expect(screen.getByText('Required field')).toHaveStyle({ color: 'var(--color-text-danger)' });
+  });
 });

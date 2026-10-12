@@ -22,6 +22,7 @@ const entry: ComponentEntry = {
     { name: 'Drawer.Title', type: 'compound', required: false, description: 'Accessible title for the drawer.' },
     { name: 'Drawer.Description', type: 'compound', required: false, description: 'Supporting description text for the drawer.' },
     { name: 'Drawer.Close', type: 'compound', required: false, description: 'Element that closes the drawer.' },
+    { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material on Drawer.Content — see Foundations → Materials.' },
   ],
   examples: [
     {

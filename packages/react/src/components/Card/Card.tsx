@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { glassSurfaceClass } from '../../utils/glass.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const cardVariants = cva(
@@ -14,9 +15,18 @@ export const cardVariants = cva(
         interactive:
           'cursor-pointer shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1))] transition-all duration-200 hover:shadow-[var(--shadow-card-hover,0_4px_12px_0_rgb(0_0_0/0.15))] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
       },
+      // Material. 'glass' needs data-material="glass" on the element (set in the
+      // component) for the --glass-* vars to resolve. Single box-shadow carries
+      // both the inset specular highlight and the drop shadow so neither clobbers
+      // the other. Listed after `variant` so tailwind-merge lets it win on bg/border.
+      surface: {
+        solid: '',
+        glass: glassSurfaceClass,
+      },
     },
     defaultVariants: {
       variant: 'flat',
+      surface: 'solid',
     },
   },
 );
@@ -37,19 +47,21 @@ export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof cardVariants> {
   tone?: ToneValue;
+  surface?: 'solid' | 'glass';
   asChild?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'flat', tone, asChild = false, children, ...props }, ref) => {
+  ({ className, variant = 'flat', surface = 'solid', tone, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : 'div';
     const toneStyle = tone ? toneBorderMap[tone] : '';
 
     return (
       <Comp
         ref={ref}
-        className={cn(cardVariants({ variant }), toneStyle, className)}
+        className={cn(cardVariants({ variant, surface }), toneStyle, className)}
         data-tone={tone}
+        data-material={surface === 'glass' ? 'glass' : undefined}
         {...props}
       >
         {children}

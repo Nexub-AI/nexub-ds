@@ -15,6 +15,7 @@ const entry: ComponentEntry = {
     { name: 'variant', type: "'flat' | 'surface' | 'interactive'", default: "'flat'", required: false, description: 'Visual style of the card surface.' },
     { name: 'tone', type: "ToneValue", default: 'undefined', required: false, description: 'Applies a semantic left-border accent.' },
     { name: 'asChild', type: 'boolean', default: 'false', required: false, description: 'Merges props onto the immediate child element.' },
+    { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Liquid-glass material treatment — see Foundations → Materials.' },
   ],
   examples: [
     {

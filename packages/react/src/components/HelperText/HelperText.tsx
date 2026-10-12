@@ -7,11 +7,15 @@ export interface HelperTextProps extends React.HTMLAttributes<HTMLParagraphEleme
 }
 
 export const HelperText = React.forwardRef<HTMLParagraphElement, HelperTextProps>(
-  ({ className, tone, children, ...props }, ref) => {
+  ({ className, tone, style, children, ...props }, ref) => {
+    // Inline var() so Tailwind JIT never sees `${tone}`; only semantic tones
+    // resolve a --color-text-* var, brand tones fall back to the muted class.
+    const toneStyle: React.CSSProperties = tone ? { color: `var(--color-text-${tone})` } : {};
     return (
       <p
         ref={ref}
         data-tone={tone}
+        style={{ ...toneStyle, ...style }}
         className={cn(
           'text-sm text-[var(--color-text-muted)] leading-snug',
           className,

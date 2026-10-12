@@ -107,4 +107,24 @@ describe('Dialog', () => {
     await user.click(screen.getByText('Open'));
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('activates the glass material on Content with surface="glass"', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Open</Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay />
+          <Dialog.Content surface="glass">
+            <Dialog.Title>Test</Dialog.Title>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    );
+
+    await user.click(screen.getByText('Open'));
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('data-material', 'glass');
+    expect(dialog).toHaveClass('bg-[var(--glass-bg)]');
+  });
 });
