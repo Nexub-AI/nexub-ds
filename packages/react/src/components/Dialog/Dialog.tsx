@@ -14,7 +14,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixDialog.DialogOverlayProps>
       <RadixDialog.Overlay
         ref={ref}
         className={cn(
-          'fixed inset-0 z-[var(--z-modal)] bg-black/50 backdrop-blur-sm',
+          'fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)] backdrop-blur-sm',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
           className,

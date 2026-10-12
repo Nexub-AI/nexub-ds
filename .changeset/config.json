@@ -8,7 +8,8 @@
       "@nexub/themes",
       "@nexub/icons",
       "@nexub/react",
-      "@nexub/patterns"
+      "@nexub/patterns",
+      "@nexub/brand"
     ]
   ],
   "linked": [],

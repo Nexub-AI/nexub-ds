@@ -9,8 +9,10 @@ describe('Logo', () => {
     expect(screen.getByText('nexub')).toBeInTheDocument();
   });
 
-  it('does not render wordmark in mark variant', () => {
-    render(<Logo variant="mark" />);
+  it('does not render wordmark in icon variant (and its old name, mark)', () => {
+    const { rerender } = render(<Logo variant="icon" />);
+    expect(screen.queryByText('nexub')).not.toBeInTheDocument();
+    rerender(<Logo variant="mark" />);
     expect(screen.queryByText('nexub')).not.toBeInTheDocument();
   });
 
@@ -25,8 +27,39 @@ describe('Logo', () => {
     expect(ref.current).toBeInstanceOf(HTMLSpanElement);
   });
 
-  it('has aria-label Nexub', () => {
+  it('is an image named Nexub', () => {
     render(<Logo />);
-    expect(screen.getByLabelText('Nexub')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Nexub' })).toBeInTheDocument();
+  });
+
+  it('renders the colour mark from brand tokens by default', () => {
+    const { container } = render(<Logo />);
+    const stops = container.querySelectorAll('stop');
+    expect(stops.length).toBeGreaterThan(0);
+    stops.forEach((s) => expect(s.getAttribute('style')).toMatch(/var\(--color-brand-mark-\d+\)/));
+  });
+
+  it('renders a single currentColor path when mark="mono"', () => {
+    const { container } = render(<Logo mark="mono" />);
+    expect(container.querySelectorAll('stop')).toHaveLength(0);
+    expect(container.querySelectorAll('path')).toHaveLength(1);
+    expect(container.querySelector('svg')).toHaveAttribute('fill', 'currentColor');
+  });
+
+  it('gives each instance its own gradient ids', () => {
+    const { container } = render(<><Logo /><Logo /></>);
+    const ids = [...container.querySelectorAll('linearGradient')].map((g) => g.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('shows the product name after the wordmark and names the image with it', () => {
+    render(<Logo product="Command Hub" />);
+    expect(screen.getByText('Command Hub')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Nexub Command Hub' })).toBeInTheDocument();
+  });
+
+  it('hides the product name in the icon variant', () => {
+    render(<Logo variant="icon" product="Account" />);
+    expect(screen.queryByText('Account')).not.toBeInTheDocument();
   });
 });

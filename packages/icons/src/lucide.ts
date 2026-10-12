@@ -112,6 +112,10 @@ import {
   LucideSkipForward,
   LucideSkipBack,
   LucideLoader2,
+  LucidePin,
+  LucideSend,
+  LucideCrown,
+  LucideGrip,
 } from 'lucide-react';
 import { createIcon } from './createIcon.js';
 
@@ -198,6 +202,9 @@ export const Heart           = /* @__PURE__ */ createIcon(LucideHeart,          
 export const Eye             = /* @__PURE__ */ createIcon(LucideEye,             'Eye');
 export const EyeOff          = /* @__PURE__ */ createIcon(LucideEyeOff,          'EyeOff');
 export const Bookmark        = /* @__PURE__ */ createIcon(LucideBookmark,        'Bookmark');
+export const Pin             = /* @__PURE__ */ createIcon(LucidePin,             'Pin');
+export const Send            = /* @__PURE__ */ createIcon(LucideSend,            'Send');
+export const Crown           = /* @__PURE__ */ createIcon(LucideCrown,           'Crown');
 export const Tag             = /* @__PURE__ */ createIcon(LucideTag,             'Tag');
 export const Flag            = /* @__PURE__ */ createIcon(LucideFlag,            'Flag');
 
@@ -264,3 +271,6 @@ export const SkipBack        = /* @__PURE__ */ createIcon(LucideSkipBack,       
 
 // Loading & state
 export const Loader2         = /* @__PURE__ */ createIcon(LucideLoader2,         'Loader2');
+
+// App switcher — the 3×3 "waffle" (AppLauncher trigger)
+export const Apps            = /* @__PURE__ */ createIcon(LucideGrip,            'Apps');

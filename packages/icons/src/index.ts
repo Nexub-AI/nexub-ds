@@ -6,6 +6,7 @@ export * from './lucide.js';
 
 // Custom Nexub icons
 export { NexubMark } from './icons/NexubMark.js';
+export type { NexubMarkProps } from './icons/NexubMark.js';
 export { LeapMark } from './icons/LeapMark.js';
 export { BookubMark } from './icons/BookubMark.js';
 export { PayubMark } from './icons/PayubMark.js';
