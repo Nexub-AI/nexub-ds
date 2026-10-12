@@ -1,6 +1,6 @@
 {
   "name": "@nexub/patterns",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Composite UI patterns for Nexub Design System \u2014 pre-built, production-ready layouts and widgets built on @nexub/react.",
   "type": "module",
   "license": "MIT",
