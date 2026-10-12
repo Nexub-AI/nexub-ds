@@ -21,10 +21,12 @@ export const logoVariants = cva('inline-flex items-center gap-2', {
   },
 });
 
+// The mark is 78×56: size it by height; aspect-ratio overrides the square
+// width/height attributes the icon wrapper sets.
 const iconSizeMap: Record<'sm' | 'md' | 'lg', string> = {
-  sm: 'h-5 w-5',
-  md: 'h-7 w-7',
-  lg: 'h-9 w-9',
+  sm: 'h-5 w-auto aspect-[78/56]',
+  md: 'h-7 w-auto aspect-[78/56]',
+  lg: 'h-9 w-auto aspect-[78/56]',
 };
 
 const wordmarkSizeMap: Record<'sm' | 'md' | 'lg', string> = {
@@ -36,13 +38,20 @@ const wordmarkSizeMap: Record<'sm' | 'md' | 'lg', string> = {
 export interface LogoProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof logoVariants> {
-  variant?: 'full' | 'mark';
+  /** `full` = mark + wordmark; `icon` = mark only. `mark` is the old name for `icon`. */
+  variant?: 'full' | 'icon' | 'mark';
+  /** `color` (default) = the official mark in brand colours; `mono` = `currentColor`. */
+  mark?: 'color' | 'mono';
+  /** Product name shown after the wordmark, e.g. "Command Hub". Ignored for `variant="icon"`. */
+  product?: string;
 }
 
 export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
   (
     {
       variant = 'full',
+      mark = 'color',
+      product,
       size = 'md',
       tone = 'default',
       className,
@@ -52,19 +61,22 @@ export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
   ) => {
     const resolvedSize = size ?? 'md';
     const resolvedTone = tone ?? 'default';
+    const full = variant === 'full';
 
     return (
       <span
         ref={ref}
+        role="img"
+        aria-label={product ? `Nexub ${product}` : 'Nexub'}
         className={cn(logoVariants({ size: resolvedSize, tone: resolvedTone }), className)}
-        aria-label="Nexub"
         {...rest}
       >
         <NexubMark
+          variant={mark}
           className={cn(iconSizeMap[resolvedSize], 'shrink-0')}
           aria-hidden="true"
         />
-        {variant === 'full' && (
+        {full && (
           <span
             className={cn(
               wordmarkSizeMap[resolvedSize],
@@ -73,6 +85,20 @@ export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
           >
             nexub
           </span>
+        )}
+        {full && product && (
+          <>
+            <span aria-hidden="true" className="h-1/2 w-px shrink-0 bg-current opacity-25" />
+            <span
+              className={cn(
+                wordmarkSizeMap[resolvedSize],
+                'font-medium tracking-tight leading-none whitespace-nowrap',
+                resolvedTone === 'inverse' ? 'opacity-70' : 'text-[var(--color-text-muted)]',
+              )}
+            >
+              {product}
+            </span>
+          </>
         )}
       </span>
     );

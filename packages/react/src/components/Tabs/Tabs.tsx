@@ -47,6 +47,9 @@ const Content = React.forwardRef<HTMLDivElement, RadixTabs.TabsContentProps>(
       className={cn(
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
         className,
+        // Radix hides inactive panels with the `hidden` attribute, which any
+        // display class (`flex`, `md:grid`…) overrides. !important always wins.
+        'data-[state=inactive]:!hidden',
       )}
       {...props}
     />

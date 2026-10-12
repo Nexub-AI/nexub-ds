@@ -1,29 +1,63 @@
-import { forwardRef, type SVGProps } from 'react';
+import { forwardRef, useId, type FC, type SVGProps } from 'react';
 import { createIcon } from '../createIcon.js';
 import type { IconProps } from '../Icon.js';
+import { NEXUB_MARK_GRADIENTS, NEXUB_MARK_PATHS } from './nexubMarkData.js';
 
-const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  function NexubMarkSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
+// The official mark (@nexub/brand assets/nexub-mark.svg). Mono merges its
+// shapes into one path so there are no seams where they overlap.
+const MONO_PATH = NEXUB_MARK_PATHS.map((p) => p.d).join(' ');
+
+type NexubMarkSvgProps = SVGProps<SVGSVGElement> & { variant?: 'mono' | 'color' };
+
+const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, NexubMarkSvgProps>(
+  // strokeWidth comes from createIcon; the mark is filled, so drop it.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function NexubMarkSvg({ width = 24, height = 24, strokeWidth, variant = 'mono', ...props }, ref) {
+    // Gradient ids must be unique per instance; useId() can contain ':'.
+    const uid = `nxm${useId().replace(/[^\w-]/g, '')}`;
     return (
-      <svg
-        ref={ref}
-        viewBox="0 0 24 24"
-        width={width}
-        height={height}
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        {...props}
-      >
-        {/* "B" letterform — left stem + two bumps */}
-        <path d="M6 4h7a4 4 0 0 1 0 8H6V4z" />
-        <path d="M6 12h8a4 4 0 0 1 0 8H6v-8z" />
+      <svg ref={ref} viewBox="0 0 78 56" width={width} height={height} fill="currentColor" {...props}>
+        {variant === 'mono' ? (
+          <path d={MONO_PATH} />
+        ) : (
+          <>
+            <defs>
+              {NEXUB_MARK_GRADIENTS.map((g, i) => (
+                <linearGradient
+                  key={i}
+                  id={`${uid}-${i}`}
+                  x1={g.x1}
+                  y1={g.y1}
+                  x2={g.x2}
+                  y2={g.y2}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  {g.stops.map((s, j) => (
+                    <stop
+                      key={j}
+                      offset={s.offset}
+                      style={{
+                        stopColor: `var(--color-brand-mark-${s.color})`,
+                        stopOpacity: 'opacity' in s ? s.opacity : undefined,
+                      }}
+                    />
+                  ))}
+                </linearGradient>
+              ))}
+            </defs>
+            {NEXUB_MARK_PATHS.map((p, i) => (
+              <path key={i} d={p.d} fill={`url(#${uid}-${p.gradient})`} />
+            ))}
+          </>
+        )}
       </svg>
     );
   },
 );
 
-export const NexubMark = /* @__PURE__ */ createIcon(NexubMarkSvg , 'NexubMark');
-export type { IconProps as NexubMarkProps };
+export interface NexubMarkProps extends IconProps {
+  /** `mono` (default) fills with `currentColor`; `color` uses the brand-mark tokens. */
+  variant?: 'mono' | 'color';
+}
+
+export const NexubMark = /* @__PURE__ */ createIcon(NexubMarkSvg, 'NexubMark') as FC<NexubMarkProps>;

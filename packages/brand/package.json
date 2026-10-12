@@ -1,0 +1,36 @@
+{
+  "name": "@nexub/brand",
+  "version": "1.0.0",
+  "description": "Official Nexub brand files: the Nexub mark (colour and mono SVG), app icon tiles, PNG icons and favicon.",
+  "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/brand"
+  },
+  "keywords": [
+    "brand",
+    "logo",
+    "icons",
+    "favicon",
+    "nexub"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "assets"
+  ],
+  "sideEffects": false,
+  "exports": {
+    "./*": "./assets/*",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build:assets": "node scripts/build-assets.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}

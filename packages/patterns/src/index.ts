@@ -27,3 +27,14 @@ export type { StepIndicatorProps, StepIndicatorStep } from './components/StepInd
 
 export { NotificationItem } from './components/NotificationItem/index.js';
 export type { NotificationItemProps } from './components/NotificationItem/index.js';
+
+export { AppLauncher } from './components/AppLauncher/index.js';
+export type { AppLauncherProps, AppLauncherApp } from './components/AppLauncher/index.js';
+
+export { SettingsLayout, SettingsRow } from './components/SettingsLayout/index.js';
+export type {
+  SettingsLayoutProps,
+  SettingsLayoutItem,
+  SettingsLayoutSectionProps,
+  SettingsRowProps,
+} from './components/SettingsLayout/index.js';

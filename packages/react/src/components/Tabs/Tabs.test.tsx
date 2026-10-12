@@ -77,3 +77,22 @@ describe('Tabs', () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });
+
+describe('Tabs.Content display', () => {
+  it('keeps the inactive-hidden class even when the consumer passes a display class', () => {
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List>
+          <Tabs.Trigger value="a">A</Tabs.Trigger>
+          <Tabs.Trigger value="b">B</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="a" className="flex">Panel A</Tabs.Content>
+        <Tabs.Content value="b" className="flex md:grid" data-testid="b">Panel B</Tabs.Content>
+      </Tabs.Root>,
+    );
+    const inactive = screen.getByTestId('b');
+    expect(inactive).toHaveAttribute('data-state', 'inactive');
+    expect(inactive.className).toContain('data-[state=inactive]:!hidden');
+    expect(inactive.className).toContain('flex');
+  });
+});
