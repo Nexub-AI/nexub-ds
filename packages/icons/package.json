@@ -1,7 +1,7 @@
 {
   "name": "@nexub/icons",
   "version": "0.0.2",
-  "description": "Icon components for Nexub Design System — tree-shakeable React wrappers around Lucide icons with design-system size tokens.",
+  "description": "Icon components for Nexub Design System \u2014 tree-shakeable React wrappers around Lucide icons with design-system size tokens.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -27,25 +27,24 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
   },
-  "module": "./dist/index.js",
   "peerDependencies": {
     "react": ">=18 <20",
     "react-dom": ">=18 <20"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.1.0",
     "lucide-react": "^0.468.0"
   },
   "devDependencies": {

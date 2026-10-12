@@ -104,7 +104,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               type="button"
               tabIndex={-1}
               onClick={increment}
-              disabled={disabled ?? (max !== undefined && currentValue >= max)}
+              disabled={disabled || (max !== undefined && currentValue >= max)}
               className={cn(stepperButtonClass, 'border-b border-[var(--color-border-default)] text-xs leading-none flex-1')}
               aria-label="Increment"
             >
@@ -114,7 +114,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               type="button"
               tabIndex={-1}
               onClick={decrement}
-              disabled={disabled ?? (min !== undefined && currentValue <= min)}
+              disabled={disabled || (min !== undefined && currentValue <= min)}
               className={cn(stepperButtonClass, 'text-xs leading-none flex-1')}
               aria-label="Decrement"
             >

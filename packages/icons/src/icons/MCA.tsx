@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
-import { createIcon, type IconComponent } from '../createIcon.js';
+import { createIcon } from '../createIcon.js';
 
-const MCASvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const MCASvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function MCASvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -26,4 +26,4 @@ const MCASvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const MCA = createIcon(MCASvg , 'MCA');
+export const MCA = /* @__PURE__ */ createIcon(MCASvg , 'MCA');

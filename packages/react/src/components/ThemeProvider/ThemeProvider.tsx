@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -24,11 +25,6 @@ export interface ThemeProviderProps {
    * Defaults to 'nexub-theme'.
    */
   storageKey?: string;
-  /**
-   * Element to apply the `data-theme` attribute to.
-   * Defaults to `document.documentElement` (<html>).
-   */
-  attribute?: 'data-theme' | 'class';
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -38,23 +34,15 @@ ThemeContext.displayName = 'ThemeContext';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function getSystemTheme(): 'light' | 'dark' {
-  if (typeof window === 'undefined') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
+const DARK_QUERY = '(prefers-color-scheme: dark)';
 
-function applyTheme(
-  resolvedTheme: 'light' | 'dark',
-  attribute: 'data-theme' | 'class',
-): void {
+// 'system' removes the attribute so @nexub/themes' prefers-color-scheme rules
+// apply with no JS round-trip (no flash on first paint).
+function applyTheme(theme: ThemeMode): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  if (attribute === 'class') {
-    root.classList.remove('light', 'dark');
-    root.classList.add(resolvedTheme);
-  } else {
-    root.setAttribute('data-theme', resolvedTheme);
-  }
+  if (theme === 'system') root.removeAttribute('data-theme');
+  else root.setAttribute('data-theme', theme);
 }
 
 function readStorage(key: string, fallback: ThemeMode): ThemeMode {
@@ -85,32 +73,29 @@ export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'nexub-theme',
-  attribute = 'data-theme',
 }: ThemeProviderProps) {
-  const [theme, setThemeState] = React.useState<ThemeMode>(() =>
-    readStorage(storageKey, defaultTheme),
-  );
+  // Start from props (not storage/matchMedia) so server and client render the
+  // same tree; real values are synced before paint below.
+  const [theme, setThemeState] = React.useState<ThemeMode>(defaultTheme);
+  const [systemTheme, setSystemTheme] = React.useState<'light' | 'dark'>('light');
 
-  const resolvedTheme = React.useMemo<'light' | 'dark'>(
-    () => (theme === 'system' ? getSystemTheme() : theme),
-    [theme],
-  );
+  useIsomorphicLayoutEffect(() => {
+    setThemeState(readStorage(storageKey, defaultTheme));
+  }, [storageKey, defaultTheme]);
 
-  // Apply to DOM whenever resolvedTheme changes
-  React.useEffect(() => {
-    applyTheme(resolvedTheme, attribute);
-  }, [resolvedTheme, attribute]);
+  useIsomorphicLayoutEffect(() => {
+    const mq = window.matchMedia(DARK_QUERY);
+    const sync = () => setSystemTheme(mq.matches ? 'dark' : 'light');
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
-  // Track system preference changes when theme === 'system'
-  React.useEffect(() => {
-    if (theme !== 'system') return;
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = () => {
-      applyTheme(getSystemTheme(), attribute);
-    };
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, [theme, attribute]);
+  useIsomorphicLayoutEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  const resolvedTheme = theme === 'system' ? systemTheme : theme;
 
   const setTheme = React.useCallback(
     (mode: ThemeMode) => {

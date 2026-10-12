@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Check, Copy } from 'lucide-react';
+import { Check, Copy } from '@nexub/icons';
 
 interface CopyButtonProps {
   text: string;

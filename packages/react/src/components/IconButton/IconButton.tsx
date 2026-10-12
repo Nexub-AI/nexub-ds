@@ -16,7 +16,7 @@ export const iconButtonVariants = cva(
         ghost:
           'bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
         solid:
-          'bg-[var(--color-brand-primary-500)] text-white hover:bg-[var(--color-brand-primary-600)]',
+          'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
         outline:
           'bg-transparent border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
         subtle:

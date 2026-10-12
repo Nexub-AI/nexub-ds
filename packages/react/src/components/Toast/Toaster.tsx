@@ -35,7 +35,17 @@ export function Toaster() {
               </RadixToast.Description>
             )}
           </div>
-          <RadixToast.Close className="rounded-md p-1 opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring-default)]">
+          {t.action && (
+            <RadixToast.Action
+              altText={t.action.label}
+              onClick={t.action.onClick}
+              className="shrink-0 rounded-md border border-[var(--color-border-default)] px-3 py-1.5 text-sm font-medium hover:bg-[var(--color-bg-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring-default)]"
+            >
+              {t.action.label}
+            </RadixToast.Action>
+          )}
+          {/* Hidden until hover only on hover-capable devices; always visible on touch. */}
+          <RadixToast.Close className="rounded-md p-1 transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring-default)]">
             <X size="sm" aria-hidden="true" />
             <span className="sr-only">Close</span>
           </RadixToast.Close>
@@ -45,3 +55,5 @@ export function Toaster() {
     </RadixToast.Provider>
   );
 }
+
+Toaster.displayName = 'Toaster';

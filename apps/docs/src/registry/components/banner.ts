@@ -4,10 +4,10 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'banner',
     title: 'Banner',
-    description: 'Full-width announcement banner, typically used at the top of a page.',
+    description: 'Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.',
     category: 'Feedback',
     package: '@nexub/react',
-    status: 'stable',
+    status: 'deprecated',
     addedIn: '0.0.1',
   },
   props: [

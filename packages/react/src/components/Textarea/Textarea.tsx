@@ -6,7 +6,7 @@ export const textareaVariants = cva(
   [
     'w-full rounded-md border bg-[var(--color-bg-default)] text-[var(--color-text-primary)]',
     'placeholder:text-[var(--color-text-placeholder)]',
-    'border-[var(--color-border-default)] transition-colors',
+    'border-[var(--color-border-input)] transition-colors',
     // Border shifts to ring color on focus; ring is a semi-transparent halo.
     // One hard 1 px border + one soft 2 px glow = single clean focus indicator.
     'focus-visible:outline-none focus-visible:border-[var(--color-ring-default)] focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',

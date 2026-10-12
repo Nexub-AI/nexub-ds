@@ -18,7 +18,8 @@ const entry: ComponentEntry = {
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },
     { name: 'maxDate', type: 'Date', required: false, description: 'Latest selectable date. Dates after this are greyed out.' },
     { name: 'numberOfMonths', type: 'number', default: '2', required: false, description: 'Number of months to display in the calendar popover.' },
-    { name: 'label', type: 'string', required: false, description: 'Visible label rendered above the input.' },
+    { name: 'aria-label', type: 'string', required: false, description: 'Field name for screen readers; the selected value is appended.' },
+    { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
     { name: 'error', type: 'string', required: false, description: 'Error message displayed below the input.' },
   ],
   examples: [
@@ -35,7 +36,7 @@ const entry: ComponentEntry = {
   });
   return (
     <DateRangePicker
-      label="Booking period"
+      aria-label="Booking period"
       value={range}
       onChange={setRange}
       placeholder="Select date range…"

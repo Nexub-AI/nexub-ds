@@ -18,17 +18,16 @@ export type ToneValue =
 // Tone overrides the variant colour with a solid semantic/brand palette.
 // Static strings (no interpolation) so Tailwind's JIT scans them literally;
 // appended after the variant classes so tailwind-merge lets tone win.
-// ponytail: white text on warning-500 is borderline contrast — revisit if WCAG AA fails.
 const toneClasses: Record<ToneValue, string> = {
   neutral: 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
-  info: 'bg-[var(--color-info-500)] text-white hover:bg-[var(--color-info-600)]',
-  success: 'bg-[var(--color-success-500)] text-white hover:bg-[var(--color-success-600)]',
-  warning: 'bg-[var(--color-warning-500)] text-white hover:bg-[var(--color-warning-600)]',
-  danger: 'bg-[var(--color-danger-500)] text-white hover:bg-[var(--color-danger-600)]',
-  leap: 'bg-[var(--color-leap-500)] text-white hover:bg-[var(--color-leap-600)]',
-  bookub: 'bg-[var(--color-bookub-500)] text-white hover:bg-[var(--color-bookub-600)]',
-  payub: 'bg-[var(--color-payub-500)] text-white hover:bg-[var(--color-payub-600)]',
-  founderub: 'bg-[var(--color-founderub-500)] text-white hover:bg-[var(--color-founderub-600)]',
+  info: 'bg-[var(--color-fill-info)] text-white hover:bg-[var(--color-fill-info-hover)]',
+  success: 'bg-[var(--color-fill-success)] text-white hover:bg-[var(--color-fill-success-hover)]',
+  warning: 'bg-[var(--color-fill-warning)] text-white hover:bg-[var(--color-fill-warning-hover)]',
+  danger: 'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)]',
+  leap: 'bg-[var(--color-fill-leap)] text-white hover:bg-[var(--color-fill-leap-hover)]',
+  bookub: 'bg-[var(--color-fill-bookub)] text-white hover:bg-[var(--color-fill-bookub-hover)]',
+  payub: 'bg-[var(--color-fill-payub)] text-white hover:bg-[var(--color-fill-payub-hover)]',
+  founderub: 'bg-[var(--color-fill-founderub)] text-white hover:bg-[var(--color-fill-founderub-hover)]',
 };
 
 export const buttonVariants = cva(
@@ -42,7 +41,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-[var(--color-brand-primary-500)] text-white hover:bg-[var(--color-brand-primary-600)]',
+          'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
         secondary:
           'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] border border-[var(--color-border-default)] hover:bg-[var(--color-bg-muted)]',
         subtle:
@@ -52,9 +51,9 @@ export const buttonVariants = cva(
         outline:
           'bg-transparent border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
         destructive:
-          'bg-[var(--color-danger-500)] text-white hover:bg-[var(--color-danger-600)]',
+          'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)]',
         accent:
-          'bg-[var(--color-accent-500)] text-white hover:bg-[var(--color-accent-600)]',
+          'bg-[var(--color-fill-accent)] text-white hover:bg-[var(--color-fill-accent-hover)]',
         link: 'bg-transparent text-[var(--color-text-primary)] underline-offset-4 hover:underline',
       },
       size: {

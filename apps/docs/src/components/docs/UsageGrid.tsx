@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Check, X } from 'lucide-react';
+import { Check, X } from '@nexub/icons';
 import type { UsageDef } from '@/registry/types';
 
 interface Props {

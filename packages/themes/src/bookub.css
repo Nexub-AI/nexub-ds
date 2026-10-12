@@ -14,4 +14,6 @@
   --color-accent-900: var(--color-accent-bookub-900);
   --color-accent-950: var(--color-accent-bookub-950);
   --color-ring-default: var(--color-accent-bookub-500);
+  --color-fill-accent: var(--color-fill-bookub);
+  --color-fill-accent-hover: var(--color-fill-bookub-hover);
 }

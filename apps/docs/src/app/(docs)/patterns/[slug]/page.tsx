@@ -21,7 +21,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const entry = getPatternEntry(slug);
-  return { title: entry?.meta.title ?? 'Pattern' };
+  return { title: entry?.meta.title ?? 'Pattern', description: entry?.meta.description };
 }
 
 export default async function PatternPage({ params }: Props) {

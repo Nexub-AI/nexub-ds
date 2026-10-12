@@ -1,7 +1,7 @@
 {
   "name": "@nexub/patterns",
   "version": "0.0.2",
-  "description": "Composite UI patterns for Nexub Design System — pre-built, production-ready layouts and widgets built on @nexub/react.",
+  "description": "Composite UI patterns for Nexub Design System \u2014 pre-built, production-ready layouts and widgets built on @nexub/react.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -27,26 +27,26 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint": "eslint src"
   },
-  "module": "./dist/index.js",
   "peerDependencies": {
     "react": ">=18 <20",
     "react-dom": ">=18 <20",
-    "@nexub/react": "*",
-    "@nexub/icons": "*",
-    "@nexub/tokens": "*"
+    "@nexub/react": "workspace:^",
+    "@nexub/icons": "workspace:^",
+    "@nexub/tokens": "workspace:^"
   },
   "peerDependenciesMeta": {
     "@nexub/icons": {

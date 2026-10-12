@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
@@ -29,22 +30,32 @@ Logo.displayName = 'TopNav.Logo';
 
 const Menu = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => (
-    <nav ref={ref} className={cn('hidden md:flex items-center gap-1', className)} {...props} />
+    // Scrolls horizontally on narrow screens rather than hiding the links.
+    <nav
+      ref={ref}
+      aria-label="Main"
+      className={cn('flex min-w-0 items-center gap-1 overflow-x-auto', className)}
+      {...props}
+    />
   ),
 );
 Menu.displayName = 'TopNav.Menu';
 
 export interface TopNavItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   active?: boolean;
+  /** Render the child element (e.g. a router `<Link>`) instead of an `<a>`. */
+  asChild?: boolean;
 }
 
 const Item = React.forwardRef<HTMLAnchorElement, TopNavItemProps>(
-  ({ className, active, ...props }, ref) => (
-    <a
+  ({ className, active, asChild, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'a';
+    return (
+    <Comp
       ref={ref}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'inline-flex h-9 items-center rounded-md px-4 text-sm font-medium transition-colors',
+        'inline-flex h-9 shrink-0 items-center rounded-md px-4 text-sm font-medium transition-colors',
         active
           ? 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]'
           : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]',
@@ -52,7 +63,8 @@ const Item = React.forwardRef<HTMLAnchorElement, TopNavItemProps>(
       )}
       {...props}
     />
-  ),
+    );
+  },
 );
 Item.displayName = 'TopNav.Item';
 

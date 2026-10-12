@@ -28,7 +28,7 @@ describe('Rating', () => {
   it('calls onValueChange when a star is clicked', () => {
     const onValueChange = vi.fn();
     render(<Rating onValueChange={onValueChange} />);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     fireEvent.click(screen.getAllByRole('radio')[2]!);
     expect(onValueChange).toHaveBeenCalledWith(3);
   });
@@ -36,7 +36,7 @@ describe('Rating', () => {
   it('does not call onValueChange in readOnly mode', () => {
     const onValueChange = vi.fn();
     render(<Rating readOnly onValueChange={onValueChange} />);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     fireEvent.click(screen.getAllByRole('radio')[2]!);
     expect(onValueChange).not.toHaveBeenCalled();
   });
@@ -52,5 +52,30 @@ describe('Rating', () => {
     render(<Rating value={3} readOnly />);
     const stars = screen.getAllByRole('radio');
     expect(stars[2]).toHaveAttribute('aria-checked', 'true');
+  });
+});
+
+describe('Rating keyboard', () => {
+  it('exposes a single tab stop', () => {
+    render(<Rating value={3} />);
+    const stars = screen.getAllByRole('radio');
+    expect(stars.filter((s) => s.tabIndex === 0)).toEqual([stars[2]]);
+  });
+
+  it('arrow keys move selection and focus; Home/End jump', () => {
+    const onValueChange = vi.fn();
+    render(<Rating onValueChange={onValueChange} />);
+    const stars = screen.getAllByRole('radio');
+    expect(stars[0]!.tabIndex).toBe(0); // nothing checked → first star
+    stars[0]!.focus();
+    fireEvent.keyDown(stars[0]!, { key: 'ArrowRight' });
+    expect(onValueChange).toHaveBeenLastCalledWith(2);
+    expect(document.activeElement).toBe(stars[1]);
+    fireEvent.keyDown(stars[1]!, { key: 'End' });
+    expect(onValueChange).toHaveBeenLastCalledWith(5);
+    fireEvent.keyDown(stars[4]!, { key: 'ArrowRight' });
+    expect(onValueChange).toHaveBeenLastCalledWith(5);
+    fireEvent.keyDown(stars[4]!, { key: 'Home' });
+    expect(onValueChange).toHaveBeenLastCalledWith(1);
   });
 });

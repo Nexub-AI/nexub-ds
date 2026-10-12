@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
-import { Menu, Search } from 'lucide-react';
+import { Menu, Search } from '@nexub/icons';
 import { NexubLogo } from './NexubLogo';
 import { useSidebar } from './SidebarContext';
 

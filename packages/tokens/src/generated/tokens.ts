@@ -19,7 +19,7 @@ export const tokens = {
         "500": "#4099f1",
         "600": "#2563eb",
         "700": "#1d4ed8",
-        "800": "#1e3a8a",
+        "800": "#1e40af",
         "900": "#1e3a8a",
         "950": "#1b3b6f"
       }
@@ -283,10 +283,10 @@ export const tokens = {
   },
   "font": {
     "family": {
-      "sans": "'Geist', ui-sans-serif, system-ui, sans-serif",
+      "sans": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       "mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
-      "devanagari": "'Noto Sans Devanagari', 'Geist', ui-sans-serif, sans-serif",
-      "tamil": "'Noto Sans Tamil', 'Geist', ui-sans-serif, sans-serif"
+      "devanagari": "'Noto Sans Devanagari', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif",
+      "tamil": "'Noto Sans Tamil', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif"
     },
     "weight": {
       "regular": "400",

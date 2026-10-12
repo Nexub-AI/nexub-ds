@@ -32,6 +32,23 @@ import '@nexub/themes/base';   // resets + token aliases
 import '@nexub/themes/light';  // light mode defaults
 import '@nexub/themes/dark';   // dark mode overrides`} />
 
+      <h2>Tailwind</h2>
+      <p>
+        Components ship Tailwind class names, so your Tailwind (v3) build must use the Nexub preset and scan the
+        package output. The preset maps the tokens and registers <code>tailwindcss-animate</code>.
+      </p>
+      <CodeBlock code={`// tailwind.config.ts
+import nexub from '@nexub/tokens/tailwind';
+
+export default {
+  presets: [nexub],
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/@nexub/react/dist/**/*.js',
+    './node_modules/@nexub/patterns/dist/**/*.js',
+  ],
+};`} />
+
       <h2>ThemeProvider</h2>
       <p>
         Wrap your app with <code>ThemeProvider</code> to enable light/dark/system mode switching

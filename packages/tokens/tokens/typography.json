@@ -1,10 +1,10 @@
 {
   "font": {
     "family": {
-      "sans":       { "$value": "'Geist', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily" },
+      "sans":       { "$value": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily" },
       "mono":       { "$value": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "$type": "fontFamily" },
-      "devanagari": { "$value": "'Noto Sans Devanagari', 'Geist', ui-sans-serif, sans-serif", "$type": "fontFamily" },
-      "tamil":      { "$value": "'Noto Sans Tamil', 'Geist', ui-sans-serif, sans-serif", "$type": "fontFamily" }
+      "devanagari": { "$value": "'Noto Sans Devanagari', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif", "$type": "fontFamily" },
+      "tamil":      { "$value": "'Noto Sans Tamil', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif", "$type": "fontFamily" }
     },
     "weight": {
       "regular":   { "$value": "400", "$type": "fontWeight" },

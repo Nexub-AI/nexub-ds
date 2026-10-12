@@ -15,6 +15,10 @@ export interface DateRangePickerProps {
   minDate?: Date;
   maxDate?: Date;
   className?: string;
+  /** Id for the trigger button, e.g. to pair with a `<label htmlFor>`. */
+  id?: string;
+  /** Field name for screen readers; the current value is appended. */
+  'aria-label'?: string;
 }
 
 function formatRange(
@@ -48,7 +52,7 @@ const calendarClassNames = {
   day_button:
     'inline-flex h-8 w-8 items-center justify-center rounded-md text-sm hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
   selected:
-    'bg-[var(--color-brand-primary-500)] text-white hover:bg-[var(--color-brand-primary-600)]',
+    'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
   range_start: 'rounded-l-md',
   range_end: 'rounded-r-md',
   range_middle:
@@ -71,21 +75,25 @@ export const DateRangePicker = React.forwardRef<
     minDate,
     maxDate,
     className,
+    id,
+    'aria-label': ariaLabel,
   },
   ref,
 ) {
   const [open, setOpen] = React.useState(false);
-  const label = formatRange(value, placeholder);
+  const display = formatRange(value, placeholder);
+  const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
   return (
     <RadixPopover.Root open={open} onOpenChange={setOpen}>
       <RadixPopover.Trigger asChild>
         <button
           ref={ref}
+          id={id}
           disabled={disabled}
           aria-label={label}
           className={cn(
-            'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
+            'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-input)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
             'hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
             'disabled:cursor-not-allowed disabled:opacity-50',
             !value && 'text-[var(--color-text-muted)]',
@@ -93,7 +101,7 @@ export const DateRangePicker = React.forwardRef<
           )}
         >
           <CalendarDays size="sm" aria-hidden="true" />
-          {label}
+          {display}
         </button>
       </RadixPopover.Trigger>
       <RadixPopover.Portal>

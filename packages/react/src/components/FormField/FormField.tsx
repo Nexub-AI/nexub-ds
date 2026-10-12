@@ -32,16 +32,10 @@ export interface FormFieldRootProps extends React.HTMLAttributes<HTMLDivElement>
   disabled?: boolean;
 }
 
-function Root({
-  id: idProp,
-  name,
-  invalid,
-  required,
-  disabled,
-  className,
-  children,
-  ...props
-}: FormFieldRootProps) {
+const Root = React.forwardRef<HTMLDivElement, FormFieldRootProps>(function Root(
+  { id: idProp, name, invalid, required, disabled, className, children, ...props },
+  ref,
+) {
   const generatedId = React.useId();
   const id = idProp ?? generatedId;
 
@@ -60,12 +54,12 @@ function Root({
 
   return (
     <FormFieldContext.Provider value={value}>
-      <div className={cn('flex flex-col gap-1.5', className)} {...props}>
+      <div ref={ref} className={cn('flex flex-col gap-1.5', className)} {...props}>
         {children}
       </div>
     </FormFieldContext.Provider>
   );
-}
+});
 
 Root.displayName = 'FormField.Root';
 

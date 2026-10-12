@@ -34,20 +34,6 @@ const entry: ComponentEntry = {
   description="Check your network and try again."
 />`,
     },
-    {
-      title: 'Custom actions',
-      code: `<ErrorState
-  tone="error"
-  title="Failed to submit form"
-  description="There was a problem saving your changes. Your data has been preserved."
-  actions={
-    <div style={{ display: 'flex', gap: '8px' }}>
-      <Button variant="primary" onClick={() => {}}>Try again</Button>
-      <Button variant="outline" onClick={() => {}}>Discard changes</Button>
-    </div>
-  }
-/>`,
-    },
   ],
 };
 

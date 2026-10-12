@@ -464,6 +464,32 @@ html, body {
   }
 }
 
+/* ── Landing motion (replaces framer-motion) ──────────────────────────────
+   Scroll-driven reveal where supported; elsewhere content is simply shown. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    [data-reveal-scroll] {
+      animation: docs-reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+  .landing-orb {
+    animation: landing-orb-float 8s ease-in-out infinite;
+  }
+}
+@keyframes landing-orb-float {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(var(--orb-x, 0), var(--orb-y, 0)); }
+}
+.landing-card {
+  transition: transform 200ms var(--ease-out, ease-out), box-shadow 200ms var(--ease-out, ease-out);
+}
+.landing-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.12));
+}
+
 /* ── Playground grid ────────────────────────────────────────────────────── */
 .docs-playground-grid {
   display: grid;

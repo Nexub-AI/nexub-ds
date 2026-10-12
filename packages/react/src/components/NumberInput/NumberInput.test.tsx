@@ -35,3 +35,11 @@ describe('NumberInput', () => {
     expect(onChange).toHaveBeenCalledWith(6);
   });
 });
+
+describe('NumberInput bounds', () => {
+  it('still disables the increment stepper at max when disabled={false}', () => {
+    render(<NumberInput showSteppers value={5} max={5} disabled={false} />);
+    expect(screen.getByLabelText('Increment')).toBeDisabled();
+    expect(screen.getByLabelText('Decrement')).not.toBeDisabled();
+  });
+});

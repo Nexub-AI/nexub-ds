@@ -1,13 +1,16 @@
 name: CI
 
-# Runs on direct pushes to development and on PRs targeting staging/production.
+# Runs on direct pushes to development and on PRs targeting development/staging/production.
 # staging/production are excluded from push triggers — their own deploy workflows
 # already build everything post-merge, so a second CI run would be redundant.
 on:
   push:
     branches: [development]
   pull_request:
-    branches: [staging, production]
+    branches: [development, staging, production]
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -32,19 +35,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build packages in dependency order to avoid DTS resolution errors.
-      # Turbo parallel build can start patterns before icons DTS finishes.
-      - name: Build @nexub/tokens
-        run: pnpm --filter @nexub/tokens build
-
-      - name: Build @nexub/icons
-        run: pnpm --filter @nexub/icons build
-
-      - name: Build @nexub/react
-        run: pnpm --filter @nexub/react build
-
-      - name: Build @nexub/patterns
-        run: pnpm --filter @nexub/patterns build
+      # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
 
       # Docs static export — verifies all pages pre-render without errors.
       # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
@@ -59,4 +52,6 @@ jobs:
 
       - name: Test
         run: pnpm turbo test
-        continue-on-error: true  # tests still being written
+
+      - name: Build Storybook
+        run: pnpm --filter @nexub/react build-storybook --quiet

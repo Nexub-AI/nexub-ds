@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
-import { createIcon, type IconComponent } from '../createIcon.js';
+import { createIcon } from '../createIcon.js';
 
-const IRASSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const IRASSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function IRASSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -27,4 +27,4 @@ const IRASSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const IRAS = createIcon(IRASSvg , 'IRAS');
+export const IRAS = /* @__PURE__ */ createIcon(IRASSvg , 'IRAS');

@@ -12,7 +12,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerPro
     <RadixSelect.Trigger
       ref={ref}
       className={cn(
-        'flex h-9 w-full items-center justify-between rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
+        'flex h-9 w-full items-center justify-between rounded-md border border-[var(--color-border-input)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
         // Border shifts to ring color on focus; ring is a semi-transparent halo.
         'placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-ring-default)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',
         'disabled:cursor-not-allowed disabled:opacity-50',
