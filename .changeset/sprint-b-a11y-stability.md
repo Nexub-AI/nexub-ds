@@ -17,6 +17,6 @@ Accessibility and stability fixes.
 - **Autocomplete** shows the selected label (not the id), filters by label, and renders a real "Loading…".
 - **NumberInput:** steppers respect bounds when `disabled={false}`.
 - **TopNav:** the menu scrolls instead of disappearing below `md`; `<nav aria-label="Main">`; `Item` supports `asChild`.
-- **Sidebar:** the root is now `<nav aria-label="Sidebar">` (was `<aside>`); `Item` supports `asChild`, keeps an accessible name and tooltip when collapsed.
+- **Breaking:** **Sidebar:** the root is now `<nav aria-label="Sidebar">` (was `<aside>`); `Item` supports `asChild`, keeps an accessible name and tooltip when collapsed.
 - **Link:** new-tab links always get `noopener noreferrer` (merged with the caller's `rel`); supports `asChild`.
 - `@nexub/tokens`: brand-primary-800 is now `#1e40af` (was a copy of 900).
