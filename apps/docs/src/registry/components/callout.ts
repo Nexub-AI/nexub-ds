@@ -4,10 +4,10 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'callout',
     title: 'Callout',
-    description: 'Highlighted content block for tips, warnings, or notes.',
+    description: 'Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.',
     category: 'Feedback',
     package: '@nexub/react',
-    status: 'stable',
+    status: 'deprecated',
     addedIn: '0.0.1',
   },
   props: [

@@ -64,3 +64,5 @@ export function Autocomplete({
     </Combobox.Root>
   );
 }
+
+Autocomplete.displayName = 'Autocomplete';

@@ -10,7 +10,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
     <RadixCheckbox.Root
       ref={ref}
       className={cn(
-        'peer h-4 w-4 shrink-0 rounded-sm border border-[var(--color-border-default)]',
+        'peer h-4 w-4 shrink-0 rounded-sm border border-[var(--color-border-input)]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
         'disabled:cursor-not-allowed disabled:opacity-50',
         'data-[state=checked]:bg-[var(--color-fill-primary)] data-[state=checked]:border-[var(--color-fill-primary)] data-[state=checked]:text-white',

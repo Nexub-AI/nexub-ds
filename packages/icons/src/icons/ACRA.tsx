@@ -1,5 +1,5 @@
 import { forwardRef, type SVGProps } from 'react';
-import { createIcon, type IconComponent } from '../createIcon.js';
+import { createIcon } from '../createIcon.js';
 
 const ACRASvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function ACRASvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {

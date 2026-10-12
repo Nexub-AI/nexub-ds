@@ -28,7 +28,7 @@ describe('Rating', () => {
   it('calls onValueChange when a star is clicked', () => {
     const onValueChange = vi.fn();
     render(<Rating onValueChange={onValueChange} />);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     fireEvent.click(screen.getAllByRole('radio')[2]!);
     expect(onValueChange).toHaveBeenCalledWith(3);
   });
@@ -36,7 +36,7 @@ describe('Rating', () => {
   it('does not call onValueChange in readOnly mode', () => {
     const onValueChange = vi.fn();
     render(<Rating readOnly onValueChange={onValueChange} />);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+     
     fireEvent.click(screen.getAllByRole('radio')[2]!);
     expect(onValueChange).not.toHaveBeenCalled();
   });

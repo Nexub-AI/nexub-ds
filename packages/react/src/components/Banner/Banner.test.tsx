@@ -16,7 +16,7 @@ describe('Banner', () => {
 
   it('forwards className', () => {
     render(<Banner className="custom-class">Banner</Banner>);
-    expect(screen.getByRole('banner')).toHaveClass('custom-class');
+    expect(screen.getByRole('status')).toHaveClass('custom-class');
   });
 
   it('forwards ref', () => {
@@ -40,6 +40,6 @@ describe('Banner', () => {
   it('has no border-radius (full-width style)', () => {
     render(<Banner>Banner</Banner>);
     // Banner uses no rounded-* class
-    expect(screen.getByRole('banner').className).not.toMatch(/rounded-lg/);
+    expect(screen.getByRole('status').className).not.toMatch(/rounded-lg/);
   });
 });

@@ -37,7 +37,7 @@ describe('Stack', () => {
   });
 
   it('injects dividers between children', () => {
-    const { getAllByText } = render(
+    render(
       <Stack divider={<hr />}>
         <span>A</span>
         <span>B</span>

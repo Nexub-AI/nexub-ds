@@ -4,10 +4,10 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'tag',
     title: 'Tag',
-    description: 'Non-interactive label tag for categorisation.',
+    description: 'Deprecated — use Badge. Non-interactive label tag for categorisation.',
     category: 'Labels & Badges',
     package: '@nexub/react',
-    status: 'stable',
+    status: 'deprecated',
     addedIn: '0.0.1',
   },
   props: [

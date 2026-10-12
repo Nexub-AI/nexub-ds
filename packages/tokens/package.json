@@ -43,7 +43,8 @@
     "build": "node scripts/build.mjs && tsc -p tsconfig.json",
     "dev": "node scripts/build.mjs --watch",
     "clean": "rm -rf dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "style-dictionary": "^4.3.0",

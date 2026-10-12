@@ -31,7 +31,7 @@ export const inputVariants = cva(
 export const inputWrapperVariants = cva(
   [
     'flex items-center w-full rounded-md border bg-[var(--color-bg-default)] transition-colors',
-    'border-[var(--color-border-default)]',
+    'border-[var(--color-border-input)]',
     // On focus: the border shifts to the ring color and the ring is a
     // semi-transparent halo. One hard 1 px border + one soft 2 px glow =
     // a single clean focus indicator. No double ring.
@@ -111,7 +111,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (hasAddon) {
       return (
-        <div className={cn('flex w-full rounded-md overflow-hidden border border-[var(--color-border-default)]', invalid && 'border-[var(--color-danger-500)]')}>
+        <div className={cn('flex w-full rounded-md overflow-hidden border border-[var(--color-border-input)]', invalid && 'border-[var(--color-danger-500)]')}>
           {leadingAddon && (
             <span className={cn(addonVariants({ side: 'leading' }))}>
               {leadingAddon}
