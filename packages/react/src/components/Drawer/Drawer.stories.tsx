@@ -39,3 +39,29 @@ export const Default: Story = {
     </Drawer.Root>
   ),
 };
+
+export const Glass: Story = {
+  render: () => (
+    <Drawer.Root defaultOpen>
+      <Drawer.Trigger asChild>
+        <button>Open Drawer</button>
+      </Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Overlay />
+        <Drawer.Content side="right" surface="glass">
+          <Drawer.Header>
+            <Drawer.Title>Glass drawer</Drawer.Title>
+            <Drawer.Description>
+              surface=&quot;glass&quot; frosts the panel over the page behind it.
+            </Drawer.Description>
+          </Drawer.Header>
+          <Drawer.Footer>
+            <Drawer.Close asChild>
+              <button>Close</button>
+            </Drawer.Close>
+          </Drawer.Footer>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
+  ),
+};

@@ -26,22 +26,31 @@ export default function ComponentsPage() {
             <h2 style={{ marginBottom: '1rem' }}>{cat}</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
               {entries.map((e) => (
-                <Link
+                <div
                   key={e.meta.slug}
-                  href={`/components/${e.meta.slug}`}
-                  style={{ textDecoration: 'none', display: 'block' }}
+                  style={{
+                    position: 'relative',
+                    border: '1px solid var(--color-border-default)',
+                    borderRadius: 'var(--radius-xl)',
+                    background: 'var(--color-bg-raised)',
+                    overflow: 'hidden',
+                    transition: 'border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out)',
+                    height: '100%',
+                  }}
                 >
-                  <div
+                  {/* Full-card hit target without wrapping previews (avoids invalid <a> inside <a> from demos that use Link/Breadcrumb). */}
+                  <Link
+                    href={`/components/${e.meta.slug}`}
+                    prefetch
+                    aria-label={`${e.meta.title}: view documentation`}
                     style={{
-                      border: '1px solid var(--color-border-default)',
-                      borderRadius: 'var(--radius-xl)',
-                      background: 'var(--color-bg-raised)',
-                      overflow: 'hidden',
-                      transition: 'border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out)',
-                      cursor: 'pointer',
-                      height: '100%',
+                      position: 'absolute',
+                      inset: 0,
+                      zIndex: 0,
+                      textDecoration: 'none',
                     }}
-                  >
+                  />
+                  <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
                     {/* Mini live preview area */}
                     <div
                       style={{
@@ -97,7 +106,7 @@ export default function ComponentsPage() {
                       )}
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>

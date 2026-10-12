@@ -302,6 +302,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Spacing', href: '/foundations/spacing' },
       { title: 'Motion', href: '/foundations/motion' },
       { title: 'Shadows', href: '/foundations/shadows' },
+      { title: 'Materials', href: '/foundations/materials' },
     ],
   },
   {

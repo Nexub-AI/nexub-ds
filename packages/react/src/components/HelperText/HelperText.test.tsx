@@ -24,4 +24,9 @@ describe('HelperText', () => {
     render(<HelperText tone="info">Hint</HelperText>);
     expect(screen.getByText('Hint')).toHaveAttribute('data-tone', 'info');
   });
+
+  it('tints text with the tone colour', () => {
+    render(<HelperText tone="danger">Error</HelperText>);
+    expect(screen.getByText('Error')).toHaveStyle({ color: 'var(--color-text-danger)' });
+  });
 });

@@ -43,4 +43,16 @@ describe('Card', () => {
     render(<Card tone="success">Card</Card>);
     expect(screen.getByText('Card')).toHaveAttribute('data-tone', 'success');
   });
+
+  it('activates the glass material with surface="glass"', () => {
+    render(<Card surface="glass">Card</Card>);
+    const el = screen.getByText('Card');
+    expect(el).toHaveAttribute('data-material', 'glass');
+    expect(el).toHaveClass('bg-[var(--glass-bg)]');
+  });
+
+  it('omits data-material for the default solid surface', () => {
+    render(<Card>Card</Card>);
+    expect(screen.getByText('Card')).not.toHaveAttribute('data-material');
+  });
 });

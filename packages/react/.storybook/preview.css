@@ -1,0 +1,17 @@
+/* Storybook canvas styling for @nexub/react.
+   Mirrors the docs app pipeline: design-system theme CSS (tokens) first,
+   then Tailwind layers so component utility classes resolve. */
+@import '@nexub/themes/base';
+@import '@nexub/themes/light';
+@import '@nexub/themes/dark';
+/* @import '@nexub/themes/glass';  ← enable once @nexub/themes ships the glass export (Liquid Glass PR #29) */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: var(--color-bg-default);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+}
