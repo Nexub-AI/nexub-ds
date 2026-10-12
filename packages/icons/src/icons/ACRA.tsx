@@ -1,7 +1,7 @@
 import { forwardRef, type SVGProps } from 'react';
 import { createIcon, type IconComponent } from '../createIcon.js';
 
-const ACRASvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const ACRASvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function ACRASvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -24,4 +24,4 @@ const ACRASvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const ACRA = createIcon(ACRASvg , 'ACRA');
+export const ACRA = /* @__PURE__ */ createIcon(ACRASvg , 'ACRA');

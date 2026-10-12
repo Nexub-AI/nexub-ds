@@ -1,11 +1,15 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['esm', 'cjs'],
-  dts: true,
+  // One entry per component so consumers' bundlers can drop unused modules
+  // (sideEffects:false only works at module granularity).
+  entry: ['src/index.ts', 'src/components/*/index.ts'],
+  format: ['esm'],
+  dts: { entry: 'src/index.ts' },
   splitting: true,
-  treeshake: true,
   clean: true,
   external: ['react', 'react-dom'],
+  // esbuild strips module-level directives when bundling; re-add on every
+  // output file so Next.js RSC consumers can import from server components.
+  banner: { js: "'use client';" },
 });

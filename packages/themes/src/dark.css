@@ -3,8 +3,7 @@
    Apply via [data-theme='dark'] on an ancestor (typically <html>),
    or automatically via prefers-color-scheme when no explicit theme is set. */
 
-[data-theme='dark'],
-:root:not([data-theme]) {
+[data-theme='dark'] {
   /* ── Background ─────────────────────────────────────────────────────── */
   --color-bg-default: #0b1220;
   --color-bg-subtle:  #0f172a;

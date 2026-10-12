@@ -2,7 +2,7 @@ import { forwardRef, type SVGProps } from 'react';
 import { createIcon, type IconComponent } from '../createIcon.js';
 import type { IconProps } from '../Icon.js';
 
-const NexubMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   function NexubMarkSvg({ width = 24, height = 24, strokeWidth = 1.75, ...props }, ref) {
     return (
       <svg
@@ -25,5 +25,5 @@ const NexubMarkSvg = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   },
 );
 
-export const NexubMark = createIcon(NexubMarkSvg , 'NexubMark');
+export const NexubMark = /* @__PURE__ */ createIcon(NexubMarkSvg , 'NexubMark');
 export type { IconProps as NexubMarkProps };

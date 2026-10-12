@@ -122,6 +122,16 @@ describe('ThemeProvider', () => {
     expect(screen.getByTestId('resolved').textContent).toBe('dark');
   });
 
+  it('removes data-theme in system mode so CSS media queries apply', () => {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    render(
+      <ThemeProvider defaultTheme="system">
+        <Consumer />
+      </ThemeProvider>,
+    );
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
   it('updates data-theme when setTheme is called', () => {
     render(
       <ThemeProvider defaultTheme="light">

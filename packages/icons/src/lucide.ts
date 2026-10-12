@@ -1,150 +1,262 @@
-import * as Lucide from 'lucide-react';
+// Named imports + @__PURE__ let consumer bundlers drop every icon they don't use.
+import {
+  LucideArrowRight,
+  LucideArrowLeft,
+  LucideArrowUp,
+  LucideArrowDown,
+  LucideArrowUpRight,
+  LucideChevronDown,
+  LucideChevronRight,
+  LucideChevronLeft,
+  LucideChevronUp,
+  LucideChevronsUpDown,
+  LucideCheck,
+  LucideCheckCircle2,
+  LucideX,
+  LucideXCircle,
+  LucideAlertCircle,
+  LucideAlertTriangle,
+  LucideInfo,
+  LucideHelpCircle,
+  LucideLifeBuoy,
+  LucideThumbsUp,
+  LucideThumbsDown,
+  LucideSearch,
+  LucideMenu,
+  LucideMoreHorizontal,
+  LucideMoreVertical,
+  LucidePlus,
+  LucideMinus,
+  LucideFilter,
+  LucideSlidersHorizontal,
+  LucideSettings,
+  LucideSettings2,
+  LucideCommand,
+  LucideCalendar,
+  LucideCalendarDays,
+  LucideClock,
+  LucideUser,
+  LucideUsers,
+  LucideUserPlus,
+  LucideBuilding2,
+  LucideBriefcase,
+  LucideFileText,
+  LucideFileCheck,
+  LucideFileX,
+  LucideFolder,
+  LucidePaperclip,
+  LucideImage,
+  LucideVideo,
+  LucideDownload,
+  LucideUpload,
+  LucideExternalLink,
+  LucideLink,
+  LucideCopy,
+  LucideSave,
+  LucideRefreshCw,
+  LucideEdit,
+  LucideEdit2,
+  LucideEdit3,
+  LucideTrash2,
+  LucidePencil,
+  LucideStar,
+  LucideHeart,
+  LucideEye,
+  LucideEyeOff,
+  LucideBookmark,
+  LucideTag,
+  LucideFlag,
+  LucideLock,
+  LucideUnlock,
+  LucideShield,
+  LucideShieldCheck,
+  LucideMail,
+  LucidePhone,
+  LucideMessageSquare,
+  LucideBell,
+  LucideHome,
+  LucideGlobe,
+  LucideMapPin,
+  LucideLogIn,
+  LucideLogOut,
+  LucideCreditCard,
+  LucideReceipt,
+  LucideShoppingCart,
+  LucidePackage,
+  LucideWallet,
+  LucideDollarSign,
+  LucideTrendingUp,
+  LucideTrendingDown,
+  LucideBarChart3,
+  LucidePieChart,
+  LucideLineChart,
+  LucideActivity,
+  LucideDatabase,
+  LucideServer,
+  LucideCode,
+  LucideCode2,
+  LucideTerminal,
+  LucideSun,
+  LucideMoon,
+  LucideMonitor,
+  LucideSmartphone,
+  LucideLaptop,
+  LucideZap,
+  LucideSparkles,
+  LucideMic,
+  LucideVolume2,
+  LucidePlay,
+  LucidePause,
+  LucideSkipForward,
+  LucideSkipBack,
+  LucideLoader2,
+} from 'lucide-react';
 import { createIcon } from './createIcon.js';
 
 // Arrow & navigation
-export const ArrowRight      = createIcon(Lucide.ArrowRight,      'ArrowRight');
-export const ArrowLeft       = createIcon(Lucide.ArrowLeft,       'ArrowLeft');
-export const ArrowUp         = createIcon(Lucide.ArrowUp,         'ArrowUp');
-export const ArrowDown       = createIcon(Lucide.ArrowDown,       'ArrowDown');
-export const ArrowUpRight    = createIcon(Lucide.ArrowUpRight,    'ArrowUpRight');
-export const ChevronDown     = createIcon(Lucide.ChevronDown,     'ChevronDown');
-export const ChevronRight    = createIcon(Lucide.ChevronRight,    'ChevronRight');
-export const ChevronLeft     = createIcon(Lucide.ChevronLeft,     'ChevronLeft');
-export const ChevronUp       = createIcon(Lucide.ChevronUp,       'ChevronUp');
-export const ChevronsUpDown  = createIcon(Lucide.ChevronsUpDown,  'ChevronsUpDown');
+export const ArrowRight      = /* @__PURE__ */ createIcon(LucideArrowRight,      'ArrowRight');
+export const ArrowLeft       = /* @__PURE__ */ createIcon(LucideArrowLeft,       'ArrowLeft');
+export const ArrowUp         = /* @__PURE__ */ createIcon(LucideArrowUp,         'ArrowUp');
+export const ArrowDown       = /* @__PURE__ */ createIcon(LucideArrowDown,       'ArrowDown');
+export const ArrowUpRight    = /* @__PURE__ */ createIcon(LucideArrowUpRight,    'ArrowUpRight');
+export const ChevronDown     = /* @__PURE__ */ createIcon(LucideChevronDown,     'ChevronDown');
+export const ChevronRight    = /* @__PURE__ */ createIcon(LucideChevronRight,    'ChevronRight');
+export const ChevronLeft     = /* @__PURE__ */ createIcon(LucideChevronLeft,     'ChevronLeft');
+export const ChevronUp       = /* @__PURE__ */ createIcon(LucideChevronUp,       'ChevronUp');
+export const ChevronsUpDown  = /* @__PURE__ */ createIcon(LucideChevronsUpDown,  'ChevronsUpDown');
 
 // Status & feedback
-export const Check           = createIcon(Lucide.Check,           'Check');
-export const CheckCircle2    = createIcon(Lucide.CheckCircle2,    'CheckCircle2');
-export const X               = createIcon(Lucide.X,               'X');
-export const XCircle         = createIcon(Lucide.XCircle,         'XCircle');
-export const AlertCircle     = createIcon(Lucide.AlertCircle,     'AlertCircle');
-export const AlertTriangle   = createIcon(Lucide.AlertTriangle,   'AlertTriangle');
-export const Info            = createIcon(Lucide.Info,            'Info');
-export const HelpCircle      = createIcon(Lucide.HelpCircle,      'HelpCircle');
-export const LifeBuoy        = createIcon(Lucide.LifeBuoy,        'LifeBuoy');
-export const ThumbsUp        = createIcon(Lucide.ThumbsUp,        'ThumbsUp');
-export const ThumbsDown      = createIcon(Lucide.ThumbsDown,      'ThumbsDown');
+export const Check           = /* @__PURE__ */ createIcon(LucideCheck,           'Check');
+export const CheckCircle2    = /* @__PURE__ */ createIcon(LucideCheckCircle2,    'CheckCircle2');
+export const X               = /* @__PURE__ */ createIcon(LucideX,               'X');
+export const XCircle         = /* @__PURE__ */ createIcon(LucideXCircle,         'XCircle');
+export const AlertCircle     = /* @__PURE__ */ createIcon(LucideAlertCircle,     'AlertCircle');
+export const AlertTriangle   = /* @__PURE__ */ createIcon(LucideAlertTriangle,   'AlertTriangle');
+export const Info            = /* @__PURE__ */ createIcon(LucideInfo,            'Info');
+export const HelpCircle      = /* @__PURE__ */ createIcon(LucideHelpCircle,      'HelpCircle');
+export const LifeBuoy        = /* @__PURE__ */ createIcon(LucideLifeBuoy,        'LifeBuoy');
+export const ThumbsUp        = /* @__PURE__ */ createIcon(LucideThumbsUp,        'ThumbsUp');
+export const ThumbsDown      = /* @__PURE__ */ createIcon(LucideThumbsDown,      'ThumbsDown');
 
 // UI controls
-export const Search          = createIcon(Lucide.Search,          'Search');
-export const Menu            = createIcon(Lucide.Menu,            'Menu');
-export const MoreHorizontal  = createIcon(Lucide.MoreHorizontal,  'MoreHorizontal');
-export const MoreVertical    = createIcon(Lucide.MoreVertical,    'MoreVertical');
-export const Plus            = createIcon(Lucide.Plus,            'Plus');
-export const Minus           = createIcon(Lucide.Minus,           'Minus');
-export const Filter          = createIcon(Lucide.Filter,          'Filter');
-export const SlidersHorizontal = createIcon(Lucide.SlidersHorizontal, 'SlidersHorizontal');
-export const Settings        = createIcon(Lucide.Settings,        'Settings');
-export const Settings2       = createIcon(Lucide.Settings2,       'Settings2');
-export const Command         = createIcon(Lucide.Command,         'Command');
+export const Search          = /* @__PURE__ */ createIcon(LucideSearch,          'Search');
+export const Menu            = /* @__PURE__ */ createIcon(LucideMenu,            'Menu');
+export const MoreHorizontal  = /* @__PURE__ */ createIcon(LucideMoreHorizontal,  'MoreHorizontal');
+export const MoreVertical    = /* @__PURE__ */ createIcon(LucideMoreVertical,    'MoreVertical');
+export const Plus            = /* @__PURE__ */ createIcon(LucidePlus,            'Plus');
+export const Minus           = /* @__PURE__ */ createIcon(LucideMinus,           'Minus');
+export const Filter          = /* @__PURE__ */ createIcon(LucideFilter,          'Filter');
+export const SlidersHorizontal = /* @__PURE__ */ createIcon(LucideSlidersHorizontal, 'SlidersHorizontal');
+export const Settings        = /* @__PURE__ */ createIcon(LucideSettings,        'Settings');
+export const Settings2       = /* @__PURE__ */ createIcon(LucideSettings2,       'Settings2');
+export const Command         = /* @__PURE__ */ createIcon(LucideCommand,         'Command');
 
 // Time & calendar
-export const Calendar        = createIcon(Lucide.Calendar,        'Calendar');
-export const CalendarDays    = createIcon(Lucide.CalendarDays,    'CalendarDays');
-export const Clock           = createIcon(Lucide.Clock,           'Clock');
+export const Calendar        = /* @__PURE__ */ createIcon(LucideCalendar,        'Calendar');
+export const CalendarDays    = /* @__PURE__ */ createIcon(LucideCalendarDays,    'CalendarDays');
+export const Clock           = /* @__PURE__ */ createIcon(LucideClock,           'Clock');
 
 // People & org
-export const User            = createIcon(Lucide.User,            'User');
-export const Users           = createIcon(Lucide.Users,           'Users');
-export const UserPlus        = createIcon(Lucide.UserPlus,        'UserPlus');
-export const Building2       = createIcon(Lucide.Building2,       'Building2');
-export const Briefcase       = createIcon(Lucide.Briefcase,       'Briefcase');
+export const User            = /* @__PURE__ */ createIcon(LucideUser,            'User');
+export const Users           = /* @__PURE__ */ createIcon(LucideUsers,           'Users');
+export const UserPlus        = /* @__PURE__ */ createIcon(LucideUserPlus,        'UserPlus');
+export const Building2       = /* @__PURE__ */ createIcon(LucideBuilding2,       'Building2');
+export const Briefcase       = /* @__PURE__ */ createIcon(LucideBriefcase,       'Briefcase');
 
 // Files & docs
-export const FileText        = createIcon(Lucide.FileText,        'FileText');
-export const FileCheck       = createIcon(Lucide.FileCheck,       'FileCheck');
-export const FileX           = createIcon(Lucide.FileX,           'FileX');
-export const Folder          = createIcon(Lucide.Folder,          'Folder');
-export const Paperclip       = createIcon(Lucide.Paperclip,       'Paperclip');
-export const Image           = createIcon(Lucide.Image,           'Image');
-export const Video           = createIcon(Lucide.Video,           'Video');
+export const FileText        = /* @__PURE__ */ createIcon(LucideFileText,        'FileText');
+export const FileCheck       = /* @__PURE__ */ createIcon(LucideFileCheck,       'FileCheck');
+export const FileX           = /* @__PURE__ */ createIcon(LucideFileX,           'FileX');
+export const Folder          = /* @__PURE__ */ createIcon(LucideFolder,          'Folder');
+export const Paperclip       = /* @__PURE__ */ createIcon(LucidePaperclip,       'Paperclip');
+export const Image           = /* @__PURE__ */ createIcon(LucideImage,           'Image');
+export const Video           = /* @__PURE__ */ createIcon(LucideVideo,           'Video');
 
 // Transfer
-export const Download        = createIcon(Lucide.Download,        'Download');
-export const Upload          = createIcon(Lucide.Upload,          'Upload');
-export const ExternalLink    = createIcon(Lucide.ExternalLink,    'ExternalLink');
-export const Link            = createIcon(Lucide.Link,            'Link');
-export const Copy            = createIcon(Lucide.Copy,            'Copy');
-export const Save            = createIcon(Lucide.Save,            'Save');
-export const RefreshCw       = createIcon(Lucide.RefreshCw,       'RefreshCw');
+export const Download        = /* @__PURE__ */ createIcon(LucideDownload,        'Download');
+export const Upload          = /* @__PURE__ */ createIcon(LucideUpload,          'Upload');
+export const ExternalLink    = /* @__PURE__ */ createIcon(LucideExternalLink,    'ExternalLink');
+export const Link            = /* @__PURE__ */ createIcon(LucideLink,            'Link');
+export const Copy            = /* @__PURE__ */ createIcon(LucideCopy,            'Copy');
+export const Save            = /* @__PURE__ */ createIcon(LucideSave,            'Save');
+export const RefreshCw       = /* @__PURE__ */ createIcon(LucideRefreshCw,       'RefreshCw');
 
 // Edit
-export const Edit            = createIcon(Lucide.Edit,            'Edit');
-export const Edit2           = createIcon(Lucide.Edit2,           'Edit2');
-export const Edit3           = createIcon(Lucide.Edit3,           'Edit3');
-export const Trash2          = createIcon(Lucide.Trash2,          'Trash2');
-export const Pencil          = createIcon(Lucide.Pencil,          'Pencil');
+export const Edit            = /* @__PURE__ */ createIcon(LucideEdit,            'Edit');
+export const Edit2           = /* @__PURE__ */ createIcon(LucideEdit2,           'Edit2');
+export const Edit3           = /* @__PURE__ */ createIcon(LucideEdit3,           'Edit3');
+export const Trash2          = /* @__PURE__ */ createIcon(LucideTrash2,          'Trash2');
+export const Pencil          = /* @__PURE__ */ createIcon(LucidePencil,          'Pencil');
 
 // Interaction
-export const Star            = createIcon(Lucide.Star,            'Star');
-export const Heart           = createIcon(Lucide.Heart,           'Heart');
-export const Eye             = createIcon(Lucide.Eye,             'Eye');
-export const EyeOff          = createIcon(Lucide.EyeOff,          'EyeOff');
-export const Bookmark        = createIcon(Lucide.Bookmark,        'Bookmark');
-export const Tag             = createIcon(Lucide.Tag,             'Tag');
-export const Flag            = createIcon(Lucide.Flag,            'Flag');
+export const Star            = /* @__PURE__ */ createIcon(LucideStar,            'Star');
+export const Heart           = /* @__PURE__ */ createIcon(LucideHeart,           'Heart');
+export const Eye             = /* @__PURE__ */ createIcon(LucideEye,             'Eye');
+export const EyeOff          = /* @__PURE__ */ createIcon(LucideEyeOff,          'EyeOff');
+export const Bookmark        = /* @__PURE__ */ createIcon(LucideBookmark,        'Bookmark');
+export const Tag             = /* @__PURE__ */ createIcon(LucideTag,             'Tag');
+export const Flag            = /* @__PURE__ */ createIcon(LucideFlag,            'Flag');
 
 // Security
-export const Lock            = createIcon(Lucide.Lock,            'Lock');
-export const Unlock          = createIcon(Lucide.Unlock,          'Unlock');
-export const Shield          = createIcon(Lucide.Shield,          'Shield');
-export const ShieldCheck     = createIcon(Lucide.ShieldCheck,     'ShieldCheck');
+export const Lock            = /* @__PURE__ */ createIcon(LucideLock,            'Lock');
+export const Unlock          = /* @__PURE__ */ createIcon(LucideUnlock,          'Unlock');
+export const Shield          = /* @__PURE__ */ createIcon(LucideShield,          'Shield');
+export const ShieldCheck     = /* @__PURE__ */ createIcon(LucideShieldCheck,     'ShieldCheck');
 
 // Communication
-export const Mail            = createIcon(Lucide.Mail,            'Mail');
-export const Phone           = createIcon(Lucide.Phone,           'Phone');
-export const MessageSquare   = createIcon(Lucide.MessageSquare,   'MessageSquare');
-export const Bell            = createIcon(Lucide.Bell,            'Bell');
+export const Mail            = /* @__PURE__ */ createIcon(LucideMail,            'Mail');
+export const Phone           = /* @__PURE__ */ createIcon(LucidePhone,           'Phone');
+export const MessageSquare   = /* @__PURE__ */ createIcon(LucideMessageSquare,   'MessageSquare');
+export const Bell            = /* @__PURE__ */ createIcon(LucideBell,            'Bell');
 
 // Navigation
-export const Home            = createIcon(Lucide.Home,            'Home');
-export const Globe           = createIcon(Lucide.Globe,           'Globe');
-export const MapPin          = createIcon(Lucide.MapPin,          'MapPin');
-export const LogIn           = createIcon(Lucide.LogIn,           'LogIn');
-export const LogOut          = createIcon(Lucide.LogOut,          'LogOut');
+export const Home            = /* @__PURE__ */ createIcon(LucideHome,            'Home');
+export const Globe           = /* @__PURE__ */ createIcon(LucideGlobe,           'Globe');
+export const MapPin          = /* @__PURE__ */ createIcon(LucideMapPin,          'MapPin');
+export const LogIn           = /* @__PURE__ */ createIcon(LucideLogIn,           'LogIn');
+export const LogOut          = /* @__PURE__ */ createIcon(LucideLogOut,          'LogOut');
 
 // Finance
-export const CreditCard      = createIcon(Lucide.CreditCard,      'CreditCard');
-export const Receipt         = createIcon(Lucide.Receipt,         'Receipt');
-export const ShoppingCart    = createIcon(Lucide.ShoppingCart,    'ShoppingCart');
-export const Package         = createIcon(Lucide.Package,         'Package');
-export const Wallet          = createIcon(Lucide.Wallet,          'Wallet');
-export const DollarSign      = createIcon(Lucide.DollarSign,      'DollarSign');
+export const CreditCard      = /* @__PURE__ */ createIcon(LucideCreditCard,      'CreditCard');
+export const Receipt         = /* @__PURE__ */ createIcon(LucideReceipt,         'Receipt');
+export const ShoppingCart    = /* @__PURE__ */ createIcon(LucideShoppingCart,    'ShoppingCart');
+export const Package         = /* @__PURE__ */ createIcon(LucidePackage,         'Package');
+export const Wallet          = /* @__PURE__ */ createIcon(LucideWallet,          'Wallet');
+export const DollarSign      = /* @__PURE__ */ createIcon(LucideDollarSign,      'DollarSign');
 
 // Charts & data
-export const TrendingUp      = createIcon(Lucide.TrendingUp,      'TrendingUp');
-export const TrendingDown    = createIcon(Lucide.TrendingDown,    'TrendingDown');
-export const BarChart3       = createIcon(Lucide.BarChart3,       'BarChart3');
-export const PieChart        = createIcon(Lucide.PieChart,        'PieChart');
-export const LineChart       = createIcon(Lucide.LineChart,       'LineChart');
-export const Activity        = createIcon(Lucide.Activity,        'Activity');
+export const TrendingUp      = /* @__PURE__ */ createIcon(LucideTrendingUp,      'TrendingUp');
+export const TrendingDown    = /* @__PURE__ */ createIcon(LucideTrendingDown,    'TrendingDown');
+export const BarChart3       = /* @__PURE__ */ createIcon(LucideBarChart3,       'BarChart3');
+export const PieChart        = /* @__PURE__ */ createIcon(LucidePieChart,        'PieChart');
+export const LineChart       = /* @__PURE__ */ createIcon(LucideLineChart,       'LineChart');
+export const Activity        = /* @__PURE__ */ createIcon(LucideActivity,        'Activity');
 
 // Tech
-export const Database        = createIcon(Lucide.Database,        'Database');
-export const Server          = createIcon(Lucide.Server,          'Server');
-export const Code            = createIcon(Lucide.Code,            'Code');
-export const Code2           = createIcon(Lucide.Code2,           'Code2');
-export const Terminal        = createIcon(Lucide.Terminal,        'Terminal');
+export const Database        = /* @__PURE__ */ createIcon(LucideDatabase,        'Database');
+export const Server          = /* @__PURE__ */ createIcon(LucideServer,          'Server');
+export const Code            = /* @__PURE__ */ createIcon(LucideCode,            'Code');
+export const Code2           = /* @__PURE__ */ createIcon(LucideCode2,           'Code2');
+export const Terminal        = /* @__PURE__ */ createIcon(LucideTerminal,        'Terminal');
 
 // Theme & display
-export const Sun             = createIcon(Lucide.Sun,             'Sun');
-export const Moon            = createIcon(Lucide.Moon,            'Moon');
-export const Monitor         = createIcon(Lucide.Monitor,         'Monitor');
-export const Smartphone      = createIcon(Lucide.Smartphone,      'Smartphone');
-export const Laptop          = createIcon(Lucide.Laptop,          'Laptop');
+export const Sun             = /* @__PURE__ */ createIcon(LucideSun,             'Sun');
+export const Moon            = /* @__PURE__ */ createIcon(LucideMoon,            'Moon');
+export const Monitor         = /* @__PURE__ */ createIcon(LucideMonitor,         'Monitor');
+export const Smartphone      = /* @__PURE__ */ createIcon(LucideSmartphone,      'Smartphone');
+export const Laptop          = /* @__PURE__ */ createIcon(LucideLaptop,          'Laptop');
 
 // AI & brand
-export const Zap             = createIcon(Lucide.Zap,             'Zap');
-export const Sparkles        = createIcon(Lucide.Sparkles,        'Sparkles');
+export const Zap             = /* @__PURE__ */ createIcon(LucideZap,             'Zap');
+export const Sparkles        = /* @__PURE__ */ createIcon(LucideSparkles,        'Sparkles');
 
 // Media
-export const Mic             = createIcon(Lucide.Mic,             'Mic');
-export const Volume2         = createIcon(Lucide.Volume2,         'Volume2');
-export const Play            = createIcon(Lucide.Play,            'Play');
-export const Pause           = createIcon(Lucide.Pause,           'Pause');
-export const SkipForward     = createIcon(Lucide.SkipForward,     'SkipForward');
-export const SkipBack        = createIcon(Lucide.SkipBack,        'SkipBack');
+export const Mic             = /* @__PURE__ */ createIcon(LucideMic,             'Mic');
+export const Volume2         = /* @__PURE__ */ createIcon(LucideVolume2,         'Volume2');
+export const Play            = /* @__PURE__ */ createIcon(LucidePlay,            'Play');
+export const Pause           = /* @__PURE__ */ createIcon(LucidePause,           'Pause');
+export const SkipForward     = /* @__PURE__ */ createIcon(LucideSkipForward,     'SkipForward');
+export const SkipBack        = /* @__PURE__ */ createIcon(LucideSkipBack,        'SkipBack');
 
 // Loading & state
-export const Loader2         = createIcon(Lucide.Loader2,         'Loader2');
+export const Loader2         = /* @__PURE__ */ createIcon(LucideLoader2,         'Loader2');
