@@ -44,6 +44,10 @@ jobs:
       - name: Build docs (static export)
         run: pnpm --filter @nexub/docs build
 
+      # Versioning policy: changesets may only be minor/patch (PUBLISHING.md).
+      - name: Release policy
+        run: pnpm check:release-policy
+
       - name: Typecheck all packages
         run: pnpm turbo typecheck
 

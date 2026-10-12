@@ -8,10 +8,10 @@ This directory is used by [Changesets](https://github.com/changesets/changesets)
 pnpm changeset
 ```
 
-Follow the prompts to select which packages changed and describe the change. All five `@nexub/*` packages are **linked**, so bumping one with `minor` bumps all five.
+Pick **`minor`** for every normal change, or **`patch`** for a hotfix to the current release. **Never `major`**: CI rejects it. The major rolls over automatically after `x.9` (`1.9.x → 2.0.0`).
 
-## What constitutes a patch vs minor vs major?
+All five `@nexub/*` packages share one version (`fixed` group), and all of a release's changesets combine into one bump.
 
-- **patch** — bug fix, docs, internal refactor with no public API change.
-- **minor** — new component, new prop, new token, backwards-compatible addition.
-- **major** — breaking API change (prop rename, removed export, token rename that changes CSS var names).
+Breaking change? Still `minor`. Start the line with `**Breaking:**` and add a one-line migration.
+
+Full policy: [PUBLISHING.md → Versioning Policy](../PUBLISHING.md#versioning-policy).

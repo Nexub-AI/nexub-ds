@@ -26,15 +26,35 @@ All five packages are in a changesets **`fixed`** group — they always publish 
 |---|---|---|---|---|
 | `0.0.1` | — | Initial | Initial private release (pre-public, workspace only) | — |
 | `0.0.2` | 2026-04-27 | Patch | Focus ring double-ring fix (Input, Textarea, Select, NumberInput, Heading); Toast SSR guard; Collapse RAF cleanup; FileUpload useMemo; useMergedRefs stable callback; Motion willChange hints | [v0.0.2](https://github.com/Nexub-AI/nexub-ds/releases/tag/v0.0.2) |
+| `1.0.0` | 2026-10-12 | Major | Liquid Glass material layer; first public 1.0 (lockstep versioning) | — |
 
 ---
 
-## Versioning Rules
+## Versioning Policy
 
-We follow **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
+Nexub DS uses **one rolling version** for all five packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
 
-| Change | Version bump | Example |
+```
+1.0.0 → 1.1.0 → 1.2.0 → … → 1.9.0 → 2.0.0 → 2.1.0 → … → 2.9.0 → 3.0.0
+```
+
+| Situation | Changeset bump | Example |
 |---|---|---|
+| Normal release (features, fixes, breaking changes, anything) | `minor` | `1.3.0` → `1.4.0` |
+| Hotfix to the current release only | `patch` | `1.4.0` → `1.4.1` |
+| Next release after any `x.9.y` | `minor` (rolls over automatically) | `1.9.1` → `2.0.0` |
+| `major` | **never**. CI rejects it | — |
+
+Rules:
+1. **Write changesets with `minor` or `patch` only.** `pnpm check:release-policy` (in CI) fails on `major`.
+2. **Multiple changesets in one release still produce one bump.** All packages share a version (changesets `fixed` group) and the highest bump wins, so a day's worth of `minor` changesets ships as a single `1.x+1.0`.
+3. **Rollover is automatic.** The release job runs `pnpm version-packages` = `changeset version` + `scripts/release-version.mjs`, which turns `x.10.0` into `x+1.0.0` in every `package.json` and CHANGELOG.
+4. **Breaking changes ship in a minor, so say so.** Consumers on `^1.0.0` receive every 1.x automatically. Start the changeset line with `**Breaking:**` and give the one-line migration. Removals go through a deprecation first (`@deprecated` JSDoc for at least one release) wherever practical.
+5. **After every publish, merge the back-merge PR.** The release job opens `chore(release): back-merge vX into development` (production → development). Merge it before the next promotion, or the version lines will conflict.
+
+The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
+
+---|---|---|
 | Bug fix, internal refactor, performance, docs | `patch` | `0.0.2` → `0.0.3` |
 | New component, new prop, backward-compatible feature | `minor` | `0.0.3` → `0.1.0` |
 | Renamed/removed export, breaking prop change, peer dep bump | `major` | `0.1.0` → `1.0.0` |
@@ -47,7 +67,7 @@ All packages in the fixed group always bump to the **same version** even if only
 
 Publishing is automated by `.github/workflows/release.yml` (changesets/action). Nobody runs `npm publish` by hand.
 
-1. **Add a changeset in your PR.** Run `pnpm changeset` (pick packages and bump type), or write `.changeset/<name>.md` by hand:
+1. **Add a changeset in your PR.** Run `pnpm changeset` and pick **`minor`** (or `patch` for a hotfix). See the [Versioning Policy](#versioning-policy). Or write `.changeset/<name>.md` by hand:
    ```markdown
    ---
    "@nexub/react": patch
@@ -55,7 +75,7 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
 
    Short description of what changed and why.
    ```
-   Use one changeset per logical change. Bump types follow the table above.
+   Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
 4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, using the `NPM_TOKEN` secret) and deploys the docs to production.
