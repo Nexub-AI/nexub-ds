@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: 'Sheet.Portal', type: 'compound', required: false, description: 'Portals the overlay and content into the document body.' },
     { name: 'Sheet.Overlay', type: 'compound', required: false, description: 'Dimmed backdrop rendered behind the sheet.' },
     { name: 'Sheet.Content', type: 'compound', required: false, description: 'The sheet panel. Accepts a side prop.' },
+    { name: 'scrollLock', type: "'style' | 'class'", required: false, description: 'On Sheet.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src \'self\'). Default `style`.' },
     { name: 'side', type: "'left' | 'right' | 'top' | 'bottom'", required: false, description: 'Edge of the screen from which the sheet slides in.' },
     { name: 'Sheet.Header', type: 'compound', required: false, description: 'Header section of the sheet panel.' },
     { name: 'Sheet.Footer', type: 'compound', required: false, description: 'Footer section of the sheet panel.' },

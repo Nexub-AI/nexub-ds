@@ -184,6 +184,7 @@ export { NavigationMenu } from './components/NavigationMenu/index.js';
 
 // Components — Drawers / Sheets
 export { Drawer, Sheet } from './components/Drawer/index.js';
+export type { DrawerRootProps } from './components/Drawer/index.js';
 
 // Components — Form Controls (Radix)
 export { Select } from './components/Select/index.js';
@@ -221,7 +222,7 @@ export type { ToastItem } from './components/Toast/index.js';
 export { TopNav } from './components/TopNav/index.js';
 export type { TopNavItemProps } from './components/TopNav/index.js';
 export { Sidebar } from './components/Sidebar/index.js';
-export type { SidebarRootProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
+export type { SidebarRootProps, SidebarHeaderProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
 export { AppShell } from './components/AppShell/index.js';
 export { PageHeader } from './components/PageHeader/index.js';
 export type { PageHeaderProps } from './components/PageHeader/index.js';

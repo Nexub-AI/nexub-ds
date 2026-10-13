@@ -256,6 +256,8 @@ export interface SearchEntry {
 export const searchIndex: SearchEntry[] = [
   // Static pages
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
+  { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
+  { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color tokens and semantic palette', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Font families, sizes, and weights', href: '/foundations/typography', category: 'Foundations' },
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
@@ -292,7 +294,11 @@ const componentsByCategory = (category: string) =>
 export const navGroups: NavGroup[] = [
   {
     title: 'Getting Started',
-    items: [{ title: 'Introduction', href: '/getting-started' }],
+    items: [
+      { title: 'Introduction', href: '/getting-started' },
+      { title: 'Using the brand assets', href: '/getting-started/brand-assets' },
+      { title: 'Strict CSP', href: '/getting-started/strict-csp' },
+    ],
   },
   {
     title: 'Foundations',
