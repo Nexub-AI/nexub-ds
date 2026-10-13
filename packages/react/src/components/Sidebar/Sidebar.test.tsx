@@ -71,3 +71,29 @@ describe('Sidebar', () => {
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
 });
+
+describe('Sidebar.Header', () => {
+  it('renders the logo and a trailing status that can wrap under it', () => {
+    render(
+      <Sidebar.Root>
+        <Sidebar.Header status={<span>Live</span>}>
+          <span>LOGO</span>
+        </Sidebar.Header>
+      </Sidebar.Root>,
+    );
+    const header = screen.getByText('LOGO').parentElement!.parentElement!;
+    expect(header).toHaveClass('flex-wrap');
+    expect(screen.getByText('Live')).toBeInTheDocument();
+  });
+
+  it('keeps the status announced when collapsed', () => {
+    render(
+      <Sidebar.Root collapsed>
+        <Sidebar.Header status={<span>Live</span>}>
+          <span>LOGO</span>
+        </Sidebar.Header>
+      </Sidebar.Root>,
+    );
+    expect(screen.getByText('Live').parentElement).toHaveClass('group-data-[collapsed=true]/sidebar:sr-only');
+  });
+});

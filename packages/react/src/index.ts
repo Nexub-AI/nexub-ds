@@ -184,6 +184,7 @@ export { NavigationMenu } from './components/NavigationMenu/index.js';
 
 // Components — Drawers / Sheets
 export { Drawer, Sheet } from './components/Drawer/index.js';
+export type { DrawerRootProps } from './components/Drawer/index.js';
 
 // Components — Form Controls (Radix)
 export { Select } from './components/Select/index.js';
@@ -221,7 +222,7 @@ export type { ToastItem } from './components/Toast/index.js';
 export { TopNav } from './components/TopNav/index.js';
 export type { TopNavItemProps } from './components/TopNav/index.js';
 export { Sidebar } from './components/Sidebar/index.js';
-export type { SidebarRootProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
+export type { SidebarRootProps, SidebarHeaderProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
 export { AppShell } from './components/AppShell/index.js';
 export { PageHeader } from './components/PageHeader/index.js';
 export type { PageHeaderProps } from './components/PageHeader/index.js';
@@ -247,8 +248,8 @@ export { DateRangePicker } from './components/DateRangePicker/index.js';
 export type { DateRangePickerProps, DateRange } from './components/DateRangePicker/index.js';
 
 // Components — Theme
-export { ThemeProvider, useTheme } from './components/ThemeProvider/index.js';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps } from './components/ThemeProvider/index.js';
+export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider/index.js';
+export type { ThemeMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
 
 // Components — Motion
 export { Fade, Slide, Scale, Collapse } from './components/Motion/index.js';

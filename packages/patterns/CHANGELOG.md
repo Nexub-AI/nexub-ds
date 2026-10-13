@@ -1,5 +1,22 @@
 # @nexub/patterns
 
+## 1.2.0
+
+### Minor Changes
+
+- d296fe3: **New pattern `AppLauncher`** (the "waffle" app switcher), replacing the copies hand-built in each app.
+  - `<AppLauncher apps={[{ id, name, href, icon?, current? }]} onNavigate? surface? label? />`: an `IconButton` ("Nexub apps") opens a 320px `Popover` (aligned to the end) with a 3-column grid of app tiles (40px rounded icon and name).
+  - Missing or broken icons fall back to an `Avatar` with initials. The current app is subtly highlighted and marked `aria-current="page"`.
+  - Keyboard: opens with focus on the current app; arrow keys move through the grid, Home/End jump to the ends. `onNavigate(app)` takes over plain clicks for client-side routing; modified clicks still open the link.
+  - `surface="glass"` supported. Renders nothing for an empty list.
+  - `@nexub/icons`: new `Apps` icon (3×3 dots).
+
+- d296fe3: **New pattern `SettingsLayout`** (the My Account layout) and **`SettingsRow`**.
+  - Full-width frame: a `TopNav` with `logo` and `actions` slots, and a left `Sidebar` of sections built from `items: { id, label, icon, href }[]`, with `activeId` highlighted. It works with any router: `onSelect(item)` takes over plain clicks, and `href` still works for modified clicks.
+  - Under 768px the sidebar becomes a menu button that opens a left `Sheet` with the same items. Choosing one closes it.
+  - Content area (max width 3xl) with an optional page header (`title`, `description`). Children are sections: use `SettingsLayout.Section` (a `Card` with an optional title and description).
+  - `SettingsRow` (also `SettingsLayout.Row`): label (and optional description) on the left, value in the middle, action on the right. It stacks on phones.
+
 ## 1.1.0
 
 ### Minor Changes

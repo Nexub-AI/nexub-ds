@@ -1,2 +1,2 @@
-export { ThemeProvider, useTheme } from './ThemeProvider.js';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps } from './ThemeProvider.js';
+export { ThemeProvider, ThemeScript, useTheme } from './ThemeProvider.js';
+export type { ThemeMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './ThemeProvider.js';

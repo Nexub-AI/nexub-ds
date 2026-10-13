@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import * as React from 'react';
-import { ThemeProvider, useTheme } from './ThemeProvider.js';
+import { ThemeProvider, ThemeScript, themeScriptSource, useTheme } from './ThemeProvider.js';
+import { renderToString } from 'react-dom/server';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -153,5 +154,30 @@ describe('ThemeProvider', () => {
       'useTheme must be used inside a <ThemeProvider>.',
     );
     spy.mockRestore();
+  });
+});
+
+// ─── ThemeScript ──────────────────────────────────────────────────────────────
+
+describe('ThemeScript', () => {
+  it('applies the stored theme and product before paint', () => {
+    localStorage.setItem('k', 'dark');
+    localStorage.setItem('p', 'bookub');
+    new Function(themeScriptSource('k', 'p'))();
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(document.documentElement.getAttribute('data-product')).toBe('bookub');
+    document.documentElement.removeAttribute('data-product');
+  });
+
+  it('ignores unknown stored values', () => {
+    localStorage.setItem('nexub-theme', 'system');
+    new Function(themeScriptSource('nexub-theme'))();
+    expect(document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+
+  it('cannot be broken out of by a hostile storage key, and passes the nonce', () => {
+    const html = renderToString(<ThemeScript storageKey={'</script><script>alert(1)//'} nonce="abc" />);
+    expect(html).not.toContain('</script><script>');
+    expect(html).toContain('nonce="abc"');
   });
 });

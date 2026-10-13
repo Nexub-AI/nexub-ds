@@ -1,5 +1,25 @@
 # @nexub/icons
 
+## 1.2.0
+
+### Minor Changes
+
+- d296fe3: **New pattern `AppLauncher`** (the "waffle" app switcher), replacing the copies hand-built in each app.
+  - `<AppLauncher apps={[{ id, name, href, icon?, current? }]} onNavigate? surface? label? />`: an `IconButton` ("Nexub apps") opens a 320px `Popover` (aligned to the end) with a 3-column grid of app tiles (40px rounded icon and name).
+  - Missing or broken icons fall back to an `Avatar` with initials. The current app is subtly highlighted and marked `aria-current="page"`.
+  - Keyboard: opens with focus on the current app; arrow keys move through the grid, Home/End jump to the ends. `onNavigate(app)` takes over plain clicks for client-side routing; modified clicks still open the link.
+  - `surface="glass"` supported. Renders nothing for an empty list.
+  - `@nexub/icons`: new `Apps` icon (3×3 dots).
+
+- d296fe3: **Branding: the official Nexub mark in `Logo`.**
+  - `NexubMark` (`@nexub/icons`) now draws the official Nexub mark (the purple-blue ribbon), taken from the master SVG without redrawing. It replaces the placeholder "B". New `variant` prop: `"mono"` (default, `currentColor`, as before) or `"color"`. Each instance gets its own gradient ids, so several marks on one page don't clash.
+  - `Logo` gets `mark="color" | "mono"` (default `"color"`) and `product?: string`. With `product`, it renders the mark, "nexub", a subtle separator and the product name in muted text at the wordmark's size, e.g. `<Logo product="Command Hub" />`. The accessible name becomes "Nexub Command Hub".
+  - `Logo` `variant="icon"` is the new name for the mark-only variant. `variant="mark"` still works. `Logo` now has `role="img"`, so its name is announced.
+  - The mark is sized by height at its real 78:56 ratio (it used to sit in a square box).
+  - `@nexub/tokens`: 47 new brand tokens, `--color-brand-mark-1` … `--color-brand-mark-47` (Tailwind `brand-mark-*`), holding the mark's gradient colours. `Logo` and `NexubMark` contain no hex values.
+
+- d296fe3: **New icons `Pin`, `Send` and `Crown`**, so apps no longer need Bookmark, ArrowUp and Star as stand-ins.
+
 ## 1.1.0
 
 ### Minor Changes

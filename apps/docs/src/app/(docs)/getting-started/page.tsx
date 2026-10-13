@@ -64,6 +64,26 @@ export default function App({ children }) {
   );
 }`} />
 
+      <h2>ThemeScript</h2>
+      <p>
+        On server-rendered pages, add <code>ThemeScript</code> to <code>&lt;head&gt;</code> so the
+        stored theme is applied before first paint (no light/dark flash). Use the same{' '}
+        <code>storageKey</code> as <code>ThemeProvider</code>, and pass your CSP <code>nonce</code>{' '}
+        if your Content-Security-Policy blocks inline scripts.
+      </p>
+      <CodeBlock code={`import { ThemeScript } from '@nexub/react';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript storageKey="my-app-theme" nonce={nonce} />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}`} />
+
       <h2>useTheme</h2>
       <p>Read and control the active theme from any client component:</p>
       <CodeBlock code={`'use client';

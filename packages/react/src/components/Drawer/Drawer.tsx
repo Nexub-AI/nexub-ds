@@ -1,27 +1,156 @@
 import * as React from 'react';
+import type * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Slot } from '@radix-ui/react-slot';
 import { Drawer as VaulDrawer } from 'vaul';
 import { cn } from '../../utils/cn.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
-const Root = VaulDrawer.Root;
-const Trigger = VaulDrawer.Trigger;
-const Portal = VaulDrawer.Portal;
-const Close = VaulDrawer.Close;
+// vaul is bundled into @nexub/react (see tsup.config.ts) and is not a
+// dependency, so no exported type may reference it. These are vaul 1.1.2's
+// Root props, re-declared; the rest of the API is typed with Radix Dialog,
+// which is a dependency.
+export interface DrawerRootProps {
+  children?: React.ReactNode;
+  open?: boolean;
+  /** Opened by default, skips the initial enter animation. Still reacts to `open` changes. */
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Gets triggered after the open or close animation ends. */
+  onAnimationEnd?: (open: boolean) => void;
+  onClose?: () => void;
+  /** Edge the drawer slides in from. Match it to `Content`'s `side`. @default 'bottom' */
+  direction?: 'top' | 'bottom' | 'left' | 'right';
+  /** When `false`, the page behind stays interactive and nothing is locked or trapped. @default true */
+  modal?: boolean;
+  /**
+   * How page scroll is locked while the drawer is open (modal only).
+   * - `'style'` (default): Radix's scroll lock. It injects a `<style>` tag, which a strict
+   *   `style-src` CSP blocks.
+   * - `'class'`: adds the `nexub-scroll-lock` class from `@nexub/themes/base` to `<html>`.
+   *   Injects nothing, so it works under `style-src 'self'`. Focus trap, Escape and
+   *   outside-click dismissal are unchanged.
+   * @default 'style'
+   */
+  scrollLock?: 'style' | 'class';
+  /** When `false`, dragging, outside clicks and Escape don't close the drawer. @default true */
+  dismissible?: boolean;
+  /** Only the `Drawer.Handle` starts a drag. @default false */
+  handleOnly?: boolean;
+  /** Fraction (0–1) of the drawer that must be dragged away to close it. @default 0.25 */
+  closeThreshold?: number;
+  /** Snap points, as fractions of the screen (e.g. `[0.4, 1]`) or px strings. */
+  snapPoints?: (number | string)[];
+  activeSnapPoint?: number | string | null;
+  setActiveSnapPoint?: (snapPoint: number | string | null) => void;
+  /** Index of the snap point from which the overlay fades. Defaults to the last one. */
+  fadeFromIndex?: number;
+  /** Don't skip snap points on fast swipes. @default false */
+  snapToSequentialPoint?: boolean;
+  /** ms during which the drawer can't be dragged after its content scrolls. @default 500 */
+  scrollLockTimeout?: number;
+  onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
+  onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
+  shouldScaleBackground?: boolean;
+  /** @default true */
+  setBackgroundColorOnScale?: boolean;
+  /** When `true`, vaul sets no styles on `body`. */
+  noBodyStyles?: boolean;
+  /** Only resize (don't move) the drawer when the on-screen keyboard opens. */
+  fixed?: boolean;
+  nested?: boolean;
+  disablePreventScroll?: boolean;
+  preventScrollRestoration?: boolean;
+  /** Reposition inputs instead of scrolling them into view when the keyboard opens. */
+  repositionInputs?: boolean;
+  container?: HTMLElement | null;
+  autoFocus?: boolean;
+}
 
-const Overlay = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof VaulDrawer.Overlay>>(
-  ({ className, ...props }, ref) => (
-    <VaulDrawer.Overlay
-      ref={ref}
-      className={cn('fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)]', className)}
-      {...props}
-    />
-  ),
+type VaulRootProps = React.ComponentProps<typeof VaulDrawer.Root>;
+
+const DrawerContext = React.createContext({ scrollLock: 'style' as 'style' | 'class', open: false, modal: true });
+
+function Root({ scrollLock = 'style', onOpenChange, ...props }: DrawerRootProps) {
+  // Mirror the open state (controlled or not) for the class-lock overlay's data-state.
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(props.defaultOpen ?? false);
+  const open = props.open ?? uncontrolledOpen;
+  return (
+    <DrawerContext.Provider value={{ scrollLock, open, modal: props.modal ?? true }}>
+      <VaulDrawer.Root
+        {...(props as VaulRootProps)}
+        onOpenChange={(next) => {
+          setUncontrolledOpen(next);
+          onOpenChange?.(next);
+        }}
+      />
+    </DrawerContext.Provider>
+  );
+}
+Root.displayName = 'Drawer.Root';
+
+const Trigger: React.ForwardRefExoticComponent<
+  DialogPrimitive.DialogTriggerProps & React.RefAttributes<HTMLButtonElement>
+> = VaulDrawer.Trigger;
+const Close: React.ForwardRefExoticComponent<
+  DialogPrimitive.DialogCloseProps & React.RefAttributes<HTMLButtonElement>
+> = VaulDrawer.Close;
+const Portal: (props: DialogPrimitive.DialogPortalProps) => React.JSX.Element = VaulDrawer.Portal;
+
+let scrollLocks = 0;
+
+// The class-based lock. Lives with the overlay, like Radix's: on while the
+// overlay is mounted (including its fade-out), off when it unmounts.
+function useClassScrollLock() {
+  React.useEffect(() => {
+    const html = document.documentElement;
+    if (scrollLocks++ === 0) {
+      // Keep the scrollbar's space so the page doesn't shift sideways.
+      html.classList.toggle('nexub-scroll-gutter', window.innerWidth > html.clientWidth);
+      html.classList.add('nexub-scroll-lock');
+    }
+    return () => {
+      if (--scrollLocks === 0) html.classList.remove('nexub-scroll-lock', 'nexub-scroll-gutter');
+    };
+  }, []);
+}
+
+// Radix's scroll lock (react-remove-scroll) lives in Dialog.Overlay, so this
+// overlay is a plain element. Focus trap, aria-hidden siblings and outside-click
+// dismissal live in Dialog.Content and still apply.
+// ponytail: no drag-to-fade or snap-point overlay states; add if a class-lock sheet needs snap points.
+const ClassLockOverlay = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogOverlayProps & { open: boolean }>(
+  ({ asChild, forceMount: _forceMount, open, ...props }, ref) => {
+    useClassScrollLock();
+    const Comp = asChild ? Slot : 'div';
+    return (
+      <Comp
+        ref={ref}
+        data-vaul-overlay=""
+        data-vaul-snap-points="false"
+        data-state={open ? 'open' : 'closed'}
+        {...props}
+      />
+    );
+  },
+);
+
+const Overlay = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogOverlayProps>(
+  ({ className, ...props }, ref) => {
+    const { scrollLock, open, modal } = React.useContext(DrawerContext);
+    const classes = cn('fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)]', className);
+    if (scrollLock === 'class') {
+      // Non-modal drawers have no overlay (vaul's Overlay returns null too).
+      if (!modal) return null;
+      return <ClassLockOverlay ref={ref} open={open} className={cn('pointer-events-auto', classes)} {...props} />;
+    }
+    return <VaulDrawer.Overlay ref={ref} className={classes} {...props} />;
+  },
 );
 Overlay.displayName = 'Drawer.Overlay';
 
 const Content = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof VaulDrawer.Content> & {
+  DialogPrimitive.DialogContentProps & {
     side?: 'left' | 'right' | 'top' | 'bottom';
     surface?: SurfaceValue;
   }

@@ -3,7 +3,8 @@ import { NexubMark } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 
-export const logoVariants = cva('inline-flex items-center gap-2', {
+// min-w-0/max-w-full: in a narrow container the product name truncates.
+export const logoVariants = cva('inline-flex min-w-0 max-w-full items-center gap-2', {
   variants: {
     size: {
       sm: 'h-6',
@@ -80,7 +81,7 @@ export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
           <span
             className={cn(
               wordmarkSizeMap[resolvedSize],
-              'font-semibold tracking-tight leading-none',
+              'shrink-0 font-semibold tracking-tight leading-none',
             )}
           >
             nexub
@@ -92,7 +93,8 @@ export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
             <span
               className={cn(
                 wordmarkSizeMap[resolvedSize],
-                'font-medium tracking-tight leading-none whitespace-nowrap',
+                // leading-normal so the clip box doesn't cut descenders.
+                'min-w-0 truncate font-medium tracking-tight leading-normal',
                 resolvedTone === 'inverse' ? 'opacity-70' : 'text-[var(--color-text-muted)]',
               )}
             >

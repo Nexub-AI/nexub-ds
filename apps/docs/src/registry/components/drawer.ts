@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: 'Drawer.Portal', type: 'compound', required: false, description: 'Portals the overlay and content into the document body.' },
     { name: 'Drawer.Overlay', type: 'compound', required: false, description: 'Dimmed backdrop rendered behind the drawer.' },
     { name: 'Drawer.Content', type: 'compound', required: false, description: 'The drawer panel. Accepts a side prop.' },
+    { name: 'scrollLock', type: "'style' | 'class'", required: false, description: 'On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src \'self\'). Default `style`.' },
     { name: 'side', type: "'left' | 'right' | 'top' | 'bottom'", required: false, description: 'Edge of the screen from which the drawer slides in.' },
     { name: 'Drawer.Header', type: 'compound', required: false, description: 'Header section of the drawer panel.' },
     { name: 'Drawer.Footer', type: 'compound', required: false, description: 'Footer section of the drawer panel.' },
