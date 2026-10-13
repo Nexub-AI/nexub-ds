@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Logo } from './Logo.js';
@@ -36,7 +39,7 @@ describe('Logo', () => {
     const { container } = render(<Logo />);
     const stops = container.querySelectorAll('stop');
     expect(stops.length).toBeGreaterThan(0);
-    stops.forEach((s) => expect(s.getAttribute('style')).toMatch(/var\(--color-brand-mark-\d+\)/));
+    stops.forEach((s) => expect(s.getAttribute('class')).toMatch(/^nxm-s-\d+/));
   });
 
   it('renders a single currentColor path when mark="mono"', () => {
@@ -61,5 +64,16 @@ describe('Logo', () => {
   it('hides the product name in the icon variant', () => {
     render(<Logo variant="icon" product="Account" />);
     expect(screen.queryByText('Account')).not.toBeInTheDocument();
+  });
+
+  it('renders the colour mark with no style attributes, so a strict CSP keeps its colours', () => {
+    const html = renderToString(<Logo mark="color" />);
+    expect(html).toContain('<stop');
+    expect(html).not.toMatch(/\sstyle=/);
+    // Every stop class has its rule in @nexub/themes base.css.
+    const css = readFileSync(createRequire(import.meta.url).resolve('@nexub/themes/base'), 'utf8');
+    const classes = new Set([...html.matchAll(/class="(nxm-[^"]+)"/g)].flatMap((m) => (m[1] ?? '').split(' ')));
+    expect(classes.size).toBeGreaterThan(0);
+    for (const c of classes) expect(css).toContain(`.${c}{`);
   });
 });
