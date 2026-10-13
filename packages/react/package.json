@@ -80,9 +80,9 @@
     "tailwind-merge": "^2.5.4"
   },
   "peerDependencies": {
+    "@nexub/tokens": "workspace:^",
     "react": ">=18 <20",
-    "react-dom": ">=18 <20",
-    "@nexub/tokens": "workspace:^"
+    "react-dom": ">=18 <20"
   },
   "devDependencies": {
     "@nexub/themes": "workspace:*",
@@ -96,6 +96,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
+    "axe-core": "^4.11.3",
     "jsdom": "^25.0.1",
     "postcss": "^8.4.49",
     "react": "^19.0.0",

@@ -1,0 +1,24 @@
+version: 2
+updates:
+  # Workflow actions are pinned by SHA; Dependabot bumps the SHA and the "# vX.Y.Z" comment together.
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    target-branch: development
+    schedule:
+      interval: weekly
+    # Let new releases age a week before proposing them (supply-chain buffer).
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]

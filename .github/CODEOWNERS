@@ -1,0 +1,8 @@
+# Changes to CI, release, and publishing need an owner's review.
+/.github/                  @sasinex
+/.changeset/config.json    @sasinex
+/scripts/                  @sasinex
+/package.json              @sasinex
+/pnpm-workspace.yaml       @sasinex
+/apps/docs/functions/      @sasinex
+/apps/docs/public/_headers @sasinex

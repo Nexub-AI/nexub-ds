@@ -248,8 +248,8 @@ export { DateRangePicker } from './components/DateRangePicker/index.js';
 export type { DateRangePickerProps, DateRange } from './components/DateRangePicker/index.js';
 
 // Components — Theme
-export { ThemeProvider, useTheme } from './components/ThemeProvider/index.js';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps } from './components/ThemeProvider/index.js';
+export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider/index.js';
+export type { ThemeMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
 
 // Components — Motion
 export { Fade, Slide, Scale, Collapse } from './components/Motion/index.js';
