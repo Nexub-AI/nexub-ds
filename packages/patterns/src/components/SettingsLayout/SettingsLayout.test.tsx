@@ -56,6 +56,16 @@ describe('SettingsLayout', () => {
     expect(onSelect).toHaveBeenCalledWith(items[0]);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('opens the phone menu without injecting a <style> tag (strict CSP)', async () => {
+    const user = userEvent.setup();
+    const before = document.querySelectorAll('style').length;
+    render(<SettingsLayout items={items} />);
+    await user.click(screen.getByRole('button', { name: 'Open settings menu' }));
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument();
+    expect(document.querySelectorAll('style')).toHaveLength(before);
+    expect(document.documentElement).toHaveClass('nexub-scroll-lock');
+  });
 });
 
 describe('SettingsRow', () => {

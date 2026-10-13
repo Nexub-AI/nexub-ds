@@ -95,3 +95,40 @@ export const SideSheetLongContent: Story = {
     </Drawer.Root>
   ),
 };
+
+/**
+ * `scrollLock="class"` locks page scroll with a class from `@nexub/themes/base`
+ * instead of an injected `<style>` tag, so it works under `style-src 'self'`.
+ * The counter shows the page's `<style>` tags; it doesn't change when the sheet opens.
+ */
+export const StrictCsp: Story = {
+  render: function StrictCspStory() {
+    const [open, setOpen] = React.useState(false);
+    const [styles, setStyles] = React.useState(0);
+    React.useEffect(() => setStyles(document.querySelectorAll('style').length), [open]);
+    return (
+      <div>
+        <p style={{ fontSize: '0.875rem' }}>&lt;style&gt; tags on the page: {styles}</p>
+        <Drawer.Root open={open} onOpenChange={setOpen} direction="left" scrollLock="class">
+          <Drawer.Trigger asChild>
+            <button>Open menu</button>
+          </Drawer.Trigger>
+          <Drawer.Portal>
+            <Drawer.Overlay />
+            <Drawer.Content side="left">
+              <Drawer.Header>
+                <Drawer.Title>Menu</Drawer.Title>
+                <Drawer.Description>The page behind is scroll-locked by a class.</Drawer.Description>
+              </Drawer.Header>
+              <Drawer.Footer>
+                <Drawer.Close asChild>
+                  <button>Close</button>
+                </Drawer.Close>
+              </Drawer.Footer>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
+      </div>
+    );
+  },
+};

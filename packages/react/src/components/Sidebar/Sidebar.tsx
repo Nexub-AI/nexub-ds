@@ -26,6 +26,33 @@ const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
 );
 Root.displayName = 'Sidebar.Root';
 
+export interface SidebarHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Trailing element next to the logo, e.g. a "Live" `<Badge>`. Moves under the logo when they don't fit. */
+  status?: React.ReactNode;
+}
+
+/** Top of the sidebar: a logo (children) and an optional status. */
+const Header = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
+  ({ className, status, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        // Wraps instead of overlapping: the status drops to its own line when
+        // the logo needs the width, and a logo wider than the sidebar truncates.
+        'flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-[var(--color-border-default)] px-3 py-3 group-data-[collapsed=true]/sidebar:justify-center group-data-[collapsed=true]/sidebar:px-2',
+        className,
+      )}
+      {...props}
+    >
+      <div className="flex min-w-0 max-w-full items-center">{children}</div>
+      {status && (
+        <div className="flex shrink-0 items-center group-data-[collapsed=true]/sidebar:sr-only">{status}</div>
+      )}
+    </div>
+  ),
+);
+Header.displayName = 'Sidebar.Header';
+
 export interface SidebarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
 }
@@ -110,4 +137,4 @@ const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
 );
 Footer.displayName = 'Sidebar.Footer';
 
-export const Sidebar = { Root, Group, Item, Separator, Footer };
+export const Sidebar = { Root, Header, Group, Item, Separator, Footer };

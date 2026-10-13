@@ -2,11 +2,12 @@
    Global resets, focus ring, body, scrollbar, reduced-motion.
    Import this once at the root of your app before light.css or dark.css. */
 
-/* Plus Jakarta Sans — the Nexub DS typeface. Self-hosted (OFL-1.1) via
-   Fontsource; variable weights 200–800, normal + italic. Subsets load on
-   demand via unicode-range, so only the glyphs a page uses are fetched. */
-@import '@fontsource-variable/plus-jakarta-sans/wght.css';
-@import '@fontsource-variable/plus-jakarta-sans/wght-italic.css';
+/* Plus Jakarta Sans — the Nexub DS typeface. Self-hosted (OFL-1.1, from
+   Fontsource); variable weights 200–800, normal + italic. Subsets load on
+   demand via unicode-range, so only the glyphs a page uses are fetched. Every
+   file is big enough that bundlers emit it rather than inline a data: URL,
+   so `font-src 'self'` works (see scripts/build-fonts.mjs). */
+@import './fonts.css';
 @import '@nexub/tokens/css';
 
 /* ─── Semantic shorthand aliases ───────────────────────────────────────────
@@ -236,6 +237,19 @@ code, kbd, pre, samp {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+/* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
+   A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
+   instead of injecting a <style> tag. The gutter class keeps the scrollbar's
+   space so the page doesn't shift sideways. */
+html.nexub-scroll-lock { overflow: hidden; }
+html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
+
+/* ─── Radix ScrollArea / Select viewports ────────────────────────────────────
+   Radix renders these rules in a <style> tag, which a strict CSP blocks. The
+   same rules here keep the native scrollbar hidden either way. */
+[data-radix-scroll-area-viewport],[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar,[data-radix-select-viewport]::-webkit-scrollbar{display:none}
 
 /* ─── Drawer / Sheet (vaul 1.1.2) ─────────────────────────────────────────────
    vaul's own styles. vaul normally injects these in a <style> tag when
