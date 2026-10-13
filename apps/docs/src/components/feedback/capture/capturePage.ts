@@ -38,6 +38,10 @@ export async function capturePage(): Promise<Blob> {
       height: window.innerHeight,
       pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
       cacheBust: true,
+      // Cross-origin images without CORS headers (e.g. Avatar examples) can't be
+      // inlined; draw a transparent pixel instead of failing the whole capture.
+      imagePlaceholder:
+        'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
       filter: (node: HTMLElement) =>
         !(typeof node.closest === 'function' && node.closest('[data-feedback-ignore]')),
     });
