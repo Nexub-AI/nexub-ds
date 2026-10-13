@@ -230,6 +230,7 @@ export { Breadcrumb } from './components/Breadcrumb/index.js';
 export { Pagination } from './components/Pagination/index.js';
 export type { PaginationProps } from './components/Pagination/index.js';
 export { CommandPalette } from './components/CommandPalette/index.js';
+export type { CommandPaletteRootProps } from './components/CommandPalette/index.js';
 
 // Components — Data Display
 export { Table } from './components/Table/index.js';

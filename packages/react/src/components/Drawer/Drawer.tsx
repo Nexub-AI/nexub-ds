@@ -3,6 +3,7 @@ import type * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Slot } from '@radix-ui/react-slot';
 import { Drawer as VaulDrawer } from 'vaul';
 import { cn } from '../../utils/cn.js';
+import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 // vaul is bundled into @nexub/react (see tsup.config.ts) and is not a
@@ -95,24 +96,6 @@ const Close: React.ForwardRefExoticComponent<
   DialogPrimitive.DialogCloseProps & React.RefAttributes<HTMLButtonElement>
 > = VaulDrawer.Close;
 const Portal: (props: DialogPrimitive.DialogPortalProps) => React.JSX.Element = VaulDrawer.Portal;
-
-let scrollLocks = 0;
-
-// The class-based lock. Lives with the overlay, like Radix's: on while the
-// overlay is mounted (including its fade-out), off when it unmounts.
-function useClassScrollLock() {
-  React.useEffect(() => {
-    const html = document.documentElement;
-    if (scrollLocks++ === 0) {
-      // Keep the scrollbar's space so the page doesn't shift sideways.
-      html.classList.toggle('nexub-scroll-gutter', window.innerWidth > html.clientWidth);
-      html.classList.add('nexub-scroll-lock');
-    }
-    return () => {
-      if (--scrollLocks === 0) html.classList.remove('nexub-scroll-lock', 'nexub-scroll-gutter');
-    };
-  }, []);
-}
 
 // Radix's scroll lock (react-remove-scroll) lives in Dialog.Overlay, so this
 // overlay is a plain element. Focus trap, aria-hidden siblings and outside-click
