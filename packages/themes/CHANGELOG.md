@@ -1,5 +1,20 @@
 # @nexub/themes
 
+## 1.3.0
+
+### Minor Changes
+
+- d907d10: **Strict CSP: `Sheet` / `Drawer` can lock scroll without an injected `<style>`.**
+  - New `scrollLock` prop on `Sheet.Root` / `Drawer.Root`: `"style"` (default, unchanged) or `"class"`. With `"class"`, page scroll is locked by the `nexub-scroll-lock` class from `@nexub/themes/base` on `<html>` (keeping the scrollbar's space, so nothing shifts) instead of Radix's injected `<style>` tag, which `style-src 'self'` blocks. The sheet stays modal: focus trap, hidden background for screen readers, Escape and outside-click still work.
+  - `SettingsLayout`'s phone menu uses `scrollLock="class"`, so it opens under a strict CSP with no console error and the page behind is locked.
+  - `@nexub/themes/base` also ships Radix's scrollbar-hiding rule for `ScrollArea` and `Select` viewports, so they look right when a strict CSP blocks Radix's `<style>` tag.
+  - New docs page, Getting Started → Strict CSP: which components are CSP-safe and how to use the others.
+- d907d10: **Fonts work under `font-src 'self'` with default Vite settings.** `@nexub/themes/base` now loads Plus Jakarta Sans from its own `fonts.css`, which only references font files over 8 KB, so Vite (4 KB) and webpack (8 KB) emit them as files instead of inlining `data:` URLs. The one subset left out, cyrillic-ext (≈1.7 KB, a few rare glyphs such as ₴), falls back to the system font. Apps can remove `build.assetsInlineLimit: 0`. The Strict CSP docs page has a Vite setting that never inlines fonts, and shows how to use the system font instead. `@fontsource-variable/plus-jakarta-sans` is no longer a runtime dependency.
+
+### Patch Changes
+
+- @nexub/tokens@1.3.0
+
 ## 1.2.0
 
 ### Minor Changes
