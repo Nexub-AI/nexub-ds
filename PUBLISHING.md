@@ -28,6 +28,8 @@ All six packages are in a changesets **`fixed`** group — they always publish a
 | `0.0.1` | — | Initial | Initial private release (pre-public, workspace only) | — |
 | `0.0.2` | 2026-04-27 | Patch | Focus ring double-ring fix (Input, Textarea, Select, NumberInput, Heading); Toast SSR guard; Collapse RAF cleanup; FileUpload useMemo; useMergedRefs stable callback; Motion willChange hints | [v0.0.2](https://github.com/Nexub-AI/nexub-ds/releases/tag/v0.0.2) |
 | `1.0.0` | 2026-10-12 | Major | Liquid Glass material layer; first public 1.0 (lockstep versioning) | — |
+| `1.1.0` | 2026-10-12 | Minor | Plus Jakarta Sans typeface; ESM-only packages with working tree-shaking and RSC-safe builds; accessibility and stability fixes (DatePicker labels, WCAG input borders); lighter dependencies; StatusPill/Tag/Banner/Callout deprecated | [@nexub/react@1.1.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.1.0) |
+| `1.2.0` | 2026-10-12 | Minor | Official Nexub mark in `Logo` (`mark`, `product`, brand-mark tokens); new `@nexub/brand` package; `AppLauncher` and `SettingsLayout` patterns; `Apps`/`Pin`/`Send`/`Crown` icons; Sheet sideways-scroll, Tabs inactive-panel and Drawer CSP fixes | [@nexub/react@1.2.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.2.0) |
 
 ---
 
