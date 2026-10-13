@@ -238,6 +238,11 @@ code, kbd, pre, samp {
   to   { transform: translateX(-50%); }
 }
 
+/* ─── App header (@nexub/patterns AppHeader) ─────────────────────────────────
+   One height for the fixed top header everywhere. Offset layouts with
+   var(--app-header-height); AppHeader's own spacer already does in flow. */
+:root { --app-header-height: 64px; }
+
 /* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
    A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
    instead of injecting a <style> tag. The gutter class keeps the scrollbar's
