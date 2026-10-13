@@ -83,7 +83,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
           <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ml-2 md:hidden" onClick={() => setMenuOpen(true)}>
             <Menu size="md" aria-hidden="true" />
           </IconButton>
-          {logo && <TopNav.Logo className="min-w-0">{logo}</TopNav.Logo>}
+          {logo && <TopNav.Logo className="min-w-0 shrink">{logo}</TopNav.Logo>}
           {actions && <TopNav.Actions>{actions}</TopNav.Actions>}
         </TopNav.Root>
 
@@ -108,7 +108,8 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
           </main>
         </div>
 
-        <Sheet.Root open={menuOpen} onOpenChange={setMenuOpen} direction="left">
+        {/* Class-based scroll lock: no injected <style>, so strict-CSP apps work. */}
+        <Sheet.Root open={menuOpen} onOpenChange={setMenuOpen} direction="left" scrollLock="class">
           <Sheet.Portal>
             <Sheet.Overlay className="md:hidden" />
             <Sheet.Content side="left" aria-describedby={undefined} className="md:hidden">

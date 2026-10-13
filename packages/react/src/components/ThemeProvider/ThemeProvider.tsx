@@ -122,3 +122,39 @@ export function useTheme(): ThemeContextValue {
   }
   return ctx;
 }
+
+// ─── Pre-paint script ─────────────────────────────────────────────────────────
+
+export interface ThemeScriptProps {
+  /** Must match ThemeProvider's `storageKey`. Defaults to 'nexub-theme'. */
+  storageKey?: string;
+  /** If set, a stored product brand (e.g. 'bookub') is applied as `data-product`. */
+  productStorageKey?: string;
+  /** CSP nonce for pages whose script-src disallows inline scripts. */
+  nonce?: string;
+}
+
+// JSON-encode and escape '<' so a key can never close the <script> tag.
+const jsString = (s: string) => JSON.stringify(s).replace(/</g, '\\u003c');
+
+/** @internal Exported for tests. */
+export function themeScriptSource(storageKey: string, productStorageKey?: string): string {
+  const product = productStorageKey
+    ? `var b=localStorage.getItem(${jsString(productStorageKey)});if(b&&b!=='base')d.setAttribute('data-product',b);`
+    : '';
+  return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}}catch(e){}`;
+}
+
+/**
+ * Applies the stored theme before first paint, so there is no light/dark flash.
+ * Render it in `<head>` (or at the top of `<body>`) on server-rendered pages.
+ */
+export function ThemeScript({ storageKey = 'nexub-theme', productStorageKey, nonce }: ThemeScriptProps) {
+  return (
+    <script
+      nonce={nonce}
+      suppressHydrationWarning
+      dangerouslySetInnerHTML={{ __html: themeScriptSource(storageKey, productStorageKey) }}
+    />
+  );
+}

@@ -9,3 +9,9 @@ global.ResizeObserver = class ResizeObserver {
 
 // jsdom doesn't implement scrollIntoView — mock it for cmdk
 if (typeof window !== "undefined") window.HTMLElement.prototype.scrollIntoView = function () {};
+
+// jsdom doesn't implement matchMedia — vaul (Drawer/Sheet) reads it when it opens
+if (typeof window !== "undefined" && !window.matchMedia) {
+  window.matchMedia = (query: string) =>
+    ({ matches: false, media: query, onchange: null, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, dispatchEvent: () => false }) as MediaQueryList;
+}

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { Sidebar } from './Sidebar.js';
+import { Badge } from '../Badge/Badge.js';
+import { Logo } from '../Logo/Logo.js';
 
 const meta: Meta = {
   title: 'Navigation/Sidebar',
@@ -71,6 +73,33 @@ export const Default: Story = {
             Nexub DS v1.0
           </span>
         </Sidebar.Footer>
+      </Sidebar.Root>
+    </div>
+  ),
+};
+
+/** Product logo with a status. The status moves under the logo when they don't fit, and a logo wider than the sidebar truncates. */
+export const HeaderWithStatus: Story = {
+  render: () => (
+    <div style={{ height: '320px', display: 'flex', gap: '24px' }}>
+      {[240, 200].map((width) => (
+        <Sidebar.Root key={width} style={{ width }}>
+          <Sidebar.Header status={<Badge variant="soft" tone="success">Live</Badge>}>
+            <Logo product="Command Hub" size="sm" />
+          </Sidebar.Header>
+          <Sidebar.Group>
+            <Sidebar.Item href="#" active icon={<DashboardIcon />}>Overview</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<SettingsIcon />}>Settings</Sidebar.Item>
+          </Sidebar.Group>
+        </Sidebar.Root>
+      ))}
+      <Sidebar.Root collapsed>
+        <Sidebar.Header status={<Badge variant="soft" tone="success">Live</Badge>}>
+          <Logo variant="icon" product="Command Hub" size="sm" />
+        </Sidebar.Header>
+        <Sidebar.Group>
+          <Sidebar.Item href="#" active icon={<DashboardIcon />}>Overview</Sidebar.Item>
+        </Sidebar.Group>
       </Sidebar.Root>
     </div>
   ),

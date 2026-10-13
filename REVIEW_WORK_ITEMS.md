@@ -70,3 +70,33 @@ Effort: S = under half a day, M = 1–3 days, L = about a week.
 3. **Sprint C (lighten + simplify): done 2026-10-12.** 20, 21, 23, 24, 25, 27, 31; 22 won't-do. Also documented the Tailwind preset setup.
    Docs `/` First Load 192 → 129 kB; registry data no longer ships to the client; framer-motion removed.
 4. **Sprint D (larger refactors): in progress 2026-10-12.** 28 and 29 done; 26 and 30 partial (see rows). Full example single-sourcing deferred by decision.
+
+---
+
+# Sprint E: Security (2026-10-13)
+
+| # | Item | Status |
+|---|------|--------|
+| E1 | Docs CSP + HSTS + Permissions-Policy + COOP (`apps/docs/public/_headers`). `script-src` keeps `'unsafe-inline'` (static export inlines RSC scripts). | ✅ |
+| E2 | `ThemeScript` export (pre-paint theme, `nonce` for strict CSP); docs dogfoods it. | ✅ |
+| E3 | Actions pinned by SHA, `persist-credentials: false`, zizmor in CI, Dependabot (7-day cooldown), CODEOWNERS, SECURITY.md. | ✅ |
+| E4 | pnpm 10 (install scripts blocked except `esbuild`, `sharp`). | ✅ |
+| E5 | npm trusted publishing (OIDC) instead of `NPM_TOKEN`. Needs npmjs.com setup per package; check pnpm/changesets OIDC support first. Provenance is not generated for private repos. | ⏳ owner action |
+| E6 | `pnpm audit --prod --audit-level=high` CI gate (overrides for postcss/nanoid/source-map-js/sharp; `braces` GHSA-vfj7-8cjw-p6xm ignored, build-time only). axe-core sweep over 24 components. | ✅ |
+
+Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Avatar examples).
+
+# Roadmap: scaling to Apple / Google / Wise level
+
+| # | Item | Evidence | Effort |
+|---|------|----------|--------|
+| R1 | Visual regression: screenshot every story × light/dark/glass/4 brands. | No visual tests; 90+ components × 7 themes. | M |
+| R2 | i18n + RTL: `NexubProvider` with `locale`/`dir`/`messages`; physical → logical Tailwind classes. | 61 physical vs 2 logical classes; 16 hardcoded English aria-labels. | M |
+| R3 | Token tiers (reference → semantic → component); Swift/Compose outputs if native apps exist. | Tokens are DTCG already. | M–L |
+| R4 | Prebuilt CSS, then Tailwind v4. | Consumers must adopt our Tailwind preset. | M |
+| R5 | Governance: per-component status (alpha/beta/stable/deprecated), RFC process, deprecation removal policy (rolling-minor has no major to remove in). | 4 deprecated components with no removal path. | S–M |
+| R6 | Usage telemetry: scan consumer repos for component usage to drive the roadmap. | | S |
+
+# Research log
+
+Monthly findings from the scheduled research routine are appended below (newest first).
