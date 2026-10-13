@@ -9,6 +9,11 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+    ignore:
+      # v2 renames every input, drops GITHUB_TOKEN env auth and requires Changesets CLI v3.
+      # Migrate release.yml together with @changesets/cli v3, then remove this.
+      - dependency-name: changesets/action
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: /
