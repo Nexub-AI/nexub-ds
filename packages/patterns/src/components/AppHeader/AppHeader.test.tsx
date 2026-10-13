@@ -188,8 +188,7 @@ describe('AppHeader', () => {
     await user.keyboard('{Escape}');
     await user.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
     expect(document.querySelectorAll('style')).toHaveLength(before);
-    // The Logo mark's gradient <stop>s still use style attributes (separate fix).
-    expect(screen.getByRole('banner').querySelectorAll('[style]:not(stop)')).toHaveLength(0);
+    expect(screen.getByRole('banner').querySelectorAll('[style]')).toHaveLength(0);
   });
 
   it('sits in AppShell.Header with Body below it', () => {
