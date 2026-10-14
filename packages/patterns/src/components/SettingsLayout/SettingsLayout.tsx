@@ -19,6 +19,12 @@ export interface SettingsLayoutProps extends Omit<React.HTMLAttributes<HTMLDivEl
   logo?: React.ReactNode;
   /** Top bar, right: theme switch, `<AppLauncher>`, account menu. */
   actions?: React.ReactNode;
+  /**
+   * Replaces the built-in top bar (and `logo`/`actions`), usually with an `AppHeader`.
+   * Gets the phone section-menu button to place in it:
+   * `header={(menu) => <AppHeader menu={menu} … />}`.
+   */
+  header?: (menuButton: React.ReactElement) => React.ReactNode;
   /** Page header. */
   title?: React.ReactNode;
   description?: React.ReactNode;
@@ -63,7 +69,7 @@ function SectionNav({
 
 const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
   (
-    { items, activeId, onSelect, logo, actions, title, description, navLabel = 'Settings', className, children, ...props },
+    { items, activeId, onSelect, logo, actions, header, title, description, navLabel = 'Settings', className, children, ...props },
     ref,
   ) => {
     const [menuOpen, setMenuOpen] = React.useState(false);
@@ -77,15 +83,23 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
       setMenuOpen(false);
     };
 
+    const menuButton = (
+      <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ml-2 md:hidden" onClick={() => setMenuOpen(true)}>
+        <Menu size="md" aria-hidden="true" />
+      </IconButton>
+    );
+
     return (
       <div ref={ref} className={cn('flex min-h-screen flex-col bg-[var(--color-bg-default)]', className)} {...props}>
-        <TopNav.Root>
-          <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ml-2 md:hidden" onClick={() => setMenuOpen(true)}>
-            <Menu size="md" aria-hidden="true" />
-          </IconButton>
-          {logo && <TopNav.Logo className="min-w-0 shrink">{logo}</TopNav.Logo>}
-          {actions && <TopNav.Actions>{actions}</TopNav.Actions>}
-        </TopNav.Root>
+        {header ? (
+          header(menuButton)
+        ) : (
+          <TopNav.Root className="h-[var(--app-header-height,64px)]">
+            {menuButton}
+            {logo && <TopNav.Logo className="min-w-0 shrink">{logo}</TopNav.Logo>}
+            {actions && <TopNav.Actions>{actions}</TopNav.Actions>}
+          </TopNav.Root>
+        )}
 
         <div className="flex flex-1">
           <SectionNav
@@ -93,7 +107,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             activeId={activeId}
             onChoose={onChoose}
             label={navLabel}
-            className="sticky top-[var(--size-nav-header,64px)] hidden h-[calc(100vh-var(--size-nav-header,64px))] shrink-0 md:flex"
+            className="sticky top-[var(--app-header-height,64px)] hidden h-[calc(100vh-var(--app-header-height,64px))] shrink-0 md:flex"
           />
           <main className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-10">
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
