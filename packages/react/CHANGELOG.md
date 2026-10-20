@@ -1,5 +1,48 @@
 # @nexub/react
 
+## 1.4.0
+
+### Minor Changes
+
+- 6b51c55: Calm Depth core controls (design refresh Phase 2). Props and variant names are unchanged; the look moves onto the Phase 1 foundations.
+  - **Button / IconButton**: capsule shape, the control-size ladder (md is now 40px; `data-density="compact"` shrinks it), role colours, and a state layer plus press spring instead of hover colour swaps. New variant names `filled`, `tonal`, `outlined`, `text`; `primary`, `secondary`, `subtle`, `outline` and `ghost` remain as aliases. Explicit disabled styling replaces 50% opacity.
+  - **Input / Textarea / Select / Combobox**: 12px field shape, 16px text from md up, and a 2px primary border on focus instead of a halo ring. `invalid` uses the error role.
+  - **Checkbox / Radio / Switch**: 2px outline borders (≥3:1), primary when on. Switch has new proportions and the thumb slides on a spring.
+  - **Badge / Chip / Toggle**: role pairs (container / on-container), WCAG AA by construction.
+  - **SegmentedControl / Tabs**: one indicator that slides to the selected item on a spring. Tabs now use a primary underline.
+  - **Slider**: thin track, solid primary knob, and a state-layer halo.
+  - Focus is the single global ring for every control. `cn` now understands the token scales (`text-label-lg`, `rounded-shape-*`, `h-control-*`, `shadow-elevation-*`).
+
+- 8ee088d: Calm Depth surfaces & overlays (design refresh Phase 4). Props are unchanged.
+  - **New role `--color-surface-elevated`** for floating layers: white in light, lighter than the page in dark. `--color-bg-raised` and `--color-surface-raised` now alias it; before, they were darker than the page in dark mode.
+  - **Overlays** (Dialog, AlertDialog, CommandPalette, Drawer): 24px shape, the elevated surface, elevation 3, a 40% scrim, and spring enter/exit. AlertDialog's Action and Cancel are now real `Button` styles (destructive / outlined).
+  - **Floating surfaces** (Popover, HoverCard, DropdownMenu, ContextMenu, Menubar, Select, NavigationMenu): 16px shape, elevation 2, and menu items with a concentric 10px radius, an on-surface state layer and explicit disabled text.
+  - **Tooltip**: inverse surface on its own z-tier (`--z-tooltip`), so it no longer sits on the popover tier, and it now flips correctly in dark mode.
+  - **Toast / Toaster**: an inverse-surface snackbar with an `inverse-primary` action.
+  - **Card**: the elevated surface plus a soft alpha hairline. Shadows only for `surface` and `interactive`; `interactive` uses the state layer and a spring lift.
+  - **Navigation**: TopNav and NavigationMenu items are capsules with state layers. The Sidebar is a tonal panel without a divider, and its active item is a secondary-container pill instead of a solid brand fill.
+  - **AppHeader**: a glass header's account menu offers the glass intensity dial (Clear / Balanced / Tinted / Solid).
+
+- 15c47b5: **`CommandPalette.Root`**: new props and a focus fix.
+  - `scrollLock="class"` locks page scroll with the `nexub-scroll-lock` class instead of Radix's injected `<style>`, so the palette opens under `style-src 'self'`.
+  - `shouldFilter={false}` for results that are already filtered (async search), and `label` for the dialog's accessible name (default "Command palette"; also silences Radix's missing-title warning).
+  - Closing now returns focus to the element focused before it opened. Without a `Dialog.Trigger`, focus used to drop to `<body>`.
+  - The dialog keeps a 1rem margin each side on phones.
+
+- 14d2e1a: Glass 2.0 (design refresh Phase 3).
+  - **Recipe**: the fill is the surface role at the dial's opacity (`color-mix`), so dark glass needs no separate values. `backdrop-filter` is `blur + saturate`, and the edge is a hairline with a top specular highlight and a bottom rim. Same `surface="glass"` API.
+  - **Thickness** scales with size: buttons are thin (8px blur, elevation 1), bars and popovers regular (16px, elevation 2), dialogs and drawers thick (28px, elevation 3). Set `data-glass-thickness` to override.
+  - **Intensity dial**: `ThemeProvider` gains `glass` / `setGlass` (`'clear' | 'balanced' | 'tinted' | 'off'`), persisted under `nexub-glass` and applied pre-paint by `ThemeScript`. It sets `data-glass` on `<html>`, and any ancestor can set it too.
+  - **Variants**: `data-glass-tint="primary"` for the single emphasised action, and `data-glass-variant="clear"` over imagery only.
+  - **Scroll edge**: `TopNav.Root` / `AppHeader` accept `scrollEdge="soft" | "hard"`. Soft dissolves content under the bar instead of showing a divider.
+  - **Button `variant="glass"`** (thin glass).
+  - **Fallbacks are solid** under `prefers-reduced-transparency`, `prefers-contrast: more` (plus a 2px outline), `forced-colors`, `data-glass="off"`, and in browsers without `backdrop-filter`.
+
+### Patch Changes
+
+- Updated dependencies [c0fe350]
+  - @nexub/icons@1.4.0
+
 ## 1.3.0
 
 ### Minor Changes

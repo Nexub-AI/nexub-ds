@@ -1,5 +1,11 @@
 # @nexub/icons
 
+## 1.4.0
+
+### Minor Changes
+
+- c0fe350: Fix the colour `<NexubMark>` (and `<Logo>`, `AppHeader`, `SettingsLayout`) rendering black on server-rendered pages with a strict Content-Security-Policy. Its gradient stops now use `nxm-*` classes from `@nexub/themes/base` instead of inline `style` attributes, so make sure `base.css` is imported.
+
 ## 1.3.0
 
 ## 1.2.0
