@@ -146,13 +146,28 @@ describe('AppHeader', () => {
       const u = setup({ user, accountHref: '/account', privacyHref: '/privacy', accountMenuItems: <span>Extra</span>, onSignOut: vi.fn() });
       await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
       const menu = screen.getByRole('menu');
-      expect(within(menu).getByText('Sam Lee')).toHaveClass('font-semibold');
+      expect(within(menu).getByText('Sam Lee')).toHaveClass('text-title-sm');
       expect(within(menu).getByText('sam@example.com')).toBeInTheDocument();
       expect(within(menu).getByRole('menuitem', { name: 'Manage your Nexub Account' })).toHaveAttribute('href', '/account');
       expect(within(menu).getByRole('menuitem', { name: 'Privacy policy' })).toHaveAttribute('href', '/privacy');
       expect(within(menu).queryByText('Terms of service')).not.toBeInTheDocument();
       expect(within(menu).getAllByRole('separator')).toHaveLength(2);
       expect(within(menu).getByRole('menuitem', { name: 'Sign out' })).toBeInTheDocument();
+    });
+
+    it('offers the glass intensity dial only on a glass header', async () => {
+      const u = setup({ user, surface: 'glass' });
+      await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
+      const solid = within(screen.getByRole('menu')).getByRole('menuitemradio', { name: 'Solid' });
+      await u.click(solid);
+      expect(document.documentElement.getAttribute('data-glass')).toBe('off');
+      expect(solid).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('has no glass dial on a solid header', async () => {
+      const u = setup({ user });
+      await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
+      expect(within(screen.getByRole('menu')).queryByRole('menuitemradio', { name: 'Solid' })).not.toBeInTheDocument();
     });
 
     it('disables Sign out while it is pending', async () => {

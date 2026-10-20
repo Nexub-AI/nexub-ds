@@ -3,6 +3,7 @@ import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
+import { enterExit, floatingSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixSelect.Root;
 const Group = RadixSelect.Group;
@@ -67,7 +68,9 @@ const Content = React.forwardRef<HTMLDivElement, RadixSelect.SelectContentProps>
       <RadixSelect.Content
         ref={ref}
         className={cn(
-          'relative z-[var(--z-popover)] max-h-96 min-w-32 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-md',
+          'relative z-[var(--z-popover)] max-h-96 min-w-32 overflow-hidden',
+          floatingSurface,
+          enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
           position === 'popper' &&
@@ -80,7 +83,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixSelect.SelectContentProps>
         <ScrollUpButton />
         <RadixSelect.Viewport
           className={cn(
-            'p-1',
+            'p-1.5',
             position === 'popper' &&
               'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]',
           )}
@@ -98,7 +101,7 @@ const Label = React.forwardRef<HTMLDivElement, RadixSelect.SelectLabelProps>(
   ({ className, ...props }, ref) => (
     <RadixSelect.Label
       ref={ref}
-      className={cn('px-2 py-1.5 text-xs font-semibold text-[var(--color-text-muted)]', className)}
+      className={cn(menuLabel, className)}
       {...props}
     />
   ),
@@ -110,7 +113,7 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
     <RadixSelect.Item
       ref={ref}
       className={cn(
-        'relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2 text-body-sm text-[var(--color-on-surface)] outline-none',
+        'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2 text-body-sm text-[var(--color-on-surface)] outline-none',
         // Highlight = the on-surface state layer at hover opacity.
         'focus:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--color-text-disabled)]',
@@ -133,7 +136,7 @@ const Separator = React.forwardRef<HTMLDivElement, RadixSelect.SelectSeparatorPr
   ({ className, ...props }, ref) => (
     <RadixSelect.Separator
       ref={ref}
-      className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+      className={cn(menuSeparator, className)}
       {...props}
     />
   ),

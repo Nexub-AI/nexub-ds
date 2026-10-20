@@ -13,7 +13,8 @@ const Content = React.forwardRef<HTMLDivElement, RadixTooltip.TooltipContentProp
         ref={ref}
         sideOffset={sideOffset}
         className={cn(
-          'z-[1500] rounded bg-[var(--color-neutral-900)] px-2 py-1 text-xs text-white',
+          'z-[var(--z-tooltip,1800)] rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-2.5 py-1.5 text-label-md text-[var(--color-inverse-on-surface)] shadow-elevation-1',
+          'duration-effects-fast ease-effects-fast',
           'data-[state=delayed-open]:animate-in data-[state=closed]:animate-out',
           'data-[state=delayed-open]:fade-in-0 data-[state=closed]:fade-out-0',
           'data-[state=delayed-open]:zoom-in-95 data-[state=closed]:zoom-out-95',

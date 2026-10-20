@@ -63,6 +63,9 @@ export const ROLES = {
   'surface-container': ['neutral', 94, 12, 94, 12],
   'surface-container-high': ['neutral', 92, 17, 92, 17],
   'surface-container-highest': ['neutral', 90, 22, 90, 22],
+  // Not an M3 role: floating layers (menus, popovers, dialogs). White in light,
+  // lighter than the page in dark (Apple's elevated background).
+  'surface-elevated': ['neutral', 100, 17, 100, 17],
   'on-surface': ['neutral', 10, 90, 0, 100],
   'on-surface-variant': ['neutral-variant', 30, 80, 20, 90],
   // Not an M3 role: tertiary text that still clears 4.5:1 on every container.

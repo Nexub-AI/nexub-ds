@@ -9,6 +9,7 @@ import {
   TopNav,
   cn,
   useTheme,
+  type GlassMode,
 } from '@nexub/react';
 import { Building2, ChevronDown, Moon, Search, Sun } from '@nexub/icons';
 import { AppLauncher, type AppLauncherApp } from '../AppLauncher/AppLauncher.js';
@@ -304,6 +305,25 @@ function ThemeSwitch() {
   );
 }
 
+// The glass intensity dial (ThemeProvider), offered when the header is glass.
+const GLASS_LABELS: Record<GlassMode, string> = { clear: 'Clear', balanced: 'Balanced', tinted: 'Tinted', off: 'Solid' };
+function GlassItems() {
+  const { glass, setGlass } = useTheme();
+  return (
+    <>
+      <DropdownMenu.Separator />
+      <DropdownMenu.Label>Glass</DropdownMenu.Label>
+      <DropdownMenu.RadioGroup value={glass} onValueChange={(v) => setGlass(v as GlassMode)}>
+        {(Object.keys(GLASS_LABELS) as GlassMode[]).map((mode) => (
+          <DropdownMenu.RadioItem key={mode} value={mode} onSelect={(e) => e.preventDefault()}>
+            {GLASS_LABELS[mode]}
+          </DropdownMenu.RadioItem>
+        ))}
+      </DropdownMenu.RadioGroup>
+    </>
+  );
+}
+
 function AccountMenu({
   user,
   accountHref,
@@ -311,8 +331,10 @@ function AccountMenu({
   termsHref,
   onSignOut,
   accountMenuItems,
+  glassControl,
 }: Pick<AppHeaderProps, 'accountHref' | 'privacyHref' | 'termsHref' | 'onSignOut' | 'accountMenuItems'> & {
   user: AppHeaderUser;
+  glassControl?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
   const [signingOut, setSigningOut] = React.useState(false);
@@ -362,10 +384,11 @@ function AccountMenu({
       <DropdownMenu.Portal>
         <DropdownMenu.Content align="end" className="w-72 max-w-[calc(100vw-1rem)]">
           <DropdownMenu.Label className="flex flex-col gap-0.5 py-2">
-            <span className="truncate text-sm font-semibold text-[var(--color-text-primary)]">{user.name}</span>
-            {user.email && <span className="truncate text-xs font-normal text-[var(--color-text-muted)]">{user.email}</span>}
+            <span className="truncate text-title-sm text-[var(--color-on-surface)]">{user.name}</span>
+            {user.email && <span className="truncate text-body-sm text-[var(--color-on-surface-muted)]">{user.email}</span>}
           </DropdownMenu.Label>
           {accountHref && link(accountHref, 'Manage your Nexub Account')}
+          {glassControl && <GlassItems />}
           {legal && <DropdownMenu.Separator />}
           {legal}
           {last && <DropdownMenu.Separator />}
@@ -452,6 +475,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
                   termsHref={termsHref}
                   onSignOut={onSignOut}
                   accountMenuItems={accountMenuItems}
+                  glassControl={showThemeSwitch && surface === 'glass'}
                 />
               )}
             </nav>

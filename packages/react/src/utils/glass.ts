@@ -5,7 +5,7 @@
  * Optional `data-glass-thickness` (thin | thick) scales blur and shadow with size.
  */
 export const glassSurfaceClass =
-  'bg-[var(--glass-bg)] border-[var(--glass-border)] [-webkit-backdrop-filter:var(--glass-filter)] [backdrop-filter:var(--glass-filter)] [box-shadow:var(--glass-shadow)]';
+  'border bg-[var(--glass-bg)] border-[var(--glass-border)] [-webkit-backdrop-filter:var(--glass-filter)] [backdrop-filter:var(--glass-filter)] [box-shadow:var(--glass-shadow)]';
 
 export type SurfaceValue = 'solid' | 'glass';
 export type GlassThickness = 'thin' | 'regular' | 'thick';

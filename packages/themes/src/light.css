@@ -10,7 +10,7 @@
   --color-bg-default: var(--color-surface);
   --color-bg-subtle:  var(--color-surface-container-low);
   --color-bg-muted:   var(--color-surface-container-high);
-  --color-bg-raised:  var(--color-surface-container-lowest);
+  --color-bg-raised:  var(--color-surface-elevated);
   --color-bg-inverse: var(--color-inverse-surface);
 
   --color-text-primary:   var(--color-on-surface);
@@ -33,7 +33,7 @@
 
   --color-surface-warm:    light-dark(#fefce8, #1c1a0a);
   --color-surface-muted:   var(--color-surface-container-low);
-  --color-surface-raised:  var(--color-surface-container-lowest);
+  --color-surface-raised:  var(--color-surface-elevated);
   --color-surface-sunken:  var(--color-surface-container-high);
   --color-surface-inverse: var(--color-inverse-surface);
 
