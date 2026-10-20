@@ -1,6 +1,6 @@
 {
   "name": "@nexub/themes",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (Leap, Bookub, Payub, Founderub) as importable CSS.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
