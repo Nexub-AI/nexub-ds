@@ -28,15 +28,30 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    contrast: {
+      description: 'Contrast level (data-contrast)',
+      defaultValue: 'standard',
+      toolbar: { title: 'Contrast', icon: 'contrast', items: ['standard', 'high'], dynamicTitle: true },
+    },
+    density: {
+      description: 'Control density (data-density)',
+      defaultValue: 'comfortable',
+      toolbar: { title: 'Density', icon: 'grow', items: ['comfortable', 'compact'], dynamicTitle: true },
+    },
   },
-  // @nexub/themes switches palette via `data-theme` and brand via `data-product` on <html>.
+  // @nexub/themes reads data-theme / data-product / data-contrast / data-density on <html>.
   decorators: [
     (Story, context) => {
       const root = document.documentElement;
-      root.dataset.theme = String(context.globals.theme);
-      const brand = String(context.globals.brand ?? 'none');
-      if (brand === 'none') delete root.dataset.product;
-      else root.dataset.product = brand;
+      const g = context.globals;
+      root.dataset.theme = String(g.theme);
+      const set = (key: string, value: unknown, fallback: string) => {
+        if (value === undefined || value === fallback) delete root.dataset[key];
+        else root.dataset[key] = String(value);
+      };
+      set('product', g.brand, 'none');
+      set('contrast', g.contrast, 'standard');
+      set('density', g.density, 'comfortable');
       return Story();
     },
   ],

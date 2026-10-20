@@ -71,7 +71,7 @@ export default function StrictCspPage() {
 
       <h2>Fonts</h2>
       <p>
-        <code>@nexub/themes/base</code> bundles Plus Jakarta Sans. Every font file it references is over
+        <code>@nexub/themes/base</code> bundles Inter and Plus Jakarta Sans. Every font file it references is over
         8 KB, so Vite (4 KB limit) and webpack (8 KB) emit real files instead of <code>data:</code> URLs,
         and <code>font-src &apos;self&apos;</code> works with default settings.
       </p>
