@@ -74,6 +74,13 @@ const cspCases: [string, React.ReactElement][] = [
   ['RadioCard', <N.RadioCardGroup defaultValue="a"><N.RadioCard value="a" title="A" /></N.RadioCardGroup>],
   ['CheckboxCard', <N.CheckboxCard title="A" />],
   ['NexubProvider', <N.NexubProvider locale="ar"><N.Spinner /></N.NexubProvider>],
+  ['PromptInput', <N.PromptInput maxRows={4} attachments="a" actions="b" />],
+  ['PromptInput streaming', <N.PromptInput status="streaming" />],
+  ['ThinkingIndicator', <N.ThinkingIndicator size="sm" />],
+  ['StreamingText', <N.StreamingText text="Hello" streaming />],
+  ['MessageBubble', <N.MessageBubble from="assistant" avatar={<span>A</span>}>Hi<N.MessageActions text="Hi" onFeedback={() => {}} onRegenerate={() => {}} /></N.MessageBubble>],
+  ['Citation', <N.Citation index={1} source={{ title: 'T', url: 'https://example.com', snippet: 'S' }} />],
+  ['SourceList', <N.SourceList sources={[{ title: 'T', url: 'https://example.com' }]} />],
   ['Button async', <N.Button status="success">Save</N.Button>],
   ['MediaCard', <N.MediaCard src="/a.jpg" alt="" title="T" href="/x" />],
 ];

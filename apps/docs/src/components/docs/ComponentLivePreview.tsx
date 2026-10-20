@@ -97,9 +97,18 @@ import {
   MediaCard,
   NumberTicker,
   FormError,
+  PromptInput,
+  ThinkingIndicator,
+  StreamingText,
+  MessageBubble,
+  MessageActions,
+  Citation,
+  SourceList,
   type ButtonStatus,
+  type CitationSource,
+  type PromptInputStatus,
 } from '@nexub/react';
-import { Bell, Building2, Shield, User, Users, Zap } from '@nexub/icons';
+import { Bell, Building2, Globe, Paperclip, Shield, Sparkles, User, Users, Zap } from '@nexub/icons';
 
 // @nexub/patterns used in previews
 import {
@@ -118,6 +127,7 @@ import {
   BentoTile,
   ErrorSummary,
   useFormErrors,
+  Conversation,
   type FormErrorMap,
 } from '@nexub/patterns';
 
@@ -2182,6 +2192,213 @@ function ActivityFeedExamples({ idx }: { idx: number }) {
   return null;
 }
 
+/* ── AI ───────────────────────────────────────────────────────────────────── */
+
+function PromptInputExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ width: '100%', maxWidth: 520 }}>
+        <PromptInput placeholder="Ask anything" />
+      </div>
+    );
+  if (idx === 1) return <PromptInputAttachmentsDemo />;
+  if (idx === 2) return <PromptInputStreamingDemo />;
+  return null;
+}
+
+function PromptInputAttachmentsDemo() {
+  const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
+  return (
+    <div style={{ width: '100%', maxWidth: 520 }}>
+      <PromptInput
+        placeholder="Ask about these files"
+        attachments={
+          files.length > 0 &&
+          files.map((f) => (
+            <Chip key={f} onRemove={() => setFiles((all) => all.filter((x) => x !== f))}>
+              {f}
+            </Chip>
+          ))
+        }
+        actions={
+          <>
+            <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
+            <IconButton size="sm" label="Search the web"><Globe /></IconButton>
+          </>
+        }
+      />
+    </div>
+  );
+}
+
+function PromptInputStreamingDemo() {
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const send = () => {
+    setStatus('streaming');
+    timer.current = setTimeout(() => setStatus('idle'), 3000);
+  };
+  const stop = () => {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  };
+  return (
+    <div style={{ width: '100%', maxWidth: 520 }}>
+      <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
+    </div>
+  );
+}
+
+function ThinkingIndicatorExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ThinkingIndicator />;
+  if (idx === 1)
+    return (
+      <div style={col(16)}>
+        <ThinkingIndicator label="Searching 4 sources" />
+        <ThinkingIndicator size="sm" />
+        <ThinkingIndicator size="sm" label={null} />
+      </div>
+    );
+  return null;
+}
+
+const STREAM_DEMO_TEXT =
+  'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
+
+function StreamingTextExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <StreamingTextDemo />;
+  return null;
+}
+
+function StreamingTextDemo() {
+  const [length, setLength] = React.useState(0);
+  const streaming = length < STREAM_DEMO_TEXT.length;
+  React.useEffect(() => {
+    if (!streaming) return;
+    const id = setTimeout(() => setLength((n) => Math.min(STREAM_DEMO_TEXT.length, n + 6)), 60);
+    return () => clearTimeout(id);
+  }, [length, streaming]);
+  return (
+    <div style={{ ...col(12), maxWidth: 480 }}>
+      <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
+      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+    </div>
+  );
+}
+
+function MessageBubbleExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ ...col(16), alignItems: 'stretch', width: '100%', maxWidth: 560 }}>
+        <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
+        <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+          <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
+          <MessageActions
+            text="Open Settings, then Billing, and choose Cancel plan."
+            onFeedback={() => {}}
+            onRegenerate={() => toast.info('Regenerating…')}
+          />
+        </MessageBubble>
+        <MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+      </div>
+    );
+  if (idx === 1)
+    return (
+      <div style={{ width: '100%', maxWidth: 560 }}>
+        <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
+          Can I get a refund for last month?
+        </MessageBubble>
+      </div>
+    );
+  return null;
+}
+
+const CITATION_SOURCES: CitationSource[] = [
+  { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { title: 'Grants for home heating', url: 'https://example.org/grants', domain: 'example.org' },
+  { title: 'Running costs compared', url: 'https://example.net/costs' },
+];
+
+function CitationExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ ...col(16), alignItems: 'stretch', maxWidth: 560 }}>
+        <p>
+          Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
+          part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas
+          <Citation index={3} source={CITATION_SOURCES[2]!} />.
+        </p>
+        <SourceList sources={CITATION_SOURCES} />
+      </div>
+    );
+  return null;
+}
+
+function ConversationExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ConversationDemo />;
+  return null;
+}
+
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string };
+
+const CHAT_REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
+const CHAT_SOURCE = CITATION_SOURCES[0]!;
+
+function ConversationDemo() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+
+  function send(text: string) {
+    const id = Date.now();
+    setMessages((m) => [...m, { id, from: 'user', text }, { id: id + 1, from: 'assistant', text: '' }]);
+    setStatus('submitting');
+    timer.current = setTimeout(() => {
+      setStatus('streaming');
+      stream(id + 1, 0);
+    }, 800);
+  }
+
+  function stream(id: number, length: number) {
+    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: CHAT_REPLY.slice(0, length) } : msg)));
+    if (length >= CHAT_REPLY.length) return setStatus('idle');
+    timer.current = setTimeout(() => stream(id, length + 4), 50);
+  }
+
+  function stop() {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  }
+
+  const last = messages[messages.length - 1];
+
+  return (
+    <Conversation
+      style={{ height: 420, width: '100%' }}
+      composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
+    >
+      {messages.map((msg) =>
+        msg.from === 'user' ? (
+          <MessageBubble key={msg.id} from="user">{msg.text}</MessageBubble>
+        ) : (
+          <MessageBubble key={msg.id} from="assistant">
+            {status === 'submitting' && msg === last ? (
+              <ThinkingIndicator />
+            ) : (
+              <>
+                <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
+                {msg.text === CHAT_REPLY && <Citation index={1} source={CHAT_SOURCE} />}
+              </>
+            )}
+          </MessageBubble>
+        ),
+      )}
+    </Conversation>
+  );
+}
+
 /* ── Render maps ──────────────────────────────────────────────────────────── */
 
 const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
@@ -2283,6 +2500,12 @@ const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'motion-slide': MotionSlideExamples,
   'motion-scale': MotionScaleExamples,
   'motion-collapse': MotionCollapseExamples,
+  // AI
+  'prompt-input': PromptInputExamples,
+  'thinking-indicator': ThinkingIndicatorExamples,
+  'streaming-text': StreamingTextExamples,
+  'message-bubble': MessageBubbleExamples,
+  citation: CitationExamples,
 };
 
 const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
@@ -2295,6 +2518,7 @@ const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'list-detail': ListDetailExamples,
   'bento-grid': BentoGridExamples,
   'error-summary': ErrorSummaryExamples,
+  conversation: ConversationExamples,
   'plan-card': PlanCardExamples,
   'step-indicator': StepIndicatorExamples,
   'notification-item': NotificationItemExamples,

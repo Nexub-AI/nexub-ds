@@ -10,6 +10,18 @@ export { useMediaQuery } from './hooks/useMediaQuery.js';
 export { useMergedRefs } from './hooks/useMergedRefs.js';
 export { usePointerSheen } from './hooks/usePointerSheen.js';
 
+// Components — AI
+export { PromptInput } from './components/PromptInput/index.js';
+export type { PromptInputProps, PromptInputMessages, PromptInputStatus } from './components/PromptInput/index.js';
+export { ThinkingIndicator } from './components/ThinkingIndicator/index.js';
+export type { ThinkingIndicatorProps, ThinkingIndicatorMessages } from './components/ThinkingIndicator/index.js';
+export { StreamingText } from './components/StreamingText/index.js';
+export type { StreamingTextProps } from './components/StreamingText/index.js';
+export { MessageBubble, MessageActions, defaultMessageStrings } from './components/MessageBubble/index.js';
+export type { MessageBubbleProps, MessageActionsProps, MessageFrom, MessageStrings, Feedback } from './components/MessageBubble/index.js';
+export { Citation, SourceChip, SourceList, safeUrl } from './components/Citation/index.js';
+export type { CitationProps, CitationSource, CitationMessages, SourceChipProps, SourceListProps } from './components/Citation/index.js';
+
 // Components — NexubProvider (i18n / RTL)
 export { NexubProvider, useNexubMessages, useLocale, defaultMessages } from './components/NexubProvider/index.js';
 export type { NexubProviderProps, NexubMessages, Direction as TextDirection } from './components/NexubProvider/index.js';

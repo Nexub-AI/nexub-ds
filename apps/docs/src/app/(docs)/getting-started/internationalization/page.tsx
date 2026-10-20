@@ -40,6 +40,25 @@ const messageKeys: [key: string, value: string][] = [
   ['commandPalette', "'Command palette'"],
   ['notifications', "'Notifications ({hotkey})' — Radix replaces {hotkey}"],
   ['undo', "'Undo'"],
+  // AI surfaces — see /getting-started/ai-surfaces
+  ['promptLabel', "'Message'"],
+  ['sendMessage', "'Send message'"],
+  ['stopGenerating', "'Stop generating'"],
+  ['promptHint', "'Press Enter to send, Shift+Enter for a new line'"],
+  ['thinking', "'Thinking'"],
+  ['youSaid', "'You said'"],
+  ['assistantSaid', "'Assistant said'"],
+  ['failedToSend', "'Failed to send'"],
+  ['retry', "'Retry'"],
+  ['copy', "'Copy'"],
+  ['copied', "'Copied'"],
+  ['goodResponse', "'Good response'"],
+  ['badResponse', "'Bad response'"],
+  ['regenerate', "'Regenerate'"],
+  ['sources', "'Sources'"],
+  ['source', '(n) => `Source ${n}`'],
+  ['jumpToLatest', "'Jump to latest'"],
+  ['conversation', "'Conversation'"],
 ];
 
 export default function InternationalizationPage() {

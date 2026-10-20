@@ -39,6 +39,25 @@ export interface NexubMessages {
   /** Toaster region label; Radix replaces `{hotkey}`. */
   notifications: string;
   undo: string;
+  // AI surfaces
+  promptLabel: string;
+  sendMessage: string;
+  stopGenerating: string;
+  promptHint: string;
+  thinking: string;
+  youSaid: string;
+  assistantSaid: string;
+  failedToSend: string;
+  retry: string;
+  copy: string;
+  copied: string;
+  goodResponse: string;
+  badResponse: string;
+  regenerate: string;
+  sources: string;
+  source: (index: number) => string;
+  jumpToLatest: string;
+  conversation: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -75,6 +94,24 @@ export const defaultMessages: NexubMessages = {
   commandPalette: 'Command palette',
   notifications: 'Notifications ({hotkey})',
   undo: 'Undo',
+  promptLabel: 'Message',
+  sendMessage: 'Send message',
+  stopGenerating: 'Stop generating',
+  promptHint: 'Press Enter to send, Shift+Enter for a new line',
+  thinking: 'Thinking',
+  youSaid: 'You said',
+  assistantSaid: 'Assistant said',
+  failedToSend: 'Failed to send',
+  retry: 'Retry',
+  copy: 'Copy',
+  copied: 'Copied',
+  goodResponse: 'Good response',
+  badResponse: 'Bad response',
+  regenerate: 'Regenerate',
+  sources: 'Sources',
+  source: (n) => `Source ${n}`,
+  jumpToLatest: 'Jump to latest',
+  conversation: 'Conversation',
 };
 
 export type Direction = 'ltr' | 'rtl';

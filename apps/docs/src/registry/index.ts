@@ -138,6 +138,14 @@ import bentoGridEntry from './patterns/bento-grid';
 // ─── 1.7.0 ────────────────────────────────────────────────────────────────────
 import errorSummaryEntry from './patterns/error-summary';
 
+// ─── 1.8.0 — AI ───────────────────────────────────────────────────────────────
+import promptInputEntry from './components/prompt-input';
+import thinkingIndicatorEntry from './components/thinking-indicator';
+import streamingTextEntry from './components/streaming-text';
+import messageBubbleEntry from './components/message-bubble';
+import citationEntry from './components/citation';
+import conversationEntry from './patterns/conversation';
+
 // ─── All component entries (flat) ─────────────────────────────────────────────
 export const componentEntries: ComponentEntry[] = [
   // Actions
@@ -238,6 +246,12 @@ export const componentEntries: ComponentEntry[] = [
   motionSlideEntry,
   motionScaleEntry,
   motionCollapseEntry,
+  // AI
+  promptInputEntry,
+  messageBubbleEntry,
+  streamingTextEntry,
+  thinkingIndicatorEntry,
+  citationEntry,
 ];
 
 // ─── All pattern entries (flat) ───────────────────────────────────────────────
@@ -255,6 +269,7 @@ export const patternEntries: ComponentEntry[] = [
   listDetailEntry,
   bentoGridEntry,
   errorSummaryEntry,
+  conversationEntry,
 ];
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
@@ -287,6 +302,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
+  { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
@@ -330,6 +346,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Using the brand assets', href: '/getting-started/brand-assets' },
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
       { title: 'Internationalization', href: '/getting-started/internationalization' },
+      { title: 'Building AI surfaces', href: '/getting-started/ai-surfaces' },
     ],
   },
   {
@@ -365,6 +382,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Inline',         items: componentsByCategory('Inline Primitives') },
       { title: 'Layout',         items: componentsByCategory('Layout') },
       { title: 'Motion',         items: componentsByCategory('Motion') },
+      { title: 'AI',             items: componentsByCategory('AI') },
     ],
   },
   {
