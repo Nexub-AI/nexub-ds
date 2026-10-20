@@ -38,16 +38,16 @@ export function FeedbackButton() {
             alignItems: 'center',
             gap: 8,
             padding: '10px 14px',
-            border: '1px solid var(--color-border-default)',
-            borderRadius: 'var(--radius-full)',
-            background: 'var(--color-bg-default)',
-            color: 'var(--color-text-primary)',
+            border: '1px solid var(--color-outline-variant)',
+            borderRadius: 'var(--shape-control)',
+            background: 'var(--color-surface)',
+            color: 'var(--color-on-surface)',
             fontSize: '0.82rem',
             fontWeight: 600,
             fontFamily: 'inherit',
             cursor: 'pointer',
             boxShadow:
-              '0 6px 20px -6px color-mix(in srgb, var(--color-text-primary) 18%, transparent), 0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent)',
+              '0 6px 20px -6px color-mix(in srgb, var(--color-on-surface) 18%, transparent), 0 1px 2px color-mix(in srgb, var(--color-on-surface) 6%, transparent)',
             transition:
               'transform var(--duration-fast, 180ms) var(--ease-out, ease), box-shadow var(--duration-fast, 180ms) var(--ease-out, ease)',
           }}

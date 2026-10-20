@@ -141,7 +141,7 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
 
   if (!imageUrl || !previewDims) {
     return (
-      <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+      <div style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-muted)' }}>
         Loading capture…
       </div>
     );
@@ -155,10 +155,10 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
           width: previewDims.w,
           height: previewDims.h,
           maxWidth: '100%',
-          border: '1px solid var(--color-border-default)',
-          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--color-outline-variant)',
+          borderRadius: 'var(--shape-field)',
           overflow: 'hidden',
-          background: 'var(--color-bg-subtle)',
+          background: 'var(--color-surface-container-low)',
           touchAction: 'none',
         }}
       >
@@ -202,7 +202,7 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
           justifyContent: 'space-between',
           gap: 8,
           fontSize: '0.72rem',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-on-surface-muted)',
         }}
       >
         <span>Click and drag to mark the area. Strokes save with the screenshot.</span>
@@ -240,9 +240,9 @@ const ghostBtn: React.CSSProperties = {
   fontFamily: 'inherit',
   fontWeight: 500,
   background: 'transparent',
-  color: 'var(--color-text-secondary)',
-  border: '1px solid var(--color-border-default)',
-  borderRadius: 'var(--radius-sm)',
+  color: 'var(--color-on-surface-variant)',
+  border: '1px solid var(--color-outline-variant)',
+  borderRadius: 'var(--shape-tooltip)',
   cursor: 'pointer',
 };
 
@@ -251,9 +251,9 @@ const primaryBtn: React.CSSProperties = {
   fontSize: '0.72rem',
   fontFamily: 'inherit',
   fontWeight: 600,
-  background: 'var(--color-brand-primary-500)',
+  background: 'var(--color-primary)',
   color: '#fff',
-  border: '1px solid var(--color-brand-primary-500)',
-  borderRadius: 'var(--radius-sm)',
+  border: '1px solid var(--color-primary)',
+  borderRadius: 'var(--shape-tooltip)',
   cursor: 'pointer',
 };

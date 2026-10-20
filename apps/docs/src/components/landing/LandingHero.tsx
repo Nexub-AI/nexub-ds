@@ -64,7 +64,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           zIndex: 1,
           opacity: cursor.active ? 1 : 0,
           transition: 'opacity 0.3s ease',
-          background: `radial-gradient(600px circle at ${cursor.x}px ${cursor.y}px, color-mix(in srgb, var(--color-brand-primary-500) 8%, transparent) 0%, transparent 70%)`,
+          background: `radial-gradient(600px circle at ${cursor.x}px ${cursor.y}px, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 70%)`,
         }}
       />
 
@@ -83,7 +83,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             width: '420px',
             height: '420px',
             borderRadius: '50%',
-            background: 'var(--color-brand-primary-500)',
+            background: 'var(--color-primary)',
             opacity: 0.07,
             filter: 'blur(80px)',
           }}
@@ -101,7 +101,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             width: '360px',
             height: '360px',
             borderRadius: '50%',
-            background: 'var(--color-brand-primary-400)',
+            background: 'var(--color-primary)',
             opacity: 0.06,
             filter: 'blur(70px)',
           }}
@@ -119,7 +119,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             width: '280px',
             height: '280px',
             borderRadius: '50%',
-            background: 'var(--color-brand-primary-600)',
+            background: 'var(--color-primary)',
             opacity: 0.05,
             filter: 'blur(60px)',
           }}
@@ -138,8 +138,8 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           alignItems: 'center',
           gap: '24px',
           justifyContent: 'space-between',
-          borderBottom: '1px solid var(--color-border-default)',
-          background: 'color-mix(in srgb, var(--color-bg-default) 80%, transparent)',
+          borderBottom: '1px solid var(--color-outline-variant)',
+          background: 'color-mix(in srgb, var(--color-surface) 80%, transparent)',
           backdropFilter: 'blur(10px)',
           zIndex: 10,
         }}
@@ -154,15 +154,15 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             priority
             style={{ display: 'block' }}
           />
-          <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-text-primary)' }}>
-            Nexub<span style={{ color: 'var(--color-brand-primary-500)' }}> DS</span>
+          <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-on-surface)' }}>
+            Nexub<span style={{ color: 'var(--color-primary)' }}> DS</span>
           </span>
         </div>
 
         <div className="landing-nav-links">
-          <Link href="/getting-started" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
-          <Link href="/components" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
-          <Link href="/patterns" className="landing-nav-link" style={{ color: 'var(--color-text-secondary)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
+          <Link href="/getting-started" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
+          <Link href="/components" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
+          <Link href="/patterns" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
           <ThemeSwitcher />
         </div>
       </nav>
@@ -176,7 +176,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
             width: '80px',
             height: '80px',
             borderRadius: '50%',
-            background: 'var(--color-brand-primary-500)',
+            background: 'var(--color-primary)',
             opacity: 0.18,
             filter: 'blur(24px)',
           }}
@@ -206,12 +206,12 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           gap: '8px',
           padding: '4px 14px',
           marginBottom: '1.75rem',
-          background: 'var(--color-semantic-info-bg)',
-          border: '1px solid var(--color-semantic-info-border)',
-          borderRadius: 'var(--radius-full)',
+          background: 'var(--color-info-container)',
+          border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
+          borderRadius: 'var(--shape-control)',
           fontSize: '0.78rem',
           fontWeight: 600,
-          color: 'var(--color-semantic-info-default)',
+          color: 'var(--color-info)',
           letterSpacing: '0.02em',
         }}
       >
@@ -231,7 +231,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           letterSpacing: '-0.035em',
           marginBottom: '1.25rem',
           maxWidth: '860px',
-          background: 'linear-gradient(135deg, var(--color-text-primary) 0%, var(--color-brand-primary-500) 55%, var(--color-brand-primary-400) 100%)',
+          background: 'linear-gradient(135deg, var(--color-on-surface) 0%, var(--color-primary) 55%, var(--color-primary) 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -247,7 +247,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           position: 'relative',
           zIndex: 2,
           fontSize: '1.125rem',
-          color: 'var(--color-text-secondary)',
+          color: 'var(--color-on-surface-variant)',
           maxWidth: '520px',
           lineHeight: 1.7,
           marginBottom: '2.5rem',
@@ -267,13 +267,13 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           className="landing-cta-shimmer"
           style={{
             padding: '13px 30px',
-            borderRadius: 'var(--radius-lg)',
+            borderRadius: 'var(--shape-container)',
             background: 'var(--gradient-button-primary)',
             color: '#fff',
             fontWeight: 700,
             fontSize: '0.9375rem',
             textDecoration: 'none',
-            boxShadow: 'var(--shadow-md)',
+            boxShadow: 'var(--elevation-2)',
             display: 'inline-block',
           }}
         >
@@ -283,10 +283,10 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           href="/components"
           style={{
             padding: '13px 30px',
-            borderRadius: 'var(--radius-lg)',
-            background: 'var(--color-bg-raised)',
-            border: '1px solid var(--color-border-default)',
-            color: 'var(--color-text-primary)',
+            borderRadius: 'var(--shape-container)',
+            background: 'var(--color-surface-elevated)',
+            border: '1px solid var(--color-outline-variant)',
+            color: 'var(--color-on-surface)',
             fontWeight: 600,
             fontSize: '0.9375rem',
             textDecoration: 'none',
@@ -311,8 +311,8 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       >
         {stats.map((s) => (
           <div key={s.label} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-brand-primary-500)' }}>{s.num}</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)', fontWeight: 500, marginTop: '2px' }}>{s.label}</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)' }}>{s.num}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--color-on-surface-muted)', fontWeight: 500, marginTop: '2px' }}>{s.label}</div>
           </div>
         ))}
       </div>

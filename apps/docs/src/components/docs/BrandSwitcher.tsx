@@ -47,7 +47,7 @@ export const BrandSwitcher = React.memo(function BrandSwitcher() {
 
   return (
     <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-      <span style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', marginRight: '2px', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Brand</span>
+      <span style={{ fontSize: 'var(--type-label-sm-size)', color: 'var(--color-on-surface-variant)', marginRight: '2px', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Brand</span>
       {brands.map((b) => (
         <BrandButton
           key={b.value}
@@ -80,7 +80,7 @@ const BrandButton = React.memo(function BrandButton({ brand: b, isActive, onSele
         height: '18px',
         borderRadius: '50%',
         background: b.color,
-        border: isActive ? `2px solid var(--color-text-primary)` : '2px solid transparent',
+        border: isActive ? `2px solid var(--color-on-surface)` : '2px solid transparent',
         outline: isActive ? `2px solid ${b.color}` : 'none',
         outlineOffset: '1px',
         cursor: 'pointer',

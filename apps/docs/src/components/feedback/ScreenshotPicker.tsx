@@ -124,7 +124,7 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
           />
         </label>
       </div>
-      <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--color-text-muted)' }}>
+      <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--color-on-surface-muted)' }}>
         Capture page = current viewport (no permission). Capture screen = native picker (browser/window/screen). Max 2 MB.
       </p>
     </div>
@@ -155,8 +155,8 @@ function CaptureBtn({
         ...buttonBase,
         ...(primary
           ? {
-              borderColor: 'var(--color-brand-primary-500)',
-              color: 'var(--color-brand-primary-500)',
+              borderColor: 'var(--color-primary)',
+              color: 'var(--color-primary)',
             }
           : null),
         cursor: disabled ? 'not-allowed' : 'pointer',
@@ -178,9 +178,9 @@ const buttonBase: React.CSSProperties = {
   fontSize: '0.78rem',
   fontWeight: 500,
   fontFamily: 'inherit',
-  background: 'var(--color-bg-default)',
-  color: 'var(--color-text-secondary)',
-  border: '1px solid var(--color-border-default)',
-  borderRadius: 'var(--radius-md)',
+  background: 'var(--color-surface)',
+  color: 'var(--color-on-surface-variant)',
+  border: '1px solid var(--color-outline-variant)',
+  borderRadius: 'var(--shape-field)',
   whiteSpace: 'nowrap',
 };

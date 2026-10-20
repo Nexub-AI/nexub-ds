@@ -41,8 +41,8 @@ export function ComponentPreview({
   return (
     <div
       style={{
-        border: '1px solid var(--color-border-default)',
-        borderRadius: 'var(--radius-xl)',
+        background: 'var(--color-surface-container-low)',
+        borderRadius: 'var(--shape-container)',
         overflow: 'hidden',
         marginBottom: '1.5rem',
       }}
@@ -55,8 +55,6 @@ export function ComponentPreview({
           display: 'flex',
           gap: '2px',
           padding: '8px 12px',
-          borderBottom: '1px solid var(--color-border-default)',
-          background: 'var(--color-bg-subtle)',
         }}
       >
         {tabs.map((t) => (
@@ -68,20 +66,20 @@ export function ComponentPreview({
             aria-controls={`tabpanel-${t}`}
             id={`tab-${t}`}
             onClick={() => setTab(t)}
+            className="nx-state-layer"
             style={{
               padding: '4px 12px',
               minHeight: '44px',
               minWidth: '44px',
-              fontSize: '0.8rem',
+              fontSize: 'var(--type-label-lg-size)',
               fontFamily: 'var(--font-family-sans)',
-              fontWeight: tab === t ? 600 : 400,
-              background: tab === t ? 'var(--color-bg-default)' : 'transparent',
-              border: tab === t ? '1px solid var(--color-border-default)' : '1px solid transparent',
-              borderRadius: 'var(--radius-md)',
-              color: tab === t ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+              fontWeight: 'var(--type-label-lg-weight)',
+              background: tab === t ? 'var(--color-secondary-container)' : 'transparent',
+              border: 'none',
+              borderRadius: 'var(--shape-control)',
+              color: tab === t ? 'var(--color-on-secondary-container)' : 'var(--color-on-surface-variant)',
               cursor: 'pointer',
               textTransform: 'capitalize',
-              transition: 'all var(--duration-fast) var(--ease-out)',
             }}
           >
             {t === 'a11y' ? 'A11y' : t}
@@ -104,7 +102,9 @@ export function ComponentPreview({
               justifyContent: 'center',
               minHeight,
               padding: '2rem',
-              background: 'var(--color-bg-default)',
+              margin: '0 8px',
+              borderRadius: 'calc(var(--shape-container) - 8px)',
+              background: 'var(--color-surface)',
               overflow: 'auto',
               ...bgImage(toolbar.bg),
             }}
@@ -118,10 +118,10 @@ export function ComponentPreview({
                 justifyContent: 'center',
                 ...(toolbar.width !== 'full'
                   ? {
-                      border: '1px dashed var(--color-border-subtle)',
-                      borderRadius: 'var(--radius-md)',
+                      border: '1px dashed var(--color-outline-variant)',
+                      borderRadius: 'var(--shape-field)',
                       padding: '1rem',
-                      background: 'var(--color-bg-default)',
+                      background: 'var(--color-surface)',
                     }
                   : null),
               }}
@@ -135,15 +135,14 @@ export function ComponentPreview({
 
       {/* Code pane */}
       {tab === 'code' && (
-        <div role="tabpanel" id="tabpanel-code" aria-labelledby="tab-code" style={{ padding: '12px' }}>
+        <div role="tabpanel" id="tabpanel-code" aria-labelledby="tab-code" style={{ padding: '0 8px 8px' }}>
           {codeSlot ?? (
             <pre
               className="docs-snippet"
               style={{
                 background: 'var(--docs-snippet-bg)',
                 color: 'var(--docs-snippet-fg)',
-                border: '1px solid var(--docs-snippet-border)',
-                borderRadius: 'var(--radius-lg)',
+                borderRadius: 'calc(var(--shape-container) - 8px)',
                 padding: '1.25rem 1.5rem',
                 overflowX: 'auto',
                 fontSize: '0.8125rem',
@@ -164,7 +163,7 @@ export function ComponentPreview({
           role="tabpanel"
           id="tabpanel-a11y"
           aria-labelledby="tab-a11y"
-          style={{ padding: '1.25rem 1.5rem', background: 'var(--color-bg-default)' }}
+          style={{ padding: '1.25rem 1.5rem', margin: '0 8px 8px', borderRadius: 'calc(var(--shape-container) - 8px)', background: 'var(--color-surface)' }}
         >
           {a11ySlot}
         </div>

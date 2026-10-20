@@ -60,12 +60,12 @@ const SubGroup = React.memo(function SubGroup({
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
-          padding: '4px 20px 4px 32px',
+          padding: '6px 24px 4px 36px',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
-          color: 'var(--color-text-subtle)',
-          fontSize: '0.68rem',
+          color: 'var(--color-on-surface-muted)',
+          fontSize: 'var(--type-label-sm-size)',
           fontWeight: 600,
           letterSpacing: '0.05em',
           textTransform: 'uppercase',
@@ -105,23 +105,9 @@ const SubGroup = React.memo(function SubGroup({
               <Link
                 href={item.href}
                 prefetch={true}
-                style={{
-                  display: 'block',
-                  padding: '4px 20px 4px 40px',
-                  fontSize: '0.83rem',
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive
-                    ? 'var(--color-brand-primary-500)'
-                    : 'var(--color-text-secondary)',
-                  textDecoration: 'none',
-                  borderLeft: isActive
-                    ? '2px solid var(--color-brand-primary-500)'
-                    : '2px solid transparent',
-                  background: isActive
-                    ? 'var(--color-semantic-info-bg)'
-                    : 'transparent',
-                  transition: 'color var(--duration-fast) var(--ease-out)',
-                }}
+                className="docs-nav-item nx-state-layer"
+                data-depth="2"
+                aria-current={isActive ? 'page' : undefined}
               >
                 {item.title}
               </Link>
@@ -185,12 +171,12 @@ const TopGroup = React.memo(function TopGroup({
           alignItems: 'center',
           justifyContent: 'space-between',
           width: '100%',
-          padding: '6px 20px',
+          padding: '8px 24px',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
-          color: 'var(--color-text-muted)',
-          fontSize: '0.7rem',
+          color: 'var(--color-on-surface-variant)',
+          fontSize: 'var(--type-label-md-size)',
           fontWeight: 700,
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
@@ -224,23 +210,8 @@ const TopGroup = React.memo(function TopGroup({
                   <Link
                     href={item.href}
                     prefetch={true}
-                    style={{
-                      display: 'block',
-                      padding: '5px 20px 5px 24px',
-                      fontSize: '0.84rem',
-                      fontWeight: isActive ? 600 : 400,
-                      color: isActive
-                        ? 'var(--color-brand-primary-500)'
-                        : 'var(--color-text-secondary)',
-                      textDecoration: 'none',
-                      borderLeft: isActive
-                        ? '2px solid var(--color-brand-primary-500)'
-                        : '2px solid transparent',
-                      background: isActive
-                        ? 'var(--color-semantic-info-bg)'
-                        : 'transparent',
-                      transition: 'color var(--duration-fast) var(--ease-out)',
-                    }}
+                    className="docs-nav-item nx-state-layer"
+                    aria-current={isActive ? 'page' : undefined}
                   >
                     {item.title}
                   </Link>
@@ -300,9 +271,8 @@ export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
       data-open={isOpen ? 'true' : 'false'}
       style={{
         overflowY: 'auto',
-        borderRight: '1px solid var(--color-border-default)',
         padding: '1rem 0',
-        background: 'var(--color-bg-subtle)',
+        background: 'var(--color-surface-container-low)',
       }}
       // Close sidebar on mobile when any link is clicked (event delegation)
       onClick={(e) => {

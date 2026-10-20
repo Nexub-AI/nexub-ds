@@ -38,7 +38,7 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
         onClick={() => setOpen(false)}
         style={{
           position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.5)',
+          background: 'var(--color-overlay)',
           backdropFilter: 'blur(4px)',
           zIndex: 'var(--z-commandK)',
         }}
@@ -53,36 +53,35 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
           transform: 'translateX(-50%)',
           width: 'min(560px, 92vw)',
           zIndex: 'var(--z-commandK)',
-          background: 'var(--color-bg-raised)',
-          border: '1px solid var(--color-border-default)',
-          borderRadius: 'var(--radius-xl)',
-          boxShadow: 'var(--shadow-xl)',
+          background: 'var(--color-surface-container-high)',
+          borderRadius: 'var(--shape-overlay)',
+          boxShadow: 'var(--elevation-3)',
           overflow: 'hidden',
         }}
       >
         <Command label="Search docs" shouldFilter>
           {/* Input */}
-          <div style={{ display: 'flex', alignItems: 'center', padding: '12px 16px', gap: '10px', borderBottom: '1px solid var(--color-border-default)' }}>
-            <Search size={16} style={{ color: 'var(--color-text-muted)', flexShrink: 0 }} />
+          <div style={{ display: 'flex', alignItems: 'center', margin: '12px 12px 4px', padding: '0 14px', height: '48px', gap: '10px', background: 'var(--color-surface-container-highest)', borderRadius: 'var(--shape-field)' }}>
+            <Search size={16} style={{ color: 'var(--color-on-surface-muted)', flexShrink: 0 }} />
             <Command.Input
               placeholder="Search components, patterns, foundations…"
               style={{
                 flex: 1, border: 'none', outline: 'none', background: 'transparent',
-                fontSize: '0.9rem', color: 'var(--color-text-primary)',
+                fontSize: 'var(--type-body-lg-size)', color: 'var(--color-on-surface)',
                 fontFamily: 'var(--font-family-sans)',
               }}
             />
             <kbd style={{
               fontSize: '0.7rem', padding: '2px 6px',
-              background: 'var(--color-bg-muted)', border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-sm)', color: 'var(--color-text-muted)',
+              background: 'var(--color-surface-container-high)',
+              borderRadius: 'var(--shape-tooltip)', color: 'var(--color-on-surface-variant)',
               fontFamily: 'var(--font-family-sans)',
             }}>esc</kbd>
           </div>
 
           {/* Results */}
           <Command.List style={{ maxHeight: '340px', overflowY: 'auto', padding: '8px' }}>
-            <Command.Empty style={{ padding: '24px', textAlign: 'center', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
+            <Command.Empty style={{ padding: '24px', textAlign: 'center', color: 'var(--color-on-surface-muted)', fontSize: '0.875rem' }}>
               No results found.
             </Command.Empty>
 
@@ -93,22 +92,22 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
                 onSelect={() => handleSelect(item.href)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '10px',
-                  padding: '8px 10px', borderRadius: 'var(--radius-md)',
-                  cursor: 'pointer', color: 'var(--color-text-primary)',
+                  padding: '8px 12px', borderRadius: 'var(--shape-field)',
+                  cursor: 'pointer', color: 'var(--color-on-surface)',
                   fontSize: '0.875rem',
                 }}
                 className="search-item"
               >
-                <span style={{ color: 'var(--color-text-muted)', flexShrink: 0 }}>
+                <span style={{ color: 'var(--color-on-surface-muted)', flexShrink: 0 }}>
                   {item.category.startsWith('Pattern') ? <Layers size={14} /> : <FileText size={14} />}
                 </span>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 500 }}>{item.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {item.description}
                   </div>
                 </div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--color-text-subtle)', flexShrink: 0 }}>
+                <span style={{ fontSize: 'var(--type-label-sm-size)', color: 'var(--color-on-surface-muted)', flexShrink: 0 }}>
                   {item.category}
                 </span>
               </Command.Item>

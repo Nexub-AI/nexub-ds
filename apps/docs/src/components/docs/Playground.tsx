@@ -48,18 +48,18 @@ export function Playground({ slug, componentName, def }: Props) {
   return (
     <div
       style={{
-        border: '1px solid var(--color-border-default)',
-        borderRadius: 'var(--radius-xl)',
+        border: '1px solid var(--color-outline-variant)',
+        borderRadius: 'var(--shape-container)',
         overflow: 'hidden',
         marginBottom: '1.5rem',
-        background: 'var(--color-bg-default)',
+        background: 'var(--color-surface)',
       }}
     >
       <div
         style={{
           padding: '8px 12px',
-          borderBottom: '1px solid var(--color-border-default)',
-          background: 'var(--color-bg-subtle)',
+          borderBottom: '1px solid var(--color-outline-variant)',
+          background: 'var(--color-surface-container-low)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -70,7 +70,7 @@ export function Playground({ slug, componentName, def }: Props) {
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
-            color: 'var(--color-text-secondary)',
+            color: 'var(--color-on-surface-variant)',
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
           }}
@@ -80,7 +80,7 @@ export function Playground({ slug, componentName, def }: Props) {
         <span
           style={{
             fontSize: '0.7rem',
-            color: 'var(--color-text-subtle)',
+            color: 'var(--color-outline)',
             fontFamily: 'var(--font-family-mono)',
           }}
         >
@@ -93,8 +93,8 @@ export function Playground({ slug, componentName, def }: Props) {
         <div
           style={{
             padding: '1rem',
-            borderRight: '1px solid var(--color-border-subtle)',
-            background: 'var(--color-bg-subtle)',
+            borderRight: '1px solid var(--color-surface-container-high)',
+            background: 'var(--color-surface-container-low)',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem',
@@ -128,10 +128,10 @@ export function Playground({ slug, componentName, def }: Props) {
                 justifyContent: 'center',
                 ...(toolbar.width !== 'full'
                   ? {
-                      border: '1px dashed var(--color-border-subtle)',
-                      borderRadius: 'var(--radius-md)',
+                      border: '1px dashed var(--color-surface-container-high)',
+                      borderRadius: 'var(--shape-field)',
                       padding: '1rem',
-                      background: 'var(--color-bg-default)',
+                      background: 'var(--color-surface)',
                     }
                   : null),
               }}
@@ -142,7 +142,7 @@ export function Playground({ slug, componentName, def }: Props) {
 
           <PreviewToolbar state={toolbar} onChange={setToolbar} />
 
-          <div style={{ position: 'relative', borderTop: '1px solid var(--color-border-default)' }}>
+          <div style={{ position: 'relative', borderTop: '1px solid var(--color-outline-variant)' }}>
             <pre
               className="docs-snippet"
               style={{
@@ -183,7 +183,7 @@ function ControlField({
       style={{
         fontSize: '0.72rem',
         fontWeight: 600,
-        color: 'var(--color-text-secondary)',
+        color: 'var(--color-on-surface-variant)',
         fontFamily: 'var(--font-family-mono)',
       }}
     >
@@ -268,10 +268,10 @@ const inputStyle: React.CSSProperties = {
   padding: '6px 8px',
   fontSize: '0.78rem',
   fontFamily: 'var(--font-family-mono)',
-  background: 'var(--color-bg-default)',
-  border: '1px solid var(--color-border-default)',
-  borderRadius: 'var(--radius-md)',
-  color: 'var(--color-text-primary)',
+  background: 'var(--color-surface)',
+  border: '1px solid var(--color-outline-variant)',
+  borderRadius: 'var(--shape-field)',
+  color: 'var(--color-on-surface)',
 };
 
 const selectStyle: React.CSSProperties = {
