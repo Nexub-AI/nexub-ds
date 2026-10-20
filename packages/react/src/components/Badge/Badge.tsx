@@ -5,15 +5,14 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const badgeVariants = cva(
   [
-    'inline-flex items-center gap-1 font-medium rounded-full whitespace-nowrap',
-    'transition-colors select-none',
+    'inline-flex items-center gap-1 rounded-shape-control whitespace-nowrap select-none',
   ],
   {
     variants: {
       size: {
-        sm: 'px-2 py-0.5 text-xs',
-        md: 'px-2.5 py-0.5 text-sm',
-        lg: 'px-3 py-1 text-sm',
+        sm: 'h-5 px-2 text-label-sm',
+        md: 'h-6 px-2.5 text-label-md',
+        lg: 'h-7 px-3 text-label-lg',
       },
       variant: {
         solid: '',
@@ -28,72 +27,57 @@ export const badgeVariants = cva(
   },
 );
 
+// Role pairs: solid = role / on-role, soft = container / on-container,
+// outline = role-coloured text and a half-strength role border. All pairs
+// are WCAG AA by construction (see @nexub/tokens generate.test.mjs).
 const toneClasses: Record<
   ToneValue,
   { solid: string; soft: string; outline: string }
 > = {
   neutral: {
-    solid:
-      'bg-[var(--color-neutral-500)] text-white',
-    soft: 'bg-[var(--color-neutral-500)]/10 text-[var(--color-neutral-700)]',
-    outline:
-      'border-[var(--color-neutral-500)] text-[var(--color-neutral-700)]',
+    solid: 'bg-[var(--color-inverse-surface)] text-[var(--color-inverse-on-surface)]',
+    soft: 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)]',
+    outline: 'border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)]',
   },
   info: {
-    solid:
-      'bg-[var(--color-fill-info)] text-white',
-    soft: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-text-info)]',
-    outline:
-      'border-[var(--color-semantic-info-default)] text-[var(--color-text-info)]',
+    solid: 'bg-[var(--color-info)] text-[var(--color-on-info)]',
+    soft: 'bg-[var(--color-info-container)] text-[var(--color-on-info-container)]',
+    outline: 'border-[color-mix(in_srgb,var(--color-info)_50%,transparent)] text-[var(--color-info)]',
   },
   success: {
-    solid:
-      'bg-[var(--color-fill-success)] text-white',
-    soft: 'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-text-success)]',
-    outline:
-      'border-[var(--color-semantic-success-default)] text-[var(--color-text-success)]',
+    solid: 'bg-[var(--color-success)] text-[var(--color-on-success)]',
+    soft: 'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
+    outline: 'border-[color-mix(in_srgb,var(--color-success)_50%,transparent)] text-[var(--color-success)]',
   },
   warning: {
-    solid:
-      'bg-[var(--color-fill-warning)] text-white',
-    soft: 'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-text-warning)]',
-    outline:
-      'border-[var(--color-semantic-warning-default)] text-[var(--color-text-warning)]',
+    solid: 'bg-[var(--color-warning)] text-[var(--color-on-warning)]',
+    soft: 'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
+    outline: 'border-[color-mix(in_srgb,var(--color-warning)_50%,transparent)] text-[var(--color-warning)]',
   },
   danger: {
-    solid:
-      'bg-[var(--color-fill-danger)] text-white',
-    soft: 'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-text-danger)]',
-    outline:
-      'border-[var(--color-semantic-error-default)] text-[var(--color-text-danger)]',
+    solid: 'bg-[var(--color-error)] text-[var(--color-on-error)]',
+    soft: 'bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
+    outline: 'border-[color-mix(in_srgb,var(--color-error)_50%,transparent)] text-[var(--color-error)]',
   },
   leap: {
-    solid:
-      'bg-[var(--color-fill-leap)] text-white',
-    soft: 'bg-[var(--color-leap-500)]/10 text-[var(--color-leap-700)]',
-    outline:
-      'border-[var(--color-leap-500)] text-[var(--color-leap-700)]',
+    solid: 'bg-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))] text-[color:light-dark(var(--color-palette-leap-100),var(--color-palette-leap-20))]',
+    soft: 'bg-[color:light-dark(var(--color-palette-leap-90),var(--color-palette-leap-30))] text-[color:light-dark(var(--color-palette-leap-10),var(--color-palette-leap-90))]',
+    outline: 'border-[color:light-dark(var(--color-palette-leap-80),var(--color-palette-leap-40))] text-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))]',
   },
   bookub: {
-    solid:
-      'bg-[var(--color-fill-bookub)] text-white',
-    soft: 'bg-[var(--color-bookub-500)]/10 text-[var(--color-bookub-700)]',
-    outline:
-      'border-[var(--color-bookub-500)] text-[var(--color-bookub-700)]',
+    solid: 'bg-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))] text-[color:light-dark(var(--color-palette-bookub-100),var(--color-palette-bookub-20))]',
+    soft: 'bg-[color:light-dark(var(--color-palette-bookub-90),var(--color-palette-bookub-30))] text-[color:light-dark(var(--color-palette-bookub-10),var(--color-palette-bookub-90))]',
+    outline: 'border-[color:light-dark(var(--color-palette-bookub-80),var(--color-palette-bookub-40))] text-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))]',
   },
   payub: {
-    solid:
-      'bg-[var(--color-fill-payub)] text-white',
-    soft: 'bg-[var(--color-payub-500)]/10 text-[var(--color-payub-700)]',
-    outline:
-      'border-[var(--color-payub-500)] text-[var(--color-payub-700)]',
+    solid: 'bg-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))] text-[color:light-dark(var(--color-palette-payub-100),var(--color-palette-payub-20))]',
+    soft: 'bg-[color:light-dark(var(--color-palette-payub-90),var(--color-palette-payub-30))] text-[color:light-dark(var(--color-palette-payub-10),var(--color-palette-payub-90))]',
+    outline: 'border-[color:light-dark(var(--color-palette-payub-80),var(--color-palette-payub-40))] text-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))]',
   },
   founderub: {
-    solid:
-      'bg-[var(--color-fill-founderub)] text-white',
-    soft: 'bg-[var(--color-founderub-500)]/10 text-[var(--color-founderub-700)]',
-    outline:
-      'border-[var(--color-founderub-500)] text-[var(--color-founderub-700)]',
+    solid: 'bg-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))] text-[color:light-dark(var(--color-palette-founderub-100),var(--color-palette-founderub-20))]',
+    soft: 'bg-[color:light-dark(var(--color-palette-founderub-90),var(--color-palette-founderub-30))] text-[color:light-dark(var(--color-palette-founderub-10),var(--color-palette-founderub-90))]',
+    outline: 'border-[color:light-dark(var(--color-palette-founderub-80),var(--color-palette-founderub-40))] text-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))]',
   },
 };
 

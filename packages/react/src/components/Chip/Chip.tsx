@@ -4,30 +4,24 @@ import { cn } from '../../utils/cn.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const chipVariants = cva(
-  'inline-flex items-center gap-1 rounded-full font-medium select-none transition-colors',
+  'inline-flex items-center gap-1 rounded-shape-control select-none',
   {
     variants: {
       size: {
-        sm: 'px-2 py-0.5 text-xs',
-        md: 'px-2.5 py-1 text-sm',
+        sm: 'h-6 px-2.5 text-label-md',
+        md: 'h-8 px-3 text-label-lg',
       },
+      // Containers + on-container text (WCAG AA by construction).
       tone: {
-        neutral:
-          'bg-[var(--color-neutral-100)] text-[var(--color-neutral-700)] border border-[var(--color-neutral-200)]',
-        info: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-semantic-info-default)] border border-[var(--color-semantic-info-default)]/20',
-        success:
-          'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-semantic-success-default)] border border-[var(--color-semantic-success-default)]/20',
-        warning:
-          'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-semantic-warning-default)] border border-[var(--color-semantic-warning-default)]/20',
-        danger:
-          'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-semantic-error-default)] border border-[var(--color-semantic-error-default)]/20',
-        leap: 'bg-[var(--color-leap-500)]/10 text-[var(--color-leap-700)] border border-[var(--color-leap-500)]/20',
-        bookub:
-          'bg-[var(--color-bookub-500)]/10 text-[var(--color-bookub-700)] border border-[var(--color-bookub-500)]/20',
-        payub:
-          'bg-[var(--color-payub-500)]/10 text-[var(--color-payub-700)] border border-[var(--color-payub-500)]/20',
-        founderub:
-          'bg-[var(--color-founderub-500)]/10 text-[var(--color-founderub-700)] border border-[var(--color-founderub-500)]/20',
+        neutral: 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] border border-[var(--color-outline-variant)]',
+        info: 'bg-[var(--color-info-container)] text-[var(--color-on-info-container)]',
+        success: 'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
+        warning: 'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
+        danger: 'bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
+        leap: 'bg-[color:light-dark(var(--color-palette-leap-90),var(--color-palette-leap-30))] text-[color:light-dark(var(--color-palette-leap-10),var(--color-palette-leap-90))]',
+        bookub: 'bg-[color:light-dark(var(--color-palette-bookub-90),var(--color-palette-bookub-30))] text-[color:light-dark(var(--color-palette-bookub-10),var(--color-palette-bookub-90))]',
+        payub: 'bg-[color:light-dark(var(--color-palette-payub-90),var(--color-palette-payub-30))] text-[color:light-dark(var(--color-palette-payub-10),var(--color-palette-payub-90))]',
+        founderub: 'bg-[color:light-dark(var(--color-palette-founderub-90),var(--color-palette-founderub-30))] text-[color:light-dark(var(--color-palette-founderub-10),var(--color-palette-founderub-90))]',
       },
     },
     defaultVariants: {
@@ -62,10 +56,9 @@ export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
               onRemove();
             }}
             className={cn(
-              'inline-flex items-center justify-center rounded-full transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-1',
-              'hover:bg-black/10 text-current opacity-60 hover:opacity-100',
-              size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4',
+              // State layer for hover/press; focus = the global ring.
+              'nx-state-layer inline-flex items-center justify-center rounded-full text-current -mr-1',
+              size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
             )}
           >
             <svg
