@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const chipVariants = cva(
@@ -40,6 +41,7 @@ export interface ChipProps
 
 export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
   ({ className, size, tone = 'neutral', onRemove, children, ...props }, ref) => {
+    const messages = useNexubMessages();
     return (
       <span
         ref={ref}
@@ -50,7 +52,7 @@ export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
         {onRemove && (
           <button
             type="button"
-            aria-label="Remove"
+            aria-label={messages.remove}
             onClick={(e) => {
               e.stopPropagation();
               onRemove();

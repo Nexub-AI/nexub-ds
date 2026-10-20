@@ -96,6 +96,8 @@ import {
   CheckboxCard,
   MediaCard,
   NumberTicker,
+  FormError,
+  type ButtonStatus,
 } from '@nexub/react';
 import { Bell, Building2, Shield, User, Users, Zap } from '@nexub/icons';
 
@@ -114,6 +116,9 @@ import {
   ListDetail,
   BentoGrid,
   BentoTile,
+  ErrorSummary,
+  useFormErrors,
+  type FormErrorMap,
 } from '@nexub/patterns';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
@@ -171,7 +176,28 @@ function ButtonExamples({ idx }: { idx: number }) {
         <Button variant="outline" disabled>Disabled</Button>
       </div>
     );
+  if (idx === 4) return <AsyncButtonDemo />;
   return null;
+}
+
+const NEXT_STATUS: Record<ButtonStatus, ButtonStatus> = { idle: 'loading', loading: 'success', success: 'error', error: 'idle' };
+
+function AsyncButtonDemo() {
+  const [status, setStatus] = React.useState<ButtonStatus>('idle');
+  // Clicks are ignored while loading, so loading moves on by itself.
+  React.useEffect(() => {
+    if (status !== 'loading') return;
+    const t = setTimeout(() => setStatus('success'), 1200);
+    return () => clearTimeout(t);
+  }, [status]);
+  return (
+    <div style={col(8)}>
+      <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
+        Save
+      </Button>
+      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+    </div>
+  );
 }
 
 function BadgeExamples({ idx }: { idx: number }) {
@@ -862,8 +888,26 @@ function ToastExamples({ idx }: { idx: number }) {
             Delete with undo
           </Button>
         )}
+        {idx === 3 && <UndoableDeleteDemo />}
       </div>
     </>
+  );
+}
+
+function UndoableDeleteDemo() {
+  const [hidden, setHidden] = React.useState(false);
+  const remove = () => {
+    setHidden(true);
+    toast.undoable('Invoice deleted', {
+      description: 'INV-2041',
+      onUndo: () => setHidden(false),
+      onCommit: () => {},
+    });
+  };
+  return hidden ? (
+    <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+  ) : (
+    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 
@@ -1966,6 +2010,40 @@ function BentoGridExamples({ idx }: { idx: number }) {
   return null;
 }
 
+function ErrorSummaryExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ErrorSummaryDemo />;
+  return null;
+}
+
+function ErrorSummaryDemo() {
+  const [submitted, setSubmitted] = React.useState<FormErrorMap>({});
+  const { errors, fieldProps, errorProps } = useFormErrors(submitted);
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setSubmitted({
+      'es-name': String(data.get('name')).trim() ? undefined : 'Enter your name',
+      'es-email': /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+    });
+  };
+  return (
+    <form noValidate onSubmit={submit} style={{ ...col(12), alignItems: 'stretch', width: 340 }}>
+      <ErrorSummary errors={errors} />
+      <div style={{ ...col(4), alignItems: 'stretch' }}>
+        <Label htmlFor="es-name">Name</Label>
+        <Input name="name" {...fieldProps('es-name')} invalid={Boolean(submitted['es-name'])} />
+        {submitted['es-name'] && <FormError {...errorProps('es-name')}>{submitted['es-name']}</FormError>}
+      </div>
+      <div style={{ ...col(4), alignItems: 'stretch' }}>
+        <Label htmlFor="es-email">Email</Label>
+        <Input name="email" type="email" {...fieldProps('es-email')} invalid={Boolean(submitted['es-email'])} />
+        {submitted['es-email'] && <FormError {...errorProps('es-email')}>{submitted['es-email']}</FormError>}
+      </div>
+      <Button type="submit">Create account</Button>
+    </form>
+  );
+}
+
 function UserCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
@@ -2216,6 +2294,7 @@ const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'info-list': InfoListExamples,
   'list-detail': ListDetailExamples,
   'bento-grid': BentoGridExamples,
+  'error-summary': ErrorSummaryExamples,
   'plan-card': PlanCardExamples,
   'step-indicator': StepIndicatorExamples,
   'notification-item': NotificationItemExamples,

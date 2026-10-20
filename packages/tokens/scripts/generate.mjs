@@ -24,7 +24,8 @@ const SEEDS = {
 };
 export const PRODUCTS = ['leap', 'bookub', 'payub', 'founderub'];
 
-export const TONES = [0, 4, 6, 10, 12, 17, 20, 22, 24, 30, 40, 50, 60, 70, 72, 80, 87, 90, 92, 94, 95, 96, 98, 99, 100];
+// 5/15/25/35/45/65/76/85 exist for data-contrast="medium" (halfway tones).
+export const TONES = [0, 4, 5, 6, 10, 12, 15, 17, 20, 22, 24, 25, 30, 35, 40, 45, 50, 60, 65, 70, 72, 76, 80, 85, 87, 90, 92, 94, 95, 96, 98, 99, 100];
 
 export function palettes() {
   const hct = (hex) => Hct.fromInt(argbFromHex(hex));
@@ -90,28 +91,108 @@ export const tertiary = (product) =>
     Object.entries(accent('tertiary')).map(([role, [, ...tones]]) => [role, [product, ...tones]]),
   );
 
-const lightDark = (pal, l, d) => `light-dark(var(--color-palette-${pal}-${l}), var(--color-palette-${pal}-${d}))`;
-const decls = (roles, high) =>
+// Contrast levels. Medium sits halfway between standard and high, snapped
+// to the nearest generated tone.
+export const LEVELS = ['standard', 'medium', 'high'];
+const snap = (t) => TONES.reduce((a, b) => (Math.abs(b - t) < Math.abs(a - t) ? b : a));
+export const tonesAt = ([pal, l, d, hl, hd], level) =>
+  level === 'high' ? [pal, hl, hd] : level === 'medium' ? [pal, snap((l + hl) / 2), snap((d + hd) / 2)] : [pal, l, d];
+
+// Wide gamut: accent fills get 18% more OKLCH chroma on P3 screens. Lightness
+// is untouched, so contrast pairs move by a hair at most.
+export const P3_ROLES = ['primary', 'tertiary', 'error', 'success', 'warning', 'info', ...PRODUCTS];
+const P3_BOOST = 1.18;
+
+const tone = (pal, t) => `var(--color-palette-${pal}-${t})`;
+const boost = (c) => `oklch(from ${c} l calc(c * ${P3_BOOST}) h)`;
+const decls = (roles, level, p3 = false) =>
   Object.entries(roles)
-    .map(([role, [pal, l, d, hl, hd]]) => `  --color-${role}: ${high ? lightDark(pal, hl, hd) : lightDark(pal, l, d)};`)
+    .filter(([role]) => !p3 || P3_ROLES.includes(role))
+    .map(([role, entry]) => {
+      const [pal, l, d] = tonesAt(entry, level);
+      const [a, b] = [tone(pal, l), tone(pal, d)].map((c) => (p3 ? boost(c) : c));
+      return `  --color-${role}: light-dark(${a}, ${b});`;
+    })
     .join('\n');
 
-export function rolesCss() {
-  const hc = (sel) => `[data-contrast='high']${sel}, [data-contrast='high'] ${sel}`;
-  const hcAuto = (sel) => `:root:not([data-contrast])${sel}, :root:not([data-contrast]) ${sel}`;
+// ─── Data visualisation ──────────────────────────────────────────────────────
+
+// Categorical series: [HCT hue, light tone, dark tone] at chroma 80 (clamped to
+// sRGB). Hues: brand blue 268, amber 70 (founderub), emerald 165 (bookub),
+// pink 355, violet 300 (payub), cyan 215, red 25, lime 130. Leap's indigo
+// (285) sits too close to the brand blue to be its own series.
+// Tones vary per series so the first six stay ≥ ΔE2000 12 apart (all pairs)
+// under protanopia/deuteranopia/tritanopia simulation in both schemes, and
+// every series clears 3:1 on surface and surface-container (WCAG 1.4.11).
+// generate.test.mjs checks both.
+export const CHART = [
+  [268, 40, 74],
+  [70, 55, 70],
+  [165, 40, 74],
+  [355, 45, 82],
+  [300, 55, 58],
+  [215, 55, 58],
+  [25, 45, 70],
+  [130, 50, 80],
+];
+export const chartCategorical = () =>
+  CHART.map(([h, l, d]) => [l, d].map((t) => hexFromArgb(Hct.from(h, 80, t).toInt())));
+// Sequential: primary, light → strong (light 90→30, dark 20→80).
+export const CHART_SEQ = [90, 80, 70, 60, 50, 40, 30].map((l, i) => ['primary', l, 20 + i * 10]);
+// Diverging: error → neutral → primary; the midpoint sits near the surface.
+export const CHART_DIV = [
+  ['error', 40, 80],
+  ['error', 60, 60],
+  ['error', 80, 40],
+  ['neutral', 90, 20],
+  ['primary', 80, 40],
+  ['primary', 60, 60],
+  ['primary', 40, 80],
+];
+export const CHART_KEYS = [
+  ...CHART.map((_, i) => `${i + 1}`),
+  ...CHART_SEQ.map((_, i) => `seq-${i + 1}`),
+  ...CHART_DIV.map((_, i) => `div-${i + 1}`),
+];
+
+function chartCss() {
+  return [
+    ...chartCategorical().map(([l, d], i) => `  --color-chart-${i + 1}: light-dark(${l}, ${d});`),
+    ...CHART_SEQ.map(([p, l, d], i) => `  --color-chart-seq-${i + 1}: light-dark(${tone(p, l)}, ${tone(p, d)});`),
+    ...CHART_DIV.map(([p, l, d], i) => `  --color-chart-div-${i + 1}: light-dark(${tone(p, l)}, ${tone(p, d)});`),
+  ].join('\n');
+}
+
+function contrastBlocks(p3) {
+  const all = { ...ROLES, ...tertiary('primary') };
+  const at = (lvl, sel) => `[data-contrast='${lvl}']${sel}, [data-contrast='${lvl}'] ${sel}`;
+  const auto = (sel) => `:root:not([data-contrast])${sel}, :root:not([data-contrast]) ${sel}`;
   const brands = PRODUCTS.map((p) => {
     const sel = `[data-product='${p}']`;
+    const roles = tertiary(p);
     return [
-      `${sel} {\n${decls(tertiary(p), false)}\n}`,
-      `${hc(sel)} {\n${decls(tertiary(p), true)}\n}`,
-      `@media (prefers-contrast: more) {\n${hcAuto(sel)} {\n${decls(tertiary(p), true)}\n}\n}`,
+      `${sel} {\n${decls(roles, 'standard', p3)}\n}`,
+      `${at('medium', sel)} {\n${decls(roles, 'medium', p3)}\n}`,
+      `${at('high', sel)} {\n${decls(roles, 'high', p3)}\n}`,
+      `@media (prefers-contrast: more) {\n${auto(sel)} {\n${decls(roles, 'high', p3)}\n}\n}`,
     ].join('\n');
-  }).join('\n\n');
+  });
+  return [
+    `:root, [data-contrast='standard'] {\n${decls(all, 'standard', p3)}\n}`,
+    `[data-contrast='medium'] {\n${decls(all, 'medium', p3)}\n}`,
+    `[data-contrast='high'] {\n${decls(all, 'high', p3)}\n}`,
+    `@media (prefers-contrast: more) {\n:root:not([data-contrast]) {\n${decls(all, 'high', p3)}\n}\n}`,
+    ...brands,
+  ].join('\n\n');
+}
 
+export function rolesCss() {
   return `/* Auto-generated by @nexub/tokens (scripts/generate.mjs). Do not edit.
    Color roles. Each role is light-dark(light tone, dark tone), so it follows
    color-scheme, which data-theme sets below (nested themes work too).
-   Contrast: data-contrast="high" or prefers-contrast: more. */
+   Contrast: data-contrast="medium" | "high" (prefers-contrast: more → high).
+   Chart palettes (--color-chart-*) override the static hex in variables.css,
+   which loads first. On P3 screens, accent fills gain OKLCH chroma. */
 
 :root, [data-theme='light'] { color-scheme: light; }
 [data-theme='dark'] { color-scheme: dark; }
@@ -119,21 +200,17 @@ export function rolesCss() {
   :root:not([data-theme]) { color-scheme: dark; }
 }
 
-:root, [data-contrast='standard'] {
-${decls({ ...ROLES, ...tertiary('primary') }, false)}
+${contrastBlocks(false)}
+
+:root {
+${chartCss()}
 }
 
-[data-contrast='high'] {
-${decls({ ...ROLES, ...tertiary('primary') }, true)}
+@media (color-gamut: p3) {
+@supports (color: oklch(from red l c h)) {
+${contrastBlocks(true)}
 }
-
-@media (prefers-contrast: more) {
-  :root:not([data-contrast]) {
-${decls({ ...ROLES, ...tertiary('primary') }, true)}
-  }
 }
-
-${brands}
 `;
 }
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 
 export const ratingVariants = cva('inline-flex items-center gap-0.5', {
@@ -44,6 +45,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
       onChange: onValueChange,
     });
     const [hovered, setHovered] = React.useState<number | null>(null);
+    const messages = useNexubMessages();
 
     const displayValue = hovered ?? value ?? 0;
     const starRefs = React.useRef<(HTMLButtonElement | null)[]>([]);
@@ -67,7 +69,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
         ref={ref}
         className={cn(ratingVariants({ size }), className)}
         role="radiogroup"
-        aria-label="Rating"
+        aria-label={messages.rating}
         aria-readonly={readOnly || undefined}
         {...props}
       >
@@ -83,7 +85,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
               role="radio"
               tabIndex={starValue === tabStop ? 0 : -1}
               aria-checked={starValue === (value ?? 0)}
-              aria-label={`${starValue} star${starValue !== 1 ? 's' : ''}`}
+              aria-label={messages.ratingStars(starValue)}
               disabled={readOnly}
               onClick={() => !readOnly && setValue(starValue)}
               onKeyDown={(e) => !readOnly && handleKeyDown(e, starValue)}

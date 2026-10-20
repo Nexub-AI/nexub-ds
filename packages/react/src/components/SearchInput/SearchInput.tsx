@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Search, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Input, type InputProps } from '../Input/Input.js';
 
 export interface SearchInputProps extends Omit<InputProps, 'leadingIcon' | 'trailingIcon'> {
@@ -22,6 +23,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       onChange?.(e);
     };
 
+    const messages = useNexubMessages();
     const handleClear = () => {
       if (!controlled) setInternalValue('');
       onClear?.();
@@ -31,7 +33,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       <button
         type="button"
         onClick={handleClear}
-        aria-label="Clear search"
+        aria-label={messages.clearSearch}
         className={cn(
           'shrink-0 rounded-full text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors',
         )}

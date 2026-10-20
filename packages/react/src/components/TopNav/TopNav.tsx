@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 export interface TopNavRootProps extends React.HTMLAttributes<HTMLElement> {
@@ -37,15 +38,18 @@ const Logo = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
 Logo.displayName = 'TopNav.Logo';
 
 const Menu = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
-  ({ className, ...props }, ref) => (
+  ({ className, ...props }, ref) => {
+    const messages = useNexubMessages();
+    return (
     // Scrolls horizontally on narrow screens rather than hiding the links.
     <nav
       ref={ref}
-      aria-label="Main"
+      aria-label={messages.mainNavigation}
       className={cn('flex min-w-0 items-center gap-1 overflow-x-auto', className)}
       {...props}
     />
-  ),
+    );
+  },
 );
 Menu.displayName = 'TopNav.Menu';
 

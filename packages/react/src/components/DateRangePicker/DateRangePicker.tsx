@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { DayPicker, type DateRange } from 'react-day-picker';
-import { format } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { formatDate } from '../DatePicker/DatePicker.js';
 import { field, fieldFocusVisible } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 
@@ -26,12 +27,13 @@ export interface DateRangePickerProps {
 function formatRange(
   range: DateRange | undefined,
   placeholder: string,
+  locale: string | undefined,
 ): string {
   if (!range) return placeholder;
   if (range.from && range.to) {
-    return `${format(range.from, 'PP')} \u2013 ${format(range.to, 'PP')}`;
+    return `${formatDate(range.from, locale)} \u2013 ${formatDate(range.to, locale)}`;
   }
-  if (range.from) return `${format(range.from, 'PP')} \u2013 \u2026`;
+  if (range.from) return `${formatDate(range.from, locale)} \u2013 \u2026`;
   return placeholder;
 }
 
@@ -79,7 +81,7 @@ export const DateRangePicker = React.forwardRef<
   {
     value,
     onChange,
-    placeholder = 'Pick a date range',
+    placeholder: placeholderProp,
     disabled = false,
     minDate,
     maxDate,
@@ -90,7 +92,10 @@ export const DateRangePicker = React.forwardRef<
   ref,
 ) {
   const [open, setOpen] = React.useState(false);
-  const display = formatRange(value, placeholder);
+  const messages = useNexubMessages();
+  const locale = useIntlLocale();
+  const placeholder = placeholderProp ?? messages.pickDateRange;
+  const display = formatRange(value, placeholder, locale);
   const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
   return (

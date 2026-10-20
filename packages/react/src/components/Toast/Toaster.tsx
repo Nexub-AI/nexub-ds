@@ -3,7 +3,8 @@ import * as RadixToast from '@radix-ui/react-toast';
 import { X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
-import { toast, useToastStore } from './useToast.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { fireToastClose, toast, useToastStore } from './useToast.js';
 
 const toneMap: Record<string, string> = {
   success: 'border-s-4 border-[var(--color-success)]',
@@ -35,6 +36,7 @@ export interface ToasterProps {
  */
 export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   const toasts = useToastStore();
+  const messages = useNexubMessages();
   // Closed by Radix (timer, swipe, close button) but still in the store and
   // mounted for the exit animation; they leave the stack order immediately.
   const [closed, setClosed] = React.useState<ReadonlySet<string>>(() => new Set());
@@ -125,6 +127,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
     <RadixToast.Provider swipeDirection="right">
       {toasts.map((t) => {
         const i = order.indexOf(t.id);
+        const action = t.action ?? (t.undo && { label: t.undo.label ?? messages.undo, onClick: t.undo.onUndo });
         return (
           <RadixToast.Root
             key={t.id}
@@ -133,6 +136,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
             data-hidden={i === -1 ? undefined : i >= visibleToasts}
             onOpenChange={(open) => {
               if (open) return;
+              fireToastClose(t);
               setClosed((s) => new Set(s).add(t.id));
               // Drop it from the store once the exit animation has played, so a
               // long session doesn't keep every toast it ever showed.
@@ -177,25 +181,26 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
                 </RadixToast.Description>
               )}
             </div>
-            {t.action && (
+            {action && (
               <RadixToast.Action
-                altText={t.action.label}
-                onClick={t.action.onClick}
+                altText={action.label}
+                onClick={action.onClick}
                 className="nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
               >
-                {t.action.label}
+                {action.label}
               </RadixToast.Action>
             )}
             {/* Hidden until hover only on hover-capable devices; always visible on touch. */}
             <RadixToast.Close className="nx-state-layer relative grid h-8 w-8 place-items-center rounded-full transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100">
               <X size="sm" aria-hidden="true" />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{messages.close}</span>
             </RadixToast.Close>
           </RadixToast.Root>
         );
       })}
       <RadixToast.Viewport
         ref={viewportRef}
+        label={messages.notifications}
         data-expanded={expanded}
         className={cn(
           'group/toaster fixed top-0 end-0 z-[var(--z-toast,2000)] max-h-screen w-full p-4 sm:max-w-sm',

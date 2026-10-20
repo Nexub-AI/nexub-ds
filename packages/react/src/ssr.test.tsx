@@ -73,6 +73,8 @@ const cspCases: [string, React.ReactElement][] = [
   ['NumberTicker', <N.NumberTicker value={1234.5} locale="en-US" />],
   ['RadioCard', <N.RadioCardGroup defaultValue="a"><N.RadioCard value="a" title="A" /></N.RadioCardGroup>],
   ['CheckboxCard', <N.CheckboxCard title="A" />],
+  ['NexubProvider', <N.NexubProvider locale="ar"><N.Spinner /></N.NexubProvider>],
+  ['Button async', <N.Button status="success">Save</N.Button>],
   ['MediaCard', <N.MediaCard src="/a.jpg" alt="" title="T" href="/x" />],
 ];
 

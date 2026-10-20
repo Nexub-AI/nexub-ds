@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const bannerVariants = cva(
@@ -63,6 +64,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
     },
     ref,
   ) => {
+    const messages = useNexubMessages();
     return (
       <div
         ref={ref}
@@ -88,7 +90,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
         {onClose && (
           <button
             type="button"
-            aria-label="Dismiss banner"
+            aria-label={messages.dismissBanner}
             onClick={onClose}
             className={cn(
               'nx-state-layer shrink-0 inline-flex items-center justify-center rounded-full w-6 h-6',

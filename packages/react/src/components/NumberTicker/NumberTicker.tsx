@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useIntlLocale } from '../NexubProvider/NexubProvider.js';
 
 /** A run of already-formatted text with its own class (Amount's muted symbol and minor units). */
 export interface NumberTickerPart {
@@ -75,7 +76,8 @@ function Char({ char, className, enter }: { char: string; className?: string; en
  * shows the value as-is; only later changes animate.
  */
 export const NumberTicker = React.forwardRef<HTMLSpanElement, NumberTickerProps>(
-  ({ value, format, locale, className, 'aria-live': ariaLive = 'off', ...props }, ref) => {
+  ({ value, format, locale: localeProp, className, 'aria-live': ariaLive = 'off', ...props }, ref) => {
+    const locale = useIntlLocale(localeProp);
     const parts: readonly NumberTickerPart[] =
       typeof value === 'number'
         ? [{ value: new Intl.NumberFormat(locale, format).format(value) }]

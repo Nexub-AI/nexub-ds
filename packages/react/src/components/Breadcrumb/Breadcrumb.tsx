@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { ChevronRight, MoreHorizontal } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => (
-    <nav ref={ref} aria-label="breadcrumb" className={cn('', className)} {...props} />
+    <nav ref={ref} aria-label={useNexubMessages().breadcrumb} className={cn('', className)} {...props} />
   ),
 );
 Root.displayName = 'Breadcrumb.Root';
@@ -83,7 +84,7 @@ const Ellipsis = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>
     {...props}
   >
     <MoreHorizontal size="sm" aria-hidden="true" />
-    <span className="sr-only">More</span>
+    <span className="sr-only">{useNexubMessages().breadcrumbMore}</span>
   </span>
 );
 Ellipsis.displayName = 'Breadcrumb.Ellipsis';

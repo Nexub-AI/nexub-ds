@@ -171,3 +171,53 @@ describe('Toaster store cleanup', () => {
     vi.useRealTimers();
   });
 });
+
+describe('toast.undoable', () => {
+  function setup(opts?: { duration?: number }) {
+    vi.useFakeTimers();
+    const onUndo = vi.fn();
+    const onCommit = vi.fn();
+    render(<Toaster />);
+    act(() => { toast.undoable('Row deleted', { onUndo, onCommit, ...opts }); });
+    return { onUndo, onCommit };
+  }
+
+  it('Undo calls onUndo, closes the toast, and never commits', () => {
+    const { onUndo, onCommit } = setup();
+    fireEvent.click(screen.getByRole('button', { name: 'Undo' }));
+    expect(onUndo).toHaveBeenCalledOnce();
+    act(() => vi.advanceTimersByTime(2000));
+    expect(screen.queryByText('Row deleted', { selector: 'li *' })).toBeNull();
+    expect(onCommit).not.toHaveBeenCalled();
+  });
+
+  it('commits when the timer runs out', () => {
+    const { onUndo, onCommit } = setup({ duration: 1000 });
+    act(() => vi.advanceTimersByTime(999));
+    expect(onCommit).not.toHaveBeenCalled();
+    act(() => vi.advanceTimersByTime(10));
+    expect(onCommit).toHaveBeenCalledOnce();
+    expect(onUndo).not.toHaveBeenCalled();
+  });
+
+  it('commits on the close button, exactly once through store cleanup', () => {
+    const { onCommit } = setup();
+    fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+    expect(onCommit).toHaveBeenCalledOnce();
+    act(() => vi.advanceTimersByTime(5000)); // Toaster removes it from the store
+    expect(onCommit).toHaveBeenCalledOnce();
+  });
+
+  it('commits once on programmatic dismiss', () => {
+    const { onCommit } = setup();
+    act(() => toast.dismiss());
+    act(() => toast.dismiss());
+    expect(onCommit).toHaveBeenCalledOnce();
+  });
+
+  it('uses undoLabel', () => {
+    setup();
+    act(() => { toast.undoable('Archived', { onUndo: () => {}, undoLabel: 'Restore' }); });
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument();
+  });
+});

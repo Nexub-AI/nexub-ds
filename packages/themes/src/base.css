@@ -394,6 +394,23 @@ code, kbd, pre, samp {
   .nx-sheen::after { display: none; }
 }
 
+/* ─── Touch targets ─────────────────────────────────────────────────────────
+   Small controls keep their visual size but get an invisible 44×44 hit area
+   on touch screens (Apple HIG, WCAG 2.5.5). Uses ::after; the state layer
+   uses ::before. */
+@media (pointer: coarse) {
+  .nx-hit { position: relative; }
+  .nx-hit::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
 /* ─── Micro-moments ──────────────────────────────────────────────────────────
    Reveal: content replacing a skeleton crossfades in (no travel). */
 .nx-reveal {
@@ -407,6 +424,20 @@ code, kbd, pre, samp {
 }
 @media (prefers-reduced-motion: reduce) {
   .nx-check-draw { animation: none; }
+}
+/* Shake: a short horizontal "no" on the spatial-fast spring (async Button error). */
+@keyframes nx-shake {
+  0%, 100% { translate: 0; }
+  20% { translate: -4px; }
+  40% { translate: 4px; }
+  60% { translate: -3px; }
+  80% { translate: 2px; }
+}
+.nx-shake {
+  animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-shake { animation: none; }
 }
 
 /* ─── Density ────────────────────────────────────────────────────────────────

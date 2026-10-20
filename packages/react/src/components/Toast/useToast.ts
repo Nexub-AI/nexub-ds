@@ -11,6 +11,21 @@ export interface ToastItem {
   tone?: ToastTone;
   duration?: number;
   action?: { label: string; onClick: () => void };
+  /** An Undo action; its label defaults to the `undo` message. Set by `toast.undoable`. */
+  undo?: { label?: string; onUndo: () => void };
+  /** Called once when the toast closes, however it closes (timer, swipe, close, action, dismiss). */
+  onClose?: () => void;
+}
+
+export interface UndoableToastOptions {
+  /** Called when Undo is clicked; the toast then closes. */
+  onUndo: () => void;
+  /** Called once when the toast closes any other way — the change is final. */
+  onCommit?: () => void;
+  /** @default the `undo` message ('Undo') */
+  undoLabel?: string;
+  description?: string;
+  duration?: number;
 }
 
 type Listener = (items: ToastItem[]) => void;
@@ -60,9 +75,36 @@ export function useToastStore(): ToastItem[] {
   return state;
 }
 
+// Ids whose onClose already ran (closed in the Toaster, not yet removed from the store).
+const closeFired = new Set<string>();
+
+/** Runs a toast's onClose at most once. Internal: the Toaster calls it when Radix closes a toast. */
+export function fireToastClose(item: ToastItem) {
+  if (closeFired.has(item.id)) return;
+  closeFired.add(item.id);
+  item.onClose?.();
+}
+
 function dismiss(id?: string) {
+  const removed = id ? g.__nexub_toast_items.filter((i) => i.id === id) : g.__nexub_toast_items;
   g.__nexub_toast_items = id ? g.__nexub_toast_items.filter((i) => i.id !== id) : [];
   notify();
+  for (const item of removed) {
+    fireToastClose(item);
+    closeFired.delete(item.id);
+  }
+}
+
+function undoable(title: string, { onUndo, onCommit, undoLabel, description, duration }: UndoableToastOptions) {
+  let undone = false;
+  return add({
+    title,
+    tone: 'neutral',
+    description,
+    duration,
+    undo: { label: undoLabel, onUndo: () => { undone = true; onUndo(); } },
+    onClose: () => { if (!undone) onCommit?.(); },
+  });
 }
 
 export const toast = {
@@ -76,5 +118,7 @@ export const toast = {
     add({ title, tone: 'warning', ...opts }),
   custom: (title: string, opts?: Partial<Omit<ToastItem, 'id' | 'title' | 'tone'>>) =>
     add({ title, tone: 'neutral', ...opts }),
+  /** A toast with an Undo action: Undo calls `onUndo`; any other close calls `onCommit`, once. */
+  undoable,
   dismiss,
 };

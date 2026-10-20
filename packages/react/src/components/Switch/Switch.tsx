@@ -48,7 +48,7 @@ export interface SwitchProps extends RadixSwitch.SwitchProps, VariantProps<typeo
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   ({ className, size, ...props }, ref) => (
-    <RadixSwitch.Root ref={ref} className={cn(switchVariants({ size }), className)} {...props}>
+    <RadixSwitch.Root ref={ref} className={cn(switchVariants({ size }), 'nx-hit', className)} {...props}>
       <RadixSwitch.Thumb className={cn(thumbVariants({ size }))} />
     </RadixSwitch.Root>
   ),

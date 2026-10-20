@@ -135,6 +135,9 @@ import mediaCardEntry from './components/media-card';
 import numberTickerEntry from './components/number-ticker';
 import bentoGridEntry from './patterns/bento-grid';
 
+// ─── 1.7.0 ────────────────────────────────────────────────────────────────────
+import errorSummaryEntry from './patterns/error-summary';
+
 // ─── All component entries (flat) ─────────────────────────────────────────────
 export const componentEntries: ComponentEntry[] = [
   // Actions
@@ -251,6 +254,7 @@ export const patternEntries: ComponentEntry[] = [
   notificationItemEntry,
   listDetailEntry,
   bentoGridEntry,
+  errorSummaryEntry,
 ];
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
@@ -282,6 +286,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
+  { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
@@ -324,6 +329,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Introduction', href: '/getting-started' },
       { title: 'Using the brand assets', href: '/getting-started/brand-assets' },
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
+      { title: 'Internationalization', href: '/getting-started/internationalization' },
     ],
   },
   {

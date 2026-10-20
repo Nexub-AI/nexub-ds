@@ -53,7 +53,7 @@ const outlined = `bg-transparent border border-[var(--color-outline-variant)] te
 const text = `bg-transparent text-[var(--color-on-surface)] ${disabledText}`;
 
 export const buttonVariants = cva(
-  [pressable, 'relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
+  [pressable, 'nx-hit relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
   {
     variants: {
       variant: {
@@ -92,16 +92,34 @@ export const buttonVariants = cva(
   },
 );
 
+export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   tone?: ToneValue;
+  /** Async feedback. `loading` blocks clicks (aria-disabled, focus kept),
+   *  `success` draws a check, `error` shakes once. Not applied with `asChild`. */
+  status?: ButtonStatus;
+  /** Alias for `status="loading"`. */
   loading?: boolean;
+  /** Announced while loading. @default 'Loading' */
+  loadingLabel?: string;
+  /** Announced on success; when given it also replaces the visible label. @default 'Done' */
+  successLabel?: string;
+  /** Announced on error. @default 'Something went wrong' */
+  errorLabel?: string;
   fullWidth?: boolean;
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
   asChild?: boolean;
 }
+
+const CheckIcon = () => (
+  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path className="nx-check-draw" pathLength={1} d="M20 6 9 17l-5-5" />
+  </svg>
+);
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -110,21 +128,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       variant,
       size,
       tone,
-      loading = false,
+      status: statusProp,
+      loading,
+      loadingLabel = 'Loading',
+      successLabel,
+      errorLabel = 'Something went wrong',
       fullWidth,
       leadingIcon,
       trailingIcon,
       asChild = false,
       disabled,
+      onClick,
       children,
       ...props
     },
     ref,
   ) => {
+    const status: ButtonStatus = statusProp ?? (loading ? 'loading' : 'idle');
     const sharedProps = {
       className: cn(
         buttonVariants({ variant, size, fullWidth }),
         tone ? toneClasses[tone] : '',
+        !asChild && status === 'error' && 'nx-shake',
         className,
       ),
       'data-tone': tone,
@@ -134,22 +159,75 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (asChild) {
       return (
-        <Slot ref={ref} {...sharedProps}>
+        <Slot ref={ref} onClick={onClick} {...sharedProps}>
           {children}
         </Slot>
       );
     }
 
-    return (
-      <button ref={ref} disabled={disabled ?? loading} {...sharedProps}>
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-        ) : (
-          leadingIcon
+    const busy = status === 'loading';
+    const swapLabel = status === 'success' && successLabel !== undefined;
+    // Spinner/check overlay the label, which stays in flow (transparent) so the width holds.
+    const overlay = busy ? (
+      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+    ) : status === 'success' && !swapLabel ? (
+      <CheckIcon />
+    ) : null;
+    const announcement =
+      status === 'loading' ? loadingLabel
+      : status === 'success' ? (successLabel ?? 'Done')
+      : status === 'error' ? errorLabel
+      : '';
+
+    const button = (
+      <button
+        ref={ref}
+        disabled={disabled}
+        aria-busy={busy || undefined}
+        aria-disabled={busy || props['aria-disabled'] || undefined}
+        onClick={(e) => {
+          // aria-disabled (not disabled) keeps focus; block the action ourselves.
+          if (busy) {
+            e.preventDefault();
+            return;
+          }
+          onClick?.(e);
+        }}
+        data-status={status === 'idle' ? undefined : status}
+        {...sharedProps}
+      >
+        <span className={cn('contents', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
+          {swapLabel ? (
+            <>
+              <CheckIcon />
+              {successLabel}
+            </>
+          ) : (
+            <>
+              {leadingIcon}
+              {children}
+              {trailingIcon}
+            </>
+          )}
+        </span>
+        {overlay && (
+          <span className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+            {overlay}
+          </span>
         )}
-        {children}
-        {!loading && trailingIcon}
       </button>
+    );
+
+    // Only async buttons get the live region (a sibling: live regions inside a
+    // button aren't announced reliably). Rendered up front so changes announce.
+    if (statusProp === undefined && loading === undefined) return button;
+    return (
+      <>
+        {button}
+        <span role="status" className="sr-only">
+          {announcement}
+        </span>
+      </>
     );
   },
 );

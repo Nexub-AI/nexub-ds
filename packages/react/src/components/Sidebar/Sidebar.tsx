@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
   collapsed?: boolean;
 }
 
 const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
-  ({ className, collapsed = false, ...props }, ref) => (
+  ({ className, collapsed = false, ...props }, ref) => {
+    const messages = useNexubMessages();
+    return (
     <nav
       ref={ref}
-      aria-label="Sidebar"
+      aria-label={messages.sidebar}
       data-collapsed={collapsed}
       className={cn(
         // Chrome recedes: a tonal panel, no divider.
@@ -23,7 +26,8 @@ const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
       )}
       {...props}
     />
-  ),
+    );
+  },
 );
 Root.displayName = 'Sidebar.Root';
 

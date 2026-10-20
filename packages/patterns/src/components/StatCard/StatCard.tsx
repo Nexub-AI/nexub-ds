@@ -56,7 +56,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
           {icon && <span className="text-[var(--color-on-surface-muted)]">{icon}</span>}
         </div>
 
-        <div className="text-3xl font-bold tracking-tight text-[var(--color-on-surface)]">
+        <div className="text-3xl font-bold tracking-tight tabular-nums text-[var(--color-on-surface)]">
           {animate && (typeof value === 'number' || typeof value === 'string') ? (
             <NumberTicker value={value} aria-live="polite" />
           ) : (
