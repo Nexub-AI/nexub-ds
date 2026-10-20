@@ -3,6 +3,8 @@ import type * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Slot } from '@radix-ui/react-slot';
 import { Drawer as VaulDrawer } from 'vaul';
 import { cn } from '../../utils/cn.js';
+import { scrim } from '../../utils/surface.js';
+import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 // vaul is bundled into @nexub/react (see tsup.config.ts) and is not a
@@ -96,24 +98,6 @@ const Close: React.ForwardRefExoticComponent<
 > = VaulDrawer.Close;
 const Portal: (props: DialogPrimitive.DialogPortalProps) => React.JSX.Element = VaulDrawer.Portal;
 
-let scrollLocks = 0;
-
-// The class-based lock. Lives with the overlay, like Radix's: on while the
-// overlay is mounted (including its fade-out), off when it unmounts.
-function useClassScrollLock() {
-  React.useEffect(() => {
-    const html = document.documentElement;
-    if (scrollLocks++ === 0) {
-      // Keep the scrollbar's space so the page doesn't shift sideways.
-      html.classList.toggle('nexub-scroll-gutter', window.innerWidth > html.clientWidth);
-      html.classList.add('nexub-scroll-lock');
-    }
-    return () => {
-      if (--scrollLocks === 0) html.classList.remove('nexub-scroll-lock', 'nexub-scroll-gutter');
-    };
-  }, []);
-}
-
 // Radix's scroll lock (react-remove-scroll) lives in Dialog.Overlay, so this
 // overlay is a plain element. Focus trap, aria-hidden siblings and outside-click
 // dismissal live in Dialog.Content and still apply.
@@ -137,7 +121,7 @@ const ClassLockOverlay = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
 const Overlay = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogOverlayProps>(
   ({ className, ...props }, ref) => {
     const { scrollLock, open, modal } = React.useContext(DrawerContext);
-    const classes = cn('fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)]', className);
+    const classes = cn('fixed inset-0 z-[var(--z-modal)]', scrim, className);
     if (scrollLock === 'class') {
       // Non-modal drawers have no overlay (vaul's Overlay returns null too).
       if (!modal) return null;
@@ -159,21 +143,22 @@ const Content = React.forwardRef<
   // over-drag) otherwise makes the panel scroll sideways. Hidden x also makes
   // y scroll, so long content works without extra classes.
   const sideMap = {
-    right: 'inset-y-0 right-0 h-full w-3/4 max-w-sm border-l overflow-x-hidden',
-    left: 'inset-y-0 left-0 h-full w-3/4 max-w-sm border-r overflow-x-hidden',
-    top: 'inset-x-0 top-0 w-full border-b',
-    bottom: 'inset-x-0 bottom-0 w-full border-t rounded-t-2xl',
+    right: 'inset-y-0 right-0 h-full w-3/4 max-w-sm overflow-x-hidden',
+    left: 'inset-y-0 left-0 h-full w-3/4 max-w-sm overflow-x-hidden',
+    top: 'inset-x-0 top-0 w-full rounded-b-[var(--shape-overlay)]',
+    bottom: 'inset-x-0 bottom-0 w-full rounded-t-[var(--shape-overlay)]',
   };
   return (
     <VaulDrawer.Content
       ref={ref}
       className={cn(
-        'fixed z-[var(--z-modal)] flex flex-col bg-[var(--color-bg-default)] shadow-xl focus:outline-none',
+        'fixed z-[var(--z-modal)] flex flex-col bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)] shadow-elevation-3 focus:outline-none',
         sideMap[side],
         surface === 'glass' && glassSurfaceClass,
         className,
       )}
       data-material={surface === 'glass' ? 'glass' : undefined}
+      data-glass-thickness={surface === 'glass' ? 'thick' : undefined}
       {...props}
     >
       {side === 'bottom' && (
@@ -189,7 +174,7 @@ const Title = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHead
   ({ className, ...props }, ref) => (
     <VaulDrawer.Title
       ref={ref}
-      className={cn('text-lg font-semibold text-[var(--color-text-primary)]', className)}
+      className={cn('text-title-lg text-[var(--color-on-surface)]', className)}
       {...props}
     />
   ),
@@ -200,7 +185,7 @@ const Description = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
   ({ className, ...props }, ref) => (
     <VaulDrawer.Description
       ref={ref}
-      className={cn('text-sm text-[var(--color-text-muted)]', className)}
+      className={cn('text-body-sm text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   ),

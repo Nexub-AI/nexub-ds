@@ -220,7 +220,7 @@ export type { ToastItem } from './components/Toast/index.js';
 
 // Components — Navigation Shells
 export { TopNav } from './components/TopNav/index.js';
-export type { TopNavItemProps } from './components/TopNav/index.js';
+export type { TopNavItemProps, TopNavRootProps } from './components/TopNav/index.js';
 export { Sidebar } from './components/Sidebar/index.js';
 export type { SidebarRootProps, SidebarHeaderProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
 export { AppShell } from './components/AppShell/index.js';
@@ -230,6 +230,7 @@ export { Breadcrumb } from './components/Breadcrumb/index.js';
 export { Pagination } from './components/Pagination/index.js';
 export type { PaginationProps } from './components/Pagination/index.js';
 export { CommandPalette } from './components/CommandPalette/index.js';
+export type { CommandPaletteRootProps } from './components/CommandPalette/index.js';
 
 // Components — Data Display
 export { Table } from './components/Table/index.js';
@@ -249,7 +250,7 @@ export type { DateRangePickerProps, DateRange } from './components/DateRangePick
 
 // Components — Theme
 export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider/index.js';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
+export type { ThemeMode, GlassMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
 
 // Components — Motion
 export { Fade, Slide, Scale, Collapse } from './components/Motion/index.js';

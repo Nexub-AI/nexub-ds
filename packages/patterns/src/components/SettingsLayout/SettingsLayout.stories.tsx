@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Avatar, Button, IconButton, Logo, Switch } from '@nexub/react';
 import { Bell, Lock, Moon, User } from '@nexub/icons';
 import { AppLauncher } from '../AppLauncher/AppLauncher.js';
+import { AppHeader } from '../AppHeader/AppHeader.js';
 import { SettingsLayout, SettingsRow } from './SettingsLayout.js';
 
 const items = [
@@ -17,7 +18,7 @@ const pages: Record<string, { title: string; description: string }> = {
   notifications: { title: 'Notifications', description: 'Choose what we email you about.' },
 };
 
-function MyAccount() {
+function MyAccount({ appHeader = false }: { appHeader?: boolean }) {
   const [active, setActive] = React.useState('profile');
   const page = pages[active]!;
   return (
@@ -25,6 +26,20 @@ function MyAccount() {
       items={items}
       activeId={active}
       onSelect={(item) => setActive(item.id)}
+      header={
+        appHeader
+          ? (menu) => (
+              <AppHeader
+                menu={menu}
+                productName="Account"
+                showThemeSwitch={false}
+                apps={[{ id: 'account', name: 'Account', href: '#', current: true }]}
+                user={{ name: 'Sam Lee', email: 'sam@example.com' }}
+                onSignOut={() => {}}
+              />
+            )
+          : undefined
+      }
       logo={<Logo product="Account" size="sm" />}
       actions={
         <>
@@ -79,4 +94,13 @@ export const Phone375: Story = {
       defaultViewport: 'phone375',
     },
   },
+};
+
+/** `header` swaps the built-in top bar for an `AppHeader`; the section menu goes in its menu slot. */
+export const WithAppHeader: Story = { render: () => <MyAccount appHeader /> };
+
+export const WithAppHeaderPhone: Story = {
+  name: 'With AppHeader (375px)',
+  render: () => <MyAccount appHeader />,
+  parameters: Phone375.parameters,
 };

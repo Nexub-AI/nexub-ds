@@ -6,7 +6,7 @@ All `@nexub/*` packages release in lockstep. Security fixes ship on the latest m
 
 ## Reporting a vulnerability
 
-Email **security@nexub.ai** with:
+Email **security_report@nexub.com** with:
 
 - the affected package(s) and version(s)
 - a description and, if possible, a minimal reproduction

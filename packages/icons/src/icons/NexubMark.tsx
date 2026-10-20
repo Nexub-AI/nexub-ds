@@ -7,6 +7,10 @@ import { NEXUB_MARK_GRADIENTS, NEXUB_MARK_PATHS } from './nexubMarkData.js';
 // shapes into one path so there are no seams where they overlap.
 const MONO_PATH = NEXUB_MARK_PATHS.map((p) => p.d).join(' ');
 
+// Must match the class names build-assets.mjs writes into base.css.
+const stopClass = (s: { color: number; opacity?: number }) =>
+  `nxm-s-${s.color}${s.opacity === undefined ? '' : ` nxm-o-${String(s.opacity).replace('.', '_')}`}`;
+
 type NexubMarkSvgProps = SVGProps<SVGSVGElement> & { variant?: 'mono' | 'color' };
 
 const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, NexubMarkSvgProps>(
@@ -33,14 +37,9 @@ const NexubMarkSvg = /* @__PURE__ */ forwardRef<SVGSVGElement, NexubMarkSvgProps
                   gradientUnits="userSpaceOnUse"
                 >
                   {g.stops.map((s, j) => (
-                    <stop
-                      key={j}
-                      offset={s.offset}
-                      style={{
-                        stopColor: `var(--color-brand-mark-${s.color})`,
-                        stopOpacity: 'opacity' in s ? s.opacity : undefined,
-                      }}
-                    />
+                    // Classes, not style=: server-rendered style attributes are
+                    // blocked by a strict CSP. Rules: @nexub/themes base.css.
+                    <stop key={j} offset={s.offset} className={stopClass(s)} />
                   ))}
                 </linearGradient>
               ))}

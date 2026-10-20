@@ -13,3 +13,5 @@ apps/docs/out/
 
 # npm lockfile — this is a pnpm workspace
 package-lock.json
+test-results/
+playwright-report/

@@ -38,3 +38,12 @@ export type {
   SettingsLayoutSectionProps,
   SettingsRowProps,
 } from './components/SettingsLayout/index.js';
+
+export { AppHeader } from './components/AppHeader/index.js';
+export type {
+  AppHeaderProps,
+  AppHeaderSearchGroup,
+  AppHeaderSearchItem,
+  AppHeaderOrg,
+  AppHeaderUser,
+} from './components/AppHeader/index.js';

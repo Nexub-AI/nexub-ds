@@ -6,14 +6,15 @@ import { glassSurfaceClass } from '../../utils/glass.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const cardVariants = cva(
-  'rounded-lg bg-[var(--color-bg-default)] border border-[var(--color-border-default)] text-[var(--color-text-primary)]',
+  // In-flow content: tone + a soft alpha hairline, no shadow (shadows are for floating layers).
+  'rounded-shape-container bg-[var(--color-surface-elevated)] border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] text-[var(--color-on-surface)]',
   {
     variants: {
       variant: {
         flat: '',
-        surface: 'shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1),0_1px_2px_-1px_rgb(0_0_0/0.1))]',
+        surface: 'bg-[var(--color-surface-elevated)] shadow-elevation-1',
         interactive:
-          'cursor-pointer shadow-[var(--shadow-sm)] transition-all duration-200 hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
+          'nx-state-layer cursor-pointer bg-[var(--color-surface-elevated)] shadow-elevation-1 transition-[box-shadow,transform] duration-spatial-fast ease-spatial-fast hover:-translate-y-0.5 hover:shadow-elevation-2',
       },
       // Material. 'glass' needs data-material="glass" on the element (set in the
       // component) for the --glass-* vars to resolve. Single box-shadow carries

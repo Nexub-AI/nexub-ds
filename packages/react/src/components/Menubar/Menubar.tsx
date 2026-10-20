@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RadixMenubar from '@radix-ui/react-menubar';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { enterExit, floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Menu = RadixMenubar.Menu;
 const Portal = RadixMenubar.Portal;
@@ -15,8 +16,7 @@ const Root = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarProps>(
       <RadixMenubar.Root
         ref={ref}
         className={cn(
-          'flex h-9 items-center gap-1 rounded-md border border-[var(--color-border-default)]',
-          'bg-[var(--color-bg-default)] px-3',
+          'flex h-control-md items-center gap-0.5 rounded-shape-control bg-[var(--color-surface-container-low)] p-1',
           className,
         )}
         {...props}
@@ -32,9 +32,9 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixMenubar.MenubarTriggerP
       <RadixMenubar.Trigger
         ref={ref}
         className={cn(
-          'relative flex cursor-default select-none items-center rounded-sm px-3 py-1 text-sm font-medium',
-          'outline-none focus:bg-[var(--color-bg-subtle)]',
-          'data-[state=open]:bg-[var(--color-bg-subtle)]',
+          'nx-state-layer relative flex h-full cursor-default select-none items-center rounded-shape-control px-3 text-label-lg text-[var(--color-on-surface)]',
+          'outline-none',
+          'data-[state=open]:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
           className,
         )}
         {...props}
@@ -45,8 +45,10 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixMenubar.MenubarTriggerP
 Trigger.displayName = 'Menubar.Trigger';
 
 const contentBaseClasses = cn(
-  'z-[var(--z-popover)] min-w-48 rounded-lg border border-[var(--color-border-default)]',
-  'bg-[var(--color-bg-default)] p-1 shadow-md outline-none',
+  'z-[var(--z-popover)] min-w-48 outline-none',
+  floatingSurface,
+  menuContent,
+  enterExit,
   'data-[state=open]:animate-in data-[state=closed]:animate-out',
   'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
   'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
@@ -69,9 +71,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarContentProp
 Content.displayName = 'Menubar.Content';
 
 const itemBaseClasses = cn(
-  'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none',
-  'transition-colors hover:bg-[var(--color-bg-subtle)] focus:bg-[var(--color-bg-subtle)]',
-  'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+  menuItem,
 );
 
 const Item = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarItemProps>(
@@ -93,7 +93,7 @@ const Label = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarLabelProps>(
       <RadixMenubar.Label
         ref={ref}
         className={cn(
-          'px-2 py-1 text-xs font-semibold text-[var(--color-text-muted)]',
+          menuLabel,
           className,
         )}
         {...props}
@@ -108,7 +108,7 @@ const Separator = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarSeparator
     return (
       <RadixMenubar.Separator
         ref={ref}
-        className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+        className={cn(menuSeparator, className)}
         {...props}
       />
     );
@@ -170,7 +170,7 @@ const SubTrigger = React.forwardRef<
       ref={ref}
       className={cn(
         itemBaseClasses,
-        'data-[state=open]:bg-[var(--color-bg-subtle)]',
+        'data-[state=open]:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         className,
       )}
       {...props}

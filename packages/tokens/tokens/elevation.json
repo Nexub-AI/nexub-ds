@@ -1,0 +1,28 @@
+{
+  "elevation": {
+    "0": { "$value": "none", "$type": "shadow", "$description": "In-flow content: use tonal surfaces, not shadow" },
+    "1": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.06)), 0 1px 2px light-dark(rgb(26 28 30 / 0.06), rgb(0 0 0 / 0.4)), 0 2px 6px light-dark(rgb(26 28 30 / 0.04), rgb(0 0 0 / 0.3))",
+      "$type": "shadow",
+      "$description": "Menus, interactive cards on hover"
+    },
+    "2": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 2px 4px light-dark(rgb(26 28 30 / 0.06), rgb(0 0 0 / 0.4)), 0 8px 20px light-dark(rgb(26 28 30 / 0.08), rgb(0 0 0 / 0.45))",
+      "$type": "shadow",
+      "$description": "Popovers, toasts"
+    },
+    "3": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 4px 8px light-dark(rgb(26 28 30 / 0.08), rgb(0 0 0 / 0.45)), 0 20px 48px light-dark(rgb(26 28 30 / 0.16), rgb(0 0 0 / 0.55))",
+      "$type": "shadow",
+      "$description": "Dialogs, sheets"
+    }
+  },
+  "state": {
+    "hover":              { "$value": "0.08", "$type": "number", "$description": "State-layer opacity (on-color over the container)" },
+    "focus":              { "$value": "0.10", "$type": "number" },
+    "pressed":            { "$value": "0.12", "$type": "number" },
+    "dragged":            { "$value": "0.16", "$type": "number" },
+    "disabled-content":   { "$value": "0.38", "$type": "number" },
+    "disabled-container": { "$value": "0.12", "$type": "number" }
+  }
+}

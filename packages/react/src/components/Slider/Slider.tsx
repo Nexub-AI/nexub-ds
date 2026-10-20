@@ -14,17 +14,23 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
     return (
       <RadixSlider.Root
         ref={ref}
-        className={cn('relative flex w-full touch-none select-none items-center', className)}
+        className={cn('group relative flex h-control-sm w-full touch-none select-none items-center', className)}
         {...props}
       >
-        <RadixSlider.Track className="relative h-2 w-full grow overflow-hidden rounded-full bg-[var(--color-bg-muted)]">
-          <RadixSlider.Range className="absolute h-full bg-[var(--color-fill-primary)]" />
+        <RadixSlider.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-[var(--color-surface-container-highest)]">
+          <RadixSlider.Range className="absolute h-full bg-[var(--color-primary)] group-data-[disabled]:bg-[var(--color-text-disabled)]" />
         </RadixSlider.Track>
         {Array.from({ length: count }, (_, i) => (
           <RadixSlider.Thumb
             key={i}
             aria-label={thumbLabels?.[i] ?? ariaLabel}
-            className="block h-5 w-5 rounded-full border-2 border-[var(--color-fill-primary)] bg-[var(--color-bg-default)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] disabled:pointer-events-none disabled:opacity-50"
+            // Solid primary knob with a surface ring; the state-layer halo is wider than the knob.
+            className={cn(
+              'nx-state-layer block h-5 w-5 rounded-full border-2 border-[var(--color-surface-container-lowest)] bg-[var(--color-primary)] text-[var(--color-primary)] shadow-elevation-1',
+              'before:-inset-2.5 cursor-grab active:cursor-grabbing',
+              // Opaque disabled knob (text-disabled is translucent and would show the range through it).
+              'group-data-[disabled]:pointer-events-none group-data-[disabled]:bg-[color-mix(in_srgb,var(--color-on-surface)_38%,var(--color-surface))]',
+            )}
           />
         ))}
       </RadixSlider.Root>

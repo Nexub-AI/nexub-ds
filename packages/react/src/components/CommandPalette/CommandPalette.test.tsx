@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { CommandPalette } from './CommandPalette.js';
 
 describe('CommandPalette', () => {
@@ -48,5 +49,40 @@ describe('CommandPalette', () => {
     );
     expect(getByText('Create project')).toBeInTheDocument();
     expect(getByText('Open settings')).toBeInTheDocument();
+  });
+
+  it('scrollLock="class" injects no <style> and locks with a class on <html>', () => {
+    const before = document.querySelectorAll('style').length;
+    const { getByRole, unmount } = render(
+      <CommandPalette.Root open scrollLock="class" label="Search">
+        <CommandPalette.Input placeholder="Search" />
+      </CommandPalette.Root>,
+    );
+    expect(getByRole('dialog', { name: 'Search' })).toBeInTheDocument();
+    expect(document.querySelectorAll('style')).toHaveLength(before);
+    expect(document.documentElement).toHaveClass('nexub-scroll-lock');
+    unmount();
+    expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
+  });
+
+  it('returns focus to the element focused before it opened', async () => {
+    function Example() {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Open</button>
+          <CommandPalette.Root open={open} onOpenChange={setOpen}>
+            <CommandPalette.Input placeholder="Search" />
+          </CommandPalette.Root>
+        </>
+      );
+    }
+    const user = userEvent.setup();
+    const { getByRole, queryByRole } = render(<Example />);
+    await user.click(getByRole('button', { name: 'Open' }));
+    expect(getByRole('combobox')).toHaveFocus();
+    await user.keyboard('{Escape}');
+    expect(queryByRole('dialog')).not.toBeInTheDocument();
+    expect(getByRole('button', { name: 'Open' })).toHaveFocus();
   });
 });

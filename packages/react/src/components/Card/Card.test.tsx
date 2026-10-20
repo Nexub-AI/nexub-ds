@@ -27,7 +27,7 @@ describe('Card', () => {
 
   it('applies surface variant', () => {
     render(<Card variant="surface">Card</Card>);
-    expect(screen.getByText('Card')).toHaveClass('shadow-[var(--shadow-card,0_1px_3px_0_rgb(0_0_0/0.1),0_1px_2px_-1px_rgb(0_0_0/0.1))]');
+    expect(screen.getByText('Card')).toHaveClass('shadow-elevation-1');
   });
 
   it('renders as child element with asChild', () => {

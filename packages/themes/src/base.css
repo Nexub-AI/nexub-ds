@@ -9,6 +9,7 @@
    so `font-src 'self'` works (see scripts/build-fonts.mjs). */
 @import './fonts.css';
 @import '@nexub/tokens/css';
+@import '@nexub/tokens/css/roles';
 
 /* ─── Semantic shorthand aliases ───────────────────────────────────────────
    Components reference these shorter names. They proxy the full token names
@@ -48,7 +49,7 @@
 
   /* Form-control boundaries (WCAG 1.4.11 needs >= 3:1 against the page).
      Separate from --color-border-default, which cards/dividers keep light. */
-  --color-border-input: #848e9f;
+  --color-border-input: var(--color-outline);
 
   /* placeholder text (PKG-B01) */
   --color-text-placeholder: var(--color-text-muted);
@@ -60,26 +61,27 @@
   --color-text-warning: var(--color-semantic-warning-strong);
   --color-text-danger:  var(--color-semantic-error-strong);
 
-  /* Solid fills under white text. Fixed shades (they do NOT flip in dark mode)
-     chosen so white text is >= 4.5:1 (WCAG AA). Brand themes override accent. */
-  --color-fill-primary:         var(--color-brand-primary-600);
-  --color-fill-primary-hover:   var(--color-brand-primary-700);
-  --color-fill-info:            var(--color-brand-primary-600);
-  --color-fill-info-hover:      var(--color-brand-primary-700);
-  --color-fill-success:         #047857;
-  --color-fill-success-hover:   #065f46;
-  --color-fill-warning:         #b45309;
-  --color-fill-warning-hover:   #92400e;
-  --color-fill-danger:          #b91c1c;
-  --color-fill-danger-hover:    #991b1b;
-  --color-fill-leap:            var(--color-accent-leap-600);
-  --color-fill-leap-hover:      var(--color-accent-leap-700);
-  --color-fill-bookub:          var(--color-accent-bookub-700);
-  --color-fill-bookub-hover:    var(--color-accent-bookub-800);
-  --color-fill-payub:           var(--color-accent-payub-600);
-  --color-fill-payub-hover:     var(--color-accent-payub-700);
-  --color-fill-founderub:       var(--color-accent-founderub-700);
-  --color-fill-founderub-hover: var(--color-accent-founderub-800);
+  /* Solid fills under white text. Fixed palette tones (they do NOT flip in dark
+     mode): tone 40 vs white is >= 4.5:1 by HCT construction; hover = tone 30.
+     Brand themes override accent. Phase 2 moves components to on-* roles. */
+  --color-fill-primary:         var(--color-palette-primary-40);
+  --color-fill-primary-hover:   var(--color-palette-primary-30);
+  --color-fill-info:            var(--color-palette-info-40);
+  --color-fill-info-hover:      var(--color-palette-info-30);
+  --color-fill-success:         var(--color-palette-success-40);
+  --color-fill-success-hover:   var(--color-palette-success-30);
+  --color-fill-warning:         var(--color-palette-warning-40);
+  --color-fill-warning-hover:   var(--color-palette-warning-30);
+  --color-fill-danger:          var(--color-palette-error-40);
+  --color-fill-danger-hover:    var(--color-palette-error-30);
+  --color-fill-leap:            var(--color-palette-leap-40);
+  --color-fill-leap-hover:      var(--color-palette-leap-30);
+  --color-fill-bookub:          var(--color-palette-bookub-40);
+  --color-fill-bookub-hover:    var(--color-palette-bookub-30);
+  --color-fill-payub:           var(--color-palette-payub-40);
+  --color-fill-payub-hover:     var(--color-palette-payub-30);
+  --color-fill-founderub:       var(--color-palette-founderub-40);
+  --color-fill-founderub-hover: var(--color-palette-founderub-30);
   --color-fill-accent:          var(--color-fill-primary);
   --color-fill-accent-hover:    var(--color-fill-primary-hover);
 
@@ -139,11 +141,14 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-size-adjust: 100%;
+  /* never fake bold/italic; Inter's optical sizes follow font-size */
+  font-synthesis: none;
+  font-optical-sizing: auto;
 }
 
 /* Form controls don't inherit fonts by default — without this, apps that
    don't use Tailwind's preflight would render buttons/inputs in the system UI
-   font instead of Plus Jakarta Sans. */
+   font instead of Inter. */
 button, input, select, textarea, optgroup {
   font-family: inherit;
 }
@@ -154,19 +159,25 @@ body {
   background: var(--gradient-hero-ambient);
 }
 
-/* Focus ring */
+/* Focus ring: one ring for everything. The outline follows border-radius, so
+   it hugs capsules and fields. Contrast >= 3:1 on every surface (ring = primary). */
 :focus-visible {
-  outline: 2px solid var(--color-ring-default);
-  outline-offset: 3px;
-  box-shadow: var(--shadow-focus);
+  outline: 3px solid var(--color-ring-default);
+  outline-offset: 2px;
 }
 
-/* Headings */
+@media (forced-colors: active) {
+  :focus-visible { outline-color: Highlight; }
+}
+
+/* Headings: brand display face, balanced wrapping */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
+  font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
   line-height: 1.2;
   color: var(--color-text-primary);
+  text-wrap: balance;
 }
 
 /* Paragraphs / lists */
@@ -174,11 +185,15 @@ p, ul, ol {
   margin: 0;
 }
 
+p {
+  text-wrap: pretty;
+}
+
 /* Links */
 a {
   color: var(--color-text-link);
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 0.3em;
 }
 
 a:hover {
@@ -199,7 +214,7 @@ code, kbd, pre, samp {
 
 /* Selection */
 ::selection {
-  background-color: color-mix(in srgb, var(--color-brand-primary-500) 20%, transparent);
+  background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
   color: var(--color-text-primary);
 }
 
@@ -232,11 +247,53 @@ code, kbd, pre, samp {
   }
 }
 
+/* ─── State layer (Calm Depth §4.2) ──────────────────────────────────────────
+   An overlay of the element's own text color (its on-* role) at the
+   --state-* opacity, so hover/focus/press read correctly on any fill, theme,
+   brand or glass. The ::before paints above the background, below content. */
+.nx-state-layer { position: relative; isolation: isolate; }
+.nx-state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+.nx-state-layer:hover::before { opacity: var(--state-hover); }
+.nx-state-layer:focus-visible::before { opacity: var(--state-focus); }
+.nx-state-layer:active::before { opacity: var(--state-pressed); }
+.nx-state-layer:is(:disabled, [aria-disabled='true'], [data-disabled])::before { opacity: 0; }
+
+/* Press feedback: a fast spatial spring, no ripple. */
+.nx-press {
+  transition: transform var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+}
+.nx-press:active:not(:disabled, [aria-disabled='true'], [data-disabled]) { transform: scale(0.97); }
+
+/* ─── Density ────────────────────────────────────────────────────────────────
+   Compact shifts every control one step down the ladder (md 40 → 32). */
+[data-density='compact'] {
+  --size-control-xs: 20px;
+  --size-control-sm: 24px;
+  --size-control-md: 32px;
+  --size-control-lg: 40px;
+  --size-control-xl: 48px;
+}
+
 /* Logo-scroll marquee keyframe (used by LogoWall) */
 @keyframes logo-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+
+/* ─── App header (@nexub/patterns AppHeader) ─────────────────────────────────
+   One height for the fixed top header everywhere. Offset layouts with
+   var(--app-header-height); AppHeader's own spacer already does in flow. */
+:root { --app-header-height: 64px; }
 
 /* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
    A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
@@ -244,6 +301,60 @@ code, kbd, pre, samp {
    space so the page doesn't shift sideways. */
 html.nexub-scroll-lock { overflow: hidden; }
 html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
+
+/* ─── Nexub mark gradient stops (<NexubMark variant="color">, <Logo>) ───────
+   Classes instead of style= attributes, which a strict CSP blocks in
+   server-rendered HTML. */
+/* nexub-mark-stops:start — generated by packages/brand/scripts/build-assets.mjs */
+.nxm-s-1{stop-color:var(--color-brand-mark-1)}
+.nxm-s-2{stop-color:var(--color-brand-mark-2)}
+.nxm-s-3{stop-color:var(--color-brand-mark-3)}
+.nxm-s-4{stop-color:var(--color-brand-mark-4)}
+.nxm-s-5{stop-color:var(--color-brand-mark-5)}
+.nxm-s-6{stop-color:var(--color-brand-mark-6)}
+.nxm-s-7{stop-color:var(--color-brand-mark-7)}
+.nxm-s-8{stop-color:var(--color-brand-mark-8)}
+.nxm-s-9{stop-color:var(--color-brand-mark-9)}
+.nxm-s-10{stop-color:var(--color-brand-mark-10)}
+.nxm-s-11{stop-color:var(--color-brand-mark-11)}
+.nxm-s-12{stop-color:var(--color-brand-mark-12)}
+.nxm-s-13{stop-color:var(--color-brand-mark-13)}
+.nxm-s-14{stop-color:var(--color-brand-mark-14)}
+.nxm-s-15{stop-color:var(--color-brand-mark-15)}
+.nxm-s-16{stop-color:var(--color-brand-mark-16)}
+.nxm-s-17{stop-color:var(--color-brand-mark-17)}
+.nxm-s-18{stop-color:var(--color-brand-mark-18)}
+.nxm-s-19{stop-color:var(--color-brand-mark-19)}
+.nxm-s-20{stop-color:var(--color-brand-mark-20)}
+.nxm-s-21{stop-color:var(--color-brand-mark-21)}
+.nxm-s-22{stop-color:var(--color-brand-mark-22)}
+.nxm-s-23{stop-color:var(--color-brand-mark-23)}
+.nxm-s-24{stop-color:var(--color-brand-mark-24)}
+.nxm-s-25{stop-color:var(--color-brand-mark-25)}
+.nxm-s-26{stop-color:var(--color-brand-mark-26)}
+.nxm-s-27{stop-color:var(--color-brand-mark-27)}
+.nxm-s-28{stop-color:var(--color-brand-mark-28)}
+.nxm-s-29{stop-color:var(--color-brand-mark-29)}
+.nxm-s-30{stop-color:var(--color-brand-mark-30)}
+.nxm-s-31{stop-color:var(--color-brand-mark-31)}
+.nxm-s-32{stop-color:var(--color-brand-mark-32)}
+.nxm-s-33{stop-color:var(--color-brand-mark-33)}
+.nxm-s-34{stop-color:var(--color-brand-mark-34)}
+.nxm-s-35{stop-color:var(--color-brand-mark-35)}
+.nxm-s-36{stop-color:var(--color-brand-mark-36)}
+.nxm-s-37{stop-color:var(--color-brand-mark-37)}
+.nxm-s-38{stop-color:var(--color-brand-mark-38)}
+.nxm-s-39{stop-color:var(--color-brand-mark-39)}
+.nxm-s-40{stop-color:var(--color-brand-mark-40)}
+.nxm-s-41{stop-color:var(--color-brand-mark-41)}
+.nxm-s-42{stop-color:var(--color-brand-mark-42)}
+.nxm-s-43{stop-color:var(--color-brand-mark-43)}
+.nxm-s-44{stop-color:var(--color-brand-mark-44)}
+.nxm-s-45{stop-color:var(--color-brand-mark-45)}
+.nxm-s-46{stop-color:var(--color-brand-mark-46)}
+.nxm-s-47{stop-color:var(--color-brand-mark-47)}
+.nxm-o-0{stop-opacity:0}
+/* nexub-mark-stops:end */
 
 /* ─── Radix ScrollArea / Select viewports ────────────────────────────────────
    Radix renders these rules in a <style> tag, which a strict CSP blocks. The

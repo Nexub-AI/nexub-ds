@@ -14,16 +14,17 @@ const Item = React.forwardRef<HTMLButtonElement, RadixRadioGroup.RadioGroupItemP
     <RadixRadioGroup.Item
       ref={ref}
       className={cn(
-        'aspect-square h-4 w-4 rounded-full border border-[var(--color-border-input)]',
-        'text-[var(--color-brand-primary-500)]',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-        'disabled:cursor-not-allowed disabled:opacity-50',
+        // 18px, 2px outline border (>= 3:1), primary ring + dot when on. Focus = the global ring.
+        'aspect-square h-[18px] w-[18px] shrink-0 rounded-full border-2 border-[var(--color-outline)]',
+        'transition-[border-color] duration-effects-fast ease-effects-fast',
+        'hover:border-[var(--color-on-surface)] data-[state=checked]:border-[var(--color-primary)]',
+        'disabled:cursor-not-allowed disabled:border-[var(--color-text-disabled)]',
         className,
       )}
       {...props}
     >
       <RadixRadioGroup.Indicator className="flex items-center justify-center">
-        <span className="block h-2 w-2 rounded-full bg-[var(--color-brand-primary-500)]" />
+        <span className="block h-2 w-2 rounded-full bg-[var(--color-primary)] [[data-disabled]_&]:bg-[var(--color-text-disabled)]" />
       </RadixRadioGroup.Indicator>
     </RadixRadioGroup.Item>
   ),

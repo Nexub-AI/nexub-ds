@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { cn } from '../../utils/cn.js';
+import { enterExit, overlaySurface, scrim } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 const Root = RadixDialog.Root;
@@ -14,7 +15,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixDialog.DialogOverlayProps>
       <RadixDialog.Overlay
         ref={ref}
         className={cn(
-          'fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)] backdrop-blur-sm',
+          'fixed inset-0 z-[var(--z-modal)]', scrim, enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
           className,
@@ -45,7 +46,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
         ref={ref}
         className={cn(
           'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2',
-          'rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-xl',
+          overlaySurface, enterExit,
           'max-h-[90vh] overflow-y-auto p-6 focus:outline-none',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
@@ -57,6 +58,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
           className,
         )}
         data-material={surface === 'glass' ? 'glass' : undefined}
+        data-glass-thickness={surface === 'glass' ? 'thick' : undefined}
         {...props}
       >
         {children}

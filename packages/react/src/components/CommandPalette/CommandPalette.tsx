@@ -3,31 +3,74 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Command } from 'cmdk';
 import { Search } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { enterExit, overlaySurface } from '../../utils/surface.js';
+import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 
-const Root = React.forwardRef<
-  HTMLDivElement,
-  RadixDialog.DialogProps & { className?: string }
->(({ children, ...props }, ref) => (
+export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
+  className?: string;
+  /** Accessible name of the dialog. @default 'Command palette' */
+  label?: string;
+  /**
+   * How page scroll is locked while open.
+   * - `'style'` (default): Radix's lock, which injects a `<style>` tag (blocked by `style-src 'self'`).
+   * - `'class'`: the `nexub-scroll-lock` class from `@nexub/themes/base`. Strict-CSP safe.
+   */
+  scrollLock?: 'style' | 'class';
+  /** `false` when the items are already filtered (e.g. async search results). @default true */
+  shouldFilter?: boolean;
+}
+
+const overlayClasses =
+  'fixed inset-0 z-[var(--z-modal)] bg-[color-mix(in_srgb,#000_40%,transparent)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 duration-effects-default ease-effects-default';
+
+// Radix's scroll lock lives in Dialog.Overlay, so the class-lock overlay is a
+// plain element. Focus trap and Escape live in Dialog.Content and still apply.
+function ClassLockOverlay() {
+  useClassScrollLock();
+  return <div data-state="open" className={overlayClasses} />;
+}
+
+const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
+  ({ children, label = 'Command palette', scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  // Radix returns focus to Dialog.Trigger, which a palette (opened by a shortcut
+  // or its own button) doesn't have. Return it to whatever had it before.
+  const returnFocusRef = React.useRef<HTMLElement | null>(null);
+  return (
   <RadixDialog.Root {...props}>
     <RadixDialog.Portal>
-      <RadixDialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)] backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0" />
+      {scrollLock === 'class' ? <ClassLockOverlay /> : <RadixDialog.Overlay className={overlayClasses} />}
       <RadixDialog.Content
         ref={ref}
+        aria-describedby={undefined}
+        onOpenAutoFocus={() => {
+          returnFocusRef.current = document.activeElement as HTMLElement | null;
+        }}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          returnFocusRef.current?.focus();
+        }}
         className={cn(
-          'fixed left-1/2 top-[20%] z-[var(--z-modal)] w-full max-w-xl -translate-x-1/2',
-          'overflow-hidden rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-2xl',
+          'fixed left-1/2 top-[20%] z-[var(--z-modal)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2',
+          'overflow-hidden', overlaySurface, enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
           'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
         )}
       >
-        <Command className="flex h-full w-full flex-col overflow-hidden text-[var(--color-text-primary)]">
+        <RadixDialog.Title className="sr-only">{label}</RadixDialog.Title>
+        <Command
+          label={label}
+          shouldFilter={shouldFilter}
+          loop
+          className="flex h-full w-full flex-col overflow-hidden text-[var(--color-text-primary)]"
+        >
           {children}
         </Command>
       </RadixDialog.Content>
     </RadixDialog.Portal>
   </RadixDialog.Root>
-));
+  );
+});
 Root.displayName = 'CommandPalette.Root';
 
 const Input = React.forwardRef<
@@ -39,7 +82,7 @@ const Input = React.forwardRef<
     <Command.Input
       ref={ref}
       className={cn(
-        'flex h-12 w-full bg-transparent py-3 text-sm outline-none placeholder:text-[var(--color-text-muted)] disabled:cursor-not-allowed disabled:opacity-50',
+        'flex h-control-xl w-full bg-transparent text-body-lg outline-none placeholder:text-[var(--color-text-placeholder)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
         className,
       )}
       {...props}
@@ -67,7 +110,7 @@ const Empty = React.forwardRef<
   <Command.Empty
     ref={ref}
     className={cn(
-      'py-8 text-center text-sm text-[var(--color-text-muted)]',
+      'py-8 text-center text-body-sm text-[var(--color-on-surface-muted)]',
       className,
     )}
     {...props}
@@ -82,8 +125,8 @@ const Group = React.forwardRef<
   <Command.Group
     ref={ref}
     className={cn(
-      'overflow-hidden p-1 text-[var(--color-text-primary)]',
-      '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-text-muted)]',
+      'overflow-hidden p-2 text-[var(--color-on-surface)]',
+      '[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-label-sm [&_[cmdk-group-heading]]:text-[var(--color-on-surface-muted)]',
       className,
     )}
     {...props}
@@ -98,9 +141,10 @@ const Item = React.forwardRef<
   <Command.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-md px-3 py-2 text-sm outline-none',
-      'aria-selected:bg-[var(--color-bg-subtle)] aria-selected:text-[var(--color-text-primary)]',
-      'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
+      // Concentric: overlay 24px − 8px padding = 16px.
+      'relative flex cursor-default select-none items-center gap-2 rounded-shape-container px-3 py-2.5 text-body-sm outline-none',
+      'aria-selected:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
+      'data-[disabled=true]:pointer-events-none data-[disabled=true]:text-[var(--color-text-disabled)]',
       className,
     )}
     {...props}
