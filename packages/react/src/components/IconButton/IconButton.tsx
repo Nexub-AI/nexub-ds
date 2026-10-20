@@ -2,32 +2,25 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
 
 export const iconButtonVariants = cva(
-  [
-    'inline-flex items-center justify-center rounded-md transition-colors flex-shrink-0',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-    'disabled:opacity-50 disabled:pointer-events-none',
-    'select-none',
-  ],
+  [pressable, 'relative inline-flex items-center justify-center flex-shrink-0'],
   {
     variants: {
       variant: {
-        ghost:
-          'bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
-        solid:
-          'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
-        outline:
-          'bg-transparent border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
-        subtle:
-          'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
+        ghost: `bg-transparent text-[var(--color-on-surface-variant)] ${disabledText}`,
+        solid: `bg-[var(--color-primary)] text-[var(--color-on-primary)] ${disabledContainer}`,
+        outline: `bg-transparent border border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] ${disabledContainer}`,
+        subtle: `bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)] ${disabledContainer}`,
       },
+      // Square on the control ladder; the capsule shape makes it a circle.
       size: {
-        xs: 'h-7 w-7 text-xs',
-        sm: 'h-8 w-8 text-sm',
-        md: 'h-9 w-9 text-sm',
-        lg: 'h-10 w-10 text-base',
-        xl: 'h-12 w-12 text-base',
+        xs: 'h-control-xs w-control-xs text-label-sm',
+        sm: 'h-control-sm w-control-sm text-label-md',
+        md: 'h-control-md w-control-md text-label-lg',
+        lg: 'h-control-lg w-control-lg text-title-md',
+        xl: 'h-control-xl w-control-xl text-title-md',
       },
     },
     defaultVariants: {

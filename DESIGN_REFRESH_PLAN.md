@@ -402,7 +402,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 |---|---|---|
 | **0. Guardrails** ✅ 2026-10-20 | Visual regression (= R1), token contrast test, Storybook Brand toolbar. See [Phase 0 result](#phase-0-result) below. | M |
 | **1. Foundations** ✅ 2026-10-20 | OKLCH tonal palette generator + role tokens + contrast levels. State-layer tokens + utility. Semantic shape. Elevation 1–3. Type roles + font decision. Spring `linear()` tokens. Size ladder + density. Unified focus ring. All old names aliased. | L |
-| **2. Core controls** | Button family (+ tonal), IconButton, Input/Select/Textarea/Combobox, Checkbox/Radio/Switch, Chip/Badge, SegmentedControl, Tabs, Slider, Toggle. | L |
+| **2. Core controls** ✅ 2026-10-20 | Button family (+ tonal), IconButton, Input/Select/Textarea/Combobox, Checkbox/Radio/Switch, Chip/Badge, SegmentedControl, Tabs, Slider, Toggle. | L |
 | **3. Glass 2.0** | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
 | **4. Surfaces & overlays** | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
 | **5. New components** | ButtonGroup (connected), SplitButton, FloatingToolbar, NavigationRail, Amount/MoneyInput, ListDetail. | M–L |
@@ -457,6 +457,38 @@ The token build adds:
 4. **Legacy alias names resolve at `:root`.** A nested `data-contrast` only affects role names; nested `data-theme` and brands work everywhere.
 5. **Browser requirement.** It requires `light-dark()` (Baseline 2024).
 6. **Emphasized type weights are not tokenized.** Use the next weight utility.
+
+### Phase 2 result (2026-10-20)
+
+**Shared pieces**
+- `utils/control.ts` holds the field chrome, focus, invalid, disabled and pressable class strings.
+- `hooks/useSlidingIndicator.ts` drives one indicator that slides to the active item.
+- `cn` now understands the token scales. Before, tailwind-merge silently dropped `text-label-*` next to text colours.
+
+**Components**
+
+| Component | Change |
+|---|---|
+| Button | Capsule, control ladder, roles, state layer + press spring. `filled`/`tonal`/`outlined`/`text`, with legacy aliases. |
+| IconButton | Circle, the same system. |
+| Input / Textarea / Select / Combobox | 12px fields, 16px text, 2px primary focus border, explicit disabled. |
+| Checkbox / Radio / Switch | Outline borders that clear 3:1, primary when on. The Switch thumb uses the expressive spring. |
+| Badge / Chip / Toggle | Role pairs. |
+| SegmentedControl / Tabs | The sliding indicator; Tabs use a primary underline. |
+| Slider | Thin track, primary knob, halo state layer. |
+
+**Fixed along the way**
+- Storybook's Tailwind config used `require()` on the ESM-only preset, so **the token preset never applied in Storybook**. Earlier baselines rendered Tailwind defaults.
+
+**Verified**
+- In a real browser: state layer at 0 / .08 / .12 for rest / hover / pressed, press `scale(.97)`, a 3px focus ring that follows the capsule, and indicators landing exactly on the clicked item.
+- New review stories: `Foundations/Core controls` (every state), the Button gallery, and SegmentedControl with a selection.
+- Visual baselines were re-recorded and are stable across reruns. 622 unit tests pass.
+
+**Deferred**
+- Filled (M3) text-field variant: the outlined field is kept as the only one for WCAG 1.4.11.
+- The `glass` button variant moves to Phase 3.
+- A 44px hit area for xs controls: 24px already meets WCAG 2.5.8.
 
 ### Quality bar (definition of done for each phase)
 

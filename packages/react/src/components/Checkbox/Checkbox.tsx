@@ -10,11 +10,13 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
     <RadixCheckbox.Root
       ref={ref}
       className={cn(
-        'peer h-4 w-4 shrink-0 rounded-sm border border-[var(--color-border-input)]',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        'data-[state=checked]:bg-[var(--color-fill-primary)] data-[state=checked]:border-[var(--color-fill-primary)] data-[state=checked]:text-white',
-        'data-[state=indeterminate]:bg-[var(--color-fill-primary)] data-[state=indeterminate]:border-[var(--color-fill-primary)] data-[state=indeterminate]:text-white',
+        // 18px, 2px outline border (>= 3:1), primary when on. Focus = the global ring.
+        'peer h-[18px] w-[18px] shrink-0 rounded-[5px] border-2 border-[var(--color-outline)]',
+        'transition-[background-color,border-color] duration-effects-fast ease-effects-fast',
+        'hover:border-[var(--color-on-surface)]',
+        'data-[state=checked]:bg-[var(--color-primary)] data-[state=checked]:border-[var(--color-primary)] data-[state=checked]:text-[var(--color-on-primary)]',
+        'data-[state=indeterminate]:bg-[var(--color-primary)] data-[state=indeterminate]:border-[var(--color-primary)] data-[state=indeterminate]:text-[var(--color-on-primary)]',
+        'disabled:cursor-not-allowed disabled:border-[var(--color-text-disabled)] disabled:data-[state=checked]:bg-[var(--color-text-disabled)] disabled:data-[state=indeterminate]:bg-[var(--color-text-disabled)] disabled:text-[var(--color-surface)]',
         className,
       )}
       {...props}

@@ -4,17 +4,23 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 
 export const toggleVariants = cva(
-  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-[var(--color-bg-subtle)] data-[state=on]:text-[var(--color-text-primary)]',
+  [
+    // Pressable capsule; on = the secondary container (tonal selection).
+    'nx-state-layer nx-press relative inline-flex items-center justify-center gap-2 rounded-shape-control select-none',
+    'text-[var(--color-on-surface-variant)] transition-[background-color,color] duration-effects-fast ease-effects-fast',
+    'data-[state=on]:bg-[var(--color-secondary-container)] data-[state=on]:text-[var(--color-on-secondary-container)]',
+    'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
+  ],
   {
     variants: {
       variant: {
-        default: 'bg-transparent hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]',
-        outline: 'border border-[var(--color-border-default)] bg-transparent hover:bg-[var(--color-bg-subtle)]',
+        default: 'bg-transparent',
+        outline: 'border border-[var(--color-outline-variant)] bg-transparent data-[state=on]:border-transparent',
       },
       size: {
-        sm: 'h-8 px-2.5',
-        md: 'h-9 px-3',
-        lg: 'h-10 px-4',
+        sm: 'h-control-sm px-3 text-label-md',
+        md: 'h-control-md px-4 text-label-lg',
+        lg: 'h-control-lg px-5 text-label-lg',
       },
     },
     defaultVariants: { variant: 'default', size: 'md' },

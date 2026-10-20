@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
 
 const Root = RadixSelect.Root;
 const Group = RadixSelect.Group;
@@ -12,11 +13,14 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerPro
     <RadixSelect.Trigger
       ref={ref}
       className={cn(
-        'flex h-9 w-full items-center justify-between rounded-md border border-[var(--color-border-input)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
-        // Border shifts to ring color on focus; ring is a semi-transparent halo.
-        'placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-ring-default)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        invalid && 'border-[var(--color-semantic-error-default)] focus:border-[var(--color-semantic-error-default)] focus:ring-[color-mix(in_srgb,var(--color-semantic-error-default)_25%,transparent)]',
+        'flex h-control-md w-full items-center justify-between gap-2 px-3.5 text-body-md',
+        field,
+        fieldFocusVisible,
+        // Open reads like focus: the 2px primary border.
+        'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
+        'data-[placeholder]:text-[var(--color-text-placeholder)]',
+        'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
+        invalid && fieldInvalid,
         '[&>span]:line-clamp-1',
         className,
       )}
@@ -24,7 +28,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerPro
     >
       {children}
       <RadixSelect.Icon asChild>
-        <ChevronDown size="sm" className="opacity-50" aria-hidden="true" />
+        <ChevronDown size="sm" className="shrink-0 text-[var(--color-on-surface-variant)]" aria-hidden="true" />
       </RadixSelect.Icon>
     </RadixSelect.Trigger>
   ),
@@ -106,9 +110,10 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
     <RadixSelect.Item
       ref={ref}
       className={cn(
-        'relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none',
-        'focus:bg-[var(--color-bg-subtle)] focus:text-[var(--color-text-primary)]',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        'relative flex w-full cursor-default select-none items-center rounded-lg py-2 pl-8 pr-2 text-body-sm text-[var(--color-on-surface)] outline-none',
+        // Highlight = the on-surface state layer at hover opacity.
+        'focus:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
+        'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--color-text-disabled)]',
         className,
       )}
       {...props}

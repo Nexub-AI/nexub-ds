@@ -4,13 +4,21 @@ import { cn } from '../../utils/cn.js';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const switchVariants = cva(
-  'peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-[var(--color-brand-primary-500)] data-[state=unchecked]:bg-[var(--color-border-default)]',
+  // Off: tonal track with a 2px outline (>= 3:1, WCAG 1.4.11). On: primary.
+  // Focus = the global ring (it follows the capsule).
+  [
+    'peer inline-flex shrink-0 cursor-pointer items-center rounded-full border-2',
+    'transition-[background-color,border-color] duration-effects-fast ease-effects-fast',
+    'data-[state=unchecked]:bg-[var(--color-surface-container-highest)] data-[state=unchecked]:border-[var(--color-outline)]',
+    'data-[state=checked]:bg-[var(--color-primary)] data-[state=checked]:border-[var(--color-primary)]',
+    'disabled:cursor-not-allowed disabled:border-[var(--color-text-disabled)] disabled:bg-[color-mix(in_srgb,var(--color-on-surface)_12%,transparent)] disabled:data-[state=checked]:bg-[var(--color-text-disabled)] disabled:data-[state=checked]:border-transparent disabled:data-[state=unchecked]:border-[var(--color-outline-variant)]',
+  ],
   {
     variants: {
       size: {
-        sm: 'h-4 w-7',
-        md: 'h-5 w-9',
-        lg: 'h-6 w-11',
+        sm: 'h-5 w-9',
+        md: 'h-7 w-12',
+        lg: 'h-8 w-14',
       },
     },
     defaultVariants: { size: 'md' },
@@ -18,13 +26,18 @@ export const switchVariants = cva(
 );
 
 export const thumbVariants = cva(
-  'pointer-events-none block rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=unchecked]:translate-x-0',
+  // The thumb slides on the expressive spring (a toggle is a key moment).
+  [
+    'pointer-events-none block rounded-full shadow-elevation-1',
+    'transition-[transform,background-color] duration-expressive-fast ease-expressive-fast',
+    'translate-x-0.5 data-[state=unchecked]:bg-[var(--color-outline)] data-[state=checked]:bg-[var(--color-on-primary)] data-[disabled]:data-[state=unchecked]:bg-[var(--color-outline-variant)]',
+  ],
   {
     variants: {
       size: {
-        sm: 'h-3 w-3 data-[state=checked]:translate-x-3',
-        md: 'h-4 w-4 data-[state=checked]:translate-x-4',
-        lg: 'h-5 w-5 data-[state=checked]:translate-x-5',
+        sm: 'h-3 w-3 data-[state=checked]:translate-x-[18px]',
+        md: 'h-5 w-5 data-[state=checked]:translate-x-[22px]',
+        lg: 'h-6 w-6 data-[state=checked]:translate-x-[26px]',
       },
     },
     defaultVariants: { size: 'md' },

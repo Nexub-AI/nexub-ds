@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
 
 export type ToneValue =
   | 'neutral'
@@ -15,53 +16,53 @@ export type ToneValue =
   | 'payub'
   | 'founderub';
 
-// Tone overrides the variant colour with a solid semantic/brand palette.
-// Static strings (no interpolation) so Tailwind's JIT scans them literally;
-// appended after the variant classes so tailwind-merge lets tone win.
+// Tone overrides the variant colour with a solid role (or brand palette tone
+// 40/80) and its on-color. Hover/press come from the state layer. Static
+// strings so Tailwind's JIT scans them; appended after the variant classes so
+// tailwind-merge lets tone win.
 const toneClasses: Record<ToneValue, string> = {
-  neutral: 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
-  info: 'bg-[var(--color-fill-info)] text-white hover:bg-[var(--color-fill-info-hover)]',
-  success: 'bg-[var(--color-fill-success)] text-white hover:bg-[var(--color-fill-success-hover)]',
-  warning: 'bg-[var(--color-fill-warning)] text-white hover:bg-[var(--color-fill-warning-hover)]',
-  danger: 'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)]',
-  leap: 'bg-[var(--color-fill-leap)] text-white hover:bg-[var(--color-fill-leap-hover)]',
-  bookub: 'bg-[var(--color-fill-bookub)] text-white hover:bg-[var(--color-fill-bookub-hover)]',
-  payub: 'bg-[var(--color-fill-payub)] text-white hover:bg-[var(--color-fill-payub-hover)]',
-  founderub: 'bg-[var(--color-fill-founderub)] text-white hover:bg-[var(--color-fill-founderub-hover)]',
+  neutral: 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)]',
+  info: 'bg-[var(--color-info)] text-[var(--color-on-info)]',
+  success: 'bg-[var(--color-success)] text-[var(--color-on-success)]',
+  warning: 'bg-[var(--color-warning)] text-[var(--color-on-warning)]',
+  danger: 'bg-[var(--color-error)] text-[var(--color-on-error)]',
+  leap: 'bg-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))] text-[color:light-dark(var(--color-palette-leap-100),var(--color-palette-leap-20))]',
+  bookub: 'bg-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))] text-[color:light-dark(var(--color-palette-bookub-100),var(--color-palette-bookub-20))]',
+  payub: 'bg-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))] text-[color:light-dark(var(--color-palette-payub-100),var(--color-palette-payub-20))]',
+  founderub: 'bg-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))] text-[color:light-dark(var(--color-palette-founderub-100),var(--color-palette-founderub-20))]',
 };
 
+const filled = `bg-[var(--color-primary)] text-[var(--color-on-primary)] ${disabledContainer}`;
+const tonal = `bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] ${disabledContainer}`;
+const outlined = `bg-transparent border border-[var(--color-outline-variant)] text-[var(--color-on-surface)] ${disabledContainer}`;
+const text = `bg-transparent text-[var(--color-on-surface)] ${disabledText}`;
+
 export const buttonVariants = cva(
-  [
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-colors',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-    'disabled:opacity-50 disabled:pointer-events-none',
-    'select-none',
-  ],
+  [pressable, 'relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
   {
     variants: {
       variant: {
-        primary:
-          'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)]',
-        secondary:
-          'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] border border-[var(--color-border-default)] hover:bg-[var(--color-bg-muted)]',
-        subtle:
-          'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)]',
-        ghost:
-          'bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
-        outline:
-          'bg-transparent border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
-        destructive:
-          'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)]',
-        accent:
-          'bg-[var(--color-fill-accent)] text-white hover:bg-[var(--color-fill-accent-hover)]',
-        link: 'bg-transparent text-[var(--color-text-primary)] underline-offset-4 hover:underline',
+        filled,
+        tonal,
+        outlined,
+        text,
+        // Legacy names (kept as aliases).
+        primary: filled,
+        secondary: tonal,
+        subtle: `bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)] ${disabledContainer}`,
+        outline: outlined,
+        ghost: text,
+        destructive: `bg-[var(--color-error)] text-[var(--color-on-error)] ${disabledContainer}`,
+        accent: `bg-[var(--color-tertiary)] text-[var(--color-on-tertiary)] ${disabledContainer}`,
+        link: `bg-transparent text-[var(--color-primary)] underline underline-offset-[0.3em] ${disabledText}`,
       },
+      // The control ladder (density-aware: data-density="compact" shrinks it).
       size: {
-        xs: 'h-7 px-2.5 text-xs',
-        sm: 'h-8 px-3 text-sm',
-        md: 'h-9 px-4 text-sm',
-        lg: 'h-10 px-5 text-base',
-        xl: 'h-12 px-6 text-base',
+        xs: 'h-control-xs px-2.5 text-label-sm',
+        sm: 'h-control-sm px-3.5 text-label-md',
+        md: 'h-control-md px-5 text-label-lg',
+        lg: 'h-control-lg px-6 text-title-md',
+        xl: 'h-control-xl px-7 text-title-md',
       },
       fullWidth: {
         true: 'w-full',

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { field, fieldDisabledWithin, fieldFocusWithin, fieldInvalid } from '../../utils/control.js';
 
 export const inputVariants = cva(
   [
@@ -11,15 +12,16 @@ export const inputVariants = cva(
     'outline-none focus:outline-none focus-visible:outline-none',
     'ring-0 focus:ring-0 focus-visible:ring-0',
     'placeholder:text-[var(--color-text-placeholder)]',
-    'text-[var(--color-text-primary)]',
-    'disabled:opacity-50 disabled:cursor-not-allowed',
+    'text-[var(--color-on-surface)]',
+    'disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
   ],
   {
     variants: {
+      // 16px from md up: readable, and iOS doesn't zoom on focus.
       size: {
-        sm: 'text-sm',
-        md: 'text-sm',
-        lg: 'text-base',
+        sm: 'text-body-sm',
+        md: 'text-body-md',
+        lg: 'text-body-md',
       },
     },
     defaultVariants: {
@@ -30,23 +32,21 @@ export const inputVariants = cva(
 
 export const inputWrapperVariants = cva(
   [
-    'flex items-center w-full rounded-md border bg-[var(--color-bg-default)] transition-colors',
-    'border-[var(--color-border-input)]',
-    // On focus: the border shifts to the ring color and the ring is a
-    // semi-transparent halo. One hard 1 px border + one soft 2 px glow =
-    // a single clean focus indicator. No double ring.
-    'focus-within:outline-none focus-within:border-[var(--color-ring-default)] focus-within:ring-2 focus-within:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',
-    'has-[:disabled]:opacity-50 has-[:disabled]:cursor-not-allowed',
+    // The wrapper is the field: one border that thickens to 2px primary on focus.
+    'flex items-center w-full',
+    field,
+    fieldFocusWithin,
+    fieldDisabledWithin,
   ],
   {
     variants: {
       size: {
-        sm: 'h-8 px-3 gap-1.5',
-        md: 'h-9 px-3 gap-2',
-        lg: 'h-10 px-4 gap-2',
+        sm: 'h-control-sm px-3 gap-1.5',
+        md: 'h-control-md px-3.5 gap-2',
+        lg: 'h-control-lg px-4 gap-2',
       },
       invalid: {
-        true: 'border-[var(--color-danger-500)] focus-within:border-[var(--color-danger-500)] focus-within:ring-[color-mix(in_srgb,var(--color-danger-500)_25%,transparent)]',
+        true: fieldInvalid,
       },
     },
     defaultVariants: {
@@ -57,14 +57,14 @@ export const inputWrapperVariants = cva(
 
 export const addonVariants = cva(
   [
-    'flex items-center self-stretch px-3 text-[var(--color-text-muted)] bg-[var(--color-bg-subtle)]',
-    'border-[var(--color-border-default)] shrink-0',
+    'flex items-center self-stretch px-3 text-[var(--color-on-surface-variant)] bg-[var(--color-surface-container-high)]',
+    'border-[var(--color-outline-variant)] shrink-0',
   ],
   {
     variants: {
       side: {
-        leading: 'border-r rounded-l-md',
-        trailing: 'border-l rounded-r-md',
+        leading: 'border-r',
+        trailing: 'border-l',
       },
     },
   },
@@ -111,19 +111,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (hasAddon) {
       return (
-        <div className={cn('flex w-full rounded-md overflow-hidden border border-[var(--color-border-input)]', invalid && 'border-[var(--color-danger-500)]')}>
+        <div className={cn('flex w-full overflow-hidden', field, fieldFocusWithin, invalid && fieldInvalid)}>
           {leadingAddon && (
             <span className={cn(addonVariants({ side: 'leading' }))}>
               {leadingAddon}
             </span>
           )}
-          <div className={cn(inputWrapperVariants({ size, invalid }), 'rounded-none border-0 ring-offset-0', wrapperClassName)}>
+          <div className={cn(inputWrapperVariants({ size, invalid }), 'rounded-none border-0 shadow-none focus-within:shadow-none', wrapperClassName)}>
             {leadingIcon && (
-              <span className="shrink-0 text-[var(--color-text-muted)]">{leadingIcon}</span>
+              <span className="shrink-0 text-[var(--color-on-surface-variant)]">{leadingIcon}</span>
             )}
             {inputEl}
             {trailingIcon && (
-              <span className="shrink-0 text-[var(--color-text-muted)]">{trailingIcon}</span>
+              <span className="shrink-0 text-[var(--color-on-surface-variant)]">{trailingIcon}</span>
             )}
           </div>
           {trailingAddon && (
@@ -138,11 +138,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn(inputWrapperVariants({ size, invalid }), wrapperClassName)}>
         {leadingIcon && (
-          <span className="shrink-0 text-[var(--color-text-muted)]">{leadingIcon}</span>
+          <span className="shrink-0 text-[var(--color-on-surface-variant)]">{leadingIcon}</span>
         )}
         {inputEl}
         {trailingIcon && (
-          <span className="shrink-0 text-[var(--color-text-muted)]">{trailingIcon}</span>
+          <span className="shrink-0 text-[var(--color-on-surface-variant)]">{trailingIcon}</span>
         )}
       </div>
     );
