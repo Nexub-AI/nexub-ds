@@ -14,6 +14,8 @@ export type { ButtonProps, ToneValue } from './components/Button/index.js';
 
 export { ButtonGroup } from './components/ButtonGroup/index.js';
 export type { ButtonGroupProps } from './components/ButtonGroup/index.js';
+export { SplitButton } from './components/SplitButton/index.js';
+export type { SplitButtonProps } from './components/SplitButton/index.js';
 
 export { IconButton, iconButtonVariants } from './components/IconButton/index.js';
 export type { IconButtonProps } from './components/IconButton/index.js';
@@ -26,6 +28,10 @@ export type { TextareaProps } from './components/Textarea/index.js';
 
 export { NumberInput } from './components/NumberInput/index.js';
 export type { NumberInputProps } from './components/NumberInput/index.js';
+export { MoneyInput } from './components/MoneyInput/index.js';
+export type { MoneyInputProps } from './components/MoneyInput/index.js';
+export { Amount } from './components/Amount/index.js';
+export type { AmountProps } from './components/Amount/index.js';
 
 export { SearchInput } from './components/SearchInput/index.js';
 export type { SearchInputProps } from './components/SearchInput/index.js';
@@ -181,6 +187,8 @@ export { DropdownMenu } from './components/DropdownMenu/index.js';
 export { ContextMenu } from './components/ContextMenu/index.js';
 export { Menubar } from './components/Menubar/index.js';
 export { NavigationMenu } from './components/NavigationMenu/index.js';
+export { NavigationRail } from './components/NavigationRail/index.js';
+export type { NavigationRailRootProps, NavigationRailItemProps } from './components/NavigationRail/index.js';
 
 // Components — Drawers / Sheets
 export { Drawer, Sheet } from './components/Drawer/index.js';
@@ -211,6 +219,7 @@ export { Collapsible } from './components/Collapsible/index.js';
 export { ScrollArea } from './components/ScrollArea/index.js';
 export type { ScrollAreaProps } from './components/ScrollArea/index.js';
 export { Toolbar } from './components/Toolbar/index.js';
+export type { ToolbarRootProps } from './components/Toolbar/index.js';
 
 // Components — Toast
 export { Toast } from './components/Toast/index.js';
