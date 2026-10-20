@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as RadixAlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '../../utils/cn.js';
+import { enterExit, overlaySurface, scrim } from '../../utils/surface.js';
+import { buttonVariants } from '../Button/Button.js';
 
 const Root = RadixAlertDialog.Root;
 const Trigger = RadixAlertDialog.Trigger;
@@ -12,7 +14,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOve
       <RadixAlertDialog.Overlay
         ref={ref}
         className={cn(
-          'fixed inset-0 z-[var(--z-modal)] bg-[var(--color-overlay)] backdrop-blur-sm',
+          'fixed inset-0 z-[var(--z-modal)]', scrim, enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
           className,
@@ -31,7 +33,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogCon
         ref={ref}
         className={cn(
           'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
-          'rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-xl',
+          overlaySurface, enterExit,
           'p-6 focus:outline-none',
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
@@ -100,10 +102,8 @@ const Action = React.forwardRef<HTMLButtonElement, RadixAlertDialog.AlertDialogA
       <RadixAlertDialog.Action
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium',
-          'bg-[var(--color-fill-danger)] text-white hover:bg-[var(--color-fill-danger-hover)] focus:outline-none',
-          'focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-          'disabled:pointer-events-none disabled:opacity-50',
+          // The destructive confirm: same as <Button variant="destructive">.
+          buttonVariants({ variant: 'destructive' }),
           className,
         )}
         {...props}
@@ -119,10 +119,7 @@ const Cancel = React.forwardRef<HTMLButtonElement, RadixAlertDialog.AlertDialogC
       <RadixAlertDialog.Cancel
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center rounded-md border border-[var(--color-border-default)] px-4 py-2 text-sm font-medium',
-          'bg-[var(--color-bg-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
-          'disabled:pointer-events-none disabled:opacity-50',
+          buttonVariants({ variant: 'outlined' }),
           className,
         )}
         {...props}

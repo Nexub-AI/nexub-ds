@@ -404,7 +404,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 | **1. Foundations** ✅ 2026-10-20 | OKLCH tonal palette generator + role tokens + contrast levels. State-layer tokens + utility. Semantic shape. Elevation 1–3. Type roles + font decision. Spring `linear()` tokens. Size ladder + density. Unified focus ring. All old names aliased. | L |
 | **2. Core controls** ✅ 2026-10-20 | Button family (+ tonal), IconButton, Input/Select/Textarea/Combobox, Checkbox/Radio/Switch, Chip/Badge, SegmentedControl, Tabs, Slider, Toggle. | L |
 | **3. Glass 2.0** ✅ 2026-10-20 | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
-| **4. Surfaces & overlays** | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
+| **4. Surfaces & overlays** ✅ 2026-10-20 | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
 | **5. New components** | ButtonGroup (connected), SplitButton, FloatingToolbar, NavigationRail, Amount/MoneyInput, ListDetail. | M–L |
 | **6. Docs** | Principles page; Foundations rewritten (colour roles, state layers, shape, elevation, motion, glass); do/don't pairs; before/after gallery. | M |
 | **Later** | Refraction (5.5); runtime seed-colour theming (`<ThemeProvider seed="#...">`) if a consumer needs it. | — |
@@ -516,6 +516,31 @@ The token build adds:
 **Still open**
 - Refraction (§5.5) stays deferred.
 - A glass-dial control in the AppHeader settings pattern and the docs moves to Phase 4/6.
+
+### Phase 4 result (2026-10-20)
+
+**New role.** `surface-elevated` (neutral tone 100 in light, 17 in dark, in both contrast levels) for every floating layer. The legacy "raised" aliases now use it; before, they were darker than the page in dark mode.
+
+**Shared.** `utils/surface.ts` holds overlay and floating surfaces, concentric menu items, the spring enter/exit and the scrim.
+
+**Components**
+
+| Component | Change |
+|---|---|
+| Dialog / AlertDialog / CommandPalette / Drawer | Overlay surface. AlertDialog buttons reuse `buttonVariants`. |
+| Popover, HoverCard, the menus, Select, NavigationMenu | Floating surface. |
+| Tooltip | Inverse surface on its own z-tier. |
+| Toast | Inverse snackbar. |
+| Card | Elevated + alpha hairline. |
+| TopNav / Sidebar | Capsule items; tonal sidebar with a secondary-container active pill. |
+| AppHeader | Glass-dial radio group in the account menu, shown for glass headers. |
+
+**Evidence**
+- New review story `Foundations/Surfaces`, with Cards, every floating overlay open, and an open Dialog. Checked in light and dark; two fixes came out of it: the story layout, and dark flat cards that read as sunken.
+- Two AppHeader dial tests.
+- Visual suite: 493 passed, stable. Build, typecheck, lint and tests all pass.
+
+**Rollout checkpoint.** Phases 1–4 are complete. Per decision 4, development may now be promoted to production. That's the owner's call.
 
 ### Quality bar (definition of done for each phase)
 

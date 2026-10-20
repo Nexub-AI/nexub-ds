@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RadixNav from '@radix-ui/react-navigation-menu';
 import { ChevronDown } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { floatingSurface } from '../../utils/surface.js';
 
 const Root = React.forwardRef<HTMLElement, RadixNav.NavigationMenuProps>(
   ({ className, children, ...props }, ref) => (
@@ -35,10 +36,9 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixNav.NavigationMenuTrigg
     <RadixNav.Trigger
       ref={ref}
       className={cn(
-        'group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors',
-        'hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)] focus:bg-[var(--color-bg-subtle)] focus:text-[var(--color-text-primary)] focus:outline-none',
-        'data-[active]:bg-[var(--color-bg-subtle)]/50 data-[state=open]:bg-[var(--color-bg-subtle)]/50',
-        'disabled:pointer-events-none disabled:opacity-50',
+        'nx-state-layer group relative inline-flex h-control-sm w-max items-center justify-center rounded-shape-control px-3.5 text-label-lg text-[var(--color-on-surface-variant)]',
+        'data-[active]:text-[var(--color-on-surface)] data-[state=open]:bg-[var(--color-secondary-container)] data-[state=open]:text-[var(--color-on-secondary-container)]',
+        'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
         className,
       )}
       {...props}
@@ -73,7 +73,7 @@ const Link = React.forwardRef<HTMLAnchorElement, RadixNav.NavigationMenuLinkProp
     <RadixNav.Link
       ref={ref}
       className={cn(
-        'block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)] focus:bg-[var(--color-bg-subtle)] focus:text-[var(--color-text-primary)]',
+        'nx-state-layer relative block select-none rounded-[10px] p-3 leading-none text-[var(--color-on-surface)] no-underline outline-none',
         className,
       )}
       {...props}
@@ -88,7 +88,7 @@ const Viewport = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuViewpor
       <RadixNav.Viewport
         ref={ref}
         className={cn(
-          'origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-md',
+          'origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden', floatingSurface,
           'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]',
           className,
         )}

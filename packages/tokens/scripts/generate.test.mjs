@@ -14,7 +14,7 @@ const ratio = (a, b) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-const SURFACES = ['surface', 'surface-dim', 'surface-bright', 'surface-container-lowest', 'surface-container-low', 'surface-container', 'surface-container-high', 'surface-container-highest'];
+const SURFACES = ['surface', 'surface-dim', 'surface-bright', 'surface-container-lowest', 'surface-container-low', 'surface-container', 'surface-container-high', 'surface-container-highest', 'surface-elevated'];
 const ACCENTS = ['primary', 'secondary', 'tertiary', 'error', 'success', 'warning', 'info'];
 const PAIRS = [
   ...ACCENTS.flatMap((a) => [

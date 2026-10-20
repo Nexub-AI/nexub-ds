@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as RadixContextMenu from '@radix-ui/react-context-menu';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { enterExit, floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixContextMenu.Root;
 const Trigger = RadixContextMenu.Trigger;
@@ -16,8 +17,10 @@ const Content = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuCon
       <RadixContextMenu.Content
         ref={ref}
         className={cn(
-          'z-[var(--z-popover)] min-w-48 rounded-lg border border-[var(--color-border-default)]',
-          'bg-[var(--color-bg-default)] p-1 shadow-md outline-none',
+          'z-[var(--z-popover)] min-w-48 outline-none',
+          floatingSurface,
+          menuContent,
+          enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
           'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
@@ -31,9 +34,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuCon
 Content.displayName = 'ContextMenu.Content';
 
 const itemBaseClasses = cn(
-  'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none',
-  'transition-colors hover:bg-[var(--color-bg-subtle)] focus:bg-[var(--color-bg-subtle)]',
-  'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+  menuItem,
 );
 
 const Item = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuItemProps>(
@@ -55,7 +56,7 @@ const Label = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuLabel
       <RadixContextMenu.Label
         ref={ref}
         className={cn(
-          'px-2 py-1 text-xs font-semibold text-[var(--color-text-muted)]',
+          menuLabel,
           className,
         )}
         {...props}
@@ -70,7 +71,7 @@ const Separator = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuS
     return (
       <RadixContextMenu.Separator
         ref={ref}
-        className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+        className={cn(menuSeparator, className)}
         {...props}
       />
     );
@@ -132,7 +133,7 @@ const SubTrigger = React.forwardRef<
       ref={ref}
       className={cn(
         itemBaseClasses,
-        'data-[state=open]:bg-[var(--color-bg-subtle)]',
+        'data-[state=open]:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         className,
       )}
       {...props}
@@ -152,8 +153,10 @@ const SubContent = React.forwardRef<
     <RadixContextMenu.SubContent
       ref={ref}
       className={cn(
-        'z-[var(--z-popover)] min-w-48 rounded-lg border border-[var(--color-border-default)]',
-        'bg-[var(--color-bg-default)] p-1 shadow-md outline-none',
+        'z-[var(--z-popover)] min-w-48 outline-none',
+        floatingSurface,
+        menuContent,
+        enterExit,
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
         'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
         'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',

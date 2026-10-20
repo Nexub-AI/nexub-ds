@@ -13,7 +13,8 @@ const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
       aria-label="Sidebar"
       data-collapsed={collapsed}
       className={cn(
-        'group/sidebar flex flex-col gap-1 bg-[var(--color-bg-default)] border-r border-[var(--color-border-default)] transition-all duration-200',
+        // Chrome recedes: a tonal panel, no divider.
+        'group/sidebar flex flex-col gap-1 bg-[var(--color-surface-container-low)] transition-[width] duration-spatial-default ease-spatial-default',
         collapsed
           ? 'w-[var(--size-nav-sidebar-collapsed,56px)]'
           : 'w-[var(--size-nav-sidebar,240px)]',
@@ -39,7 +40,7 @@ const Header = React.forwardRef<HTMLDivElement, SidebarHeaderProps>(
       className={cn(
         // Wraps instead of overlapping: the status drops to its own line when
         // the logo needs the width, and a logo wider than the sidebar truncates.
-        'flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-[var(--color-border-default)] px-3 py-3 group-data-[collapsed=true]/sidebar:justify-center group-data-[collapsed=true]/sidebar:px-2',
+        'flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-[var(--color-outline-variant)] px-3 py-3 group-data-[collapsed=true]/sidebar:justify-center group-data-[collapsed=true]/sidebar:px-2',
         className,
       )}
       {...props}
@@ -95,10 +96,11 @@ const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
       // Native tooltip for the icon-only collapsed state.
       title: typeof label === 'string' ? label : undefined,
       className: cn(
-        'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+        // Active = the secondary-container pill (M3 nav indicator), not a solid brand fill.
+        'nx-state-layer relative flex h-control-md items-center gap-3 rounded-shape-control px-3 text-label-lg',
         active
-          ? 'bg-[var(--color-fill-primary)] text-white'
-          : 'text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
+          ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)]'
+          : 'text-[var(--color-on-surface-variant)]',
         className,
       ),
       ...props,
@@ -116,7 +118,7 @@ const Separator = React.forwardRef<HTMLHRElement, React.HTMLAttributes<HTMLHREle
   ({ className, ...props }, ref) => (
     <hr
       ref={ref}
-      className={cn('my-2 border-[var(--color-border-default)]', className)}
+      className={cn('my-2 border-[var(--color-outline-variant)]', className)}
       {...props}
     />
   ),
@@ -128,7 +130,7 @@ const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
     <div
       ref={ref}
       className={cn(
-        'mt-auto border-t border-[var(--color-border-default)] p-4',
+        'mt-auto border-t border-[var(--color-outline-variant)] p-4',
         className,
       )}
       {...props}
