@@ -1,26 +1,28 @@
+import { Card, Container, EyebrowChip, Grid, Heading, Section, Text } from '@nexub/react';
+import { Code, Layers, Package, Sparkles } from '@nexub/icons';
 import { componentEntries, patternEntries } from '@/registry/index';
 
 const features = [
   {
-    icon: '◈',
+    Icon: Package,
     stat: `${componentEntries.length}`,
     title: 'Components',
     desc: 'Accessible, token-driven React components built on Radix UI primitives. Every edge case handled.',
   },
   {
-    icon: '⬡',
+    Icon: Code,
     stat: '100%',
     title: 'TypeScript',
     desc: 'Fully typed from props to theme tokens. Autocomplete, type safety, zero any-casting.',
   },
   {
-    icon: '◐',
+    Icon: Sparkles,
     stat: '5',
     title: 'Brand themes',
     desc: 'Light, dark, and 4 product brands (Leap, Bookub, Payub, Founderub) — all CSS, zero runtime.',
   },
   {
-    icon: '⊞',
+    Icon: Layers,
     stat: `${patternEntries.length}`,
     title: 'Patterns',
     desc: 'Composable UI patterns for real SaaS flows: stat cards, auth, settings, activity feeds.',
@@ -29,95 +31,55 @@ const features = [
 
 export function LandingFeatures() {
   return (
-    <section
+    <Section
+      paddingY="md"
+      tone="subtle"
       style={{
-        background: 'var(--color-surface-container-low)',
         borderTop: '1px solid var(--color-outline-variant)',
         borderBottom: '1px solid var(--color-outline-variant)',
-        padding: '5rem 2rem',
       }}
     >
-      <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
-        {/* Section label */}
-        <p data-reveal-scroll
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            color: 'var(--color-primary)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginBottom: '0.75rem',
-            textAlign: 'center',
-          }}
-        >
+      <Container size="lg" style={{ textAlign: 'center' }}>
+        <EyebrowChip tone="info" data-reveal-scroll style={{ marginBottom: '0.75rem' }}>
           What&apos;s inside
-        </p>
+        </EyebrowChip>
 
-        <h2 data-reveal-scroll
-          style={{
-            fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-            fontWeight: 800,
-            textAlign: 'center',
-            letterSpacing: '-0.02em',
-            marginBottom: '3rem',
-            color: 'var(--color-on-surface)',
-          }}
-        >
+        <Heading level={2} size="h2" data-reveal-scroll style={{ marginBottom: '3rem' }}>
           Everything you need to ship faster
-        </h2>
+        </Heading>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))',
-            gap: '20px',
-          }}
-        >
-          {features.map((f) => (
-            <div
-              key={f.title}
-              className="landing-card"
-              data-reveal-scroll
-              style={{
-                background: 'var(--color-surface-elevated)',
-                border: '1px solid var(--color-outline-variant)',
-                borderRadius: 'var(--shape-container)',
-                padding: '1.75rem',
-                boxShadow: 'var(--elevation-1)',
-                cursor: 'default',
-                transition: 'box-shadow 0.2s ease',
-              }}
-            >
-              <div
+        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" gap="20px" style={{ textAlign: 'left' }}>
+          {features.map(({ Icon, stat, title, desc }) => (
+            <Card key={title} variant="surface" data-reveal-scroll style={{ padding: '1.75rem' }}>
+              <span
+                aria-hidden="true"
                 style={{
-                  fontSize: '1.5rem',
                   marginBottom: '1rem',
                   width: '44px',
                   height: '44px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'var(--color-info-container)',
-                  border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
+                  background: 'var(--color-primary-container)',
                   borderRadius: 'var(--shape-container)',
-                  color: 'var(--color-primary)',
+                  color: 'var(--color-on-primary-container)',
                 }}
               >
-                {f.icon}
-              </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)', lineHeight: 1, marginBottom: '0.25rem' }}>
-                {f.stat}
-              </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: '0.5rem' }}>
-                {f.title}
-              </div>
-              <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface-muted)', lineHeight: 1.6 }}>
-                {f.desc}
-              </div>
-            </div>
+                <Icon size="md" />
+              </span>
+              <Text weight="bold" style={{ fontSize: '2rem', lineHeight: 1, marginBottom: '0.25rem', color: 'var(--color-primary)' }}>
+                {stat}
+              </Text>
+              <Heading level={3} size="h6" style={{ marginBottom: '0.5rem' }}>
+                {title}
+              </Heading>
+              <Text size="body-sm" tone="muted">
+                {desc}
+              </Text>
+            </Card>
           ))}
-        </div>
-      </div>
-    </section>
+        </Grid>
+      </Container>
+    </Section>
   );
 }

@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { Container, EyebrowChip, Heading, Link, Section, Text } from '@nexub/react';
 import { componentEntries, patternEntries } from '@/registry/index';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingFeatures } from '@/components/landing/LandingFeatures';
@@ -40,57 +41,47 @@ export default function HomePage() {
       <LandingFeatures />
 
       {/* ── Live component showcase ────────────────────────────────────────── */}
-      <section
-        style={{
-          background: 'var(--docs-showcase-bg)',
-          padding: '5rem 2rem',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}
+      <Section
+        paddingY="md"
+        tone="muted"
+        style={{ borderBottom: '1px solid var(--color-outline-variant)' }}
       >
-        <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+        <Container size="md" style={{ textAlign: 'center' }}>
+          <EyebrowChip tone="info" style={{ marginBottom: '0.75rem' }}>
             Built with Nexub DS
-          </p>
-          <h2 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 800, color: '#f0f6fc', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
+          </EyebrowChip>
+          <Heading level={2} size="h3" style={{ marginBottom: '0.75rem' }}>
             Real components, live in your browser
-          </h2>
-          <p style={{ fontSize: '1rem', color: 'rgba(240,246,252,0.55)', maxWidth: '480px', margin: '0 auto 3rem', lineHeight: 1.7 }}>
+          </Heading>
+          <Text tone="muted" style={{ maxWidth: '480px', margin: '0 auto 3rem' }}>
             Every component is interactive, themeable, and accessible out of the box.
-          </p>
+          </Text>
           <LandingShowcase />
-        </div>
-      </section>
+        </Container>
+      </Section>
 
       {/* ── Animated Callout (client) ─────────────────────────────────────── */}
       <LandingCallout />
 
       {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <footer
-        style={{
-          borderTop: '1px solid var(--color-outline-variant)',
-          padding: '1.5rem 2rem',
-          textAlign: 'center',
-          color: 'var(--color-on-surface-muted)',
-          fontSize: '0.78rem',
-          lineHeight: 1.6,
-        }}
+      <Text
+        asChild
+        size="caption"
+        tone="muted"
+        style={{ borderTop: '1px solid var(--color-outline-variant)', padding: '1.5rem 2rem', textAlign: 'center' }}
       >
-        Built on{' '}
-        <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>Nexub Design System</span>
-        {' '}·{' '}
-        © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
-        {' '}·{' '}
-        Crafted by{' '}
-        <a
-          href="https://github.com/sasinex"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}
-        >
-          Sasidharan
-        </a>
-        {' '}— shipped with vibe coding energy ⚡
-      </footer>
+        <footer>
+          Built on <Text asChild size="caption" weight="semibold" style={{ color: 'var(--color-primary)' }}><span>Nexub Design System</span></Text>
+          {' '}·{' '}
+          © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
+          {' '}·{' '}
+          Crafted by{' '}
+          <Link href="https://github.com/sasinex" target="_blank" rel="noopener noreferrer">
+            Sasidharan
+          </Link>
+          {' '}— shipped with vibe coding energy ⚡
+        </footer>
+      </Text>
     </main>
   );
 }

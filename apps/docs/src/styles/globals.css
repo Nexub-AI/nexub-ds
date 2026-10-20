@@ -25,9 +25,6 @@
   --docs-snippet-bg: var(--color-surface-container);
   --docs-snippet-fg: var(--color-on-surface);
   --docs-snippet-border: transparent;
-
-  /* Landing showcase band: an intentional dark stage in both modes. */
-  --docs-showcase-bg: #0d1117;
 }
 
 /* ── Base resets ──────────────────────────────────────────────────────────── */

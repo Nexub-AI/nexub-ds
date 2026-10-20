@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
 import { Menu, Search } from '@nexub/icons';
-import { TopNav } from '@nexub/react';
-import { NexubLogo } from './NexubLogo';
+import { Logo, TopNav } from '@nexub/react';
 import { useSidebar } from './SidebarContext';
 
 interface DocsHeaderProps {
@@ -37,11 +36,8 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
       </button>
 
       {/* Logo */}
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', flexShrink: 0 }}>
-        <NexubLogo size={28} />
-        <span style={{ fontFamily: 'var(--font-family-display)', fontWeight: 700, fontSize: 'var(--type-title-md-size)', color: 'var(--color-on-surface)' }}>
-          Nexub<span style={{ color: 'var(--color-primary)' }}> DS</span>
-        </span>
+      <Link href="/" aria-label="Nexub Design System home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minWidth: 0 }}>
+        <Logo size="sm" product="Design System" />
       </Link>
 
       {/* Version badge */}
