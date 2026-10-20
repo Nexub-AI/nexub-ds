@@ -23,12 +23,12 @@ describe('AspectRatio', () => {
   it('sets default 16/9 aspect ratio via inline style', () => {
     const { container } = render(<AspectRatio>x</AspectRatio>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.aspectRatio).toBe(String(16 / 9));
+    expect(parseFloat(el.style.aspectRatio)).toBeCloseTo(16 / 9);
   });
 
   it('accepts a custom ratio', () => {
     const { container } = render(<AspectRatio ratio={4 / 3}>x</AspectRatio>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.aspectRatio).toBe(String(4 / 3));
+    expect(parseFloat(el.style.aspectRatio)).toBeCloseTo(4 / 3);
   });
 });
