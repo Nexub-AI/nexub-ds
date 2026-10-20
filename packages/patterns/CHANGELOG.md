@@ -1,5 +1,36 @@
 # @nexub/patterns
 
+## 1.4.0
+
+### Minor Changes
+
+- 15c47b5: **New pattern `AppHeader`**: the one top header every Nexub app shares. It is presentational; the app passes data and callbacks in.
+  - Left to right: a `menu` slot (below `md`), the logo (`homeHref`, `onNavigate`), a centred search field (an icon below `md`) that opens a `CommandPalette`, the organization (`orgs`, `currentOrgId`, `onOrgChange`), a theme switch (`useTheme`, `showThemeSwitch`), the `AppLauncher` (`apps`) and an account menu (`user`, `accountHref`, `privacyHref`, `termsHref`, `onSignOut`, `accountMenuItems`).
+  - Search takes static `searchItems` or an async `onSearch(query)` (debounced, with loading, empty and error states). Opens with ⌘K / Ctrl+K anywhere and "/" outside text fields.
+  - Fixed to the top at the new `--app-header-height` variable (64px, in `@nexub/themes/base`) and followed by a spacer of that height, so pages, `AppShell.Body` and `SettingsLayout` start below it with no padding of their own.
+  - `surface="glass"`; strict-CSP safe (class scroll lock, non-modal menus); fits at 375px, where the org switcher collapses to an icon.
+
+  **`SettingsLayout`**: new `header` prop, `header={(menu) => <AppHeader menu={menu} … />}`, which replaces its top bar and hands the phone section-menu button to the AppHeader's menu slot. Its top bar and sticky sidebar now use `--app-header-height`.
+
+- 8ee088d: Calm Depth surfaces & overlays (design refresh Phase 4). Props are unchanged.
+  - **New role `--color-surface-elevated`** for floating layers: white in light, lighter than the page in dark. `--color-bg-raised` and `--color-surface-raised` now alias it; before, they were darker than the page in dark mode.
+  - **Overlays** (Dialog, AlertDialog, CommandPalette, Drawer): 24px shape, the elevated surface, elevation 3, a 40% scrim, and spring enter/exit. AlertDialog's Action and Cancel are now real `Button` styles (destructive / outlined).
+  - **Floating surfaces** (Popover, HoverCard, DropdownMenu, ContextMenu, Menubar, Select, NavigationMenu): 16px shape, elevation 2, and menu items with a concentric 10px radius, an on-surface state layer and explicit disabled text.
+  - **Tooltip**: inverse surface on its own z-tier (`--z-tooltip`), so it no longer sits on the popover tier, and it now flips correctly in dark mode.
+  - **Toast / Toaster**: an inverse-surface snackbar with an `inverse-primary` action.
+  - **Card**: the elevated surface plus a soft alpha hairline. Shadows only for `surface` and `interactive`; `interactive` uses the state layer and a spring lift.
+  - **Navigation**: TopNav and NavigationMenu items are capsules with state layers. The Sidebar is a tonal panel without a divider, and its active item is a secondary-container pill instead of a solid brand fill.
+  - **AppHeader**: a glass header's account menu offers the glass intensity dial (Clear / Balanced / Tinted / Solid).
+
+- 14d2e1a: Glass 2.0 (design refresh Phase 3).
+  - **Recipe**: the fill is the surface role at the dial's opacity (`color-mix`), so dark glass needs no separate values. `backdrop-filter` is `blur + saturate`, and the edge is a hairline with a top specular highlight and a bottom rim. Same `surface="glass"` API.
+  - **Thickness** scales with size: buttons are thin (8px blur, elevation 1), bars and popovers regular (16px, elevation 2), dialogs and drawers thick (28px, elevation 3). Set `data-glass-thickness` to override.
+  - **Intensity dial**: `ThemeProvider` gains `glass` / `setGlass` (`'clear' | 'balanced' | 'tinted' | 'off'`), persisted under `nexub-glass` and applied pre-paint by `ThemeScript`. It sets `data-glass` on `<html>`, and any ancestor can set it too.
+  - **Variants**: `data-glass-tint="primary"` for the single emphasised action, and `data-glass-variant="clear"` over imagery only.
+  - **Scroll edge**: `TopNav.Root` / `AppHeader` accept `scrollEdge="soft" | "hard"`. Soft dissolves content under the bar instead of showing a divider.
+  - **Button `variant="glass"`** (thin glass).
+  - **Fallbacks are solid** under `prefers-reduced-transparency`, `prefers-contrast: more` (plus a 2px outline), `forced-colors`, `data-glass="off"`, and in browsers without `backdrop-filter`.
+
 ## 1.3.0
 
 ### Minor Changes
