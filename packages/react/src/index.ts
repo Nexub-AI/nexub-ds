@@ -10,9 +10,13 @@ export { useMediaQuery } from './hooks/useMediaQuery.js';
 export { useMergedRefs } from './hooks/useMergedRefs.js';
 export { usePointerSheen } from './hooks/usePointerSheen.js';
 
+// Components — NexubProvider (i18n / RTL)
+export { NexubProvider, useNexubMessages, useLocale, defaultMessages } from './components/NexubProvider/index.js';
+export type { NexubProviderProps, NexubMessages, Direction as TextDirection } from './components/NexubProvider/index.js';
+
 // Components — Form & Input
 export { Button, buttonVariants } from './components/Button/index.js';
-export type { ButtonProps, ToneValue } from './components/Button/index.js';
+export type { ButtonProps, ButtonStatus, ToneValue } from './components/Button/index.js';
 
 export { ButtonGroup } from './components/ButtonGroup/index.js';
 export type { ButtonGroupProps } from './components/ButtonGroup/index.js';
@@ -235,7 +239,7 @@ export type { ToolbarRootProps } from './components/Toolbar/index.js';
 export { Toast } from './components/Toast/index.js';
 export { Toaster } from './components/Toast/index.js';
 export { toast, useToastStore } from './components/Toast/index.js';
-export type { ToastItem, ToasterProps } from './components/Toast/index.js';
+export type { ToastItem, ToasterProps, UndoableToastOptions } from './components/Toast/index.js';
 
 // Components — Navigation Shells
 export { TopNav } from './components/TopNav/index.js';

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface NavigationRailRootProps extends React.HTMLAttributes<HTMLElement> {
   /** Accessible name for the landmark. @default 'Main' */
@@ -14,10 +15,12 @@ export interface NavigationRailRootProps extends React.HTMLAttributes<HTMLElemen
  * (compact) and Sidebar (expanded). Icons over labels, an active pill behind the icon.
  */
 const Root = React.forwardRef<HTMLElement, NavigationRailRootProps>(
-  ({ className, header, children, 'aria-label': ariaLabel = 'Main', ...props }, ref) => (
+  ({ className, header, children, 'aria-label': ariaLabel, ...props }, ref) => {
+    const messages = useNexubMessages();
+    return (
     <nav
       ref={ref}
-      aria-label={ariaLabel}
+      aria-label={ariaLabel ?? messages.mainNavigation}
       className={cn('flex h-full w-20 shrink-0 flex-col items-center gap-3 py-4', className)}
       {...props}
     >
@@ -26,7 +29,8 @@ const Root = React.forwardRef<HTMLElement, NavigationRailRootProps>(
         {children}
       </ul>
     </nav>
-  ),
+    );
+  },
 );
 Root.displayName = 'NavigationRail.Root';
 

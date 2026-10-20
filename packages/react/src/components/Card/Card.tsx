@@ -38,14 +38,14 @@ export const cardVariants = cva(
 
 const toneBorderMap: Record<ToneValue, string> = {
   neutral: '',
-  info: 'border-l-4 border-l-[var(--color-info)]',
-  success: 'border-l-4 border-l-[var(--color-success)]',
-  warning: 'border-l-4 border-l-[var(--color-warning)]',
-  danger: 'border-l-4 border-l-[var(--color-error)]',
-  leap: 'border-l-4 border-l-[var(--color-leap)]',
-  bookub: 'border-l-4 border-l-[var(--color-bookub)]',
-  payub: 'border-l-4 border-l-[var(--color-payub)]',
-  founderub: 'border-l-4 border-l-[var(--color-founderub)]',
+  info: 'border-s-4 border-s-[var(--color-info)]',
+  success: 'border-s-4 border-s-[var(--color-success)]',
+  warning: 'border-s-4 border-s-[var(--color-warning)]',
+  danger: 'border-s-4 border-s-[var(--color-error)]',
+  leap: 'border-s-4 border-s-[var(--color-leap)]',
+  bookub: 'border-s-4 border-s-[var(--color-bookub)]',
+  payub: 'border-s-4 border-s-[var(--color-payub)]',
+  founderub: 'border-s-4 border-s-[var(--color-founderub)]',
 };
 
 export interface CardProps

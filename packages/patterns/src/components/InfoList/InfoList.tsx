@@ -27,7 +27,7 @@ Root.displayName = 'InfoList.Root';
 const Item = ({ label, value, className }: InfoListItemProps) => (
   <div className={cn('flex items-center justify-between py-3 gap-4', className)}>
     <dt className="text-sm text-[var(--color-on-surface-muted)] shrink-0">{label}</dt>
-    <dd className="text-sm font-medium text-[var(--color-on-surface)] text-right">{value}</dd>
+    <dd className="text-sm font-medium text-[var(--color-on-surface)] text-end">{value}</dd>
   </div>
 );
 Item.displayName = 'InfoList.Item';

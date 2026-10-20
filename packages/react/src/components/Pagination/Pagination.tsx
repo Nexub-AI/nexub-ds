@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { disabledText, pressable } from '../../utils/control.js';
 
 // Text capsules with a state layer; the current page is a filled primary capsule.
@@ -51,6 +52,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
     },
     ref,
   ) => {
+    const messages = useNexubMessages();
     const totalPages = Math.ceil(totalItems / pageSize);
     if (totalPages <= 1) return null;
     const pages = generatePages(page, totalPages, siblingCount);
@@ -59,17 +61,17 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
       <nav
         ref={ref}
         role="navigation"
-        aria-label="Pagination"
-        className={cn('flex items-center gap-1', className)}
+        aria-label={messages.pagination}
+        className={cn('flex items-center gap-1 tabular-nums', className)}
         {...props}
       >
         <button
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          aria-label="Go to previous page"
+          aria-label={messages.previousPage}
           className={navButton}
         >
-          <ChevronLeft size="sm" aria-hidden="true" />
+          <ChevronLeft size="sm" aria-hidden="true" className="rtl:-scale-x-100" />
         </button>
 
         {pages.map((p, i) =>
@@ -84,7 +86,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
             <button
               key={p}
               onClick={() => onPageChange(p)}
-              aria-label={`Go to page ${p}`}
+              aria-label={messages.goToPage(p)}
               aria-current={p === page ? 'page' : undefined}
               className={cn(
                 pressable,
@@ -102,10 +104,10 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
         <button
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          aria-label="Go to next page"
+          aria-label={messages.nextPage}
           className={navButton}
         >
-          <ChevronRight size="sm" aria-hidden="true" />
+          <ChevronRight size="sm" aria-hidden="true" className="rtl:-scale-x-100" />
         </button>
       </nav>
     );

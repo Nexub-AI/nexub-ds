@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';
 
 export interface AutocompleteOption {
@@ -20,11 +21,12 @@ export function Autocomplete({
   options,
   value,
   onValueChange,
-  placeholder = 'Search\u2026',
-  emptyText = 'No results found.',
+  placeholder,
+  emptyText,
   loading = false,
   className,
 }: AutocompleteProps) {
+  const messages = useNexubMessages();
   const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
   // Input text. Follows the selected option's label when `value` changes from
   // outside (adjusted during render, not in an effect).
@@ -37,13 +39,13 @@ export function Autocomplete({
 
   return (
     <Combobox.Root className={className}>
-      <Combobox.Input placeholder={placeholder} value={search} onValueChange={setSearch} />
+      <Combobox.Input placeholder={placeholder ?? messages.searchPlaceholder} value={search} onValueChange={setSearch} />
       <Combobox.List>
         {loading ? (
-          <div className="py-6 text-center text-sm text-[var(--color-on-surface-muted)]">Loading…</div>
+          <div className="py-6 text-center text-sm text-[var(--color-on-surface-muted)]">{messages.loading}</div>
         ) : (
           <>
-            <Combobox.Empty>{emptyText}</Combobox.Empty>
+            <Combobox.Empty>{emptyText ?? messages.noResults}</Combobox.Empty>
             {options.map((opt) => (
               <Combobox.Item
                 key={opt.value}

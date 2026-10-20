@@ -7,7 +7,7 @@ export const separatorVariants = cva('', {
   variants: {
     orientation: {
       horizontal: 'w-full border-t',
-      vertical: 'h-full border-l self-stretch',
+      vertical: 'h-full border-s self-stretch',
     },
     tone: {
       neutral: 'border-[var(--color-outline-variant)]',

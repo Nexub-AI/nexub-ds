@@ -24,7 +24,7 @@ export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorPro
             {/* connector line */}
             {index < steps.length - 1 && (
               <div
-                className="absolute left-4 top-8 h-full w-px bg-[var(--color-outline-variant)]"
+                className="absolute start-4 top-8 h-full w-px bg-[var(--color-outline-variant)]"
                 aria-hidden="true"
               />
             )}

@@ -26,7 +26,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
         <div className="flex flex-wrap items-center gap-2">{filters}</div>
       )}
       {actions && (
-        <div className="ml-auto flex items-center gap-2">{actions}</div>
+        <div className="ms-auto flex items-center gap-2">{actions}</div>
       )}
     </div>
   ),

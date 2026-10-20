@@ -15,7 +15,7 @@ const Item = React.forwardRef<HTMLButtonElement, RadixRadioGroup.RadioGroupItemP
       ref={ref}
       className={cn(
         // 18px, 2px outline border (>= 3:1), primary ring + dot when on. Focus = the global ring.
-        'aspect-square h-[18px] w-[18px] shrink-0 rounded-full border-2 border-[var(--color-outline)]',
+        'nx-hit aspect-square h-[18px] w-[18px] shrink-0 rounded-full border-2 border-[var(--color-outline)]',
         'transition-[border-color] duration-effects-fast ease-effects-fast',
         'hover:border-[var(--color-on-surface)] data-[state=checked]:border-[var(--color-primary)]',
         'disabled:cursor-not-allowed disabled:border-[var(--color-text-disabled)]',

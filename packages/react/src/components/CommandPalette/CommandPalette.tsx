@@ -3,6 +3,7 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Command } from 'cmdk';
 import { Search } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 
@@ -30,7 +31,9 @@ function ClassLockOverlay() {
 }
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
-  ({ children, label = 'Command palette', scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  ({ children, label: labelProp, scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  const messages = useNexubMessages();
+  const label = labelProp ?? messages.commandPalette;
   // Radix returns focus to Dialog.Trigger, which a palette (opened by a shortcut
   // or its own button) doesn't have. Return it to whatever had it before.
   const returnFocusRef = React.useRef<HTMLElement | null>(null);
@@ -74,7 +77,7 @@ const Input = React.forwardRef<
   React.ComponentProps<typeof Command.Input>
 >(({ className, ...props }, ref) => (
   <div className="flex items-center border-b border-[var(--color-outline-variant)] px-3">
-    <Search size="sm" className="mr-2 shrink-0 opacity-50" aria-hidden="true" />
+    <Search size="sm" className="me-2 shrink-0 opacity-50" aria-hidden="true" />
     <Command.Input
       ref={ref}
       className={cn(

@@ -134,6 +134,15 @@ startViewTransition(() => navigate('/settings'));`}</code></pre>
         border instead.
       </p>
 
+      <h2>Touch targets</h2>
+      <p>
+        On coarse pointers (<code>pointer: coarse</code>), small controls get an invisible hit area of at
+        least 44×44px, centred on the control, without changing its visual size or layout. It comes from the{' '}
+        <code>nx-hit</code> class (an <code>::after</code> pseudo-element), which Button, IconButton, Checkbox,
+        Radio and Switch apply. Add <code>nx-hit</code> to your own small controls; leave at least 44px between
+        their centres so the hit areas don’t overlap.
+      </p>
+
       <h2>Reduced motion</h2>
       <p>
         Under <code>prefers-reduced-motion: reduce</code> transitions and animations become instant changes.

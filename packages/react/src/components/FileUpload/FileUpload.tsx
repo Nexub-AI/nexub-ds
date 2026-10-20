@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Upload, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 interface FileUploadContextValue {
   accept?: string[];
@@ -75,6 +76,7 @@ Root.displayName = 'FileUpload.Root';
 const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
     const { accept, addFiles, isDragging, setIsDragging } = useFileUpload();
+    const messages = useNexubMessages();
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     function handleDrop(e: React.DragEvent) {
@@ -89,7 +91,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         ref={ref}
         role="button"
         tabIndex={0}
-        aria-label="Upload files"
+        aria-label={messages.uploadFiles}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
@@ -114,9 +116,9 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         {children ?? (
           <p className="text-sm text-[var(--color-on-surface-muted)]">
             <span className="font-semibold text-[var(--color-primary)]">
-              Click to upload
+              {messages.clickToUpload}
             </span>{' '}
-            or drag and drop
+            {messages.orDragAndDrop}
           </p>
         )}
         <input
@@ -150,6 +152,7 @@ const Item = React.forwardRef<
   React.HTMLAttributes<HTMLLIElement> & { index: number }
 >(({ className, index, ...props }, ref) => {
   const { files, removeFile } = useFileUpload();
+  const messages = useNexubMessages();
   const file = files[index];
   if (!file) return null;
   return (
@@ -171,7 +174,7 @@ const Item = React.forwardRef<
       </div>
       <button
         onClick={() => removeFile(index)}
-        aria-label={`Remove ${file.name}`}
+        aria-label={messages.removeFile(file.name)}
         className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
       >
         <X size="sm" aria-hidden="true" />

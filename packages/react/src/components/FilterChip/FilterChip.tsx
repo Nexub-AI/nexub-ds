@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { disabledText } from '../../utils/control.js';
 
 export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,6 +12,7 @@ export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 
 export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
   ({ className, selected = false, count, onRemove, children, ...props }, ref) => {
+    const messages = useNexubMessages();
     return (
       <span
         className={cn(
@@ -49,14 +51,14 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
         {onRemove && (
           <button
             type="button"
-            aria-label="Remove filter"
+            aria-label={messages.removeFilter}
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
             }}
             className={cn(
               // State layer for hover/press; focus = the global ring.
-              'nx-state-layer inline-flex items-center justify-center rounded-full w-5 h-5 -mr-1 text-current',
+              'nx-state-layer inline-flex items-center justify-center rounded-full w-5 h-5 -me-1 text-current',
             )}
           >
             <svg

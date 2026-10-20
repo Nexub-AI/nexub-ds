@@ -11,7 +11,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
       ref={ref}
       className={cn(
         // 18px, 2px outline border (>= 3:1), primary when on. Focus = the global ring.
-        'peer h-[18px] w-[18px] shrink-0 rounded-[5px] border-2 border-[var(--color-outline)]',
+        'nx-hit peer h-[18px] w-[18px] shrink-0 rounded-[5px] border-2 border-[var(--color-outline)]',
         'transition-[background-color,border-color] duration-effects-fast ease-effects-fast',
         'hover:border-[var(--color-on-surface)]',
         'data-[state=checked]:bg-[var(--color-primary)] data-[state=checked]:border-[var(--color-primary)] data-[state=checked]:text-[var(--color-on-primary)]',

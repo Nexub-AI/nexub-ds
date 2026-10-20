@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useIntlLocale } from '../NexubProvider/NexubProvider.js';
 import { moneyFormatter } from '../../utils/money.js';
 import { NumberTicker } from '../NumberTicker/NumberTicker.js';
 
@@ -34,7 +35,8 @@ const muted = (type: Intl.NumberFormatPartTypes) => type === 'currency' || type 
  * currency's own minor unit, a true minus sign. Formatting is Intl.NumberFormat.
  */
 export const Amount = React.forwardRef<HTMLSpanElement, AmountProps>(
-  ({ value, currency, locale, size = 'md', tone = 'neutral', signDisplay, animate = false, className, ...props }, ref) => {
+  ({ value, currency, locale: localeProp, size = 'md', tone = 'neutral', signDisplay, animate = false, className, ...props }, ref) => {
+    const locale = useIntlLocale(localeProp);
     const parts = moneyFormatter(currency, locale, { signDisplay }).formatToParts(value);
     const quiet = size === 'display';
     return (

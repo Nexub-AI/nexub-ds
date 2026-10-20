@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { avatarVariants } from '../Avatar/Avatar.js';
 import type { AvatarProps } from '../Avatar/Avatar.js';
 
 export const avatarGroupVariants = cva('flex items-center', {
   variants: {
     spacing: {
-      sm: '[&>*:not(:first-child)]:-ml-3',
-      md: '[&>*:not(:first-child)]:-ml-2',
-      lg: '[&>*:not(:first-child)]:-ml-1',
+      sm: '[&>*:not(:first-child)]:-ms-3',
+      md: '[&>*:not(:first-child)]:-ms-2',
+      lg: '[&>*:not(:first-child)]:-ms-1',
     },
   },
   defaultVariants: {
@@ -27,6 +28,7 @@ export interface AvatarGroupProps
 
 export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
   ({ className, max, size = 'md', spacing, children, ...props }, ref) => {
+    const messages = useNexubMessages();
     const items = React.Children.toArray(children);
     const visibleItems = max !== undefined ? items.slice(0, max) : items;
     const overflowCount =
@@ -60,7 +62,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
             <span
               className={cn(avatarVariants({ size }), 'font-medium')}
               role="img"
-              aria-label={`${overflowCount} more`}
+              aria-label={messages.moreCount(overflowCount)}
             >
               <span aria-hidden="true">+{overflowCount}</span>
             </span>

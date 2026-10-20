@@ -63,8 +63,8 @@ export const addonVariants = cva(
   {
     variants: {
       side: {
-        leading: 'border-r',
-        trailing: 'border-l',
+        leading: 'border-e',
+        trailing: 'border-s',
       },
     },
   },

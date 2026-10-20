@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const bannerVariants = cva(
   [
-    'relative flex gap-3 border-l-4 px-4 py-3',
+    'relative flex gap-3 border-s-4 px-4 py-3',
     'w-full',
     // No border-radius — full-width banner
   ],
@@ -13,23 +14,23 @@ export const bannerVariants = cva(
     variants: {
       tone: {
         neutral:
-          'bg-[var(--color-surface-container-low)] border-l-[var(--color-outline)] text-[var(--color-on-surface)]',
+          'bg-[var(--color-surface-container-low)] border-s-[var(--color-outline)] text-[var(--color-on-surface)]',
         info:
-          'bg-[var(--color-info-container)] border-l-[var(--color-info)] text-[var(--color-on-info-container)]',
+          'bg-[var(--color-info-container)] border-s-[var(--color-info)] text-[var(--color-on-info-container)]',
         success:
-          'bg-[var(--color-success-container)] border-l-[var(--color-success)] text-[var(--color-on-success-container)]',
+          'bg-[var(--color-success-container)] border-s-[var(--color-success)] text-[var(--color-on-success-container)]',
         warning:
-          'bg-[var(--color-warning-container)] border-l-[var(--color-warning)] text-[var(--color-on-warning-container)]',
+          'bg-[var(--color-warning-container)] border-s-[var(--color-warning)] text-[var(--color-on-warning-container)]',
         danger:
-          'bg-[var(--color-error-container)] border-l-[var(--color-error)] text-[var(--color-on-error-container)]',
+          'bg-[var(--color-error-container)] border-s-[var(--color-error)] text-[var(--color-on-error-container)]',
         leap:
-          'bg-[var(--color-leap-container)] border-l-[var(--color-leap)] text-[var(--color-on-leap-container)]',
+          'bg-[var(--color-leap-container)] border-s-[var(--color-leap)] text-[var(--color-on-leap-container)]',
         bookub:
-          'bg-[var(--color-bookub-container)] border-l-[var(--color-bookub)] text-[var(--color-on-bookub-container)]',
+          'bg-[var(--color-bookub-container)] border-s-[var(--color-bookub)] text-[var(--color-on-bookub-container)]',
         payub:
-          'bg-[var(--color-payub-container)] border-l-[var(--color-payub)] text-[var(--color-on-payub-container)]',
+          'bg-[var(--color-payub-container)] border-s-[var(--color-payub)] text-[var(--color-on-payub-container)]',
         founderub:
-          'bg-[var(--color-founderub-container)] border-l-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
+          'bg-[var(--color-founderub-container)] border-s-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
       },
     },
     defaultVariants: {
@@ -63,6 +64,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
     },
     ref,
   ) => {
+    const messages = useNexubMessages();
     return (
       <div
         ref={ref}
@@ -88,7 +90,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
         {onClose && (
           <button
             type="button"
-            aria-label="Dismiss banner"
+            aria-label={messages.dismissBanner}
             onClick={onClose}
             className={cn(
               'nx-state-layer shrink-0 inline-flex items-center justify-center rounded-full w-6 h-6',

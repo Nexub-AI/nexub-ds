@@ -22,6 +22,10 @@ const RULES: Record<string, RegExp> = {
   'hex-color': /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![0-9a-fA-F])/g,
   // Enter/exit is nx-motion (themes/base.css), not tailwindcss-animate.
   'tw-animate': /\b(?:animate-in|animate-out|fade-in-\d|fade-out-\d|zoom-in-\d|zoom-out-\d|slide-in-from-|slide-out-to-)/g,
+  // RTL: logical spacing, borders, radii and alignment (ms/me, ps/pe, border-s/e,
+  // rounded-s/e, text-start/end). left/right positions aren't linted: centring
+  // (left-1/2) and explicit sides (Drawer side="left") are physical on purpose.
+  'physical-direction': /(?<=^|[\s'"`:])-?(?:ml|mr|pl|pr)-|(?<=^|[\s'"`:])(?:border-[lr]|rounded-(?:[lr]|tl|tr|bl|br))(?=[-\s'"`]|$)|(?<=^|[\s'"`:])text-(?:left|right)(?=[\s'"`]|$)/gm,
   // Tailwind 3 emits nothing for an opacity modifier on a var() colour.
   'dead-opacity-modifier': /\[var\(--[a-z0-9-]+\)\]\/\d+/g,
 };

@@ -102,3 +102,47 @@ export const StackedExpanded: Story = {
     </div>
   ),
 };
+
+const initialRows = ['Invoice #1042', 'Invoice #1043', 'Invoice #1044', 'Invoice #1045'];
+
+function UndoDeleteDemo() {
+  const [rows, setRows] = React.useState(initialRows);
+  const [log, setLog] = React.useState<string[]>([]);
+
+  const remove = (row: string) => {
+    const index = rows.indexOf(row);
+    // Optimistic: hide it now, delete for real only when the toast commits.
+    setRows((r) => r.filter((x) => x !== row));
+    toast.undoable(`${row} deleted`, {
+      onUndo: () =>
+        setRows((r) => (r.includes(row) ? r : [...r.slice(0, index), row, ...r.slice(index)])),
+      onCommit: () => setLog((l) => [...l, `DELETE ${row}`]),
+    });
+  };
+
+  return (
+    <div className="flex w-[360px] flex-col gap-3 p-4">
+      <ul className="flex flex-col gap-1">
+        {rows.map((row) => (
+          <li key={row} className="flex items-center justify-between gap-2 text-body-md">
+            {row}
+            <Button size="sm" variant="ghost" onClick={() => remove(row)}>
+              Delete
+            </Button>
+          </li>
+        ))}
+      </ul>
+      <Button variant="outline" size="sm" onClick={() => setRows(initialRows)}>
+        Reset rows
+      </Button>
+      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Committed: {log.join(', ') || 'none'}</p>
+      <Toaster />
+    </div>
+  );
+}
+
+/** `toast.undoable`: Undo restores the row; any other close (timer, swipe, ×) commits the delete, once. */
+export const UndoDelete: Story = {
+  name: 'Undo delete',
+  render: () => <UndoDeleteDemo />,
+};

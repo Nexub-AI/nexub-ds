@@ -4,8 +4,14 @@ import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { field, fieldFocusVisible } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
+
+/** With a NexubProvider locale, Intl's medium date; otherwise date-fns 'PP' as before. */
+export function formatDate(date: Date, locale: string | undefined): string {
+  return locale ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date) : format(date, 'PP');
+}
 
 export interface DatePickerProps {
   value?: Date;
@@ -56,7 +62,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     {
       value,
       onChange,
-      placeholder = 'Pick a date',
+      placeholder: placeholderProp,
       disabled = false,
       minDate,
       maxDate,
@@ -67,7 +73,10 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     ref,
   ) {
     const [open, setOpen] = React.useState(false);
-    const display = value ? format(value, 'PP') : placeholder;
+    const messages = useNexubMessages();
+    const placeholder = placeholderProp ?? messages.pickDate;
+    const locale = useIntlLocale();
+    const display = value ? formatDate(value, locale) : placeholder;
 
     return (
       <RadixPopover.Root open={open} onOpenChange={setOpen}>
@@ -89,7 +98,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             )}
           >
             <CalendarDays size="sm" aria-hidden="true" />
-            {value ? format(value, 'PP') : placeholder}
+            {display}
           </button>
         </RadixPopover.Trigger>
         <RadixPopover.Portal>

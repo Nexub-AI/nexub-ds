@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { disabledText } from '../../utils/control.js';
 import { inputWrapperVariants } from '../Input/Input.js';
 
@@ -49,6 +50,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     ref,
   ) => {
     const [internalValue, setInternalValue] = React.useState<number>(defaultValue);
+    const messages = useNexubMessages();
     const controlled = value !== undefined;
     const currentValue = controlled ? value : internalValue;
 
@@ -74,7 +76,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     );
 
     return (
-      <div className={cn(inputWrapperVariants({ size, invalid }), 'pr-0 gap-0 overflow-hidden', className)}>
+      <div className={cn(inputWrapperVariants({ size, invalid }), 'pe-0 gap-0 overflow-hidden', className)}>
         <input
           ref={ref}
           type="number"
@@ -99,14 +101,14 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           {...props}
         />
         {showSteppers && (
-          <div className="flex flex-col border-l border-[var(--color-outline-variant)] self-stretch">
+          <div className="flex flex-col border-s border-[var(--color-outline-variant)] self-stretch">
             <button
               type="button"
               tabIndex={-1}
               onClick={increment}
               disabled={disabled || (max !== undefined && currentValue >= max)}
               className={cn(stepperButtonClass, 'border-b border-[var(--color-outline-variant)] text-xs leading-none flex-1')}
-              aria-label="Increment"
+              aria-label={messages.increment}
             >
               ▲
             </button>
@@ -116,7 +118,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={decrement}
               disabled={disabled || (min !== undefined && currentValue <= min)}
               className={cn(stepperButtonClass, 'text-xs leading-none flex-1')}
-              aria-label="Decrement"
+              aria-label={messages.decrement}
             >
               ▼
             </button>

@@ -111,7 +111,7 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
     <RadixSelect.Item
       ref={ref}
       className={cn(
-        'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2 text-body-sm text-[var(--color-on-surface)] outline-none',
+        'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 ps-8 pe-2 text-body-sm text-[var(--color-on-surface)] outline-none',
         // Highlight = the on-surface state layer at hover opacity.
         'focus:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--color-text-disabled)]',
@@ -119,7 +119,7 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
       )}
       {...props}
     >
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
         <RadixSelect.ItemIndicator>
           <Check size="xs" aria-hidden="true" />
         </RadixSelect.ItemIndicator>
