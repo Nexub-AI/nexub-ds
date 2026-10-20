@@ -5,6 +5,10 @@
 @import '@nexub/themes/light';
 @import '@nexub/themes/dark';
 @import '@nexub/themes/glass';
+@import '@nexub/themes/leap';
+@import '@nexub/themes/bookub';
+@import '@nexub/themes/payub';
+@import '@nexub/themes/founderub';
 
 @tailwind base;
 @tailwind components;

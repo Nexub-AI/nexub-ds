@@ -34,6 +34,18 @@ Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it,
 3. Add a changeset.
 4. Open a PR; CI must be green.
 
+## Visual regression & contrast
+
+CI screenshots every Storybook story (light, dark, payub) and checks WCAG AA contrast for theme token pairs (`packages/react/visual/`). Baselines must be rendered in the pinned Playwright Linux image, so run them through Docker:
+
+```bash
+pnpm turbo build --filter='./packages/*' && pnpm --filter @nexub/react build-storybook
+pnpm --filter @nexub/react test:visual:docker                       # check
+pnpm --filter @nexub/react test:visual:docker --update-snapshots    # accept intended changes
+```
+
+Review the changed PNGs in the PR diff before committing them. Contrast failures that already exist are listed in `KNOWN` in `contrast.spec.ts`. That list may only shrink.
+
 ## PR checklist
 
 - [ ] `pnpm build` passes.
