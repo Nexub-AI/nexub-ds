@@ -18,11 +18,25 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    brand: {
+      description: 'Product brand (accent palette)',
+      defaultValue: 'none',
+      toolbar: {
+        title: 'Brand',
+        icon: 'circlehollow',
+        items: ['none', 'leap', 'bookub', 'payub', 'founderub'],
+        dynamicTitle: true,
+      },
+    },
   },
-  // @nexub/themes switches palette via a `data-theme` attribute on <html>.
+  // @nexub/themes switches palette via `data-theme` and brand via `data-product` on <html>.
   decorators: [
     (Story, context) => {
-      document.documentElement.dataset.theme = String(context.globals.theme);
+      const root = document.documentElement;
+      root.dataset.theme = String(context.globals.theme);
+      const brand = String(context.globals.brand ?? 'none');
+      if (brand === 'none') delete root.dataset.product;
+      else root.dataset.product = brand;
       return Story();
     },
   ],
