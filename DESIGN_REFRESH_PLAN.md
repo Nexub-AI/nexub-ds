@@ -406,7 +406,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 | **3. Glass 2.0** ✅ 2026-10-20 | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
 | **4. Surfaces & overlays** ✅ 2026-10-20 | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
 | **5. New components** ✅ 2026-10-20 | ButtonGroup (connected), SplitButton, FloatingToolbar, NavigationRail, Amount/MoneyInput, ListDetail. | M–L |
-| **6. Docs** | Principles page; Foundations rewritten (colour roles, state layers, shape, elevation, motion, glass); do/don't pairs; before/after gallery. | M |
+| **6. Docs** ✅ 2026-10-20 | Principles page; Foundations rewritten (colour roles, state layers, shape, elevation, motion, glass); do/don't pairs; before/after gallery. | M |
 | **Later** | Refraction (5.5); runtime seed-colour theming (`<ThemeProvider seed="#...">`) if a consumer needs it. | — |
 
 ### Phase 0 result
@@ -563,6 +563,34 @@ The token build adds:
 - Visual suite: 502 passed, stable.
 
 **Decision.** FloatingToolbar ships as `Toolbar.Root floating`, not a separate component: it's the same Radix toolbar with a different surface.
+
+### Phase 6 result (2026-10-20)
+
+**Foundations pages**
+- **New Principles page:** the six Calm Depth principles, each with a do/don't pair.
+- **Colors:** rewritten around roles.
+  - Surface tiers.
+  - Accent role and container pairs with their real on-colours.
+  - Text and outlines.
+  - A live `data-contrast="high"` demo.
+  - Tonal palette strips.
+  - The legacy-name mapping.
+- **Typography:** the 15 type roles, rendered live from their tokens.
+- **Elevation & shape** (same `/foundations/shadows` URL): tonal elevation, elevation 1–3, semantic shapes and concentric radii.
+- **Motion & interaction:** the spring families with a click-to-run demo, state layers on real buttons, the focus ring and reduced motion.
+- **Materials:** Glass 2.0 with the **live intensity dial** (bound to ThemeProvider), usage rules, thickness, scroll edge and fallbacks.
+
+**Component and pattern pages.** Registry entries with live previews for SplitButton, NavigationRail, Amount, MoneyInput and the ListDetail pattern. Nav and search are updated.
+
+**Verified**
+- Docs build: 110 static pages. Typecheck clean. examples-sync passes (91).
+- In the browser:
+  - all new pages return 200 with no console errors;
+  - the dial sets `data-glass`, persists it, and the solid setting removes the blur.
+
+**Not done**
+- The docs site's own chrome (sidebar, header) still uses the old style. A follow-up should restyle it with the new components.
+- The before/after gallery wasn't built. The visual-regression history and PR screenshots cover it.
 
 ### Quality bar (definition of done for each phase)
 

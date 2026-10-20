@@ -85,6 +85,11 @@ import {
   toast,
   Collapse,
   Box,
+  SplitButton,
+  DropdownMenu,
+  NavigationRail,
+  Amount,
+  MoneyInput,
 } from '@nexub/react';
 
 // @nexub/patterns used in previews
@@ -99,6 +104,7 @@ import {
   StepIndicator,
   NotificationItem,
   ActivityFeed,
+  ListDetail,
 } from '@nexub/patterns';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
@@ -356,6 +362,90 @@ function ButtonGroupExamples({ idx }: { idx: number }) {
         <Button variant="outline">Option B</Button>
         <Button variant="outline">Option C</Button>
       </ButtonGroup>
+    );
+  return null;
+}
+
+function SplitButtonExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <SplitButton
+        menuLabel="More save options"
+        menu={
+          <>
+            <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
+            <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
+          </>
+        }
+      >
+        Save
+      </SplitButton>
+    );
+  if (idx === 1)
+    return (
+      <SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
+        Export
+      </SplitButton>
+    );
+  return null;
+}
+
+function NavigationRailExamples({ idx }: { idx: number }) {
+  const glyph = (d: string) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
+  );
+  if (idx === 0)
+    return (
+      <NavigationRail.Root aria-label="Workspace" style={{ height: 'auto', background: 'var(--color-surface-container-low)', borderRadius: 24 }}>
+        <NavigationRail.Item href="#" icon={glyph('M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z')} label="Home" active />
+        <NavigationRail.Item href="#" icon={glyph('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z')} label="Files" />
+        <NavigationRail.Item href="#" icon={glyph('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')} label="Settings" />
+      </NavigationRail.Root>
+    );
+  return null;
+}
+
+function AmountExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <Amount value={128450.75} currency="USD" size="display" />;
+  if (idx === 1)
+    return (
+      <div style={{ display: 'flex', gap: 16 }}>
+        <Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
+        <Amount value={-89.99} currency="USD" tone="auto" />
+      </div>
+    );
+  return null;
+}
+
+function MoneyInputExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} />;
+  if (idx === 1) return <MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />;
+  return null;
+}
+
+function ListDetailExamples({ idx }: { idx: number }) {
+  const [selected, setSelected] = React.useState<number | null>(0);
+  const items = ['Quarterly report', 'Design review', 'Invoice #4821'];
+  if (idx === 0)
+    return (
+      <div style={{ width: '100%', height: 240, border: '1px solid var(--color-outline-variant)', borderRadius: 16, overflow: 'hidden' }}>
+        <ListDetail
+          showDetail={selected !== null}
+          onBack={() => setSelected(null)}
+          list={
+            <ul style={{ padding: 8, margin: 0, listStyle: 'none' }}>
+              {items.map((m, i) => (
+                <li key={m}>
+                  <button type="button" onClick={() => setSelected(i)} className="nx-state-layer relative w-full rounded-shape-container px-3 py-2 text-left text-body-sm">
+                    {m}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          }
+          detail={<div style={{ padding: 20 }} className="text-title-md">{selected === null ? 'Nothing selected' : items[selected]}</div>}
+        />
+      </div>
     );
   return null;
 }
@@ -1829,6 +1919,10 @@ const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   // Actions
   button: ButtonExamples,
   'button-group': ButtonGroupExamples,
+  'split-button': SplitButtonExamples,
+  'navigation-rail': NavigationRailExamples,
+  amount: AmountExamples,
+  'money-input': MoneyInputExamples,
   'icon-button': IconButtonExamples,
   // Form & Input
   input: InputExamples,
@@ -1925,6 +2019,7 @@ const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'filter-bar': FilterBarExamples,
   'settings-section': SettingsSectionExamples,
   'info-list': InfoListExamples,
+  'list-detail': ListDetailExamples,
   'plan-card': PlanCardExamples,
   'step-indicator': StepIndicatorExamples,
   'notification-item': NotificationItemExamples,
