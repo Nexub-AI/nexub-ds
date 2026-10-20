@@ -1,6 +1,6 @@
 # Next enhancements — review and proposal (2026-10-21)
 
-Status: **proposal, not approved**. Builds on the shipped Calm Depth refresh (v1.5.1, [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md)). Roadmap row R8 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
+Status: **approved 2026-10-21 and built** — Waves 1–4 landed on development (PRs #94, #95, #96, #97). Decisions: Wave 1 first; sheen opt-in; AI kit in scope; Next 16 landed separately (#87); E4 runtime seed theming skipped (no consumer needs it yet). Builds on the shipped Calm Depth refresh (v1.5.1, [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md)). Roadmap row R8 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
 
 Scope asked for: security, pixel-perfect UI, UX, colour, cards, hovers and card effects, animation.
 
@@ -191,3 +191,14 @@ Each wave goes through the usual flow: PRs to development → CI green → stagi
    - enable npm trusted publishing;
    - rotate the npm token as a stop-gap before ~2026-11-11;
    - turn on Dependabot alerts and secret scanning.
+
+## 5. Results
+
+| Wave | PR | Highlights |
+|---|---|---|
+| 1 | #94 | Deps 57 → 2 audit findings; strict-CSP components + SSR test; docs nonce CSP; npm trusted-publishing ready (Node 24); ~45 components migrated (485-alias codemod); brand accent roles; nx-motion springs; design-lint |
+| 2 | #95 | Card lift/press, opt-in sheen, CardLink; RadioCard/CheckboxCard, MediaCard, NumberTicker, BentoGrid; Sonner-style toasts; check draw, AppHeader condense, view transitions; VR for states/contrast/compact/RTL |
+| 3 | #96 | CVD-tested data-viz palettes, P3 accents, medium contrast; async Button; ErrorSummary; toast.undoable; NexubProvider (i18n + direction); RTL codemod + lint; 44px touch targets; tabular figures |
+| 4 | #97 | PromptInput, ThinkingIndicator, StreamingText, MessageBubble/MessageActions, Citation/SourceList, Conversation pattern; AI docs + guide |
+
+Owner actions still open: enable npm trusted publishing per package (then delete NPM_TOKEN; it expires ~2026-11-11); turn on Dependabot alerts and secret-scanning push protection.
