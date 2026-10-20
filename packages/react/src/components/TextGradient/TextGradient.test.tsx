@@ -24,4 +24,9 @@ describe('TextGradient', () => {
     render(<TextGradient>clip</TextGradient>);
     expect(screen.getByText('clip')).toHaveClass('bg-clip-text');
   });
+
+  it('paints the gradient as background-image, not background-color', () => {
+    render(<TextGradient>paint</TextGradient>);
+    expect(screen.getByText('paint')).toHaveClass('bg-[image:var(--gradient-brand-horizontal)]');
+  });
 });
