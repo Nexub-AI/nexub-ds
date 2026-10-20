@@ -27,10 +27,10 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
   ) => {
     const deltaColor =
       deltaType === 'increase'
-        ? 'var(--color-success-500)'
+        ? 'text-[var(--color-success)]'
         : deltaType === 'decrease'
-          ? 'var(--color-error-500)'
-          : 'var(--color-text-muted)';
+          ? 'text-[var(--color-error)]'
+          : 'text-[var(--color-on-surface-muted)]';
 
     const DeltaIcon =
       deltaType === 'increase'
@@ -43,17 +43,17 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-6 flex flex-col gap-3',
+          'rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-elevated)] p-6 flex flex-col gap-3',
           className,
         )}
         {...props}
       >
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-[var(--color-text-muted)]">{label}</span>
-          {icon && <span className="text-[var(--color-text-muted)]">{icon}</span>}
+          <span className="text-sm font-medium text-[var(--color-on-surface-muted)]">{label}</span>
+          {icon && <span className="text-[var(--color-on-surface-muted)]">{icon}</span>}
         </div>
 
-        <div className="text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
+        <div className="text-3xl font-bold tracking-tight text-[var(--color-on-surface)]">
           {value}
         </div>
 
@@ -61,8 +61,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
           <div className="flex items-center gap-2">
             {delta && (
               <span
-                className="inline-flex items-center gap-1 text-xs font-medium"
-                style={{ color: deltaColor }}
+                className={cn('inline-flex items-center gap-1 text-xs font-medium', deltaColor)}
                 data-delta-type={deltaType}
               >
                 <DeltaIcon size="xs" aria-hidden="true" />
@@ -70,7 +69,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
               </span>
             )}
             {description && (
-              <span className="text-xs text-[var(--color-text-muted)]">{description}</span>
+              <span className="text-xs text-[var(--color-on-surface-muted)]">{description}</span>
             )}
           </div>
         )}

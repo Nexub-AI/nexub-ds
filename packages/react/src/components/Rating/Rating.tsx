@@ -93,7 +93,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(
                 'bg-transparent border-0 p-0 m-0 inline-flex items-center justify-center transition-transform',
                 !readOnly && 'cursor-pointer hover:scale-110',
                 readOnly && 'cursor-default',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-1 rounded-sm',
+                'rounded-shape-min',
                 'disabled:pointer-events-none',
               )}
             >
@@ -115,8 +115,8 @@ function StarIcon({ filled, ...props }: { filled: boolean } & React.SVGProps<SVG
   return (
     <svg
       viewBox="0 0 20 20"
-      fill={filled ? 'var(--color-founderub-500, #f59e0b)' : 'none'}
-      stroke={filled ? 'var(--color-founderub-500, #f59e0b)' : 'var(--color-border-default)'}
+      fill={filled ? 'var(--color-palette-warning-72)' : 'none'}
+      stroke={filled ? 'var(--color-warning)' : 'var(--color-outline-variant)'}
       strokeWidth="1.5"
       xmlns="http://www.w3.org/2000/svg"
       {...props}

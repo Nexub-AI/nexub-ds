@@ -11,7 +11,7 @@ export const inputVariants = cva(
     'border-0 shadow-none',
     'outline-none focus:outline-none focus-visible:outline-none',
     'ring-0 focus:ring-0 focus-visible:ring-0',
-    'placeholder:text-[var(--color-text-placeholder)]',
+    'placeholder:text-[var(--color-on-surface-muted)]',
     'text-[var(--color-on-surface)]',
     'disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
   ],

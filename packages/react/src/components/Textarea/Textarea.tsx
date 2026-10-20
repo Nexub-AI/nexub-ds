@@ -7,7 +7,7 @@ export const textareaVariants = cva(
   [
     'w-full',
     field,
-    'placeholder:text-[var(--color-text-placeholder)]',
+    'placeholder:text-[var(--color-on-surface-muted)]',
     fieldFocusVisible,
     'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
   ],

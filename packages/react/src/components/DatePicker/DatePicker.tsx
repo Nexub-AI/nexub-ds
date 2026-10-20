@@ -4,6 +4,8 @@ import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { field, fieldFocusVisible } from '../../utils/control.js';
+import { floatingSurface } from '../../utils/surface.js';
 
 export interface DatePickerProps {
   value?: Date;
@@ -23,36 +25,28 @@ const calendarClassNames = {
   months: 'flex flex-col sm:flex-row gap-4',
   month: 'flex flex-col gap-4',
   month_caption: 'flex justify-center pt-1 relative items-center',
-  caption_label: 'text-sm font-medium',
+  caption_label: 'text-label-lg text-[var(--color-on-surface)]',
   nav: 'flex items-center gap-1',
   button_previous:
-    'absolute left-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)] disabled:pointer-events-none disabled:opacity-50',
+    'nx-state-layer absolute left-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   button_next:
-    'absolute right-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-[var(--color-border-default)] hover:bg-[var(--color-bg-subtle)] disabled:pointer-events-none disabled:opacity-50',
+    'nx-state-layer absolute right-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
   weekday:
-    'text-[var(--color-text-muted)] rounded-md w-8 font-normal text-[0.8rem] flex-1 text-center',
+    'text-[var(--color-on-surface-muted)] w-8 text-label-sm flex-1 text-center',
   week: 'flex w-full mt-2',
-  day: cn(
-    'relative p-0 text-center text-sm flex-1',
-    '[&:has([aria-selected].day-range-end)]:rounded-r-md',
-    '[&:has([aria-selected].day-outside)]:bg-[var(--color-bg-subtle)]/50',
-    '[&:has([aria-selected])]:bg-[var(--color-bg-subtle)]',
-    'first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md',
-    'focus-within:relative focus-within:z-20',
-  ),
+  day: 'relative flex flex-1 justify-center p-0 text-center focus-within:z-20',
   day_button: cn(
-    'inline-flex h-8 w-8 items-center justify-center rounded-md text-sm transition-colors',
-    'hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
-    'aria-selected:opacity-100',
+    // Capsule day with a state layer; focus = the global ring. The transparent
+    // border carries today's primary outline.
+    'nx-state-layer inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-body-sm text-[var(--color-on-surface)]',
+    'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   ),
-  selected:
-    'bg-[var(--color-fill-primary)] text-white hover:bg-[var(--color-fill-primary-hover)] hover:text-white focus:bg-[var(--color-fill-primary)] focus:text-white',
-  today: 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]',
-  outside: 'text-[var(--color-text-muted)] opacity-50',
-  disabled: 'text-[var(--color-text-muted)] opacity-50',
+  selected: '[&>button]:bg-[var(--color-primary)] [&>button]:text-[var(--color-on-primary)]',
+  today: '[&>button]:border-[var(--color-primary)]',
+  outside: '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
+  disabled: '',
   hidden: 'invisible',
 } as Record<string, string>;
 
@@ -83,10 +77,13 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             disabled={disabled}
             aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
             className={cn(
-              'inline-flex h-9 w-full items-center justify-start gap-2 rounded-md border border-[var(--color-border-input)] bg-[var(--color-bg-default)] px-3 py-2 text-sm',
-              'hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
-              'disabled:cursor-not-allowed disabled:opacity-50',
-              !value && 'text-[var(--color-text-muted)]',
+              'inline-flex h-control-md w-full items-center justify-start gap-2 px-3.5 text-body-md',
+              field,
+              fieldFocusVisible,
+              // Open reads like focus: the 2px primary border (as Select).
+              'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
+              'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
+              !value && 'text-[var(--color-on-surface-muted)]',
               className,
             )}
           >
@@ -98,10 +95,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
           <RadixPopover.Content
             align="start"
             className={cn(
-              'z-[var(--z-popover)] rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] shadow-md',
-              'data-[state=open]:animate-in data-[state=closed]:animate-out',
-              'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-              'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+              'z-[var(--z-popover)] outline-none',
+              floatingSurface,
+              'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
             )}
           >
             <DayPicker

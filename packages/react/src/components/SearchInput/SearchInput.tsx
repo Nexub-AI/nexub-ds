@@ -33,8 +33,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         onClick={handleClear}
         aria-label="Clear search"
         className={cn(
-          'shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors',
-          'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-ring-default)] rounded',
+          'shrink-0 rounded-full text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors',
         )}
       >
         <X className="h-4 w-4" aria-hidden="true" />

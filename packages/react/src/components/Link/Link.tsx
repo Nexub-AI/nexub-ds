@@ -7,17 +7,17 @@ import { cn } from '../../utils/cn.js';
 export const linkVariants = cva(
   [
     'inline-flex items-center gap-1 transition-colors',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] rounded-sm',
+    'rounded-shape-min',
   ],
   {
     variants: {
       variant: {
         default:
-          'text-[var(--color-brand-primary-500)] hover:text-[var(--color-brand-primary-600)]',
+          'text-[var(--color-primary)] underline-offset-4 hover:underline',
         muted:
-          'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
+          'text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]',
         underlined:
-          'text-[var(--color-brand-primary-500)] underline underline-offset-4 hover:text-[var(--color-brand-primary-600)]',
+          'text-[var(--color-primary)] underline underline-offset-4 hover:decoration-2',
       },
     },
     defaultVariants: {

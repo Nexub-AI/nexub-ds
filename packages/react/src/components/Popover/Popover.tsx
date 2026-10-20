@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { cn } from '../../utils/cn.js';
-import { enterExit, floatingSurface } from '../../utils/surface.js';
+import { floatingSurface } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 const Root = RadixPopover.Root;
@@ -20,13 +20,7 @@ const Content = React.forwardRef<
         className={cn(
           'z-[var(--z-popover)] p-4 outline-none',
           floatingSurface,
-          enterExit,
-          'outline-none',
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-          'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
-          'data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+          'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
           surface === 'glass' && glassSurfaceClass,
           className,
         )}
@@ -43,7 +37,7 @@ const Arrow = React.forwardRef<SVGSVGElement, RadixPopover.PopoverArrowProps>(
     return (
       <RadixPopover.Arrow
         ref={ref}
-        className={cn('fill-[var(--color-border-default)]', className)}
+        className={cn('fill-[var(--color-outline-variant)]', className)}
         {...props}
       />
     );

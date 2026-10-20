@@ -13,11 +13,11 @@ export const textVariants = cva('', {
       label: 'text-sm leading-none font-medium',
     },
     tone: {
-      default: 'text-[var(--color-text-primary)]',
-      secondary: 'text-[var(--color-text-secondary)]',
-      muted: 'text-[var(--color-text-muted)]',
-      subtle: 'text-[var(--color-text-subtle)]',
-      inverse: 'text-[var(--color-text-inverse)]',
+      default: 'text-[var(--color-on-surface)]',
+      secondary: 'text-[var(--color-on-surface-variant)]',
+      muted: 'text-[var(--color-on-surface-muted)]',
+      subtle: 'text-[var(--color-outline)]',
+      inverse: 'text-[var(--color-inverse-on-surface)]',
     },
     weight: {
       regular: 'font-normal',

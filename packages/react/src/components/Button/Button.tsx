@@ -18,17 +18,17 @@ export type ToneValue =
   | 'founderub';
 
 // Text-only tone for content on surfaces (Heading, Label, HelperText,
-// EyebrowChip): semantic "text" roles, brand palettes at tone 40 / 80.
+// EyebrowChip): accent roles (tone 40 / 80, AA on every surface).
 export const toneTextClasses: Record<ToneValue, string> = {
   neutral: 'text-[var(--color-on-surface-variant)]',
-  info: 'text-[var(--color-text-info)]',
-  success: 'text-[var(--color-text-success)]',
-  warning: 'text-[var(--color-text-warning)]',
-  danger: 'text-[var(--color-text-danger)]',
-  leap: 'text-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))]',
-  bookub: 'text-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))]',
-  payub: 'text-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))]',
-  founderub: 'text-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))]',
+  info: 'text-[var(--color-info)]',
+  success: 'text-[var(--color-success)]',
+  warning: 'text-[var(--color-warning)]',
+  danger: 'text-[var(--color-error)]',
+  leap: 'text-[var(--color-leap)]',
+  bookub: 'text-[var(--color-bookub)]',
+  payub: 'text-[var(--color-payub)]',
+  founderub: 'text-[var(--color-founderub)]',
 };
 
 // Tone overrides the variant colour with a solid role (or brand palette tone
@@ -41,10 +41,10 @@ const toneClasses: Record<ToneValue, string> = {
   success: 'bg-[var(--color-success)] text-[var(--color-on-success)]',
   warning: 'bg-[var(--color-warning)] text-[var(--color-on-warning)]',
   danger: 'bg-[var(--color-error)] text-[var(--color-on-error)]',
-  leap: 'bg-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))] text-[color:light-dark(var(--color-palette-leap-100),var(--color-palette-leap-20))]',
-  bookub: 'bg-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))] text-[color:light-dark(var(--color-palette-bookub-100),var(--color-palette-bookub-20))]',
-  payub: 'bg-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))] text-[color:light-dark(var(--color-palette-payub-100),var(--color-palette-payub-20))]',
-  founderub: 'bg-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))] text-[color:light-dark(var(--color-palette-founderub-100),var(--color-palette-founderub-20))]',
+  leap: 'bg-[var(--color-leap)] text-[var(--color-on-leap)]',
+  bookub: 'bg-[var(--color-bookub)] text-[var(--color-on-bookub)]',
+  payub: 'bg-[var(--color-payub)] text-[var(--color-on-payub)]',
+  founderub: 'bg-[var(--color-founderub)] text-[var(--color-on-founderub)]',
 };
 
 const filled = `bg-[var(--color-primary)] text-[var(--color-on-primary)] ${disabledContainer}`;

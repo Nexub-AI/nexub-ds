@@ -20,9 +20,5 @@ export const menuItem = [
 export const menuSeparator = '-mx-1.5 my-1.5 h-px bg-[var(--color-outline-variant)]';
 export const menuLabel = 'px-2.5 py-1.5 text-label-sm text-[var(--color-on-surface-muted)]';
 
-/** Enter on the default spatial spring, exit faster on the effects spring. */
-export const enterExit =
-  'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast data-[state=closed]:ease-effects-fast';
-
 /** Scrim behind modal overlays. */
 export const scrim = 'bg-[color-mix(in_srgb,var(--color-scrim,#000)_40%,transparent)]';

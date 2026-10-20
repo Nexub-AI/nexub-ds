@@ -83,9 +83,6 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
 
 const SEARCH_DEBOUNCE_MS = 200;
 
-const focusRing =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]';
-
 const isPlainClick = (e: React.MouseEvent) =>
   e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
 
@@ -179,10 +176,7 @@ function HeaderSearch({
       <button
         type="button"
         {...triggerProps}
-        className={cn(
-          'hidden h-9 w-full max-w-xl items-center gap-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-subtle)] px-3 text-sm text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-bg-muted)] md:flex',
-          focusRing,
-        )}
+        className="nx-state-layer hidden h-9 w-full max-w-xl items-center gap-2 rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 text-sm text-[var(--color-on-surface-muted)] md:flex"
       >
         <Search size="sm" aria-hidden="true" className="shrink-0" />
         <span className="min-w-0 flex-1 truncate text-left">{placeholder}</span>
@@ -204,7 +198,7 @@ function HeaderSearch({
         <CommandPalette.Input placeholder={placeholder} value={query} onValueChange={setQuery} />
         <CommandPalette.List>
           {loading && (
-            <div role="status" className="px-3 py-2 text-sm text-[var(--color-text-muted)]">
+            <div role="status" className="px-3 py-2 text-sm text-[var(--color-on-surface-muted)]">
               Searching…
             </div>
           )}
@@ -226,13 +220,13 @@ function HeaderSearch({
                   }}
                 >
                   {item.icon && (
-                    <span aria-hidden="true" className="mr-2 flex shrink-0 text-[var(--color-text-muted)]">
+                    <span aria-hidden="true" className="mr-2 flex shrink-0 text-[var(--color-on-surface-muted)]">
                       {item.icon}
                     </span>
                   )}
                   <span className="min-w-0 truncate">{item.label}</span>
                   {item.hint && (
-                    <span className="ml-auto shrink-0 pl-3 text-xs text-[var(--color-text-muted)]">{item.hint}</span>
+                    <span className="ml-auto shrink-0 pl-3 text-xs text-[var(--color-on-surface-muted)]">{item.hint}</span>
                   )}
                 </CommandPalette.Item>
               ))}
@@ -255,7 +249,7 @@ function OrgSwitcher({
   if (!current) return null;
   if (orgs.length === 1) {
     return (
-      <span title={current.name} className={cn('px-2 text-sm font-medium text-[var(--color-text-secondary)]', orgLabelClass)}>
+      <span title={current.name} className={cn('px-2 text-sm font-medium text-[var(--color-on-surface-variant)]', orgLabelClass)}>
         {current.name}
       </span>
     );
@@ -268,15 +262,12 @@ function OrgSwitcher({
           type="button"
           aria-label={`${current.name}, switch organization`}
           title={current.name}
-          className={cn(
-            'inline-flex h-9 min-w-0 shrink-0 items-center gap-1 rounded-md px-2 text-sm sm:shrink font-medium text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)]',
-            focusRing,
-          )}
+          className="nx-state-layer inline-flex h-9 min-w-0 shrink-0 items-center gap-1 rounded-shape-control px-2 text-sm sm:shrink font-medium text-[var(--color-on-surface)]"
         >
           {/* Phones: an icon; the name is in the accessible name and the menu. */}
           <Building2 size="md" aria-hidden="true" className="shrink-0 sm:hidden" />
           <span className={cn('hidden sm:inline', orgLabelClass)}>{current.name}</span>
-          <ChevronDown size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-text-muted)]" />
+          <ChevronDown size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-on-surface-muted)]" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -377,7 +368,7 @@ function AccountMenu({
     // modal={false}: Radix's modal menu injects a <style> scroll lock (strict CSP).
     <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenu.Trigger asChild>
-        <button type="button" aria-label={`Account: ${user.name}`} className={cn('ml-1 shrink-0 rounded-full', focusRing)}>
+        <button type="button" aria-label={`Account: ${user.name}`} className="ml-1 shrink-0 rounded-full">
           <Avatar name={user.name} src={user.avatarUrl} size="sm" aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
@@ -451,7 +442,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
                   onNavigate(homeHref);
                 }
               }}
-              className={cn('flex min-w-0 shrink items-center rounded-md p-1', focusRing)}
+              className="flex min-w-0 shrink items-center rounded-shape-min p-1"
             >
               <Logo size="sm" product={productName} />
             </a>

@@ -14,7 +14,7 @@ export const HelperText = React.forwardRef<HTMLParagraphElement, HelperTextProps
         data-tone={tone}
         style={style}
         className={cn(
-          'text-sm text-[var(--color-text-muted)] leading-snug',
+          'text-sm text-[var(--color-on-surface-muted)] leading-snug',
           tone && toneTextClasses[tone],
           className,
         )}

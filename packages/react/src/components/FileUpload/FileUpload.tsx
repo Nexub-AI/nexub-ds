@@ -101,18 +101,19 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
-          'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-8 text-center transition-colors',
+          // Hover/press = the state layer; focus = the global ring.
+          'nx-state-layer flex cursor-pointer flex-col items-center justify-center gap-2 rounded-shape-container border-2 border-dashed p-8 text-center text-[var(--color-on-surface)] transition-colors',
           isDragging
-            ? 'border-[var(--color-brand-primary-500)] bg-[var(--color-brand-primary-500)]/5'
-            : 'border-[var(--color-border-input)] hover:border-[var(--color-brand-primary-500)] hover:bg-[var(--color-bg-subtle)]',
+            ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
+            : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
           className,
         )}
         {...props}
       >
-        <Upload size="lg" className="text-[var(--color-text-muted)]" aria-hidden="true" />
+        <Upload size="lg" className="text-[var(--color-on-surface-muted)]" aria-hidden="true" />
         {children ?? (
-          <p className="text-sm text-[var(--color-text-muted)]">
-            <span className="font-semibold text-[var(--color-brand-primary-500)]">
+          <p className="text-sm text-[var(--color-on-surface-muted)]">
+            <span className="font-semibold text-[var(--color-primary)]">
               Click to upload
             </span>{' '}
             or drag and drop
@@ -155,23 +156,23 @@ const Item = React.forwardRef<
     <li
       ref={ref}
       className={cn(
-        'flex items-center justify-between gap-3 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-3',
+        'flex items-center justify-between gap-3 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-3',
         className,
       )}
       {...props}
     >
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-[var(--color-text-primary)]">
+        <p className="truncate text-sm font-medium text-[var(--color-on-surface)]">
           {file.name}
         </p>
-        <p className="text-xs text-[var(--color-text-muted)]">
+        <p className="text-xs text-[var(--color-on-surface-muted)]">
           {(file.size / 1024).toFixed(1)} KB
         </p>
       </div>
       <button
         onClick={() => removeFile(index)}
         aria-label={`Remove ${file.name}`}
-        className="shrink-0 rounded p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+        className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
       >
         <X size="sm" aria-hidden="true" />
       </button>

@@ -62,7 +62,7 @@ const Group = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
   ({ className, label, children, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col gap-0.5 p-2', className)} {...props}>
       {label && (
-        <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+        <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-[var(--color-on-surface-muted)]">
           {label}
         </p>
       )}

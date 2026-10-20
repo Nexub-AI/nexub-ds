@@ -1,21 +1,22 @@
 import * as React from 'react';
 import { AlertTriangle, AlertCircle, Info } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { pressable } from '../../utils/control.js';
 
 type ErrorTone = 'error' | 'warning' | 'info';
 
 const toneConfig: Record<ErrorTone, { icon: React.ReactNode; color: string }> = {
   error: {
     icon: <AlertCircle size="xl" aria-hidden="true" />,
-    color: 'text-[var(--color-semantic-error-default)]',
+    color: 'text-[var(--color-error)]',
   },
   warning: {
     icon: <AlertTriangle size="xl" aria-hidden="true" />,
-    color: 'text-[var(--color-semantic-warning-default)]',
+    color: 'text-[var(--color-warning)]',
   },
   info: {
     icon: <Info size="xl" aria-hidden="true" />,
-    color: 'text-[var(--color-semantic-info-default)]',
+    color: 'text-[var(--color-info)]',
   },
 };
 
@@ -40,15 +41,16 @@ export const ErrorState = React.forwardRef<HTMLDivElement, ErrorStateProps>(
       >
         <span className={color}>{icon}</span>
         <div className="flex flex-col gap-1">
-          <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">{title}</h3>
+          <h3 className="text-lg font-semibold text-[var(--color-on-surface)]">{title}</h3>
           {description && (
-            <p className="max-w-sm text-sm text-[var(--color-text-muted)]">{description}</p>
+            <p className="max-w-sm text-sm text-[var(--color-on-surface-muted)]">{description}</p>
           )}
         </div>
         {onRetry && (
           <button
+            type="button"
             onClick={onRetry}
-            className="inline-flex h-9 items-center justify-center rounded-md bg-[var(--color-fill-primary)] px-4 text-sm font-medium text-white hover:bg-[var(--color-fill-primary-hover)] transition-colors"
+            className={cn(pressable, 'inline-flex h-9 items-center justify-center bg-[var(--color-primary)] px-4 text-label-lg text-[var(--color-on-primary)]')}
           >
             Try again
           </button>

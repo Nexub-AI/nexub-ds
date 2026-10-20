@@ -15,7 +15,7 @@ const ratio = (a, b) => {
 };
 
 const SURFACES = ['surface', 'surface-dim', 'surface-bright', 'surface-container-lowest', 'surface-container-low', 'surface-container', 'surface-container-high', 'surface-container-highest', 'surface-elevated'];
-const ACCENTS = ['primary', 'secondary', 'tertiary', 'error', 'success', 'warning', 'info'];
+const ACCENTS = ['primary', 'secondary', 'tertiary', 'error', 'success', 'warning', 'info', ...PRODUCTS];
 const PAIRS = [
   ...ACCENTS.flatMap((a) => [
     [`on-${a}`, a, 4.5],

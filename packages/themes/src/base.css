@@ -274,6 +274,50 @@ code, kbd, pre, samp {
 }
 .nx-press:active:not(:disabled, [aria-disabled='true'], [data-disabled]) { transform: scale(0.97); }
 
+/* ─── Enter / exit (overlays, menus, tooltips, toasts) ───────────────────────
+   Opacity rides the effects spring; position and scale ride the spatial
+   spring, so a little overshoot reads as physical without flashing.
+   Keyframes, not transitions: Radix keeps closing content mounted until its
+   exit animation ends. Standalone translate/scale compose with the
+   component's own transform (e.g. a centred dialog's -50% offsets).
+   Modifiers set where the layer comes from: --nx-x, --nx-y, --nx-scale. */
+@keyframes nx-fade-in { from { opacity: 0; } }
+@keyframes nx-fade-out { to { opacity: 0; } }
+@keyframes nx-move-in { from { translate: var(--nx-x, 0) var(--nx-y, 0); scale: var(--nx-scale, 1); } }
+@keyframes nx-move-out { to { translate: var(--nx-x, 0) var(--nx-y, 0); scale: var(--nx-scale, 1); } }
+
+.nx-motion:is([data-state='open'], [data-state='delayed-open'], [data-state='instant-open'], [data-motion^='from-']) {
+  animation:
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing),
+    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+}
+/* Exit is quicker than enter and never overshoots. */
+.nx-motion:is([data-state='closed'], [data-motion^='to-']) {
+  animation:
+    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards,
+    nx-move-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+}
+
+/* Floating layers grow from their trigger: a small scale plus a 4px nudge
+   away from the side they open on (Radix sets data-side). Components set
+   transform-origin to Radix's --radix-*-transform-origin. */
+.nx-pop { --nx-scale: 0.96; }
+.nx-pop[data-side='bottom'] { --nx-y: -4px; }
+.nx-pop[data-side='top'] { --nx-y: 4px; }
+.nx-pop[data-side='left'] { --nx-x: 4px; }
+.nx-pop[data-side='right'] { --nx-x: -4px; }
+/* Modal dialogs rise slightly as they scale in. */
+.nx-dialog { --nx-scale: 0.96; --nx-y: 8px; }
+/* NavigationMenu content slides in from the item's direction. */
+.nx-motion:is([data-motion='from-start'], [data-motion='to-start']) { --nx-x: -24px; }
+.nx-motion:is([data-motion='from-end'], [data-motion='to-end']) { --nx-x: 24px; }
+
+/* Reduced motion: a designed fallback, not a cut. Keep the crossfade, drop
+   the travel and scale. */
+@media (prefers-reduced-motion: reduce) {
+  .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
+}
+
 /* ─── Density ────────────────────────────────────────────────────────────────
    Compact shifts every control one step down the ladder (md 40 → 32). */
 [data-density='compact'] {

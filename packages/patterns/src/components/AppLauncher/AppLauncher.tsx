@@ -33,12 +33,12 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
         alt=""
         width={40}
         height={40}
-        className="h-10 w-10 rounded-xl object-cover"
+        className="h-10 w-10 rounded-[12px] object-cover"
         onError={() => setFailed(true)}
       />
     );
   }
-  return <Avatar name={app.name} size="md" className="rounded-xl" aria-hidden="true" />;
+  return <Avatar name={app.name} size="md" className="rounded-[12px]" aria-hidden="true" />;
 }
 
 export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>(
@@ -105,9 +105,9 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
                     aria-current={app.current ? 'page' : undefined}
                     onClick={(e) => onClick(e, app)}
                     className={cn(
-                      'flex flex-col items-center gap-1.5 rounded-lg px-1 py-3 text-center text-xs text-[var(--color-text-primary)] transition-colors',
-                      'hover:bg-[var(--color-bg-subtle)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
-                      app.current && 'bg-[var(--color-bg-subtle)] font-semibold',
+                      'flex flex-col items-center gap-1.5 rounded-[8px] px-1 py-3 text-center text-xs text-[var(--color-on-surface)] transition-colors',
+                      'hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
+                      app.current && 'bg-[var(--color-surface-container-low)] font-semibold',
                     )}
                   >
                     <AppIcon app={app} />

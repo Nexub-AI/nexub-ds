@@ -40,7 +40,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         style={style}
         className={cn(
           labelVariants({ size, disabled }),
-          'text-[var(--color-text-primary)]',
+          'text-[var(--color-on-surface)]',
           tone && toneTextClasses[tone],
           className,
         )}
@@ -50,7 +50,7 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         {required && (
           <span
             aria-hidden="true"
-            className="text-[var(--color-danger-500)] leading-none"
+            className="text-[var(--color-error)] leading-none"
           >
             *
           </span>
