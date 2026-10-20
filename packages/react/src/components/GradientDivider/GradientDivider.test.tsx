@@ -43,7 +43,8 @@ describe('GradientDivider', () => {
   it('contains brand gradient colours', () => {
     render(<GradientDivider />);
     const style = screen.getByRole('separator').style.background;
-    expect(style).toMatch(/#4099f1/i);
-    expect(style).toMatch(/#1cce66/i);
+    // jsdom may serialise the colours as hex or rgb().
+    expect(style).toMatch(/#4099f1|rgb\(64, 153, 241\)/i);
+    expect(style).toMatch(/#1cce66|rgb\(28, 206, 102\)/i);
   });
 });

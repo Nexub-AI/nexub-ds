@@ -18,7 +18,7 @@
     "@nexub/tokens": "workspace:*",
     "cmdk": "^1.0.0",
     "html-to-image": "^1.11.13",
-    "next": "^15.5.27",
+    "next": "^16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "shiki": "^1.0.0"
