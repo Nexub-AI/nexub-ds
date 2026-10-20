@@ -79,6 +79,8 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   surface?: 'solid' | 'glass';
   /** `soft`: page content dissolves under the header instead of meeting a divider. */
   scrollEdge?: 'soft' | 'hard';
+  /** Shrink 64 → 52px and lift onto elevation 1 over the first 64px of page scroll (CSS scroll timeline; static where unsupported). */
+  condense?: boolean;
 }
 
 const SEARCH_DEBOUNCE_MS = 200;
@@ -416,6 +418,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
       onSignOut,
       accountMenuItems,
       surface = 'solid',
+      condense = false,
       className,
       ...props
     },
@@ -429,6 +432,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
           ref={ref}
           role="banner"
           surface={surface}
+          data-condense={condense ? '' : undefined}
           className={cn('fixed inset-x-0 top-0 h-[var(--app-header-height,64px)] px-2 sm:px-4', className)}
           {...props}
         >

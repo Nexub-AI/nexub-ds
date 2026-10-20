@@ -81,6 +81,8 @@ export const ROLES = {
   'inverse-surface': ['neutral', 20, 90, 20, 90],
   'inverse-on-surface': ['neutral', 95, 20, 100, 0],
   'inverse-primary': ['primary', 80, 40, 80, 40],
+  // Behind modals and under image captions; black in both themes.
+  scrim: ['neutral', 0, 0, 0, 0],
 };
 // Product brands remap the tertiary family.
 export const tertiary = (product) =>

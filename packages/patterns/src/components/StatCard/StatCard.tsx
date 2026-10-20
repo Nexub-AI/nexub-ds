@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@nexub/react';
+import { cn, NumberTicker } from '@nexub/react';
 import { TrendingUp, TrendingDown, Minus } from '@nexub/icons';
 
 export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,6 +9,8 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   deltaType?: 'increase' | 'decrease' | 'neutral';
   icon?: React.ReactNode;
   description?: string;
+  /** Roll digits when a number/string `value` changes (NumberTicker); announced politely. */
+  animate?: boolean;
 }
 
 export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
@@ -20,6 +22,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       deltaType = 'neutral',
       icon,
       description,
+      animate = false,
       className,
       ...props
     },
@@ -54,7 +57,11 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         </div>
 
         <div className="text-3xl font-bold tracking-tight text-[var(--color-on-surface)]">
-          {value}
+          {animate && (typeof value === 'number' || typeof value === 'string') ? (
+            <NumberTicker value={value} aria-live="polite" />
+          ) : (
+            value
+          )}
         </div>
 
         {(delta || description) && (

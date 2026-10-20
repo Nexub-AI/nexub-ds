@@ -50,3 +50,5 @@ export type {
   AppHeaderOrg,
   AppHeaderUser,
 } from './components/AppHeader/index.js';
+export { BentoGrid, BentoTile } from './components/BentoGrid/index.js';
+export type { BentoGridProps, BentoTileProps, BentoTileSize } from './components/BentoGrid/index.js';

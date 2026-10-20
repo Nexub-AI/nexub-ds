@@ -2,7 +2,12 @@ import * as React from 'react';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
 import { cn } from '../../utils/cn.js';
 
-const Provider = RadixTooltip.Provider;
+// Hover intent: wait 400ms before the first tooltip; once one has shown,
+// neighbours open instantly for 300ms (skipDelay), so scanning a toolbar
+// doesn't stutter.
+function Provider({ delayDuration = 400, skipDelayDuration = 300, ...props }: RadixTooltip.TooltipProviderProps) {
+  return <RadixTooltip.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration} {...props} />;
+}
 const Root = RadixTooltip.Root;
 const Trigger = RadixTooltip.Trigger;
 

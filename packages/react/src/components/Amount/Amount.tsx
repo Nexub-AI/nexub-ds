@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { moneyFormatter } from '../../utils/money.js';
+import { NumberTicker } from '../NumberTicker/NumberTicker.js';
 
 export interface AmountProps extends Omit<React.HTMLAttributes<HTMLSpanElement>, 'children'> {
   value: number;
@@ -14,6 +15,8 @@ export interface AmountProps extends Omit<React.HTMLAttributes<HTMLSpanElement>,
   tone?: 'neutral' | 'auto';
   /** e.g. 'exceptZero' to show "+" on gains. */
   signDisplay?: Intl.NumberFormatOptions['signDisplay'];
+  /** Roll digits to new values (NumberTicker). The first render never animates. */
+  animate?: boolean;
 }
 
 const sizes = {
@@ -23,12 +26,15 @@ const sizes = {
   display: 'font-display text-display-sm',
 };
 
+const mutedClass = 'text-[0.55em] font-semibold text-[var(--color-on-surface-variant)]';
+const muted = (type: Intl.NumberFormatPartTypes) => type === 'currency' || type === 'decimal' || type === 'fraction';
+
 /**
  * A money figure, honest by default (Calm Depth §3.5): tabular numerals, the
  * currency's own minor unit, a true minus sign. Formatting is Intl.NumberFormat.
  */
 export const Amount = React.forwardRef<HTMLSpanElement, AmountProps>(
-  ({ value, currency, locale, size = 'md', tone = 'neutral', signDisplay, className, ...props }, ref) => {
+  ({ value, currency, locale, size = 'md', tone = 'neutral', signDisplay, animate = false, className, ...props }, ref) => {
     const parts = moneyFormatter(currency, locale, { signDisplay }).formatToParts(value);
     const quiet = size === 'display';
     return (
@@ -44,18 +50,26 @@ export const Amount = React.forwardRef<HTMLSpanElement, AmountProps>(
         )}
         {...props}
       >
-        {parts.map((p, i) => {
-          // U+2212 MINUS SIGN: the typographic minus, the width of "+".
-          const text = p.type === 'minusSign' ? '−' : p.value;
-          const muted = quiet && (p.type === 'currency' || p.type === 'decimal' || p.type === 'fraction');
-          return muted ? (
-            <span key={i} className="text-[0.55em] font-semibold text-[var(--color-on-surface-variant)]">
-              {text}
-            </span>
-          ) : (
-            <React.Fragment key={i}>{text}</React.Fragment>
-          );
-        })}
+        {animate ? (
+          <NumberTicker
+            value={parts.map((p) => ({
+              value: p.type === 'minusSign' ? '−' : p.value,
+              className: quiet && muted(p.type) ? mutedClass : undefined,
+            }))}
+          />
+        ) : (
+          parts.map((p, i) => {
+            // U+2212 MINUS SIGN: the typographic minus, the width of "+".
+            const text = p.type === 'minusSign' ? '−' : p.value;
+            return quiet && muted(p.type) ? (
+              <span key={i} className={mutedClass}>
+                {text}
+              </span>
+            ) : (
+              <React.Fragment key={i}>{text}</React.Fragment>
+            );
+          })
+        )}
       </span>
     );
   },

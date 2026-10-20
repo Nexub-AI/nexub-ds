@@ -238,8 +238,10 @@ code, kbd, pre, samp {
 }
 
 /* Reduced motion */
+/* Reduced motion: everything is instant, except the designed fallbacks
+   (nx-motion, nx-reveal), which keep their crossfade with no travel. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.nx-motion, .nx-reveal), *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -318,6 +320,95 @@ code, kbd, pre, samp {
   .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
 }
 
+/* ─── Cards: lift, press, sheen ──────────────────────────────────────────────
+   Lift: hover raises 2px on the spatial spring with elevation 1 → 2; leaving
+   settles faster on the effects spring (a transition uses the *destination*
+   state's timing). Press sinks to 0.99. Hover only where a real pointer
+   hovers, so touch never gets a stuck lift. */
+.nx-lift {
+  transition:
+    translate var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing),
+    scale var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing),
+    box-shadow var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+@media (hover: hover) {
+  .nx-lift:hover {
+    translate: 0 -2px;
+    transition:
+      translate var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing),
+      scale var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing),
+      box-shadow var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+  }
+  /* Glass keeps its own shadow (it carries the specular edge). */
+  .nx-lift:not([data-material='glass']):hover { box-shadow: var(--elevation-2); }
+}
+.nx-lift:active { translate: 0 0; scale: 0.99; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-lift:hover, .nx-lift:active { translate: none; scale: none; }
+}
+
+/* Sheen (opt-in): a soft light that follows the pointer across the surface,
+   plus a brighter rim where the pointer is nearest the edge. JS sets
+   --nx-mx/--nx-my through the CSSOM (CSP-safe); --nx-sheen fades it in.
+   Primary-tinted on light surfaces, white on dark and on glass. Off for touch
+   (no hover), reduced motion and reduced transparency. */
+@property --nx-sheen { syntax: '<number>'; inherits: true; initial-value: 0; }
+.nx-sheen {
+  position: relative;
+  --nx-sheen-tint: light-dark(var(--color-primary), #fff);
+  background-image: radial-gradient(
+    28rem circle at var(--nx-mx, 50%) var(--nx-my, 0%),
+    color-mix(in srgb, var(--nx-sheen-tint) calc(var(--nx-sheen) * 9%), transparent),
+    transparent 70%
+  );
+  transition: --nx-sheen var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+.nx-sheen::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    14rem circle at var(--nx-mx, 50%) var(--nx-my, 0%),
+    color-mix(in srgb, var(--nx-sheen-tint) calc(var(--nx-sheen) * 70%), transparent),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+[data-material='glass'].nx-sheen { --nx-sheen-tint: #fff; }
+/* On a sheen surface the light is the hover feedback; the grey state layer
+   would wash it out. Press still darkens. */
+.nx-sheen.nx-state-layer:hover:not(:active)::before { opacity: 0; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .nx-sheen:hover {
+    --nx-sheen: 1;
+    transition: --nx-sheen var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nx-sheen { background-image: none; }
+  .nx-sheen::after { display: none; }
+}
+
+/* ─── Micro-moments ──────────────────────────────────────────────────────────
+   Reveal: content replacing a skeleton crossfades in (no travel). */
+.nx-reveal {
+  animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+/* Check draw: a checkmark path (pathLength="1") draws itself in. */
+@keyframes nx-draw { from { stroke-dashoffset: 1; } }
+.nx-check-draw {
+  stroke-dasharray: 1;
+  animation: nx-draw var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-check-draw { animation: none; }
+}
+
 /* ─── Density ────────────────────────────────────────────────────────────────
    Compact shifts every control one step down the ladder (md 40 → 32). */
 [data-density='compact'] {
@@ -338,6 +429,18 @@ code, kbd, pre, samp {
    One height for the fixed top header everywhere. Offset layouts with
    var(--app-header-height); AppHeader's own spacer already does in flow. */
 :root { --app-header-height: 64px; }
+/* condense: scroll-driven, no JS. The page spacer stays 64px; only the bar
+   tightens. Glass keeps its own shadow. */
+@keyframes nx-condense { to { height: 52px; } }
+@keyframes nx-condense-lift { to { height: 52px; box-shadow: var(--elevation-1); } }
+@supports (animation-timeline: scroll()) {
+  [data-condense] {
+    animation: nx-condense-lift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+  [data-condense][data-material='glass'] { animation-name: nx-condense; }
+}
 
 /* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
    A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>

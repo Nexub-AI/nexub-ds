@@ -3,7 +3,11 @@ import * as RadixHoverCard from '@radix-ui/react-hover-card';
 import { cn } from '../../utils/cn.js';
 import { floatingSurface } from '../../utils/surface.js';
 
-const Root = RadixHoverCard.Root;
+// Hover intent: open after 500ms of resting on the trigger, close 200ms after
+// leaving (long enough to cross the gap into the card).
+function Root({ openDelay = 500, closeDelay = 200, ...props }: RadixHoverCard.HoverCardProps) {
+  return <RadixHoverCard.Root openDelay={openDelay} closeDelay={closeDelay} {...props} />;
+}
 const Trigger = RadixHoverCard.Trigger;
 
 const Content = React.forwardRef<HTMLDivElement, RadixHoverCard.HoverCardContentProps>(
