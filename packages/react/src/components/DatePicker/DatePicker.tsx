@@ -24,13 +24,14 @@ export interface DatePickerProps {
 const calendarClassNames = {
   months: 'flex flex-col sm:flex-row gap-4',
   month: 'flex flex-col gap-4',
-  month_caption: 'flex justify-center pt-1 relative items-center',
+  month_caption: 'flex h-8 items-center justify-center',
   caption_label: 'text-label-lg text-[var(--color-on-surface)]',
-  nav: 'flex items-center gap-1',
+  // v9 renders nav beside the months, not in the caption: pin it to the caption row.
+  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-8 items-center justify-between',
   button_previous:
-    'nx-state-layer absolute left-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
+    'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   button_next:
-    'nx-state-layer absolute right-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
+    'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
   weekday:
@@ -103,6 +104,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             <DayPicker
               mode="single"
               selected={value}
+              defaultMonth={value}
               onSelect={(date) => {
                 onChange?.(date);
                 setOpen(false);
@@ -111,7 +113,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               endMonth={maxDate}
               initialFocus
               showOutsideDays
-              className="p-3"
+              className="relative p-3"
               classNames={calendarClassNames}
               components={{
                 Chevron: ({ orientation, ...rest }) =>

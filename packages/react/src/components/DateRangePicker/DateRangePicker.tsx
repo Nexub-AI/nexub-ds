@@ -38,13 +38,14 @@ function formatRange(
 const calendarClassNames = {
   months: 'flex flex-col sm:flex-row gap-4',
   month: 'flex flex-col gap-4',
-  month_caption: 'flex justify-center pt-1 relative items-center',
+  month_caption: 'flex h-8 items-center justify-center',
   caption_label: 'text-label-lg text-[var(--color-on-surface)]',
-  nav: 'flex items-center gap-1',
+  // v9 renders nav beside the months, not in the caption: pin it to the caption row.
+  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-8 items-center justify-between',
   button_previous:
-    'nx-state-layer absolute left-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
+    'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   button_next:
-    'nx-state-layer absolute right-1 inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
+    'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
   weekday:
@@ -61,8 +62,9 @@ const calendarClassNames = {
   // primary-container band. `nx-range-middle` is a marker so `selected`
   // skips middle days without depending on CSS order.
   selected: '[&:not(.nx-range-middle)>button]:bg-[var(--color-primary)] [&:not(.nx-range-middle)>button]:text-[var(--color-on-primary)]',
-  range_start: '',
-  range_end: '',
+  // Half bands join the end capsules to the middle band (not on a one-day range).
+  range_start: 'nx-range-start [&:not(.nx-range-end)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)]',
+  range_end: 'nx-range-end [&:not(.nx-range-start)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)]',
   range_middle: 'nx-range-middle bg-[var(--color-primary-container)] [&>button]:text-[var(--color-on-primary-container)]',
   today: '[&>button]:border-[var(--color-primary)]',
   outside: '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
@@ -126,13 +128,15 @@ export const DateRangePicker = React.forwardRef<
           <DayPicker
             mode="range"
             selected={value}
+            defaultMonth={value?.from}
             onSelect={onChange}
             numberOfMonths={2}
             startMonth={minDate}
             endMonth={maxDate}
             initialFocus
-            showOutsideDays
-            className="p-3"
+            // Two months side by side: outside days would repeat the range.
+            showOutsideDays={false}
+            className="relative p-3"
             classNames={calendarClassNames}
             components={{
               Chevron: ({ orientation, ...rest }) =>
