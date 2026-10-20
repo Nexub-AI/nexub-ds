@@ -43,14 +43,11 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version-file: .nvmrc
+          # Node 24 bundles npm 11 (>= 11.5.1), which npm trusted publishing (OIDC)
+          # needs; `pnpm publish` hands the upload to this npm CLI.
+          node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
-
-      # npm trusted publishing (OIDC) needs npm >= 11.5.1; Node 22 ships npm 10.
-      # `pnpm publish` hands the upload to this npm CLI.
-      - name: Upgrade npm for trusted publishing
-        run: npm install -g npm@11.6.2
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
