@@ -19,6 +19,9 @@ export type { SettingsSectionProps } from './components/SettingsSection/index.js
 export { InfoList } from './components/InfoList/index.js';
 export type { InfoListRootProps, InfoListItemProps } from './components/InfoList/index.js';
 
+export { ListDetail } from './components/ListDetail/index.js';
+export type { ListDetailProps } from './components/ListDetail/index.js';
+
 export { PlanCard } from './components/PlanCard/index.js';
 export type { PlanCardProps } from './components/PlanCard/index.js';
 
