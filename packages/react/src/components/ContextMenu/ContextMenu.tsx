@@ -83,11 +83,11 @@ const CheckboxItem = React.forwardRef<
   return (
     <RadixContextMenu.CheckboxItem
       ref={ref}
-      className={cn(itemBaseClasses, 'pl-8', className)}
+      className={cn(itemBaseClasses, 'ps-8', className)}
       checked={checked}
       {...props}
     >
-      <span className="absolute left-2 flex h-4 w-4 items-center justify-center">
+      <span className="absolute start-2 flex h-4 w-4 items-center justify-center">
         <RadixContextMenu.ItemIndicator>
           <Check className="h-4 w-4" />
         </RadixContextMenu.ItemIndicator>
@@ -105,10 +105,10 @@ const RadioItem = React.forwardRef<
   return (
     <RadixContextMenu.RadioItem
       ref={ref}
-      className={cn(itemBaseClasses, 'pl-8', className)}
+      className={cn(itemBaseClasses, 'ps-8', className)}
       {...props}
     >
-      <span className="absolute left-2 flex h-4 w-4 items-center justify-center">
+      <span className="absolute start-2 flex h-4 w-4 items-center justify-center">
         <RadixContextMenu.ItemIndicator>
           <svg className="h-2 w-2 fill-current" viewBox="0 0 8 8" aria-hidden="true">
             <circle cx="4" cy="4" r="4" />
@@ -136,7 +136,7 @@ const SubTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <ChevronRight className="ml-auto h-4 w-4" />
+      <ChevronRight className="ms-auto h-4 w-4 rtl:-scale-x-100" />
     </RadixContextMenu.SubTrigger>
   );
 });

@@ -18,7 +18,7 @@ export interface SelectableCardContentProps {
 
 /** Card surface + selected state (2px primary edge: 1px border + 1px inset, no layout shift). */
 export const selectableCardClass = [
-  'group nx-state-layer flex w-full items-start gap-3 p-4 text-left',
+  'group nx-state-layer flex w-full items-start gap-3 p-4 text-start',
   'rounded-shape-container bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)]',
   'border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)]',
   'cursor-pointer transition-[border-color,box-shadow] duration-effects-fast ease-effects-fast',

@@ -5,30 +5,30 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const alertVariants = cva(
   [
-    'relative flex gap-3 rounded-shape-container border-l-4 p-4',
+    'relative flex gap-3 rounded-shape-container border-s-4 p-4',
     'w-full',
   ],
   {
     variants: {
       tone: {
         neutral:
-          'bg-[var(--color-surface-container-low)] border-l-[var(--color-outline)] text-[var(--color-on-surface)]',
+          'bg-[var(--color-surface-container-low)] border-s-[var(--color-outline)] text-[var(--color-on-surface)]',
         info:
-          'bg-[var(--color-info-container)] border-l-[var(--color-info)] text-[var(--color-on-info-container)]',
+          'bg-[var(--color-info-container)] border-s-[var(--color-info)] text-[var(--color-on-info-container)]',
         success:
-          'bg-[var(--color-success-container)] border-l-[var(--color-success)] text-[var(--color-on-success-container)]',
+          'bg-[var(--color-success-container)] border-s-[var(--color-success)] text-[var(--color-on-success-container)]',
         warning:
-          'bg-[var(--color-warning-container)] border-l-[var(--color-warning)] text-[var(--color-on-warning-container)]',
+          'bg-[var(--color-warning-container)] border-s-[var(--color-warning)] text-[var(--color-on-warning-container)]',
         danger:
-          'bg-[var(--color-error-container)] border-l-[var(--color-error)] text-[var(--color-on-error-container)]',
+          'bg-[var(--color-error-container)] border-s-[var(--color-error)] text-[var(--color-on-error-container)]',
         leap:
-          'bg-[var(--color-leap-container)] border-l-[var(--color-leap)] text-[var(--color-on-leap-container)]',
+          'bg-[var(--color-leap-container)] border-s-[var(--color-leap)] text-[var(--color-on-leap-container)]',
         bookub:
-          'bg-[var(--color-bookub-container)] border-l-[var(--color-bookub)] text-[var(--color-on-bookub-container)]',
+          'bg-[var(--color-bookub-container)] border-s-[var(--color-bookub)] text-[var(--color-on-bookub-container)]',
         payub:
-          'bg-[var(--color-payub-container)] border-l-[var(--color-payub)] text-[var(--color-on-payub-container)]',
+          'bg-[var(--color-payub-container)] border-s-[var(--color-payub)] text-[var(--color-on-payub-container)]',
         founderub:
-          'bg-[var(--color-founderub-container)] border-l-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
+          'bg-[var(--color-founderub-container)] border-s-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
       },
     },
     defaultVariants: {

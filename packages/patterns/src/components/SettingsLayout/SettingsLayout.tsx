@@ -84,7 +84,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
     };
 
     const menuButton = (
-      <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ml-2 md:hidden" onClick={() => setMenuOpen(true)}>
+      <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ms-2 md:hidden" onClick={() => setMenuOpen(true)}>
         <Menu size="md" aria-hidden="true" />
       </IconButton>
     );
@@ -128,7 +128,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             <Sheet.Overlay className="md:hidden" />
             <Sheet.Content side="left" aria-describedby={undefined} className="md:hidden">
               <Sheet.Title className="px-5 pb-2 pt-5 text-base">{navLabel}</Sheet.Title>
-              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} className="w-full border-r-0" />
+              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} className="w-full border-e-0" />
             </Sheet.Content>
           </Sheet.Portal>
         </Sheet.Root>

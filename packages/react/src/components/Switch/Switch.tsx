@@ -30,14 +30,14 @@ export const thumbVariants = cva(
   [
     'pointer-events-none block rounded-full shadow-elevation-1',
     'transition-[transform,background-color] duration-expressive-fast ease-expressive-fast',
-    'translate-x-0.5 data-[state=unchecked]:bg-[var(--color-outline)] data-[state=checked]:bg-[var(--color-on-primary)] data-[disabled]:data-[state=unchecked]:bg-[var(--color-outline-variant)]',
+    'translate-x-0.5 rtl:-translate-x-0.5 data-[state=unchecked]:bg-[var(--color-outline)] data-[state=checked]:bg-[var(--color-on-primary)] data-[disabled]:data-[state=unchecked]:bg-[var(--color-outline-variant)]',
   ],
   {
     variants: {
       size: {
-        sm: 'h-3 w-3 data-[state=checked]:translate-x-[18px]',
-        md: 'h-5 w-5 data-[state=checked]:translate-x-[22px]',
-        lg: 'h-6 w-6 data-[state=checked]:translate-x-[26px]',
+        sm: 'h-3 w-3 data-[state=checked]:translate-x-[18px] rtl:data-[state=checked]:-translate-x-[18px]',
+        md: 'h-5 w-5 data-[state=checked]:translate-x-[22px] rtl:data-[state=checked]:-translate-x-[22px]',
+        lg: 'h-6 w-6 data-[state=checked]:translate-x-[26px] rtl:data-[state=checked]:-translate-x-[26px]',
       },
     },
     defaultVariants: { size: 'md' },

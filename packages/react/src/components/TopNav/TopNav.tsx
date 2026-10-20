@@ -78,7 +78,7 @@ Item.displayName = 'TopNav.Item';
 
 const Actions = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('ml-auto flex items-center gap-2', className)} {...props} />
+    <div ref={ref} className={cn('ms-auto flex items-center gap-2', className)} {...props} />
   ),
 );
 Actions.displayName = 'TopNav.Actions';

@@ -57,7 +57,7 @@ export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
             }}
             className={cn(
               // State layer for hover/press; focus = the global ring.
-              'nx-state-layer inline-flex items-center justify-center rounded-full text-current -mr-1',
+              'nx-state-layer inline-flex items-center justify-center rounded-full text-current -me-1',
               size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
             )}
           >

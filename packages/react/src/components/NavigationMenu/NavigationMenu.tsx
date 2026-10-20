@@ -46,7 +46,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixNav.NavigationMenuTrigg
       {children}
       <ChevronDown
         size="xs"
-        className="relative ml-1 transition duration-300 group-data-[state=open]:rotate-180"
+        className="relative ms-1 transition duration-300 group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </RadixNav.Trigger>
@@ -59,7 +59,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuContentP
     <RadixNav.Content
       ref={ref}
       className={cn(
-        'nx-motion left-0 top-0 w-full md:absolute md:w-auto',
+        'nx-motion start-0 top-0 w-full md:absolute md:w-auto',
         className,
       )}
       {...props}
@@ -84,7 +84,7 @@ Link.displayName = 'NavigationMenu.Link';
 
 const Viewport = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuViewportProps>(
   ({ className, ...props }, ref) => (
-    <div className="absolute left-0 top-full flex justify-center">
+    <div className="absolute start-0 top-full flex justify-center">
       <RadixNav.Viewport
         ref={ref}
         className={cn(
@@ -109,7 +109,7 @@ const Indicator = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuIndica
       )}
       {...props}
     >
-      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-[2px] bg-[var(--color-outline-variant)] shadow-elevation-1" />
+      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-ss-[2px] bg-[var(--color-outline-variant)] shadow-elevation-1" />
     </RadixNav.Indicator>
   ),
 );

@@ -74,7 +74,7 @@ const Input = React.forwardRef<
   React.ComponentProps<typeof Command.Input>
 >(({ className, ...props }, ref) => (
   <div className="flex items-center border-b border-[var(--color-outline-variant)] px-3">
-    <Search size="sm" className="mr-2 shrink-0 opacity-50" aria-hidden="true" />
+    <Search size="sm" className="me-2 shrink-0 opacity-50" aria-hidden="true" />
     <Command.Input
       ref={ref}
       className={cn(

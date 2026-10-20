@@ -74,7 +74,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     );
 
     return (
-      <div className={cn(inputWrapperVariants({ size, invalid }), 'pr-0 gap-0 overflow-hidden', className)}>
+      <div className={cn(inputWrapperVariants({ size, invalid }), 'pe-0 gap-0 overflow-hidden', className)}>
         <input
           ref={ref}
           type="number"
@@ -99,7 +99,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           {...props}
         />
         {showSteppers && (
-          <div className="flex flex-col border-l border-[var(--color-outline-variant)] self-stretch">
+          <div className="flex flex-col border-s border-[var(--color-outline-variant)] self-stretch">
             <button
               type="button"
               tabIndex={-1}

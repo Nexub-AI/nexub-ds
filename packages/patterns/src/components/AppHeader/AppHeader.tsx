@@ -181,7 +181,7 @@ function HeaderSearch({
         className="nx-state-layer hidden h-9 w-full max-w-xl items-center gap-2 rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 text-sm text-[var(--color-on-surface-muted)] md:flex"
       >
         <Search size="sm" aria-hidden="true" className="shrink-0" />
-        <span className="min-w-0 flex-1 truncate text-left">{placeholder}</span>
+        <span className="min-w-0 flex-1 truncate text-start">{placeholder}</span>
         <Kbd aria-hidden="true" className="shrink-0">
           {isMac ? '⌘K' : 'Ctrl K'}
         </Kbd>
@@ -222,13 +222,13 @@ function HeaderSearch({
                   }}
                 >
                   {item.icon && (
-                    <span aria-hidden="true" className="mr-2 flex shrink-0 text-[var(--color-on-surface-muted)]">
+                    <span aria-hidden="true" className="me-2 flex shrink-0 text-[var(--color-on-surface-muted)]">
                       {item.icon}
                     </span>
                   )}
                   <span className="min-w-0 truncate">{item.label}</span>
                   {item.hint && (
-                    <span className="ml-auto shrink-0 pl-3 text-xs text-[var(--color-on-surface-muted)]">{item.hint}</span>
+                    <span className="ms-auto shrink-0 ps-3 text-xs text-[var(--color-on-surface-muted)]">{item.hint}</span>
                   )}
                 </CommandPalette.Item>
               ))}
@@ -370,7 +370,7 @@ function AccountMenu({
     // modal={false}: Radix's modal menu injects a <style> scroll lock (strict CSP).
     <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenu.Trigger asChild>
-        <button type="button" aria-label={`Account: ${user.name}`} className="ml-1 shrink-0 rounded-full">
+        <button type="button" aria-label={`Account: ${user.name}`} className="ms-1 shrink-0 rounded-full">
           <Avatar name={user.name} src={user.avatarUrl} size="sm" aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
@@ -451,7 +451,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
               <Logo size="sm" product={productName} />
             </a>
             {/* Phones: just the icon, pushed right. md+: a centred field. */}
-            <div className="ml-auto flex shrink-0 md:ml-0 md:min-w-0 md:flex-1 md:justify-center md:px-2 lg:px-4">
+            <div className="ms-auto flex shrink-0 md:ms-0 md:min-w-0 md:flex-1 md:justify-center md:px-2 lg:px-4">
               {(onSearch || searchItems) && (
                 <HeaderSearch placeholder={placeholder} items={searchItems} onSearch={onSearch} />
               )}

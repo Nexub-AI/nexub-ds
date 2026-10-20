@@ -69,7 +69,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           aria-label="Go to previous page"
           className={navButton}
         >
-          <ChevronLeft size="sm" aria-hidden="true" />
+          <ChevronLeft size="sm" aria-hidden="true" className="rtl:-scale-x-100" />
         </button>
 
         {pages.map((p, i) =>
@@ -105,7 +105,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           aria-label="Go to next page"
           className={navButton}
         >
-          <ChevronRight size="sm" aria-hidden="true" />
+          <ChevronRight size="sm" aria-hidden="true" className="rtl:-scale-x-100" />
         </button>
       </nav>
     );

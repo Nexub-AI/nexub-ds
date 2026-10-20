@@ -7,9 +7,9 @@ import type { AvatarProps } from '../Avatar/Avatar.js';
 export const avatarGroupVariants = cva('flex items-center', {
   variants: {
     spacing: {
-      sm: '[&>*:not(:first-child)]:-ml-3',
-      md: '[&>*:not(:first-child)]:-ml-2',
-      lg: '[&>*:not(:first-child)]:-ml-1',
+      sm: '[&>*:not(:first-child)]:-ms-3',
+      md: '[&>*:not(:first-child)]:-ms-2',
+      lg: '[&>*:not(:first-child)]:-ms-1',
     },
   },
   defaultVariants: {

@@ -9,7 +9,7 @@ const Viewport = React.forwardRef<HTMLOListElement, RadixToast.ToastViewportProp
     <RadixToast.Viewport
       ref={ref}
       className={cn(
-        'fixed top-0 right-0 z-[var(--z-toast,2000)] flex max-h-screen w-full flex-col-reverse p-4 sm:max-w-sm gap-2',
+        'fixed top-0 end-0 z-[var(--z-toast,2000)] flex max-h-screen w-full flex-col-reverse p-4 sm:max-w-sm gap-2',
         className,
       )}
       {...props}
@@ -24,10 +24,10 @@ const Root = React.forwardRef<HTMLLIElement, RadixToast.ToastProps>(
       ref={ref}
       className={cn(
         // Snackbar: the inverse surface stands out from any page, light or dark.
-        'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 pl-4 pr-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+        'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
         'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
         // Enter/exit slide from the right edge, where the viewport sits.
-        'nx-motion [--nx-x:calc(100%+1rem)]',
+        'nx-motion [--nx-x:calc(100%+1rem)] rtl:[--nx-x:calc(-100%-1rem)]',
         className,
       )}
       {...props}

@@ -56,7 +56,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
             }}
             className={cn(
               // State layer for hover/press; focus = the global ring.
-              'nx-state-layer inline-flex items-center justify-center rounded-full w-5 h-5 -mr-1 text-current',
+              'nx-state-layer inline-flex items-center justify-center rounded-full w-5 h-5 -me-1 text-current',
             )}
           >
             <svg

@@ -70,7 +70,7 @@ const Separator = ({
     aria-hidden="true"
     className={cn('[&>svg]:h-3.5 [&>svg]:w-3.5', className)}
   >
-    {children ?? <ChevronRight aria-hidden="true" />}
+    {children ?? <ChevronRight aria-hidden="true" className="rtl:-scale-x-100" />}
   </li>
 );
 Separator.displayName = 'Breadcrumb.Separator';
