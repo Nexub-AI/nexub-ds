@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { disabledText } from '../../utils/control.js';
 
 export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
@@ -13,19 +14,19 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
     return (
       <span
         className={cn(
-          'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium select-none transition-colors',
+          // Matches Chip; hover/press come from the state layer.
+          'nx-state-layer inline-flex items-center gap-1 rounded-shape-control border h-8 px-3 text-label-lg select-none',
           selected
-            ? 'bg-[var(--color-fill-accent)] text-white border-[var(--color-fill-accent)]'
-            : 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)] border-[var(--color-border-default)] hover:bg-[var(--color-bg-muted)]',
+            ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] border-transparent'
+            : 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] border-[var(--color-outline-variant)]',
         )}
       >
         <button
           ref={ref}
           type="button"
           className={cn(
-            'inline-flex items-center gap-1 bg-transparent border-0 p-0 m-0 cursor-pointer',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)] rounded-sm',
-            selected ? 'text-white' : 'text-[var(--color-text-primary)]',
+            'inline-flex items-center gap-1 bg-transparent border-0 p-0 m-0 cursor-pointer rounded-shape-control text-current',
+            disabledText,
             className,
           )}
           aria-pressed={selected}
@@ -35,10 +36,10 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           {count !== undefined && (
             <span
               className={cn(
-                'inline-flex items-center justify-center rounded-full text-xs font-semibold px-1.5 min-w-[1.25rem] h-5',
+                'inline-flex items-center justify-center rounded-full text-label-sm px-1.5 min-w-[1.25rem] h-5',
                 selected
-                  ? 'bg-white/20 text-white'
-                  : 'bg-[var(--color-bg-muted)] text-[var(--color-text-muted)]',
+                  ? 'bg-[var(--color-on-secondary-container)] text-[var(--color-secondary-container)]'
+                  : 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)]',
               )}
             >
               {count}
@@ -54,11 +55,8 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
               onRemove();
             }}
             className={cn(
-              'inline-flex items-center justify-center rounded-full w-4 h-4 text-xs transition-colors',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-1',
-              selected
-                ? 'text-white hover:bg-white/20'
-                : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-muted)] hover:text-[var(--color-text-primary)]',
+              // State layer for hover/press; focus = the global ring.
+              'nx-state-layer inline-flex items-center justify-center rounded-full w-5 h-5 -mr-1 text-current',
             )}
           >
             <svg

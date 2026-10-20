@@ -30,7 +30,7 @@ export const UserCard = React.forwardRef<HTMLDivElement, UserCardProps>(
       <div
         ref={ref}
         className={cn(
-          'flex items-center gap-3 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-4',
+          'flex items-center gap-3 rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-elevated)] p-4',
           className,
         )}
         {...props}
@@ -43,14 +43,14 @@ export const UserCard = React.forwardRef<HTMLDivElement, UserCardProps>(
         />
 
         <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-[var(--color-text-primary)] truncate">
+          <span className="text-sm font-semibold text-[var(--color-on-surface)] truncate">
             {name}
           </span>
           {role && (
-            <span className="text-xs text-[var(--color-text-muted)] truncate">{role}</span>
+            <span className="text-xs text-[var(--color-on-surface-muted)] truncate">{role}</span>
           )}
           {email && (
-            <span className="text-xs text-[var(--color-text-secondary)] truncate">{email}</span>
+            <span className="text-xs text-[var(--color-on-surface-variant)] truncate">{email}</span>
           )}
         </div>
 

@@ -5,10 +5,10 @@ import { cn } from '../../utils/cn.js';
 import { useToastStore } from './useToast.js';
 
 const toneMap: Record<string, string> = {
-  success: 'border-l-4 border-[var(--color-semantic-success-default)]',
-  error: 'border-l-4 border-[var(--color-semantic-error-default)]',
-  warning: 'border-l-4 border-[var(--color-semantic-warning-default)]',
-  info: 'border-l-4 border-[var(--color-semantic-info-default)]',
+  success: 'border-l-4 border-[var(--color-success)]',
+  error: 'border-l-4 border-[var(--color-error)]',
+  warning: 'border-l-4 border-[var(--color-warning)]',
+  info: 'border-l-4 border-[var(--color-info)]',
   neutral: '',
 };
 
@@ -23,7 +23,7 @@ export function Toaster() {
             'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 pl-4 pr-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
             'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
             'data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none',
-            'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=closed]:slide-out-to-right-full',
+            'nx-motion [--nx-x:calc(100%+1rem)]',
             toneMap[t.tone ?? 'neutral'],
           )}
           duration={t.duration ?? 5000}
@@ -40,13 +40,13 @@ export function Toaster() {
             <RadixToast.Action
               altText={t.action.label}
               onClick={t.action.onClick}
-              className="shrink-0 rounded-md border border-[var(--color-border-default)] px-3 py-1.5 text-sm font-medium hover:bg-[var(--color-bg-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--color-ring-default)]"
+              className="nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
             >
               {t.action.label}
             </RadixToast.Action>
           )}
           {/* Hidden until hover only on hover-capable devices; always visible on touch. */}
-          <RadixToast.Close className="rounded-md p-1 transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-ring-default)]">
+          <RadixToast.Close className="nx-state-layer relative grid h-8 w-8 place-items-center rounded-full transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100">
             <X size="sm" aria-hidden="true" />
             <span className="sr-only">Close</span>
           </RadixToast.Close>

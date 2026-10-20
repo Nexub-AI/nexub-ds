@@ -49,14 +49,14 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
           return (
             <span
               key={child.key ?? index}
-              className="ring-2 ring-[var(--color-bg-default)] rounded-full inline-flex"
+              className="ring-2 ring-[var(--color-surface)] rounded-full inline-flex"
             >
               {childWithSize}
             </span>
           );
         })}
         {overflowCount > 0 && (
-          <span className="ring-2 ring-[var(--color-bg-default)] rounded-full inline-flex">
+          <span className="ring-2 ring-[var(--color-surface)] rounded-full inline-flex">
             <span
               className={cn(avatarVariants({ size }), 'font-medium')}
               role="img"

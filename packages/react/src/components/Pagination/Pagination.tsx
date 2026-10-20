@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { disabledText, pressable } from '../../utils/control.js';
+
+// Text capsules with a state layer; the current page is a filled primary capsule.
+const navButton = cn(
+  pressable,
+  'inline-flex h-11 w-11 items-center justify-center bg-transparent text-[var(--color-on-surface)]',
+  disabledText,
+);
 
 function generatePages(
   current: number,
@@ -59,7 +67,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
           aria-label="Go to previous page"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--color-border-default)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)] disabled:pointer-events-none disabled:opacity-50"
+          className={navButton}
         >
           <ChevronLeft size="sm" aria-hidden="true" />
         </button>
@@ -68,7 +76,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           p === '...' ? (
             <span
               key={`ellipsis-${i}`}
-              className="flex h-11 w-11 items-center justify-center text-[var(--color-text-muted)]"
+              className="flex h-11 w-11 items-center justify-center text-[var(--color-on-surface-muted)]"
             >
               <MoreHorizontal size="sm" aria-hidden="true" />
             </span>
@@ -79,10 +87,11 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
               aria-label={`Go to page ${p}`}
               aria-current={p === page ? 'page' : undefined}
               className={cn(
-                'inline-flex h-11 w-11 items-center justify-center rounded-md text-sm font-medium transition-colors',
+                pressable,
+                'inline-flex h-11 min-w-11 px-2 items-center justify-center text-label-lg',
                 p === page
-                  ? 'bg-[var(--color-fill-primary)] text-white'
-                  : 'border border-[var(--color-border-default)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
+                  ? 'bg-[var(--color-primary)] text-[var(--color-on-primary)]'
+                  : 'bg-transparent text-[var(--color-on-surface)]',
               )}
             >
               {p}
@@ -94,7 +103,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
           aria-label="Go to next page"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--color-border-default)] text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-subtle)] disabled:pointer-events-none disabled:opacity-50"
+          className={navButton}
         >
           <ChevronRight size="sm" aria-hidden="true" />
         </button>

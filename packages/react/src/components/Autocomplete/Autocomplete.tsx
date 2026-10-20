@@ -40,7 +40,7 @@ export function Autocomplete({
       <Combobox.Input placeholder={placeholder} value={search} onValueChange={setSearch} />
       <Combobox.List>
         {loading ? (
-          <div className="py-6 text-center text-sm text-[var(--color-text-muted)]">Loading…</div>
+          <div className="py-6 text-center text-sm text-[var(--color-on-surface-muted)]">Loading…</div>
         ) : (
           <>
             <Combobox.Empty>{emptyText}</Combobox.Empty>

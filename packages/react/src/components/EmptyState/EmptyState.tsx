@@ -19,7 +19,7 @@ const Illustration = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('text-[var(--color-text-muted)]', className)}
+      className={cn('text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   ),
@@ -30,7 +30,7 @@ const Title = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHead
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-lg font-semibold text-[var(--color-text-primary)]', className)}
+      className={cn('text-lg font-semibold text-[var(--color-on-surface)]', className)}
       {...props}
     />
   ),
@@ -43,7 +43,7 @@ const Description = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('max-w-sm text-sm text-[var(--color-text-muted)]', className)}
+    className={cn('max-w-sm text-sm text-[var(--color-on-surface-muted)]', className)}
     {...props}
   />
 ));

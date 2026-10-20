@@ -13,21 +13,23 @@ export const bannerVariants = cva(
     variants: {
       tone: {
         neutral:
-          'bg-[var(--color-bg-subtle)] border-l-[var(--color-neutral-500)] text-[var(--color-text-primary)]',
-        info: 'bg-[var(--color-semantic-info-default)]/10 border-l-[var(--color-semantic-info-default)] text-[var(--color-semantic-info-default)]',
+          'bg-[var(--color-surface-container-low)] border-l-[var(--color-outline)] text-[var(--color-on-surface)]',
+        info:
+          'bg-[var(--color-info-container)] border-l-[var(--color-info)] text-[var(--color-on-info-container)]',
         success:
-          'bg-[var(--color-semantic-success-default)]/10 border-l-[var(--color-semantic-success-default)] text-[var(--color-semantic-success-default)]',
+          'bg-[var(--color-success-container)] border-l-[var(--color-success)] text-[var(--color-on-success-container)]',
         warning:
-          'bg-[var(--color-semantic-warning-default)]/10 border-l-[var(--color-semantic-warning-default)] text-[var(--color-semantic-warning-default)]',
+          'bg-[var(--color-warning-container)] border-l-[var(--color-warning)] text-[var(--color-on-warning-container)]',
         danger:
-          'bg-[var(--color-semantic-error-default)]/10 border-l-[var(--color-semantic-error-default)] text-[var(--color-semantic-error-default)]',
-        leap: 'bg-[var(--color-leap-500)]/10 border-l-[var(--color-leap-500)] text-[var(--color-leap-700)]',
+          'bg-[var(--color-error-container)] border-l-[var(--color-error)] text-[var(--color-on-error-container)]',
+        leap:
+          'bg-[var(--color-leap-container)] border-l-[var(--color-leap)] text-[var(--color-on-leap-container)]',
         bookub:
-          'bg-[var(--color-bookub-500)]/10 border-l-[var(--color-bookub-500)] text-[var(--color-bookub-700)]',
+          'bg-[var(--color-bookub-container)] border-l-[var(--color-bookub)] text-[var(--color-on-bookub-container)]',
         payub:
-          'bg-[var(--color-payub-500)]/10 border-l-[var(--color-payub-500)] text-[var(--color-payub-700)]',
+          'bg-[var(--color-payub-container)] border-l-[var(--color-payub)] text-[var(--color-on-payub-container)]',
         founderub:
-          'bg-[var(--color-founderub-500)]/10 border-l-[var(--color-founderub-500)] text-[var(--color-founderub-700)]',
+          'bg-[var(--color-founderub-container)] border-l-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
       },
     },
     defaultVariants: {
@@ -89,8 +91,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
             aria-label="Dismiss banner"
             onClick={onClose}
             className={cn(
-              'shrink-0 inline-flex items-center justify-center rounded-md w-6 h-6 opacity-60 hover:opacity-100 transition-opacity',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)] focus-visible:ring-offset-2 ring-offset-[var(--color-ring-offset)]',
+              'nx-state-layer shrink-0 inline-flex items-center justify-center rounded-full w-6 h-6',
             )}
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">

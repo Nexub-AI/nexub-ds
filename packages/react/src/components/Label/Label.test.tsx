@@ -42,6 +42,6 @@ describe('Label', () => {
 
   it('tints text with the tone colour', () => {
     render(<Label tone="danger">Required field</Label>);
-    expect(screen.getByText('Required field')).toHaveStyle({ color: 'var(--color-text-danger)' });
+    expect(screen.getByText('Required field')).toHaveClass('text-[var(--color-error)]');
   });
 });

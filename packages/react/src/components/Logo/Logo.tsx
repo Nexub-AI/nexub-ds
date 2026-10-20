@@ -12,8 +12,9 @@ export const logoVariants = cva('inline-flex min-w-0 max-w-full items-center gap
       lg: 'h-10',
     },
     tone: {
-      default: 'text-[var(--color-text-primary)]',
-      inverse: 'text-white',
+      default: 'text-[var(--color-on-surface)]',
+      // Brand asset: the inverse mark is always white (on dark or imagery), in both themes.
+      inverse: 'text-[var(--color-palette-neutral-100)]',
     },
   },
   defaultVariants: {
@@ -95,7 +96,7 @@ export const Logo = React.forwardRef<HTMLSpanElement, LogoProps>(
                 wordmarkSizeMap[resolvedSize],
                 // leading-normal so the clip box doesn't cut descenders.
                 'min-w-0 truncate font-medium tracking-tight leading-normal',
-                resolvedTone === 'inverse' ? 'opacity-70' : 'text-[var(--color-text-muted)]',
+                resolvedTone === 'inverse' ? 'opacity-70' : 'text-[var(--color-on-surface-muted)]',
               )}
             >
               {product}

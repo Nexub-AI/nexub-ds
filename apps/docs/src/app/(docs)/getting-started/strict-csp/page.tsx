@@ -108,6 +108,28 @@ export default defineConfig({
         <code>style=&quot;…&quot;</code> attribute in the markup is blocked. Client-rendered apps (like a Vite
         SPA) aren&apos;t affected.
       </p>
+      <p>
+        So components render scale values as classes, and server HTML has no <code>style</code>{' '}
+        attribute for them. A test enforces this.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Component</th><th>Classes (no style attribute)</th><th>Inline style (blocked in server HTML)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Stack</code>, <code>Flex</code>, <code>Grid</code></td><td>Numeric <code>gap</code> on the spacing scale, common <code>align</code>/<code>justify</code>, <code>cols</code>/<code>rows</code> 1–12</td><td>Arbitrary strings, e.g. <code>gap=&quot;13px&quot;</code></td></tr>
+          <tr><td><code>Text</code></td><td><code>lineClamp</code> 1–6</td><td><code>lineClamp</code> 7 and up</td></tr>
+          <tr><td><code>AspectRatio</code></td><td>1, 16/9, 4/3, 3/2, 21/9, 9/16, 3/4, 2/3</td><td>Any other ratio</td></tr>
+          <tr><td><code>Skeleton</code></td><td>Shape defaults</td><td>Explicit <code>width</code>/<code>height</code></td></tr>
+          <tr><td><code>GradientDivider</code></td><td><code>height</code> 1–4</td><td>Thicker dividers</td></tr>
+          <tr><td><code>Progress</code></td><td colSpan={2}>The fill width is set through the CSSOM after hydration, so the bar fills in on load.</td></tr>
+          <tr><td><code>Fade</code>, <code>Collapse</code>, <code>Scale</code>, <code>Slide</code></td><td colSpan={2}>Animate through inline style. Under strict CSP the first paint has no animation; later transitions work.</td></tr>
+        </tbody>
+      </table>
+      <p>
+        Radix sets a few internal styles of its own (Slider thumb position, the hidden form input behind
+        Switch and Checkbox, the Popover anchor, Toast&apos;s screen-reader announcer).
+      </p>
     </div>
   );
 }

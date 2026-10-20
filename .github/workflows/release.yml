@@ -26,6 +26,7 @@ jobs:
       contents: write       # changesets needs to push version commits
       pull-requests: write  # changesets opens the Version Packages PR
       deployments: write    # required so wrangler can register a GitHub Deployment for the Pages production URL
+      id-token: write       # npm trusted publishing (OIDC) — no long-lived npm token needed
 
     steps:
       # Credentials must persist: changesets pushes the version branch with them.
@@ -42,7 +43,9 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version-file: .nvmrc
+          # Node 24 bundles npm 11 (>= 11.5.1), which npm trusted publishing (OIDC)
+          # needs; `pnpm publish` hands the upload to this npm CLI.
+          node-version: 24
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
@@ -72,6 +75,10 @@ jobs:
           # Contents: write + Pull requests: write (or a classic token with the
           # `repo` scope). Falls back to GITHUB_TOKEN only for the publish phase.
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+          # Trusted publishing (OIDC via id-token: write) is used when it is enabled
+          # for each package on npmjs.com; npm prefers it over this token. Keep the
+          # token only as a fallback until then, then delete the NPM_TOKEN secret.
+          # (Repo is private, so npm cannot attach provenance attestations.)
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # After a publish, the version commit (bumped package.json + CHANGELOGs)

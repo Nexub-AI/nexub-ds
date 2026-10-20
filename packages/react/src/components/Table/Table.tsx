@@ -33,7 +33,7 @@ const TableFooter = React.forwardRef<
   <tfoot
     ref={ref}
     className={cn(
-      'border-t bg-[var(--color-bg-subtle)] font-medium [&>tr]:last:border-b-0',
+      'border-t bg-[var(--color-surface-container-low)] font-medium [&>tr]:last:border-b-0',
       className,
     )}
     {...props}
@@ -46,7 +46,7 @@ const Row = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTable
     <tr
       ref={ref}
       className={cn(
-        'border-b border-[var(--color-border-default)] transition-colors hover:bg-[var(--color-bg-subtle)]/50 data-[state=selected]:bg-[var(--color-bg-subtle)]',
+        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-surface-container-low)_50%,transparent)] data-[state=selected]:bg-[var(--color-surface-container-low)]',
         className,
       )}
       {...props}
@@ -62,7 +62,7 @@ const Head = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-10 px-4 text-left align-middle font-medium text-[var(--color-text-muted)] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
+      'h-10 px-4 text-left align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]',
       className,
     )}
     {...props}
@@ -91,7 +91,7 @@ const Caption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn('mt-4 text-sm text-[var(--color-text-muted)]', className)}
+    className={cn('mt-4 text-sm text-[var(--color-on-surface-muted)]', className)}
     {...props}
   />
 ));

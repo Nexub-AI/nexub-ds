@@ -601,6 +601,7 @@ export const tokens = {
   "gradient": {
     "brand": "linear-gradient(135deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)",
     "brand-horizontal": "linear-gradient(90deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)",
+    "brand-vertical": "linear-gradient(180deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)",
     "hero-ambient": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(64,153,241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(28,206,102,0.06) 0%, transparent 50%), #ffffff",
     "button-primary": "linear-gradient(135deg, #4099f1 0%, #2563eb 100%)",
     "button-primary-hover": "linear-gradient(135deg, #60a5fa 0%, #4099f1 100%)",

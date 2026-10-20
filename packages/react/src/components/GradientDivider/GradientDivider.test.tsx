@@ -20,9 +20,10 @@ describe('GradientDivider', () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
-  it('applies default height of 3px', () => {
+  it('applies default 3px thickness via a class, no style attribute', () => {
     render(<GradientDivider />);
-    expect(screen.getByRole('separator')).toHaveStyle({ height: '3px' });
+    expect(screen.getByRole('separator')).toHaveClass('h-[3px]');
+    expect(screen.getByRole('separator')).not.toHaveAttribute('style');
   });
 
   it('applies custom height', () => {
@@ -40,11 +41,8 @@ describe('GradientDivider', () => {
     expect(screen.getByRole('separator')).toHaveAttribute('aria-orientation', 'vertical');
   });
 
-  it('contains brand gradient colours', () => {
+  it('uses the brand gradient token', () => {
     render(<GradientDivider />);
-    const style = screen.getByRole('separator').style.background;
-    // jsdom may serialise the colours as hex or rgb().
-    expect(style).toMatch(/#4099f1|rgb\(64, 153, 241\)/i);
-    expect(style).toMatch(/#1cce66|rgb\(28, 206, 102\)/i);
+    expect(screen.getByRole('separator').className).toContain('--gradient-brand-horizontal');
   });
 });

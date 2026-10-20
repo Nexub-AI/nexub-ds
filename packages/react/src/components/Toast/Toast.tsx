@@ -26,7 +26,8 @@ const Root = React.forwardRef<HTMLLIElement, RadixToast.ToastProps>(
         // Snackbar: the inverse surface stands out from any page, light or dark.
         'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 pl-4 pr-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
         'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=closed]:slide-out-to-right-full',
+        // Enter/exit slide from the right edge, where the viewport sits.
+        'nx-motion [--nx-x:calc(100%+1rem)]',
         className,
       )}
       {...props}

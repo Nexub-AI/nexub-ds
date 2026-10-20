@@ -21,7 +21,6 @@ describe('SegmentedControl', () => {
         <SegmentedControl.Item value="list">List</SegmentedControl.Item>
       </SegmentedControl.Root>,
     );
-    // Radix toggle-group >=1.2: single-select roots are radio groups.
     expect(screen.getByRole('radiogroup')).toHaveClass('custom-root');
   });
 

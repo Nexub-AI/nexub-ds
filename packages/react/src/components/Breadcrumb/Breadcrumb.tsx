@@ -14,7 +14,7 @@ const List = React.forwardRef<HTMLOListElement, React.HTMLAttributes<HTMLOListEl
     <ol
       ref={ref}
       className={cn(
-        'flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-text-muted)] sm:gap-2.5',
+        'flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-on-surface-muted)] sm:gap-2.5',
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ const Link = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <a
     ref={ref}
-    className={cn('transition-colors hover:text-[var(--color-text-primary)]', className)}
+    className={cn('transition-colors hover:text-[var(--color-on-surface)]', className)}
     {...props}
   >
     {children}
@@ -51,7 +51,7 @@ const Page = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElem
       role="link"
       aria-current="page"
       aria-disabled="true"
-      className={cn('font-normal text-[var(--color-text-primary)]', className)}
+      className={cn('font-normal text-[var(--color-on-surface)]', className)}
       {...props}
     />
   ),

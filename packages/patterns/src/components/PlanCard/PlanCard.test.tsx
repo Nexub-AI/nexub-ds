@@ -66,16 +66,16 @@ describe('PlanCard', () => {
     expect(screen.queryByText('Most popular')).toBeNull();
   });
 
-  it('adds ring class to root when highlighted', () => {
+  it('adds primary outline to root when highlighted', () => {
     const { container } = render(<PlanCard {...baseProps} highlighted />);
     const root = container.firstElementChild!;
-    expect(root.className).toContain('ring-1');
+    expect(root.className).toContain('border-2');
   });
 
-  it('does not add ring class when not highlighted', () => {
+  it('does not add primary outline when not highlighted', () => {
     const { container } = render(<PlanCard {...baseProps} />);
     const root = container.firstElementChild!;
-    expect(root.className).not.toContain('ring-1');
+    expect(root.className).not.toContain('border-2');
   });
 
   it('forwards className to root element', () => {

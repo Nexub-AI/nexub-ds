@@ -10,7 +10,7 @@ const Root = React.forwardRef<HTMLDivElement, RootProps>(
   ({ className, ...props }, ref) => (
     <RadixAccordion.Root
       ref={ref}
-      className={cn('divide-y divide-[var(--color-border-default)]', className)}
+      className={cn('divide-y divide-[var(--color-outline-variant)]', className)}
       {...props}
     />
   ),
@@ -31,7 +31,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixAccordion.AccordionTrig
         ref={ref}
         className={cn(
           'flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all',
-          'hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-default)]',
+          'hover:underline',
           '[&[data-state=open]>svg]:rotate-180',
           className,
         )}

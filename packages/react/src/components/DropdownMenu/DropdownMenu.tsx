@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { enterExit, floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
+import { floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixDropdownMenu.Root;
 const Trigger = RadixDropdownMenu.Trigger;
@@ -21,12 +21,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMenuC
           'z-[var(--z-popover)] min-w-48 outline-none',
           floatingSurface,
           menuContent,
-          enterExit,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-          'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
-          'data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+          'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',
           className,
         )}
         {...props}
@@ -159,12 +154,7 @@ const SubContent = React.forwardRef<
         'z-[var(--z-popover)] min-w-48 outline-none',
         floatingSurface,
         menuContent,
-        enterExit,
-        'data-[state=open]:animate-in data-[state=closed]:animate-out',
-        'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-        'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
-        'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
-        'data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+        'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',
         className,
       )}
       {...props}

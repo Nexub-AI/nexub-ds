@@ -27,6 +27,6 @@ describe('HelperText', () => {
 
   it('tints text with the tone colour', () => {
     render(<HelperText tone="danger">Error</HelperText>);
-    expect(screen.getByText('Error')).toHaveStyle({ color: 'var(--color-text-danger)' });
+    expect(screen.getByText('Error')).toHaveClass('text-[var(--color-error)]');
   });
 });

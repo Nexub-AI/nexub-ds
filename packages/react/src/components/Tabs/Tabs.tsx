@@ -47,7 +47,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixTabs.TabsTriggerProps>(
       ref={ref}
       className={cn(
         // State layer for hover/press; focus = the global ring.
-        'nx-state-layer relative inline-flex h-control-md items-center justify-center whitespace-nowrap rounded-t-lg px-4 text-label-lg select-none',
+        'nx-state-layer relative inline-flex h-control-md items-center justify-center whitespace-nowrap rounded-t-[var(--shape-field)] px-4 text-label-lg select-none',
         'text-[var(--color-on-surface-variant)] transition-colors duration-effects-fast ease-effects-fast',
         'data-[state=active]:text-[var(--color-primary)]',
         'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',

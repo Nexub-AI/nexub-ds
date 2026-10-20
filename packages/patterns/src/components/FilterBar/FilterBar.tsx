@@ -20,7 +20,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
         placeholder={searchPlaceholder ?? 'Search…'}
         value={searchValue}
         onChange={(e) => onSearch?.(e.target.value)}
-        className="h-9 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-3 py-2 text-sm placeholder:text-[var(--color-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-primary-500)] w-full sm:w-64"
+        className="h-9 rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)] px-3 py-2 text-sm text-[var(--color-on-surface)] placeholder:text-[var(--color-on-surface-muted)] w-full sm:w-64"
       />
       {filters && (
         <div className="flex flex-wrap items-center gap-2">{filters}</div>

@@ -11,9 +11,9 @@ export const Kbd = React.forwardRef<HTMLElement, KbdProps>(
         className={cn(
           'inline-flex items-center justify-center font-mono text-xs',
           'px-1.5 py-0.5 min-w-[1.5rem]',
-          'rounded border border-[var(--color-border-default)]',
-          'bg-[var(--color-bg-subtle)] text-[var(--color-text-secondary)]',
-          'shadow-[0_1px_0_var(--color-border-default)]',
+          'rounded-shape-min border border-[var(--color-outline-variant)]',
+          'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)]',
+          'shadow-[0_1px_0_var(--color-outline-variant)]',
           className,
         )}
         {...rest}

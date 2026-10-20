@@ -11,7 +11,7 @@ export const FormError = React.forwardRef<HTMLParagraphElement, FormErrorProps>(
         ref={ref}
         role="alert"
         className={cn(
-          'flex items-center gap-1.5 text-sm text-[var(--color-danger-600)] leading-snug',
+          'flex items-center gap-1.5 text-sm text-[var(--color-on-error-container)] leading-snug',
           className,
         )}
         {...props}
