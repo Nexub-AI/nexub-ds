@@ -32,35 +32,47 @@ const PAIRS: [string, string, number][] = [
   ),
   ['--color-border-input', '--color-bg-default', UI],
   ['--color-ring-default', '--color-bg-default', UI],
+  ['--color-ring-default', '--color-surface-container-highest', UI],
+  // Calm Depth roles
+  ...['on-surface', 'on-surface-variant', 'on-surface-muted'].flatMap((t) =>
+    ['surface', 'surface-container-lowest', 'surface-container-low', 'surface-container-high', 'surface-container-highest'].map(
+      (s) => [`--color-${t}`, `--color-${s}`, TEXT] as [string, string, number],
+    ),
+  ),
+  ...['primary', 'tertiary', 'error', 'success', 'warning', 'info'].flatMap(
+    (a) =>
+      [
+        [`--color-on-${a}`, `--color-${a}`, TEXT],
+        [`--color-on-${a}-container`, `--color-${a}-container`, TEXT],
+        [`--color-${a}`, '--color-surface', TEXT],
+      ] as [string, string, number][],
+  ),
+  ['--color-outline', '--color-surface', UI],
+  ['--color-outline', '--color-surface-container-highest', UI],
+  ['--color-inverse-on-surface', '--color-inverse-surface', TEXT],
 ];
 
-// Failures that exist today. Phase 1 (role tokens) removes them; the test fails
-// if one starts passing so this list can only shrink.
-const KNOWN = new Set<string>([
-  // Focus ring uses the -500 accent: below 3:1 on white (Phase 1 unified focus ring).
-  'light/none --color-ring-default on --color-bg-default',
-  'light/bookub --color-ring-default on --color-bg-default',
-  'light/founderub --color-ring-default on --color-bg-default',
-  // #64748b on #f1f5f9 = 4.34 (Phase 1 role tokens).
-  ...['none', 'leap', 'bookub', 'payub', 'founderub'].map(
-    (b) => `light/${b} --color-text-muted on --color-bg-muted`,
-  ),
-]);
+// Failures that exist today; the test fails if one starts passing, so this
+// list can only shrink. Phase 1 cleared the 8 Phase 0 entries.
+const KNOWN = new Set<string>([]);
 
 const contexts = ['light', 'dark'].flatMap((theme) =>
-  ['none', 'leap', 'bookub', 'payub', 'founderub'].map((brand) => ({ theme, brand })),
+  ['standard', 'high'].flatMap((contrast) =>
+    ['none', 'leap', 'bookub', 'payub', 'founderub'].map((brand) => ({ theme, contrast, brand })),
+  ),
 );
 
-for (const { theme, brand } of contexts) {
-  test(`contrast ${theme}/${brand}`, async ({ page }) => {
-    const globals = `theme:${theme}${brand === 'none' ? '' : `;brand:${brand}`}`;
+for (const { theme, contrast, brand } of contexts) {
+  test(`contrast ${theme}/${contrast}/${brand}`, async ({ page }) => {
+    const globals = `theme:${theme};contrast:${contrast};brand:${brand}`;
     await page.goto(`/iframe.html?id=${anyStory}&viewMode=story&globals=${globals}`);
     await page.waitForFunction(
-      ([t, b]) =>
+      ([t, c, b]) =>
         document.body.classList.contains('sb-show-main') &&
         document.documentElement.dataset.theme === t &&
+        (document.documentElement.dataset.contrast ?? 'standard') === c &&
         (document.documentElement.dataset.product ?? 'none') === b,
-      [theme, brand],
+      [theme, contrast, brand],
     );
 
     const ratios = await page.evaluate((pairs) => {
@@ -100,12 +112,12 @@ for (const { theme, brand } of contexts) {
     }, PAIRS);
 
     const failing = PAIRS.flatMap(([fg, bg, min], i) =>
-      ratios[i] < min ? [`${theme}/${brand} ${fg} on ${bg}: ${ratios[i].toFixed(2)} < ${min}`] : [],
+      ratios[i] < min ? [`${theme}/${contrast}/${brand} ${fg} on ${bg}: ${ratios[i].toFixed(2)} < ${min}`] : [],
     );
     const key = (s: string) => s.split(':')[0];
     expect(failing.filter((f) => !KNOWN.has(key(f))), 'new contrast failures').toEqual([]);
     const fixed = [...KNOWN].filter(
-      (k) => k.startsWith(`${theme}/${brand} `) && !failing.some((f) => key(f) === k),
+      (k) => k.startsWith(`${theme}/${contrast}/${brand} `) && !failing.some((f) => key(f) === k),
     );
     expect(fixed, 'now passing: remove from KNOWN').toEqual([]);
   });

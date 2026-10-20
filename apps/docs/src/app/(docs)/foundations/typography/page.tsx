@@ -25,9 +25,10 @@ export default function TypographyPage() {
       <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
       <h1>Typography</h1>
       <p>
-        Nexub DS uses <strong>Plus Jakarta Sans</strong> for all interface text. It ships with{' '}
-        <code>@nexub/themes</code>: importing <code>@nexub/themes/base</code> self-hosts the variable font
-        (weights 200–800, normal and italic), so every app on the design system gets it with no extra setup.
+        Nexub DS uses <strong>Inter</strong> for interface text and <strong>Plus Jakarta Sans</strong> for
+        display and headline text (<code>--font-family-display</code>; headings use it by default). Both ship
+        with <code>@nexub/themes</code>: importing <code>@nexub/themes/base</code> self-hosts the variable fonts
+        (Inter with its optical-size axis; both normal and italic), so every app gets them with no extra setup.
         Code uses the monospace stack in <code>--font-family-mono</code>.
       </p>
 
@@ -59,7 +60,8 @@ export default function TypographyPage() {
       <h2 style={{ marginTop: '2rem' }}>Font Families</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {[
-          { name: '--font-family-sans', sample: 'Plus Jakarta Sans — the primary interface typeface', family: 'var(--font-family-sans)' },
+          { name: '--font-family-sans', sample: 'Inter — the interface typeface', family: 'var(--font-family-sans)' },
+          { name: '--font-family-display', sample: 'Plus Jakarta Sans — display and headlines', family: 'var(--font-family-display)' },
           { name: '--font-family-mono', sample: 'Monospace — for code and data', family: 'var(--font-family-mono)' },
         ].map((f) => (
           <div key={f.name} style={{ padding: '16px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)' }}>

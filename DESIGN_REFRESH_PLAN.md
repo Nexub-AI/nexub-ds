@@ -401,7 +401,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 | Phase | Scope | Effort |
 |---|---|---|
 | **0. Guardrails** ✅ 2026-10-20 | Visual regression (= R1), token contrast test, Storybook Brand toolbar. See [Phase 0 result](#phase-0-result) below. | M |
-| **1. Foundations** | OKLCH tonal palette generator + role tokens + contrast levels. State-layer tokens + utility. Semantic shape. Elevation 1–3. Type roles + font decision. Spring `linear()` tokens. Size ladder + density. Unified focus ring. All old names aliased. | L |
+| **1. Foundations** ✅ 2026-10-20 | OKLCH tonal palette generator + role tokens + contrast levels. State-layer tokens + utility. Semantic shape. Elevation 1–3. Type roles + font decision. Spring `linear()` tokens. Size ladder + density. Unified focus ring. All old names aliased. | L |
 | **2. Core controls** | Button family (+ tonal), IconButton, Input/Select/Textarea/Combobox, Checkbox/Radio/Switch, Chip/Badge, SegmentedControl, Tabs, Slider, Toggle. | L |
 | **3. Glass 2.0** | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
 | **4. Surfaces & overlays** | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
@@ -424,6 +424,39 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 - Dark mode passes everywhere.
 
 **Storybook:** a Brand toolbar was added. The glass-dial, contrast and density toolbars land with those features (Phases 1 and 3).
+
+### Phase 1 result (2026-10-20)
+
+**Generator.** `packages/tokens/scripts/generate.mjs`, with its self-test, produces:
+- 12 HCT tonal palettes;
+- the role table (light / dark × standard / high);
+- spring easings.
+
+The token build adds:
+- `--color-palette-*`, `--motion-spring-*`, `--shape-*`, `--elevation-*`, `--state-*` and `--type-*`;
+- `@nexub/tokens/css/roles`;
+- Tailwind entries: role colours, `rounded-shape-*`, `shadow-elevation-*`, `text-<role>`, `ease-/duration-<spring>`, `h-control-*`.
+
+**Themes.**
+- Roles are `light-dark()`, and `data-theme` sets `color-scheme`. Dark works at any depth, so `dark.css` is now empty, kept only so existing imports still work.
+- Legacy semantic names alias the roles.
+- Fills are palette tone 40 (hover 30).
+- One 3px focus ring.
+- Inter is the UI face; Jakarta is used for headings and display.
+- New `.nx-state-layer`, `.nx-press` and `data-density="compact"`.
+
+**Results.**
+- All 8 Phase 0 contrast failures are fixed, and `KNOWN` is empty.
+- The browser contrast test now covers 20 contexts: light/dark × standard/high × 5 brands, with role pairs added.
+- Visual baselines were re-recorded after a side-by-side review.
+
+**Deviations from §4**
+1. **Hex output, not OKLCH.** All values are in the sRGB gamut, so OKLCH adds nothing until we want P3.
+2. **Contrast levels are standard + high only.** Medium is deferred.
+3. **Primary seed moved from hue 255 to 268 (`#0059c7` at tone 40).** At the brand-mark hue, sRGB caps chroma, which made tone 40 a dull `#0061a6`. Neutrals keep the brand-mark hue.
+4. **Legacy alias names resolve at `:root`.** A nested `data-contrast` only affects role names; nested `data-theme` and brands work everywhere.
+5. **Browser requirement.** It requires `light-dark()` (Baseline 2024).
+6. **Emphasized type weights are not tokenized.** Use the next weight utility.
 
 ### Quality bar (definition of done for each phase)
 
