@@ -27,3 +27,8 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+    ignore:
+      # 0.4.0 ships ESM with extensionless relative imports, so Node can't load it
+      # (tokens build fails). Skip just that release; a fixed 0.4.x will still be proposed.
+      - dependency-name: "@material/material-color-utilities"
+        versions: ["0.4.0"]
