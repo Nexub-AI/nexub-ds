@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 1.5.1
+
+### Patch Changes
+
+- 5aaeb38: `TextGradient`: render the brand gradient. The class compiled to `background-color`, so the gradient was dropped and the clipped text was invisible.
+  - @nexub/icons@1.5.1
+
 ## 1.5.0
 
 ### Minor Changes
