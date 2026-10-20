@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as RadixHoverCard from '@radix-ui/react-hover-card';
 import { cn } from '../../utils/cn.js';
+import { enterExit, floatingSurface } from '../../utils/surface.js';
 
 const Root = RadixHoverCard.Root;
 const Trigger = RadixHoverCard.Trigger;
@@ -12,8 +13,9 @@ const Content = React.forwardRef<HTMLDivElement, RadixHoverCard.HoverCardContent
         ref={ref}
         sideOffset={sideOffset}
         className={cn(
-          'z-[var(--z-popover)] w-64 rounded-lg border border-[var(--color-border-default)]',
-          'bg-[var(--color-bg-default)] p-4 shadow-md outline-none',
+          'z-[var(--z-popover)] w-64 p-4 outline-none',
+          floatingSurface,
+          enterExit,
           'data-[state=open]:animate-in data-[state=closed]:animate-out',
           'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
           'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',

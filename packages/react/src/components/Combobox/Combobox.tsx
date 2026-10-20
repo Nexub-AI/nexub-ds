@@ -7,7 +7,7 @@ const Root = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comman
     <Command
       ref={ref}
       className={cn(
-        'flex h-full w-full flex-col overflow-hidden rounded-lg bg-[var(--color-bg-default)] text-[var(--color-text-primary)]',
+        'flex h-full w-full flex-col overflow-hidden rounded-shape-container bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]',
         className,
       )}
       {...props}
@@ -18,11 +18,11 @@ Root.displayName = 'Combobox.Root';
 
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Command.Input>>(
   ({ className, ...props }, ref) => (
-    <div className="flex items-center border-b border-[var(--color-border-default)] px-3">
+    <div className="flex items-center border-b border-[var(--color-outline-variant)] px-3.5">
       <Command.Input
         ref={ref}
         className={cn(
-          'flex h-10 w-full bg-transparent py-3 text-sm outline-none placeholder:text-[var(--color-text-muted)] disabled:cursor-not-allowed disabled:opacity-50',
+          'flex h-control-md w-full bg-transparent text-body-md outline-none placeholder:text-[var(--color-text-placeholder)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
           className,
         )}
         {...props}
@@ -47,7 +47,7 @@ const Empty = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comma
   ({ className, ...props }, ref) => (
     <Command.Empty
       ref={ref}
-      className={cn('py-6 text-center text-sm text-[var(--color-text-muted)]', className)}
+      className={cn('py-6 text-center text-body-sm text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   ),
@@ -73,9 +73,10 @@ const Item = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comman
     <Command.Item
       ref={ref}
       className={cn(
-        'relative flex cursor-default select-none items-center rounded-md px-2 py-1.5 text-sm outline-none',
-        'aria-selected:bg-[var(--color-bg-subtle)] aria-selected:text-[var(--color-text-primary)]',
-        'data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50',
+        'relative flex cursor-default select-none items-center rounded-lg px-2.5 py-2 text-body-sm outline-none',
+        // Highlight = the on-surface state layer at hover opacity.
+        'aria-selected:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
+        'data-[disabled=true]:pointer-events-none data-[disabled=true]:text-[var(--color-text-disabled)]',
         className,
       )}
       {...props}
@@ -88,7 +89,7 @@ const Separator = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof C
   ({ className, ...props }, ref) => (
     <Command.Separator
       ref={ref}
-      className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+      className={cn('-mx-1 my-1 h-px bg-[var(--color-outline-variant)]', className)}
       {...props}
     />
   ),

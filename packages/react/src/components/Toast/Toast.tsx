@@ -23,7 +23,9 @@ const Root = React.forwardRef<HTMLLIElement, RadixToast.ToastProps>(
     <RadixToast.Root
       ref={ref}
       className={cn(
-        'group pointer-events-auto relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-4 shadow-md transition-all',
+        // Snackbar: the inverse surface stands out from any page, light or dark.
+        'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 pl-4 pr-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+        'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=closed]:slide-out-to-right-full',
         className,
       )}
@@ -35,7 +37,7 @@ Root.displayName = 'Toast.Root';
 
 const Title = React.forwardRef<HTMLDivElement, RadixToast.ToastTitleProps>(
   ({ className, ...props }, ref) => (
-    <RadixToast.Title ref={ref} className={cn('text-sm font-semibold', className)} {...props} />
+    <RadixToast.Title ref={ref} className={cn('text-title-sm', className)} {...props} />
   ),
 );
 Title.displayName = 'Toast.Title';
@@ -44,7 +46,7 @@ const Description = React.forwardRef<HTMLDivElement, RadixToast.ToastDescription
   ({ className, ...props }, ref) => (
     <RadixToast.Description
       ref={ref}
-      className={cn('text-sm text-[var(--color-text-muted)]', className)}
+      className={cn('text-body-sm text-[color-mix(in_srgb,var(--color-inverse-on-surface)_80%,transparent)]', className)}
       {...props}
     />
   ),
@@ -56,7 +58,7 @@ const Action = React.forwardRef<HTMLButtonElement, RadixToast.ToastActionProps>(
     <RadixToast.Action
       ref={ref}
       className={cn(
-        'inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border px-3 text-xs font-medium transition-colors hover:bg-[var(--color-bg-subtle)]',
+        'nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]',
         className,
       )}
       {...props}
@@ -67,7 +69,7 @@ Action.displayName = 'Toast.Action';
 
 const Close = React.forwardRef<HTMLButtonElement, RadixToast.ToastCloseProps>(
   ({ className, ...props }, ref) => (
-    <RadixToast.Close ref={ref} className={cn('rounded p-1', className)} {...props} />
+    <RadixToast.Close ref={ref} className={cn('nx-state-layer relative grid h-8 w-8 place-items-center rounded-full', className)} {...props} />
   ),
 );
 Close.displayName = 'Toast.Close';

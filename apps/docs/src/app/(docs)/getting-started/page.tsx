@@ -30,7 +30,7 @@ export default function GettingStartedPage() {
       <CodeBlock code={`// In your global CSS or entry file
 import '@nexub/themes/base';   // resets + token aliases
 import '@nexub/themes/light';  // light mode defaults
-import '@nexub/themes/dark';   // dark mode overrides`} />
+import '@nexub/themes/dark';   // optional: dark comes from light-dark() roles now`} />
 
       <h2>Tailwind</h2>
       <p>

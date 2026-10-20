@@ -33,6 +33,6 @@ describe('Badge', () => {
   it('applies tone', () => {
     render(<Badge tone="success" variant="solid">Badge</Badge>);
     const el = screen.getByText('Badge');
-    expect(el.className).toMatch(/fill-success|text-success/);
+    expect(el.className).toMatch(/color-success/);
   });
 });

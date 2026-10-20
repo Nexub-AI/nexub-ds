@@ -46,6 +46,6 @@ describe('Button', () => {
 
   it('recolors with a semantic tone', () => {
     render(<Button tone="success">Save</Button>);
-    expect(screen.getByRole('button')).toHaveClass('bg-[var(--color-fill-success)]');
+    expect(screen.getByRole('button')).toHaveClass('bg-[var(--color-success)]');
   });
 });

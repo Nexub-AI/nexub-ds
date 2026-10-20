@@ -1,26 +1,25 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
 
 export const textareaVariants = cva(
   [
-    'w-full rounded-md border bg-[var(--color-bg-default)] text-[var(--color-text-primary)]',
+    'w-full',
+    field,
     'placeholder:text-[var(--color-text-placeholder)]',
-    'border-[var(--color-border-input)] transition-colors',
-    // Border shifts to ring color on focus; ring is a semi-transparent halo.
-    // One hard 1 px border + one soft 2 px glow = single clean focus indicator.
-    'focus-visible:outline-none focus-visible:border-[var(--color-ring-default)] focus-visible:ring-2 focus-visible:ring-[color-mix(in_srgb,var(--color-ring-default)_25%,transparent)]',
-    'disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed',
+    fieldFocusVisible,
+    'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
   ],
   {
     variants: {
       size: {
-        sm: 'px-3 py-1.5 text-sm min-h-[64px]',
-        md: 'px-3 py-2 text-sm min-h-[80px]',
-        lg: 'px-4 py-2.5 text-base min-h-[96px]',
+        sm: 'px-3 py-1.5 text-body-sm min-h-[64px]',
+        md: 'px-3.5 py-2 text-body-md min-h-[80px]',
+        lg: 'px-4 py-2.5 text-body-md min-h-[96px]',
       },
       invalid: {
-        true: 'border-[var(--color-danger-500)] focus-visible:border-[var(--color-danger-500)] focus-visible:ring-[color-mix(in_srgb,var(--color-danger-500)_25%,transparent)]',
+        true: fieldInvalid,
       },
       resize: {
         none: 'resize-none',

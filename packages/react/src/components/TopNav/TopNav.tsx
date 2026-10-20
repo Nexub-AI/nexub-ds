@@ -3,16 +3,24 @@ import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
-const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { surface?: SurfaceValue }>(
-  ({ className, children, surface = 'solid', ...props }, ref) => (
+export interface TopNavRootProps extends React.HTMLAttributes<HTMLElement> {
+  surface?: SurfaceValue;
+  /** Sticky-bar edge: `soft` dissolves scrolling content under the bar (no
+   *  divider), `hard` is an opaque band for pinned headers. Default: a divider. */
+  scrollEdge?: 'soft' | 'hard';
+}
+
+const Root = React.forwardRef<HTMLElement, TopNavRootProps>(
+  ({ className, children, surface = 'solid', scrollEdge, ...props }, ref) => (
     <header
       ref={ref}
       className={cn(
-        'sticky top-0 z-[var(--z-sticky,100)] flex h-[var(--size-nav-header,64px)] items-center border-b border-[var(--color-border-default)] bg-[var(--color-bg-default)] px-4',
+        'sticky top-0 z-[var(--z-sticky,100)] flex h-[var(--size-nav-header,64px)] items-center border-b border-[var(--color-outline-variant)] bg-[var(--color-surface)] px-4',
         surface === 'glass' && glassSurfaceClass,
         className,
       )}
       data-material={surface === 'glass' ? 'glass' : undefined}
+      data-scroll-edge={scrollEdge}
       {...props}
     >
       <div className="flex w-full items-center gap-4">{children}</div>
@@ -55,10 +63,10 @@ const Item = React.forwardRef<HTMLAnchorElement, TopNavItemProps>(
       ref={ref}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'inline-flex h-9 shrink-0 items-center rounded-md px-4 text-sm font-medium transition-colors',
+        'nx-state-layer relative inline-flex h-control-sm shrink-0 items-center rounded-shape-control px-3.5 text-label-lg',
         active
-          ? 'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]'
-          : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-primary)]',
+          ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)]'
+          : 'text-[var(--color-on-surface-variant)]',
         className,
       )}
       {...props}

@@ -2,6 +2,7 @@ import StyleDictionary from 'style-dictionary';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ROLES, SPRINGS, palettes, rolesCss, spring, tertiary } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -51,6 +52,14 @@ StyleDictionary.registerFormat({
     const boxShadow = {};
     const zIndex = {};
     const fontFamily = {};
+    const fontSize = {};
+    const transitionTimingFunction = {};
+    const transitionDuration = {};
+
+    // Color roles live in dist/css/roles.css (light-dark()), not in the token tree.
+    for (const role of [...Object.keys(ROLES), ...Object.keys(tertiary('primary'))]) {
+      colors[role] = `var(--color-${role})`;
+    }
 
     for (const token of dictionary.allTokens) {
       const [ns, ...rest] = token.path;
@@ -61,14 +70,31 @@ StyleDictionary.registerFormat({
       } else if (ns === 'spacing' || ns === 'container') {
         const key = ns === 'container' ? `container-${rest.join('-')}` : rest.join('-');
         spacing[key] = `var(${varName})`;
+      } else if (ns === 'size' && rest[0] === 'control') {
+        spacing[`control-${rest[1]}`] = `var(${varName})`; // h-control-md, density-aware
       } else if (ns === 'radius') {
         borderRadius[rest.join('-')] = `var(${varName})`;
+      } else if (ns === 'shape') {
+        borderRadius[`shape-${rest.join('-')}`] = `var(${varName})`;
       } else if (ns === 'shadow') {
         boxShadow[rest.join('-')] = `var(${varName})`;
+      } else if (ns === 'elevation') {
+        boxShadow[`elevation-${rest.join('-')}`] = `var(${varName})`;
       } else if (ns === 'z') {
         zIndex[rest.join('-')] = `var(${varName})`;
       } else if (ns === 'font' && rest[0] === 'family') {
         fontFamily[rest[1]] = `var(${varName})`;
+      } else if (ns === 'type') {
+        // text-display-lg etc.: [size, { lineHeight, letterSpacing, fontWeight }]
+        const [role, prop] = rest;
+        const entry = (fontSize[role] ??= [`var(--type-${role}-size)`, {}]);
+        if (prop === 'lineHeight') entry[1].lineHeight = `var(${varName})`;
+        if (prop === 'letterSpacing') entry[1].letterSpacing = `var(${varName})`;
+        if (prop === 'weight') entry[1].fontWeight = `var(${varName})`;
+      } else if (ns === 'motion' && rest[0] === 'spring') {
+        const key = `${rest[1]}-${rest[2]}`; // ease-spatial-fast / duration-spatial-fast
+        if (rest[3] === 'easing') transitionTimingFunction[key] = `var(${varName})`;
+        if (rest[3] === 'duration') transitionDuration[key] = `var(${varName})`;
       }
     }
 
@@ -81,6 +107,26 @@ StyleDictionary.registerFormat({
           boxShadow,
           zIndex,
           fontFamily,
+          fontSize,
+          transitionTimingFunction,
+          transitionDuration,
+          // Accordion + Collapsible height animation (Radix exposes the content height).
+          keyframes: {
+            'accordion-down': {
+              from: { height: '0' },
+              to: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
+            },
+            'accordion-up': {
+              from: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
+              to: { height: '0' },
+            },
+          },
+          animation: {
+            'accordion-down':
+              'accordion-down var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing)',
+            'accordion-up':
+              'accordion-up var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing)',
+          },
         },
       },
     };
@@ -119,7 +165,33 @@ function setDeep(obj, path, value) {
 
 // ─── Build ───────────────────────────────────────────────────────────────────
 
+// Generated tokens: tonal palettes and spring easings (scripts/generate.mjs).
+const generated = {
+  color: {
+    palette: Object.fromEntries(
+      Object.entries(palettes()).map(([name, tones]) => [
+        name,
+        Object.fromEntries(Object.entries(tones).map(([t, hex]) => [t, { $value: hex, $type: 'color' }])),
+      ]),
+    ),
+  },
+  motion: {
+    spring: Object.fromEntries(
+      Object.entries(SPRINGS).map(([kind, speeds]) => [
+        kind,
+        Object.fromEntries(
+          Object.entries(speeds).map(([speed, [damping, stiffness]]) => {
+            const { easing, duration } = spring(damping, stiffness);
+            return [speed, { easing: { $value: easing, $type: 'other' }, duration: { $value: duration, $type: 'other' } }];
+          }),
+        ),
+      ]),
+    ),
+  },
+};
+
 const sd = new StyleDictionary({
+  tokens: generated,
   source: [`${root}/tokens/*.json`],
   platforms: {
     css: {
@@ -172,6 +244,9 @@ const sd = new StyleDictionary({
 });
 
 await sd.buildAllPlatforms();
+
+// Color roles (light-dark() over the palette vars above).
+writeFileSync(`${root}/dist/css/roles.css`, rolesCss());
 
 // Emit tailwind preset type declaration
 mkdirSync(`${root}/dist/tailwind`, { recursive: true });

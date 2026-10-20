@@ -1,0 +1,10 @@
+{
+  "shape": {
+    "control":   { "$value": "9999px", "$type": "dimension", "$description": "Capsule: Button, IconButton, Chip, SegmentedControl, Switch, Badge" },
+    "field":     { "$value": "12px",   "$type": "dimension", "$description": "Input, Select, Textarea, Combobox" },
+    "container": { "$value": "16px",   "$type": "dimension", "$description": "Card, Popover, Menu, Toast" },
+    "overlay":   { "$value": "24px",   "$type": "dimension", "$description": "Dialog, Sheet, CommandPalette" },
+    "tooltip":   { "$value": "8px",    "$type": "dimension", "$description": "Tooltip, Kbd" },
+    "min":       { "$value": "4px",    "$type": "dimension", "$description": "Floor for concentric inner radii: max(min, outer - padding)" }
+  }
+}

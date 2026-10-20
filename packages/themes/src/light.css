@@ -1,37 +1,63 @@
 /* @nexub/themes — light.css
-   Explicit light-mode semantic token assignments.
+   Legacy semantic names → Calm Depth color roles (@nexub/tokens/css/roles).
+   Roles are light-dark() values, so these aliases resolve per color-scheme:
+   light by default, dark under [data-theme='dark'] (or the OS when no
+   data-theme is set), at any depth. New code should use the role names
+   (--color-surface, --color-on-surface, …) directly.
    Import after base.css. */
 
-:root,
-[data-theme='light'] {
-  --color-bg-default: #ffffff;
-  --color-bg-subtle:  #f8fafc;
-  --color-bg-muted:   #f1f5f9;
-  --color-bg-raised:  #ffffff;
-  --color-bg-inverse: #0f172a;
+:root {
+  --color-bg-default: var(--color-surface);
+  --color-bg-subtle:  var(--color-surface-container-low);
+  --color-bg-muted:   var(--color-surface-container-high);
+  --color-bg-raised:  var(--color-surface-elevated);
+  --color-bg-inverse: var(--color-inverse-surface);
 
-  --color-text-primary:   #0f172a;
-  --color-text-secondary: #334155;
-  --color-text-muted:     #64748b;
-  --color-text-subtle:    #94a3b8;
-  --color-text-inverse:   #f8fafc;
-  --color-text-link:      #2563eb;
-  --color-text-disabled:  #94a3b8;
+  --color-text-primary:   var(--color-on-surface);
+  --color-text-secondary: var(--color-on-surface-variant);
+  --color-text-muted:     var(--color-on-surface-muted);
+  --color-text-subtle:    var(--color-outline);
+  --color-text-inverse:   var(--color-inverse-on-surface);
+  --color-text-link:      var(--color-primary);
+  --color-text-disabled:  color-mix(in srgb, var(--color-on-surface) 38%, transparent);
 
-  --color-border-default: #e2e8f0;
-  --color-border-subtle:  #f1f5f9;
-  --color-border-strong:  #94a3b8;
-  --color-border-inverse: #334155;
-  --color-border-input:   #848e9f;
+  --color-border-default: var(--color-outline-variant);
+  --color-border-subtle:  var(--color-surface-container-high);
+  --color-border-strong:  var(--color-outline);
+  --color-border-inverse: var(--color-inverse-on-surface);
+  /* Form-control boundaries: outline clears 3:1 (WCAG 1.4.11) on every surface. */
+  --color-border-input:   var(--color-outline);
 
-  --color-ring-default: #4099f1;
-  --color-ring-offset:  #ffffff;
+  --color-ring-default: var(--color-primary);
+  --color-ring-offset:  var(--color-surface);
 
-  --color-surface-warm:    #fefce8;
-  --color-surface-muted:   #f8fafc;
-  --color-surface-raised:  #ffffff;
-  --color-surface-sunken:  #f1f5f9;
-  --color-surface-inverse: #0f172a;
+  --color-surface-warm:    light-dark(#fefce8, #1c1a0a);
+  --color-surface-muted:   var(--color-surface-container-low);
+  --color-surface-raised:  var(--color-surface-elevated);
+  --color-surface-sunken:  var(--color-surface-container-high);
+  --color-surface-inverse: var(--color-inverse-surface);
 
-  --gradient-hero-ambient: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(64,153,241,0.12) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(28,206,102,0.06) 0%, transparent 50%), #ffffff;
+  /* Semantic tones: default = the role, strong = text-safe on page and container,
+     bg = container, border = the role at 35%. */
+  --color-semantic-success-default: var(--color-success);
+  --color-semantic-success-strong:  var(--color-on-success-container);
+  --color-semantic-success-bg:      var(--color-success-container);
+  --color-semantic-success-border:  color-mix(in srgb, var(--color-success) 35%, transparent);
+
+  --color-semantic-error-default: var(--color-error);
+  --color-semantic-error-strong:  var(--color-on-error-container);
+  --color-semantic-error-bg:      var(--color-error-container);
+  --color-semantic-error-border:  color-mix(in srgb, var(--color-error) 35%, transparent);
+
+  --color-semantic-warning-default: var(--color-warning);
+  --color-semantic-warning-strong:  var(--color-on-warning-container);
+  --color-semantic-warning-bg:      var(--color-warning-container);
+  --color-semantic-warning-border:  color-mix(in srgb, var(--color-warning) 35%, transparent);
+
+  --color-semantic-info-default: var(--color-info);
+  --color-semantic-info-strong:  var(--color-on-info-container);
+  --color-semantic-info-bg:      var(--color-info-container);
+  --color-semantic-info-border:  color-mix(in srgb, var(--color-info) 35%, transparent);
+
+  --gradient-hero-ambient: radial-gradient(ellipse 80% 50% at 50% -20%, light-dark(rgb(64 153 241 / 0.12), rgb(64 153 241 / 0.08)) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, light-dark(rgb(28 206 102 / 0.06), transparent) 0%, transparent 50%), var(--color-surface);
 }

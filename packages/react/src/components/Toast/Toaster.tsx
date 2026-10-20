@@ -20,7 +20,8 @@ export function Toaster() {
         <RadixToast.Root
           key={t.id}
           className={cn(
-            'group pointer-events-auto relative flex w-full items-center justify-between gap-2 overflow-hidden rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-4 shadow-md transition-all',
+            'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 pl-4 pr-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+            'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
             'data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none',
             'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-80 data-[state=open]:slide-in-from-top-full data-[state=closed]:slide-out-to-right-full',
             toneMap[t.tone ?? 'neutral'],
@@ -28,9 +29,9 @@ export function Toaster() {
           duration={t.duration ?? 5000}
         >
           <div className="grid gap-1">
-            <RadixToast.Title className="text-sm font-semibold">{t.title}</RadixToast.Title>
+            <RadixToast.Title className="text-title-sm">{t.title}</RadixToast.Title>
             {t.description && (
-              <RadixToast.Description className="text-sm text-[var(--color-text-muted)]">
+              <RadixToast.Description className="text-body-sm text-[color-mix(in_srgb,var(--color-inverse-on-surface)_80%,transparent)]">
                 {t.description}
               </RadixToast.Description>
             )}

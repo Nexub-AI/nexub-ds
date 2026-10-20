@@ -18,11 +18,46 @@ const preview: Preview = {
         dynamicTitle: true,
       },
     },
+    brand: {
+      description: 'Product brand (accent palette)',
+      defaultValue: 'none',
+      toolbar: {
+        title: 'Brand',
+        icon: 'circlehollow',
+        items: ['none', 'leap', 'bookub', 'payub', 'founderub'],
+        dynamicTitle: true,
+      },
+    },
+    contrast: {
+      description: 'Contrast level (data-contrast)',
+      defaultValue: 'standard',
+      toolbar: { title: 'Contrast', icon: 'contrast', items: ['standard', 'high'], dynamicTitle: true },
+    },
+    density: {
+      description: 'Control density (data-density)',
+      defaultValue: 'comfortable',
+      toolbar: { title: 'Density', icon: 'grow', items: ['comfortable', 'compact'], dynamicTitle: true },
+    },
+    glass: {
+      description: 'Glass intensity dial (data-glass)',
+      defaultValue: 'balanced',
+      toolbar: { title: 'Glass', icon: 'mirror', items: ['clear', 'balanced', 'tinted', 'off'], dynamicTitle: true },
+    },
   },
-  // @nexub/themes switches palette via a `data-theme` attribute on <html>.
+  // @nexub/themes reads data-theme / data-product / data-contrast / data-density on <html>.
   decorators: [
     (Story, context) => {
-      document.documentElement.dataset.theme = String(context.globals.theme);
+      const root = document.documentElement;
+      const g = context.globals;
+      root.dataset.theme = String(g.theme);
+      const set = (key: string, value: unknown, fallback: string) => {
+        if (value === undefined || value === fallback) delete root.dataset[key];
+        else root.dataset[key] = String(value);
+      };
+      set('product', g.brand, 'none');
+      set('contrast', g.contrast, 'standard');
+      set('density', g.density, 'comfortable');
+      set('glass', g.glass, 'balanced');
       return Story();
     },
   ],
