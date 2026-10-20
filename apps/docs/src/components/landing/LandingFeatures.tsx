@@ -31,9 +31,9 @@ export function LandingFeatures() {
   return (
     <section
       style={{
-        background: 'var(--color-bg-subtle)',
-        borderTop: '1px solid var(--color-border-default)',
-        borderBottom: '1px solid var(--color-border-default)',
+        background: 'var(--color-surface-container-low)',
+        borderTop: '1px solid var(--color-outline-variant)',
+        borderBottom: '1px solid var(--color-outline-variant)',
         padding: '5rem 2rem',
       }}
     >
@@ -43,7 +43,7 @@ export function LandingFeatures() {
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
-            color: 'var(--color-brand-primary-500)',
+            color: 'var(--color-primary)',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
             marginBottom: '0.75rem',
@@ -60,7 +60,7 @@ export function LandingFeatures() {
             textAlign: 'center',
             letterSpacing: '-0.02em',
             marginBottom: '3rem',
-            color: 'var(--color-text-primary)',
+            color: 'var(--color-on-surface)',
           }}
         >
           Everything you need to ship faster
@@ -79,11 +79,11 @@ export function LandingFeatures() {
               className="landing-card"
               data-reveal-scroll
               style={{
-                background: 'var(--color-bg-raised)',
-                border: '1px solid var(--color-border-default)',
-                borderRadius: 'var(--radius-xl)',
+                background: 'var(--color-surface-elevated)',
+                border: '1px solid var(--color-outline-variant)',
+                borderRadius: 'var(--shape-container)',
                 padding: '1.75rem',
-                boxShadow: 'var(--shadow-sm)',
+                boxShadow: 'var(--elevation-1)',
                 cursor: 'default',
                 transition: 'box-shadow 0.2s ease',
               }}
@@ -97,21 +97,21 @@ export function LandingFeatures() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  background: 'var(--color-semantic-info-bg)',
-                  border: '1px solid var(--color-semantic-info-border)',
-                  borderRadius: 'var(--radius-lg)',
-                  color: 'var(--color-brand-primary-500)',
+                  background: 'var(--color-info-container)',
+                  border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
+                  borderRadius: 'var(--shape-container)',
+                  color: 'var(--color-primary)',
                 }}
               >
                 {f.icon}
               </div>
-              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-brand-primary-500)', lineHeight: 1, marginBottom: '0.25rem' }}>
+              <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)', lineHeight: 1, marginBottom: '0.25rem' }}>
                 {f.stat}
               </div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.5rem' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: '0.5rem' }}>
                 {f.title}
               </div>
-              <div style={{ fontSize: '0.84rem', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+              <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface-muted)', lineHeight: 1.6 }}>
                 {f.desc}
               </div>
             </div>

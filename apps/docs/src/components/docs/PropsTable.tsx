@@ -18,7 +18,7 @@ export function PropsTable({ props }: PropsTableProps) {
         }}
       >
         <thead>
-          <tr style={{ borderBottom: '1px solid var(--color-border-default)' }}>
+          <tr style={{ borderBottom: '1px solid var(--color-outline-variant)' }}>
             {['Prop', 'Type', 'Default', 'Required', 'Description'].map((h) => (
               <th
                 key={h}
@@ -26,9 +26,9 @@ export function PropsTable({ props }: PropsTableProps) {
                   textAlign: 'left',
                   padding: '8px 12px',
                   fontWeight: 600,
-                  color: 'var(--color-text-secondary)',
+                  color: 'var(--color-on-surface-variant)',
                   whiteSpace: 'nowrap',
-                  background: 'var(--color-bg-subtle)',
+                  background: 'var(--color-surface-container-low)',
                 }}
               >
                 {h}
@@ -41,26 +41,26 @@ export function PropsTable({ props }: PropsTableProps) {
             <tr
               key={p.name}
               style={{
-                borderBottom: i < props.length - 1 ? '1px solid var(--color-border-subtle)' : 'none',
+                borderBottom: i < props.length - 1 ? '1px solid var(--color-outline-variant)' : 'none',
               }}
             >
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', fontWeight: 600, color: 'var(--color-brand-primary-500)', whiteSpace: 'nowrap' }}>
+              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', fontWeight: 600, color: 'var(--color-primary)', whiteSpace: 'nowrap' }}>
                 {p.name}
               </td>
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-muted)', fontSize: '0.75rem' }}>
+              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-on-surface-muted)', fontSize: '0.75rem' }}>
                 {p.type}
               </td>
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-subtle)', fontSize: '0.75rem' }}>
+              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-outline)', fontSize: '0.75rem' }}>
                 {p.default ?? '—'}
               </td>
               <td style={{ padding: '8px 12px', textAlign: 'center' }}>
                 {p.required ? (
-                  <span style={{ color: 'var(--color-semantic-error-default)', fontWeight: 600 }}>✓</span>
+                  <span style={{ color: 'var(--color-error)', fontWeight: 600 }}>✓</span>
                 ) : (
-                  <span style={{ color: 'var(--color-text-subtle)' }}>—</span>
+                  <span style={{ color: 'var(--color-outline)' }}>—</span>
                 )}
               </td>
-              <td style={{ padding: '8px 12px', color: 'var(--color-text-secondary)' }}>
+              <td style={{ padding: '8px 12px', color: 'var(--color-on-surface-variant)' }}>
                 {p.description}
               </td>
             </tr>

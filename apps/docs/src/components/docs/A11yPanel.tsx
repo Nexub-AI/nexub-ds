@@ -15,14 +15,14 @@ function Key({ children }: { children: React.ReactNode }) {
         padding: '1px 6px',
         minWidth: 22,
         height: 22,
-        background: 'var(--color-bg-default)',
-        border: '1px solid var(--color-border-default)',
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-outline-variant)',
         borderBottomWidth: 2,
-        borderRadius: 'var(--radius-sm)',
+        borderRadius: 'var(--shape-tooltip)',
         fontFamily: 'var(--font-family-mono)',
         fontSize: '0.72rem',
         fontWeight: 600,
-        color: 'var(--color-text-secondary)',
+        color: 'var(--color-on-surface-variant)',
       }}
     >
       {children}
@@ -59,7 +59,7 @@ export function A11yPanel({ a11y }: Props) {
           {keyboard.map((k) => (
             <li key={k.key} style={listItemStyle}>
               <Key>{k.key}</Key>
-              <span style={{ color: 'var(--color-text-secondary)' }}>{k.description}</span>
+              <span style={{ color: 'var(--color-on-surface-variant)' }}>{k.description}</span>
             </li>
           ))}
         </ul>
@@ -102,7 +102,7 @@ export function A11yPanel({ a11y }: Props) {
 
   if (!sections.length) {
     return (
-      <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>
+      <p style={{ color: 'var(--color-on-surface-muted)', fontSize: '0.85rem' }}>
         No accessibility notes documented yet.
       </p>
     );
@@ -122,10 +122,10 @@ export function A11yPanel({ a11y }: Props) {
 
 const pillStyle: React.CSSProperties = {
   padding: '2px 8px',
-  borderRadius: 'var(--radius-full)',
-  background: 'var(--color-semantic-info-bg)',
-  color: 'var(--color-semantic-info-default)',
-  border: '1px solid var(--color-semantic-info-border)',
+  borderRadius: 'var(--shape-control)',
+  background: 'var(--color-info-container)',
+  color: 'var(--color-info)',
+  border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
   fontSize: '0.72rem',
   fontWeight: 600,
   fontFamily: 'var(--font-family-mono)',
@@ -150,7 +150,7 @@ const listItemStyle: React.CSSProperties = {
 const bulletStyle: React.CSSProperties = {
   margin: 0,
   paddingLeft: '1.1rem',
-  color: 'var(--color-text-secondary)',
+  color: 'var(--color-on-surface-variant)',
   fontSize: '0.82rem',
   lineHeight: 1.6,
 };
@@ -159,7 +159,7 @@ const headingStyle: React.CSSProperties = {
   margin: '0 0 0.5rem',
   fontSize: '0.72rem',
   fontWeight: 700,
-  color: 'var(--color-text-secondary)',
+  color: 'var(--color-on-surface-variant)',
   letterSpacing: '0.05em',
   textTransform: 'uppercase',
 };

@@ -16,7 +16,7 @@ const rules: { rule: string; do: string; dont: string }[] = [
 export default function GrammarStylePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
       <h1>Grammar &amp; Style</h1>
       <p>
         Consistency in punctuation, capitalisation, and word choice makes the product feel polished and trustworthy.
@@ -27,18 +27,18 @@ export default function GrammarStylePage() {
       <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid var(--color-border-default)', background: 'var(--color-bg-subtle)' }}>
+            <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
               {['Rule', '✅ Do', '❌ Don\'t'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rules.map((r, i) => (
-              <tr key={r.rule} style={{ borderBottom: i < rules.length - 1 ? '1px solid var(--color-border-subtle)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>{r.rule}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-semantic-success-default)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.do}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-semantic-error-default)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.dont}</td>
+              <tr key={r.rule} style={{ borderBottom: i < rules.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--color-on-surface)', whiteSpace: 'nowrap' }}>{r.rule}</td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.do}</td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.dont}</td>
               </tr>
             ))}
           </tbody>

@@ -18,18 +18,18 @@ export function VariantMatrix({ slug, def }: Props) {
   return (
     <div
       style={{
-        border: '1px solid var(--color-border-default)',
-        borderRadius: 'var(--radius-xl)',
+        border: '1px solid var(--color-outline-variant)',
+        borderRadius: 'var(--shape-container)',
         overflow: 'hidden',
         marginBottom: '1.5rem',
-        background: 'var(--color-bg-default)',
+        background: 'var(--color-surface)',
       }}
     >
       <div
         style={{
           padding: '8px 12px',
-          borderBottom: '1px solid var(--color-border-default)',
-          background: 'var(--color-bg-subtle)',
+          borderBottom: '1px solid var(--color-outline-variant)',
+          background: 'var(--color-surface-container-low)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -40,7 +40,7 @@ export function VariantMatrix({ slug, def }: Props) {
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
-            color: 'var(--color-text-secondary)',
+            color: 'var(--color-on-surface-variant)',
             letterSpacing: '0.05em',
             textTransform: 'uppercase',
           }}
@@ -52,7 +52,7 @@ export function VariantMatrix({ slug, def }: Props) {
         <span
           style={{
             fontSize: '0.7rem',
-            color: 'var(--color-text-subtle)',
+            color: 'var(--color-outline)',
             fontFamily: 'var(--font-family-mono)',
           }}
         >
@@ -77,7 +77,7 @@ export function VariantMatrix({ slug, def }: Props) {
                 <span
                   style={{
                     fontFamily: 'var(--font-family-mono)',
-                    color: 'var(--color-text-subtle)',
+                    color: 'var(--color-outline)',
                     fontWeight: 600,
                   }}
                 >
@@ -131,11 +131,11 @@ export function VariantMatrix({ slug, def }: Props) {
 
 const headStyle: React.CSSProperties = {
   padding: '8px 12px',
-  background: 'var(--color-bg-subtle)',
-  borderBottom: '1px solid var(--color-border-default)',
-  borderLeft: '1px solid var(--color-border-subtle)',
+  background: 'var(--color-surface-container-low)',
+  borderBottom: '1px solid var(--color-outline-variant)',
+  borderLeft: '1px solid var(--color-surface-container-high)',
   textAlign: 'center',
-  color: 'var(--color-text-muted)',
+  color: 'var(--color-on-surface-muted)',
   fontWeight: 600,
 };
 
@@ -148,11 +148,11 @@ const cornerStyle: React.CSSProperties = {
 
 const rowHeadStyle: React.CSSProperties = {
   padding: '8px 12px',
-  background: 'var(--color-bg-subtle)',
-  borderBottom: '1px solid var(--color-border-subtle)',
-  borderRight: '1px solid var(--color-border-subtle)',
+  background: 'var(--color-surface-container-low)',
+  borderBottom: '1px solid var(--color-surface-container-high)',
+  borderRight: '1px solid var(--color-surface-container-high)',
   textAlign: 'left',
-  color: 'var(--color-text-muted)',
+  color: 'var(--color-on-surface-muted)',
   fontWeight: 600,
   whiteSpace: 'nowrap',
   position: 'sticky',
@@ -161,7 +161,7 @@ const rowHeadStyle: React.CSSProperties = {
 
 const cellStyle: React.CSSProperties = {
   padding: 0,
-  borderBottom: '1px solid var(--color-border-subtle)',
-  borderLeft: '1px solid var(--color-border-subtle)',
-  background: 'var(--color-bg-default)',
+  borderBottom: '1px solid var(--color-surface-container-high)',
+  borderLeft: '1px solid var(--color-surface-container-high)',
+  background: 'var(--color-surface)',
 };

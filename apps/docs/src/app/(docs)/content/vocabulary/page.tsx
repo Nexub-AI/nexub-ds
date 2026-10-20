@@ -29,7 +29,7 @@ const glossary: { term: string; def: string }[] = [
 export default function VocabularyPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
       <h1>Vocabulary</h1>
       <p>
         Consistent terminology builds trust and reduces confusion. Use these approved terms across all Nexub products and documentation.
@@ -39,18 +39,18 @@ export default function VocabularyPage() {
       <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
           <thead>
-            <tr style={{ borderBottom: '2px solid var(--color-border-default)', background: 'var(--color-bg-subtle)' }}>
+            <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
               {['Use this', 'Not this', 'Notes'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {vocab.map((v, i) => (
-              <tr key={v.use} style={{ borderBottom: i < vocab.length - 1 ? '1px solid var(--color-border-subtle)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-semantic-success-default)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{v.use}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-semantic-error-default)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap', textDecoration: 'line-through', opacity: 0.7 }}>{v.avoid}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-text-secondary)', fontSize: '0.82rem' }}>{v.notes}</td>
+              <tr key={v.use} style={{ borderBottom: i < vocab.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{v.use}</td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap', textDecoration: 'line-through', opacity: 0.7 }}>{v.avoid}</td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-on-surface-variant)', fontSize: '0.82rem' }}>{v.notes}</td>
               </tr>
             ))}
           </tbody>
@@ -65,17 +65,17 @@ export default function VocabularyPage() {
             key={g.term}
             style={{
               padding: '0.875rem 1.25rem',
-              border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-lg)',
-              background: 'var(--color-bg-subtle)',
+              border: '1px solid var(--color-outline-variant)',
+              borderRadius: 'var(--shape-container)',
+              background: 'var(--color-surface-container-low)',
               display: 'grid',
               gridTemplateColumns: '140px 1fr',
               gap: '1rem',
               alignItems: 'start',
             }}
           >
-            <span style={{ fontFamily: 'var(--font-family-mono)', fontWeight: 700, color: 'var(--color-brand-primary-500)', fontSize: '0.84rem' }}>{g.term}</span>
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.84rem', lineHeight: 1.6 }}>{g.def}</span>
+            <span style={{ fontFamily: 'var(--font-family-mono)', fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.84rem' }}>{g.term}</span>
+            <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.84rem', lineHeight: 1.6 }}>{g.def}</span>
           </div>
         ))}
       </div>

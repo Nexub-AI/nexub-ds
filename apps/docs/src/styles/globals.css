@@ -14,20 +14,20 @@
 /* ── Docs-site layout vars ────────────────────────────────────────────────── */
 :root {
   --docs-sidebar-width: 260px;
-  --docs-header-height: 60px;
+  --docs-header-height: 64px;
   --docs-content-max-width: 860px;
 
-  /* Code block background — stays dark in both light and dark modes.
-     Used by the Shiki-highlighted Import block, which targets `github-dark`. */
-  --docs-code-bg: #0d1117;
+  /* Code blocks sit on the tonal container in both modes; Shiki emits
+     dual-theme tokens (see .shiki below). */
+  --docs-code-bg: var(--color-surface-container);
 
-  /* Plain (non-Shiki) snippet treatment — adapts to theme via existing tokens.
-     Used by the Hero copy-import strip, the Playground generated-code pre,
-     and the ComponentPreview fallback pre. Light mode: paper-tone; dark mode:
-     dark slate (already swapped by --color-bg-subtle in @nexub/themes). */
-  --docs-snippet-bg: var(--color-bg-subtle);
-  --docs-snippet-fg: var(--color-text-primary);
-  --docs-snippet-border: var(--color-border-default);
+  /* Plain (non-Shiki) snippets: Hero import strip, Playground code, preview fallback. */
+  --docs-snippet-bg: var(--color-surface-container);
+  --docs-snippet-fg: var(--color-on-surface);
+  --docs-snippet-border: transparent;
+
+  /* Landing showcase band: an intentional dark stage in both modes. */
+  --docs-showcase-bg: #0d1117;
 }
 
 /* ── Base resets ──────────────────────────────────────────────────────────── */
@@ -50,75 +50,127 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-bg-default);
-  color: var(--color-text-primary);
+  background: var(--color-surface);
+  color: var(--color-on-surface);
   font-family: var(--font-family-sans);
   line-height: 1.5;
-}
-
-/* ── Text selection ───────────────────────────────────────────────────────── */
-::selection {
-  background-color: var(--color-brand-primary-500);
-  color: #fff;
 }
 
 /* ── Scrollbar (webkit) ───────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border-default);
-  border-radius: 3px;
+  background: var(--color-outline-variant);
+  border-radius: var(--shape-control);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--color-border-strong); }
+::-webkit-scrollbar-thumb:hover { background: var(--color-outline); }
 
 /* ── Prose area inside docs pages ─────────────────────────────────────────── */
-/* Headings use clamp() so they scale smoothly between mobile and desktop
- * instead of hard-jumping at the 639px breakpoint. Min/max anchors:
- *   h1: 28px → 44px   (cite-anchor 1.75rem→2.75rem)
- *   h2: 22px → 32px   (1.375rem→2rem)
- *   h3: 18px → 24px   (1.125rem→1.5rem)
- * The middle term scales the size by viewport width so the curve is smooth
- * across every screen, not just the canonical breakpoints. */
+/* Headings: display face, fluid sizes via clamp() (no hard breakpoint jump).
+ *   h1: 28px → 44px, h2: 22px → 32px, h3: 18px → 24px
+ * Body: Inter on the body-lg type role. */
+.docs-prose h1,
+.docs-prose h2,
+.docs-prose h3 {
+  font-family: var(--font-family-display);
+  color: var(--color-on-surface);
+  letter-spacing: -0.01em;
+}
 .docs-prose h1 {
   font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--type-display-sm-weight);
   line-height: 1.15;
   margin-bottom: 0.5rem;
-  color: var(--color-text-primary);
 }
 .docs-prose h2 {
   font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--type-headline-sm-weight);
   line-height: 1.25;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
-  color: var(--color-text-primary);
 }
 .docs-prose h3 {
   font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.5rem);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--type-title-lg-weight);
   line-height: 1.3;
   margin-top: 1.5rem;
   margin-bottom: 0.25rem;
-  color: var(--color-text-primary);
 }
-.docs-prose p  {
-  color: var(--color-text-secondary);
+.docs-prose p:not([class]) {
+  font-family: var(--font-family-sans);
+  font-size: var(--type-body-lg-size);
+  font-weight: var(--type-body-lg-weight);
+  color: var(--color-on-surface-variant);
   line-height: 1.7;
   margin-bottom: 1rem;
   /* Cap paragraph reading width so prose stays comfortable on wide monitors,
    * while wide blocks (Playground, Matrix, examples, code) still go edge-to-edge. */
   max-width: 75ch;
 }
-.docs-prose code { font-family: var(--font-family-mono); font-size: 0.85em; background: var(--color-bg-muted); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0.1em 0.35em; color: var(--color-text-primary); }
+.docs-prose a:not([class]) {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+  text-decoration-thickness: 1px;
+}
+.docs-prose a:not([class]):hover { text-decoration-thickness: 2px; opacity: 1; }
+.docs-prose code {
+  font-family: var(--font-family-mono);
+  font-size: 0.85em;
+  background: var(--color-surface-container);
+  border-radius: var(--shape-tooltip);
+  padding: 0.1em 0.4em;
+  color: var(--color-on-surface);
+}
+.docs-prose pre:not(.shiki, [style]) {
+  background: var(--docs-code-bg);
+  border-radius: var(--shape-container);
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+}
+.docs-prose pre code { background: transparent; padding: 0; }
+.docs-prose table:not([class]) { border-collapse: collapse; width: 100%; }
+.docs-prose table:not([class]) :is(th, td) {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-outline-variant);
+}
+.docs-prose table:not([class]) th {
+  font-size: var(--type-label-lg-size);
+  font-weight: var(--type-label-lg-weight);
+  color: var(--color-on-surface);
+}
 
-/* ── Shiki code block ─────────────────────────────────────────────────────── */
+/* ── Shiki code block (dual theme, follows color-scheme) ────────────────── */
 .shiki { background: transparent !important; }
+.shiki span { color: light-dark(var(--shiki-light), var(--shiki-dark)); }
 
-/* ── Command-K search item hover ──────────────────────────────────────────── */
-.search-item[data-selected='true'],
-.search-item[data-selected] {
-  background: var(--color-bg-muted) !important;
+/* ── Sidebar nav item: capsule + state layer; active = secondary-container
+   pill, matching @nexub/react Sidebar.Item. ─────────────────────────────── */
+.docs-nav-item {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  margin: 1px 12px;
+  padding: 0 12px;
+  border-radius: var(--shape-control);
+  font-size: var(--type-label-lg-size);
+  font-weight: var(--type-body-md-weight);
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+}
+.docs-nav-item[data-depth='2'] { padding-left: 24px; }
+.docs-nav-item[aria-current='page'] {
+  background: var(--color-secondary-container);
+  color: var(--color-on-secondary-container);
+  font-weight: var(--type-label-lg-weight);
+}
+.docs-nav-item:hover { opacity: 1; }
+
+/* ── Command-K search item: selected = secondary-container ───────────────── */
+.search-item[data-selected='true'] {
+  background: var(--color-secondary-container) !important;
+  color: var(--color-on-secondary-container) !important;
   outline: none;
 }
 
@@ -166,13 +218,13 @@ a { color: inherit; }
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--color-text-primary);
-  border-radius: var(--radius-md);
+  color: var(--color-on-surface);
+  border-radius: var(--shape-control);
   flex-shrink: 0;
   min-width: 44px;
   min-height: 44px;
 }
-.docs-hamburger:hover { background: var(--color-bg-muted); }
+.docs-hamburger:hover { background: color-mix(in srgb, var(--color-on-surface) 8%, transparent); }
 
 /* Search icon button (mobile only) — hidden on desktop */
 .docs-header-search-icon {
@@ -183,13 +235,13 @@ a { color: inherit; }
   border: none;
   background: none;
   cursor: pointer;
-  color: var(--color-text-muted);
-  border-radius: var(--radius-md);
+  color: var(--color-on-surface-muted);
+  border-radius: var(--shape-control);
   flex-shrink: 0;
   min-width: 44px;
   min-height: 44px;
 }
-.docs-header-search-icon:hover { background: var(--color-bg-muted); }
+.docs-header-search-icon:hover { background: color-mix(in srgb, var(--color-on-surface) 8%, transparent); }
 
 /* Mobile overlay (behind sidebar) */
 .docs-sidebar-overlay {
@@ -197,7 +249,7 @@ a { color: inherit; }
   position: fixed;
   inset: 0;
   top: var(--docs-header-height);
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-overlay);
   z-index: 199;
 }
 
@@ -216,7 +268,7 @@ a { color: inherit; }
 
   .docs-sidebar[data-open="true"] {
     transform: translateX(0);
-    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--elevation-3);
   }
 
   .docs-main {
@@ -245,7 +297,7 @@ a { color: inherit; }
    * ARIA shape so the React component stays untouched. Users on mobile get
    * the OS-level theme by default; explicit selection moves to a future
    * settings menu if needed. */
-  header > [role="group"][aria-label="Theme"] {
+  .docs-header [role="group"][aria-label="Theme"] {
     display: none !important;
   }
 }
@@ -254,7 +306,9 @@ a { color: inherit; }
  * scrolling regions (variant matrix, code blocks, preview pane) keep their
  * own overflow:auto so their inner content is still reachable. */
 html, body {
-  overflow-x: hidden;
+  /* clip, not hidden: hidden makes body a scroll container and breaks the
+     sticky header and sidebar. */
+  overflow-x: clip;
 }
 
 /* The prose-heading mobile scale-down used to live here as a hard jump at
@@ -288,7 +342,7 @@ html, body {
 .docs-usage-card {
   position: relative;
   padding: 1.1rem 1.1rem 1.15rem;
-  border-radius: var(--radius-xl);
+  border-radius: var(--shape-container);
   border: 1px solid;
   overflow: hidden;
   transition: transform var(--duration-fast, 180ms) var(--ease-out, ease),
@@ -304,7 +358,7 @@ html, body {
 }
 .docs-usage-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px -10px var(--docs-usage-shadow, rgba(0, 0, 0, 0.18));
+  box-shadow: var(--elevation-1);
 }
 .docs-usage-card-header {
   display: flex;
@@ -319,7 +373,7 @@ html, body {
   justify-content: center;
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-full);
+  border-radius: var(--shape-control);
   flex-shrink: 0;
   color: #fff;
   box-shadow: 0 4px 10px -4px var(--docs-usage-shadow, rgba(0,0,0,0.25));
@@ -328,13 +382,13 @@ html, body {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--color-text-primary);
+  color: var(--color-on-surface);
   line-height: 1.25;
 }
 .docs-usage-card-subtitle {
   margin: 2px 0 0;
   font-size: 0.72rem;
-  color: var(--color-text-muted);
+  color: var(--color-on-surface-muted);
   letter-spacing: 0.01em;
 }
 .docs-usage-list {
@@ -352,7 +406,7 @@ html, body {
   gap: 9px;
   font-size: 0.84rem;
   line-height: 1.55;
-  color: var(--color-text-secondary);
+  color: var(--color-on-surface-variant);
 }
 .docs-usage-bullet {
   display: inline-flex;
@@ -360,7 +414,7 @@ html, body {
   justify-content: center;
   width: 18px;
   height: 18px;
-  border-radius: var(--radius-full);
+  border-radius: var(--shape-control);
   flex-shrink: 0;
   margin-top: 2px;
   color: #fff;
@@ -369,29 +423,29 @@ html, body {
 /* Do tone — success palette */
 .docs-usage-do {
   background:
-    linear-gradient(135deg, var(--color-semantic-success-bg) 0%, transparent 100%),
-    var(--color-bg-default);
-  border-color: var(--color-semantic-success-border);
-  --docs-usage-glow: var(--color-semantic-success-default);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-success-default) 35%, transparent);
+    linear-gradient(135deg, var(--color-success-container) 0%, transparent 100%),
+    var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
+  --docs-usage-glow: var(--color-success);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-success) 35%, transparent);
 }
 .docs-usage-do .docs-usage-card-icon,
 .docs-usage-do .docs-usage-bullet {
-  background: var(--color-semantic-success-default);
+  background: var(--color-success);
 }
 
 /* Don't tone — error palette */
 .docs-usage-dont {
   background:
-    linear-gradient(135deg, var(--color-semantic-error-bg) 0%, transparent 100%),
-    var(--color-bg-default);
-  border-color: var(--color-semantic-error-border);
-  --docs-usage-glow: var(--color-semantic-error-default);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-semantic-error-default) 35%, transparent);
+    linear-gradient(135deg, var(--color-error-container) 0%, transparent 100%),
+    var(--color-surface);
+  border-color: color-mix(in srgb, var(--color-error) 35%, transparent);
+  --docs-usage-glow: var(--color-error);
+  --docs-usage-shadow: color-mix(in srgb, var(--color-error) 35%, transparent);
 }
 .docs-usage-dont .docs-usage-card-icon,
 .docs-usage-dont .docs-usage-bullet {
-  background: var(--color-semantic-error-default);
+  background: var(--color-error);
 }
 
 @media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
@@ -402,11 +456,6 @@ html, body {
 }
 
 /* ── Plain snippet wrapper (Hero import strip, Playground generated code) ── */
-.docs-snippet {
-  /* Override CopyButton's white-on-dark defaults so it reads on light snippets too. */
-  --docs-copy-btn-bg: color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-  --docs-copy-btn-border: var(--color-border-default);
-}
 .docs-snippet code {
   /* Reset the global .docs-prose code pill treatment when inside a snippet pre */
   background: transparent;
@@ -415,9 +464,6 @@ html, body {
   color: inherit;
 }
 /* Inline (single-line) variant — Hero copy-import strip */
-.docs-snippet-inline {
-  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
-}
 
 /* ── Component page layout (content + right-rail TOC) ───────────────────── */
 .docs-layout-with-toc {
@@ -445,11 +491,11 @@ html, body {
 .docs-hero-bar {
   height: 3px;
   width: 72px;
-  border-radius: var(--radius-full);
+  border-radius: var(--shape-control);
   background: linear-gradient(
     90deg,
-    var(--color-brand-primary-500),
-    var(--color-semantic-info-default, var(--color-brand-primary-600, var(--color-brand-primary-500)))
+    var(--color-primary),
+    var(--color-info, var(--color-primary, var(--color-primary)))
   );
 }
 
@@ -487,7 +533,7 @@ html, body {
 }
 .landing-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.12));
+  box-shadow: var(--elevation-3);
 }
 
 /* ── Playground grid ────────────────────────────────────────────────────── */
@@ -533,21 +579,21 @@ html, body {
   }
 }
 .docs-related-card:hover {
-  border-color: var(--color-brand-primary-500) !important;
+  border-color: var(--color-primary) !important;
   transform: translateY(-1px);
 }
 
 /* ── Feedback floating action button ────────────────────────────────────── */
 .docs-feedback-fab:hover {
-  border-color: var(--color-brand-primary-500);
-  color: var(--color-brand-primary-500);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 @media (prefers-reduced-motion: no-preference) {
   .docs-feedback-fab:hover {
     transform: translateY(-1px);
     box-shadow:
-      0 8px 24px -8px color-mix(in srgb, var(--color-brand-primary-500) 35%, transparent),
-      0 1px 2px color-mix(in srgb, var(--color-text-primary) 6%, transparent);
+      0 8px 24px -8px color-mix(in srgb, var(--color-primary) 35%, transparent),
+      0 1px 2px color-mix(in srgb, var(--color-on-surface) 6%, transparent);
   }
 }
 .docs-feedback-fab:focus-visible {
@@ -605,7 +651,7 @@ html, body {
   top: 50%;
   left: 50%;
   border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--color-brand-primary-500) 30%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   pointer-events: none;
 }
 .logo-ring-1 {
@@ -620,7 +666,7 @@ html, body {
   height: 148px;
   margin-top: -74px;
   margin-left: -74px;
-  border-color: color-mix(in srgb, var(--color-brand-primary-500) 14%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 14%, transparent);
   animation: ring-orbit-ccw 13s linear infinite;
 }
 .logo-ring-1::after {
@@ -632,8 +678,8 @@ html, body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-brand-primary-500);
-  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-brand-primary-500) 70%, transparent);
+  background: var(--color-primary);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-primary) 70%, transparent);
 }
 
 /* ── Landing page — CTA shimmer ───────────────────────────────────────────── */

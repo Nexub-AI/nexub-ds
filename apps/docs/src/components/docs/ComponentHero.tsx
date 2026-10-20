@@ -16,7 +16,7 @@ export function ComponentHero({ entry }: Props) {
         style={{
           fontSize: '0.78rem',
           fontWeight: 600,
-          color: 'var(--color-brand-primary-500)',
+          color: 'var(--color-primary)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
           marginBottom: '0.5rem',
@@ -46,13 +46,13 @@ export function ComponentHero({ entry }: Props) {
 
       {/* Inline copy-import strip */}
       <div
-        className="docs-snippet docs-snippet-inline"
+        className="docs-snippet"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: 8,
           padding: '6px 8px 6px 12px',
-          borderRadius: 'var(--radius-md)',
+          borderRadius: 'var(--shape-field)',
           background: 'var(--docs-snippet-bg)',
           color: 'var(--docs-snippet-fg)',
           border: '1px solid var(--docs-snippet-border)',
@@ -81,29 +81,29 @@ function Badge({
 }) {
   const map = {
     success: {
-      bg: 'var(--color-semantic-success-bg)',
-      fg: 'var(--color-semantic-success-default)',
-      border: 'var(--color-semantic-success-border)',
+      bg: 'var(--color-success-container)',
+      fg: 'var(--color-success)',
+      border: 'color-mix(in srgb, var(--color-success) 35%, transparent)',
     },
     warning: {
-      bg: 'var(--color-semantic-warning-bg)',
-      fg: 'var(--color-semantic-warning-default)',
-      border: 'var(--color-semantic-warning-border)',
+      bg: 'var(--color-warning-container)',
+      fg: 'var(--color-warning)',
+      border: 'color-mix(in srgb, var(--color-warning) 35%, transparent)',
     },
     danger: {
-      bg: 'var(--color-semantic-error-bg)',
-      fg: 'var(--color-semantic-error-default)',
-      border: 'var(--color-semantic-error-border)',
+      bg: 'var(--color-error-container)',
+      fg: 'var(--color-error)',
+      border: 'color-mix(in srgb, var(--color-error) 35%, transparent)',
     },
     info: {
-      bg: 'var(--color-semantic-info-bg)',
-      fg: 'var(--color-semantic-info-default)',
-      border: 'var(--color-semantic-info-border)',
+      bg: 'var(--color-info-container)',
+      fg: 'var(--color-info)',
+      border: 'color-mix(in srgb, var(--color-info) 35%, transparent)',
     },
     muted: {
-      bg: 'var(--color-bg-muted)',
-      fg: 'var(--color-text-muted)',
-      border: 'var(--color-border-default)',
+      bg: 'var(--color-surface-container-high)',
+      fg: 'var(--color-on-surface-muted)',
+      border: 'var(--color-outline-variant)',
     },
   } as const;
   const c = map[tone];
@@ -111,7 +111,7 @@ function Badge({
     <span
       style={{
         padding: '2px 8px',
-        borderRadius: 'var(--radius-full)',
+        borderRadius: 'var(--shape-control)',
         background: c.bg,
         color: c.fg,
         border: `1px solid ${c.border}`,

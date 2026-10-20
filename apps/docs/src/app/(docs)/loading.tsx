@@ -15,7 +15,7 @@ import type React from 'react';
 // Reusable shimmer style — gradient sweep matching LivePreviewWrapper.tsx
 const shimmer: React.CSSProperties = {
   background:
-    'linear-gradient(90deg, var(--color-bg-muted) 25%, var(--color-bg-subtle) 50%, var(--color-bg-muted) 75%)',
+    'linear-gradient(90deg, var(--color-surface-container-high) 25%, var(--color-surface-container-low) 50%, var(--color-surface-container-high) 75%)',
   backgroundSize: '200% 100%',
   animation: 'skeleton-shimmer 1.4s ease infinite',
 };
@@ -28,7 +28,7 @@ export default function DocsLoading() {
         style={{
           height: '12px',
           width: '160px',
-          borderRadius: 'var(--radius-sm)',
+          borderRadius: 'var(--shape-tooltip)',
           marginBottom: '1rem',
           ...shimmer,
         }}
@@ -39,7 +39,7 @@ export default function DocsLoading() {
         style={{
           height: '36px',
           width: '260px',
-          borderRadius: 'var(--radius-sm)',
+          borderRadius: 'var(--shape-tooltip)',
           marginBottom: '0.75rem',
           ...shimmer,
         }}
@@ -54,7 +54,7 @@ export default function DocsLoading() {
               height: '14px',
               width: `${w}%`,
               maxWidth: '480px',
-              borderRadius: 'var(--radius-sm)',
+              borderRadius: 'var(--shape-tooltip)',
               ...shimmer,
             }}
           />
@@ -65,8 +65,8 @@ export default function DocsLoading() {
       <div
         style={{
           height: '52px',
-          borderRadius: 'var(--radius-lg)',
-          background: 'var(--docs-code-bg, #0d1117)',
+          borderRadius: 'var(--shape-container)',
+          background: 'var(--docs-code-bg)',
           opacity: 0.6,
           marginBottom: '2rem',
         }}
@@ -75,8 +75,8 @@ export default function DocsLoading() {
       {/* Preview skeleton */}
       <div
         style={{
-          border: '1px solid var(--color-border-default)',
-          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--color-outline-variant)',
+          borderRadius: 'var(--shape-container)',
           overflow: 'hidden',
           marginBottom: '2rem',
         }}
@@ -84,8 +84,8 @@ export default function DocsLoading() {
         <div
           style={{
             height: '40px',
-            background: 'var(--color-bg-subtle)',
-            borderBottom: '1px solid var(--color-border-default)',
+            background: 'var(--color-surface-container-low)',
+            borderBottom: '1px solid var(--color-outline-variant)',
           }}
         />
         <div style={{ height: '140px', ...shimmer }} />
@@ -98,7 +98,7 @@ export default function DocsLoading() {
             key={i}
             style={{
               height: '36px',
-              borderRadius: 'var(--radius-sm)',
+              borderRadius: 'var(--shape-tooltip)',
               ...shimmer,
               // Stagger the animation so rows don't pulse in lock-step
               animationDelay: `${i * 0.1}s`,

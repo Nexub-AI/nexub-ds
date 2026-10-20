@@ -7,8 +7,8 @@ function PreviewSkeleton() {
     <div
       style={{
         minHeight: '120px',
-        borderRadius: 'var(--radius-lg)',
-        background: 'linear-gradient(90deg, var(--color-bg-subtle) 25%, var(--color-bg-muted) 50%, var(--color-bg-subtle) 75%)',
+        borderRadius: 'var(--shape-container)',
+        background: 'linear-gradient(90deg, var(--color-surface-container-low) 25%, var(--color-surface-container-high) 50%, var(--color-surface-container-low) 75%)',
         backgroundSize: '200% 100%',
         animation: 'skeleton-shimmer 1.4s ease infinite',
       }}

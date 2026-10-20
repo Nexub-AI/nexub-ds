@@ -25,17 +25,17 @@ export default function Error({ error, reset }: ErrorProps) {
         gap: '16px',
         padding: '32px',
         textAlign: 'center',
-        color: 'var(--color-text-primary)',
+        color: 'var(--color-on-surface)',
         fontFamily: 'var(--font-family-sans)',
       }}
     >
       <div style={{ fontSize: '4rem', lineHeight: 1 }}>⚠️</div>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>Something went wrong</h1>
-      <p style={{ color: 'var(--color-text-secondary)', maxWidth: '360px', margin: 0, lineHeight: 1.6 }}>
+      <p style={{ color: 'var(--color-on-surface-variant)', maxWidth: '360px', margin: 0, lineHeight: 1.6 }}>
         An unexpected error occurred. You can try again or return to the home page.
       </p>
       {error.digest && (
-        <p style={{ fontSize: '0.75rem', color: 'var(--color-text-subtle)', margin: 0, fontFamily: 'var(--font-family-mono)' }}>
+        <p style={{ fontSize: '0.75rem', color: 'var(--color-outline)', margin: 0, fontFamily: 'var(--font-family-mono)' }}>
           Error ID: {error.digest}
         </p>
       )}
@@ -44,10 +44,10 @@ export default function Error({ error, reset }: ErrorProps) {
           onClick={reset}
           style={{
             padding: '8px 20px',
-            background: 'var(--color-brand-primary-500)',
+            background: 'var(--color-primary)',
             color: '#fff',
             border: 'none',
-            borderRadius: 'var(--radius-md)',
+            borderRadius: 'var(--shape-field)',
             cursor: 'pointer',
             fontSize: '0.875rem',
             fontWeight: 500,
@@ -60,9 +60,9 @@ export default function Error({ error, reset }: ErrorProps) {
           style={{
             padding: '8px 20px',
             background: 'transparent',
-            color: 'var(--color-text-secondary)',
-            border: '1px solid var(--color-border-default)',
-            borderRadius: 'var(--radius-md)',
+            color: 'var(--color-on-surface-variant)',
+            border: '1px solid var(--color-outline-variant)',
+            borderRadius: 'var(--shape-field)',
             textDecoration: 'none',
             fontSize: '0.875rem',
             fontWeight: 500,
