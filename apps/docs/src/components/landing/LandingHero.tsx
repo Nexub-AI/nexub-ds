@@ -3,6 +3,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Button, EyebrowChip, Heading, Logo, Text, TextGradient } from '@nexub/react';
+import { ArrowRight } from '@nexub/icons';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
 interface LandingHeroProps {
@@ -144,25 +146,14 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           zIndex: 10,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Static nav logo */}
-          <Image
-            src="/nexub-icon.svg"
-            alt="Nexub"
-            width={39}
-            height={28}
-            priority
-            style={{ display: 'block' }}
-          />
-          <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-on-surface)' }}>
-            Nexub<span style={{ color: 'var(--color-primary)' }}> DS</span>
-          </span>
-        </div>
+        <Link href="/" aria-label="Nexub Design System home" style={{ textDecoration: 'none' }}>
+          <Logo size="sm" product="Design System" />
+        </Link>
 
         <div className="landing-nav-links">
-          <Link href="/getting-started" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Docs</Link>
-          <Link href="/components" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Components</Link>
-          <Link href="/patterns" className="landing-nav-link" style={{ color: 'var(--color-on-surface-variant)', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 500 }}>Patterns</Link>
+          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/getting-started">Docs</Link></Button>
+          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/components">Components</Link></Button>
+          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/patterns">Patterns</Link></Button>
           <ThemeSwitcher />
         </div>
       </nav>
@@ -196,104 +187,58 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       </div>
 
       {/* ── Eyebrow — CSS animation, SSR-safe ─────────────────────────────── */}
-      <div
+      <EyebrowChip
+        tone="info"
         className="hero-anim-1"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px',
-          padding: '4px 14px',
-          marginBottom: '1.75rem',
-          background: 'var(--color-info-container)',
-          border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
-          borderRadius: 'var(--shape-control)',
-          fontSize: '0.78rem',
-          fontWeight: 600,
-          color: 'var(--color-info)',
-          letterSpacing: '0.02em',
-        }}
+        style={{ position: 'relative', zIndex: 2, marginBottom: '1.75rem' }}
       >
-        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} />
         v{version} · {componentCount} components · {patternCount} patterns
-      </div>
+      </EyebrowChip>
 
       {/* ── Headline — CSS animation ───────────────────────────────────────── */}
-      <h1
+      <Heading
+        level={1}
+        size="display"
         className="hero-anim-2"
         style={{
           position: 'relative',
           zIndex: 2,
           fontSize: 'clamp(2.75rem, 7vw, 5rem)',
-          fontWeight: 800,
           lineHeight: 1.05,
           letterSpacing: '-0.035em',
           marginBottom: '1.25rem',
           maxWidth: '860px',
-          background: 'linear-gradient(135deg, var(--color-on-surface) 0%, var(--color-primary) 55%, var(--color-primary) 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
         }}
       >
-        Design system for<br />ambitious SaaS teams
-      </h1>
+        Design system for<br />
+        {/* Calm override of the brand rainbow: ink to primary. */}
+        <TextGradient style={{ backgroundImage: 'linear-gradient(135deg, var(--color-on-surface) 0%, var(--color-primary) 70%)' }}>
+          ambitious SaaS teams
+        </TextGradient>
+      </Heading>
 
       {/* ── Subheading — CSS animation ────────────────────────────────────── */}
-      <p
+      <Text
+        size="body-lg"
+        tone="secondary"
         className="hero-anim-3"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          fontSize: '1.125rem',
-          color: 'var(--color-on-surface-variant)',
-          maxWidth: '520px',
-          lineHeight: 1.7,
-          marginBottom: '2.5rem',
-        }}
+        style={{ position: 'relative', zIndex: 2, maxWidth: '520px', marginBottom: '2.5rem' }}
       >
         A complete library of accessible, token-driven React components and patterns.
         Build faster, ship consistently, look great everywhere.
-      </p>
+      </Text>
 
       {/* ── CTAs — CSS animation ──────────────────────────────────────────── */}
       <div
         className="hero-anim-4"
         style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}
       >
-        <Link
-          href="/getting-started"
-          className="landing-cta-shimmer"
-          style={{
-            padding: '13px 30px',
-            borderRadius: 'var(--shape-container)',
-            background: 'var(--gradient-button-primary)',
-            color: '#fff',
-            fontWeight: 700,
-            fontSize: '0.9375rem',
-            textDecoration: 'none',
-            boxShadow: 'var(--elevation-2)',
-            display: 'inline-block',
-          }}
-        >
-          Get started →
-        </Link>
-        <Link
-          href="/components"
-          style={{
-            padding: '13px 30px',
-            borderRadius: 'var(--shape-container)',
-            background: 'var(--color-surface-elevated)',
-            border: '1px solid var(--color-outline-variant)',
-            color: 'var(--color-on-surface)',
-            fontWeight: 600,
-            fontSize: '0.9375rem',
-            textDecoration: 'none',
-          }}
-        >
-          Browse components
-        </Link>
+        <Button asChild variant="filled" size="lg" className="landing-cta-shimmer">
+          <Link href="/getting-started">Get started <ArrowRight size="sm" aria-hidden="true" /></Link>
+        </Button>
+        <Button asChild variant="outlined" size="lg">
+          <Link href="/components">Browse components</Link>
+        </Button>
       </div>
 
       {/* ── Stats strip — CSS animation ───────────────────────────────────── */}
@@ -311,8 +256,8 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       >
         {stats.map((s) => (
           <div key={s.label} style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary)' }}>{s.num}</div>
-            <div style={{ fontSize: '0.78rem', color: 'var(--color-on-surface-muted)', fontWeight: 500, marginTop: '2px' }}>{s.label}</div>
+            <Text size="body" weight="bold" style={{ fontSize: '2rem', lineHeight: 1.2, color: 'var(--color-primary)' }}>{s.num}</Text>
+            <Text size="caption" tone="muted" weight="medium" style={{ marginTop: '2px' }}>{s.label}</Text>
           </div>
         ))}
       </div>
