@@ -4,20 +4,21 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = { title: 'Typography' };
 
-const typeScale = [
-  { name: 'display', size: '72px', weight: 800, tracking: '-0.02em', lineHeight: '1.1' },
-  { name: 'h1', size: '56px', weight: 700, tracking: '-0.02em', lineHeight: '1.15' },
-  { name: 'h2', size: '40px', weight: 700, tracking: '-0.015em', lineHeight: '1.2' },
-  { name: 'h3', size: '32px', weight: 600, tracking: '-0.01em', lineHeight: '1.25' },
-  { name: 'h4', size: '24px', weight: 600, tracking: '-0.005em', lineHeight: '1.3' },
-  { name: 'h5', size: '20px', weight: 600, tracking: '0', lineHeight: '1.35' },
-  { name: 'h6', size: '16px', weight: 600, tracking: '0', lineHeight: '1.4' },
-  { name: 'body-lg', size: '18px', weight: 400, tracking: '0', lineHeight: '1.7' },
-  { name: 'body', size: '16px', weight: 400, tracking: '0', lineHeight: '1.6' },
-  { name: 'body-sm', size: '14px', weight: 400, tracking: '0', lineHeight: '1.5' },
-  { name: 'caption', size: '12px', weight: 400, tracking: '0.01em', lineHeight: '1.5' },
-  { name: 'label', size: '12px', weight: 600, tracking: '0.05em', lineHeight: '1.4' },
-];
+// The 15 type roles (--type-<role>-*, Tailwind text-<role>). Display and
+// headline use the brand face; the rest use Inter. Tracking tightens with size.
+const typeScale = ['display', 'headline', 'title', 'body', 'label'].flatMap((role) =>
+  ['lg', 'md', 'sm'].map((s) => {
+    const name = `${role}-${s}`;
+    return {
+      name,
+      size: `var(--type-${name}-size)`,
+      weight: `var(--type-${name}-weight)`,
+      tracking: `var(--type-${name}-letterSpacing)`,
+      lineHeight: `var(--type-${name}-lineHeight)`,
+      family: role === 'display' || role === 'headline' ? 'var(--font-family-display)' : 'var(--font-family-sans)',
+    };
+  }),
+);
 
 export default function TypographyPage() {
   return (
@@ -32,7 +33,12 @@ export default function TypographyPage() {
         Code uses the monospace stack in <code>--font-family-mono</code>.
       </p>
 
-      <h2>Type Scale</h2>
+      <h2>Type roles</h2>
+      <p>
+        Use roles, not sizes: <code>className=&quot;text-title-md&quot;</code> sets size, line height,
+        tracking and weight together. Headings (<code>h1</code>–<code>h6</code>) default to the display face
+        with <code>text-wrap: balance</code>; numbers in data use <code>tabular-nums</code>.
+      </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
         {typeScale.map((t) => (
           <div
@@ -44,14 +50,14 @@ export default function TypographyPage() {
               borderBottom: '1px solid var(--color-border-subtle)',
             }}
           >
-            <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-brand-primary-500)' }}>
+            <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-primary)' }}>
               {t.name}
             </code>
-            <span style={{ fontSize: t.size, fontWeight: t.weight, letterSpacing: t.tracking, lineHeight: t.lineHeight, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontFamily: t.family, fontSize: t.size, fontWeight: t.weight as unknown as number, letterSpacing: t.tracking, lineHeight: t.lineHeight, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               The quick brown fox
             </span>
             <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)' }}>
-              {t.size} / {t.weight} / lh {t.lineHeight}
+              text-{t.name}
             </span>
           </div>
         ))}
