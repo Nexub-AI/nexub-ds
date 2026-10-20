@@ -30,6 +30,7 @@
     "./light": "./src/light.css",
     "./dark": "./src/dark.css",
     "./glass": "./src/glass.css",
+    "./view-transitions": "./src/view-transitions.css",
     "./leap": "./src/leap.css",
     "./bookub": "./src/bookub.css",
     "./payub": "./src/payub.css",

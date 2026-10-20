@@ -48,7 +48,12 @@ for (const { id } of stories) {
         .then(() => true, () => false);
       test.skip(!applied, 'story pins its own theme/brand globals');
       await page.evaluate(() => document.fonts.ready);
-      await expect(page).toHaveScreenshot(`${id}--${v.name}.png`, { fullPage: true });
+      // Glass is subtle on light backgrounds; the default per-pixel threshold
+      // (0.2) let a whole recipe change through, so compare glass tighter.
+      await expect(page).toHaveScreenshot(`${id}--${v.name}.png`, {
+        fullPage: true,
+        ...(/glass/.test(id) && { threshold: 0.05 }),
+      });
     });
   }
 }

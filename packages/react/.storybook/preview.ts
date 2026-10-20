@@ -38,6 +38,11 @@ const preview: Preview = {
       defaultValue: 'comfortable',
       toolbar: { title: 'Density', icon: 'grow', items: ['comfortable', 'compact'], dynamicTitle: true },
     },
+    dir: {
+      description: 'Text direction',
+      defaultValue: 'ltr',
+      toolbar: { title: 'Direction', icon: 'transfer', items: ['ltr', 'rtl'], dynamicTitle: true },
+    },
     glass: {
       description: 'Glass intensity dial (data-glass)',
       defaultValue: 'balanced',
@@ -58,6 +63,7 @@ const preview: Preview = {
       set('contrast', g.contrast, 'standard');
       set('density', g.density, 'comfortable');
       set('glass', g.glass, 'balanced');
+      root.dir = g.dir === 'rtl' ? 'rtl' : 'ltr';
       return Story();
     },
   ],

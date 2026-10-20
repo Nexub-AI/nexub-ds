@@ -128,6 +128,13 @@ import navigationRailEntry from './components/navigation-rail';
 import amountEntry from './components/amount';
 import moneyInputEntry from './components/money-input';
 
+// ─── 1.6.0 ────────────────────────────────────────────────────────────────────
+import radioCardEntry from './components/radio-card';
+import checkboxCardEntry from './components/checkbox-card';
+import mediaCardEntry from './components/media-card';
+import numberTickerEntry from './components/number-ticker';
+import bentoGridEntry from './patterns/bento-grid';
+
 // ─── All component entries (flat) ─────────────────────────────────────────────
 export const componentEntries: ComponentEntry[] = [
   // Actions
@@ -183,6 +190,8 @@ export const componentEntries: ComponentEntry[] = [
   selectEntry,
   checkboxEntry,
   radioGroupEntry,
+  radioCardEntry,
+  checkboxCardEntry,
   switchEntry,
   comboboxEntry,
   autocompleteEntry,
@@ -202,7 +211,9 @@ export const componentEntries: ComponentEntry[] = [
   dataTableEntry,
   emptyStateEntry,
   errorStateEntry,
+  numberTickerEntry,
   cardEntry,
+  mediaCardEntry,
   // Dividers
   separatorEntry,
   gradientDividerEntry,
@@ -239,6 +250,7 @@ export const patternEntries: ComponentEntry[] = [
   stepIndicatorEntry,
   notificationItemEntry,
   listDetailEntry,
+  bentoGridEntry,
 ];
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────

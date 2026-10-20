@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/patterns',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '1.6.0',
   },
   props: [
     { name: 'label', type: 'string', required: true, description: 'Metric name label.' },
@@ -17,6 +18,7 @@ const entry: ComponentEntry = {
     { name: 'deltaType', type: "'increase' | 'decrease' | 'neutral'", required: false, description: 'Semantic direction of the delta.' },
     { name: 'icon', type: 'React.ReactNode', required: false, description: 'Icon displayed in the card header.' },
     { name: 'description', type: 'string', required: false, description: 'Additional context below the value.' },
+    { name: 'animate', type: 'boolean', default: 'false', required: false, description: 'Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates.' },
   ],
   examples: [
     {
@@ -38,6 +40,10 @@ const entry: ComponentEntry = {
   deltaType="decrease"
   icon={<Users size={20} />}
 />`,
+    },
+    {
+      title: 'Animated',
+      code: `<StatCard label="Orders today" value={orders.toLocaleString()} animate />`,
     },
   ],
 };

@@ -1,5 +1,6 @@
 // Utilities
 export { cn } from './utils/cn.js';
+export { startViewTransition } from './utils/viewTransition.js';
 
 // Hooks
 export { useControllableState } from './hooks/useControllableState.js';
@@ -7,6 +8,7 @@ export { useDisclosure } from './hooks/useDisclosure.js';
 export { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect.js';
 export { useMediaQuery } from './hooks/useMediaQuery.js';
 export { useMergedRefs } from './hooks/useMergedRefs.js';
+export { usePointerSheen } from './hooks/usePointerSheen.js';
 
 // Components — Form & Input
 export { Button, buttonVariants } from './components/Button/index.js';
@@ -32,6 +34,8 @@ export { MoneyInput } from './components/MoneyInput/index.js';
 export type { MoneyInputProps } from './components/MoneyInput/index.js';
 export { Amount } from './components/Amount/index.js';
 export type { AmountProps } from './components/Amount/index.js';
+export { NumberTicker } from './components/NumberTicker/index.js';
+export type { NumberTickerProps, NumberTickerPart } from './components/NumberTicker/index.js';
 
 export { SearchInput } from './components/SearchInput/index.js';
 export type { SearchInputProps } from './components/SearchInput/index.js';
@@ -78,8 +82,14 @@ export { AvatarGroup, avatarGroupVariants } from './components/AvatarGroup/index
 export type { AvatarGroupProps } from './components/AvatarGroup/index.js';
 
 // Components — Layout & Containers
-export { Card, cardVariants } from './components/Card/index.js';
-export type { CardProps } from './components/Card/index.js';
+export { Card, CardLink, cardVariants } from './components/Card/index.js';
+export type { CardProps, CardLinkProps } from './components/Card/index.js';
+export { RadioCardGroup, RadioCard } from './components/RadioCard/index.js';
+export type { RadioCardGroupProps, RadioCardProps } from './components/RadioCard/index.js';
+export { CheckboxCard } from './components/CheckboxCard/index.js';
+export type { CheckboxCardProps } from './components/CheckboxCard/index.js';
+export { MediaCard } from './components/MediaCard/index.js';
+export type { MediaCardProps, MediaCardRatio } from './components/MediaCard/index.js';
 
 // Components — Feedback
 export { Alert, alertVariants } from './components/Alert/index.js';
@@ -225,7 +235,7 @@ export type { ToolbarRootProps } from './components/Toolbar/index.js';
 export { Toast } from './components/Toast/index.js';
 export { Toaster } from './components/Toast/index.js';
 export { toast, useToastStore } from './components/Toast/index.js';
-export type { ToastItem } from './components/Toast/index.js';
+export type { ToastItem, ToasterProps } from './components/Toast/index.js';
 
 // Components — Navigation Shells
 export { TopNav } from './components/TopNav/index.js';

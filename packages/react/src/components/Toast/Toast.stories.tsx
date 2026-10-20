@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { toast, Toaster } from './index.js';
+import { Button } from '../Button/index.js';
 
 const meta: Meta = {
   title: 'Feedback/Toast',
@@ -63,4 +64,41 @@ function ToastDemo() {
 
 export const Default: Story = {
   render: () => <ToastDemo />,
+};
+
+const samples = [
+  () => toast.success('Saved'),
+  () => toast.info('New update available', { description: 'Refresh to get the latest version.' }),
+  () =>
+    toast.error('Upload failed', {
+      description: 'The file is larger than 25 MB. Compress it or split it into parts, then try again.',
+    }),
+  () => toast.custom('Message archived', { action: { label: 'Undo', onClick: () => {} } }),
+  () => toast.warning('Storage almost full', { description: '92% of your quota is used.' }),
+];
+
+/** Fire several toasts: they stack, newest in front. Hover or tab into the stack to fan it out (timers pause meanwhile). */
+export const Stacked: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-2 p-4">
+      <Button onClick={() => samples[Math.floor(Math.random() * samples.length)]!()}>Fire one</Button>
+      <Button variant="outline" onClick={() => samples.forEach((fire, i) => setTimeout(fire, i * 250))}>
+        Fire five
+      </Button>
+      <Button variant="ghost" onClick={() => toast.dismiss()}>
+        Clear
+      </Button>
+      <Toaster />
+    </div>
+  ),
+};
+
+export const StackedExpanded: Story = {
+  name: 'Stacked (expand)',
+  render: () => (
+    <div className="flex flex-wrap gap-2 p-4">
+      <Button onClick={() => samples.forEach((fire) => fire())}>Fire five</Button>
+      <Toaster expand visibleToasts={4} />
+    </div>
+  ),
 };

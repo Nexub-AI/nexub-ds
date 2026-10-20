@@ -55,7 +55,7 @@ describe('SSR', () => {
 // the rest are Radix internals (library-owned): Slider thumb position, the
 // hidden form input behind Switch/Checkbox, Popover anchor (Autocomplete), and
 // Toast's visually-hidden announcer.
-const STYLE_ALLOWED = new Set(['Fade', 'Collapse', 'Slider', 'Switch', 'Checkbox', 'Autocomplete', 'Toaster']);
+const STYLE_ALLOWED = new Set(['Fade', 'Collapse', 'Slider', 'Switch', 'Checkbox', 'Autocomplete', 'Toaster', 'RadioCard', 'CheckboxCard']);
 
 const cspCases: [string, React.ReactElement][] = [
   ['Stack', <N.Stack gap={4} align="center" justify="between">x</N.Stack>],
@@ -70,6 +70,10 @@ const cspCases: [string, React.ReactElement][] = [
   ['AspectRatio', <N.AspectRatio ratio={4 / 3}>x</N.AspectRatio>],
   ['GradientDivider', <N.GradientDivider orientation="vertical" />],
   ['Textarea autoGrow', <N.Textarea autoGrow />],
+  ['NumberTicker', <N.NumberTicker value={1234.5} locale="en-US" />],
+  ['RadioCard', <N.RadioCardGroup defaultValue="a"><N.RadioCard value="a" title="A" /></N.RadioCardGroup>],
+  ['CheckboxCard', <N.CheckboxCard title="A" />],
+  ['MediaCard', <N.MediaCard src="/a.jpg" alt="" title="T" href="/x" />],
 ];
 
 describe('strict CSP: no style attributes in server HTML', () => {
