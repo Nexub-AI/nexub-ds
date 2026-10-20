@@ -403,7 +403,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 | **0. Guardrails** ✅ 2026-10-20 | Visual regression (= R1), token contrast test, Storybook Brand toolbar. See [Phase 0 result](#phase-0-result) below. | M |
 | **1. Foundations** ✅ 2026-10-20 | OKLCH tonal palette generator + role tokens + contrast levels. State-layer tokens + utility. Semantic shape. Elevation 1–3. Type roles + font decision. Spring `linear()` tokens. Size ladder + density. Unified focus ring. All old names aliased. | L |
 | **2. Core controls** ✅ 2026-10-20 | Button family (+ tonal), IconButton, Input/Select/Textarea/Combobox, Checkbox/Radio/Switch, Chip/Badge, SegmentedControl, Tabs, Slider, Toggle. | L |
-| **3. Glass 2.0** | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
+| **3. Glass 2.0** ✅ 2026-10-20 | Thickness tiers, gradient edge, tint, clear variant, intensity dial in ThemeProvider/ThemeScript, all fallbacks, scroll-edge, perf traces. | M |
 | **4. Surfaces & overlays** | Card, Dialog, Sheet/Drawer, Popover, Menus, Tooltip, Toast, TopNav, Sidebar, AppHeader, CommandPalette; View Transitions. Then the **promote-to-production checkpoint**. | L |
 | **5. New components** | ButtonGroup (connected), SplitButton, FloatingToolbar, NavigationRail, Amount/MoneyInput, ListDetail. | M–L |
 | **6. Docs** | Principles page; Foundations rewritten (colour roles, state layers, shape, elevation, motion, glass); do/don't pairs; before/after gallery. | M |
@@ -489,6 +489,33 @@ The token build adds:
 - Filled (M3) text-field variant: the outlined field is kept as the only one for WCAG 1.4.11.
 - The `glass` button variant moves to Phase 3.
 - A 44px hit area for xs controls: 24px already meets WCAG 2.5.8.
+
+### Phase 3 result (2026-10-20)
+
+**What shipped**
+- `glass.css` was rewritten around variables.
+- The fill is `color-mix(surface, dial opacity)`, so the dark-mode duplicates are gone.
+- `blur + saturate`; a hairline plus top specular and bottom rim edge; thin / regular / thick thickness; `tint="primary"`; a `clear` variant.
+- `scrollEdge` soft/hard on TopNav and AppHeader.
+- `Button variant="glass"`.
+- The **intensity dial** lives in ThemeProvider and ThemeScript, persisted as `nexub-glass`, with a Storybook Glass toolbar.
+- Review story: `Foundations/Glass` (material and scroll edge).
+
+**Verified**
+- **WebKit 27.2 resolves `var()` in `backdrop-filter`**, prefixed and unprefixed (§5.6 resolved). It also supports `mask-composite`, `light-dark()`, and `color-mix()` with `calc()`.
+- **Performance:** on a 120 Hz Mac, 3 glass layers over continuously scrolling content held 120 fps (p50 8.3 ms, p99 9.3 ms, no frame over 20 ms).
+- **Fallbacks, checked in a real browser:**
+  - reduced transparency, high contrast, forced colours and `data-glass=off` all give a solid fill and no filter;
+  - high contrast adds a 2px outline.
+  - One bug was caught and fixed: forced colours lost to the utility class until it moved to the variables.
+- **ThemeProvider:** 16 tests, including the dial and the pre-paint script.
+
+**Deviation**
+- The edge is a border plus inset specular/rim, not the masked `::after` gradient from §5.2. A pseudo-element needs `position: relative`, which would break fixed overlays (Dialog/Drawer).
+
+**Still open**
+- Refraction (§5.5) stays deferred.
+- A glass-dial control in the AppHeader settings pattern and the docs moves to Phase 4/6.
 
 ### Quality bar (definition of done for each phase)
 

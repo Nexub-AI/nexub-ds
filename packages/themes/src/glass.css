@@ -1,44 +1,107 @@
 /* @nexub/themes — glass.css
-   Liquid-glass MATERIAL layer. Orthogonal to light/dark: set data-material="glass"
-   on a surface (components do this via surface="glass") IN ADDITION to the normal
-   theme. Import once, after base/light/dark. Selectors mirror dark.css so the
-   dark palette resolves both for an explicit [data-theme='dark'] and for the
-   prefers-color-scheme auto case. */
+   Glass 2.0: a translucent MATERIAL for the floating control layer (bars,
+   toolbars, popovers, menus, sheets, dialogs). Orthogonal to light/dark: the
+   fill is the surface role (a light-dark() value), so dark glass needs no
+   separate rules. Components opt in with surface="glass", which sets
+   data-material="glass" and the glass utility classes (@nexub/react utils/glass).
 
+   Knobs, all optional, on the element or any ancestor:
+     data-glass="clear|balanced|tinted|off"  user intensity dial (ThemeProvider)
+     data-glass-thickness="thin|regular|thick"  size → blur + shadow (per component)
+     data-glass-variant="clear"   over media only: low fill, bright bold content
+     data-glass-tint="primary"    the one emphasised action
+     data-scroll-edge="soft|hard" sticky bars: fade content under the bar / opaque band
+   Import once, after base/light. */
+
+/* ── Intensity dial (user preference, like iOS 27's clear → tinted slider) ── */
+[data-glass='clear']    { --glass-dial: 0.35; }
+[data-glass='balanced'] { --glass-dial: 0.62; }
+[data-glass='tinted']   { --glass-dial: 0.85; }
+
+/* ── Recipe ─────────────────────────────────────────────────────────────────── */
 [data-material='glass'] {
-  --glass-bg:        rgba(255, 255, 255, 0.55);
-  --glass-border:    rgba(255, 255, 255, 0.35);
-  --glass-highlight: rgba(255, 255, 255, 0.65);
-  --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.12);
-  --glass-blur:      16px;
+  --glass-opacity: var(--glass-dial, 0.62);
+  --glass-tint: var(--color-surface);
+  --glass-blur: 16px;
+  --glass-saturate: 180%;
+  --glass-elevation: var(--elevation-2);
+
+  --glass-bg: color-mix(in oklch, var(--glass-tint) calc(var(--glass-opacity) * 100%), transparent);
+  /* Edge: a hairline plus a bright top specular and a faint bottom rim. */
+  --glass-border: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.12));
+  --glass-highlight: light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.14));
+  --glass-rim: light-dark(rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.04));
+  --glass-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  --glass-shadow: inset 0 1px 0 0 var(--glass-highlight), inset 0 -1px 0 0 var(--glass-rim), var(--glass-elevation);
 }
 
-/* glass-on-dark — explicit theme */
-[data-theme='dark'] [data-material='glass'],
-[data-theme='dark'][data-material='glass'] {
-  --glass-bg:        rgba(20, 20, 24, 0.55);
-  --glass-border:    rgba(255, 255, 255, 0.12);
-  --glass-highlight: rgba(255, 255, 255, 0.10);
-  --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.45);
+/* Thickness scales with size, like Apple's material: more blur, deeper shadow. */
+[data-material='glass'][data-glass-thickness='thin'] {
+  --glass-blur: 8px;
+  --glass-saturate: 170%;
+  --glass-elevation: var(--elevation-1);
+}
+[data-material='glass'][data-glass-thickness='thick'] {
+  --glass-blur: 28px;
+  --glass-elevation: var(--elevation-3);
 }
 
-/* glass-on-dark — auto (no explicit theme + OS dark) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) [data-material='glass'],
-  :root:not([data-theme])[data-material='glass'] {
-    --glass-bg:        rgba(20, 20, 24, 0.55);
-    --glass-border:    rgba(255, 255, 255, 0.12);
-    --glass-highlight: rgba(255, 255, 255, 0.10);
-    --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.45);
+/* Tint: the single emphasised action. Kept near-opaque so on-primary text holds. */
+[data-material='glass'][data-glass-tint='primary'] {
+  --glass-tint: var(--color-primary);
+  --glass-opacity: max(var(--glass-dial, 0.62), 0.82);
+}
+
+/* Clear: over imagery/video only. A dim scrim instead of a surface fill. */
+[data-material='glass'][data-glass-variant='clear'] {
+  --glass-bg: rgb(0 0 0 / calc(var(--glass-dial, 0.62) * 0.4));
+  --glass-blur: 6px;
+  --glass-border: rgb(255 255 255 / 0.22);
+  --glass-highlight: rgb(255 255 255 / 0.3);
+}
+
+/* Scroll edge (sticky bars): soft = content dissolves under the bar; hard = opaque band. */
+[data-scroll-edge='soft'] {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 14px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 14px), transparent);
+  border-bottom-color: transparent;
+}
+[data-material='glass'][data-scroll-edge='hard'] {
+  --glass-opacity: max(var(--glass-dial, 0.62), 0.9);
+}
+
+/* ── Solid fallbacks: load-bearing, not polish ──────────────────────────────── */
+/* Each fallback sets the fill itself (solid tint) and doubles the attribute so
+   it outranks the two-attribute variant rules above (clear, tint, hard edge). */
+[data-glass='off'] [data-material='glass'],
+[data-glass='off'][data-material='glass'] {
+  --glass-bg: var(--glass-tint);
+  --glass-filter: none;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-material='glass'][data-material='glass'] { --glass-opacity: 0.94; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-material='glass'][data-material='glass'] {
+    --glass-bg: var(--glass-tint);
+    --glass-filter: none;
   }
 }
-
-/* a11y: drop translucency + blur when the user opts out — fall back to the
-   solid surface tokens Card/Dialog/etc. already use. Load-bearing, not polish. */
-@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
-  [data-material='glass'] {
-    --glass-bg:     var(--color-bg-default);
-    --glass-border: var(--color-border-default);
-    --glass-blur:   0px;
+@media (prefers-contrast: more) {
+  [data-material='glass'][data-material='glass'] {
+    --glass-bg: var(--glass-tint);
+    --glass-filter: none;
+    --glass-border: var(--color-outline);
+    outline: 2px solid var(--color-outline);
+    outline-offset: -2px;
+  }
+}
+@media (forced-colors: active) {
+  /* Through the vars: the component's utility classes outrank a plain
+     backdrop-filter declaration here. */
+  [data-material='glass'][data-material='glass'] {
+    --glass-bg: Canvas;
+    --glass-filter: none;
+    --glass-border: CanvasText;
   }
 }

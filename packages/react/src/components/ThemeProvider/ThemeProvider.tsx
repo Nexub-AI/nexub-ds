@@ -5,6 +5,11 @@ import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
+/** Glass intensity dial (user preference, like iOS 27's clear → tinted slider).
+ *  'off' makes every glass surface solid. Set as `data-glass` on <html>. */
+export type GlassMode = 'clear' | 'balanced' | 'tinted' | 'off';
+const GLASS_MODES: readonly GlassMode[] = ['clear', 'balanced', 'tinted', 'off'];
+
 export interface ThemeContextValue {
   /** The resolved theme actually applied (never 'system'). */
   resolvedTheme: 'light' | 'dark';
@@ -12,6 +17,10 @@ export interface ThemeContextValue {
   theme: ThemeMode;
   /** Change the active theme. */
   setTheme: (mode: ThemeMode) => void;
+  /** Glass intensity. */
+  glass: GlassMode;
+  /** Change (and persist) the glass intensity. */
+  setGlass: (mode: GlassMode) => void;
 }
 
 export interface ThemeProviderProps {
@@ -25,6 +34,10 @@ export interface ThemeProviderProps {
    * Defaults to 'nexub-theme'.
    */
   storageKey?: string;
+  /** Initial glass intensity. Defaults to 'balanced'. */
+  defaultGlass?: GlassMode;
+  /** localStorage key for the glass intensity. Defaults to 'nexub-glass'. */
+  glassStorageKey?: string;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -58,6 +71,17 @@ function readStorage(key: string, fallback: ThemeMode): ThemeMode {
   return fallback;
 }
 
+function readGlass(key: string, fallback: GlassMode): GlassMode {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    const stored = window.localStorage.getItem(key) as GlassMode | null;
+    if (stored && GLASS_MODES.includes(stored)) return stored;
+  } catch {
+    // localStorage not available
+  }
+  return fallback;
+}
+
 function writeStorage(key: string, value: string): void {
   if (typeof window === 'undefined') return;
   try {
@@ -73,11 +97,14 @@ export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'nexub-theme',
+  defaultGlass = 'balanced',
+  glassStorageKey = 'nexub-glass',
 }: ThemeProviderProps) {
   // Start from props (not storage/matchMedia) so server and client render the
   // same tree; real values are synced before paint below.
   const [theme, setThemeState] = React.useState<ThemeMode>(defaultTheme);
   const [systemTheme, setSystemTheme] = React.useState<'light' | 'dark'>('light');
+  const [glass, setGlassState] = React.useState<GlassMode>(defaultGlass);
 
   useIsomorphicLayoutEffect(() => {
     setThemeState(readStorage(storageKey, defaultTheme));
@@ -95,6 +122,14 @@ export function ThemeProvider({
     applyTheme(theme);
   }, [theme]);
 
+  useIsomorphicLayoutEffect(() => {
+    setGlassState(readGlass(glassStorageKey, defaultGlass));
+  }, [glassStorageKey, defaultGlass]);
+
+  useIsomorphicLayoutEffect(() => {
+    document.documentElement.setAttribute('data-glass', glass);
+  }, [glass]);
+
   const resolvedTheme = theme === 'system' ? systemTheme : theme;
 
   const setTheme = React.useCallback(
@@ -105,9 +140,17 @@ export function ThemeProvider({
     [storageKey],
   );
 
+  const setGlass = React.useCallback(
+    (mode: GlassMode) => {
+      writeStorage(glassStorageKey, mode);
+      setGlassState(mode);
+    },
+    [glassStorageKey],
+  );
+
   const value = React.useMemo<ThemeContextValue>(
-    () => ({ theme, resolvedTheme, setTheme }),
-    [theme, resolvedTheme, setTheme],
+    () => ({ theme, resolvedTheme, setTheme, glass, setGlass }),
+    [theme, resolvedTheme, setTheme, glass, setGlass],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
@@ -130,6 +173,8 @@ export interface ThemeScriptProps {
   storageKey?: string;
   /** If set, a stored product brand (e.g. 'bookub') is applied as `data-product`. */
   productStorageKey?: string;
+  /** Must match ThemeProvider's `glassStorageKey`. Defaults to 'nexub-glass'. */
+  glassStorageKey?: string;
   /** CSP nonce for pages whose script-src disallows inline scripts. */
   nonce?: string;
 }
@@ -138,23 +183,24 @@ export interface ThemeScriptProps {
 const jsString = (s: string) => JSON.stringify(s).replace(/</g, '\\u003c');
 
 /** @internal Exported for tests. */
-export function themeScriptSource(storageKey: string, productStorageKey?: string): string {
+export function themeScriptSource(storageKey: string, productStorageKey?: string, glassStorageKey = 'nexub-glass'): string {
   const product = productStorageKey
     ? `var b=localStorage.getItem(${jsString(productStorageKey)});if(b&&b!=='base')d.setAttribute('data-product',b);`
     : '';
-  return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}}catch(e){}`;
+  const glass = `var g=localStorage.getItem(${jsString(glassStorageKey)});if(${JSON.stringify(GLASS_MODES)}.indexOf(g)>-1)d.setAttribute('data-glass',g);`;
+  return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}${glass}}catch(e){}`;
 }
 
 /**
  * Applies the stored theme before first paint, so there is no light/dark flash.
  * Render it in `<head>` (or at the top of `<body>`) on server-rendered pages.
  */
-export function ThemeScript({ storageKey = 'nexub-theme', productStorageKey, nonce }: ThemeScriptProps) {
+export function ThemeScript({ storageKey = 'nexub-theme', productStorageKey, glassStorageKey, nonce }: ThemeScriptProps) {
   return (
     <script
       nonce={nonce}
       suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: themeScriptSource(storageKey, productStorageKey) }}
+      dangerouslySetInnerHTML={{ __html: themeScriptSource(storageKey, productStorageKey, glassStorageKey) }}
     />
   );
 }

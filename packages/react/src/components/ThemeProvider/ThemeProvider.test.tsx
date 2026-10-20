@@ -159,6 +159,29 @@ describe('ThemeProvider', () => {
 
 // ─── ThemeScript ──────────────────────────────────────────────────────────────
 
+describe('glass dial', () => {
+  function GlassConsumer() {
+    const { glass, setGlass } = useTheme();
+    return <button onClick={() => setGlass('off')}>{glass}</button>;
+  }
+
+  it('defaults to balanced and sets data-glass on <html>', () => {
+    render(<ThemeProvider><GlassConsumer /></ThemeProvider>);
+    expect(screen.getByRole('button')).toHaveTextContent('balanced');
+    expect(document.documentElement.getAttribute('data-glass')).toBe('balanced');
+  });
+
+  it('persists the choice and restores it', () => {
+    const { unmount } = render(<ThemeProvider><GlassConsumer /></ThemeProvider>);
+    act(() => screen.getByRole('button').click());
+    expect(document.documentElement.getAttribute('data-glass')).toBe('off');
+    expect(localStorage.getItem('nexub-glass')).toBe('off');
+    unmount();
+    render(<ThemeProvider><GlassConsumer /></ThemeProvider>);
+    expect(screen.getByRole('button')).toHaveTextContent('off');
+  });
+});
+
 describe('ThemeScript', () => {
   it('applies the stored theme and product before paint', () => {
     localStorage.setItem('k', 'dark');
@@ -167,6 +190,16 @@ describe('ThemeScript', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-product')).toBe('bookub');
     document.documentElement.removeAttribute('data-product');
+  });
+
+  it('applies the stored glass intensity and ignores unknown values', () => {
+    localStorage.setItem('nexub-glass', 'tinted');
+    new Function(themeScriptSource('k'))();
+    expect(document.documentElement.getAttribute('data-glass')).toBe('tinted');
+    localStorage.setItem('nexub-glass', 'bogus');
+    document.documentElement.removeAttribute('data-glass');
+    new Function(themeScriptSource('k'))();
+    expect(document.documentElement.hasAttribute('data-glass')).toBe(false);
   });
 
   it('ignores unknown stored values', () => {

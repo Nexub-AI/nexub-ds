@@ -38,6 +38,11 @@ const preview: Preview = {
       defaultValue: 'comfortable',
       toolbar: { title: 'Density', icon: 'grow', items: ['comfortable', 'compact'], dynamicTitle: true },
     },
+    glass: {
+      description: 'Glass intensity dial (data-glass)',
+      defaultValue: 'balanced',
+      toolbar: { title: 'Glass', icon: 'mirror', items: ['clear', 'balanced', 'tinted', 'off'], dynamicTitle: true },
+    },
   },
   // @nexub/themes reads data-theme / data-product / data-contrast / data-density on <html>.
   decorators: [
@@ -52,6 +57,7 @@ const preview: Preview = {
       set('product', g.brand, 'none');
       set('contrast', g.contrast, 'standard');
       set('density', g.density, 'comfortable');
+      set('glass', g.glass, 'balanced');
       return Story();
     },
   ],

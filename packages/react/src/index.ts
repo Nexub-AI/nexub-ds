@@ -220,7 +220,7 @@ export type { ToastItem } from './components/Toast/index.js';
 
 // Components — Navigation Shells
 export { TopNav } from './components/TopNav/index.js';
-export type { TopNavItemProps } from './components/TopNav/index.js';
+export type { TopNavItemProps, TopNavRootProps } from './components/TopNav/index.js';
 export { Sidebar } from './components/Sidebar/index.js';
 export type { SidebarRootProps, SidebarHeaderProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
 export { AppShell } from './components/AppShell/index.js';
@@ -250,7 +250,7 @@ export type { DateRangePickerProps, DateRange } from './components/DateRangePick
 
 // Components — Theme
 export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider/index.js';
-export type { ThemeMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
+export type { ThemeMode, GlassMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
 
 // Components — Motion
 export { Fade, Slide, Scale, Collapse } from './components/Motion/index.js';

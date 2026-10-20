@@ -4,6 +4,7 @@ import { Loader2 } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
+import { glassSurfaceClass } from '../../utils/glass.js';
 
 export type ToneValue =
   | 'neutral'
@@ -46,6 +47,8 @@ export const buttonVariants = cva(
         tonal,
         outlined,
         text,
+        // Thin glass: for buttons floating over content/media (toolbars, media controls).
+        glass: `border ${glassSurfaceClass} text-[var(--color-on-surface)] ${disabledContainer}`,
         // Legacy names (kept as aliases).
         primary: filled,
         secondary: tonal,
@@ -111,6 +114,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className,
       ),
       'data-tone': tone,
+      ...(variant === 'glass' && { 'data-material': 'glass', 'data-glass-thickness': 'thin' }),
       ...props,
     };
 
