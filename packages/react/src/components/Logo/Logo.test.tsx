@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as React from 'react';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
