@@ -1,84 +1,87 @@
 import type { Metadata } from 'next';
+import { SpringDemo, StateDemo } from './MotionDemo';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = { title: 'Motion' };
+export const metadata: Metadata = {
+  title: 'Motion & interaction',
+  description: 'Spring motion tokens, state layers, press feedback and the focus ring.',
+};
 
-const durations = [
-  { name: 'instant', value: '0ms' },
-  { name: 'fast', value: '150ms' },
-  { name: 'normal', value: '200ms' },
-  { name: 'slow', value: '300ms' },
-  { name: 'slower', value: '500ms' },
-];
+const eyebrow = { fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: '0.5rem' };
 
-const easings = [
-  { name: 'linear', value: 'cubic-bezier(0, 0, 1, 1)' },
-  { name: 'in', value: 'cubic-bezier(0.4, 0, 1, 1)' },
-  { name: 'out', value: 'cubic-bezier(0, 0, 0.2, 1)' },
-  { name: 'in-out', value: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-  { name: 'out-expo', value: 'cubic-bezier(0.16, 1, 0.3, 1)' },
-  { name: 'spring', value: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+const springs = [
+  ['spatial', 'Position and size: panels, sheets, indicators. Damping 0.9, a hair of settle.', '1400 / 700 / 300'],
+  ['effects', 'Opacity and color. Critically damped: never overshoots.', '3800 / 1600 / 800'],
+  ['expressive', 'Key moments only: toggles, success, drag release. Damping 0.7–0.8.', '800 / 380 / 200'],
 ];
 
 export default function MotionPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
-      <h1>Motion</h1>
+      <p style={eyebrow}>Foundations</p>
+      <h1>Motion &amp; interaction</h1>
       <p>
-        Motion tokens define the duration and easing curves used across all transition animations.
-        They&apos;re exposed as <code>--duration-*</code> and <code>--ease-*</code> CSS custom properties,
-        and used by the <code>Fade</code>, <code>Slide</code>, <code>Scale</code>, and <code>Collapse</code> motion components.
+        Motion is <strong>springs, not durations</strong> (Apple’s fluid interfaces, Material 3’s motion
+        scheme). Each spring is precomputed into a CSS <code>linear()</code> easing plus the time it takes to
+        settle, so transitions stay in CSS and are interruptible: a new target retargets from where the
+        element is.
       </p>
 
-      <h2>Duration</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '2rem' }}>
-        {durations.map((d) => (
-          <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '10px 0', borderBottom: '1px solid var(--color-border-subtle)' }}>
-            <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-brand-primary-500)', width: '160px' }}>--duration-{d.name}</code>
-            <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-muted)', width: '60px' }}>{d.value}</code>
-            <div style={{ flex: 1, height: '8px', background: 'var(--color-bg-muted)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
-              <div
-                style={{
-                  height: '100%',
-                  width: '24px',
-                  background: 'var(--color-brand-primary-500)',
-                  borderRadius: 'var(--radius-full)',
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      <h2>Springs</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Family</th>
+            <th>Use</th>
+            <th>Stiffness (fast / default / slow)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {springs.map(([k, use, stiff]) => (
+            <tr key={k}>
+              <td>
+                <code>{k}</code>
+              </td>
+              <td>{use}</td>
+              <td>{stiff}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <pre><code>{`transition: transform var(--motion-spring-spatial-default-duration)
+                      var(--motion-spring-spatial-default-easing);
+/* Tailwind: duration-spatial-default ease-spatial-default */`}</code></pre>
+      <p>Click a row to run it:</p>
+      <SpringDemo />
+      <p>
+        Exits use the next-faster token. Never animate <code>backdrop-filter</code>, and don’t use{' '}
+        <code>transition-all</code>.
+      </p>
 
-      <h2>Easing</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {easings.map((e) => (
-          <div key={e.name} style={{ padding: '10px 0', borderBottom: '1px solid var(--color-border-subtle)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-brand-primary-500)', width: '160px' }}>--ease-{e.name}</code>
-              <code style={{ fontSize: '0.72rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-muted)' }}>{e.value}</code>
-            </div>
-          </div>
-        ))}
-      </div>
+      <h2>State layers</h2>
+      <p>
+        Hover, focus and press are an overlay of the control’s own text color at a fixed opacity, so they
+        read correctly on any fill, theme, brand or glass: <code>--state-hover</code> 0.08,{' '}
+        <code>--state-focus</code> 0.10, <code>--state-pressed</code> 0.12, <code>--state-dragged</code> 0.16.
+        Add <code>nx-state-layer</code> to any custom control. Pressables also scale to 0.97 on a fast spring
+        (<code>nx-press</code>). There is no ripple.
+      </p>
+      <StateDemo />
 
-      <h2>Motion Components</h2>
-      <p>Use the built-in motion primitives from <code>@nexub/react</code> for consistent animations:</p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '2rem' }}>
-        {[
-          { name: 'Fade', desc: 'Opacity 0 → 1 transition' },
-          { name: 'Slide', desc: 'Translate + fade from a direction' },
-          { name: 'Scale', desc: 'Scale + fade from initialScale' },
-          { name: 'Collapse', desc: 'Max-height accordion reveal' },
-        ].map((c) => (
-          <div key={c.name} style={{ padding: '16px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)' }}>
-            <div style={{ fontWeight: 700, fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-primary)', marginBottom: '4px' }}>{c.name}</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>{c.desc}</div>
-          </div>
-        ))}
-      </div>
+      <h2>Focus</h2>
+      <p>
+        One ring for everything: a 3px <code>outline</code> in <code>--color-ring-default</code>, offset 2px.
+        It follows <code>border-radius</code>, so it hugs capsules and fields, clears 3:1 on every surface, and
+        uses the system <code>Highlight</code> colour in forced-colours mode. Fields show focus as a 2px primary
+        border instead.
+      </p>
+
+      <h2>Reduced motion</h2>
+      <p>
+        Under <code>prefers-reduced-motion: reduce</code> every transition and animation collapses to an
+        instant change. Nothing that conveys meaning relies on motion alone.
+      </p>
     </div>
   );
 }

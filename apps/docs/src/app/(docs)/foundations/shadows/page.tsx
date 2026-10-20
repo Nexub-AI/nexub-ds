@@ -2,72 +2,75 @@ import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = { title: 'Shadows' };
+export const metadata: Metadata = {
+  title: 'Elevation & shape',
+  description: 'Tonal elevation, three shadow levels for floating layers, semantic shapes and concentric radii.',
+};
 
-const shadows = [
-  { name: 'xs', desc: 'Minimal lift — chips, tags' },
-  { name: 'sm', desc: 'Subtle elevation — buttons' },
-  { name: 'md', desc: 'Moderate — dropdowns, popovers' },
-  { name: 'lg', desc: 'Prominent — modals, drawers' },
-  { name: 'xl', desc: 'Strong — command palette' },
-  { name: '2xl', desc: 'Maximum — full-page overlays' },
-  { name: 'card', desc: 'Card surface' },
-  { name: 'glow', desc: 'Brand glow effect' },
-  { name: 'focus', desc: 'Focus ring (used internally)' },
+const eyebrow = { fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: '0.5rem' };
+const mono = { fontFamily: 'var(--font-family-mono)', fontSize: '0.72rem', color: 'var(--color-on-surface-muted)' };
+
+const levels = [
+  ['0', 'In-flow content. Use tone, not shadow.'],
+  ['1', 'Menus, interactive cards on hover, the Switch thumb.'],
+  ['2', 'Popovers, toasts, floating toolbars.'],
+  ['3', 'Dialogs, sheets, the command palette.'],
 ];
 
-export default function ShadowsPage() {
+const shapes = [
+  ['control', '9999px', 'Capsule: Button, IconButton, Chip, SegmentedControl, Switch, Badge'],
+  ['field', '12px', 'Input, Select, Textarea'],
+  ['container', '16px', 'Card, Popover, Menu, Toast'],
+  ['overlay', '24px', 'Dialog, Sheet, CommandPalette'],
+  ['tooltip', '8px', 'Tooltip, Kbd'],
+];
+
+export default function ElevationShapePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
-      <h1>Shadows</h1>
-      <p>
-        Shadow tokens create a consistent elevation system. They&apos;re exposed as <code>--shadow-*</code> CSS custom properties
-        and adapt to light/dark mode automatically.
-      </p>
+      <p style={eyebrow}>Foundations</p>
+      <h1>Elevation &amp; shape</h1>
 
-      <h2>Elevation Scale</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px', marginBottom: '2rem' }}>
-        {shadows.map((s) => (
-          <div key={s.name} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div
-              style={{
-                height: '80px',
-                background: 'var(--color-bg-raised)',
-                borderRadius: 'var(--radius-xl)',
-                boxShadow: `var(--shadow-${s.name})`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-brand-primary-500)' }}>
-                --shadow-{s.name}
-              </code>
-            </div>
-            <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{s.desc}</p>
+      <h2>Elevation</h2>
+      <p>
+        Content that sits in the page uses <strong>tone</strong>: it steps up through the surface-container
+        roles. <strong>Shadows are only for things that float.</strong> Each level is a 1px alpha ring plus two
+        soft layers, defined with <code>light-dark()</code> so dark mode gets deeper, quieter shadows.
+      </p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 20, padding: 24, borderRadius: 24, background: 'var(--color-surface-container-low)', marginBottom: '2rem' }}>
+        {levels.map(([n, use]) => (
+          <div key={n} style={{ borderRadius: 16, padding: 16, minHeight: 96, background: 'var(--color-surface-elevated)', boxShadow: `var(--elevation-${n})` }}>
+            <code style={{ fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem' }}>elevation-{n}</code>
+            <p style={{ margin: '6px 0 0', fontSize: '0.82rem', color: 'var(--color-on-surface-variant)' }}>{use}</p>
           </div>
         ))}
       </div>
 
-      <h2>Border Radius</h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '12px' }}>
-        {['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'full'].map((r) => (
-          <div key={r} style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
-            <div
-              style={{
-                width: '60px',
-                height: '60px',
-                background: 'var(--color-brand-primary-500)',
-                borderRadius: `var(--radius-${r})`,
-                opacity: 0.8,
-              }}
-            />
-            <code style={{ fontSize: '0.7rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-muted)' }}>
-              --radius-{r}
+      <h2>Shape</h2>
+      <p>
+        Components use <strong>semantic shapes</strong>, not raw radii, so one decision changes every control.
+        Tailwind: <code>rounded-shape-control</code> and so on. The primitive radius scale is unchanged.
+      </p>
+      <div style={{ display: 'grid', gap: 12, marginBottom: '2rem' }}>
+        {shapes.map(([name, value, use]) => (
+          <div key={name} style={{ display: 'grid', gridTemplateColumns: '120px 160px 1fr', gap: 16, alignItems: 'center' }}>
+            <div style={{ height: 44, borderRadius: `var(--shape-${name})`, background: 'var(--color-secondary-container)' }} />
+            <code style={mono}>
+              --shape-{name} ({value})
             </code>
+            <span style={{ fontSize: '0.88rem' }}>{use}</span>
           </div>
         ))}
+      </div>
+
+      <h2>Concentric radii</h2>
+      <p>
+        A shape inside a shape keeps the same centre of curvature: <em>inner radius = outer radius − padding</em>,
+        floored at <code>--shape-min</code> (4px). Menus (16px with 6px padding) use 10px items; the command
+        palette (24px with 8px padding) uses 16px items.
+      </p>
+      <div style={{ display: 'inline-block', padding: 8, borderRadius: 24, background: 'var(--color-surface-container-high)', marginBottom: '2rem' }}>
+        <div style={{ width: 240, height: 64, borderRadius: 16, background: 'var(--color-surface-elevated)' }} />
       </div>
     </div>
   );

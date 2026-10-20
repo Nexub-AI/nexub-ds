@@ -120,13 +120,24 @@ import settingsSectionEntry from './patterns/settings-section';
 import infoListEntry from './patterns/info-list';
 import stepIndicatorEntry from './patterns/step-indicator';
 import notificationItemEntry from './patterns/notification-item';
+import listDetailEntry from './patterns/list-detail';
+
+// ─── Design refresh Phase 5 ───────────────────────────────────────────────────
+import splitButtonEntry from './components/split-button';
+import navigationRailEntry from './components/navigation-rail';
+import amountEntry from './components/amount';
+import moneyInputEntry from './components/money-input';
 
 // ─── All component entries (flat) ─────────────────────────────────────────────
 export const componentEntries: ComponentEntry[] = [
   // Actions
   buttonEntry,
   buttonGroupEntry,
+  splitButtonEntry,
   iconButtonEntry,
+  navigationRailEntry,
+  amountEntry,
+  moneyInputEntry,
   // Form & Input
   inputEntry,
   textareaEntry,
@@ -227,6 +238,7 @@ export const patternEntries: ComponentEntry[] = [
   infoListEntry,
   stepIndicatorEntry,
   notificationItemEntry,
+  listDetailEntry,
 ];
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
@@ -258,11 +270,13 @@ export const searchIndex: SearchEntry[] = [
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
-  { id: 'foundations-colors', label: 'Colors', description: 'Color tokens and semantic palette', href: '/foundations/colors', category: 'Foundations' },
-  { id: 'foundations-typography', label: 'Typography', description: 'Font families, sizes, and weights', href: '/foundations/typography', category: 'Foundations' },
+  { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
+  { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
+  { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
-  { id: 'foundations-motion', label: 'Motion', description: 'Duration and easing tokens', href: '/foundations/motion', category: 'Foundations' },
-  { id: 'foundations-shadows', label: 'Shadows', description: 'Elevation and shadow tokens', href: '/foundations/shadows', category: 'Foundations' },
+  { id: 'foundations-motion', label: 'Motion & interaction', description: 'Spring tokens, state layers, focus ring', href: '/foundations/motion', category: 'Foundations' },
+  { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },
+  { id: 'foundations-materials', label: 'Materials', description: 'Glass 2.0 and the intensity dial', href: '/foundations/materials', category: 'Foundations' },
   { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
   { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
   { id: 'content-vocabulary', label: 'Vocabulary', description: 'Approved terms and words to avoid', href: '/content/vocabulary', category: 'Content' },
@@ -303,11 +317,12 @@ export const navGroups: NavGroup[] = [
   {
     title: 'Foundations',
     items: [
+      { title: 'Principles', href: '/foundations/principles' },
       { title: 'Colors', href: '/foundations/colors' },
       { title: 'Typography', href: '/foundations/typography' },
       { title: 'Spacing', href: '/foundations/spacing' },
-      { title: 'Motion', href: '/foundations/motion' },
-      { title: 'Shadows', href: '/foundations/shadows' },
+      { title: 'Elevation & shape', href: '/foundations/shadows' },
+      { title: 'Motion & interaction', href: '/foundations/motion' },
       { title: 'Materials', href: '/foundations/materials' },
     ],
   },
