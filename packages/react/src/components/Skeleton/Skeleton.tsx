@@ -3,16 +3,16 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 
 export const skeletonVariants = cva(
-  'bg-[var(--color-bg-muted)]',
+  'block bg-surface-container-highest',
   {
     variants: {
       shape: {
-        line: 'rounded',
-        rect: 'rounded-md',
-        circle: 'rounded-full',
+        line: 'h-[1em] w-full rounded-shape-min',
+        rect: 'w-full rounded-shape-container',
+        circle: 'size-10 rounded-full',
       },
       animated: {
-        true: 'animate-pulse',
+        true: 'animate-pulse motion-reduce:animate-none',
       },
     },
     defaultVariants: {
@@ -26,10 +26,13 @@ export interface SkeletonProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof skeletonVariants> {
   shape?: 'line' | 'rect' | 'circle';
+  /** Arbitrary size; rendered as inline style. Omit to use the shape's default classes. */
   width?: string | number;
   height?: string | number;
   animated?: boolean;
 }
+
+const px = (v: string | number) => (typeof v === 'number' ? `${v}px` : v);
 
 export const Skeleton = React.forwardRef<HTMLSpanElement, SkeletonProps>(
   (
@@ -44,45 +47,21 @@ export const Skeleton = React.forwardRef<HTMLSpanElement, SkeletonProps>(
     },
     ref,
   ) => {
-    const defaultHeight =
-      shape === 'line' ? '1em' : shape === 'circle' ? undefined : undefined;
-
-    const resolvedWidth =
-      width !== undefined
-        ? typeof width === 'number'
-          ? `${width}px`
-          : width
-        : shape === 'circle'
-          ? height !== undefined
-            ? typeof height === 'number'
-              ? `${height}px`
-              : height
-            : '2.5rem'
-          : '100%';
-
-    const resolvedHeight =
-      height !== undefined
-        ? typeof height === 'number'
-          ? `${height}px`
-          : height
-        : shape === 'circle'
-          ? resolvedWidth
-          : defaultHeight;
+    // Defaults come from classes, so the common case renders no style
+    // attribute (strict-CSP safe). A circle with only one dimension stays round.
+    const w = width ?? (shape === 'circle' ? height : undefined);
+    const h = height ?? (shape === 'circle' ? width : undefined);
+    const sizeStyle =
+      w !== undefined || h !== undefined
+        ? { ...(w !== undefined && { width: px(w) }), ...(h !== undefined && { height: px(h) }) }
+        : undefined;
 
     return (
       <span
         ref={ref}
         aria-hidden="true"
-        className={cn(
-          skeletonVariants({ shape, animated }),
-          'block',
-          className,
-        )}
-        style={{
-          width: resolvedWidth,
-          height: resolvedHeight,
-          ...style,
-        }}
+        className={cn(skeletonVariants({ shape, animated }), className)}
+        style={sizeStyle || style ? { ...sizeStyle, ...style } : undefined}
         {...props}
       />
     );

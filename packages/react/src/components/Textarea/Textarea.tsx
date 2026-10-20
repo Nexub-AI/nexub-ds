@@ -81,14 +81,10 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
          * and the textarea, so the container grows to fit the larger of the two.
          * The textarea is stretched to fill the container height automatically.
          */
-        <div
-          className="grid w-full"
-          style={{ gridTemplateAreas: '"grow"' }}
-        >
+        <div className="grid w-full">
           <span
             aria-hidden="true"
-            className={cn(sharedClass, 'invisible whitespace-pre-wrap break-words pointer-events-none')}
-            style={{ gridArea: 'grow' }}
+            className={cn(sharedClass, 'col-start-1 row-start-1 invisible whitespace-pre-wrap break-words pointer-events-none')}
           >
             {resolvedValue + '\u200b'}
           </span>
@@ -97,9 +93,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             value={value}
             defaultValue={!controlled ? defaultValue : undefined}
             onChange={handleChange}
-            className={cn(sharedClass, 'overflow-hidden')}
+            className={cn(sharedClass, 'col-start-1 row-start-1 overflow-hidden')}
             aria-invalid={invalid ?? undefined}
-            style={{ gridArea: 'grow' }}
             {...props}
           />
         </div>

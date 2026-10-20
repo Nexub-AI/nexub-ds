@@ -40,6 +40,11 @@ export interface TextProps
   lineClamp?: number;
 }
 
+const LINE_CLAMP: Record<number, string> = {
+  1: 'line-clamp-1', 2: 'line-clamp-2', 3: 'line-clamp-3',
+  4: 'line-clamp-4', 5: 'line-clamp-5', 6: 'line-clamp-6',
+};
+
 export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
   (
     {
@@ -58,15 +63,17 @@ export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
   ) => {
     const Comp = asChild ? Slot : 'p';
 
-    const clampStyle: React.CSSProperties =
-      lineClamp !== undefined
+    // Classes for 1–6 (no style attribute, strict-CSP safe); inline beyond that.
+    const clampClass = lineClamp !== undefined ? LINE_CLAMP[lineClamp] : undefined;
+    const clampStyle: React.CSSProperties | undefined =
+      lineClamp !== undefined && !clampClass
         ? {
             display: '-webkit-box',
             WebkitLineClamp: lineClamp,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
           }
-        : {};
+        : undefined;
 
     return (
       <Comp
@@ -74,9 +81,10 @@ export const Text = React.forwardRef<HTMLParagraphElement, TextProps>(
         className={cn(
           textVariants({ size, tone, weight }),
           truncate && 'truncate',
+          clampClass,
           className,
         )}
-        style={{ ...clampStyle, ...style }}
+        style={clampStyle ? { ...clampStyle, ...style } : style}
         {...rest}
       >
         {children}

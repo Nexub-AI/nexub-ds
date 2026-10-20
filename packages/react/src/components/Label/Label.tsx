@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
-import type { ToneValue } from '../Button/Button.js';
+import { toneTextClasses, type ToneValue } from '../Button/Button.js';
 
 export const labelVariants = cva(
   ['inline-flex items-center gap-1 font-medium leading-none select-none'],
@@ -33,17 +33,15 @@ export interface LabelProps
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
   ({ className, size, required, disabled, tone, style, children, ...props }, ref) => {
-    // Inline var() so Tailwind JIT never sees `${tone}`; only semantic tones
-    // resolve a --color-text-* var, brand tones fall back to the primary class.
-    const toneStyle: React.CSSProperties = tone ? { color: `var(--color-text-${tone})` } : {};
     return (
       <label
         ref={ref}
         data-tone={tone}
-        style={{ ...toneStyle, ...style }}
+        style={style}
         className={cn(
           labelVariants({ size, disabled }),
           'text-[var(--color-text-primary)]',
+          tone && toneTextClasses[tone],
           className,
         )}
         {...props}

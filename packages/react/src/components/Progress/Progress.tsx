@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import type { ToneValue } from '../Button/Button.js';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 export const progressTrackVariants = cva(
   'relative w-full overflow-hidden rounded-full bg-[var(--color-bg-muted)]',
@@ -68,6 +69,12 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   ) => {
     const clampedValue = Math.min(Math.max(value, 0), max);
     const percentage = (clampedValue / max) * 100;
+    // Width is set through CSSOM, not a style attribute, so server HTML stays
+    // valid under a strict CSP (style-src without 'unsafe-inline').
+    const fillRef = React.useRef<HTMLDivElement>(null);
+    useIsomorphicLayoutEffect(() => {
+      fillRef.current?.style.setProperty('width', `${percentage}%`);
+    }, [percentage]);
     const isIndeterminate = value === undefined || value === null;
 
     return (
@@ -85,7 +92,8 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
             progressFillVariants({ tone }),
             animated && 'animate-pulse',
           )}
-          style={{ width: `${percentage}%` }}
+          ref={fillRef}
+          data-part="fill"
         />
       </div>
     );

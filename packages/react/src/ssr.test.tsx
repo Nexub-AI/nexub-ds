@@ -48,3 +48,32 @@ describe('SSR', () => {
     expect(() => renderToString(<N.ThemeProvider>{el}</N.ThemeProvider>)).not.toThrow();
   });
 });
+
+// Strict CSP (style-src without 'unsafe-inline') blocks style attributes in
+// server HTML. Scale values must render as classes. Allowlist is shrink-only:
+// Fade/Collapse animate via inline style (degrade to no first-paint animation);
+// the rest are Radix internals (library-owned): Slider thumb position, the
+// hidden form input behind Switch/Checkbox, Popover anchor (Autocomplete), and
+// Toast's visually-hidden announcer.
+const STYLE_ALLOWED = new Set(['Fade', 'Collapse', 'Slider', 'Switch', 'Checkbox', 'Autocomplete', 'Toaster']);
+
+const cspCases: [string, React.ReactElement][] = [
+  ['Stack', <N.Stack gap={4} align="center" justify="between">x</N.Stack>],
+  ['Flex', <N.Flex gap={2} align="start">x</N.Flex>],
+  ['Grid', <N.Grid cols={3} rows={2} gap={6}>x</N.Grid>],
+  ['Text', <N.Text lineClamp={2}>x</N.Text>],
+  ['Heading', <N.Heading tone="success">x</N.Heading>],
+  ['Label', <N.Label tone="danger">x</N.Label>],
+  ['HelperText', <N.HelperText tone="warning">x</N.HelperText>],
+  ['Skeleton', <N.Skeleton />],
+  ['Skeleton circle', <N.Skeleton shape="circle" />],
+  ['AspectRatio', <N.AspectRatio ratio={4 / 3}>x</N.AspectRatio>],
+  ['GradientDivider', <N.GradientDivider orientation="vertical" />],
+  ['Textarea autoGrow', <N.Textarea autoGrow />],
+];
+
+describe('strict CSP: no style attributes in server HTML', () => {
+  it.each([...cases, ...cspCases].filter(([n]) => !STYLE_ALLOWED.has(n)))('%s', (_name, el) => {
+    expect(renderToString(<N.ThemeProvider>{el}</N.ThemeProvider>)).not.toMatch(/ style="/);
+  });
+});

@@ -20,15 +20,21 @@ describe('AspectRatio', () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 
-  it('sets default 16/9 aspect ratio via inline style', () => {
+  it('uses a class for the default 16/9 ratio (no style attribute)', () => {
     const { container } = render(<AspectRatio>x</AspectRatio>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.aspectRatio).toBe(String(16 / 9));
+    expect(el).toHaveClass('aspect-video');
+    expect(el).not.toHaveAttribute('style');
   });
 
-  it('accepts a custom ratio', () => {
+  it('uses a class for common ratios', () => {
     const { container } = render(<AspectRatio ratio={4 / 3}>x</AspectRatio>);
+    expect(container.firstChild).toHaveClass('aspect-[4/3]');
+  });
+
+  it('falls back to inline style for other ratios', () => {
+    const { container } = render(<AspectRatio ratio={1.9}>x</AspectRatio>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.aspectRatio).toBe(String(4 / 3));
+    expect(el.style.aspectRatio).toMatch(/^1\.9/);
   });
 });
