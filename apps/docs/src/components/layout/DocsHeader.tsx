@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
 import { Menu, Search } from '@nexub/icons';
+import { TopNav } from '@nexub/react';
 import { NexubLogo } from './NexubLogo';
 import { useSidebar } from './SidebarContext';
 
@@ -20,20 +21,11 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
   };
 
   return (
-    <header
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 'var(--z-sticky)',
-        height: 'var(--docs-header-height)',
-        display: 'flex',
-        alignItems: 'center',
-        paddingInline: '1rem',
-        gap: '12px',
-        background: 'color-mix(in srgb, var(--color-bg-default) 85%, transparent)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--color-border-default)',
-      }}
+    <TopNav.Root
+      surface="glass"
+      scrollEdge="soft"
+      className="docs-header border-x-0 border-t-0"
+      style={{ height: 'var(--docs-header-height)' }}
     >
       {/* Hamburger — mobile only */}
       <button
@@ -47,8 +39,8 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
       {/* Logo */}
       <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', flexShrink: 0 }}>
         <NexubLogo size={28} />
-        <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-text-primary)' }}>
-          Nexub<span style={{ color: 'var(--color-brand-primary-500)' }}> DS</span>
+        <span style={{ fontFamily: 'var(--font-family-display)', fontWeight: 700, fontSize: 'var(--type-title-md-size)', color: 'var(--color-on-surface)' }}>
+          Nexub<span style={{ color: 'var(--color-primary)' }}> DS</span>
         </span>
       </Link>
 
@@ -61,20 +53,20 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
       {/* Search trigger — hidden on mobile */}
       <button
         onClick={openSearch}
-        className="docs-header-search"
+        className="docs-header-search nx-state-layer"
         style={{
           display: 'flex', alignItems: 'center', gap: '8px',
-          padding: '6px 12px',
-          background: 'var(--color-bg-muted)',
-          border: '1px solid var(--color-border-default)',
-          borderRadius: 'var(--radius-lg)',
-          color: 'var(--color-text-muted)',
-          fontSize: '0.8rem',
+          height: 'var(--size-control-md)',
+          paddingInline: '14px',
+          background: 'var(--color-surface-container-highest)',
+          border: 'none',
+          borderRadius: 'var(--shape-field)',
+          color: 'var(--color-on-surface-variant)',
+          fontSize: 'var(--type-body-md-size)',
           fontFamily: 'var(--font-family-sans)',
           cursor: 'pointer',
-          width: '200px',
+          width: '220px',
           justifyContent: 'space-between',
-          transition: 'border-color var(--duration-fast) var(--ease-out)',
           flexShrink: 0,
         }}
         aria-label="Search (⌘K)"
@@ -85,8 +77,8 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
         </span>
         <kbd style={{
           fontSize: '0.65rem', padding: '1px 5px',
-          background: 'var(--color-bg-raised)', border: '1px solid var(--color-border-default)',
-          borderRadius: 'var(--radius-sm)', fontFamily: 'var(--font-family-sans)',
+          background: 'var(--color-surface-elevated)', border: '1px solid var(--color-outline-variant)',
+          borderRadius: 'var(--shape-tooltip)', fontFamily: 'var(--font-family-sans)',
         }}>⌘K</kbd>
       </button>
 
@@ -106,6 +98,6 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
 
       {/* Theme switcher */}
       <ThemeSwitcher />
-    </header>
+    </TopNav.Root>
   );
 }

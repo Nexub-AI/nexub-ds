@@ -31,7 +31,7 @@ const whenToUse = [
 export default function IllustrationPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
       <h1>Illustration</h1>
       <p>
         Illustrations are used sparingly across Nexub products to communicate ideas that words alone can&apos;t capture —
@@ -45,13 +45,13 @@ export default function IllustrationPage() {
             key={p.title}
             style={{
               padding: '1.25rem',
-              border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-xl)',
-              background: 'var(--color-bg-subtle)',
+              border: '1px solid var(--color-outline-variant)',
+              borderRadius: 'var(--shape-container)',
+              background: 'var(--color-surface-container-low)',
             }}
           >
-            <div style={{ fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{p.title}</div>
-            <div style={{ fontSize: '0.84rem', color: 'var(--color-text-secondary)', lineHeight: 1.7 }}>{p.desc}</div>
+            <div style={{ fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{p.title}</div>
+            <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface-variant)', lineHeight: 1.7 }}>{p.desc}</div>
           </div>
         ))}
       </div>
@@ -66,14 +66,14 @@ export default function IllustrationPage() {
               gridTemplateColumns: '160px 1fr',
               gap: '1rem',
               padding: '0.875rem 1.25rem',
-              border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-lg)',
-              background: 'var(--color-bg-raised)',
+              border: '1px solid var(--color-outline-variant)',
+              borderRadius: 'var(--shape-container)',
+              background: 'var(--color-surface-elevated)',
               alignItems: 'start',
             }}
           >
-            <span style={{ fontWeight: 700, color: 'var(--color-brand-primary-500)', fontSize: '0.84rem' }}>{w.context}</span>
-            <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.84rem', lineHeight: 1.6 }}>{w.guidance}</span>
+            <span style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.84rem' }}>{w.context}</span>
+            <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.84rem', lineHeight: 1.6 }}>{w.guidance}</span>
           </div>
         ))}
       </div>

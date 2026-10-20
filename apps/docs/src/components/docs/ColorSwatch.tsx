@@ -9,9 +9,9 @@ export function ColorSwatch({ name, value }: ColorSwatchProps) {
   return (
     <div
       style={{
-        borderRadius: 'var(--radius-lg)',
+        borderRadius: 'var(--shape-container)',
         overflow: 'hidden',
-        border: '1px solid var(--color-border-default)',
+        border: '1px solid var(--color-outline-variant)',
         fontSize: '0.75rem',
       }}
     >
@@ -24,8 +24,8 @@ export function ColorSwatch({ name, value }: ColorSwatchProps) {
       <div
         style={{
           padding: '6px 10px',
-          background: 'var(--color-bg-subtle)',
-          color: 'var(--color-text-secondary)',
+          background: 'var(--color-surface-container-low)',
+          color: 'var(--color-on-surface-variant)',
           fontFamily: 'var(--font-family-mono)',
         }}
       >

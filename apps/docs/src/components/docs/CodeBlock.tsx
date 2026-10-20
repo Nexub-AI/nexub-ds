@@ -17,7 +17,7 @@ declare global {
 function getHighlighter(): Promise<Highlighter> {
   if (!globalThis.__shikiHighlighter) {
     globalThis.__shikiHighlighter = createHighlighter({
-      themes: ['github-dark'],
+      themes: ['github-light', 'github-dark'],
       langs: ['tsx', 'typescript', 'javascript', 'html', 'bash', 'css', 'json'],
     }).catch((err) => {
       // Clear the cached rejected promise so the next render retries instead
@@ -33,7 +33,10 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
   const highlighter = await getHighlighter();
   const html = highlighter.codeToHtml(code, {
     lang,
-    theme: 'github-dark',
+    // Dual theme: tokens carry --shiki-light/--shiki-dark, picked in globals.css
+    // by color-scheme so code reads on the tonal surface in both modes.
+    themes: { light: 'github-light', dark: 'github-dark' },
+    defaultColor: false,
   });
 
   return (
@@ -51,7 +54,8 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
       <div
         style={{
           background: 'var(--docs-code-bg)',
-          borderRadius: 'var(--radius-lg)',
+          color: 'var(--color-on-surface)',
+          borderRadius: 'var(--shape-container)',
           padding: '1.25rem 1.5rem',
           overflowX: 'auto',
           fontSize: '0.8125rem',

@@ -38,18 +38,18 @@ export function CopyButton({ text }: CopyButtonProps) {
         onClick={handleCopy}
         title={copied ? 'Copied!' : 'Copy code'}
         aria-label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
+        className="nx-state-layer nx-press"
         style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         width: '28px',
         height: '28px',
-        background: 'var(--docs-copy-btn-bg, rgba(255,255,255,0.08))',
-        border: '1px solid var(--docs-copy-btn-border, rgba(255,255,255,0.12))',
-        borderRadius: 'var(--radius-md)',
-        color: copied ? 'var(--color-semantic-success-default)' : 'var(--color-text-muted)',
+        background: 'var(--color-surface-container-high)',
+        border: 'none',
+        borderRadius: 'var(--shape-control)',
+        color: copied ? 'var(--color-success)' : 'var(--color-on-surface-variant)',
         cursor: 'pointer',
-        transition: 'color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out)',
       }}
     >
         {copied ? <Check size={13} /> : <Copy size={13} />}

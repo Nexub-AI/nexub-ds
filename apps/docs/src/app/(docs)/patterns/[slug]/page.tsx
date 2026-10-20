@@ -37,7 +37,7 @@ export default async function PatternPage({ params }: Props) {
         style={{
           fontSize: '0.8rem',
           fontWeight: 600,
-          color: 'var(--color-brand-primary-500)',
+          color: 'var(--color-primary)',
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
           marginBottom: '0.5rem',
@@ -52,12 +52,12 @@ export default async function PatternPage({ params }: Props) {
           <span
             style={{
               padding: '2px 8px',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--color-semantic-info-bg)',
-              color: 'var(--color-semantic-info-default)',
+              borderRadius: 'var(--shape-control)',
+              background: 'var(--color-info-container)',
+              color: 'var(--color-info)',
               fontSize: '0.7rem',
               fontWeight: 600,
-              border: '1px solid var(--color-semantic-info-border)',
+              border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
               fontFamily: 'var(--font-family-mono)',
             }}
           >
@@ -67,12 +67,12 @@ export default async function PatternPage({ params }: Props) {
             <span
               style={{
                 padding: '2px 8px',
-                borderRadius: 'var(--radius-full)',
-                background: 'var(--color-bg-muted)',
-                color: 'var(--color-text-muted)',
+                borderRadius: 'var(--shape-control)',
+                background: 'var(--color-surface-container-high)',
+                color: 'var(--color-on-surface-muted)',
                 fontSize: '0.7rem',
                 fontWeight: 600,
-                border: '1px solid var(--color-border-default)',
+                border: '1px solid var(--color-outline-variant)',
                 fontFamily: 'var(--font-family-mono)',
               }}
             >
@@ -133,7 +133,7 @@ function CodeBlockSkeleton() {
     <div
       style={{
         height: '52px',
-        borderRadius: 'var(--radius-lg)',
+        borderRadius: 'var(--shape-container)',
         background: 'var(--docs-code-bg, #0d1117)',
         opacity: 0.6,
       }}
