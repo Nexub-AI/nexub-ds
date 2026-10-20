@@ -57,6 +57,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
           className,
         )}
         data-material={surface === 'glass' ? 'glass' : undefined}
+        data-glass-thickness={surface === 'glass' ? 'thick' : undefined}
         {...props}
       >
         {children}

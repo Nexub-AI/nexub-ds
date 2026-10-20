@@ -3,8 +3,15 @@ import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
-const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & { surface?: SurfaceValue }>(
-  ({ className, children, surface = 'solid', ...props }, ref) => (
+export interface TopNavRootProps extends React.HTMLAttributes<HTMLElement> {
+  surface?: SurfaceValue;
+  /** Sticky-bar edge: `soft` dissolves scrolling content under the bar (no
+   *  divider), `hard` is an opaque band for pinned headers. Default: a divider. */
+  scrollEdge?: 'soft' | 'hard';
+}
+
+const Root = React.forwardRef<HTMLElement, TopNavRootProps>(
+  ({ className, children, surface = 'solid', scrollEdge, ...props }, ref) => (
     <header
       ref={ref}
       className={cn(
@@ -13,6 +20,7 @@ const Root = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement> & {
         className,
       )}
       data-material={surface === 'glass' ? 'glass' : undefined}
+      data-scroll-edge={scrollEdge}
       {...props}
     >
       <div className="flex w-full items-center gap-4">{children}</div>

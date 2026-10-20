@@ -19,7 +19,7 @@ export const Default: Story = {
   },
 };
 
-const variants = ['filled', 'tonal', 'outlined', 'text', 'destructive', 'accent', 'link'] as const;
+const variants = ['filled', 'tonal', 'outlined', 'text', 'glass', 'destructive', 'accent', 'link'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
 const tones = ['neutral', 'info', 'success', 'warning', 'danger', 'leap', 'bookub', 'payub', 'founderub'] as const;
 

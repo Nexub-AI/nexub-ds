@@ -76,6 +76,8 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   accountMenuItems?: React.ReactNode;
 
   surface?: 'solid' | 'glass';
+  /** `soft`: page content dissolves under the header instead of meeting a divider. */
+  scrollEdge?: 'soft' | 'hard';
 }
 
 const SEARCH_DEBOUNCE_MS = 200;

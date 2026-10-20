@@ -157,6 +157,7 @@ const Content = React.forwardRef<
         className,
       )}
       data-material={surface === 'glass' ? 'glass' : undefined}
+      data-glass-thickness={surface === 'glass' ? 'thick' : undefined}
       {...props}
     >
       {side === 'bottom' && (
