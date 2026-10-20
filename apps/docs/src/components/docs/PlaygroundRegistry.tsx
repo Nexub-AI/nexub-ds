@@ -79,7 +79,7 @@ const renderers: Record<string, (p: Bag) => React.ReactElement> = {
   card: (p) => (
     <div style={{ width: 280 }}>
       <Card variant={s(p.variant, 'surface') as 'surface'}>
-        <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-text-primary)' }}>
+        <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-on-surface)' }}>
           {s(p.title, 'Card title')}
         </div>
         <Text size="body-sm" tone="muted">
@@ -98,7 +98,7 @@ export function renderPlayground(slug: string, props: Bag): React.ReactElement {
   const fn = renderers[slug];
   if (!fn) {
     return (
-      <div style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem' }}>
+      <div style={{ color: 'var(--color-on-surface-muted)', fontSize: '0.85rem' }}>
         Live preview not available for <code>{slug}</code>.
       </div>
     );

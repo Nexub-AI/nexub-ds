@@ -30,9 +30,9 @@ const PreviewFallback = () => (
     style={{
       width: '28px',
       height: '28px',
-      borderRadius: 'var(--radius-md)',
-      background: 'var(--color-bg-muted)',
-      border: '1px solid var(--color-border-default)',
+      borderRadius: 'var(--shape-field)',
+      background: 'var(--color-surface-container-high)',
+      border: '1px solid var(--color-outline-variant)',
     }}
   />
 );
@@ -42,8 +42,8 @@ const PreviewSkeleton = () => (
     style={{
       width: '80px',
       height: '22px',
-      borderRadius: 'var(--radius-md)',
-      background: 'var(--color-border-default)',
+      borderRadius: 'var(--shape-field)',
+      background: 'var(--color-outline-variant)',
       opacity: 0.5,
     }}
   />

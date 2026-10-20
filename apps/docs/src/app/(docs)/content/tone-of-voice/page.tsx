@@ -32,7 +32,7 @@ const attributes = [
 export default function ToneOfVoicePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
       <h1>Tone of Voice</h1>
       <p>
         Nexub products speak with one voice across every surface — from button labels to error messages to onboarding flows.
@@ -47,23 +47,23 @@ export default function ToneOfVoicePage() {
           <div
             key={a.name}
             style={{
-              border: '1px solid var(--color-border-default)',
-              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--color-outline-variant)',
+              borderRadius: 'var(--shape-container)',
               overflow: 'hidden',
             }}
           >
-            <div style={{ padding: '1rem 1.25rem', background: 'var(--color-bg-subtle)', borderBottom: '1px solid var(--color-border-default)' }}>
-              <span style={{ fontWeight: 700, color: 'var(--color-brand-primary-500)', fontSize: '0.9rem' }}>{a.name}</span>
-              <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem', marginLeft: '0.75rem' }}>{a.desc}</span>
+            <div style={{ padding: '1rem 1.25rem', background: 'var(--color-surface-container-low)', borderBottom: '1px solid var(--color-outline-variant)' }}>
+              <span style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.9rem' }}>{a.name}</span>
+              <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.85rem', marginLeft: '0.75rem' }}>{a.desc}</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
-              <div style={{ padding: '0.875rem 1.25rem', borderRight: '1px solid var(--color-border-default)', background: 'var(--color-semantic-success-bg)' }}>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-semantic-success-default)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>✅ Do</div>
-                <div style={{ fontSize: '0.84rem', color: 'var(--color-text-primary)', fontStyle: 'italic' }}>{a.do}</div>
+              <div style={{ padding: '0.875rem 1.25rem', borderRight: '1px solid var(--color-outline-variant)', background: 'var(--color-success-container)' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-success)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>✅ Do</div>
+                <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface)', fontStyle: 'italic' }}>{a.do}</div>
               </div>
-              <div style={{ padding: '0.875rem 1.25rem', background: 'var(--color-semantic-error-bg)' }}>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-semantic-error-default)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>❌ Don&apos;t</div>
-                <div style={{ fontSize: '0.84rem', color: 'var(--color-text-primary)', fontStyle: 'italic' }}>{a.dont}</div>
+              <div style={{ padding: '0.875rem 1.25rem', background: 'var(--color-error-container)' }}>
+                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-error)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>❌ Don&apos;t</div>
+                <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface)', fontStyle: 'italic' }}>{a.dont}</div>
               </div>
             </div>
           </div>

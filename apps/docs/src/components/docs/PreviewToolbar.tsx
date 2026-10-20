@@ -43,8 +43,6 @@ export function PreviewToolbar({ state, onChange }: Props) {
         flexWrap: 'wrap',
         gap: '12px',
         padding: '6px 12px',
-        borderTop: '1px solid var(--color-border-subtle)',
-        background: 'var(--color-bg-subtle)',
         fontSize: '0.7rem',
         fontFamily: 'var(--font-family-sans)',
       }}
@@ -96,7 +94,7 @@ function SegGroup({ label, children }: { label: string; children: React.ReactNod
     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
       <span
         style={{
-          color: 'var(--color-text-subtle)',
+          color: 'var(--color-on-surface-variant)',
           fontWeight: 600,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
@@ -110,9 +108,8 @@ function SegGroup({ label, children }: { label: string; children: React.ReactNod
           display: 'inline-flex',
           gap: '2px',
           padding: '2px',
-          background: 'var(--color-bg-default)',
-          border: '1px solid var(--color-border-subtle)',
-          borderRadius: 'var(--radius-md)',
+          background: 'var(--color-surface-container-high)',
+          borderRadius: 'var(--shape-control)',
         }}
       >
         {children}
@@ -138,18 +135,18 @@ function SegBtn({
       onClick={onClick}
       title={title}
       aria-pressed={active}
+      className="nx-state-layer"
       style={{
         padding: '3px 8px',
         minHeight: '24px',
         fontSize: '0.7rem',
         fontFamily: 'inherit',
         fontWeight: active ? 600 : 500,
-        background: active ? 'var(--color-bg-muted)' : 'transparent',
-        color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+        background: active ? 'var(--color-secondary-container)' : 'transparent',
+        color: active ? 'var(--color-on-secondary-container)' : 'var(--color-on-surface-variant)',
         border: 'none',
-        borderRadius: 'var(--radius-sm)',
+        borderRadius: 'var(--shape-control)',
         cursor: 'pointer',
-        transition: 'all var(--duration-fast) var(--ease-out)',
       }}
     >
       {children}
@@ -167,16 +164,16 @@ export function bgImage(bg: PreviewBg): React.CSSProperties {
   switch (bg) {
     case 'grid':
       return {
-        backgroundImage: 'radial-gradient(var(--color-border-default) 1px, transparent 1px)',
+        backgroundImage: 'radial-gradient(var(--color-outline-variant) 1px, transparent 1px)',
         backgroundSize: '20px 20px',
       };
     case 'dotted':
       return {
-        backgroundImage: 'radial-gradient(var(--color-border-subtle) 1.2px, transparent 1.2px)',
+        backgroundImage: 'radial-gradient(var(--color-surface-container-high) 1.2px, transparent 1.2px)',
         backgroundSize: '14px 14px',
       };
     case 'solid':
-      return { backgroundImage: 'none', background: 'var(--color-bg-muted)' };
+      return { backgroundImage: 'none', background: 'var(--color-surface-container-high)' };
     case 'transparent':
       return { backgroundImage: 'none' };
   }

@@ -27,7 +27,7 @@ export default function HomePage() {
   const version = getVersion();
 
   return (
-    <main style={{ background: 'var(--color-bg-default)', color: 'var(--color-text-primary)' }}>
+    <main style={{ background: 'var(--color-surface)', color: 'var(--color-on-surface)' }}>
 
       {/* ── Animated Hero (client) ────────────────────────────────────────── */}
       <LandingHero
@@ -42,13 +42,13 @@ export default function HomePage() {
       {/* ── Live component showcase ────────────────────────────────────────── */}
       <section
         style={{
-          background: 'var(--docs-code-bg, #0d1117)',
+          background: 'var(--docs-showcase-bg)',
           padding: '5rem 2rem',
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}
       >
         <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-brand-primary-400)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+          <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
             Built with Nexub DS
           </p>
           <h2 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 800, color: '#f0f6fc', letterSpacing: '-0.02em', marginBottom: '0.75rem' }}>
@@ -67,16 +67,16 @@ export default function HomePage() {
       {/* ── Footer ───────────────────────────────────────────────────────── */}
       <footer
         style={{
-          borderTop: '1px solid var(--color-border-default)',
+          borderTop: '1px solid var(--color-outline-variant)',
           padding: '1.5rem 2rem',
           textAlign: 'center',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-on-surface-muted)',
           fontSize: '0.78rem',
           lineHeight: 1.6,
         }}
       >
         Built on{' '}
-        <span style={{ color: 'var(--color-brand-primary-500)', fontWeight: 600 }}>Nexub Design System</span>
+        <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>Nexub Design System</span>
         {' '}·{' '}
         © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
         {' '}·{' '}
@@ -85,7 +85,7 @@ export default function HomePage() {
           href="https://github.com/sasinex"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: 'var(--color-brand-primary-500)', textDecoration: 'none', fontWeight: 500 }}
+          style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}
         >
           Sasidharan
         </a>

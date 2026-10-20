@@ -217,7 +217,7 @@ function CardExamples({ idx }: { idx: number }) {
     return (
       <div style={{ width: 280 }}>
         <Card>
-          <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-text-primary)' }}>Card title</div>
+          <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-on-surface)' }}>Card title</div>
           <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
         </Card>
       </div>
@@ -302,13 +302,13 @@ function TabsExamples({ idx }: { idx: number }) {
             <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="tab1">
-            <div style={{ padding: '12px 0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>Overview content goes here.</div>
+            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Overview content goes here.</div>
           </Tabs.Content>
           <Tabs.Content value="tab2">
-            <div style={{ padding: '12px 0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>Analytics content goes here.</div>
+            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Analytics content goes here.</div>
           </Tabs.Content>
           <Tabs.Content value="tab3">
-            <div style={{ padding: '12px 0', color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>Settings content goes here.</div>
+            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Settings content goes here.</div>
           </Tabs.Content>
         </Tabs.Root>
       </div>
@@ -602,7 +602,7 @@ function EyebrowChipExamples({ idx }: { idx: number }) {
     return (
       <div style={col(8)}>
         <EyebrowChip>Now available</EyebrowChip>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>Version 2.0</h2>
+        <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-on-surface)' }}>Version 2.0</h2>
       </div>
     );
   return null;
@@ -622,8 +622,8 @@ function AvatarExamples({ idx }: { idx: number }) {
   if (idx === 3)
     return (
       <div style={row(12)}>
-        <Avatar name="Online" badge badgeColor="var(--color-semantic-success-default)" />
-        <Avatar name="Away" badge badgeColor="var(--color-semantic-warning-default)" />
+        <Avatar name="Online" badge badgeColor="var(--color-success)" />
+        <Avatar name="Away" badge badgeColor="var(--color-warning)" />
       </div>
     );
   return null;
@@ -767,9 +767,9 @@ function SeparatorExamples({ idx }: { idx: number }) {
   if (idx === 1)
     return (
       <div style={{ display: 'flex', height: 32, alignItems: 'center', gap: 16 }}>
-        <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>Left</span>
+        <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Left</span>
         <Separator orientation="vertical" />
-        <span style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>Right</span>
+        <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Right</span>
       </div>
     );
   return null;
@@ -1035,15 +1035,15 @@ function GridExamples({ idx }: { idx: number }) {
 function BoxExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <Box style={{ padding: 'var(--spacing-4)', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+      <Box style={{ padding: 'var(--spacing-4)', background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
         <Text size="body-sm">Content inside a Box</Text>
       </Box>
     );
   if (idx === 1)
     return (
-      <Box style={{ padding: 'var(--spacing-6)', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-lg)' }}>
+      <Box style={{ padding: 'var(--spacing-6)', background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-container)' }}>
         <Heading size="h4">Section title</Heading>
-        <Box style={{ padding: 'var(--spacing-3)', background: 'var(--color-bg-default)', borderRadius: 'var(--radius-md)', marginTop: 8 }}>
+        <Box style={{ padding: 'var(--spacing-3)', background: 'var(--color-surface)', borderRadius: 'var(--shape-field)', marginTop: 8 }}>
           <Text size="body-sm">Nested box content</Text>
         </Box>
       </Box>
@@ -1099,7 +1099,7 @@ function CollapsibleExamples({ idx }: { idx: number }) {
           <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
         </Collapsible.Trigger>
         <Collapsible.Content>
-          <div style={{ paddingTop: 12, color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+          <div style={{ paddingTop: 12, color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
             Hidden content revealed on toggle. This section can hold any content.
           </div>
         </Collapsible.Content>
@@ -1109,7 +1109,7 @@ function CollapsibleExamples({ idx }: { idx: number }) {
     return (
       <Collapsible.Root open={open2} onOpenChange={setOpen2}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontWeight: 500, color: 'var(--color-text-primary)', fontSize: '0.875rem' }}>Advanced settings</span>
+          <span style={{ fontWeight: 500, color: 'var(--color-on-surface)', fontSize: '0.875rem' }}>Advanced settings</span>
           <Collapsible.Trigger asChild>
             <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
           </Collapsible.Trigger>
@@ -1136,9 +1136,9 @@ function CollapsibleExamples({ idx }: { idx: number }) {
 function ScrollAreaExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <ScrollArea style={{ height: 200, width: 280, border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 12 }}>
+      <ScrollArea style={{ height: 200, width: 280, border: '1px solid var(--color-outline-variant)', borderRadius: 'var(--shape-field)', padding: 12 }}>
         {Array.from({ length: 20 }, (_, i) => (
-          <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+          <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-on-surface-variant)' }}>
             List item {i + 1}
           </div>
         ))}
@@ -1146,7 +1146,7 @@ function ScrollAreaExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <ScrollArea orientation="horizontal" style={{ width: 320, border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: 12 }}>
+      <ScrollArea orientation="horizontal" style={{ width: 320, border: '1px solid var(--color-outline-variant)', borderRadius: 'var(--shape-field)', padding: 12 }}>
         <div style={{ display: 'flex', gap: 8, width: 'max-content' }}>
           {Array.from({ length: 12 }, (_, i) => (
             <div
@@ -1154,13 +1154,13 @@ function ScrollAreaExamples({ idx }: { idx: number }) {
               style={{
                 width: 80,
                 height: 80,
-                background: 'var(--color-bg-subtle)',
-                borderRadius: 'var(--radius-sm)',
+                background: 'var(--color-surface-container-low)',
+                borderRadius: 'var(--shape-tooltip)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '0.75rem',
-                color: 'var(--color-text-secondary)',
+                color: 'var(--color-on-surface-variant)',
                 flexShrink: 0,
               }}
             >
@@ -1544,7 +1544,7 @@ function TableExamples({ idx }: { idx: number }) {
         </Table.Body>
         <Table.Footer>
           <Table.Row>
-            <Table.Cell colSpan={3} style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+            <Table.Cell colSpan={3} style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
               Showing {rows.length} of {rows.length} users
             </Table.Cell>
           </Table.Row>
@@ -1588,8 +1588,8 @@ function EmptyStateExamples({ idx }: { idx: number }) {
       <EmptyState.Root>
         <EmptyState.Illustration>
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <rect x="8" y="8" width="32" height="32" rx="4" stroke="var(--color-border-default)" strokeWidth="2" />
-            <path d="M18 24h12M24 18v12" stroke="var(--color-text-muted)" strokeWidth="2" strokeLinecap="round" />
+            <rect x="8" y="8" width="32" height="32" rx="4" stroke="var(--color-outline-variant)" strokeWidth="2" />
+            <path d="M18 24h12M24 18v12" stroke="var(--color-on-surface-muted)" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </EmptyState.Illustration>
         <EmptyState.Title>No results found</EmptyState.Title>
@@ -1604,10 +1604,10 @@ function EmptyStateExamples({ idx }: { idx: number }) {
       <EmptyState.Root>
         <EmptyState.Illustration>
           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
-            <rect width="80" height="80" rx="40" fill="var(--color-bg-subtle)" />
-            <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-border-strong)" strokeWidth="2" />
-            <path d="M24 36h32" stroke="var(--color-border-strong)" strokeWidth="2" />
-            <circle cx="40" cy="48" r="4" fill="var(--color-text-disabled)" />
+            <rect width="80" height="80" rx="40" fill="var(--color-surface-container-low)" />
+            <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-outline)" strokeWidth="2" />
+            <path d="M24 36h32" stroke="var(--color-outline)" strokeWidth="2" />
+            <circle cx="40" cy="48" r="4" fill="color-mix(in srgb, var(--color-on-surface) 38%, transparent)" />
           </svg>
         </EmptyState.Illustration>
         <EmptyState.Title>No documents yet</EmptyState.Title>
@@ -1735,7 +1735,7 @@ function MotionCollapseExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
       <Collapse in>
-        <div style={{ padding: 16, background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+        <div style={{ padding: 16, background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
           <Text size="body-sm">Collapsed content goes here.</Text>
         </div>
       </Collapse>
@@ -1747,7 +1747,7 @@ function MotionCollapseExamples({ idx }: { idx: number }) {
           {visible ? 'Collapse' : 'Expand'}
         </Button>
         <Collapse in={visible}>
-          <div style={{ padding: 16, background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+          <div style={{ padding: 16, background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
             <Text size="body-sm">This content collapses and expands smoothly.</Text>
           </div>
         </Collapse>
@@ -1833,7 +1833,7 @@ function SettingsSectionExamples({ idx }: { idx: number }) {
           <div style={col(12)}>
             {['Email alerts', 'Push notifications'].map((item) => (
               <div key={item} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>{item}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--color-on-surface)' }}>{item}</span>
                 <Switch defaultChecked />
               </div>
             ))}

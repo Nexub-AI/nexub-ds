@@ -54,7 +54,7 @@ export function DocsTOC({ items }: Props) {
           fontWeight: 700,
           letterSpacing: '0.06em',
           textTransform: 'uppercase',
-          color: 'var(--color-text-subtle)',
+          color: 'var(--color-outline)',
           margin: '0 0 0.5rem',
         }}
       >
@@ -72,8 +72,8 @@ export function DocsTOC({ items }: Props) {
                   padding: '4px 8px',
                   paddingLeft: it.level === 3 ? '1.25rem' : '0.5rem',
                   borderLeft: '2px solid',
-                  borderColor: isActive ? 'var(--color-brand-primary-500)' : 'transparent',
-                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                  borderColor: isActive ? 'var(--color-primary)' : 'transparent',
+                  color: isActive ? 'var(--color-on-surface)' : 'var(--color-on-surface-muted)',
                   fontWeight: isActive ? 600 : 400,
                   fontSize: '0.78rem',
                   lineHeight: 1.5,

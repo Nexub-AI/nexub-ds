@@ -30,11 +30,10 @@ export function ThemeSwitcher() {
       aria-label="Theme"
       style={{
         display: 'flex',
-        background: 'var(--color-bg-muted)',
-        borderRadius: 'var(--radius-lg)',
+        background: 'var(--color-surface-container-high)',
+        borderRadius: 'var(--shape-control)',
         padding: '3px',
         gap: '2px',
-        border: '1px solid var(--color-border-default)',
       }}
     >
       {options.map((opt) => (
@@ -43,18 +42,18 @@ export function ThemeSwitcher() {
           onClick={() => setTheme(opt.value)}
           title={opt.label}
           aria-pressed={activeTheme === opt.value}
+          className="nx-state-layer nx-press"
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             width: '28px',
             height: '28px',
-            borderRadius: 'var(--radius-md)',
-            background: activeTheme === opt.value ? 'var(--color-bg-default)' : 'transparent',
-            border: activeTheme === opt.value ? '1px solid var(--color-border-default)' : '1px solid transparent',
-            color: activeTheme === opt.value ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+            borderRadius: 'var(--shape-control)',
+            background: activeTheme === opt.value ? 'var(--color-secondary-container)' : 'transparent',
+            border: 'none',
+            color: activeTheme === opt.value ? 'var(--color-on-secondary-container)' : 'var(--color-on-surface-variant)',
             cursor: 'pointer',
-            transition: 'all var(--duration-fast) var(--ease-out)',
           }}
         >
           {opt.icon}
