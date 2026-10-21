@@ -67,6 +67,36 @@ export interface NexubMessages {
   source: (index: number) => string;
   jumpToLatest: string;
   conversation: string;
+  // DataTable pager
+  pageOf: (page: number, total: number) => string;
+  previous: string;
+  next: string;
+  // AppHeader (@nexub/patterns)
+  search: string;
+  searchProduct: (productName: string) => string;
+  keyboardShortcut: (shortcut: string) => string;
+  commandKey: string;
+  controlKey: string;
+  searching: string;
+  searchFailed: string;
+  noResultsFor: (query: string) => string;
+  typeToSearch: string;
+  switchOrganization: (name: string) => string;
+  organizations: string;
+  switchToLightTheme: string;
+  switchToDarkTheme: string;
+  glass: string;
+  glassClear: string;
+  glassBalanced: string;
+  glassTinted: string;
+  glassSolid: string;
+  accountMenu: (name: string) => string;
+  manageAccount: string;
+  privacyPolicy: string;
+  termsOfService: string;
+  signOut: string;
+  signingOut: string;
+  accountAndApps: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -126,6 +156,34 @@ export const defaultMessages: NexubMessages = {
   source: (n) => `Source ${n}`,
   jumpToLatest: 'Jump to latest',
   conversation: 'Conversation',
+  pageOf: (page, total) => `Page ${page} of ${total}`,
+  previous: 'Previous',
+  next: 'Next',
+  search: 'Search',
+  searchProduct: (productName) => `Search ${productName}`,
+  keyboardShortcut: (shortcut) => `Keyboard shortcut: ${shortcut}`,
+  commandKey: 'Command',
+  controlKey: 'Control',
+  searching: 'Searching…',
+  searchFailed: 'Search failed. Try again.',
+  noResultsFor: (query) => `No results for “${query}”`,
+  typeToSearch: 'Type to search',
+  switchOrganization: (name) => `${name}, switch organization`,
+  organizations: 'Organizations',
+  switchToLightTheme: 'Switch to light theme',
+  switchToDarkTheme: 'Switch to dark theme',
+  glass: 'Glass',
+  glassClear: 'Clear',
+  glassBalanced: 'Balanced',
+  glassTinted: 'Tinted',
+  glassSolid: 'Solid',
+  accountMenu: (name) => `Account: ${name}`,
+  manageAccount: 'Manage your Nexub Account',
+  privacyPolicy: 'Privacy policy',
+  termsOfService: 'Terms of service',
+  signOut: 'Sign out',
+  signingOut: 'Signing out…',
+  accountAndApps: 'Account and apps',
 };
 
 export type Direction = 'ltr' | 'rtl';

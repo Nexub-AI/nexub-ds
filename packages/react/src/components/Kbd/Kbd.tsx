@@ -8,6 +8,8 @@ export const Kbd = React.forwardRef<HTMLElement, KbdProps>(
     return (
       <kbd
         ref={ref as React.Ref<HTMLElement>}
+        // Shortcuts like ⌘K must not reorder in RTL.
+        dir="ltr"
         className={cn(
           'inline-flex items-center justify-center font-mono text-xs',
           'px-1.5 py-0.5 min-w-[1.5rem]',

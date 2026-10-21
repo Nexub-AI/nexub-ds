@@ -171,3 +171,14 @@ export const InAppShell: Story = {
     </AppShell.Root>
   ),
 };
+
+/** `position="static"`: in flow with no spacer, for embeds and previews. */
+export const Embedded: Story = {
+  args: { position: 'static' },
+  render: (args) => (
+    <div className="rounded-shape-container border border-[var(--color-outline-variant)]">
+      <AppHeader {...args} />
+      <div className="p-4 text-sm">Embedded content</div>
+    </div>
+  ),
+};

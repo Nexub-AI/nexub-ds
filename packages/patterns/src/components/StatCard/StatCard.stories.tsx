@@ -61,3 +61,19 @@ export const Neutral: Story = {
     </div>
   ),
 };
+
+/** Churn going down is good: the arrow follows `deltaType`, the colour follows `sentiment`. */
+export const SentimentOverride: Story = {
+  render: () => (
+    <div style={{ maxWidth: '280px' }}>
+      <StatCard
+        label="Churn"
+        value="2.1%"
+        delta="-0.4%"
+        deltaType="decrease"
+        sentiment="positive"
+        description="vs last month"
+      />
+    </div>
+  ),
+};

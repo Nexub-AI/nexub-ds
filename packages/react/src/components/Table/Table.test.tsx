@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { Table } from './Table.js';
 
 describe('Table', () => {
@@ -89,5 +89,48 @@ describe('Table', () => {
       </Table.Root>,
     );
     expect(screen.getByText('Total: 1')).toBeInTheDocument();
+  });
+
+  describe('horizontal overflow', () => {
+    const proto = Element.prototype;
+    const sw = Object.getOwnPropertyDescriptor(proto, 'scrollWidth')!;
+    const cw = Object.getOwnPropertyDescriptor(proto, 'clientWidth')!;
+    afterEach(() => {
+      Object.defineProperty(proto, 'scrollWidth', sw);
+      Object.defineProperty(proto, 'clientWidth', cw);
+    });
+    const overflow = () => {
+      Object.defineProperty(proto, 'scrollWidth', { configurable: true, get: () => 800 });
+      Object.defineProperty(proto, 'clientWidth', { configurable: true, get: () => 300 });
+    };
+    const Wide = (props: React.ComponentProps<typeof Table.Root>) => (
+      <Table.Root {...props}>
+        <Table.Caption>Invoices</Table.Caption>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Alice</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table.Root>
+    );
+
+    it('is not a tab stop when it fits', () => {
+      const { container } = render(<Wide />);
+      expect(container.firstElementChild).not.toHaveAttribute('tabindex');
+      expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('becomes a focusable region named by the caption when it overflows', () => {
+      overflow();
+      render(<Wide />);
+      const region = screen.getByRole('region', { name: 'Invoices' });
+      expect(region).toHaveAttribute('tabindex', '0');
+    });
+
+    it('prefers scrollLabel for the region name', () => {
+      overflow();
+      render(<Wide scrollLabel="Invoice table" />);
+      expect(screen.getByRole('region', { name: 'Invoice table' })).toBeInTheDocument();
+    });
   });
 });

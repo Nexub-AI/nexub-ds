@@ -10,7 +10,8 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` (required) | `ColumnDef<TData>[]` |  | TanStack Table column definitions. Use the createColumnHelper() utility for type-safe definitions. |
+| `columns` (required) | `DataTableColumn<TData>[]` |  | TanStack Table column definitions (`DataTableColumn` is exported from @nexub/react). Set `meta: { align: 'end' }` for numeric columns; headers, sort buttons and cells follow it. |
+| `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `data` (required) | `TData[]` |  | Array of row data objects to render. |
 | `enableSorting` | `boolean` | `false` | Enables click-to-sort on column headers. |
 | `enableRowSelection` | `boolean` | `false` | Adds a checkbox column for row selection. |

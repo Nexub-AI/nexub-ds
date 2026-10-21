@@ -14,6 +14,7 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `value` (required) | `React.ReactNode` |  | Primary metric value. |
 | `delta` | `string` |  | Change value (e.g. "+12.5%"). |
 | `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
+| `sentiment` | `'positive' \| 'negative' \| 'neutral'` |  | Colour of the delta, independent of the arrow. Defaults from `deltaType`; use it when a decrease is good news (e.g. churn down). |
 | `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
 | `description` | `string` |  | Additional context below the value. |
 | `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |

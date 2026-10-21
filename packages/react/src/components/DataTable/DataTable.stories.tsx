@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from './DataTable.js';
+import { DataTable, type DataTableColumn } from './DataTable.js';
 
 const meta: Meta = {
   title: 'Data Display/DataTable',
@@ -67,5 +67,37 @@ const data: User[] = [
 export const Default: Story = {
   render: () => (
     <DataTable columns={columns} data={data} enableSorting />
+  ),
+};
+
+interface Account {
+  name: string;
+  mrr: number;
+  seats: number;
+}
+
+const accountColumns: DataTableColumn<Account>[] = [
+  { accessorKey: 'name', header: 'Account' },
+  { accessorKey: 'mrr', header: 'MRR', meta: { align: 'end' } },
+  { accessorKey: 'seats', header: 'Seats', meta: { align: 'end' } },
+];
+
+const accounts: Account[] = [
+  { name: 'Acme', mrr: 12400, seats: 120 },
+  { name: 'Globex', mrr: 980, seats: 8 },
+  { name: 'Initech', mrr: 4310, seats: 41 },
+];
+
+/** Numeric columns aligned to the end via `meta.align`; named by a screen-reader-only caption. */
+export const NumericColumns: Story = {
+  render: () => (
+    <DataTable
+      columns={accountColumns}
+      data={accounts}
+      caption="Top accounts by MRR"
+      captionHidden
+      enableSorting
+      pagination={{ pageSize: 2 }}
+    />
   ),
 };
