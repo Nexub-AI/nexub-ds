@@ -45,8 +45,8 @@ const columns: ColumnDef<User>[] = [
             padding: '2px 10px',
             fontSize: '12px',
             fontWeight: 500,
-            background: status === 'Active' ? '#dcfce7' : '#f4f4f5',
-            color: status === 'Active' ? '#166534' : '#71717a',
+            background: status === 'Active' ? 'var(--color-success-container)' : 'var(--color-surface-container-highest)',
+            color: status === 'Active' ? 'var(--color-on-success-container)' : 'var(--color-on-surface-variant)',
           }}
         >
           {status}

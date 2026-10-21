@@ -61,7 +61,12 @@ export const Material = () => (
 
 /** A glass bar with the soft scroll edge: content dissolves under it, no divider. */
 export const ScrollEdge = () => (
-  <div style={{ ...backdrop, padding: 0, height: 320, overflow: 'auto', position: 'relative' }}>
+  <div
+    role="region"
+    aria-label="Scrolling content"
+    tabIndex={0}
+    style={{ ...backdrop, padding: 0, height: 320, overflow: 'auto', position: 'relative' }}
+  >
     <TopNav.Root surface="glass" scrollEdge="soft" aria-label="Demo">
       <span className="text-title-md">Soft scroll edge</span>
     </TopNav.Root>

@@ -13,6 +13,7 @@ type Story = StoryObj<typeof NumberInput>;
 
 export const Default: Story = {
   args: {
+    'aria-label': 'Quantity',
     defaultValue: 0,
     step: 1,
     showSteppers: true,

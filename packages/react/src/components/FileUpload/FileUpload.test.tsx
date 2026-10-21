@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { FileUpload } from './FileUpload.js';
+import { FileUpload, formatFileSize } from './FileUpload.js';
 
 describe('FileUpload', () => {
   it('renders dropzone', () => {
@@ -10,16 +10,18 @@ describe('FileUpload', () => {
         <FileUpload.Dropzone />
       </FileUpload.Root>,
     );
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    // A native file input, named by its visible label text (no role="button" wrapper).
+    expect(screen.getByLabelText(/click to upload/i)).toHaveAttribute('type', 'file');
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 
-  it('renders dropzone with aria-label "Upload files"', () => {
+  it('names the file input with the visible drop-zone text', () => {
     render(
       <FileUpload.Root>
         <FileUpload.Dropzone />
       </FileUpload.Root>,
     );
-    expect(screen.getByRole('button', { name: /upload files/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/click to upload or drag and drop/i)).toBeInTheDocument();
   });
 
   it('files list is empty initially (List renders nothing)', () => {
@@ -50,5 +52,20 @@ describe('FileUpload', () => {
       </FileUpload.Root>,
     );
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  });
+});
+
+describe('formatFileSize', () => {
+  it('formats bytes, kilobytes and megabytes with Intl units', () => {
+    const nf = (locale: string, unit: string, v: number) =>
+      new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 1 }).format(v);
+    expect(formatFileSize(512, 'en')).toBe(nf('en', 'byte', 512));
+    expect(formatFileSize(1536, 'en')).toBe(nf('en', 'kilobyte', 1.5));
+    expect(formatFileSize(1536, 'en')).toMatch(/1\.5\s?kB/);
+    expect(formatFileSize(5 * 1024 * 1024 + 300 * 1024, 'en')).toBe(nf('en', 'megabyte', 5.3));
+  });
+
+  it('follows the locale', () => {
+    expect(formatFileSize(1536, 'de')).toMatch(/^1,5/);
   });
 });

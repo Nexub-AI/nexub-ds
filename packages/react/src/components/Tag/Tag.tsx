@@ -46,7 +46,14 @@ export interface TagProps
   tone?: ToneValue;
 }
 
-/** @deprecated Use `Badge` instead: `<Badge size="sm">` covers it. Will be removed in 1.0. */
+/**
+ * Static metadata label (status, category, version). Shape: `rounded-shape-min`,
+ * a squared label, so it never reads as tappable. It has no state layer or
+ * hover/press affordance on purpose; anything a user toggles, filters by or
+ * removes is a `Chip` (control-shaped, `nx-state-layer`, optional remove button).
+ *
+ * @deprecated Use `Badge` instead: `<Badge size="sm">` covers it. Will be removed in 1.0.
+ */
 export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
   ({ className, size, tone = 'neutral', children, ...props }, ref) => {
     return (

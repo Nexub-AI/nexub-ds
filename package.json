@@ -17,6 +17,7 @@
     "version-packages": "changeset version && node scripts/release-version.mjs",
     "release": "turbo build --filter='./packages/*' && changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,json,css,md}\"",
+    "check:size": "node scripts/check-size.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs"
   },
   "devDependencies": {

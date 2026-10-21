@@ -64,13 +64,16 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
 
     const showImage = Boolean(src) && !imgError;
     const initials = name ? getInitials(name) : null;
+    // An unnamed avatar is decorative: an unlabelled role="img" is an a11y violation.
+    const labelled = Boolean(name || props['aria-label'] || props['aria-labelledby']);
 
     return (
       <span
         ref={ref}
         className={cn(avatarVariants({ size }), className)}
         aria-label={name ?? undefined}
-        role="img"
+        role={labelled ? 'img' : undefined}
+        aria-hidden={labelled ? undefined : true}
         {...props}
       >
         {showImage ? (

@@ -4,18 +4,18 @@ import * as React from 'react';
 import { ActivityFeed } from './ActivityFeed.js';
 
 describe('ActivityFeed', () => {
-  it('renders with role="feed"', () => {
+  it('renders as a list', () => {
     render(
       <ActivityFeed.Root>
         <ActivityFeed.Item title="Something happened" />
       </ActivityFeed.Root>,
     );
-    expect(screen.getByRole('feed')).toBeDefined();
+    expect(screen.getByRole('list')).toBeDefined();
   });
 
   it('renders with aria-label "Activity feed"', () => {
     render(<ActivityFeed.Root />);
-    expect(screen.getByRole('feed').getAttribute('aria-label')).toBe('Activity feed');
+    expect(screen.getByRole('list').getAttribute('aria-label')).toBe('Activity feed');
   });
 
   it('renders item title', () => {
