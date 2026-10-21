@@ -1,5 +1,53 @@
 # @nexub/themes
 
+## 1.6.0
+
+### Minor Changes
+
+- d42a650: Wave 1 — secure and consistent (ENHANCEMENTS_PLAN.md).
+
+  - **Strict CSP.** Layout and text components render scale values as classes, so server HTML carries no `style` attribute (blocked under `style-src` without `'unsafe-inline'`): `Stack`/`Flex`/`Grid` (`gap`, `align`, `justify`, `cols`, `rows`), `Text` `lineClamp` 1–6, `Heading`/`Label`/`HelperText` `tone`, `AspectRatio` common ratios, `Skeleton` defaults, `GradientDivider`, auto-growing `Textarea`. Off-scale values still fall back to inline style. `Progress` sets its fill through the CSSOM.
+  - **Every component on Calm Depth.** The ~45 components the refresh hadn't reached now use colour roles, shape and elevation tokens, the global focus ring, colour-based disabled states and the state layer. Brand tones (`leap`, `bookub`, `payub`, `founderub`) now tint text in `Heading`, `Label`, `HelperText` and `EyebrowChip` instead of falling back.
+  - **Brand accent roles.** `--color-leap`, `--color-on-leap`, `--color-leap-container`, `--color-on-leap-container` (and the same for `bookub`, `payub`, `founderub`), with light/dark and high-contrast values, plus Tailwind colours of the same names. New `--gradient-brand-vertical`.
+  - **Spring enter/exit.** Overlays, menus, tooltips and toasts animate with `nx-motion` (themes/base.css): opacity on the effects spring, scale and travel on the spatial spring, quicker exits, and a crossfade-only fallback under reduced motion. Components no longer depend on `tailwindcss-animate` (the preset still registers it for your own classes).
+
+- 28bced6: Wave 2 — cards, effects and motion (ENHANCEMENTS_PLAN.md).
+
+  - **Cards.** `Card variant="interactive"` lifts 2px on a spring with elevation 1 → 2 and sinks on press (`nx-lift`; hover only where a real pointer hovers). Opt-in `effect="sheen"`: a soft light and rim follow the pointer (off for touch, reduced motion and reduced transparency). New `CardLink` makes the whole card one link with the focus ring on the card. New `usePointerSheen` hook.
+  - **New components.** `RadioCardGroup`/`RadioCard` and `CheckboxCard` (selectable cards with a springing check badge), `MediaCard` (image with a glass caption and optional stretched link), `NumberTicker` (rolling digits; `Amount animate`, `StatCard animate`), and `BentoGrid`/`BentoTile` in patterns (container-query tiles).
+  - **Toasts stack.** `Toaster` shows the newest toast with older ones peeking behind it and fans them out on hover or focus (timers pause meanwhile). New props `expand` and `visibleToasts`. Closed toasts are now removed from the store.
+  - **Motion.** Checkbox checks draw in; `nx-reveal` crossfades content in; `AppHeader condense` shrinks the bar on scroll with a CSS scroll timeline; opt-in page transitions via `@nexub/themes/view-transitions` and `startViewTransition()`. Tooltips and hover cards share hover-intent delays. Under reduced motion, overlays now keep a short crossfade instead of popping in.
+  - **Tokens.** New `--color-scrim` role.
+
+- c57d385: Wave 3 — colour and UX (ENHANCEMENTS_PLAN.md).
+
+  - **Data-viz colour.** `--color-chart-1..8` are now generated, light/dark aware, ≥3:1 on surfaces and tested to stay distinguishable under protanopia, deuteranopia and tritanopia (CIEDE2000 ≥ 10 between neighbours). New sequential `--color-chart-seq-1..7` and diverging `--color-chart-div-1..7`; Tailwind `chart` colours follow.
+  - **Wide gamut.** On P3 displays the accent fills (primary, tertiary, semantic and brand accents) gain ~18% chroma via relative colour syntax; lightness — and so contrast — is unchanged.
+  - **Medium contrast.** `data-contrast="medium"` sits between standard and high, AA-tested everywhere.
+  - **Async buttons.** `Button status="loading" | "success" | "error"`: the width holds, focus stays (aria-disabled), success draws a check, error shakes once, and each change is announced. `SplitButton` keeps focus while loading.
+  - **Forms.** New `ErrorSummary` pattern + `useFormErrors()` hook (focus moves to the summary; links focus the field).
+  - **Undo over confirm.** `toast.undoable(title, { onUndo, onCommit })` commits exactly once when the toast closes without Undo.
+  - **i18n and RTL.** New `NexubProvider` (`locale`, `dir`, `messages`) with Radix direction support; every built-in English string is a translatable message, and Intl formatting follows the provider locale. Components use logical properties throughout, directional icons mirror, and the Switch thumb and toasts follow the reading direction.
+  - **Touch targets.** Button, IconButton, Checkbox, Radio and Switch get an invisible 44×44 hit area on touch screens.
+  - **Optics.** Tables, pagination and stat values use tabular figures.
+
+- c867e37: Wave 4 — AI surface kit (ENHANCEMENTS_PLAN.md).
+
+  - `PromptInput`: an auto-growing composer with attachment and action slots; Enter sends, Shift+Enter adds a line, IME-safe; Send becomes Stop while streaming (Escape stops too); solid or glass.
+  - `ThinkingIndicator`: a softly morphing shape with a shimmering label; `role="status"`; static under reduced motion.
+  - `StreamingText`: new text fades in as it arrives with a caret while streaming; `aria-busy` instead of a chatty live region.
+  - `MessageBubble` + `MessageActions`: user / assistant / system messages as labelled articles; copy (with a drawn check), thumbs up/down, regenerate; actions appear on hover or focus on pointer devices and stay visible on touch.
+  - `Citation`, `SourceChip`, `SourceList`: numbered source markers with a hover-card preview, and a source row; only http/https links are rendered (`safeUrl`).
+  - Patterns `Conversation`: a stick-to-bottom message list with a "Jump to latest" button and a composer slot.
+  - 18 new translatable messages in `NexubProvider` for the AI surfaces.
+
+### Patch Changes
+
+- Updated dependencies [d42a650]
+- Updated dependencies [28bced6]
+- Updated dependencies [c57d385]
+  - @nexub/tokens@1.6.0
+
 ## 1.5.1
 
 ### Patch Changes
