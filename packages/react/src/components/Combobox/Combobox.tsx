@@ -22,7 +22,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Com
       <Command.Input
         ref={ref}
         className={cn(
-          'flex h-control-md w-full bg-transparent text-body-md outline-none placeholder:text-[var(--color-text-placeholder)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
+          'flex h-control-md w-full bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
           className,
         )}
         {...props}
@@ -59,7 +59,7 @@ const Group = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comma
     <Command.Group
       ref={ref}
       className={cn(
-        'overflow-hidden p-1 text-[var(--color-text-primary)] [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-text-muted)]',
+        'overflow-hidden p-1 text-[var(--color-on-surface)] [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-on-surface-muted)]',
         className,
       )}
       {...props}
@@ -73,7 +73,7 @@ const Item = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comman
     <Command.Item
       ref={ref}
       className={cn(
-        'relative flex cursor-default select-none items-center rounded-lg px-2.5 py-2 text-body-sm outline-none',
+        'relative flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-body-sm outline-none',
         // Highlight = the on-surface state layer at hover opacity.
         'aria-selected:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         'data-[disabled=true]:pointer-events-none data-[disabled=true]:text-[var(--color-text-disabled)]',

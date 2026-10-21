@@ -27,6 +27,6 @@ describe('Tag', () => {
 
   it('applies tone', () => {
     render(<Tag tone="success">Design</Tag>);
-    expect(screen.getByText('Design').className).toMatch(/semantic-success/);
+    expect(screen.getByText('Design').className).toMatch(/color-success-container/);
   });
 });

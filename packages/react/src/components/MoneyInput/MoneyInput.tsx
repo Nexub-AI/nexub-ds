@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useIntlLocale } from '../NexubProvider/NexubProvider.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { currencySymbol, formatForDisplay, formatForEditing, parseMoney } from '../../utils/money.js';
 import { Input, type InputProps } from '../Input/Input.js';
@@ -23,7 +24,8 @@ export interface MoneyInputProps
  * (e.g. 1234.5 → "1,234.50"). Raw while editing so the caret never jumps.
  */
 export const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
-  ({ value: valueProp, defaultValue = null, onValueChange, currency, locale, onFocus, onBlur, className, ...props }, ref) => {
+  ({ value: valueProp, defaultValue = null, onValueChange, currency, locale: localeProp, onFocus, onBlur, className, ...props }, ref) => {
+    const locale = useIntlLocale(localeProp);
     const [value, setValue] = useControllableState<number | null>({
       value: valueProp,
       defaultValue,

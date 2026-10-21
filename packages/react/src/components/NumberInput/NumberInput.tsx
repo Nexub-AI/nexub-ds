@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { disabledText } from '../../utils/control.js';
 import { inputWrapperVariants } from '../Input/Input.js';
 
 export interface NumberInputProps
@@ -48,6 +50,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     ref,
   ) => {
     const [internalValue, setInternalValue] = React.useState<number>(defaultValue);
+    const messages = useNexubMessages();
     const controlled = value !== undefined;
     const currentValue = controlled ? value : internalValue;
 
@@ -67,14 +70,13 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const stepperButtonClass = cn(
       'flex items-center justify-center px-2 self-stretch shrink-0',
-      'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]',
-      'hover:bg-[var(--color-bg-subtle)] transition-colors',
-      'disabled:opacity-50 disabled:pointer-events-none',
-      'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-ring-default)]',
+      // State layer for hover/press; tabIndex -1, so no focus styling needed.
+      'nx-state-layer text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]',
+      disabledText,
     );
 
     return (
-      <div className={cn(inputWrapperVariants({ size, invalid }), 'pr-0 gap-0', className)}>
+      <div className={cn(inputWrapperVariants({ size, invalid }), 'pe-0 gap-0 overflow-hidden', className)}>
         <input
           ref={ref}
           type="number"
@@ -87,26 +89,26 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           aria-invalid={invalid ?? undefined}
           className={cn(
             // Wrapper owns ALL focus styling — strip every indicator from the inner input.
-            'flex-1 min-w-0 bg-transparent text-[var(--color-text-primary)]',
+            'flex-1 min-w-0 bg-transparent text-[var(--color-on-surface)]',
             'border-0 shadow-none',
             'outline-none focus:outline-none focus-visible:outline-none',
             'ring-0 focus:ring-0 focus-visible:ring-0',
-            'placeholder:text-[var(--color-text-placeholder)]',
-            'disabled:opacity-50 disabled:cursor-not-allowed',
+            'placeholder:text-[var(--color-on-surface-muted)]',
+            'disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
             '[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none',
-            size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-base' : 'text-sm',
+            size === 'sm' ? 'text-body-sm' : 'text-body-md',
           )}
           {...props}
         />
         {showSteppers && (
-          <div className="flex flex-col border-l border-[var(--color-border-default)] self-stretch">
+          <div className="flex flex-col border-s border-[var(--color-outline-variant)] self-stretch">
             <button
               type="button"
               tabIndex={-1}
               onClick={increment}
               disabled={disabled || (max !== undefined && currentValue >= max)}
-              className={cn(stepperButtonClass, 'border-b border-[var(--color-border-default)] text-xs leading-none flex-1')}
-              aria-label="Increment"
+              className={cn(stepperButtonClass, 'border-b border-[var(--color-outline-variant)] text-xs leading-none flex-1')}
+              aria-label={messages.increment}
             >
               ▲
             </button>
@@ -116,7 +118,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               onClick={decrement}
               disabled={disabled || (min !== undefined && currentValue <= min)}
               className={cn(stepperButtonClass, 'text-xs leading-none flex-1')}
-              aria-label="Decrement"
+              aria-label={messages.decrement}
             >
               ▼
             </button>

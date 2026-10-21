@@ -18,8 +18,8 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
     <div
       ref={ref}
       className={cn(
-        'flex items-start gap-3 p-3 rounded-lg transition-colors hover:bg-[var(--color-bg-subtle)]',
-        !read && 'bg-[var(--color-bg-subtle)]',
+        'nx-state-layer flex items-start gap-3 p-3 rounded-shape-container',
+        !read && 'bg-[var(--color-surface-container-low)]',
         className,
       )}
       {...props}
@@ -27,7 +27,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
       {/* unread dot */}
       {!read && (
         <span
-          className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--color-brand-primary-500)]"
+          className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--color-primary)]"
           aria-label="Unread"
         />
       )}
@@ -37,14 +37,14 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
 
       {/* content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[var(--color-text-primary)] truncate">{title}</p>
+        <p className="text-sm font-medium text-[var(--color-on-surface)] truncate">{title}</p>
         {description && (
-          <p className="text-sm text-[var(--color-text-muted)] mt-0.5 line-clamp-2">
+          <p className="text-sm text-[var(--color-on-surface-muted)] mt-0.5 line-clamp-2">
             {description}
           </p>
         )}
         {timestamp && (
-          <time className="text-xs text-[var(--color-text-muted)] mt-1 block">{timestamp}</time>
+          <time className="text-xs text-[var(--color-on-surface-muted)] mt-1 block">{timestamp}</time>
         )}
       </div>
 
@@ -54,7 +54,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss notification"
-          className="shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-1 rounded"
+          className="shrink-0 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] p-1 rounded-shape-control"
         >
           ×
         </button>

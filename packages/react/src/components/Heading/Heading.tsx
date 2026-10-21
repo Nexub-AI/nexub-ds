@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
-import type { ToneValue } from '../Button/Button.js';
+import { toneTextClasses, type ToneValue } from '../Button/Button.js';
 
 export const headingVariants = cva('', {
   variants: {
@@ -64,22 +64,15 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     const Tag = `h${level}` as React.ElementType;
     const Comp = asChild ? Slot : Tag;
 
-    // Use inline style for tone colour so Tailwind JIT never sees a
-    // dynamic class string containing `${tone}` — that would get scanned
-    // and produce invalid CSS with a literal `${tone}` token.
-    const toneStyle: React.CSSProperties =
-      tone && tone !== 'default'
-        ? { color: `var(--color-text-${tone})` }
-        : {};
-
     return (
       <Comp
         ref={ref}
         className={cn(
           headingVariants({ size: resolvedSize, weight }),
+          tone && tone !== 'default' && toneTextClasses[tone],
           className,
         )}
-        style={{ ...toneStyle, ...style }}
+        style={style}
         data-tone={tone}
         {...rest}
       >

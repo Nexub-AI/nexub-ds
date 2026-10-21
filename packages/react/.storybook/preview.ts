@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/react';
+import * as React from 'react';
+import { NexubProvider } from '../src/components/NexubProvider/index.js';
 import './preview.css';
 
 const preview: Preview = {
@@ -38,6 +40,11 @@ const preview: Preview = {
       defaultValue: 'comfortable',
       toolbar: { title: 'Density', icon: 'grow', items: ['comfortable', 'compact'], dynamicTitle: true },
     },
+    dir: {
+      description: 'Text direction',
+      defaultValue: 'ltr',
+      toolbar: { title: 'Direction', icon: 'transfer', items: ['ltr', 'rtl'], dynamicTitle: true },
+    },
     glass: {
       description: 'Glass intensity dial (data-glass)',
       defaultValue: 'balanced',
@@ -58,7 +65,10 @@ const preview: Preview = {
       set('contrast', g.contrast, 'standard');
       set('density', g.density, 'comfortable');
       set('glass', g.glass, 'balanced');
-      return Story();
+      const dir = g.dir === 'rtl' ? 'rtl' : 'ltr';
+      root.dir = dir;
+      // Radix primitives (Slider, menus, tabs) read direction from the provider.
+      return React.createElement(NexubProvider, { dir }, Story());
     },
   ],
 };

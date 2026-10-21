@@ -25,15 +25,17 @@ describe('Grid', () => {
     expect(container.firstChild).toHaveClass('grid');
   });
 
-  it('sets gridTemplateColumns via inline style for numeric cols', () => {
-    const { container } = render(<Grid cols={3}>x</Grid>);
+  it('uses classes for on-scale cols and gap (no style attribute)', () => {
+    const { container } = render(<Grid cols={3} gap={4}>x</Grid>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.gridTemplateColumns).toBe('repeat(3, minmax(0, 1fr))');
+    expect(el).toHaveClass('grid-cols-3', 'gap-4');
+    expect(el).not.toHaveAttribute('style');
   });
 
-  it('sets gap via inline style for numeric gap', () => {
-    const { container } = render(<Grid gap={4}>x</Grid>);
+  it('falls back to inline style for off-scale values', () => {
+    const { container } = render(<Grid cols={13} gap="13px">x</Grid>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.gap).toBe('1rem');
+    expect(el.style.gridTemplateColumns).toBe('repeat(13, minmax(0, 1fr))');
+    expect(el.style.gap).toBe('13px');
   });
 });

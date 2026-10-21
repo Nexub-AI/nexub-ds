@@ -46,7 +46,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixNav.NavigationMenuTrigg
       {children}
       <ChevronDown
         size="xs"
-        className="relative ml-1 transition duration-300 group-data-[state=open]:rotate-180"
+        className="relative ms-1 transition duration-300 group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </RadixNav.Trigger>
@@ -59,7 +59,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuContentP
     <RadixNav.Content
       ref={ref}
       className={cn(
-        'left-0 top-0 w-full data-[motion^=from-]:animate-in data-[motion^=to-]:animate-out data-[motion^=from-]:fade-in data-[motion^=to-]:fade-out data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52 data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52 md:absolute md:w-auto',
+        'nx-motion start-0 top-0 w-full md:absolute md:w-auto',
         className,
       )}
       {...props}
@@ -84,12 +84,12 @@ Link.displayName = 'NavigationMenu.Link';
 
 const Viewport = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuViewportProps>(
   ({ className, ...props }, ref) => (
-    <div className="absolute left-0 top-full flex justify-center">
+    <div className="absolute start-0 top-full flex justify-center">
       <RadixNav.Viewport
         ref={ref}
         className={cn(
-          'origin-top-center relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden', floatingSurface,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-90 md:w-[var(--radix-navigation-menu-viewport-width)]',
+          'nx-motion nx-pop origin-top relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden', floatingSurface,
+          'md:w-[var(--radix-navigation-menu-viewport-width)]',
           className,
         )}
         {...props}
@@ -104,12 +104,12 @@ const Indicator = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuIndica
     <RadixNav.Indicator
       ref={ref}
       className={cn(
-        'top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden data-[state=hidden]:animate-out data-[state=visible]:animate-in data-[state=hidden]:fade-out data-[state=visible]:fade-in',
+        'top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden transition-opacity duration-effects-fast ease-effects-fast data-[state=hidden]:opacity-0',
         className,
       )}
       {...props}
     >
-      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm bg-[var(--color-border-default)] shadow-md" />
+      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-ss-[2px] bg-[var(--color-outline-variant)] shadow-elevation-1" />
     </RadixNav.Indicator>
   ),
 );

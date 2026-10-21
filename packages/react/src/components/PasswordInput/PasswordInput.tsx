@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Eye, EyeOff } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Input, type InputProps } from '../Input/Input.js';
 
 export type PasswordInputProps = Omit<InputProps, 'type' | 'trailingIcon'>;
@@ -8,15 +9,15 @@ export type PasswordInputProps = Omit<InputProps, 'type' | 'trailingIcon'>;
 export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
   ({ className, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
+    const messages = useNexubMessages();
 
     const toggleButton = (
       <button
         type="button"
         onClick={() => setShowPassword((prev) => !prev)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? messages.hidePassword : messages.showPassword}
         className={cn(
-          'shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors',
-          'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--color-ring-default)] rounded',
+          'shrink-0 rounded-full text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors',
         )}
       >
         {showPassword ? (

@@ -13,7 +13,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
         <code
           ref={ref as React.Ref<HTMLElement>}
           className={cn(
-            'font-mono text-sm bg-[var(--color-bg-muted)] px-1.5 py-0.5 rounded',
+            'font-mono text-sm bg-[var(--color-surface-container-high)] px-1.5 py-0.5 rounded-shape-min',
             className,
           )}
           {...rest}
@@ -26,7 +26,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
     return (
       <pre
         className={cn(
-          'overflow-x-auto rounded-md bg-[var(--color-bg-muted)] p-4',
+          'overflow-x-auto rounded-shape-container bg-[var(--color-surface-container-high)] p-4',
           className,
         )}
       >

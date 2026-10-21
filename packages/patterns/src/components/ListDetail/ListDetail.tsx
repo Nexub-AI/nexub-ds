@@ -54,7 +54,7 @@ export const ListDetail = React.forwardRef<HTMLDivElement, ListDetailProps>(
           aria-label={listLabel}
           className={cn(
             'min-h-0 w-full shrink-0 flex-col overflow-y-auto',
-            '[@container(min-width:720px)]:flex [@container(min-width:720px)]:border-r [@container(min-width:720px)]:border-[var(--color-outline-variant)]',
+            '[@container(min-width:720px)]:flex [@container(min-width:720px)]:border-e [@container(min-width:720px)]:border-[var(--color-outline-variant)]',
             widths[listWidth],
             showDetail ? 'hidden' : 'flex',
           )}
@@ -72,7 +72,7 @@ export const ListDetail = React.forwardRef<HTMLDivElement, ListDetailProps>(
           {onBack && (
             <div className="p-2 [@container(min-width:720px)]:hidden">
               <IconButton label={backLabel} onClick={onBack}>
-                <ArrowLeft size="md" aria-hidden="true" />
+                <ArrowLeft size="md" aria-hidden="true" className="rtl:-scale-x-100" />
               </IconButton>
             </div>
           )}

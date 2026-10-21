@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { Card } from './Card.js';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { Card, CardLink } from './Card.js';
 
 describe('Card', () => {
   it('renders children', () => {
@@ -54,5 +54,46 @@ describe('Card', () => {
   it('omits data-material for the default solid surface', () => {
     render(<Card>Card</Card>);
     expect(screen.getByText('Card')).not.toHaveAttribute('data-material');
+  });
+});
+
+describe('Card effects and links', () => {
+  it('interactive cards lift with nx-lift', () => {
+    render(<Card variant="interactive">Lift</Card>);
+    expect(screen.getByText('Lift')).toHaveClass('nx-lift', 'nx-state-layer');
+  });
+
+  it('sheen is opt-in and tracks the pointer through CSS variables', async () => {
+    const raf = vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+      cb(0);
+      return 0;
+    });
+    render(<Card effect="sheen">Shine</Card>);
+    const el = screen.getByText('Shine');
+    expect(el).toHaveClass('nx-sheen');
+    fireEvent.pointerMove(el, { clientX: 30, clientY: 12, pointerType: 'mouse' });
+    expect(el.style.getPropertyValue('--nx-mx')).toBe('30px');
+    expect(el.style.getPropertyValue('--nx-my')).toBe('12px');
+    raf.mockRestore();
+  });
+
+  it('ignores touch pointers and has no sheen by default', () => {
+    render(<Card>Plain</Card>);
+    const el = screen.getByText('Plain');
+    expect(el).not.toHaveClass('nx-sheen');
+    fireEvent.pointerMove(el, { clientX: 5, clientY: 5, pointerType: 'mouse' });
+    expect(el.style.getPropertyValue('--nx-mx')).toBe('');
+  });
+
+  it('CardLink stretches over the card as one named link', () => {
+    render(
+      <Card variant="interactive">
+        <h3><CardLink href="/plan">Pro plan</CardLink></h3>
+        <p>Details</p>
+      </Card>,
+    );
+    const link = screen.getByRole('link', { name: 'Pro plan' });
+    expect(link).toHaveAttribute('data-card-link');
+    expect(link.className).toContain('after:absolute');
   });
 });

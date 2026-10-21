@@ -24,7 +24,7 @@ export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorPro
             {/* connector line */}
             {index < steps.length - 1 && (
               <div
-                className="absolute left-4 top-8 h-full w-px bg-[var(--color-border-default)]"
+                className="absolute start-4 top-8 h-full w-px bg-[var(--color-outline-variant)]"
                 aria-hidden="true"
               />
             )}
@@ -34,11 +34,11 @@ export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorPro
               className={cn(
                 'relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
                 status === 'complete' &&
-                  'bg-[var(--color-fill-primary)] text-white',
+                  'bg-[var(--color-primary)] text-[var(--color-on-primary)]',
                 status === 'current' &&
-                  'border-2 border-[var(--color-brand-primary-500)] text-[var(--color-brand-primary-500)] bg-[var(--color-bg-default)]',
+                  'border-2 border-[var(--color-primary)] text-[var(--color-primary)] bg-[var(--color-surface)]',
                 status === 'upcoming' &&
-                  'border-2 border-[var(--color-border-default)] text-[var(--color-text-muted)] bg-[var(--color-bg-default)]',
+                  'border-2 border-[var(--color-outline-variant)] text-[var(--color-on-surface-muted)] bg-[var(--color-surface)]',
               )}
               aria-current={status === 'current' ? 'step' : undefined}
             >
@@ -51,11 +51,11 @@ export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorPro
 
             {/* label */}
             <div className="flex flex-col gap-0.5 pt-0.5">
-              <p className="text-sm font-medium text-[var(--color-text-primary)]">
+              <p className="text-sm font-medium text-[var(--color-on-surface)]">
                 {step.label}
               </p>
               {step.description && (
-                <p className="text-xs text-[var(--color-text-muted)]">{step.description}</p>
+                <p className="text-xs text-[var(--color-on-surface-muted)]">{step.description}</p>
               )}
             </div>
           </li>

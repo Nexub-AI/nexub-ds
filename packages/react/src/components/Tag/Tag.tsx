@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const tagVariants = cva(
-  'inline-flex items-center rounded font-medium select-none whitespace-nowrap',
+  'inline-flex items-center rounded-shape-min font-medium select-none whitespace-nowrap',
   {
     variants: {
       size: {
@@ -14,18 +14,23 @@ export const tagVariants = cva(
       },
       tone: {
         neutral:
-          'bg-[var(--color-neutral-100)] text-[var(--color-neutral-700)]',
-        info: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-semantic-info-default)]',
+          'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)]',
+        info:
+          'bg-[var(--color-info-container)] text-[var(--color-on-info-container)]',
         success:
-          'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-semantic-success-default)]',
+          'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
         warning:
-          'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-semantic-warning-default)]',
+          'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
         danger:
-          'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-semantic-error-default)]',
-        leap: 'bg-[var(--color-leap-500)]/10 text-[var(--color-leap-700)]',
-        bookub: 'bg-[var(--color-bookub-500)]/10 text-[var(--color-bookub-700)]',
-        payub: 'bg-[var(--color-payub-500)]/10 text-[var(--color-payub-700)]',
-        founderub: 'bg-[var(--color-founderub-500)]/10 text-[var(--color-founderub-700)]',
+          'bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
+        leap:
+          'bg-[var(--color-leap-container)] text-[var(--color-on-leap-container)]',
+        bookub:
+          'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)]',
+        payub:
+          'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)]',
+        founderub:
+          'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
       },
     },
     defaultVariants: {

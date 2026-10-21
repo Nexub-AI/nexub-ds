@@ -84,13 +84,13 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
     };
 
     const menuButton = (
-      <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ml-2 md:hidden" onClick={() => setMenuOpen(true)}>
+      <IconButton label={`Open ${navLabel.toLowerCase()} menu`} className="-ms-2 md:hidden" onClick={() => setMenuOpen(true)}>
         <Menu size="md" aria-hidden="true" />
       </IconButton>
     );
 
     return (
-      <div ref={ref} className={cn('flex min-h-screen flex-col bg-[var(--color-bg-default)]', className)} {...props}>
+      <div ref={ref} className={cn('flex min-h-screen flex-col bg-[var(--color-surface)]', className)} {...props}>
         {header ? (
           header(menuButton)
         ) : (
@@ -113,8 +113,8 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
               {(title || description) && (
                 <header className="flex flex-col gap-1">
-                  {title && <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)]">{title}</h1>}
-                  {description && <p className="text-sm text-[var(--color-text-muted)]">{description}</p>}
+                  {title && <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-on-surface)]">{title}</h1>}
+                  {description && <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>}
                 </header>
               )}
               {children}
@@ -128,7 +128,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             <Sheet.Overlay className="md:hidden" />
             <Sheet.Content side="left" aria-describedby={undefined} className="md:hidden">
               <Sheet.Title className="px-5 pb-2 pt-5 text-base">{navLabel}</Sheet.Title>
-              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} className="w-full border-r-0" />
+              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} className="w-full border-e-0" />
             </Sheet.Content>
           </Sheet.Portal>
         </Sheet.Root>
@@ -149,9 +149,9 @@ const Section = React.forwardRef<HTMLElement, SettingsLayoutSectionProps>(
     <Card asChild className={cn('px-5 py-1', className)}>
       <section ref={ref} {...props}>
         {(title || description) && (
-          <div className="flex flex-col gap-1 border-b border-[var(--color-border-default)] pb-4 pt-4">
-            {title && <h2 className="text-base font-semibold text-[var(--color-text-primary)]">{title}</h2>}
-            {description && <p className="text-sm text-[var(--color-text-muted)]">{description}</p>}
+          <div className="flex flex-col gap-1 border-b border-[var(--color-outline-variant)] pb-4 pt-4">
+            {title && <h2 className="text-base font-semibold text-[var(--color-on-surface)]">{title}</h2>}
+            {description && <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>}
           </div>
         )}
         {children}
@@ -177,16 +177,16 @@ export const SettingsRow = React.forwardRef<HTMLDivElement, SettingsRowProps>(
     <div
       ref={ref}
       className={cn(
-        'flex flex-col gap-2 border-t border-[var(--color-border-default)] py-4 first:border-t-0 sm:flex-row sm:items-center sm:gap-4',
+        'flex flex-col gap-2 border-t border-[var(--color-outline-variant)] py-4 first:border-t-0 sm:flex-row sm:items-center sm:gap-4',
         className,
       )}
       {...props}
     >
       <div className="flex flex-col gap-0.5 sm:w-1/3 sm:shrink-0">
-        <span className="text-sm font-medium text-[var(--color-text-primary)]">{label}</span>
-        {description && <span className="text-xs text-[var(--color-text-muted)]">{description}</span>}
+        <span className="text-sm font-medium text-[var(--color-on-surface)]">{label}</span>
+        {description && <span className="text-xs text-[var(--color-on-surface-muted)]">{description}</span>}
       </div>
-      <div className="min-w-0 flex-1 break-words text-sm text-[var(--color-text-secondary)]">{value}</div>
+      <div className="min-w-0 flex-1 break-words text-sm text-[var(--color-on-surface-variant)]">{value}</div>
       {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
     </div>
   ),

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from './Button.js';
+import * as React from 'react';
+import { Button, type ButtonStatus } from './Button.js';
 
 const meta: Meta<typeof Button> = {
   title: 'Components/Button',
@@ -51,4 +52,28 @@ export const Gallery: Story = {
       </div>
     </div>
   ),
+};
+
+/** Async feedback: idle → loading → success (or error on every other press). */
+export const Async: Story = {
+  render: () => {
+    const AsyncDemo = () => {
+      const [status, setStatus] = React.useState<ButtonStatus>('idle');
+      const [fail, setFail] = React.useState(false);
+      const run = () => {
+        setStatus('loading');
+        window.setTimeout(() => {
+          setStatus(fail ? 'error' : 'success');
+          setFail((f) => !f);
+          window.setTimeout(() => setStatus('idle'), 1500);
+        }, 1200);
+      };
+      return (
+        <Button status={status} onClick={run} errorLabel="Could not save, try again">
+          Save changes
+        </Button>
+      );
+    };
+    return <AsyncDemo />;
+  },
 };
