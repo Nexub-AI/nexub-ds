@@ -30,6 +30,8 @@ export interface SettingsLayoutProps extends Omit<React.HTMLAttributes<HTMLDivEl
   description?: React.ReactNode;
   /** Accessible name of the section navigation. */
   navLabel?: string;
+  /** Pinned to the bottom of the section sidebar (and the phone menu) while the items scroll, e.g. `v1.2.0 · Updated 21 Oct 2026`. */
+  navFooter?: React.ReactNode;
 }
 
 const isPlainClick = (e: React.MouseEvent) =>
@@ -40,12 +42,14 @@ function SectionNav({
   activeId,
   onChoose,
   label,
+  footer,
   className,
 }: {
   items: SettingsLayoutItem[];
   activeId?: string;
   onChoose: (e: React.MouseEvent, item: SettingsLayoutItem) => void;
   label: string;
+  footer?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -63,13 +67,16 @@ function SectionNav({
           </Sidebar.Item>
         ))}
       </Sidebar.Group>
+      {footer && (
+        <Sidebar.Footer className="px-5 py-3 text-xs text-[var(--color-on-surface-muted)]">{footer}</Sidebar.Footer>
+      )}
     </Sidebar.Root>
   );
 }
 
 const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
   (
-    { items, activeId, onSelect, logo, actions, header, title, description, navLabel = 'Settings', className, children, ...props },
+    { items, activeId, onSelect, logo, actions, header, title, description, navLabel = 'Settings', navFooter, className, children, ...props },
     ref,
   ) => {
     const [menuOpen, setMenuOpen] = React.useState(false);
@@ -107,6 +114,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             activeId={activeId}
             onChoose={onChoose}
             label={navLabel}
+            footer={navFooter}
             className="sticky top-[var(--app-header-height,64px)] hidden h-[calc(100vh-var(--app-header-height,64px))] shrink-0 md:flex"
           />
           <main className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-10">
@@ -128,7 +136,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             <Sheet.Overlay className="md:hidden" />
             <Sheet.Content side="left" aria-describedby={undefined} className="md:hidden">
               <Sheet.Title className="px-5 pb-2 pt-5 text-base">{navLabel}</Sheet.Title>
-              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} className="w-full border-e-0" />
+              <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} footer={navFooter} className="min-h-0 w-full flex-1 border-e-0" />
             </Sheet.Content>
           </Sheet.Portal>
         </Sheet.Root>

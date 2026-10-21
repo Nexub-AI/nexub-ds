@@ -123,6 +123,8 @@ Search opens with the button, **⌘K / Ctrl+K** anywhere, or **/** when focus is
   </SettingsLayout>
   ```
 
+  `navFooter` pins a line to the bottom of the section sidebar and the phone menu while the items scroll, e.g. `navFooter="v1.2.0 · Updated 21 Oct 2026"`. In your own `Sidebar`, use `Sidebar.Footer` for the same.
+
 ### Strict CSP
 
 The header injects no `<style>` tags and sets no inline styles of its own: the search palette locks page scroll with a class (`scrollLock="class"`), and the org and account menus are non-modal. One known gap: the colour Nexub mark inside `Logo` still sets `style` on its gradient stops, so under `style-src 'self'` a server-rendered mark loses its colours until that is fixed.
