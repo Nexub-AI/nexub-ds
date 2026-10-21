@@ -72,7 +72,7 @@ export const LightAndDark: Story = {
 
 export const Inverse: Story = {
   render: () => (
-    <div className="flex flex-col items-start gap-4 rounded-xl bg-[var(--color-bg-inverse)] p-6">
+    <div className="flex flex-col items-start gap-4 rounded-xl bg-[var(--color-palette-neutral-10)] p-6">
       <Logo tone="inverse" />
       <Logo tone="inverse" mark="mono" product="Command Hub" />
     </div>

@@ -14,13 +14,13 @@ export const Default: Story = {
     <div style={{ maxWidth: '480px' }}>
       <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={5}>
         <FileUpload.Dropzone>
-          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
-            <span style={{ fontWeight: 600, color: 'var(--color-brand-primary-500)' }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-on-surface-muted)' }}>
+            <span style={{ fontWeight: 600, color: 'var(--color-primary)' }}>
               Click to upload
             </span>{' '}
             or drag and drop
           </p>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-on-surface-muted)', marginTop: '4px' }}>
             PNG, JPG, PDF up to 10 MB (max 5 files)
           </p>
         </FileUpload.Dropzone>

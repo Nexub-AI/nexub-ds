@@ -1,16 +1,58 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
-import { DayPicker } from 'react-day-picker';
-import { format } from 'date-fns';
+import { DayPicker, type ChevronProps, type Labels, type Modifiers } from 'react-day-picker';
+import { format, type Locale } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { field, fieldFocusVisible } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 
-/** With a NexubProvider locale, Intl's medium date; otherwise date-fns 'PP' as before. */
-export function formatDate(date: Date, locale: string | undefined): string {
+/**
+ * A date-fns Locale wins (date-fns 'PP'); else with a NexubProvider locale,
+ * Intl's medium date; otherwise date-fns 'PP' as before.
+ */
+export function formatDate(date: Date, locale: string | undefined, dateLocale?: Locale): string {
+  if (dateLocale) return format(date, 'PP', { locale: dateLocale });
   return locale ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(date) : format(date, 'PP');
+}
+
+/** Nav chevrons point to the inline side they move toward: mirrored in RTL. */
+function CalendarChevron({ orientation, ...rest }: ChevronProps) {
+  const { dir } = useLocale();
+  const flip = dir === 'rtl';
+  if (orientation === 'left' || orientation === 'right') {
+    const Icon = (orientation === 'left') !== flip ? ChevronLeft : ChevronRight;
+    return <Icon size="xs" aria-hidden="true" />;
+  }
+  return <ChevronRight size="xs" aria-hidden="true" {...rest} />;
+}
+
+/** Internal: locale, dir, translated labels and chevrons shared by both pickers. */
+export function useCalendarLocale(localeProp?: Locale) {
+  const { dir, dateLocale } = useLocale();
+  const messages = useNexubMessages();
+  const intlLocale = useIntlLocale();
+  const locale = localeProp ?? dateLocale;
+  const labels = React.useMemo<Partial<Labels>>(() => {
+    const day = (date: Date, modifiers: Modifiers | undefined, withSelected: boolean) => {
+      let label = format(date, 'PPPP', locale ? { locale } : undefined);
+      if (modifiers?.today) label = messages.todayDate(label);
+      if (withSelected && modifiers?.selected) label = messages.selectedDate(label);
+      return label;
+    };
+    return {
+      labelPrevious: () => messages.previousMonth,
+      labelNext: () => messages.nextMonth,
+      labelNav: () => messages.calendarNavigation,
+      labelDayButton: (date, modifiers) => day(date, modifiers, true),
+      labelGridcell: (date, modifiers) => day(date, modifiers, false),
+    };
+  }, [messages, locale]);
+  return {
+    dayPickerProps: { locale, dir, labels, components: { Chevron: CalendarChevron } },
+    format: (date: Date) => formatDate(date, intlLocale, locale),
+  };
 }
 
 export interface DatePickerProps {
@@ -25,6 +67,8 @@ export interface DatePickerProps {
   id?: string;
   /** Field name for screen readers; the current value is appended. */
   'aria-label'?: string;
+  /** date-fns Locale for the calendar and trigger text; wins over NexubProvider's `dateLocale`. */
+  locale?: Locale;
 }
 
 const calendarClassNames = {
@@ -69,14 +113,15 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       className,
       id,
       'aria-label': ariaLabel,
+      locale: localeProp,
     },
     ref,
   ) {
     const [open, setOpen] = React.useState(false);
     const messages = useNexubMessages();
     const placeholder = placeholderProp ?? messages.pickDate;
-    const locale = useIntlLocale();
-    const display = value ? formatDate(value, locale) : placeholder;
+    const calendar = useCalendarLocale(localeProp);
+    const display = value ? calendar.format(value) : placeholder;
 
     return (
       <RadixPopover.Root open={open} onOpenChange={setOpen}>
@@ -124,16 +169,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               showOutsideDays
               className="relative p-3"
               classNames={calendarClassNames}
-              components={{
-                Chevron: ({ orientation, ...rest }) =>
-                  orientation === 'left' ? (
-                    <ChevronLeft size="xs" aria-hidden="true" />
-                  ) : orientation === 'right' ? (
-                    <ChevronRight size="xs" aria-hidden="true" />
-                  ) : (
-                    <ChevronRight size="xs" aria-hidden="true" {...rest} />
-                  ),
-              }}
+              {...calendar.dayPickerProps}
             />
           </RadixPopover.Content>
         </RadixPopover.Portal>

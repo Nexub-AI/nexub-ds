@@ -13,6 +13,7 @@ type Story = StoryObj<typeof Progress>;
 
 export const Default: Story = {
   args: {
+    'aria-label': 'Upload progress',
     value: 65,
     max: 100,
     size: 'md',
