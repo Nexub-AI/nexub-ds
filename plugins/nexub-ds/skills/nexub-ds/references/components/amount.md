@@ -16,6 +16,7 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 | `size` | `'sm' \| 'md' \| 'lg' \| 'display'` | `'md'` | `display` is a hero figure with a quieter symbol and minor units. |
 | `tone` | `'neutral' \| 'auto'` | `'neutral'` | `auto` colours gains success and losses error. |
 | `signDisplay` | `Intl signDisplay` |  | e.g. 'exceptZero' to show + on gains. |
+| `animate` | `boolean` | `false` | Roll the digits to new values (NumberTicker). The first render never animates. |
 
 ## Example: Display
 
@@ -30,4 +31,4 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 <Amount value={-89.99} currency="USD" tone="auto" />
 ```
 
-Related: [money-input](money-input.md)
+Related: [money-input](money-input.md), [number-ticker](number-ticker.md)

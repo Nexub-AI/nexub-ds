@@ -34,10 +34,10 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
     <div
       ref={ref}
       className={cn(
-        'relative flex flex-col gap-6 rounded-xl border bg-[var(--color-bg-default)] p-6',
+        'relative flex flex-col gap-6 rounded-shape-container bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)] p-6',
         highlighted
-          ? 'border-[var(--color-brand-primary-500)] shadow-lg ring-1 ring-[var(--color-brand-primary-500)]'
-          : 'border-[var(--color-border-default)]',
+          ? 'border-2 border-[var(--color-primary)] shadow-elevation-2'
+          : 'border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] shadow-elevation-1',
         className,
       )}
       {...props}
@@ -49,15 +49,15 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
       )}
 
       <div className="flex flex-col gap-1">
-        <p className="text-base font-semibold text-[var(--color-text-primary)]">{name}</p>
+        <p className="text-base font-semibold text-[var(--color-on-surface)]">{name}</p>
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold text-[var(--color-text-primary)]">{price}</span>
+          <span className="text-3xl font-bold text-[var(--color-on-surface)]">{price}</span>
           {period && (
-            <span className="text-sm text-[var(--color-text-muted)]">{period}</span>
+            <span className="text-sm text-[var(--color-on-surface-muted)]">{period}</span>
           )}
         </div>
         {description && (
-          <p className="text-sm text-[var(--color-text-muted)]">{description}</p>
+          <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>
         )}
       </div>
 
@@ -65,9 +65,9 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
         {features.map((feature) => (
           <li
             key={feature}
-            className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]"
+            className="flex items-center gap-2 text-sm text-[var(--color-on-surface-variant)]"
           >
-            <Check size="xs" className="text-[var(--color-success-500)] shrink-0" aria-hidden="true" />
+            <Check size="xs" className="text-[var(--color-success)] shrink-0" aria-hidden="true" />
             {feature}
           </li>
         ))}

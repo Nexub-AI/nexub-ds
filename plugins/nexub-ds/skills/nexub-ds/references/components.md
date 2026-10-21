@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v1.5.1. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v1.6.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -9,6 +9,14 @@ Never use a component marked deprecated.
 - [Button Group](components/button-group.md) `@nexub/react`: Groups related buttons together with optional attachment and orientation.
 - [Icon Button](components/icon-button.md) `@nexub/react`: A square button designed to hold a single icon, with an accessible label.
 - [Split Button](components/split-button.md) `@nexub/react`: A primary action with related secondary actions behind a chevron, as one connected control.
+
+## Components — AI
+
+- [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
+- [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
+- [Thinking Indicator](components/thinking-indicator.md) `@nexub/react`: Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
 
 ## Components — Avatar
 
@@ -21,6 +29,7 @@ Never use a component marked deprecated.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
 ## Components — Disclosure
@@ -60,7 +69,9 @@ Never use a component marked deprecated.
 
 - [Autocomplete](components/autocomplete.md) `@nexub/react`: Type-to-search input with matching options dropdown.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
+- [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
@@ -95,6 +106,7 @@ Never use a component marked deprecated.
 - [Card](components/card.md) `@nexub/react`: Surface container for grouping related content. Supports flat, surface, and interactive variants.
 - [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
 - [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
+- [Media Card](components/media-card.md) `@nexub/react`: An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
 - [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
 
 ## Components — Loading States
@@ -131,6 +143,10 @@ Never use a component marked deprecated.
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
 
+## Patterns — AI
+
+- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+
 ## Patterns — Auth
 
 - [AuthCard](components/auth-card.md) `@nexub/patterns`: Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
@@ -146,8 +162,13 @@ Never use a component marked deprecated.
 
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
 
+## Patterns — Forms
+
+- [Error Summary](components/error-summary.md) `@nexub/patterns`: Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
+
 ## Patterns — Layout
 
+- [Bento Grid](components/bento-grid.md) `@nexub/patterns`: A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 480px, 4 at 768px.
 - [List Detail](components/list-detail.md) `@nexub/patterns`: The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
 - [SettingsSection](components/settings-section.md) `@nexub/patterns`: Grouped settings panel with title, description, and action area.
 
@@ -167,5 +188,5 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
 - `@nexub/patterns`: AppHeader, AppLauncher, SettingsLayout

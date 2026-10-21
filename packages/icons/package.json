@@ -1,6 +1,6 @@
 {
   "name": "@nexub/icons",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Icon components for Nexub Design System — tree-shakeable React wrappers around Lucide icons with design-system size tokens.",
   "type": "module",
   "license": "MIT",
@@ -48,9 +48,9 @@
     "lucide-react": "^0.468.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "tsup": "^8.3.5",
-    "typescript": "^5.6.3"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   }
 }

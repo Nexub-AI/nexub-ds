@@ -96,7 +96,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v1.5.1. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v1.6.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -129,6 +129,22 @@ Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` au
 | `on-info` | `bg-on-info` / `text-on-info` / `border-on-info` | `--color-on-info` |  |
 | `info-container` | `bg-info-container` / `text-info-container` / `border-info-container` | `--color-info-container` |  |
 | `on-info-container` | `bg-on-info-container` / `text-on-info-container` / `border-on-info-container` | `--color-on-info-container` |  |
+| `leap` | `bg-leap` / `text-leap` / `border-leap` | `--color-leap` |  |
+| `on-leap` | `bg-on-leap` / `text-on-leap` / `border-on-leap` | `--color-on-leap` |  |
+| `leap-container` | `bg-leap-container` / `text-leap-container` / `border-leap-container` | `--color-leap-container` |  |
+| `on-leap-container` | `bg-on-leap-container` / `text-on-leap-container` / `border-on-leap-container` | `--color-on-leap-container` |  |
+| `bookub` | `bg-bookub` / `text-bookub` / `border-bookub` | `--color-bookub` |  |
+| `on-bookub` | `bg-on-bookub` / `text-on-bookub` / `border-on-bookub` | `--color-on-bookub` |  |
+| `bookub-container` | `bg-bookub-container` / `text-bookub-container` / `border-bookub-container` | `--color-bookub-container` |  |
+| `on-bookub-container` | `bg-on-bookub-container` / `text-on-bookub-container` / `border-on-bookub-container` | `--color-on-bookub-container` |  |
+| `payub` | `bg-payub` / `text-payub` / `border-payub` | `--color-payub` |  |
+| `on-payub` | `bg-on-payub` / `text-on-payub` / `border-on-payub` | `--color-on-payub` |  |
+| `payub-container` | `bg-payub-container` / `text-payub-container` / `border-payub-container` | `--color-payub-container` |  |
+| `on-payub-container` | `bg-on-payub-container` / `text-on-payub-container` / `border-on-payub-container` | `--color-on-payub-container` |  |
+| `founderub` | `bg-founderub` / `text-founderub` / `border-founderub` | `--color-founderub` |  |
+| `on-founderub` | `bg-on-founderub` / `text-on-founderub` / `border-on-founderub` | `--color-on-founderub` |  |
+| `founderub-container` | `bg-founderub-container` / `text-founderub-container` / `border-founderub-container` | `--color-founderub-container` |  |
+| `on-founderub-container` | `bg-on-founderub-container` / `text-on-founderub-container` / `border-on-founderub-container` | `--color-on-founderub-container` |  |
 | `surface` | `bg-surface` / `text-surface` / `border-surface` | `--color-surface` | Page background |
 | `surface-dim` | `bg-surface-dim` / `text-surface-dim` / `border-surface-dim` | `--color-surface-dim` |  |
 | `surface-bright` | `bg-surface-bright` / `text-surface-bright` / `border-surface-bright` | `--color-surface-bright` |  |
@@ -146,6 +162,7 @@ Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` au
 | `inverse-surface` | `bg-inverse-surface` / `text-inverse-surface` / `border-inverse-surface` | `--color-inverse-surface` |  |
 | `inverse-on-surface` | `bg-inverse-on-surface` / `text-inverse-on-surface` / `border-inverse-on-surface` | `--color-inverse-on-surface` |  |
 | `inverse-primary` | `bg-inverse-primary` / `text-inverse-primary` / `border-inverse-primary` | `--color-inverse-primary` |  |
+| `scrim` | `bg-scrim` / `text-scrim` / `border-scrim` | `--color-scrim` |  |
 | `tertiary` | `bg-tertiary` / `text-tertiary` / `border-tertiary` | `--color-tertiary` | Product brand accent (remapped by data-product) |
 | `on-tertiary` | `bg-on-tertiary` / `text-on-tertiary` / `border-on-tertiary` | `--color-on-tertiary` |  |
 | `tertiary-container` | `bg-tertiary-container` / `text-tertiary-container` / `border-tertiary-container` | `--color-tertiary-container` |  |
@@ -317,7 +334,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v1.5.1. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v1.6.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -326,6 +343,14 @@ Never use a component marked deprecated.
 - [Button Group](components/button-group.md) `@nexub/react`: Groups related buttons together with optional attachment and orientation.
 - [Icon Button](components/icon-button.md) `@nexub/react`: A square button designed to hold a single icon, with an accessible label.
 - [Split Button](components/split-button.md) `@nexub/react`: A primary action with related secondary actions behind a chevron, as one connected control.
+
+## Components — AI
+
+- [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
+- [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
+- [Thinking Indicator](components/thinking-indicator.md) `@nexub/react`: Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
 
 ## Components — Avatar
 
@@ -338,6 +363,7 @@ Never use a component marked deprecated.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
 ## Components — Disclosure
@@ -377,7 +403,9 @@ Never use a component marked deprecated.
 
 - [Autocomplete](components/autocomplete.md) `@nexub/react`: Type-to-search input with matching options dropdown.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
+- [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
@@ -412,6 +440,7 @@ Never use a component marked deprecated.
 - [Card](components/card.md) `@nexub/react`: Surface container for grouping related content. Supports flat, surface, and interactive variants.
 - [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
 - [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
+- [Media Card](components/media-card.md) `@nexub/react`: An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
 - [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
 
 ## Components — Loading States
@@ -448,6 +477,10 @@ Never use a component marked deprecated.
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
 
+## Patterns — AI
+
+- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+
 ## Patterns — Auth
 
 - [AuthCard](components/auth-card.md) `@nexub/patterns`: Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
@@ -463,8 +496,13 @@ Never use a component marked deprecated.
 
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
 
+## Patterns — Forms
+
+- [Error Summary](components/error-summary.md) `@nexub/patterns`: Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
+
 ## Patterns — Layout
 
+- [Bento Grid](components/bento-grid.md) `@nexub/patterns`: A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 480px, 4 at 768px.
 - [List Detail](components/list-detail.md) `@nexub/patterns`: The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
 - [SettingsSection](components/settings-section.md) `@nexub/patterns`: Grouped settings panel with title, description, and action area.
 
@@ -484,7 +522,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
 - `@nexub/patterns`: AppHeader, AppLauncher, SettingsLayout
 
 
@@ -699,6 +737,7 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 | `size` | `'sm' \| 'md' \| 'lg' \| 'display'` | `'md'` | `display` is a hero figure with a quieter symbol and minor units. |
 | `tone` | `'neutral' \| 'auto'` | `'neutral'` | `auto` colours gains success and losses error. |
 | `signDisplay` | `Intl signDisplay` |  | e.g. 'exceptZero' to show + on gains. |
+| `animate` | `boolean` | `false` | Roll the digits to new values (NumberTicker). The first render never animates. |
 
 ## Example: Display
 
@@ -713,7 +752,7 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 <Amount value={-89.99} currency="USD" tone="auto" />
 ```
 
-Related: [money-input](money-input.md)
+Related: [money-input](money-input.md), [number-ticker](number-ticker.md)
 
 
 ---
@@ -1148,13 +1187,17 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 | --- | --- | --- | --- |
 | `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
-| `loading` | `boolean` | `false` | Shows a spinner and disables interaction. |
+| `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
+| `loading` | `boolean` | `false` | Alias for `status="loading"`. |
+| `loadingLabel` | `string` | `'Loading'` | Announced when `status` becomes `loading`. |
+| `successLabel` | `string` | `'Done'` | Announced on `success`. When set, it also replaces the visible label (with a check) instead of showing the check alone. |
+| `errorLabel` | `string` | `'Something went wrong'` | Announced on `error`. |
 | `disabled` | `boolean` | `false` | Disables the button. |
 | `fullWidth` | `boolean` | `false` | Stretches the button to fill its container. |
 | `leadingIcon` | `React.ReactNode` |  | Icon rendered before the label. |
 | `trailingIcon` | `React.ReactNode` |  | Icon rendered after the label. |
 | `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone — overrides the variant colour with a semantic palette. |
-| `asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
+| `asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). `status` and `loading` have no effect with `asChild`. |
 
 ## Example: Default
 
@@ -1194,6 +1237,32 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 </div>
 ```
 
+## Example: Async
+
+Drive `status` from the request. Each click here moves to the next status.
+
+```tsx
+function SaveButton() {
+  const [status, setStatus] = React.useState<ButtonStatus>('idle');
+
+  async function save() {
+    setStatus('loading');
+    try {
+      await saveProfile();
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
+  }
+
+  return (
+    <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={save}>
+      Save
+    </Button>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: button
@@ -1203,7 +1272,8 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 - Receives focus in document order; `disabled` removes it from the tab sequence.
 - Visible focus ring uses `--color-border-focus` and meets WCAG 2.4.7 contrast.
 - Announces the visible label plus the implicit "button" role.
-- `loading` toggles `aria-busy="true"` so AT users hear the pending state.
+- While loading the button sets `aria-busy` and `aria-disabled` (not `disabled`), so focus stays on it and clicks are ignored.
+- A button with `status` or `loading` renders a polite `role="status"` region next to it that announces `loadingLabel`, `successLabel` or `errorLabel` as the status changes.
 - Pair icon-only triggers with `IconButton` for a 44×44 touch target.
 
 Related: [icon-button](icon-button.md), [button-group](button-group.md), [link](link.md)
@@ -1254,16 +1324,18 @@ Surface container for grouping related content. Supports flat, surface, and inte
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'flat' \| 'surface' \| 'interactive'` | `'flat'` | Visual style of the card surface. |
+| `variant` | `'flat' \| 'surface' \| 'interactive'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. |
+| `effect` | `'none' \| 'sheen'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency. |
 | `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
 | `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Liquid-glass material treatment — see Foundations → Materials. |
+| `CardLink` | `AnchorHTMLAttributes & { asChild?: boolean }` |  | Put it around the card title to make the whole card one link. Its ::after covers the card and the card shows the focus ring. Give other controls inside the card `relative z-[1]`. Use `asChild` for a router link. |
 
 ## Example: Default
 
 ```tsx
 <Card>
-  <Heading as="h3" size="sm">Card title</Heading>
+  <Heading level={3} size="h5">Card title</Heading>
   <Text size="body-sm" tone="muted">Card description goes here.</Text>
 </Card>
 ```
@@ -1278,14 +1350,95 @@ Surface container for grouping related content. Supports flat, surface, and inte
 </div>
 ```
 
+## Example: Card link
+
+The whole card is one link named by its title. The button sits above the link with `relative z-[1]`.
+
+```tsx
+<Card variant="interactive" className="p-4">
+  <Heading level={3} size="h5">
+    <CardLink href="/projects/atlas">Atlas</CardLink>
+  </Heading>
+  <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
+  <Button size="sm" variant="text" className="relative z-[1]" onClick={star}>
+    Star
+  </Button>
+</Card>
+```
+
+## Example: Sheen
+
+Move the pointer over the card.
+
+```tsx
+<Card variant="surface" effect="sheen" className="p-6">
+  <Heading level={3} size="h5">Pro</Heading>
+  <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
+</Card>
+```
+
 ## Accessibility
 
 - Roles: region (when used as a landmark)
-- `Tab`: Focuses interactive children. Card itself is not focusable unless `variant="interactive"` wraps a `<Link>` or `<button>`.
-- Use `<Card asChild>` with a `<Link>` or `<button>` inside to make the whole surface clickable while preserving correct focus semantics.
+- `Tab`: Focuses interactive children. The card itself is never focusable; with a CardLink, the link is.
+- With a CardLink inside, the focus ring is drawn on the card, not around the title.
+- Prefer CardLink over wrapping the whole card in `<a>`: the link’s accessible name stays the title instead of every word on the card.
 - Group related content with a heading inside the Card so AT users can navigate by heading level.
 
-Related: [callout](callout.md), [banner](banner.md), [alert](alert.md)
+Related: [media-card](media-card.md), [radio-card](radio-card.md), [callout](callout.md)
+
+
+---
+
+# Checkbox Card
+
+A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Import: `import { CheckboxCard } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/checkbox-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `ReactNode` |  | The card’s accessible name. |
+| `description` | `ReactNode` |  | Secondary text, exposed as the accessible description. |
+| `icon` | `ReactNode` |  | Leading icon. Turns primary when checked. |
+| `checked / defaultChecked` | `boolean` |  | Controlled or initial state. No indeterminate state. |
+| `onCheckedChange` | `(checked: boolean) => void` |  | Called with a plain boolean. |
+| `children` | `ReactNode` |  | Extra content under the description. Keep it non-interactive. |
+| `disabled` | `boolean` | `false` | Disables the card. |
+
+## Example: Features
+
+Lay checkbox cards out with any grid; there is no group component.
+
+```tsx
+<fieldset className="grid gap-3 sm:grid-cols-3">
+  <legend className="sr-only">Add-ons</legend>
+  <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
+  <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
+  <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
+</fieldset>
+```
+
+## Example: Disabled
+
+```tsx
+<CheckboxCard title="SSO" description="Available on Enterprise." disabled />
+<CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+```
+
+## Accessibility
+
+- Roles: checkbox
+- `Tab`: Moves focus to the card.
+- `Space`: Toggles the card.
+- The title is the accessible name and the description is the accessible description.
+- Wrap related cards in a `fieldset` with a `legend` so the set has a name.
+
+Related: [checkbox](checkbox.md), [radio-card](radio-card.md), [card](card.md)
 
 
 ---
@@ -1380,6 +1533,71 @@ Compact label chip, optionally dismissible.
   <Chip onRemove={() => {}}>Product</Chip>
 </div>
 ```
+
+
+---
+
+# Citation
+
+Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { Citation } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/citation
+
+## When to use
+
+- Assistant answers built from retrieved documents or web results.
+- SourceList under the reply, so sources are reachable without hovering.
+
+## When not to use
+
+- Ordinary links in prose: use Link.
+- Footnotes in static content, where a numbered list at the end of the page is enough.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `index` (required) | `number` |  | Citation: 1-based number shown in the marker. |
+| `source` (required) | `CitationSource` |  | Citation and SourceChip: `{ title, url, domain?, snippet?, favicon? }`. |
+| `source.url` (required) | `string` |  | Linked only if it is http or https. Anything else (javascript:, data:, relative) renders as plain text. |
+| `source.domain` | `string` |  | Shown instead of the URL’s hostname. |
+| `source.snippet` | `string` |  | Quoted text shown in the hover preview. |
+| `source.favicon` | `string` |  | http(s) image URL. Falls back to the domain’s first letter. |
+| `SourceList sources` (required) | `CitationSource[]` |  | Rendered as SourceChips under a "Sources" heading. Scrolls sideways when narrow, wraps from 480px. |
+| `messages` | `Partial<CitationMessages>` |  | Citation and SourceList: overrides for `sources` and `source(index)`. |
+| `safeUrl(url)` | `(url?: string) => string \| undefined` |  | The same http(s) check, exported for your own links. |
+
+## Example: Cited answer
+
+Hover or focus a number to preview its source.
+
+```tsx
+const sources: CitationSource[] = [
+  { url: 'https://example.com/guides/heat-pumps', title: 'Choosing a heat pump', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { url: 'https://example.org/grants', title: 'Grants for home heating', domain: 'example.org' },
+  { url: 'https://example.net/costs', title: 'Running costs compared' },
+];
+
+<p>
+  Most homes can use an air-source heat pump<Citation index={1} source={sources[0]} />.
+  Grants cover part of the cost<Citation index={2} source={sources[1]} />, and running
+  costs are close to gas<Citation index={3} source={sources[2]} />.
+</p>
+<SourceList sources={sources} />
+```
+
+## Accessibility
+
+- Roles: link (marker and chips), region (SourceList, named by its heading)
+- `Tab`: Focuses a marker and opens its preview.
+- `Enter`: Opens the source in a new tab.
+- Markers are named "Source 1: <title>", not just the number.
+- The hover preview repeats the marker’s information; nothing in it is only available on hover.
+- Links open in a new tab with `rel="noopener noreferrer"`; favicons load with `referrerPolicy="no-referrer"`.
+
+Related: [message-bubble](message-bubble.md), [hover-card](hover-card.md), [link](link.md)
 
 
 ---
@@ -2566,6 +2784,143 @@ Styled anchor link with variant and external support.
 
 ---
 
+# Media Card
+
+An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
+
+- Package: `@nexub/react` · Category: Layout · Status: beta
+- Import: `import { MediaCard } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/media-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` (required) | `string` |  | Image URL. Loaded lazily. |
+| `alt` (required) | `string` |  | Image description. Pass '' when the image is decorative. |
+| `ratio` | `'16/9' \| '4/3' \| '1/1' \| '3/4'` | `'16/9'` | Aspect ratio of the image box. |
+| `title` | `ReactNode` |  | Caption title, rendered as an h3. |
+| `description` | `ReactNode` |  | Caption text under the title. |
+| `eyebrow` | `ReactNode` |  | Small label above the title. |
+| `href` | `string` |  | Makes the whole card one link, stretched from the title (so it needs `title`). Adds the hover lift and image zoom. |
+| `children` | `ReactNode` |  | Actions under the caption. They stay clickable above the stretched link. |
+
+## Example: With link
+
+```tsx
+<MediaCard
+  src="/covers/lisbon.jpg"
+  alt=""
+  eyebrow="Guide"
+  title="A weekend in Lisbon"
+  description="Where to eat, walk and stay."
+  href="/guides/lisbon"
+/>
+```
+
+## Example: Without link, with actions
+
+```tsx
+<MediaCard src="/covers/q3.jpg" alt="" title="Q3 brand shoot" description="48 photos">
+  <Button size="sm" variant="tonal">Open</Button>
+  <Button size="sm" variant="text">Share</Button>
+</MediaCard>
+```
+
+## Example: Ratios
+
+```tsx
+<MediaCard ratio="16/9" src={src} alt="" title="16/9" />
+<MediaCard ratio="4/3" src={src} alt="" title="4/3" />
+<MediaCard ratio="1/1" src={src} alt="" title="1/1" />
+<MediaCard ratio="3/4" src={src} alt="" title="3/4" />
+```
+
+## Accessibility
+
+- Roles: link (when `href` is set), heading level 3 (title)
+- `Tab`: Focuses the link (the card shows the focus ring), then any actions.
+- `Enter`: Follows the link.
+- With `href`, the link’s name is the title only, not the whole caption.
+- Most card images repeat the title, so `alt=""` is usually right.
+
+Related: [card](card.md)
+
+
+---
+
+# Message Bubble
+
+One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { MessageBubble } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/message-bubble
+
+## When to use
+
+- Each turn in a chat or assistant thread, inside Conversation.
+- MessageActions under assistant replies the user may want to copy, rate or retry.
+
+## When not to use
+
+- Comment threads and activity logs: use ActivityFeed or NotificationItem.
+- Model output as HTML: render text or React elements as children, never `dangerouslySetInnerHTML`.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `from` (required) | `'user' \| 'assistant' \| 'system'` |  | Who sent it. Sets layout and the default accessible name. |
+| `avatar` | `ReactNode` |  | Assistant only: shown at the inline start. |
+| `name` | `string` |  | Accessible name of the message. Defaults to "You said" or "Assistant said". |
+| `status` | `'sending' \| 'error'` |  | `sending` sets `aria-busy`; `error` shows "Failed to send". |
+| `onRetry` | `() => void` |  | With `status="error"`, adds a Retry button. |
+| `messages` | `Partial<MessageStrings>` |  | Local string overrides. |
+| `MessageActions text` | `string` |  | Text Copy puts on the clipboard. |
+| `MessageActions copy` | `boolean` | `true` | Set false to hide Copy. |
+| `MessageActions feedback / defaultFeedback / onFeedback` | `'up' \| 'down' \| null` |  | Thumbs up/down appear when `onFeedback` is set. Pressing the active one clears it. |
+| `MessageActions onRegenerate` | `() => void` |  | Shows Regenerate when set. |
+
+## Example: Conversation
+
+Hover or focus the assistant reply to show its actions.
+
+```tsx
+<MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
+<MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+  <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
+  <MessageActions
+    text="Open Settings, then Billing, and choose Cancel plan."
+    onFeedback={(value) => logFeedback(value)}
+    onRegenerate={() => regenerate()}
+  />
+</MessageBubble>
+<MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+```
+
+## Example: Failed to send
+
+```tsx
+<MessageBubble from="user" status="error" onRetry={() => resend()}>
+  Can I get a refund for last month?
+</MessageBubble>
+```
+
+## Accessibility
+
+- Roles: article (each message), alert (send error), button (actions)
+- `Tab`: Moves through the action buttons; focusing one reveals the row.
+- `Space / Enter`: Activates an action. Feedback buttons toggle.
+- Each message is an `article` named "You said" or "Assistant said", so users can jump between messages.
+- Feedback buttons expose `aria-pressed`. Copy announces "Copied" through a status region.
+- The action row is only visually hidden until hover; it stays in the tab order and accessibility tree.
+
+Related: [streaming-text](streaming-text.md), [conversation](conversation.md), [citation](citation.md)
+
+
+---
+
 # Money Input
 
 An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
@@ -2918,6 +3273,54 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 
 ---
 
+# Number Ticker
+
+A number whose digits roll to new values on the spatial spring. The first render never animates.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { NumberTicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/number-ticker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` (required) | `number \| string \| NumberTickerPart[]` |  | A number (formatted with `format` and `locale`), an already-formatted string, or styled parts. |
+| `format` | `Intl.NumberFormatOptions` |  | Formatting for a number `value`. |
+| `locale` | `string` |  | BCP 47 locale. Defaults to the user's. |
+| `aria-live` | `'off' \| 'polite'` | `'off'` | Announce changes to screen readers. Use `polite` only for values the user is waiting on. |
+
+## Example: Formatted number
+
+Each digit is a 0–9 strip; separators and symbols stay still.
+
+```tsx
+const [n, setN] = React.useState(12480);
+
+<NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
+<Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
+  Change
+</Button>
+```
+
+## Example: Amount
+
+`Amount animate` uses the ticker and keeps the quieter symbol and minor units.
+
+```tsx
+<Amount value={balance} currency="USD" size="display" animate />
+```
+
+## Accessibility
+
+- The full value is read as one string; the rolling digits are hidden from assistive tech.
+- Under reduced motion digits change instantly.
+
+Related: [amount](amount.md), [stat-card](stat-card.md)
+
+
+---
+
 # Pagination
 
 Page navigation control with prev/next and page number buttons.
@@ -3102,6 +3505,192 @@ Horizontal progress bar with optional tone and animation.
 ```tsx
 <Progress value={40} animated tone="info" />
 ```
+
+
+---
+
+# Prompt Input
+
+The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { PromptInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/prompt-input
+
+## When to use
+
+- The message box of a chat or assistant.
+- Any free-text prompt that starts a long-running, stoppable generation.
+
+## When not to use
+
+- Ordinary forms: use Textarea, where Enter adds a line.
+- Search: use SearchInput.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue / onValueChange` | `string` |  | Controlled or uncontrolled text. Uncontrolled input clears itself after a submit. |
+| `onSubmit` | `(value: string) => void` |  | Called with the text on Enter or Send. Not called while empty, disabled or not `idle`. |
+| `onStop` | `() => void` |  | Called by Stop, or Escape in the field, while `status="streaming"`. |
+| `status` | `'idle' \| 'submitting' \| 'streaming'` | `'idle'` | `streaming` swaps Send for Stop; `submitting` holds Send until the request is accepted. |
+| `maxRows` | `number` | `8` | Rows the field grows to before it scrolls. |
+| `attachments` | `ReactNode` |  | Rendered above the text, e.g. removable Chips. |
+| `actions` | `ReactNode` |  | Rendered bottom-start, e.g. an attach IconButton or a model picker. |
+| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material for composers floating over content. |
+| `label` | `string` | `messages.promptLabel ('Message')` | Accessible name of the text field. |
+| `messages` | `Partial<PromptInputMessages>` |  | Local overrides for `promptLabel`, `sendMessage`, `stopGenerating`, `promptHint`. |
+| `textareaClassName` | `string` |  | Class for the textarea; `className` goes to the outer container. |
+
+## Example: Default
+
+Enter sends, Shift+Enter adds a line. Send stays inert until there is text.
+
+```tsx
+<PromptInput placeholder="Ask anything" onSubmit={(text) => send(text)} />
+```
+
+## Example: Attachments and actions
+
+```tsx
+<PromptInput
+  placeholder="Ask about these files"
+  attachments={
+    <>
+      <Chip onRemove={() => remove('q3-report.pdf')}>q3-report.pdf</Chip>
+      <Chip onRemove={() => remove('pricing.csv')}>pricing.csv</Chip>
+    </>
+  }
+  actions={
+    <>
+      <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
+      <IconButton size="sm" label="Search the web"><Globe /></IconButton>
+    </>
+  }
+/>
+```
+
+## Example: Streaming
+
+Send a message: the button turns into Stop for three seconds. Stop or Escape ends it early.
+
+```tsx
+const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+const timer = React.useRef<ReturnType<typeof setTimeout>>();
+
+function send() {
+  setStatus('streaming');
+  timer.current = setTimeout(() => setStatus('idle'), 3000);
+}
+
+function stop() {
+  clearTimeout(timer.current);
+  setStatus('idle');
+}
+
+<PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
+```
+
+## Accessibility
+
+- Roles: textbox (multiline), button (Send / Stop)
+- `Enter`: Sends. Ignored while an IME composition is open.
+- `Shift + Enter`: New line.
+- `Escape`: Stops the reply while streaming.
+- Focus stays in the field after sending, so the user can type the next message straight away.
+- An empty field keeps Send focusable with `aria-disabled`, rather than removing it from the tab order.
+- The field is named by `label` (default "Message") and described by the Enter/Shift+Enter hint.
+- Send and Stop are icon buttons with their own names; the swap does not move focus.
+
+Related: [message-bubble](message-bubble.md), [conversation](conversation.md), [textarea](textarea.md)
+
+
+---
+
+# Radio Card
+
+A radio group where each option is a whole card: title, description and optional icon, one choice.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Import: `import { RadioCard } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/radio-card
+
+## When to use
+
+- Two to six options that each need a sentence of explanation, like plans or regions.
+- A choice important enough to deserve the space.
+
+## When not to use
+
+- Short labels with no description: use RadioGroup.
+- More than six options: use Select or Combobox.
+- Cards that hold links or buttons: the whole card is the control, so use Card with CardLink.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `RadioCardGroup columns` | `1 \| 2 \| 3 \| 4` | `1` | Grid columns. Collapses to one column on narrow screens. |
+| `RadioCardGroup value / defaultValue / onValueChange` | `string` |  | Radix RadioGroup props; the group also takes `disabled`, `name`, `required`. |
+| `value` (required) | `string` |  | The option this card selects. |
+| `title` (required) | `ReactNode` |  | The card’s accessible name. |
+| `description` | `ReactNode` |  | Secondary text, exposed as the accessible description. |
+| `icon` | `ReactNode` |  | Leading icon. Turns primary when selected. |
+| `children` | `ReactNode` |  | Extra content under the description. Keep it non-interactive: the whole card is the control. |
+| `disabled` | `boolean` | `false` | Disables this card only. |
+
+## Example: Plan picker
+
+```tsx
+const [plan, setPlan] = React.useState('team');
+
+<RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan}>
+  <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features.">
+    <span className="text-sm font-medium">$0 / month</span>
+  </RadioCard>
+  <RadioCard value="team" icon={<Users />} title="Team" description="Up to 20 seats, shared workspaces.">
+    <span className="text-sm font-medium">$12 / seat</span>
+  </RadioCard>
+  <RadioCard value="enterprise" icon={<Building2 />} title="Enterprise" description="SSO, audit logs, priority support.">
+    <span className="text-sm font-medium">Contact sales</span>
+  </RadioCard>
+</RadioCardGroup>
+```
+
+## Example: Columns
+
+Two columns from the sm breakpoint up, one below.
+
+```tsx
+<RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly">
+  <RadioCard value="monthly" title="Monthly" description="Billed every month." />
+  <RadioCard value="yearly" title="Yearly" description="Two months free." />
+</RadioCardGroup>
+```
+
+## Example: Disabled
+
+Disable one card, or pass `disabled` to the group to disable all of them.
+
+```tsx
+<RadioCardGroup aria-label="Region" columns={2} defaultValue="eu">
+  <RadioCard value="eu" title="Europe" description="Frankfurt" />
+  <RadioCard value="us" title="United States" description="Virginia" />
+  <RadioCard value="ap" title="Asia Pacific" description="Coming soon" disabled />
+</RadioCardGroup>
+```
+
+## Accessibility
+
+- Roles: radiogroup, radio (each card)
+- `Tab`: Moves focus into the group, to the selected card.
+- `Arrow keys`: Move between cards and select.
+- `Space`: Selects the focused card.
+- The title is the accessible name and the description is the accessible description.
+- Give the group an `aria-label` or `aria-labelledby`.
+
+Related: [radio-group](radio-group.md), [checkbox-card](checkbox-card.md), [card](card.md)
 
 
 ---
@@ -3721,6 +4310,63 @@ Vertical stack layout with configurable gap.
 
 ---
 
+# Streaming Text
+
+Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { StreamingText } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/streaming-text
+
+## When to use
+
+- Any model output rendered token by token.
+
+## When not to use
+
+- Finished text loaded from history: render it as plain text, or with `streaming={false}`.
+- Model output as HTML or Markdown HTML: StreamingText renders text only. Parse Markdown to React elements yourself; never inject model HTML.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` (required) | `string` |  | The full text received so far. Append to it; anything that is not an append renders statically. |
+| `streaming` | `boolean` | `false` | Shows the caret and sets `aria-busy` while more text is expected. |
+| `as` | `'div' \| 'p' \| 'span'` | `'div'` | Element to render. |
+| `aria-live` | `'off' \| 'polite'` | `'off'` | Opt-in live announcements. Leave off: screen readers would re-read the region on every token. |
+
+## Example: Streaming a reply
+
+Words arrive on a timer. Restart streams the paragraph again.
+
+```tsx
+const reply = 'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
+const [length, setLength] = React.useState(0);
+const streaming = length < reply.length;
+
+React.useEffect(() => {
+  if (!streaming) return;
+  const id = setTimeout(() => setLength((n) => Math.min(reply.length, n + 6)), 60);
+  return () => clearTimeout(id);
+}, [length, streaming]);
+
+<StreamingText as="p" text={reply.slice(0, length)} streaming={streaming} />
+<Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+```
+
+## Accessibility
+
+- Not a live region by default. Announce the finished message once instead, e.g. through a polite status or Conversation’s `announce` for whole messages.
+- `aria-busy` is true while streaming, so assistive tech can wait for the final text.
+- The caret is decorative (`aria-hidden`). With reduced motion, chunks appear without fading and the caret does not blink.
+- Only the last three chunks keep their own span, so the DOM stays flat however long the reply gets.
+
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md), [conversation](conversation.md)
+
+
+---
+
 # Switch
 
 Toggle control for binary on/off settings. Built on Radix UI Switch.
@@ -4065,6 +4711,60 @@ A multi-line text input with configurable resize behaviour, size, and validation
 
 ---
 
+# Thinking Indicator
+
+Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { ThinkingIndicator } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/thinking-indicator
+
+## When to use
+
+- The gap between sending a prompt and the first token of the reply.
+- Tool calls or retrieval steps inside a reply, with a label naming the step.
+
+## When not to use
+
+- Once text is streaming: StreamingText’s caret already shows progress. Replace the indicator, don’t stack them.
+- General loading outside AI surfaces: use Spinner or Skeleton.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `ReactNode \| null` | `messages.thinking ('Thinking')` | Visible text. `null` hides it; "Thinking" is still announced. |
+| `size` | `'sm' \| 'md'` | `'md'` | Shape and text size. |
+| `messages` | `Partial<{ thinking: string }>` |  | Local override for the default text. |
+
+## Example: Default
+
+```tsx
+<ThinkingIndicator />
+```
+
+## Example: Custom label and sizes
+
+Name the step when you know it. `label={null}` keeps only the shape.
+
+```tsx
+<ThinkingIndicator label="Searching 4 sources" />
+<ThinkingIndicator size="sm" />
+<ThinkingIndicator size="sm" label={null} />
+```
+
+## Accessibility
+
+- Roles: status
+- A polite live region: the label is announced once when it mounts. Changing the label announces the new step.
+- Render it only while waiting and remove it when tokens start, so it is not announced again.
+- With reduced motion the shape and shimmer are static.
+
+Related: [streaming-text](streaming-text.md), [spinner](spinner.md), [conversation](conversation.md)
+
+
+---
+
 # Toast
 
 Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
@@ -4091,16 +4791,17 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Toaster position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'bottom-center'` | `'bottom-right'` | Where toasts appear on screen. |
-| `Toaster richColors` | `boolean` | `false` | Enables fully coloured backgrounds for success, error, warning, and info toasts. |
-| `Toaster closeButton` | `boolean` | `false` | Renders a close button on each toast. |
+| `Toaster expand` | `boolean` | `false` | Always show toasts as a list. By default they collapse into a stack that fans out on hover or focus, which also pauses their timers. |
+| `Toaster visibleToasts` | `number` | `3` | How many toasts show at once. Older ones are hidden visually but stay in the live region. |
 | `toast.success(title, opts?)` (required) | `string` |  | Show a success toast with an optional options object. |
 | `toast.error(title, opts?)` (required) | `string` |  | Show an error toast. |
 | `toast.warning(title, opts?)` (required) | `string` |  | Show a warning toast. |
 | `toast.info(title, opts?)` (required) | `string` |  | Show an info toast. |
 | `toast.custom(title, opts?)` (required) | `string` |  | Show a default/custom toast. |
+| `toast.undoable(title, opts)` (required) | `UndoableToastOptions` |  | A toast with an Undo action (beta, 1.7.0). Undo calls `opts.onUndo`; any other close (timer, swipe, close button, `toast.dismiss`) calls `opts.onCommit`, exactly once. Returns the toast id. |
+| `undoable opts` | `{ onUndo; onCommit?; undoLabel?; description?; duration? }` |  | `undoLabel` defaults to the `undo` message ("Undo"). Commit the change in `onCommit`, not before showing the toast. |
 | `opts.description` | `string` |  | Secondary supporting text below the title. |
-| `opts.duration` | `number` | `4000` | Time in ms before auto-dismiss. Use Infinity to persist. |
+| `opts.duration` | `number` | `5000` | Time in ms before auto-dismiss. Use Infinity to persist. |
 | `opts.action` | `{ label: string; onClick: () => void }` |  | Renders an action button inside the toast. |
 
 ## Example: Default
@@ -4127,7 +4828,7 @@ function DefaultToast() {
 function ToastVariants() {
   return (
     <>
-      <Toaster richColors />
+      <Toaster />
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <Button variant="outline" onClick={() => toast.custom('Default notification')}>
           Default
@@ -4171,6 +4872,36 @@ function ToastWithAction() {
       >
         Send message
       </Button>
+    </>
+  );
+}
+```
+
+## Example: Undoable delete
+
+Hide the item right away; delete it for real only when the toast closes without Undo.
+
+```tsx
+function UndoableDelete() {
+  const [hidden, setHidden] = React.useState(false);
+
+  function remove() {
+    setHidden(true);
+    toast.undoable('Invoice deleted', {
+      description: 'INV-2041',
+      onUndo: () => setHidden(false),
+      onCommit: () => deleteInvoice('INV-2041'),
+    });
+  }
+
+  return (
+    <>
+      <Toaster />
+      {hidden ? (
+        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+      ) : (
+        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+      )}
     </>
   );
 }
@@ -4362,6 +5093,231 @@ Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a cent
   </div>
 </AuthCard>
 ```
+
+
+---
+
+# Bento Grid
+
+A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 480px, 4 at 768px.
+
+- Package: `@nexub/patterns` · Category: Layout · Status: beta
+- Import: `import { BentoGrid } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/bento-grid
+
+## When to use
+
+- Overview pages where a few items deserve more room than the rest.
+
+## When not to use
+
+- Lists the user scans in order: dense packing can move tiles out of reading order.
+- Equal-weight items: use Grid.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `BentoGrid children` (required) | `ReactNode` |  | `BentoTile`s. Dense packing back-fills gaps left by large tiles, so visual order can differ from source order. |
+| `size` | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | `'1x1'` | Tile span, columns × rows. Two-wide spans apply from 2 columns up. |
+| `...Card props` | `CardProps` |  | A tile is a surface Card (`variant` is fixed); `tone`, `surface` and `effect` pass through. |
+
+## Example: Dashboard
+
+```tsx
+<BentoGrid>
+  <BentoTile size="2x2">
+    <h3 className="text-title-sm">Revenue, last 7 days</h3>
+    <RevenueChart />
+  </BentoTile>
+  <BentoTile><StatTile label="Active users" value="12,480" /></BentoTile>
+  <BentoTile><StatTile label="Conversion" value="3.2%" /></BentoTile>
+  <BentoTile size="2x1">3 invoices awaiting approval.</BentoTile>
+  <BentoTile><StatTile label="Churn" value="0.8%" /></BentoTile>
+  <BentoTile><StatTile label="NPS" value="61" /></BentoTile>
+</BentoGrid>
+```
+
+Related: [card](card.md), [stat-card](stat-card.md)
+
+
+---
+
+# Conversation
+
+Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+
+- Package: `@nexub/patterns` · Category: AI · Status: beta
+- Import: `import { Conversation } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/conversation
+
+## When to use
+
+- A full chat or assistant view: messages above, composer below.
+
+## When not to use
+
+- A single question and answer: a PromptInput and a MessageBubble in normal flow are enough.
+- Comment threads that don’t follow new content: use ActivityFeed.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` |  | The messages, usually MessageBubbles. |
+| `composer` | `ReactNode` |  | Sticky slot under the list, usually a PromptInput. |
+| `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". |
+| `announce` | `boolean` | `false` | Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk. |
+| `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest` and `conversation`. |
+
+## Example: Mini chat
+
+Send a message: it shows Thinking, then streams a cited reply. Stop or Escape ends the reply early.
+
+```tsx
+type Message = { id: number; from: 'user' | 'assistant'; text: string };
+
+const REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
+const SOURCE = { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps' };
+
+function Chat() {
+  const [messages, setMessages] = React.useState<Message[]>([]);
+  const [status, setStatus] = React.useState<'idle' | 'submitting' | 'streaming'>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>();
+
+  function send(text: string) {
+    const id = Date.now();
+    setMessages((m) => [...m, { id, from: 'user', text }, { id: id + 1, from: 'assistant', text: '' }]);
+    setStatus('submitting');
+    timer.current = setTimeout(() => {
+      setStatus('streaming');
+      stream(id + 1, 0);
+    }, 800);
+  }
+
+  function stream(id: number, length: number) {
+    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: REPLY.slice(0, length) } : msg)));
+    if (length >= REPLY.length) return setStatus('idle');
+    timer.current = setTimeout(() => stream(id, length + 4), 50);
+  }
+
+  function stop() {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  }
+
+  const last = messages[messages.length - 1];
+
+  return (
+    <Conversation
+      style={{ height: 420 }}
+      composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
+    >
+      {messages.map((msg) =>
+        msg.from === 'user' ? (
+          <MessageBubble key={msg.id} from="user">{msg.text}</MessageBubble>
+        ) : (
+          <MessageBubble key={msg.id} from="assistant">
+            {status === 'submitting' && msg === last ? (
+              <ThinkingIndicator />
+            ) : (
+              <>
+                <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
+                {msg.text === REPLY && <Citation index={1} source={SOURCE} />}
+              </>
+            )}
+          </MessageBubble>
+        ),
+      )}
+    </Conversation>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: region (default) or log (with `announce`)
+- `Tab`: The message list is focusable so keyboard users can scroll it.
+- Keep focus in the composer while a reply streams; don’t move it to the new message.
+- The list is named "Conversation". Leave `announce` off while streaming tokens and announce the finished reply once instead.
+- With reduced motion, "Jump to latest" scrolls instantly.
+
+Related: [message-bubble](message-bubble.md), [prompt-input](prompt-input.md), [streaming-text](streaming-text.md)
+
+
+---
+
+# Error Summary
+
+Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
+
+- Package: `@nexub/patterns` · Category: Forms · Status: beta
+- Import: `import { ErrorSummary } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/error-summary
+
+## When to use
+
+- Forms validated on submit, especially long ones where some errors are off screen.
+- Alongside inline messages, never instead of them.
+
+## When not to use
+
+- Live validation while typing: pass a new array per submit, not per keystroke, or the summary steals focus.
+- A single field: the inline message is enough.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `errors` (required) | `{ id: string; message: string }[]` |  | One entry per invalid field; `id` is the field’s DOM id. Renders nothing when empty. |
+| `title` | `ReactNode` | `'There is a problem'` | Heading; it also labels the summary. |
+| `onFocusField` | `(id: string) => void` |  | Called after a link moves focus to its field. |
+| `useFormErrors(map)` (required) | `Record<string, string \| null \| undefined \| false>` |  | Takes `{ fieldId: message }`. Falsy messages are skipped. |
+| `→ errors` | `ErrorSummaryItem[]` |  | The list for `ErrorSummary`. Stable for the same map object. |
+| `→ fieldProps(id)` | `function` |  | Spread on the input: `id`, plus `aria-invalid` and `aria-describedby="${id}-error"` when it has an error. |
+| `→ errorProps(id)` | `function` |  | Spread on the inline message: `id="${id}-error"`, the same id FormField.Error uses. |
+
+## Example: Validate on submit
+
+Submit empty to see the summary. A new map per submit moves focus to the summary; links jump to each field.
+
+```tsx
+function SignUp() {
+  const [submitted, setSubmitted] = React.useState<FormErrorMap>({});
+  const { errors, fieldProps, errorProps } = useFormErrors(submitted);
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setSubmitted({
+      name: String(data.get('name')).trim() ? undefined : 'Enter your name',
+      email: /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+    });
+  }
+
+  return (
+    <form noValidate onSubmit={submit}>
+      <ErrorSummary errors={errors} />
+      <Label htmlFor="name">Name</Label>
+      <Input name="name" {...fieldProps('name')} invalid={Boolean(submitted.name)} />
+      {submitted.name && <FormError {...errorProps('name')}>{submitted.name}</FormError>}
+      <Label htmlFor="email">Email</Label>
+      <Input name="email" type="email" {...fieldProps('email')} invalid={Boolean(submitted.email)} />
+      {submitted.email && <FormError {...errorProps('email')}>{submitted.email}</FormError>}
+      <Button type="submit">Create account</Button>
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: alert
+- Takes focus whenever it receives a new, non-empty `errors` array, so screen readers read it and keyboard users start from it.
+- Each link scrolls its field into view and focuses it.
+- An `alert` labelled by its heading. Fields get `aria-invalid` and `aria-describedby` pointing at their inline message.
+
+Related: [form-field](form-field.md), [input](input.md), [alert](alert.md)
 
 
 ---
@@ -4590,6 +5546,7 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
 | `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
 | `description` | `string` |  | Additional context below the value. |
+| `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
 
 ## Example: Default
 
@@ -4613,6 +5570,12 @@ Metric display card showing a KPI value, label, optional delta, and icon.
   deltaType="decrease"
   icon={<Users size={20} />}
 />
+```
+
+## Example: Animated
+
+```tsx
+<StatCard label="Orders today" value={orders.toLocaleString()} animate />
 ```
 
 

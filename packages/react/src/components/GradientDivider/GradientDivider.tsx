@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 
-// The 4-colour brand signature stripe — hard-coded gradient is intentional here.
-const BRAND_GRADIENT_H =
-  'linear-gradient(90deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)';
-const BRAND_GRADIENT_V =
-  'linear-gradient(180deg, #4099f1 0%, #1cce66 40%, #f59e0b 70%, #1b3b6f 100%)';
+// The 4-colour brand signature stripe, from the brand gradient tokens.
+// Classes, not inline style, so it renders under a strict CSP.
+const GRADIENT_H = 'bg-[image:var(--gradient-brand-horizontal)]';
+const GRADIENT_V = 'bg-[image:var(--gradient-brand-vertical)]';
+
+const THICKNESS_H: Record<number, string> = { 1: 'h-px', 2: 'h-0.5', 3: 'h-[3px]', 4: 'h-1' };
+const THICKNESS_V: Record<number, string> = { 1: 'w-px', 2: 'w-0.5', 3: 'w-[3px]', 4: 'w-1' };
 
 export interface GradientDividerProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: number;
@@ -18,6 +20,13 @@ export const GradientDivider = React.forwardRef<HTMLDivElement, GradientDividerP
     ref,
   ) => {
     const isHorizontal = orientation === 'horizontal';
+    const thickness = (isHorizontal ? THICKNESS_H : THICKNESS_V)[height];
+    // Off-scale thickness falls back to inline style.
+    const sizeStyle = thickness
+      ? undefined
+      : isHorizontal
+        ? { height: `${height}px` }
+        : { width: `${height}px` };
 
     return (
       <div
@@ -26,15 +35,11 @@ export const GradientDivider = React.forwardRef<HTMLDivElement, GradientDividerP
         aria-orientation={orientation}
         className={cn(
           isHorizontal ? 'w-full' : 'h-full',
+          isHorizontal ? GRADIENT_H : GRADIENT_V,
+          thickness,
           className,
         )}
-        style={{
-          background: isHorizontal ? BRAND_GRADIENT_H : BRAND_GRADIENT_V,
-          ...(isHorizontal
-            ? { height: `${height}px` }
-            : { width: `${height}px` }),
-          ...style,
-        }}
+        style={sizeStyle || style ? { ...sizeStyle, ...style } : undefined}
         {...props}
       />
     );

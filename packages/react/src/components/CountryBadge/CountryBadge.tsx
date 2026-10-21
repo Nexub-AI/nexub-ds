@@ -23,8 +23,8 @@ export const CountryBadge = React.forwardRef<HTMLSpanElement, CountryBadgeProps>
         ref={ref}
         className={cn(
           'inline-flex items-center rounded-full font-medium',
-          'bg-[var(--color-bg-subtle)] text-[var(--color-text-primary)]',
-          'border border-[var(--color-border-default)]',
+          'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface)]',
+          'border border-[var(--color-outline-variant)]',
           sizeClass[size],
           className,
         )}

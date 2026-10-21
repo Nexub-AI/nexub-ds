@@ -20,15 +20,17 @@ export interface SplitButtonProps extends Omit<ButtonProps, 'asChild' | 'trailin
  */
 export const SplitButton = React.forwardRef<HTMLButtonElement, SplitButtonProps>(
   ({ menuLabel, menu, align = 'end', variant, size, tone, disabled, loading, className, ...props }, ref) => {
-    const shared = { variant, size, tone, disabled: disabled || loading };
+    const shared = { variant, size, tone };
     return (
       <ButtonGroup attached className={className}>
-        <Button ref={ref} {...shared} loading={loading} {...props} />
+        {/* Loading uses aria-disabled (Button), so the focused primary keeps focus. */}
+        <Button ref={ref} {...shared} disabled={disabled} {...(loading ? { loading: true } : {})} {...props} />
         {/* modal={false}: Radix's modal menu injects a <style> scroll lock (strict CSP). */}
         <DropdownMenu.Root modal={false}>
           <DropdownMenu.Trigger asChild>
             <Button
               {...shared}
+              disabled={disabled || loading}
               aria-label={menuLabel}
               className={cn(
                 'px-3',

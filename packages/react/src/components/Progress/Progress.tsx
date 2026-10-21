@@ -2,9 +2,10 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import type { ToneValue } from '../Button/Button.js';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 export const progressTrackVariants = cva(
-  'relative w-full overflow-hidden rounded-full bg-[var(--color-bg-muted)]',
+  'relative w-full overflow-hidden rounded-full bg-[var(--color-surface-container-high)]',
   {
     variants: {
       size: {
@@ -24,15 +25,15 @@ export const progressFillVariants = cva(
   {
     variants: {
       tone: {
-        neutral: 'bg-[var(--color-neutral-500)]',
-        info: 'bg-[var(--color-semantic-info-default)]',
-        success: 'bg-[var(--color-semantic-success-default)]',
-        warning: 'bg-[var(--color-semantic-warning-default)]',
-        danger: 'bg-[var(--color-semantic-error-default)]',
-        leap: 'bg-[var(--color-leap-500)]',
-        bookub: 'bg-[var(--color-bookub-500)]',
-        payub: 'bg-[var(--color-payub-500)]',
-        founderub: 'bg-[var(--color-founderub-500)]',
+        neutral: 'bg-[var(--color-outline)]',
+        info: 'bg-[var(--color-info)]',
+        success: 'bg-[var(--color-success)]',
+        warning: 'bg-[var(--color-warning)]',
+        danger: 'bg-[var(--color-error)]',
+        leap: 'bg-[var(--color-leap)]',
+        bookub: 'bg-[var(--color-bookub)]',
+        payub: 'bg-[var(--color-payub)]',
+        founderub: 'bg-[var(--color-founderub)]',
       },
       animated: {
         true: 'bg-[length:200%_100%] animate-[progress-stripes_1s_linear_infinite]',
@@ -68,6 +69,12 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   ) => {
     const clampedValue = Math.min(Math.max(value, 0), max);
     const percentage = (clampedValue / max) * 100;
+    // Width is set through CSSOM, not a style attribute, so server HTML stays
+    // valid under a strict CSP (style-src without 'unsafe-inline').
+    const fillRef = React.useRef<HTMLDivElement>(null);
+    useIsomorphicLayoutEffect(() => {
+      fillRef.current?.style.setProperty('width', `${percentage}%`);
+    }, [percentage]);
     const isIndeterminate = value === undefined || value === null;
 
     return (
@@ -85,7 +92,8 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
             progressFillVariants({ tone }),
             animated && 'animate-pulse',
           )}
-          style={{ width: `${percentage}%` }}
+          ref={fillRef}
+          data-part="fill"
         />
       </div>
     );

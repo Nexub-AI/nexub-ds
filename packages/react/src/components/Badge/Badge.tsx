@@ -60,24 +60,24 @@ const toneClasses: Record<
     outline: 'border-[color-mix(in_srgb,var(--color-error)_50%,transparent)] text-[var(--color-error)]',
   },
   leap: {
-    solid: 'bg-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))] text-[color:light-dark(var(--color-palette-leap-100),var(--color-palette-leap-20))]',
-    soft: 'bg-[color:light-dark(var(--color-palette-leap-90),var(--color-palette-leap-30))] text-[color:light-dark(var(--color-palette-leap-10),var(--color-palette-leap-90))]',
-    outline: 'border-[color:light-dark(var(--color-palette-leap-80),var(--color-palette-leap-40))] text-[color:light-dark(var(--color-palette-leap-40),var(--color-palette-leap-80))]',
+    solid: 'bg-[var(--color-leap)] text-[var(--color-on-leap)]',
+    soft: 'bg-[var(--color-leap-container)] text-[var(--color-on-leap-container)]',
+    outline: 'border-[color:light-dark(var(--color-palette-leap-80),var(--color-palette-leap-40))] text-[var(--color-leap)]',
   },
   bookub: {
-    solid: 'bg-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))] text-[color:light-dark(var(--color-palette-bookub-100),var(--color-palette-bookub-20))]',
-    soft: 'bg-[color:light-dark(var(--color-palette-bookub-90),var(--color-palette-bookub-30))] text-[color:light-dark(var(--color-palette-bookub-10),var(--color-palette-bookub-90))]',
-    outline: 'border-[color:light-dark(var(--color-palette-bookub-80),var(--color-palette-bookub-40))] text-[color:light-dark(var(--color-palette-bookub-40),var(--color-palette-bookub-80))]',
+    solid: 'bg-[var(--color-bookub)] text-[var(--color-on-bookub)]',
+    soft: 'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)]',
+    outline: 'border-[color:light-dark(var(--color-palette-bookub-80),var(--color-palette-bookub-40))] text-[var(--color-bookub)]',
   },
   payub: {
-    solid: 'bg-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))] text-[color:light-dark(var(--color-palette-payub-100),var(--color-palette-payub-20))]',
-    soft: 'bg-[color:light-dark(var(--color-palette-payub-90),var(--color-palette-payub-30))] text-[color:light-dark(var(--color-palette-payub-10),var(--color-palette-payub-90))]',
-    outline: 'border-[color:light-dark(var(--color-palette-payub-80),var(--color-palette-payub-40))] text-[color:light-dark(var(--color-palette-payub-40),var(--color-palette-payub-80))]',
+    solid: 'bg-[var(--color-payub)] text-[var(--color-on-payub)]',
+    soft: 'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)]',
+    outline: 'border-[color:light-dark(var(--color-palette-payub-80),var(--color-palette-payub-40))] text-[var(--color-payub)]',
   },
   founderub: {
-    solid: 'bg-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))] text-[color:light-dark(var(--color-palette-founderub-100),var(--color-palette-founderub-20))]',
-    soft: 'bg-[color:light-dark(var(--color-palette-founderub-90),var(--color-palette-founderub-30))] text-[color:light-dark(var(--color-palette-founderub-10),var(--color-palette-founderub-90))]',
-    outline: 'border-[color:light-dark(var(--color-palette-founderub-80),var(--color-palette-founderub-40))] text-[color:light-dark(var(--color-palette-founderub-40),var(--color-palette-founderub-80))]',
+    solid: 'bg-[var(--color-founderub)] text-[var(--color-on-founderub)]',
+    soft: 'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
+    outline: 'border-[color:light-dark(var(--color-palette-founderub-80),var(--color-palette-founderub-40))] text-[var(--color-founderub)]',
   },
 };
 

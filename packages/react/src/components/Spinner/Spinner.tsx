@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const spinnerVariants = cva(
@@ -20,15 +21,15 @@ export const spinnerVariants = cva(
         xl: 'h-10 w-10 border-4',
       },
       tone: {
-        neutral: 'border-[var(--color-neutral-500)]',
-        info: 'border-[var(--color-semantic-info-default)]',
-        success: 'border-[var(--color-semantic-success-default)]',
-        warning: 'border-[var(--color-semantic-warning-default)]',
-        danger: 'border-[var(--color-semantic-error-default)]',
-        leap: 'border-[var(--color-leap-500)]',
-        bookub: 'border-[var(--color-bookub-500)]',
-        payub: 'border-[var(--color-payub-500)]',
-        founderub: 'border-[var(--color-founderub-500)]',
+        neutral: 'border-[var(--color-on-surface-variant)]',
+        info: 'border-[var(--color-info)]',
+        success: 'border-[var(--color-success)]',
+        warning: 'border-[var(--color-warning)]',
+        danger: 'border-[var(--color-error)]',
+        leap: 'border-[var(--color-leap)]',
+        bookub: 'border-[var(--color-bookub)]',
+        payub: 'border-[var(--color-payub)]',
+        founderub: 'border-[var(--color-founderub)]',
       },
     },
     defaultVariants: {
@@ -46,12 +47,13 @@ export interface SpinnerProps
 }
 
 export const Spinner = React.forwardRef<HTMLSpanElement, SpinnerProps>(
-  ({ className, size, tone = 'neutral', label = 'Loading…', ...props }, ref) => {
+  ({ className, size, tone = 'neutral', label, ...props }, ref) => {
+    const messages = useNexubMessages();
     return (
       <span
         ref={ref}
         role="status"
-        aria-label={label}
+        aria-label={label ?? messages.loading}
         className={cn('inline-flex items-center justify-center', className)}
         {...props}
       >

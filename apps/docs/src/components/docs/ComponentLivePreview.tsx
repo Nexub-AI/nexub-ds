@@ -90,7 +90,25 @@ import {
   NavigationRail,
   Amount,
   MoneyInput,
+  CardLink,
+  RadioCardGroup,
+  RadioCard,
+  CheckboxCard,
+  MediaCard,
+  NumberTicker,
+  FormError,
+  PromptInput,
+  ThinkingIndicator,
+  StreamingText,
+  MessageBubble,
+  MessageActions,
+  Citation,
+  SourceList,
+  type ButtonStatus,
+  type CitationSource,
+  type PromptInputStatus,
 } from '@nexub/react';
+import { Bell, Building2, Globe, Paperclip, Shield, Sparkles, User, Users, Zap } from '@nexub/icons';
 
 // @nexub/patterns used in previews
 import {
@@ -105,6 +123,12 @@ import {
   NotificationItem,
   ActivityFeed,
   ListDetail,
+  BentoGrid,
+  BentoTile,
+  ErrorSummary,
+  useFormErrors,
+  Conversation,
+  type FormErrorMap,
 } from '@nexub/patterns';
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
@@ -124,6 +148,13 @@ const row = (gap = 8, wrap = true): React.CSSProperties => ({
   alignItems: 'center',
   justifyContent: 'center',
 });
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
 
 /* ── Existing component examples ──────────────────────────────────────────── */
 
@@ -155,7 +186,28 @@ function ButtonExamples({ idx }: { idx: number }) {
         <Button variant="outline" disabled>Disabled</Button>
       </div>
     );
+  if (idx === 4) return <AsyncButtonDemo />;
   return null;
+}
+
+const NEXT_STATUS: Record<ButtonStatus, ButtonStatus> = { idle: 'loading', loading: 'success', success: 'error', error: 'idle' };
+
+function AsyncButtonDemo() {
+  const [status, setStatus] = React.useState<ButtonStatus>('idle');
+  // Clicks are ignored while loading, so loading moves on by itself.
+  React.useEffect(() => {
+    if (status !== 'loading') return;
+    const t = setTimeout(() => setStatus('success'), 1200);
+    return () => clearTimeout(t);
+  }, [status]);
+  return (
+    <div style={col(8)}>
+      <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
+        Save
+      </Button>
+      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+    </div>
+  );
 }
 
 function BadgeExamples({ idx }: { idx: number }) {
@@ -213,6 +265,7 @@ function InputExamples({ idx }: { idx: number }) {
 }
 
 function CardExamples({ idx }: { idx: number }) {
+  const [starred, setStarred] = React.useState(false);
   if (idx === 0)
     return (
       <div style={{ width: 280 }}>
@@ -228,6 +281,136 @@ function CardExamples({ idx }: { idx: number }) {
         <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
         <Card variant="surface"><Text size="body-sm">Surface</Text></Card>
         <Card variant="interactive"><Text size="body-sm">Interactive</Text></Card>
+      </div>
+    );
+  if (idx === 2)
+    return (
+      <div style={{ width: 280 }}>
+        <Card variant="interactive" style={{ padding: 16 }}>
+          <Heading level={3} size="h5">
+            <CardLink href="#">Atlas</CardLink>
+          </Heading>
+          <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
+          <Button size="sm" variant="text" className="relative z-[1]" style={{ marginTop: 8 }} onClick={() => setStarred((v) => !v)}>
+            {starred ? 'Starred' : 'Star'}
+          </Button>
+        </Card>
+      </div>
+    );
+  if (idx === 3)
+    return (
+      <div style={{ width: 280 }}>
+        <Card variant="surface" effect="sheen" style={{ padding: 24 }}>
+          <Heading level={3} size="h5">Pro</Heading>
+          <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
+        </Card>
+      </div>
+    );
+  return null;
+}
+
+function RadioCardExamples({ idx }: { idx: number }) {
+  const [plan, setPlan] = React.useState('team');
+  if (idx === 0)
+    return (
+      <RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan} style={{ width: '100%' }}>
+        <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features.">
+          <span className="text-sm font-medium">$0 / month</span>
+        </RadioCard>
+        <RadioCard value="team" icon={<Users />} title="Team" description="Up to 20 seats, shared workspaces.">
+          <span className="text-sm font-medium">$12 / seat</span>
+        </RadioCard>
+        <RadioCard value="enterprise" icon={<Building2 />} title="Enterprise" description="SSO, audit logs, priority support.">
+          <span className="text-sm font-medium">Contact sales</span>
+        </RadioCard>
+      </RadioCardGroup>
+    );
+  if (idx === 1)
+    return (
+      <RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly" style={{ width: '100%' }}>
+        <RadioCard value="monthly" title="Monthly" description="Billed every month." />
+        <RadioCard value="yearly" title="Yearly" description="Two months free." />
+      </RadioCardGroup>
+    );
+  if (idx === 2)
+    return (
+      <RadioCardGroup aria-label="Region" columns={2} defaultValue="eu" style={{ width: '100%' }}>
+        <RadioCard value="eu" title="Europe" description="Frankfurt" />
+        <RadioCard value="us" title="United States" description="Virginia" />
+        <RadioCard value="ap" title="Asia Pacific" description="Coming soon" disabled />
+      </RadioCardGroup>
+    );
+  return null;
+}
+
+function CheckboxCardExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <fieldset className="grid gap-3 sm:grid-cols-3" style={{ width: '100%', border: 0, padding: 0, margin: 0 }}>
+        <legend className="sr-only">Add-ons</legend>
+        <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
+        <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
+        <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
+      </fieldset>
+    );
+  if (idx === 1)
+    return (
+      <div style={{ ...col(12), width: 320, alignItems: 'stretch' }}>
+        <CheckboxCard title="SSO" description="Available on Enterprise." disabled />
+        <CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+      </div>
+    );
+  return null;
+}
+
+function MediaCardExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ width: 320 }}>
+        <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
+      </div>
+    );
+  if (idx === 1)
+    return (
+      <div style={{ width: 320 }}>
+        <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
+          <Button size="sm" variant="tonal">Open</Button>
+          <Button size="sm" variant="text">Share</Button>
+        </MediaCard>
+      </div>
+    );
+  if (idx === 2)
+    return (
+      <div style={{ ...row(12), alignItems: 'flex-start' }}>
+        {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
+          <div key={r} style={{ width: 160 }}>
+            <MediaCard ratio={r} src={COVER} alt="" title={r} />
+          </div>
+        ))}
+      </div>
+    );
+  return null;
+}
+
+function NumberTickerExamples({ idx }: { idx: number }) {
+  const [n, setN] = React.useState(12480);
+  const [balance, setBalance] = React.useState(128450.75);
+  if (idx === 0)
+    return (
+      <div style={{ ...col(12), alignItems: 'center' }}>
+        <NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
+        <Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
+          Change
+        </Button>
+      </div>
+    );
+  if (idx === 1)
+    return (
+      <div style={{ ...col(12), alignItems: 'center' }}>
+        <Amount value={balance} currency="USD" size="display" animate />
+        <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
+          Change
+        </Button>
       </div>
     );
   return null;
@@ -715,8 +898,26 @@ function ToastExamples({ idx }: { idx: number }) {
             Delete with undo
           </Button>
         )}
+        {idx === 3 && <UndoableDeleteDemo />}
       </div>
     </>
+  );
+}
+
+function UndoableDeleteDemo() {
+  const [hidden, setHidden] = React.useState(false);
+  const remove = () => {
+    setHidden(true);
+    toast.undoable('Invoice deleted', {
+      description: 'INV-2041',
+      onUndo: () => setHidden(false),
+      onCommit: () => {},
+    });
+  };
+  return hidden ? (
+    <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+  ) : (
+    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 
@@ -1759,6 +1960,7 @@ function MotionCollapseExamples({ idx }: { idx: number }) {
 /* ── Pattern examples ─────────────────────────────────────────────────────── */
 
 function StatCardExamples({ idx }: { idx: number }) {
+  const [orders, setOrders] = React.useState(1284);
   if (idx === 0)
     return (
       <div style={{ width: 240 }}>
@@ -1772,7 +1974,84 @@ function StatCardExamples({ idx }: { idx: number }) {
         <StatCard label="Churn" value="3.2%" delta="-0.4%" deltaType="decrease" />
       </div>
     );
+  if (idx === 2)
+    return (
+      <div style={{ ...col(12), width: 240, alignItems: 'stretch' }}>
+        <StatCard label="Orders today" value={orders.toLocaleString('en-US')} animate />
+        <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
+          New orders
+        </Button>
+      </div>
+    );
   return null;
+}
+
+function BentoStat({ label, value }: { label: string; value: string }) {
+  return (
+    <BentoTile className="flex flex-col justify-between">
+      <span className="text-label-md text-[var(--color-on-surface-variant)]">{label}</span>
+      <span className="text-title-lg text-[var(--color-on-surface)]">{value}</span>
+    </BentoTile>
+  );
+}
+
+function BentoGridExamples({ idx }: { idx: number }) {
+  const bars = ['40%', '65%', '50%', '80%', '72%', '90%', '60%'];
+  if (idx === 0)
+    return (
+      <BentoGrid style={{ width: '100%' }}>
+        <BentoTile size="2x2" className="flex flex-col gap-3">
+          <h3 className="text-title-sm text-[var(--color-on-surface)]">Revenue, last 7 days</h3>
+          <div role="img" aria-label={`Bar chart: ${bars.join(', ')}`} style={{ display: 'flex', flex: 1, alignItems: 'flex-end', gap: 8 }}>
+            {bars.map((h, i) => (
+              <div key={i} className="rounded-shape-min bg-[var(--color-primary-container)]" style={{ flex: 1, height: h }} />
+            ))}
+          </div>
+        </BentoTile>
+        <BentoStat label="Active users" value="12,480" />
+        <BentoStat label="Conversion" value="3.2%" />
+        <BentoTile size="2x1" className="flex items-center text-body-md text-[var(--color-on-surface-variant)]">
+          3 invoices awaiting approval.
+        </BentoTile>
+        <BentoStat label="Churn" value="0.8%" />
+        <BentoStat label="NPS" value="61" />
+      </BentoGrid>
+    );
+  return null;
+}
+
+function ErrorSummaryExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ErrorSummaryDemo />;
+  return null;
+}
+
+function ErrorSummaryDemo() {
+  const [submitted, setSubmitted] = React.useState<FormErrorMap>({});
+  const { errors, fieldProps, errorProps } = useFormErrors(submitted);
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setSubmitted({
+      'es-name': String(data.get('name')).trim() ? undefined : 'Enter your name',
+      'es-email': /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+    });
+  };
+  return (
+    <form noValidate onSubmit={submit} style={{ ...col(12), alignItems: 'stretch', width: 340 }}>
+      <ErrorSummary errors={errors} />
+      <div style={{ ...col(4), alignItems: 'stretch' }}>
+        <Label htmlFor="es-name">Name</Label>
+        <Input name="name" {...fieldProps('es-name')} invalid={Boolean(submitted['es-name'])} />
+        {submitted['es-name'] && <FormError {...errorProps('es-name')}>{submitted['es-name']}</FormError>}
+      </div>
+      <div style={{ ...col(4), alignItems: 'stretch' }}>
+        <Label htmlFor="es-email">Email</Label>
+        <Input name="email" type="email" {...fieldProps('es-email')} invalid={Boolean(submitted['es-email'])} />
+        {submitted['es-email'] && <FormError {...errorProps('es-email')}>{submitted['es-email']}</FormError>}
+      </div>
+      <Button type="submit">Create account</Button>
+    </form>
+  );
 }
 
 function UserCardExamples({ idx }: { idx: number }) {
@@ -1913,6 +2192,213 @@ function ActivityFeedExamples({ idx }: { idx: number }) {
   return null;
 }
 
+/* ── AI ───────────────────────────────────────────────────────────────────── */
+
+function PromptInputExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ width: '100%', maxWidth: 520 }}>
+        <PromptInput placeholder="Ask anything" />
+      </div>
+    );
+  if (idx === 1) return <PromptInputAttachmentsDemo />;
+  if (idx === 2) return <PromptInputStreamingDemo />;
+  return null;
+}
+
+function PromptInputAttachmentsDemo() {
+  const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
+  return (
+    <div style={{ width: '100%', maxWidth: 520 }}>
+      <PromptInput
+        placeholder="Ask about these files"
+        attachments={
+          files.length > 0 &&
+          files.map((f) => (
+            <Chip key={f} onRemove={() => setFiles((all) => all.filter((x) => x !== f))}>
+              {f}
+            </Chip>
+          ))
+        }
+        actions={
+          <>
+            <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
+            <IconButton size="sm" label="Search the web"><Globe /></IconButton>
+          </>
+        }
+      />
+    </div>
+  );
+}
+
+function PromptInputStreamingDemo() {
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const send = () => {
+    setStatus('streaming');
+    timer.current = setTimeout(() => setStatus('idle'), 3000);
+  };
+  const stop = () => {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  };
+  return (
+    <div style={{ width: '100%', maxWidth: 520 }}>
+      <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
+    </div>
+  );
+}
+
+function ThinkingIndicatorExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ThinkingIndicator />;
+  if (idx === 1)
+    return (
+      <div style={col(16)}>
+        <ThinkingIndicator label="Searching 4 sources" />
+        <ThinkingIndicator size="sm" />
+        <ThinkingIndicator size="sm" label={null} />
+      </div>
+    );
+  return null;
+}
+
+const STREAM_DEMO_TEXT =
+  'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
+
+function StreamingTextExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <StreamingTextDemo />;
+  return null;
+}
+
+function StreamingTextDemo() {
+  const [length, setLength] = React.useState(0);
+  const streaming = length < STREAM_DEMO_TEXT.length;
+  React.useEffect(() => {
+    if (!streaming) return;
+    const id = setTimeout(() => setLength((n) => Math.min(STREAM_DEMO_TEXT.length, n + 6)), 60);
+    return () => clearTimeout(id);
+  }, [length, streaming]);
+  return (
+    <div style={{ ...col(12), maxWidth: 480 }}>
+      <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
+      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+    </div>
+  );
+}
+
+function MessageBubbleExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ ...col(16), alignItems: 'stretch', width: '100%', maxWidth: 560 }}>
+        <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
+        <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+          <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
+          <MessageActions
+            text="Open Settings, then Billing, and choose Cancel plan."
+            onFeedback={() => {}}
+            onRegenerate={() => toast.info('Regenerating…')}
+          />
+        </MessageBubble>
+        <MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+      </div>
+    );
+  if (idx === 1)
+    return (
+      <div style={{ width: '100%', maxWidth: 560 }}>
+        <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
+          Can I get a refund for last month?
+        </MessageBubble>
+      </div>
+    );
+  return null;
+}
+
+const CITATION_SOURCES: CitationSource[] = [
+  { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { title: 'Grants for home heating', url: 'https://example.org/grants', domain: 'example.org' },
+  { title: 'Running costs compared', url: 'https://example.net/costs' },
+];
+
+function CitationExamples({ idx }: { idx: number }) {
+  if (idx === 0)
+    return (
+      <div style={{ ...col(16), alignItems: 'stretch', maxWidth: 560 }}>
+        <p>
+          Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
+          part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas
+          <Citation index={3} source={CITATION_SOURCES[2]!} />.
+        </p>
+        <SourceList sources={CITATION_SOURCES} />
+      </div>
+    );
+  return null;
+}
+
+function ConversationExamples({ idx }: { idx: number }) {
+  if (idx === 0) return <ConversationDemo />;
+  return null;
+}
+
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string };
+
+const CHAT_REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
+const CHAT_SOURCE = CITATION_SOURCES[0]!;
+
+function ConversationDemo() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+
+  function send(text: string) {
+    const id = Date.now();
+    setMessages((m) => [...m, { id, from: 'user', text }, { id: id + 1, from: 'assistant', text: '' }]);
+    setStatus('submitting');
+    timer.current = setTimeout(() => {
+      setStatus('streaming');
+      stream(id + 1, 0);
+    }, 800);
+  }
+
+  function stream(id: number, length: number) {
+    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: CHAT_REPLY.slice(0, length) } : msg)));
+    if (length >= CHAT_REPLY.length) return setStatus('idle');
+    timer.current = setTimeout(() => stream(id, length + 4), 50);
+  }
+
+  function stop() {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  }
+
+  const last = messages[messages.length - 1];
+
+  return (
+    <Conversation
+      style={{ height: 420, width: '100%' }}
+      composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
+    >
+      {messages.map((msg) =>
+        msg.from === 'user' ? (
+          <MessageBubble key={msg.id} from="user">{msg.text}</MessageBubble>
+        ) : (
+          <MessageBubble key={msg.id} from="assistant">
+            {status === 'submitting' && msg === last ? (
+              <ThinkingIndicator />
+            ) : (
+              <>
+                <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
+                {msg.text === CHAT_REPLY && <Citation index={1} source={CHAT_SOURCE} />}
+              </>
+            )}
+          </MessageBubble>
+        ),
+      )}
+    </Conversation>
+  );
+}
+
 /* ── Render maps ──────────────────────────────────────────────────────────── */
 
 const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
@@ -1969,6 +2455,8 @@ const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   select: SelectExamples,
   checkbox: CheckboxExamples,
   'radio-group': RadioGroupExamples,
+  'radio-card': RadioCardExamples,
+  'checkbox-card': CheckboxCardExamples,
   switch: SwitchExamples,
   combobox: ComboboxExamples,
   autocomplete: AutocompleteExamples,
@@ -1989,6 +2477,8 @@ const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'empty-state': EmptyStateExamples,
   'error-state': ErrorStateExamples,
   card: CardExamples,
+  'media-card': MediaCardExamples,
+  'number-ticker': NumberTickerExamples,
   // Dividers
   separator: SeparatorExamples,
   'gradient-divider': GradientDividerExamples,
@@ -2010,6 +2500,12 @@ const COMPONENT_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'motion-slide': MotionSlideExamples,
   'motion-scale': MotionScaleExamples,
   'motion-collapse': MotionCollapseExamples,
+  // AI
+  'prompt-input': PromptInputExamples,
+  'thinking-indicator': ThinkingIndicatorExamples,
+  'streaming-text': StreamingTextExamples,
+  'message-bubble': MessageBubbleExamples,
+  citation: CitationExamples,
 };
 
 const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
@@ -2020,6 +2516,9 @@ const PATTERN_MAP: Record<string, React.ComponentType<{ idx: number }>> = {
   'settings-section': SettingsSectionExamples,
   'info-list': InfoListExamples,
   'list-detail': ListDetailExamples,
+  'bento-grid': BentoGridExamples,
+  'error-summary': ErrorSummaryExamples,
+  conversation: ConversationExamples,
   'plan-card': PlanCardExamples,
   'step-indicator': StepIndicatorExamples,
   'notification-item': NotificationItemExamples,

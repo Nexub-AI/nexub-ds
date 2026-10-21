@@ -30,20 +30,20 @@ export function AuthCard({
       )}
 
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-on-surface)]">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-[var(--color-text-muted)]">{description}</p>
+          <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>
         )}
       </div>
 
-      <div className="rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-6 flex flex-col gap-4">
+      <div className="rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-elevated)] shadow-elevation-1 p-6 flex flex-col gap-4">
         {children}
       </div>
 
       {footer && (
-        <div className="flex flex-col items-center gap-2 text-sm text-[var(--color-text-muted)]">
+        <div className="flex flex-col items-center gap-2 text-sm text-[var(--color-on-surface-muted)]">
           {footer}
         </div>
       )}

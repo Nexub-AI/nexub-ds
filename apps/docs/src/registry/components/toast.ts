@@ -9,18 +9,20 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '1.7.0',
   },
   props: [
-    { name: 'Toaster position', type: "'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center'", default: "'bottom-right'", required: false, description: 'Where toasts appear on screen.' },
-    { name: 'Toaster richColors', type: 'boolean', default: 'false', required: false, description: 'Enables fully coloured backgrounds for success, error, warning, and info toasts.' },
-    { name: 'Toaster closeButton', type: 'boolean', default: 'false', required: false, description: 'Renders a close button on each toast.' },
+    { name: 'Toaster expand', type: 'boolean', default: 'false', required: false, description: 'Always show toasts as a list. By default they collapse into a stack that fans out on hover or focus, which also pauses their timers.' },
+    { name: 'Toaster visibleToasts', type: 'number', default: '3', required: false, description: 'How many toasts show at once. Older ones are hidden visually but stay in the live region.' },
     { name: 'toast.success(title, opts?)', type: 'string', required: true, description: 'Show a success toast with an optional options object.' },
     { name: 'toast.error(title, opts?)', type: 'string', required: true, description: 'Show an error toast.' },
     { name: 'toast.warning(title, opts?)', type: 'string', required: true, description: 'Show a warning toast.' },
     { name: 'toast.info(title, opts?)', type: 'string', required: true, description: 'Show an info toast.' },
     { name: 'toast.custom(title, opts?)', type: 'string', required: true, description: 'Show a default/custom toast.' },
+    { name: 'toast.undoable(title, opts)', type: 'UndoableToastOptions', required: true, description: 'A toast with an Undo action (beta, 1.7.0). Undo calls `opts.onUndo`; any other close (timer, swipe, close button, `toast.dismiss`) calls `opts.onCommit`, exactly once. Returns the toast id.' },
+    { name: 'undoable opts', type: '{ onUndo; onCommit?; undoLabel?; description?; duration? }', required: false, description: '`undoLabel` defaults to the `undo` message ("Undo"). Commit the change in `onCommit`, not before showing the toast.' },
     { name: 'opts.description', type: 'string', required: false, description: 'Secondary supporting text below the title.' },
-    { name: 'opts.duration', type: 'number', default: '4000', required: false, description: 'Time in ms before auto-dismiss. Use Infinity to persist.' },
+    { name: 'opts.duration', type: 'number', default: '5000', required: false, description: 'Time in ms before auto-dismiss. Use Infinity to persist.' },
     { name: 'opts.action', type: '{ label: string; onClick: () => void }', required: false, description: 'Renders an action button inside the toast.' },
   ],
   examples: [
@@ -45,7 +47,7 @@ const entry: ComponentEntry = {
       code: `function ToastVariants() {
   return (
     <>
-      <Toaster richColors />
+      <Toaster />
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <Button variant="outline" onClick={() => toast.custom('Default notification')}>
           Default
@@ -87,6 +89,33 @@ const entry: ComponentEntry = {
       >
         Send message
       </Button>
+    </>
+  );
+}`,
+    },
+    {
+      title: 'Undoable delete',
+      description: 'Hide the item right away; delete it for real only when the toast closes without Undo.',
+      code: `function UndoableDelete() {
+  const [hidden, setHidden] = React.useState(false);
+
+  function remove() {
+    setHidden(true);
+    toast.undoable('Invoice deleted', {
+      description: 'INV-2041',
+      onUndo: () => setHidden(false),
+      onCommit: () => deleteInvoice('INV-2041'),
+    });
+  }
+
+  return (
+    <>
+      <Toaster />
+      {hidden ? (
+        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+      ) : (
+        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+      )}
     </>
   );
 }`,

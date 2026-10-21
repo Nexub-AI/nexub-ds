@@ -1,0 +1,30 @@
+/* @nexub/themes/view-transitions — opt-in page transitions.
+   Import after base. Multi-page sites get them on navigation (@view-transition);
+   SPAs wrap their route update in startViewTransition() from @nexub/react.
+   The old page fades out fast; the new one fades in and rises 8px on the
+   spatial spring. Name an element (view-transition-name) to morph it between
+   pages instead. Reduced motion: crossfade only. */
+
+@view-transition { navigation: auto; }
+
+@keyframes nx-vt-rise { from { translate: 0 8px; } }
+
+::view-transition-old(root) {
+  animation: nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) both;
+}
+::view-transition-new(root) {
+  animation:
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both,
+    nx-vt-rise var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing) both;
+}
+::view-transition-group(*) {
+  animation-duration: var(--motion-spring-spatial-default-duration);
+  animation-timing-function: var(--motion-spring-spatial-default-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-new(root) {
+    animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both;
+  }
+  ::view-transition-group(*) { animation-duration: 0s; }
+}

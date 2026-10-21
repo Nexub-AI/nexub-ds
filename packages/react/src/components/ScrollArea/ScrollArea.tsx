@@ -14,10 +14,10 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       </RadixScrollArea.Viewport>
       {(orientation === 'vertical' || orientation === 'both') && (
         <RadixScrollArea.Scrollbar
-          className="flex touch-none select-none transition-colors h-full w-2.5 border-l border-l-transparent p-[1px]"
+          className="flex touch-none select-none transition-colors h-full w-2.5 border-s border-s-transparent p-[1px]"
           orientation="vertical"
         >
-          <RadixScrollArea.Thumb className="relative flex-1 rounded-full bg-[var(--color-border-default)]" />
+          <RadixScrollArea.Thumb className="relative flex-1 rounded-full bg-[var(--color-outline-variant)]" />
         </RadixScrollArea.Scrollbar>
       )}
       {(orientation === 'horizontal' || orientation === 'both') && (
@@ -25,7 +25,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
           className="flex touch-none select-none transition-colors flex-col h-2.5 border-t border-t-transparent p-[1px]"
           orientation="horizontal"
         >
-          <RadixScrollArea.Thumb className="relative flex-1 rounded-full bg-[var(--color-border-default)]" />
+          <RadixScrollArea.Thumb className="relative flex-1 rounded-full bg-[var(--color-outline-variant)]" />
         </RadixScrollArea.Scrollbar>
       )}
       <RadixScrollArea.Corner />

@@ -16,6 +16,7 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
 | `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
 | `description` | `string` |  | Additional context below the value. |
+| `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
 
 ## Example: Default
 
@@ -39,4 +40,10 @@ Metric display card showing a KPI value, label, optional delta, and icon.
   deltaType="decrease"
   icon={<Users size={20} />}
 />
+```
+
+## Example: Animated
+
+```tsx
+<StatCard label="Orders today" value={orders.toLocaleString()} animate />
 ```

@@ -2,7 +2,7 @@ import StyleDictionary from 'style-dictionary';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ROLES, SPRINGS, palettes, rolesCss, spring, tertiary } from './generate.mjs';
+import { CHART_KEYS, ROLES, SPRINGS, palettes, rolesCss, spring, tertiary } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -97,6 +97,9 @@ StyleDictionary.registerFormat({
         if (rest[3] === 'duration') transitionDuration[key] = `var(${varName})`;
       }
     }
+
+    // Chart palettes are generated into roles.css (bg-chart-1, fill-chart-seq-3, stroke-chart-div-7).
+    colors.chart = Object.fromEntries(CHART_KEYS.map((k) => [k, `var(--color-chart-${k})`]));
 
     const preset = {
       theme: {

@@ -21,7 +21,7 @@ describe('SegmentedControl', () => {
         <SegmentedControl.Item value="list">List</SegmentedControl.Item>
       </SegmentedControl.Root>,
     );
-    expect(screen.getByRole('group')).toHaveClass('custom-root');
+    expect(screen.getByRole('radiogroup')).toHaveClass('custom-root');
   });
 
   it('forwards className on Item', () => {

@@ -26,13 +26,17 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 | --- | --- | --- | --- |
 | `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
-| `loading` | `boolean` | `false` | Shows a spinner and disables interaction. |
+| `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
+| `loading` | `boolean` | `false` | Alias for `status="loading"`. |
+| `loadingLabel` | `string` | `'Loading'` | Announced when `status` becomes `loading`. |
+| `successLabel` | `string` | `'Done'` | Announced on `success`. When set, it also replaces the visible label (with a check) instead of showing the check alone. |
+| `errorLabel` | `string` | `'Something went wrong'` | Announced on `error`. |
 | `disabled` | `boolean` | `false` | Disables the button. |
 | `fullWidth` | `boolean` | `false` | Stretches the button to fill its container. |
 | `leadingIcon` | `React.ReactNode` |  | Icon rendered before the label. |
 | `trailingIcon` | `React.ReactNode` |  | Icon rendered after the label. |
 | `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone — overrides the variant colour with a semantic palette. |
-| `asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
+| `asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). `status` and `loading` have no effect with `asChild`. |
 
 ## Example: Default
 
@@ -72,6 +76,32 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 </div>
 ```
 
+## Example: Async
+
+Drive `status` from the request. Each click here moves to the next status.
+
+```tsx
+function SaveButton() {
+  const [status, setStatus] = React.useState<ButtonStatus>('idle');
+
+  async function save() {
+    setStatus('loading');
+    try {
+      await saveProfile();
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
+  }
+
+  return (
+    <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={save}>
+      Save
+    </Button>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: button
@@ -81,7 +111,8 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 - Receives focus in document order; `disabled` removes it from the tab sequence.
 - Visible focus ring uses `--color-border-focus` and meets WCAG 2.4.7 contrast.
 - Announces the visible label plus the implicit "button" role.
-- `loading` toggles `aria-busy="true"` so AT users hear the pending state.
+- While loading the button sets `aria-busy` and `aria-disabled` (not `disabled`), so focus stays on it and clicks are ignored.
+- A button with `status` or `loading` renders a polite `role="status"` region next to it that announces `loadingLabel`, `successLabel` or `errorLabel` as the status changes.
 - Pair icon-only triggers with `IconButton` for a 44×44 touch target.
 
 Related: [icon-button](icon-button.md), [button-group](button-group.md), [link](link.md)

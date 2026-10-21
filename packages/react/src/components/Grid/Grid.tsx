@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { layoutProps } from '../../utils/layout.js';
 
 export interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
   cols?: number | string;
@@ -33,30 +34,13 @@ export const Grid = React.forwardRef<HTMLDivElement, GridProps>(
   ) => {
     const Comp = asChild ? Slot : 'div';
 
-    const inlineStyle: React.CSSProperties = {
-      ...(cols !== undefined
-        ? {
-            gridTemplateColumns:
-              typeof cols === 'number' ? `repeat(${cols}, minmax(0, 1fr))` : cols,
-          }
-        : {}),
-      ...(rows !== undefined
-        ? {
-            gridTemplateRows:
-              typeof rows === 'number' ? `repeat(${rows}, minmax(0, 1fr))` : rows,
-          }
-        : {}),
-      ...(gap !== undefined
-        ? { gap: typeof gap === 'number' ? `${gap * 0.25}rem` : gap }
-        : {}),
-      ...style,
-    };
+    const layout = layoutProps({ gap, cols, rows, style });
 
     return (
       <Comp
         ref={ref}
-        className={cn('grid', flow && flowClass[flow], className)}
-        style={inlineStyle}
+        className={cn('grid', layout.className, flow && flowClass[flow], className)}
+        style={layout.style}
         {...rest}
       >
         {children}

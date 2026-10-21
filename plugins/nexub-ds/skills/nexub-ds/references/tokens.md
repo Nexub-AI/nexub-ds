@@ -1,6 +1,6 @@
 # Tokens
 
-Nexub DS v1.5.1. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v1.6.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -33,6 +33,22 @@ Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` au
 | `on-info` | `bg-on-info` / `text-on-info` / `border-on-info` | `--color-on-info` |  |
 | `info-container` | `bg-info-container` / `text-info-container` / `border-info-container` | `--color-info-container` |  |
 | `on-info-container` | `bg-on-info-container` / `text-on-info-container` / `border-on-info-container` | `--color-on-info-container` |  |
+| `leap` | `bg-leap` / `text-leap` / `border-leap` | `--color-leap` |  |
+| `on-leap` | `bg-on-leap` / `text-on-leap` / `border-on-leap` | `--color-on-leap` |  |
+| `leap-container` | `bg-leap-container` / `text-leap-container` / `border-leap-container` | `--color-leap-container` |  |
+| `on-leap-container` | `bg-on-leap-container` / `text-on-leap-container` / `border-on-leap-container` | `--color-on-leap-container` |  |
+| `bookub` | `bg-bookub` / `text-bookub` / `border-bookub` | `--color-bookub` |  |
+| `on-bookub` | `bg-on-bookub` / `text-on-bookub` / `border-on-bookub` | `--color-on-bookub` |  |
+| `bookub-container` | `bg-bookub-container` / `text-bookub-container` / `border-bookub-container` | `--color-bookub-container` |  |
+| `on-bookub-container` | `bg-on-bookub-container` / `text-on-bookub-container` / `border-on-bookub-container` | `--color-on-bookub-container` |  |
+| `payub` | `bg-payub` / `text-payub` / `border-payub` | `--color-payub` |  |
+| `on-payub` | `bg-on-payub` / `text-on-payub` / `border-on-payub` | `--color-on-payub` |  |
+| `payub-container` | `bg-payub-container` / `text-payub-container` / `border-payub-container` | `--color-payub-container` |  |
+| `on-payub-container` | `bg-on-payub-container` / `text-on-payub-container` / `border-on-payub-container` | `--color-on-payub-container` |  |
+| `founderub` | `bg-founderub` / `text-founderub` / `border-founderub` | `--color-founderub` |  |
+| `on-founderub` | `bg-on-founderub` / `text-on-founderub` / `border-on-founderub` | `--color-on-founderub` |  |
+| `founderub-container` | `bg-founderub-container` / `text-founderub-container` / `border-founderub-container` | `--color-founderub-container` |  |
+| `on-founderub-container` | `bg-on-founderub-container` / `text-on-founderub-container` / `border-on-founderub-container` | `--color-on-founderub-container` |  |
 | `surface` | `bg-surface` / `text-surface` / `border-surface` | `--color-surface` | Page background |
 | `surface-dim` | `bg-surface-dim` / `text-surface-dim` / `border-surface-dim` | `--color-surface-dim` |  |
 | `surface-bright` | `bg-surface-bright` / `text-surface-bright` / `border-surface-bright` | `--color-surface-bright` |  |
@@ -50,6 +66,7 @@ Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` au
 | `inverse-surface` | `bg-inverse-surface` / `text-inverse-surface` / `border-inverse-surface` | `--color-inverse-surface` |  |
 | `inverse-on-surface` | `bg-inverse-on-surface` / `text-inverse-on-surface` / `border-inverse-on-surface` | `--color-inverse-on-surface` |  |
 | `inverse-primary` | `bg-inverse-primary` / `text-inverse-primary` / `border-inverse-primary` | `--color-inverse-primary` |  |
+| `scrim` | `bg-scrim` / `text-scrim` / `border-scrim` | `--color-scrim` |  |
 | `tertiary` | `bg-tertiary` / `text-tertiary` / `border-tertiary` | `--color-tertiary` | Product brand accent (remapped by data-product) |
 | `on-tertiary` | `bg-on-tertiary` / `text-on-tertiary` / `border-on-tertiary` | `--color-on-tertiary` |  |
 | `tertiary-container` | `bg-tertiary-container` / `text-tertiary-container` / `border-tertiary-container` | `--color-tertiary-container` |  |

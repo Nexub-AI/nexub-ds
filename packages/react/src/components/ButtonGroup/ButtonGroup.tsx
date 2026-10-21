@@ -24,7 +24,7 @@ export const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
                 'gap-0.5',
                 '[&>*:not(:first-child):not(:last-child)]:rounded-[6px]',
                 orientation === 'horizontal'
-                  ? ['[&>*:first-child]:rounded-r-[6px]', '[&>*:last-child]:rounded-l-[6px]']
+                  ? ['[&>*:first-child]:rounded-e-[6px]', '[&>*:last-child]:rounded-s-[6px]']
                   : ['[&>*:first-child]:rounded-b-[6px]', '[&>*:last-child]:rounded-t-[6px]'],
               ]
             : 'gap-2',

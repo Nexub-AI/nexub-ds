@@ -24,16 +24,17 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Toaster position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'bottom-center'` | `'bottom-right'` | Where toasts appear on screen. |
-| `Toaster richColors` | `boolean` | `false` | Enables fully coloured backgrounds for success, error, warning, and info toasts. |
-| `Toaster closeButton` | `boolean` | `false` | Renders a close button on each toast. |
+| `Toaster expand` | `boolean` | `false` | Always show toasts as a list. By default they collapse into a stack that fans out on hover or focus, which also pauses their timers. |
+| `Toaster visibleToasts` | `number` | `3` | How many toasts show at once. Older ones are hidden visually but stay in the live region. |
 | `toast.success(title, opts?)` (required) | `string` |  | Show a success toast with an optional options object. |
 | `toast.error(title, opts?)` (required) | `string` |  | Show an error toast. |
 | `toast.warning(title, opts?)` (required) | `string` |  | Show a warning toast. |
 | `toast.info(title, opts?)` (required) | `string` |  | Show an info toast. |
 | `toast.custom(title, opts?)` (required) | `string` |  | Show a default/custom toast. |
+| `toast.undoable(title, opts)` (required) | `UndoableToastOptions` |  | A toast with an Undo action (beta, 1.7.0). Undo calls `opts.onUndo`; any other close (timer, swipe, close button, `toast.dismiss`) calls `opts.onCommit`, exactly once. Returns the toast id. |
+| `undoable opts` | `{ onUndo; onCommit?; undoLabel?; description?; duration? }` |  | `undoLabel` defaults to the `undo` message ("Undo"). Commit the change in `onCommit`, not before showing the toast. |
 | `opts.description` | `string` |  | Secondary supporting text below the title. |
-| `opts.duration` | `number` | `4000` | Time in ms before auto-dismiss. Use Infinity to persist. |
+| `opts.duration` | `number` | `5000` | Time in ms before auto-dismiss. Use Infinity to persist. |
 | `opts.action` | `{ label: string; onClick: () => void }` |  | Renders an action button inside the toast. |
 
 ## Example: Default
@@ -60,7 +61,7 @@ function DefaultToast() {
 function ToastVariants() {
   return (
     <>
-      <Toaster richColors />
+      <Toaster />
       <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
         <Button variant="outline" onClick={() => toast.custom('Default notification')}>
           Default
@@ -104,6 +105,36 @@ function ToastWithAction() {
       >
         Send message
       </Button>
+    </>
+  );
+}
+```
+
+## Example: Undoable delete
+
+Hide the item right away; delete it for real only when the toast closes without Undo.
+
+```tsx
+function UndoableDelete() {
+  const [hidden, setHidden] = React.useState(false);
+
+  function remove() {
+    setHidden(true);
+    toast.undoable('Invoice deleted', {
+      description: 'INV-2041',
+      onUndo: () => setHidden(false),
+      onCommit: () => deleteInvoice('INV-2041'),
+    });
+  }
+
+  return (
+    <>
+      <Toaster />
+      {hidden ? (
+        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+      ) : (
+        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+      )}
     </>
   );
 }

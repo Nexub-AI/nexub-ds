@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const chipVariants = cva(
@@ -18,10 +19,10 @@ export const chipVariants = cva(
         success: 'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
         warning: 'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
         danger: 'bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
-        leap: 'bg-[color:light-dark(var(--color-palette-leap-90),var(--color-palette-leap-30))] text-[color:light-dark(var(--color-palette-leap-10),var(--color-palette-leap-90))]',
-        bookub: 'bg-[color:light-dark(var(--color-palette-bookub-90),var(--color-palette-bookub-30))] text-[color:light-dark(var(--color-palette-bookub-10),var(--color-palette-bookub-90))]',
-        payub: 'bg-[color:light-dark(var(--color-palette-payub-90),var(--color-palette-payub-30))] text-[color:light-dark(var(--color-palette-payub-10),var(--color-palette-payub-90))]',
-        founderub: 'bg-[color:light-dark(var(--color-palette-founderub-90),var(--color-palette-founderub-30))] text-[color:light-dark(var(--color-palette-founderub-10),var(--color-palette-founderub-90))]',
+        leap: 'bg-[var(--color-leap-container)] text-[var(--color-on-leap-container)]',
+        bookub: 'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)]',
+        payub: 'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)]',
+        founderub: 'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
       },
     },
     defaultVariants: {
@@ -40,6 +41,7 @@ export interface ChipProps
 
 export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
   ({ className, size, tone = 'neutral', onRemove, children, ...props }, ref) => {
+    const messages = useNexubMessages();
     return (
       <span
         ref={ref}
@@ -50,14 +52,14 @@ export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
         {onRemove && (
           <button
             type="button"
-            aria-label="Remove"
+            aria-label={messages.remove}
             onClick={(e) => {
               e.stopPropagation();
               onRemove();
             }}
             className={cn(
               // State layer for hover/press; focus = the global ring.
-              'nx-state-layer inline-flex items-center justify-center rounded-full text-current -mr-1',
+              'nx-state-layer inline-flex items-center justify-center rounded-full text-current -me-1',
               size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
             )}
           >

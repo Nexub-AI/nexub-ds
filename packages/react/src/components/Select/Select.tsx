@@ -3,7 +3,7 @@ import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
-import { enterExit, floatingSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
+import { floatingSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixSelect.Root;
 const Group = RadixSelect.Group;
@@ -19,7 +19,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerPro
         fieldFocusVisible,
         // Open reads like focus: the 2px primary border.
         'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
-        'data-[placeholder]:text-[var(--color-text-placeholder)]',
+        'data-[placeholder]:text-[var(--color-on-surface-muted)]',
         'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
         invalid && fieldInvalid,
         '[&>span]:line-clamp-1',
@@ -70,9 +70,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixSelect.SelectContentProps>
         className={cn(
           'relative z-[var(--z-popover)] max-h-96 min-w-32 overflow-hidden',
           floatingSurface,
-          enterExit,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
+          'nx-motion nx-pop origin-[var(--radix-select-content-transform-origin)]',
           position === 'popper' &&
             'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 w-[var(--radix-select-trigger-width)]',
           className,
@@ -113,7 +111,7 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
     <RadixSelect.Item
       ref={ref}
       className={cn(
-        'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 pl-8 pr-2 text-body-sm text-[var(--color-on-surface)] outline-none',
+        'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 ps-8 pe-2 text-body-sm text-[var(--color-on-surface)] outline-none',
         // Highlight = the on-surface state layer at hover opacity.
         'focus:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--color-text-disabled)]',
@@ -121,7 +119,7 @@ const Item = React.forwardRef<HTMLDivElement, RadixSelect.SelectItemProps>(
       )}
       {...props}
     >
-      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <span className="absolute start-2 flex h-3.5 w-3.5 items-center justify-center">
         <RadixSelect.ItemIndicator>
           <Check size="xs" aria-hidden="true" />
         </RadixSelect.ItemIndicator>

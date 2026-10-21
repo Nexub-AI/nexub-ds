@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { layoutProps } from '../../utils/layout.js';
 
 export interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
   direction?: 'row' | 'column';
@@ -47,12 +48,7 @@ export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
   ) => {
     const Comp = asChild ? Slot : 'div';
 
-    const inlineStyle: React.CSSProperties = {
-      ...(gap !== undefined ? { gap: typeof gap === 'number' ? `${gap * 0.25}rem` : gap } : {}),
-      ...(align ? { alignItems: align } : {}),
-      ...(justify ? { justifyContent: justify } : {}),
-      ...style,
-    };
+    const layout = layoutProps({ gap, align, justify, style });
 
     const content = divider ? injectDividers(children, divider) : children;
 
@@ -60,12 +56,12 @@ export const Stack = React.forwardRef<HTMLDivElement, StackProps>(
       <Comp
         ref={ref}
         className={cn(
-          'flex',
+          'flex', layout.className,
           direction === 'row' ? 'flex-row' : 'flex-col',
           wrap && 'flex-wrap',
           className,
         )}
-        style={inlineStyle}
+        style={layout.style}
         {...rest}
       >
         {content}

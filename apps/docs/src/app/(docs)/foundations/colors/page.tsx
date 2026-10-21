@@ -26,6 +26,21 @@ const surfaces = [
 const accents = ['primary', 'secondary', 'tertiary', 'error', 'success', 'warning', 'info'];
 const palettes = ['primary', 'secondary', 'neutral', 'neutral-variant', 'error', 'success', 'warning', 'leap', 'bookub', 'payub', 'founderub'];
 const tones = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100];
+const series = (prefix: string, n: number) => Array.from({ length: n }, (_, i) => `${prefix}${i + 1}`);
+
+/** A strip of chart colours, read straight from the CSS vars. */
+function Ramp({ keys }: { keys: string[] }) {
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${keys.length}, 1fr)`, gap: 4, marginBottom: '1rem' }}>
+      {keys.map((k) => (
+        <div key={k} title={`--color-chart-${k}`}>
+          <div style={{ height: 36, borderRadius: 8, background: `var(--color-chart-${k})` }} />
+          <div style={{ ...mono, textAlign: 'center', marginTop: 4 }}>{k}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /** A role with its on-role text, so the swatch shows the real pairing. */
 function Pair({ bg, fg, label }: { bg: string; fg: string; label: string }) {
@@ -47,7 +62,7 @@ export default function ColorsPage() {
         (in HCT) from a seed color, so contrast is arithmetic: a tone gap of 50 guarantees 4.5:1. Every role
         is a <code>light-dark()</code> value, so it follows <code>data-theme</code> at any depth with no
         separate dark stylesheet. A build-time test checks every role pair against WCAG 2.2 AA in light,
-        dark and high contrast, for every brand.
+        dark, medium and high contrast, for every brand.
       </p>
       <pre><code>{`background: var(--color-surface-container-low);
 color: var(--color-on-surface);
@@ -102,13 +117,56 @@ color: var(--color-on-surface);
 
       <h2>Contrast levels</h2>
       <p>
-        Set <code>data-contrast=&quot;high&quot;</code> (or let <code>prefers-contrast: more</code> do it)
-        and accents, secondary text and outlines move further from their surfaces. Nothing else changes.
+        Three levels: <strong>standard</strong> (the default), <strong>medium</strong> and{' '}
+        <strong>high</strong>. Set <code>data-contrast</code> on <code>&lt;html&gt;</code> or on any
+        subtree; without it, <code>prefers-contrast: more</code> selects high. Accents, secondary text and
+        outlines move further from their surfaces; surfaces stay put. Medium takes the tone halfway
+        between the other two, for users who want more separation without the starkness of high.
       </p>
-      <div data-contrast="high" style={{ ...grid(180), padding: 12, borderRadius: 16, background: 'var(--color-surface)' }}>
-        <Pair bg="primary" fg="on-primary" label="primary (high)" />
-        <Pair bg="surface-container" fg="on-surface-variant" label="variant text (high)" />
+      <pre><code>{`<html data-contrast="medium">   <!-- standard | medium | high -->`}</code></pre>
+      <div style={grid(180)}>
+        {(['standard', 'medium', 'high'] as const).map((level) => (
+          <div key={level} data-contrast={level} style={{ display: 'grid', gap: 8, padding: 12, borderRadius: 16, background: 'var(--color-surface)' }}>
+            <Pair bg="primary" fg="on-primary" label={`primary (${level})`} />
+            <Pair bg="surface-container" fg="on-surface-variant" label="variant text" />
+          </div>
+        ))}
       </div>
+
+      <h2>Data visualisation</h2>
+      <p>
+        Chart palettes are roles too: light-dark aware, generated in HCT. Use{' '}
+        <code>--color-chart-*</code> (Tailwind: <code>fill-chart-1</code>, <code>bg-chart-seq-4</code>,{' '}
+        <code>stroke-chart-div-7</code>).
+      </p>
+      <h3>Categorical</h3>
+      <p>
+        Eight series for unordered categories. Each clears 3:1 against <code>surface</code> and{' '}
+        <code>surface-container</code> in both schemes (WCAG 1.4.11), and a build-time test simulates
+        protanopia, deuteranopia and tritanopia to keep the first six apart. Past six series, label
+        directly or group the rest as &ldquo;Other&rdquo;; never rely on colour alone.
+      </p>
+      <Ramp keys={series('', 8)} />
+      <h3>Sequential</h3>
+      <p>
+        Seven steps of primary for ordered values (low → high). Step 1 is closest to the surface in
+        either scheme.
+      </p>
+      <Ramp keys={series('seq-', 7)} />
+      <h3>Diverging</h3>
+      <p>
+        Error → neutral → primary, for values either side of a midpoint (step 4). Swap the ends if
+        &ldquo;negative&rdquo; is not bad news in your data.
+      </p>
+      <Ramp keys={series('div-', 7)} />
+
+      <h2>Wide gamut</h2>
+      <p>
+        On P3 displays (<code>color-gamut: p3</code>, with relative colour support) the accent fills
+        &mdash; primary, tertiary, the product accents, success, warning, error and info &mdash; gain 18%
+        OKLCH chroma. Lightness is unchanged, so every contrast pair holds. Containers, text and surfaces
+        stay in sRGB. Nothing to opt into.
+      </p>
 
       <h2>Tonal palettes</h2>
       <p>

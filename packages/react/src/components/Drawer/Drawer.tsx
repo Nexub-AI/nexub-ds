@@ -162,7 +162,7 @@ const Content = React.forwardRef<
       {...props}
     >
       {side === 'bottom' && (
-        <div className="mx-auto mt-4 h-2 w-20 rounded-full bg-[var(--color-border-default)]" />
+        <div className="mx-auto mt-4 h-2 w-20 rounded-full bg-[var(--color-outline-variant)]" />
       )}
       {children}
     </VaulDrawer.Content>

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 
 export const avatarVariants = cva(
-  'relative inline-flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-[var(--color-bg-muted)] text-[var(--color-text-muted)] font-medium select-none',
+  'relative inline-flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-muted)] font-medium select-none',
   {
     variants: {
       size: {
@@ -99,9 +99,9 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         {badge && (
           <span
             className={cn(
-              'absolute bottom-0 right-0 rounded-full ring-2 ring-[var(--color-bg-default)]',
+              'absolute bottom-0 end-0 rounded-full ring-2 ring-[var(--color-surface)]',
               badgeSizeMap[size ?? 'md'],
-              badgeColor ?? 'bg-[var(--color-semantic-success-default)]',
+              badgeColor ?? 'bg-[var(--color-success)]',
             )}
             aria-hidden="true"
           />
