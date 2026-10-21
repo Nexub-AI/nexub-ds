@@ -17,9 +17,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Tests run on the office Mac minis (self-hosted) to save GitHub Actions
+  # minutes; deploys and releases stay on GitHub-hosted runners (staging.yml,
+  # release.yml). Until a Mini serves this repo the job waits in the queue
+  # (no minutes used); run the same checks locally before merging.
   ci:
     name: Build, typecheck & lint
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, macOS, ARM64]
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -43,7 +48,11 @@ jobs:
 
       # Static security lint for the workflows themselves (injection, unpinned actions, token scope).
       - name: Workflow lint (zizmor)
-        run: pipx run zizmor==1.30.1 --offline .github/workflows
+        # pipx on GitHub-hosted images; uvx or a throwaway venv on the Minis.
+        run: |
+          if command -v pipx >/dev/null; then pipx run zizmor==1.30.1 --offline .github/workflows
+          elif command -v uvx >/dev/null; then uvx zizmor==1.30.1 --offline .github/workflows
+          else python3 -m venv "$RUNNER_TEMP/zizmor" && "$RUNNER_TEMP/zizmor/bin/pip" install -q zizmor==1.30.1 && "$RUNNER_TEMP/zizmor/bin/zizmor" --offline .github/workflows; fi
 
       # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
       - name: Build packages
@@ -82,15 +91,15 @@ jobs:
 
   # Screenshot every story (light/dark/payub), the docs foundation pages (light/dark)
   # + WCAG contrast over theme tokens.
-  # Runs in the same pinned Playwright image used to record baselines locally
+  # Runs on the office Mac minis (self-hosted, org-level runners) to save
+  # Actions minutes. Builds natively, then screenshots in the same pinned
+  # Playwright Linux image used to record baselines locally
   # (`pnpm --filter @nexub/react test:visual:docker --update-snapshots`), so
-  # font rendering matches pixel for pixel.
+  # font rendering matches pixel for pixel. Needs Docker (Colima) on the Mini.
   visual:
     name: Visual regression & contrast
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
-      options: --ipc=host
+    runs-on: [self-hosted, macOS, ARM64]
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -117,8 +126,12 @@ jobs:
       - name: Build docs (static export)
         run: pnpm --filter @nexub/docs build
 
+      - name: Check Docker
+        run: |
+          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini, run: colima start"; exit 1; }
+
       - name: Visual regression & contrast
-        run: pnpm --filter @nexub/react test:visual
+        run: pnpm --filter @nexub/react test:visual:docker
 
       - name: Upload diff report
         if: failure()

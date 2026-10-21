@@ -34,6 +34,16 @@ Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it,
 3. Add a changeset.
 4. Open a PR; CI must be green.
 
+## Running CI locally
+
+Tests run locally and on the office Mac minis (self-hosted runners); GitHub-hosted
+Actions only deploy and release. Before you open or merge a PR, run what CI runs:
+
+```bash
+pnpm ci:local          # audit, build, bundle size, docs build, release policy, AI docs, typecheck, lint, tests
+pnpm ci:local:visual   # Storybook + docs screenshots, axe and contrast (needs Docker, e.g. Colima)
+```
+
 ## Visual regression & contrast
 
 CI screenshots every Storybook story (light, dark, payub) and checks WCAG AA contrast for theme token pairs (`packages/react/visual/`). Baselines must be rendered in the pinned Playwright Linux image, so run them through Docker:
