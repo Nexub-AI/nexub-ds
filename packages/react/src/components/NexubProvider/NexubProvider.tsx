@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { DirectionProvider } from '@radix-ui/react-direction';
+import type { Locale } from 'date-fns';
 
 /** Every user-facing default string in @nexub/react. Explicit component props still win. */
 export interface NexubMessages {
@@ -35,6 +36,14 @@ export interface NexubMessages {
   noResults: string;
   pickDate: string;
   pickDateRange: string;
+  /** Calendar nav and day labels (DatePicker, DateRangePicker). */
+  previousMonth: string;
+  nextMonth: string;
+  calendarNavigation: string;
+  /** Wraps a day's formatted date when it is today. */
+  todayDate: (date: string) => string;
+  /** Wraps a day's (possibly today-wrapped) label when it is selected. */
+  selectedDate: (label: string) => string;
   commandPalette: string;
   /** Toaster region label; Radix replaces `{hotkey}`. */
   notifications: string;
@@ -91,6 +100,11 @@ export const defaultMessages: NexubMessages = {
   noResults: 'No results found.',
   pickDate: 'Pick a date',
   pickDateRange: 'Pick a date range',
+  previousMonth: 'Go to previous month',
+  nextMonth: 'Go to next month',
+  calendarNavigation: 'Calendar navigation',
+  todayDate: (date) => `Today, ${date}`,
+  selectedDate: (label) => `${label}, selected`,
   commandPalette: 'Command palette',
   notifications: 'Notifications ({hotkey})',
   undo: 'Undo',
@@ -120,12 +134,14 @@ interface NexubContextValue {
   /** Undefined without a provider, so Intl components keep the user's locale. */
   locale: string | undefined;
   dir: Direction;
+  dateLocale: Locale | undefined;
   messages: NexubMessages;
 }
 
 const NexubContext = React.createContext<NexubContextValue>({
   locale: undefined,
   dir: 'ltr',
+  dateLocale: undefined,
   messages: defaultMessages,
 });
 
@@ -141,6 +157,11 @@ export interface NexubProviderProps {
   locale?: string;
   /** Text direction for Radix primitives. @default derived from `locale` */
   dir?: Direction;
+  /**
+   * date-fns Locale for calendars (month/weekday names, week start, trigger text).
+   * Import only the one you need, e.g. `import { fr } from 'date-fns/locale/fr'`.
+   */
+  dateLocale?: Locale;
   /** Overrides for the default English strings. */
   messages?: Partial<NexubMessages>;
   children?: React.ReactNode;
@@ -151,11 +172,11 @@ export interface NexubProviderProps {
  * It does not set `dir`/`lang` on <html> — the app does that (as it renders
  * <html>), so the page and CSS `rtl:` variants agree with this provider.
  */
-export function NexubProvider({ locale = 'en', dir, messages, children }: NexubProviderProps) {
+export function NexubProvider({ locale = 'en', dir, dateLocale, messages, children }: NexubProviderProps) {
   const resolvedDir = dir ?? directionOf(locale);
   const value = React.useMemo(
-    () => ({ locale, dir: resolvedDir, messages: { ...defaultMessages, ...messages } }),
-    [locale, resolvedDir, messages],
+    () => ({ locale, dir: resolvedDir, dateLocale, messages: { ...defaultMessages, ...messages } }),
+    [locale, resolvedDir, dateLocale, messages],
   );
   return (
     <NexubContext.Provider value={value}>
@@ -169,10 +190,10 @@ export function useNexubMessages(): NexubMessages {
   return React.useContext(NexubContext).messages;
 }
 
-/** The active locale (default 'en') and direction. */
-export function useLocale(): { locale: string; dir: Direction } {
-  const { locale = 'en', dir } = React.useContext(NexubContext);
-  return { locale, dir };
+/** The active locale (default 'en'), direction and optional date-fns Locale. */
+export function useLocale(): { locale: string; dir: Direction; dateLocale?: Locale } {
+  const { locale = 'en', dir, dateLocale } = React.useContext(NexubContext);
+  return { locale, dir, dateLocale };
 }
 
 /** Internal: the provider's locale, or undefined (= the user's) without one. */

@@ -31,6 +31,11 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 | `1.0.0` | 2026-10-12 | Major | Liquid Glass material layer; first public 1.0 (lockstep versioning) | — |
 | `1.1.0` | 2026-10-12 | Minor | Plus Jakarta Sans typeface; ESM-only packages with working tree-shaking and RSC-safe builds; accessibility and stability fixes (DatePicker labels, WCAG input borders); lighter dependencies; StatusPill/Tag/Banner/Callout deprecated | [@nexub/react@1.1.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.1.0) |
 | `1.2.0` | 2026-10-12 | Minor | Official Nexub mark in `Logo` (`mark`, `product`, brand-mark tokens); new `@nexub/brand` package; `AppLauncher` and `SettingsLayout` patterns; `Apps`/`Pin`/`Send`/`Crown` icons; Sheet sideways-scroll, Tabs inactive-panel and Drawer CSP fixes | [@nexub/react@1.2.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.2.0) |
+| `1.3.0` | 2026-10-13 | Minor | Strict CSP: `scrollLock="class"` for Sheet/Drawer; fully typed Drawer without `vaul`; `Sidebar.Header`; Strict CSP docs page | [@nexub/react@1.3.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.3.0) |
+| `1.4.0` | 2026-10-20 | Minor | Calm Depth refresh, phases 0–4: HCT colour roles, Inter + Jakarta, capsule controls, spring motion, Glass 2.0 dial, overlays and surfaces; visual regression | [@nexub/react@1.4.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.4.0) |
+| `1.5.0` | 2026-10-20 | Minor | Connected ButtonGroup, SplitButton, floating Toolbar, NavigationRail, Amount/MoneyInput, ListDetail; rewritten foundations docs | [@nexub/react@1.5.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.5.0) |
+| `1.5.1` | 2026-10-20 | Patch | Landing page on DS components; `TextGradient` background-image fix | [@nexub/react@1.5.1](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.5.1) |
+| `1.6.0` | 2026-10-21 | Minor | Enhancement waves 1–4: strict-CSP components, every component on Calm Depth, design lint; cards, sheen, selectable/media cards, stacked toasts; data-viz palettes, P3, medium contrast, async buttons, ErrorSummary, undo, i18n/RTL; AI surface kit. First release via npm trusted publishing | [@nexub/react@1.6.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.6.0) |
 
 ---
 
@@ -82,7 +87,7 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
    Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
-4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, using the `NPM_TOKEN` secret) and deploys the docs to production.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, authenticated by npm trusted publishing — GitHub OIDC, no npm token) and deploys the docs to production.
 5. **Add a row** to the [Release History](#release-history) table.
 
 > The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.

@@ -44,4 +44,15 @@ describe('Avatar', () => {
     render(<Avatar name="Jane Smith" />);
     expect(screen.getByRole('img')).toHaveAttribute('aria-label', 'Jane Smith');
   });
+
+  it('is decorative without a name (no unlabelled role="img")', () => {
+    const { container } = render(<Avatar fallback="N" />);
+    expect(screen.queryByRole('img')).toBeNull();
+    expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('keeps role="img" when labelled via aria-label', () => {
+    render(<Avatar fallback="N" aria-label="Nexub" />);
+    expect(screen.getByRole('img', { name: 'Nexub' })).toBeInTheDocument();
+  });
 });
