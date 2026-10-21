@@ -21,6 +21,7 @@ export interface SplitButtonProps extends Omit<ButtonProps, 'asChild' | 'trailin
 export const SplitButton = React.forwardRef<HTMLButtonElement, SplitButtonProps>(
   ({ menuLabel, menu, align = 'end', variant, size, tone, disabled, loading, className, ...props }, ref) => {
     const shared = { variant, size, tone };
+    const busy = loading || props.status === 'loading';
     return (
       <ButtonGroup attached className={className}>
         {/* Loading uses aria-disabled (Button), so the focused primary keeps focus. */}
@@ -30,7 +31,7 @@ export const SplitButton = React.forwardRef<HTMLButtonElement, SplitButtonProps>
           <DropdownMenu.Trigger asChild>
             <Button
               {...shared}
-              disabled={disabled || loading}
+              disabled={disabled || busy}
               aria-label={menuLabel}
               className={cn(
                 'px-3',

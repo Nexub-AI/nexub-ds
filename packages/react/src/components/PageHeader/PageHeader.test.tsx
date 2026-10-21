@@ -49,4 +49,15 @@ describe('PageHeader', () => {
     render(<PageHeader title="Dashboard" ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('renders an h1 by default', () => {
+    render(<PageHeader title="Dashboard" />);
+    expect(screen.getByRole('heading', { level: 1, name: 'Dashboard' })).toBeInTheDocument();
+  });
+
+  it('renders the heading level from `level`', () => {
+    render(<PageHeader title="Billing" level={2} />);
+    expect(screen.getByRole('heading', { level: 2, name: 'Billing' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
+  });
 });

@@ -81,6 +81,7 @@ const cspCases: [string, React.ReactElement][] = [
   ['MessageBubble', <N.MessageBubble from="assistant" avatar={<span>A</span>}>Hi<N.MessageActions text="Hi" onFeedback={() => {}} onRegenerate={() => {}} /></N.MessageBubble>],
   ['Citation', <N.Citation index={1} source={{ title: 'T', url: 'https://example.com', snippet: 'S' }} />],
   ['SourceList', <N.SourceList sources={[{ title: 'T', url: 'https://example.com' }]} />],
+  ['DataTable', <N.DataTable columns={[{ accessorKey: 'a', header: 'A', meta: { align: 'end' } }]} data={[{ a: 1 }]} caption="T" enableSorting pagination={{ pageSize: 1 }} />],
   ['Button async', <N.Button status="success">Save</N.Button>],
   ['MediaCard', <N.MediaCard src="/a.jpg" alt="" title="T" href="/x" />],
 ];

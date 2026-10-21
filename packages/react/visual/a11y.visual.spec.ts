@@ -25,6 +25,7 @@ const KNOWN: Record<string, string[]> = {
   'navigation-appshell--default': MONOGRAM,
   'navigation-topnav--default': MONOGRAM,
   'patterns-appheader--desktop': MONOGRAM,
+  'patterns-appheader--embedded': MONOGRAM,
   'patterns-appheader--desktop-dark': MONOGRAM,
   'patterns-appheader--glass': MONOGRAM,
   'patterns-appheader--in-app-shell': MONOGRAM,

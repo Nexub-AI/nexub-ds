@@ -8,6 +8,7 @@ import {
   Logo,
   TopNav,
   cn,
+  useNexubMessages,
   useTheme,
   type GlassMode,
 } from '@nexub/react';
@@ -81,6 +82,12 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   scrollEdge?: 'soft' | 'hard';
   /** Shrink 64 → 52px and lift onto elevation 1 over the first 64px of page scroll (CSS scroll timeline; static where unsupported). */
   condense?: boolean;
+  /**
+   * `fixed` pins it to the viewport and renders a spacer after it. `sticky` and `static`
+   * keep it in flow (no spacer), for layouts, embeds and previews.
+   * @default 'fixed'
+   */
+  position?: 'fixed' | 'sticky' | 'static';
 }
 
 const SEARCH_DEBOUNCE_MS = 200;
@@ -100,6 +107,7 @@ function HeaderSearch({
   items?: AppHeaderSearchGroup[];
   onSearch?: AppHeaderProps['onSearch'];
 }) {
+  const t = useNexubMessages();
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState('');
   const [results, setResults] = React.useState<AppHeaderSearchGroup[]>([]);
@@ -173,7 +181,7 @@ function HeaderSearch({
   return (
     <>
       <span id={hintId} className="sr-only">
-        Keyboard shortcut: {isMac ? 'Command' : 'Control'} K
+        {t.keyboardShortcut(`${isMac ? t.commandKey : t.controlKey} K`)}
       </span>
       <button
         type="button"
@@ -201,12 +209,12 @@ function HeaderSearch({
         <CommandPalette.List>
           {loading && (
             <div role="status" className="px-3 py-2 text-sm text-[var(--color-on-surface-muted)]">
-              Searching…
+              {t.searching}
             </div>
           )}
           {!loading && (
             <CommandPalette.Empty>
-              {failed ? 'Search failed. Try again.' : query ? `No results for “${query}”` : 'Type to search'}
+              {failed ? t.searchFailed : query ? t.noResultsFor(query) : t.typeToSearch}
             </CommandPalette.Empty>
           )}
           {groups.map((group) => (
@@ -247,6 +255,7 @@ function OrgSwitcher({
   currentOrgId,
   onOrgChange,
 }: Pick<AppHeaderProps, 'currentOrgId' | 'onOrgChange'> & { orgs: AppHeaderOrg[] }) {
+  const t = useNexubMessages();
   const current = orgs.find((o) => o.id === currentOrgId) ?? orgs[0];
   if (!current) return null;
   if (orgs.length === 1) {
@@ -262,7 +271,7 @@ function OrgSwitcher({
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          aria-label={`${current.name}, switch organization`}
+          aria-label={t.switchOrganization(current.name)}
           title={current.name}
           className="nx-state-layer inline-flex h-9 min-w-0 shrink-0 items-center gap-1 rounded-shape-control px-2 text-sm sm:shrink font-medium text-[var(--color-on-surface)]"
         >
@@ -274,7 +283,7 @@ function OrgSwitcher({
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content align="end" className="max-w-[calc(100vw-1rem)]">
-          <DropdownMenu.Label>Organizations</DropdownMenu.Label>
+          <DropdownMenu.Label>{t.organizations}</DropdownMenu.Label>
           <DropdownMenu.RadioGroup value={current.id} onValueChange={(id) => onOrgChange?.(id)}>
             {orgs.map((org) => (
               <DropdownMenu.RadioItem key={org.id} value={org.id}>
@@ -289,27 +298,35 @@ function OrgSwitcher({
 }
 
 function ThemeSwitch() {
+  const t = useNexubMessages();
   const { resolvedTheme, setTheme } = useTheme();
   const dark = resolvedTheme === 'dark';
   return (
-    <IconButton label={dark ? 'Switch to light theme' : 'Switch to dark theme'} onClick={() => setTheme(dark ? 'light' : 'dark')}>
+    <IconButton label={dark ? t.switchToLightTheme : t.switchToDarkTheme} onClick={() => setTheme(dark ? 'light' : 'dark')}>
       {dark ? <Sun size="md" aria-hidden="true" /> : <Moon size="md" aria-hidden="true" />}
     </IconButton>
   );
 }
 
 // The glass intensity dial (ThemeProvider), offered when the header is glass.
-const GLASS_LABELS: Record<GlassMode, string> = { clear: 'Clear', balanced: 'Balanced', tinted: 'Tinted', off: 'Solid' };
+const GLASS_MODES: GlassMode[] = ['clear', 'balanced', 'tinted', 'off'];
 function GlassItems() {
+  const t = useNexubMessages();
   const { glass, setGlass } = useTheme();
+  const labels: Record<GlassMode, string> = {
+    clear: t.glassClear,
+    balanced: t.glassBalanced,
+    tinted: t.glassTinted,
+    off: t.glassSolid,
+  };
   return (
     <>
       <DropdownMenu.Separator />
-      <DropdownMenu.Label>Glass</DropdownMenu.Label>
+      <DropdownMenu.Label>{t.glass}</DropdownMenu.Label>
       <DropdownMenu.RadioGroup value={glass} onValueChange={(v) => setGlass(v as GlassMode)}>
-        {(Object.keys(GLASS_LABELS) as GlassMode[]).map((mode) => (
+        {GLASS_MODES.map((mode) => (
           <DropdownMenu.RadioItem key={mode} value={mode} onSelect={(e) => e.preventDefault()}>
-            {GLASS_LABELS[mode]}
+            {labels[mode]}
           </DropdownMenu.RadioItem>
         ))}
       </DropdownMenu.RadioGroup>
@@ -329,6 +346,7 @@ function AccountMenu({
   user: AppHeaderUser;
   glassControl?: boolean;
 }) {
+  const t = useNexubMessages();
   const [open, setOpen] = React.useState(false);
   const [signingOut, setSigningOut] = React.useState(false);
 
@@ -351,8 +369,8 @@ function AccountMenu({
   );
   const legal = (privacyHref || termsHref) && (
     <>
-      {privacyHref && link(privacyHref, 'Privacy policy')}
-      {termsHref && link(termsHref, 'Terms of service')}
+      {privacyHref && link(privacyHref, t.privacyPolicy)}
+      {termsHref && link(termsHref, t.termsOfService)}
     </>
   );
   const last = (accountMenuItems || onSignOut) && (
@@ -360,7 +378,7 @@ function AccountMenu({
       {accountMenuItems}
       {onSignOut && (
         <DropdownMenu.Item disabled={signingOut} onSelect={signOut}>
-          {signingOut ? 'Signing out…' : 'Sign out'}
+          {signingOut ? t.signingOut : t.signOut}
         </DropdownMenu.Item>
       )}
     </>
@@ -370,7 +388,7 @@ function AccountMenu({
     // modal={false}: Radix's modal menu injects a <style> scroll lock (strict CSP).
     <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
       <DropdownMenu.Trigger asChild>
-        <button type="button" aria-label={`Account: ${user.name}`} className="ms-1 shrink-0 rounded-full">
+        <button type="button" aria-label={t.accountMenu(user.name)} className="ms-1 shrink-0 rounded-full">
           <Avatar name={user.name} src={user.avatarUrl} size="sm" aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
@@ -380,7 +398,7 @@ function AccountMenu({
             <span className="truncate text-title-sm text-[var(--color-on-surface)]">{user.name}</span>
             {user.email && <span className="truncate text-body-sm text-[var(--color-on-surface-muted)]">{user.email}</span>}
           </DropdownMenu.Label>
-          {accountHref && link(accountHref, 'Manage your Nexub Account')}
+          {accountHref && link(accountHref, t.manageAccount)}
           {glassControl && <GlassItems />}
           {legal && <DropdownMenu.Separator />}
           {legal}
@@ -393,8 +411,9 @@ function AccountMenu({
 }
 
 /**
- * The one top header every Nexub app shares. Fixed to the top; renders a
- * spacer of `--app-header-height` after itself, so content starts below it.
+ * The one top header every Nexub app shares. Fixed to the top by default and
+ * renders a spacer of `--app-header-height` after itself, so content starts
+ * below it; `position="sticky" | "static"` keeps it in flow without a spacer.
  */
 export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
   (
@@ -419,12 +438,14 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
       accountMenuItems,
       surface = 'solid',
       condense = false,
+      position = 'fixed',
       className,
       ...props
     },
     ref,
   ) => {
-    const placeholder = searchPlaceholder ?? (productName ? `Search ${productName}` : 'Search');
+    const t = useNexubMessages();
+    const placeholder = searchPlaceholder ?? (productName ? t.searchProduct(productName) : t.search);
 
     return (
       <>
@@ -433,7 +454,13 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
           role="banner"
           surface={surface}
           data-condense={condense ? '' : undefined}
-          className={cn('fixed inset-x-0 top-0 h-[var(--app-header-height,64px)] px-2 sm:px-4', className)}
+          className={cn(
+            'h-[var(--app-header-height,64px)] px-2 sm:px-4',
+            // TopNav.Root is sticky by default.
+            position === 'fixed' && 'fixed inset-x-0 top-0',
+            position === 'static' && 'static',
+            className,
+          )}
           {...props}
         >
           <div className="flex w-full min-w-0 items-center gap-1 sm:gap-2">
@@ -456,7 +483,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
                 <HeaderSearch placeholder={placeholder} items={searchItems} onSearch={onSearch} />
               )}
             </div>
-            <nav aria-label="Account and apps" className="flex shrink-0 items-center gap-0.5 sm:gap-1">
+            <nav aria-label={t.accountAndApps} className="flex shrink-0 items-center gap-0.5 sm:gap-1">
               {orgs.length > 0 && <OrgSwitcher orgs={orgs} currentOrgId={currentOrgId} onOrgChange={onOrgChange} />}
               {showThemeSwitch && <ThemeSwitch />}
               {apps && (
@@ -476,7 +503,9 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
             </nav>
           </div>
         </TopNav.Root>
-        <div aria-hidden="true" className="h-[var(--app-header-height,64px)] shrink-0" />
+        {position === 'fixed' && (
+          <div aria-hidden="true" className="h-[var(--app-header-height,64px)] shrink-0" />
+        )}
       </>
     );
   },

@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
-import { AppShell, ThemeProvider } from '@nexub/react';
+import { AppShell, NexubProvider, ThemeProvider } from '@nexub/react';
 import { AppHeader, type AppHeaderProps } from './AppHeader.js';
 import { SettingsLayout } from '../SettingsLayout/SettingsLayout.js';
 
@@ -232,5 +232,52 @@ describe('AppHeader', () => {
     expect(screen.getAllByRole('banner')).toHaveLength(1);
     await user.click(within(banner).getByRole('button', { name: 'Open settings menu' }));
     expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument();
+  });
+
+  describe('position', () => {
+    it('is fixed with a spacer by default', () => {
+      const { container } = render(<AppHeader showThemeSwitch={false} />);
+      expect(screen.getByRole('banner')).toHaveClass('fixed');
+      expect(container.querySelector('[aria-hidden="true"].h-\\[var\\(--app-header-height\\,64px\\)\\]')).not.toBeNull();
+    });
+
+    it.each(['sticky', 'static'] as const)('%s stays in flow with no spacer', (position) => {
+      const { container } = render(<AppHeader showThemeSwitch={false} position={position} />);
+      const banner = screen.getByRole('banner');
+      expect(banner).not.toHaveClass('fixed');
+      expect(container.children).toHaveLength(1);
+      if (position === 'static') expect(banner).toHaveClass('static');
+      else expect(banner).toHaveClass('sticky');
+    });
+  });
+
+  it('routes its strings through NexubProvider', async () => {
+    const user = userEvent.setup();
+    render(
+      <NexubProvider
+        messages={{
+          searchProduct: (p) => `Rechercher ${p}`,
+          accountAndApps: 'Compte et apps',
+          accountMenu: (n) => `Compte : ${n}`,
+          signOut: 'Se déconnecter',
+          switchToDarkTheme: 'Thème sombre',
+          switchToLightTheme: 'Thème clair',
+        }}
+      >
+        <ThemeProvider>
+          <AppHeader
+            productName="Hub"
+            searchItems={[]}
+            user={{ name: 'Ada' }}
+            onSignOut={() => {}}
+          />
+        </ThemeProvider>
+      </NexubProvider>,
+    );
+    expect(screen.getByRole('navigation', { name: 'Compte et apps' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Rechercher Hub' }).length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: /^Thème (sombre|clair)$/ })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Compte : Ada' }));
+    expect(await screen.findByRole('menuitem', { name: 'Se déconnecter' })).toBeInTheDocument();
   });
 });
