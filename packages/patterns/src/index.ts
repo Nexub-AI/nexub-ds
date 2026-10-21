@@ -54,3 +54,5 @@ export { BentoGrid, BentoTile } from './components/BentoGrid/index.js';
 export type { BentoGridProps, BentoTileProps, BentoTileSize } from './components/BentoGrid/index.js';
 export { ErrorSummary, useFormErrors } from './components/ErrorSummary/index.js';
 export type { ErrorSummaryProps, ErrorSummaryItem, FormErrorMap } from './components/ErrorSummary/index.js';
+export { Conversation } from './components/Conversation/index.js';
+export type { ConversationProps, ConversationMessages } from './components/Conversation/index.js';

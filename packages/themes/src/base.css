@@ -394,6 +394,45 @@ code, kbd, pre, samp {
   .nx-sheen::after { display: none; }
 }
 
+/* ─── AI: thinking indicator ─────────────────────────────────────────────────
+   nx-morph: a small shape that breathes between a circle and a soft squircle
+   on the expressive spring. nx-shimmer: a decorative light sweep across label
+   text (the text stays in the DOM). Reduced motion: both static. */
+@keyframes nx-morph {
+  from { border-radius: 50%; rotate: 0deg; }
+  to { border-radius: 38% 62% 38% 62% / 62% 38% 62% 38%; rotate: 90deg; }
+}
+@keyframes nx-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nx-morph {
+    animation: nx-morph calc(var(--motion-spring-expressive-slow-duration) * 2)
+      var(--motion-spring-expressive-slow-easing) infinite alternate;
+  }
+  .nx-shimmer {
+    background-image: linear-gradient(90deg,
+      currentColor 0%, currentColor 40%, var(--color-on-surface) 50%, currentColor 60%, currentColor 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* A steady sweep: linear, not a spring (a spring would pulse each loop). */
+    animation: nx-shimmer 2s linear infinite;
+  }
+}
+@media (forced-colors: active) {
+  .nx-shimmer { background: none; -webkit-text-fill-color: currentColor; }
+}
+
+/* Streaming caret: a steady blink while text is arriving. */
+@keyframes nx-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.nx-caret { animation: nx-caret 1s steps(1, end) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-caret { animation: none; }
+}
+
 /* ─── Touch targets ─────────────────────────────────────────────────────────
    Small controls keep their visual size but get an invisible 44×44 hit area
    on touch screens (Apple HIG, WCAG 2.5.5). Uses ::after; the state layer
