@@ -13,6 +13,7 @@ const entry: ComponentEntry = {
   props: [
     { name: 'value', type: 'Date | undefined', required: false, description: 'Controlled selected date value.' },
     { name: 'onChange', type: '(date: Date | undefined) => void', required: false, description: 'Callback invoked when the selected date changes.' },
+    { name: 'locale', type: 'Locale (date-fns)', required: false, description: 'Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL.' },
     { name: 'placeholder', type: 'string', default: "'Pick a date'", required: false, description: 'Placeholder text displayed in the input when no date is selected.' },
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the date picker input and calendar.' },
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },

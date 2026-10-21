@@ -13,7 +13,7 @@ const entry: ComponentEntry = {
     related: ['icon-button', 'button-group', 'link'],
   },
   props: [
-    { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle' | 'link' | 'destructive'", default: "'primary'", required: false, description: 'Visual style of the button.' },
+    { name: 'variant', type: "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'subtle' | 'link' | 'destructive' | 'accent'", default: "'primary'", required: false, description: 'Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text.' },
     { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", required: false, description: 'Control height and padding.' },
     { name: 'status', type: "'idle' | 'loading' | 'success' | 'error'", default: "'idle'", required: false, description: 'Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds.' },
     { name: 'loading', type: 'boolean', default: 'false', required: false, description: 'Alias for `status="loading"`.' },

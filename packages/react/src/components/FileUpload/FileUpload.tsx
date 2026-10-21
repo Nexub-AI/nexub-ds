@@ -1,7 +1,14 @@
 import * as React from 'react';
 import { Upload, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+
+/** Localised file size ("12.3 kB", "1,5 Mo"), 1024-based as before. */
+export function formatFileSize(bytes: number, locale: string): string {
+  const [value, unit] =
+    bytes < 1024 ? [bytes, 'byte'] : bytes < 1024 * 1024 ? [bytes / 1024, 'kilobyte'] : [bytes / (1024 * 1024), 'megabyte'];
+  return new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 1 }).format(value);
+}
 
 interface FileUploadContextValue {
   accept?: string[];
@@ -87,15 +94,11 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
     }
 
     return (
+      // A <label> around the native file input: click, Enter and Space open the
+      // picker natively, the visible text is the accessible name, and the
+      // focus ring follows the input's keyboard focus onto the drop zone.
       <div
         ref={ref}
-        role="button"
-        tabIndex={0}
-        aria-label={messages.uploadFiles}
-        onClick={() => inputRef.current?.click()}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') inputRef.current?.click();
-        }}
         onDragOver={(e) => {
           e.preventDefault();
           setIsDragging(true);
@@ -103,8 +106,9 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
-          // Hover/press = the state layer; focus = the global ring.
-          'nx-state-layer flex cursor-pointer flex-col items-center justify-center gap-2 rounded-shape-container border-2 border-dashed p-8 text-center text-[var(--color-on-surface)] transition-colors',
+          // Hover/press = the state layer.
+          'nx-state-layer rounded-shape-container border-2 border-dashed text-center text-[var(--color-on-surface)] transition-colors',
+          'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-[3px] has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-[var(--color-primary)]',
           isDragging
             ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
             : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
@@ -112,26 +116,26 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         )}
         {...props}
       >
-        <Upload size="lg" className="text-[var(--color-on-surface-muted)]" aria-hidden="true" />
-        {children ?? (
-          <p className="text-sm text-[var(--color-on-surface-muted)]">
-            <span className="font-semibold text-[var(--color-primary)]">
-              {messages.clickToUpload}
-            </span>{' '}
-            {messages.orDragAndDrop}
-          </p>
-        )}
-        <input
-          ref={inputRef}
-          type="file"
-          className="sr-only"
-          multiple
-          accept={accept?.join(',')}
-          onChange={(e) => {
-            if (e.target.files) addFiles(Array.from(e.target.files));
-            e.target.value = '';
-          }}
-        />
+        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 p-8">
+          <Upload size="lg" className="text-[var(--color-on-surface-muted)]" aria-hidden="true" />
+          {children ?? (
+            <span className="text-sm text-[var(--color-on-surface-muted)]">
+              <span className="font-semibold text-[var(--color-primary)]">{messages.clickToUpload}</span>{' '}
+              {messages.orDragAndDrop}
+            </span>
+          )}
+          <input
+            ref={inputRef}
+            type="file"
+            className="sr-only"
+            multiple
+            accept={accept?.join(',')}
+            onChange={(e) => {
+              if (e.target.files) addFiles(Array.from(e.target.files));
+              e.target.value = '';
+            }}
+          />
+        </label>
       </div>
     );
   },
@@ -153,6 +157,7 @@ const Item = React.forwardRef<
 >(({ className, index, ...props }, ref) => {
   const { files, removeFile } = useFileUpload();
   const messages = useNexubMessages();
+  const { locale } = useLocale();
   const file = files[index];
   if (!file) return null;
   return (
@@ -169,7 +174,7 @@ const Item = React.forwardRef<
           {file.name}
         </p>
         <p className="text-xs text-[var(--color-on-surface-muted)]">
-          {(file.size / 1024).toFixed(1)} KB
+          {formatFileSize(file.size, locale)}
         </p>
       </div>
       <button

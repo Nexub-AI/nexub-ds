@@ -31,7 +31,7 @@ function Panel({ title }: { title: string }) {
   return (
     <div className="flex flex-col gap-4 rounded-shape-container bg-[var(--color-surface-container-low)] p-4">
       <p className="text-title-sm text-[var(--color-on-surface)]">{title}</p>
-      <SearchInput defaultValue="invoice" />
+      <SearchInput defaultValue="invoice" aria-label="Search" />
       <div className="flex gap-2">
         <Chip onRemove={() => {}}>Design</Chip>
         <Chip onRemove={() => {}}>Finance</Chip>
@@ -42,6 +42,10 @@ function Panel({ title }: { title: string }) {
           <Tabs.Trigger value="b">Two</Tabs.Trigger>
           <Tabs.Trigger value="c">Three</Tabs.Trigger>
         </Tabs.List>
+        {/* Triggers point aria-controls at their panel, so the panels must exist. */}
+        <Tabs.Content value="a" />
+        <Tabs.Content value="b" />
+        <Tabs.Content value="c" />
       </Tabs.Root>
       <Slider defaultValue={[30]} aria-label="Volume" />
       <Amount value={1234.5} currency="USD" />

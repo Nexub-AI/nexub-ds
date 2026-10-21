@@ -1,0 +1,118 @@
+# Nexub Design System
+
+> Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
+
+Version 1.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+
+## Docs
+
+- [Getting started](https://nexub-ds-docs.pages.dev/getting-started): install, Tailwind preset, ThemeProvider
+- [Principles](https://nexub-ds-docs.pages.dev/foundations/principles): the six Calm Depth rules
+- [Colors](https://nexub-ds-docs.pages.dev/foundations/colors): color roles and contrast
+- [Materials](https://nexub-ds-docs.pages.dev/foundations/materials): Liquid Glass rules
+
+## Components
+
+- [Accordion](https://nexub-ds-docs.pages.dev/components/accordion): Vertically stacked list of collapsible sections.
+- [Alert Dialog](https://nexub-ds-docs.pages.dev/components/alert-dialog): Confirmation dialog that requires an explicit user action before proceeding.
+- [Alert](https://nexub-ds-docs.pages.dev/components/alert): Inline contextual message with optional title, icon, and dismiss action.
+- [Amount](https://nexub-ds-docs.pages.dev/components/amount): Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
+- [Autocomplete](https://nexub-ds-docs.pages.dev/components/autocomplete): Type-to-search input with matching options dropdown.
+- [Avatar Group](https://nexub-ds-docs.pages.dev/components/avatar-group): Stacked group of avatars with overflow count.
+- [Avatar](https://nexub-ds-docs.pages.dev/components/avatar): Displays a user's profile picture with initials fallback.
+- [Badge](https://nexub-ds-docs.pages.dev/components/badge): Small status indicator or label. Communicates state, category, or count.
+- [Banner](https://nexub-ds-docs.pages.dev/components/banner): Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
+- [Box](https://nexub-ds-docs.pages.dev/components/box): Generic container primitive with style token props.
+- [Breadcrumb](https://nexub-ds-docs.pages.dev/components/breadcrumb): Hierarchical navigation trail showing page location.
+- [Button Group](https://nexub-ds-docs.pages.dev/components/button-group): Groups related buttons together with optional attachment and orientation.
+- [Button](https://nexub-ds-docs.pages.dev/components/button): Triggers an action or event. Supports multiple variants, sizes, and semantic tones.
+- [Callout](https://nexub-ds-docs.pages.dev/components/callout): Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
+- [Card](https://nexub-ds-docs.pages.dev/components/card): Surface container for grouping related content. Supports flat, surface, and interactive variants.
+- [Checkbox Card](https://nexub-ds-docs.pages.dev/components/checkbox-card): A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
+- [Checkbox](https://nexub-ds-docs.pages.dev/components/checkbox): Binary checkbox input built on Radix UI.
+- [Chip](https://nexub-ds-docs.pages.dev/components/chip): Compact label chip, optionally dismissible.
+- [Citation](https://nexub-ds-docs.pages.dev/components/citation): Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+- [Code](https://nexub-ds-docs.pages.dev/components/code-inline): Inline code span for technical terms and short code snippets.
+- [Collapsible](https://nexub-ds-docs.pages.dev/components/collapsible): Toggle visibility of content with smooth animation.
+- [Combobox](https://nexub-ds-docs.pages.dev/components/combobox): Command-palette style searchable dropdown built on cmdk.
+- [Data Table](https://nexub-ds-docs.pages.dev/components/data-table): Feature-rich data table with sorting and row selection powered by TanStack Table.
+- [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker): Calendar date picker with text input.
+- [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker): Dual-calendar date range selector.
+- [Dialog](https://nexub-ds-docs.pages.dev/components/dialog): Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
+- [Drawer](https://nexub-ds-docs.pages.dev/components/drawer): Slide-in panel from any edge of the screen.
+- [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state): Placeholder UI shown when a list or page has no content.
+- [Error State](https://nexub-ds-docs.pages.dev/components/error-state): Full-page or section error view with retry action.
+- [Eyebrow Chip](https://nexub-ds-docs.pages.dev/components/eyebrow-chip): A compact eyebrow label, typically used above headings.
+- [Filter Chip](https://nexub-ds-docs.pages.dev/components/filter-chip): Interactive chip for filtering, supports selected/unselected state.
+- [Flex](https://nexub-ds-docs.pages.dev/components/flex): Flexbox layout primitive.
+- [Form Field](https://nexub-ds-docs.pages.dev/components/form-field): Wraps Label, Input, HelperText and FormError into a single accessible group.
+- [Gradient Divider](https://nexub-ds-docs.pages.dev/components/gradient-divider): A decorative gradient-faded horizontal rule.
+- [Grid](https://nexub-ds-docs.pages.dev/components/grid): CSS Grid layout primitive.
+- [Heading](https://nexub-ds-docs.pages.dev/components/heading): Semantic heading component with size, weight, and tone control.
+- [Helper Text](https://nexub-ds-docs.pages.dev/components/helper-text): Small supporting text placed beneath a form field to provide hints or validation feedback.
+- [Hover Card](https://nexub-ds-docs.pages.dev/components/hover-card): Rich tooltip card revealed on hover.
+- [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button): A square button designed to hold a single icon, with an accessible label.
+- [Input](https://nexub-ds-docs.pages.dev/components/input): Text input field for forms. Supports size variants, icons, addons, and validation states.
+- [Kbd](https://nexub-ds-docs.pages.dev/components/kbd): Keyboard key display — renders a styled <kbd> element.
+- [Label](https://nexub-ds-docs.pages.dev/components/label): An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
+- [Link](https://nexub-ds-docs.pages.dev/components/link): Styled anchor link with variant and external support.
+- [Media Card](https://nexub-ds-docs.pages.dev/components/media-card): An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
+- [Message Bubble](https://nexub-ds-docs.pages.dev/components/message-bubble): One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Money Input](https://nexub-ds-docs.pages.dev/components/money-input): An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
+- [Collapse](https://nexub-ds-docs.pages.dev/components/motion-collapse): Expands and collapses content along the block axis.
+- [Fade](https://nexub-ds-docs.pages.dev/components/motion-fade): Animates opacity between 0 and 1 based on the `in` prop.
+- [Scale](https://nexub-ds-docs.pages.dev/components/motion-scale): Scales content in/out from its center.
+- [Slide](https://nexub-ds-docs.pages.dev/components/motion-slide): Slides content in from a direction based on the `in` prop.
+- [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
+- [Number Input](https://nexub-ds-docs.pages.dev/components/number-input): A numeric input with increment and decrement controls, supporting min/max clamping and step.
+- [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker): A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Pagination](https://nexub-ds-docs.pages.dev/components/pagination): Page navigation control with prev/next and page number buttons.
+- [Password Input](https://nexub-ds-docs.pages.dev/components/password-input): A password field with a built-in toggle to reveal or hide the entered value.
+- [Popover](https://nexub-ds-docs.pages.dev/components/popover): Floating content panel anchored to a trigger element.
+- [Progress](https://nexub-ds-docs.pages.dev/components/progress): Horizontal progress bar with optional tone and animation.
+- [Prompt Input](https://nexub-ds-docs.pages.dev/components/prompt-input): The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
+- [Radio Card](https://nexub-ds-docs.pages.dev/components/radio-card): A radio group where each option is a whole card: title, description and optional icon, one choice.
+- [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group): Group of mutually exclusive radio inputs.
+- [Rating](https://nexub-ds-docs.pages.dev/components/rating): Star rating input, supports controlled and read-only modes.
+- [Scroll Area](https://nexub-ds-docs.pages.dev/components/scroll-area): Scrollable container with custom styled scrollbars.
+- [Search Input](https://nexub-ds-docs.pages.dev/components/search-input): A text input pre-wired with a search icon and a clear button for filtering content.
+- [Segmented Control](https://nexub-ds-docs.pages.dev/components/segmented-control): Tab-style control for mutually exclusive selections.
+- [Select](https://nexub-ds-docs.pages.dev/components/select): Accessible dropdown select built on Radix UI. Supports groups and search.
+- [Separator](https://nexub-ds-docs.pages.dev/components/separator): A horizontal or vertical visual divider.
+- [Sheet](https://nexub-ds-docs.pages.dev/components/sheet): Alias for Drawer — slide-in sheet panel.
+- [Skeleton](https://nexub-ds-docs.pages.dev/components/skeleton): Placeholder loading animation that mimics content layout.
+- [Slider](https://nexub-ds-docs.pages.dev/components/slider): Range slider built on Radix UI Slider.
+- [Spinner](https://nexub-ds-docs.pages.dev/components/spinner): Animated loading indicator. Inherits color from context.
+- [Split Button](https://nexub-ds-docs.pages.dev/components/split-button): A primary action with related secondary actions behind a chevron, as one connected control.
+- [Stack](https://nexub-ds-docs.pages.dev/components/stack): Vertical stack layout with configurable gap.
+- [Status Pill](https://nexub-ds-docs.pages.dev/components/status-pill): Deprecated — use Badge. A pill indicator for status values like active, pending, error.
+- [Streaming Text](https://nexub-ds-docs.pages.dev/components/streaming-text): Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
+- [Switch](https://nexub-ds-docs.pages.dev/components/switch): Toggle control for binary on/off settings. Built on Radix UI Switch.
+- [Table](https://nexub-ds-docs.pages.dev/components/table): Semantic HTML table with styled variants.
+- [Tabs](https://nexub-ds-docs.pages.dev/components/tabs): Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+- [Tag](https://nexub-ds-docs.pages.dev/components/tag): Deprecated — use Badge. Non-interactive label tag for categorisation.
+- [Text Gradient](https://nexub-ds-docs.pages.dev/components/text-gradient): Renders text with a brand gradient fill.
+- [Text](https://nexub-ds-docs.pages.dev/components/text): Paragraph text component with size, tone, and weight variants.
+- [Textarea](https://nexub-ds-docs.pages.dev/components/textarea): A multi-line text input with configurable resize behaviour, size, and validation states.
+- [Thinking Indicator](https://nexub-ds-docs.pages.dev/components/thinking-indicator): Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
+- [Toast](https://nexub-ds-docs.pages.dev/components/toast): Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
+- [Toggle Group](https://nexub-ds-docs.pages.dev/components/toggle-group): Group of toggle buttons where one or many can be active.
+- [Toggle](https://nexub-ds-docs.pages.dev/components/toggle): Pressable toggle button built on Radix UI Toggle.
+- [Tooltip](https://nexub-ds-docs.pages.dev/components/tooltip): Floating label that appears on hover. Built on Radix UI Tooltip.
+
+## Patterns
+
+- [ActivityFeed](https://nexub-ds-docs.pages.dev/patterns/activity-feed): Chronological list of activity events with avatar, description, and timestamp.
+- [AuthCard](https://nexub-ds-docs.pages.dev/patterns/auth-card): Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
+- [Bento Grid](https://nexub-ds-docs.pages.dev/patterns/bento-grid): A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 480px, 4 at 768px.
+- [Conversation](https://nexub-ds-docs.pages.dev/patterns/conversation): Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+- [Error Summary](https://nexub-ds-docs.pages.dev/patterns/error-summary): Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
+- [FilterBar](https://nexub-ds-docs.pages.dev/patterns/filter-bar): Search + filter toolbar pattern for data-heavy list or table views.
+- [InfoList](https://nexub-ds-docs.pages.dev/patterns/info-list): Key–value list for displaying structured metadata or details.
+- [List Detail](https://nexub-ds-docs.pages.dev/patterns/list-detail): The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
+- [NotificationItem](https://nexub-ds-docs.pages.dev/patterns/notification-item): Single notification row for notification panels or dropdowns.
+- [PlanCard](https://nexub-ds-docs.pages.dev/patterns/plan-card): Pricing plan card with feature checklist, badge, and CTA button.
+- [SettingsSection](https://nexub-ds-docs.pages.dev/patterns/settings-section): Grouped settings panel with title, description, and action area.
+- [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card): Metric display card showing a KPI value, label, optional delta, and icon.
+- [StepIndicator](https://nexub-ds-docs.pages.dev/patterns/step-indicator): Visual progress indicator for multi-step flows like onboarding or checkout.
+- [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card): User profile card displaying avatar, name, role, and optional actions.

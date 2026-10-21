@@ -1,10 +1,11 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { DayPicker, type DateRange } from 'react-day-picker';
-import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
+import type { Locale } from 'date-fns';
+import { CalendarDays } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { formatDate } from '../DatePicker/DatePicker.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useCalendarLocale } from '../DatePicker/DatePicker.js';
 import { field, fieldFocusVisible } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 
@@ -22,18 +23,20 @@ export interface DateRangePickerProps {
   id?: string;
   /** Field name for screen readers; the current value is appended. */
   'aria-label'?: string;
+  /** date-fns Locale for the calendar and trigger text; wins over NexubProvider's `dateLocale`. */
+  locale?: Locale;
 }
 
 function formatRange(
   range: DateRange | undefined,
   placeholder: string,
-  locale: string | undefined,
+  formatDate: (date: Date) => string,
 ): string {
   if (!range) return placeholder;
   if (range.from && range.to) {
-    return `${formatDate(range.from, locale)} \u2013 ${formatDate(range.to, locale)}`;
+    return `${formatDate(range.from)} \u2013 ${formatDate(range.to)}`;
   }
-  if (range.from) return `${formatDate(range.from, locale)} \u2013 \u2026`;
+  if (range.from) return `${formatDate(range.from)} \u2013 \u2026`;
   return placeholder;
 }
 
@@ -65,8 +68,9 @@ const calendarClassNames = {
   // skips middle days without depending on CSS order.
   selected: '[&:not(.nx-range-middle)>button]:bg-[var(--color-primary)] [&:not(.nx-range-middle)>button]:text-[var(--color-on-primary)]',
   // Half bands join the end capsules to the middle band (not on a one-day range).
-  range_start: 'nx-range-start [&:not(.nx-range-end)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)]',
-  range_end: 'nx-range-end [&:not(.nx-range-start)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)]',
+  // RTL (DayPicker's dir): the bands run the other way.
+  range_start: 'nx-range-start [&:not(.nx-range-end)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-end)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)]',
+  range_end: 'nx-range-end [&:not(.nx-range-start)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-start)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)]',
   range_middle: 'nx-range-middle bg-[var(--color-primary-container)] [&>button]:text-[var(--color-on-primary-container)]',
   today: '[&>button]:border-[var(--color-primary)]',
   outside: '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
@@ -88,14 +92,15 @@ export const DateRangePicker = React.forwardRef<
     className,
     id,
     'aria-label': ariaLabel,
+    locale: localeProp,
   },
   ref,
 ) {
   const [open, setOpen] = React.useState(false);
   const messages = useNexubMessages();
-  const locale = useIntlLocale();
+  const calendar = useCalendarLocale(localeProp);
   const placeholder = placeholderProp ?? messages.pickDateRange;
-  const display = formatRange(value, placeholder, locale);
+  const display = formatRange(value, placeholder, calendar.format);
   const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
   return (
@@ -143,16 +148,7 @@ export const DateRangePicker = React.forwardRef<
             showOutsideDays={false}
             className="relative p-3"
             classNames={calendarClassNames}
-            components={{
-              Chevron: ({ orientation, ...rest }) =>
-                orientation === 'left' ? (
-                  <ChevronLeft size="xs" aria-hidden="true" />
-                ) : orientation === 'right' ? (
-                  <ChevronRight size="xs" aria-hidden="true" />
-                ) : (
-                  <ChevronRight size="xs" aria-hidden="true" {...rest} />
-                ),
-            }}
+            {...calendar.dayPickerProps}
           />
         </RadixPopover.Content>
       </RadixPopover.Portal>

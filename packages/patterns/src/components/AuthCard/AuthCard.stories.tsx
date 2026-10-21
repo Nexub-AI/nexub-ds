@@ -39,7 +39,7 @@ export const Default: Story = {
           <>
             <span>
               Don&apos;t have an account?{' '}
-              <a href="#" style={{ color: 'var(--color-brand-primary-500)' }}>
+              <a href="#" style={{ color: 'var(--color-primary)', textDecoration: 'underline' }}>
                 Sign up
               </a>
             </span>
@@ -65,8 +65,8 @@ export const Default: Story = {
             height: '36px',
             borderRadius: '6px',
             border: 'none',
-            background: 'var(--color-brand-primary-500, #6366f1)',
-            color: 'white',
+            background: 'var(--color-primary)',
+            color: 'var(--color-on-primary)',
             fontWeight: 600,
             fontSize: '14px',
             cursor: 'pointer',

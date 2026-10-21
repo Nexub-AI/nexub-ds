@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Select.Root>
-      <Select.Trigger style={{ width: '220px' }}>
+      <Select.Trigger aria-label="Country" style={{ width: '220px' }}>
         <Select.Value placeholder="Select a country" />
       </Select.Trigger>
       <Select.Content>

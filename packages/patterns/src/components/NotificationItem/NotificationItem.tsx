@@ -28,6 +28,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
       {!read && (
         <span
           className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[var(--color-primary)]"
+          role="img"
           aria-label="Unread"
         />
       )}

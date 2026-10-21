@@ -25,7 +25,7 @@ export const WithActions: Story = {
     actions: (
       <button
         type="button"
-        style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', background: 'var(--color-brand-primary-500)', color: 'white' }}
+        style={{ padding: '0.5rem 1rem', borderRadius: '0.375rem', background: 'var(--color-primary)', color: 'var(--color-on-primary)' }}
       >
         New Project
       </button>

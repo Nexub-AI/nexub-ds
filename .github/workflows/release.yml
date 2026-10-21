@@ -47,7 +47,8 @@ jobs:
           # needs; `pnpm publish` hands the upload to this npm CLI.
           node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
+          # No registry-url: it writes an .npmrc auth line with a placeholder
+          # token, which trusted publishing doesn't need.
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -75,11 +76,9 @@ jobs:
           # Contents: write + Pull requests: write (or a classic token with the
           # `repo` scope). Falls back to GITHUB_TOKEN only for the publish phase.
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
-          # Trusted publishing (OIDC via id-token: write) is used when it is enabled
-          # for each package on npmjs.com; npm prefers it over this token. Keep the
-          # token only as a fallback until then, then delete the NPM_TOKEN secret.
-          # (Repo is private, so npm cannot attach provenance attestations.)
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # npm auth is trusted publishing (OIDC via id-token: write), configured per
+          # package on npmjs.com — no npm token. v1.6.0 was the first release
+          # published this way. (Private repo: npm can't attach provenance.)
 
       # After a publish, the version commit (bumped package.json + CHANGELOGs)
       # only exists on production. Open a PR merging it back into development

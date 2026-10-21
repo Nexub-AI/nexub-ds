@@ -9,7 +9,8 @@ export interface ScrollAreaProps extends RadixScrollArea.ScrollAreaProps {
 export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
   ({ className, children, orientation = 'vertical', ...props }, ref) => (
     <RadixScrollArea.Root ref={ref} className={cn('relative overflow-hidden', className)} {...props}>
-      <RadixScrollArea.Viewport className="h-full w-full rounded-[inherit]">
+      {/* tabIndex: keyboard users must be able to scroll a region without focusable content (WCAG 2.1.1). */}
+      <RadixScrollArea.Viewport tabIndex={0} className="h-full w-full rounded-[inherit]">
         {children}
       </RadixScrollArea.Viewport>
       {(orientation === 'vertical' || orientation === 'both') && (

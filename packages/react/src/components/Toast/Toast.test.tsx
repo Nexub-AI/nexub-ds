@@ -1,6 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
+import * as React from 'react';
+import { renderHook, act, render, screen } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { toast, useToastStore } from './useToast.js';
+import { Toast } from './Toast.js';
+import { NexubProvider } from '../NexubProvider/NexubProvider.js';
 
 // Reset module-level state before each test by dismissing all toasts
 beforeEach(() => {
@@ -122,5 +125,35 @@ describe('useToastStore', () => {
 
     expect(result.current[0]!.description).toBe('More detail');
     expect(result.current[0]!.duration).toBe(3000);
+  });
+});
+
+describe('Toast.Root swipe', () => {
+  const renderToast = (wrapper?: React.ComponentType<{ children: React.ReactNode }>) =>
+    render(
+      <Toast.Provider>
+        <Toast.Root open>
+          <Toast.Title>Saved</Toast.Title>
+        </Toast.Root>
+        <Toast.Viewport />
+      </Toast.Provider>,
+      { wrapper },
+    );
+
+  it('follows the finger and animates out like Toaster items', () => {
+    renderToast();
+    const root = screen.getByText('Saved').closest('li')!;
+    expect(root).toHaveClass(
+      'data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]',
+      'data-[swipe=cancel]:translate-x-0',
+      'data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)]',
+      'data-[swipe=move]:transition-none',
+    );
+    expect(root).toHaveAttribute('data-swipe-direction', 'right');
+  });
+
+  it('swipes toward the inline end (left) in RTL', () => {
+    renderToast(({ children }) => <NexubProvider locale="ar">{children}</NexubProvider>);
+    expect(screen.getByText('Saved').closest('li')).toHaveAttribute('data-swipe-direction', 'left');
   });
 });

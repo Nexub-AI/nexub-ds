@@ -9,20 +9,20 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function AvatarCircle({ initials, color }: { initials: string; color: string }) {
+function AvatarCircle({ initials, color }: { initials: string; color: 'primary' | 'success' | 'warning' }) {
   return (
     <div
       style={{
         width: '32px',
         height: '32px',
         borderRadius: '50%',
-        background: color,
+        background: `var(--color-${color})`,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: '12px',
         fontWeight: 600,
-        color: 'white',
+        color: `var(--color-on-${color})`,
         flexShrink: 0,
       }}
     >
@@ -44,19 +44,19 @@ export const Default: Story = {
     >
       <ActivityFeed.Root>
         <ActivityFeed.Item
-          avatar={<AvatarCircle initials="AJ" color="#6366f1" />}
+          avatar={<AvatarCircle initials="AJ" color="primary" />}
           title="Alice Johnson created a new project"
           description="Project: Q2 Marketing Campaign"
           timestamp="2m ago"
         />
         <ActivityFeed.Item
-          avatar={<AvatarCircle initials="DL" color="#10b981" />}
+          avatar={<AvatarCircle initials="DL" color="success" />}
           title="David Lee commented on a report"
           description="&ldquo;Revenue looks great this quarter!&rdquo;"
           timestamp="14m ago"
         />
         <ActivityFeed.Item
-          avatar={<AvatarCircle initials="CW" color="#f59e0b" />}
+          avatar={<AvatarCircle initials="CW" color="warning" />}
           title="Carol White updated team settings"
           description="Changed billing contact to finance@nexub.io"
           timestamp="1h ago"

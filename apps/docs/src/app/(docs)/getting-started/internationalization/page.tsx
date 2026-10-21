@@ -110,6 +110,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <td><code>&apos;rtl&apos;</code> for Arabic, Hebrew, Persian and Urdu (<code>ar</code>, <code>he</code>, <code>fa</code>, <code>ur</code>, with any region), otherwise <code>&apos;ltr&apos;</code>. Set it to override.</td>
           </tr>
           <tr>
+            <td><code>dateLocale</code></td>
+            <td>none</td>
+            <td>A date-fns <code>Locale</code> (e.g. <code>import {'{ fr }'} from &apos;date-fns/locale&apos;</code>) for the date pickers: month and weekday names, week start and the trigger&apos;s date format. Only the locale you import is bundled. A picker&apos;s own <code>locale</code> prop wins.</td>
+          </tr>
+          <tr>
             <td><code>messages</code></td>
             <td>English</td>
             <td>A <code>Partial&lt;NexubMessages&gt;</code> merged over the defaults, so you only pass what you translate. Explicit props still win: <code>&lt;Autocomplete placeholder=&quot;…&quot; /&gt;</code> beats <code>searchPlaceholder</code>.</td>
