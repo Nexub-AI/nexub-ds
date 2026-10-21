@@ -67,4 +67,20 @@ describe('StatCard', () => {
     const { container } = render(<StatCard label="Test" value="0" />);
     expect(container.querySelectorAll('.flex.items-center.gap-2').length).toBe(0);
   });
+
+  it('derives sentiment from deltaType by default', () => {
+    render(<StatCard label="MRR" value="$5,000" delta="+12%" deltaType="increase" />);
+    const delta = screen.getByText('+12%');
+    expect(delta).toHaveAttribute('data-sentiment', 'positive');
+    expect(delta.className).toContain('--color-success');
+  });
+
+  it('sentiment sets the colour independently of the arrow', () => {
+    render(<StatCard label="Churn" value="3%" delta="-2%" deltaType="decrease" sentiment="positive" />);
+    const delta = screen.getByText('-2%');
+    expect(delta).toHaveAttribute('data-delta-type', 'decrease');
+    expect(delta).toHaveAttribute('data-sentiment', 'positive');
+    expect(delta.className).toContain('--color-success');
+    expect(delta.className).not.toContain('--color-error');
+  });
 });

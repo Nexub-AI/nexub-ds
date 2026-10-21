@@ -77,7 +77,6 @@ import {
   Text,
   TextGradient,
   Textarea,
-  Toaster,
   Toggle,
   ToggleGroup,
   Tooltip,
@@ -870,7 +869,7 @@ function CalloutExamples({ idx }: { idx: number }) {
 function ToastExamples({ idx }: { idx: number }) {
   return (
     <>
-      <Toaster />
+      {/* The docs root layout already renders <Toaster /> (ClientProviders); a second one doubles every toast. */}
       <div style={row(8)}>
         {idx === 0 && (
           <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>

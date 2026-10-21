@@ -42,4 +42,9 @@ describe('SplitButton', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'More save options' })).toBeDisabled();
   });
+
+  it('disables the menu toggle while status="loading"', () => {
+    setup({ status: 'loading' });
+    expect(screen.getByRole('button', { name: 'More save options' })).toBeDisabled();
+  });
 });

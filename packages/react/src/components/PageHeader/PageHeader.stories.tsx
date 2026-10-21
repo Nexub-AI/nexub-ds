@@ -44,3 +44,12 @@ export const WithBreadcrumb: Story = {
     ),
   },
 };
+
+/** A section header inside a page that already has an h1. */
+export const Level2: Story = {
+  args: {
+    title: 'Billing',
+    description: 'Invoices and payment methods.',
+    level: 2,
+  },
+};

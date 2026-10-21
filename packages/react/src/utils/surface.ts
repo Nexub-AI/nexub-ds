@@ -21,4 +21,4 @@ export const menuSeparator = '-mx-1.5 my-1.5 h-px bg-[var(--color-outline-varian
 export const menuLabel = 'px-2.5 py-1.5 text-label-sm text-[var(--color-on-surface-muted)]';
 
 /** Scrim behind modal overlays. */
-export const scrim = 'bg-[color-mix(in_srgb,var(--color-scrim,#000)_40%,transparent)]';
+export const scrim = 'bg-[color-mix(in_srgb,var(--color-scrim)_40%,transparent)]';
