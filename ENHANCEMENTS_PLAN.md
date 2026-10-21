@@ -11,7 +11,7 @@ Updated at every step. Flow per version: feature PRs → `development` (CI green
 | Version | Scope | Status | PRs | Released |
 |---|---|---|---|---|
 | **1.6.0** | Waves 1–4: security + consistency, cards + motion, colour + UX, AI surface kit | ✅ **Released** — on npm (all 6 packages), docs deployed, production = development | #94–#97 → staging #98 → production #99 → version #100 → back-merge #101 | 2026-10-21 |
-| **1.7.0** | Hardening: release-workflow token cleanup; axe accessibility checks over every story in CI; bundle-size budgets; visual tests for docs foundation pages; date pickers follow locale + RTL; translated file sizes; swipeable `Toast.Root`; Tag shape decision | 🚧 **In progress** — branch `claude/v1.7.0` | — | — |
+| **1.7.0** | Hardening: release-workflow token cleanup; axe accessibility checks over every story in CI; bundle-size budgets; visual tests for docs foundation pages; date pickers follow locale + RTL; translated file sizes; swipeable `Toast.Root`; Tag shape decision | 🚧 **Built, in review** — PR open, CI running; then staging → production → npm | #103 | — |
 | **1.8.0** | Adoption: 1.5 → 1.6+ migration guide (new props, brand roles, NexubProvider, design-lint rules for apps); codemod for app code (legacy tokens → roles, physical → logical classes); an example product screen in the docs built only from public APIs, and the fixes it turns up | ⏳ Planned | — | — |
 | **1.9.0** | Foundations: runtime brand theming from a seed colour (`ThemeProvider seed`); Tailwind v4 readiness (CSS-first preset alongside the v3 preset, no breaking change) | ⏳ Planned | — | — |
 
