@@ -13,7 +13,6 @@ const Root = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListEl
   ({ className, children, ...props }, ref) => (
     <ul
       ref={ref}
-      role="feed"
       aria-label="Activity feed"
       className={cn('flex flex-col divide-y divide-[var(--color-outline-variant)]', className)}
       {...props}

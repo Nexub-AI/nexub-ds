@@ -3,7 +3,7 @@ import * as RadixToast from '@radix-ui/react-toast';
 import { X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { fireToastClose, toast, useToastStore } from './useToast.js';
 
 const toneMap: Record<string, string> = {
@@ -37,6 +37,7 @@ export interface ToasterProps {
 export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   const toasts = useToastStore();
   const messages = useNexubMessages();
+  const { dir } = useLocale();
   // Closed by Radix (timer, swipe, close button) but still in the store and
   // mounted for the exit animation; they leave the stack order immediately.
   const [closed, setClosed] = React.useState<ReadonlySet<string>>(() => new Set());
@@ -124,7 +125,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   }, [order.length]);
 
   return (
-    <RadixToast.Provider swipeDirection="right">
+    <RadixToast.Provider swipeDirection={dir === 'rtl' ? 'left' : 'right'}>
       {toasts.map((t) => {
         const i = order.indexOf(t.id);
         const action = t.action ?? (t.undo && { label: t.undo.label ?? messages.undo, onClick: t.undo.onUndo });

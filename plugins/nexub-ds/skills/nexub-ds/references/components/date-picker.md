@@ -12,6 +12,7 @@ Calendar date picker with text input.
 | --- | --- | --- | --- |
 | `value` | `Date \| undefined` |  | Controlled selected date value. |
 | `onChange` | `(date: Date \| undefined) => void` |  | Callback invoked when the selected date changes. |
+| `locale` | `Locale (date-fns)` |  | Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL. |
 | `placeholder` | `string` | `'Pick a date'` | Placeholder text displayed in the input when no date is selected. |
 | `disabled` | `boolean` | `false` | Disables the date picker input and calendar. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |

@@ -12,6 +12,7 @@ Dual-calendar date range selector.
 | --- | --- | --- | --- |
 | `value` | `{ from: Date \| undefined; to: Date \| undefined }` |  | Controlled date range value. |
 | `onChange` | `(range: { from: Date \| undefined; to: Date \| undefined }) => void` |  | Callback invoked when the selected range changes. |
+| `locale` | `Locale (date-fns)` |  | Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL. |
 | `placeholder` | `string` | `'Select date range'` | Placeholder text shown in the trigger input when no range is selected. |
 | `disabled` | `boolean` | `false` | Disables the trigger input and calendar popover. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |

@@ -18,8 +18,8 @@ const chipStyle = (active: boolean): React.CSSProperties => ({
   fontWeight: 500,
   border: '1px solid var(--color-border-default)',
   cursor: 'pointer',
-  background: active ? 'var(--color-brand-primary-500, #6366f1)' : 'transparent',
-  color: active ? 'white' : 'var(--color-text-primary)',
+  background: active ? 'var(--color-primary)' : 'transparent',
+  color: active ? 'var(--color-on-primary)' : 'var(--color-text-primary)',
 });
 
 function FilterBarDemo() {
@@ -52,8 +52,8 @@ function FilterBarDemo() {
             padding: '6px 14px',
             borderRadius: '6px',
             border: 'none',
-            background: 'var(--color-brand-primary-500, #6366f1)',
-            color: 'white',
+            background: 'var(--color-primary)',
+            color: 'var(--color-on-primary)',
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: 600,

@@ -49,6 +49,11 @@ jobs:
       - name: Build packages
         run: pnpm turbo build --filter='./packages/*'
 
+      # gzip budgets per entry point (size-budgets.json). New entry or intended growth:
+      # `pnpm check:size --update` and commit the reviewed diff.
+      - name: Bundle size
+        run: pnpm check:size
+
       # Docs static export — verifies all pages pre-render without errors.
       # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
       - name: Build docs (static export)
@@ -75,7 +80,8 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter @nexub/react build-storybook --quiet
 
-  # Screenshot every story (light/dark/payub) + WCAG contrast over theme tokens.
+  # Screenshot every story (light/dark/payub), the docs foundation pages (light/dark)
+  # + WCAG contrast over theme tokens.
   # Runs on the office Mac minis (self-hosted, org-level runners) to save
   # Actions minutes. Builds natively, then screenshots in the same pinned
   # Playwright Linux image used to record baselines locally
@@ -107,8 +113,13 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter @nexub/react build-storybook --quiet
 
+      # Static export for the docs foundation-page screenshots (project "docs").
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
       - name: Check Docker
-        run: docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini: colima start"; exit 1; }
+        run: |
+          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini, run: colima start"; exit 1; }
 
       - name: Visual regression & contrast
         run: pnpm --filter @nexub/react test:visual:docker

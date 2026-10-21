@@ -177,9 +177,8 @@ describe('English defaults still render', () => {
         </FileUpload.List>
       </FileUpload.Root>,
     );
-    const zone = screen.getByRole('button', { name: 'Upload files' });
-    expect(zone).toHaveTextContent('Click to upload or drag and drop');
-    const input = zone.querySelector('input')!;
+    const input = screen.getByLabelText('Click to upload or drag and drop');
+    expect(input).toHaveAttribute('type', 'file');
     fireEvent.change(input, { target: { files: [new File(['x'], 'a.txt')] } });
     expect(screen.getByRole('button', { name: 'Remove a.txt' })).toBeInTheDocument();
   });
