@@ -58,6 +58,11 @@ jobs:
       - name: Release policy
         run: pnpm check:release-policy
 
+      # The Claude skill, llms.txt and @nexub/mcp are generated from the docs
+      # registry + tokens; fail if a component/token change forgot `pnpm ai-docs`.
+      - name: AI docs up to date
+        run: pnpm ai-docs --check
+
       - name: Typecheck all packages
         run: pnpm turbo typecheck
 

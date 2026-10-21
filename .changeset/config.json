@@ -9,7 +9,8 @@
       "@nexub/icons",
       "@nexub/react",
       "@nexub/patterns",
-      "@nexub/brand"
+      "@nexub/brand",
+      "@nexub/mcp"
     ]
   ],
   "linked": [],
