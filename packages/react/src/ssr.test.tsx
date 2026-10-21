@@ -82,6 +82,7 @@ const cspCases: [string, React.ReactElement][] = [
   ['Citation', <N.Citation index={1} source={{ title: 'T', url: 'https://example.com', snippet: 'S' }} />],
   ['SourceList', <N.SourceList sources={[{ title: 'T', url: 'https://example.com' }]} />],
   ['DataTable', <N.DataTable columns={[{ accessorKey: 'a', header: 'A', meta: { align: 'end' } }]} data={[{ a: 1 }]} caption="T" enableSorting pagination={{ pageSize: 1 }} />],
+  ['ThemeProvider seed', <N.ThemeProvider seed="#4099f1"><span>x</span></N.ThemeProvider>],
   ['Button async', <N.Button status="success">Save</N.Button>],
   ['MediaCard', <N.MediaCard src="/a.jpg" alt="" title="T" href="/x" />],
 ];

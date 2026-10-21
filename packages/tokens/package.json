@@ -1,6 +1,6 @@
 {
   "name": "@nexub/tokens",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
   "type": "module",
   "license": "MIT",
@@ -38,10 +38,15 @@
     },
     "./css": "./dist/css/variables.css",
     "./css/roles": "./dist/css/roles.css",
+    "./seed": {
+      "types": "./dist/js/seed.d.ts",
+      "default": "./dist/js/seed.js"
+    },
     "./tailwind": {
       "types": "./dist/tailwind/preset.d.ts",
       "default": "./dist/tailwind/preset.js"
     },
+    "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./package.json": "./package.json"
   },
@@ -54,11 +59,13 @@
     "test": "node --test scripts/*.test.mjs bin/*.test.mjs"
   },
   "devDependencies": {
-    "@material/material-color-utilities": "0.3.0",
     "style-dictionary": "^5.7.0",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-v4": "npm:tailwindcss@^4.3.3",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@material/material-color-utilities": "0.3.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "peerDependencies": {
