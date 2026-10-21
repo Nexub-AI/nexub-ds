@@ -37,6 +37,7 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 | `1.5.1` | 2026-10-20 | Patch | Landing page on DS components; `TextGradient` background-image fix | [@nexub/react@1.5.1](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.5.1) |
 | `1.6.0` | 2026-10-21 | Minor | Enhancement waves 1–4: strict-CSP components, every component on Calm Depth, design lint; cards, sheen, selectable/media cards, stacked toasts; data-viz palettes, P3, medium contrast, async buttons, ErrorSummary, undo, i18n/RTL; AI surface kit. | [@nexub/react@1.6.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.6.0) |
 | `1.7.0` | 2026-10-21 | Minor | Hardening: axe checks over every story, bundle-size budgets, docs visual tests; date pickers follow locale + RTL; native-label FileUpload; accessibility fixes; Claude skill, `llms.txt` and new `@nexub/mcp` package | [@nexub/react@1.7.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.7.0) |
+| `1.8.0` | 2026-10-21 | Minor | Adoption: `nexub-migrate` CLI, Upgrading guide, example dashboard; DataTable column type/alignment/caption, keyboard-scrollable Table, StatCard `sentiment`, PageHeader `level`, AppHeader `position` + translatable strings; RTL fixes | [@nexub/react@1.8.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.8.0) |
 
 ---
 

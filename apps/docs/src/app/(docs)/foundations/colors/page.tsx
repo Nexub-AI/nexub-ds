@@ -184,6 +184,23 @@ color: var(--color-on-surface);
         </div>
       ))}
 
+      <h2>Brand theming from a seed colour</h2>
+      <p>
+        For white-label products, pass one hex colour and the accent roles are regenerated from it with the same
+        HCT tone table as the built-in themes, so every pair still meets WCAG AA in light, dark and every contrast
+        level. Like Material 3, the seed is a starting hue, not a fixed swatch: a light yellow becomes a readable olive.
+      </p>
+      <pre><code>{`<ThemeProvider seed="#e4572e">…</ThemeProvider>
+// a product brand instead of the primary accent:
+<ThemeProvider seed="#e4572e" seedTarget="tertiary">…</ThemeProvider>`}</code></pre>
+      <p>
+        <code>ThemeProvider</code> loads the colour maths only when <code>seed</code> is set and applies the roles
+        through the CSSOM, so it works under a strict CSP. Because that happens after hydration, server-rendered apps
+        should also ship the static CSS to avoid a flash:{' '}
+        <code>createSeedThemeCss(&apos;#e4572e&apos;)</code> from <code>@nexub/tokens/seed</code>. Seeding covers the
+        primary (or tertiary) family; secondary, the chart palettes and P3 wide-gamut boosts stay on the Nexub brand.
+      </p>
+
       <h2>Legacy names</h2>
       <p>
         <code>--color-bg-*</code>, <code>--color-text-*</code>, <code>--color-border-*</code>,{' '}

@@ -49,6 +49,30 @@ export default {
   ],
 };`} />
 
+      <h3>Tailwind v4</h3>
+      <p>
+        On Tailwind v4, skip the config file and import the CSS-first theme instead. It is generated from the same
+        tokens as the v3 preset, so the class names are identical (<code>bg-surface-container-high</code>,{' '}
+        <code>rounded-shape-container</code>, <code>shadow-elevation-2</code>, <code>text-body-md</code>,{' '}
+        <code>duration-spatial-default</code>, <code>ease-spatial-default</code>, <code>h-control-md</code>, …) and
+        every utility resolves to the token&apos;s <code>var(--…)</code> at runtime, so light/dark, brand, contrast and
+        density keep working. Keep the theme CSS from Setup loaded; v4 apps also need <code>@source</code> for the
+        package output, because v4 does not scan <code>node_modules</code>.
+      </p>
+      <CodeBlock lang="css" code={`/* app.css */
+@import "tailwindcss";
+@import "@nexub/tokens/tailwind.css";
+
+@source "../node_modules/@nexub/react/dist";
+@source "../node_modules/@nexub/patterns/dist";`} />
+      <p>
+        Tailwind v3 keeps using the preset above; nothing changes there. Known differences on v4:{' '}
+        <code>tailwindcss-animate</code> is a v3 plugin, so add a v4 port such as <code>tw-animate-css</code> for the{' '}
+        <code>animate-in</code>/<code>zoom-in-95</code> classes the overlays use (the accordion keyframes are already in
+        the theme). Opacity modifiers like <code>bg-primary/50</code> work on v4 (via <code>color-mix()</code>) but not
+        with the v3 preset.
+      </p>
+
       <h2>ThemeProvider</h2>
       <p>
         Wrap your app with <code>ThemeProvider</code> to enable light/dark/system mode switching

@@ -38,6 +38,20 @@ export interface ThemeProviderProps {
   defaultGlass?: GlassMode;
   /** localStorage key for the glass intensity. Defaults to 'nexub-glass'. */
   glassStorageKey?: string;
+  /**
+   * Brand seed colour (`#rgb` / `#rrggbb`) for white-label theming. The accent
+   * family named by `seedTarget` is regenerated from it (same HCT tones as the
+   * built-in roles, so WCAG pairs hold) and set on `<html>` via the CSSOM
+   * (strict-CSP safe), following the current `data-contrast` level.
+   *
+   * Runs on the client after `@nexub/tokens/seed` loads (a lazy chunk with
+   * the colour library), so server-rendered pages paint the default brand
+   * first. To avoid that flash, emit `createSeedThemeCss(seed)` from
+   * `@nexub/tokens/seed` into a server-rendered stylesheet instead.
+   */
+  seed?: string;
+  /** Accent family the seed recolours: 'primary' (default) or 'tertiary' (product brand). */
+  seedTarget?: 'primary' | 'tertiary';
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -82,6 +96,74 @@ function readGlass(key: string, fallback: GlassMode): GlassMode {
   return fallback;
 }
 
+type Contrast = 'standard' | 'medium' | 'high';
+const CONTRAST_QUERY = '(prefers-contrast: more)';
+
+// Mirrors @nexub/tokens' roles.css: data-contrast wins, else prefers-contrast: more → high.
+function readContrast(root: HTMLElement): Contrast {
+  const attr = root.getAttribute('data-contrast');
+  if (attr === 'standard' || attr === 'medium' || attr === 'high') return attr;
+  return window.matchMedia(CONTRAST_QUERY).matches ? 'high' : 'standard';
+}
+
+// Seed theming: lazy-loads @nexub/tokens/seed (keeps the colour library out of
+// apps that don't use it), writes the role vars on <html> with setProperty,
+// recomputes on contrast changes, and removes them on cleanup.
+function useSeedTheme(seed: string | undefined, target: 'primary' | 'tertiary'): void {
+  React.useEffect(() => {
+    if (!seed) return;
+    const color = seed;
+    const root = document.documentElement;
+    const mq = window.matchMedia(CONTRAST_QUERY);
+    const observer = new MutationObserver(() => update());
+    let applied: string[] = [];
+    let create: typeof import('@nexub/tokens/seed').createSeedTheme | undefined;
+    let done = false;
+
+    const clear = () => {
+      for (const name of applied) root.style.removeProperty(name);
+      applied = [];
+    };
+    const stop = () => {
+      done = true;
+      observer.disconnect();
+      mq.removeEventListener('change', update);
+    };
+    function update() {
+      if (done || !create) return;
+      let vars: Record<string, string>;
+      try {
+        vars = create(color, { contrast: readContrast(root), target });
+      } catch (error) {
+        console.error(error);
+        clear();
+        stop();
+        return;
+      }
+      clear();
+      for (const [name, value] of Object.entries(vars)) root.style.setProperty(name, value);
+      applied = Object.keys(vars);
+    }
+
+    observer.observe(root, { attributes: true, attributeFilter: ['data-contrast'] });
+    mq.addEventListener('change', update);
+    import('@nexub/tokens/seed').then(
+      (mod) => {
+        create = mod.createSeedTheme;
+        update();
+      },
+      (error: unknown) => {
+        console.error(error);
+        stop();
+      },
+    );
+    return () => {
+      stop();
+      clear();
+    };
+  }, [seed, target]);
+}
+
 function writeStorage(key: string, value: string): void {
   if (typeof window === 'undefined') return;
   try {
@@ -99,7 +181,11 @@ export function ThemeProvider({
   storageKey = 'nexub-theme',
   defaultGlass = 'balanced',
   glassStorageKey = 'nexub-glass',
+  seed,
+  seedTarget = 'primary',
 }: ThemeProviderProps) {
+  useSeedTheme(seed, seedTarget);
+
   // Start from props (not storage/matchMedia) so server and client render the
   // same tree; real values are synced before paint below.
   const [theme, setThemeState] = React.useState<ThemeMode>(defaultTheme);

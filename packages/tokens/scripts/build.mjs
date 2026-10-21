@@ -43,96 +43,97 @@ StyleDictionary.registerFormat({
   },
 });
 
+// One mapping for both Tailwind targets: v3 preset (theme.extend) and v4 @theme CSS.
+function presetExtend(dictionary) {
+  const colors = {};
+  const spacing = {};
+  const borderRadius = {};
+  const boxShadow = {};
+  const zIndex = {};
+  const fontFamily = {};
+  const fontSize = {};
+  const transitionTimingFunction = {};
+  const transitionDuration = {};
+
+  // Color roles live in dist/css/roles.css (light-dark()), not in the token tree.
+  for (const role of [...Object.keys(ROLES), ...Object.keys(tertiary('primary'))]) {
+    colors[role] = `var(--color-${role})`;
+  }
+
+  for (const token of dictionary.allTokens) {
+    const [ns, ...rest] = token.path;
+    const varName = `--${token.path.join('-')}`;
+
+    if (ns === 'color') {
+      setDeep(colors, rest, `var(${varName})`);
+    } else if (ns === 'spacing' || ns === 'container') {
+      const key = ns === 'container' ? `container-${rest.join('-')}` : rest.join('-');
+      spacing[key] = `var(${varName})`;
+    } else if (ns === 'size' && rest[0] === 'control') {
+      spacing[`control-${rest[1]}`] = `var(${varName})`; // h-control-md, density-aware
+    } else if (ns === 'radius') {
+      borderRadius[rest.join('-')] = `var(${varName})`;
+    } else if (ns === 'shape') {
+      borderRadius[`shape-${rest.join('-')}`] = `var(${varName})`;
+    } else if (ns === 'shadow') {
+      boxShadow[rest.join('-')] = `var(${varName})`;
+    } else if (ns === 'elevation') {
+      boxShadow[`elevation-${rest.join('-')}`] = `var(${varName})`;
+    } else if (ns === 'z') {
+      zIndex[rest.join('-')] = `var(${varName})`;
+    } else if (ns === 'font' && rest[0] === 'family') {
+      fontFamily[rest[1]] = `var(${varName})`;
+    } else if (ns === 'type') {
+      // text-display-lg etc.: [size, { lineHeight, letterSpacing, fontWeight }]
+      const [role, prop] = rest;
+      const entry = (fontSize[role] ??= [`var(--type-${role}-size)`, {}]);
+      if (prop === 'lineHeight') entry[1].lineHeight = `var(${varName})`;
+      if (prop === 'letterSpacing') entry[1].letterSpacing = `var(${varName})`;
+      if (prop === 'weight') entry[1].fontWeight = `var(${varName})`;
+    } else if (ns === 'motion' && rest[0] === 'spring') {
+      const key = `${rest[1]}-${rest[2]}`; // ease-spatial-fast / duration-spatial-fast
+      if (rest[3] === 'easing') transitionTimingFunction[key] = `var(${varName})`;
+      if (rest[3] === 'duration') transitionDuration[key] = `var(${varName})`;
+    }
+  }
+
+  // Chart palettes are generated into roles.css (bg-chart-1, fill-chart-seq-3, stroke-chart-div-7).
+  colors.chart = Object.fromEntries(CHART_KEYS.map((k) => [k, `var(--color-chart-${k})`]));
+
+  return {
+    colors,
+    spacing,
+    borderRadius,
+    boxShadow,
+    zIndex,
+    fontFamily,
+    fontSize,
+    transitionTimingFunction,
+    transitionDuration,
+    // Accordion + Collapsible height animation (Radix exposes the content height).
+    keyframes: {
+      'accordion-down': {
+        from: { height: '0' },
+        to: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
+      },
+      'accordion-up': {
+        from: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
+        to: { height: '0' },
+      },
+    },
+    animation: {
+      'accordion-down':
+        'accordion-down var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing)',
+      'accordion-up':
+        'accordion-up var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing)',
+    },
+  };
+}
+
 StyleDictionary.registerFormat({
   name: 'tailwind/preset',
   format({ dictionary }) {
-    const colors = {};
-    const spacing = {};
-    const borderRadius = {};
-    const boxShadow = {};
-    const zIndex = {};
-    const fontFamily = {};
-    const fontSize = {};
-    const transitionTimingFunction = {};
-    const transitionDuration = {};
-
-    // Color roles live in dist/css/roles.css (light-dark()), not in the token tree.
-    for (const role of [...Object.keys(ROLES), ...Object.keys(tertiary('primary'))]) {
-      colors[role] = `var(--color-${role})`;
-    }
-
-    for (const token of dictionary.allTokens) {
-      const [ns, ...rest] = token.path;
-      const varName = `--${token.path.join('-')}`;
-
-      if (ns === 'color') {
-        setDeep(colors, rest, `var(${varName})`);
-      } else if (ns === 'spacing' || ns === 'container') {
-        const key = ns === 'container' ? `container-${rest.join('-')}` : rest.join('-');
-        spacing[key] = `var(${varName})`;
-      } else if (ns === 'size' && rest[0] === 'control') {
-        spacing[`control-${rest[1]}`] = `var(${varName})`; // h-control-md, density-aware
-      } else if (ns === 'radius') {
-        borderRadius[rest.join('-')] = `var(${varName})`;
-      } else if (ns === 'shape') {
-        borderRadius[`shape-${rest.join('-')}`] = `var(${varName})`;
-      } else if (ns === 'shadow') {
-        boxShadow[rest.join('-')] = `var(${varName})`;
-      } else if (ns === 'elevation') {
-        boxShadow[`elevation-${rest.join('-')}`] = `var(${varName})`;
-      } else if (ns === 'z') {
-        zIndex[rest.join('-')] = `var(${varName})`;
-      } else if (ns === 'font' && rest[0] === 'family') {
-        fontFamily[rest[1]] = `var(${varName})`;
-      } else if (ns === 'type') {
-        // text-display-lg etc.: [size, { lineHeight, letterSpacing, fontWeight }]
-        const [role, prop] = rest;
-        const entry = (fontSize[role] ??= [`var(--type-${role}-size)`, {}]);
-        if (prop === 'lineHeight') entry[1].lineHeight = `var(${varName})`;
-        if (prop === 'letterSpacing') entry[1].letterSpacing = `var(${varName})`;
-        if (prop === 'weight') entry[1].fontWeight = `var(${varName})`;
-      } else if (ns === 'motion' && rest[0] === 'spring') {
-        const key = `${rest[1]}-${rest[2]}`; // ease-spatial-fast / duration-spatial-fast
-        if (rest[3] === 'easing') transitionTimingFunction[key] = `var(${varName})`;
-        if (rest[3] === 'duration') transitionDuration[key] = `var(${varName})`;
-      }
-    }
-
-    // Chart palettes are generated into roles.css (bg-chart-1, fill-chart-seq-3, stroke-chart-div-7).
-    colors.chart = Object.fromEntries(CHART_KEYS.map((k) => [k, `var(--color-chart-${k})`]));
-
-    const preset = {
-      theme: {
-        extend: {
-          colors,
-          spacing,
-          borderRadius,
-          boxShadow,
-          zIndex,
-          fontFamily,
-          fontSize,
-          transitionTimingFunction,
-          transitionDuration,
-          // Accordion + Collapsible height animation (Radix exposes the content height).
-          keyframes: {
-            'accordion-down': {
-              from: { height: '0' },
-              to: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
-            },
-            'accordion-up': {
-              from: { height: 'var(--radix-accordion-content-height, var(--radix-collapsible-content-height))' },
-              to: { height: '0' },
-            },
-          },
-          animation: {
-            'accordion-down':
-              'accordion-down var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing)',
-            'accordion-up':
-              'accordion-up var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing)',
-          },
-        },
-      },
-    };
+    const preset = { theme: { extend: presetExtend(dictionary) } };
 
     // Components use tailwindcss-animate classes (animate-in, zoom-in-95, …);
     // registering it here means every preset consumer gets them.
@@ -146,6 +147,51 @@ StyleDictionary.registerFormat({
   },
 });
 
+// Tailwind v4: the same mapping as CSS-first theme variables. `@theme inline` so
+// utilities emit var(--…) and light-dark()/brand/contrast/density keep resolving at runtime.
+StyleDictionary.registerFormat({
+  name: 'tailwind/v4-theme',
+  format({ dictionary }) {
+    const t = presetExtend(dictionary);
+    const lines = [];
+    const add = (ns, obj) => {
+      for (const [k, v] of Object.entries(flatten(obj))) lines.push(`  --${ns}-${k}: ${v};`);
+    };
+    add('color', t.colors);
+    add('spacing', t.spacing);
+    add('radius', t.borderRadius);
+    add('shadow', t.boxShadow);
+    add('z-index', t.zIndex);
+    add('font', t.fontFamily);
+    for (const [role, [size, o]] of Object.entries(t.fontSize)) {
+      lines.push(`  --text-${role}: ${size};`);
+      if (o.lineHeight) lines.push(`  --text-${role}--line-height: ${o.lineHeight};`);
+      if (o.letterSpacing) lines.push(`  --text-${role}--letter-spacing: ${o.letterSpacing};`);
+      if (o.fontWeight) lines.push(`  --text-${role}--font-weight: ${o.fontWeight};`);
+    }
+    add('ease', t.transitionTimingFunction);
+    add('transition-duration', t.transitionDuration); // v4's duration-* reads --transition-duration-*
+    add('animate', t.animation);
+    for (const [name, frames] of Object.entries(t.keyframes)) {
+      lines.push(`  @keyframes ${name} {`);
+      for (const [at, decl] of Object.entries(frames)) {
+        const body = Object.entries(decl).map(([p, v]) => `${p}: ${v};`).join(' ');
+        lines.push(`    ${at} { ${body} }`);
+      }
+      lines.push('  }');
+    }
+    return [
+      `/* Auto-generated by @nexub/tokens build script. Do not edit. */`,
+      `/* Tailwind v4: @import "tailwindcss"; @import "@nexub/tokens/tailwind.css"; */`,
+      `/* Needs the token CSS loaded too (@nexub/tokens/css + /css/roles, or @nexub/themes). */`,
+      `@theme inline reference {`,
+      ...lines,
+      `}`,
+      '',
+    ].join('\n');
+  },
+});
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function buildNested(tokens) {
@@ -154,6 +200,14 @@ function buildNested(tokens) {
     setDeep(result, token.path, token.$value ?? token.value);
   }
   return result;
+}
+
+// { palette: { primary: { 40: v } } } → { 'palette-primary-40': v } (v3's nested-key naming).
+function flatten(obj, prefix = '') {
+  return Object.entries(obj).reduce((out, [k, v]) => {
+    const key = prefix ? `${prefix}-${k}` : k;
+    return Object.assign(out, typeof v === 'object' ? flatten(v, key) : { [key]: v });
+  }, {});
 }
 
 function setDeep(obj, path, value) {
@@ -240,6 +294,10 @@ const sd = new StyleDictionary({
         {
           destination: 'preset.js',
           format: 'tailwind/preset',
+        },
+        {
+          destination: 'theme.css',
+          format: 'tailwind/v4-theme',
         },
       ],
     },
