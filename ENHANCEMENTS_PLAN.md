@@ -1,8 +1,23 @@
 # Next enhancements — review and proposal (2026-10-21)
 
-Status: **approved 2026-10-21 and built** — Waves 1–4 landed on development (PRs #94, #95, #96, #97). Decisions: Wave 1 first; sheen opt-in; AI kit in scope; Next 16 landed separately (#87); E4 runtime seed theming skipped (no consumer needs it yet). Builds on the shipped Calm Depth refresh (v1.5.1, [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md)). Roadmap row R8 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
+Status: **approved 2026-10-21.** Waves 1–4 shipped in **v1.6.0**; hardening, adoption and foundations follow in 1.7.0–1.9.0 (tracker below). Decisions: Wave 1 first; sheen opt-in; AI kit in scope; Next 16 landed separately (#87). Builds on the shipped Calm Depth refresh (v1.5.1, [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md)). Roadmap row R8 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
 
 Scope asked for: security, pixel-perfect UI, UX, colour, cards, hovers and card effects, animation.
+
+## Release tracker
+
+Updated at every step. Flow per version: feature PRs → `development` (CI green) → `staging` → `production` → Version Packages PR → npm publish → back-merge.
+
+| Version | Scope | Status | PRs | Released |
+|---|---|---|---|---|
+| **1.6.0** | Waves 1–4: security + consistency, cards + motion, colour + UX, AI surface kit | ✅ **Released** — on npm (all 6 packages), docs deployed, production = development | #94–#97 → staging #98 → production #99 → version #100 → back-merge #101 | 2026-10-21 |
+| **1.7.0** | Hardening: release-workflow token cleanup; axe accessibility checks over every story in CI; bundle-size budgets; visual tests for docs foundation pages; date pickers follow locale + RTL; translated file sizes; swipeable `Toast.Root`; Tag shape decision | 🚧 **In progress** — branch `claude/v1.7.0` | — | — |
+| **1.8.0** | Adoption: 1.5 → 1.6+ migration guide (new props, brand roles, NexubProvider, design-lint rules for apps); codemod for app code (legacy tokens → roles, physical → logical classes); an example product screen in the docs built only from public APIs, and the fixes it turns up | ⏳ Planned | — | — |
+| **1.9.0** | Foundations: runtime brand theming from a seed colour (`ThemeProvider seed`); Tailwind v4 readiness (CSS-first preset alongside the v3 preset, no breaking change) | ⏳ Planned | — | — |
+
+After 1.9.x the next release is **2.0.0** (rolling-minor policy, PUBLISHING.md); nothing in this plan needs a breaking change.
+
+Still yours to do (repo settings): turn on Dependabot alerts and secret-scanning push protection. npm trusted publishing is already live — v1.6.0 published through OIDC.
 
 ---
 
@@ -175,11 +190,11 @@ Guiding rule (Principle 4): **effects must be physical and quiet**. No 3D tilt a
 | Wave | Contents | Release |
 |---|---|---|
 | **1. Secure and consistent** | A1–A5, B1–B2 (long tail + design lint), D1 (`@starting-style`) | v1.6.0 |
-| **2. Cards and motion** | C1–C7, D2–D7, B3 (VR states) | v1.7.0 |
-| **3. Colour and UX** | E1–E3, F1–F5, B4–B5 (RTL, optics) | v1.8.0 |
-| **4. AI surfaces** | F6, E4 if needed | v1.9.0 |
+| **2. Cards and motion** | C1–C7, D2–D7, B3 (VR states) | v1.6.0 |
+| **3. Colour and UX** | E1–E3, F1–F5, B4–B5 (RTL, optics) | v1.6.0 |
+| **4. AI surfaces** | F6 (E4 moved to 1.9.0) | v1.6.0 |
 
-Each wave goes through the usual flow: PRs to development → CI green → staging → production → Changesets release.
+Planned as one release per wave; all four were promoted together and shipped as **v1.6.0**.
 
 ## 4. Decisions needed
 
@@ -201,4 +216,4 @@ Each wave goes through the usual flow: PRs to development → CI green → stagi
 | 3 | #96 | CVD-tested data-viz palettes, P3 accents, medium contrast; async Button; ErrorSummary; toast.undoable; NexubProvider (i18n + direction); RTL codemod + lint; 44px touch targets; tabular figures |
 | 4 | #97 | PromptInput, ThinkingIndicator, StreamingText, MessageBubble/MessageActions, Citation/SourceList, Conversation pattern; AI docs + guide |
 
-Owner actions still open: enable npm trusted publishing per package (then delete NPM_TOKEN; it expires ~2026-11-11); turn on Dependabot alerts and secret-scanning push protection.
+All four waves shipped in **v1.6.0** (2026-10-21). See the release tracker at the top for what follows.
