@@ -14,11 +14,11 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
       {breadcrumb && <div>{breadcrumb}</div>}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] truncate">
+          <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-on-surface)] truncate">
             {title}
           </h1>
           {description && (
-            <p className="mt-1 text-sm text-[var(--color-text-muted)]">{description}</p>
+            <p className="mt-1 text-sm text-[var(--color-on-surface-muted)]">{description}</p>
           )}
         </div>
         {actions && (

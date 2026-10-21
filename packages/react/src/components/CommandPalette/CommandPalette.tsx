@@ -3,7 +3,8 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Command } from 'cmdk';
 import { Search } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { enterExit, overlaySurface } from '../../utils/surface.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { overlaySurface, scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 
 export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
@@ -20,8 +21,7 @@ export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   shouldFilter?: boolean;
 }
 
-const overlayClasses =
-  'fixed inset-0 z-[var(--z-modal)] bg-[color-mix(in_srgb,#000_40%,transparent)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 duration-effects-default ease-effects-default';
+const overlayClasses = cn('fixed inset-0 z-[var(--z-modal)] nx-motion', scrim);
 
 // Radix's scroll lock lives in Dialog.Overlay, so the class-lock overlay is a
 // plain element. Focus trap and Escape live in Dialog.Content and still apply.
@@ -31,7 +31,9 @@ function ClassLockOverlay() {
 }
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
-  ({ children, label = 'Command palette', scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  ({ children, label: labelProp, scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  const messages = useNexubMessages();
+  const label = labelProp ?? messages.commandPalette;
   // Radix returns focus to Dialog.Trigger, which a palette (opened by a shortcut
   // or its own button) doesn't have. Return it to whatever had it before.
   const returnFocusRef = React.useRef<HTMLElement | null>(null);
@@ -51,10 +53,7 @@ const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
         }}
         className={cn(
           'fixed left-1/2 top-[20%] z-[var(--z-modal)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2',
-          'overflow-hidden', overlaySurface, enterExit,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-          'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+          'nx-motion nx-dialog overflow-hidden', overlaySurface,
         )}
       >
         <RadixDialog.Title className="sr-only">{label}</RadixDialog.Title>
@@ -62,7 +61,7 @@ const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
           label={label}
           shouldFilter={shouldFilter}
           loop
-          className="flex h-full w-full flex-col overflow-hidden text-[var(--color-text-primary)]"
+          className="flex h-full w-full flex-col overflow-hidden text-[var(--color-on-surface)]"
         >
           {children}
         </Command>
@@ -77,12 +76,12 @@ const Input = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<typeof Command.Input>
 >(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b border-[var(--color-border-default)] px-3">
-    <Search size="sm" className="mr-2 shrink-0 opacity-50" aria-hidden="true" />
+  <div className="flex items-center border-b border-[var(--color-outline-variant)] px-3">
+    <Search size="sm" className="me-2 shrink-0 opacity-50" aria-hidden="true" />
     <Command.Input
       ref={ref}
       className={cn(
-        'flex h-control-xl w-full bg-transparent text-body-lg outline-none placeholder:text-[var(--color-text-placeholder)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
+        'flex h-control-xl w-full bg-transparent text-body-lg outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
         className,
       )}
       {...props}
@@ -158,7 +157,7 @@ const Separator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Command.Separator
     ref={ref}
-    className={cn('-mx-1 my-1 h-px bg-[var(--color-border-default)]', className)}
+    className={cn('-mx-1 my-1 h-px bg-[var(--color-outline-variant)]', className)}
     {...props}
   />
 ));

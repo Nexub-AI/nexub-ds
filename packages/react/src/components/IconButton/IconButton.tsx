@@ -45,7 +45,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       <Comp
         ref={ref}
         aria-label={label}
-        className={cn(iconButtonVariants({ variant, size }), className)}
+        className={cn(iconButtonVariants({ variant, size }), 'nx-hit', className)}
         {...props}
       >
         {children}

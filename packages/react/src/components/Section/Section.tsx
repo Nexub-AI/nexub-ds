@@ -11,10 +11,10 @@ export const sectionVariants = cva('w-full', {
       lg: 'py-32',
     },
     tone: {
-      default: 'bg-[var(--color-bg-default)]',
-      subtle: 'bg-[var(--color-bg-subtle)]',
-      muted: 'bg-[var(--color-bg-muted)]',
-      inverse: 'bg-[var(--color-bg-inverse)] text-[var(--color-text-inverse)]',
+      default: 'bg-[var(--color-surface)]',
+      subtle: 'bg-[var(--color-surface-container-low)]',
+      muted: 'bg-[var(--color-surface-container-high)]',
+      inverse: 'bg-[var(--color-inverse-surface)] text-[var(--color-inverse-on-surface)]',
     },
   },
   defaultVariants: {

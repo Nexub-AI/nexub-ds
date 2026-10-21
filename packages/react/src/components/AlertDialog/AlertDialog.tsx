@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as RadixAlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '../../utils/cn.js';
-import { enterExit, overlaySurface, scrim } from '../../utils/surface.js';
+import { overlaySurface, scrim } from '../../utils/surface.js';
 import { buttonVariants } from '../Button/Button.js';
 
 const Root = RadixAlertDialog.Root;
@@ -14,9 +14,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOve
       <RadixAlertDialog.Overlay
         ref={ref}
         className={cn(
-          'fixed inset-0 z-[var(--z-modal)]', scrim, enterExit,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
+          'fixed inset-0 z-[var(--z-modal)] nx-motion', scrim,
           className,
         )}
         {...props}
@@ -33,13 +31,8 @@ const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogCon
         ref={ref}
         className={cn(
           'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
-          overlaySurface, enterExit,
+          'nx-motion nx-dialog', overlaySurface,
           'p-6 focus:outline-none',
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-          'data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
-          'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-          'data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]',
           className,
         )}
         {...props}
@@ -56,7 +49,7 @@ const Title = React.forwardRef<HTMLHeadingElement, RadixAlertDialog.AlertDialogT
     return (
       <RadixAlertDialog.Title
         ref={ref}
-        className={cn('text-lg font-semibold text-[var(--color-text-primary)]', className)}
+        className={cn('text-lg font-semibold text-[var(--color-on-surface)]', className)}
         {...props}
       />
     );
@@ -71,7 +64,7 @@ const Description = React.forwardRef<
   return (
     <RadixAlertDialog.Description
       ref={ref}
-      className={cn('mt-1 text-sm text-[var(--color-text-muted)]', className)}
+      className={cn('mt-1 text-sm text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   );

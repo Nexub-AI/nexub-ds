@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
+import { layoutProps } from '../../utils/layout.js';
 
 export interface FlexProps extends React.HTMLAttributes<HTMLDivElement> {
   gap?: number | string;
@@ -36,18 +37,13 @@ export const Flex = React.forwardRef<HTMLDivElement, FlexProps>(
   ) => {
     const Comp = asChild ? Slot : 'div';
 
-    const inlineStyle: React.CSSProperties = {
-      ...(gap !== undefined ? { gap: typeof gap === 'number' ? `${gap * 0.25}rem` : gap } : {}),
-      ...(align ? { alignItems: align } : {}),
-      ...(justify ? { justifyContent: justify } : {}),
-      ...style,
-    };
+    const layout = layoutProps({ gap, align, justify, style });
 
     return (
       <Comp
         ref={ref}
-        className={cn('flex', directionClass[direction], wrap && 'flex-wrap', className)}
-        style={inlineStyle}
+        className={cn('flex', layout.className, directionClass[direction], wrap && 'flex-wrap', className)}
+        style={layout.style}
         {...rest}
       >
         {children}

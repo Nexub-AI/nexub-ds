@@ -13,6 +13,14 @@ import {
 } from '@tanstack/react-table';
 import { ArrowUp, ArrowDown, ChevronsUpDown } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { disabledContainer, pressable } from '../../utils/control.js';
+
+// Outlined capsules; hover/press = the state layer.
+const pagerButton = cn(
+  pressable,
+  'border border-[var(--color-outline-variant)] bg-transparent px-4 py-2 min-h-[44px] text-label-lg text-[var(--color-on-surface)]',
+  disabledContainer,
+);
 
 // ---------------------------------------------------------------------------
 // Minimal inline table primitives (no external Table component dependency)
@@ -38,7 +46,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn('[&_tr]:border-b border-[var(--color-border-default)]', className)}
+    className={cn('[&_tr]:border-b border-[var(--color-outline-variant)]', className)}
     {...props}
   />
 ));
@@ -63,7 +71,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      'border-b border-[var(--color-border-default)] transition-colors hover:bg-[var(--color-bg-subtle)] data-[state=selected]:bg-[var(--color-bg-subtle)]',
+      'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[var(--color-surface-container-low)]',
       className,
     )}
     {...props}
@@ -78,7 +86,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-10 px-4 text-left align-middle text-xs font-medium text-[var(--color-text-muted)] [&:has([role=checkbox])]:pr-0',
+      'h-10 px-4 text-start align-middle text-xs font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0',
       className,
     )}
     {...props}
@@ -93,7 +101,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'px-4 py-3 align-middle text-[var(--color-text-primary)] [&:has([role=checkbox])]:pr-0',
+      'px-4 py-3 align-middle text-[var(--color-on-surface)] [&:has([role=checkbox])]:pe-0',
       className,
     )}
     {...props}
@@ -179,7 +187,7 @@ export function DataTable<TData>({
                     header.column.getCanSort() ? (
                     <button
                       onClick={header.column.getToggleSortingHandler()}
-                      className="inline-flex items-center gap-1 hover:text-[var(--color-text-primary)]"
+                      className="inline-flex items-center gap-1 hover:text-[var(--color-on-surface)]"
                     >
                       {flexRender(header.column.columnDef.header, header.getContext())}
                       {header.column.getIsSorted() === 'asc' ? (
@@ -216,7 +224,7 @@ export function DataTable<TData>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="h-24 text-center text-[var(--color-text-muted)]"
+                className="h-24 text-center text-[var(--color-on-surface-muted)]"
               >
                 No results.
               </TableCell>
@@ -226,7 +234,7 @@ export function DataTable<TData>({
       </TableRoot>
 
       {pagination && (
-        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--color-text-muted)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--color-on-surface-muted)]">
           <span>
             Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
@@ -234,14 +242,14 @@ export function DataTable<TData>({
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="rounded border border-[var(--color-border-default)] px-3 py-2 min-h-[44px] disabled:opacity-50"
+              className={pagerButton}
             >
               Previous
             </button>
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="rounded border border-[var(--color-border-default)] px-3 py-2 min-h-[44px] disabled:opacity-50"
+              className={pagerButton}
             >
               Next
             </button>

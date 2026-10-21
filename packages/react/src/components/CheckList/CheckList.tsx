@@ -35,12 +35,12 @@ export const CheckListItem = React.forwardRef<HTMLLIElement, CheckListItemProps>
     return (
       <li
         ref={ref}
-        className={cn('flex items-start gap-2 text-[var(--color-text-primary)]', className)}
+        className={cn('flex items-start gap-2 text-[var(--color-on-surface)]', className)}
         {...props}
       >
-        <span className="shrink-0 inline-flex items-center justify-center mt-0.5 h-4 w-4 rounded-full bg-[var(--color-semantic-success-default)]/10">
+        <span className="shrink-0 inline-flex items-center justify-center mt-0.5 h-4 w-4 rounded-full bg-[color-mix(in_srgb,var(--color-success)_10%,transparent)]">
           <Check
-            className="h-3 w-3 text-[var(--color-semantic-success-default)]"
+            className="h-3 w-3 text-[var(--color-success)]"
             aria-hidden="true"
           />
         </span>

@@ -4,26 +4,28 @@ import { cn } from '../../utils/cn.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const statusPillVariants = cva(
-  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium select-none',
+  'inline-flex items-center gap-1.5 rounded-shape-control px-2.5 py-1 text-xs font-medium select-none',
   {
     variants: {
       tone: {
         neutral:
-          'bg-[var(--color-neutral-100)] text-[var(--color-neutral-700)] border border-[var(--color-neutral-200)]',
-        info: 'bg-[var(--color-semantic-info-default)]/10 text-[var(--color-semantic-info-default)] border border-[var(--color-semantic-info-default)]/20',
+          'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)] border border-[var(--color-outline-variant)]',
+        info:
+          'bg-[var(--color-info-container)] text-[var(--color-on-info-container)] border border-[color-mix(in_srgb,var(--color-info)_35%,transparent)]',
         success:
-          'bg-[var(--color-semantic-success-default)]/10 text-[var(--color-semantic-success-default)] border border-[var(--color-semantic-success-default)]/20',
+          'bg-[var(--color-success-container)] text-[var(--color-on-success-container)] border border-[color-mix(in_srgb,var(--color-success)_35%,transparent)]',
         warning:
-          'bg-[var(--color-semantic-warning-default)]/10 text-[var(--color-semantic-warning-default)] border border-[var(--color-semantic-warning-default)]/20',
+          'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)] border border-[color-mix(in_srgb,var(--color-warning)_35%,transparent)]',
         danger:
-          'bg-[var(--color-semantic-error-default)]/10 text-[var(--color-semantic-error-default)] border border-[var(--color-semantic-error-default)]/20',
-        leap: 'bg-[var(--color-leap-500)]/10 text-[var(--color-leap-700)] border border-[var(--color-leap-500)]/20',
+          'bg-[var(--color-error-container)] text-[var(--color-on-error-container)] border border-[color-mix(in_srgb,var(--color-error)_35%,transparent)]',
+        leap:
+          'bg-[var(--color-leap-container)] text-[var(--color-on-leap-container)] border border-[color-mix(in_srgb,var(--color-leap)_35%,transparent)]',
         bookub:
-          'bg-[var(--color-bookub-500)]/10 text-[var(--color-bookub-700)] border border-[var(--color-bookub-500)]/20',
+          'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)] border border-[color-mix(in_srgb,var(--color-bookub)_35%,transparent)]',
         payub:
-          'bg-[var(--color-payub-500)]/10 text-[var(--color-payub-700)] border border-[var(--color-payub-500)]/20',
+          'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)] border border-[color-mix(in_srgb,var(--color-payub)_35%,transparent)]',
         founderub:
-          'bg-[var(--color-founderub-500)]/10 text-[var(--color-founderub-700)] border border-[var(--color-founderub-500)]/20',
+          'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)] border border-[color-mix(in_srgb,var(--color-founderub)_35%,transparent)]',
       },
     },
     defaultVariants: {
@@ -33,15 +35,15 @@ export const statusPillVariants = cva(
 );
 
 const dotColorMap: Record<ToneValue, string> = {
-  neutral: 'bg-[var(--color-neutral-500)]',
-  info: 'bg-[var(--color-semantic-info-default)]',
-  success: 'bg-[var(--color-semantic-success-default)]',
-  warning: 'bg-[var(--color-semantic-warning-default)]',
-  danger: 'bg-[var(--color-semantic-error-default)]',
-  leap: 'bg-[var(--color-leap-500)]',
-  bookub: 'bg-[var(--color-bookub-500)]',
-  payub: 'bg-[var(--color-payub-500)]',
-  founderub: 'bg-[var(--color-founderub-500)]',
+  neutral: 'bg-[var(--color-outline)]',
+  info: 'bg-[var(--color-info)]',
+  success: 'bg-[var(--color-success)]',
+  warning: 'bg-[var(--color-warning)]',
+  danger: 'bg-[var(--color-error)]',
+  leap: 'bg-[var(--color-leap)]',
+  bookub: 'bg-[var(--color-bookub)]',
+  payub: 'bg-[var(--color-payub)]',
+  founderub: 'bg-[var(--color-founderub)]',
 };
 
 const pulseTones: ToneValue[] = ['success', 'info'];

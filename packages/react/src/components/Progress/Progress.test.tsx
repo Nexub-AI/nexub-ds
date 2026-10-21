@@ -37,7 +37,7 @@ describe('Progress', () => {
 
   it('renders fill at correct percentage', () => {
     const { container } = render(<Progress value={50} max={100} />);
-    const fill = container.querySelector('[style]') as HTMLElement;
+    const fill = container.querySelector('[data-part="fill"]') as HTMLElement;
     expect(fill.style.width).toBe('50%');
   });
 

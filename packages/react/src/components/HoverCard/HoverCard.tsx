@@ -1,9 +1,13 @@
 import * as React from 'react';
 import * as RadixHoverCard from '@radix-ui/react-hover-card';
 import { cn } from '../../utils/cn.js';
-import { enterExit, floatingSurface } from '../../utils/surface.js';
+import { floatingSurface } from '../../utils/surface.js';
 
-const Root = RadixHoverCard.Root;
+// Hover intent: open after 500ms of resting on the trigger, close 200ms after
+// leaving (long enough to cross the gap into the card).
+function Root({ openDelay = 500, closeDelay = 200, ...props }: RadixHoverCard.HoverCardProps) {
+  return <RadixHoverCard.Root openDelay={openDelay} closeDelay={closeDelay} {...props} />;
+}
 const Trigger = RadixHoverCard.Trigger;
 
 const Content = React.forwardRef<HTMLDivElement, RadixHoverCard.HoverCardContentProps>(
@@ -15,12 +19,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixHoverCard.HoverCardContent
         className={cn(
           'z-[var(--z-popover)] w-64 p-4 outline-none',
           floatingSurface,
-          enterExit,
-          'data-[state=open]:animate-in data-[state=closed]:animate-out',
-          'data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0',
-          'data-[state=open]:zoom-in-95 data-[state=closed]:zoom-out-95',
-          'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2',
-          'data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+          'nx-motion nx-pop origin-[var(--radix-hover-card-content-transform-origin)]',
           className,
         )}
         {...props}
@@ -35,7 +34,7 @@ const Arrow = React.forwardRef<SVGSVGElement, RadixHoverCard.HoverCardArrowProps
     return (
       <RadixHoverCard.Arrow
         ref={ref}
-        className={cn('fill-[var(--color-border-default)]', className)}
+        className={cn('fill-[var(--color-outline-variant)]', className)}
         {...props}
       />
     );

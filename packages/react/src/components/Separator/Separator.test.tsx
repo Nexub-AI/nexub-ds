@@ -33,6 +33,6 @@ describe('Separator', () => {
   it('applies tone style class', () => {
     render(<Separator tone="success" />);
     const el = screen.getByRole('separator');
-    expect(el.className).toMatch(/semantic-success/);
+    expect(el.className).toContain('var(--color-success)_30%');
   });
 });

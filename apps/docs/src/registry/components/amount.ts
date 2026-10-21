@@ -9,7 +9,8 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'beta',
     addedIn: '1.5.0',
-    related: ['money-input'],
+    updatedIn: '1.6.0',
+    related: ['money-input', 'number-ticker'],
   },
   props: [
     { name: 'value', type: 'number', required: true, description: 'The amount.' },
@@ -18,6 +19,7 @@ const entry: ComponentEntry = {
     { name: 'size', type: "'sm' | 'md' | 'lg' | 'display'", default: "'md'", required: false, description: '`display` is a hero figure with a quieter symbol and minor units.' },
     { name: 'tone', type: "'neutral' | 'auto'", default: "'neutral'", required: false, description: '`auto` colours gains success and losses error.' },
     { name: 'signDisplay', type: 'Intl signDisplay', required: false, description: "e.g. 'exceptZero' to show + on gains." },
+    { name: 'animate', type: 'boolean', default: 'false', required: false, description: 'Roll the digits to new values (NumberTicker). The first render never animates.' },
   ],
   examples: [
     {
