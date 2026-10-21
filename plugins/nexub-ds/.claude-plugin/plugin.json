@@ -1,5 +1,6 @@
 {
   "name": "nexub-ds",
+  "displayName": "Nexub Design System",
   "description": "Build SaaS UI with the Nexub Design System: components, patterns, tokens and Calm Depth rules for Claude.",
   "author": {
     "name": "Nexub AI",
