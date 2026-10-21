@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { ThemeProvider, ThemeScript, themeScriptSource, useTheme } from './ThemeProvider.js';
 import { renderToString } from 'react-dom/server';
+import { createSeedTheme } from '@nexub/tokens/seed';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -212,5 +213,60 @@ describe('ThemeScript', () => {
     const html = renderToString(<ThemeScript storageKey={'</script><script>alert(1)//'} nonce="abc" />);
     expect(html).not.toContain('</script><script>');
     expect(html).toContain('nonce="abc"');
+  });
+});
+
+// ─── Seed theming ─────────────────────────────────────────────────────────────
+
+describe('seed theming', () => {
+  const root = document.documentElement;
+  const prop = (name: string) => root.style.getPropertyValue(name);
+
+  beforeEach(() => {
+    root.removeAttribute('style');
+    root.removeAttribute('data-contrast');
+  });
+
+  it('applies the seeded primary roles on <html> via the CSSOM', async () => {
+    render(<ThemeProvider seed="#4099f1"><span /></ThemeProvider>);
+    const expected = createSeedTheme('#4099f1');
+    await waitFor(() => expect(prop('--color-primary')).toBe(expected['--color-primary']));
+    for (const [name, value] of Object.entries(expected)) expect(prop(name)).toBe(value);
+  });
+
+  it('follows data-contrast changes', async () => {
+    render(<ThemeProvider seed="#7b1fa2"><span /></ThemeProvider>);
+    await waitFor(() => expect(prop('--color-primary')).toBe(createSeedTheme('#7b1fa2')['--color-primary']));
+    root.setAttribute('data-contrast', 'high');
+    const high = createSeedTheme('#7b1fa2', { contrast: 'high' })['--color-primary'];
+    await waitFor(() => expect(prop('--color-primary')).toBe(high));
+  });
+
+  it('cleans up on seed/target change and on unmount', async () => {
+    const { rerender, unmount } = render(<ThemeProvider seed="#ff0000"><span /></ThemeProvider>);
+    await waitFor(() => expect(prop('--color-primary')).toBe(createSeedTheme('#ff0000')['--color-primary']));
+    rerender(<ThemeProvider seed="#00e5ff" seedTarget="tertiary"><span /></ThemeProvider>);
+    await waitFor(() => expect(prop('--color-tertiary')).toBe(createSeedTheme('#00e5ff', { target: 'tertiary' })['--color-tertiary']));
+    expect(prop('--color-primary')).toBe('');
+    expect(prop('--color-inverse-primary')).toBe('');
+    unmount();
+    expect(root.getAttribute('style') ?? '').toBe('');
+  });
+
+  it('logs an invalid seed once and sets nothing', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    render(<ThemeProvider seed="not-a-colour"><span>ok</span></ThemeProvider>);
+    expect(screen.getByText('ok')).toBeInTheDocument();
+    await waitFor(() => expect(spy).toHaveBeenCalledTimes(1));
+    root.setAttribute('data-contrast', 'high');
+    await new Promise((r) => setTimeout(r, 0));
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(root.getAttribute('style') ?? '').toBe('');
+    spy.mockRestore();
+  });
+
+  it('renders no style attribute on the server', () => {
+    const html = renderToString(<ThemeProvider seed="#4099f1"><span>x</span></ThemeProvider>);
+    expect(html).not.toContain('style=');
   });
 });

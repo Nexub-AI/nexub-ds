@@ -63,6 +63,8 @@ const add = (name, file) => {
 };
 
 add('tokens (js)', join(pkgs, 'tokens/dist/js/index.js'));
+// Runtime seed theming (lazy-loaded by ThemeProvider seed); MCU is a dependency, not counted.
+add('tokens/seed', join(pkgs, 'tokens/dist/js/seed.js'));
 // Every CSS file a consumer can import (package.json exports ending in .css).
 for (const pkg of ['tokens', 'themes']) {
   const { exports } = JSON.parse(readFileSync(join(pkgs, pkg, 'package.json'), 'utf8'));
