@@ -15,8 +15,9 @@ Update the [Release History](#release-history) table after every publish.
 | `@nexub/react` | [![npm](https://img.shields.io/npm/v/@nexub/react)](https://www.npmjs.com/package/@nexub/react) | 90+ React UI components |
 | `@nexub/patterns` | [![npm](https://img.shields.io/npm/v/@nexub/patterns)](https://www.npmjs.com/package/@nexub/patterns) | Composite UI patterns |
 | `@nexub/brand` | [![npm](https://img.shields.io/npm/v/@nexub/brand)](https://www.npmjs.com/package/@nexub/brand) | Brand files (mark SVGs, app icons, favicon) |
+| `@nexub/mcp` | [![npm](https://img.shields.io/npm/v/@nexub/mcp)](https://www.npmjs.com/package/@nexub/mcp) | MCP server serving the Claude skill (components, tokens, rules) |
 
-All six packages are in a changesets **`fixed`** group — they always publish at the same version number.
+All seven packages are in a changesets **`fixed`** group — they always publish at the same version number.
 `@nexub/docs` is excluded from publishing (it's the docs website, not a library).
 
 ---
@@ -130,6 +131,7 @@ npm CDN propagates in ~30 seconds. Wait and re-run `npm view`.
 | `@nexub/react` | `dist/` (ESM, one entry per component, + types) | `src/`, tests, stories |
 | `@nexub/patterns` | `dist/` (ESM + types) | `src/`, tests |
 | `@nexub/brand` | `assets/` (SVG, PNG, ICO) | `scripts/`, `glyphs/` |
+| `@nexub/mcp` | `src/` (server + CLI), `dist/skill/` (copy of `plugins/nexub-ds/skills/nexub-ds`) | tests |
 
 ---
 

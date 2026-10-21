@@ -1,0 +1,21 @@
+{
+  "name": "nexub",
+  "owner": {
+    "name": "Nexub AI",
+    "url": "https://github.com/Nexub-AI"
+  },
+  "description": "Claude plugins for building with the Nexub Design System.",
+  "plugins": [
+    {
+      "name": "nexub-ds",
+      "description": "Build SaaS UI with the Nexub Design System: components, patterns, tokens and Calm Depth rules.",
+      "category": "design",
+      "source": {
+        "source": "git-subdir",
+        "url": "Nexub-AI/nexub-ds",
+        "path": "plugins/nexub-ds",
+        "ref": "production"
+      }
+    }
+  ]
+}
