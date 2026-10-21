@@ -76,15 +76,15 @@ jobs:
         run: pnpm --filter @nexub/react build-storybook --quiet
 
   # Screenshot every story (light/dark/payub) + WCAG contrast over theme tokens.
-  # Runs in the same pinned Playwright image used to record baselines locally
+  # Runs on the office Mac minis (self-hosted, org-level runners) to save
+  # Actions minutes. Builds natively, then screenshots in the same pinned
+  # Playwright Linux image used to record baselines locally
   # (`pnpm --filter @nexub/react test:visual:docker --update-snapshots`), so
-  # font rendering matches pixel for pixel.
+  # font rendering matches pixel for pixel. Needs Docker (Colima) on the Mini.
   visual:
     name: Visual regression & contrast
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
-      options: --ipc=host
+    runs-on: [self-hosted, macOS, ARM64]
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -107,8 +107,11 @@ jobs:
       - name: Build Storybook
         run: pnpm --filter @nexub/react build-storybook --quiet
 
+      - name: Check Docker
+        run: docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini: colima start"; exit 1; }
+
       - name: Visual regression & contrast
-        run: pnpm --filter @nexub/react test:visual
+        run: pnpm --filter @nexub/react test:visual:docker
 
       - name: Upload diff report
         if: failure()
