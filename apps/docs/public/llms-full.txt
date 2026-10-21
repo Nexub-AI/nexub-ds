@@ -1,0 +1,4680 @@
+
+# Nexub Design System
+
+Nexub DS is a token-driven React design system for SaaS products. The visual language is **Calm Depth**: tonal surfaces, one accent per view, spring motion, honest numbers. **Liquid Glass** is an optional material for the floating control layer.
+
+Reference files (read only what the task needs):
+
+- [references/components.md](references/components.md): every component and pattern, grouped by category. Start here.
+- `references/components/<slug>.md`: props, examples, when to use and accessibility for one component. Read it before using a component you have not used yet in this session.
+- [references/tokens.md](references/tokens.md): color roles, type roles, spacing, shape, elevation, motion, z-index.
+
+## 1. Check the setup first
+
+Look for `@nexub/react` in `package.json`. If it is missing, set it up:
+
+```bash
+npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons
+```
+
+```ts
+// app entry or global CSS, once
+import '@nexub/themes/base';   // resets + token CSS variables
+import '@nexub/themes/light';
+import '@nexub/themes/glass';  // only if you use Liquid Glass
+```
+
+```ts
+// tailwind.config.ts (Tailwind v3)
+import nexub from '@nexub/tokens/tailwind';
+export default {
+  presets: [nexub],
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/@nexub/react/dist/**/*.js',
+    './node_modules/@nexub/patterns/dist/**/*.js',
+  ],
+};
+```
+
+Wrap the app in `<ThemeProvider defaultTheme="system" storageKey="app-theme">` from `@nexub/react`. In server-rendered apps (Next.js), put `<ThemeScript storageKey="app-theme" />` in `<head>` and add `suppressHydrationWarning` to `<html>`. Product brands: set `data-product="leap" | "bookub" | "payub" | "founderub"` on the root. This remaps the `tertiary` role.
+
+## 2. How to build a screen
+
+1. **Start from a pattern.** Check the Patterns sections of `references/components.md` before you compose anything by hand.
+2. **Then use components.** Use `@nexub/react` for every control, overlay, layout primitive and piece of typography. Never hand-roll a button, input, dialog, menu or table that the library already has.
+3. **Then use tokens, only for the glue.** Use Tailwind utilities from the preset (`bg-surface-container-low`, `text-on-surface-variant`, `p-4`, `gap-6`, `rounded-shape-container`, `text-title-md`) or `var(--…)`.
+4. **Never hardcode design values.** That means no hex or rgb colors, no Tailwind palette colors (`bg-blue-500`, `text-gray-600`), no arbitrary px values (`p-[13px]`), no ad-hoc shadows or gradients.
+
+Starting points for typical SaaS screens:
+
+| Screen | Build with |
+| --- | --- |
+| App frame | `AppShell` (`AppShell.Root/Header/Body/Sidebar/Main`) + `Sidebar` or `NavigationRail` + `AppHeader` or `TopNav` |
+| Dashboard | `PageHeader` + a `Grid` of `StatCard` + `DataTable` or `Table` + `ActivityFeed` |
+| List / detail | `ListDetail` + `FilterBar` + `EmptyState` |
+| Settings | `SettingsLayout` / `SettingsRow` + `SettingsSection` + `FormField` |
+| Sign in / sign up | `AuthCard` + `FormField` + `PasswordInput` |
+| Pricing / billing | `PlanCard` + `SegmentedControl` (monthly / yearly) + `Amount` |
+| Onboarding | `StepIndicator` + `CheckList` |
+| Search / commands | `CommandPalette` + `KeyboardShortcut` |
+| Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+
+Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's own minor unit and a true minus sign. Icons: import from `@nexub/icons`, not `lucide-react` directly.
+
+## 3. Calm Depth principles
+
+1. **Content leads, chrome recedes.** Navigation is quieter than content. Remove a divider before you add one; let spacing and tone separate regions. Do: a tonal sidebar with no border, where the active item is a soft pill. Don't: a saturated brand-blue sidebar item, or a hard line around every region.
+2. **Hierarchy through tone and layout, not decoration.** Surfaces step `surface` → `surface-container-*` → `surface-elevated`. Shadows are only for things that float. Product UI has no gradients, no colored icon tiles and no gradient eyebrow chips.
+3. **One accent, spent deliberately.** Each view gets one filled (primary) button. Everything else is `tonal`, `outlined` or `text`. Never put two filled buttons side by side.
+4. **Physical, interruptible motion.** Use the spring tokens (`ease-spatial-default duration-spatial-default`), not raw durations. Exits are faster than entrances. Honor `prefers-reduced-motion`.
+5. **Honest numbers and states.** Use tabular figures in data. Hover, pressed, selected and disabled are explicit component states. Never fake a state with opacity.
+6. **Accessible by construction.** Every role pair meets WCAG 2.2 AA in light, dark and high contrast, as long as you pair a role with its `on-` role. Keep visible focus, labelled controls (`FormField` + `Label`) and keyboard support. Use `VisuallyHidden` for icon-only labels.
+
+## 4. Liquid Glass rules
+
+- Glass is for the floating control layer only: top bars, floating toolbars, popovers, menus, sheets, dialogs. Card glass is only for surfaces over imagery or media.
+- Turn it on through props: `<TopNav.Root surface="glass" scrollEdge="soft">`, `<Dialog.Content surface="glass">`, `<Button variant="glass">`.
+- Never put glass on glass. Show at most three glass layers at a time. Tint only the one primary action (`data-glass-tint="primary"`).
+- Never put white text on glass over an unknown background.
+
+## 5. UI copy
+
+Copy is clear, direct, human and confident. Use sentence case, active voice, contractions and specific verbs ("Save changes", not "Submit"). Errors say what happened and what to do: "Your session expired. Sign in again." No "Oops", no emoji in errors, no "Please be advised".
+
+## 6. Before you finish
+
+- [ ] Every control comes from `@nexub/react` or `@nexub/patterns`. No deprecated component (see the index).
+- [ ] There are no hex or rgb colors, Tailwind palette colors, arbitrary px values or custom shadows. Everything is a token utility or `var(--…)`.
+- [ ] Every background role is paired with its `on-` role. Secondary text uses `on-surface-variant` or `on-surface-muted`.
+- [ ] Each view has at most one filled button.
+- [ ] The screen works in light and dark (`data-theme`) and at `data-contrast="high"`.
+- [ ] Every input has a label. Icon-only buttons have an `aria-label`. Keyboard paths work.
+
+
+---
+
+# Tokens
+
+Nexub DS v1.5.1. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
+
+## Color roles
+
+Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` automatically. Pair every background role with its `on-` role.
+
+| Role | Tailwind | CSS var | Use for |
+| --- | --- | --- | --- |
+| `primary` | `bg-primary` / `text-primary` / `border-primary` | `--color-primary` | The one emphasised action; links |
+| `on-primary` | `bg-on-primary` / `text-on-primary` / `border-on-primary` | `--color-on-primary` |  |
+| `primary-container` | `bg-primary-container` / `text-primary-container` / `border-primary-container` | `--color-primary-container` |  |
+| `on-primary-container` | `bg-on-primary-container` / `text-on-primary-container` / `border-on-primary-container` | `--color-on-primary-container` |  |
+| `secondary` | `bg-secondary` / `text-secondary` / `border-secondary` | `--color-secondary` |  |
+| `on-secondary` | `bg-on-secondary` / `text-on-secondary` / `border-on-secondary` | `--color-on-secondary` |  |
+| `secondary-container` | `bg-secondary-container` / `text-secondary-container` / `border-secondary-container` | `--color-secondary-container` |  |
+| `on-secondary-container` | `bg-on-secondary-container` / `text-on-secondary-container` / `border-on-secondary-container` | `--color-on-secondary-container` |  |
+| `error` | `bg-error` / `text-error` / `border-error` | `--color-error` | Destructive / error |
+| `on-error` | `bg-on-error` / `text-on-error` / `border-on-error` | `--color-on-error` |  |
+| `error-container` | `bg-error-container` / `text-error-container` / `border-error-container` | `--color-error-container` |  |
+| `on-error-container` | `bg-on-error-container` / `text-on-error-container` / `border-on-error-container` | `--color-on-error-container` |  |
+| `success` | `bg-success` / `text-success` / `border-success` | `--color-success` |  |
+| `on-success` | `bg-on-success` / `text-on-success` / `border-on-success` | `--color-on-success` |  |
+| `success-container` | `bg-success-container` / `text-success-container` / `border-success-container` | `--color-success-container` |  |
+| `on-success-container` | `bg-on-success-container` / `text-on-success-container` / `border-on-success-container` | `--color-on-success-container` |  |
+| `warning` | `bg-warning` / `text-warning` / `border-warning` | `--color-warning` |  |
+| `on-warning` | `bg-on-warning` / `text-on-warning` / `border-on-warning` | `--color-on-warning` |  |
+| `warning-container` | `bg-warning-container` / `text-warning-container` / `border-warning-container` | `--color-warning-container` |  |
+| `on-warning-container` | `bg-on-warning-container` / `text-on-warning-container` / `border-on-warning-container` | `--color-on-warning-container` |  |
+| `info` | `bg-info` / `text-info` / `border-info` | `--color-info` |  |
+| `on-info` | `bg-on-info` / `text-on-info` / `border-on-info` | `--color-on-info` |  |
+| `info-container` | `bg-info-container` / `text-info-container` / `border-info-container` | `--color-info-container` |  |
+| `on-info-container` | `bg-on-info-container` / `text-on-info-container` / `border-on-info-container` | `--color-on-info-container` |  |
+| `surface` | `bg-surface` / `text-surface` / `border-surface` | `--color-surface` | Page background |
+| `surface-dim` | `bg-surface-dim` / `text-surface-dim` / `border-surface-dim` | `--color-surface-dim` |  |
+| `surface-bright` | `bg-surface-bright` / `text-surface-bright` / `border-surface-bright` | `--color-surface-bright` |  |
+| `surface-container-lowest` | `bg-surface-container-lowest` / `text-surface-container-lowest` / `border-surface-container-lowest` | `--color-surface-container-lowest` |  |
+| `surface-container-low` | `bg-surface-container-low` / `text-surface-container-low` / `border-surface-container-low` | `--color-surface-container-low` | In-flow cards, sidebars |
+| `surface-container` | `bg-surface-container` / `text-surface-container` / `border-surface-container` | `--color-surface-container` | Default container |
+| `surface-container-high` | `bg-surface-container-high` / `text-surface-container-high` / `border-surface-container-high` | `--color-surface-container-high` | Pressed / neutral fills |
+| `surface-container-highest` | `bg-surface-container-highest` / `text-surface-container-highest` / `border-surface-container-highest` | `--color-surface-container-highest` |  |
+| `surface-elevated` | `bg-surface-elevated` / `text-surface-elevated` / `border-surface-elevated` | `--color-surface-elevated` | Floating layers: menus, popovers, dialogs |
+| `on-surface` | `bg-on-surface` / `text-on-surface` / `border-on-surface` | `--color-on-surface` | Primary text |
+| `on-surface-variant` | `bg-on-surface-variant` / `text-on-surface-variant` / `border-on-surface-variant` | `--color-on-surface-variant` | Secondary text |
+| `on-surface-muted` | `bg-on-surface-muted` / `text-on-surface-muted` / `border-on-surface-muted` | `--color-on-surface-muted` | Tertiary text (still ≥ 4.5:1) |
+| `outline` | `bg-outline` / `text-outline` / `border-outline` | `--color-outline` | Field borders, focus (≥ 3:1) |
+| `outline-variant` | `bg-outline-variant` / `text-outline-variant` / `border-outline-variant` | `--color-outline-variant` | Hairlines, dividers |
+| `inverse-surface` | `bg-inverse-surface` / `text-inverse-surface` / `border-inverse-surface` | `--color-inverse-surface` |  |
+| `inverse-on-surface` | `bg-inverse-on-surface` / `text-inverse-on-surface` / `border-inverse-on-surface` | `--color-inverse-on-surface` |  |
+| `inverse-primary` | `bg-inverse-primary` / `text-inverse-primary` / `border-inverse-primary` | `--color-inverse-primary` |  |
+| `tertiary` | `bg-tertiary` / `text-tertiary` / `border-tertiary` | `--color-tertiary` | Product brand accent (remapped by data-product) |
+| `on-tertiary` | `bg-on-tertiary` / `text-on-tertiary` / `border-on-tertiary` | `--color-on-tertiary` |  |
+| `tertiary-container` | `bg-tertiary-container` / `text-tertiary-container` / `border-tertiary-container` | `--color-tertiary-container` |  |
+| `on-tertiary-container` | `bg-on-tertiary-container` / `text-on-tertiary-container` / `border-on-tertiary-container` | `--color-on-tertiary-container` |  |
+
+Legacy aliases (`--color-bg-*`, `--color-text-*`, `--color-border-*`, `--color-semantic-*`, raw `--color-brand-*` / `--color-accent-*` scales, `--gradient-*`) still work but must not be used in new code.
+
+## Chart colors
+
+| CSS var | Value |
+| --- | --- |
+| `--color-chart-1` | #4099f1 |
+| `--color-chart-2` | #10b981 |
+| `--color-chart-3` | #8b5cf6 |
+| `--color-chart-4` | #f59e0b |
+| `--color-chart-5` | #ef4444 |
+| `--color-chart-6` | #06b6d4 |
+| `--color-chart-7` | #ec4899 |
+| `--color-chart-8` | #84cc16 |
+
+## Typography roles
+
+Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `font-mono` (Geist Mono, code and figures).
+
+| Tailwind | Size / line height | Weight |
+| --- | --- | --- |
+| `text-display-lg` | 56px / 60px | 700 |
+| `text-display-md` | 44px / 48px | 700 |
+| `text-display-sm` | 36px / 40px | 700 |
+| `text-headline-lg` | 32px / 38px | 600 |
+| `text-headline-md` | 28px / 34px | 600 |
+| `text-headline-sm` | 24px / 30px | 600 |
+| `text-title-lg` | 20px / 28px | 600 |
+| `text-title-md` | 16px / 24px | 600 |
+| `text-title-sm` | 14px / 20px | 600 |
+| `text-body-lg` | 18px / 28px | 400 |
+| `text-body-md` | 16px / 24px | 400 |
+| `text-body-sm` | 14px / 20px | 400 |
+| `text-label-lg` | 14px / 20px | 500 |
+| `text-label-md` | 13px / 18px | 500 |
+| `text-label-sm` | 12px / 16px | 500 |
+
+## Spacing
+
+| CSS var | Tailwind (p-, m-, gap-, w-, h-) | Value |
+| --- | --- | --- |
+| `--spacing-0` | `0` | 0px |
+| `--spacing-1` | `1` | 4px |
+| `--spacing-2` | `2` | 8px |
+| `--spacing-3` | `3` | 12px |
+| `--spacing-4` | `4` | 16px |
+| `--spacing-5` | `5` | 20px |
+| `--spacing-6` | `6` | 24px |
+| `--spacing-7` | `7` | 28px |
+| `--spacing-8` | `8` | 32px |
+| `--spacing-9` | `9` | 36px |
+| `--spacing-10` | `10` | 40px |
+| `--spacing-11` | `11` | 44px |
+| `--spacing-12` | `12` | 48px |
+| `--spacing-14` | `14` | 56px |
+| `--spacing-16` | `16` | 64px |
+| `--spacing-20` | `20` | 80px |
+| `--spacing-24` | `24` | 96px |
+| `--spacing-28` | `28` | 112px |
+| `--spacing-32` | `32` | 128px |
+| `--spacing-40` | `40` | 160px |
+| `--spacing-48` | `48` | 192px |
+| `--spacing-56` | `56` | 224px |
+| `--spacing-64` | `64` | 256px |
+| `--spacing-px` | `px` | 1px |
+| `--spacing-0-5` | `0-5` | 2px |
+| `--spacing-1-5` | `1-5` | 6px |
+| `--spacing-2-5` | `2-5` | 10px |
+| `--spacing-3-5` | `3-5` | 14px |
+
+Containers: `max-w-container-sm` (640px), `max-w-container-md` (768px), `max-w-container-lg` (1024px), `max-w-container-xl` (1280px), `max-w-container-2xl` (1536px), `max-w-container-nexub` (1440px), `max-w-container-prose` (65ch).
+
+## Control and component sizes
+
+| CSS var | Tailwind | Value |
+| --- | --- | --- |
+| `--size-control-xs` | `h-control-xs` | 24px |
+| `--size-control-sm` | `h-control-sm` | 32px |
+| `--size-control-md` | `h-control-md` | 40px |
+| `--size-control-lg` | `h-control-lg` | 48px |
+| `--size-control-xl` | `h-control-xl` | 56px |
+| `--size-icon-xs` |  | 12px |
+| `--size-icon-sm` |  | 16px |
+| `--size-icon-md` |  | 20px |
+| `--size-icon-lg` |  | 24px |
+| `--size-icon-xl` |  | 32px |
+| `--size-avatar-xs` |  | 24px |
+| `--size-avatar-sm` |  | 32px |
+| `--size-avatar-md` |  | 40px |
+| `--size-avatar-lg` |  | 48px |
+| `--size-avatar-xl` |  | 64px |
+| `--size-nav-header` |  | 64px |
+| `--size-nav-sidebar` |  | 256px |
+| `--size-nav-sidebar-collapsed` |  | 64px |
+
+Control heights shrink under `data-density="compact"`. Use the component `size` prop instead of setting heights.
+
+## Shape (corner radius by role)
+
+| CSS var | Tailwind | Value |
+| --- | --- | --- |
+| `--shape-control` | `rounded-shape-control` | 9999px |
+| `--shape-field` | `rounded-shape-field` | 12px |
+| `--shape-container` | `rounded-shape-container` | 16px |
+| `--shape-overlay` | `rounded-shape-overlay` | 24px |
+| `--shape-tooltip` | `rounded-shape-tooltip` | 8px |
+| `--shape-min` | `rounded-shape-min` | 4px |
+
+Raw radii (`rounded-sm` … `rounded-3xl`, `--radius-*`) exist; prefer the shape roles.
+
+## Elevation
+
+| CSS var | Tailwind | Value |
+| --- | --- | --- |
+| `--elevation-0` | `shadow-elevation-0` | none |
+| `--elevation-1` | `shadow-elevation-1` | 0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.06)), 0 1px 2px light-dark(rgb(26 28 30 / 0.06), rgb(0 0 0 / 0.4)), 0 2px 6px light-dark(rgb(26 28 30 / 0.04), rgb(0 0 0 / 0.3)) |
+| `--elevation-2` | `shadow-elevation-2` | 0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 2px 4px light-dark(rgb(26 28 30 / 0.06), rgb(0 0 0 / 0.4)), 0 8px 20px light-dark(rgb(26 28 30 / 0.08), rgb(0 0 0 / 0.45)) |
+| `--elevation-3` | `shadow-elevation-3` | 0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 4px 8px light-dark(rgb(26 28 30 / 0.08), rgb(0 0 0 / 0.45)), 0 20px 48px light-dark(rgb(26 28 30 / 0.16), rgb(0 0 0 / 0.55)) |
+
+Shadows are only for things that float. In-flow cards use tone (`surface-container-*`) and a hairline, not a shadow.
+
+## Motion
+
+Use springs, not durations. Each spring has a paired easing and duration:
+
+| Spring | Tailwind |
+| --- | --- |
+| `--motion-spring-spatial-fast-{easing,duration}` | `ease-spatial-fast duration-spatial-fast` |
+| `--motion-spring-spatial-default-{easing,duration}` | `ease-spatial-default duration-spatial-default` |
+| `--motion-spring-spatial-slow-{easing,duration}` | `ease-spatial-slow duration-spatial-slow` |
+| `--motion-spring-effects-fast-{easing,duration}` | `ease-effects-fast duration-effects-fast` |
+| `--motion-spring-effects-default-{easing,duration}` | `ease-effects-default duration-effects-default` |
+| `--motion-spring-effects-slow-{easing,duration}` | `ease-effects-slow duration-effects-slow` |
+| `--motion-spring-expressive-fast-{easing,duration}` | `ease-expressive-fast duration-expressive-fast` |
+| `--motion-spring-expressive-default-{easing,duration}` | `ease-expressive-default duration-expressive-default` |
+| `--motion-spring-expressive-slow-{easing,duration}` | `ease-expressive-slow duration-expressive-slow` |
+
+`spatial` = movement and size, `effects` = color and opacity (no bounce), `expressive` = key moments only. Exits use `fast`. Respect `prefers-reduced-motion`.
+
+## Z-index
+
+| CSS var | Tailwind | Value |
+| --- | --- | --- |
+| `--z-hide` | `z-hide` | -1 |
+| `--z-base` | `z-base` | 0 |
+| `--z-raised` | `z-raised` | 10 |
+| `--z-dropdown` | `z-dropdown` | 1000 |
+| `--z-sticky` | `z-sticky` | 1100 |
+| `--z-banner` | `z-banner` | 1200 |
+| `--z-overlay` | `z-overlay` | 1300 |
+| `--z-modal` | `z-modal` | 1400 |
+| `--z-popover` | `z-popover` | 1500 |
+| `--z-skipLink` | `z-skipLink` | 1600 |
+| `--z-toast` | `z-toast` | 1700 |
+| `--z-tooltip` | `z-tooltip` | 1800 |
+| `--z-commandK` | `z-commandK` | 1900 |
+
+## Breakpoints
+
+`sm` 640px · `md` 768px · `lg` 1024px · `xl` 1280px · `2xl` 1536px
+
+
+---
+
+# Component index
+
+Nexub DS v1.5.1. Open `components/<slug>.md` for props, examples and accessibility notes.
+Never use a component marked deprecated.
+
+## Components — Actions
+
+- [Button](components/button.md) `@nexub/react`: Triggers an action or event. Supports multiple variants, sizes, and semantic tones.
+- [Button Group](components/button-group.md) `@nexub/react`: Groups related buttons together with optional attachment and orientation.
+- [Icon Button](components/icon-button.md) `@nexub/react`: A square button designed to hold a single icon, with an accessible label.
+- [Split Button](components/split-button.md) `@nexub/react`: A primary action with related secondary actions behind a chevron, as one connected control.
+
+## Components — Avatar
+
+- [Avatar](components/avatar.md) `@nexub/react`: Displays a user's profile picture with initials fallback.
+- [Avatar Group](components/avatar-group.md) `@nexub/react`: Stacked group of avatars with overflow count.
+
+## Components — Data Display
+
+- [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
+- [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
+- [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
+- [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
+
+## Components — Disclosure
+
+- [Accordion](components/accordion.md) `@nexub/react`: Vertically stacked list of collapsible sections.
+- [Collapsible](components/collapsible.md) `@nexub/react`: Toggle visibility of content with smooth animation.
+- [Scroll Area](components/scroll-area.md) `@nexub/react`: Scrollable container with custom styled scrollbars.
+
+## Components — Dividers
+
+- [Gradient Divider](components/gradient-divider.md) `@nexub/react`: A decorative gradient-faded horizontal rule.
+- [Separator](components/separator.md) `@nexub/react`: A horizontal or vertical visual divider.
+
+## Components — Feedback
+
+- [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
+- [Banner](components/banner.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
+- [Callout](components/callout.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
+- [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
+- [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
+
+## Components — Form & Input
+
+- [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
+- [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
+- [Helper Text](components/helper-text.md) `@nexub/react`: Small supporting text placed beneath a form field to provide hints or validation feedback.
+- [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
+- [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
+- [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
+- [Number Input](components/number-input.md) `@nexub/react`: A numeric input with increment and decrement controls, supporting min/max clamping and step.
+- [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
+- [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
+- [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
+
+## Components — Form Controls
+
+- [Autocomplete](components/autocomplete.md) `@nexub/react`: Type-to-search input with matching options dropdown.
+- [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
+- [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
+- [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
+- [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
+
+## Components — Inline Primitives
+
+- [Code](components/code-inline.md) `@nexub/react`: Inline code span for technical terms and short code snippets.
+- [Kbd](components/kbd.md) `@nexub/react`: Keyboard key display — renders a styled <kbd> element.
+- [Link](components/link.md) `@nexub/react`: Styled anchor link with variant and external support.
+- [Text Gradient](components/text-gradient.md) `@nexub/react`: Renders text with a brand gradient fill.
+
+## Components — Interactive
+
+- [Rating](components/rating.md) `@nexub/react`: Star rating input, supports controlled and read-only modes.
+- [Segmented Control](components/segmented-control.md) `@nexub/react`: Tab-style control for mutually exclusive selections.
+- [Slider](components/slider.md) `@nexub/react`: Range slider built on Radix UI Slider.
+- [Toggle](components/toggle.md) `@nexub/react`: Pressable toggle button built on Radix UI Toggle.
+- [Toggle Group](components/toggle-group.md) `@nexub/react`: Group of toggle buttons where one or many can be active.
+
+## Components — Labels & Badges
+
+- [Badge](components/badge.md) `@nexub/react`: Small status indicator or label. Communicates state, category, or count.
+- [Chip](components/chip.md) `@nexub/react`: Compact label chip, optionally dismissible.
+- [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
+- [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
+- [Status Pill](components/status-pill.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. A pill indicator for status values like active, pending, error.
+- [Tag](components/tag.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. Non-interactive label tag for categorisation.
+
+## Components — Layout
+
+- [Box](components/box.md) `@nexub/react`: Generic container primitive with style token props.
+- [Card](components/card.md) `@nexub/react`: Surface container for grouping related content. Supports flat, surface, and interactive variants.
+- [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
+- [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
+- [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
+
+## Components — Loading States
+
+- [Progress](components/progress.md) `@nexub/react`: Horizontal progress bar with optional tone and animation.
+- [Skeleton](components/skeleton.md) `@nexub/react`: Placeholder loading animation that mimics content layout.
+
+## Components — Motion
+
+- [Collapse](components/motion-collapse.md) `@nexub/react`: Expands and collapses content along the block axis.
+- [Fade](components/motion-fade.md) `@nexub/react`: Animates opacity between 0 and 1 based on the `in` prop.
+- [Scale](components/motion-scale.md) `@nexub/react`: Scales content in/out from its center.
+- [Slide](components/motion-slide.md) `@nexub/react`: Slides content in from a direction based on the `in` prop.
+
+## Components — Navigation
+
+- [Breadcrumb](components/breadcrumb.md) `@nexub/react`: Hierarchical navigation trail showing page location.
+- [Navigation Rail](components/navigation-rail.md) `@nexub/react`: Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
+- [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
+- [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+
+## Components — Overlays
+
+- [Alert Dialog](components/alert-dialog.md) `@nexub/react`: Confirmation dialog that requires an explicit user action before proceeding.
+- [Dialog](components/dialog.md) `@nexub/react`: Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
+- [Drawer](components/drawer.md) `@nexub/react`: Slide-in panel from any edge of the screen.
+- [Hover Card](components/hover-card.md) `@nexub/react`: Rich tooltip card revealed on hover.
+- [Popover](components/popover.md) `@nexub/react`: Floating content panel anchored to a trigger element.
+- [Sheet](components/sheet.md) `@nexub/react`: Alias for Drawer — slide-in sheet panel.
+- [Tooltip](components/tooltip.md) `@nexub/react`: Floating label that appears on hover. Built on Radix UI Tooltip.
+
+## Components — Typography
+
+- [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
+- [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
+
+## Patterns — Auth
+
+- [AuthCard](components/auth-card.md) `@nexub/patterns`: Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
+
+## Patterns — Data
+
+- [ActivityFeed](components/activity-feed.md) `@nexub/patterns`: Chronological list of activity events with avatar, description, and timestamp.
+- [FilterBar](components/filter-bar.md) `@nexub/patterns`: Search + filter toolbar pattern for data-heavy list or table views.
+- [InfoList](components/info-list.md) `@nexub/patterns`: Key–value list for displaying structured metadata or details.
+- [StatCard](components/stat-card.md) `@nexub/patterns`: Metric display card showing a KPI value, label, optional delta, and icon.
+
+## Patterns — Feedback
+
+- [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
+
+## Patterns — Layout
+
+- [List Detail](components/list-detail.md) `@nexub/patterns`: The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
+- [SettingsSection](components/settings-section.md) `@nexub/patterns`: Grouped settings panel with title, description, and action area.
+
+## Patterns — Marketing
+
+- [PlanCard](components/plan-card.md) `@nexub/patterns`: Pricing plan card with feature checklist, badge, and CTA button.
+
+## Patterns — Navigation
+
+- [StepIndicator](components/step-indicator.md) `@nexub/patterns`: Visual progress indicator for multi-step flows like onboarding or checkout.
+
+## Patterns — People
+
+- [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.
+
+## Exported without a reference page
+
+These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
+
+- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/patterns`: AppHeader, AppLauncher, SettingsLayout
+
+
+---
+
+# Accordion
+
+Vertically stacked list of collapsible sections.
+
+- Package: `@nexub/react` · Category: Disclosure · Status: stable
+- Import: `import { Accordion } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/accordion
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Accordion.Root type` | `'single' \| 'multiple'` | `'single'` | Whether one or multiple items can be open at the same time. |
+| `Accordion.Root collapsible` | `boolean` | `false` | When type is "single", allows the open item to be collapsed by clicking it again. |
+| `Accordion.Root defaultValue` | `string \| string[]` |  | The item(s) open by default (uncontrolled). |
+| `Accordion.Root value` | `string \| string[]` |  | Controlled open item(s). |
+| `Accordion.Root onValueChange` | `(value: string \| string[]) => void` |  | Callback fired when the open state changes. |
+| `Accordion.Root disabled` | `boolean` | `false` | Disables all items in the accordion. |
+| `Accordion.Item value` (required) | `string` |  | Unique identifier for the item. |
+| `Accordion.Item disabled` | `boolean` | `false` | Disables this specific item. |
+| `Accordion.Trigger asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
+| `Accordion.Content forceMount` | `boolean` | `false` | Keeps content in the DOM even when collapsed. |
+
+## Example: Default
+
+```tsx
+<Accordion.Root type="single" collapsible defaultValue="item-1">
+  <Accordion.Item value="item-1">
+    <Accordion.Trigger>What is Nexub DS?</Accordion.Trigger>
+    <Accordion.Content>
+      Nexub DS is a design system providing accessible, themeable React components
+      built on Radix UI primitives.
+    </Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-2">
+    <Accordion.Trigger>Is it accessible?</Accordion.Trigger>
+    <Accordion.Content>
+      Yes. All components follow WAI-ARIA patterns and are keyboard-navigable
+      out of the box.
+    </Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-3">
+    <Accordion.Trigger>Can I customise the styles?</Accordion.Trigger>
+    <Accordion.Content>
+      Absolutely. Components expose design tokens via CSS custom properties,
+      and every element accepts a className prop.
+    </Accordion.Content>
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+## Example: Multiple
+
+```tsx
+<Accordion.Root type="multiple" defaultValue={['item-1', 'item-2']}>
+  <Accordion.Item value="item-1">
+    <Accordion.Trigger>First section</Accordion.Trigger>
+    <Accordion.Content>
+      This section is open by default. Multiple items can be expanded
+      simultaneously when type is set to "multiple".
+    </Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-2">
+    <Accordion.Trigger>Second section</Accordion.Trigger>
+    <Accordion.Content>
+      Also open by default. Click any trigger to collapse individual sections
+      independently.
+    </Accordion.Content>
+  </Accordion.Item>
+  <Accordion.Item value="item-3">
+    <Accordion.Trigger>Third section</Accordion.Trigger>
+    <Accordion.Content>
+      Closed by default. Expanding this does not close the others.
+    </Accordion.Content>
+  </Accordion.Item>
+</Accordion.Root>
+```
+
+
+---
+
+# Alert Dialog
+
+Confirmation dialog that requires an explicit user action before proceeding.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { AlertDialog } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/alert-dialog
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `AlertDialog.Root` | `compound` |  | Root provider component that manages open state. |
+| `AlertDialog.Trigger` | `compound` |  | Element that opens the dialog on interaction. |
+| `AlertDialog.Portal` | `compound` |  | Portals the overlay and content into the document body. |
+| `AlertDialog.Overlay` | `compound` |  | Dimmed backdrop rendered behind the content. |
+| `AlertDialog.Content` | `compound` |  | The dialog panel containing title, description, and actions. |
+| `AlertDialog.Title` | `compound` |  | Accessible title announced to screen readers. |
+| `AlertDialog.Description` | `compound` |  | Supporting description text for the dialog. |
+| `AlertDialog.Action` | `compound` |  | Confirms the destructive or affirmative action and closes the dialog. |
+| `AlertDialog.Cancel` | `compound` |  | Cancels the action and closes the dialog. |
+
+## Example: Default
+
+```tsx
+<AlertDialog.Root>
+  <AlertDialog.Trigger asChild>
+    <Button variant="destructive">Delete account</Button>
+  </AlertDialog.Trigger>
+  <AlertDialog.Portal>
+    <AlertDialog.Overlay />
+    <AlertDialog.Content>
+      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+      <AlertDialog.Description>
+        This action cannot be undone. This will permanently delete your account and remove all associated data.
+      </AlertDialog.Description>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
+        <AlertDialog.Cancel asChild>
+          <Button variant="outline">Cancel</Button>
+        </AlertDialog.Cancel>
+        <AlertDialog.Action asChild>
+          <Button variant="destructive">Confirm delete</Button>
+        </AlertDialog.Action>
+      </div>
+    </AlertDialog.Content>
+  </AlertDialog.Portal>
+</AlertDialog.Root>
+```
+
+
+---
+
+# Alert
+
+Inline contextual message with optional title, icon, and dismiss action.
+
+- Package: `@nexub/react` · Category: Feedback · Status: stable
+- Import: `import { Alert } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/alert
+
+## When to use
+
+- Communicating system status, errors, or success after an action
+- Showing inline validation feedback inside a form
+- Warning the user about a potentially risky operation
+- Providing contextual information relevant to the current page
+
+## When not to use
+
+- Transient messages — use Toast for ephemeral notifications
+- Blocking the user for a required decision — use AlertDialog
+- Marketing or promotional messaging
+- Replacing empty states — use EmptyState instead
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic colour tone of the alert. |
+| `title` | `string` |  | Bold title rendered at the top of the alert. |
+| `icon` | `ReactNode` |  | Custom icon rendered to the left of the content. |
+| `action` | `ReactNode` |  | Action element (e.g. a button) rendered beside the content. |
+| `onClose` | `() => void` |  | When provided, renders a close button that calls this handler. |
+
+## Example: Default
+
+```tsx
+<Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>
+```
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <Alert tone="info" title="Information">This is an informational message.</Alert>
+  <Alert tone="success" title="Success">Your changes have been saved.</Alert>
+  <Alert tone="warning" title="Warning">Please review before proceeding.</Alert>
+  <Alert tone="danger" title="Error">Something went wrong. Please try again.</Alert>
+</div>
+```
+
+## Example: Dismissible
+
+```tsx
+<Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
+```
+
+
+---
+
+# Amount
+
+Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Amount } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/amount
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` (required) | `number` |  | The amount. |
+| `currency` (required) | `string` |  | ISO 4217 code, e.g. "USD". |
+| `locale` | `string` |  | BCP 47 locale. Defaults to the user's. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'display'` | `'md'` | `display` is a hero figure with a quieter symbol and minor units. |
+| `tone` | `'neutral' \| 'auto'` | `'neutral'` | `auto` colours gains success and losses error. |
+| `signDisplay` | `Intl signDisplay` |  | e.g. 'exceptZero' to show + on gains. |
+
+## Example: Display
+
+```tsx
+<Amount value={128450.75} currency="USD" size="display" />
+```
+
+## Example: Gains and losses
+
+```tsx
+<Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
+<Amount value={-89.99} currency="USD" tone="auto" />
+```
+
+Related: [money-input](money-input.md)
+
+
+---
+
+# Autocomplete
+
+Type-to-search input with matching options dropdown.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { Autocomplete } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/autocomplete
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `options` (required) | `{ value: string; label: string }[]` |  | Array of options available for selection. |
+| `value` | `string` |  | The controlled selected value. |
+| `onValueChange` | `(value: string) => void` |  | Callback fired when the selected value changes. |
+| `placeholder` | `string` |  | Placeholder text shown in the input when empty. |
+| `emptyText` | `string` |  | Text shown when no options match the current search query. |
+| `loading` | `boolean` |  | Shows a loading indicator while options are being fetched. |
+
+## Example: Default
+
+```tsx
+<Autocomplete
+  options={[
+    { value: 'react', label: 'React' },
+    { value: 'vue', label: 'Vue' },
+    { value: 'angular', label: 'Angular' },
+  ]}
+  placeholder="Search framework…"
+/>
+```
+
+## Example: With loading state
+
+```tsx
+<Autocomplete
+  options={[]}
+  loading
+  placeholder="Loading options…"
+/>
+```
+
+## Example: Custom empty text
+
+```tsx
+<Autocomplete
+  options={[
+    { value: 'nexub', label: 'Nexub' },
+    { value: 'acme', label: 'Acme Corp' },
+  ]}
+  placeholder="Search company…"
+  emptyText="No companies found. Try a different search."
+/>
+```
+
+
+---
+
+# Avatar Group
+
+Stacked group of avatars with overflow count.
+
+- Package: `@nexub/react` · Category: Avatar · Status: stable
+- Import: `import { AvatarGroup } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/avatar-group
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `max` | `number` | `4` | Maximum number of avatars shown before an overflow count is rendered. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` |  | Controls avatar dimensions for all children. |
+| `spacing` | `'tight' \| 'normal'` | `'normal'` | Controls the overlap amount between stacked avatars. |
+
+## Example: Default
+
+```tsx
+<AvatarGroup max={3}>
+  <Avatar name="Alice" />
+  <Avatar name="Bob" />
+  <Avatar name="Carol" />
+  <Avatar name="Dave" />
+</AvatarGroup>
+```
+
+
+---
+
+# Avatar
+
+Displays a user's profile picture with initials fallback.
+
+- Package: `@nexub/react` · Category: Avatar · Status: stable
+- Import: `import { Avatar } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/avatar
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` |  | URL of the profile image. |
+| `name` | `string` |  | Full name used to generate initials when no image is provided. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Controls avatar dimensions. |
+| `badge` | `boolean` |  | Shows a status badge on the avatar. |
+| `badgeColor` | `string` |  | Colour of the status badge. |
+| `fallback` | `ReactNode` |  | Custom fallback rendered when the image fails to load and no name is provided. |
+
+## Example: Default
+
+```tsx
+<Avatar name="Alex Johnson" />
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+  <Avatar size="xs" name="Alex Johnson" />
+  <Avatar size="sm" name="Alex Johnson" />
+  <Avatar size="md" name="Alex Johnson" />
+  <Avatar size="lg" name="Alex Johnson" />
+  <Avatar size="xl" name="Alex Johnson" />
+</div>
+```
+
+## Example: With image
+
+```tsx
+<Avatar src="https://i.pravatar.cc/150?img=1" name="Alex Johnson" />
+```
+
+## Example: With badge
+
+```tsx
+<Avatar name="Online User" badge badgeColor="green" />
+```
+
+
+---
+
+# Badge
+
+Small status indicator or label. Communicates state, category, or count.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: stable
+- Import: `import { Badge } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/badge
+
+## When to use
+
+- Labelling a status, category, or tag on an item
+- Showing a count or numeric indicator alongside an element
+- Highlighting new, featured, or updated content
+- Communicating a stage in a workflow (draft, published, archived)
+
+## When not to use
+
+- Interactive filtering — use FilterChip or Chip instead
+- Long text labels that exceed 2–3 words
+- Critical alerts requiring user action — use Alert or Toast
+- Replacing a button — badges are non-interactive by design
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'solid' \| 'soft' \| 'outline'` | `'solid'` | Visual fill style. |
+| `tone` | `'success' \| 'danger' \| 'warning' \| 'info' \| 'neutral'` | `'neutral'` | Semantic color tone. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size. |
+| `leadingIcon` | `React.ReactNode` |  | Icon or dot rendered before the label. |
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Badge tone="success">Active</Badge>
+  <Badge tone="danger">Error</Badge>
+  <Badge tone="warning">Warning</Badge>
+  <Badge tone="info">Info</Badge>
+  <Badge tone="neutral">Draft</Badge>
+</div>
+```
+
+## Example: Variants
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Badge variant="solid" tone="success">Solid</Badge>
+  <Badge variant="soft" tone="info">Soft</Badge>
+  <Badge variant="outline" tone="warning">Outline</Badge>
+</div>
+```
+
+## Example: With leading dot
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Badge tone="success" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Online</Badge>
+  <Badge tone="danger" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Offline</Badge>
+</div>
+```
+
+## Accessibility
+
+- Roles: status (when conveying live state)
+- `—`: Badges are non-interactive and have no keyboard handlers.
+- Skipped in tab order. Decorative — never trap focus on a Badge.
+- Reads as inline text. For live status changes, wrap in an element with `role="status"` and `aria-live="polite"`.
+- For interactive equivalents (filtering, dismissing) reach for `Chip` or `FilterChip`.
+
+Related: [chip](chip.md), [tag](tag.md), [status-pill](status-pill.md)
+
+
+---
+
+# Banner
+
+> **Deprecated.** Do not use in new code. Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
+
+- Package: `@nexub/react` · Category: Feedback · Status: deprecated
+- Import: `import { Banner } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/banner
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone of the banner. |
+| `action` | `ReactNode` |  | Action element (e.g. a button or link) rendered to the right of the content. |
+| `onClose` | `() => void` |  | When provided, renders a close button that dismisses the banner. |
+
+## Example: Default
+
+```tsx
+<Banner tone="info">New features available — <strong>see what's new</strong></Banner>
+```
+
+## Example: With action
+
+```tsx
+<Banner
+  tone="warning"
+  action={<Button size="sm" variant="outline">View details</Button>}
+>
+  Your subscription renews in 5 days.
+</Banner>
+```
+
+
+---
+
+# Box
+
+Generic container primitive with style token props.
+
+- Package: `@nexub/react` · Category: Layout · Status: stable
+- Import: `import { Box } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/box
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `padding` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Padding applied to all sides using design tokens. |
+| `background` | `string` |  | Background color CSS value or token. |
+| `radius` | `string` |  | Border radius CSS value or token. |
+| `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<Box padding="md" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+  Content inside a Box
+</Box>
+```
+
+## Example: Nested
+
+```tsx
+<Box padding="lg" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-lg)' }}>
+  <Heading size="h4">Section title</Heading>
+  <Box padding="sm" style={{ background: 'var(--color-bg-default)', borderRadius: 'var(--radius-md)', marginTop: '8px' }}>
+    <Text>Nested box content</Text>
+  </Box>
+</Box>
+```
+
+
+---
+
+# Breadcrumb
+
+Hierarchical navigation trail showing page location.
+
+- Package: `@nexub/react` · Category: Navigation · Status: stable
+- Import: `import { Breadcrumb } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/breadcrumb
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Breadcrumb.Root aria-label` | `string` | `'breadcrumb'` | Accessible label for the nav landmark. |
+| `Breadcrumb.Link href` | `string` |  | URL the breadcrumb link navigates to. |
+| `Breadcrumb.Link asChild` | `boolean` | `false` | Merges props onto the immediate child element, useful for router Link components. |
+| `Breadcrumb.Separator children` | `React.ReactNode` |  | Custom separator element. Defaults to a chevron icon. |
+| `Breadcrumb.Ellipsis aria-label` | `string` | `'More'` | Accessible label for the ellipsis element used to collapse long trails. |
+
+## Example: Default
+
+```tsx
+<Breadcrumb.Root>
+  <Breadcrumb.List>
+    <Breadcrumb.Item>
+      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item>
+      <Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item>
+      <Breadcrumb.Page>Button</Breadcrumb.Page>
+    </Breadcrumb.Item>
+  </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+## Example: With ellipsis
+
+```tsx
+<Breadcrumb.Root>
+  <Breadcrumb.List>
+    <Breadcrumb.Item>
+      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item>
+      <Breadcrumb.Ellipsis />
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item>
+      <Breadcrumb.Link href="/components/navigation">Navigation</Breadcrumb.Link>
+    </Breadcrumb.Item>
+    <Breadcrumb.Separator />
+    <Breadcrumb.Item>
+      <Breadcrumb.Page>Breadcrumb</Breadcrumb.Page>
+    </Breadcrumb.Item>
+  </Breadcrumb.List>
+</Breadcrumb.Root>
+```
+
+
+---
+
+# Button Group
+
+Groups related buttons together with optional attachment and orientation.
+
+- Package: `@nexub/react` · Category: Actions · Status: stable
+- Import: `import { ButtonGroup } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/button-group
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Lays out child buttons horizontally or vertically. |
+| `attached` | `boolean` | `false` | Removes gap and merges borders between adjacent buttons. |
+
+## Example: Default
+
+```tsx
+<ButtonGroup>
+  <Button variant="primary">Save</Button>
+  <Button variant="outline">Cancel</Button>
+</ButtonGroup>
+```
+
+## Example: Attached
+
+```tsx
+<ButtonGroup attached>
+  <Button variant="outline">Left</Button>
+  <Button variant="outline">Center</Button>
+  <Button variant="outline">Right</Button>
+</ButtonGroup>
+```
+
+## Example: Vertical
+
+```tsx
+<ButtonGroup orientation="vertical">
+  <Button variant="outline">Option A</Button>
+  <Button variant="outline">Option B</Button>
+  <Button variant="outline">Option C</Button>
+</ButtonGroup>
+```
+
+
+---
+
+# Button
+
+Triggers an action or event. Supports multiple variants, sizes, and semantic tones.
+
+- Package: `@nexub/react` · Category: Actions · Status: stable
+- Import: `import { Button } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/button
+
+## When to use
+
+- Triggering a primary or secondary action (submit, save, confirm)
+- Navigating users to another page or step in a flow
+- Opening a dialog, drawer, or modal overlay
+- Destructive actions that need a visible, labelled control
+
+## When not to use
+
+- Inline text navigation — use a Link instead
+- Icon-only controls — use IconButton for touch target compliance
+- Selecting among multiple options — use ToggleGroup or SegmentedControl
+- Passive information display with no action
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
+| `loading` | `boolean` | `false` | Shows a spinner and disables interaction. |
+| `disabled` | `boolean` | `false` | Disables the button. |
+| `fullWidth` | `boolean` | `false` | Stretches the button to fill its container. |
+| `leadingIcon` | `React.ReactNode` |  | Icon rendered before the label. |
+| `trailingIcon` | `React.ReactNode` |  | Icon rendered after the label. |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone — overrides the variant colour with a semantic palette. |
+| `asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<Button variant="primary">Click me</Button>
+```
+
+## Example: Variants
+
+```tsx
+<div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+  <Button variant="primary">Primary</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="ghost">Ghost</Button>
+  <Button variant="subtle">Subtle</Button>
+  <Button variant="link">Link</Button>
+</div>
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+  <Button size="xs" variant="primary">XSmall</Button>
+  <Button size="sm" variant="primary">Small</Button>
+  <Button size="md" variant="primary">Medium</Button>
+  <Button size="lg" variant="primary">Large</Button>
+</div>
+```
+
+## Example: States
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Button variant="primary" loading>Loading</Button>
+  <Button variant="outline" disabled>Disabled</Button>
+</div>
+```
+
+## Accessibility
+
+- Roles: button
+- `Space`: Activates the focused button.
+- `Enter`: Activates the focused button.
+- `Tab`: Moves focus to the button in document order.
+- Receives focus in document order; `disabled` removes it from the tab sequence.
+- Visible focus ring uses `--color-border-focus` and meets WCAG 2.4.7 contrast.
+- Announces the visible label plus the implicit "button" role.
+- `loading` toggles `aria-busy="true"` so AT users hear the pending state.
+- Pair icon-only triggers with `IconButton` for a 44×44 touch target.
+
+Related: [icon-button](icon-button.md), [button-group](button-group.md), [link](link.md)
+
+
+---
+
+# Callout
+
+> **Deprecated.** Do not use in new code. Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
+
+- Package: `@nexub/react` · Category: Feedback · Status: deprecated
+- Import: `import { Callout } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/callout
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone of the callout. |
+| `title` | `string` |  | Bold title rendered at the top of the callout. |
+| `icon` | `ReactNode` |  | Custom icon rendered beside the title. |
+
+## Example: Default
+
+```tsx
+<Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>
+```
+
+## Example: Info
+
+```tsx
+<Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>
+```
+
+
+---
+
+# Card
+
+Surface container for grouping related content. Supports flat, surface, and interactive variants.
+
+- Package: `@nexub/react` · Category: Layout · Status: stable
+- Import: `import { Card } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'flat' \| 'surface' \| 'interactive'` | `'flat'` | Visual style of the card surface. |
+| `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
+| `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
+| `surface` | `'solid' \| 'glass'` | `'solid'` | Liquid-glass material treatment — see Foundations → Materials. |
+
+## Example: Default
+
+```tsx
+<Card>
+  <Heading as="h3" size="sm">Card title</Heading>
+  <Text size="body-sm" tone="muted">Card description goes here.</Text>
+</Card>
+```
+
+## Example: Variants
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
+  <Card variant="surface"><Text size="body-sm">Surface (elevated)</Text></Card>
+  <Card variant="interactive"><Text size="body-sm">Interactive (hover)</Text></Card>
+</div>
+```
+
+## Accessibility
+
+- Roles: region (when used as a landmark)
+- `Tab`: Focuses interactive children. Card itself is not focusable unless `variant="interactive"` wraps a `<Link>` or `<button>`.
+- Use `<Card asChild>` with a `<Link>` or `<button>` inside to make the whole surface clickable while preserving correct focus semantics.
+- Group related content with a heading inside the Card so AT users can navigate by heading level.
+
+Related: [callout](callout.md), [banner](banner.md), [alert](alert.md)
+
+
+---
+
+# Checkbox
+
+Binary checkbox input built on Radix UI.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { Checkbox } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/checkbox
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `checked` | `boolean` |  | The controlled checked state. |
+| `defaultChecked` | `boolean` |  | The initial checked state when uncontrolled. |
+| `disabled` | `boolean` |  | Disables the checkbox when true. |
+| `required` | `boolean` |  | Marks the checkbox as required in a form. |
+| `onCheckedChange` | `(checked: boolean) => void` |  | Callback fired when the checked state changes. |
+
+## Example: Default
+
+```tsx
+<Checkbox defaultChecked />
+```
+
+## Example: With label
+
+```tsx
+<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  <Checkbox id="terms" />
+  <Label htmlFor="terms">I agree to the terms</Label>
+</div>
+```
+
+## Example: States
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <Checkbox id="checked" defaultChecked />
+    <Label htmlFor="checked">Checked</Label>
+  </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <Checkbox id="unchecked" />
+    <Label htmlFor="unchecked">Unchecked</Label>
+  </div>
+  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <Checkbox id="disabled" disabled />
+    <Label htmlFor="disabled">Disabled</Label>
+  </div>
+</div>
+```
+
+
+---
+
+# Chip
+
+Compact label chip, optionally dismissible.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: stable
+- Import: `import { Chip } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/chip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'filled' \| 'outline'` | `'filled'` | Visual style of the chip. |
+| `onRemove` | `() => void` |  | When provided, renders a dismiss button that calls this handler. |
+| `size` | `'sm' \| 'md'` |  | Controls chip size. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Chip>Design</Chip>
+  <Chip>Engineering</Chip>
+  <Chip>Product</Chip>
+</div>
+```
+
+## Example: Dismissible
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Chip onRemove={() => {}}>Design</Chip>
+  <Chip onRemove={() => {}}>Engineering</Chip>
+  <Chip onRemove={() => {}}>Product</Chip>
+</div>
+```
+
+
+---
+
+# Code
+
+Inline code span for technical terms and short code snippets.
+
+- Package: `@nexub/react` · Category: Inline Primitives · Status: stable
+- Import: `import { CodeInline } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/code-inline
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `...props` | `React.HTMLAttributes<HTMLElement>` |  | All standard span/code HTML attributes are forwarded. |
+
+## Example: Default
+
+```tsx
+<Code>npm install @nexub/react</Code>
+```
+
+## Example: In prose
+
+```tsx
+<Text>Use the <Code>useTheme()</Code> hook to access the current theme.</Text>
+```
+
+
+---
+
+# Collapsible
+
+Toggle visibility of content with smooth animation.
+
+- Package: `@nexub/react` · Category: Disclosure · Status: stable
+- Import: `import { Collapsible } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/collapsible
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Collapsible.Root open` | `boolean` |  | Controlled open state. |
+| `Collapsible.Root defaultOpen` | `boolean` | `false` | Whether the collapsible is open by default (uncontrolled). |
+| `Collapsible.Root onOpenChange` | `(open: boolean) => void` |  | Callback fired when the open state changes. |
+| `Collapsible.Root disabled` | `boolean` | `false` | Prevents the user from toggling the collapsible. |
+| `Collapsible.Trigger asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
+| `Collapsible.Content forceMount` | `boolean` | `false` | Keeps the content mounted in the DOM even when closed. |
+
+## Example: Default
+
+```tsx
+<Collapsible.Root>
+  <Collapsible.Trigger asChild>
+    <Button variant="outline">Toggle details</Button>
+  </Collapsible.Trigger>
+  <Collapsible.Content>
+    <div style={{ paddingTop: '12px', color: 'var(--color-text-secondary)' }}>
+      Hidden content revealed on toggle.
+    </div>
+  </Collapsible.Content>
+</Collapsible.Root>
+```
+
+## Example: Controlled
+
+```tsx
+function ControlledExample() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span style={{ fontWeight: 500 }}>Advanced settings</span>
+        <Collapsible.Trigger asChild>
+          <IconButton
+            aria-label={open ? 'Collapse' : 'Expand'}
+            variant="ghost"
+            size="sm"
+          />
+        </Collapsible.Trigger>
+      </div>
+      <Collapsible.Content>
+        <div style={{ paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Switch id="notif" />
+            <Label htmlFor="notif">Enable notifications</Label>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Switch id="autosave" />
+            <Label htmlFor="autosave">Auto-save drafts</Label>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Switch id="tooltips" />
+            <Label htmlFor="tooltips">Show tooltips</Label>
+          </div>
+        </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
+  );
+}
+```
+
+
+---
+
+# Combobox
+
+Command-palette style searchable dropdown built on cmdk.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { Combobox } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/combobox
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Combobox.Root` | `compound` |  | Root cmdk command container. |
+| `Combobox.Input` | `compound` |  | Search input that filters the list. |
+| `Combobox.List` | `compound` |  | Scrollable list container for groups and items. |
+| `Combobox.Group` | `compound` |  | Labeled group of items within the list. |
+| `Combobox.Item` | `compound` |  | Individual selectable option. |
+| `Combobox.Empty` | `compound` |  | Content shown when no items match the search query. |
+| `Combobox.Separator` | `compound` |  | Visual separator between groups or items. |
+
+## Example: Default
+
+```tsx
+<Combobox.Root>
+  <Combobox.Input placeholder="Search..." />
+  <Combobox.List>
+    <Combobox.Empty>No results found.</Combobox.Empty>
+    <Combobox.Group heading="Frameworks">
+      <Combobox.Item value="react">React</Combobox.Item>
+      <Combobox.Item value="vue">Vue</Combobox.Item>
+      <Combobox.Item value="svelte">Svelte</Combobox.Item>
+    </Combobox.Group>
+    <Combobox.Separator />
+    <Combobox.Group heading="Languages">
+      <Combobox.Item value="typescript">TypeScript</Combobox.Item>
+      <Combobox.Item value="rust">Rust</Combobox.Item>
+    </Combobox.Group>
+  </Combobox.List>
+</Combobox.Root>
+```
+
+
+---
+
+# Data Table
+
+Feature-rich data table with sorting and row selection powered by TanStack Table.
+
+- Package: `@nexub/react` · Category: Data Display · Status: stable
+- Import: `import { DataTable } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/data-table
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` (required) | `ColumnDef<TData>[]` |  | TanStack Table column definitions. Use the createColumnHelper() utility for type-safe definitions. |
+| `data` (required) | `TData[]` |  | Array of row data objects to render. |
+| `enableSorting` | `boolean` | `false` | Enables click-to-sort on column headers. |
+| `enableRowSelection` | `boolean` | `false` | Adds a checkbox column for row selection. |
+| `pagination.pageSize` | `number` | `10` | Number of rows per page when pagination is active. |
+| `pagination.pageIndex` | `number` | `0` | Zero-based index of the currently visible page. |
+| `onRowSelectionChange` | `(selectedRows: TData[]) => void` |  | Callback invoked when the row selection state changes. |
+| `loading` | `boolean` | `false` | Shows a skeleton loading state over the table body. |
+| `emptyState` | `React.ReactNode` |  | Custom content rendered when the data array is empty. |
+
+## Example: Default
+
+```tsx
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'role', header: 'Role' },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'joined', header: 'Joined' },
+];
+
+const data = [
+  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
+  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
+  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
+  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
+  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
+];
+
+<DataTable columns={columns} data={data} />
+```
+
+## Example: With sorting
+
+```tsx
+const columns = [
+  { accessorKey: 'name', header: 'Name', enableSorting: true },
+  { accessorKey: 'role', header: 'Role', enableSorting: true },
+  { accessorKey: 'status', header: 'Status', enableSorting: true },
+  { accessorKey: 'joined', header: 'Joined', enableSorting: true },
+];
+
+const data = [
+  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
+  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
+  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
+  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
+  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
+];
+
+<DataTable
+  columns={columns}
+  data={data}
+  enableSorting
+  enableRowSelection
+  pagination={{ pageSize: 5, pageIndex: 0 }}
+/>
+```
+
+
+---
+
+# Date Picker
+
+Calendar date picker with text input.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { DatePicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/date-picker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `Date \| undefined` |  | Controlled selected date value. |
+| `onChange` | `(date: Date \| undefined) => void` |  | Callback invoked when the selected date changes. |
+| `placeholder` | `string` | `'Pick a date'` | Placeholder text displayed in the input when no date is selected. |
+| `disabled` | `boolean` | `false` | Disables the date picker input and calendar. |
+| `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
+| `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
+| `format` | `string` | `'dd/MM/yyyy'` | Date format string for the text input display. |
+| `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
+| `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
+| `error` | `string` |  | Error message displayed below the input. |
+
+## Example: Default
+
+```tsx
+<DatePicker placeholder="Select a date…" />
+```
+
+## Example: With value
+
+```tsx
+function ControlledDatePicker() {
+  const [date, setDate] = React.useState(new Date('2026-01-15'));
+  return (
+    <DatePicker
+      aria-label="Appointment date"
+      value={date}
+      onChange={setDate}
+      placeholder="Select a date…"
+    />
+  );
+}
+```
+
+## Example: With constraints
+
+```tsx
+<DatePicker
+  aria-label="Schedule for"
+  placeholder="Select a future date…"
+  minDate={new Date()}
+  maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+/>
+```
+
+
+---
+
+# Date Range Picker
+
+Dual-calendar date range selector.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { DateRangePicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/date-range-picker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `{ from: Date \| undefined; to: Date \| undefined }` |  | Controlled date range value. |
+| `onChange` | `(range: { from: Date \| undefined; to: Date \| undefined }) => void` |  | Callback invoked when the selected range changes. |
+| `placeholder` | `string` | `'Select date range'` | Placeholder text shown in the trigger input when no range is selected. |
+| `disabled` | `boolean` | `false` | Disables the trigger input and calendar popover. |
+| `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
+| `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
+| `numberOfMonths` | `number` | `2` | Number of months to display in the calendar popover. |
+| `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
+| `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
+| `error` | `string` |  | Error message displayed below the input. |
+
+## Example: Default
+
+```tsx
+<DateRangePicker placeholder="Select date range…" />
+```
+
+## Example: Controlled
+
+```tsx
+function ControlledDateRangePicker() {
+  const [range, setRange] = React.useState({
+    from: new Date('2026-04-01'),
+    to: new Date('2026-04-14'),
+  });
+  return (
+    <DateRangePicker
+      aria-label="Booking period"
+      value={range}
+      onChange={setRange}
+      placeholder="Select date range…"
+    />
+  );
+}
+```
+
+
+---
+
+# Dialog
+
+Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { Dialog } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/dialog
+
+## When to use
+
+- Confirming a destructive or irreversible action
+- Collecting a small form without leaving the current page
+- Displaying critical information that requires acknowledgement
+- Previewing content before taking an action
+
+## When not to use
+
+- Long multi-step flows — use a Drawer or a dedicated page instead
+- Quick contextual info — use a Tooltip or Popover
+- Non-blocking side panels — use Sheet or Drawer
+- Stacking multiple dialogs — always limit to one at a time
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` |  | Controlled open state. |
+| `onOpenChange` | `(open: boolean) => void` |  | Callback when open state changes. |
+| `defaultOpen` | `boolean` | `false` | Uncontrolled initial open state. |
+| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Dialog.Content — see Foundations → Materials. |
+
+## Example: Default
+
+```tsx
+<Dialog.Root>
+  <Dialog.Trigger asChild>
+    <Button>Open Dialog</Button>
+  </Dialog.Trigger>
+  <Dialog.Portal>
+    <Dialog.Overlay />
+    <Dialog.Content>
+      <Dialog.Header>
+        <Dialog.Title>Edit profile</Dialog.Title>
+        <Dialog.Description>
+          Make changes to your profile here.
+        </Dialog.Description>
+      </Dialog.Header>
+      <Dialog.Footer>
+        <Dialog.Close asChild>
+          <Button variant="outline">Cancel</Button>
+        </Dialog.Close>
+        <Button>Save changes</Button>
+      </Dialog.Footer>
+    </Dialog.Content>
+  </Dialog.Portal>
+</Dialog.Root>
+```
+
+
+---
+
+# Drawer
+
+Slide-in panel from any edge of the screen.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { Drawer } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/drawer
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Drawer.Root` | `compound` |  | Root provider that manages open/close state. |
+| `Drawer.Trigger` | `compound` |  | Element that opens the drawer. |
+| `Drawer.Portal` | `compound` |  | Portals the overlay and content into the document body. |
+| `Drawer.Overlay` | `compound` |  | Dimmed backdrop rendered behind the drawer. |
+| `Drawer.Content` | `compound` |  | The drawer panel. Accepts a side prop. |
+| `scrollLock` | `'style' \| 'class'` |  | On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src 'self'). Default `style`. |
+| `side` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
+| `Drawer.Header` | `compound` |  | Header section of the drawer panel. |
+| `Drawer.Footer` | `compound` |  | Footer section of the drawer panel. |
+| `Drawer.Title` | `compound` |  | Accessible title for the drawer. |
+| `Drawer.Description` | `compound` |  | Supporting description text for the drawer. |
+| `Drawer.Close` | `compound` |  | Element that closes the drawer. |
+| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Drawer.Content — see Foundations → Materials. |
+
+## Example: Default
+
+```tsx
+<Drawer.Root>
+  <Drawer.Trigger asChild>
+    <Button variant="outline">Open drawer</Button>
+  </Drawer.Trigger>
+  <Drawer.Portal>
+    <Drawer.Overlay />
+    <Drawer.Content side="right">
+      <Drawer.Header>
+        <Drawer.Title>Edit profile</Drawer.Title>
+        <Drawer.Description>Make changes to your profile settings.</Drawer.Description>
+      </Drawer.Header>
+      <div style={{ padding: '16px', flex: 1 }}>
+        <Text size="body-sm" tone="secondary">Drawer body content goes here.</Text>
+      </div>
+      <Drawer.Footer>
+        <Drawer.Close asChild>
+          <Button variant="outline">Cancel</Button>
+        </Drawer.Close>
+        <Button variant="primary">Save changes</Button>
+      </Drawer.Footer>
+    </Drawer.Content>
+  </Drawer.Portal>
+</Drawer.Root>
+```
+
+## Example: Bottom sheet
+
+```tsx
+<Drawer.Root>
+  <Drawer.Trigger asChild>
+    <Button variant="outline">Open bottom sheet</Button>
+  </Drawer.Trigger>
+  <Drawer.Portal>
+    <Drawer.Overlay />
+    <Drawer.Content side="bottom">
+      <Drawer.Header>
+        <Drawer.Title>Share</Drawer.Title>
+      </Drawer.Header>
+      <div style={{ padding: '16px' }}>
+        <Text size="body-sm">Choose how you would like to share this item.</Text>
+      </div>
+      <Drawer.Footer>
+        <Drawer.Close asChild>
+          <Button variant="outline" fullWidth>Cancel</Button>
+        </Drawer.Close>
+      </Drawer.Footer>
+    </Drawer.Content>
+  </Drawer.Portal>
+</Drawer.Root>
+```
+
+
+---
+
+# Empty State
+
+Placeholder UI shown when a list or page has no content.
+
+- Package: `@nexub/react` · Category: Data Display · Status: stable
+- Import: `import { EmptyState } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/empty-state
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `EmptyState.Root layout` | `'centered' \| 'inline'` | `'centered'` | "centered" stacks content vertically in the middle of its container; "inline" aligns content to the start. |
+| `EmptyState.Illustration children` | `React.ReactNode` |  | Icon or SVG illustration to render above the title. |
+| `EmptyState.Title children` (required) | `React.ReactNode` |  | Primary heading text for the empty state. |
+| `EmptyState.Description children` | `React.ReactNode` |  | Supporting text providing more context or guidance. |
+| `EmptyState.Actions children` | `React.ReactNode` |  | One or more action buttons rendered below the description. |
+
+## Example: Default
+
+```tsx
+<EmptyState.Root>
+  <EmptyState.Illustration>
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--color-text-disabled)"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.35-4.35" />
+    </svg>
+  </EmptyState.Illustration>
+  <EmptyState.Title>No results found</EmptyState.Title>
+  <EmptyState.Description>
+    Try adjusting your search or filters to find what you're looking for.
+  </EmptyState.Description>
+  <EmptyState.Actions>
+    <Button variant="primary">Clear filters</Button>
+    <Button variant="outline">Browse all</Button>
+  </EmptyState.Actions>
+</EmptyState.Root>
+```
+
+## Example: Custom illustration
+
+```tsx
+<EmptyState.Root>
+  <EmptyState.Illustration>
+    <svg
+      width="80"
+      height="80"
+      viewBox="0 0 80 80"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect width="80" height="80" rx="40" fill="var(--color-bg-subtle)" />
+      <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-border-strong)" strokeWidth="2" />
+      <path d="M24 36h32" stroke="var(--color-border-strong)" strokeWidth="2" />
+      <circle cx="40" cy="48" r="4" fill="var(--color-text-disabled)" />
+    </svg>
+  </EmptyState.Illustration>
+  <EmptyState.Title>No documents yet</EmptyState.Title>
+  <EmptyState.Description>
+    Upload your first document to get started.
+  </EmptyState.Description>
+  <EmptyState.Actions>
+    <Button variant="primary">Upload document</Button>
+  </EmptyState.Actions>
+</EmptyState.Root>
+```
+
+
+---
+
+# Error State
+
+Full-page or section error view with retry action.
+
+- Package: `@nexub/react` · Category: Data Display · Status: stable
+- Import: `import { ErrorState } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/error-state
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Primary error heading shown to the user. |
+| `description` | `string` |  | Supporting text with more detail about the error or recovery steps. |
+| `tone` | `'error' \| 'warning' \| 'info'` | `'error'` | Controls the icon and colour scheme of the error state. |
+| `onRetry` | `() => void` |  | When provided, renders a "Try again" button that calls this function on click. |
+| `actions` | `React.ReactNode` |  | Custom action elements rendered below the description. Takes priority over the default retry button. |
+
+## Example: Default
+
+```tsx
+<ErrorState
+  title="Something went wrong"
+  description="We could not load the data. Please try again."
+  onRetry={() => {}}
+/>
+```
+
+## Example: Warning
+
+```tsx
+<ErrorState
+  tone="warning"
+  title="Connection issue"
+  description="Check your network and try again."
+/>
+```
+
+
+---
+
+# Eyebrow Chip
+
+A compact eyebrow label, typically used above headings.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: stable
+- Import: `import { EyebrowChip } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/eyebrow-chip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md'` |  | Controls chip size. |
+
+## Example: Default
+
+```tsx
+<EyebrowChip>New release</EyebrowChip>
+```
+
+## Example: Usage
+
+```tsx
+<div>
+  <EyebrowChip>Now available</EyebrowChip>
+  <h2 style={{ marginTop: '8px', fontSize: '1.5rem', fontWeight: 700 }}>Version 2.0</h2>
+</div>
+```
+
+
+---
+
+# Filter Chip
+
+Interactive chip for filtering, supports selected/unselected state.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: stable
+- Import: `import { FilterChip } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/filter-chip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `selected` | `boolean` |  | Controlled selected state of the chip. |
+| `onSelectedChange` | `(selected: boolean) => void` |  | Called when the selected state changes. |
+| `disabled` | `boolean` |  | Disables the chip. |
+| `size` | `'sm' \| 'md'` |  | Controls chip size. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <FilterChip>All</FilterChip>
+  <FilterChip defaultSelected>Active</FilterChip>
+  <FilterChip>Archived</FilterChip>
+</div>
+```
+
+
+---
+
+# Flex
+
+Flexbox layout primitive.
+
+- Package: `@nexub/react` · Category: Layout · Status: stable
+- Import: `import { Flex } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/flex
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` |  | Sets the flex-direction CSS property. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Sets the align-items CSS property. |
+| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around'` |  | Sets the justify-content CSS property. |
+| `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Spacing between children using design tokens. |
+| `wrap` | `boolean` |  | Allows children to wrap onto multiple lines. |
+
+## Example: Default
+
+```tsx
+<Flex gap="md" align="center">
+  <Button variant="primary">Action</Button>
+  <Button variant="outline">Cancel</Button>
+</Flex>
+```
+
+## Example: Space between
+
+```tsx
+<Flex justify="between">
+  <Badge tone="success">Active</Badge>
+  <Badge tone="neutral">Draft</Badge>
+</Flex>
+```
+
+## Example: Wrap
+
+```tsx
+<Flex gap="sm" wrap>
+  <Badge tone="info">React</Badge>
+  <Badge tone="info">TypeScript</Badge>
+  <Badge tone="info">Tailwind</Badge>
+  <Badge tone="info">Radix UI</Badge>
+  <Badge tone="info">Storybook</Badge>
+</Flex>
+```
+
+
+---
+
+# Form Field
+
+Wraps Label, Input, HelperText and FormError into a single accessible group.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { FormField } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/form-field
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | `string` |  | Name attribute forwarded to the underlying input. |
+| `id` | `string` |  | Explicit id for the input; defaults to the name value. |
+| `error` | `string` |  | Validation error message shown below the input. |
+| `required` | `boolean` |  | Marks the field as required and renders a required indicator on the label. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '280px' }}>
+  <Label htmlFor="field-name" required>Full name</Label>
+  <Input id="field-name" placeholder="Jane Smith" />
+  <HelperText>Enter your legal name.</HelperText>
+</div>
+```
+
+
+---
+
+# Gradient Divider
+
+A decorative gradient-faded horizontal rule.
+
+- Package: `@nexub/react` · Category: Dividers · Status: stable
+- Import: `import { GradientDivider } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/gradient-divider
+
+## Example: Default
+
+```tsx
+<GradientDivider />
+```
+
+
+---
+
+# Grid
+
+CSS Grid layout primitive.
+
+- Package: `@nexub/react` · Category: Layout · Status: stable
+- Import: `import { Grid } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/grid
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `cols` | `number \| string` |  | Number of columns or a custom grid-template-columns value. |
+| `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Gap between grid cells using design tokens. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Sets the align-items CSS property for all grid cells. |
+
+## Example: 2-column
+
+```tsx
+<Grid cols={2} gap="md">
+  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
+</Grid>
+```
+
+## Example: 3-column
+
+```tsx
+<Grid cols={3} gap="md">
+  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card five</Text></Card.Body></Card>
+  <Card><Card.Body><Text>Card six</Text></Card.Body></Card>
+</Grid>
+```
+
+
+---
+
+# Heading
+
+Semantic heading component with size, weight, and tone control.
+
+- Package: `@nexub/react` · Category: Typography · Status: stable
+- Import: `import { Heading } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/heading
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `level` | `1 \| 2 \| 3 \| 4 \| 5 \| 6` | `2` | The semantic HTML heading level rendered. |
+| `size` | `'display' \| 'h1' \| 'h2' \| 'h3' \| 'h4' \| 'h5' \| 'h6'` |  | Visual size of the heading, independent of the semantic level. |
+| `tone` | `'default' \| 'muted' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Color tone applied to the heading text. |
+| `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold' \| 'extrabold'` |  | Font weight of the heading. |
+| `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<Heading>The quick brown fox</Heading>
+```
+
+## Example: Scale
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <Heading size="h1">Heading H1</Heading>
+  <Heading size="h2">Heading H2</Heading>
+  <Heading size="h3">Heading H3</Heading>
+  <Heading size="h4">Heading H4</Heading>
+  <Heading size="h5">Heading H5</Heading>
+</div>
+```
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <Heading tone="info">Info heading</Heading>
+  <Heading tone="success">Success heading</Heading>
+  <Heading tone="warning">Warning heading</Heading>
+  <Heading tone="danger">Danger heading</Heading>
+</div>
+```
+
+
+---
+
+# Helper Text
+
+Small supporting text placed beneath a form field to provide hints or validation feedback.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { HelperText } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/helper-text
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic colour tone of the helper text. |
+| `disabled` | `boolean` |  | Applies muted disabled styling. |
+
+## Example: Default
+
+```tsx
+<HelperText>We will never share your email with anyone else.</HelperText>
+```
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <HelperText tone="info">Your password must be at least 8 characters.</HelperText>
+  <HelperText tone="success">Username is available.</HelperText>
+  <HelperText tone="warning">This action may affect other records.</HelperText>
+  <HelperText tone="danger">This field is required.</HelperText>
+</div>
+```
+
+
+---
+
+# Hover Card
+
+Rich tooltip card revealed on hover.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { HoverCard } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/hover-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `HoverCard.Root` | `compound` |  | Root provider that manages open/close state. |
+| `HoverCard.Trigger` | `compound` |  | Element that triggers the card on hover. |
+| `HoverCard.Content` | `compound` |  | The floating card panel shown on hover. |
+| `openDelay` | `number` |  | Delay in milliseconds before the card opens. |
+| `closeDelay` | `number` |  | Delay in milliseconds before the card closes. |
+
+## Example: Default
+
+```tsx
+<HoverCard.Root openDelay={200} closeDelay={100}>
+  <HoverCard.Trigger asChild>
+    <Link href="#">@sasidharan</Link>
+  </HoverCard.Trigger>
+  <HoverCard.Content side="bottom" align="start" sideOffset={8}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '240px' }}>
+      <Text weight="semibold">Sasidharan</Text>
+      <Text size="body-sm" tone="secondary">Full-stack engineer building design systems.</Text>
+      <Text size="caption" tone="muted">Joined April 2024</Text>
+    </div>
+  </HoverCard.Content>
+</HoverCard.Root>
+```
+
+
+---
+
+# Icon Button
+
+A square button designed to hold a single icon, with an accessible label.
+
+- Package: `@nexub/react` · Category: Actions · Status: stable
+- Import: `import { IconButton } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/icon-button
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'ghost' \| 'solid' \| 'outline' \| 'subtle'` | `'ghost'` | Visual style of the icon button. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Controls button dimensions. |
+| `disabled` | `boolean` |  | Disables the button. |
+| `loading` | `boolean` |  | Shows a spinner and disables interaction. |
+| `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<IconButton variant="ghost" aria-label="Settings">
+  <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
+</IconButton>
+```
+
+## Example: Variants
+
+```tsx
+<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+  <IconButton variant="ghost" aria-label="Ghost action">
+    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
+  </IconButton>
+  <IconButton variant="solid" aria-label="Solid action">
+    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
+  </IconButton>
+  <IconButton variant="outline" aria-label="Outline action">
+    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
+  </IconButton>
+  <IconButton variant="subtle" aria-label="Subtle action">
+    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
+  </IconButton>
+</div>
+```
+
+
+---
+
+# Input
+
+Text input field for forms. Supports size variants, icons, addons, and validation states.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { Input } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/input
+
+## When to use
+
+- Capturing short free-form text (name, email, search term)
+- Single-line data entry within a form
+- Filtering or searching a list of items
+- Inline editing of a single value
+
+## When not to use
+
+- Multi-line text — use Textarea instead
+- Choosing from a fixed list of options — use Select or Combobox
+- Numeric stepping — use NumberInput for increment/decrement control
+- Passwords — use PasswordInput which toggles visibility
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Control height and font size. |
+| `invalid` | `boolean` | `false` | Applies error ring styling. |
+| `disabled` | `boolean` | `false` | Disables the input. |
+| `placeholder` | `string` |  | Placeholder text. |
+| `type` | `string` | `'text'` | HTML input type attribute. |
+| `leadingIcon` | `React.ReactNode` |  | Icon rendered at the start of the input. |
+| `trailingIcon` | `React.ReactNode` |  | Icon rendered at the end of the input. |
+| `leadingAddon` | `string` |  | Text addon rendered before the input (e.g. "https://"). |
+| `trailingAddon` | `string` |  | Text addon rendered after the input (e.g. ".com"). |
+
+## Example: Default
+
+```tsx
+<Input placeholder="Enter value…" />
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '320px' }}>
+  <Input size="sm" placeholder="Small" />
+  <Input size="md" placeholder="Medium" />
+  <Input size="lg" placeholder="Large" />
+</div>
+```
+
+## Example: Invalid state
+
+```tsx
+<Input invalid placeholder="Invalid value" />
+```
+
+## Example: With label and helper
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
+  <Label htmlFor="email">Email address</Label>
+  <Input id="email" type="email" placeholder="you@example.com" />
+  <HelperText>We'll never share your email.</HelperText>
+</div>
+```
+
+## Accessibility
+
+- Roles: textbox
+- `Tab`: Moves focus to the input.
+- `Esc`: Browsers may revert recent changes (autofill suggestions).
+- Visible focus ring on `:focus-visible`. Pair with a `<Label htmlFor>` so clicking the label moves focus into the field.
+- `invalid` toggles `aria-invalid="true"` so AT users hear the error state.
+- Use `aria-describedby` to associate `HelperText` or error messages.
+
+Related: [textarea](textarea.md), [number-input](number-input.md), [password-input](password-input.md), [search-input](search-input.md)
+
+
+---
+
+# Kbd
+
+Keyboard key display — renders a styled <kbd> element.
+
+- Package: `@nexub/react` · Category: Inline Primitives · Status: stable
+- Import: `import { Kbd } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/kbd
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `...props` | `React.HTMLAttributes<HTMLElement>` |  | All standard kbd HTML attributes are forwarded. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+  <Kbd>⌘</Kbd>
+  <Kbd>K</Kbd>
+</div>
+```
+
+## Example: Combinations
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+    <Kbd>⌘</Kbd>
+    <Kbd>K</Kbd>
+  </div>
+  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+    <Kbd>Ctrl</Kbd>
+    <Kbd>C</Kbd>
+  </div>
+  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+    <Kbd>⇧</Kbd>
+    <Kbd>⌘</Kbd>
+    <Kbd>P</Kbd>
+  </div>
+</div>
+```
+
+
+---
+
+# Label
+
+An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { Label } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/label
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `htmlFor` | `string` |  | Associates the label with a form control by its id. |
+| `required` | `boolean` |  | Renders a required indicator (asterisk) after the label text. |
+| `disabled` | `boolean` |  | Applies disabled styling to the label. |
+| `size` | `'sm' \| 'md'` | `'md'` | Controls label font size. |
+
+## Example: Default
+
+```tsx
+<Label htmlFor="name">Full name</Label>
+```
+
+## Example: Required
+
+```tsx
+<Label required>Email address</Label>
+```
+
+## Example: With input
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+  <Label htmlFor="email">Email</Label>
+  <Input id="email" type="email" placeholder="you@example.com" />
+</div>
+```
+
+
+---
+
+# Link
+
+Styled anchor link with variant and external support.
+
+- Package: `@nexub/react` · Category: Inline Primitives · Status: stable
+- Import: `import { Link } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/link
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'default' \| 'muted' \| 'underline'` |  | Visual style of the link. |
+| `external` | `boolean` |  | Opens the link in a new tab with appropriate rel attributes. |
+| `href` | `string` |  | The URL the link points to. |
+| `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<Link href="#">View documentation</Link>
+```
+
+## Example: Variants
+
+```tsx
+<div style={{ display: 'flex', gap: '16px' }}>
+  <Link href="#" variant="default">Default</Link>
+  <Link href="#" variant="muted">Muted</Link>
+  <Link href="#" variant="underline">Underline</Link>
+</div>
+```
+
+## Example: External
+
+```tsx
+<Link href="#" external>Open in new tab</Link>
+```
+
+
+---
+
+# Money Input
+
+An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { MoneyInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/money-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `currency` (required) | `string` |  | ISO 4217 code, e.g. "EUR". |
+| `locale` | `string` |  | BCP 47 locale for separators. Defaults to the user's. |
+| `value / defaultValue` | `number \| null` |  | The amount, or null when empty. |
+| `onValueChange` | `(value: number \| null) => void` |  | Parsed amount, rounded to the minor unit, as the person types. |
+
+## Example: Default
+
+```tsx
+<MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} onValueChange={setAmount} />
+```
+
+## Example: German separators
+
+```tsx
+<MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />
+```
+
+Related: [amount](amount.md), [number-input](number-input.md), [input](input.md)
+
+
+---
+
+# Collapse
+
+Expands and collapses content along the block axis.
+
+- Package: `@nexub/react` · Category: Motion · Status: stable
+- Import: `import { MotionCollapse } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-collapse
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `in` (required) | `boolean` |  | When true, expands the content to its natural height. When false, collapses it to zero height. |
+| `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
+| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
+| `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the collapse animation completes. |
+| `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
+| `children` (required) | `React.ReactNode` |  | Content to expand and collapse. |
+
+## Example: Default
+
+```tsx
+<Collapse in={true}>
+  <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+    Collapsed content
+  </div>
+</Collapse>
+```
+
+## Example: Toggle
+
+```tsx
+function CollapseToggle() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <Button variant="outline" onClick={() => setOpen((o) => !o)}>
+        {open ? 'Collapse' : 'Expand'}
+      </Button>
+      <Collapse in={open} unmountOnExit>
+        <div
+          style={{
+            padding: '16px',
+            background: 'var(--color-bg-subtle)',
+            borderRadius: 'var(--radius-md)',
+            color: 'var(--color-text-secondary)',
+            fontSize: '0.875rem',
+          }}
+        >
+          This section smoothly expands and collapses along the vertical axis.
+          It preserves the natural document flow by animating the block size.
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Fade
+
+Animates opacity between 0 and 1 based on the `in` prop.
+
+- Package: `@nexub/react` · Category: Motion · Status: stable
+- Import: `import { MotionFade } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-fade
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `in` (required) | `boolean` |  | When true, fades content in. When false, fades it out. |
+| `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
+| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
+| `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
+| `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
+| `children` (required) | `React.ReactNode` |  | Content to animate. |
+
+## Example: Default
+
+```tsx
+<Fade in={true}>
+  <Card>Faded in content</Card>
+</Fade>
+```
+
+## Example: Toggle
+
+```tsx
+function FadeToggle() {
+  const [visible, setVisible] = React.useState(true);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+        {visible ? 'Fade out' : 'Fade in'}
+      </Button>
+      <Fade in={visible} duration="normal" easing="out" unmountOnExit>
+        <Card style={{ padding: '16px' }}>
+          This content fades in and out. Toggle the button to animate it.
+        </Card>
+      </Fade>
+    </div>
+  );
+}
+```
+
+## Example: Slow with spring easing
+
+```tsx
+function SlowFade() {
+  const [visible, setVisible] = React.useState(true);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Fade in={visible} duration="slow" easing="spring">
+        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+          Slow spring fade animation.
+        </div>
+      </Fade>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Scale
+
+Scales content in/out from its center.
+
+- Package: `@nexub/react` · Category: Motion · Status: stable
+- Import: `import { MotionScale } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-scale
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `in` (required) | `boolean` |  | When true, scales content in from 0 to 1. When false, scales it back down to 0. |
+| `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
+| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
+| `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
+| `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
+| `children` (required) | `React.ReactNode` |  | Content to animate. |
+
+## Example: Default
+
+```tsx
+<Scale in={true}>
+  <Card>Scaled content</Card>
+</Scale>
+```
+
+## Example: Toggle
+
+```tsx
+function ScaleToggle() {
+  const [visible, setVisible] = React.useState(true);
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+        {visible ? 'Scale out' : 'Scale in'}
+      </Button>
+      <Scale in={visible} duration="fast" easing="spring" unmountOnExit>
+        <div
+          style={{
+            padding: '24px',
+            background: 'var(--color-bg-subtle)',
+            borderRadius: 'var(--radius-md)',
+            textAlign: 'center',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
+          Pop!
+        </div>
+      </Scale>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Slide
+
+Slides content in from a direction based on the `in` prop.
+
+- Package: `@nexub/react` · Category: Motion · Status: stable
+- Import: `import { MotionSlide } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-slide
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `in` (required) | `boolean` |  | When true, slides content in. When false, slides it out. |
+| `direction` | `'up' \| 'down' \| 'left' \| 'right'` | `'up'` | The direction from which the content slides in. |
+| `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
+| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
+| `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
+| `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
+| `children` (required) | `React.ReactNode` |  | Content to animate. |
+
+## Example: Default
+
+```tsx
+<Slide in={true} direction="up">
+  <Card>Slid in from bottom</Card>
+</Slide>
+```
+
+## Example: Directions
+
+```tsx
+function SlideDirections() {
+  const [visible, setVisible] = React.useState(true);
+  const [direction, setDirection] = React.useState('up');
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        {['up', 'down', 'left', 'right'].map((dir) => (
+          <Button
+            key={dir}
+            variant={direction === dir ? 'primary' : 'outline'}
+            size="sm"
+            onClick={() => { setDirection(dir); setVisible(true); }}
+          >
+            {dir}
+          </Button>
+        ))}
+        <Button variant="ghost" size="sm" onClick={() => setVisible((v) => !v)}>
+          Toggle
+        </Button>
+      </div>
+      <Slide in={visible} direction={direction} unmountOnExit>
+        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
+          Sliding in from {direction}.
+        </div>
+      </Slide>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Navigation Rail
+
+Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
+
+- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Import: `import { NavigationRail } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/navigation-rail
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Root header` | `ReactNode` |  | Slot above the items, e.g. a primary action. |
+| `Root aria-label` | `string` | `'Main'` | Name of the nav landmark. |
+| `Item icon / label` (required) | `ReactNode` |  | Icon in the indicator pill; label below. |
+| `Item active` | `boolean` |  | Marks the current page (aria-current="page"). |
+| `Item asChild` | `boolean` |  | Use your router link as the item; pass it as the only child. |
+
+## Example: Default
+
+```tsx
+<NavigationRail.Root aria-label="Workspace">
+  <NavigationRail.Item href="/" icon={<Home />} label="Home" active />
+  <NavigationRail.Item href="/files" icon={<Folder />} label="Files" />
+  <NavigationRail.Item href="/settings" icon={<Settings />} label="Settings" />
+</NavigationRail.Root>
+```
+
+Related: [sidebar](sidebar.md), [top-nav](top-nav.md)
+
+
+---
+
+# Number Input
+
+A numeric input with increment and decrement controls, supporting min/max clamping and step.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { NumberInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/number-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` |  | Controlled value of the input. |
+| `min` | `number` |  | Minimum allowed value. |
+| `max` | `number` |  | Maximum allowed value. |
+| `step` | `number` | `1` | Amount to increment or decrement on each step. |
+| `disabled` | `boolean` |  | Disables the input and its controls. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+
+## Example: Default
+
+```tsx
+<NumberInput defaultValue={0} />
+```
+
+## Example: With range
+
+```tsx
+<NumberInput defaultValue={5} min={0} max={10} />
+```
+
+
+---
+
+# Pagination
+
+Page navigation control with prev/next and page number buttons.
+
+- Package: `@nexub/react` · Category: Navigation · Status: stable
+- Import: `import { Pagination } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/pagination
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `page` (required) | `number` |  | The currently active page (1-indexed). |
+| `totalItems` (required) | `number` |  | Total number of items across all pages. |
+| `pageSize` | `number` | `10` | Number of items per page. Used to calculate total page count. |
+| `siblingCount` | `number` | `1` | Number of page buttons to show on each side of the current page. |
+| `onPageChange` (required) | `(page: number) => void` |  | Callback invoked with the new page number when the user navigates. |
+| `showFirstLast` | `boolean` | `true` | Whether to show First and Last page navigation buttons. |
+| `disabled` | `boolean` | `false` | Disables all pagination controls. |
+
+## Example: Default
+
+```tsx
+function DefaultPagination() {
+  const [page, setPage] = React.useState(3);
+  return (
+    <Pagination
+      page={page}
+      totalItems={100}
+      pageSize={10}
+      onPageChange={setPage}
+    />
+  );
+}
+```
+
+## Example: Large dataset
+
+```tsx
+function LargeDatasetPagination() {
+  const [page, setPage] = React.useState(5);
+  return (
+    <Pagination
+      page={page}
+      totalItems={500}
+      pageSize={20}
+      siblingCount={2}
+      onPageChange={setPage}
+    />
+  );
+}
+```
+
+
+---
+
+# Password Input
+
+A password field with a built-in toggle to reveal or hide the entered value.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { PasswordInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/password-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` |  | Placeholder text shown when the field is empty. |
+| `invalid` | `boolean` |  | Applies error styling to indicate a validation failure. |
+| `disabled` | `boolean` |  | Disables the input. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+
+## Example: Default
+
+```tsx
+<PasswordInput placeholder="Enter password…" />
+```
+
+## Example: Invalid
+
+```tsx
+<PasswordInput invalid placeholder="Password is too short" />
+```
+
+
+---
+
+# Popover
+
+Floating content panel anchored to a trigger element.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { Popover } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/popover
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Popover.Root` | `compound` |  | Root provider that manages open/close state. |
+| `Popover.Trigger` | `compound` |  | Element that toggles the popover on click. |
+| `Popover.Content` | `compound` |  | The floating content panel. |
+| `Popover.Arrow` | `compound` |  | Optional arrow pointing to the trigger. |
+| `Popover.Close` | `compound` |  | Button that closes the popover. |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` |  | Preferred side of the trigger to render the content. |
+| `align` | `'start' \| 'center' \| 'end'` |  | Alignment of the content relative to the trigger. |
+| `sideOffset` | `number` |  | Distance in pixels between the trigger and the content. |
+| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Popover.Content — see Foundations → Materials. |
+
+## Example: Default
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger asChild>
+    <Button variant="outline">Open popover</Button>
+  </Popover.Trigger>
+  <Popover.Content>
+    <Text size="body-sm">Popover content goes here.</Text>
+  </Popover.Content>
+</Popover.Root>
+```
+
+## Example: With close button
+
+```tsx
+<Popover.Root>
+  <Popover.Trigger asChild>
+    <Button variant="outline">Settings</Button>
+  </Popover.Trigger>
+  <Popover.Content side="bottom" align="end" sideOffset={8}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <Text weight="semibold">Preferences</Text>
+      <Text size="body-sm" tone="secondary">Adjust your display settings.</Text>
+      <Popover.Close asChild>
+        <Button variant="ghost" size="sm">Close</Button>
+      </Popover.Close>
+    </div>
+  </Popover.Content>
+</Popover.Root>
+```
+
+
+---
+
+# Progress
+
+Horizontal progress bar with optional tone and animation.
+
+- Package: `@nexub/react` · Category: Loading States · Status: stable
+- Import: `import { Progress } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/progress
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` |  | Current progress value between 0 and max. |
+| `max` | `number` | `100` | Maximum value of the progress bar. |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone of the filled track. |
+| `animated` | `boolean` | `false` | Adds a stripes-in-motion animation to the filled track. |
+
+## Example: Default
+
+```tsx
+<Progress value={65} />
+```
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <Progress value={80} tone="info" />
+  <Progress value={60} tone="success" />
+  <Progress value={45} tone="warning" />
+  <Progress value={30} tone="danger" />
+</div>
+```
+
+## Example: Animated
+
+```tsx
+<Progress value={40} animated tone="info" />
+```
+
+
+---
+
+# Radio Group
+
+Group of mutually exclusive radio inputs.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { RadioGroup } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/radio-group
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `RadioGroup.Root` | `compound` |  | Root provider that manages selection state. |
+| `RadioGroup.Item` | `compound` |  | Individual radio option within the group. |
+| `value` | `string` |  | The controlled selected value. |
+| `defaultValue` | `string` |  | The initial selected value when uncontrolled. |
+| `onValueChange` | `(value: string) => void` |  | Callback fired when the selection changes. |
+| `disabled` | `boolean` |  | Disables all items in the group. |
+| `orientation` | `'horizontal' \| 'vertical'` |  | Layout orientation of the radio items. |
+
+## Example: Default
+
+```tsx
+<RadioGroup.Root defaultValue="option-2">
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <RadioGroup.Item value="option-1" id="r1" />
+      <Label htmlFor="r1">Option one</Label>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <RadioGroup.Item value="option-2" id="r2" />
+      <Label htmlFor="r2">Option two</Label>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <RadioGroup.Item value="option-3" id="r3" />
+      <Label htmlFor="r3">Option three</Label>
+    </div>
+  </div>
+</RadioGroup.Root>
+```
+
+## Example: Horizontal
+
+```tsx
+<RadioGroup.Root defaultValue="monthly" orientation="horizontal">
+  <div style={{ display: 'flex', gap: '16px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <RadioGroup.Item value="monthly" id="monthly" />
+      <Label htmlFor="monthly">Monthly</Label>
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <RadioGroup.Item value="annual" id="annual" />
+      <Label htmlFor="annual">Annual</Label>
+    </div>
+  </div>
+</RadioGroup.Root>
+```
+
+
+---
+
+# Rating
+
+Star rating input, supports controlled and read-only modes.
+
+- Package: `@nexub/react` · Category: Interactive · Status: stable
+- Import: `import { Rating } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/rating
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` |  | The controlled rating value. |
+| `max` | `number` | `5` | Maximum number of stars. |
+| `readOnly` | `boolean` | `false` | Prevents user interaction when true. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Size of the star icons. |
+| `onValueChange` | `(value: number) => void` |  | Callback fired when the user selects a new rating. |
+
+## Example: Default
+
+```tsx
+<Rating defaultValue={3} />
+```
+
+## Example: Read-only
+
+```tsx
+<Rating value={4} readOnly />
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <Rating defaultValue={3} size="sm" />
+  <Rating defaultValue={3} size="md" />
+  <Rating defaultValue={3} size="lg" />
+</div>
+```
+
+
+---
+
+# Scroll Area
+
+Scrollable container with custom styled scrollbars.
+
+- Package: `@nexub/react` · Category: Disclosure · Status: stable
+- Import: `import { ScrollArea } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/scroll-area
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `type` | `'auto' \| 'always' \| 'scroll' \| 'hover'` | `'hover'` | Controls when the scrollbar is visible. "hover" shows it on mouse-over, "scroll" while scrolling, "always" always, "auto" when content overflows. |
+| `scrollHideDelay` | `number` | `600` | Milliseconds before the scrollbar hides after the user stops interacting (only applies to types "scroll" and "hover"). |
+| `orientation` | `'vertical' \| 'horizontal' \| 'both'` | `'vertical'` | Which axis(es) to make scrollable. |
+| `className` | `string` |  | Additional CSS class names applied to the viewport wrapper. |
+| `style` | `React.CSSProperties` |  | Inline styles applied to the viewport wrapper. |
+
+## Example: Default
+
+```tsx
+<ScrollArea style={{ height: '200px', width: '280px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+  {Array.from({ length: 20 }, (_, i) => (
+    <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+      Item {i + 1}
+    </div>
+  ))}
+</ScrollArea>
+```
+
+## Example: Horizontal
+
+```tsx
+<ScrollArea orientation="horizontal" style={{ width: '320px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
+  <div style={{ display: 'flex', gap: '8px', width: 'max-content' }}>
+    {Array.from({ length: 12 }, (_, i) => (
+      <div
+        key={i}
+        style={{
+          width: '80px',
+          height: '80px',
+          background: 'var(--color-bg-subtle)',
+          borderRadius: 'var(--radius-sm)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '0.75rem',
+          color: 'var(--color-text-secondary)',
+          flexShrink: 0,
+        }}
+      >
+        Card {i + 1}
+      </div>
+    ))}
+  </div>
+</ScrollArea>
+```
+
+
+---
+
+# Search Input
+
+A text input pre-wired with a search icon and a clear button for filtering content.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { SearchInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/search-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` |  | Placeholder text shown when empty. |
+| `value` | `string` |  | Controlled value of the search field. |
+| `onClear` | `() => void` |  | Called when the user clicks the clear button. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+
+## Example: Default
+
+```tsx
+<SearchInput placeholder="Search…" />
+```
+
+
+---
+
+# Segmented Control
+
+Tab-style control for mutually exclusive selections.
+
+- Package: `@nexub/react` · Category: Interactive · Status: stable
+- Import: `import { SegmentedControl } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/segmented-control
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the segmented control. |
+| `value` | `string` |  | The controlled selected value. |
+| `defaultValue` | `string` |  | The initial selected value when uncontrolled. |
+
+## Example: Default
+
+```tsx
+<SegmentedControl.Root defaultValue="month">
+  <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
+  <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
+  <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
+</SegmentedControl.Root>
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <SegmentedControl.Root defaultValue="b" size="sm">
+    <SegmentedControl.Item value="a">Small A</SegmentedControl.Item>
+    <SegmentedControl.Item value="b">Small B</SegmentedControl.Item>
+  </SegmentedControl.Root>
+  <SegmentedControl.Root defaultValue="b" size="md">
+    <SegmentedControl.Item value="a">Medium A</SegmentedControl.Item>
+    <SegmentedControl.Item value="b">Medium B</SegmentedControl.Item>
+  </SegmentedControl.Root>
+  <SegmentedControl.Root defaultValue="b" size="lg">
+    <SegmentedControl.Item value="a">Large A</SegmentedControl.Item>
+    <SegmentedControl.Item value="b">Large B</SegmentedControl.Item>
+  </SegmentedControl.Root>
+</div>
+```
+
+
+---
+
+# Select
+
+Accessible dropdown select built on Radix UI. Supports groups and search.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { Select } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/select
+
+## When to use
+
+- Choosing a single option from a list of 5+ items
+- When screen space is limited and a dropdown collapses the options
+- Selecting a region, country, currency, or other enumerated value
+- Filtering or configuring a setting with predefined choices
+
+## When not to use
+
+- Fewer than 5 options — use RadioGroup to keep choices visible
+- Searching or typing to find an option — use Combobox instead
+- Multi-select — use Combobox or a checkbox list
+- Boolean on/off choices — use Switch or Checkbox
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` |  | Controlled selected value. |
+| `onValueChange` | `(value: string) => void` |  | Callback when value changes. |
+| `placeholder` | `string` |  | Placeholder when no value selected. |
+| `disabled` | `boolean` | `false` | Disables the select. |
+
+## Example: Default
+
+```tsx
+<Select.Root>
+  <Select.Trigger placeholder="Pick a fruit" />
+  <Select.Content>
+    <Select.Item value="apple">Apple</Select.Item>
+    <Select.Item value="banana">Banana</Select.Item>
+    <Select.Item value="cherry">Cherry</Select.Item>
+  </Select.Content>
+</Select.Root>
+```
+
+
+---
+
+# Separator
+
+A horizontal or vertical visual divider.
+
+- Package: `@nexub/react` · Category: Dividers · Status: stable
+- Import: `import { Separator } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/separator
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the separator line. |
+| `decorative` | `boolean` | `true` | When true, the separator is hidden from the accessibility tree. |
+
+## Example: Default
+
+```tsx
+<Separator />
+```
+
+## Example: Vertical
+
+```tsx
+<div style={{ display: 'flex', height: '32px', alignItems: 'center', gap: '16px' }}>
+  <span>Left</span>
+  <Separator orientation="vertical" />
+  <span>Right</span>
+</div>
+```
+
+
+---
+
+# Sheet
+
+Alias for Drawer — slide-in sheet panel.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { Sheet } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/sheet
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Sheet.Root` | `compound` |  | Root provider that manages open/close state. Exported from Drawer. |
+| `Sheet.Trigger` | `compound` |  | Element that opens the sheet. |
+| `Sheet.Portal` | `compound` |  | Portals the overlay and content into the document body. |
+| `Sheet.Overlay` | `compound` |  | Dimmed backdrop rendered behind the sheet. |
+| `Sheet.Content` | `compound` |  | The sheet panel. Accepts a side prop. |
+| `scrollLock` | `'style' \| 'class'` |  | On Sheet.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src 'self'). Default `style`. |
+| `side` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the sheet slides in. |
+| `Sheet.Header` | `compound` |  | Header section of the sheet panel. |
+| `Sheet.Footer` | `compound` |  | Footer section of the sheet panel. |
+| `Sheet.Title` | `compound` |  | Accessible title for the sheet. |
+| `Sheet.Description` | `compound` |  | Supporting description text for the sheet. |
+| `Sheet.Close` | `compound` |  | Element that closes the sheet. |
+
+## Example: Default
+
+```tsx
+<Sheet.Root>
+  <Sheet.Trigger asChild>
+    <Button variant="outline">Open sheet</Button>
+  </Sheet.Trigger>
+  <Sheet.Portal>
+    <Sheet.Overlay />
+    <Sheet.Content side="right">
+      <Sheet.Header>
+        <Sheet.Title>Notifications</Sheet.Title>
+        <Sheet.Description>Review your latest activity.</Sheet.Description>
+      </Sheet.Header>
+      <div style={{ padding: '16px', flex: 1 }}>
+        <Text size="body-sm" tone="secondary">No new notifications.</Text>
+      </div>
+      <Sheet.Footer>
+        <Sheet.Close asChild>
+          <Button variant="outline">Close</Button>
+        </Sheet.Close>
+      </Sheet.Footer>
+    </Sheet.Content>
+  </Sheet.Portal>
+</Sheet.Root>
+```
+
+
+---
+
+# Skeleton
+
+Placeholder loading animation that mimics content layout.
+
+- Package: `@nexub/react` · Category: Loading States · Status: stable
+- Import: `import { Skeleton } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/skeleton
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `shape` | `'line' \| 'rect' \| 'circle'` | `'line'` | Shape of the skeleton placeholder. |
+| `width` | `string \| number` |  | Width of the skeleton element. |
+| `height` | `string \| number` |  | Height of the skeleton element. |
+| `animated` | `boolean` | `true` | Enables the shimmer animation. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '280px', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' }}>
+  <Skeleton shape="circle" width={40} height={40} />
+  <Skeleton shape="line" width="60%" height={12} />
+  <Skeleton shape="line" width="100%" height={12} />
+  <Skeleton shape="line" width="80%" height={12} />
+  <Skeleton shape="rect" width="100%" height={80} />
+</div>
+```
+
+## Example: Shapes
+
+```tsx
+<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+  <Skeleton shape="line" width={120} height={12} />
+  <Skeleton shape="rect" width={80} height={60} />
+  <Skeleton shape="circle" width={40} height={40} />
+</div>
+```
+
+
+---
+
+# Slider
+
+Range slider built on Radix UI Slider.
+
+- Package: `@nexub/react` · Category: Interactive · Status: stable
+- Import: `import { Slider } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/slider
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number[]` |  | The controlled value of the slider. |
+| `defaultValue` | `number[]` |  | The initial value when uncontrolled. |
+| `min` | `number` |  | The minimum value of the slider. |
+| `max` | `number` |  | The maximum value of the slider. |
+| `step` | `number` |  | The step increment between values. |
+| `disabled` | `boolean` |  | Disables slider interaction when true. |
+| `onValueChange` | `(value: number[]) => void` |  | Callback fired when the value changes. |
+
+## Example: Default
+
+```tsx
+<Slider defaultValue={[50]} min={0} max={100} style={{ width: '240px' }} />
+```
+
+## Example: Range
+
+```tsx
+<Slider defaultValue={[20, 80]} min={0} max={100} style={{ width: '240px' }} />
+```
+
+
+---
+
+# Spinner
+
+Animated loading indicator. Inherits color from context.
+
+- Package: `@nexub/react` · Category: Feedback · Status: stable
+- Import: `import { Spinner } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/spinner
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Diameter of the spinner. |
+| `label` | `string` | `'Loading…'` | Screen-reader accessible label. |
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+  <Spinner size="xs" />
+  <Spinner size="sm" />
+  <Spinner size="md" />
+  <Spinner size="lg" />
+  <Spinner size="xl" />
+</div>
+```
+
+## Example: Inside button
+
+```tsx
+<Button loading>Saving…</Button>
+```
+
+
+---
+
+# Split Button
+
+A primary action with related secondary actions behind a chevron, as one connected control.
+
+- Package: `@nexub/react` · Category: Actions · Status: beta
+- Import: `import { SplitButton } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/split-button
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `menuLabel` (required) | `string` |  | Accessible name of the menu toggle, e.g. "More save options". |
+| `menu` (required) | `ReactNode` |  | `DropdownMenu.Item`s for the secondary actions. |
+| `align` | `'start' \| 'end'` | `'end'` | Menu alignment against the toggle. |
+| `variant / size / tone` | `Button props` |  | Applied to both halves. |
+
+## Example: Default
+
+```tsx
+<SplitButton
+  onClick={save}
+  menuLabel="More save options"
+  menu={
+    <>
+      <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
+      <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
+    </>
+  }
+>
+  Save
+</SplitButton>
+```
+
+## Example: Outlined
+
+```tsx
+<SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
+  Export
+</SplitButton>
+```
+
+Related: [button](button.md), [button-group](button-group.md), [dropdown-menu](dropdown-menu.md)
+
+
+---
+
+# Stack
+
+Vertical stack layout with configurable gap.
+
+- Package: `@nexub/react` · Category: Layout · Status: stable
+- Import: `import { Stack } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/stack
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Spacing between child elements. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Cross-axis alignment of children. |
+| `dividers` | `boolean` |  | Renders a divider line between each child element. |
+
+## Example: Default
+
+```tsx
+<Stack gap="md">
+  <Button variant="outline">Item 1</Button>
+  <Button variant="outline">Item 2</Button>
+  <Button variant="outline">Item 3</Button>
+</Stack>
+```
+
+## Example: With dividers
+
+```tsx
+<Stack gap="md" dividers>
+  <Text>First section</Text>
+  <Text>Second section</Text>
+  <Text>Third section</Text>
+</Stack>
+```
+
+
+---
+
+# Status Pill
+
+> **Deprecated.** Do not use in new code. Deprecated — use Badge. A pill indicator for status values like active, pending, error.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
+- Import: `import { StatusPill } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/status-pill
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | Text displayed inside the pill. |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic colour tone of the pill. |
+| `dot` | `boolean` | `false` | Renders a small status dot before the label. Pulses automatically for success and info tones. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <StatusPill tone="success" label="Active" />
+  <StatusPill tone="warning" label="Pending" />
+  <StatusPill tone="danger" label="Error" />
+  <StatusPill tone="neutral" label="Draft" />
+  <StatusPill tone="info" label="Syncing" />
+</div>
+```
+
+## Example: With dot
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <StatusPill tone="success" dot label="Live" />
+  <StatusPill tone="info" dot label="Syncing" />
+  <StatusPill tone="warning" dot label="Degraded" />
+</div>
+```
+
+
+---
+
+# Switch
+
+Toggle control for binary on/off settings. Built on Radix UI Switch.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
+- Import: `import { Switch } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/switch
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `checked` | `boolean` |  | Controlled checked state. |
+| `defaultChecked` | `boolean` | `false` | Uncontrolled initial state. |
+| `onCheckedChange` | `(checked: boolean) => void` |  | Callback when checked state changes. |
+| `disabled` | `boolean` | `false` | Disables interaction. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Switch size. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  <Switch id="airplane" />
+  <Label htmlFor="airplane">Airplane mode</Label>
+</div>
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+  <Switch size="sm" />
+  <Switch size="md" />
+  <Switch size="lg" />
+</div>
+```
+
+
+---
+
+# Table
+
+Semantic HTML table with styled variants.
+
+- Package: `@nexub/react` · Category: Data Display · Status: stable
+- Import: `import { Table } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/table
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Table.Root striped` | `boolean` | `false` | Applies alternating row background colours. |
+| `Table.Root bordered` | `boolean` | `false` | Adds borders between rows and columns. |
+| `Table.Root hoverable` | `boolean` | `false` | Highlights rows on mouse hover. |
+| `Table.Root stickyHeader` | `boolean` | `false` | Fixes the table header to the top when scrolling inside a scrollable container. |
+| `Table.Head align` | `'start' \| 'center' \| 'end'` | `'start'` | Text alignment within the header cell. |
+| `Table.Cell align` | `'start' \| 'center' \| 'end'` | `'start'` | Text alignment within the data cell. |
+| `Table.Caption side` | `'top' \| 'bottom'` | `'bottom'` | Whether the caption appears above or below the table. |
+
+## Example: Default
+
+```tsx
+<Table.Root>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Name</Table.Head>
+      <Table.Head>Status</Table.Head>
+      <Table.Head>Date</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Alice Johnson</Table.Cell>
+      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
+      <Table.Cell>12 Jan 2026</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Bob Martinez</Table.Cell>
+      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
+      <Table.Cell>18 Feb 2026</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Carol Smith</Table.Cell>
+      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
+      <Table.Cell>03 Mar 2026</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table.Root>
+```
+
+## Example: With caption
+
+```tsx
+<Table.Root>
+  <Table.Caption>Recent user activity — last 30 days</Table.Caption>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Name</Table.Head>
+      <Table.Head>Status</Table.Head>
+      <Table.Head>Date</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Alice Johnson</Table.Cell>
+      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
+      <Table.Cell>12 Jan 2026</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Bob Martinez</Table.Cell>
+      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
+      <Table.Cell>18 Feb 2026</Table.Cell>
+    </Table.Row>
+    <Table.Row>
+      <Table.Cell>Carol Smith</Table.Cell>
+      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
+      <Table.Cell>03 Mar 2026</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+  <Table.Footer>
+    <Table.Row>
+      <Table.Cell colSpan={3} style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
+        Showing 3 of 3 users
+      </Table.Cell>
+    </Table.Row>
+  </Table.Footer>
+</Table.Root>
+```
+
+
+---
+
+# Tabs
+
+Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+
+- Package: `@nexub/react` · Category: Navigation · Status: stable
+- Import: `import { Tabs } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/tabs
+
+## When to use
+
+- Switching between related views within the same page context
+- Organising content that belongs to the same entity
+- Reducing visual clutter by hiding secondary content behind tabs
+- Horizontal navigation within a bounded section
+
+## When not to use
+
+- Global site navigation — use the sidebar or top nav
+- Sequential steps in order — use StepIndicator
+- Comparing content side-by-side — keep both views visible
+- More than 5–7 tabs — consider a Select or sub-navigation
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultValue` | `string` |  | Initially active tab value (uncontrolled). |
+| `value` | `string` |  | Controlled active tab value. |
+| `onValueChange` | `(value: string) => void` |  | Callback when active tab changes. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction of the tab list. |
+
+## Example: Default
+
+```tsx
+<Tabs.Root defaultValue="account">
+  <Tabs.List>
+    <Tabs.Trigger value="account">Account</Tabs.Trigger>
+    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
+    <Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="account">
+    <Text>Account settings content.</Text>
+  </Tabs.Content>
+  <Tabs.Content value="billing">
+    <Text>Billing details content.</Text>
+  </Tabs.Content>
+  <Tabs.Content value="notifications">
+    <Text>Notification preferences content.</Text>
+  </Tabs.Content>
+</Tabs.Root>
+```
+
+
+---
+
+# Tag
+
+> **Deprecated.** Do not use in new code. Deprecated — use Badge. Non-interactive label tag for categorisation.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
+- Import: `import { Tag } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/tag
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `'solid' \| 'soft' \| 'outline'` | `'soft'` | Visual style of the tag. |
+| `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | Semantic colour tone of the tag. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Controls tag size. |
+
+## Example: Default
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Tag>Frontend</Tag>
+  <Tag tone="info">Backend</Tag>
+  <Tag tone="success">Deployed</Tag>
+</div>
+```
+
+
+---
+
+# Text Gradient
+
+Renders text with a brand gradient fill.
+
+- Package: `@nexub/react` · Category: Inline Primitives · Status: stable
+- Import: `import { TextGradient } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/text-gradient
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `from` | `string` |  | Starting color of the gradient (CSS color value or token). |
+| `to` | `string` |  | Ending color of the gradient (CSS color value or token). |
+| `direction` | `'to-r' \| 'to-br' \| 'to-b'` |  | Direction of the gradient. |
+
+## Example: Default
+
+```tsx
+<TextGradient>Design system for ambitious teams</TextGradient>
+```
+
+## Example: In heading
+
+```tsx
+<Heading size="h1">
+  Build with{' '}
+  <TextGradient>Nexub</TextGradient>
+</Heading>
+```
+
+
+---
+
+# Text
+
+Paragraph text component with size, tone, and weight variants.
+
+- Package: `@nexub/react` · Category: Typography · Status: stable
+- Import: `import { Text } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/text
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `size` | `'body-lg' \| 'body' \| 'body-sm' \| 'caption' \| 'label'` | `'body'` | Controls the font size and line height. |
+| `tone` | `'default' \| 'secondary' \| 'muted' \| 'subtle' \| 'inverse'` |  | Color tone applied to the text. |
+| `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold'` |  | Font weight of the text. |
+| `truncate` | `boolean` |  | Truncates text with an ellipsis when it overflows. |
+| `lineClamp` | `number` |  | Clamps the text to a maximum number of lines. |
+| `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
+
+## Example: Default
+
+```tsx
+<Text>The Nexub design system provides accessible, token-driven components.</Text>
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <Text size="body-lg">Body large — ideal for introductory paragraphs.</Text>
+  <Text size="body">Body — the default reading size.</Text>
+  <Text size="body-sm">Body small — secondary content and descriptions.</Text>
+  <Text size="caption">Caption — metadata and timestamps.</Text>
+</div>
+```
+
+## Example: Tones
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+  <Text tone="default">Default tone</Text>
+  <Text tone="secondary">Secondary tone</Text>
+  <Text tone="muted">Muted tone</Text>
+</div>
+```
+
+
+---
+
+# Textarea
+
+A multi-line text input with configurable resize behaviour, size, and validation states.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { Textarea } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/textarea
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` |  | Placeholder text shown when the field is empty. |
+| `disabled` | `boolean` |  | Disables the textarea. |
+| `invalid` | `boolean` |  | Applies error styling to indicate a validation failure. |
+| `rows` | `number` |  | Initial visible row count. |
+| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | `'vertical'` | Controls resize handle visibility. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Controls font size and padding. |
+
+## Example: Default
+
+```tsx
+<Textarea placeholder="Enter your message…" />
+```
+
+## Example: Sizes
+
+```tsx
+<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+  <Textarea size="sm" placeholder="Small textarea" />
+  <Textarea size="md" placeholder="Medium textarea" />
+  <Textarea size="lg" placeholder="Large textarea" />
+</div>
+```
+
+## Example: Invalid
+
+```tsx
+<Textarea invalid placeholder="This field has an error" />
+```
+
+
+---
+
+# Toast
+
+Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
+
+- Package: `@nexub/react` · Category: Feedback · Status: stable
+- Import: `import { Toast } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/toast
+
+## When to use
+
+- Confirming a non-blocking action (file saved, message sent)
+- Reporting a background event the user should know about
+- Providing brief feedback that disappears automatically
+- Offering an undo action immediately after a destructive operation
+
+## When not to use
+
+- Critical errors that block the user — use Alert or AlertDialog
+- Information the user must read and acknowledge — use Dialog
+- Persistent status that should remain visible — use Banner or Alert
+- Long messages with multiple lines of text
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Toaster position` | `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'bottom-center'` | `'bottom-right'` | Where toasts appear on screen. |
+| `Toaster richColors` | `boolean` | `false` | Enables fully coloured backgrounds for success, error, warning, and info toasts. |
+| `Toaster closeButton` | `boolean` | `false` | Renders a close button on each toast. |
+| `toast.success(title, opts?)` (required) | `string` |  | Show a success toast with an optional options object. |
+| `toast.error(title, opts?)` (required) | `string` |  | Show an error toast. |
+| `toast.warning(title, opts?)` (required) | `string` |  | Show a warning toast. |
+| `toast.info(title, opts?)` (required) | `string` |  | Show an info toast. |
+| `toast.custom(title, opts?)` (required) | `string` |  | Show a default/custom toast. |
+| `opts.description` | `string` |  | Secondary supporting text below the title. |
+| `opts.duration` | `number` | `4000` | Time in ms before auto-dismiss. Use Infinity to persist. |
+| `opts.action` | `{ label: string; onClick: () => void }` |  | Renders an action button inside the toast. |
+
+## Example: Default
+
+```tsx
+function DefaultToast() {
+  return (
+    <>
+      <Toaster />
+      <Button
+        variant="outline"
+        onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}
+      >
+        Show toast
+      </Button>
+    </>
+  );
+}
+```
+
+## Example: Variants
+
+```tsx
+function ToastVariants() {
+  return (
+    <>
+      <Toaster richColors />
+      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <Button variant="outline" onClick={() => toast.custom('Default notification')}>
+          Default
+        </Button>
+        <Button variant="outline" onClick={() => toast.success('Saved successfully')}>
+          Success
+        </Button>
+        <Button variant="outline" onClick={() => toast.error('Something went wrong')}>
+          Error
+        </Button>
+        <Button variant="outline" onClick={() => toast.warning('Proceed with caution')}>
+          Warning
+        </Button>
+        <Button variant="outline" onClick={() => toast.info('New update available')}>
+          Info
+        </Button>
+      </div>
+    </>
+  );
+}
+```
+
+## Example: With action
+
+```tsx
+function ToastWithAction() {
+  return (
+    <>
+      <Toaster />
+      <Button
+        variant="outline"
+        onClick={() =>
+          toast.custom('Message sent', {
+            description: 'Your message has been delivered to the team.',
+            action: {
+              label: 'Undo',
+              onClick: () => {},
+            },
+          })
+        }
+      >
+        Send message
+      </Button>
+    </>
+  );
+}
+```
+
+
+---
+
+# Toggle Group
+
+Group of toggle buttons where one or many can be active.
+
+- Package: `@nexub/react` · Category: Interactive · Status: stable
+- Import: `import { ToggleGroup } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/toggle-group
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `type` (required) | `'single' \| 'multiple'` |  | Controls whether one or multiple items can be active at a time. |
+| `value` | `string \| string[]` |  | The controlled active value(s). |
+| `variant` | `'default' \| 'outline'` |  | Visual style applied to all toggle items in the group. |
+
+## Example: Single
+
+```tsx
+<ToggleGroup.Root type="single" defaultValue="left">
+  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>
+  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>
+  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>
+</ToggleGroup.Root>
+```
+
+## Example: Multiple
+
+```tsx
+<ToggleGroup.Root type="multiple" defaultValue={["bold", "italic"]}>
+  <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
+  <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
+  <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
+</ToggleGroup.Root>
+```
+
+
+---
+
+# Toggle
+
+Pressable toggle button built on Radix UI Toggle.
+
+- Package: `@nexub/react` · Category: Interactive · Status: stable
+- Import: `import { Toggle } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/toggle
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `pressed` | `boolean` |  | The controlled pressed state. |
+| `defaultPressed` | `boolean` |  | The initial pressed state when uncontrolled. |
+| `variant` | `'default' \| 'outline'` |  | Visual style of the toggle button. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Size of the toggle button. |
+| `disabled` | `boolean` |  | Disables the toggle when true. |
+
+## Example: Default
+
+```tsx
+<Toggle>Bold</Toggle>
+```
+
+## Example: Outline variants
+
+```tsx
+<div style={{ display: 'flex', gap: '8px' }}>
+  <Toggle variant="outline">Unpressed</Toggle>
+  <Toggle variant="outline" defaultPressed>Pressed</Toggle>
+</div>
+```
+
+
+---
+
+# Tooltip
+
+Floating label that appears on hover. Built on Radix UI Tooltip.
+
+- Package: `@nexub/react` · Category: Overlays · Status: stable
+- Import: `import { Tooltip } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/tooltip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` (required) | `React.ReactNode` |  | Content shown inside the tooltip. |
+| `side` | `'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Preferred side to open. |
+| `delayDuration` | `number` | `700` | Delay in ms before tooltip opens. |
+
+## Example: Default
+
+```tsx
+<Tooltip content="This is a tooltip">
+  <Button variant="outline">Hover me</Button>
+</Tooltip>
+```
+
+## Example: Sides
+
+```tsx
+<div style={{ display: 'flex', gap: '12px' }}>
+  <Tooltip content="Top" side="top"><Button size="sm">Top</Button></Tooltip>
+  <Tooltip content="Right" side="right"><Button size="sm">Right</Button></Tooltip>
+  <Tooltip content="Bottom" side="bottom"><Button size="sm">Bottom</Button></Tooltip>
+  <Tooltip content="Left" side="left"><Button size="sm">Left</Button></Tooltip>
+</div>
+```
+
+
+---
+
+# ActivityFeed
+
+Chronological list of activity events with avatar, description, and timestamp.
+
+- Package: `@nexub/patterns` · Category: Data · Status: stable
+- Import: `import { ActivityFeed } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/activity-feed
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | Activity event title. |
+| `description` | `React.ReactNode` |  | Supporting description. |
+| `timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
+| `avatar` | `React.ReactNode` |  | Avatar element for the actor. |
+
+## Example: Default
+
+```tsx
+<ActivityFeed.Root>
+  <ActivityFeed.Item
+    title="Alex created a new project"
+    description="Project 'Nexub DS v2' was created"
+    timestamp="2 hours ago"
+  />
+  <ActivityFeed.Item
+    title="Sam invited 3 members"
+    description="Jordan, Riley, and Taylor joined"
+    timestamp="Yesterday"
+  />
+</ActivityFeed.Root>
+```
+
+
+---
+
+# AuthCard
+
+Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
+
+- Package: `@nexub/patterns` · Category: Auth · Status: stable
+- Import: `import { AuthCard } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/auth-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Card heading (e.g. "Sign in to Nexub"). |
+| `description` | `string` |  | Subheading text. |
+| `logo` | `React.ReactNode` |  | Logo or brand mark above the title. |
+| `footer` | `React.ReactNode` |  | Footer content (e.g. "Don't have an account?"). |
+| `children` (required) | `React.ReactNode` |  | Form content. |
+
+## Example: Sign in
+
+```tsx
+<AuthCard
+  title="Sign in to Nexub"
+  description="Enter your credentials below"
+  footer={<Text size="sm">Don't have an account? <Link href="/signup">Sign up</Link></Text>}
+>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <Input type="email" placeholder="Email" />
+    <Input type="password" placeholder="Password" />
+    <Button>Sign in</Button>
+  </div>
+</AuthCard>
+```
+
+
+---
+
+# FilterBar
+
+Search + filter toolbar pattern for data-heavy list or table views.
+
+- Package: `@nexub/patterns` · Category: Data · Status: stable
+- Import: `import { FilterBar } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/filter-bar
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `searchPlaceholder` | `string` | `'Search…'` | Placeholder text for the search input. |
+| `searchValue` | `string` |  | Controlled search value. |
+| `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
+| `filters` | `React.ReactNode` |  | Filter controls rendered to the right of search. |
+| `actions` | `React.ReactNode` |  | Action buttons (e.g. "Export") rendered on the far right. |
+
+## Example: Default
+
+```tsx
+<FilterBar
+  searchPlaceholder="Search users…"
+  onSearch={(v) => {}}
+  filters={
+    <Select.Root>
+      <Select.Trigger><Select.Value placeholder="Status" /></Select.Trigger>
+      <Select.Content>
+        <Select.Item value="active">Active</Select.Item>
+        <Select.Item value="inactive">Inactive</Select.Item>
+      </Select.Content>
+    </Select.Root>
+  }
+  actions={<Button variant="outline" size="sm">Export</Button>}
+/>
+```
+
+
+---
+
+# InfoList
+
+Key–value list for displaying structured metadata or details.
+
+- Package: `@nexub/patterns` · Category: Data · Status: stable
+- Import: `import { InfoList } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/info-list
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | The key label. |
+| `value` (required) | `React.ReactNode` |  | The displayed value. |
+
+## Example: Default
+
+```tsx
+<InfoList.Root>
+  <InfoList.Item label="Plan" value="Pro" />
+  <InfoList.Item label="Status" value={<Badge tone="success">Active</Badge>} />
+  <InfoList.Item label="Member since" value="Jan 2024" />
+  <InfoList.Item label="Team size" value="12 members" />
+</InfoList.Root>
+```
+
+
+---
+
+# List Detail
+
+The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
+
+- Package: `@nexub/patterns` · Category: Layout · Status: beta
+- Import: `import { ListDetail } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/list-detail
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `list / detail` (required) | `ReactNode` |  | The two panes. |
+| `showDetail` | `boolean` | `false` | When narrow, show the detail instead of the list (set it on selection). |
+| `onBack` | `() => void` |  | Back button, shown only when narrow. |
+| `listWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | Fixed list width when both panes show (288 / 320 / 400px). |
+
+## Example: Default
+
+```tsx
+<ListDetail
+  showDetail={selected !== null}
+  onBack={() => setSelected(null)}
+  list={<MessageList onSelect={setSelected} />}
+  detail={<Message id={selected} />}
+/>
+```
+
+
+---
+
+# NotificationItem
+
+Single notification row for notification panels or dropdowns.
+
+- Package: `@nexub/patterns` · Category: Feedback · Status: stable
+- Import: `import { NotificationItem } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/notification-item
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Notification title. |
+| `description` | `string` |  | Supporting text. |
+| `timestamp` | `string` |  | Relative time string. |
+| `unread` | `boolean` | `false` | Applies unread indicator styling. |
+| `avatar` | `React.ReactNode` |  | Avatar for the notification actor. |
+| `onClick` | `() => void` |  | Click handler for the item. |
+
+## Example: Default
+
+```tsx
+<NotificationItem
+  title="New comment on your post"
+  description="Alex left a comment on 'Design System v2'"
+  timestamp="5 min ago"
+  unread
+/>
+```
+
+
+---
+
+# PlanCard
+
+Pricing plan card with feature checklist, badge, and CTA button.
+
+- Package: `@nexub/patterns` · Category: Marketing · Status: stable
+- Import: `import { PlanCard } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/plan-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | `string` |  | Plan name (e.g. "Pro"). |
+| `price` (required) | `string` |  | Price string (e.g. "$49/mo"). |
+| `description` | `string` |  | Short plan description. |
+| `features` | `string[]` |  | List of included features. |
+| `highlighted` | `boolean` | `false` | Applies brand accent styling for recommended plans. |
+| `badge` | `string` |  | Label for the plan badge (e.g. "Most Popular"). |
+| `ctaLabel` | `string` | `'Get started'` | CTA button label. |
+| `onCta` | `() => void` |  | CTA button click handler. |
+
+## Example: Default
+
+```tsx
+<PlanCard
+  name="Pro"
+  price="$49/mo"
+  description="Everything you need to scale."
+  features={['Unlimited projects', 'Priority support', 'Custom domains', 'Analytics']}
+  highlighted
+  badge="Most Popular"
+  ctaLabel="Start free trial"
+/>
+```
+
+
+---
+
+# SettingsSection
+
+Grouped settings panel with title, description, and action area.
+
+- Package: `@nexub/patterns` · Category: Layout · Status: stable
+- Import: `import { SettingsSection } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/settings-section
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Section heading. |
+| `description` | `string` |  | Supporting description for the section. |
+| `children` (required) | `React.ReactNode` |  | Settings controls. |
+| `action` | `React.ReactNode` |  | Primary action (e.g. save button). |
+
+## Example: Default
+
+```tsx
+<SettingsSection
+  title="Profile"
+  description="Update your personal information."
+  action={<Button size="sm">Save changes</Button>}
+>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
+    <Input placeholder="Display name" />
+    <Input placeholder="Email address" type="email" />
+  </div>
+</SettingsSection>
+```
+
+
+---
+
+# StatCard
+
+Metric display card showing a KPI value, label, optional delta, and icon.
+
+- Package: `@nexub/patterns` · Category: Data · Status: stable
+- Import: `import { StatCard } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/stat-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | Metric name label. |
+| `value` (required) | `React.ReactNode` |  | Primary metric value. |
+| `delta` | `string` |  | Change value (e.g. "+12.5%"). |
+| `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
+| `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
+| `description` | `string` |  | Additional context below the value. |
+
+## Example: Default
+
+```tsx
+<StatCard
+  label="Total Revenue"
+  value="$48,295"
+  delta="+12.5%"
+  deltaType="increase"
+  description="vs last month"
+/>
+```
+
+## Example: With icon
+
+```tsx
+<StatCard
+  label="Active Users"
+  value="2,841"
+  delta="-3.2%"
+  deltaType="decrease"
+  icon={<Users size={20} />}
+/>
+```
+
+
+---
+
+# StepIndicator
+
+Visual progress indicator for multi-step flows like onboarding or checkout.
+
+- Package: `@nexub/patterns` · Category: Navigation · Status: stable
+- Import: `import { StepIndicator } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/step-indicator
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` (required) | `StepIndicatorStep[]` |  | Array of step definitions. |
+| `currentStep` (required) | `number` |  | Zero-based index of the active step. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction. |
+
+## Example: Default
+
+```tsx
+<StepIndicator
+  currentStep={1}
+  steps={[
+    { label: 'Account' },
+    { label: 'Profile' },
+    { label: 'Payment' },
+    { label: 'Review' },
+  ]}
+/>
+```
+
+
+---
+
+# UserCard
+
+User profile card displaying avatar, name, role, and optional actions.
+
+- Package: `@nexub/patterns` · Category: People · Status: stable
+- Import: `import { UserCard } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/user-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | `string` |  | User display name. |
+| `email` | `string` |  | User email address. |
+| `role` | `string` |  | Job title or role label. |
+| `avatar` | `string` |  | URL for avatar image. |
+| `actions` | `React.ReactNode` |  | Action buttons or menu. |
+
+## Example: Default
+
+```tsx
+<UserCard
+  name="Alex Morgan"
+  email="alex@nexub.io"
+  role="Design Lead"
+/>
+```

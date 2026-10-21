@@ -1,0 +1,19 @@
+{
+  "name": "nexub-ds",
+  "description": "Build SaaS UI with the Nexub Design System: components, patterns, tokens and Calm Depth rules for Claude.",
+  "author": {
+    "name": "Nexub AI",
+    "url": "https://github.com/Nexub-AI"
+  },
+  "homepage": "https://nexub-ds-docs.pages.dev",
+  "repository": "https://github.com/Nexub-AI/nexub-ds",
+  "license": "MIT",
+  "keywords": [
+    "design-system",
+    "react",
+    "tailwind",
+    "saas",
+    "ui"
+  ],
+  "version": "1.5.1"
+}

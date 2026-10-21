@@ -13,7 +13,7 @@ const entry: ComponentEntry = {
     related: ['icon-button', 'button-group', 'link'],
   },
   props: [
-    { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'ghost' | 'subtle' | 'link' | 'destructive'", default: "'primary'", required: false, description: 'Visual style of the button.' },
+    { name: 'variant', type: "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'subtle' | 'link' | 'destructive' | 'accent'", default: "'primary'", required: false, description: 'Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text.' },
     { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", required: false, description: 'Control height and padding.' },
     { name: 'loading', type: 'boolean', default: 'false', required: false, description: 'Shows a spinner and disables interaction.' },
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the button.' },
