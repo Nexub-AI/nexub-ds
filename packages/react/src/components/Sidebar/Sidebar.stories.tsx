@@ -78,6 +78,24 @@ export const Default: Story = {
   ),
 };
 
+/** Many items in a short sidebar: they scroll, the footer stays pinned at the bottom. */
+export const StickyFooter: Story = {
+  render: () => (
+    <div className="flex h-[320px]">
+      <Sidebar.Root>
+        <Sidebar.Group label="Pages">
+          {Array.from({ length: 12 }, (_, i) => (
+            <Sidebar.Item key={i} href="#" active={i === 0} icon={<DashboardIcon />}>
+              Page {i + 1}
+            </Sidebar.Item>
+          ))}
+        </Sidebar.Group>
+        <Sidebar.Footer className="text-xs text-[var(--color-on-surface-muted)]">v1.2.0 · Updated 21 Oct 2026</Sidebar.Footer>
+      </Sidebar.Root>
+    </div>
+  ),
+};
+
 /** Product logo with a status. The status moves under the logo when they don't fit, and a logo wider than the sidebar truncates. */
 export const HeaderWithStatus: Story = {
   render: () => (

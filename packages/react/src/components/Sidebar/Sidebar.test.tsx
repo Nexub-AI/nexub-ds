@@ -4,6 +4,17 @@ import { describe, it, expect } from 'vitest';
 import { Sidebar } from './Sidebar.js';
 
 describe('Sidebar', () => {
+  it('Footer stays pinned to the bottom of the scrolling sidebar', () => {
+    render(
+      <Sidebar.Root>
+        <Sidebar.Footer>v1.2.0</Sidebar.Footer>
+      </Sidebar.Root>,
+    );
+    const footer = screen.getByText('v1.2.0');
+    expect(screen.getByRole('navigation')).toContainElement(footer);
+    expect(footer).toHaveClass('sticky', 'bottom-0', 'bg-[var(--color-surface-container-low)]', 'border-t');
+  });
+
   it('renders a labelled navigation landmark', () => {
     render(<Sidebar.Root />);
     expect(screen.getByRole('navigation', { name: 'Sidebar' })).toBeInTheDocument();

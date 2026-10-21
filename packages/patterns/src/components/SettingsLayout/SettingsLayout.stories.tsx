@@ -18,13 +18,14 @@ const pages: Record<string, { title: string; description: string }> = {
   notifications: { title: 'Notifications', description: 'Choose what we email you about.' },
 };
 
-function MyAccount({ appHeader = false }: { appHeader?: boolean }) {
+function MyAccount({ appHeader = false, navFooter }: { appHeader?: boolean; navFooter?: React.ReactNode }) {
   const [active, setActive] = React.useState('profile');
   const page = pages[active]!;
   return (
     <SettingsLayout
       items={items}
       activeId={active}
+      navFooter={navFooter}
       onSelect={(item) => setActive(item.id)}
       header={
         appHeader
@@ -102,5 +103,14 @@ export const WithAppHeader: Story = { render: () => <MyAccount appHeader /> };
 export const WithAppHeaderPhone: Story = {
   name: 'With AppHeader (375px)',
   render: () => <MyAccount appHeader />,
+  parameters: Phone375.parameters,
+};
+
+/** `navFooter` stays pinned at the bottom of the section sidebar (and the phone menu) while the items scroll. */
+export const WithNavFooter: Story = { render: () => <MyAccount navFooter="v1.2.0 · Updated 21 Oct 2026" /> };
+
+export const WithNavFooterPhone: Story = {
+  name: 'With nav footer (375px)',
+  render: () => <MyAccount navFooter="v1.2.0 · Updated 21 Oct 2026" />,
   parameters: Phone375.parameters,
 };
