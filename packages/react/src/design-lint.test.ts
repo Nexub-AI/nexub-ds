@@ -34,7 +34,7 @@ const RULES: Record<string, RegExp> = {
 const KNOWN: Record<string, Record<string, number>> = {};
 
 const PACKAGES = path.resolve(__dirname, '../..');
-const ROOTS = ['react/src/components', 'patterns/src/components'];
+const ROOTS = ['react/src/components', 'react/src/utils', 'react/src/hooks', 'patterns/src/components'];
 
 function sourceFiles(): string[] {
   const out: string[] = [];

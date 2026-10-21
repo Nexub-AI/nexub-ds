@@ -303,6 +303,8 @@ export const searchIndex: SearchEntry[] = [
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
+  { id: 'upgrading', label: 'Upgrading to 1.8', description: 'From 1.5: changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
+  { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
@@ -347,6 +349,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
       { title: 'Internationalization', href: '/getting-started/internationalization' },
       { title: 'Building AI surfaces', href: '/getting-started/ai-surfaces' },
+      { title: 'Upgrading to 1.8', href: '/getting-started/upgrading' },
     ],
   },
   {
@@ -391,6 +394,12 @@ export const navGroups: NavGroup[] = [
       title: e.meta.title,
       href: `/patterns/${e.meta.slug}`,
     })),
+  },
+  {
+    title: 'Examples',
+    items: [
+      { title: 'Dashboard', href: '/examples/dashboard' },
+    ],
   },
   {
     title: 'Content',

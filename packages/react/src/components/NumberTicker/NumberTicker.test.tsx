@@ -71,6 +71,25 @@ describe('NumberTicker', () => {
     expect(html).not.toMatch(/data-motion/);
     expect(html).toContain('-98,765.43');
   });
+
+  // Inline-block digits are bidi-neutral: without an LTR isolate an RTL page
+  // shows "$68,420" as "024,86$".
+  it('isolates the number LTR so RTL pages keep digit order', () => {
+    const { container } = render(<NumberTicker value="$68,420" />);
+    expect(container.querySelector('[aria-hidden]')).toHaveAttribute('dir', 'ltr');
+  });
+
+  it('keeps RTL-locale formats RTL, with each digit run isolated LTR', () => {
+    // What Intl gives for ar / he: an RLM, Latin digits, then the currency.
+    const { container } = render(<NumberTicker value={'\u200F68,420.00 US$'} />);
+    const root = container.querySelector('[aria-hidden]')!;
+    expect(root).toHaveAttribute('dir', 'rtl');
+    const runs = root.querySelectorAll(':scope > [dir="ltr"]');
+    expect(runs).toHaveLength(1);
+    expect(runs[0]!.querySelectorAll('[data-digit]')).toHaveLength(7);
+    expect(runs[0]!.textContent).toContain(',');
+    expect(renderToString(<NumberTicker value={'\u200F68,420.00 US$'} />)).not.toMatch(/ style="/);
+  });
 });
 
 describe('Amount animate', () => {

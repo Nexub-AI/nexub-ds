@@ -6,18 +6,18 @@ Scope asked for: security, pixel-perfect UI, UX, colour, cards, hovers and card 
 
 ## Release tracker
 
-Updated at every step. Flow per version: feature PRs → `development` (CI green) → `staging` → `production` → Version Packages PR → npm publish → back-merge.
+Updated at every step. Flow per version: feature PRs → `development` → `staging` → `production` → Version Packages PR → npm publish → back-merge. Tests run locally (`pnpm ci:local`, `pnpm ci:local:visual`) and on the self-hosted Mac minis (#110); GitHub-hosted Actions only deploy and publish.
 
 | Version | Scope | Status | PRs | Released |
 |---|---|---|---|---|
 | **1.6.0** | Waves 1–4: security + consistency, cards + motion, colour + UX, AI surface kit | ✅ **Released** — on npm (all 6 packages), docs deployed, production = development | #94–#97 → staging #98 → production #99 → version #100 → back-merge #101 | 2026-10-21 |
-| **1.7.0** | Hardening: release-workflow token cleanup; axe accessibility checks over every story in CI; bundle-size budgets; visual tests for docs foundation pages; date pickers follow locale + RTL; translated file sizes; swipeable `Toast.Root`; Tag shape decision | 🚧 **Built, in review** — PR open, CI running; then staging → production → npm | #103 | — |
-| **1.8.0** | Adoption: 1.5 → 1.6+ migration guide (new props, brand roles, NexubProvider, design-lint rules for apps); codemod for app code (legacy tokens → roles, physical → logical classes); an example product screen in the docs built only from public APIs, and the fixes it turns up | ⏳ Planned | — | — |
+| **1.7.0** | Hardening: release-workflow clean-up; axe accessibility checks over every story; bundle-size budgets; docs visual tests; date pickers follow locale + RTL; FileUpload as a native label; swipeable `Toast.Root`; Tag documented. Also shipped: Claude skill, `llms.txt` and the new `@nexub/mcp` package (#102) | ✅ **Released** — on npm (all 7 packages incl. new `@nexub/mcp`), docs deployed, production = development. First publish failed (npm token removed by mistake); fixed by hotfix #108 | #102, #103 → staging #105 → production #106 → version #107 → hotfix #108 → back-merge #109 | 2026-10-21 |
+| **1.8.0** | Adoption: 1.5 → 1.6+ migration guide (new props, brand roles, NexubProvider, design-lint rules for apps); codemod for app code (legacy tokens → roles, physical → logical classes); an example product screen in the docs built only from public APIs, and the fixes it turns up | 🚧 **Built, verified locally** (`ci:local` + `ci:local:visual`, 1,072 visual/a11y/docs checks) — merging, then staging → production → npm | PR pending | — |
 | **1.9.0** | Foundations: runtime brand theming from a seed colour (`ThemeProvider seed`); Tailwind v4 readiness (CSS-first preset alongside the v3 preset, no breaking change) | ⏳ Planned | — | — |
 
 After 1.9.x the next release is **2.0.0** (rolling-minor policy, PUBLISHING.md); nothing in this plan needs a breaking change.
 
-Still yours to do (repo settings): turn on Dependabot alerts and secret-scanning push protection. npm trusted publishing is already live — v1.6.0 published through OIDC.
+Still yours to do: (1) register the Mac minis for this repo or at the org level (they're on `krtc-fe` only) and run Docker/Colima on them, or CI jobs stay queued; (2) keep the `NPM_TOKEN` secret — trusted publishing is **not** configured; set it up per package on npmjs.com or rotate the token before ~2026-11-11; (3) turn on Dependabot alerts and secret-scanning push protection.
 
 ---
 

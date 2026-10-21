@@ -24,4 +24,9 @@ describe('Kbd', () => {
     render(<Kbd ref={ref}>Shift</Kbd>);
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
+
+  it('stays left-to-right in RTL so shortcuts do not reorder', () => {
+    render(<Kbd>⌘K</Kbd>);
+    expect(screen.getByText('⌘K')).toHaveAttribute('dir', 'ltr');
+  });
 });

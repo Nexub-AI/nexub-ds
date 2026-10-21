@@ -20,8 +20,13 @@
   "publishConfig": {
     "access": "public"
   },
+  "bin": {
+    "nexub-migrate": "./bin/nexub-migrate.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "bin",
+    "!bin/*.test.mjs"
   ],
   "sideEffects": [
     "./dist/css/*.css"
@@ -46,7 +51,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "node --test scripts/*.test.mjs"
+    "test": "node --test scripts/*.test.mjs bin/*.test.mjs"
   },
   "devDependencies": {
     "@material/material-color-utilities": "0.3.0",

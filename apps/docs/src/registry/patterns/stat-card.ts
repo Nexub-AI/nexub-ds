@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: 'value', type: 'React.ReactNode', required: true, description: 'Primary metric value.' },
     { name: 'delta', type: 'string', required: false, description: 'Change value (e.g. "+12.5%").' },
     { name: 'deltaType', type: "'increase' | 'decrease' | 'neutral'", required: false, description: 'Semantic direction of the delta.' },
+    { name: 'sentiment', type: "'positive' | 'negative' | 'neutral'", required: false, description: 'Colour of the delta, independent of the arrow. Defaults from `deltaType`; use it when a decrease is good news (e.g. churn down).' },
     { name: 'icon', type: 'React.ReactNode', required: false, description: 'Icon displayed in the card header.' },
     { name: 'description', type: 'string', required: false, description: 'Additional context below the value.' },
     { name: 'animate', type: 'boolean', default: 'false', required: false, description: 'Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates.' },

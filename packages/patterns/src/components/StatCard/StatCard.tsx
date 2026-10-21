@@ -6,7 +6,14 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   label: string;
   value: React.ReactNode;
   delta?: string;
+  /** Direction of the change: sets the arrow (and, by default, the colour). */
   deltaType?: 'increase' | 'decrease' | 'neutral';
+  /**
+   * Whether the change is good or bad, independent of its direction — e.g. churn going
+   * down is `deltaType="decrease"` + `sentiment="positive"`.
+   * @default derived from `deltaType` (increase → positive, decrease → negative)
+   */
+  sentiment?: 'positive' | 'negative' | 'neutral';
   icon?: React.ReactNode;
   description?: string;
   /** Roll digits when a number/string `value` changes (NumberTicker); announced politely. */
@@ -20,6 +27,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       value,
       delta,
       deltaType = 'neutral',
+      sentiment,
       icon,
       description,
       animate = false,
@@ -28,10 +36,13 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
     },
     ref,
   ) => {
+    const tone =
+      sentiment ??
+      (deltaType === 'increase' ? 'positive' : deltaType === 'decrease' ? 'negative' : 'neutral');
     const deltaColor =
-      deltaType === 'increase'
+      tone === 'positive'
         ? 'text-[var(--color-success)]'
-        : deltaType === 'decrease'
+        : tone === 'negative'
           ? 'text-[var(--color-error)]'
           : 'text-[var(--color-on-surface-muted)]';
 
@@ -70,6 +81,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
               <span
                 className={cn('inline-flex items-center gap-1 text-xs font-medium', deltaColor)}
                 data-delta-type={deltaType}
+                data-sentiment={tone}
               >
                 <DeltaIcon size="xs" aria-hidden="true" />
                 {delta}

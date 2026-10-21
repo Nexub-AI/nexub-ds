@@ -11,7 +11,8 @@ const entry: ComponentEntry = {
     addedIn: '0.0.1',
   },
   props: [
-    { name: 'columns', type: 'ColumnDef<TData>[]', required: true, description: 'TanStack Table column definitions. Use the createColumnHelper() utility for type-safe definitions.' },
+    { name: 'columns', type: 'DataTableColumn<TData>[]', required: true, description: 'TanStack Table column definitions (`DataTableColumn` is exported from @nexub/react). Set `meta: { align: \'end\' }` for numeric columns; headers, sort buttons and cells follow it.' },
+    { name: 'caption', type: 'ReactNode', required: false, description: 'Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only.' },
     { name: 'data', type: 'TData[]', required: true, description: 'Array of row data objects to render.' },
     { name: 'enableSorting', type: 'boolean', default: 'false', required: false, description: 'Enables click-to-sort on column headers.' },
     { name: 'enableRowSelection', type: 'boolean', default: 'false', required: false, description: 'Adds a checkbox column for row selection.' },
