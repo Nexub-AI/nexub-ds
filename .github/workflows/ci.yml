@@ -33,6 +33,10 @@ jobs:
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         # version is read from packageManager field in package.json (pnpm@10.34.7)
+        # Per-job dest: both Mini runners share the ci-runner home, and the
+        # default ~/setup-pnpm gets clobbered when two jobs install at once.
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -48,11 +52,13 @@ jobs:
 
       # Static security lint for the workflows themselves (injection, unpinned actions, token scope).
       - name: Workflow lint (zizmor)
-        # pipx on GitHub-hosted images; uvx or a throwaway venv on the Minis.
+        # pipx on GitHub-hosted images; uvx on the Minis. macOS's python3 is 3.9
+        # and zizmor > 1.16 needs 3.10+, so the fallback installs uv in a
+        # throwaway venv and lets uvx fetch its own Python.
         run: |
           if command -v pipx >/dev/null; then pipx run zizmor==1.30.1 --offline .github/workflows
           elif command -v uvx >/dev/null; then uvx zizmor==1.30.1 --offline .github/workflows
-          else python3 -m venv "$RUNNER_TEMP/zizmor" && "$RUNNER_TEMP/zizmor/bin/pip" install -q zizmor==1.30.1 && "$RUNNER_TEMP/zizmor/bin/zizmor" --offline .github/workflows; fi
+          else python3 -m venv "$RUNNER_TEMP/uv" && "$RUNNER_TEMP/uv/bin/pip" install -q uv && "$RUNNER_TEMP/uv/bin/uvx" zizmor==1.30.1 --offline .github/workflows; fi
 
       # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
       - name: Build packages
@@ -107,6 +113,8 @@ jobs:
           persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          dest: ${{ runner.temp }}/setup-pnpm
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -127,8 +135,11 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: Check Docker
+        # Colima belongs to the runner's user (ci-runner); start it after a reboot.
         run: |
-          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini, run: colima start"; exit 1; }
+          export PATH="/opt/homebrew/bin:$PATH"
+          docker info >/dev/null 2>&1 || colima start
+          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running for this runner's user. On the Mac mini, as ci-runner, run: colima start"; exit 1; }
 
       - name: Visual regression & contrast
         run: pnpm --filter @nexub/react test:visual:docker
