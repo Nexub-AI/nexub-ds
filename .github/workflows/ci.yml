@@ -127,8 +127,11 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: Check Docker
+        # Colima belongs to the runner's user (ci-runner); start it after a reboot.
         run: |
-          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running on this runner. On the Mac mini, run: colima start"; exit 1; }
+          export PATH="/opt/homebrew/bin:$PATH"
+          docker info >/dev/null 2>&1 || colima start
+          docker info --format 'Docker {{.ServerVersion}}' || { echo "::error::Docker is not running for this runner's user. On the Mac mini, as ci-runner, run: colima start"; exit 1; }
 
       - name: Visual regression & contrast
         run: pnpm --filter @nexub/react test:visual:docker
