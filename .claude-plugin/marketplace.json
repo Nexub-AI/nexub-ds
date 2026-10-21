@@ -12,7 +12,7 @@
       "category": "design",
       "source": {
         "source": "git-subdir",
-        "url": "Nexub-AI/nexub-ds",
+        "url": "https://github.com/Nexub-AI/nexub-ds.git",
         "path": "plugins/nexub-ds",
         "ref": "production"
       }
