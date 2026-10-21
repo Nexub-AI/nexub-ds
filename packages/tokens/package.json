@@ -1,6 +1,6 @@
 {
   "name": "@nexub/tokens",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
   "type": "module",
   "license": "MIT",
