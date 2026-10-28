@@ -1,0 +1,9 @@
+<!-- Command Hub glyph: a team of agents around a hub. -->
+<defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+</defs>
+<path d="M256 264V132M256 264 142 330M256 264l114 66" stroke="url(#glyph)" stroke-width="22" stroke-linecap="round"/>
+<circle cx="256" cy="264" r="56" fill="url(#glyph)"/>
+<circle cx="256" cy="124" r="38" fill="url(#glyph)"/>
+<circle cx="134" cy="336" r="38" fill="url(#glyph)"/>
+<circle cx="378" cy="336" r="38" fill="url(#glyph)"/>

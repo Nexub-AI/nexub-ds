@@ -8,6 +8,8 @@ export interface AppLauncherApp {
   href: string;
   /** Tile image URL (e.g. `@nexub/brand/app-icon-account.svg`). Falls back to initials. */
   icon?: string;
+  /** Section heading, e.g. "People & HR". Apps with the same group sit together, in order of first appearance. */
+  group?: string;
   /** The app the user is in now. */
   current?: boolean;
 }
@@ -23,6 +25,22 @@ export interface AppLauncherProps {
 }
 
 const COLUMNS = 3;
+
+/** Apps by group, in order of each group's first app; `firstRow` numbers the grid rows across sections. */
+function groupApps(apps: AppLauncherApp[]) {
+  const sections: { group?: string; items: AppLauncherApp[]; firstRow: number }[] = [];
+  for (const app of apps) {
+    const s = sections.find((x) => x.group === app.group);
+    if (s) s.items.push(app);
+    else sections.push({ group: app.group, items: [app], firstRow: 0 });
+  }
+  let row = 0;
+  for (const s of sections) {
+    s.firstRow = row;
+    row += Math.ceil(s.items.length / COLUMNS);
+  }
+  return sections;
+}
 
 function AppIcon({ app }: { app: AppLauncherApp }) {
   const [failed, setFailed] = React.useState(false);
@@ -44,8 +62,9 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
 export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>(
   ({ apps, onNavigate, surface = 'solid', label = 'Nexub apps', className }, ref) => {
     const [open, setOpen] = React.useState(false);
-    const listRef = React.useRef<HTMLUListElement>(null);
+    const listRef = React.useRef<HTMLDivElement>(null);
     if (apps.length === 0) return null;
+    const sections = groupApps(apps);
 
     // Open on the current app's tile (else the first) so arrow keys work at once.
     const onOpenAutoFocus = (e: Event) => {
@@ -54,23 +73,30 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
       (list?.querySelector<HTMLAnchorElement>('a[aria-current]') ?? list?.querySelector('a'))?.focus();
     };
 
-    // Arrow keys move through the 3-column grid; Home/End jump to the ends.
-    const onKeyDown = (e: React.KeyboardEvent<HTMLUListElement>) => {
+    // Arrow keys move through the 3-column grid, section by section; Home/End jump to the ends.
+    const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
       const links = [...e.currentTarget.querySelectorAll<HTMLAnchorElement>('a')];
       const i = links.indexOf(document.activeElement as HTMLAnchorElement);
       if (i < 0) return;
-      const step: Record<string, number> = {
-        ArrowRight: 1,
-        ArrowLeft: -1,
-        ArrowDown: COLUMNS,
-        ArrowUp: -COLUMNS,
-        Home: -i,
-        End: links.length - 1 - i,
+      const at = (a: HTMLAnchorElement) => [Number(a.dataset.row), Number(a.dataset.col)] as const;
+      // Up/Down: the tile in the row above or below, in the same column or the nearest before it
+      const vertical = (dir: 1 | -1) => {
+        const [row, col] = at(links[i]!);
+        const next = links.filter((a) => at(a)[0] === row + dir);
+        return next.length ? links.indexOf(next[Math.min(col, next.length - 1)]!) : i;
       };
-      const delta = step[e.key];
-      if (delta === undefined) return;
+      const target: Record<string, () => number> = {
+        ArrowRight: () => i + 1,
+        ArrowLeft: () => i - 1,
+        ArrowDown: () => vertical(1),
+        ArrowUp: () => vertical(-1),
+        Home: () => 0,
+        End: () => links.length - 1,
+      };
+      const go = target[e.key];
+      if (!go) return;
       e.preventDefault();
-      links[Math.min(links.length - 1, Math.max(0, i + delta))]?.focus();
+      links[Math.min(links.length - 1, Math.max(0, go()))]?.focus();
     };
 
     const onClick = (e: React.MouseEvent<HTMLAnchorElement>, app: AppLauncherApp) => {
@@ -97,25 +123,36 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
             onOpenAutoFocus={onOpenAutoFocus}
             className="w-80 max-w-[calc(100vw-2rem)] p-2"
           >
-            <ul ref={listRef} className="grid grid-cols-3 gap-1" onKeyDown={onKeyDown}>
-              {apps.map((app) => (
-                <li key={app.id}>
-                  <a
-                    href={app.href}
-                    aria-current={app.current ? 'page' : undefined}
-                    onClick={(e) => onClick(e, app)}
-                    className={cn(
-                      'flex flex-col items-center gap-1.5 rounded-[8px] px-1 py-3 text-center text-xs text-[var(--color-on-surface)] transition-colors',
-                      'hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
-                      app.current && 'bg-[var(--color-surface-container-low)] font-semibold',
-                    )}
-                  >
-                    <AppIcon app={app} />
-                    <span className="w-full truncate">{app.name}</span>
-                  </a>
-                </li>
+            <div ref={listRef} className="flex flex-col gap-2" onKeyDown={onKeyDown}>
+              {sections.map(({ group, items, firstRow }) => (
+                <div key={group ?? ''}>
+                  {group && (
+                    <h3 className="px-2 py-1 text-label-sm text-[var(--color-on-surface-variant)]">{group}</h3>
+                  )}
+                  <ul className="grid grid-cols-3 gap-1" aria-label={group}>
+                    {items.map((app, n) => (
+                      <li key={app.id}>
+                        <a
+                          href={app.href}
+                          aria-current={app.current ? 'page' : undefined}
+                          data-row={firstRow + Math.floor(n / COLUMNS)}
+                          data-col={n % COLUMNS}
+                          onClick={(e) => onClick(e, app)}
+                          className={cn(
+                            'flex flex-col items-center gap-1.5 rounded-[8px] px-1 py-3 text-center text-xs text-[var(--color-on-surface)] transition-colors',
+                            'hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
+                            app.current && 'bg-[var(--color-surface-container-low)] font-semibold',
+                          )}
+                        >
+                          <AppIcon app={app} />
+                          <span className="w-full truncate">{app.name}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
+            </div>
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>

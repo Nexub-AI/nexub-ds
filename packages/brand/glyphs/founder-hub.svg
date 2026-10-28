@@ -1,0 +1,7 @@
+<!-- Founder Hub glyph: a rocket. -->
+<defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fdba74"/><stop offset="1" stop-color="#ea580c"/></linearGradient>
+</defs>
+<path fill-rule="evenodd" d="M256 100c54 42 80 104 74 200H182c-6-96 20-158 74-200zm0 82a30 30 0 1 0 0 60 30 30 0 1 0 0-60z" fill="url(#glyph)"/>
+<path d="M186 244l-50 58v56l58-26zM326 244l50 58v56l-58-26z" fill="url(#glyph)"/>
+<path d="M222 318h68l-14 54c-6 26-34 26-40 0z" fill="url(#glyph)" opacity=".6"/>

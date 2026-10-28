@@ -1,0 +1,8 @@
+<!-- Contracts glyph: a page with a signature. -->
+<defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a5b4fc"/><stop offset="1" stop-color="#4f46e5"/></linearGradient>
+</defs>
+<path d="M170 106h120l84 84v184c0 18-14 32-32 32H170c-18 0-32-14-32-32V138c0-18 14-32 32-32z" fill="none" stroke="url(#glyph)" stroke-width="24" stroke-linejoin="round"/>
+<path d="M290 106v84h84" fill="none" stroke="url(#glyph)" stroke-width="24" stroke-linejoin="round"/>
+<path d="M186 238h120M186 286h80" stroke="url(#glyph)" stroke-width="22" stroke-linecap="round"/>
+<path d="M186 356c18-30 36-30 40 0s26 28 44 0 30-18 58-6" fill="none" stroke="url(#glyph)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>

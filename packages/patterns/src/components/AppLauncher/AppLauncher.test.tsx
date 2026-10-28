@@ -70,4 +70,23 @@ describe('AppLauncher', () => {
     await open();
     expect(screen.getByRole('dialog', { name: 'Nexub apps' })).toHaveAttribute('data-material', 'glass');
   });
+
+  it('shows apps in their groups, in order of first appearance, and moves down across groups', async () => {
+    const grouped: AppLauncherApp[] = [
+      { id: 'account', name: 'Account', href: '/account', group: 'You' },
+      { id: 'people', name: 'People', href: '/people', group: 'People & HR' },
+      { id: 'pay', name: 'Payub', href: '/pay', group: 'People & HR', current: true },
+      { id: 'admin', name: 'Admin', href: '/admin', group: 'You' },
+    ];
+    render(<AppLauncher apps={grouped} />);
+    const user = await open();
+    expect(screen.getAllByRole('heading').map((h) => h.textContent)).toEqual(['You', 'People & HR']);
+    expect(screen.getAllByRole('link').map((a) => a.lastElementChild!.textContent)).toEqual(['Account', 'Admin', 'People', 'Payub']);
+    expect(screen.getByRole('list', { name: 'People & HR' })).toContainElement(screen.getByRole('link', { name: 'People' }));
+    expect(screen.getByRole('link', { name: 'Payub' })).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(screen.getByRole('link', { name: 'Admin' })).toHaveFocus(); // same column in the group above
+    await user.keyboard('{ArrowLeft}{ArrowDown}');
+    expect(screen.getByRole('link', { name: 'People' })).toHaveFocus();
+  });
 });
