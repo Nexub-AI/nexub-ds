@@ -1,5 +1,11 @@
 # @nexub/themes
 
+## 2.0.0
+
+### Patch Changes
+
+- @nexub/tokens@1.10.0
+
 ## 1.9.0
 
 ### Minor Changes
