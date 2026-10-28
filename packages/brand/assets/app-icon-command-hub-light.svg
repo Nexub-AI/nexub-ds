@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e8eaef"/></linearGradient>
+    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="#8b5cf6" stop-opacity=".22"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#tile)"/>
+  <rect width="512" height="512" rx="115" fill="url(#halo)"/>
+  <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
+  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="#0b0c10" stroke-opacity=".1" stroke-width="6"/>
+  <defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+</defs>
+<path d="M256 264V132M256 264 142 330M256 264l114 66" stroke="url(#glyph)" stroke-width="22" stroke-linecap="round"/>
+<circle cx="256" cy="264" r="56" fill="url(#glyph)"/>
+<circle cx="256" cy="124" r="38" fill="url(#glyph)"/>
+<circle cx="134" cy="336" r="38" fill="url(#glyph)"/>
+<circle cx="378" cy="336" r="38" fill="url(#glyph)"/>
+</svg>

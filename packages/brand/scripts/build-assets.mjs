@@ -6,7 +6,8 @@
 //
 // Writes:
 //   assets/nexub-mark-mono.svg            single-colour mark (currentColor)
-//   assets/app-icon[-<product>].svg       black glass tile + glyph
+//   assets/app-icon[-<product>].svg       black glass tile + glyph (dark theme)
+//   assets/app-icon[-<product>]-light.svg white glass tile + glyph (light theme)
 //   assets/app-icon[-<product>]-{192,512}.png
 //   assets/favicon.ico                    16/32/48 from the Nexub tile
 //   ../tokens/tokens/brand-mark.json      --color-brand-mark-1…n
@@ -27,6 +28,14 @@ const MARK_GLYPH = `<svg x="97" y="148" width="318" height="228" viewBox="0 0 78
 const PRODUCTS = [
   { id: '', glyph: MARK_GLYPH, halo: '#8b6cff' }, // app-icon.svg — the Nexub mark
   { id: 'account', glyph: read('glyphs/account.svg'), halo: '#4099f1' },
+  { id: 'command-hub', glyph: read('glyphs/command-hub.svg'), halo: '#8b5cf6' },
+  { id: 'admin', glyph: read('glyphs/admin.svg'), halo: '#06b6d4' },
+  { id: 'people', glyph: read('glyphs/people.svg'), halo: '#f59e0b' },
+  { id: 'payhub', glyph: read('glyphs/payhub.svg'), halo: '#22c55e' },
+  { id: 'commerce', glyph: read('glyphs/commerce.svg'), halo: '#ec4899' },
+  { id: 'contracts', glyph: read('glyphs/contracts.svg'), halo: '#6366f1' },
+  { id: 'leap', glyph: read('glyphs/leap.svg'), halo: '#14b8a6' },
+  { id: 'founder-hub', glyph: read('glyphs/founder-hub.svg'), halo: '#f97316' },
 ];
 
 // ─── Parse the master ────────────────────────────────────────────────────────
@@ -98,16 +107,21 @@ const mono = master.replace(
 writeFileSync(`${root}assets/nexub-mark-mono.svg`, mono);
 
 // ─── App tiles ───────────────────────────────────────────────────────────────
-const tile = (glyph, halo) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+// `light`: the same tile in white glass, for light themes (glyphs are mid-tone, so they read on both).
+const TILE = {
+  dark: { top: '#26282e', bottom: '#050506', sheen: '.2', halo: '.32', edge: '#fff', edgeOpacity: '.14' },
+  light: { top: '#ffffff', bottom: '#e8eaef', sheen: '.7', halo: '.22', edge: '#0b0c10', edgeOpacity: '.1' },
+};
+const tile = (glyph, halo, look = TILE.dark) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26282e"/><stop offset="1" stop-color="#050506"/></linearGradient>
-    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
-    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="${halo}" stop-opacity=".32"/><stop offset="1" stop-color="${halo}" stop-opacity="0"/></radialGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${look.top}"/><stop offset="1" stop-color="${look.bottom}"/></linearGradient>
+    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity="${look.sheen}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="${halo}" stop-opacity="${look.halo}"/><stop offset="1" stop-color="${halo}" stop-opacity="0"/></radialGradient>
   </defs>
   <rect width="512" height="512" rx="115" fill="url(#tile)"/>
   <rect width="512" height="512" rx="115" fill="url(#halo)"/>
   <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
-  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="6"/>
+  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="${look.edge}" stroke-opacity="${look.edgeOpacity}" stroke-width="6"/>
   ${glyph.replace(/<!--[\s\S]*?-->\s*/g, '').trim()}
 </svg>
 `;
@@ -119,6 +133,7 @@ for (const { id, glyph, halo } of PRODUCTS) {
   const svg = tile(glyph, halo);
   writeFileSync(`${root}assets/${name}.svg`, svg);
   for (const size of [192, 512]) writeFileSync(`${root}assets/${name}-${size}.png`, await png(svg, size));
+  writeFileSync(`${root}assets/${name}-light.svg`, tile(glyph, halo, TILE.light));
 }
 
 // favicon.ico: PNG-in-ICO (supported by every current browser).

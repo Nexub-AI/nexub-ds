@@ -1,0 +1,8 @@
+<!-- People glyph: two people, one in front. -->
+<defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient>
+</defs>
+<circle cx="334" cy="182" r="44" fill="url(#glyph)" opacity=".55"/>
+<path d="M300 258c54 0 90 40 100 100h-62c-6-40-20-74-38-100z" fill="url(#glyph)" opacity=".55"/>
+<circle cx="228" cy="200" r="56" fill="url(#glyph)"/>
+<path d="M116 388c12-70 58-112 112-112s100 42 112 112z" fill="url(#glyph)"/>
