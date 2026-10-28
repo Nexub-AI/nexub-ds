@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e8eaef"/></linearGradient>
+    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="#f59e0b" stop-opacity=".22"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#tile)"/>
+  <rect width="512" height="512" rx="115" fill="url(#halo)"/>
+  <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
+  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="#0b0c10" stroke-opacity=".1" stroke-width="6"/>
+  <defs>
+  <linearGradient id="glyph" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fcd34d"/><stop offset="1" stop-color="#d97706"/></linearGradient>
+</defs>
+<circle cx="334" cy="182" r="44" fill="url(#glyph)" opacity=".55"/>
+<path d="M300 258c54 0 90 40 100 100h-62c-6-40-20-74-38-100z" fill="url(#glyph)" opacity=".55"/>
+<circle cx="228" cy="200" r="56" fill="url(#glyph)"/>
+<path d="M116 388c12-70 58-112 112-112s100 42 112 112z" fill="url(#glyph)"/>
+</svg>
