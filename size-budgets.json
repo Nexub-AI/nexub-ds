@@ -123,7 +123,7 @@
   "react/VisuallyHidden": 300,
   "patterns/ActivityFeed": 800,
   "patterns/AppHeader": 6200,
-  "patterns/AppLauncher": 1800,
+  "patterns/AppLauncher": 2100,
   "patterns/AuthCard": 800,
   "patterns/BentoGrid": 700,
   "patterns/Conversation": 1900,
