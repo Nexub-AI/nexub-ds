@@ -13,6 +13,8 @@ pnpm add @nexub/brand
 | `app-icon.svg` | App icon: black glass rounded tile with the Nexub mark. |
 | `app-icon-192.png`, `app-icon-512.png` | The same tile for web manifests. |
 | `app-icon-account.svg`, `app-icon-account-192.png`, `app-icon-account-512.png` | The Account tile: same tile, person glyph. |
+| `app-icon-<product>.svg`, `-192.png`, `-512.png` | Each Nexub app's tile, same tile with its own glyph: `command-hub` (a hub of agents), `admin` (a shield), `people` (two people), `payhub` (a banknote), `commerce` (a shopping bag), `contracts` (a signed page), `leap` (a leap forward), `founder-hub` (a rocket). |
+| `app-icon[-<product>]-light.svg` | Every tile again in white glass, for light themes. The black tiles are for dark themes. |
 | `favicon.ico` | 16, 32 and 48 px, from `app-icon.svg`. |
 
 Every file is at `@nexub/brand/<file>` (the package maps `./*` to `assets/*`).
@@ -74,6 +76,8 @@ Every product gets the same tile with its own glyph. Don't edit the tile itself.
 
 1. Draw the glyph as an SVG fragment in the 512 × 512 tile space and save it as `glyphs/<product>.svg`. Keep it inside roughly x/y 90–422, the area the Nexub mark uses. Gradients go in a `<defs>` inside the fragment; use `id="glyph"` (see `glyphs/account.svg`).
 2. Add `{ id: '<product>', glyph: read('glyphs/<product>.svg'), halo: '<hex>' }` to `PRODUCTS` in `scripts/build-assets.mjs`. `halo` tints the glow behind the glyph.
-3. Run `pnpm --filter @nexub/brand build:assets` and commit `assets/app-icon-<product>*`.
+3. Run `pnpm --filter @nexub/brand build:assets` and commit `assets/app-icon-<product>*` (it also writes the `-light.svg` tile).
+
+Use mid-tone gradient colours for a glyph (roughly Tailwind's 300 to 700 shades), so it reads on both the black and the white tile.
 
 The same script regenerates everything from the master, `assets/nexub-mark.svg`: the mono mark, every tile and PNG, the favicon, the `--color-brand-mark-*` tokens in `@nexub/tokens`, and the path data behind `<NexubMark>`. If the master changes, replace that file (verbatim, never redrawn) and run the script.
