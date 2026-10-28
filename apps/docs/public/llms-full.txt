@@ -96,7 +96,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v1.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v2.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -334,7 +334,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v1.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v2.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
