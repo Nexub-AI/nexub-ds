@@ -3,8 +3,8 @@
 # List rows are one accessible element ("Title, subtitle"), so match by prefix.
 appId: ai.nexub.mobile
 ---
-- launchApp:
-    clearState: true
+# CI installs a fresh build, so no clearState (it reinstalls on iOS and can hang).
+- launchApp
 - extendedWaitUntil:
     visible: "Components"
     timeout: 60000
