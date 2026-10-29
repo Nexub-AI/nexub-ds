@@ -156,12 +156,8 @@ appId: ai.nexub.mobile
     centerElement: true
 - takeScreenshot: 08-send
 - runFlow: subflows/back.yaml
-- scrollUntilVisible:
-    element: "Activity.*"
-    centerElement: true
-- tapOn:
-    text: "Activity.*"
-    retryTapIfNoChange: true
+# Deep link (app.json scheme): this step checks the Activity screen itself.
+- openLink: nexub://patterns/activity
 - extendedWaitUntil:
     visible: "Amazon.*"
     timeout: 10000
