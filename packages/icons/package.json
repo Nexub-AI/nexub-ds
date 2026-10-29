@@ -1,7 +1,7 @@
 {
   "name": "@nexub/icons",
   "version": "2.0.0",
-  "description": "Icon components for Nexub Design System — tree-shakeable React wrappers around Lucide icons with design-system size tokens.",
+  "description": "Icon components for Nexub Design System — tree-shakeable wrappers around Lucide icons with design-system size tokens, for React (web) and React Native (@nexub/icons/native).",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -29,12 +29,17 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "react-native": "./dist/native/index.js",
+      "default": "./dist/native/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "node scripts/gen-native.mjs && tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -42,7 +47,10 @@
   },
   "peerDependencies": {
     "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "react-dom": ">=18 <20",
+    "lucide-react-native": ">=1.60.0",
+    "react-native": ">=0.86.0",
+    "react-native-svg": ">=15.0.0"
   },
   "dependencies": {
     "lucide-react": "^0.468.0"
@@ -50,7 +58,24 @@
   "devDependencies": {
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "lucide-react-native": "1.64.0",
+    "react-native": "0.88.1",
+    "react-native-svg": "15.16.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "lucide-react-native": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "react-native-svg": {
+      "optional": true
+    }
   }
 }

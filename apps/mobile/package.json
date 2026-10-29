@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@nexub/icons": "workspace:*",
+    "@nexub/react-native": "workspace:*",
     "expo": "~58.0.21",
     "expo-constants": "~58.0.14",
     "expo-font": "~58.0.11",

@@ -1,0 +1,11 @@
+# Smoke + screenshot of the Foundations screen (runs on iOS and Android in CI).
+appId: ai.nexub.mobile
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Display"
+    timeout: 60000
+- assertVisible: "Press me"
+- tapOn: "Press me"
+- takeScreenshot: foundations

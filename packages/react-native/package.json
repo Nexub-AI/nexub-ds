@@ -1,0 +1,118 @@
+{
+  "name": "@nexub/react-native",
+  "version": "2.0.0",
+  "description": "React Native components for Nexub Design System — native chrome, Nexub content. Same tokens, brands and prop names as @nexub/react, for Expo and bare React Native apps.",
+  "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/react-native"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "components",
+    "design-system",
+    "nexub"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "lib",
+    "!src/__tests__"
+  ],
+  "sideEffects": false,
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/typescript/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "bob build",
+    "clean": "rm -rf lib",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "@expo-google-fonts/geist-mono": "^0.4.3",
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
+    "@nexub/core": "workspace:*",
+    "@nexub/icons": "workspace:*",
+    "@nexub/tokens": "workspace:*",
+    "lucide-react-native": "^1.64.0"
+  },
+  "peerDependencies": {
+    "expo-glass-effect": ">=57.0.0",
+    "expo-haptics": ">=57.0.0",
+    "react": ">=19.1.0",
+    "react-native": ">=0.86.0",
+    "react-native-reanimated": ">=4.5.0",
+    "react-native-safe-area-context": ">=5.6.0",
+    "react-native-svg": ">=15.0.0"
+  },
+  "peerDependenciesMeta": {
+    "expo-glass-effect": {
+      "optional": true
+    },
+    "expo-haptics": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "^30.0.0",
+    "@types/react": "~19.3.0",
+    "expo": "~58.0.21",
+    "expo-glass-effect": "~58.0.5",
+    "expo-haptics": "~58.0.7",
+    "jest": "^30.2.0",
+    "jest-expo": "~58.0.13",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-builder-bob": "^0.44.1",
+    "react-native-reanimated": "4.7.1",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-svg": "15.16.0",
+    "react-native-worklets": "0.13.0",
+    "typescript": "^5.9.3"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(\\.pnpm|((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|react-native-svg|lucide-react-native|@nexub/.*|@material/.*))"
+    ]
+  }
+}

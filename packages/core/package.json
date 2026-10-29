@@ -1,0 +1,46 @@
+{
+  "name": "@nexub/core",
+  "version": "2.0.0",
+  "description": "Platform-neutral core of Nexub Design System, shared by @nexub/react (web) and @nexub/react-native: UI strings, locale direction, money formatting and shared prop types. Pure TypeScript, no DOM, no React.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "design-system",
+    "i18n",
+    "money",
+    "nexub"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
