@@ -1,5 +1,6 @@
 # Walks every catalogue screen and screenshots it (iOS + Android in CI).
 # Scroll to each target first: CI emulators have small screens.
+# List rows are one accessible element ("Title, subtitle"), so match by prefix.
 appId: ai.nexub.mobile
 ---
 - launchApp:
@@ -9,7 +10,7 @@ appId: ai.nexub.mobile
     timeout: 60000
 - takeScreenshot: 00-catalogue
 
-- tapOn: "Foundations"
+- tapOn: "Foundations.*"
 - extendedWaitUntil:
     visible: "Display"
     timeout: 10000
@@ -19,7 +20,7 @@ appId: ai.nexub.mobile
 - takeScreenshot: 01-foundations
 - back
 
-- tapOn: "Actions"
+- tapOn: "Actions.*"
 - extendedWaitUntil:
     visible: "Continue"
     timeout: 10000
@@ -29,7 +30,7 @@ appId: ai.nexub.mobile
 - takeScreenshot: 02-actions
 - back
 
-- tapOn: "Inputs"
+- tapOn: "Inputs.*"
 - extendedWaitUntil:
     visible: "You send"
     timeout: 10000
@@ -40,8 +41,8 @@ appId: ai.nexub.mobile
 - back
 
 - scrollUntilVisible:
-    element: "Lists & cards"
-- tapOn: "Lists & cards"
+    element: "Lists & cards.*"
+- tapOn: "Lists & cards.*"
 - extendedWaitUntil:
     visible: "Total balance"
     timeout: 10000
@@ -49,8 +50,8 @@ appId: ai.nexub.mobile
 - back
 
 - scrollUntilVisible:
-    element: "Feedback"
-- tapOn: "Feedback"
+    element: "Feedback.*"
+- tapOn: "Feedback.*"
 - extendedWaitUntil:
     visible: "Banners"
     timeout: 10000
@@ -66,8 +67,8 @@ appId: ai.nexub.mobile
 - back
 
 - scrollUntilVisible:
-    element: "Mobile patterns"
-- tapOn: "Mobile patterns"
+    element: "Mobile patterns.*"
+- tapOn: "Mobile patterns.*"
 - extendedWaitUntil:
     visible: "Sheets and menus"
     timeout: 10000
@@ -84,14 +85,14 @@ appId: ai.nexub.mobile
 - back
 
 - scrollUntilVisible:
-    element: "Screens"
-- tapOn: "Screens"
+    element: "Screens.*"
+- tapOn: "Screens.*"
 - extendedWaitUntil:
     visible: "Payub flows"
     timeout: 10000
 - scrollUntilVisible:
-    element: "Send money"
-- tapOn: "Send money"
+    element: "Send money.*"
+- tapOn: "Send money.*"
 - extendedWaitUntil:
     visible: "How much?"
     timeout: 10000
@@ -102,9 +103,9 @@ appId: ai.nexub.mobile
 - takeScreenshot: 08-send
 - back
 - scrollUntilVisible:
-    element: "Activity"
-- tapOn: "Activity"
+    element: "Activity.*"
+- tapOn: "Activity.*"
 - extendedWaitUntil:
-    visible: "Amazon"
+    visible: "Amazon.*"
     timeout: 10000
 - takeScreenshot: 09-activity
