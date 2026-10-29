@@ -23,6 +23,21 @@ const HEX = /^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i;
  * @returns {Record<string, string>} e.g. `createSeedTheme('#4099f1')['--color-primary'] === 'light-dark(#0061a6, #a0c9ff)'`
  */
 export function createSeedTheme(seed, { contrast = 'standard', target = 'primary' } = {}) {
+  const { light, dark } = createSeedRoles(seed, { contrast, target });
+  /** @type {Record<string, string>} */
+  const vars = {};
+  for (const role of Object.keys(light)) vars[`--color-${role}`] = `light-dark(${light[role]}, ${dark[role]})`;
+  return vars;
+}
+
+/**
+ * The same accent family as plain hex per scheme, for React Native
+ * (`@nexub/react-native` merges it over the built-in roles).
+ * @param {string} seed Hex colour, `#rgb` or `#rrggbb`.
+ * @param {SeedThemeOptions} [options]
+ * @returns {{ light: Record<string, string>, dark: Record<string, string> }}
+ */
+export function createSeedRoles(seed, { contrast = 'standard', target = 'primary' } = {}) {
   if (typeof seed !== 'string' || !HEX.test(seed))
     throw new TypeError(`@nexub/tokens/seed: seed must be a hex colour (#rgb or #rrggbb), got ${JSON.stringify(seed)}`);
   if (!LEVELS.includes(contrast))
@@ -32,13 +47,14 @@ export function createSeedTheme(seed, { contrast = 'standard', target = 'primary
   const pal = tonalPalette(seed);
   const roles = { ...accent(target) };
   if (target === 'primary' && ROLES['inverse-primary']) roles['inverse-primary'] = ROLES['inverse-primary'];
-  /** @type {Record<string, string>} */
-  const vars = {};
+  /** @type {{ light: Record<string, string>, dark: Record<string, string> }} */
+  const out = { light: {}, dark: {} };
   for (const [role, entry] of Object.entries(roles)) {
     const [, l, d] = tonesAt(entry, contrast);
-    vars[`--color-${role}`] = `light-dark(${toneHex(pal, l)}, ${toneHex(pal, d)})`;
+    out.light[role] = toneHex(pal, l);
+    out.dark[role] = toneHex(pal, d);
   }
-  return vars;
+  return out;
 }
 
 /**
