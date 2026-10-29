@@ -81,3 +81,30 @@ appId: ai.nexub.mobile
 - tapOn: "Show Balance"
 - assertVisible: "$12,480.50"
 - takeScreenshot: 07-mobile
+- back
+
+- scrollUntilVisible:
+    element: "Screens"
+- tapOn: "Screens"
+- extendedWaitUntil:
+    visible: "Payub flows"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Send money"
+- tapOn: "Send money"
+- extendedWaitUntil:
+    visible: "How much?"
+    timeout: 10000
+- tapOn: "2"
+- tapOn: "5"
+- tapOn: "0"
+- assertVisible: "Recipient gets"
+- takeScreenshot: 08-send
+- back
+- scrollUntilVisible:
+    element: "Activity"
+- tapOn: "Activity"
+- extendedWaitUntil:
+    visible: "Amazon"
+    timeout: 10000
+- takeScreenshot: 09-activity

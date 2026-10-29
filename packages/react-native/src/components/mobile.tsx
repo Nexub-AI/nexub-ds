@@ -497,8 +497,6 @@ export function ExpressiveMoneyInput({
           variant="display-md"
           color={error ? 'error' : 'on-surface'}
           tabular
-          adjustsFontSizeToFit
-          numberOfLines={1}
         >
           <Text variant="headline-md" color="on-surface-variant">
             {currencySymbol(currency, loc)}

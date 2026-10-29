@@ -33,6 +33,11 @@
       "types": "./lib/typescript/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./patterns": {
+      "source": "./src/patterns/index.ts",
+      "types": "./lib/typescript/patterns/index.d.ts",
+      "default": "./lib/module/patterns/index.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

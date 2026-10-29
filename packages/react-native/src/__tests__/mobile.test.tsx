@@ -45,7 +45,8 @@ it('OTPInput: one field with OTP autofill, completes at full length', async () =
 it('ExpressiveMoneyInput: keypad builds an amount, capped at the currency minor units', async () => {
   const onValue = jest.fn();
   await wrap(<ExpressiveMoneyInput label="Amount" currency="USD" onValueChange={onValue} />);
-  for (const k of ['4', '2', '.', '5', '0', '9']) await fireEvent.press(screen.getByRole('button', { name: k }));
+  for (const k of ['4', '2', '.', '5', '0', '9'])
+    await fireEvent.press(screen.getByRole('button', { name: k }));
   expect(onValue).toHaveBeenLastCalledWith(42.5);
   await fireEvent.press(screen.getByRole('button', { name: 'Delete' }));
   expect(onValue).toHaveBeenLastCalledWith(42.5);
@@ -61,7 +62,11 @@ it('SensitiveValue: masked reads "hidden", the toggle reveals', async () => {
 it('SwipeableRow: every swipe action is an accessibility action', async () => {
   const onDelete = jest.fn();
   await wrap(
-    <SwipeableRow label="Amazon, $42.50" onPress={() => {}} actions={[{ label: 'Delete', tone: 'danger', onPress: onDelete }]}>
+    <SwipeableRow
+      label="Amazon, $42.50"
+      onPress={() => {}}
+      actions={[{ label: 'Delete', tone: 'danger', onPress: onDelete }]}
+    >
       <RNText>Row</RNText>
     </SwipeableRow>,
   );
@@ -77,7 +82,9 @@ it('ContextMenu: long-press actions are reachable as accessibility actions', asy
       <RNText>GB33 BUKB 2020 1555 5555 55</RNText>
     </ContextMenu>,
   );
-  await fireEvent(screen.getByRole('button', { name: 'IBAN' }), 'accessibilityAction', { nativeEvent: { actionName: 'Copy' } });
+  await fireEvent(screen.getByRole('button', { name: 'IBAN' }), 'accessibilityAction', {
+    nativeEvent: { actionName: 'Copy' },
+  });
   expect(onCopy).toHaveBeenCalled();
 });
 

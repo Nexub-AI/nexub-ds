@@ -68,7 +68,9 @@ export function BottomSheet({
   const max = screen - insets.top - 12;
   const [content, setContent] = React.useState(0);
   const heights = detents
-    .map((d) => Math.min(max, d === 'content' ? (content ? content + GRABBER : max * 0.5) : d * screen))
+    .map((d) =>
+      Math.min(max, d === 'content' ? (content ? content + GRABBER : max * 0.5) : d * screen),
+    )
     .sort((a, b) => a - b);
   const [index, setIndex] = React.useState(0);
   const [visible, setVisible] = React.useState(open);
