@@ -189,3 +189,31 @@ describe('feedback', () => {
     });
   });
 });
+
+describe('toast timing', () => {
+  function Undoable({ action }: { action: boolean }) {
+    const toast = useToast();
+    return (
+      <RNText
+        accessibilityRole="button"
+        onPress={() => toast({ message: 'Deleted', ...(action ? { action: { label: 'Undo', onPress: () => {} } } : {}) })}
+      >
+        go
+      </RNText>
+    );
+  }
+
+  it('stays 10 s when it has an action, 4 s without', async () => {
+    jest.useFakeTimers();
+    try {
+      await wrap(<Undoable action />);
+      await fireEvent.press(screen.getByRole('button', { name: 'go' }));
+      await React.act(() => jest.advanceTimersByTime(5_000));
+      expect(screen.getByText('Deleted')).toBeTruthy();
+      await React.act(() => jest.advanceTimersByTime(5_100));
+      expect(screen.queryByText('Deleted')).toBeNull();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+});
