@@ -99,7 +99,8 @@ appId: ai.nexub.mobile
 - tapOn: "2"
 - tapOn: "5"
 - tapOn: "0"
-- assertVisible: "Recipient gets.*"
+- scrollUntilVisible:
+    element: "Recipient gets.*"
 - takeScreenshot: 08-send
 - back
 - scrollUntilVisible:
