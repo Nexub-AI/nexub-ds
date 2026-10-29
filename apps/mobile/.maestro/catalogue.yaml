@@ -18,7 +18,7 @@ appId: ai.nexub.mobile
     element: "Press me"
 - tapOn: "Press me"
 - takeScreenshot: 01-foundations
-- back
+- runFlow: subflows/back.yaml
 
 - tapOn: "Actions.*"
 - extendedWaitUntil:
@@ -28,7 +28,7 @@ appId: ai.nexub.mobile
     element: "Bank"
 - tapOn: "Bank"
 - takeScreenshot: 02-actions
-- back
+- runFlow: subflows/back.yaml
 
 - tapOn: "Inputs.*"
 - extendedWaitUntil:
@@ -38,7 +38,7 @@ appId: ai.nexub.mobile
     element: "Month"
 - tapOn: "Month"
 - takeScreenshot: 03-inputs
-- back
+- runFlow: subflows/back.yaml
 
 - scrollUntilVisible:
     element: "Lists & cards.*"
@@ -47,7 +47,7 @@ appId: ai.nexub.mobile
     visible: "Total balance"
     timeout: 10000
 - takeScreenshot: 04-lists
-- back
+- runFlow: subflows/back.yaml
 
 - scrollUntilVisible:
     element: "Feedback.*"
@@ -64,7 +64,7 @@ appId: ai.nexub.mobile
 - assertVisible: "Cancel this transfer?"
 - tapOn: "Keep it"
 - assertNotVisible: "Cancel this transfer?"
-- back
+- runFlow: subflows/back.yaml
 
 - scrollUntilVisible:
     element: "Mobile patterns.*"
@@ -82,7 +82,7 @@ appId: ai.nexub.mobile
 - tapOn: "Show Balance"
 - assertVisible: ".*12,480.50"
 - takeScreenshot: 07-mobile
-- back
+- runFlow: subflows/back.yaml
 
 - scrollUntilVisible:
     element: "Screens.*"
@@ -102,7 +102,7 @@ appId: ai.nexub.mobile
 - scrollUntilVisible:
     element: "Recipient gets.*"
 - takeScreenshot: 08-send
-- back
+- runFlow: subflows/back.yaml
 - scrollUntilVisible:
     element: "Activity.*"
 - tapOn: "Activity.*"
