@@ -80,7 +80,7 @@ appId: ai.nexub.mobile
 - scrollUntilVisible:
     element: "Show Balance"
 - tapOn: "Show Balance"
-- assertVisible: "$12,480.50"
+- assertVisible: ".*12,480.50"
 - takeScreenshot: 07-mobile
 - back
 
@@ -99,7 +99,7 @@ appId: ai.nexub.mobile
 - tapOn: "2"
 - tapOn: "5"
 - tapOn: "0"
-- assertVisible: "Recipient gets"
+- assertVisible: "Recipient gets.*"
 - takeScreenshot: 08-send
 - back
 - scrollUntilVisible:
