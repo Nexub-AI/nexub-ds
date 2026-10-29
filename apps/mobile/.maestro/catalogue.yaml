@@ -1,5 +1,6 @@
 # Walks every catalogue screen and screenshots it (iOS + Android in CI).
-# Scroll to each target first: CI emulators have small screens.
+# Scroll each target to the centre first: CI emulators have small screens, and
+# a row left at the bottom edge sits under Android's gesture bar.
 # List rows are one accessible element ("Title, subtitle"), so match by prefix.
 appId: ai.nexub.mobile
 ---
@@ -16,6 +17,7 @@ appId: ai.nexub.mobile
     timeout: 10000
 - scrollUntilVisible:
     element: "Press me"
+    centerElement: true
 - tapOn: "Press me"
 - takeScreenshot: 01-foundations
 - runFlow: subflows/back.yaml
@@ -26,6 +28,7 @@ appId: ai.nexub.mobile
     timeout: 10000
 - scrollUntilVisible:
     element: "Bank"
+    centerElement: true
 - tapOn: "Bank"
 - takeScreenshot: 02-actions
 - runFlow: subflows/back.yaml
@@ -36,12 +39,14 @@ appId: ai.nexub.mobile
     timeout: 10000
 - scrollUntilVisible:
     element: "Month"
+    centerElement: true
 - tapOn: "Month"
 - takeScreenshot: 03-inputs
 - runFlow: subflows/back.yaml
 
 - scrollUntilVisible:
     element: "Lists & cards.*"
+    centerElement: true
 - tapOn: "Lists & cards.*"
 - extendedWaitUntil:
     visible: "Total balance"
@@ -51,12 +56,14 @@ appId: ai.nexub.mobile
 
 - scrollUntilVisible:
     element: "Feedback.*"
+    centerElement: true
 - tapOn: "Feedback.*"
 - extendedWaitUntil:
     visible: "Banners"
     timeout: 10000
 - scrollUntilVisible:
     element: "Show toast"
+    centerElement: true
 - tapOn: "Show toast"
 - assertVisible: "Recipient saved"
 - takeScreenshot: 05-feedback
@@ -68,6 +75,7 @@ appId: ai.nexub.mobile
 
 - scrollUntilVisible:
     element: "Mobile patterns.*"
+    centerElement: true
 - tapOn: "Mobile patterns.*"
 - extendedWaitUntil:
     visible: "Sheets and menus"
@@ -79,6 +87,7 @@ appId: ai.nexub.mobile
 - assertNotVisible: "Transfer details"
 - scrollUntilVisible:
     element: "Show Balance"
+    centerElement: true
 - tapOn: "Show Balance"
 - assertVisible: ".*12,480.50"
 - takeScreenshot: 07-mobile
@@ -86,12 +95,14 @@ appId: ai.nexub.mobile
 
 - scrollUntilVisible:
     element: "Screens.*"
+    centerElement: true
 - tapOn: "Screens.*"
 - extendedWaitUntil:
     visible: "Payub flows"
     timeout: 10000
 - scrollUntilVisible:
     element: "Send money.*"
+    centerElement: true
 - tapOn: "Send money.*"
 - extendedWaitUntil:
     visible: "How much?"
@@ -101,10 +112,12 @@ appId: ai.nexub.mobile
 - tapOn: "0"
 - scrollUntilVisible:
     element: "Recipient gets.*"
+    centerElement: true
 - takeScreenshot: 08-send
 - runFlow: subflows/back.yaml
 - scrollUntilVisible:
     element: "Activity.*"
+    centerElement: true
 - tapOn: "Activity.*"
 - extendedWaitUntil:
     visible: "Amazon.*"
