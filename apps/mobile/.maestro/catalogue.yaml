@@ -158,6 +158,10 @@ appId: ai.nexub.mobile
 - runFlow: subflows/back.yaml
 # Deep link (app.json scheme): this step checks the Activity screen itself.
 - openLink: nexub://patterns/activity
+# iOS asks "Open in Nexub Mobile?" the first time a link opens the app.
+- tapOn:
+    text: "Open"
+    optional: true
 - extendedWaitUntil:
     visible: "Amazon.*"
     timeout: 10000
