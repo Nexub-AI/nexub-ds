@@ -1,5 +1,5 @@
 import { Stack as Screen, router } from 'expo-router';
-import { Bell, Layers, MessageSquare, Settings, Sparkles } from '@nexub/icons/native';
+import { Bell, Layers, MessageSquare, Settings, Smartphone, Sparkles } from '@nexub/icons/native';
 import { Icon, ListItem, ListSection, ScreenContainer } from '@nexub/react-native';
 
 const SECTIONS = [
@@ -8,6 +8,7 @@ const SECTIONS = [
   { href: '/inputs', title: 'Inputs', subtitle: 'Fields, money, selection controls', icon: Settings },
   { href: '/lists', title: 'Lists & cards', subtitle: 'ListItem, ListSection, Card, Accordion', icon: MessageSquare },
   { href: '/feedback', title: 'Feedback', subtitle: 'Banner, toast, dialog, progress, states', icon: Bell },
+  { href: '/mobile', title: 'Mobile patterns', subtitle: 'Sheets, swipe, OTP, keypad, privacy', icon: Smartphone },
 ] as const;
 
 export default function Catalogue() {

@@ -94,6 +94,20 @@ export interface NexubMessages {
   signOut: string;
   signingOut: string;
   accountAndApps: string;
+  // Mobile (@nexub/react-native)
+  /** Sheet grabber: cycles the sheet height. */
+  resize: string;
+  cancel: string;
+  show: (label: string) => string;
+  hide: (label: string) => string;
+  /** Read in place of a masked value. */
+  hidden: string;
+  deleteDigit: string;
+  /** OTP / PIN entry, e.g. "Digit 2 of 6". */
+  codeDigit: (index: number, total: number) => string;
+  offline: string;
+  page: (index: number, total: number) => string;
+  moreActions: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -181,6 +195,16 @@ export const defaultMessages: NexubMessages = {
   signOut: 'Sign out',
   signingOut: 'Signing out…',
   accountAndApps: 'Account and apps',
+  resize: 'Resize',
+  cancel: 'Cancel',
+  show: (label) => `Show ${label}`,
+  hide: (label) => `Hide ${label}`,
+  hidden: 'Hidden',
+  deleteDigit: 'Delete',
+  codeDigit: (index, total) => `Digit ${index} of ${total}`,
+  offline: 'You’re offline. Some things may not be up to date.',
+  page: (index, total) => `Page ${index} of ${total}`,
+  moreActions: 'More actions',
 };
 
 export type Direction = 'ltr' | 'rtl';

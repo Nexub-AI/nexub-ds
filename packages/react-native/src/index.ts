@@ -124,3 +124,52 @@ export type {
   EmptyStateProps,
   ErrorStateProps,
 } from './components/feedback';
+export { BottomSheet, ActionSheet, ContextMenu, Select } from './components/overlays';
+export type {
+  BottomSheetProps,
+  SheetDetent,
+  SheetAction,
+  ActionSheetProps,
+  ContextMenuProps,
+  SelectProps,
+  SelectOption,
+} from './components/overlays';
+export {
+  SwipeableRow,
+  RefreshControl,
+  Carousel,
+  PageIndicator,
+  StickyFooter,
+  OTPInput,
+  NumericKeypad,
+  ExpressiveMoneyInput,
+  SensitiveValue,
+  PrivacyShield,
+  OfflineBanner,
+  Coachmark,
+  FAB,
+  DateTimeField,
+} from './components/mobile';
+export type {
+  SwipeAction,
+  SwipeableRowProps,
+  CarouselProps,
+  PageIndicatorProps,
+  StickyFooterProps,
+  OTPInputProps,
+  NumericKeypadProps,
+  ExpressiveMoneyInputProps,
+  SensitiveValueProps,
+  PrivacyShieldProps,
+  CoachmarkProps,
+  FABProps,
+  DateTimeFieldProps,
+} from './components/mobile';
+
+// Navigation (native chrome, Nexub colours)
+export {
+  nexubStackOptions,
+  nexubNavigationTheme,
+  nexubTabsOptions,
+  useNexubNavigation,
+} from './theme/navigation';

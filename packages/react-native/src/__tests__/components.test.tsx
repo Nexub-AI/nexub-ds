@@ -62,7 +62,12 @@ describe('Button', () => {
 
   it('small controls still get a 44pt target', async () => {
     await wrap(<IconButton icon={Settings} label="Settings" size="sm" />);
-    expect(screen.getByRole('button', { name: 'Settings' }).props.hitSlop).toEqual({ top: 6, bottom: 6, left: 6, right: 6 });
+    expect(screen.getByRole('button', { name: 'Settings' }).props.hitSlop).toEqual({
+      top: 6,
+      bottom: 6,
+      left: 6,
+      right: 6,
+    });
   });
 });
 
@@ -109,7 +114,15 @@ describe('selection controls', () => {
 describe('ListItem', () => {
   it('a switch row is one switch element; pressing the row toggles it', async () => {
     const onChange = jest.fn();
-    await wrap(<ListItem variant="switch" title="Face ID" subtitle="Unlock the app" checked={false} onCheckedChange={onChange} />);
+    await wrap(
+      <ListItem
+        variant="switch"
+        title="Face ID"
+        subtitle="Unlock the app"
+        checked={false}
+        onCheckedChange={onChange}
+      />,
+    );
     await fireEvent.press(screen.getByRole('switch', { name: 'Face ID, Unlock the app' }));
     expect(onChange).toHaveBeenCalledWith(true);
   });
@@ -130,7 +143,9 @@ describe('money and numbers', () => {
 
   it('Stepper clamps to its range and is adjustable', async () => {
     const onChange = jest.fn();
-    await wrap(<Stepper label="Guests" defaultValue={1} min={1} max={2} onValueChange={onChange} />);
+    await wrap(
+      <Stepper label="Guests" defaultValue={1} min={1} max={2} onValueChange={onChange} />,
+    );
     await fireEvent.press(screen.getByRole('button', { name: 'Increment' }));
     expect(onChange).toHaveBeenLastCalledWith(2);
     expect(screen.getByRole('button', { name: 'Increment' })).toBeDisabled();
@@ -169,6 +184,8 @@ describe('feedback', () => {
 
   it('Progress reports its value', async () => {
     await wrap(<Progress value={0.4} label="Upload" />);
-    expect(screen.getByRole('progressbar', { name: 'Upload' })).toHaveAccessibilityValue({ now: 40 });
+    expect(screen.getByRole('progressbar', { name: 'Upload' })).toHaveAccessibilityValue({
+      now: 40,
+    });
   });
 });

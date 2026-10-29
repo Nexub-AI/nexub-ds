@@ -64,3 +64,20 @@ appId: ai.nexub.mobile
 - tapOn: "Keep it"
 - assertNotVisible: "Cancel this transfer?"
 - back
+
+- scrollUntilVisible:
+    element: "Mobile patterns"
+- tapOn: "Mobile patterns"
+- extendedWaitUntil:
+    visible: "Sheets and menus"
+    timeout: 10000
+- tapOn: "Open sheet"
+- assertVisible: "Transfer details"
+- takeScreenshot: 06-sheet
+- tapOn: "Confirm and send"
+- assertNotVisible: "Transfer details"
+- scrollUntilVisible:
+    element: "Show Balance"
+- tapOn: "Show Balance"
+- assertVisible: "$12,480.50"
+- takeScreenshot: 07-mobile

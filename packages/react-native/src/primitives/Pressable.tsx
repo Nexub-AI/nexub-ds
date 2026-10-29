@@ -82,7 +82,11 @@ export function Pressable({
       {stateLayer && (
         <AnimatedView
           pointerEvents="none"
-          style={[StyleSheet.absoluteFill, { backgroundColor: roles[stateLayer], borderRadius: radius }, layer]}
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: roles[stateLayer], borderRadius: radius },
+            layer,
+          ]}
         />
       )}
     </AnimatedPressable>

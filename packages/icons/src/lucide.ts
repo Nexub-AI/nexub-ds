@@ -13,6 +13,7 @@ import {
   LucideCheck,
   LucideCheckCircle2,
   LucideX,
+  LucideDelete,
   LucideXCircle,
   LucideAlertCircle,
   LucideAlertTriangle,
@@ -135,6 +136,8 @@ export const ChevronsUpDown  = /* @__PURE__ */ createIcon(LucideChevronsUpDown, 
 export const Check           = /* @__PURE__ */ createIcon(LucideCheck,           'Check');
 export const CheckCircle2    = /* @__PURE__ */ createIcon(LucideCheckCircle2,    'CheckCircle2');
 export const X               = /* @__PURE__ */ createIcon(LucideX,               'X');
+// Backspace (number pads, PIN entry)
+export const Delete          = /* @__PURE__ */ createIcon(LucideDelete,          'Delete');
 export const XCircle         = /* @__PURE__ */ createIcon(LucideXCircle,         'XCircle');
 export const AlertCircle     = /* @__PURE__ */ createIcon(LucideAlertCircle,     'AlertCircle');
 export const AlertTriangle   = /* @__PURE__ */ createIcon(LucideAlertTriangle,   'AlertTriangle');
