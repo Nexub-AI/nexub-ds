@@ -1,0 +1,12 @@
+# graphify (knowledge graph) — keep the corpus to real source and hand-written docs.
+# Visual-regression baselines and brand image assets: thousands of vision calls, no knowledge.
+packages/react/visual/__screenshots__/
+packages/brand/assets/
+packages/brand/glyphs/
+apps/docs/public/*.svg
+# Generated from the docs registry (`pnpm ai-docs`): duplicates of the source of truth.
+plugins/nexub-ds/skills/nexub-ds/references/
+apps/docs/public/llms.txt
+apps/docs/public/llms-full.txt
+# Secrets / local config
+.npmrc
