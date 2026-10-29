@@ -17,15 +17,14 @@ Every change that affects a published package must include a changeset:
 pnpm changeset
 ```
 
-Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it, and the major rolls over automatically after `x.9`. All six `@nexub/*` packages share one version. See [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy).
+Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it, and the major rolls over automatically after `x.9`. All seven `@nexub/*` packages share one version. See [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy).
 
 ### Semver guide
 
 | Type | When to use |
 | --- | --- |
 | `patch` | Bug fix, docs, internal refactor with no public API change |
-| `minor` | New component, new prop, new token, backwards-compatible addition |
-| `major` | Breaking API change — prop rename, removed export, CSS var rename |
+| `minor` | New component, new prop, new token, backwards-compatible addition. Breaking changes are minors too: start the line with `**Breaking:**` and give the migration |
 
 ## Adding a component
 
@@ -36,8 +35,8 @@ Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it,
 
 ## Running CI locally
 
-Tests run locally and on the office Mac minis (self-hosted runners); GitHub-hosted
-Actions only deploy and release. Before you open or merge a PR, run what CI runs:
+CI runs on GitHub-hosted runners (the repo is public, so minutes are free). Before you
+push, run what CI runs:
 
 ```bash
 pnpm ci:local          # audit, build, bundle size, docs build, release policy, AI docs, typecheck, lint, tests
@@ -55,6 +54,17 @@ pnpm --filter @nexub/react test:visual:docker --update-snapshots    # accept int
 ```
 
 Review the changed PNGs in the PR diff before committing them. Contrast failures that already exist are listed in `KNOWN` in `contrast.spec.ts`. That list may only shrink.
+
+## Knowledge graph (graphify)
+
+A local knowledge graph of the repo helps answer "what uses X?" or "why was Y decided?" before you change things. It is not committed.
+
+```bash
+uv tool install graphifyy             # once
+graphify update .                     # code only, no LLM: refresh after pulling
+```
+
+In Claude Code, `/graphify .` builds the full graph (code plus the plans, READMEs and changelogs) and `/graphify query "…"` searches it. `.graphifyignore` keeps out screenshots, brand images and generated docs. Output goes to `graphify-out/` (gitignored): `GRAPH_REPORT.md`, `graph.json` and an interactive `graph.html`.
 
 ## PR checklist
 
