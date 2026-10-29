@@ -6,6 +6,8 @@ appId: ai.nexub.mobile
 - extendedWaitUntil:
     visible: "Display"
     timeout: 60000
-- assertVisible: "Press me"
-- tapOn: "Press me"
 - takeScreenshot: foundations
+- scrollUntilVisible:
+    element: "Press me"
+    direction: DOWN
+- tapOn: "Press me"
