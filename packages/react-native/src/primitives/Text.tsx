@@ -27,7 +27,8 @@ const RAMP: Record<NativeTypeRole, Ramp> = {
 
 // Big type already reads at large sizes; cap it so it doesn't push content off
 // screen. Body, title and label roles scale without a cap (WCAG 1.4.4).
-const cap = (role: NativeTypeRole) => (role.startsWith('display') ? 1.3 : role.startsWith('headline') ? 1.6 : undefined);
+const cap = (role: NativeTypeRole) =>
+  role.startsWith('display') ? 1.3 : role.startsWith('headline') ? 1.6 : undefined;
 
 export interface TextProps extends RNTextProps {
   /** Type role. @default 'body-md' */
@@ -40,7 +41,14 @@ export interface TextProps extends RNTextProps {
   family?: FontFamily;
 }
 
-export function Text({ variant = 'body-md', color = 'on-surface', tabular, family, style, ...rest }: TextProps) {
+export function Text({
+  variant = 'body-md',
+  color = 'on-surface',
+  tabular,
+  family,
+  style,
+  ...rest
+}: TextProps) {
   const { roles, tokens, fonts } = useTheme();
   const t = tokens.type[variant];
   return (

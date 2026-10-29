@@ -3,7 +3,15 @@ import { StyleSheet } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import * as Haptics from 'expo-haptics';
 import { native } from '@nexub/tokens/native';
-import { NexubNativeProvider, Pressable, Surface, Text, Heading, useTheme, type NexubNativeProviderProps } from '../index';
+import {
+  NexubNativeProvider,
+  Pressable,
+  Surface,
+  Text,
+  Heading,
+  useTheme,
+  type NexubNativeProviderProps,
+} from '../index';
 
 jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
@@ -45,7 +53,10 @@ describe('NexubNativeProvider', () => {
 
   it('derives RTL from the locale and merges message overrides', async () => {
     let theme!: ReturnType<typeof useTheme>;
-    await wrap(<Roles onTheme={(t) => (theme = t)} />, { locale: 'ar', messages: { close: 'إغلاق' } });
+    await wrap(<Roles onTheme={(t) => (theme = t)} />, {
+      locale: 'ar',
+      messages: { close: 'إغلاق' },
+    });
     expect(theme.dir).toBe('rtl');
     expect(theme.messages.close).toBe('إغلاق');
     expect(theme.messages.remove).toBe('Remove');

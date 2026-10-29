@@ -3,7 +3,8 @@ import { Platform } from 'react-native';
 // Semantic haptics (MOBILE_PLAN.md §4.4). Apple's rule: never on plain taps,
 // never the only feedback. Android uses the platform constants, not the
 // vibrator-based impact API.
-export type HapticToken = 'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap';
+export type HapticToken =
+  'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap';
 
 // Optional peer: without expo-haptics every haptic is a no-op.
 let H: typeof import('expo-haptics') | undefined;

@@ -27,6 +27,9 @@ env:
   EXPO_NO_TELEMETRY: 1
   MAESTRO_VERSION: 2.12.0
   MAESTRO_SHA256: a6044a84542f522f434c5dc3d609e60c7446d423f3ed1b2ae513f5c48663ec5e
+  # The iOS XCTest driver can take minutes to start on shared macOS runners.
+  MAESTRO_DRIVER_STARTUP_TIMEOUT: 300000
+  MAESTRO_CLI_NO_ANALYTICS: 1
 
 jobs:
   ios:

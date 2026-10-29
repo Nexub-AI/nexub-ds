@@ -116,3 +116,7 @@ Version 2.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card): Metric display card showing a KPI value, label, optional delta, and icon.
 - [StepIndicator](https://nexub-ds-docs.pages.dev/patterns/step-indicator): Visual progress indicator for multi-step flows like onboarding or checkout.
 - [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card): User profile card displaying avatar, name, role, and optional actions.
+
+## React Native
+
+- [React Native](https://nexub-ds-docs.pages.dev/getting-started/react-native): @nexub/react-native components and @nexub/react-native/patterns screens for Expo and bare React Native apps (native chrome, Nexub content)

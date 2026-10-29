@@ -1,6 +1,6 @@
 # Mobile (React Native): research and plan (2026-10-29)
 
-Status: **direction approved 2026-10-29.** The hybrid approach (native chrome, Nexub content) and recommendations D1–D9 are accepted, with Payub as the pilot (§10). The execution plan (§12) is **awaiting approval**. Nothing is built yet. Roadmap row to add: R9 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
+Status: **built 2026-10-29/30, phases M0–M5 done** (one release, 2.1.0, after CI). Results: §13. Roadmap row: R9 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEMS.md).
 
 This builds on the Calm Depth research for Google, Apple and Wise ([DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md) §2–3) and carries it to phones.
 
@@ -511,6 +511,32 @@ The showcase app becomes a clickable Payub-style demo built only from public API
 **M0, step 1: the `apps/mobile` skeleton in the monorepo**, on branch `spike/mobile-m0`.
 
 It's the cheapest way to surface the real risks (Metro + pnpm, Maestro on CI, sheet engine) before we write any package code, and it doesn't touch any published package. B1 (npm token) can run in parallel. It only has to be done before 2.1.0 publishes.
+
+---
+
+## 13. Results (M0–M5)
+
+| Phase | Delivered | PR |
+|---|---|---|
+| M0 | `apps/mobile` Expo SDK 58 showcase in the pnpm monorepo; patched zod for the Expo CLI (GHSA-mrhx-c7xc-m3w5) | #142 |
+| M1 | `@nexub/core`, `@nexub/tokens/native` (+ parity test), `createSeedRoles`, `@nexub/icons/native`, `@nexub/react-native` provider + primitives, Mobile CI (Maestro on iOS simulator + Android emulator) | #143 |
+| M2 | About 30 core components | — |
+| M3 | Sheets, menus, swipe, OTP, keypad, privacy, navigation helpers | — |
+| M4 | `@nexub/react-native/patterns`: 20 screen templates, Payub first | — |
+| M5 | README as the reference, AI docs + MCP `get_react_native`, docs page, mobile app icons in `@nexub/brand` | — |
+
+Decisions made while building (they change §4–§5 where noted):
+
+- **D4, BottomSheet:** built on Reanimated + RN core `PanResponder` (no TrueSheet, no Gesture Handler). It works in Expo Go and with Gesture Handler 2 or 3 apps, and adds no native dependency. Grabber, detents, keyboard and accessibility are covered in tests and on the simulator.
+- **Gestures:** RN core `PanResponder` everywhere (sheet, swipe rows, slider). Gesture Handler 3 replaced its API, and we support SDK 57 (GH 2) and SDK 58 (GH 3).
+- **Fonts:** static weights from `@expo-google-fonts` per-weight subpaths (no vendored binaries; bare RN can load the same files).
+- **Header:** an opaque native header with large titles. A transparent header hid the expanded large title on iOS 26.
+- **Hermes on iOS** has no `Intl.NumberFormat#formatToParts`/`resolvedOptions`; `@nexub/core` money helpers derive the same values from `format()` (tested).
+- **Tag / StatusPill** are deprecated on web, so native ships only `Badge` (with `dot`).
+- **Status stays alpha** for every native component in 2.1.0: stable comes after the Payub pilot uses them (M5 "promotion" deferred to that feedback).
+- **Showcase dev setup:** `source` export condition + Metro singletons, so the app runs from package source without rebuilding and without duplicate native modules.
+
+Not done (follow-ups): a dedicated NexubMark/product marks set in `@nexub/icons/native`; on-device Storybook (the showcase app covers the catalogue); per-component docs pages with screenshots; screenshot assertions (Maestro runs flows and uploads screenshots; no baselines yet).
 
 ---
 

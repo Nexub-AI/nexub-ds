@@ -1,0 +1,112 @@
+# Walks every catalogue screen and screenshots it (iOS + Android in CI).
+# Scroll to each target first: CI emulators have small screens.
+# List rows are one accessible element ("Title, subtitle"), so match by prefix.
+appId: ai.nexub.mobile
+---
+# CI installs a fresh build, so no clearState (it reinstalls on iOS and can hang).
+- launchApp
+- extendedWaitUntil:
+    visible: "Components"
+    timeout: 60000
+- takeScreenshot: 00-catalogue
+
+- tapOn: "Foundations.*"
+- extendedWaitUntil:
+    visible: "Display"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Press me"
+- tapOn: "Press me"
+- takeScreenshot: 01-foundations
+- runFlow: subflows/back.yaml
+
+- tapOn: "Actions.*"
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Bank"
+- tapOn: "Bank"
+- takeScreenshot: 02-actions
+- runFlow: subflows/back.yaml
+
+- tapOn: "Inputs.*"
+- extendedWaitUntil:
+    visible: "You send"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Month"
+- tapOn: "Month"
+- takeScreenshot: 03-inputs
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Lists & cards.*"
+- tapOn: "Lists & cards.*"
+- extendedWaitUntil:
+    visible: "Total balance"
+    timeout: 10000
+- takeScreenshot: 04-lists
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Feedback.*"
+- tapOn: "Feedback.*"
+- extendedWaitUntil:
+    visible: "Banners"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Show toast"
+- tapOn: "Show toast"
+- assertVisible: "Recipient saved"
+- takeScreenshot: 05-feedback
+- tapOn: "Open dialog"
+- assertVisible: "Cancel this transfer?"
+- tapOn: "Keep it"
+- assertNotVisible: "Cancel this transfer?"
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Mobile patterns.*"
+- tapOn: "Mobile patterns.*"
+- extendedWaitUntil:
+    visible: "Sheets and menus"
+    timeout: 10000
+- tapOn: "Open sheet"
+- assertVisible: "Transfer details"
+- takeScreenshot: 06-sheet
+- tapOn: "Confirm and send"
+- assertNotVisible: "Transfer details"
+- scrollUntilVisible:
+    element: "Show Balance"
+- tapOn: "Show Balance"
+- assertVisible: ".*12,480.50"
+- takeScreenshot: 07-mobile
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Screens.*"
+- tapOn: "Screens.*"
+- extendedWaitUntil:
+    visible: "Payub flows"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Send money.*"
+- tapOn: "Send money.*"
+- extendedWaitUntil:
+    visible: "How much?"
+    timeout: 10000
+- tapOn: "2"
+- tapOn: "5"
+- tapOn: "0"
+- scrollUntilVisible:
+    element: "Recipient gets.*"
+- takeScreenshot: 08-send
+- runFlow: subflows/back.yaml
+- scrollUntilVisible:
+    element: "Activity.*"
+- tapOn: "Activity.*"
+- extendedWaitUntil:
+    visible: "Amazon.*"
+    timeout: 10000
+- takeScreenshot: 09-activity

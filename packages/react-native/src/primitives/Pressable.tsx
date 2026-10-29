@@ -12,6 +12,9 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 import type { HapticToken } from '../theme/haptics';
 import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
 
+// The touchable itself animates and takes `style`, so layout props (flex,
+// position, margins) apply to the element that sits in the parent's layout.
+const AnimatedPressable = Animated.createAnimatedComponent(RNPressable);
 const AnimatedView = Animated.createAnimatedComponent(View);
 
 export interface PressableProps extends Omit<RNPressableProps, 'style' | 'children'> {
@@ -49,12 +52,14 @@ export function Pressable({
   const opacity = tokens.state.pressed;
   const scale = pressScale === false ? 1 : pressScale;
 
-  const container = useAnimatedStyle(() => ({ transform: [{ scale: 1 - (1 - scale) * pressed.value }] }));
+  const container = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 - (1 - scale) * pressed.value }],
+  }));
   const layer = useAnimatedStyle(() => ({ opacity: pressed.value * opacity }));
   const radius = StyleSheet.flatten(style)?.borderRadius;
 
   return (
-    <RNPressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityState={{ disabled: !!disabled }}
       disabled={disabled}
@@ -70,17 +75,20 @@ export function Pressable({
         if (haptic) play(haptic);
         onPress?.(e);
       }}
+      style={[style, container]}
       {...rest}
     >
-      <AnimatedView style={[style, container]}>
-        {children}
-        {stateLayer && (
-          <AnimatedView
-            pointerEvents="none"
-            style={[StyleSheet.absoluteFill, { backgroundColor: roles[stateLayer], borderRadius: radius }, layer]}
-          />
-        )}
-      </AnimatedView>
-    </RNPressable>
+      {children}
+      {stateLayer && (
+        <AnimatedView
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: roles[stateLayer], borderRadius: radius },
+            layer,
+          ]}
+        />
+      )}
+    </AnimatedPressable>
   );
 }

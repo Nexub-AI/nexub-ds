@@ -79,6 +79,7 @@ add('core', join(pkgs, 'core/dist/index.js'));
 add('tokens/native', join(pkgs, 'tokens/dist/js/native.js'));
 add('icons/native', join(pkgs, 'icons/dist/native/index.js'));
 add('react-native', join(pkgs, 'react-native/lib/module/index.js'));
+add('react-native/patterns', join(pkgs, 'react-native/lib/module/patterns/index.js'));
 add('react', join(pkgs, 'react/dist/index.js'));
 add('patterns', join(pkgs, 'patterns/dist/index.js'));
 for (const dir of ['react', 'patterns']) {

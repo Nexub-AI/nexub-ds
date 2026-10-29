@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { AccessibilityInfo, AppState, Platform, StyleSheet, View, useColorScheme } from 'react-native';
+import {
+  AccessibilityInfo,
+  AppState,
+  Platform,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
 import { native, type NativeRoles } from '@nexub/tokens/native';
 import { createSeedRoles } from '@nexub/tokens/seed';
 import {
@@ -68,7 +75,10 @@ export interface NexubNativeProviderProps {
 const ThemeContext = React.createContext<NexubTheme | null>(null);
 
 // AccessibilityInfo reads that fire no change event (contrast): re-read on foreground.
-function useForegroundSetting(read: (() => Promise<boolean>) | undefined, enabled: boolean): boolean {
+function useForegroundSetting(
+  read: (() => Promise<boolean>) | undefined,
+  enabled: boolean,
+): boolean {
   const [on, setOn] = React.useState(false);
   React.useEffect(() => {
     if (!enabled || !read) return;
@@ -80,7 +90,10 @@ function useForegroundSetting(read: (() => Promise<boolean>) | undefined, enable
   return on;
 }
 
-function useSetting(read: () => Promise<boolean>, event: 'reduceMotionChanged' | 'reduceTransparencyChanged'): boolean {
+function useSetting(
+  read: () => Promise<boolean>,
+  event: 'reduceMotionChanged' | 'reduceTransparencyChanged',
+): boolean {
   const [on, setOn] = React.useState(false);
   React.useEffect(() => {
     read().then(setOn, () => setOn(false));
@@ -96,7 +109,9 @@ type A11y = typeof AccessibilityInfo & {
 };
 const a11y = AccessibilityInfo as A11y;
 const readHighContrast =
-  Platform.OS === 'ios' ? a11y.isDarkerSystemColorsEnabled?.bind(a11y) : a11y.isHighTextContrastEnabled?.bind(a11y);
+  Platform.OS === 'ios'
+    ? a11y.isDarkerSystemColorsEnabled?.bind(a11y)
+    : a11y.isHighTextContrastEnabled?.bind(a11y);
 const readReduceMotion = () => AccessibilityInfo.isReduceMotionEnabled();
 const readReduceTransparency = () =>
   Platform.OS === 'ios' ? AccessibilityInfo.isReduceTransparencyEnabled() : Promise.resolve(false);
@@ -120,9 +135,11 @@ export function NexubNativeProvider({
   children,
 }: NexubNativeProviderProps) {
   const system = useColorScheme();
-  const scheme: Scheme = schemeProp === 'system' ? (system === 'dark' ? 'dark' : 'light') : schemeProp;
+  const scheme: Scheme =
+    schemeProp === 'system' ? (system === 'dark' ? 'dark' : 'light') : schemeProp;
   const systemHigh = useForegroundSetting(readHighContrast, contrastProp === 'system');
-  const contrast: ContrastLevel = contrastProp === 'system' ? (systemHigh ? 'high' : 'standard') : contrastProp;
+  const contrast: ContrastLevel =
+    contrastProp === 'system' ? (systemHigh ? 'high' : 'standard') : contrastProp;
   const reducedMotion = useSetting(readReduceMotion, 'reduceMotionChanged');
   const reduceTransparency = useSetting(readReduceTransparency, 'reduceTransparencyChanged');
   const resolvedDir = dir ?? directionOf(locale);
@@ -148,7 +165,21 @@ export function NexubNativeProvider({
       dir: resolvedDir,
       messages: { ...defaultMessages, ...messages },
     };
-  }, [scheme, contrast, product, seed, seedTarget, glass, reduceTransparency, reducedMotion, haptics, fonts, locale, resolvedDir, messages]);
+  }, [
+    scheme,
+    contrast,
+    product,
+    seed,
+    seedTarget,
+    glass,
+    reduceTransparency,
+    reducedMotion,
+    haptics,
+    fonts,
+    locale,
+    resolvedDir,
+    messages,
+  ]);
 
   return (
     <ThemeContext.Provider value={theme}>
