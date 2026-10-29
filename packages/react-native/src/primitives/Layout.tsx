@@ -21,7 +21,17 @@ export interface BoxProps extends ViewProps {
   flex?: number;
 }
 
-function useBoxStyle({ padding, paddingX, paddingY, gap, background, radius, align, justify, flex }: BoxProps): ViewStyle {
+function useBoxStyle({
+  padding,
+  paddingX,
+  paddingY,
+  gap,
+  background,
+  radius,
+  align,
+  justify,
+  flex,
+}: BoxProps): ViewStyle {
   const { tokens, roles } = useTheme();
   const s = (k?: Space) => (k === undefined ? undefined : tokens.spacing[k]);
   return {
@@ -48,5 +58,14 @@ export function Stack({ gap = '3', style, ...props }: BoxProps) {
 
 /** Children in a row that wraps, centred on the cross axis. @default gap '2' */
 export function Inline({ gap = '2', align = 'center', style, ...props }: BoxProps) {
-  return <View style={[useBoxStyle({ gap, align, ...props }), { flexDirection: 'row', flexWrap: 'wrap' }, style]} {...props} />;
+  return (
+    <View
+      style={[
+        useBoxStyle({ gap, align, ...props }),
+        { flexDirection: 'row', flexWrap: 'wrap' },
+        style,
+      ]}
+      {...props}
+    />
+  );
 }

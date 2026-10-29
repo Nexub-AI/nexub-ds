@@ -12,7 +12,15 @@ jest.mock('react-native-reanimated', () => {
     useDerivedValue: (fn) => ({ value: fn() }),
     withSpring: id,
     withTiming: id,
+    withRepeat: id,
+    FadeIn: {},
+    FadeOut: {},
+    FadeInDown: {},
+    FadeOutDown: {},
     interpolate: (v) => v,
     ReduceMotion: { System: 'system', Always: 'always', Never: 'never' },
   };
 });
+
+// Safe-area insets without a native provider.
+jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);

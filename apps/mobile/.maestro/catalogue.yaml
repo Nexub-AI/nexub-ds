@@ -1,0 +1,42 @@
+# Walks every catalogue screen and screenshots it (iOS + Android in CI).
+appId: ai.nexub.mobile
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Components"
+    timeout: 60000
+- takeScreenshot: 00-catalogue
+
+- tapOn: "Foundations"
+- assertVisible: "Display"
+- tapOn: "Press me"
+- takeScreenshot: 01-foundations
+- back
+
+- tapOn: "Actions"
+- assertVisible: "Continue"
+- tapOn: "Bank"
+- takeScreenshot: 02-actions
+- back
+
+- tapOn: "Inputs"
+- assertVisible: "You send"
+- tapOn: "Month"
+- takeScreenshot: 03-inputs
+- back
+
+- tapOn: "Lists & cards"
+- assertVisible: "Total balance"
+- takeScreenshot: 04-lists
+- back
+
+- tapOn: "Feedback"
+- assertVisible: "Banners"
+- tapOn: "Show toast"
+- assertVisible: "Recipient saved"
+- takeScreenshot: 05-feedback
+- tapOn: "Open dialog"
+- assertVisible: "Cancel this transfer?"
+- tapOn: "Keep it"
+- assertNotVisible: "Cancel this transfer?"

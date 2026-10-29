@@ -2,7 +2,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
-import { NexubNativeProvider, nexubFonts, useRoles } from '@nexub/react-native';
+import { NexubNativeProvider, ToastProvider, nexubFonts, useRoles } from '@nexub/react-native';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,7 +31,9 @@ export default function RootLayout() {
   if (!loaded) return null;
   return (
     <NexubNativeProvider product="payub">
-      <Screens />
+      <ToastProvider>
+        <Screens />
+      </ToastProvider>
     </NexubNativeProvider>
   );
 }

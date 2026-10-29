@@ -1,8 +1,21 @@
 // @nexub/react-native — native chrome, Nexub content (MOBILE_PLAN.md).
 
 // Theme
-export { NexubNativeProvider, useTheme, useRoles, useHaptics, useNexubMessages } from './theme/ThemeProvider';
-export type { NexubNativeProviderProps, NexubTheme, Roles, RoleName, Scheme, ElevationLevel } from './theme/ThemeProvider';
+export {
+  NexubNativeProvider,
+  useTheme,
+  useRoles,
+  useHaptics,
+  useNexubMessages,
+} from './theme/ThemeProvider';
+export type {
+  NexubNativeProviderProps,
+  NexubTheme,
+  Roles,
+  RoleName,
+  Scheme,
+  ElevationLevel,
+} from './theme/ThemeProvider';
 export { nexubFonts, fontStyle } from './theme/fonts';
 export type { FontFamily, FontSource } from './theme/fonts';
 export { playHaptic } from './theme/haptics';
@@ -25,4 +38,89 @@ export type { ScreenContainerProps } from './primitives/ScreenContainer';
 
 // Shared with @nexub/react
 export { defaultMessages, directionOf } from '@nexub/core';
-export type { NexubMessages, Direction, ToneValue, Product, GlassMode, ContrastLevel, ControlSize } from '@nexub/core';
+export type {
+  NexubMessages,
+  Direction,
+  ToneValue,
+  Product,
+  GlassMode,
+  ContrastLevel,
+  ControlSize,
+} from '@nexub/core';
+
+// Components
+export { Button, IconButton, ButtonGroup, Link } from './components/actions';
+export type {
+  ButtonProps,
+  ButtonVariant,
+  IconButtonProps,
+  ButtonGroupProps,
+  LinkProps,
+} from './components/actions';
+export { Amount, Badge, Avatar, AvatarGroup, Divider } from './components/display';
+export type {
+  AmountProps,
+  BadgeProps,
+  AvatarProps,
+  AvatarSize,
+  AvatarGroupProps,
+  DividerProps,
+} from './components/display';
+export {
+  TextField,
+  PasswordInput,
+  SearchField,
+  MoneyInput,
+  Stepper,
+  Checkbox,
+  RadioGroup,
+  Radio,
+  Switch,
+  SegmentedControl,
+  Slider,
+  Chip,
+  FilterChip,
+} from './components/inputs';
+export type {
+  TextFieldProps,
+  PasswordInputProps,
+  SearchFieldProps,
+  MoneyInputProps,
+  StepperProps,
+  CheckboxProps,
+  RadioGroupProps,
+  RadioProps,
+  SwitchProps,
+  SegmentedControlProps,
+  SliderProps,
+  ChipProps,
+} from './components/inputs';
+export { Card, ListItem, ListSection, Accordion } from './components/containers';
+export type {
+  CardProps,
+  ListItemProps,
+  ListItemVariant,
+  ListSectionProps,
+  AccordionProps,
+} from './components/containers';
+export {
+  Banner,
+  ToastProvider,
+  useToast,
+  Dialog,
+  Progress,
+  LoadingIndicator,
+  Skeleton,
+  EmptyState,
+  ErrorState,
+} from './components/feedback';
+export type {
+  BannerProps,
+  ToastOptions,
+  ToastProviderProps,
+  DialogProps,
+  ProgressProps,
+  SkeletonProps,
+  EmptyStateProps,
+  ErrorStateProps,
+} from './components/feedback';

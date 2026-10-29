@@ -32,7 +32,14 @@ export interface SurfaceProps extends ViewProps {
  * `surface-elevated` + hairline elsewhere, or whenever glass is 'off' (user
  * setting or Reduce Transparency).
  */
-export function Surface({ tone = 'surface', elevation = 0, material = 'solid', radius, style, ...rest }: SurfaceProps) {
+export function Surface({
+  tone = 'surface',
+  elevation = 0,
+  material = 'solid',
+  radius,
+  style,
+  ...rest
+}: SurfaceProps) {
   const theme = useTheme();
   const borderRadius = typeof radius === 'string' ? theme.tokens.shape[radius] : radius;
   const glass = material === 'glass' && theme.glass !== 'off';
@@ -56,7 +63,10 @@ export function Surface({ tone = 'surface', elevation = 0, material = 'solid', r
           borderRadius,
           boxShadow: theme.elevation(elevation),
         },
-        material === 'glass' && { borderWidth: StyleSheet.hairlineWidth, borderColor: theme.roles['outline-variant'] },
+        material === 'glass' && {
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: theme.roles['outline-variant'],
+        },
         style,
       ]}
       {...rest}

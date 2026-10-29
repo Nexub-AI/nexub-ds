@@ -45,7 +45,11 @@ export function ScreenContainer({
     gap: tokens.spacing[gap],
   };
   if (!scroll) {
-    return <View style={[{ flex: 1, backgroundColor: roles[background] }, inner, contentStyle, style]}>{children}</View>;
+    return (
+      <View style={[{ flex: 1, backgroundColor: roles[background] }, inner, contentStyle, style]}>
+        {children}
+      </View>
+    );
   }
   return (
     <ScrollView
