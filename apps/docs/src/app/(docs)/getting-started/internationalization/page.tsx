@@ -5,7 +5,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = { title: 'Internationalization' };
 
-// Mirrors defaultMessages in packages/react/src/components/NexubProvider/NexubProvider.tsx.
+// Mirrors defaultMessages in packages/core/src/messages.ts (shared by @nexub/react and @nexub/react-native).
 const messageKeys: [key: string, value: string][] = [
   ['close', "'Close'"],
   ['dismissAlert', "'Dismiss alert'"],

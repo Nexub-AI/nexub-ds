@@ -35,6 +35,7 @@ claude plugin install nexub-ds@nexub
 | `list_components` | Every component and pattern, optionally filtered (`query: "table"`) |
 | `get_component` | Props, import, examples, when to use and accessibility for one component (`name: "DatePicker"`) |
 | `get_tokens` | Color roles, typography, spacing, shape, elevation, motion, with Tailwind utilities (`section: "Motion"`) |
+| `get_react_native` | Mobile apps: `@nexub/react-native` setup, components, screen patterns and mobile rules |
 
 ## Staying current
 
