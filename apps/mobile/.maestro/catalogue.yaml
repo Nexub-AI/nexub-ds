@@ -1,4 +1,5 @@
 # Walks every catalogue screen and screenshots it (iOS + Android in CI).
+# Scroll to each target first: CI emulators have small screens.
 appId: ai.nexub.mobile
 ---
 - launchApp:
@@ -9,30 +10,52 @@ appId: ai.nexub.mobile
 - takeScreenshot: 00-catalogue
 
 - tapOn: "Foundations"
-- assertVisible: "Display"
+- extendedWaitUntil:
+    visible: "Display"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Press me"
 - tapOn: "Press me"
 - takeScreenshot: 01-foundations
 - back
 
 - tapOn: "Actions"
-- assertVisible: "Continue"
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Bank"
 - tapOn: "Bank"
 - takeScreenshot: 02-actions
 - back
 
 - tapOn: "Inputs"
-- assertVisible: "You send"
+- extendedWaitUntil:
+    visible: "You send"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Month"
 - tapOn: "Month"
 - takeScreenshot: 03-inputs
 - back
 
+- scrollUntilVisible:
+    element: "Lists & cards"
 - tapOn: "Lists & cards"
-- assertVisible: "Total balance"
+- extendedWaitUntil:
+    visible: "Total balance"
+    timeout: 10000
 - takeScreenshot: 04-lists
 - back
 
+- scrollUntilVisible:
+    element: "Feedback"
 - tapOn: "Feedback"
-- assertVisible: "Banners"
+- extendedWaitUntil:
+    visible: "Banners"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Show toast"
 - tapOn: "Show toast"
 - assertVisible: "Recipient saved"
 - takeScreenshot: 05-feedback
@@ -40,3 +63,4 @@ appId: ai.nexub.mobile
 - assertVisible: "Cancel this transfer?"
 - tapOn: "Keep it"
 - assertNotVisible: "Cancel this transfer?"
+- back
