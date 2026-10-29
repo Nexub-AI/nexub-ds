@@ -58,7 +58,7 @@ export default function Foundations() {
         <Heading variant="title-lg">Press</Heading>
         <Pressable
           haptic="confirm"
-          accessibilityLabel="Confirm"
+          accessibilityLabel="Press me"
           style={{ borderRadius: 9999, backgroundColor: '#0059c7', paddingVertical: 14, alignItems: 'center' }}
           stateLayer="on-primary"
         >
