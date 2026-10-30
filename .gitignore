@@ -9,6 +9,9 @@ coverage/
 .env.local
 .next
 apps/docs/out/
+# React Native web export (apps/mobile build:web), copied into the docs at build time
+apps/mobile/dist-web/
+apps/docs/public/m/
 .claude/
 
 # npm lockfile — this is a pnpm workspace
