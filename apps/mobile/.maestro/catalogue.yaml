@@ -1,0 +1,168 @@
+# Walks every catalogue screen and screenshots it (iOS + Android in CI).
+# Scroll each target to the centre first: CI emulators have small screens, and
+# a row left at the bottom edge sits under Android's gesture bar. Taps retry if
+# the screen didn't change (a tap that only stops scroll momentum on iOS).
+# List rows are one accessible element ("Title, subtitle"), so match by prefix.
+appId: ai.nexub.mobile
+---
+# CI installs a fresh build, so no clearState (it reinstalls on iOS and can hang).
+- launchApp
+- extendedWaitUntil:
+    visible: "Components"
+    timeout: 60000
+- takeScreenshot: 00-catalogue
+
+- tapOn:
+    text: "Foundations.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Display"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Press me"
+    centerElement: true
+- tapOn:
+    text: "Press me"
+    retryTapIfNoChange: true
+- takeScreenshot: 01-foundations
+- runFlow: subflows/back.yaml
+
+- tapOn:
+    text: "Actions.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Bank"
+    centerElement: true
+- tapOn:
+    text: "Bank"
+    retryTapIfNoChange: true
+- takeScreenshot: 02-actions
+- runFlow: subflows/back.yaml
+
+- tapOn:
+    text: "Inputs.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "You send"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Month"
+    centerElement: true
+- tapOn:
+    text: "Month"
+    retryTapIfNoChange: true
+- takeScreenshot: 03-inputs
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Lists & cards.*"
+    centerElement: true
+- tapOn:
+    text: "Lists & cards.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Total balance"
+    timeout: 10000
+- takeScreenshot: 04-lists
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Feedback.*"
+    centerElement: true
+- tapOn:
+    text: "Feedback.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Banners"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Show toast"
+    centerElement: true
+- tapOn:
+    text: "Show toast"
+    retryTapIfNoChange: true
+- assertVisible: "Recipient saved"
+- takeScreenshot: 05-feedback
+- tapOn:
+    text: "Open dialog"
+    retryTapIfNoChange: true
+- assertVisible: "Cancel this transfer?"
+- tapOn:
+    text: "Keep it"
+    retryTapIfNoChange: true
+- assertNotVisible: "Cancel this transfer?"
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Mobile patterns.*"
+    centerElement: true
+- tapOn:
+    text: "Mobile patterns.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Sheets and menus"
+    timeout: 10000
+- tapOn:
+    text: "Open sheet"
+    retryTapIfNoChange: true
+- assertVisible: "Transfer details"
+- takeScreenshot: 06-sheet
+- tapOn:
+    text: "Confirm and send"
+    retryTapIfNoChange: true
+- assertNotVisible: "Transfer details"
+- scrollUntilVisible:
+    element: "Show Balance"
+    centerElement: true
+- tapOn:
+    text: "Show Balance"
+    retryTapIfNoChange: true
+- assertVisible: ".*12,480.50"
+- takeScreenshot: 07-mobile
+- runFlow: subflows/back.yaml
+
+- scrollUntilVisible:
+    element: "Screens.*"
+    centerElement: true
+- tapOn:
+    text: "Screens.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "Payub flows"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Send money.*"
+    centerElement: true
+- tapOn:
+    text: "Send money.*"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: "How much?"
+    timeout: 10000
+- tapOn:
+    text: "2"
+    retryTapIfNoChange: true
+- tapOn:
+    text: "5"
+    retryTapIfNoChange: true
+- tapOn:
+    text: "0"
+    retryTapIfNoChange: true
+- scrollUntilVisible:
+    element: "Recipient gets.*"
+    centerElement: true
+- takeScreenshot: 08-send
+- runFlow: subflows/back.yaml
+# Deep link (app.json scheme): this step checks the Activity screen itself.
+- openLink: nexub://patterns/activity
+# iOS asks "Open in Nexub Mobile?" the first time a link opens the app.
+- tapOn:
+    text: "Open"
+    optional: true
+- extendedWaitUntil:
+    visible: "Amazon.*"
+    timeout: 10000
+- takeScreenshot: 09-activity

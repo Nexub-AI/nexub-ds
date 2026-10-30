@@ -97,7 +97,8 @@ Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Av
 | R5 | Governance: per-component status (alpha/beta/stable/deprecated), RFC process, deprecation removal policy (rolling-minor has no major to remove in). | 4 deprecated components with no removal path. | S–M |
 | R6 | Usage telemetry: scan consumer repos for component usage to drive the roadmap. | | S |
 | R8 | ✅ Next enhancements (security, pixel-perfect long tail, cards/effects, motion, colour, UX, AI surfaces). Proposal: [ENHANCEMENTS_PLAN.md](ENHANCEMENTS_PLAN.md). | Review 2026-10-21 | L+ |
-| R7 | Visual refresh "Calm Depth" + Glass 2.0 (M3-style roles/state layers/springs, Apple-style glass with user intensity dial, Wise-style clarity). Proposal, awaiting decisions: [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md). Phase 0 = R1. | Audit 2026-10-20 | L+ |
+| R9 | ✅ (2026-10-30, ships in 2.1.0) React Native: `@nexub/react-native` (+ `/patterns`), `@nexub/core`, `@nexub/tokens/native`, `@nexub/icons/native`, mobile icons in `@nexub/brand`, Mobile CI. Plan: [MOBILE_PLAN.md](MOBILE_PLAN.md). | Mobile apps on Expo/RN | L+ |
+| R7 | ✅ Visual refresh "Calm Depth" + Glass 2.0 (M3-style roles/state layers/springs, Apple-style glass with user intensity dial, Wise-style clarity). Shipped in 1.4.0–1.5.x: [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md). Phase 0 = R1. | Audit 2026-10-20 | L+ |
 
 # Research log
 

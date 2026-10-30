@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- @nexub/tokens@1.10.0
+- @nexub/tokens@2.0.0
 
 ## 1.9.0
 

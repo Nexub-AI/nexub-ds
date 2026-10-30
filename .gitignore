@@ -15,3 +15,6 @@ apps/docs/out/
 package-lock.json
 test-results/
 playwright-report/
+
+# Local knowledge graph (rebuild with graphify; see .graphifyignore)
+graphify-out/

@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- @nexub/icons@1.10.0
+- @nexub/icons@2.0.0
 
 ## 1.9.0
 

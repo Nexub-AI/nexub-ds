@@ -32,6 +32,22 @@ export function nextVersion(previous, proposed) {
   return `${maj}.${min}.${pat}`;
 }
 
+/**
+ * Rename the newest release section of a CHANGELOG from the proposed version to
+ * the rolled-over one: the `## x.10.0` heading and every `@nexub/*@x.10.0`
+ * dependency line inside that section (older sections are untouched).
+ */
+export function renameChangelogSection(text, from, to) {
+  const heading = `\n## ${from}\n`;
+  const start = text.indexOf(heading);
+  if (start === -1) return text;
+  const bodyStart = start + heading.length;
+  const next = text.indexOf('\n## ', bodyStart);
+  const end = next === -1 ? text.length : next;
+  const body = text.slice(bodyStart, end).split(`@${from}`).join(`@${to}`);
+  return `${text.slice(0, start)}\n## ${to}\n${body}${text.slice(end)}`;
+}
+
 function main() {
   const root = fileURLToPath(new URL('..', import.meta.url));
   const pkgs = readdirSync(`${root}packages`)
@@ -62,7 +78,7 @@ function main() {
     const changelog = `${dir}/CHANGELOG.md`;
     if (existsSync(changelog)) {
       const text = readFileSync(changelog, 'utf8');
-      writeFileSync(changelog, text.replace(`\n## ${proposed[0]}\n`, `\n## ${target}\n`));
+      writeFileSync(changelog, renameChangelogSection(text, proposed[0], target));
     }
   }
   console.log(`release-version: ${previous} → ${target} (rolled over from ${proposed[0]})`);

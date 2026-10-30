@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["react-native"],
+    "noEmit": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "exclude": ["node_modules", "lib", "src/**/*.test.ts", "src/**/*.test.tsx"]
+}

@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "Nexub Mobile",
+    "slug": "nexub-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "../../packages/brand/assets/mobile/nexub-ios.png",
+    "scheme": "nexub",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "ai.nexub.mobile"
+    },
+    "android": {
+      "package": "ai.nexub.mobile",
+      "adaptiveIcon": {
+        "backgroundImage": "../../packages/brand/assets/mobile/nexub-android-background.png",
+        "foregroundImage": "../../packages/brand/assets/mobile/nexub-android-foreground.png",
+        "monochromeImage": "../../packages/brand/assets/mobile/nexub-android-monochrome.png"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#050506",
+          "image": "../../packages/brand/assets/mobile/nexub-android-foreground.png",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
