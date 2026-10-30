@@ -7,15 +7,23 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
+import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 import { moneyFormatter, type ToneValue } from '@nexub/core';
 import type { NativeIconProps } from '@nexub/icons/native';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
+import { nxEnter } from '../theme/motion';
 import { TONE_CONTAINERS, TONE_ROLES, TONE_TEXT } from './shared';
 
 // ─── Amount ──────────────────────────────────────────────────────────────────
 
 export interface AmountProps {
+  /**
+   * Animate value changes: the new figure rises in on the spatial spring.
+   * Wraps the text in a view, so leave it off when Amount sits inside other text.
+   * @default false
+   */
+  animate?: boolean;
   value: number;
   /** ISO 4217 code, e.g. 'USD', 'EUR', 'INR'. */
   currency: string;
@@ -45,8 +53,31 @@ export function Amount({
   size = 'md',
   tone = 'neutral',
   signDisplay,
+  animate = false,
   style,
 }: AmountProps) {
+  const figure = (
+    <AmountFigure value={value} currency={currency} locale={locale} size={size} tone={tone} signDisplay={signDisplay} style={style} />
+  );
+  if (!animate) return figure;
+  return (
+    <LayoutAnimationConfig skipEntering>
+      <Animated.View key={value} entering={nxEnter('up', 'fast')} style={{ alignSelf: 'flex-start' }}>
+        {figure}
+      </Animated.View>
+    </LayoutAnimationConfig>
+  );
+}
+
+function AmountFigure({
+  value,
+  currency,
+  locale,
+  size = 'md',
+  tone = 'neutral',
+  signDisplay,
+  style,
+}: Omit<AmountProps, 'animate'>) {
   const theme = useTheme();
   const fmt = moneyFormatter(currency, locale ?? theme.locale, signDisplay ? { signDisplay } : {});
   const color = tone === 'auto' && value !== 0 ? (value > 0 ? 'success' : 'error') : 'on-surface';

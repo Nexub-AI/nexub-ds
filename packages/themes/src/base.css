@@ -320,6 +320,62 @@ code, kbd, pre, samp {
   .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
 }
 
+/* Stagger: children of .nx-stagger rise in one after another (40ms apart, up
+   to the 12th; later ones arrive with the 12th). Set --nx-stagger to change
+   the step. Re-key the parent to replay. */
+.nx-stagger > * {
+  --nx-y: 8px;
+  animation:
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both,
+    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing) both;
+  animation-delay: calc(var(--nx-i, 0) * var(--nx-stagger, 40ms));
+}
+.nx-stagger > :nth-child(2) { --nx-i: 1; }
+.nx-stagger > :nth-child(3) { --nx-i: 2; }
+.nx-stagger > :nth-child(4) { --nx-i: 3; }
+.nx-stagger > :nth-child(5) { --nx-i: 4; }
+.nx-stagger > :nth-child(6) { --nx-i: 5; }
+.nx-stagger > :nth-child(7) { --nx-i: 6; }
+.nx-stagger > :nth-child(8) { --nx-i: 7; }
+.nx-stagger > :nth-child(9) { --nx-i: 8; }
+.nx-stagger > :nth-child(10) { --nx-i: 9; }
+.nx-stagger > :nth-child(11) { --nx-i: 10; }
+.nx-stagger > :nth-child(n + 12) { --nx-i: 11; }
+
+/* ListTransition items: grow in from zero height and fade in; exit collapses
+   and fades (quicker, no overshoot). Rows animate via grid-template-rows so
+   the item needs no measured height. */
+.nx-list-item { display: grid; grid-template-rows: 1fr; }
+.nx-list-item-inner { min-height: 0; overflow: hidden; }
+@keyframes nx-rows-in { from { grid-template-rows: 0fr; } }
+@keyframes nx-rows-out { to { grid-template-rows: 0fr; } }
+.nx-list-item[data-state='enter'] {
+  animation:
+    nx-rows-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing),
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+.nx-list-item[data-state='exit'] {
+  pointer-events: none;
+  animation:
+    nx-rows-out var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) forwards,
+    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+}
+
+/* SkeletonSwap: skeleton and content share one grid cell and crossfade. */
+.nx-swap { display: grid; }
+.nx-swap > * { grid-area: 1 / 1; min-width: 0; }
+.nx-swap-in { animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both; }
+.nx-swap-out {
+  pointer-events: none;
+  animation: nx-fade-out var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-stagger > * { --nx-y: 0px; animation-delay: 0s; }
+  .nx-list-item[data-state='enter'] { animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing); }
+  .nx-list-item[data-state='exit'] { animation: nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards; }
+}
+
 /* ─── Cards: lift, press, sheen ──────────────────────────────────────────────
    Lift: hover raises 2px on the spatial spring with elevation 1 → 2; leaving
    settles faster on the effects spring (a transition uses the *destination*
@@ -589,3 +645,28 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 [data-vaul-drawer]{touch-action:none;will-change:transform;transition:transform .5s cubic-bezier(.32, .72, 0, 1);animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=open]{animation-name:slideFromBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=closed]{animation-name:slideToBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=open]{animation-name:slideFromTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=closed]{animation-name:slideToTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=open]{animation-name:slideFromLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=closed]{animation-name:slideToLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=open]{animation-name:slideFromRight}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=closed]{animation-name:slideToRight}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--initial-transform,100%),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--initial-transform,100%),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-overlay][data-vaul-snap-points=false]{animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-overlay][data-vaul-snap-points=false][data-state=open]{animation-name:fadeIn}[data-vaul-overlay][data-state=closed]{animation-name:fadeOut}[data-vaul-animate=false]{animation:none!important}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:0;transition:opacity .5s cubic-bezier(.32, .72, 0, 1)}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:1}[data-vaul-drawer]:not([data-vaul-custom-container=true])::after{content:'';position:absolute;background:inherit;background-color:inherit}[data-vaul-drawer][data-vaul-drawer-direction=top]::after{top:initial;bottom:100%;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{top:100%;bottom:initial;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=left]::after{left:initial;right:100%;top:0;bottom:0;width:200%}[data-vaul-drawer][data-vaul-drawer-direction=right]::after{left:100%;right:initial;top:0;bottom:0;width:200%}[data-vaul-overlay][data-vaul-snap-points=true]:not([data-vaul-snap-points-overlay=true]):not(
 [data-state=closed]
 ){opacity:0}[data-vaul-overlay][data-vaul-snap-points-overlay=true]{opacity:1}[data-vaul-handle]{display:block;position:relative;opacity:.7;background:#e2e2e4;margin-left:auto;margin-right:auto;height:5px;width:32px;border-radius:1rem;touch-action:pan-y}[data-vaul-handle]:active,[data-vaul-handle]:hover{opacity:1}[data-vaul-handle-hitarea]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(100%,2.75rem);height:max(100%,2.75rem);touch-action:inherit}@media (hover:hover) and (pointer:fine){[data-vaul-drawer]{user-select:none}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{to{opacity:0}}@keyframes slideFromBottom{from{transform:translate3d(0,var(--initial-transform,100%),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToBottom{to{transform:translate3d(0,var(--initial-transform,100%),0)}}@keyframes slideFromTop{from{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToTop{to{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}}@keyframes slideFromLeft{from{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToLeft{to{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}}@keyframes slideFromRight{from{transform:translate3d(var(--initial-transform,100%),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToRight{to{transform:translate3d(var(--initial-transform,100%),0,0)}}
+
+/* Drawer / Sheet on our springs. vaul's copy above stays verbatim (tsup checks
+   it); these override its .5s iOS curve. Enter rides spatial, exit is quicker
+   on effects and never overshoots. Placed after vaul's rules so ties win. */
+.nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'] {
+  animation-duration: var(--motion-spring-spatial-default-duration);
+  animation-timing-function: var(--motion-spring-spatial-default-easing);
+}
+.nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] {
+  animation-duration: var(--motion-spring-effects-default-duration);
+  animation-timing-function: var(--motion-spring-effects-default-easing);
+}
+.nx-drawer-overlay[data-vaul-overlay][data-vaul-snap-points='false'] {
+  animation-duration: var(--motion-spring-effects-default-duration);
+  animation-timing-function: var(--motion-spring-effects-default-easing);
+}
+.nx-drawer-overlay[data-vaul-overlay][data-state='closed'] {
+  animation-duration: var(--motion-spring-effects-fast-duration);
+  animation-timing-function: var(--motion-spring-effects-fast-easing);
+}
+/* Reduced motion: the panel fades instead of sliding. */
+@media (prefers-reduced-motion: reduce) {
+  .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='open'] { animation-name: fadeIn; }
+  .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] { animation-name: fadeOut; }
+}

@@ -20,7 +20,7 @@ export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
   {
     in: visible,
     duration = 'normal',
-    easing = 'out',
+    easing,
     unmountOnExit = false,
     children,
     style,

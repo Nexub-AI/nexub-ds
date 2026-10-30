@@ -20,6 +20,8 @@ export { nexubFonts, fontStyle } from './theme/fonts';
 export type { FontFamily, FontSource } from './theme/fonts';
 export { playHaptic } from './theme/haptics';
 export type { HapticToken } from './theme/haptics';
+export { nxSpring, nxEnter, nxExit, nxLayout } from './theme/motion';
+export type { SpringFamily, SpringSpeed, EnterKind, ExitKind } from './theme/motion';
 export { useControllableState } from './hooks/useControllableState';
 
 // Primitives

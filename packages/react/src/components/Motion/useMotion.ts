@@ -1,8 +1,9 @@
 import * as React from 'react';
 import type { MotionDuration, MotionEasing } from './motion.types.js';
+import { useMediaQuery } from '../../hooks/useMediaQuery.js';
 
-// Mirrors the --duration-* tokens. Used for the exit fallback timer: a 0ms
-// transition (or a hidden / display:none element) never fires transitionend.
+// Mirrors the legacy --duration-* tokens. Used only when a caller passes
+// `easing` explicitly (the pre-spring behaviour).
 export const DURATION_MS: Record<MotionDuration, number> = {
   instant: 0,
   fast: 150,
@@ -10,13 +11,44 @@ export const DURATION_MS: Record<MotionDuration, number> = {
   slow: 300,
   slower: 500,
 };
+
+export type SpringSpeed = 'fast' | 'default' | 'slow';
+export type SpringFamily = 'spatial' | 'effects' | 'expressive';
+
+/** `duration` → spring speed. `instant` is handled separately (no motion). */
+export const SPRING_SPEED: Record<Exclude<MotionDuration, 'instant'>, SpringSpeed> = {
+  fast: 'fast',
+  normal: 'default',
+  slow: 'slow',
+  slower: 'slow',
+};
+
+// Settle times of the spring tokens (@nexub/tokens motion.spring.*.duration).
+// Used for fallback timers: a hidden element never fires transitionend.
+export const SPRING_MS: Record<SpringFamily, Record<SpringSpeed, number>> = {
+  spatial: { fast: 224, default: 317, slow: 484 },
+  effects: { fast: 150, default: 231, slow: 327 },
+  expressive: { fast: 364, default: 435, slow: 600 },
+};
+
 const FALLBACK_MARGIN_MS = 50;
+
+/** One `transition` entry riding a spring token. */
+export const spring = (property: string, family: SpringFamily, speed: SpringSpeed) =>
+  `${property} var(--motion-spring-${family}-${speed}-duration) var(--motion-spring-${family}-${speed}-easing)`;
+
+/** True when the user asked the OS for reduced motion. False during SSR. */
+export function usePrefersReducedMotion(): boolean {
+  return useMediaQuery('(prefers-reduced-motion: reduce)');
+}
 
 export type TransitionPhase = 'exited' | 'entering' | 'entered' | 'exiting';
 
 export interface UseMotionReturn {
   phase: TransitionPhase;
   mounted: boolean;
+  /** Reduced motion is on: keep the crossfade, drop travel and scale. */
+  reduced: boolean;
   transitionStyle: React.CSSProperties;
   /** Attach to onTransitionEnd so the hook can move exiting → exited. */
   handleTransitionEnd: (e?: React.TransitionEvent) => void;
@@ -30,11 +62,15 @@ export interface UseMotionReturn {
  *                           (in=false)
  *                              ▼
  *                           exiting ─► (onTransitionEnd) ─► exited
+ *
+ * Enter rides the springs (opacity on `effects`, transform on `spatial`).
+ * Exit is quicker and never overshoots (`effects` fast for both).
+ * Passing `easing` opts back into the legacy duration + easing tokens.
  */
 export function useMotion({
   visible,
   duration = 'normal',
-  easing = 'out',
+  easing,
   unmountOnExit = false,
 }: {
   visible: boolean;
@@ -46,6 +82,7 @@ export function useMotion({
   const [phase, setPhase] = React.useState<TransitionPhase>(
     visible ? 'entered' : 'exited',
   );
+  const reduced = usePrefersReducedMotion();
 
   const rafRef = React.useRef<number | null>(null);
   const isMounted = React.useRef(true);
@@ -77,12 +114,16 @@ export function useMotion({
     }
   }, [visible]);
 
+  const legacy = easing !== undefined;
+  const exitMs =
+    duration === 'instant' ? 0 : legacy ? DURATION_MS[duration] : SPRING_MS.effects.fast;
+
   // Fallback so an exit always completes even if transitionend never fires.
   React.useEffect(() => {
     if (phase !== 'exiting') return;
-    const t = setTimeout(() => setPhase('exited'), DURATION_MS[duration] + FALLBACK_MARGIN_MS);
+    const t = setTimeout(() => setPhase('exited'), exitMs + FALLBACK_MARGIN_MS);
     return () => clearTimeout(t);
-  }, [phase, duration]);
+  }, [phase, exitMs]);
 
   /** Call this from the element's onTransitionEnd to finalise exit. */
   const handleTransitionEnd = React.useCallback((e?: React.TransitionEvent) => {
@@ -94,11 +135,25 @@ export function useMotion({
 
   const mounted = unmountOnExit ? phase !== 'exited' : true;
 
-  const transitionStyle: React.CSSProperties = {
-    transitionDuration: `var(--duration-${duration})`,
-    transitionTimingFunction: `var(--ease-${easing})`,
-    transitionProperty: 'opacity, transform',
-  };
+  let transitionStyle: React.CSSProperties;
+  if (duration === 'instant') {
+    transitionStyle = { transition: 'none' };
+  } else if (legacy) {
+    transitionStyle = {
+      transitionDuration: `var(--duration-${duration})`,
+      transitionTimingFunction: `var(--ease-${easing})`,
+      transitionProperty: 'opacity, transform',
+    };
+  } else if (phase === 'exiting' || phase === 'exited') {
+    transitionStyle = {
+      transition: [spring('opacity', 'effects', 'fast'), spring('transform', 'effects', 'fast')].join(', '),
+    };
+  } else {
+    const speed = SPRING_SPEED[duration];
+    transitionStyle = {
+      transition: [spring('opacity', 'effects', speed), spring('transform', 'spatial', speed)].join(', '),
+    };
+  }
 
-  return { phase, mounted, transitionStyle, handleTransitionEnd };
+  return { phase, mounted, reduced, transitionStyle, handleTransitionEnd };
 }

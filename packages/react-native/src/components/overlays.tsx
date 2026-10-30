@@ -24,7 +24,10 @@ import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { useHaptics, useTheme } from '../theme/ThemeProvider';
+import { nxSpring } from '../theme/motion';
 import { ListItem, ListSection } from './containers';
+
+const SHEET_SPRING = nxSpring('spatial', 'default');
 
 // ─── BottomSheet ─────────────────────────────────────────────────────────────
 
@@ -76,7 +79,7 @@ export function BottomSheet({
   const [visible, setVisible] = React.useState(open);
   const translate = useSharedValue(screen);
   const scrim = useSharedValue(0);
-  const spring = tokens.motion.spring.spatial.default;
+  const spring = SHEET_SPRING;
   const height = heights[Math.min(index, heights.length - 1)]!;
   const tallest = heights[heights.length - 1]!;
 

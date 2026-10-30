@@ -21,7 +21,8 @@ const directionTransform: Record<SlideDirection, { from: string; to: string }> =
 };
 
 /**
- * Slide — animates opacity + translate from a given direction.
+ * Slide — animates opacity + translate from a given direction on the spring
+ * tokens. Reduced motion keeps the fade and drops the travel.
  *
  * ```tsx
  * <Slide in={isOpen} direction="up">
@@ -33,7 +34,7 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
   {
     in: visible,
     duration = 'normal',
-    easing = 'out',
+    easing,
     unmountOnExit = false,
     direction = 'up',
     distance,
@@ -44,7 +45,7 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
   },
   ref,
 ) {
-  const { phase, mounted, transitionStyle, handleTransitionEnd } = useMotion({
+  const { phase, mounted, reduced, transitionStyle, handleTransitionEnd } = useMotion({
     visible,
     duration,
     easing,
@@ -71,7 +72,7 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
       onTransitionEnd={handleTransitionEnd}
       style={{
         opacity: isEntered ? 1 : 0,
-        transform: isEntered ? dt.to : fromTransform,
+        transform: isEntered || reduced ? dt.to : fromTransform,
         willChange: 'opacity, transform',
         ...transitionStyle,
         ...style,
