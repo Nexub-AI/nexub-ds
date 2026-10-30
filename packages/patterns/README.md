@@ -6,7 +6,10 @@ Composite UI patterns for the Nexub Design System, built on `@nexub/react`.
 pnpm add @nexub/patterns @nexub/react @nexub/icons @nexub/themes
 ```
 
-Like `@nexub/react`, the patterns are styled with Tailwind classes your app compiles: add `node_modules/@nexub/patterns/dist/**/*.js` to your Tailwind `content`, use the `@nexub/tokens/tailwind` preset, and import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`).
+Like `@nexub/react`, the patterns are styled with Tailwind classes your app compiles, on Tailwind 3 or 4. Import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`), then:
+
+- **Tailwind 3:** add `node_modules/@nexub/patterns/dist/**/*.js` to your Tailwind `content` and use the `@nexub/tokens/tailwind` preset.
+- **Tailwind 4:** `@import "@nexub/tokens/tailwind.css";` after `@import "tailwindcss";`, add `@source "../node_modules/@nexub/patterns/dist";`, and import the theme CSS with `layer(base)` so Tailwind's utilities still win over it. See [Getting Started](https://nexub-ds-docs.pages.dev/getting-started) for the full snippet.
 
 ## AppHeader
 
@@ -122,6 +125,8 @@ Search opens with the button, **⌘K / Ctrl+K** anywhere, or **/** when focus is
     …
   </SettingsLayout>
   ```
+
+  `navFooter` pins a line to the bottom of the section sidebar and the phone menu while the items scroll, e.g. `navFooter="v1.2.0 · Updated 21 Oct 2026"`. In your own `Sidebar`, use `Sidebar.Footer` for the same.
 
 ### Strict CSP
 

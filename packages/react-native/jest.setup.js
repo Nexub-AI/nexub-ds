@@ -9,7 +9,7 @@ jest.mock('react-native-reanimated', () => {
   const builder = (name) => {
     const make = (config) => {
       const b = { __name: name, __config: config };
-      for (const key of ['springify', 'stiffness', 'damping', 'mass', 'reduceMotion', 'duration', 'delay', 'easing']) {
+      for (const key of ['springify', 'stiffness', 'damping', 'mass', 'reduceMotion', 'duration', 'delay']) {
         b[key] = (v) => make({ ...config, [key]: v === undefined ? true : v });
       }
       return b;
@@ -27,9 +27,7 @@ jest.mock('react-native-reanimated', () => {
     'FadeIn', 'FadeOut', 'FadeInDown', 'FadeOutDown', 'FadeInUp', 'FadeOutUp',
     'ZoomIn', 'ZoomOut', 'SlideOutLeft', 'SlideOutRight', 'LinearTransition',
   ];
-  const Easing = { bezier: (...p) => ({ bezier: p }), linear: id };
   return {
-    Easing,
     __esModule: true,
     default: { View: AnimatedView, createAnimatedComponent: id },
     createAnimatedComponent: id,
