@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Platform } from 'react-native';
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import { native } from '@nexub/tokens/native';
 import {
@@ -29,6 +30,15 @@ const wrap = (ui: React.ReactElement) =>
   render(<NexubNativeProvider scheme="light" contrast="standard" fonts="system">{ui}</NexubNativeProvider>);
 
 describe('motion presets ride the spring tokens', () => {
+  // Layout animations run on Android; on iOS the presets are off (see below).
+  const os = Platform.OS;
+  beforeAll(() => {
+    Platform.OS = 'android';
+  });
+  afterAll(() => {
+    Platform.OS = os;
+  });
+
   it('nxSpring is the token config plus Reduce Motion', () => {
     expect(nxSpring('effects', 'slow')).toEqual({ ...native.motion.spring.effects.slow, reduceMotion: 'system' });
   });
@@ -62,6 +72,21 @@ describe('motion presets ride the spring tokens', () => {
   it('every spring is at most critically damped for effects (no overshoot)', () => {
     for (const s of Object.values(native.motion.spring.effects)) {
       expect(s.damping).toBeGreaterThanOrEqual(2 * Math.sqrt(s.stiffness * s.mass) - 0.01);
+    }
+  });
+});
+
+describe('on iOS', () => {
+  it('enter, exit and layout presets are off; nxSpring still runs', () => {
+    const os = Platform.OS;
+    Platform.OS = 'ios';
+    try {
+      expect(nxEnter('up')).toBeUndefined();
+      expect(nxExit('down')).toBeUndefined();
+      expect(nxLayout()).toBeUndefined();
+      expect(nxSpring('spatial', 'fast')).toMatchObject(native.motion.spring.spatial.fast);
+    } finally {
+      Platform.OS = os;
     }
   });
 });

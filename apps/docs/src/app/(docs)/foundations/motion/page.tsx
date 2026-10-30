@@ -57,7 +57,7 @@ export default function MotionPage() {
         </Section>
       </MotionGallery>
 
-      <Section id="mobile" title="On iOS & Android" description="@nexub/react-native uses the same springs through Reanimated. Toasts, banners, list rows, chips, the segmented control, sheets and press feedback already move; use the presets for your own views.">
+      <Section id="mobile" title="On iOS & Android" description="@nexub/react-native uses the same springs through Reanimated. Sheets, switches, the segmented control and press feedback move on both platforms. The enter, exit and layout presets (banners, list rows, chips) animate on Android and are off on iOS for now, where views appear in place.">
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="flex min-w-0 flex-col gap-4">
             <CodeBlock
