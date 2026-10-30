@@ -1,0 +1,24 @@
+/* Tailwind v3 → v4 compatibility for the docs site.
+   The site moved to Tailwind v4 but must render as it did on v3 (and as the
+   components render for consumers still on v3), so restore the v3 defaults
+   that v4 changed. (The v3 button pointer cursor comes from @nexub/themes/base.) */
+
+@layer base {
+  /* v3 preflight: unspecified border colour was gray-200 (v4: currentColor). */
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: #e5e7eb;
+  }
+
+  /* v3 preflight: placeholders were gray-400 (v4: currentColor at 50%). */
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+  }
+}
+
+/* v3: hover: applied on every device (v4 wraps it in @media (hover: hover)). */
+@custom-variant hover (&:hover);

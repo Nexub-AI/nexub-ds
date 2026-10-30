@@ -90,7 +90,9 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
               aria-current={p === page ? 'page' : undefined}
               className={cn(
                 pressable,
-                'inline-flex h-11 min-w-11 px-2 items-center justify-center text-label-lg',
+                // tabular-nums on the button itself: Tailwind 4's preflight lets buttons
+                // inherit it from the nav, Tailwind 3's (UA font reset) does not.
+                'inline-flex h-11 min-w-11 px-2 items-center justify-center text-label-lg tabular-nums',
                 p === page
                   ? 'bg-[var(--color-primary)] text-[var(--color-on-primary)]'
                   : 'bg-transparent text-[var(--color-on-surface)]',
