@@ -1,6 +1,7 @@
 # Walks every catalogue screen and screenshots it (iOS + Android in CI).
-# Scroll each target to the centre first: CI emulators have small screens, and
-# a row left at the bottom edge sits under Android's gesture bar. Taps retry if
+# Scroll targets into view with subflows/scroll-to.yaml (centred on Android,
+# where a row at the bottom edge sits under the gesture bar; not on iOS, where
+# centring can park it under the translucent navigation bar). Taps retry if
 # the screen didn't change (a tap that only stops scroll momentum on iOS).
 # List rows are one accessible element ("Title, subtitle"), so match by prefix.
 # Toasts, dialogs and sheets spring in, so wait for them rather than assert
@@ -21,9 +22,10 @@ appId: ai.nexub.mobile
 - extendedWaitUntil:
     visible: "Display"
     timeout: 10000
-- scrollUntilVisible:
-    element: "Press me"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Press me"
 - tapOn:
     text: "Press me"
     retryTapIfNoChange: true
@@ -36,9 +38,10 @@ appId: ai.nexub.mobile
 - extendedWaitUntil:
     visible: "Continue"
     timeout: 10000
-- scrollUntilVisible:
-    element: "Bank"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Bank"
 - tapOn:
     text: "Bank"
     retryTapIfNoChange: true
@@ -51,18 +54,20 @@ appId: ai.nexub.mobile
 - extendedWaitUntil:
     visible: "You send"
     timeout: 10000
-- scrollUntilVisible:
-    element: "Month"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Month"
 - tapOn:
     text: "Month"
     retryTapIfNoChange: true
 - takeScreenshot: 03-inputs
 - runFlow: subflows/back.yaml
 
-- scrollUntilVisible:
-    element: "Lists & cards.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Lists & cards.*"
 - tapOn:
     text: "Lists & cards.*"
     retryTapIfNoChange: true
@@ -72,18 +77,20 @@ appId: ai.nexub.mobile
 - takeScreenshot: 04-lists
 - runFlow: subflows/back.yaml
 
-- scrollUntilVisible:
-    element: "Feedback.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Feedback.*"
 - tapOn:
     text: "Feedback.*"
     retryTapIfNoChange: true
 - extendedWaitUntil:
     visible: "Banners"
     timeout: 10000
-- scrollUntilVisible:
-    element: "Show toast"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Show toast"
 - tapOn:
     text: "Show toast"
     retryTapIfNoChange: true
@@ -103,9 +110,10 @@ appId: ai.nexub.mobile
 - assertNotVisible: "Cancel this transfer?"
 - runFlow: subflows/back.yaml
 
-- scrollUntilVisible:
-    element: "Mobile patterns.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Mobile patterns.*"
 - tapOn:
     text: "Mobile patterns.*"
     retryTapIfNoChange: true
@@ -123,9 +131,10 @@ appId: ai.nexub.mobile
     text: "Confirm and send"
     retryTapIfNoChange: true
 - assertNotVisible: "Transfer details"
-- scrollUntilVisible:
-    element: "Show Balance"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Show Balance"
 - tapOn:
     text: "Show Balance"
     retryTapIfNoChange: true
@@ -135,18 +144,20 @@ appId: ai.nexub.mobile
 - takeScreenshot: 07-mobile
 - runFlow: subflows/back.yaml
 
-- scrollUntilVisible:
-    element: "Screens.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Screens.*"
 - tapOn:
     text: "Screens.*"
     retryTapIfNoChange: true
 - extendedWaitUntil:
     visible: "Payub flows"
     timeout: 10000
-- scrollUntilVisible:
-    element: "Send money.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Send money.*"
 - tapOn:
     text: "Send money.*"
     retryTapIfNoChange: true
@@ -162,9 +173,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "0"
     retryTapIfNoChange: true
-- scrollUntilVisible:
-    element: "Recipient gets.*"
-    centerElement: true
+- runFlow:
+    file: subflows/scroll-to.yaml
+    env:
+      TARGET: "Recipient gets.*"
 - takeScreenshot: 08-send
 - runFlow: subflows/back.yaml
 # Deep link (app.json scheme): this step checks the Activity screen itself.
