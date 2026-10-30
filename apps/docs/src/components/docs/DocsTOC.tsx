@@ -60,7 +60,7 @@ export function DocsTOC({ items }: Props) {
       >
         On this page
       </p>
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <ul className="list-none m-0 p-0 flex flex-col gap-0.5">
         {items.map((it) => {
           const isActive = active === it.id;
           return (

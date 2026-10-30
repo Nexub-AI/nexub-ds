@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Using the brand assets' };
 export default function BrandAssetsPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">
         Getting Started
       </p>
       <h1>Using the brand assets</h1>

@@ -62,7 +62,7 @@ const renderers: Record<string, (p: Bag) => React.ReactElement> = {
     const showLabel = b(p.showLabel);
     const showHelper = b(p.showHelper);
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, width: 280 }}>
+      <div className="flex flex-col gap-1 w-[280px]">
         {showLabel && <Label htmlFor={id}>{s(p.labelText, 'Email')}</Label>}
         <Input
           id={id}
@@ -77,9 +77,9 @@ const renderers: Record<string, (p: Bag) => React.ReactElement> = {
   },
 
   card: (p) => (
-    <div style={{ width: 280 }}>
+    <div className="w-[280px]">
       <Card variant={s(p.variant, 'surface') as 'surface'}>
-        <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-on-surface)' }}>
+        <div className="font-semibold mb-1 text-[var(--color-on-surface)]">
           {s(p.title, 'Card title')}
         </div>
         <Text size="body-sm" tone="muted">
@@ -98,7 +98,7 @@ export function renderPlayground(slug: string, props: Bag): React.ReactElement {
   const fn = renderers[slug];
   if (!fn) {
     return (
-      <div style={{ color: 'var(--color-on-surface-muted)', fontSize: '0.85rem' }}>
+      <div className="text-[var(--color-on-surface-muted)] text-[0.85rem]">
         Live preview not available for <code>{slug}</code>.
       </div>
     );

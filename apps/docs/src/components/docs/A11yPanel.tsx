@@ -42,7 +42,7 @@ export function A11yPanel({ a11y }: Props) {
     sections.push({
       title: 'ARIA roles',
       body: (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        <div className="flex flex-wrap gap-1.5">
           {roles.map((r) => (
             <span key={r} style={pillStyle}>{r}</span>
           ))}
@@ -59,7 +59,7 @@ export function A11yPanel({ a11y }: Props) {
           {keyboard.map((k) => (
             <li key={k.key} style={listItemStyle}>
               <Key>{k.key}</Key>
-              <span style={{ color: 'var(--color-on-surface-variant)' }}>{k.description}</span>
+              <span className="text-[var(--color-on-surface-variant)]">{k.description}</span>
             </li>
           ))}
         </ul>
@@ -102,7 +102,7 @@ export function A11yPanel({ a11y }: Props) {
 
   if (!sections.length) {
     return (
-      <p style={{ color: 'var(--color-on-surface-muted)', fontSize: '0.85rem' }}>
+      <p className="text-[var(--color-on-surface-muted)] text-[0.85rem]">
         No accessibility notes documented yet.
       </p>
     );

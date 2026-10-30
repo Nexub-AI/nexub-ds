@@ -81,8 +81,8 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap gap-1.5">
         <CaptureBtn
           icon={<Camera size={14} />}
           label="Capture page"
@@ -124,7 +124,7 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
           />
         </label>
       </div>
-      <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--color-on-surface-muted)' }}>
+      <p className="m-0 text-[0.72rem] text-[var(--color-on-surface-muted)]">
         Capture page = current viewport (no permission). Capture screen = native picker (browser/window/screen). Max 2 MB.
       </p>
     </div>

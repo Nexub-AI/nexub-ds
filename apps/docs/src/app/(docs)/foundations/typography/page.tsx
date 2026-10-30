@@ -23,7 +23,7 @@ const typeScale = ['display', 'headline', 'title', 'body', 'label'].flatMap((rol
 export default function TypographyPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-brand-primary-500)] tracking-wider uppercase mb-2">Foundations</p>
       <h1>Typography</h1>
       <p>
         Nexub DS uses <strong>Inter</strong> for interface text and <strong>Plus Jakarta Sans</strong> for
@@ -39,7 +39,7 @@ export default function TypographyPage() {
         tracking and weight together. Headings (<code>h1</code>–<code>h6</code>) default to the display face
         with <code>text-wrap: balance</code>; numbers in data use <code>tabular-nums</code>.
       </p>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+      <div className="flex flex-col gap-0">
         {typeScale.map((t) => (
           <div
             key={t.name}
@@ -50,35 +50,35 @@ export default function TypographyPage() {
               borderBottom: '1px solid var(--color-border-subtle)',
             }}
           >
-            <code style={{ fontSize: '0.75rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-primary)' }}>
+            <code className="text-label-sm font-mono text-[var(--color-primary)]">
               {t.name}
             </code>
             <span style={{ fontFamily: t.family, fontSize: t.size, fontWeight: t.weight as unknown as number, letterSpacing: t.tracking, lineHeight: t.lineHeight, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               The quick brown fox
             </span>
-            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)' }}>
+            <span className="text-[0.72rem] text-[var(--color-text-muted)] font-mono">
               text-{t.name}
             </span>
           </div>
         ))}
       </div>
 
-      <h2 style={{ marginTop: '2rem' }}>Font Families</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <h2 className="mt-8">Font Families</h2>
+      <div className="flex flex-col gap-3">
         {[
           { name: '--font-family-sans', sample: 'Inter — the interface typeface', family: 'var(--font-family-sans)' },
           { name: '--font-family-display', sample: 'Plus Jakarta Sans — display and headlines', family: 'var(--font-family-display)' },
           { name: '--font-family-mono', sample: 'Monospace — for code and data', family: 'var(--font-family-mono)' },
         ].map((f) => (
           <div key={f.name} style={{ padding: '16px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-lg)' }}>
-            <code style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)', display: 'block', marginBottom: '6px' }}>{f.name}</code>
+            <code className="text-[0.72rem] text-[var(--color-text-muted)] font-mono block mb-1.5">{f.name}</code>
             <span style={{ fontSize: '1.25rem', fontFamily: f.family }}>{f.sample}</span>
           </div>
         ))}
       </div>
 
       <h2>Font Weights</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div className="flex flex-col gap-2">
         {[
           { name: 'regular', value: 400 },
           { name: 'medium', value: 500 },
@@ -86,8 +86,8 @@ export default function TypographyPage() {
           { name: 'bold', value: 700 },
           { name: 'extrabold', value: 800 },
         ].map((w) => (
-          <div key={w.name} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <code style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)', width: '140px' }}>--font-weight-{w.name}</code>
+          <div key={w.name} className="flex items-center gap-4">
+            <code className="text-[0.72rem] text-[var(--color-text-muted)] font-mono w-[140px]">--font-weight-{w.name}</code>
             <span style={{ fontWeight: w.value, fontSize: '1rem' }}>{w.value} — {w.name.charAt(0).toUpperCase() + w.name.slice(1)}</span>
           </div>
         ))}

@@ -27,25 +27,13 @@ class PreviewErrorBoundary extends React.Component<
 
 const PreviewFallback = () => (
   <div
-    style={{
-      width: '28px',
-      height: '28px',
-      borderRadius: 'var(--shape-field)',
-      background: 'var(--color-surface-container-high)',
-      border: '1px solid var(--color-outline-variant)',
-    }}
+    className="w-[28px] h-[28px] rounded-shape-field bg-[var(--color-surface-container-high)] border border-[var(--color-outline-variant)]"
   />
 );
 
 const PreviewSkeleton = () => (
   <div
-    style={{
-      width: '80px',
-      height: '22px',
-      borderRadius: 'var(--shape-field)',
-      background: 'var(--color-outline-variant)',
-      opacity: 0.5,
-    }}
+    className="w-[80px] h-[22px] rounded-shape-field bg-[var(--color-outline-variant)] opacity-50"
   />
 );
 

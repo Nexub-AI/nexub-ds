@@ -67,11 +67,11 @@ export default function PrinciplesPage() {
           </h2>
           <p>{p.body}</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, margin: '0 0 1.5rem' }}>
-            <div style={{ borderRadius: 16, padding: '12px 16px', background: 'var(--color-success-container)', color: 'var(--color-on-success-container)' }}>
+            <div className="rounded-[16px] py-3 px-4 bg-[var(--color-success-container)] text-[var(--color-on-success-container)]">
               <strong>Do</strong>
               <p style={{ margin: '4px 0 0' }}>{p.do}</p>
             </div>
-            <div style={{ borderRadius: 16, padding: '12px 16px', background: 'var(--color-error-container)', color: 'var(--color-on-error-container)' }}>
+            <div className="rounded-[16px] py-3 px-4 bg-[var(--color-error-container)] text-[var(--color-on-error-container)]">
               <strong>Don’t</strong>
               <p style={{ margin: '4px 0 0' }}>{p.dont}</p>
             </div>

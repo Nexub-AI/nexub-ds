@@ -40,7 +40,7 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
   });
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="relative">
       <div
         style={{
           position: 'absolute',
@@ -52,16 +52,7 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
         <CopyButton text={code} />
       </div>
       <div
-        style={{
-          background: 'var(--docs-code-bg)',
-          color: 'var(--color-on-surface)',
-          borderRadius: 'var(--shape-container)',
-          padding: '1.25rem 1.5rem',
-          overflowX: 'auto',
-          fontSize: '0.8125rem',
-          lineHeight: 1.6,
-          fontFamily: 'var(--font-family-mono)',
-        }}
+        className="bg-[var(--docs-code-bg)] text-[var(--color-on-surface)] rounded-shape-container py-5 px-6 overflow-x-auto text-label-md leading-relaxed font-mono"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

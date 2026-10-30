@@ -12,7 +12,7 @@ const categories = Array.from(new Set(componentEntries.map((e) => e.meta.categor
 export default function ComponentsPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Library</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">Library</p>
       <h1>Components</h1>
       <p>
         Nexub DS ships with {componentEntries.length}+ accessible, token-driven React components built on Radix UI primitives.
@@ -22,8 +22,8 @@ export default function ComponentsPage() {
       {categories.map((cat) => {
         const entries = componentEntries.filter((e) => e.meta.category === cat);
         return (
-          <div key={cat} style={{ marginBottom: '2.5rem' }}>
-            <h2 style={{ marginBottom: '1rem' }}>{cat}</h2>
+          <div key={cat} className="mb-10">
+            <h2 className="mb-4">{cat}</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
               {entries.map((e) => (
                 <div
@@ -52,16 +52,7 @@ export default function ComponentsPage() {
                   <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>
                     {/* Mini live preview area */}
                     <div
-                      style={{
-                        height: '100px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: 'var(--color-surface-container-low)',
-                        borderBottom: '1px solid var(--color-outline-variant)',
-                        overflow: 'hidden',
-                        position: 'relative',
-                      }}
+                      className="h-[100px] flex items-center justify-center bg-[var(--color-surface-container-low)] border-b border-[var(--color-outline-variant)] overflow-hidden relative"
                     >
                       {/* Dot-grid background */}
                       <div
@@ -91,11 +82,11 @@ export default function ComponentsPage() {
                     </div>
 
                     {/* Card info */}
-                    <div style={{ padding: '12px 14px' }}>
-                      <div style={{ fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: '3px', fontSize: '0.875rem' }}>
+                    <div className="py-3 px-3.5">
+                      <div className="font-bold text-[var(--color-on-surface)] mb-[3px] text-body-sm">
                         {e.meta.title}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-muted)', lineHeight: 1.5 }}>
+                      <div className="text-label-sm text-[var(--color-on-surface-muted)] leading-normal">
                         {e.meta.description}
                       </div>
                       {e.meta.status === 'stable' && (

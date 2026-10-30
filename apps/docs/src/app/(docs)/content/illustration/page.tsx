@@ -31,7 +31,7 @@ const whenToUse = [
 export default function IllustrationPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">Content</p>
       <h1>Illustration</h1>
       <p>
         Illustrations are used sparingly across Nexub products to communicate ideas that words alone can&apos;t capture —
@@ -43,21 +43,16 @@ export default function IllustrationPage() {
         {principles.map((p) => (
           <div
             key={p.title}
-            style={{
-              padding: '1.25rem',
-              border: '1px solid var(--color-outline-variant)',
-              borderRadius: 'var(--shape-container)',
-              background: 'var(--color-surface-container-low)',
-            }}
+            className="p-5 border border-[var(--color-outline-variant)] rounded-shape-container bg-[var(--color-surface-container-low)]"
           >
-            <div style={{ fontWeight: 700, color: 'var(--color-on-surface)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>{p.title}</div>
-            <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface-variant)', lineHeight: 1.7 }}>{p.desc}</div>
+            <div className="font-bold text-[var(--color-on-surface)] mb-2 text-[0.9rem]">{p.title}</div>
+            <div className="text-[0.84rem] text-[var(--color-on-surface-variant)] leading-relaxed">{p.desc}</div>
           </div>
         ))}
       </div>
 
       <h2>When to use illustrations</h2>
-      <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '2rem' }}>
+      <div className="grid gap-3 mb-8">
         {whenToUse.map((w) => (
           <div
             key={w.context}
@@ -72,8 +67,8 @@ export default function IllustrationPage() {
               alignItems: 'start',
             }}
           >
-            <span style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.84rem' }}>{w.context}</span>
-            <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.84rem', lineHeight: 1.6 }}>{w.guidance}</span>
+            <span className="font-bold text-[var(--color-primary)] text-[0.84rem]">{w.context}</span>
+            <span className="text-[var(--color-on-surface-variant)] text-[0.84rem] leading-relaxed">{w.guidance}</span>
           </div>
         ))}
       </div>

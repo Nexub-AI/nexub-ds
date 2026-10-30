@@ -16,7 +16,7 @@ const rules: { rule: string; do: string; dont: string }[] = [
 export default function GrammarStylePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">Content</p>
       <h1>Grammar &amp; Style</h1>
       <p>
         Consistency in punctuation, capitalisation, and word choice makes the product feel polished and trustworthy.
@@ -24,21 +24,21 @@ export default function GrammarStylePage() {
       </p>
 
       <h2>Quick-reference rules</h2>
-      <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
+      <div className="overflow-x-auto mb-8">
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
               {['Rule', '✅ Do', '❌ Don\'t'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} className="text-start py-2.5 px-3.5 font-bold text-[var(--color-on-surface-variant)] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {rules.map((r, i) => (
               <tr key={r.rule} style={{ borderBottom: i < rules.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--color-on-surface)', whiteSpace: 'nowrap' }}>{r.rule}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.do}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.dont}</td>
+                <td className="py-2.5 px-3.5 font-semibold text-[var(--color-on-surface)] whitespace-nowrap">{r.rule}</td>
+                <td className="py-2.5 px-3.5 text-[var(--color-success)] font-mono text-[0.78rem]">{r.do}</td>
+                <td className="py-2.5 px-3.5 text-[var(--color-error)] font-mono text-[0.78rem]">{r.dont}</td>
               </tr>
             ))}
           </tbody>

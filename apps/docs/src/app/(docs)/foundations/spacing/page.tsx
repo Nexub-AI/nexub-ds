@@ -9,7 +9,7 @@ const scale = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14,
 export default function SpacingPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-brand-primary-500)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Foundations</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-brand-primary-500)] tracking-wider uppercase mb-2">Foundations</p>
       <h1>Spacing</h1>
       <p>
         Nexub DS uses a 4px base unit spacing scale exposed as <code>--spacing-{'{n}'}</code> CSS custom properties.
@@ -17,15 +17,15 @@ export default function SpacingPage() {
       </p>
 
       <h2>Scale</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <div className="flex flex-col gap-1">
         {scale.map((n) => {
           const px = n * 4;
           return (
-            <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '4px 0', borderBottom: '1px solid var(--color-border-subtle)' }}>
-              <code style={{ fontSize: '0.72rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-brand-primary-500)', width: '120px' }}>
+            <div key={n} className="flex items-center gap-4 py-1 px-0 border-b border-[var(--color-border-subtle)]">
+              <code className="text-[0.72rem] font-mono text-[var(--color-brand-primary-500)] w-[120px]">
                 --spacing-{n}
               </code>
-              <code style={{ fontSize: '0.72rem', fontFamily: 'var(--font-family-mono)', color: 'var(--color-text-muted)', width: '60px' }}>
+              <code className="text-[0.72rem] font-mono text-[var(--color-text-muted)] w-[60px]">
                 {px}px
               </code>
               <div

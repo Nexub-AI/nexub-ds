@@ -146,7 +146,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           zIndex: 10,
         }}
       >
-        <Link href="/" aria-label="Nexub Design System home" style={{ textDecoration: 'none' }}>
+        <Link href="/" aria-label="Nexub Design System home" className="no-underline">
           <Logo size="sm" product="Design System" />
         </Link>
 
@@ -255,9 +255,9 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       >
         {stats.map((s) => (
-          <div key={s.label} style={{ textAlign: 'center' }}>
-            <Text size="body" weight="bold" style={{ fontSize: '2rem', lineHeight: 1.2, color: 'var(--color-primary)' }}>{s.num}</Text>
-            <Text size="caption" tone="muted" weight="medium" style={{ marginTop: '2px' }}>{s.label}</Text>
+          <div key={s.label} className="text-center">
+            <Text size="body" weight="bold" className="text-[2rem] leading-tight text-[var(--color-primary)]">{s.num}</Text>
+            <Text size="caption" tone="muted" weight="medium" className="mt-0.5">{s.label}</Text>
           </div>
         ))}
       </div>

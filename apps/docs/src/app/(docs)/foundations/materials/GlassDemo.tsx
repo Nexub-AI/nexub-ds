@@ -12,7 +12,7 @@ const backdrop =
 export function GlassDemo() {
   const { glass, setGlass } = useTheme();
   return (
-    <div style={{ display: 'grid', gap: 16, marginBottom: '2rem' }}>
+    <div className="grid gap-4 mb-8">
       <SegmentedControl.Root value={glass} onValueChange={(v) => v && setGlass(v as GlassMode)} aria-label="Glass intensity">
         <SegmentedControl.Item value="clear">Clear</SegmentedControl.Item>
         <SegmentedControl.Item value="balanced">Balanced</SegmentedControl.Item>
@@ -20,11 +20,11 @@ export function GlassDemo() {
         <SegmentedControl.Item value="off">Solid</SegmentedControl.Item>
       </SegmentedControl.Root>
       <div style={{ background: backdrop, borderRadius: 24, padding: 32, display: 'flex', gap: 20, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
-        <Card style={{ padding: 24, width: 200 }}>
+        <Card className="p-6 w-[200px]">
           <strong>Solid</strong>
           <p style={{ margin: '4px 0 0' }}>surface=&quot;solid&quot;</p>
         </Card>
-        <Card surface="glass" style={{ padding: 24, width: 200 }}>
+        <Card surface="glass" className="p-6 w-[200px]">
           <strong>Glass</strong>
           <p style={{ margin: '4px 0 0' }}>surface=&quot;glass&quot;</p>
         </Card>

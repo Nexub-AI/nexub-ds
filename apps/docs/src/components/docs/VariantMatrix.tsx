@@ -17,44 +17,20 @@ export function VariantMatrix({ slug, def }: Props) {
 
   return (
     <div
-      style={{
-        border: '1px solid var(--color-outline-variant)',
-        borderRadius: 'var(--shape-container)',
-        overflow: 'hidden',
-        marginBottom: '1.5rem',
-        background: 'var(--color-surface)',
-      }}
+      className="border border-[var(--color-outline-variant)] rounded-shape-container overflow-hidden mb-6 bg-[var(--color-surface)]"
     >
       <div
-        style={{
-          padding: '8px 12px',
-          borderBottom: '1px solid var(--color-outline-variant)',
-          background: 'var(--color-surface-container-low)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}
+        className="py-2 px-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] flex items-center justify-between gap-3"
       >
         <span
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            color: 'var(--color-on-surface-variant)',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-          }}
+          className="text-label-sm font-bold text-[var(--color-on-surface-variant)] tracking-wider uppercase"
         >
           Variants ×{' '}
-          <span style={{ fontFamily: 'var(--font-family-mono)' }}>{rowsProp}</span> /{' '}
-          <span style={{ fontFamily: 'var(--font-family-mono)' }}>{colsProp}</span>
+          <span className="font-mono">{rowsProp}</span> /{' '}
+          <span className="font-mono">{colsProp}</span>
         </span>
         <span
-          style={{
-            fontSize: '0.7rem',
-            color: 'var(--color-outline)',
-            fontFamily: 'var(--font-family-mono)',
-          }}
+          className="text-[0.7rem] text-[var(--color-outline)] font-mono"
         >
           {rows.length} × {cols.length}
         </span>
@@ -75,18 +51,14 @@ export function VariantMatrix({ slug, def }: Props) {
             <tr>
               <th style={cornerStyle}>
                 <span
-                  style={{
-                    fontFamily: 'var(--font-family-mono)',
-                    color: 'var(--color-outline)',
-                    fontWeight: 600,
-                  }}
+                  className="font-mono text-[var(--color-outline)] font-semibold"
                 >
                   {rowsProp} ↓ / {colsProp} →
                 </span>
               </th>
               {cols.map((c) => (
                 <th key={c} style={headStyle}>
-                  <span style={{ fontFamily: 'var(--font-family-mono)' }}>{c}</span>
+                  <span className="font-mono">{c}</span>
                 </th>
               ))}
             </tr>
@@ -95,7 +67,7 @@ export function VariantMatrix({ slug, def }: Props) {
             {rows.map((r) => (
               <tr key={r}>
                 <th scope="row" style={rowHeadStyle}>
-                  <span style={{ fontFamily: 'var(--font-family-mono)' }}>{r}</span>
+                  <span className="font-mono">{r}</span>
                 </th>
                 {cols.map((c) => {
                   const props = {
@@ -107,13 +79,7 @@ export function VariantMatrix({ slug, def }: Props) {
                   return (
                     <td key={c} style={cellStyle}>
                       <div
-                        style={{
-                          minHeight: 56,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: 8,
-                        }}
+                        className="min-h-[56px] flex items-center justify-center p-2"
                       >
                         {renderPlayground(slug, props)}
                       </div>

@@ -29,28 +29,28 @@ const glossary: { term: string; def: string }[] = [
 export default function VocabularyPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">Content</p>
       <h1>Vocabulary</h1>
       <p>
         Consistent terminology builds trust and reduces confusion. Use these approved terms across all Nexub products and documentation.
       </p>
 
       <h2>Preferred terms</h2>
-      <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
+      <div className="overflow-x-auto mb-8">
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
               {['Use this', 'Not this', 'Notes'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
+                <th key={h} className="text-start py-2.5 px-3.5 font-bold text-[var(--color-on-surface-variant)] whitespace-nowrap">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {vocab.map((v, i) => (
               <tr key={v.use} style={{ borderBottom: i < vocab.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{v.use}</td>
+                <td className="py-2.5 px-3.5 font-bold text-[var(--color-success)] font-mono text-[0.8rem] whitespace-nowrap">{v.use}</td>
                 <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap', textDecoration: 'line-through', opacity: 0.7 }}>{v.avoid}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-on-surface-variant)', fontSize: '0.82rem' }}>{v.notes}</td>
+                <td className="py-2.5 px-3.5 text-[var(--color-on-surface-variant)] text-[0.82rem]">{v.notes}</td>
               </tr>
             ))}
           </tbody>
@@ -59,7 +59,7 @@ export default function VocabularyPage() {
 
       <h2>Glossary</h2>
       <p>Key terms and their canonical definitions for the Nexub product ecosystem.</p>
-      <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '2rem' }}>
+      <div className="grid gap-3 mb-8">
         {glossary.map((g) => (
           <div
             key={g.term}
@@ -74,8 +74,8 @@ export default function VocabularyPage() {
               alignItems: 'start',
             }}
           >
-            <span style={{ fontFamily: 'var(--font-family-mono)', fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.84rem' }}>{g.term}</span>
-            <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.84rem', lineHeight: 1.6 }}>{g.def}</span>
+            <span className="font-mono font-bold text-[var(--color-primary)] text-[0.84rem]">{g.term}</span>
+            <span className="text-[var(--color-on-surface-variant)] text-[0.84rem] leading-relaxed">{g.def}</span>
           </div>
         ))}
       </div>

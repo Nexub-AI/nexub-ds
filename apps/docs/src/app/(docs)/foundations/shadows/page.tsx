@@ -40,7 +40,7 @@ export default function ElevationShapePage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 20, padding: 24, borderRadius: 24, background: 'var(--color-surface-container-low)', marginBottom: '2rem' }}>
         {levels.map(([n, use]) => (
           <div key={n} style={{ borderRadius: 16, padding: 16, minHeight: 96, background: 'var(--color-surface-elevated)', boxShadow: `var(--elevation-${n})` }}>
-            <code style={{ fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem' }}>elevation-{n}</code>
+            <code className="font-mono text-[0.8rem]">elevation-{n}</code>
             <p style={{ margin: '6px 0 0', fontSize: '0.82rem', color: 'var(--color-on-surface-variant)' }}>{use}</p>
           </div>
         ))}
@@ -51,14 +51,14 @@ export default function ElevationShapePage() {
         Components use <strong>semantic shapes</strong>, not raw radii, so one decision changes every control.
         Tailwind: <code>rounded-shape-control</code> and so on. The primitive radius scale is unchanged.
       </p>
-      <div style={{ display: 'grid', gap: 12, marginBottom: '2rem' }}>
+      <div className="grid gap-3 mb-8">
         {shapes.map(([name, value, use]) => (
           <div key={name} style={{ display: 'grid', gridTemplateColumns: '120px 160px 1fr', gap: 16, alignItems: 'center' }}>
             <div style={{ height: 44, borderRadius: `var(--shape-${name})`, background: 'var(--color-secondary-container)' }} />
             <code style={mono}>
               --shape-{name} ({value})
             </code>
-            <span style={{ fontSize: '0.88rem' }}>{use}</span>
+            <span className="text-[0.88rem]">{use}</span>
           </div>
         ))}
       </div>
@@ -69,8 +69,8 @@ export default function ElevationShapePage() {
         floored at <code>--shape-min</code> (4px). Menus (16px with 6px padding) use 10px items; the command
         palette (24px with 8px padding) uses 16px items.
       </p>
-      <div style={{ display: 'inline-block', padding: 8, borderRadius: 24, background: 'var(--color-surface-container-high)', marginBottom: '2rem' }}>
-        <div style={{ width: 240, height: 64, borderRadius: 16, background: 'var(--color-surface-elevated)' }} />
+      <div className="inline-block p-2 rounded-[24px] bg-[var(--color-surface-container-high)] mb-8">
+        <div className="w-[240px] h-[64px] rounded-[16px] bg-[var(--color-surface-elevated)]" />
       </div>
     </div>
   );

@@ -5,11 +5,11 @@ import { Search } from '@nexub/icons';
 
 export function LandingShowcase() {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', justifyContent: 'center', alignItems: 'center' }}>
+    <div className="flex flex-wrap gap-8 justify-center items-center">
       {/* Buttons */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Button</Text>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="flex gap-2 flex-wrap justify-center">
           <Button variant="filled" size="md">Filled</Button>
           <Button variant="tonal" size="md">Tonal</Button>
           <Button variant="outlined" size="md">Outlined</Button>
@@ -17,9 +17,9 @@ export function LandingShowcase() {
       </div>
 
       {/* Badges */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Badge</Text>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="flex gap-2 flex-wrap justify-center">
           <Badge tone="info">Info</Badge>
           <Badge tone="success">Success</Badge>
           <Badge tone="warning">Warning</Badge>
@@ -28,15 +28,15 @@ export function LandingShowcase() {
       </div>
 
       {/* Input */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Input</Text>
-        <div style={{ width: '200px' }}>
+        <div className="w-[200px]">
           <Input placeholder="Search components…" leadingIcon={<Search size="sm" />} />
         </div>
       </div>
 
       {/* Spinner */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Spinner</Text>
         <Stack direction="row" gap="md" align="center">
           <Spinner size="sm" />

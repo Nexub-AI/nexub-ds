@@ -31,16 +31,10 @@ export function RelatedComponents({ slugs }: Props) {
             transition: 'border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 8 }}>
-            <span style={{ fontWeight: 600, color: 'var(--color-on-surface)' }}>{e.meta.title}</span>
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="font-semibold text-[var(--color-on-surface)]">{e.meta.title}</span>
             <span
-              style={{
-                fontSize: '0.65rem',
-                color: 'var(--color-outline)',
-                fontFamily: 'var(--font-family-mono)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em',
-              }}
+              className="text-[0.65rem] text-[var(--color-outline)] font-mono uppercase tracking-wide"
             >
               {e.meta.category}
             </span>

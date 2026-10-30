@@ -127,7 +127,7 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
 
           <form
             onSubmit={handleSubmit}
-            style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
+            className="flex flex-col gap-4"
             noValidate
           >
             {/* Honeypot — visually hidden, off-screen, aria-hidden, autocomplete off.

@@ -91,26 +91,14 @@ export function PreviewToolbar({ state, onChange }: Props) {
 
 function SegGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+    <div className="inline-flex items-center gap-1.5">
       <span
-        style={{
-          color: 'var(--color-on-surface-variant)',
-          fontWeight: 600,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          fontSize: '0.62rem',
-        }}
+        className="text-[var(--color-on-surface-variant)] font-semibold tracking-wide uppercase text-[0.62rem]"
       >
         {label}
       </span>
       <div
-        style={{
-          display: 'inline-flex',
-          gap: '2px',
-          padding: '2px',
-          background: 'var(--color-surface-container-high)',
-          borderRadius: 'var(--shape-control)',
-        }}
+        className="inline-flex gap-0.5 p-0.5 bg-[var(--color-surface-container-high)] rounded-shape-control"
       >
         {children}
       </div>

@@ -32,7 +32,7 @@ const attributes = [
 export default function ToneOfVoicePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
+      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">Content</p>
       <h1>Tone of Voice</h1>
       <p>
         Nexub products speak with one voice across every surface — from button labels to error messages to onboarding flows.
@@ -42,27 +42,23 @@ export default function ToneOfVoicePage() {
       <h2>Voice attributes</h2>
       <p>Four qualities define how Nexub products communicate. Every piece of UI copy should embody all four.</p>
 
-      <div style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+      <div className="grid gap-4 mb-8">
         {attributes.map((a) => (
           <div
             key={a.name}
-            style={{
-              border: '1px solid var(--color-outline-variant)',
-              borderRadius: 'var(--shape-container)',
-              overflow: 'hidden',
-            }}
+            className="border border-[var(--color-outline-variant)] rounded-shape-container overflow-hidden"
           >
-            <div style={{ padding: '1rem 1.25rem', background: 'var(--color-surface-container-low)', borderBottom: '1px solid var(--color-outline-variant)' }}>
-              <span style={{ fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.9rem' }}>{a.name}</span>
-              <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.85rem', marginLeft: '0.75rem' }}>{a.desc}</span>
+            <div className="py-4 px-5 bg-[var(--color-surface-container-low)] border-b border-[var(--color-outline-variant)]">
+              <span className="font-bold text-[var(--color-primary)] text-[0.9rem]">{a.name}</span>
+              <span className="text-[var(--color-on-surface-variant)] text-[0.85rem] ms-3">{a.desc}</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
               <div style={{ padding: '0.875rem 1.25rem', borderRight: '1px solid var(--color-outline-variant)', background: 'var(--color-success-container)' }}>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-success)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>✅ Do</div>
+                <div className="text-[0.68rem] font-bold text-[var(--color-success)] uppercase tracking-wider mb-1">✅ Do</div>
                 <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface)', fontStyle: 'italic' }}>{a.do}</div>
               </div>
-              <div style={{ padding: '0.875rem 1.25rem', background: 'var(--color-error-container)' }}>
-                <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-error)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>❌ Don&apos;t</div>
+              <div className="py-3.5 px-5 bg-[var(--color-error-container)]">
+                <div className="text-[0.68rem] font-bold text-[var(--color-error)] uppercase tracking-wider mb-1">❌ Don&apos;t</div>
                 <div style={{ fontSize: '0.84rem', color: 'var(--color-on-surface)', fontStyle: 'italic' }}>{a.dont}</div>
               </div>
             </div>

@@ -46,7 +46,7 @@ function Ramp({ keys }: { keys: string[] }) {
 function Pair({ bg, fg, label }: { bg: string; fg: string; label: string }) {
   return (
     <div style={{ borderRadius: 12, padding: '12px 14px', background: `var(--color-${bg})`, color: `var(--color-${fg})`, border: '1px solid var(--color-outline-variant)' }}>
-      <div style={{ fontWeight: 600 }}>{label}</div>
+      <div className="font-semibold">{label}</div>
       <div style={{ ...mono, opacity: 0.9 }}>--color-{bg}</div>
     </div>
   );
@@ -93,24 +93,24 @@ color: var(--color-on-surface);
       ))}
 
       <h2>Text and outlines</h2>
-      <div style={{ display: 'grid', gap: 6, marginBottom: '2rem' }}>
+      <div className="grid gap-1.5 mb-8">
         {[
           ['on-surface', 'Primary text'],
           ['on-surface-variant', 'Secondary text'],
           ['on-surface-muted', 'Tertiary text (still ≥ 4.5:1 on every container)'],
           ['primary', 'Links'],
         ].map(([role, label]) => (
-          <div key={role} style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
+          <div key={role} className="flex gap-3 items-baseline">
             <span style={{ color: `var(--color-${role})`, minWidth: 320 }}>{label}</span>
             <code style={mono}>--color-{role}</code>
           </div>
         ))}
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span style={{ width: 120, height: 32, borderRadius: 8, border: '1px solid var(--color-outline)' }} />
+        <div className="flex gap-3 items-center">
+          <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline)]" />
           <code style={mono}>--color-outline (≥ 3:1, field borders, focus)</code>
         </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-          <span style={{ width: 120, height: 32, borderRadius: 8, border: '1px solid var(--color-outline-variant)' }} />
+        <div className="flex gap-3 items-center">
+          <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline-variant)]" />
           <code style={mono}>--color-outline-variant (hairlines, dividers)</code>
         </div>
       </div>
@@ -126,7 +126,7 @@ color: var(--color-on-surface);
       <pre><code>{`<html data-contrast="medium">   <!-- standard | medium | high -->`}</code></pre>
       <div style={grid(180)}>
         {(['standard', 'medium', 'high'] as const).map((level) => (
-          <div key={level} data-contrast={level} style={{ display: 'grid', gap: 8, padding: 12, borderRadius: 16, background: 'var(--color-surface)' }}>
+          <div key={level} data-contrast={level} className="grid gap-2 p-3 rounded-[16px] bg-[var(--color-surface)]">
             <Pair bg="primary" fg="on-primary" label={`primary (${level})`} />
             <Pair bg="surface-container" fg="on-surface-variant" label="variant text" />
           </div>
@@ -174,7 +174,7 @@ color: var(--color-on-surface);
         reach for a tone only for illustration or data visualisation.
       </p>
       {palettes.map((p) => (
-        <div key={p} style={{ marginBottom: 6 }}>
+        <div key={p} className="mb-1.5">
           <code style={mono}>{p}</code>
           <div style={{ display: 'grid', gridTemplateColumns: `repeat(${tones.length}, 1fr)`, borderRadius: 8, overflow: 'hidden' }}>
             {tones.map((t) => (
