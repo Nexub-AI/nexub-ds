@@ -1,52 +1,50 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Card, CardLink, Text } from '@nexub/react';
+import { DocsLink } from '@/components/layout/DocsLink';
 import { patternEntries } from '@/registry/index';
+import { CardGrid, PageIntro, Section } from '@/components/kit';
 
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = { title: 'Patterns' };
 
 const categories = Array.from(new Set(patternEntries.map((e) => e.meta.category)));
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 export default function PatternsPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Library</p>
-      <h1>Patterns</h1>
-      <p>
-        Patterns are higher-level, brand-agnostic composites built from <code>@nexub/react</code> primitives.
-        They solve common SaaS UI problems — auth flows, stat dashboards, settings pages — out of the box.
-        Available from <code>@nexub/patterns</code>.
-      </p>
+      <PageIntro
+        eyebrow="Library"
+        title="Patterns"
+        lead={
+          <>
+            Patterns are higher-level, brand-agnostic composites built from <code>@nexub/react</code> primitives. They
+            solve common SaaS UI problems (auth flows, stat dashboards, settings pages) out of the box. Available from{' '}
+            <code>@nexub/patterns</code>; full mobile screens live in <code>@nexub/react-native/patterns</code>.
+          </>
+        }
+      />
 
       {categories.map((cat) => {
         const entries = patternEntries.filter((e) => e.meta.category === cat);
         return (
-          <div key={cat} style={{ marginBottom: '2.5rem' }}>
-            <h2 style={{ marginBottom: '1rem' }}>{cat}</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
+          <Section key={cat} id={slugify(cat)} title={cat}>
+            <CardGrid min={220}>
               {entries.map((e) => (
-                <Link key={e.meta.slug} href={`/patterns/${e.meta.slug}`} style={{ textDecoration: 'none' }}>
-                  <div
-                    style={{
-                      padding: '16px 20px',
-                      border: '1px solid var(--color-outline-variant)',
-                      borderRadius: 'var(--shape-container)',
-                      background: 'var(--color-surface-elevated)',
-                      cursor: 'pointer',
-                      transition: 'border-color var(--duration-fast) var(--ease-out)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', gap: '8px', marginBottom: '6px', alignItems: 'center' }}>
-                      <div style={{ fontWeight: 700, color: 'var(--color-on-surface)', fontSize: '0.9rem' }}>{e.meta.title}</div>
-                      <span style={{ padding: '1px 6px', borderRadius: 'var(--shape-control)', background: 'var(--color-info-container)', color: 'var(--color-info)', fontSize: '0.6rem', fontWeight: 700, border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)' }}>Pattern</span>
-                    </div>
-                    <div style={{ fontSize: '0.78rem', color: 'var(--color-on-surface-muted)', lineHeight: 1.5 }}>{e.meta.description}</div>
-                  </div>
-                </Link>
+                <Card key={e.meta.slug} variant="interactive" className="flex flex-col gap-1.5 px-5 py-4">
+                  <CardLink asChild>
+                    <DocsLink href={`/patterns/${e.meta.slug}`} className="text-title-sm font-semibold text-[var(--color-on-surface)] no-underline">
+                      {e.meta.title}
+                    </DocsLink>
+                  </CardLink>
+                  <Text size="caption" tone="muted">
+                    {e.meta.description}
+                  </Text>
+                </Card>
               ))}
-            </div>
-          </div>
+            </CardGrid>
+          </Section>
         );
       })}
     </div>
