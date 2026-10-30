@@ -31,7 +31,12 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true
+      "reactCompiler": true,
+      "baseUrl": "/m"
+    },
+    "web": {
+      "output": "single",
+      "bundler": "metro"
     }
   }
 }

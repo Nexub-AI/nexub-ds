@@ -8,7 +8,12 @@ SplashScreen.preventAutoHideAsync();
 
 function Screens() {
   const nav = useNexubNavigation();
-  return <Stack screenOptions={nav.stack} />;
+  return (
+    <Stack screenOptions={nav.stack}>
+      {/* Docs previews bring their own theme and header (preview/_layout.tsx). */}
+      <Stack.Screen name="preview" options={{ headerShown: false }} />
+    </Stack>
+  );
 }
 
 export default function RootLayout() {

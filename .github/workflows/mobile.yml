@@ -83,6 +83,11 @@ jobs:
       - name: Maestro flows
         run: maestro test apps/mobile/.maestro --test-output-dir maestro-out
 
+      # One screenshot per docs preview example (<slug>--<example>--ios.png),
+      # generated from apps/mobile/preview-manifest.json.
+      - name: Maestro preview screenshots
+        run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out
+
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -90,6 +95,7 @@ jobs:
           name: maestro-ios
           path: |
             maestro-out
+            maestro-previews-out
             *.png
           retention-days: 14
 
@@ -151,6 +157,7 @@ jobs:
           script: |
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             maestro test apps/mobile/.maestro --test-output-dir maestro-out
+            maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out
 
       - name: Upload screenshots
         if: always()
@@ -159,5 +166,6 @@ jobs:
           name: maestro-android
           path: |
             maestro-out
+            maestro-previews-out
             *.png
           retention-days: 14
