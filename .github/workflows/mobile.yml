@@ -36,6 +36,15 @@ jobs:
     name: iOS simulator (Maestro)
     runs-on: macos-26
     timeout-minutes: 60
+    env:
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      # Path-independent hits, and room for a full React Native build.
+      CCACHE_BASEDIR: ${{ github.workspace }}
+      CCACHE_MAXSIZE: 2G
+      CCACHE_SLOPPINESS: clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+      CCACHE_FILECLONE: 'true'
+      CCACHE_DEPEND: 'true'
+      CCACHE_INODECACHE: 'true'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -54,8 +63,27 @@ jobs:
       - name: Build packages
         run: pnpm turbo build --filter='./packages/*'
 
+      # ccache for the native compile (React Native + Expo modules), which is
+      # most of the iOS job. USE_CCACHE=1 makes the generated Podfile route
+      # clang through React Native's ccache wrappers. Each run saves a fresh
+      # cache; later runs restore the newest one with the same lockfile, or
+      # any older one, and only recompile what changed.
+      - name: Install ccache
+        run: brew install ccache
+
+      - name: Restore the compiler cache
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-ios-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.run_id }}
+          restore-keys: |
+            ccache-ios-${{ hashFiles('pnpm-lock.yaml') }}-
+            ccache-ios-
+
       - name: Generate the native project
         working-directory: apps/mobile
+        env:
+          USE_CCACHE: '1'
         run: pnpm exec expo prebuild --platform ios
 
       - name: Build the app (Release, simulator)
@@ -65,6 +93,7 @@ jobs:
           xcodebuild -workspace NexubMobile.xcworkspace -scheme NexubMobile -configuration Release \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 40
+          ccache --show-stats
 
       - name: Install Maestro
         run: |
