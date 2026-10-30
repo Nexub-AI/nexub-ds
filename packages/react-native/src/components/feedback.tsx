@@ -117,7 +117,7 @@ export interface ToastOptions {
   /** One short action ("Undo"). */
   action?: { label: string; onPress: () => void };
   tone?: ToneValue;
-  /** 'short' 4 s, 'long' 10 s (Material snackbar timings). @default 'short' */
+  /** 'short' 4 s, 'long' 10 s (Material snackbar timings). @default 'long' with an action (time to reach it, WCAG 2.2.1), else 'short' */
   duration?: 'short' | 'long';
 }
 
@@ -140,7 +140,10 @@ export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps
   }, []);
   React.useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(() => setToast(null), toast.duration === 'long' ? 10_000 : 4_000);
+    const timer = setTimeout(
+      () => setToast(null),
+      (toast.duration ?? (toast.action ? 'long' : 'short')) === 'long' ? 10_000 : 4_000,
+    );
     return () => clearTimeout(timer);
   }, [toast]);
   const Glyph = toast?.tone ? TONE_ICON[toast.tone] : undefined;
