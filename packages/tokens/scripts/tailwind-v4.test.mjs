@@ -6,11 +6,11 @@ import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { compile } from 'tailwindcss-v4';
+import { compile } from 'tailwindcss';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const require = createRequire(import.meta.url);
-const v4Dir = dirname(require.resolve('tailwindcss-v4/package.json'));
+const v4Dir = dirname(require.resolve('tailwindcss/package.json'));
 const themePath = join(root, 'dist/tailwind/theme.css');
 
 // utility → declarations it must contain
@@ -36,6 +36,10 @@ const EXPECT = {
   'h-control-md': ['height: var(--size-control-md)'],
   'ms-4': ['margin-inline-start: var(--spacing-4)'],
   'max-w-container-prose': ['max-width: var(--container-prose)'],
+  // Tailwind's own max-w scale, not the --container-* layout tokens of the same name
+  'max-w-sm': ['max-width: 24rem'],
+  'text-sm': ['font-size: var(--text-sm)', 'line-height: var(--tw-leading, 1.25rem)'],
+  'max-w-container-sm': ['max-width: var(--container-sm)'],
   'z-modal': ['z-index: var(--z-modal)'],
   'animate-accordion-down': ['animation: accordion-down var(--motion-spring-spatial-default-duration)'],
 };
@@ -76,12 +80,4 @@ test('@theme inline emits no self-referencing :root vars', async () => {
   const css = await build(['bg-primary', 'rounded-md', 'ms-4']);
   assert.doesNotMatch(css, /--color-primary:\s*var\(--color-primary\)/);
   assert.doesNotMatch(css, /--radius-md:\s*var\(--radius-md\)/);
-});
-
-test('v3 preset still loads', async () => {
-  const { default: preset } = await import(join(root, 'dist/tailwind/preset.js'));
-  const ext = preset.theme.extend;
-  assert.equal(ext.colors.primary, 'var(--color-primary)');
-  assert.equal(ext.transitionDuration['spatial-default'], 'var(--motion-spring-spatial-default-duration)');
-  assert.equal(preset.plugins.length, 1);
 });

@@ -1,6 +1,6 @@
 {
   "name": "@nexub/icons",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Icon components for Nexub Design System — tree-shakeable wrappers around Lucide icons with design-system size tokens, for React (web) and React Native (@nexub/icons/native).",
   "type": "module",
   "license": "MIT",

@@ -1,0 +1,19 @@
+# Scroll until ${TARGET} is fully on screen.
+# Android centres it: a row left at the bottom edge sits under the gesture bar.
+# iOS doesn't: centring can overshoot and park the element under the
+# translucent navigation bar, where a tap hits the back button instead.
+appId: ai.nexub.mobile
+---
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - scrollUntilVisible:
+          element: ${TARGET}
+          centerElement: true
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - scrollUntilVisible:
+          element: ${TARGET}

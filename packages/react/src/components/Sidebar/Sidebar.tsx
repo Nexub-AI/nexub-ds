@@ -129,12 +129,13 @@ const Separator = React.forwardRef<HTMLHRElement, React.HTMLAttributes<HTMLHREle
 );
 Separator.displayName = 'Sidebar.Separator';
 
+/** Bottom of the sidebar, e.g. a version line. Stays pinned while the items scroll above it. */
 const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'mt-auto border-t border-[var(--color-outline-variant)] p-4',
+        'sticky bottom-0 mt-auto shrink-0 border-t border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-4',
         className,
       )}
       {...props}

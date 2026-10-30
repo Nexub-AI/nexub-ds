@@ -38,13 +38,24 @@ export default {
 };
 ```
 
+```css
+/* Tailwind v4: no config file. Load the theme CSS here, in the base layer, instead of from JS */
+@layer theme, base, components, utilities;
+@import "@nexub/themes/base" layer(base);
+@import "@nexub/themes/light" layer(base);
+@import "tailwindcss";
+@import "@nexub/tokens/tailwind.css";
+@source "../node_modules/@nexub/react/dist";
+@source "../node_modules/@nexub/patterns/dist";
+```
+
 Wrap the app in `<ThemeProvider defaultTheme="system" storageKey="app-theme">` from `@nexub/react`. In server-rendered apps (Next.js), put `<ThemeScript storageKey="app-theme" />` in `<head>` and add `suppressHydrationWarning` to `<html>`. Product brands: set `data-product="leap" | "bookub" | "payub" | "founderub"` on the root. This remaps the `tertiary` role.
 
 ## 2. How to build a screen
 
 1. **Start from a pattern.** Check the Patterns sections of `references/components.md` before you compose anything by hand.
 2. **Then use components.** Use `@nexub/react` for every control, overlay, layout primitive and piece of typography. Never hand-roll a button, input, dialog, menu or table that the library already has.
-3. **Then use tokens, only for the glue.** Use Tailwind utilities from the preset (`bg-surface-container-low`, `text-on-surface-variant`, `p-4`, `gap-6`, `rounded-shape-container`, `text-title-md`) or `var(--…)`.
+3. **Then use tokens, only for the glue.** Use Tailwind utilities from the preset or v4 theme (`bg-surface-container-low`, `text-on-surface-variant`, `p-4`, `gap-6`, `rounded-shape-container`, `text-title-md`) or `var(--…)`.
 4. **Never hardcode design values.** That means no hex or rgb colors, no Tailwind palette colors (`bg-blue-500`, `text-gray-600`), no arbitrary px values (`p-[13px]`), no ad-hoc shadows or gradients.
 
 Starting points for typical SaaS screens:
@@ -97,7 +108,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v2.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v2.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -335,7 +346,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v2.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v2.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions

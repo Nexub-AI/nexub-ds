@@ -68,6 +68,23 @@ describe('SettingsLayout', () => {
   });
 });
 
+describe('SettingsLayout navFooter', () => {
+  it('pins the footer in the section sidebar and the phone menu', async () => {
+    const user = userEvent.setup();
+    render(<SettingsLayout items={items} navFooter="v1.2.0 · Updated 21 Oct 2026" />);
+    const nav = screen.getByRole('navigation', { name: 'Settings' });
+    expect(within(nav).getByText('v1.2.0 · Updated 21 Oct 2026')).toHaveClass('sticky', 'bottom-0');
+    await user.click(screen.getByRole('button', { name: 'Open settings menu' }));
+    const sheet = screen.getByRole('dialog', { name: 'Settings' });
+    expect(within(sheet).getByText('v1.2.0 · Updated 21 Oct 2026')).toBeInTheDocument();
+  });
+
+  it('renders no footer when navFooter is not set', () => {
+    render(<SettingsLayout items={items} />);
+    expect(screen.getByRole('navigation', { name: 'Settings' }).querySelector('.sticky.bottom-0')).toBeNull();
+  });
+});
+
 describe('SettingsRow', () => {
   it('renders label, description, value and action', () => {
     render(
