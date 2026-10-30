@@ -3,21 +3,25 @@
 # failing command and Maestro's own error are readable without the artifact.
 # $1: the --test-output-dir of the failed run.
 echo '::group::Maestro failed command'
-for f in $(find "$1" -name "commands-*.json" 2>/dev/null); do
-  [ -f "$f" ] || continue
+# The commands-*.json layout varies by Maestro version, so match loosely: any
+# entry whose JSON mentions a failure, else the last three commands run.
+find "$1" -name 'commands-*.json' 2>/dev/null | while read -r f; do
   python3 - "$f" <<'PY'
 import json, sys
-cmds = json.load(open(sys.argv[1]))
-for i, c in enumerate(cmds):
-    meta = c.get('metadata', {})
-    if meta.get('status') == 'FAILED':
-        print(sys.argv[1])
-        for prev in cmds[max(0, i - 3):i]:
-            print('  ok  ', json.dumps(prev.get('command'))[:300])
-        print('  FAIL', json.dumps(c.get('command'))[:600])
-        print('  error:', json.dumps(meta.get('error'))[:2000])
+path = sys.argv[1]
+try:
+    cmds = json.load(open(path))
+except Exception as e:
+    print(path, 'unreadable:', e); sys.exit()
+if isinstance(cmds, dict):
+    cmds = cmds.get('commands', list(cmds.values()))
+failed = [c for c in cmds if 'FAIL' in json.dumps(c).upper()]
+print(path)
+for c in (failed or cmds[-3:]):
+    print(' ', json.dumps(c)[:1500])
 PY
 done
+ls -R "$1" 2>/dev/null | head -n 30
 echo '::endgroup::'
 echo '::group::Text on screen (Maestro view hierarchy)'
 maestro hierarchy 2>/dev/null | grep -oE '"(text|accessibilityText|bounds)" *: *"[^"]+"' | head -n 120
