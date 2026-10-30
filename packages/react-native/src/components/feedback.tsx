@@ -10,8 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, {
-  FadeInDown,
-  FadeOutDown,
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -31,6 +30,7 @@ import {
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
+import { nxEnter, nxExit, nxLayout } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { TONE_CONTAINERS, TONE_TEXT } from './shared';
 
@@ -67,7 +67,11 @@ export function Banner({
   const [bg, fg] = TONE_CONTAINERS[tone];
   const Glyph = TONE_ICON[tone] ?? Info;
   return (
-    <View
+    // Drops in when shown, fades out when dismissed; content below glides up.
+    <Animated.View
+      entering={nxEnter('down')}
+      exiting={nxExit('fade')}
+      layout={nxLayout()}
       accessibilityRole={tone === 'danger' || tone === 'warning' ? 'alert' : 'summary'}
       style={[
         {
@@ -106,7 +110,7 @@ export function Banner({
           style={{ marginTop: -8, marginEnd: -8 }}
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 
@@ -153,8 +157,8 @@ export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps
       {toast && (
         <Animated.View
           key={toast.id}
-          entering={FadeInDown}
-          exiting={FadeOutDown}
+          entering={nxEnter('up')}
+          exiting={nxExit('down')}
           pointerEvents="box-none"
           style={{
             position: 'absolute',
@@ -410,12 +414,20 @@ export interface SkeletonProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** Loading placeholder. Pulses gently; static under Reduce Motion. Hidden from screen readers. */
+/**
+ * Loading placeholder. Breathes between full and half opacity (a slow, calm
+ * shimmer); static under Reduce Motion. Hidden from screen readers.
+ */
 export function Skeleton({ width = '100%', height = 16, radius = 'field', style }: SkeletonProps) {
   const { roles, tokens, reducedMotion } = useTheme();
   const pulse = useSharedValue(1);
   React.useEffect(() => {
-    if (!reducedMotion) pulse.value = withRepeat(withTiming(0.5, { duration: 900 }), -1, true);
+    if (reducedMotion) return;
+    pulse.value = withRepeat(
+      withTiming(0.5, { duration: SHIMMER_MS, reduceMotion: ReduceMotion.System }),
+      -1,
+      true,
+    );
   }, [reducedMotion, pulse]);
   const animated = useAnimatedStyle(() => ({ opacity: pulse.value }));
   return (
@@ -435,6 +447,9 @@ export function Skeleton({ width = '100%', height = 16, radius = 'field', style 
     />
   );
 }
+
+// Half a skeleton breath, matching web's animate-pulse (2 s per cycle).
+const SHIMMER_MS = 1000;
 
 // ─── EmptyState / ErrorState ─────────────────────────────────────────────────
 
