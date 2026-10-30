@@ -1,36 +1,19 @@
+import { Text } from '@nexub/react';
+
 export function DocsFooter() {
   return (
-    <footer
-      style={{
-        borderTop: '1px solid var(--color-outline-variant)',
-        padding: '1.5rem 2rem',
-        textAlign: 'center',
-        color: 'var(--color-on-surface-muted)',
-        fontSize: '0.78rem',
-        lineHeight: 1.6,
-      }}
-    >
-      Built on{' '}
-      <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
-        Nexub Design System
-      </span>
-      {' '}·{' '}
-      © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
-      {' '}·{' '}
-      Crafted by{' '}
-      <a
-        href="https://github.com/sasinex"
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          color: 'var(--color-primary)',
-          textDecoration: 'none',
-          fontWeight: 500,
-        }}
-      >
-        Sasidharan
-      </a>
-      {' '}— shipped with vibe coding energy ⚡
+    <footer className="border-t border-[var(--color-outline-variant)] px-6 py-6 text-center">
+      <Text size="caption" tone="muted">
+        Built with the Nexub Design System · © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore ·{' '}
+        <a
+          href="https://github.com/Nexub-AI/nexub-ds"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-[var(--color-primary)] no-underline hover:underline"
+        >
+          GitHub
+        </a>
+      </Text>
     </footer>
   );
 }

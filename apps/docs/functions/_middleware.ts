@@ -10,9 +10,15 @@
  *
  * Static assets skip this function via public/_routes.json. The CSP in
  * public/_headers stays as the fallback policy if this function never runs.
+ *
+ * /m/* is the React Native web preview (apps/mobile build:web) and /frame/*
+ * the page-template frames. Docs pages frame them, so they alone may be
+ * framed, and only by this origin.
  */
 
-const CSP = (nonce: string) =>
+const framedPreview = (path: string) => path === '/m' || path.startsWith('/m/') || path.startsWith('/frame/');
+
+const CSP = (nonce: string, frameAncestors: string) =>
   [
     "default-src 'self'",
     `script-src 'nonce-${nonce}' 'strict-dynamic' 'self' https: 'unsafe-inline'`,
@@ -20,16 +26,16 @@ const CSP = (nonce: string) =>
     "img-src 'self' data: blob: https://i.pravatar.cc",
     "font-src 'self' data:",
     "connect-src 'self' https://challenges.cloudflare.com",
-    'frame-src https://challenges.cloudflare.com',
+    "frame-src 'self' https://challenges.cloudflare.com",
     "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
-    "frame-ancestors 'none'",
+    `frame-ancestors ${frameAncestors}`,
     'upgrade-insecure-requests',
   ].join('; ');
 
-export const onRequest: PagesFunction = async ({ next }) => {
+export const onRequest: PagesFunction = async ({ request, next }) => {
   const res = await next();
   if (!(res.headers.get('content-type') ?? '').includes('text/html')) return res;
 
@@ -37,7 +43,9 @@ export const onRequest: PagesFunction = async ({ next }) => {
   const nonce = btoa(String.fromCharCode(...bytes));
 
   const out = new Response(res.body, res);
-  out.headers.set('Content-Security-Policy', CSP(nonce));
+  const preview = framedPreview(new URL(request.url).pathname);
+  out.headers.set('Content-Security-Policy', CSP(nonce, preview ? "'self'" : "'none'"));
+  out.headers.set('X-Frame-Options', preview ? 'SAMEORIGIN' : 'DENY');
   const addNonce = {
     element(el: Element) {
       el.setAttribute('nonce', nonce);

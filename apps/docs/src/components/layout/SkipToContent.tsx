@@ -1,30 +1,8 @@
-'use client';
-
 export function SkipToContent() {
   return (
     <a
       href="#main-content"
-      style={{
-        position: 'absolute',
-        top: '-999px',
-        left: '-999px',
-        zIndex: 9999,
-        padding: '8px 16px',
-        background: 'var(--color-primary)',
-        color: '#fff',
-        borderRadius: 'var(--shape-field)',
-        fontSize: '0.875rem',
-        fontWeight: 600,
-        textDecoration: 'none',
-      }}
-      onFocus={(e) => {
-        e.currentTarget.style.top = '8px';
-        e.currentTarget.style.left = '8px';
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.top = '-999px';
-        e.currentTarget.style.left = '-999px';
-      }}
+      className="sr-only z-[9999] rounded-shape-field bg-[var(--color-primary)] px-4 py-2 text-label-lg text-[var(--color-on-primary)] no-underline focus:not-sr-only focus:fixed focus:start-2 focus:top-2"
     >
       Skip to content
     </a>

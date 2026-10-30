@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, EyebrowChip, Heading, Logo, Text, TextGradient } from '@nexub/react';
+import { Button, EyebrowChip, Heading, Logo, Text, TextGradient, TopNav } from '@nexub/react';
 import { ArrowRight } from '@nexub/icons';
 import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
@@ -37,116 +37,45 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
     { num: `${componentCount}`, label: 'Components' },
     { num: `${patternCount}`, label: 'Patterns' },
     { num: '5', label: 'Brand themes' },
-    { num: '100%', label: 'TypeScript' },
+    { num: '3', label: 'Platforms: web, iOS, Android' },
   ];
 
   return (
     <section
       ref={heroRef}
-      className="landing-hero"
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
-        padding: '8rem 2rem 5rem',
-        background: 'var(--gradient-hero-ambient)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      className="landing-hero relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-32 text-center [background:var(--gradient-hero-ambient)]"
     >
       {/* ── Cursor spotlight (pure client, no SSR impact) ─────────────────── */}
       <div
+        aria-hidden="true"
+        className={
+          'pointer-events-none absolute inset-0 z-[1] transition-opacity duration-effects-default ' +
+          (cursor.active ? 'opacity-100' : 'opacity-0')
+        }
         style={{
-          position: 'absolute',
-          inset: 0,
-          pointerEvents: 'none',
-          zIndex: 1,
-          opacity: cursor.active ? 1 : 0,
-          transition: 'opacity 0.3s ease',
           background: `radial-gradient(600px circle at ${cursor.x}px ${cursor.y}px, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 70%)`,
         }}
       />
 
       {/* ── Floating gradient orbs — CSS keyframes (.landing-orb in globals.css) ────── */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <div
-          className="landing-orb"
-          style={{
-            ['--orb-y' as string]: '-30px',
-            ['--orb-x' as string]: '15px',
-            animationDuration: '8s',
-            animationDelay: '0s',
-            position: 'absolute',
-            top: '8%',
-            left: '12%',
-            width: '420px',
-            height: '420px',
-            borderRadius: '50%',
-            background: 'var(--color-primary)',
-            opacity: 0.07,
-            filter: 'blur(80px)',
-          }}
+          className="landing-orb absolute left-[12%] top-[8%] h-[420px] w-[420px] rounded-full bg-[var(--color-primary)] opacity-[0.07] blur-[80px] [animation-delay:0s] [animation-duration:8s]"
+          style={{ ['--orb-y' as string]: '-30px', ['--orb-x' as string]: '15px' }}
         />
         <div
-          className="landing-orb"
-          style={{
-            ['--orb-y' as string]: '25px',
-            ['--orb-x' as string]: '-20px',
-            animationDuration: '11s',
-            animationDelay: '2s',
-            position: 'absolute',
-            bottom: '12%',
-            right: '8%',
-            width: '360px',
-            height: '360px',
-            borderRadius: '50%',
-            background: 'var(--color-primary)',
-            opacity: 0.06,
-            filter: 'blur(70px)',
-          }}
+          className="landing-orb absolute bottom-[12%] right-[8%] h-[360px] w-[360px] rounded-full bg-[var(--color-primary)] opacity-[0.06] blur-[70px] [animation-delay:2s] [animation-duration:11s]"
+          style={{ ['--orb-y' as string]: '25px', ['--orb-x' as string]: '-20px' }}
         />
         <div
-          className="landing-orb"
-          style={{
-            ['--orb-y' as string]: '-18px',
-            ['--orb-x' as string]: '10px',
-            animationDuration: '14s',
-            animationDelay: '5s',
-            position: 'absolute',
-            top: '20%',
-            right: '20%',
-            width: '280px',
-            height: '280px',
-            borderRadius: '50%',
-            background: 'var(--color-primary)',
-            opacity: 0.05,
-            filter: 'blur(60px)',
-          }}
+          className="landing-orb absolute right-[20%] top-[20%] h-[280px] w-[280px] rounded-full bg-[var(--color-primary)] opacity-[0.05] blur-[60px] [animation-delay:5s] [animation-duration:14s]"
+          style={{ ['--orb-y' as string]: '-18px', ['--orb-x' as string]: '10px' }}
         />
       </div>
 
       {/* ── Nav strip ─────────────────────────────────────────────────────── */}
-      <nav
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          padding: '1.25rem 2rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '24px',
-          justifyContent: 'space-between',
-          borderBottom: '1px solid var(--color-outline-variant)',
-          background: 'color-mix(in srgb, var(--color-surface) 80%, transparent)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 10,
-        }}
-      >
-        <Link href="/" aria-label="Nexub Design System home" style={{ textDecoration: 'none' }}>
+      <TopNav.Root surface="glass" className="absolute inset-x-0 top-0 z-10 justify-between gap-6 border-x-0 border-t-0 px-8">
+        <Link href="/" aria-label="Nexub Design System home" className="no-underline">
           <Logo size="sm" product="Design System" />
         </Link>
 
@@ -156,42 +85,18 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/patterns">Patterns</Link></Button>
           <ThemeSwitcher />
         </div>
-      </nav>
+      </TopNav.Root>
 
       {/* ── Hero icon with orbital rings ──────────────────────────────────── */}
-      <div className="hero-icon-wrap" style={{ position: 'relative', zIndex: 2 }}>
-        {/* Soft glow behind the icon */}
-        <div
-          style={{
-            position: 'absolute',
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            background: 'var(--color-primary)',
-            opacity: 0.18,
-            filter: 'blur(24px)',
-          }}
-        />
-        {/* The icon itself */}
-        <Image
-          src="/nexub-icon.svg"
-          alt="Nexub"
-          width={72}
-          height={52}
-          priority
-          style={{ display: 'block', position: 'relative', zIndex: 2 }}
-        />
-        {/* Orbital rings */}
+      <div className="hero-icon-wrap relative z-[2]">
+        <div aria-hidden="true" className="absolute h-20 w-20 rounded-full bg-[var(--color-primary)] opacity-[0.18] blur-[24px]" />
+        <Image src="/nexub-icon.svg" alt="Nexub" width={72} height={52} priority className="relative z-[2] block" />
         <div className="logo-ring logo-ring-1" />
         <div className="logo-ring logo-ring-2" />
       </div>
 
       {/* ── Eyebrow — CSS animation, SSR-safe ─────────────────────────────── */}
-      <EyebrowChip
-        tone="info"
-        className="hero-anim-1"
-        style={{ position: 'relative', zIndex: 2, marginBottom: '1.75rem' }}
-      >
+      <EyebrowChip tone="info" className="hero-anim-1 relative z-[2] mb-7">
         v{version} · {componentCount} components · {patternCount} patterns
       </EyebrowChip>
 
@@ -199,40 +104,23 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       <Heading
         level={1}
         size="display"
-        className="hero-anim-2"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          fontSize: 'clamp(2.75rem, 7vw, 5rem)',
-          lineHeight: 1.05,
-          letterSpacing: '-0.035em',
-          marginBottom: '1.25rem',
-          maxWidth: '860px',
-        }}
+        className="hero-anim-2 relative z-[2] mb-5 max-w-[860px] text-[clamp(2.75rem,7vw,5rem)] leading-[1.05] tracking-[-0.035em]"
       >
         Design system for<br />
         {/* Calm override of the brand rainbow: ink to primary. */}
-        <TextGradient style={{ backgroundImage: 'linear-gradient(135deg, var(--color-on-surface) 0%, var(--color-primary) 70%)' }}>
+        <TextGradient className="[background-image:linear-gradient(135deg,var(--color-on-surface)_0%,var(--color-primary)_70%)]">
           ambitious SaaS teams
         </TextGradient>
       </Heading>
 
       {/* ── Subheading — CSS animation ────────────────────────────────────── */}
-      <Text
-        size="body-lg"
-        tone="secondary"
-        className="hero-anim-3"
-        style={{ position: 'relative', zIndex: 2, maxWidth: '520px', marginBottom: '2.5rem' }}
-      >
-        A complete library of accessible, token-driven React components and patterns.
-        Build faster, ship consistently, look great everywhere.
+      <Text size="body-lg" tone="secondary" className="hero-anim-3 relative z-[2] mb-10 max-w-[540px]">
+        Accessible, token-driven components and patterns for React on the web and React Native on iOS and Android.
+        One set of tokens, two platforms, every product brand.
       </Text>
 
       {/* ── CTAs — CSS animation ──────────────────────────────────────────── */}
-      <div
-        className="hero-anim-4"
-        style={{ position: 'relative', zIndex: 2, display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}
-      >
+      <div className="hero-anim-4 relative z-[2] flex flex-wrap justify-center gap-3">
         <Button asChild variant="filled" size="lg" className="landing-cta-shimmer">
           <Link href="/getting-started">Get started <ArrowRight size="sm" aria-hidden="true" /></Link>
         </Button>
@@ -242,22 +130,11 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       </div>
 
       {/* ── Stats strip — CSS animation ───────────────────────────────────── */}
-      <div
-        className="landing-stats hero-stats"
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          display: 'flex',
-          gap: '48px',
-          marginTop: '4.5rem',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-        }}
-      >
+      <div className="landing-stats hero-stats relative z-[2] mt-[4.5rem] flex flex-wrap justify-center gap-12">
         {stats.map((s) => (
-          <div key={s.label} style={{ textAlign: 'center' }}>
-            <Text size="body" weight="bold" style={{ fontSize: '2rem', lineHeight: 1.2, color: 'var(--color-primary)' }}>{s.num}</Text>
-            <Text size="caption" tone="muted" weight="medium" style={{ marginTop: '2px' }}>{s.label}</Text>
+          <div key={s.label} className="text-center">
+            <Text size="body" weight="bold" className="text-[2rem] leading-tight text-[var(--color-primary)]">{s.num}</Text>
+            <Text size="caption" tone="muted" weight="medium" className="mt-0.5">{s.label}</Text>
           </div>
         ))}
       </div>

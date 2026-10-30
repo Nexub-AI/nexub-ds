@@ -56,3 +56,33 @@ export { ErrorSummary, useFormErrors } from './components/ErrorSummary/index.js'
 export type { ErrorSummaryProps, ErrorSummaryItem, FormErrorMap } from './components/ErrorSummary/index.js';
 export { Conversation } from './components/Conversation/index.js';
 export type { ConversationProps, ConversationMessages } from './components/Conversation/index.js';
+
+// Page templates: web twins of the @nexub/react-native/patterns screens.
+export { PageFrame, defaultPageTemplateMessages, usePageMessages, groupByDay } from './components/PageFrame/index.js';
+export type {
+  PageFrameProps,
+  PageTemplateMessages,
+  Transaction,
+  ReviewRow,
+  Quote,
+  ChatMessage,
+  Plan,
+  QuickAction,
+  Insight,
+} from './components/PageFrame/index.js';
+export { ActivityPage, TransactionRow } from './components/ActivityPage/index.js';
+export type { ActivityPageProps } from './components/ActivityPage/index.js';
+export { TransactionDetailPage } from './components/TransactionDetailPage/index.js';
+export type { TransactionDetailPageProps } from './components/TransactionDetailPage/index.js';
+export { SettingsPage } from './components/SettingsPage/index.js';
+export type { SettingsPageProps, SettingsGroup, SettingsItem } from './components/SettingsPage/index.js';
+export { SignInPage } from './components/SignInPage/index.js';
+export type { SignInPageProps } from './components/SignInPage/index.js';
+export { CheckoutPage } from './components/CheckoutPage/index.js';
+export type { CheckoutPageProps } from './components/CheckoutPage/index.js';
+export { ChatPage } from './components/ChatPage/index.js';
+export type { ChatPageProps } from './components/ChatPage/index.js';
+export { PaywallPage } from './components/PaywallPage/index.js';
+export type { PaywallPageProps } from './components/PaywallPage/index.js';
+export { DashboardPage } from './components/DashboardPage/index.js';
+export type { DashboardPageProps, DashboardStat } from './components/DashboardPage/index.js';

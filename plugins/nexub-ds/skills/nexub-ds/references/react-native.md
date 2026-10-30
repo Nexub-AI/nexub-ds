@@ -77,6 +77,8 @@ Names and props match `@nexub/react` where a web twin exists.
 - **Mobile:** `SwipeableRow`, `RefreshControl`, `Carousel`, `PageIndicator`, `StickyFooter`, `SensitiveValue`, `PrivacyShield`, `FAB` (Android only by default).
 - **Navigation helpers:** `nexubStackOptions`, `nexubNavigationTheme`, `nexubTabsOptions`.
 
+- **Motion:** `nxEnter`, `nxExit`, `nxLayout` (Reanimated layout animations) and `nxSpring` (a `withSpring` config), built from the same spring tokens as the web. `<Animated.View entering={nxEnter('up')} exiting={nxExit('down')} layout={nxLayout()} />`. Toast, Banner, `ListSection` rows, `SwipeableRow`, `Chip`, the `SegmentedControl` pill and `Amount` (`animate`) already use them. In a `FlatList`, pass `nxLayout()` as `itemLayoutAnimation`.
+
 Icons: `import { Search } from '@nexub/icons/native'`. These are the same names as `@nexub/icons`. Colour them with `<Icon icon={Search} color="primary" />`.
 
 ## Patterns
@@ -97,7 +99,7 @@ Icons: `import { Search } from '@nexub/icons/native'`. These are the same names 
   - Masked values read as "hidden".
   - Toasts are announced.
 - **Haptics are semantic** (`selection`, `toggleOn`/`toggleOff`, `confirm`, `reject`, `warning`, `snap`), never on plain taps, and never the only feedback.
-- **Motion:** M3 springs (no overshoot by default), off under Reduce Motion.
+- **Motion:** M3 springs. Enter rides the spatial spring; exit is quicker on the effects spring and never overshoots. Every preset follows the OS Reduce Motion setting.
 - **Glass:** for the control layer only, never content. It is native Liquid Glass on iOS 26+, solid elsewhere and whenever the user turns transparency down.
 - **Security:** `OTPInput` uses one field, so SMS autofill works. `PasswordInput` sets the platform autofill hints. `SensitiveValue` re-masks when the app backgrounds. `PrivacyShield` covers the app-switcher snapshot. The library makes no network calls and stores nothing.
 

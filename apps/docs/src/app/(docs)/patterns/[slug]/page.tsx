@@ -1,11 +1,16 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react'; // kept for Import CodeBlock Suspense
 import { notFound } from 'next/navigation';
+import { Badge } from '@nexub/react';
 import { patternEntries, getPatternEntry } from '@/registry/index';
-import { CodeBlock } from '@/components/docs/CodeBlock';
+import { nativePatternTwins } from '@/registry/native';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
+import { UsageGrid } from '@/components/docs/UsageGrid';
+import { CopyButton } from '@/components/docs/CopyButton';
+import { PageIntro, Section } from '@/components/kit';
+import { PlatformPanel, PlatformSwitch } from '@/components/platform/PlatformTabs';
+import { MobilePanel, NoMobileTwin } from '@/components/platform/MobilePanel';
 
 // Pre-render every pattern page at build time — same strategy as component pages.
 export const dynamic = 'force-static';
@@ -30,113 +35,66 @@ export default async function PatternPage({ params }: Props) {
   if (!entry) notFound();
 
   const { meta, props, examples, usage } = entry;
+  const twin = nativePatternTwins[slug];
+  const importLine = `import { ${meta.title.replace(/\s+/g, '')} } from '@nexub/patterns';`;
 
   return (
     <div className="docs-prose">
-      <p
-        style={{
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          color: 'var(--color-primary)',
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          marginBottom: '0.5rem',
-        }}
+      <PageIntro
+        eyebrow={`Patterns · ${meta.category}`}
+        title={meta.title}
+        lead={meta.description}
+        badges={meta.addedIn && <Badge variant="outline">Since v{meta.addedIn}</Badge>}
       >
-        Patterns · {meta.category}
-      </p>
-
-      <div className="docs-page-header">
-        <h1 style={{ margin: 0 }}>{meta.title}</h1>
-        <div className="docs-page-header-badges">
-          <span
-            style={{
-              padding: '2px 8px',
-              borderRadius: 'var(--shape-control)',
-              background: 'var(--color-info-container)',
-              color: 'var(--color-info)',
-              fontSize: '0.7rem',
-              fontWeight: 600,
-              border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
-              fontFamily: 'var(--font-family-mono)',
-            }}
-          >
-            @nexub/patterns
-          </span>
-          {meta.addedIn && (
-            <span
-              style={{
-                padding: '2px 8px',
-                borderRadius: 'var(--shape-control)',
-                background: 'var(--color-surface-container-high)',
-                color: 'var(--color-on-surface-muted)',
-                fontSize: '0.7rem',
-                fontWeight: 600,
-                border: '1px solid var(--color-outline-variant)',
-                fontFamily: 'var(--font-family-mono)',
-              }}
-            >
-              Added in v{meta.addedIn}
-            </span>
-          )}
+        <div className="docs-snippet inline-flex max-w-full items-center gap-2 self-start rounded-shape-field bg-[var(--docs-snippet-bg)] py-1.5 pe-2 ps-3 font-mono text-body-sm text-[var(--docs-snippet-fg)]">
+          <code className="truncate">{importLine}</code>
+          <CopyButton text={importLine} />
         </div>
-      </div>
-      <p>{meta.description}</p>
+        <PlatformSwitch available={twin ? ['web', 'mobile'] : ['web']} />
+      </PageIntro>
 
       {usage && (
-        <div className="docs-usage-grid">
-          <div className="docs-usage-col docs-usage-do">
-            <h4>✅ When to use</h4>
-            <ul>
-              {usage.whenToUse.map((u) => <li key={u}>{u}</li>)}
-            </ul>
-          </div>
-          <div className="docs-usage-col docs-usage-dont">
-            <h4>❌ When not to use</h4>
-            <ul>
-              {usage.whenNotToUse.map((u) => <li key={u}>{u}</li>)}
-            </ul>
-          </div>
-        </div>
+        <Section id="usage" title="Usage">
+          <UsageGrid usage={usage} />
+        </Section>
       )}
 
-      <h2>Import</h2>
-      <Suspense fallback={<CodeBlockSkeleton />}>
-        <CodeBlock code={`import { ${meta.title} } from '@nexub/patterns';`} />
-      </Suspense>
+      <PlatformPanel platform="web">
+        <Section id="examples" title="Examples">
+          {examples.map((ex, i) => (
+            <Section key={ex.title} title={ex.title} description={ex.description} level={3}>
+              <ComponentPreview code={ex.code} minHeight="180px">
+                <ComponentLivePreview slug={slug} idx={i} isPattern />
+              </ComponentPreview>
+            </Section>
+          ))}
+        </Section>
 
-      {/* No codeSlot on examples — keeps Shiki out of the navigation render path.
-          See components/[slug]/page.tsx for the rationale. */}
-      <h2>Examples</h2>
-      {examples.map((ex, i) => (
-        <div key={ex.title} style={{ marginBottom: '2rem' }}>
-          <h3>{ex.title}</h3>
-          {ex.description && <p>{ex.description}</p>}
-          <ComponentPreview code={ex.code} minHeight="180px">
-            <ComponentLivePreview slug={slug} idx={i} isPattern />
-          </ComponentPreview>
-        </div>
-      ))}
+        {props.length > 0 && (
+          <Section id="props" title="Props">
+            <PropsTable props={props} />
+          </Section>
+        )}
+      </PlatformPanel>
 
-      {props.length > 0 && (
-        <>
-          <h2>Props</h2>
-          <PropsTable props={props} />
-        </>
+      {twin ? (
+        <PlatformPanel platform="mobile">
+          <Section id="mobile-heading" title={`On iOS & Android: ${twin.name}`}>
+            <MobilePanel
+              name={twin.name}
+              title={meta.title}
+              preview={`preview/${twin.preview}`}
+              code={twin.code}
+              differences={twin.differences}
+              pkg="@nexub/react-native/patterns"
+            />
+          </Section>
+        </PlatformPanel>
+      ) : (
+        <Section id="mobile" title="On iOS & Android">
+          <NoMobileTwin title={meta.title} />
+        </Section>
       )}
     </div>
-  );
-}
-
-function CodeBlockSkeleton() {
-  return (
-    <div
-      style={{
-        height: '52px',
-        borderRadius: 'var(--shape-container)',
-        background: 'var(--docs-code-bg, #0d1117)',
-        opacity: 0.6,
-      }}
-    />
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
@@ -8,10 +9,7 @@ export const metadata: Metadata = { title: 'Using the brand assets' };
 export default function BrandAssetsPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-        Getting Started
-      </p>
-      <h1>Using the brand assets</h1>
+      <PageIntro eyebrow="Getting Started" title="Using the brand assets" />
       <p>
         <code>@nexub/brand</code> ships the official Nexub files: the mark, the app icon tiles, PNG icons
         and the favicon. Use these instead of keeping your own copies. They come from the same master

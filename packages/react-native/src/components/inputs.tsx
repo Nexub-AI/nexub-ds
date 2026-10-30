@@ -19,11 +19,18 @@ import {
   X,
   type NativeIconProps,
 } from '@nexub/icons/native';
+import Animated, {
+  LayoutAnimationConfig,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { fontStyle } from '../theme/fonts';
 import { useHaptics, useTheme } from '../theme/ThemeProvider';
+import { nxEnter, nxExit, nxLayout, nxSpring } from '../theme/motion';
 import { IconButton } from './actions';
 import { controlHeight, disabledOpacity, hitSlopFor } from './shared';
 
@@ -606,10 +613,26 @@ export function SegmentedControl<T extends string>({
     defaultValue: defaultValue ?? options[0]!.value,
     onChange: onValueChange,
   });
+  // The selected pill slides between segments on the spatial spring. Until the
+  // track is measured, the selected segment paints its own background.
+  const [trackWidth, setTrackWidth] = React.useState(0);
+  const index = Math.max(0, options.findIndex((o) => o.value === v));
+  const segment = trackWidth > 0 ? (trackWidth - 6) / options.length : 0;
+  const offset = useSharedValue(index * segment);
+  const measured = React.useRef(false);
+  React.useEffect(() => {
+    if (segment === 0) return;
+    const to = index * segment * (theme.dir === 'rtl' ? -1 : 1);
+    // First measure places the pill; later changes slide it.
+    offset.value = measured.current ? withSpring(to, nxSpring('spatial', 'default')) : to;
+    measured.current = true;
+  }, [index, segment, theme.dir, offset]);
+  const indicator = useAnimatedStyle(() => ({ transform: [{ translateX: offset.value }] }));
   return (
     <View
       accessibilityRole="tablist"
       accessibilityLabel={label}
+      onLayout={(e) => setTrackWidth(e.nativeEvent.layout.width)}
       style={[
         {
           flexDirection: 'row',
@@ -620,6 +643,24 @@ export function SegmentedControl<T extends string>({
         style,
       ]}
     >
+      {segment > 0 && (
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            {
+              position: 'absolute',
+              top: 3,
+              bottom: 3,
+              start: 3,
+              width: segment,
+              borderRadius: tokens.shape.control,
+              backgroundColor: roles['surface-container-lowest'],
+              boxShadow: theme.elevation(1),
+            },
+            indicator,
+          ]}
+        />
+      )}
       {options.map((o) => {
         const on = o.value === v;
         return (
@@ -639,10 +680,11 @@ export function SegmentedControl<T extends string>({
                 alignItems: 'center',
                 justifyContent: 'center',
               },
-              on && {
-                backgroundColor: roles['surface-container-lowest'],
-                boxShadow: theme.elevation(1),
-              },
+              on &&
+                segment === 0 && {
+                  backgroundColor: roles['surface-container-lowest'],
+                  boxShadow: theme.elevation(1),
+                },
             ]}
           >
             <Text
@@ -790,7 +832,9 @@ export function Chip({
   const height = controlHeight(theme, 'sm');
   const fg = selected ? 'on-secondary-container' : 'on-surface-variant';
   return (
-    <View
+    // Selecting grows the chip for its check: the width change glides.
+    <Animated.View
+      layout={nxLayout('fast')}
       style={[
         {
           flexDirection: 'row',
@@ -823,11 +867,15 @@ export function Chip({
           backgroundColor: selected ? roles['secondary-container'] : 'transparent',
         }}
       >
-        {selected ? (
-          <Check size="sm" color={roles[fg]} />
-        ) : (
-          Lead && <Lead size="sm" color={roles[fg]} />
-        )}
+        <LayoutAnimationConfig skipEntering>
+          {selected ? (
+            <Animated.View key="check" entering={nxEnter('scale', 'fast')} exiting={nxExit('scale')}>
+              <Check size="sm" color={roles[fg]} />
+            </Animated.View>
+          ) : (
+            Lead && <Lead size="sm" color={roles[fg]} />
+          )}
+        </LayoutAnimationConfig>
         <Text variant="label-lg" color={fg}>
           {label}
         </Text>
@@ -841,7 +889,7 @@ export function Chip({
           style={{ position: 'absolute', end: 4, top: (height - controlHeight(theme, 'xs')) / 2 }}
         />
       )}
-    </View>
+    </Animated.View>
   );
 }
 

@@ -28,7 +28,7 @@ export default function HomePage() {
   const version = getVersion();
 
   return (
-    <main style={{ background: 'var(--color-surface)', color: 'var(--color-on-surface)' }}>
+    <main className="bg-[var(--color-surface)] text-[var(--color-on-surface)]">
 
       {/* ── Animated Hero (client) ────────────────────────────────────────── */}
       <LandingHero
@@ -44,16 +44,16 @@ export default function HomePage() {
       <Section
         paddingY="md"
         tone="muted"
-        style={{ borderBottom: '1px solid var(--color-outline-variant)' }}
+        className="border-b border-[var(--color-outline-variant)]"
       >
-        <Container size="md" style={{ textAlign: 'center' }}>
-          <EyebrowChip tone="info" style={{ marginBottom: '0.75rem' }}>
+        <Container size="md" className="text-center">
+          <EyebrowChip tone="info" className="mb-3">
             Built with Nexub DS
           </EyebrowChip>
-          <Heading level={2} size="h3" style={{ marginBottom: '0.75rem' }}>
+          <Heading level={2} size="h3" className="mb-3">
             Real components, live in your browser
           </Heading>
-          <Text tone="muted" style={{ maxWidth: '480px', margin: '0 auto 3rem' }}>
+          <Text tone="muted" className="mx-auto mb-12 max-w-[480px]">
             Every component is interactive, themeable, and accessible out of the box.
           </Text>
           <LandingShowcase />
@@ -68,10 +68,10 @@ export default function HomePage() {
         asChild
         size="caption"
         tone="muted"
-        style={{ borderTop: '1px solid var(--color-outline-variant)', padding: '1.5rem 2rem', textAlign: 'center' }}
+        className="border-t border-[var(--color-outline-variant)] py-6 px-8 text-center"
       >
         <footer>
-          Built on <Text asChild size="caption" weight="semibold" style={{ color: 'var(--color-primary)' }}><span>Nexub Design System</span></Text>
+          Built on <Text asChild size="caption" weight="semibold" className="text-[var(--color-primary)]"><span>Nexub Design System</span></Text>
           {' '}·{' '}
           © {new Date().getFullYear()} Nexub Pte. Ltd., Singapore 🇸🇬
           {' '}·{' '}

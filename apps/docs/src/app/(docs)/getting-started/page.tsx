@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const metadata: Metadata = { title: 'Getting Started' };
@@ -6,13 +7,11 @@ export const metadata: Metadata = { title: 'Getting Started' };
 export default function GettingStartedPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-        Introduction
-      </p>
-      <h1>Getting Started</h1>
+      <PageIntro eyebrow="Introduction" title="Getting Started" />
       <p>
-        Nexub DS is a token-driven React design system built for SaaS products.
-        It ships with 89+ accessible components, 10 composite patterns, and 5 brand themes — all powered by CSS custom properties.
+        Nexub DS is a token-driven design system for SaaS products on the web and on mobile. It ships 90+ accessible
+        React components, 17 composite patterns, a React Native package (<code>@nexub/react-native</code>) and 5 brand
+        themes, all driven by the same tokens.
       </p>
 
       <h2>Installation</h2>

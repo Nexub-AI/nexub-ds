@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { DoDont, DocTable, PageIntro, Section } from '@/components/kit';
+
 export const dynamic = 'force-static';
 export const metadata: Metadata = { title: 'Grammar & Style — Content' };
 
@@ -16,51 +18,49 @@ const rules: { rule: string; do: string; dont: string }[] = [
 export default function GrammarStylePage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
-      <h1>Grammar &amp; Style</h1>
-      <p>
-        Consistency in punctuation, capitalisation, and word choice makes the product feel polished and trustworthy.
-        Follow these rules across every UI surface.
-      </p>
+      <PageIntro
+        eyebrow="Content"
+        title="Grammar & Style"
+        lead="Consistency in punctuation, capitalisation, and word choice makes the product feel polished and trustworthy. Follow these rules across every UI surface."
+      />
 
-      <h2>Quick-reference rules</h2>
-      <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
-              {['Rule', '✅ Do', '❌ Don\'t'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rules.map((r, i) => (
-              <tr key={r.rule} style={{ borderBottom: i < rules.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 600, color: 'var(--color-on-surface)', whiteSpace: 'nowrap' }}>{r.rule}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.do}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.78rem' }}>{r.dont}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Section id="quick-reference-rules" title="Quick-reference rules">
+        <div className="grid gap-4">
+          {rules.map((r) => (
+            <DoDont key={r.rule} title={r.rule} good={r.do} bad={r.dont} />
+          ))}
+        </div>
+      </Section>
 
-      <h2>Error messages</h2>
-      <p>Error messages should do three things: tell users what happened, why it happened (if helpful), and what to do next.</p>
-      <ul>
-        <li><strong>Required field:</strong> &ldquo;Enter your email address&rdquo; — not &ldquo;This field is required&rdquo;</li>
-        <li><strong>Invalid format:</strong> &ldquo;Email must include an @ sign&rdquo; — not &ldquo;Invalid email&rdquo;</li>
-        <li><strong>Server error:</strong> &ldquo;Something went wrong. Try again or contact support.&rdquo; — not &ldquo;Error 500&rdquo;</li>
-        <li><strong>Permission denied:</strong> &ldquo;You don&apos;t have access to this page. Ask your admin.&rdquo;</li>
-      </ul>
+      <Section
+        id="error-messages"
+        title="Error messages"
+        description="Error messages should do three things: tell users what happened, why it happened (if helpful), and what to do next."
+      >
+        <div className="grid gap-4">
+          <DoDont title="Required field" good="“Enter your email address”" bad="“This field is required”" />
+          <DoDont title="Invalid format" good="“Email must include an @ sign”" bad="“Invalid email”" />
+          <DoDont title="Server error" good="“Something went wrong. Try again or contact support.”" bad="“Error 500”" />
+          <DoDont title="Permission denied" good="“You don’t have access to this page. Ask your admin.”" bad="“403 Forbidden”" />
+        </div>
+      </Section>
 
-      <h2>Placeholder text</h2>
-      <p>Placeholder copy in inputs should give a concrete example, not repeat the label.</p>
-      <ul>
-        <li><strong>Label:</strong> Email address → <strong>Placeholder:</strong> name@company.com</li>
-        <li><strong>Label:</strong> Search → <strong>Placeholder:</strong> Search components…</li>
-        <li><strong>Label:</strong> Amount → <strong>Placeholder:</strong> 0.00</li>
-      </ul>
+      <Section
+        id="placeholder-text"
+        title="Placeholder text"
+        description="Placeholder copy in inputs should give a concrete example, not repeat the label. It never replaces the label."
+      >
+        <DocTable
+          caption="Placeholder examples"
+          head={['Label', 'Placeholder']}
+          rows={[
+            ['Email', 'name@company.com'],
+            ['Search', 'Search components…'],
+            ['Amount', '0.00'],
+          ]}
+          mono={[1]}
+        />
+      </Section>
     </div>
   );
 }

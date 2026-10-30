@@ -5,13 +5,14 @@ export interface MotionBaseProps {
   /** Whether the component is visible / mounted. */
   in: boolean;
   /**
-   * Token-based duration.  Maps to `--duration-{value}`.
+   * Speed on the spring tokens: `fast` → fast, `normal` → default,
+   * `slow`/`slower` → slow springs. `instant` turns motion off.
    * @default 'normal'
    */
   duration?: MotionDuration;
   /**
-   * Token-based easing.  Maps to `--ease-{value}`.
-   * @default 'out'
+   * Legacy: set it to use the old `--duration-*` + `--ease-{value}` tokens
+   * instead of springs. Omit it to ride the spring tokens.
    */
   easing?: MotionEasing;
   /**

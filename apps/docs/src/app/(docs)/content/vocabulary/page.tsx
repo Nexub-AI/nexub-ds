@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import { Card, Text } from '@nexub/react';
+import { DocTable, PageIntro, Section } from '@/components/kit';
+
 export const dynamic = 'force-static';
 export const metadata: Metadata = { title: 'Vocabulary — Content' };
 
@@ -22,63 +25,41 @@ const glossary: { term: string; def: string }[] = [
   { term: 'Member', def: 'A person who belongs to a workspace. Members have roles.' },
   { term: 'Role', def: 'A set of permissions within a workspace (e.g. Owner, Admin, Member, Viewer).' },
   { term: 'Plan', def: 'The billing tier a workspace is subscribed to (e.g. Free, Pro, Enterprise).' },
-  { term: 'Token', def: 'A design token — a named variable representing a design decision (color, spacing, radius).' },
+  { term: 'Token', def: 'A design token: a named variable representing a design decision (color, spacing, radius).' },
   { term: 'Tone', def: 'A semantic color variant applied to a component (info, success, warning, danger, neutral).' },
 ];
 
 export default function VocabularyPage() {
   return (
     <div className="docs-prose">
-      <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Content</p>
-      <h1>Vocabulary</h1>
-      <p>
-        Consistent terminology builds trust and reduces confusion. Use these approved terms across all Nexub products and documentation.
-      </p>
+      <PageIntro
+        eyebrow="Content"
+        title="Vocabulary"
+        lead="Consistent terminology builds trust and reduces confusion. Use these approved terms across all Nexub products and documentation."
+      />
 
-      <h2>Preferred terms</h2>
-      <div style={{ overflowX: 'auto', marginBottom: '2rem' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid var(--color-outline-variant)', background: 'var(--color-surface-container-low)' }}>
-              {['Use this', 'Not this', 'Notes'].map((h) => (
-                <th key={h} style={{ textAlign: 'left', padding: '10px 14px', fontWeight: 700, color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap' }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {vocab.map((v, i) => (
-              <tr key={v.use} style={{ borderBottom: i < vocab.length - 1 ? '1px solid var(--color-surface-container-high)' : 'none' }}>
-                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-success)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{v.use}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-error)', fontFamily: 'var(--font-family-mono)', fontSize: '0.8rem', whiteSpace: 'nowrap', textDecoration: 'line-through', opacity: 0.7 }}>{v.avoid}</td>
-                <td style={{ padding: '10px 14px', color: 'var(--color-on-surface-variant)', fontSize: '0.82rem' }}>{v.notes}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Section id="preferred-terms" title="Preferred terms">
+        <DocTable
+          caption="Preferred terms"
+          head={['Use this', 'Not this', 'Notes']}
+          rows={vocab.map((v) => [
+            <span key="u" className="whitespace-nowrap font-semibold text-[var(--color-success)]">{v.use}</span>,
+            <span key="a" className="text-[var(--color-error)] line-through decoration-1">{v.avoid}</span>,
+            <span key="n" className="text-[var(--color-on-surface-variant)]">{v.notes}</span>,
+          ])}
+        />
+      </Section>
 
-      <h2>Glossary</h2>
-      <p>Key terms and their canonical definitions for the Nexub product ecosystem.</p>
-      <div style={{ display: 'grid', gap: '0.75rem', marginBottom: '2rem' }}>
-        {glossary.map((g) => (
-          <div
-            key={g.term}
-            style={{
-              padding: '0.875rem 1.25rem',
-              border: '1px solid var(--color-outline-variant)',
-              borderRadius: 'var(--shape-container)',
-              background: 'var(--color-surface-container-low)',
-              display: 'grid',
-              gridTemplateColumns: '140px 1fr',
-              gap: '1rem',
-              alignItems: 'start',
-            }}
-          >
-            <span style={{ fontFamily: 'var(--font-family-mono)', fontWeight: 700, color: 'var(--color-primary)', fontSize: '0.84rem' }}>{g.term}</span>
-            <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.84rem', lineHeight: 1.6 }}>{g.def}</span>
-          </div>
-        ))}
-      </div>
+      <Section id="glossary" title="Glossary" description="Key terms and their canonical definitions for the Nexub product ecosystem.">
+        <div className="grid gap-3">
+          {glossary.map((g) => (
+            <Card key={g.term} className="grid gap-1 p-4 sm:grid-cols-[140px_1fr] sm:gap-4">
+              <Text weight="semibold" className="font-mono !text-[var(--color-primary)]">{g.term}</Text>
+              <Text tone="secondary">{g.def}</Text>
+            </Card>
+          ))}
+        </div>
+      </Section>
     </div>
   );
 }
