@@ -179,12 +179,15 @@ appId: ai.nexub.mobile
       TARGET: "Recipient gets.*"
 - takeScreenshot: 08-send
 - runFlow: subflows/back.yaml
-# Deep link (app.json scheme): this step checks the Activity screen itself.
-- openLink: nexub://patterns/activity
-# iOS asks "Open in Nexub Mobile?" the first time a link opens the app.
+# Back on the Payub flows list: open Activity from it. (Deep links are covered
+# by previews/; on the iOS simulator a link sent while the app is open
+# sometimes never navigates.)
+- scrollUntilVisible:
+    element: "Activity.*"
+    direction: UP
 - tapOn:
-    text: "Open"
-    optional: true
+    text: "Activity.*"
+    retryTapIfNoChange: true
 - extendedWaitUntil:
     visible: "Amazon.*"
     timeout: 10000
