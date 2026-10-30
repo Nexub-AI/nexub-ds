@@ -102,11 +102,9 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Mobile patterns.*"
     retryTapIfNoChange: true
-# The busiest catalogue screen (every mobile-only example): give a software-
-# rendered CI emulator time to lay it out.
 - extendedWaitUntil:
     visible: "Sheets and menus"
-    timeout: 30000
+    timeout: 10000
 - tapOn:
     text: "Open sheet"
     retryTapIfNoChange: true

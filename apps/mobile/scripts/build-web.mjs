@@ -1,4 +1,6 @@
-// Exports the showcase app for the web under /m (app.json experiments.baseUrl)
+// Exports the showcase app for the web under /m (experiments.baseUrl, set by
+// app.config.js only for this build: on native it would break routes that start
+// with the base, e.g. /mobile)
 // into dist-web/, for the docs site to serve at nexub.design/m/…
 //
 // The export is a single-page app (one index.html). Static hosts only serve
@@ -19,7 +21,7 @@ rmSync(out, { recursive: true, force: true });
 execFileSync(join(root, 'node_modules/.bin/expo'), ['export', '--platform', 'web', '--output-dir', 'dist-web'], {
   cwd: root,
   stdio: 'inherit',
-  env: { ...process.env, CI: '1', EXPO_NO_TELEMETRY: '1' },
+  env: { ...process.env, CI: '1', EXPO_NO_TELEMETRY: '1', NEXUB_WEB_BASE_URL: '/m' },
 });
 
 const manifest = JSON.parse(readFileSync(join(root, 'preview-manifest.json'), 'utf8'));

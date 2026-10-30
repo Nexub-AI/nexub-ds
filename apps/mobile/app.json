@@ -31,8 +31,7 @@
     ],
     "experiments": {
       "typedRoutes": true,
-      "reactCompiler": true,
-      "baseUrl": "/m"
+      "reactCompiler": true
     },
     "web": {
       "output": "single",
