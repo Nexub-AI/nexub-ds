@@ -153,6 +153,13 @@ button, input, select, textarea, optgroup {
   font-family: inherit;
 }
 
+/* Pointer cursor on buttons. Tailwind v3's preflight set it; v4's doesn't, so
+   this keeps Nexub buttons the same on both. Zero specificity (:where), so any
+   cursor-* utility and v3's preflight still win. */
+:where(button:not(:disabled), [role='button']:not(:disabled)) {
+  cursor: pointer;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
