@@ -92,6 +92,16 @@ export function createServer() {
     },
   );
 
+  server.registerTool(
+    'get_react_native',
+    {
+      title: 'Nexub for React Native',
+      description:
+        'Mobile apps (Expo / React Native): install, NexubNativeProvider, every @nexub/react-native component and @nexub/react-native/patterns screen, and the mobile rules. Call this instead of the web references when building a mobile app.',
+    },
+    async () => text(read('references/react-native.md')),
+  );
+
   return server;
 }
 

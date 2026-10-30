@@ -13,6 +13,7 @@ Reference files (read only what the task needs):
 - [references/components.md](references/components.md): every component and pattern, grouped by category. Start here.
 - `references/components/<slug>.md`: props, examples, when to use and accessibility for one component. Read it before using a component you have not used yet in this session.
 - [references/tokens.md](references/tokens.md): color roles, type roles, spacing, shape, elevation, motion, z-index.
+- [references/react-native.md](references/react-native.md): **mobile apps** (Expo / React Native). Use `@nexub/react-native` and `@nexub/react-native/patterns` there, never `@nexub/react`.
 
 ## 1. Check the setup first
 

@@ -39,12 +39,13 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 | `1.7.0` | 2026-10-21 | Minor | Hardening: axe checks over every story, bundle-size budgets, docs visual tests; date pickers follow locale + RTL; native-label FileUpload; accessibility fixes; Claude skill, `llms.txt` and new `@nexub/mcp` package | [@nexub/react@1.7.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.7.0) |
 | `1.8.0` | 2026-10-21 | Minor | Adoption: `nexub-migrate` CLI, Upgrading guide, example dashboard; DataTable column type/alignment/caption, keyboard-scrollable Table, StatCard `sentiment`, PageHeader `level`, AppHeader `position` + translatable strings; RTL fixes | [@nexub/react@1.8.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.8.0) |
 | `1.9.0` | 2026-10-21 | Minor | Foundations: brand theming from a seed colour (`ThemeProvider seed`, `@nexub/tokens/seed`); Tailwind v4 theme (`@nexub/tokens/tailwind.css`) | [@nexub/react@1.9.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%401.9.0) |
+| `2.0.0` | 2026-10-28 | Minor | Rolling-minor release after 1.9 (not breaking): app tiles for every Nexub app in `@nexub/brand`, `AppLauncher` groups; body-parser 2.4.0. (its changelogs first listed dependencies as `1.10.0`, the pre-rollover name; corrected, and the rollover script now renames them) | [@nexub/react@2.0.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%402.0.0) |
 
 ---
 
 ## Versioning Policy
 
-Nexub DS uses **one rolling version** for all six packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
+Nexub DS uses **one rolling version** for all seven packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
 
 ```
 1.0.0 → 1.1.0 → 1.2.0 → … → 1.9.0 → 2.0.0 → 2.1.0 → … → 2.9.0 → 3.0.0
@@ -69,7 +70,7 @@ The policy code lives in `scripts/release-version.mjs` and `scripts/check-change
 ---|---|---|
 | Bug fix, internal refactor, performance, docs | `patch` | `0.0.2` → `0.0.3` |
 | New component, new prop, backward-compatible feature | `minor` | `0.0.3` → `0.1.0` |
-| Renamed/removed export, breaking prop change, peer dep bump | `major` | `0.1.0` → `1.0.0` |
+| Renamed/removed export, breaking prop change, peer dep bump | `minor` with a `**Breaking:**` line (see the policy above) | `1.4.0` → `1.5.0` |
 
 All packages in the fixed group always bump to the **same version** even if only one package changed.
 

@@ -1,7 +1,7 @@
 {
   "name": "@nexub/tokens",
-  "version": "1.9.0",
-  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables and Tailwind preset.",
+  "version": "2.0.0",
+  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, Tailwind presets and React Native objects.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -41,6 +41,10 @@
     "./seed": {
       "types": "./dist/js/seed.d.ts",
       "default": "./dist/js/seed.js"
+    },
+    "./native": {
+      "types": "./dist/js/native.d.ts",
+      "default": "./dist/js/native.js"
     },
     "./tailwind": {
       "types": "./dist/tailwind/preset.d.ts",

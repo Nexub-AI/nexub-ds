@@ -7,7 +7,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = { title: 'Building AI surfaces' };
 
 // Mirrors the "// AI surfaces" block of defaultMessages in
-// packages/react/src/components/NexubProvider/NexubProvider.tsx.
+// packages/core/src/messages.ts.
 const messageKeys: [key: string, value: string, usedBy: string][] = [
   ['promptLabel', "'Message'", 'PromptInput'],
   ['sendMessage', "'Send message'", 'PromptInput'],

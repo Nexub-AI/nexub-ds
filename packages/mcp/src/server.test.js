@@ -27,4 +27,5 @@ test('tools answer from the skill files', async () => {
   assert.match(await call('list_components', { query: 'pricing' }), /plan-card/);
   assert.match(await call('get_tokens', { section: 'motion' }), /^## Motion/);
   assert.match(await call('get_guidelines'), /Calm Depth principles/);
+  assert.match(await call('get_react_native'), /^# @nexub\/react-native/);
 });

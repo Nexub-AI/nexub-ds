@@ -9,12 +9,14 @@
 //   assets/app-icon[-<product>].svg       black glass tile + glyph (dark theme)
 //   assets/app-icon[-<product>]-light.svg white glass tile + glyph (light theme)
 //   assets/app-icon[-<product>]-{192,512}.png
+//   assets/mobile/<product>-ios.png       1024 full-bleed (iOS app icon)
+//   assets/mobile/<product>-android-{foreground,background,monochrome}.png  adaptive icon layers
 //   assets/favicon.ico                    16/32/48 from the Nexub tile
 //   ../tokens/tokens/brand-mark.json      --color-brand-mark-1…n
 //   ../icons/src/icons/nexubMarkData.ts   mark geometry for <NexubMark>/<Logo>
 //   ../themes/src/base.css                .nxm-* stop classes (marked block)
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
@@ -134,6 +136,32 @@ for (const { id, glyph, halo } of PRODUCTS) {
   writeFileSync(`${root}assets/${name}.svg`, svg);
   for (const size of [192, 512]) writeFileSync(`${root}assets/${name}-${size}.png`, await png(svg, size));
   writeFileSync(`${root}assets/${name}-light.svg`, tile(glyph, halo, TILE.light));
+}
+
+// ─── Mobile app icons (Expo app.json `icon` / `android.adaptiveIcon`) ────────
+// iOS: 1024 full-bleed square, no transparency (the OS draws the corners).
+// Android adaptive: 432 px layers (108 dp @ xxxhdpi); the glyph sits in the
+// inner 66% safe zone so any launcher mask keeps it whole. Monochrome = the
+// glyph's silhouette in white, for Android 13+ themed icons.
+mkdirSync(`${root}assets/mobile`, { recursive: true });
+const SAFE = 0.66;
+const square = (glyph, halo, look = TILE.dark) =>
+  tile(glyph, halo, look).replaceAll(' rx="115"', '').replace(/<rect x="3"[^>]*\/>/, '');
+const foreground = (glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g transform="translate(${(256 * (1 - SAFE)).toFixed(2)} ${(256 * (1 - SAFE)).toFixed(2)}) scale(${SAFE})">${glyph.replace(/<!--[\s\S]*?-->\s*/g, '').trim()}</g>
+</svg>
+`;
+const small = (buf) => sharp(buf).png({ compressionLevel: 9, palette: true }).toBuffer();
+for (const { id, glyph, halo } of PRODUCTS) {
+  const name = id || 'nexub';
+  const ios = await sharp(await png(square(glyph, halo), 1024)).flatten({ background: TILE.dark.bottom }).toBuffer();
+  writeFileSync(`${root}assets/mobile/${name}-ios.png`, await small(ios));
+  writeFileSync(`${root}assets/mobile/${name}-android-background.png`, await small(await png(square('', halo), 432)));
+  const fg = await png(foreground(glyph), 432);
+  writeFileSync(`${root}assets/mobile/${name}-android-foreground.png`, await small(fg));
+  const alpha = await sharp(fg).ensureAlpha().extractChannel(3).toBuffer();
+  const mono = await sharp({ create: { width: 432, height: 432, channels: 3, background: '#ffffff' } }).joinChannel(alpha).png().toBuffer();
+  writeFileSync(`${root}assets/mobile/${name}-android-monochrome.png`, await small(mono));
 }
 
 // favicon.ico: PNG-in-ICO (supported by every current browser).

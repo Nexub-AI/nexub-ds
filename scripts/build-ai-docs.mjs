@@ -3,7 +3,7 @@
 //   - packages/tokens (token JSON + generated color roles)
 // Outputs (all committed, so the Claude plugin can be installed straight from git):
 //   plugins/nexub-ds/.claude-plugin/plugin.json      version = released package version
-//   plugins/nexub-ds/skills/nexub-ds/references/**   tokens.md, components.md, components/<slug>.md
+//   plugins/nexub-ds/skills/nexub-ds/references/**   tokens.md, components.md, components/<slug>.md, react-native.md
 //   apps/docs/public/llms.txt, llms-full.txt         https://llmstxt.org
 // @nexub/mcp ships the skill folder as-is (see packages/mcp/package.json).
 //
@@ -240,16 +240,25 @@ function llmsTxt() {
     '',
     ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
     '',
+    '## React Native',
+    '',
+    `- [React Native](${SITE_URL}/getting-started/react-native): @nexub/react-native components and @nexub/react-native/patterns screens for Expo and bare React Native apps (native chrome, Nexub content)`,
+    '',
   ];
   return out.join('\n');
 }
 
 const llmsFullTxt = (files) =>
-  [stripFrontmatter(readFileSync(join(skill, 'SKILL.md'), 'utf8')), files['tokens.md'], files['components.md'], ...entries.map((e) => files[`components/${e.meta.slug}.md`])].join('\n\n---\n\n');
+  [stripFrontmatter(readFileSync(join(skill, 'SKILL.md'), 'utf8')), files['tokens.md'], files['components.md'], ...entries.map((e) => files[`components/${e.meta.slug}.md`]), files['react-native.md']].join('\n\n---\n\n');
 
 // ─── Write / check ───────────────────────────────────────────────────────────
 
-const files = { 'tokens.md': tokensMd(), 'components.md': componentsIndexMd() };
+// React Native: the package README is the reference (one source for npm, AI and people).
+const files = {
+  'tokens.md': tokensMd(),
+  'components.md': componentsIndexMd(),
+  'react-native.md': readFileSync(join(root, 'packages/react-native/README.md'), 'utf8'),
+};
 for (const e of entries) files[`components/${e.meta.slug}.md`] = componentMd(e);
 
 const pluginJson = JSON.parse(readFileSync(join(plugin, '.claude-plugin/plugin.json'), 'utf8'));

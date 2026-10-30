@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { nextVersion } from './release-version.mjs';
+import { nextVersion, renameChangelogSection } from './release-version.mjs';
 import { invalidBumps } from './check-changesets.mjs';
 
 test('each release bumps the minor', () => {
@@ -28,4 +28,13 @@ test('changeset guard flags anything but minor/patch', () => {
   assert.deepEqual(invalidBumps(md('minor')), []);
   assert.deepEqual(invalidBumps(md('patch')), []);
   assert.deepEqual(invalidBumps(md('major')), ['@nexub/react: major']);
+});
+
+test('rollover renames the newest CHANGELOG section, including dependency lines', () => {
+  const text = '# @nexub/react\n\n## 1.10.0\n\n### Patch Changes\n\n- @nexub/icons@1.10.0\n\n## 1.9.0\n\n- @nexub/icons@1.9.0\n';
+  assert.equal(
+    renameChangelogSection(text, '1.10.0', '2.0.0'),
+    '# @nexub/react\n\n## 2.0.0\n\n### Patch Changes\n\n- @nexub/icons@2.0.0\n\n## 1.9.0\n\n- @nexub/icons@1.9.0\n',
+  );
+  assert.equal(renameChangelogSection('# x\n\n## 1.9.0\n', '1.10.0', '2.0.0'), '# x\n\n## 1.9.0\n');
 });

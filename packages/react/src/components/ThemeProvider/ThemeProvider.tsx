@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { GlassMode } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -7,7 +8,7 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 
 /** Glass intensity dial (user preference, like iOS 27's clear → tinted slider).
  *  'off' makes every glass surface solid. Set as `data-glass` on <html>. */
-export type GlassMode = 'clear' | 'balanced' | 'tinted' | 'off';
+export type { GlassMode };
 const GLASS_MODES: readonly GlassMode[] = ['clear', 'balanced', 'tinted', 'off'];
 
 export interface ThemeContextValue {

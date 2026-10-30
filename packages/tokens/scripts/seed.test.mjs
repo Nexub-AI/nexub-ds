@@ -89,3 +89,11 @@ test('createSeedThemeCss', () => {
   assert.equal(css, `.brand {\n${Object.entries(theme).map(([k, v]) => `  ${k}: ${v};`).join('\n')}\n}\n`);
   assert.ok(createSeedThemeCss('#7b1fa2').startsWith(':root {\n  --color-primary: light-dark(#'));
 });
+
+test('createSeedRoles gives the same hex pairs as createSeedTheme (native)', async () => {
+  const { createSeedRoles } = await import('../src/seed.js');
+  const css = createSeedTheme('#7b1fa2', { contrast: 'high', target: 'tertiary' });
+  const { light, dark } = createSeedRoles('#7b1fa2', { contrast: 'high', target: 'tertiary' });
+  for (const [k, v] of Object.entries(css)) assert.deepEqual(split(v), [light[k.slice(8)], dark[k.slice(8)]]);
+  assert.throws(() => createSeedRoles('blue'), TypeError);
+});

@@ -10,7 +10,9 @@
       "@nexub/react",
       "@nexub/patterns",
       "@nexub/brand",
-      "@nexub/mcp"
+      "@nexub/mcp",
+      "@nexub/core",
+      "@nexub/react-native"
     ]
   ],
   "linked": [],
@@ -18,7 +20,8 @@
   "baseBranch": "development",
   "updateInternalDependencies": "patch",
   "ignore": [
-    "@nexub/docs"
+    "@nexub/docs",
+    "@nexub/mobile"
   ],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
     "onlyUpdatePeerDependentsWhenOutOfRange": true

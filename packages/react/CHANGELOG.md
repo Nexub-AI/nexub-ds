@@ -1,5 +1,11 @@
 # @nexub/react
 
+## 2.0.0
+
+### Patch Changes
+
+- @nexub/icons@2.0.0
+
 ## 1.9.0
 
 ### Minor Changes

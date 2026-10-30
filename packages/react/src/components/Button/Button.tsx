@@ -2,20 +2,12 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
+import type { ToneValue } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
 
-export type ToneValue =
-  | 'neutral'
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'danger'
-  | 'leap'
-  | 'bookub'
-  | 'payub'
-  | 'founderub';
+export type { ToneValue };
 
 // Text-only tone for content on surfaces (Heading, Label, HelperText,
 // EyebrowChip): accent roles (tone 40 / 80, AA on every surface).
