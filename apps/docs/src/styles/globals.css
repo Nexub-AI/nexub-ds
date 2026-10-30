@@ -11,6 +11,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Kit headings (Heading + fluid docs sizes) ─────────────────────────────── */
+.docs-title { font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.015em; font-family: var(--font-family-display); }
+.docs-h2 { font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem); line-height: 1.25; letter-spacing: -0.01em; font-family: var(--font-family-display); }
+.docs-h3 { font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); line-height: 1.3; font-family: var(--font-family-display); }
+
 /* ── Docs-site layout vars ────────────────────────────────────────────────── */
 :root {
   --docs-sidebar-width: 260px;
@@ -66,27 +71,25 @@ body {
 /* Headings: display face, fluid sizes via clamp() (no hard breakpoint jump).
  *   h1: 28px → 44px, h2: 22px → 32px, h3: 18px → 24px
  * Body: Inter on the body-lg type role. */
-.docs-prose h1,
-.docs-prose h2,
-.docs-prose h3 {
+.docs-prose :is(h1, h2, h3):not([class]) {
   font-family: var(--font-family-display);
   color: var(--color-on-surface);
   letter-spacing: -0.01em;
 }
-.docs-prose h1 {
+.docs-prose h1:not([class]) {
   font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem);
   font-weight: var(--type-display-sm-weight);
   line-height: 1.15;
   margin-bottom: 0.5rem;
 }
-.docs-prose h2 {
+.docs-prose h2:not([class]) {
   font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem);
   font-weight: var(--type-headline-sm-weight);
   line-height: 1.25;
   margin-top: 2rem;
   margin-bottom: 0.5rem;
 }
-.docs-prose h3 {
+.docs-prose h3:not([class]) {
   font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.5rem);
   font-weight: var(--type-title-lg-weight);
   line-height: 1.3;
@@ -104,6 +107,40 @@ body {
    * while wide blocks (Playground, Matrix, examples, code) still go edge-to-edge. */
   max-width: 75ch;
 }
+/* Dot grid behind live previews (components index, preview panes). */
+.docs-dot-grid {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-outline-variant) 50%, transparent) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Preview canvas backgrounds (PreviewToolbar bgClass). */
+.docs-bg-grid { background-image: radial-gradient(var(--color-outline-variant) 1px, transparent 1px); background-size: 20px 20px; }
+.docs-bg-dotted { background-image: radial-gradient(var(--color-surface-container-high) 1.2px, transparent 1.2px); background-size: 14px 14px; }
+.docs-bg-solid { background: var(--color-surface-container-high); }
+.docs-bg-transparent { background-image: none; }
+
+/* Busy backdrop for the Materials glass demo. */
+.docs-glass-backdrop {
+  background:
+    radial-gradient(circle at 18% 30%, #4099f1 0 20%, transparent 21%),
+    radial-gradient(circle at 72% 40%, #f59e0b 0 16%, transparent 17%),
+    radial-gradient(circle at 45% 85%, #8b5cf6 0 22%, transparent 23%),
+    light-dark(#eceef4, #1b1d24);
+}
+
+/* Tailwind's preflight strips list markers; raw prose lists get them back. */
+.docs-prose :is(ul, ol):not([class]) {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.5rem;
+  max-width: 72ch;
+  color: var(--color-on-surface-variant);
+  font-size: var(--type-body-lg-size);
+  line-height: 1.7;
+}
+.docs-prose ul:not([class]) { list-style: disc; }
+.docs-prose ol:not([class]) { list-style: decimal; }
+.docs-prose :is(ul, ol):not([class]) > li { margin-bottom: 0.25rem; }
+.docs-prose :is(ul, ol):not([class]) ::marker { color: var(--color-on-surface-muted); }
 .docs-prose a:not([class]) {
   color: var(--color-primary);
   text-decoration: underline;
@@ -111,7 +148,7 @@ body {
   text-decoration-thickness: 1px;
 }
 .docs-prose a:not([class]):hover { text-decoration-thickness: 2px; opacity: 1; }
-.docs-prose code {
+.docs-prose code:not([class]) {
   font-family: var(--font-family-mono);
   font-size: 0.85em;
   background: var(--color-surface-container);
@@ -142,34 +179,7 @@ body {
 .shiki { background: transparent !important; }
 .shiki span { color: light-dark(var(--shiki-light), var(--shiki-dark)); }
 
-/* ── Sidebar nav item: capsule + state layer; active = secondary-container
-   pill, matching @nexub/react Sidebar.Item. ─────────────────────────────── */
-.docs-nav-item {
-  display: flex;
-  align-items: center;
-  min-height: 36px;
-  margin: 1px 12px;
-  padding: 0 12px;
-  border-radius: var(--shape-control);
-  font-size: var(--type-label-lg-size);
-  font-weight: var(--type-body-md-weight);
-  color: var(--color-on-surface-variant);
-  text-decoration: none;
-}
-.docs-nav-item[data-depth='2'] { padding-left: 24px; }
-.docs-nav-item[aria-current='page'] {
-  background: var(--color-secondary-container);
-  color: var(--color-on-secondary-container);
-  font-weight: var(--type-label-lg-weight);
-}
-.docs-nav-item:hover { opacity: 1; }
-
 /* ── Command-K search item: selected = secondary-container ───────────────── */
-.search-item[data-selected='true'] {
-  background: var(--color-secondary-container) !important;
-  color: var(--color-on-secondary-container) !important;
-  outline: none;
-}
 
 /* ── Link base ────────────────────────────────────────────────────────────── */
 a { color: inherit; }
@@ -182,121 +192,34 @@ a { color: inherit; }
 
 /* ── Docs layout — mobile-first responsive ─────────────────────────────────── */
 
-/* Sidebar: sticky on desktop, off-canvas on mobile */
+/* Sidebar: a sticky tonal rail on desktop; phones use a Drawer (DocsSidebar). */
 .docs-sidebar {
   width: var(--docs-sidebar-width);
   flex-shrink: 0;
   position: sticky;
   top: var(--docs-header-height);
   height: calc(100vh - var(--docs-header-height));
+  overflow-y: auto;
+  padding: 0.5rem 0.25rem 2rem;
+  background: var(--color-surface-container-low);
 }
 
-/* Main content area
- *
- * Fills all horizontal space after the sidebar — no artificial cap. Wide
- * elements (Playground, Variant matrix, code blocks, examples, hero) get
- * the full width on big monitors. Paragraph reading width is constrained
- * separately on `.docs-prose p` so prose stays comfortable.
- *
- * Padding scales fluidly so content never touches the viewport edge but
- * doesn't waste space on smaller monitors either. */
+.docs-header { height: var(--docs-header-height); }
+
+/* Content fills the space after the sidebar; prose width is capped on .docs-prose p. */
 .docs-main {
   flex: 1;
   min-width: 0;
   padding: 2.5rem clamp(1.25rem, 2.5vw, 3rem);
 }
 
-/* Hamburger: hidden on desktop */
-.docs-hamburger {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--color-on-surface);
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  min-width: 44px;
-  min-height: 44px;
-}
-.docs-hamburger:hover { background: color-mix(in srgb, var(--color-on-surface) 8%, transparent); }
+.docs-only-mobile { display: none; }
 
-/* Search icon button (mobile only) — hidden on desktop */
-.docs-header-search-icon {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: var(--color-on-surface-muted);
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  min-width: 44px;
-  min-height: 44px;
-}
-.docs-header-search-icon:hover { background: color-mix(in srgb, var(--color-on-surface) 8%, transparent); }
-
-/* Mobile overlay (behind sidebar) */
-.docs-sidebar-overlay {
-  display: block;
-  position: fixed;
-  inset: 0;
-  top: var(--docs-header-height);
-  background: var(--color-overlay);
-  z-index: 199;
-}
-
-/* ── Mobile breakpoint (< 768px) ───────────────────────────────────────────── */
 @media (max-width: 767px) {
-  .docs-sidebar {
-    position: fixed;
-    top: var(--docs-header-height);
-    left: 0;
-    height: calc(100vh - var(--docs-header-height));
-    z-index: 200;
-    width: min(280px, 85vw) !important;
-    transform: translateX(-100%);
-    transition: transform 200ms ease, box-shadow 200ms ease;
-  }
-
-  .docs-sidebar[data-open="true"] {
-    transform: translateX(0);
-    box-shadow: var(--elevation-3);
-  }
-
-  .docs-main {
-    padding: 1.25rem 1rem !important;
-    max-width: 100% !important;
-  }
-
-  .docs-hamburger {
-    display: flex;
-  }
-
-  .docs-header-search {
-    display: none !important;
-  }
-
-  .docs-header-search-icon {
-    display: flex;
-  }
-
-  .docs-header-brand-switcher {
-    display: none !important;
-  }
-
-  /* Hide the theme switcher on mobile — three icon-buttons + segmented bg
-   * blow out the header width at <=375 px. We target it via its existing
-   * ARIA shape so the React component stays untouched. Users on mobile get
-   * the OS-level theme by default; explicit selection moves to a future
-   * settings menu if needed. */
-  .docs-header [role="group"][aria-label="Theme"] {
-    display: none !important;
-  }
+  .docs-sidebar,
+  .docs-only-desktop { display: none !important; }
+  .docs-only-mobile { display: inline-flex; }
+  .docs-main { padding: 1.25rem 1rem; }
 }
 
 /* Stop the page from scrolling sideways on narrow viewports. Individual
@@ -336,113 +259,14 @@ html, body {
   gap: 1rem;
   margin-bottom: 1.75rem;
 }
-.docs-usage-card {
-  position: relative;
-  padding: 1.1rem 1.1rem 1.15rem;
-  border-radius: var(--shape-container);
-  border: 1px solid;
-  overflow: hidden;
-  transition: transform var(--duration-fast, 180ms) var(--ease-out, ease),
-              box-shadow var(--duration-fast, 180ms) var(--ease-out, ease);
-}
-.docs-usage-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, var(--docs-usage-glow, transparent) 0%, transparent 55%);
-  opacity: 0.6;
-  pointer-events: none;
-}
-.docs-usage-card:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--elevation-1);
-}
-.docs-usage-card-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 0.85rem;
-  position: relative;
-}
-.docs-usage-card-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  color: #fff;
-  box-shadow: 0 4px 10px -4px var(--docs-usage-shadow, rgba(0,0,0,0.25));
-}
-.docs-usage-card-title {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-on-surface);
-  line-height: 1.25;
-}
-.docs-usage-card-subtitle {
-  margin: 2px 0 0;
-  font-size: 0.72rem;
-  color: var(--color-on-surface-muted);
-  letter-spacing: 0.01em;
-}
-.docs-usage-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  position: relative;
-}
-.docs-usage-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  font-size: 0.84rem;
-  line-height: 1.55;
-  color: var(--color-on-surface-variant);
-}
-.docs-usage-bullet {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: #fff;
-}
-
-/* Do tone — success palette */
+/* Still used by patterns/[slug] (owned by the component/pattern page work). */
 .docs-usage-do {
-  background:
-    linear-gradient(135deg, var(--color-success-container) 0%, transparent 100%),
-    var(--color-surface);
+  background: linear-gradient(135deg, var(--color-success-container) 0%, transparent 100%), var(--color-surface);
   border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
-  --docs-usage-glow: var(--color-success);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-success) 35%, transparent);
 }
-.docs-usage-do .docs-usage-card-icon,
-.docs-usage-do .docs-usage-bullet {
-  background: var(--color-success);
-}
-
-/* Don't tone — error palette */
 .docs-usage-dont {
-  background:
-    linear-gradient(135deg, var(--color-error-container) 0%, transparent 100%),
-    var(--color-surface);
+  background: linear-gradient(135deg, var(--color-error-container) 0%, transparent 100%), var(--color-surface);
   border-color: color-mix(in srgb, var(--color-error) 35%, transparent);
-  --docs-usage-glow: var(--color-error);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-error) 35%, transparent);
-}
-.docs-usage-dont .docs-usage-card-icon,
-.docs-usage-dont .docs-usage-bullet {
-  background: var(--color-error);
 }
 
 @media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
@@ -485,16 +309,6 @@ html, body {
 }
 
 /* ── Hero accent bar ────────────────────────────────────────────────────── */
-.docs-hero-bar {
-  height: 3px;
-  width: 72px;
-  border-radius: var(--shape-control);
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-info, var(--color-primary, var(--color-primary)))
-  );
-}
 
 /* ── Scroll-reveal animation ────────────────────────────────────────────── */
 @keyframes docs-reveal-up {
@@ -524,13 +338,6 @@ html, body {
 @keyframes landing-orb-float {
   0%, 100% { transform: translate(0, 0); }
   50%      { transform: translate(var(--orb-x, 0), var(--orb-y, 0)); }
-}
-.landing-card {
-  transition: transform 200ms var(--ease-out, ease-out), box-shadow 200ms var(--ease-out, ease-out);
-}
-.landing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--elevation-3);
 }
 
 /* ── Playground grid ────────────────────────────────────────────────────── */
@@ -574,10 +381,6 @@ html, body {
   .docs-related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-.docs-related-card:hover {
-  border-color: var(--color-primary) !important;
-  transform: translateY(-1px);
 }
 
 /* ── Feedback floating action button ────────────────────────────────────── */
@@ -703,3 +506,16 @@ html, body {
   border-radius: inherit;
   pointer-events: none;
 }
+
+/* ── Motion gallery (foundations/motion) ─────────────────────────────────── */
+@keyframes docs-spring-dot { from { inset-inline-start: 4px; } to { inset-inline-start: calc(100% - 36px); } }
+.docs-spring-dot { animation-name: docs-spring-dot; animation-fill-mode: both; }
+
+/* Reduced-motion preview: the same fallbacks @nexub/themes applies under
+   prefers-reduced-motion, scoped to the gallery. */
+.docs-reduce-motion .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
+.docs-reduce-motion .nx-stagger > * { --nx-y: 0px; animation-delay: 0s; }
+.docs-reduce-motion .nx-lift:hover,
+.docs-reduce-motion .nx-lift:active,
+.docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
+.docs-reduce-motion .docs-spring-dot { animation: none; inset-inline-start: calc(100% - 36px); }

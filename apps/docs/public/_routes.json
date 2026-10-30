@@ -1,5 +1,5 @@
 {
   "version": 1,
   "include": ["/*"],
-  "exclude": ["/_next/*", "/nexub-icon.svg", "/sitemap.xml"]
+  "exclude": ["/_next/*", "/*.txt", "/nexub-icon.svg", "/sitemap.xml"]
 }

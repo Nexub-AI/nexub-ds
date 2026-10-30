@@ -11,6 +11,9 @@ import {
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import type { HapticToken } from '../theme/haptics';
 import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
+import { nxSpring } from '../theme/motion';
+
+const PRESS_SPRING = nxSpring('spatial', 'fast');
 
 // The touchable itself animates and takes `style`, so layout props (flex,
 // position, margins) apply to the element that sits in the parent's layout.
@@ -48,7 +51,7 @@ export function Pressable({
   const { roles, tokens } = useTheme();
   const play = useHaptics();
   const pressed = useSharedValue(0);
-  const spring = tokens.motion.spring.spatial.fast;
+  const spring = PRESS_SPRING;
   const opacity = tokens.state.pressed;
   const scale = pressScale === false ? 1 : pressScale;
 

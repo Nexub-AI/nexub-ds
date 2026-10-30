@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { SegmentedControl, Text } from '@nexub/react';
 
 export type PreviewBg = 'grid' | 'dotted' | 'solid' | 'transparent';
 export type PreviewWidth = 'full' | '768' | '480' | '360';
@@ -32,125 +33,45 @@ const WIDTH_OPTIONS: { value: PreviewWidth; label: string; title: string }[] = [
   { value: '360', label: '360', title: 'Mobile' },
 ];
 
+const DIR_OPTIONS: { value: PreviewDir; label: string; title: string }[] = [
+  { value: 'ltr', label: 'LTR', title: 'Left to right' },
+  { value: 'rtl', label: 'RTL', title: 'Right to left' },
+];
+
 export function PreviewToolbar({ state, onChange }: Props) {
   return (
-    <div
-      role="toolbar"
-      aria-label="Preview controls"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '12px',
-        padding: '6px 12px',
-        fontSize: '0.7rem',
-        fontFamily: 'var(--font-family-sans)',
-      }}
-    >
-      <SegGroup label="Background">
-        {BG_OPTIONS.map((o) => (
-          <SegBtn
-            key={o.value}
-            active={state.bg === o.value}
-            onClick={() => onChange((prev) => ({ ...prev, bg: o.value }))}
-            title={o.label}
-          >
-            {o.label}
-          </SegBtn>
-        ))}
-      </SegGroup>
-
-      <SegGroup label="Width">
-        {WIDTH_OPTIONS.map((o) => (
-          <SegBtn
-            key={o.value}
-            active={state.width === o.value}
-            onClick={() => onChange((prev) => ({ ...prev, width: o.value }))}
-            title={o.title}
-          >
-            {o.label}
-          </SegBtn>
-        ))}
-      </SegGroup>
-
-      <SegGroup label="Direction">
-        {(['ltr', 'rtl'] as const).map((d) => (
-          <SegBtn
-            key={d}
-            active={state.dir === d}
-            onClick={() => onChange((prev) => ({ ...prev, dir: d }))}
-            title={d === 'ltr' ? 'Left to right' : 'Right to left'}
-          >
-            {d.toUpperCase()}
-          </SegBtn>
-        ))}
-      </SegGroup>
+    <div role="toolbar" aria-label="Preview controls" className="flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2">
+      <Group label="Background" value={state.bg} options={BG_OPTIONS} onChange={(bg) => onChange((p) => ({ ...p, bg }))} />
+      <Group label="Width" value={state.width} options={WIDTH_OPTIONS} onChange={(width) => onChange((p) => ({ ...p, width }))} />
+      <Group label="Direction" value={state.dir} options={DIR_OPTIONS} onChange={(dir) => onChange((p) => ({ ...p, dir }))} />
     </div>
   );
 }
 
-function SegGroup({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-      <span
-        style={{
-          color: 'var(--color-on-surface-variant)',
-          fontWeight: 600,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          fontSize: '0.62rem',
-        }}
-      >
-        {label}
-      </span>
-      <div
-        style={{
-          display: 'inline-flex',
-          gap: '2px',
-          padding: '2px',
-          background: 'var(--color-surface-container-high)',
-          borderRadius: 'var(--shape-control)',
-        }}
-      >
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function SegBtn({
-  active,
-  onClick,
-  title,
-  children,
+function Group<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
 }: {
-  active: boolean;
-  onClick: () => void;
-  title?: string;
-  children: React.ReactNode;
+  label: string;
+  value: T;
+  options: { value: T; label: string; title?: string }[];
+  onChange: (v: T) => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      title={title}
-      aria-pressed={active}
-      className="nx-state-layer"
-      style={{
-        padding: '3px 8px',
-        minHeight: '24px',
-        fontSize: '0.7rem',
-        fontFamily: 'inherit',
-        fontWeight: active ? 600 : 500,
-        background: active ? 'var(--color-secondary-container)' : 'transparent',
-        color: active ? 'var(--color-on-secondary-container)' : 'var(--color-on-surface-variant)',
-        border: 'none',
-        borderRadius: 'var(--shape-control)',
-        cursor: 'pointer',
-      }}
-    >
-      {children}
-    </button>
+    <div className="inline-flex items-center gap-2">
+      <Text size="label" weight="semibold" tone="muted" className="uppercase tracking-wide" aria-hidden="true">
+        {label}
+      </Text>
+      <SegmentedControl.Root size="sm" aria-label={label} value={value} onValueChange={(v) => v && onChange(v as T)}>
+        {options.map((o) => (
+          <SegmentedControl.Item key={o.value} value={o.value} title={o.title ?? o.label} className="!px-2.5 text-label-sm">
+            {o.label}
+          </SegmentedControl.Item>
+        ))}
+      </SegmentedControl.Root>
+    </div>
   );
 }
 
@@ -160,6 +81,12 @@ export const DEFAULT_TOOLBAR_STATE: PreviewToolbarState = {
   dir: 'ltr',
 };
 
+/** Background class for the preview canvas (see globals.css `.docs-bg-*`). */
+export function bgClass(bg: PreviewBg): string {
+  return `docs-bg-${bg}`;
+}
+
+/** @deprecated Use `bgClass` — kept for callers that still spread style objects. */
 export function bgImage(bg: PreviewBg): React.CSSProperties {
   switch (bg) {
     case 'grid':

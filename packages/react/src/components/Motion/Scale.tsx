@@ -13,7 +13,8 @@ export interface ScaleProps extends MotionBaseProps, React.HTMLAttributes<HTMLDi
 }
 
 /**
- * Scale — animates opacity + scale(x) from `initialScale` to 1.
+ * Scale — animates opacity + scale(x) from `initialScale` to 1 on the spring
+ * tokens. Reduced motion keeps the fade and drops the scale.
  *
  * ```tsx
  * <Scale in={isOpen} initialScale={0.9}>
@@ -25,7 +26,7 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
   {
     in: visible,
     duration = 'fast',
-    easing = 'out-expo',
+    easing,
     unmountOnExit = false,
     initialScale = 0.95,
     children,
@@ -35,7 +36,7 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
   },
   ref,
 ) {
-  const { phase, mounted, transitionStyle, handleTransitionEnd } = useMotion({
+  const { phase, mounted, reduced, transitionStyle, handleTransitionEnd } = useMotion({
     visible,
     duration,
     easing,
@@ -52,7 +53,7 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
       onTransitionEnd={handleTransitionEnd}
       style={{
         opacity: isEntered ? 1 : 0,
-        transform: isEntered ? 'scale(1)' : `scale(${initialScale})`,
+        transform: isEntered || reduced ? 'scale(1)' : `scale(${initialScale})`,
         transformOrigin: 'top center',
         willChange: 'opacity, transform',
         ...transitionStyle,

@@ -6,12 +6,14 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
+import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
 import { Check, ChevronDown, ChevronRight } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
 import { Surface, type SurfaceProps } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
+import { nxEnter, nxExit, nxLayout } from '../theme/motion';
 import { Divider } from './display';
 import { disabledOpacity } from './shared';
 
@@ -261,12 +263,21 @@ export function ListSection({
           backgroundColor: roles['surface-container-lowest'],
         }}
       >
-        {rows.map((row, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <Divider inset={inset} />}
-            {row}
-          </React.Fragment>
-        ))}
+        {/* Rows added later grow in, removed rows fade out and the rest glide
+            into place. Rows present on first render don't animate. */}
+        <LayoutAnimationConfig skipEntering>
+          {rows.map((row, i) => (
+            <Animated.View
+              key={React.isValidElement(row) && row.key != null ? row.key : i}
+              entering={nxEnter('fade')}
+              exiting={nxExit('fade')}
+              layout={nxLayout()}
+            >
+              {i > 0 && <Divider inset={inset} />}
+              {row}
+            </Animated.View>
+          ))}
+        </LayoutAnimationConfig>
       </View>
       {footer && (
         <Text

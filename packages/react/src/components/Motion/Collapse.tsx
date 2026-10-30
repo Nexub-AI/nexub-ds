@@ -1,11 +1,11 @@
 import * as React from 'react';
 import type { MotionBaseProps } from './motion.types.js';
-import { DURATION_MS } from './useMotion.js';
+import { DURATION_MS, SPRING_MS, SPRING_SPEED, spring, usePrefersReducedMotion } from './useMotion.js';
 
 export interface CollapseProps extends Omit<MotionBaseProps, 'easing'>, React.HTMLAttributes<HTMLDivElement> {
   /**
-   * Easing for the height transition.
-   * @default 'out'
+   * Legacy: set it to use `--duration-*` + `--ease-{value}` instead of the
+   * spatial spring for the height transition.
    */
   easing?: MotionBaseProps['easing'];
   /**
@@ -18,7 +18,8 @@ export interface CollapseProps extends Omit<MotionBaseProps, 'easing'>, React.HT
 }
 
 /**
- * Collapse — animates `max-height` to reveal / hide content.
+ * Collapse — animates `max-height` to reveal / hide content on the spatial
+ * spring. Reduced motion snaps the height instead of animating it.
  * Height is measured from the content ref so you don't need to
  * provide an explicit height.
  *
@@ -32,7 +33,7 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
   {
     in: visible,
     duration = 'normal',
-    easing = 'out',
+    easing,
     unmountOnExit = false,
     collapsedHeight = 0,
     children,
@@ -43,6 +44,10 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
   ref,
 ) {
   const innerRef = React.useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
+  const legacy = easing !== undefined;
+  const settleMs =
+    duration === 'instant' || reduced ? 0 : legacy ? DURATION_MS[duration] : SPRING_MS.spatial[SPRING_SPEED[duration]];
   const [height, setHeight] = React.useState<number | 'auto'>(visible ? 'auto' : 0);
   const [overflow, setOverflow] = React.useState<'hidden' | 'visible'>(
     visible ? 'visible' : 'hidden',
@@ -123,9 +128,9 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
       firstRender.current = false;
       return;
     }
-    const t = setTimeout(finish, DURATION_MS[duration] + 100);
+    const t = setTimeout(finish, settleMs + 100);
     return () => clearTimeout(t);
-  }, [visible, duration, finish]);
+  }, [visible, settleMs, finish]);
 
   if (!mounted) return null;
 
@@ -137,9 +142,12 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
       style={{
         maxHeight,
         overflow,
-        transitionProperty: 'max-height',
-        transitionDuration: `var(--duration-${duration})`,
-        transitionTimingFunction: `var(--ease-${easing})`,
+        transition:
+          duration === 'instant' || reduced
+            ? 'none'
+            : legacy
+              ? `max-height var(--duration-${duration}) var(--ease-${easing})`
+              : spring('max-height', 'spatial', SPRING_SPEED[duration]),
         ...style,
       }}
       onTransitionEnd={handleTransitionEnd}

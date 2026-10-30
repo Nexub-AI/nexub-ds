@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "pnpm run build:mobile-web && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test test/*.test.ts"
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "build:mobile-web": "turbo run build:web --filter=@nexub/mobile --output-logs=errors-only && node ../mobile/scripts/copy-web.mjs public/m"
   },
   "dependencies": {
     "@nexub/icons": "workspace:*",

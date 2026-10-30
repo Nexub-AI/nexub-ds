@@ -132,22 +132,6 @@ import {
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 
-const col = (gap = 12): React.CSSProperties => ({
-  display: 'flex',
-  flexDirection: 'column',
-  gap,
-  alignItems: 'flex-start',
-});
-
-const row = (gap = 8, wrap = true): React.CSSProperties => ({
-  display: 'flex',
-  flexDirection: 'row',
-  gap,
-  flexWrap: wrap ? 'wrap' : 'nowrap',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
 // Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
 const COVER =
   'data:image/svg+xml;utf8,' +
@@ -161,7 +145,7 @@ function ButtonExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Button variant="primary">Click me</Button>;
   if (idx === 1)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Button variant="primary">Primary</Button>
         <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
@@ -171,7 +155,7 @@ function ButtonExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Button size="xs" variant="primary">XSmall</Button>
         <Button size="sm" variant="primary">Small</Button>
         <Button size="md" variant="primary">Medium</Button>
@@ -180,7 +164,7 @@ function ButtonExamples({ idx }: { idx: number }) {
     );
   if (idx === 3)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Button variant="primary" loading>Loading</Button>
         <Button variant="outline" disabled>Disabled</Button>
       </div>
@@ -200,7 +184,7 @@ function AsyncButtonDemo() {
     return () => clearTimeout(t);
   }, [status]);
   return (
-    <div style={col(8)}>
+    <div className="flex flex-col gap-2 items-start">
       <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
         Save
       </Button>
@@ -212,7 +196,7 @@ function AsyncButtonDemo() {
 function BadgeExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Badge tone="success">Active</Badge>
         <Badge tone="danger">Error</Badge>
         <Badge tone="warning">Warning</Badge>
@@ -222,7 +206,7 @@ function BadgeExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Badge variant="solid" tone="success">Solid</Badge>
         <Badge variant="soft" tone="info">Soft</Badge>
         <Badge variant="outline" tone="warning">Outline</Badge>
@@ -230,9 +214,9 @@ function BadgeExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         {(['success', 'danger', 'warning'] as const).map((t) => (
-          <Badge key={t} tone={t} leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', display: 'inline-block' }} />}>
+          <Badge key={t} tone={t} leadingIcon={<span className="w-[6px] h-[6px] rounded-full bg-current inline-block" />}>
             {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
           </Badge>
         ))}
@@ -242,19 +226,19 @@ function BadgeExamples({ idx }: { idx: number }) {
 }
 
 function InputExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><Input placeholder="Enter value…" /></div>;
+  if (idx === 0) return <div className="w-[280px]"><Input placeholder="Enter value…" /></div>;
   if (idx === 1)
     return (
-      <div style={{ ...col(8), width: 280 }}>
+      <div className="flex flex-col gap-2 items-start w-[280px]">
         <Input size="sm" placeholder="Small" />
         <Input size="md" placeholder="Medium" />
         <Input size="lg" placeholder="Large" />
       </div>
     );
-  if (idx === 2) return <div style={{ width: 280 }}><Input invalid placeholder="Invalid value" /></div>;
+  if (idx === 2) return <div className="w-[280px]"><Input invalid placeholder="Invalid value" /></div>;
   if (idx === 3)
     return (
-      <div style={{ ...col(4), width: 280 }}>
+      <div className="flex flex-col gap-1 items-start w-[280px]">
         <Label htmlFor="demo-email">Email address</Label>
         <Input id="demo-email" type="email" placeholder="you@example.com" />
         <HelperText>We&apos;ll never share your email.</HelperText>
@@ -267,16 +251,16 @@ function CardExamples({ idx }: { idx: number }) {
   const [starred, setStarred] = React.useState(false);
   if (idx === 0)
     return (
-      <div style={{ width: 280 }}>
+      <div className="w-[280px]">
         <Card>
-          <div style={{ fontWeight: 600, marginBottom: 4, color: 'var(--color-on-surface)' }}>Card title</div>
+          <div className="font-semibold mb-1 text-[var(--color-on-surface)]">Card title</div>
           <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
         </Card>
       </div>
     );
   if (idx === 1)
     return (
-      <div style={{ ...col(10), width: 280 }}>
+      <div className="flex flex-col gap-2.5 items-start w-[280px]">
         <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
         <Card variant="surface"><Text size="body-sm">Surface</Text></Card>
         <Card variant="interactive"><Text size="body-sm">Interactive</Text></Card>
@@ -284,13 +268,13 @@ function CardExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={{ width: 280 }}>
-        <Card variant="interactive" style={{ padding: 16 }}>
+      <div className="w-[280px]">
+        <Card variant="interactive" className="p-4">
           <Heading level={3} size="h5">
             <CardLink href="#">Atlas</CardLink>
           </Heading>
           <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
-          <Button size="sm" variant="text" className="relative z-[1]" style={{ marginTop: 8 }} onClick={() => setStarred((v) => !v)}>
+          <Button size="sm" variant="text" className="relative z-[1] mt-2" onClick={() => setStarred((v) => !v)}>
             {starred ? 'Starred' : 'Star'}
           </Button>
         </Card>
@@ -298,8 +282,8 @@ function CardExamples({ idx }: { idx: number }) {
     );
   if (idx === 3)
     return (
-      <div style={{ width: 280 }}>
-        <Card variant="surface" effect="sheen" style={{ padding: 24 }}>
+      <div className="w-[280px]">
+        <Card variant="surface" effect="sheen" className="p-6">
           <Heading level={3} size="h5">Pro</Heading>
           <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
         </Card>
@@ -312,7 +296,7 @@ function RadioCardExamples({ idx }: { idx: number }) {
   const [plan, setPlan] = React.useState('team');
   if (idx === 0)
     return (
-      <RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan} style={{ width: '100%' }}>
+      <RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan} className="w-full">
         <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features.">
           <span className="text-sm font-medium">$0 / month</span>
         </RadioCard>
@@ -326,14 +310,14 @@ function RadioCardExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly" style={{ width: '100%' }}>
+      <RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly" className="w-full">
         <RadioCard value="monthly" title="Monthly" description="Billed every month." />
         <RadioCard value="yearly" title="Yearly" description="Two months free." />
       </RadioCardGroup>
     );
   if (idx === 2)
     return (
-      <RadioCardGroup aria-label="Region" columns={2} defaultValue="eu" style={{ width: '100%' }}>
+      <RadioCardGroup aria-label="Region" columns={2} defaultValue="eu" className="w-full">
         <RadioCard value="eu" title="Europe" description="Frankfurt" />
         <RadioCard value="us" title="United States" description="Virginia" />
         <RadioCard value="ap" title="Asia Pacific" description="Coming soon" disabled />
@@ -345,7 +329,7 @@ function RadioCardExamples({ idx }: { idx: number }) {
 function CheckboxCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <fieldset className="grid gap-3 sm:grid-cols-3" style={{ width: '100%', border: 0, padding: 0, margin: 0 }}>
+      <fieldset className="grid gap-3 sm:grid-cols-3 w-full border-0 p-0 m-0">
         <legend className="sr-only">Add-ons</legend>
         <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
         <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
@@ -354,7 +338,7 @@ function CheckboxCardExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={{ ...col(12), width: 320, alignItems: 'stretch' }}>
+      <div className="flex flex-col gap-3 items-stretch w-[320px]">
         <CheckboxCard title="SSO" description="Available on Enterprise." disabled />
         <CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
       </div>
@@ -365,13 +349,13 @@ function CheckboxCardExamples({ idx }: { idx: number }) {
 function MediaCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 320 }}>
+      <div className="w-[320px]">
         <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
       </div>
     );
   if (idx === 1)
     return (
-      <div style={{ width: 320 }}>
+      <div className="w-[320px]">
         <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
           <Button size="sm" variant="tonal">Open</Button>
           <Button size="sm" variant="text">Share</Button>
@@ -380,9 +364,9 @@ function MediaCardExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={{ ...row(12), alignItems: 'flex-start' }}>
+      <div className="flex gap-3 flex-wrap items-start justify-center">
         {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
-          <div key={r} style={{ width: 160 }}>
+          <div key={r} className="w-[160px]">
             <MediaCard ratio={r} src={COVER} alt="" title={r} />
           </div>
         ))}
@@ -396,7 +380,7 @@ function NumberTickerExamples({ idx }: { idx: number }) {
   const [balance, setBalance] = React.useState(128450.75);
   if (idx === 0)
     return (
-      <div style={{ ...col(12), alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
         <Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
           Change
@@ -405,7 +389,7 @@ function NumberTickerExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={{ ...col(12), alignItems: 'center' }}>
+      <div className="flex flex-col gap-3 items-center">
         <Amount value={balance} currency="USD" size="display" animate />
         <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
           Change
@@ -425,10 +409,10 @@ function DialogDemo() {
           <Dialog.Overlay />
           <Dialog.Content size="sm">
             <Dialog.Title>Confirm action</Dialog.Title>
-            <Dialog.Description style={{ marginTop: 8, marginBottom: 24 }}>
+            <Dialog.Description className="mt-2 mb-6">
               Are you sure you want to continue? This action cannot be undone.
             </Dialog.Description>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <div className="flex gap-2 justify-end">
               <Dialog.Close asChild><Button variant="outline">Cancel</Button></Dialog.Close>
               <Button variant="primary" onClick={() => setOpen(false)}>Confirm</Button>
             </div>
@@ -459,7 +443,7 @@ function TooltipExamples({ idx }: { idx: number }) {
 function SelectExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 220 }}>
+      <div className="w-[220px]">
         <Select.Root>
           <Select.Trigger><Select.Value placeholder="Select an option…" /></Select.Trigger>
           <Select.Content>
@@ -476,7 +460,7 @@ function SelectExamples({ idx }: { idx: number }) {
 function TabsExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 320 }}>
+      <div className="w-[320px]">
         <Tabs.Root defaultValue="tab1">
           <Tabs.List>
             <Tabs.Trigger value="tab1">Overview</Tabs.Trigger>
@@ -484,13 +468,13 @@ function TabsExamples({ idx }: { idx: number }) {
             <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="tab1">
-            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Overview content goes here.</div>
+            <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Overview content goes here.</div>
           </Tabs.Content>
           <Tabs.Content value="tab2">
-            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Analytics content goes here.</div>
+            <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Analytics content goes here.</div>
           </Tabs.Content>
           <Tabs.Content value="tab3">
-            <div style={{ padding: '12px 0', color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Settings content goes here.</div>
+            <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
           </Tabs.Content>
         </Tabs.Root>
       </div>
@@ -499,17 +483,17 @@ function TabsExamples({ idx }: { idx: number }) {
 }
 
 function SwitchExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={row(16)}><Switch defaultChecked /><Switch /></div>;
-  if (idx === 1) return <div style={row(16)}><Switch size="sm" defaultChecked /><Switch size="md" defaultChecked /><Switch size="lg" defaultChecked /></div>;
+  if (idx === 0) return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch defaultChecked /><Switch /></div>;
+  if (idx === 1) return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch size="sm" defaultChecked /><Switch size="md" defaultChecked /><Switch size="lg" defaultChecked /></div>;
   return null;
 }
 
 function SpinnerExamples({ idx }: { idx: number }) {
   if (idx === 0)
-    return <div style={row(20)}><Spinner size="sm" /><Spinner size="md" /><Spinner size="lg" /><Spinner size="xl" /></div>;
+    return <div className="flex gap-5 flex-wrap items-center justify-center"><Spinner size="sm" /><Spinner size="md" /><Spinner size="lg" /><Spinner size="xl" /></div>;
   if (idx === 1)
     return (
-      <div style={row(20)}>
+      <div className="flex gap-5 flex-wrap items-center justify-center">
         <Spinner size="md" tone="info" />
         <Spinner size="md" tone="success" />
         <Spinner size="md" tone="warning" />
@@ -578,7 +562,7 @@ function NavigationRailExamples({ idx }: { idx: number }) {
   );
   if (idx === 0)
     return (
-      <NavigationRail.Root aria-label="Workspace" style={{ height: 'auto', background: 'var(--color-surface-container-low)', borderRadius: 24 }}>
+      <NavigationRail.Root aria-label="Workspace" className="h-auto bg-[var(--color-surface-container-low)] rounded-[24px]">
         <NavigationRail.Item href="#" icon={glyph('M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z')} label="Home" active />
         <NavigationRail.Item href="#" icon={glyph('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z')} label="Files" />
         <NavigationRail.Item href="#" icon={glyph('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')} label="Settings" />
@@ -591,7 +575,7 @@ function AmountExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Amount value={128450.75} currency="USD" size="display" />;
   if (idx === 1)
     return (
-      <div style={{ display: 'flex', gap: 16 }}>
+      <div className="flex gap-4">
         <Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
         <Amount value={-89.99} currency="USD" tone="auto" />
       </div>
@@ -610,12 +594,12 @@ function ListDetailExamples({ idx }: { idx: number }) {
   const items = ['Quarterly report', 'Design review', 'Invoice #4821'];
   if (idx === 0)
     return (
-      <div style={{ width: '100%', height: 240, border: '1px solid var(--color-outline-variant)', borderRadius: 16, overflow: 'hidden' }}>
+      <div className="w-full h-[240px] border border-[var(--color-outline-variant)] rounded-[16px] overflow-hidden">
         <ListDetail
           showDetail={selected !== null}
           onBack={() => setSelected(null)}
           list={
-            <ul style={{ padding: 8, margin: 0, listStyle: 'none' }}>
+            <ul className="p-2 m-0 list-none">
               {items.map((m, i) => (
                 <li key={m}>
                   <button type="button" onClick={() => setSelected(i)} className="nx-state-layer relative w-full rounded-shape-container px-3 py-2 text-left text-body-sm">
@@ -625,7 +609,7 @@ function ListDetailExamples({ idx }: { idx: number }) {
               ))}
             </ul>
           }
-          detail={<div style={{ padding: 20 }} className="text-title-md">{selected === null ? 'Nothing selected' : items[selected]}</div>}
+          detail={<div className="text-title-md p-5">{selected === null ? 'Nothing selected' : items[selected]}</div>}
         />
       </div>
     );
@@ -637,7 +621,7 @@ function IconButtonExamples({ idx }: { idx: number }) {
   if (idx === 0) return <IconButton variant="ghost" label="Add item">{icon}</IconButton>;
   if (idx === 1)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <IconButton variant="ghost" label="Ghost">{icon}</IconButton>
         <IconButton variant="solid" label="Solid">{icon}</IconButton>
         <IconButton variant="outline" label="Outline">{icon}</IconButton>
@@ -648,33 +632,33 @@ function IconButtonExamples({ idx }: { idx: number }) {
 }
 
 function TextareaExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><Textarea placeholder="Enter your message…" /></div>;
+  if (idx === 0) return <div className="w-[280px]"><Textarea placeholder="Enter your message…" /></div>;
   if (idx === 1)
     return (
-      <div style={{ ...col(8), width: 280 }}>
+      <div className="flex flex-col gap-2 items-start w-[280px]">
         <Textarea size="sm" placeholder="Small" rows={2} />
         <Textarea size="md" placeholder="Medium" rows={3} />
         <Textarea size="lg" placeholder="Large" rows={4} />
       </div>
     );
-  if (idx === 2) return <div style={{ width: 280 }}><Textarea invalid placeholder="This field has an error" /></div>;
+  if (idx === 2) return <div className="w-[280px]"><Textarea invalid placeholder="This field has an error" /></div>;
   return null;
 }
 
 function NumberInputExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 180 }}><NumberInput defaultValue={0} /></div>;
-  if (idx === 1) return <div style={{ width: 180 }}><NumberInput defaultValue={5} min={0} max={10} /></div>;
+  if (idx === 0) return <div className="w-[180px]"><NumberInput defaultValue={0} /></div>;
+  if (idx === 1) return <div className="w-[180px]"><NumberInput defaultValue={5} min={0} max={10} /></div>;
   return null;
 }
 
 function SearchInputExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><SearchInput placeholder="Search…" /></div>;
+  if (idx === 0) return <div className="w-[280px]"><SearchInput placeholder="Search…" /></div>;
   return null;
 }
 
 function PasswordInputExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><PasswordInput placeholder="Enter password…" /></div>;
-  if (idx === 1) return <div style={{ width: 280 }}><PasswordInput invalid placeholder="Password is too short" /></div>;
+  if (idx === 0) return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+  if (idx === 1) return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
   return null;
 }
 
@@ -683,7 +667,7 @@ function LabelExamples({ idx }: { idx: number }) {
   if (idx === 1) return <Label required>Email address</Label>;
   if (idx === 2)
     return (
-      <div style={{ ...col(4), width: 280 }}>
+      <div className="flex flex-col gap-1 items-start w-[280px]">
         <Label htmlFor="email-ex">Email</Label>
         <Input id="email-ex" type="email" placeholder="you@example.com" />
       </div>
@@ -695,7 +679,7 @@ function HelperTextExamples({ idx }: { idx: number }) {
   if (idx === 0) return <HelperText>We will never share your email with anyone else.</HelperText>;
   if (idx === 1)
     return (
-      <div style={col(6)}>
+      <div className="flex flex-col gap-1.5 items-start">
         <HelperText tone="info">Sync runs every 10 minutes.</HelperText>
         <HelperText tone="success">Your account is verified.</HelperText>
         <HelperText tone="warning">This action cannot be reversed.</HelperText>
@@ -708,7 +692,7 @@ function HelperTextExamples({ idx }: { idx: number }) {
 function FormFieldExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ ...col(4), width: 280 }}>
+      <div className="flex flex-col gap-1 items-start w-[280px]">
         <Label htmlFor="field-name" required>Full name</Label>
         <Input id="field-name" placeholder="Jane Smith" />
         <HelperText>Enter your legal name.</HelperText>
@@ -720,7 +704,7 @@ function FormFieldExamples({ idx }: { idx: number }) {
 function StatusPillExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <StatusPill tone="success" label="Active" />
         <StatusPill tone="warning" label="Pending" />
         <StatusPill tone="danger" label="Error" />
@@ -735,7 +719,7 @@ function StatusPillExamples({ idx }: { idx: number }) {
 function FilterChipExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <FilterChip>All</FilterChip>
         <FilterChip selected>Active</FilterChip>
         <FilterChip>Archived</FilterChip>
@@ -749,13 +733,13 @@ function ChipExamples({ idx }: { idx: number }) {
   const [chips, setChips] = React.useState(['Design', 'Engineering', 'Product']);
   if (idx === 0)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         {chips.map((c) => <Chip key={c}>{c}</Chip>)}
       </div>
     );
   if (idx === 1)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         {chips.map((c) => (
           <Chip key={c} onRemove={() => setChips((prev) => prev.filter((x) => x !== c))}>{c}</Chip>
         ))}
@@ -767,7 +751,7 @@ function ChipExamples({ idx }: { idx: number }) {
 function TagExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Tag>Frontend</Tag>
         <Tag tone="info">Backend</Tag>
         <Tag tone="success">Deployed</Tag>
@@ -782,9 +766,9 @@ function EyebrowChipExamples({ idx }: { idx: number }) {
   if (idx === 0) return <EyebrowChip>New release</EyebrowChip>;
   if (idx === 1)
     return (
-      <div style={col(8)}>
+      <div className="flex flex-col gap-2 items-start">
         <EyebrowChip>Now available</EyebrowChip>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-on-surface)' }}>Version 2.0</h2>
+        <h2 className="m-0 text-[1.5rem] font-bold text-[var(--color-on-surface)]">Version 2.0</h2>
       </div>
     );
   return null;
@@ -794,7 +778,7 @@ function AvatarExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Avatar name="Alex Johnson" />;
   if (idx === 1)
     return (
-      <div style={row(12)}>
+      <div className="flex gap-3 flex-wrap items-center justify-center">
         {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => (
           <Avatar key={s} name="Alex J" size={s} />
         ))}
@@ -803,7 +787,7 @@ function AvatarExamples({ idx }: { idx: number }) {
   if (idx === 2) return <Avatar src="https://i.pravatar.cc/150?img=3" name="Alex Johnson" />;
   if (idx === 3)
     return (
-      <div style={row(12)}>
+      <div className="flex gap-3 flex-wrap items-center justify-center">
         <Avatar name="Online" badge badgeColor="var(--color-success)" />
         <Avatar name="Away" badge badgeColor="var(--color-warning)" />
       </div>
@@ -829,7 +813,7 @@ function AlertExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>;
   if (idx === 1)
     return (
-      <div style={{ ...col(8), width: '100%', maxWidth: 480 }}>
+      <div className="flex flex-col gap-2 items-start w-full max-w-[480px]">
         <Alert tone="info" title="Info">Informational message.</Alert>
         <Alert tone="success" title="Success">Operation completed successfully.</Alert>
         <Alert tone="warning" title="Warning">Something needs your attention.</Alert>
@@ -838,7 +822,7 @@ function AlertExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={{ width: '100%', maxWidth: 480 }}>
+      <div className="w-full max-w-[480px]">
         <Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
       </div>
     );
@@ -870,14 +854,14 @@ function ToastExamples({ idx }: { idx: number }) {
   return (
     <>
       {/* The docs root layout already renders <Toaster /> (ClientProviders); a second one doubles every toast. */}
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         {idx === 0 && (
           <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
             Show toast
           </Button>
         )}
         {idx === 1 && (
-          <div style={row(8)}>
+          <div className="flex gap-2 flex-wrap items-center justify-center">
             <Button variant="outline" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
             <Button variant="outline" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
             <Button variant="outline" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
@@ -923,13 +907,13 @@ function UndoableDeleteDemo() {
 function SkeletonExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ ...col(8), width: 280 }}>
+      <div className="flex flex-col gap-2 items-start w-[280px]">
         <Skeleton shape="line" width="60%" />
         <Skeleton shape="line" width="100%" />
         <Skeleton shape="line" width="80%" />
-        <div style={row(8, false)}>
+        <div className="flex gap-2 flex-nowrap items-center justify-center">
           <Skeleton shape="circle" width={40} height={40} />
-          <div style={{ ...col(6), flex: 1 }}>
+          <div className="flex flex-col gap-1.5 items-start flex-1">
             <Skeleton shape="line" width="70%" />
             <Skeleton shape="line" width="50%" />
           </div>
@@ -938,7 +922,7 @@ function SkeletonExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={row(16)}>
+      <div className="flex gap-4 flex-wrap items-center justify-center">
         <Skeleton shape="line" width={80} />
         <Skeleton shape="rect" width={80} height={40} />
         <Skeleton shape="circle" width={40} height={40} />
@@ -948,35 +932,35 @@ function SkeletonExamples({ idx }: { idx: number }) {
 }
 
 function ProgressExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><Progress value={65} /></div>;
+  if (idx === 0) return <div className="w-[280px]"><Progress value={65} /></div>;
   if (idx === 1)
     return (
-      <div style={{ ...col(10), width: 280 }}>
+      <div className="flex flex-col gap-2.5 items-start w-[280px]">
         <Progress value={80} tone="success" />
         <Progress value={55} tone="info" />
         <Progress value={30} tone="warning" />
         <Progress value={20} tone="danger" />
       </div>
     );
-  if (idx === 2) return <div style={{ width: 280 }}><Progress value={40} animated tone="info" /></div>;
+  if (idx === 2) return <div className="w-[280px]"><Progress value={40} animated tone="info" /></div>;
   return null;
 }
 
 function SeparatorExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><Separator /></div>;
+  if (idx === 0) return <div className="w-[280px]"><Separator /></div>;
   if (idx === 1)
     return (
-      <div style={{ display: 'flex', height: 32, alignItems: 'center', gap: 16 }}>
-        <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Left</span>
+      <div className="flex h-[32px] items-center gap-4">
+        <span className="text-[var(--color-on-surface-variant)] text-body-sm">Left</span>
         <Separator orientation="vertical" />
-        <span style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>Right</span>
+        <span className="text-[var(--color-on-surface-variant)] text-body-sm">Right</span>
       </div>
     );
   return null;
 }
 
 function GradientDividerExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 280 }}><GradientDivider /></div>;
+  if (idx === 0) return <div className="w-[280px]"><GradientDivider /></div>;
   return null;
 }
 
@@ -986,7 +970,7 @@ function RatingExamples({ idx }: { idx: number }) {
   if (idx === 1) return <Rating value={4} readOnly />;
   if (idx === 2)
     return (
-      <div style={col(8)}>
+      <div className="flex flex-col gap-2 items-start">
         <Rating size="sm" value={4} readOnly />
         <Rating size="md" value={4} readOnly />
         <Rating size="lg" value={4} readOnly />
@@ -996,8 +980,8 @@ function RatingExamples({ idx }: { idx: number }) {
 }
 
 function SliderExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <div style={{ width: 240 }}><Slider defaultValue={[50]} min={0} max={100} /></div>;
-  if (idx === 1) return <div style={{ width: 240 }}><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
+  if (idx === 0) return <div className="w-[240px]"><Slider defaultValue={[50]} min={0} max={100} /></div>;
+  if (idx === 1) return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
   return null;
 }
 
@@ -1005,7 +989,7 @@ function ToggleExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Toggle>Bold</Toggle>;
   if (idx === 1)
     return (
-      <div style={row(8)}>
+      <div className="flex gap-2 flex-wrap items-center justify-center">
         <Toggle variant="outline">Italic</Toggle>
         <Toggle variant="outline" defaultPressed>Bold</Toggle>
       </div>
@@ -1044,7 +1028,7 @@ function SegmentedControlExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         {(['sm', 'md', 'lg'] as const).map((s) => (
           <SegmentedControl.Root key={s} size={s} defaultValue="a">
             <SegmentedControl.Item value="a">A</SegmentedControl.Item>
@@ -1061,7 +1045,7 @@ function HeadingExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Heading>The quick brown fox</Heading>;
   if (idx === 1)
     return (
-      <div style={col(8)}>
+      <div className="flex flex-col gap-2 items-start">
         <Heading size="h1">Heading 1</Heading>
         <Heading size="h2">Heading 2</Heading>
         <Heading size="h3">Heading 3</Heading>
@@ -1071,7 +1055,7 @@ function HeadingExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={col(8)}>
+      <div className="flex flex-col gap-2 items-start">
         <Heading tone="info">Info tone</Heading>
         <Heading tone="success">Success tone</Heading>
         <Heading tone="warning">Warning tone</Heading>
@@ -1085,7 +1069,7 @@ function TextExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Text>The Nexub design system provides accessible, token-driven components.</Text>;
   if (idx === 1)
     return (
-      <div style={col(6)}>
+      <div className="flex flex-col gap-1.5 items-start">
         <Text size="body-lg">Body Large — spacious reading.</Text>
         <Text size="body">Body — default paragraph.</Text>
         <Text size="body-sm">Body Small — compact content.</Text>
@@ -1094,7 +1078,7 @@ function TextExamples({ idx }: { idx: number }) {
     );
   if (idx === 2)
     return (
-      <div style={col(6)}>
+      <div className="flex flex-col gap-1.5 items-start">
         <Text tone="default">Default</Text>
         <Text tone="secondary">Secondary</Text>
         <Text tone="muted">Muted</Text>
@@ -1107,7 +1091,7 @@ function TextExamples({ idx }: { idx: number }) {
 function CodeInlineExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <div className="flex gap-2 flex-wrap">
         <Code>npm install</Code>
         <Code>useTheme()</Code>
         <Code>@nexub/react</Code>
@@ -1125,17 +1109,17 @@ function CodeInlineExamples({ idx }: { idx: number }) {
 function KbdExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={row(4)}>
+      <div className="flex gap-1 flex-wrap items-center justify-center">
         <Kbd>⌘</Kbd>
         <Kbd>K</Kbd>
       </div>
     );
   if (idx === 1)
     return (
-      <div style={col(8)}>
-        <div style={row(4)}><Kbd>⌘</Kbd><Kbd>K</Kbd><Text size="body-sm" tone="secondary">— Open search</Text></div>
-        <div style={row(4)}><Kbd>⌃</Kbd><Kbd>C</Kbd><Text size="body-sm" tone="secondary">— Copy</Text></div>
-        <div style={row(4)}><Kbd>⇧</Kbd><Kbd>⌘</Kbd><Kbd>P</Kbd><Text size="body-sm" tone="secondary">— Command palette</Text></div>
+      <div className="flex flex-col gap-2 items-start">
+        <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⌘</Kbd><Kbd>K</Kbd><Text size="body-sm" tone="secondary">— Open search</Text></div>
+        <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⌃</Kbd><Kbd>C</Kbd><Text size="body-sm" tone="secondary">— Copy</Text></div>
+        <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⇧</Kbd><Kbd>⌘</Kbd><Kbd>P</Kbd><Text size="body-sm" tone="secondary">— Command palette</Text></div>
       </div>
     );
   return null;
@@ -1145,7 +1129,7 @@ function LinkExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Link href="#">View documentation</Link>;
   if (idx === 1)
     return (
-      <div style={row(16)}>
+      <div className="flex gap-4 flex-wrap items-center justify-center">
         <Link href="#" variant="default">Default</Link>
         <Link href="#" variant="muted">Muted</Link>
         <Link href="#" variant="underlined">Underline</Link>
@@ -1156,7 +1140,7 @@ function LinkExamples({ idx }: { idx: number }) {
 }
 
 function TextGradientExamples({ idx }: { idx: number }) {
-  if (idx === 0) return <TextGradient style={{ fontSize: '1.5rem', fontWeight: 700 }}>Design system for ambitious teams</TextGradient>;
+  if (idx === 0) return <TextGradient className="text-[1.5rem] font-bold">Design system for ambitious teams</TextGradient>;
   if (idx === 1)
     return (
       <Heading size="h2">
@@ -1177,7 +1161,7 @@ function StackExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <Stack gap="md" divider={<Separator />} style={{ width: 220 }}>
+      <Stack gap="md" divider={<Separator />} className="w-[220px]">
         <Text size="body-sm">First item</Text>
         <Text size="body-sm">Second item</Text>
         <Text size="body-sm">Third item</Text>
@@ -1196,14 +1180,14 @@ function FlexExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <Flex justify="between" style={{ width: '100%', maxWidth: 320 }}>
+      <Flex justify="between" className="w-full max-w-[320px]">
         <Badge tone="success">Active</Badge>
         <Badge tone="neutral">Draft</Badge>
       </Flex>
     );
   if (idx === 2)
     return (
-      <Flex gap="sm" wrap style={{ maxWidth: 260 }}>
+      <Flex gap="sm" wrap className="max-w-[260px]">
         {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
           <Badge key={t} tone="info">{t}</Badge>
         ))}
@@ -1215,7 +1199,7 @@ function FlexExamples({ idx }: { idx: number }) {
 function GridExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <Grid cols={2} gap="md" style={{ width: '100%', maxWidth: 400 }}>
+      <Grid cols={2} gap="md" className="w-full max-w-[400px]">
         {[1, 2, 3, 4].map((n) => (
           <Card key={n}><Text size="body-sm" tone="muted">Card {n}</Text></Card>
         ))}
@@ -1223,7 +1207,7 @@ function GridExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <Grid cols={3} gap="sm" style={{ width: '100%', maxWidth: 480 }}>
+      <Grid cols={3} gap="sm" className="w-full max-w-[480px]">
         {[1, 2, 3, 4, 5, 6].map((n) => (
           <Card key={n}><Text size="caption" tone="muted">Item {n}</Text></Card>
         ))}
@@ -1235,15 +1219,15 @@ function GridExamples({ idx }: { idx: number }) {
 function BoxExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <Box style={{ padding: 'var(--spacing-4)', background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
+      <Box className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
         <Text size="body-sm">Content inside a Box</Text>
       </Box>
     );
   if (idx === 1)
     return (
-      <Box style={{ padding: 'var(--spacing-6)', background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-container)' }}>
+      <Box className="p-6 bg-[var(--color-surface-container-low)] rounded-shape-container">
         <Heading size="h4">Section title</Heading>
-        <Box style={{ padding: 'var(--spacing-3)', background: 'var(--color-surface)', borderRadius: 'var(--shape-field)', marginTop: 8 }}>
+        <Box className="p-3 bg-[var(--color-surface)] rounded-shape-field mt-2">
           <Text size="body-sm">Nested box content</Text>
         </Box>
       </Box>
@@ -1254,7 +1238,7 @@ function BoxExamples({ idx }: { idx: number }) {
 function AccordionExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: '100%', maxWidth: 480 }}>
+      <div className="w-full max-w-[480px]">
         <Accordion.Root type="single" collapsible>
           <Accordion.Item value="a">
             <Accordion.Trigger>What is Nexub?</Accordion.Trigger>
@@ -1273,7 +1257,7 @@ function AccordionExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={{ width: '100%', maxWidth: 480 }}>
+      <div className="w-full max-w-[480px]">
         <Accordion.Root type="multiple">
           <Accordion.Item value="x">
             <Accordion.Trigger>Section A</Accordion.Trigger>
@@ -1299,7 +1283,7 @@ function CollapsibleExamples({ idx }: { idx: number }) {
           <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
         </Collapsible.Trigger>
         <Collapsible.Content>
-          <div style={{ paddingTop: 12, color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
+          <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
             Hidden content revealed on toggle. This section can hold any content.
           </div>
         </Collapsible.Content>
@@ -1308,20 +1292,20 @@ function CollapsibleExamples({ idx }: { idx: number }) {
   if (idx === 1)
     return (
       <Collapsible.Root open={open2} onOpenChange={setOpen2}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontWeight: 500, color: 'var(--color-on-surface)', fontSize: '0.875rem' }}>Advanced settings</span>
+        <div className="flex items-center gap-2">
+          <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
           <Collapsible.Trigger asChild>
             <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
           </Collapsible.Trigger>
         </div>
         <Collapsible.Content>
-          <div style={{ paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="pt-3 flex flex-col gap-3">
             {[
               { id: 'notif', label: 'Enable notifications' },
               { id: 'autosave', label: 'Auto-save drafts' },
               { id: 'tooltips', label: 'Show tooltips' },
             ].map(({ id, label }) => (
-              <div key={id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div key={id} className="flex items-center gap-2">
                 <Switch id={id} />
                 <Label htmlFor={id}>{label}</Label>
               </div>
@@ -1336,9 +1320,9 @@ function CollapsibleExamples({ idx }: { idx: number }) {
 function ScrollAreaExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <ScrollArea style={{ height: 200, width: 280, border: '1px solid var(--color-outline-variant)', borderRadius: 'var(--shape-field)', padding: 12 }}>
+      <ScrollArea className="h-[200px] w-[280px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
         {Array.from({ length: 20 }, (_, i) => (
-          <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-on-surface-variant)' }}>
+          <div key={i} className="py-1 px-0 text-body-sm text-[var(--color-on-surface-variant)]">
             List item {i + 1}
           </div>
         ))}
@@ -1346,23 +1330,12 @@ function ScrollAreaExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <ScrollArea orientation="horizontal" style={{ width: 320, border: '1px solid var(--color-outline-variant)', borderRadius: 'var(--shape-field)', padding: 12 }}>
-        <div style={{ display: 'flex', gap: 8, width: 'max-content' }}>
+      <ScrollArea orientation="horizontal" className="w-[320px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+        <div className="flex gap-2 w-max">
           {Array.from({ length: 12 }, (_, i) => (
             <div
               key={i}
-              style={{
-                width: 80,
-                height: 80,
-                background: 'var(--color-surface-container-low)',
-                borderRadius: 'var(--shape-tooltip)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.75rem',
-                color: 'var(--color-on-surface-variant)',
-                flexShrink: 0,
-              }}
+              className="w-[80px] h-[80px] bg-[var(--color-surface-container-low)] rounded-shape-tooltip flex items-center justify-center text-label-sm text-[var(--color-on-surface-variant)] shrink-0"
             >
               Card {i + 1}
             </div>
@@ -1377,21 +1350,21 @@ function CheckboxExamples({ idx }: { idx: number }) {
   if (idx === 0) return <Checkbox defaultChecked />;
   if (idx === 1)
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="flex items-center gap-2">
         <Checkbox id="terms" />
         <Label htmlFor="terms">I agree to the terms and conditions</Label>
       </div>
     );
   if (idx === 2)
     return (
-      <div style={col(12)}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="flex flex-col gap-3 items-start">
+        <div className="flex items-center gap-2">
           <Checkbox defaultChecked /><Label>Checked</Label>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="flex items-center gap-2">
           <Checkbox /><Label>Unchecked</Label>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="flex items-center gap-2">
           <Checkbox disabled /><Label>Disabled</Label>
         </div>
       </div>
@@ -1403,9 +1376,9 @@ function RadioGroupExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
       <RadioGroup.Root defaultValue="monthly">
-        <div style={col(8)}>
+        <div className="flex flex-col gap-2 items-start">
           {['Monthly', 'Yearly', 'Lifetime'].map((opt) => (
-            <div key={opt} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div key={opt} className="flex items-center gap-2">
               <RadioGroup.Item value={opt.toLowerCase()} id={`rg-${opt}`} />
               <Label htmlFor={`rg-${opt}`}>{opt}</Label>
             </div>
@@ -1416,9 +1389,9 @@ function RadioGroupExamples({ idx }: { idx: number }) {
   if (idx === 1)
     return (
       <RadioGroup.Root defaultValue="monthly" orientation="horizontal">
-        <div style={{ display: 'flex', gap: 16 }}>
+        <div className="flex gap-4">
           {[{ value: 'monthly', label: 'Monthly' }, { value: 'annual', label: 'Annual' }].map(({ value, label }) => (
-            <div key={value} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div key={value} className="flex items-center gap-2">
               <RadioGroup.Item value={value} id={`rgh-${value}`} />
               <Label htmlFor={`rgh-${value}`}>{label}</Label>
             </div>
@@ -1432,7 +1405,7 @@ function RadioGroupExamples({ idx }: { idx: number }) {
 function ComboboxExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <Combobox.Root style={{ width: 260 }}>
+      <Combobox.Root className="w-[260px]">
         <Combobox.Input placeholder="Search…" />
         <Combobox.List>
           <Combobox.Empty>No results found.</Combobox.Empty>
@@ -1451,7 +1424,7 @@ function ComboboxExamples({ idx }: { idx: number }) {
 function AutocompleteExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 260 }}>
+      <div className="w-[260px]">
         <Autocomplete
           options={[
             { value: 'react', label: 'React' },
@@ -1465,13 +1438,13 @@ function AutocompleteExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={{ width: 260 }}>
+      <div className="w-[260px]">
         <Autocomplete options={[]} loading placeholder="Loading options…" />
       </div>
     );
   if (idx === 2)
     return (
-      <div style={{ width: 260 }}>
+      <div className="w-[260px]">
         <Autocomplete
           options={[
             { value: 'nexub', label: 'Nexub' },
@@ -1498,7 +1471,7 @@ function AlertDialogDemo() {
             <AlertDialog.Description>
               This action cannot be undone. This will permanently delete your account and remove all your data.
             </AlertDialog.Description>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 24 }}>
+            <div className="flex gap-2 justify-end mt-6">
               <AlertDialog.Cancel asChild><Button variant="outline">Cancel</Button></AlertDialog.Cancel>
               <AlertDialog.Action asChild><Button variant="destructive">Yes, delete</Button></AlertDialog.Action>
             </div>
@@ -1528,7 +1501,7 @@ function PopoverExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={row(12)}>
+      <div className="flex gap-3 flex-wrap items-center justify-center">
         {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
           <Popover.Root key={s}>
             <Popover.Trigger asChild>
@@ -1552,7 +1525,7 @@ function HoverCardExamples({ idx }: { idx: number }) {
           <Link href="#">@alex_johnson</Link>
         </HoverCard.Trigger>
         <HoverCard.Content>
-          <div style={col(8)}>
+          <div className="flex flex-col gap-2 items-start">
             <Avatar name="Alex Johnson" size="lg" />
             <div>
               <Text weight="semibold">Alex Johnson</Text>
@@ -1579,20 +1552,20 @@ function DrawerDemo() {
               <Drawer.Title>Edit profile</Drawer.Title>
               <Drawer.Description>Update your profile details.</Drawer.Description>
             </Drawer.Header>
-            <div style={{ padding: '16px', flex: 1, overflowY: 'auto' }}>
-              <div style={col(12)}>
-                <div style={col(4)}>
+            <div className="p-4 flex-1 overflow-y-auto">
+              <div className="flex flex-col gap-3 items-start">
+                <div className="flex flex-col gap-1 items-start">
                   <Label htmlFor="d-name">Name</Label>
                   <Input id="d-name" placeholder="Jane Smith" />
                 </div>
-                <div style={col(4)}>
+                <div className="flex flex-col gap-1 items-start">
                   <Label htmlFor="d-email">Email</Label>
                   <Input id="d-email" type="email" placeholder="jane@example.com" />
                 </div>
               </div>
             </div>
             <Drawer.Footer>
-              <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <div className="flex gap-2 justify-end">
                 <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
                 <Button variant="primary">Save changes</Button>
               </div>
@@ -1618,7 +1591,7 @@ function DrawerExamples({ idx }: { idx: number }) {
               <Drawer.Header>
                 <Drawer.Title>Share to</Drawer.Title>
               </Drawer.Header>
-              <div style={{ padding: '16px', display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <div className="p-4 flex gap-3 flex-wrap">
                 {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
                   <Button key={s} variant="outline" size="sm">{s}</Button>
                 ))}
@@ -1645,7 +1618,7 @@ function SheetExamples({ idx }: { idx: number }) {
                 <Sheet.Title>Notifications</Sheet.Title>
                 <Sheet.Description>Your recent activity</Sheet.Description>
               </Sheet.Header>
-              <div style={{ padding: '16px', flex: 1 }}>
+              <div className="p-4 flex-1">
                 <Text size="body-sm" tone="muted">No new notifications.</Text>
               </div>
             </Sheet.Content>
@@ -1703,7 +1676,7 @@ function TableExamples({ idx }: { idx: number }) {
   ];
   if (idx === 0)
     return (
-      <Table.Root style={{ width: '100%', maxWidth: 480 }}>
+      <Table.Root className="w-full max-w-[480px]">
         <Table.Header>
           <Table.Row>
             <Table.Head>Name</Table.Head>
@@ -1724,7 +1697,7 @@ function TableExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <Table.Root style={{ width: '100%', maxWidth: 480 }}>
+      <Table.Root className="w-full max-w-[480px]">
         <Table.Caption>Recent user activity — last 30 days</Table.Caption>
         <Table.Header>
           <Table.Row>
@@ -1744,7 +1717,7 @@ function TableExamples({ idx }: { idx: number }) {
         </Table.Body>
         <Table.Footer>
           <Table.Row>
-            <Table.Cell colSpan={3} style={{ color: 'var(--color-on-surface-variant)', fontSize: '0.875rem' }}>
+            <Table.Cell colSpan={3} className="text-[var(--color-on-surface-variant)] text-body-sm">
               Showing {rows.length} of {rows.length} users
             </Table.Cell>
           </Table.Row>
@@ -1769,13 +1742,13 @@ function DataTableExamples({ idx }: { idx: number }) {
   ];
   if (idx === 0)
     return (
-      <div style={{ width: '100%', maxWidth: 600 }}>
+      <div className="w-full max-w-[600px]">
         <DataTable columns={columns} data={data} />
       </div>
     );
   if (idx === 1)
     return (
-      <div style={{ width: '100%', maxWidth: 600 }}>
+      <div className="w-full max-w-[600px]">
         <DataTable columns={columns} data={data} enableSorting />
       </div>
     );
@@ -1874,24 +1847,24 @@ function DateRangePickerExamples({ idx }: { idx: number }) {
 
 function MotionFadeExamples({ idx }: { idx: number }) {
   const [visible, setVisible] = React.useState(true);
-  if (idx === 0) return <Fade in><Card style={{ width: 200 }}><Text size="body-sm">Faded in content</Text></Card></Fade>;
+  if (idx === 0) return <Fade in><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>;
   if (idx === 1)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         <Button variant="outline" onClick={() => setVisible((v) => !v)}>
           {visible ? 'Hide' : 'Show'}
         </Button>
         <Fade in={visible} unmountOnExit>
-          <Card style={{ width: 200 }}><Text size="body-sm">Animated content</Text></Card>
+          <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
         </Fade>
       </div>
     );
   if (idx === 2)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
         <Fade in={visible} duration="slow" easing="spring">
-          <Card style={{ width: 200 }}><Text size="body-sm">Slow spring fade animation.</Text></Card>
+          <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
         </Fade>
       </div>
     );
@@ -1901,13 +1874,13 @@ function MotionFadeExamples({ idx }: { idx: number }) {
 function MotionSlideExamples({ idx }: { idx: number }) {
   const [visible, setVisible] = React.useState(true);
   if (idx === 0)
-    return <Slide in direction="up"><Card style={{ width: 200 }}><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
+    return <Slide in direction="up"><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
   if (idx === 1)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
         <Slide in={visible} direction="up" unmountOnExit>
-          <Card style={{ width: 200 }}><Text size="body-sm">Sliding content</Text></Card>
+          <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
         </Slide>
       </div>
     );
@@ -1917,13 +1890,13 @@ function MotionSlideExamples({ idx }: { idx: number }) {
 function MotionScaleExamples({ idx }: { idx: number }) {
   const [visible, setVisible] = React.useState(true);
   if (idx === 0)
-    return <Scale in><Card style={{ width: 200 }}><Text size="body-sm">Scaled content</Text></Card></Scale>;
+    return <Scale in><Card className="w-[200px]"><Text size="body-sm">Scaled content</Text></Card></Scale>;
   if (idx === 1)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
         <Scale in={visible} unmountOnExit>
-          <Card style={{ width: 200 }}><Text size="body-sm">Scaling content</Text></Card>
+          <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
         </Scale>
       </div>
     );
@@ -1935,19 +1908,19 @@ function MotionCollapseExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
       <Collapse in>
-        <div style={{ padding: 16, background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
+        <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
           <Text size="body-sm">Collapsed content goes here.</Text>
         </div>
       </Collapse>
     );
   if (idx === 1)
     return (
-      <div style={col(12)}>
+      <div className="flex flex-col gap-3 items-start">
         <Button variant="outline" onClick={() => setVisible((v) => !v)}>
           {visible ? 'Collapse' : 'Expand'}
         </Button>
         <Collapse in={visible}>
-          <div style={{ padding: 16, background: 'var(--color-surface-container-low)', borderRadius: 'var(--shape-field)' }}>
+          <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
             <Text size="body-sm">This content collapses and expands smoothly.</Text>
           </div>
         </Collapse>
@@ -1962,20 +1935,20 @@ function StatCardExamples({ idx }: { idx: number }) {
   const [orders, setOrders] = React.useState(1284);
   if (idx === 0)
     return (
-      <div style={{ width: 240 }}>
+      <div className="w-[240px]">
         <StatCard label="Total Revenue" value="$48,295" delta="+12.5%" deltaType="increase" description="vs last month" />
       </div>
     );
   if (idx === 1)
     return (
-      <div style={row(12)}>
+      <div className="flex gap-3 flex-wrap items-center justify-center">
         <StatCard label="Users" value="2,841" delta="+8.3%" deltaType="increase" />
         <StatCard label="Churn" value="3.2%" delta="-0.4%" deltaType="decrease" />
       </div>
     );
   if (idx === 2)
     return (
-      <div style={{ ...col(12), width: 240, alignItems: 'stretch' }}>
+      <div className="flex flex-col gap-3 items-stretch w-[240px]">
         <StatCard label="Orders today" value={orders.toLocaleString('en-US')} animate />
         <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
           New orders
@@ -1998,12 +1971,12 @@ function BentoGridExamples({ idx }: { idx: number }) {
   const bars = ['40%', '65%', '50%', '80%', '72%', '90%', '60%'];
   if (idx === 0)
     return (
-      <BentoGrid style={{ width: '100%' }}>
+      <BentoGrid className="w-full">
         <BentoTile size="2x2" className="flex flex-col gap-3">
           <h3 className="text-title-sm text-[var(--color-on-surface)]">Revenue, last 7 days</h3>
-          <div role="img" aria-label={`Bar chart: ${bars.join(', ')}`} style={{ display: 'flex', flex: 1, alignItems: 'flex-end', gap: 8 }}>
+          <div role="img" aria-label={`Bar chart: ${bars.join(', ')}`} className="flex flex-1 items-end gap-2">
             {bars.map((h, i) => (
-              <div key={i} className="rounded-shape-min bg-[var(--color-primary-container)]" style={{ flex: 1, height: h }} />
+              <div key={i} className="flex-1 rounded-shape-min bg-[var(--color-primary-container)]" style={{ height: h }} />
             ))}
           </div>
         </BentoTile>
@@ -2036,14 +2009,14 @@ function ErrorSummaryDemo() {
     });
   };
   return (
-    <form noValidate onSubmit={submit} style={{ ...col(12), alignItems: 'stretch', width: 340 }}>
+    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-[340px]">
       <ErrorSummary errors={errors} />
-      <div style={{ ...col(4), alignItems: 'stretch' }}>
+      <div className="flex flex-col gap-1 items-stretch">
         <Label htmlFor="es-name">Name</Label>
         <Input name="name" {...fieldProps('es-name')} invalid={Boolean(submitted['es-name'])} />
         {submitted['es-name'] && <FormError {...errorProps('es-name')}>{submitted['es-name']}</FormError>}
       </div>
-      <div style={{ ...col(4), alignItems: 'stretch' }}>
+      <div className="flex flex-col gap-1 items-stretch">
         <Label htmlFor="es-email">Email</Label>
         <Input name="email" type="email" {...fieldProps('es-email')} invalid={Boolean(submitted['es-email'])} />
         {submitted['es-email'] && <FormError {...errorProps('es-email')}>{submitted['es-email']}</FormError>}
@@ -2056,7 +2029,7 @@ function ErrorSummaryDemo() {
 function UserCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 300 }}>
+      <div className="w-[300px]">
         <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
       </div>
     );
@@ -2066,18 +2039,18 @@ function UserCardExamples({ idx }: { idx: number }) {
 function AuthCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 360 }}>
+      <div className="w-[360px]">
         <AuthCard title="Sign in" description="Welcome back — enter your credentials to continue.">
-          <div style={col(12)}>
-            <div style={col(4)}>
+          <div className="flex flex-col gap-3 items-start">
+            <div className="flex flex-col gap-1 items-start">
               <Label htmlFor="auth-email">Email</Label>
               <Input id="auth-email" type="email" placeholder="you@company.com" />
             </div>
-            <div style={col(4)}>
+            <div className="flex flex-col gap-1 items-start">
               <Label htmlFor="auth-pass">Password</Label>
               <Input id="auth-pass" type="password" placeholder="••••••••" />
             </div>
-            <Button variant="primary" style={{ width: '100%' }}>Sign in</Button>
+            <Button variant="primary" className="w-full">Sign in</Button>
           </div>
         </AuthCard>
       </div>
@@ -2088,11 +2061,11 @@ function AuthCardExamples({ idx }: { idx: number }) {
 function FilterBarExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: '100%', maxWidth: 480 }}>
+      <div className="w-full max-w-[480px]">
         <FilterBar
           searchPlaceholder="Search users…"
           filters={
-            <div style={row(8)}>
+            <div className="flex gap-2 flex-wrap items-center justify-center">
               <Badge tone="neutral">Status: All</Badge>
               <Badge tone="neutral">Plan: All</Badge>
             </div>
@@ -2106,12 +2079,12 @@ function FilterBarExamples({ idx }: { idx: number }) {
 function SettingsSectionExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: '100%', maxWidth: 560 }}>
+      <div className="w-full max-w-[560px]">
         <SettingsSection title="Notifications" description="Control how and when you receive notifications.">
-          <div style={col(12)}>
+          <div className="flex flex-col gap-3 items-start">
             {['Email alerts', 'Push notifications'].map((item) => (
-              <div key={item} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.875rem', color: 'var(--color-on-surface)' }}>{item}</span>
+              <div key={item} className="flex items-center justify-between">
+                <span className="text-body-sm text-[var(--color-on-surface)]">{item}</span>
                 <Switch defaultChecked />
               </div>
             ))}
@@ -2125,7 +2098,7 @@ function SettingsSectionExamples({ idx }: { idx: number }) {
 function InfoListExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 280 }}>
+      <div className="w-[280px]">
         <InfoList.Root>
           <InfoList.Item label="Plan" value="Pro" />
           <InfoList.Item label="Seats" value="12 / 50" />
@@ -2140,7 +2113,7 @@ function InfoListExamples({ idx }: { idx: number }) {
 function PlanCardExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 280 }}>
+      <div className="w-[280px]">
         <PlanCard
           name="Pro"
           price="$49"
@@ -2169,7 +2142,7 @@ function StepIndicatorExamples({ idx }: { idx: number }) {
 function NotificationItemExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 340 }}>
+      <div className="w-[340px]">
         <NotificationItem title="New team member" description="Sarah joined your workspace." timestamp="2 min ago" read={false} />
         <NotificationItem title="Invoice paid" description="Invoice #1042 was paid successfully." timestamp="1 hr ago" read />
       </div>
@@ -2180,7 +2153,7 @@ function NotificationItemExamples({ idx }: { idx: number }) {
 function ActivityFeedExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: 340 }}>
+      <div className="w-[340px]">
         <ActivityFeed.Root>
           <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
           <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />
@@ -2196,7 +2169,7 @@ function ActivityFeedExamples({ idx }: { idx: number }) {
 function PromptInputExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ width: '100%', maxWidth: 520 }}>
+      <div className="w-full max-w-[520px]">
         <PromptInput placeholder="Ask anything" />
       </div>
     );
@@ -2208,7 +2181,7 @@ function PromptInputExamples({ idx }: { idx: number }) {
 function PromptInputAttachmentsDemo() {
   const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
   return (
-    <div style={{ width: '100%', maxWidth: 520 }}>
+    <div className="w-full max-w-[520px]">
       <PromptInput
         placeholder="Ask about these files"
         attachments={
@@ -2243,7 +2216,7 @@ function PromptInputStreamingDemo() {
     setStatus('idle');
   };
   return (
-    <div style={{ width: '100%', maxWidth: 520 }}>
+    <div className="w-full max-w-[520px]">
       <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
     </div>
   );
@@ -2253,7 +2226,7 @@ function ThinkingIndicatorExamples({ idx }: { idx: number }) {
   if (idx === 0) return <ThinkingIndicator />;
   if (idx === 1)
     return (
-      <div style={col(16)}>
+      <div className="flex flex-col gap-4 items-start">
         <ThinkingIndicator label="Searching 4 sources" />
         <ThinkingIndicator size="sm" />
         <ThinkingIndicator size="sm" label={null} />
@@ -2279,7 +2252,7 @@ function StreamingTextDemo() {
     return () => clearTimeout(id);
   }, [length, streaming]);
   return (
-    <div style={{ ...col(12), maxWidth: 480 }}>
+    <div className="flex flex-col gap-3 items-start max-w-[480px]">
       <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
       <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
     </div>
@@ -2289,7 +2262,7 @@ function StreamingTextDemo() {
 function MessageBubbleExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ ...col(16), alignItems: 'stretch', width: '100%', maxWidth: 560 }}>
+      <div className="flex flex-col gap-4 items-stretch w-full max-w-[560px]">
         <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
         <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
           <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
@@ -2304,7 +2277,7 @@ function MessageBubbleExamples({ idx }: { idx: number }) {
     );
   if (idx === 1)
     return (
-      <div style={{ width: '100%', maxWidth: 560 }}>
+      <div className="w-full max-w-[560px]">
         <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
           Can I get a refund for last month?
         </MessageBubble>
@@ -2322,7 +2295,7 @@ const CITATION_SOURCES: CitationSource[] = [
 function CitationExamples({ idx }: { idx: number }) {
   if (idx === 0)
     return (
-      <div style={{ ...col(16), alignItems: 'stretch', maxWidth: 560 }}>
+      <div className="flex flex-col gap-4 items-stretch max-w-[560px]">
         <p>
           Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
           part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas
@@ -2375,7 +2348,7 @@ function ConversationDemo() {
 
   return (
     <Conversation
-      style={{ height: 420, width: '100%' }}
+      className="h-[420px] w-full"
       composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
     >
       {messages.map((msg) =>

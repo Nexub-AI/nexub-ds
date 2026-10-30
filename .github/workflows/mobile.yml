@@ -81,7 +81,12 @@ jobs:
           xcrun simctl install "$UDID" apps/mobile/ios/build/Build/Products/Release-iphonesimulator/NexubMobile.app
 
       - name: Maestro flows
-        run: maestro test apps/mobile/.maestro --test-output-dir maestro-out
+        run: maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; exit 1; }
+
+      # One screenshot per docs preview example (<slug>--<example>--ios.png),
+      # generated from apps/mobile/preview-manifest.json.
+      - name: Maestro preview screenshots
+        run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
       - name: Upload screenshots
         if: always()
@@ -90,6 +95,7 @@ jobs:
           name: maestro-ios
           path: |
             maestro-out
+            maestro-previews-out
             *.png
           retention-days: 14
 
@@ -150,7 +156,8 @@ jobs:
           disable-animations: true
           script: |
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
-            maestro test apps/mobile/.maestro --test-output-dir maestro-out
+            maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
+            maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
 
       - name: Upload screenshots
         if: always()
@@ -159,5 +166,6 @@ jobs:
           name: maestro-android
           path: |
             maestro-out
+            maestro-previews-out
             *.png
           retention-days: 14

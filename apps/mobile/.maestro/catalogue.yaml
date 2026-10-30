@@ -3,6 +3,9 @@
 # a row left at the bottom edge sits under Android's gesture bar. Taps retry if
 # the screen didn't change (a tap that only stops scroll momentum on iOS).
 # List rows are one accessible element ("Title, subtitle"), so match by prefix.
+# Toasts, dialogs and sheets spring in, so wait for them rather than assert
+# at the instant of the tap (iOS simulators run the animation; CI Android
+# emulators have system animations off).
 appId: ai.nexub.mobile
 ---
 # CI installs a fresh build, so no clearState (it reinstalls on iOS and can hang).
@@ -84,12 +87,16 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Show toast"
     retryTapIfNoChange: true
-- assertVisible: "Recipient saved"
+- extendedWaitUntil:
+    visible: "Recipient saved"
+    timeout: 5000
 - takeScreenshot: 05-feedback
 - tapOn:
     text: "Open dialog"
     retryTapIfNoChange: true
-- assertVisible: "Cancel this transfer?"
+- extendedWaitUntil:
+    visible: "Cancel this transfer?"
+    timeout: 5000
 - tapOn:
     text: "Keep it"
     retryTapIfNoChange: true
@@ -108,7 +115,9 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Open sheet"
     retryTapIfNoChange: true
-- assertVisible: "Transfer details"
+- extendedWaitUntil:
+    visible: "Transfer details"
+    timeout: 5000
 - takeScreenshot: 06-sheet
 - tapOn:
     text: "Confirm and send"
@@ -120,7 +129,9 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Show Balance"
     retryTapIfNoChange: true
-- assertVisible: ".*12,480.50"
+- extendedWaitUntil:
+    visible: ".*12,480.50"
+    timeout: 5000
 - takeScreenshot: 07-mobile
 - runFlow: subflows/back.yaml
 
