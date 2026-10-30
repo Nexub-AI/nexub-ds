@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { DoDont, PageIntro, Prose, Section } from '@/components/kit';
 
 export const dynamic = 'force-static';
 
@@ -6,8 +7,6 @@ export const metadata: Metadata = {
   title: 'Principles',
   description: 'Calm Depth: the six principles behind the Nexub design language.',
 };
-
-const eyebrow = { fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: '0.5rem' };
 
 const principles = [
   {
@@ -51,32 +50,24 @@ const principles = [
 export default function PrinciplesPage() {
   return (
     <div className="docs-prose">
-      <p style={eyebrow}>Foundations</p>
-      <h1>Principles</h1>
-      <p>
-        <strong>Calm Depth</strong>: calm, tonal surfaces for content; a thin layer of adaptive glass for
-        the controls that float above it; motion that feels physical; colour only where it means something.
-        It borrows Material 3’s structure, Apple’s restraint and material, and Wise’s clarity, and copies none of them.
-      </p>
-      <p>These six principles are the tie-breakers in every design and code review.</p>
+      <PageIntro
+        eyebrow="Foundations"
+        title="Principles"
+        lead={
+          <>
+            <strong>Calm Depth</strong>: calm, tonal surfaces for content; a thin layer of adaptive glass for the
+            controls that float above it; motion that feels physical; colour only where it means something. It borrows
+            Material 3’s structure, Apple’s restraint and material, and Wise’s clarity, and copies none of them.
+          </>
+        }
+      >
+        <Prose>These six principles are the tie-breakers in every design and code review, on web and on mobile.</Prose>
+      </PageIntro>
 
       {principles.map((p, i) => (
-        <section key={p.title}>
-          <h2>
-            {i + 1}. {p.title}
-          </h2>
-          <p>{p.body}</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, margin: '0 0 1.5rem' }}>
-            <div className="rounded-[16px] py-3 px-4 bg-[var(--color-success-container)] text-[var(--color-on-success-container)]">
-              <strong>Do</strong>
-              <p style={{ margin: '4px 0 0' }}>{p.do}</p>
-            </div>
-            <div className="rounded-[16px] py-3 px-4 bg-[var(--color-error-container)] text-[var(--color-on-error-container)]">
-              <strong>Don’t</strong>
-              <p style={{ margin: '4px 0 0' }}>{p.dont}</p>
-            </div>
-          </div>
-        </section>
+        <Section key={p.title} title={`${i + 1}. ${p.title}`} description={p.body}>
+          <DoDont good={p.do} bad={p.dont} />
+        </Section>
       ))}
     </div>
   );

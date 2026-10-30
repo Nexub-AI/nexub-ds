@@ -207,3 +207,91 @@ export function CardGrid({ children, min = 240 }: { children: React.ReactNode; m
     </div>
   );
 }
+
+/* ── Lists ──────────────────────────────────────────────────────────────────── */
+
+/** Bulleted (or numbered) list at the docs reading size. */
+export function List({ items, ordered = false }: { items: React.ReactNode[]; ordered?: boolean }) {
+  const Tag = ordered ? 'ol' : 'ul';
+  return (
+    <Tag
+      className={
+        (ordered ? 'list-decimal' : 'list-disc') +
+        ' m-0 flex max-w-[72ch] flex-col gap-2 ps-6 marker:text-[var(--color-on-surface-muted)]'
+      }
+    >
+      {items.map((item, i) => (
+        <li key={i} className="ps-1">
+          <Text className="text-[var(--color-on-surface-variant)] [&_strong]:text-[var(--color-on-surface)]">{item}</Text>
+        </li>
+      ))}
+    </Tag>
+  );
+}
+
+/* ── Do / Don't pair ────────────────────────────────────────────────────────── */
+
+/** One right and one wrong example side by side, e.g. a piece of UI copy. */
+export function DoDont({
+  title,
+  description,
+  good,
+  bad,
+}: {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  good: React.ReactNode;
+  bad: React.ReactNode;
+}) {
+  return (
+    <Card className="overflow-hidden p-0">
+      {(title || description) && (
+        <div className="flex flex-col gap-1 border-b border-[var(--color-outline-variant)] px-5 py-4">
+          {title && (
+            <Text weight="semibold" className="text-[var(--color-on-surface)]">
+              {title}
+            </Text>
+          )}
+          {description && (
+            <Text size="body-sm" tone="secondary">
+              {description}
+            </Text>
+          )}
+        </div>
+      )}
+      <div className="grid sm:grid-cols-2">
+        <DoDontCell tone="success" label="Do">
+          {good}
+        </DoDontCell>
+        <DoDontCell tone="danger" label="Don't">
+          {bad}
+        </DoDontCell>
+      </div>
+    </Card>
+  );
+}
+
+function DoDontCell({ tone, label, children }: { tone: 'success' | 'danger'; label: string; children: React.ReactNode }) {
+  const Icon = tone === 'success' ? Check : X;
+  return (
+    <div
+      className={
+        'flex flex-col gap-2 px-5 py-4' +
+        (tone === 'success' ? ' border-[var(--color-outline-variant)] max-sm:border-b sm:border-e' : '')
+      }
+    >
+      <Badge
+        tone={tone}
+        variant="soft"
+        size="sm"
+        leadingIcon={<Icon size={11} strokeWidth={3} aria-hidden="true" />}
+        className="self-start"
+      >
+        {label}
+      </Badge>
+      <Text size="body-sm" className="text-[var(--color-on-surface)]">
+        {children}
+      </Text>
+    </div>
+  );
+}

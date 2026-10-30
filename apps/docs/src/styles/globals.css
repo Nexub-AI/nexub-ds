@@ -107,6 +107,28 @@ body {
    * while wide blocks (Playground, Matrix, examples, code) still go edge-to-edge. */
   max-width: 75ch;
 }
+/* Busy backdrop for the Materials glass demo. */
+.docs-glass-backdrop {
+  background:
+    radial-gradient(circle at 18% 30%, #4099f1 0 20%, transparent 21%),
+    radial-gradient(circle at 72% 40%, #f59e0b 0 16%, transparent 17%),
+    radial-gradient(circle at 45% 85%, #8b5cf6 0 22%, transparent 23%),
+    light-dark(#eceef4, #1b1d24);
+}
+
+/* Tailwind's preflight strips list markers; raw prose lists get them back. */
+.docs-prose :is(ul, ol):not([class]) {
+  margin: 0 0 1rem;
+  padding-inline-start: 1.5rem;
+  max-width: 72ch;
+  color: var(--color-on-surface-variant);
+  font-size: var(--type-body-lg-size);
+  line-height: 1.7;
+}
+.docs-prose ul:not([class]) { list-style: disc; }
+.docs-prose ol:not([class]) { list-style: decimal; }
+.docs-prose :is(ul, ol):not([class]) > li { margin-bottom: 0.25rem; }
+.docs-prose :is(ul, ol):not([class]) ::marker { color: var(--color-on-surface-muted); }
 .docs-prose a:not([class]) {
   color: var(--color-primary);
   text-decoration: underline;

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro, Prose, Section } from '@/components/kit';
 
 export const dynamic = 'force-static';
 
@@ -7,9 +8,8 @@ export const metadata: Metadata = {
   description: 'Color roles generated from tonal palettes, light-dark aware, with contrast levels.',
 };
 
-const eyebrow = { fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' as const, marginBottom: '0.5rem' };
-const mono = { fontFamily: 'var(--font-family-mono)', fontSize: '0.72rem' };
-const grid = (min: number) => ({ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${min}px, 1fr))`, gap: 8, marginBottom: '2rem' });
+const mono = 'font-mono text-label-sm';
+const grid = 'grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-2';
 
 const surfaces = [
   'surface-dim',
@@ -31,11 +31,11 @@ const series = (prefix: string, n: number) => Array.from({ length: n }, (_, i) =
 /** A strip of chart colours, read straight from the CSS vars. */
 function Ramp({ keys }: { keys: string[] }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${keys.length}, 1fr)`, gap: 4, marginBottom: '1rem' }}>
+    <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${keys.length}, 1fr)` }}>
       {keys.map((k) => (
         <div key={k} title={`--color-chart-${k}`}>
-          <div style={{ height: 36, borderRadius: 8, background: `var(--color-chart-${k})` }} />
-          <div style={{ ...mono, textAlign: 'center', marginTop: 4 }}>{k}</div>
+          <div className="h-9 rounded-shape-tooltip" style={{ background: `var(--color-chart-${k})` }} />
+          <div className={mono + ' mt-1 text-center'}>{k}</div>
         </div>
       ))}
     </div>
@@ -45,9 +45,12 @@ function Ramp({ keys }: { keys: string[] }) {
 /** A role with its on-role text, so the swatch shows the real pairing. */
 function Pair({ bg, fg, label }: { bg: string; fg: string; label: string }) {
   return (
-    <div style={{ borderRadius: 12, padding: '12px 14px', background: `var(--color-${bg})`, color: `var(--color-${fg})`, border: '1px solid var(--color-outline-variant)' }}>
+    <div
+      className="rounded-shape-field border border-[var(--color-outline-variant)] px-3.5 py-3"
+      style={{ background: `var(--color-${bg})`, color: `var(--color-${fg})` }}
+    >
       <div className="font-semibold">{label}</div>
-      <div style={{ ...mono, opacity: 0.9 }}>--color-{bg}</div>
+      <div className={mono + ' opacity-90'}>--color-{bg}</div>
     </div>
   );
 }
@@ -55,15 +58,19 @@ function Pair({ bg, fg, label }: { bg: string; fg: string; label: string }) {
 export default function ColorsPage() {
   return (
     <div className="docs-prose">
-      <p style={eyebrow}>Foundations</p>
-      <h1>Colors</h1>
-      <p>
-        Colors are <strong>roles</strong>, not swatches. Each role is a tone of a tonal palette generated
+      <PageIntro
+        eyebrow="Foundations"
+        title="Colors"
+        lead={
+          <>
+            Colors are <strong>roles</strong>, not swatches. Each role is a tone of a tonal palette generated
         (in HCT) from a seed color, so contrast is arithmetic: a tone gap of 50 guarantees 4.5:1. Every role
         is a <code>light-dark()</code> value, so it follows <code>data-theme</code> at any depth with no
         separate dark stylesheet. A build-time test checks every role pair against WCAG 2.2 AA in light,
-        dark, medium and high contrast, for every brand.
-      </p>
+        dark, medium and high contrast, for every brand. React Native gets the same roles, resolved to hex per scheme and contrast level, from <code>@nexub/tokens/native</code>.
+          </>
+        }
+      />
       <pre><code>{`background: var(--color-surface-container-low);
 color: var(--color-on-surface);
 /* Tailwind: bg-surface-container-low text-on-surface */`}</code></pre>
@@ -73,7 +80,7 @@ color: var(--color-on-surface);
         In-flow content steps through the container tiers; floating layers (menus, dialogs) use{' '}
         <code>surface-elevated</code>, which is lighter than the page in dark mode.
       </p>
-      <div style={grid(180)}>
+      <div className={grid}>
         {surfaces.map((s) => (
           <Pair key={s} bg={s} fg={s === 'inverse-surface' ? 'inverse-on-surface' : 'on-surface'} label={s.replace('surface-', '').replace('-', ' ')} />
         ))}
@@ -86,14 +93,14 @@ color: var(--color-on-surface);
         remap <strong>tertiary</strong>.
       </p>
       {accents.map((a) => (
-        <div key={a} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+        <div key={a} className="mb-2 grid grid-cols-2 gap-2">
           <Pair bg={a} fg={`on-${a}`} label={a} />
           <Pair bg={`${a}-container`} fg={`on-${a}-container`} label={`${a} container`} />
         </div>
       ))}
 
       <h2>Text and outlines</h2>
-      <div className="grid gap-1.5 mb-8">
+      <div className="mb-8 grid gap-1.5">
         {[
           ['on-surface', 'Primary text'],
           ['on-surface-variant', 'Secondary text'],
@@ -101,17 +108,17 @@ color: var(--color-on-surface);
           ['primary', 'Links'],
         ].map(([role, label]) => (
           <div key={role} className="flex gap-3 items-baseline">
-            <span style={{ color: `var(--color-${role})`, minWidth: 320 }}>{label}</span>
-            <code style={mono}>--color-{role}</code>
+            <span className="min-w-0 sm:min-w-[320px]" style={{ color: `var(--color-${role})` }}>{label}</span>
+            <code className={mono}>--color-{role}</code>
           </div>
         ))}
         <div className="flex gap-3 items-center">
           <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline)]" />
-          <code style={mono}>--color-outline (≥ 3:1, field borders, focus)</code>
+          <code className={mono}>--color-outline (≥ 3:1, field borders, focus)</code>
         </div>
         <div className="flex gap-3 items-center">
           <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline-variant)]" />
-          <code style={mono}>--color-outline-variant (hairlines, dividers)</code>
+          <code className={mono}>--color-outline-variant (hairlines, dividers)</code>
         </div>
       </div>
 
@@ -124,7 +131,7 @@ color: var(--color-on-surface);
         between the other two, for users who want more separation without the starkness of high.
       </p>
       <pre><code>{`<html data-contrast="medium">   <!-- standard | medium | high -->`}</code></pre>
-      <div style={grid(180)}>
+      <div className={grid}>
         {(['standard', 'medium', 'high'] as const).map((level) => (
           <div key={level} data-contrast={level} className="grid gap-2 p-3 rounded-[16px] bg-[var(--color-surface)]">
             <Pair bg="primary" fg="on-primary" label={`primary (${level})`} />
@@ -175,10 +182,10 @@ color: var(--color-on-surface);
       </p>
       {palettes.map((p) => (
         <div key={p} className="mb-1.5">
-          <code style={mono}>{p}</code>
-          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${tones.length}, 1fr)`, borderRadius: 8, overflow: 'hidden' }}>
+          <code className={mono}>{p}</code>
+          <div className="grid overflow-hidden rounded-shape-tooltip" style={{ gridTemplateColumns: `repeat(${tones.length}, 1fr)` }}>
             {tones.map((t) => (
-              <div key={t} title={`--color-palette-${p}-${t}`} style={{ height: 28, background: `var(--color-palette-${p}-${t})` }} />
+              <div key={t} title={`--color-palette-${p}-${t}`} className="h-7" style={{ background: `var(--color-palette-${p}-${t})` }} />
             ))}
           </div>
         </div>
