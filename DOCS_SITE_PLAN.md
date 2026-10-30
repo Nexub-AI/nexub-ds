@@ -1,6 +1,6 @@
 # Docs site, platform previews and motion: findings and plan (2026-10-30)
 
-Status: **proposal, awaiting approval.** Nothing is built yet.
+Status: **approved 2026-10-30 (all recommendations); built and shipping in 2.2.0.** See §6.
 
 Ask (Sasi, 2026-10-30):
 1. Rebuild nexub.design on the Nexub design system itself. The React Native page, the usage guidelines and the site chrome don't match it.
@@ -175,3 +175,22 @@ Changesets → `development` → `staging` → `production` → Version PR → n
 | Rebuilding the docs shell regresses SEO or links | Keep every URL; redirect test over the sitemap |
 | Motion overuse | One spring family per purpose (tokens), exit faster than enter, reduce motion designed in, reviewed on the gallery page |
 | Cloudflare quota is not the real cause of F1 | P1 cuts requests by ~5× whatever the cause; the nav test proves the client side |
+
+---
+
+## 6. Results (2026-10-30)
+
+| Phase | Delivered | Where |
+|---|---|---|
+| P1 | Prefetch on intent (`DocsLink`), `/*.txt` kept off the Pages Function, nav test. One page view: 215 → 34 requests (4 non-asset). | Hotfix #153 → production (live) |
+| P2 | Docs shell on `Sidebar` + `Collapsible` + `Drawer`, `TopNav`, `SegmentedControl`, `CommandPalette`; page kit (`PageIntro`, `Section`, `DocTable`, `Guidance`, `Note`, `CardGrid`, `PageSkeleton`); every page rebuilt; inline styles 547 → 26, guarded by `test/inline-styles.test.ts`. | 2.2.0 |
+| P3 | Web · iOS & Android switch on component and pattern pages; live `@nexub/react-native` previews (Expo web export at `/m`) in an iPhone/Pixel frame that follows theme and brand; differences tables; native props generated from source (`scripts/native-props.mjs`, CI check); 19 mobile-only pages; preview slugs typed against the mobile manifest. | 2.2.0 |
+| P4 | 8 page templates in `@nexub/patterns` paired with native screens, native `HomeScreen`, `/patterns/pages/*` with a browser frame at real widths, `/examples` with web and mobile dashboards. | 2.2.0 |
+| P5 | Web: springs for Fade/Slide/Scale/Collapse, Drawer motion, `nx-stagger`, `ListTransition`, `SkeletonSwap`, `usePrefersReducedMotion`. Native: `nxEnter`/`nxExit`/`nxLayout`/`nxSpring`, applied to Toast, Banner, list rows, swipe, Chip, SegmentedControl, Skeleton, `Amount animate`. Docs Motion gallery with curves from tokens, replay, slow motion and a reduced-motion preview. | 2.2.0 |
+
+Decisions while building:
+- **Q1:** live frames ship now. Per-example iOS/Android screenshots are captured by the new Maestro preview flow as CI artifacts; committing them as docs images and baselines is a follow-up.
+- `/frame/*` (page templates) is framed like `/m/*`: same origin only, via `_headers` and the middleware.
+- Docs screenshots mask live frames (`[data-live-preview]`) and wait for network idle; stable over six runs in the CI image.
+
+Follow-ups: Maestro screenshot baselines; native `SkeletonSwap` twin; `Amount animate` by default once it can live inside text.
