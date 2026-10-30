@@ -10,6 +10,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, {
+  FadeInDown,
+  FadeOutDown,
   ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
@@ -155,10 +157,12 @@ export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps
     <ToastCtx.Provider value={show}>
       {children}
       {toast && (
+        // Reanimated's stock fade, as in 2.1.0. With the nxEnter/nxExit presets
+        // (spring or timed) iOS UI tests never found the toast on screen.
         <Animated.View
           key={toast.id}
-          entering={nxEnter('up')}
-          exiting={nxExit('down')}
+          entering={FadeInDown}
+          exiting={FadeOutDown}
           pointerEvents="box-none"
           style={{
             position: 'absolute',

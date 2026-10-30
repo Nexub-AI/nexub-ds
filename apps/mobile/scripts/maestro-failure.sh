@@ -3,7 +3,7 @@
 # failing command and Maestro's own error are readable without the artifact.
 # $1: the --test-output-dir of the failed run.
 echo '::group::Maestro failed command'
-for f in "$1"/commands-*.json; do
+for f in $(find "$1" -name "commands-*.json" 2>/dev/null); do
   [ -f "$f" ] || continue
   python3 - "$f" <<'PY'
 import json, sys
