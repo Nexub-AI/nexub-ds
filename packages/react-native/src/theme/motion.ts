@@ -54,11 +54,11 @@ export function springSettleMs({ stiffness, damping, mass }: { stiffness: number
   return 3000;
 }
 
-// Enter, exit and layout run as timed animations lasting the spring token's
-// settle time, on the system decelerate / accelerate curves. Reanimated's
-// physics-spring layout animations (`springify()` with stiffness/damping)
-// left entering views invisible on iOS, so they aren't used here; withSpring
-// (nxSpring) is unaffected.
+// Enter and exit run as timed animations lasting the spring token's settle
+// time, on the system decelerate / accelerate curves: Reanimated's
+// physics-spring entering animations (`springify()` with stiffness/damping)
+// left entering views invisible on iOS. Layout transitions move views that are
+// already visible, so they keep the physics spring.
 const decelerate = Easing.bezier(0, 0, 0.2, 1);
 const accelerate = Easing.bezier(0.4, 0, 1, 1);
 
@@ -94,9 +94,12 @@ export function nxExit(kind: ExitKind = 'fade', speed: SpringSpeed = 'fast', rtl
     .reduceMotion(ReduceMotion.System);
 }
 
-/** `layout` transition: siblings glide into place, timed to the spatial spring. */
+/** `layout` transition: siblings glide to their new place on the spatial spring. */
 export function nxLayout(speed: SpringSpeed = 'default') {
-  return LinearTransition.duration(springSettleMs(native.motion.spring.spatial[speed]))
-    .easing(decelerate)
+  const s = native.motion.spring.spatial[speed];
+  return LinearTransition.springify()
+    .stiffness(s.stiffness)
+    .damping(s.damping)
+    .mass(s.mass)
     .reduceMotion(ReduceMotion.System);
 }

@@ -69,10 +69,11 @@ describe('motion presets ride the spring tokens', () => {
     expect(rec(nxExit('end')).__name).toBe('SlideOutRight');
   });
 
-  it('layout is timed to the spatial spring', () => {
+  it('layout rides the spatial spring', () => {
     const b = rec(nxLayout());
+    const s = native.motion.spring.spatial.default;
     expect(b.__name).toBe('LinearTransition');
-    expect(b.__config).toMatchObject({ duration: springSettleMs(native.motion.spring.spatial.default), reduceMotion: 'system' });
+    expect(b.__config).toMatchObject({ springify: true, stiffness: s.stiffness, damping: s.damping, mass: s.mass, reduceMotion: 'system' });
   });
 
   it('every spring is at most critically damped for effects (no overshoot)', () => {
