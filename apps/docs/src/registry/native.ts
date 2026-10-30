@@ -346,3 +346,85 @@ export const mobileOnly: MobileOnlyEntry[] = [
 export function getMobileOnly(slug: string) {
   return mobileOnly.find((m) => m.slug === slug);
 }
+
+/** Web pattern (docs slug) → the native screen that does the same job. */
+export const nativePatternTwins: Record<string, NativeTwin> = {
+  'activity-feed': {
+    name: 'ActivityList',
+    preview: 'pattern/activity',
+    differences: [
+      { aspect: 'Row actions', web: 'Buttons or a menu on each row.', mobile: 'Swipe actions (also accessibility actions) via `actions`.' },
+      { aspect: 'Loading more', web: 'Pagination or a "Load more" button.', mobile: 'Pull to refresh (`onRefresh`) and `onEndReached` for infinite scroll.' },
+    ],
+    code: `import { ActivityList } from '@nexub/react-native/patterns';
+
+<ActivityList transactions={txs} onPress={openTx} onRefresh={refetch} refreshing={loading} />`,
+  },
+  'auth-card': {
+    name: 'SignInScreen',
+    preview: 'pattern/sign-in',
+    differences: [
+      { aspect: 'Layout', web: 'A centred card on a page.', mobile: 'A full screen with the action pinned above the keyboard.' },
+      { aspect: 'Biometrics', web: 'Passkeys through the browser.', mobile: '`onBiometric` + `biometricLabel` for Face ID or fingerprint.' },
+    ],
+    code: `import { SignInScreen } from '@nexub/react-native/patterns';
+
+<SignInScreen onSubmit={signIn} onBiometric={unlock} biometricLabel="Sign in with Face ID" error={error} />`,
+  },
+  conversation: {
+    name: 'ChatScreen',
+    preview: 'pattern/chat',
+    differences: [{ aspect: 'Composer', web: 'PromptInput with attachments and shortcuts.', mobile: 'Composer pinned above the keyboard; send on the return key.' }],
+    code: `import { ChatScreen } from '@nexub/react-native/patterns';
+
+<ChatScreen messages={messages} onSend={send} thinking={streaming} />`,
+  },
+  'plan-card': {
+    name: 'PaywallScreen',
+    preview: 'pattern/paywall',
+    differences: [{ aspect: 'Scope', web: 'One PlanCard per plan, laid out by you.', mobile: 'The whole paywall: plans, subscribe, restore purchases, terms (App Store rules).' }],
+    code: `import { PaywallScreen } from '@nexub/react-native/patterns';
+
+<PaywallScreen title="Payub Plus" plans={plans} onSubscribe={buy} onRestore={restore} />`,
+  },
+  'settings-section': {
+    name: 'SettingsScreen',
+    preview: 'pattern/settings',
+    differences: [{ aspect: 'Rows', web: 'SettingsSection rows with controls.', mobile: 'Inset-grouped ListSections of ListItems, like iOS Settings.' }],
+    code: `import { SettingsScreen } from '@nexub/react-native/patterns';
+
+<SettingsScreen groups={[{ header: 'Security', items: [{ title: 'Face ID', variant: 'switch', checked: faceId, onCheckedChange: setFaceId }] }]} />`,
+  },
+  'list-detail': {
+    name: 'ActivityList + TransactionDetail',
+    preview: 'pattern/transaction',
+    differences: [{ aspect: 'Layout', web: 'List and detail side by side; stacks on narrow screens.', mobile: 'The list pushes the detail screen onto the navigation stack.' }],
+    code: `import { TransactionDetail } from '@nexub/react-native/patterns';
+
+<TransactionDetail transaction={tx} actions={<Button variant="tonal">Split bill</Button>} />`,
+  },
+  'notification-item': {
+    name: 'NotificationsInbox',
+    preview: 'pattern/notifications',
+    differences: [{ aspect: 'Scope', web: 'One NotificationItem; lay out the list yourself.', mobile: 'The whole inbox with "Mark all read".' }],
+    code: `import { NotificationsInbox } from '@nexub/react-native/patterns';
+
+<NotificationsInbox notifications={items} onPress={open} onMarkAllRead={markAll} />`,
+  },
+  'user-card': {
+    name: 'ProfileHeader',
+    preview: 'pattern/settings',
+    differences: [{ aspect: 'Use', web: 'A card in a grid or list.', mobile: 'The header row at the top of Settings or a profile screen.' }],
+    code: `import { ProfileHeader } from '@nexub/react-native/patterns';
+
+<ProfileHeader name="Sasi" detail="sasi@nexub.ai" onPress={editProfile} />`,
+  },
+  'step-indicator': {
+    name: 'FlowStep',
+    preview: 'pattern/send',
+    differences: [{ aspect: 'Progress', web: 'Numbered steps you can see at once.', mobile: 'One step per screen with "Step 2 of 3" and the action in the footer.' }],
+    code: `import { FlowStep } from '@nexub/react-native/patterns';
+
+<FlowStep step={2} total={3} title="Review" footer={<Button size="lg">Send</Button>}>…</FlowStep>`,
+  },
+};
