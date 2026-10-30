@@ -172,6 +172,20 @@ StyleDictionary.registerFormat({
     add('ease', t.transitionTimingFunction);
     add('transition-duration', t.transitionDuration); // v4's duration-* reads --transition-duration-*
     add('animate', t.animation);
+    // Tailwind v4's max-w-sm … max-w-2xl read var(--container-*), and the Nexub layout
+    // tokens use the same names (--container-sm: 640px …), so v4 would widen them.
+    // Pin Tailwind's own scale (v3's maxWidth) inline; max-w-container-* stay the tokens.
+    const twContainer = { sm: '24rem', md: '28rem', lg: '32rem', xl: '36rem', '2xl': '42rem' };
+    for (const token of dictionary.allTokens) {
+      const [ns, ...rest] = token.path;
+      const key = rest.join('-');
+      if (ns === 'container' && twContainer[key]) lines.push(`  --container-${key}: ${twContainer[key]};`);
+    }
+    // Tailwind v4's text-xs … text-4xl use unitless line-heights (1.25rem → calc(1.25 / .875)),
+    // which children with another font size inherit as a ratio; v3 used lengths. Components
+    // nested in text-sm (badges in tables, lists) would shrink, so keep v3's lengths.
+    const twLeading = { xs: '1rem', sm: '1.25rem', base: '1.5rem', lg: '1.75rem', xl: '1.75rem', '2xl': '2rem', '3xl': '2.25rem', '4xl': '2.5rem' };
+    for (const [k, v] of Object.entries(twLeading)) lines.push(`  --text-${k}--line-height: ${v};`);
     for (const [name, frames] of Object.entries(t.keyframes)) {
       lines.push(`  @keyframes ${name} {`);
       for (const [at, decl] of Object.entries(frames)) {

@@ -1,16 +1,33 @@
-@import '@nexub/themes/base';
-@import '@nexub/themes/light';
-@import '@nexub/themes/dark';
-@import '@nexub/themes/glass';
-@import '@nexub/themes/leap';
-@import '@nexub/themes/bookub';
-@import '@nexub/themes/payub';
-@import '@nexub/themes/founderub';
+/* Tailwind v4, layered so the cascade matches the v3 build this replaced:
+   theme CSS → preflight → utilities → the docs rules below (which v3 emitted
+   after the utilities, unlayered). The @nexub/themes files go in the base
+   layer *before* preflight, exactly where v3 put them, so preflight still
+   resets their element styles (a, h1–h6, code, img) and utilities still win. */
+@layer theme, base, components, utilities;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import '@nexub/themes/base' layer(base);
+@import '@nexub/themes/light' layer(base);
+@import '@nexub/themes/dark' layer(base);
+@import '@nexub/themes/glass' layer(base);
+@import '@nexub/themes/leap' layer(base);
+@import '@nexub/themes/bookub' layer(base);
+@import '@nexub/themes/payub' layer(base);
+@import '@nexub/themes/founderub' layer(base);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+/* Nexub token utilities (bg-primary, rounded-shape-*, text-label-md, …):
+   the v4 counterpart of the @nexub/tokens/tailwind preset. */
+@import '@nexub/tokens/tailwind.css';
+@import './tailwind-v3-compat.css';
 
+/* Same class sources as the v3 `content` globs. */
+@source '../**/*.{ts,tsx}';
+@source '../../../../packages/react/src/**/*.{ts,tsx}';
+@source '../../../../packages/patterns/src/**/*.{ts,tsx}';
+
+
+@layer utilities {
 /* ── Kit headings (Heading + fluid docs sizes) ─────────────────────────────── */
 .docs-title { font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.015em; font-family: var(--font-family-display); }
 .docs-h2 { font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem); line-height: 1.25; letter-spacing: -0.01em; font-family: var(--font-family-display); }
@@ -519,3 +536,4 @@ html, body {
 .docs-reduce-motion .nx-lift:active,
 .docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
 .docs-reduce-motion .docs-spring-dot { animation: none; inset-inline-start: calc(100% - 36px); }
+} /* @layer utilities */

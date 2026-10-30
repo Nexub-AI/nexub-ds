@@ -1,21 +1,34 @@
 /* Storybook canvas styling for @nexub/react.
-   Mirrors the docs app pipeline: design-system theme CSS (tokens) first,
-   then Tailwind layers so component utility classes resolve. */
-@import '@nexub/themes/base';
-@import '@nexub/themes/light';
-@import '@nexub/themes/dark';
-@import '@nexub/themes/glass';
-@import '@nexub/themes/leap';
-@import '@nexub/themes/bookub';
-@import '@nexub/themes/payub';
-@import '@nexub/themes/founderub';
+   Mirrors the docs app pipeline (apps/docs/src/styles/globals.css): Tailwind v4,
+   layered so the cascade matches the v3 build — design-system theme CSS
+   (tokens) first, then preflight, then the component utility classes. */
+@layer theme, base, components, utilities;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import '@nexub/themes/base' layer(base);
+@import '@nexub/themes/light' layer(base);
+@import '@nexub/themes/dark' layer(base);
+@import '@nexub/themes/glass' layer(base);
+@import '@nexub/themes/leap' layer(base);
+@import '@nexub/themes/bookub' layer(base);
+@import '@nexub/themes/payub' layer(base);
+@import '@nexub/themes/founderub' layer(base);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+/* Nexub token utilities: the v4 counterpart of the @nexub/tokens/tailwind preset. */
+@import '@nexub/tokens/tailwind.css';
+@import './tailwind-v3-compat.css';
 
-body {
-  background: var(--color-bg-default);
-  color: var(--color-text-primary);
-  font-family: var(--font-family-sans);
+/* Same class sources as the v3 `content` globs. */
+@source '../src/**/*.{ts,tsx}';
+@source './**/*.{ts,tsx}';
+@source '../../patterns/src/**/*.{ts,tsx}';
+
+/* v3 emitted this after the utilities, unlayered. */
+@layer utilities {
+  body {
+    background: var(--color-bg-default);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-sans);
+  }
 }
