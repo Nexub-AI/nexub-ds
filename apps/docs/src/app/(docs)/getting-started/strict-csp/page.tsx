@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
@@ -8,10 +9,7 @@ export const metadata: Metadata = { title: 'Strict CSP' };
 export default function StrictCspPage() {
   return (
     <div className="docs-prose">
-      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">
-        Getting Started
-      </p>
-      <h1>Strict CSP</h1>
+      <PageIntro eyebrow="Getting Started" title="Strict CSP" />
       <p>
         Nexub DS works under a strict Content-Security-Policy with no <code>&apos;unsafe-inline&apos;</code>,
         hashes or nonces:

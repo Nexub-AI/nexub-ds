@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Badge } from '@nexub/react';
 import type { MatrixDef } from '@/registry/types';
 import { renderPlayground, hasPlaygroundRenderer } from './PlaygroundRegistry';
 
@@ -17,7 +18,7 @@ export function VariantMatrix({ slug, def }: Props) {
 
   return (
     <div
-      className="border border-[var(--color-outline-variant)] rounded-shape-container overflow-hidden mb-6 bg-[var(--color-surface)]"
+      className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]"
     >
       <div
         className="py-2 px-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] flex items-center justify-between gap-3"
@@ -29,35 +30,22 @@ export function VariantMatrix({ slug, def }: Props) {
           <span className="font-mono">{rowsProp}</span> /{' '}
           <span className="font-mono">{colsProp}</span>
         </span>
-        <span
-          className="text-[0.7rem] text-[var(--color-outline)] font-mono"
-        >
+        <Badge size="sm" variant="outline" className="font-mono">
           {rows.length} × {cols.length}
-        </span>
+        </Badge>
       </div>
 
       <div className="docs-matrix-scroll">
-        <table
-          className="docs-matrix-table"
-          style={{
-            borderCollapse: 'separate',
-            borderSpacing: 0,
-            width: '100%',
-            fontSize: '0.78rem',
-            fontFamily: 'var(--font-family-sans)',
-          }}
-        >
+        <table className="docs-matrix-table w-full border-separate border-spacing-0 font-sans text-label-md">
           <thead>
             <tr>
-              <th style={cornerStyle}>
-                <span
-                  className="font-mono text-[var(--color-outline)] font-semibold"
-                >
+              <th className={cornerClass}>
+                <span className="font-mono font-semibold text-[var(--color-on-surface-muted)]">
                   {rowsProp} ↓ / {colsProp} →
                 </span>
               </th>
               {cols.map((c) => (
-                <th key={c} style={headStyle}>
+                <th key={c} className={headClass}>
                   <span className="font-mono">{c}</span>
                 </th>
               ))}
@@ -66,7 +54,7 @@ export function VariantMatrix({ slug, def }: Props) {
           <tbody>
             {rows.map((r) => (
               <tr key={r}>
-                <th scope="row" style={rowHeadStyle}>
+                <th scope="row" className={rowHeadClass}>
                   <span className="font-mono">{r}</span>
                 </th>
                 {cols.map((c) => {
@@ -77,7 +65,7 @@ export function VariantMatrix({ slug, def }: Props) {
                     [childKey]: childrenDefault ?? r,
                   };
                   return (
-                    <td key={c} style={cellStyle}>
+                    <td key={c} className={cellClass}>
                       <div
                         className="min-h-[56px] flex items-center justify-center p-2"
                       >
@@ -95,39 +83,10 @@ export function VariantMatrix({ slug, def }: Props) {
   );
 }
 
-const headStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  background: 'var(--color-surface-container-low)',
-  borderBottom: '1px solid var(--color-outline-variant)',
-  borderLeft: '1px solid var(--color-surface-container-high)',
-  textAlign: 'center',
-  color: 'var(--color-on-surface-muted)',
-  fontWeight: 600,
-};
-
-const cornerStyle: React.CSSProperties = {
-  ...headStyle,
-  textAlign: 'left',
-  borderLeft: 'none',
-  whiteSpace: 'nowrap',
-};
-
-const rowHeadStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  background: 'var(--color-surface-container-low)',
-  borderBottom: '1px solid var(--color-surface-container-high)',
-  borderRight: '1px solid var(--color-surface-container-high)',
-  textAlign: 'left',
-  color: 'var(--color-on-surface-muted)',
-  fontWeight: 600,
-  whiteSpace: 'nowrap',
-  position: 'sticky',
-  left: 0,
-};
-
-const cellStyle: React.CSSProperties = {
-  padding: 0,
-  borderBottom: '1px solid var(--color-surface-container-high)',
-  borderLeft: '1px solid var(--color-surface-container-high)',
-  background: 'var(--color-surface)',
-};
+const headBase =
+  'bg-[var(--color-surface-container-low)] px-3 py-2 font-semibold text-[var(--color-on-surface-muted)] border-b border-[var(--color-outline-variant)]';
+const headClass = headBase + ' text-center border-s border-[var(--color-surface-container-high)]';
+const cornerClass = headBase + ' text-start whitespace-nowrap';
+const rowHeadClass =
+  'sticky start-0 whitespace-nowrap bg-[var(--color-surface-container-low)] px-3 py-2 text-start font-semibold text-[var(--color-on-surface-muted)] border-b border-e border-[var(--color-surface-container-high)]';
+const cellClass = 'p-0 bg-[var(--color-surface)] border-b border-s border-[var(--color-surface-container-high)]';

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Text } from '@nexub/react';
 
 export interface TocItem {
   id: string;
@@ -48,18 +49,9 @@ export function DocsTOC({ items }: Props) {
 
   return (
     <nav className="docs-toc" aria-label="On this page">
-      <p
-        style={{
-          fontSize: '0.7rem',
-          fontWeight: 700,
-          letterSpacing: '0.06em',
-          textTransform: 'uppercase',
-          color: 'var(--color-outline)',
-          margin: '0 0 0.5rem',
-        }}
-      >
+      <Text size="label" weight="semibold" tone="muted" className="mb-2 uppercase tracking-wider">
         On this page
-      </p>
+      </Text>
       <ul className="list-none m-0 p-0 flex flex-col gap-0.5">
         {items.map((it) => {
           const isActive = active === it.id;
@@ -67,19 +59,14 @@ export function DocsTOC({ items }: Props) {
             <li key={it.id}>
               <a
                 href={`#${it.id}`}
-                style={{
-                  display: 'block',
-                  padding: '4px 8px',
-                  paddingLeft: it.level === 3 ? '1.25rem' : '0.5rem',
-                  borderLeft: '2px solid',
-                  borderColor: isActive ? 'var(--color-primary)' : 'transparent',
-                  color: isActive ? 'var(--color-on-surface)' : 'var(--color-on-surface-muted)',
-                  fontWeight: isActive ? 600 : 400,
-                  fontSize: '0.78rem',
-                  lineHeight: 1.5,
-                  textDecoration: 'none',
-                  transition: 'color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out)',
-                }}
+                aria-current={isActive ? 'location' : undefined}
+                className={
+                  'block border-s-2 py-1 pe-2 text-label-md leading-normal no-underline transition-colors duration-effects-fast ease-effects-fast ' +
+                  (it.level === 3 ? 'ps-5 ' : 'ps-2 ') +
+                  (isActive
+                    ? 'border-[var(--color-primary)] font-semibold text-[var(--color-on-surface)]'
+                    : 'border-transparent text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]')
+                }
               >
                 {it.label}
               </a>

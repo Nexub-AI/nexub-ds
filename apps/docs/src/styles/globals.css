@@ -107,6 +107,18 @@ body {
    * while wide blocks (Playground, Matrix, examples, code) still go edge-to-edge. */
   max-width: 75ch;
 }
+/* Dot grid behind live previews (components index, preview panes). */
+.docs-dot-grid {
+  background-image: radial-gradient(color-mix(in srgb, var(--color-outline-variant) 50%, transparent) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Preview canvas backgrounds (PreviewToolbar bgClass). */
+.docs-bg-grid { background-image: radial-gradient(var(--color-outline-variant) 1px, transparent 1px); background-size: 20px 20px; }
+.docs-bg-dotted { background-image: radial-gradient(var(--color-surface-container-high) 1.2px, transparent 1.2px); background-size: 14px 14px; }
+.docs-bg-solid { background: var(--color-surface-container-high); }
+.docs-bg-transparent { background-image: none; }
+
 /* Busy backdrop for the Materials glass demo. */
 .docs-glass-backdrop {
   background:

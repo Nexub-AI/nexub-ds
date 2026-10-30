@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import Link from 'next/link';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
@@ -41,10 +42,7 @@ const parts: [name: string, href: string, what: string][] = [
 export default function AiSurfacesPage() {
   return (
     <div className="docs-prose">
-      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">
-        Getting Started
-      </p>
-      <h1>Building AI surfaces</h1>
+      <PageIntro eyebrow="Getting Started" title="Building AI surfaces" />
       <p>
         A small kit for chat and assistant UIs. The components only render state: you own the request, the
         stream and the message list. They work with any model or SDK.

@@ -41,18 +41,11 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
 
   return (
     <div className="relative">
-      <div
-        style={{
-          position: 'absolute',
-          top: '8px',
-          right: '8px',
-          zIndex: 10,
-        }}
-      >
+      <div className="absolute end-2 top-2 z-10">
         <CopyButton text={code} />
       </div>
       <div
-        className="bg-[var(--docs-code-bg)] text-[var(--color-on-surface)] rounded-shape-container py-5 px-6 overflow-x-auto text-label-md leading-relaxed font-mono"
+        className="overflow-x-auto rounded-shape-container bg-[var(--docs-code-bg)] py-5 pe-14 ps-6 font-mono text-label-md leading-relaxed text-[var(--color-on-surface)]"
         dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>

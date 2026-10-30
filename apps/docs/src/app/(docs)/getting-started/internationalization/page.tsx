@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
@@ -64,10 +65,7 @@ const messageKeys: [key: string, value: string][] = [
 export default function InternationalizationPage() {
   return (
     <div className="docs-prose">
-      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">
-        Getting Started
-      </p>
-      <h1>Internationalization</h1>
+      <PageIntro eyebrow="Getting Started" title="Internationalization" />
       <p>
         <code>NexubProvider</code> sets the locale, text direction and built-in strings for every{' '}
         <code>@nexub/react</code> component. It is optional: without it, components use English strings,

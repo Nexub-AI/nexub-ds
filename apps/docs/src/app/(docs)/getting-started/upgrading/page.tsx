@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
+import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = { title: 'Upgrading to 1.8' };
+export const metadata: Metadata = { title: 'Upgrading from 1.5' };
 
 // Before → after for markup and behaviour an app's tests or selectors can see.
 // Sources: packages/*/CHANGELOG.md (1.6.0, 1.7.0).
@@ -84,18 +85,17 @@ const aliases: [legacy: string, role: string][] = [
 export default function UpgradingPage() {
   return (
     <div className="docs-prose">
-      <p className="text-[0.8rem] font-semibold text-[var(--color-primary)] tracking-wider uppercase mb-2">
-        Getting Started
-      </p>
-      <h1>Upgrading to 1.8</h1>
+      <PageIntro eyebrow="Getting Started" title="Upgrading from 1.5" />
       <p>
         For apps on <code>@nexub/*</code> 1.5.x. Nothing was removed and no prop was renamed, but 1.6 and 1.7
-        changed some markup and roles that tests and selectors see, and added conventions worth adopting.
+        changed some markup and roles that tests and selectors see, and added conventions worth adopting. Every
+        release since (1.8 through 2.x) is a rolling minor with no breaking changes, so this guide takes you straight
+        to the current version.
       </p>
 
       <h2>1. Update</h2>
       <p>All <code>@nexub/*</code> packages share one version; update them together.</p>
-      <CodeBlock lang="bash" code={`pnpm add @nexub/react@^1.8 @nexub/patterns@^1.8 @nexub/themes@^1.8 @nexub/tokens@^1.8 @nexub/icons@^1.8`} />
+      <CodeBlock lang="bash" code={`pnpm add @nexub/react@^2 @nexub/patterns@^2 @nexub/themes@^2 @nexub/tokens@^2 @nexub/icons@^2`} />
       <p>
         Peer dependencies are unchanged: <code>react</code> and <code>react-dom</code> 18 or 19, and{' '}
         <code>@nexub/tokens</code>. Keep the Tailwind preset and <code>content</code> globs from{' '}

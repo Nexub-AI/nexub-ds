@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Skeleton } from '@nexub/react';
 import { ComponentLivePreview } from './LivePreviewWrapper';
 
 interface MiniPreviewCardProps {
@@ -31,26 +32,11 @@ const PreviewFallback = () => (
   />
 );
 
-const PreviewSkeleton = () => (
-  <div
-    className="w-[80px] h-[22px] rounded-shape-field bg-[var(--color-outline-variant)] opacity-50"
-  />
-);
+const PreviewSkeleton = () => <Skeleton shape="rect" className="h-[22px] w-[80px] rounded-shape-field" />;
 
 export function MiniPreviewCard({ slug }: MiniPreviewCardProps) {
   return (
-    <div
-      style={{
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        pointerEvents: 'none',
-        userSelect: 'none',
-        transform: 'scale(0.8)',
-        transformOrigin: 'center center',
-      }}
-    >
+    <div className="pointer-events-none relative flex h-full origin-center scale-[0.8] select-none items-center justify-center">
       <PreviewErrorBoundary fallback={<PreviewFallback />}>
         <React.Suspense fallback={<PreviewSkeleton />}>
           <ComponentLivePreview slug={slug} idx={0} />
