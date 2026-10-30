@@ -33,13 +33,11 @@ test('sidebar links navigate client-side', async ({ page }) => {
     '/getting-started/react-native',
   ]) {
     const link = sidebar.locator(`a[href="${href}"]`);
-    // Collapsed groups hide their links; open the group that holds this one.
-    if (!(await link.isVisible())) {
-      await link.evaluate((a) => {
-        let el: Element | null = a;
-        while (el && !(el.previousElementSibling?.getAttribute('aria-expanded') === 'false')) el = el.parentElement;
-        (el?.previousElementSibling as HTMLElement | null)?.click();
-      });
+    // Collapsed sections don't render their links; open them all.
+    while ((await link.count()) === 0) {
+      const closed = sidebar.locator('[aria-expanded="false"]');
+      if ((await closed.count()) === 0) break;
+      await closed.first().click();
     }
     await link.click();
     await expect(page).toHaveURL(href, { timeout: 5000 });

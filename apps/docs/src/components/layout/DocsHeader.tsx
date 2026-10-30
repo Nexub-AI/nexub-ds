@@ -2,98 +2,58 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { Menu, Search } from '@nexub/icons';
+import { IconButton, Kbd, Logo, TopNav } from '@nexub/react';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
-import { Menu, Search } from '@nexub/icons';
-import { Logo, TopNav } from '@nexub/react';
 import { useSidebar } from './SidebarContext';
 
 interface DocsHeaderProps {
   versionBadge?: React.ReactNode;
 }
 
+const openSearch = () =>
+  window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+
 export function DocsHeader({ versionBadge }: DocsHeaderProps) {
   const { toggle } = useSidebar();
 
-  const openSearch = () => {
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
-  };
-
   return (
-    <TopNav.Root
-      surface="glass"
-      scrollEdge="soft"
-      className="docs-header border-x-0 border-t-0"
-      style={{ height: 'var(--docs-header-height)' }}
-    >
-      {/* Hamburger — mobile only */}
-      <button
-        onClick={toggle}
-        className="docs-hamburger"
-        aria-label="Toggle navigation menu"
-      >
+    <TopNav.Root surface="glass" scrollEdge="soft" className="docs-header gap-3 border-x-0 border-t-0">
+      <IconButton label="Open navigation" className="docs-only-mobile" onClick={toggle}>
         <Menu size={20} />
-      </button>
+      </IconButton>
 
-      {/* Logo */}
-      <Link href="/" aria-label="Nexub Design System home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', minWidth: 0 }}>
+      <Link href="/" aria-label="Nexub Design System home" className="flex min-w-0 items-center no-underline">
         <Logo size="sm" product="Design System" />
       </Link>
+      {versionBadge && <div className="docs-only-desktop shrink-0">{versionBadge}</div>}
 
-      {/* Version badge */}
-      {versionBadge && <div style={{ flexShrink: 0 }}>{versionBadge}</div>}
+      <div className="flex-1" />
 
-      {/* Spacer */}
-      <div style={{ flex: 1 }} />
-
-      {/* Search trigger — hidden on mobile */}
       <button
+        type="button"
         onClick={openSearch}
-        className="docs-header-search nx-state-layer"
-        style={{
-          display: 'flex', alignItems: 'center', gap: '8px',
-          height: 'var(--size-control-md)',
-          paddingInline: '14px',
-          background: 'var(--color-surface-container-highest)',
-          border: 'none',
-          borderRadius: 'var(--shape-field)',
-          color: 'var(--color-on-surface-variant)',
-          fontSize: 'var(--type-body-md-size)',
-          fontFamily: 'var(--font-family-sans)',
-          cursor: 'pointer',
-          width: '220px',
-          justifyContent: 'space-between',
-          flexShrink: 0,
-        }}
-        aria-label="Search (⌘K)"
+        aria-label="Search the docs"
+        aria-keyshortcuts="Meta+K Control+K"
+        className="docs-only-desktop nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-[var(--color-surface-container-highest)] ps-4 pe-2 text-body-md text-[var(--color-on-surface-variant)]"
       >
-        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <Search size={13} />
-          Search…
+        <span className="flex items-center gap-2">
+          <Search size={14} aria-hidden="true" />
+          Search
         </span>
-        <kbd style={{
-          fontSize: '0.65rem', padding: '1px 5px',
-          background: 'var(--color-surface-elevated)', border: '1px solid var(--color-outline-variant)',
-          borderRadius: 'var(--shape-tooltip)', fontFamily: 'var(--font-family-sans)',
-        }}>⌘K</kbd>
+        <Kbd>⌘K</Kbd>
       </button>
-
-      {/* Search icon — mobile only */}
-      <button
-        onClick={openSearch}
-        className="docs-header-search-icon"
-        aria-label="Search (⌘K)"
-      >
+      <IconButton label="Search the docs" className="docs-only-mobile" onClick={openSearch}>
         <Search size={18} />
-      </button>
+      </IconButton>
 
-      {/* Brand switcher — hidden on mobile */}
-      <div className="docs-header-brand-switcher">
+      <div className="docs-only-desktop">
         <BrandSwitcher />
       </div>
-
-      {/* Theme switcher */}
-      <ThemeSwitcher />
+      <div className="docs-only-desktop">
+        <ThemeSwitcher />
+      </div>
     </TopNav.Root>
   );
 }
