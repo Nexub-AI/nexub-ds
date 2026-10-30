@@ -146,6 +146,7 @@ import messageBubbleEntry from './components/message-bubble';
 import citationEntry from './components/citation';
 import conversationEntry from './patterns/conversation';
 import { mobileOnly } from './native';
+import { templateEntries } from './templates';
 
 // ─── All component entries (flat) ─────────────────────────────────────────────
 export const componentEntries: ComponentEntry[] = [
@@ -334,6 +335,16 @@ export const searchIndex: SearchEntry[] = [
     href: `/components/native/${m.slug}`,
     category: 'Mobile only',
   })),
+  // Page templates
+  ...templateEntries.map((t) => ({
+    id: `template-${t.slug}`,
+    label: `${t.title} page`,
+    description: t.description,
+    href: `/patterns/pages/${t.slug}`,
+    category: 'Pattern · Pages',
+  })),
+  { id: 'examples', label: 'Examples', description: 'Web and mobile dashboards and full-page references', href: '/examples', category: 'Examples' },
+  { id: 'example-mobile', label: 'Example: Mobile dashboard', description: 'The Payub-style home screen in @nexub/react-native', href: '/examples/mobile', category: 'Examples' },
   // Patterns
   ...patternEntries.map((e) => ({
     id: `pattern-${e.meta.slug}`,
@@ -402,15 +413,18 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Patterns',
-    items: patternEntries.map((e) => ({
-      title: e.meta.title,
-      href: `/patterns/${e.meta.slug}`,
-    })),
+    items: [],
+    children: [
+      { title: 'Pages', items: templateEntries.map((t) => ({ title: t.title, href: `/patterns/pages/${t.slug}` })) },
+      { title: 'Blocks', items: patternEntries.map((e) => ({ title: e.meta.title, href: `/patterns/${e.meta.slug}` })) },
+    ],
   },
   {
     title: 'Examples',
     items: [
-      { title: 'Dashboard', href: '/examples/dashboard' },
+      { title: 'Overview', href: '/examples' },
+      { title: 'Web dashboard', href: '/examples/dashboard' },
+      { title: 'Mobile dashboard', href: '/examples/mobile' },
     ],
   },
   {

@@ -2438,6 +2438,76 @@
       }
     ]
   },
+  "HomeScreen": {
+    "file": "patterns/home.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "greeting",
+        "type": "string",
+        "required": false,
+        "description": "e.g. \"Good morning, Mei\". Leave out when the native header shows the title."
+      },
+      {
+        "name": "balance",
+        "type": "{ value: number; currency: string; label?: string }",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "quickActions",
+        "type": "QuickAction[]",
+        "required": false,
+        "default": "[]",
+        "description": "Send, Add money, Request… Up to four fit one row."
+      },
+      {
+        "name": "recent",
+        "type": "Transaction[]",
+        "required": false,
+        "default": "[]",
+        "description": "The latest few transactions."
+      },
+      {
+        "name": "onTransactionPress",
+        "type": "(t: Transaction) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSeeAllActivity",
+        "type": "() => void",
+        "required": false,
+        "description": "Shows \"See all\" beside Recent activity."
+      },
+      {
+        "name": "insights",
+        "type": "Insight[]",
+        "required": false,
+        "default": "[]",
+        "description": ""
+      },
+      {
+        "name": "onRefresh",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "refreshing",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "labels",
+        "type": "Partial<{ totalBalance: string; recentActivity: string; seeAll: string; insights: string }>",
+        "required": false,
+        "description": "Copy overrides."
+      }
+    ]
+  },
   "FlowStep": {
     "file": "patterns/money.tsx",
     "extends": [],
