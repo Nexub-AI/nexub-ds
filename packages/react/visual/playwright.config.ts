@@ -24,10 +24,10 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.visual\.spec\.ts/ },
+    { name: 'storybook', testIgnore: /docs\.(visual|nav)\.spec\.ts/ },
     {
       name: 'docs',
-      testMatch: /docs\.visual\.spec\.ts/,
+      testMatch: /docs\.(visual|nav)\.spec\.ts/,
       use: { baseURL: 'http://localhost:6008', viewport: { width: 1280, height: 800 } },
     },
   ],

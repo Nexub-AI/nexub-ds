@@ -1,21 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from '@nexub/icons';
 import type { NavGroup } from '@/registry/types';
 import { useSidebar } from './SidebarContext';
+import { DocsLink } from './DocsLink';
 
-// Every href in the nav tree. Used to prefetch all routes on sidebar mount so
-// links inside collapsed groups (display:none → invisible to
-// IntersectionObserver) are ready before the user ever expands them.
-function allHrefs(groups: NavGroup[]): string[] {
-  return groups.flatMap((g) => [
-    ...g.items.map((i) => i.href),
-    ...(g.children ?? []).flatMap((sub) => sub.items.map((i) => i.href)),
-  ]);
-}
 
 /* ─── Sub-group (category inside Components) ─────────────────────────────── */
 
@@ -84,11 +75,6 @@ const SubGroup = React.memo(function SubGroup({
         />
       </button>
 
-      {/*
-       * Always keep the <ul> in the DOM (visibility toggled via CSS).
-       * This lets Next.js <Link prefetch> work even when the group is
-       * collapsed, so RSC payloads are ready before the user clicks.
-       */}
       <ul
         style={{
           listStyle: 'none',
@@ -102,15 +88,14 @@ const SubGroup = React.memo(function SubGroup({
           const isActive = pathname === item.href;
           return (
             <li key={item.href}>
-              <Link
+              <DocsLink
                 href={item.href}
-                prefetch={true}
                 className="docs-nav-item nx-state-layer"
                 data-depth="2"
                 aria-current={isActive ? 'page' : undefined}
               >
                 {item.title}
-              </Link>
+              </DocsLink>
             </li>
           );
         })}
@@ -195,10 +180,6 @@ const TopGroup = React.memo(function TopGroup({
         />
       </button>
 
-      {/*
-       * Always keep children in DOM. CSS display toggles visibility while
-       * keeping <Link prefetch> elements mounted for background prefetching.
-       */}
       <div style={{ display: open ? 'block' : 'none' }} aria-hidden={!open}>
         {/* Flat items (Getting Started, Foundations, Patterns) */}
         {group.items.length > 0 && (
@@ -207,14 +188,13 @@ const TopGroup = React.memo(function TopGroup({
               const isActive = pathname === item.href;
               return (
                 <li key={item.href}>
-                  <Link
+                  <DocsLink
                     href={item.href}
-                    prefetch={true}
-                    className="docs-nav-item nx-state-layer"
+                        className="docs-nav-item nx-state-layer"
                     aria-current={isActive ? 'page' : undefined}
                   >
                     {item.title}
-                  </Link>
+                  </DocsLink>
                 </li>
               );
             })}
@@ -236,33 +216,8 @@ const TopGroup = React.memo(function TopGroup({
 // code strings, a11y notes) never ships to the client just to draw links.
 export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const { isOpen, close } = useSidebar();
 
-  // Prefetch every sidebar route once after the sidebar mounts.
-  // Links inside collapsed groups (display:none) are not visible to the
-  // IntersectionObserver that Next.js uses for automatic prefetching, so
-  // they would never be cached until clicked. This runs during idle time
-  // so it doesn't compete with the initial page render.
-  React.useEffect(() => {
-    if (typeof requestIdleCallback !== 'undefined') {
-      const id = requestIdleCallback(() => {
-        for (const href of allHrefs(navGroups)) {
-          router.prefetch(href);
-        }
-      });
-      return () => cancelIdleCallback(id);
-    } else {
-      // Safari fallback
-      const t = setTimeout(() => {
-        for (const href of allHrefs(navGroups)) {
-          router.prefetch(href);
-        }
-      }, 0);
-      return () => clearTimeout(t);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run once on mount — navGroups is static build-time data
 
   return (
     <aside

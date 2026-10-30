@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { DocsLink } from '@/components/layout/DocsLink';
 import { componentEntries } from '@/registry/index';
 import { MiniPreviewCard } from '@/components/docs/MiniPreviewCard';
 
@@ -39,9 +39,8 @@ export default function ComponentsPage() {
                   }}
                 >
                   {/* Full-card hit target without wrapping previews (avoids invalid <a> inside <a> from demos that use Link/Breadcrumb). */}
-                  <Link
+                  <DocsLink
                     href={`/components/${e.meta.slug}`}
-                    prefetch
                     aria-label={`${e.meta.title}: view documentation`}
                     style={{
                       position: 'absolute',
