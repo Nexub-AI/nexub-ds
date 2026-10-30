@@ -288,7 +288,7 @@ export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider
 export type { ThemeMode, GlassMode, ThemeContextValue, ThemeProviderProps, ThemeScriptProps } from './components/ThemeProvider/index.js';
 
 // Components — Motion
-export { Fade, Slide, Scale, Collapse } from './components/Motion/index.js';
-export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, MotionDuration, MotionEasing, MotionBaseProps } from './components/Motion/index.js';
+export { Fade, Slide, Scale, Collapse, ListTransition, SkeletonSwap, usePrefersReducedMotion } from './components/Motion/index.js';
+export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, ListTransitionProps, SkeletonSwapProps, MotionDuration, MotionEasing, MotionBaseProps } from './components/Motion/index.js';
 export type { DataTableColumn } from './components/DataTable/index.js';
 export type { TableRootProps } from './components/Table/index.js';

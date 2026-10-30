@@ -7,9 +7,13 @@
     "start": "expo start",
     "ios": "expo start --ios",
     "android": "expo start --android",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:web": "node scripts/build-web.mjs",
+    "preview-manifest": "node --experimental-strip-types --no-warnings scripts/preview-manifest.mjs",
+    "test": "node --experimental-strip-types --no-warnings scripts/preview-manifest.mjs --check"
   },
   "dependencies": {
+    "@expo/metro-runtime": "~58.0.15",
     "@nexub/icons": "workspace:*",
     "@nexub/react-native": "workspace:*",
     "@react-native-community/datetimepicker": "9.2.1",
@@ -25,12 +29,14 @@
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.7",
     "react": "19.3.0",
+    "react-dom": "19.3.0",
     "react-native": "0.88.1",
     "react-native-gesture-handler": "~3.3.0",
     "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.10.1",
     "react-native-screens": "~4.30.0",
     "react-native-svg": "15.16.0",
+    "react-native-web": "~0.21.4",
     "react-native-worklets": "0.13.0"
   },
   "devDependencies": {

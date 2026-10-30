@@ -20,7 +20,7 @@
     "check:size": "node scripts/check-size.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs",
     "ai-docs": "node --experimental-strip-types --no-warnings scripts/build-ai-docs.mjs",
-    "ci:local": "pnpm audit --prod --audit-level=high && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && pnpm check:release-policy && pnpm ai-docs --check && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
+    "ci:local": "pnpm audit --prod --audit-level=high && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
     "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker"
   },
   "devDependencies": {

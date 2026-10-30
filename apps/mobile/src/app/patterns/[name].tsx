@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Stack as Screen, router, useLocalSearchParams } from 'expo-router';
-import { Bell, Copy, CreditCard, Globe, Lock, Trash2, User, Wallet } from '@nexub/icons/native';
+import { ArrowDown, Bell, Copy, CreditCard, Globe, Lock, Plus, Send as SendIcon, Trash2, User, Wallet } from '@nexub/icons/native';
 import { Avatar, Button, Icon, ListItem, Text, useToast, type GlassMode } from '@nexub/react-native';
 import {
   ActivityList,
@@ -8,6 +8,7 @@ import {
   AppSwitcherSheet,
   AppearanceSection,
   ChatScreen,
+  HomeScreen,
   LockScreen,
   NotificationsInbox,
   OnboardingScreen,
@@ -57,6 +58,33 @@ function Onboarding() {
 }
 function Permission() {
   return <PermissionPrimer icon={Bell} title="Know when money arrives" body="We’ll notify you about payments and security alerts. Nothing else." onAllow={() => router.back()} onNotNow={() => router.back()} />;
+}
+function Home() {
+  const [refreshing, setRefreshing] = useState(false);
+  return (
+    <HomeScreen
+      greeting="Good morning, Asha"
+      balance={{ value: 12840.5, currency: 'USD' }}
+      quickActions={[
+        { id: 'send', label: 'Send', icon: SendIcon, onPress: () => router.push('/patterns/send') },
+        { id: 'add', label: 'Add money', icon: Plus, onPress: () => {} },
+        { id: 'request', label: 'Request', icon: ArrowDown, onPress: () => {} },
+        { id: 'card', label: 'Card', icon: CreditCard, onPress: () => {} },
+      ]}
+      recent={TX.slice(0, 3)}
+      onTransactionPress={(t) => router.push(`/patterns/detail?id=${t.id}`)}
+      onSeeAllActivity={() => router.push('/patterns/activity')}
+      insights={[
+        { id: 'spend', title: 'Spending is down 12%', body: 'You spent $420 less on shopping than last month.' },
+        { id: 'bill', title: 'Netflix renews tomorrow', body: '$15.99 from your USD balance.', action: { label: 'Manage', onPress: () => {} } },
+      ]}
+      refreshing={refreshing}
+      onRefresh={() => {
+        setRefreshing(true);
+        setTimeout(() => setRefreshing(false), 1000);
+      }}
+    />
+  );
 }
 function Activity() {
   const toast = useToast();
@@ -224,6 +252,7 @@ export const PATTERNS: Record<string, { title: string; subtitle: string; Compone
   signin: { title: 'Sign in', subtitle: 'Email, password, Face ID', Component: Signin },
   verify: { title: 'Verify code', subtitle: 'OTP with SMS autofill', Component: Verify },
   lock: { title: 'Lock screen', subtitle: 'Biometric unlock', Component: Lockscreen },
+  home: { title: 'Home', subtitle: 'Balance, quick actions, insights', Component: Home },
   activity: { title: 'Activity', subtitle: 'Grouped list, swipe, refresh', Component: Activity },
   detail: { title: 'Transaction', subtitle: 'Detail and status', Component: Detail },
   send: { title: 'Send money', subtitle: 'Amount with live quote', Component: Send },

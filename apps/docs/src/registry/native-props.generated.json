@@ -1,0 +1,3031 @@
+{
+  "Button": {
+    "file": "components/actions.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "description": "Solid semantic or product colour (overrides the variant colour)."
+      },
+      {
+        "name": "size",
+        "type": "ControlSize",
+        "required": false,
+        "default": "'md'",
+        "description": "The control ladder. Primary actions on mobile use 'lg' (48)."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a spinner, blocks presses and announces `loadingLabel`."
+      },
+      {
+        "name": "loadingLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "fullWidth",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "IconButton": {
+    "file": "components/actions.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Required: the accessible name (what it does, not \"button\")."
+      },
+      {
+        "name": "variant",
+        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "ControlSize",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "description": "Toggle state for icon toggles (favourite, mute)."
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ButtonGroup": {
+    "file": "components/actions.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "direction",
+        "type": "'row' | 'stack'",
+        "required": false,
+        "default": "'row'",
+        "description": "'stack' puts actions full-width in a column (bottom of forms)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Link": {
+    "file": "components/actions.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "Card": {
+    "file": "components/containers.tsx",
+    "extends": [
+      "SurfaceProps"
+    ],
+    "props": [
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": "Makes the whole card one pressable target (navigates to detail)."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name when pressable."
+      }
+    ]
+  },
+  "ListItem": {
+    "file": "components/containers.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "leading",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Icon, Avatar or flag before the text."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": "Trailing text (variant 'value' or 'navigation'), e.g. \"English\" or an amount."
+      },
+      {
+        "name": "trailing",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Custom trailing content (overrides the variant's)."
+      },
+      {
+        "name": "variant",
+        "type": "'static' | 'navigation' | 'switch' | 'checkbox' | 'radio' | 'button' | 'value'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "description": "For switch / checkbox / radio rows."
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "destructive",
+        "type": "boolean",
+        "required": false,
+        "description": "Button rows: red, for destructive actions (Sign out, Delete)."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ListSection": {
+    "file": "components/containers.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "header",
+        "type": "string",
+        "required": false,
+        "description": "Section title above the group."
+      },
+      {
+        "name": "footer",
+        "type": "string",
+        "required": false,
+        "description": "Helper text below the group."
+      },
+      {
+        "name": "inset",
+        "type": "number",
+        "required": false,
+        "default": "16",
+        "description": "Divider inset: 16 for text rows, 56 when rows have a leading icon."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "Accordion": {
+    "file": "components/containers.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "expanded",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultExpanded",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(expanded: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Amount": {
+    "file": "components/display.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "animate",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Animate value changes: the new figure rises in on the spatial spring.\nWraps the text in a view, so leave it off when Amount sits inside other text."
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "currency",
+        "type": "string",
+        "required": true,
+        "description": "ISO 4217 code, e.g. 'USD', 'EUR', 'INR'."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "description": "BCP 47 locale."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'display'",
+        "required": false,
+        "description": "`display`: a hero figure in the brand face with a quieter symbol and minor units."
+      },
+      {
+        "name": "tone",
+        "type": "'neutral' | 'auto'",
+        "required": false,
+        "default": "'neutral'",
+        "description": "`auto` colours gains success and losses error (use with signDisplay)."
+      },
+      {
+        "name": "signDisplay",
+        "type": "Intl.NumberFormatOptions['signDisplay']",
+        "required": false,
+        "description": "e.g. 'exceptZero' to show \"+\" on gains."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Badge": {
+    "file": "components/display.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "string | number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "default": "'neutral'",
+        "description": ""
+      },
+      {
+        "name": "variant",
+        "type": "'solid' | 'soft' | 'outline'",
+        "required": false,
+        "default": "'soft'",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "dot",
+        "type": "boolean",
+        "required": false,
+        "description": "A status dot before the label (replaces web StatusPill)."
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Avatar": {
+    "file": "components/display.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "src",
+        "type": "string",
+        "required": false,
+        "description": "Image URL. Falls back to initials when missing or broken."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "Person or org name: initials and the accessible name."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "badge",
+        "type": "boolean",
+        "required": false,
+        "description": "Online/status dot."
+      }
+    ]
+  },
+  "AvatarGroup": {
+    "file": "components/display.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactElement<AvatarProps>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "default": "4",
+        "description": "Avatars shown before \"+N\"."
+      },
+      {
+        "name": "size",
+        "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Divider": {
+    "file": "components/display.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "inset",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": "Indent from the start edge (aligns with list text after a leading icon)."
+      },
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "required": false,
+        "default": "'horizontal'",
+        "description": ""
+      }
+    ]
+  },
+  "Banner": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "action",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "One action, e.g. <Button variant=\"text\">Review</Button>."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ToastProvider": {
+    "file": "components/feedback.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "bottomOffset",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": "Extra space above the bottom inset, e.g. the tab bar height."
+      }
+    ]
+  },
+  "Dialog": {
+    "file": "components/feedback.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Extra content between the description and the actions."
+      },
+      {
+        "name": "actions",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "1–2 Buttons; put the confirming action last."
+      },
+      {
+        "name": "dismissable",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Tapping the scrim or Android back closes it."
+      }
+    ]
+  },
+  "Progress": {
+    "file": "components/feedback.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "required": true,
+        "description": "0–1."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "variant",
+        "type": "'linear' | 'circular'",
+        "required": false,
+        "default": "'linear'",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "required": false,
+        "description": "Circular diameter."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Skeleton": {
+    "file": "components/feedback.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "width",
+        "type": "ViewStyle['width']",
+        "required": false,
+        "default": "'100%'",
+        "description": ""
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "required": false,
+        "default": "16",
+        "description": ""
+      },
+      {
+        "name": "radius",
+        "type": "'field' | 'control' | 'container' | number",
+        "required": false,
+        "default": "'field'",
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "EmptyState": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "default": "AlertTriangle",
+        "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "action",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Primary next step, e.g. <Button>Add money</Button>."
+      }
+    ]
+  },
+  "ErrorState": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "Omit<EmptyStateProps, 'tone' | 'action'>"
+    ],
+    "props": [
+      {
+        "name": "onRetry",
+        "type": "() => void",
+        "required": false,
+        "description": "Shows a Retry button (messages.retry)."
+      }
+    ]
+  },
+  "TextField": {
+    "file": "components/inputs.tsx",
+    "extends": [
+      "Omit<TextInputProps, 'style' | 'editable'>"
+    ],
+    "props": [
+      {
+        "name": "ref",
+        "type": "React.Ref<React.ComponentRef<typeof TextInput>>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field (also its accessible name)."
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error message: red outline, announced, replaces the helper text."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": ""
+      },
+      {
+        "name": "leading",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "trailing",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "PasswordInput": {
+    "file": "components/inputs.tsx",
+    "extends": [
+      "Omit<TextFieldProps, 'secureTextEntry' | 'trailing'>"
+    ],
+    "props": []
+  },
+  "SearchField": {
+    "file": "components/inputs.tsx",
+    "extends": [
+      "Omit<TextInputProps, 'style'>"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "MoneyInput": {
+    "file": "components/inputs.tsx",
+    "extends": [
+      "Omit<\n  TextFieldProps,\n  'value' | 'defaultValue' | 'onChange' | 'leading' | 'keyboardType'\n>"
+    ],
+    "props": [
+      {
+        "name": "currency",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number | null) => void",
+        "required": false,
+        "description": "Parsed value (rounded to the currency's minor units), or null when empty."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Stepper": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the value, e.g. \"Guests\"."
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Checkbox": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "RadioGroup": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the group."
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Radio": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Switch": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name (visible label lives in the ListItem / row next to it)."
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SegmentedControl": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "options",
+        "type": "readonly { value: T; label: string }[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "T",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: T) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Slider": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "formatValue",
+        "type": "(value: number) => string",
+        "required": false,
+        "description": "Announced value text, e.g. (v) => `${v}%`."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Chip": {
+    "file": "components/inputs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "selected",
+        "type": "boolean",
+        "required": false,
+        "description": "Toggle state (filter chips)."
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onRemove",
+        "type": "() => void",
+        "required": false,
+        "description": "Shows a remove button (its label is messages.remove)."
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SwipeableRow": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the whole row, e.g. \"Amazon, minus $42.50, today\"."
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": "Tap / double-tap action of the row (open details)."
+      },
+      {
+        "name": "actions",
+        "type": "SwipeAction[]",
+        "required": true,
+        "description": "Revealed by swiping toward the start edge. Each one is also an accessibility action."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "PageIndicator": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "count",
+        "type": "number",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Carousel": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "readonly T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "renderItem",
+        "type": "ListRenderItem<T>",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": false,
+        "description": "Page width."
+      },
+      {
+        "name": "onIndexChange",
+        "type": "(index: number) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "StickyFooter": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "Scrollable content above the footer."
+      },
+      {
+        "name": "footer",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "The flow's primary action(s), kept above the keyboard and the home indicator."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "OTPInput": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name, e.g. \"Verification code\"."
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "required": false,
+        "default": "6",
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(code: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onComplete",
+        "type": "(code: string) => void",
+        "required": false,
+        "description": "Called once all digits are entered."
+      },
+      {
+        "name": "secure",
+        "type": "boolean",
+        "required": false,
+        "description": "Dots instead of digits (PIN). Turns off one-time-code autofill."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "autoFocus",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "NumericKeypad": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "onKey",
+        "type": "(key: string) => void",
+        "required": true,
+        "description": "Called with '0'–'9', the decimal key or 'delete'."
+      },
+      {
+        "name": "decimal",
+        "type": "boolean",
+        "required": false,
+        "description": "Show the decimal key (money)."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ExpressiveMoneyInput": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "currency",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number | null) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name, e.g. \"Amount to send\"."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "required": false,
+        "description": "Shown under the amount, e.g. \"Balance $1,240.00\" or an error."
+      },
+      {
+        "name": "error",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SensitiveValue": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What it is, e.g. \"Balance\" (used for the toggle and the masked reading)."
+      },
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": "The formatted value, e.g. \"$12,480.50\"."
+      },
+      {
+        "name": "variant",
+        "type": "React.ComponentProps<typeof Text>['variant']",
+        "required": false,
+        "default": "'title-lg'",
+        "description": ""
+      },
+      {
+        "name": "revealed",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultRevealed",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onRevealedChange",
+        "type": "(revealed: boolean) => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "PrivacyShield": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "cover",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown over the app in the app switcher (e.g. your logo)."
+      },
+      {
+        "name": "preventCapture",
+        "type": "boolean",
+        "required": false,
+        "description": "Block screenshots and recording (Android FLAG_SECURE; iOS hides the content in captures). Needs expo-screen-capture."
+      }
+    ]
+  },
+  "Coachmark": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "arrow",
+        "type": "'top' | 'bottom'",
+        "required": false,
+        "default": "'top'",
+        "description": "Which side the arrow is on (towards the thing it explains)."
+      },
+      {
+        "name": "onDismiss",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "dismissLabel",
+        "type": "string",
+        "required": false,
+        "description": "Dismiss label."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "FAB": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name; also shown when `extended`."
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "extended",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "platforms",
+        "type": "('ios' | 'android')[]",
+        "required": false,
+        "default": "['android']",
+        "description": "Platforms that render it (a FAB reads as Material; iOS uses a toolbar or nav-bar button)."
+      },
+      {
+        "name": "bottomOffset",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": "Extra bottom offset, e.g. the tab bar."
+      }
+    ]
+  },
+  "DateTimeField": {
+    "file": "components/mobile.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "Date | null",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: Date) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "mode",
+        "type": "'date' | 'time'",
+        "required": false,
+        "default": "'date'",
+        "description": ""
+      },
+      {
+        "name": "minimumDate",
+        "type": "Date",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "maximumDate",
+        "type": "Date",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "BottomSheet": {
+    "file": "components/overlays.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "detents",
+        "type": "SheetDetent[]",
+        "required": false,
+        "default": "['content']",
+        "description": "Heights the sheet rests at: 'content' (fits its content) or a 0–1 fraction of the screen."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "dismissable",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Drag down, tap the scrim or Android back closes it."
+      },
+      {
+        "name": "scroll",
+        "type": "boolean",
+        "required": false,
+        "description": "Let the content scroll (long lists)."
+      }
+    ]
+  },
+  "ActionSheet": {
+    "file": "components/overlays.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "message",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "actions",
+        "type": "SheetAction[]",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "ContextMenu": {
+    "file": "components/overlays.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "actions",
+        "type": "SheetAction[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": "Tap action of the wrapped content (long-press opens the menu)."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Select": {
+    "file": "components/overlays.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "options",
+        "type": "readonly SelectOption<T>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "T",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: T) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "OnboardingScreen": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "slides",
+        "type": "OnboardingSlide[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onGetStarted",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onSignIn",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "PermissionPrimer": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "body",
+        "type": "string",
+        "required": true,
+        "description": "Why the app needs it, in the user's terms."
+      },
+      {
+        "name": "onAllow",
+        "type": "() => void",
+        "required": true,
+        "description": "Calls the OS prompt."
+      },
+      {
+        "name": "onNotNow",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "SettingsScreen": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "header",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Optional profile row/card above the groups."
+      },
+      {
+        "name": "groups",
+        "type": "SettingsGroup[]",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "AppearanceSection": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "scheme",
+        "type": "Scheme | 'system'",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onSchemeChange",
+        "type": "(scheme: Scheme | 'system') => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "glass",
+        "type": "GlassMode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onGlassChange",
+        "type": "(glass: GlassMode) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "haptics",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onHapticsChange",
+        "type": "(on: boolean) => void",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "ProfileHeader": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "detail",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "image",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "NotificationsInbox": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "notifications",
+        "type": "NotificationEntry[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onPress",
+        "type": "(n: NotificationEntry) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onMarkAllRead",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SearchScreen": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "query",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onQueryChange",
+        "type": "(q: string) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "results",
+        "type": "T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "renderResult",
+        "type": "(item: T) => React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "keyOf",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "recent",
+        "type": "string[]",
+        "required": false,
+        "default": "[]",
+        "description": ""
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ChatScreen": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "messages",
+        "type": "ChatMessage[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onSend",
+        "type": "(text: string) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "thinking",
+        "type": "boolean",
+        "required": false,
+        "description": "Assistant is thinking (before the first token)."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "empty",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "PaywallScreen": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "plans",
+        "type": "Plan[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "defaultPlan",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSubscribe",
+        "type": "(planId: string) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onRestore",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "terms",
+        "type": "string",
+        "required": false,
+        "description": "Legal copy (auto-renewal terms)."
+      }
+    ]
+  },
+  "AppSwitcherSheet": {
+    "file": "patterns/app.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "apps",
+        "type": "NexubApp[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "current",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onOpenApp",
+        "type": "(app: NexubApp) => void",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "AuthScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Brand mark above the title."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "default": "'Sign in'",
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "footer",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "Primary action(s), kept above the keyboard."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error from the last attempt (announced)."
+      }
+    ]
+  },
+  "SignInScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "onSubmit",
+        "type": "(email: string, password: string) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "biometricLabel",
+        "type": "string",
+        "required": false,
+        "description": "Offer passkey/biometric sign-in (name the method: \"Sign in with Face ID\")."
+      },
+      {
+        "name": "onBiometric",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onForgotPassword",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onCreateAccount",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "default": "'Sign in'",
+        "description": "Copy overrides."
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Sign in'",
+        "description": ""
+      }
+    ]
+  },
+  "VerifyCodeScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "destination",
+        "type": "string",
+        "required": true,
+        "description": "Where the code went, e.g. \"+65 •••• 4821\"."
+      },
+      {
+        "name": "onComplete",
+        "type": "(code: string) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onResend",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "resendAfter",
+        "type": "number",
+        "required": false,
+        "default": "30",
+        "description": "Seconds before Resend is allowed again."
+      },
+      {
+        "name": "length",
+        "type": "number",
+        "required": false,
+        "default": "6",
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "LockScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "unlockLabel",
+        "type": "string",
+        "required": true,
+        "description": "\"Unlock with Face ID\" / \"Unlock with fingerprint\" (name the method)."
+      },
+      {
+        "name": "onUnlock",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onUsePasscode",
+        "type": "() => void",
+        "required": false,
+        "description": "Fallback to the app passcode or password."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "appName",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "HomeScreen": {
+    "file": "patterns/home.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "greeting",
+        "type": "string",
+        "required": false,
+        "description": "e.g. \"Good morning, Mei\". Leave out when the native header shows the title."
+      },
+      {
+        "name": "balance",
+        "type": "{ value: number; currency: string; label?: string }",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "quickActions",
+        "type": "QuickAction[]",
+        "required": false,
+        "default": "[]",
+        "description": "Send, Add money, Request… Up to four fit one row."
+      },
+      {
+        "name": "recent",
+        "type": "Transaction[]",
+        "required": false,
+        "default": "[]",
+        "description": "The latest few transactions."
+      },
+      {
+        "name": "onTransactionPress",
+        "type": "(t: Transaction) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSeeAllActivity",
+        "type": "() => void",
+        "required": false,
+        "description": "Shows \"See all\" beside Recent activity."
+      },
+      {
+        "name": "insights",
+        "type": "Insight[]",
+        "required": false,
+        "default": "[]",
+        "description": ""
+      },
+      {
+        "name": "onRefresh",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "refreshing",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "labels",
+        "type": "Partial<{ totalBalance: string; recentActivity: string; seeAll: string; insights: string }>",
+        "required": false,
+        "description": "Copy overrides."
+      }
+    ]
+  },
+  "FlowStep": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "step",
+        "type": "number",
+        "required": true,
+        "description": "1-based."
+      },
+      {
+        "name": "total",
+        "type": "number",
+        "required": true,
+        "default": "3",
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "footer",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      }
+    ]
+  },
+  "AmountStep": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "from",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "to",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "balance",
+        "type": "number",
+        "required": true,
+        "description": "Available balance in `from`."
+      },
+      {
+        "name": "quote",
+        "type": "(amount: number) => Quote",
+        "required": true,
+        "description": "Quote for an amount (fees and rate shown before anything else, like Wise)."
+      },
+      {
+        "name": "onContinue",
+        "type": "(amount: number) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "total",
+        "type": "number",
+        "required": false,
+        "default": "3",
+        "description": ""
+      }
+    ]
+  },
+  "ReviewStep": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "rows",
+        "type": "ReviewRow[]",
+        "required": true,
+        "default": "[]",
+        "description": ""
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "required": true,
+        "description": "\"Confirm and send\"."
+      },
+      {
+        "name": "onConfirm",
+        "type": "() => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "confirmHint",
+        "type": "string",
+        "required": false,
+        "description": "Biometric confirmation, named: \"Confirm with Face ID\". Shown as the hint under the button."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "total",
+        "type": "number",
+        "required": false,
+        "default": "3",
+        "description": ""
+      }
+    ]
+  },
+  "ActivityList": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "transactions",
+        "type": "Transaction[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onPress",
+        "type": "(t: Transaction) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onRefresh",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "refreshing",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onEndReached",
+        "type": "() => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "actions",
+        "type": "(t: Transaction) => SwipeAction[]",
+        "required": false,
+        "description": "Swipe actions per row (also accessibility actions)."
+      },
+      {
+        "name": "header",
+        "type": "React.ReactElement",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "empty",
+        "type": "React.ReactElement",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "TransactionDetail": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "transaction",
+        "type": "Transaction",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "rows",
+        "type": "ReviewRow[]",
+        "required": false,
+        "default": "[]",
+        "description": "Extra rows: reference, account, category…"
+      },
+      {
+        "name": "actions",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ResultScreen": {
+    "file": "patterns/money.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "kind",
+        "type": "'success' | 'error' | 'offline' | 'maintenance' | 'update'",
+        "required": false,
+        "default": "'success'",
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "amount",
+        "type": "{ value: number; currency: string }",
+        "required": false,
+        "description": "Hero figure (e.g. the amount sent)."
+      },
+      {
+        "name": "primary",
+        "type": "{ label: string; onPress: () => void }",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "secondary",
+        "type": "{ label: string; onPress: () => void }",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Icon": {
+    "file": "primitives/Icon.tsx",
+    "extends": [
+      "Omit<NativeIconProps, 'color'>"
+    ],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": true,
+        "description": "An icon from `@nexub/icons/native`, e.g. `Search`."
+      },
+      {
+        "name": "color",
+        "type": "RoleName",
+        "required": false,
+        "default": "'on-surface-variant'",
+        "description": "Colour role."
+      }
+    ]
+  },
+  "Box": {
+    "file": "primitives/Layout.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "padding",
+        "type": "Space",
+        "required": false,
+        "description": "Padding on every side (spacing token)."
+      },
+      {
+        "name": "paddingX",
+        "type": "Space",
+        "required": false,
+        "description": "Horizontal padding (start + end, so RTL is free)."
+      },
+      {
+        "name": "paddingY",
+        "type": "Space",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "gap",
+        "type": "Space",
+        "required": false,
+        "description": "Gap between children."
+      },
+      {
+        "name": "background",
+        "type": "RoleName",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "radius",
+        "type": "ShapeName",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "align",
+        "type": "ViewStyle['alignItems']",
+        "required": false,
+        "default": "'center'",
+        "description": ""
+      },
+      {
+        "name": "justify",
+        "type": "ViewStyle['justifyContent']",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "flex",
+        "type": "number",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Pressable": {
+    "file": "primitives/Pressable.tsx",
+    "extends": [
+      "Omit<RNPressableProps, 'style' | 'children'>"
+    ],
+    "props": [
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes)."
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none."
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none."
+      }
+    ]
+  },
+  "ScreenContainer": {
+    "file": "primitives/ScreenContainer.tsx",
+    "extends": [
+      "Omit<ScrollViewProps, 'contentContainerStyle'>"
+    ],
+    "props": [
+      {
+        "name": "scroll",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Scrolls (and lets a native large title collapse)."
+      },
+      {
+        "name": "edges",
+        "type": "Edge[]",
+        "required": false,
+        "default": "['left', 'right', 'bottom']",
+        "description": "Safe-area edges to pad. A native header already covers 'top'."
+      },
+      {
+        "name": "background",
+        "type": "RoleName",
+        "required": false,
+        "default": "'surface'",
+        "description": ""
+      },
+      {
+        "name": "padding",
+        "type": "Space",
+        "required": false,
+        "default": "'4'",
+        "description": "Content padding."
+      },
+      {
+        "name": "gap",
+        "type": "Space",
+        "required": false,
+        "default": "'4'",
+        "description": "Gap between children."
+      },
+      {
+        "name": "contentStyle",
+        "type": "ViewStyle",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Surface": {
+    "file": "primitives/Surface.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "tone",
+        "type": "SurfaceTone",
+        "required": false,
+        "default": "'surface'",
+        "description": "Tonal tier."
+      },
+      {
+        "name": "elevation",
+        "type": "0 | 1 | 2 | 3",
+        "required": false,
+        "default": "0",
+        "description": ""
+      },
+      {
+        "name": "material",
+        "type": "'solid' | 'glass'",
+        "required": false,
+        "default": "'solid'",
+        "description": "'glass' is for the control layer only (bars, floating controls), never content."
+      },
+      {
+        "name": "radius",
+        "type": "ShapeName | number",
+        "required": false,
+        "description": "Corner radius: a shape token or dp."
+      }
+    ]
+  },
+  "Text": {
+    "file": "primitives/Text.tsx",
+    "extends": [
+      "RNTextProps"
+    ],
+    "props": [
+      {
+        "name": "variant",
+        "type": "NativeTypeRole",
+        "required": false,
+        "description": "Type role."
+      },
+      {
+        "name": "color",
+        "type": "RoleName",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "Colour role."
+      },
+      {
+        "name": "tabular",
+        "type": "boolean",
+        "required": false,
+        "description": "Tabular figures, for numbers that line up."
+      },
+      {
+        "name": "family",
+        "type": "'sans' | 'display' | 'mono'",
+        "required": false,
+        "description": "Overrides the role's family (e.g. 'mono' for codes)."
+      }
+    ]
+  },
+  "Heading": {
+    "file": "primitives/Text.tsx",
+    "extends": [
+      "TextProps"
+    ],
+    "props": []
+  }
+}

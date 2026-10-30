@@ -46,15 +46,9 @@ export const BrandSwitcher = React.memo(function BrandSwitcher() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-      <span style={{ fontSize: 'var(--type-label-sm-size)', color: 'var(--color-on-surface-variant)', marginRight: '2px', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Brand</span>
+    <div role="group" aria-label="Product brand" className="flex items-center gap-1.5">
       {brands.map((b) => (
-        <BrandButton
-          key={b.value}
-          brand={b}
-          isActive={brand === b.value}
-          onSelect={handleSelect}
-        />
+        <BrandButton key={b.value} brand={b} isActive={brand === b.value} onSelect={handleSelect} />
       ))}
     </div>
   );
@@ -73,22 +67,16 @@ interface BrandButtonProps {
 const BrandButton = React.memo(function BrandButton({ brand: b, isActive, onSelect }: BrandButtonProps) {
   return (
     <button
+      type="button"
       onClick={() => onSelect(b.value)}
       title={b.label}
-      style={{
-        width: '18px',
-        height: '18px',
-        borderRadius: '50%',
-        background: b.color,
-        border: isActive ? `2px solid var(--color-on-surface)` : '2px solid transparent',
-        outline: isActive ? `2px solid ${b.color}` : 'none',
-        outlineOffset: '1px',
-        cursor: 'pointer',
-        transition: 'border var(--duration-fast) var(--ease-out)',
-        padding: 0,
-      }}
       aria-pressed={isActive}
-      aria-label={b.label}
+      aria-label={`${b.label} brand`}
+      className={
+        'nx-hit h-[18px] w-[18px] rounded-full border-2 bg-[var(--nx-swatch)] outline-offset-1 transition-[outline-color] duration-effects-fast ' +
+        (isActive ? 'border-[var(--color-surface)] outline outline-2 outline-[var(--nx-swatch)]' : 'border-transparent')
+      }
+      style={{ '--nx-swatch': b.color } as React.CSSProperties}
     />
   );
 });

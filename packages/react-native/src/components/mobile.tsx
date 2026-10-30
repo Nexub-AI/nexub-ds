@@ -25,6 +25,7 @@ import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { fontStyle } from '../theme/fonts';
 import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
+import { nxExit, nxLayout, nxSpring } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { Banner } from './feedback';
 import { BottomSheet } from './overlays';
@@ -63,11 +64,10 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
   const sign = dir === 'rtl' ? 1 : -1; // open = content moves toward the start edge
   const x = useSharedValue(0);
   const open = React.useRef(false);
-  const spring = useTheme().tokens.motion.spring.spatial.default;
   const settle = (to: boolean) => {
     if (to !== open.current) play('snap');
     open.current = to;
-    x.value = withSpring(to ? sign * width : 0, spring);
+    x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
   };
   const responder = React.useMemo(
     () =>
@@ -96,7 +96,11 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
     primary: ['primary', 'on-primary'],
   };
   return (
-    <View
+    // Removed (e.g. swipe-to-delete): slides out toward the start edge while the
+    // rows below glide up. In a FlatList, pass nxLayout() as itemLayoutAnimation.
+    <Animated.View
+      exiting={nxExit('start', 'default', dir === 'rtl')}
+      layout={nxLayout()}
       style={[{ overflow: 'hidden' }, style]}
       // One screen-reader element for the row: its name, its tap, and every swipe action.
       accessible
@@ -152,7 +156,7 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
       >
         {children}
       </Animated.View>
-    </View>
+    </Animated.View>
   );
 }
 

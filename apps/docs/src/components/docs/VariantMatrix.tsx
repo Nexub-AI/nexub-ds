@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Badge } from '@nexub/react';
 import type { MatrixDef } from '@/registry/types';
 import { renderPlayground, hasPlaygroundRenderer } from './PlaygroundRegistry';
 
@@ -17,76 +18,35 @@ export function VariantMatrix({ slug, def }: Props) {
 
   return (
     <div
-      style={{
-        border: '1px solid var(--color-outline-variant)',
-        borderRadius: 'var(--shape-container)',
-        overflow: 'hidden',
-        marginBottom: '1.5rem',
-        background: 'var(--color-surface)',
-      }}
+      className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]"
     >
       <div
-        style={{
-          padding: '8px 12px',
-          borderBottom: '1px solid var(--color-outline-variant)',
-          background: 'var(--color-surface-container-low)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}
+        className="py-2 px-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] flex items-center justify-between gap-3"
       >
         <span
-          style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            color: 'var(--color-on-surface-variant)',
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-          }}
+          className="text-label-sm font-bold text-[var(--color-on-surface-variant)] tracking-wider uppercase"
         >
           Variants ×{' '}
-          <span style={{ fontFamily: 'var(--font-family-mono)' }}>{rowsProp}</span> /{' '}
-          <span style={{ fontFamily: 'var(--font-family-mono)' }}>{colsProp}</span>
+          <span className="font-mono">{rowsProp}</span> /{' '}
+          <span className="font-mono">{colsProp}</span>
         </span>
-        <span
-          style={{
-            fontSize: '0.7rem',
-            color: 'var(--color-outline)',
-            fontFamily: 'var(--font-family-mono)',
-          }}
-        >
+        <Badge size="sm" variant="outline" className="font-mono">
           {rows.length} × {cols.length}
-        </span>
+        </Badge>
       </div>
 
       <div className="docs-matrix-scroll">
-        <table
-          className="docs-matrix-table"
-          style={{
-            borderCollapse: 'separate',
-            borderSpacing: 0,
-            width: '100%',
-            fontSize: '0.78rem',
-            fontFamily: 'var(--font-family-sans)',
-          }}
-        >
+        <table className="docs-matrix-table w-full border-separate border-spacing-0 font-sans text-label-md">
           <thead>
             <tr>
-              <th style={cornerStyle}>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-family-mono)',
-                    color: 'var(--color-outline)',
-                    fontWeight: 600,
-                  }}
-                >
+              <th className={cornerClass}>
+                <span className="font-mono font-semibold text-[var(--color-on-surface-muted)]">
                   {rowsProp} ↓ / {colsProp} →
                 </span>
               </th>
               {cols.map((c) => (
-                <th key={c} style={headStyle}>
-                  <span style={{ fontFamily: 'var(--font-family-mono)' }}>{c}</span>
+                <th key={c} className={headClass}>
+                  <span className="font-mono">{c}</span>
                 </th>
               ))}
             </tr>
@@ -94,8 +54,8 @@ export function VariantMatrix({ slug, def }: Props) {
           <tbody>
             {rows.map((r) => (
               <tr key={r}>
-                <th scope="row" style={rowHeadStyle}>
-                  <span style={{ fontFamily: 'var(--font-family-mono)' }}>{r}</span>
+                <th scope="row" className={rowHeadClass}>
+                  <span className="font-mono">{r}</span>
                 </th>
                 {cols.map((c) => {
                   const props = {
@@ -105,15 +65,9 @@ export function VariantMatrix({ slug, def }: Props) {
                     [childKey]: childrenDefault ?? r,
                   };
                   return (
-                    <td key={c} style={cellStyle}>
+                    <td key={c} className={cellClass}>
                       <div
-                        style={{
-                          minHeight: 56,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: 8,
-                        }}
+                        className="min-h-[56px] flex items-center justify-center p-2"
                       >
                         {renderPlayground(slug, props)}
                       </div>
@@ -129,39 +83,10 @@ export function VariantMatrix({ slug, def }: Props) {
   );
 }
 
-const headStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  background: 'var(--color-surface-container-low)',
-  borderBottom: '1px solid var(--color-outline-variant)',
-  borderLeft: '1px solid var(--color-surface-container-high)',
-  textAlign: 'center',
-  color: 'var(--color-on-surface-muted)',
-  fontWeight: 600,
-};
-
-const cornerStyle: React.CSSProperties = {
-  ...headStyle,
-  textAlign: 'left',
-  borderLeft: 'none',
-  whiteSpace: 'nowrap',
-};
-
-const rowHeadStyle: React.CSSProperties = {
-  padding: '8px 12px',
-  background: 'var(--color-surface-container-low)',
-  borderBottom: '1px solid var(--color-surface-container-high)',
-  borderRight: '1px solid var(--color-surface-container-high)',
-  textAlign: 'left',
-  color: 'var(--color-on-surface-muted)',
-  fontWeight: 600,
-  whiteSpace: 'nowrap',
-  position: 'sticky',
-  left: 0,
-};
-
-const cellStyle: React.CSSProperties = {
-  padding: 0,
-  borderBottom: '1px solid var(--color-surface-container-high)',
-  borderLeft: '1px solid var(--color-surface-container-high)',
-  background: 'var(--color-surface)',
-};
+const headBase =
+  'bg-[var(--color-surface-container-low)] px-3 py-2 font-semibold text-[var(--color-on-surface-muted)] border-b border-[var(--color-outline-variant)]';
+const headClass = headBase + ' text-center border-s border-[var(--color-surface-container-high)]';
+const cornerClass = headBase + ' text-start whitespace-nowrap';
+const rowHeadClass =
+  'sticky start-0 whitespace-nowrap bg-[var(--color-surface-container-low)] px-3 py-2 text-start font-semibold text-[var(--color-on-surface-muted)] border-b border-e border-[var(--color-surface-container-high)]';
+const cellClass = 'p-0 bg-[var(--color-surface)] border-b border-s border-[var(--color-surface-container-high)]';

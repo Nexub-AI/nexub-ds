@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import { ThemeProvider, TooltipProvider, Toaster } from '@nexub/react';
 import type { SearchEntry } from '@/registry/index';
 
@@ -28,12 +29,14 @@ export function ClientProviders({
   children: React.ReactNode;
   searchIndex: SearchEntry[];
 }) {
+  // Preview frames (/frame/…) render one page template, without docs chrome.
+  const inFrame = usePathname()?.startsWith('/frame/') ?? false;
   return (
     <ThemeProvider defaultTheme="system" storageKey="nexub-theme">
       <TooltipProvider delayDuration={400}>
         {children}
-        <SearchModal searchIndex={searchIndex} />
-        <FeedbackButton />
+        {!inFrame && <SearchModal searchIndex={searchIndex} />}
+        {!inFrame && <FeedbackButton />}
         <Toaster />
       </TooltipProvider>
     </ThemeProvider>

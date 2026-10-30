@@ -121,7 +121,7 @@ const ClassLockOverlay = React.forwardRef<HTMLDivElement, DialogPrimitive.Dialog
 const Overlay = React.forwardRef<HTMLDivElement, DialogPrimitive.DialogOverlayProps>(
   ({ className, ...props }, ref) => {
     const { scrollLock, open, modal } = React.useContext(DrawerContext);
-    const classes = cn('fixed inset-0 z-[var(--z-modal)]', scrim, className);
+    const classes = cn('nx-drawer-overlay fixed inset-0 z-[var(--z-modal)]', scrim, className);
     if (scrollLock === 'class') {
       // Non-modal drawers have no overlay (vaul's Overlay returns null too).
       if (!modal) return null;
@@ -152,7 +152,7 @@ const Content = React.forwardRef<
     <VaulDrawer.Content
       ref={ref}
       className={cn(
-        'fixed z-[var(--z-modal)] flex flex-col bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)] shadow-elevation-3 focus:outline-none',
+        'nx-drawer fixed z-[var(--z-modal)] flex flex-col bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)] shadow-elevation-3 focus:outline-none',
         sideMap[side],
         surface === 'glass' && glassSurfaceClass,
         className,

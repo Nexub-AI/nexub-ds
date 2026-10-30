@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Check, Copy } from '@nexub/icons';
+import { IconButton } from '@nexub/react';
 
 interface CopyButtonProps {
   text: string;
@@ -31,29 +32,19 @@ export function CopyButton({ text }: CopyButtonProps) {
   return (
     <>
       {/* Screen-reader live region announces copy success */}
-      <span role="status" aria-live="polite" aria-atomic="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>
+      <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
         {copied ? 'Copied to clipboard' : ''}
       </span>
-      <button
+      <IconButton
+        size="sm"
+        variant="subtle"
         onClick={handleCopy}
         title={copied ? 'Copied!' : 'Copy code'}
-        aria-label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
-        className="nx-state-layer nx-press"
-        style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '28px',
-        height: '28px',
-        background: 'var(--color-surface-container-high)',
-        border: 'none',
-        borderRadius: 'var(--shape-control)',
-        color: copied ? 'var(--color-success)' : 'var(--color-on-surface-variant)',
-        cursor: 'pointer',
-      }}
-    >
+        label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
+        className={'nx-press !h-7 !w-7 ' + (copied ? '!text-[var(--color-success)]' : '')}
+      >
         {copied ? <Check size={13} /> : <Copy size={13} />}
-      </button>
+      </IconButton>
     </>
   );
 }

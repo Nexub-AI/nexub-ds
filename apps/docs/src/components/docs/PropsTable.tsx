@@ -1,72 +1,40 @@
+import { Badge } from '@nexub/react';
 import type { PropDef } from '@/registry/types';
+import { DocTable } from '@/components/kit';
 
-interface PropsTableProps {
-  props: PropDef[];
+/** Renders `backtick` spans in registry descriptions as inline code. */
+export function InlineCode({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/(`[^`]+`)/g).map((part, i) =>
+        part.startsWith('`') && part.endsWith('`') ? (
+          <code key={i} className="rounded-shape-tooltip bg-[var(--color-surface-container)] px-1 py-px font-mono text-[0.85em]">
+            {part.slice(1, -1)}
+          </code>
+        ) : (
+          part
+        ),
+      )}
+    </>
+  );
 }
 
-export function PropsTable({ props }: PropsTableProps) {
+export function PropsTable({ props }: { props: PropDef[] }) {
   if (!props.length) return null;
-
   return (
-    <div style={{ overflowX: 'auto', marginBottom: '1.5rem' }}>
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          fontSize: '0.8125rem',
-          lineHeight: 1.5,
-        }}
-      >
-        <thead>
-          <tr style={{ borderBottom: '1px solid var(--color-outline-variant)' }}>
-            {['Prop', 'Type', 'Default', 'Required', 'Description'].map((h) => (
-              <th
-                key={h}
-                style={{
-                  textAlign: 'left',
-                  padding: '8px 12px',
-                  fontWeight: 600,
-                  color: 'var(--color-on-surface-variant)',
-                  whiteSpace: 'nowrap',
-                  background: 'var(--color-surface-container-low)',
-                }}
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {props.map((p, i) => (
-            <tr
-              key={p.name}
-              style={{
-                borderBottom: i < props.length - 1 ? '1px solid var(--color-outline-variant)' : 'none',
-              }}
-            >
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', fontWeight: 600, color: 'var(--color-primary)', whiteSpace: 'nowrap' }}>
-                {p.name}
-              </td>
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-on-surface-muted)', fontSize: '0.75rem' }}>
-                {p.type}
-              </td>
-              <td style={{ padding: '8px 12px', fontFamily: 'var(--font-family-mono)', color: 'var(--color-outline)', fontSize: '0.75rem' }}>
-                {p.default ?? '—'}
-              </td>
-              <td style={{ padding: '8px 12px', textAlign: 'center' }}>
-                {p.required ? (
-                  <span style={{ color: 'var(--color-error)', fontWeight: 600 }}>✓</span>
-                ) : (
-                  <span style={{ color: 'var(--color-outline)' }}>—</span>
-                )}
-              </td>
-              <td style={{ padding: '8px 12px', color: 'var(--color-on-surface-variant)' }}>
-                {p.description}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <DocTable
+      caption="Props"
+      head={['Prop', 'Type', 'Default', 'Description']}
+      mono={[1, 2]}
+      rows={props.map((p) => [
+        <span key="n" className="flex flex-wrap items-center gap-1.5 whitespace-nowrap font-mono text-body-sm font-semibold text-[var(--color-primary)]">
+          {p.name}
+          {p.required && <Badge size="sm" tone="danger" variant="soft">required</Badge>}
+        </span>,
+        <span key="t" className="text-[var(--color-on-surface-variant)]">{p.type}</span>,
+        <span key="d" className="text-[var(--color-on-surface-muted)]">{p.default ?? '—'}</span>,
+        <InlineCode key="x" text={p.description} />,
+      ])}
+    />
   );
 }

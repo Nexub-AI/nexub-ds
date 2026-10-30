@@ -34,43 +34,30 @@ export function LandingFeatures() {
     <Section
       paddingY="md"
       tone="subtle"
-      style={{
-        borderTop: '1px solid var(--color-outline-variant)',
-        borderBottom: '1px solid var(--color-outline-variant)',
-      }}
+      className="border-t border-[var(--color-outline-variant)] border-b"
     >
-      <Container size="lg" style={{ textAlign: 'center' }}>
-        <EyebrowChip tone="info" data-reveal-scroll style={{ marginBottom: '0.75rem' }}>
+      <Container size="lg" className="text-center">
+        <EyebrowChip tone="info" data-reveal-scroll className="mb-3">
           What&apos;s inside
         </EyebrowChip>
 
-        <Heading level={2} size="h2" data-reveal-scroll style={{ marginBottom: '3rem' }}>
+        <Heading level={2} size="h2" data-reveal-scroll className="mb-12">
           Everything you need to ship faster
         </Heading>
 
-        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" gap="20px" style={{ textAlign: 'left' }}>
+        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-start" gap="20px">
           {features.map(({ Icon, stat, title, desc }) => (
-            <Card key={title} variant="surface" data-reveal-scroll style={{ padding: '1.75rem' }}>
+            <Card key={title} variant="surface" data-reveal-scroll className="p-7">
               <span
                 aria-hidden="true"
-                style={{
-                  marginBottom: '1rem',
-                  width: '44px',
-                  height: '44px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'var(--color-primary-container)',
-                  borderRadius: 'var(--shape-container)',
-                  color: 'var(--color-on-primary-container)',
-                }}
+                className="mb-4 w-[44px] h-[44px] flex items-center justify-center bg-[var(--color-primary-container)] rounded-shape-container text-[var(--color-on-primary-container)]"
               >
                 <Icon size="md" />
               </span>
-              <Text weight="bold" style={{ fontSize: '2rem', lineHeight: 1, marginBottom: '0.25rem', color: 'var(--color-primary)' }}>
+              <Text weight="bold" className="text-[2rem] leading-none mb-1 text-[var(--color-primary)]">
                 {stat}
               </Text>
-              <Heading level={3} size="h6" style={{ marginBottom: '0.5rem' }}>
+              <Heading level={3} size="h6" className="mb-2">
                 {title}
               </Heading>
               <Text size="body-sm" tone="muted">
