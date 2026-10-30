@@ -1,6 +1,6 @@
 {
   "name": "@nexub/core",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Platform-neutral core of Nexub Design System, shared by @nexub/react (web) and @nexub/react-native: UI strings, locale direction, money formatting and shared prop types. Pure TypeScript, no DOM, no React.",
   "type": "module",
   "license": "MIT",
