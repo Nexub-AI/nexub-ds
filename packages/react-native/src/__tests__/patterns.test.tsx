@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { NexubNativeProvider } from '../index';
-import { ActivityList, AmountStep, ReviewStep, SignInScreen, VerifyCodeScreen } from '../patterns';
+import { ActivityList, AmountStep, HomeScreen, ReviewStep, SignInScreen, VerifyCodeScreen } from '../patterns';
 
 jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
@@ -61,4 +61,31 @@ it('ActivityList groups by day and reads each row as one element', async () => {
   await wrap(<ActivityList transactions={[{ id: '1', title: 'Amazon', amount: -42.5, currency: 'USD', date: d }]} onPress={() => {}} />);
   expect(screen.getByRole('header', { name: 'Oct 29, 2026' })).toBeTruthy();
   expect(screen.getByRole('button', { name: /Amazon/ })).toBeTruthy();
+});
+
+it('HomeScreen shows the balance, quick actions, recent activity and insights', async () => {
+  const send = jest.fn();
+  const seeAll = jest.fn();
+  const open = jest.fn();
+  const tx = { id: '1', title: 'Coffee Lab', amount: -4.5, currency: 'USD', date: new Date(2026, 9, 30) };
+  await wrap(
+    <HomeScreen
+      greeting="Good morning, Mei"
+      balance={{ value: 1280.5, currency: 'USD' }}
+      quickActions={[{ id: 'send', label: 'Send', onPress: send }]}
+      recent={[tx]}
+      onTransactionPress={open}
+      onSeeAllActivity={seeAll}
+      insights={[{ id: 'i', title: 'Spending is down', body: '12% less than last month.' }]}
+    />,
+  );
+  expect(screen.getByLabelText('Total balance, $1,280.50')).toBeTruthy(); // one element
+  await fireEvent.press(screen.getByRole('button', { name: 'Send' }));
+  expect(send).toHaveBeenCalled();
+  expect(screen.getByRole('header', { name: 'Recent activity' })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: 'See all' }));
+  expect(seeAll).toHaveBeenCalled();
+  await fireEvent.press(screen.getByRole('button', { name: /Coffee Lab/ }));
+  expect(open).toHaveBeenCalledWith(tx);
+  expect(screen.getByText('Spending is down')).toBeTruthy();
 });
