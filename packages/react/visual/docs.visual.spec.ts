@@ -23,10 +23,14 @@ for (const path of pages) {
       await page.goto(path);
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       await page.evaluate(() => document.fonts.ready);
+      // Client components (live previews, measured motion wrappers) settle after load.
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(400);
       await expect(page).toHaveScreenshot(`docs${path.replaceAll('/', '-')}--${theme}.png`, {
         fullPage: true,
         // Version badge and footer year change every release / year, not with the page.
-        mask: [page.locator('header').getByText(/^v\d+\.\d+\.\d+/), page.locator('footer')],
+        // Live previews (phone frames) load on their own schedule.
+        mask: [page.locator('header').getByText(/^v\d+\.\d+\.\d+/), page.locator('footer'), page.locator('[data-live-preview]')],
       });
     });
   }

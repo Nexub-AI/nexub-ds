@@ -49,6 +49,7 @@ export function BrowserFrame({ src, title, height = 720 }: { src: string; title:
       </SegmentedControl.Root>
       <div ref={box} className="w-full">
         <div
+          data-live-preview
           className="mx-auto overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] shadow-elevation-2"
           style={{ width: w * scale, height: height * scale + 32 }}
         >

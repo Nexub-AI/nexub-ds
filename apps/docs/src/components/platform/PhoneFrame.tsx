@@ -71,6 +71,7 @@ export function PhoneFrame({
         ))}
       </SegmentedControl.Root>
       <div
+        data-live-preview
         className="relative shrink-0 overflow-hidden bg-[var(--color-inverse-surface)] p-[10px] shadow-elevation-3"
         style={{ width: d.w * scale + 20, height: height + 20, borderRadius: d.radius * scale + 10 }}
       >
