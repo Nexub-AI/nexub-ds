@@ -8,6 +8,9 @@ echo '::endgroup::'
 echo '::group::React Native / AndroidRuntime errors'
 adb logcat -d -s ReactNativeJS:E ReactNative:E AndroidRuntime:E | tail -n 120
 echo '::endgroup::'
+echo '::group::Text on screen (Maestro view hierarchy)'
+maestro hierarchy 2>/dev/null | grep -oE '"(text|accessibilityText|resource-id)" *: *"[^"]+"' | head -n 80
+echo '::endgroup::'
 echo '::group::Maestro log'
 log=$(ls -t "$HOME"/.maestro/tests/*/maestro.log 2>/dev/null | head -n 1)
 [ -n "$log" ] && grep -E 'FAILED|Failed|Exception|Assertion|COMPLETED|Running' "$log" | tail -n 60
