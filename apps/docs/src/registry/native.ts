@@ -7,6 +7,12 @@
  * snippet. `preview` is the slug of the live preview in apps/mobile.
  */
 import nativeProps from './native-props.generated.json';
+import previewManifest from '../../../mobile/preview-manifest.json';
+
+/** A live preview in apps/mobile (its preview manifest), so a typo fails tsc. */
+export type PreviewSlug =
+  | keyof typeof previewManifest.components
+  | `pattern/${keyof typeof previewManifest.patterns & string}`;
 
 export interface PlatformDifference {
   aspect: string;
@@ -18,7 +24,7 @@ export interface NativeTwin {
   /** Export name in @nexub/react-native. */
   name: string;
   /** Live-preview slug (apps/mobile preview manifest). */
-  preview: string;
+  preview: PreviewSlug;
   differences: PlatformDifference[];
   code: string;
   notes?: string[];
@@ -315,7 +321,7 @@ export interface MobileOnlyEntry {
   title: string;
   category: string;
   description: string;
-  preview: string;
+  preview: PreviewSlug;
   code: string;
   webAlternative?: string;
 }
@@ -328,7 +334,7 @@ export const mobileOnly: MobileOnlyEntry[] = [
   { slug: 'action-sheet', name: 'ActionSheet', title: 'Action Sheet', category: 'Overlays', preview: 'action-sheet', description: 'A list of actions from the bottom: the system sheet on iOS, a Nexub sheet on Android.', code: `<ActionSheet open={open} onOpenChange={setOpen} title="Photo" actions={[{ label: 'Take photo', onPress: shoot }, { label: 'Remove', destructive: true, onPress: remove }]} />`, webAlternative: 'DropdownMenu' },
   { slug: 'context-menu', name: 'ContextMenu', title: 'Context Menu', category: 'Overlays', preview: 'context-menu', description: 'Long-press menu with the actions also exposed as accessibility actions.', code: `<ContextMenu actions={actions}><ListItem title="Amazon" value="−S$42.50" /></ContextMenu>`, webAlternative: 'ContextMenu' },
   { slug: 'swipeable-row', name: 'SwipeableRow', title: 'Swipeable Row', category: 'Lists', preview: 'swipeable-row', description: 'Swipe a row to reveal actions; every swipe action is also an accessibility action.', code: `<SwipeableRow label="Amazon" actions={[{ label: 'Archive', onPress: archive }, { label: 'Delete', tone: 'danger', onPress: del }]}>…</SwipeableRow>` },
-  { slug: 'refresh-control', name: 'RefreshControl', title: 'Refresh Control', category: 'Lists', preview: 'refresh-control', description: 'Pull to refresh in Nexub colours.', code: `<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>…</ScrollView>` },
+  { slug: 'refresh-control', name: 'RefreshControl', title: 'Refresh Control', category: 'Lists', preview: 'pattern/activity', description: 'Pull to refresh in Nexub colours.', code: `<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>…</ScrollView>` },
   { slug: 'otp-input', name: 'OTPInput', title: 'OTP Input', category: 'Inputs', preview: 'otp-input', description: 'One field drawn as cells, so SMS one-time-code autofill works on iOS and Android.', code: `<OTPInput label="Verification code" length={6} onComplete={verify} />` },
   { slug: 'numeric-keypad', name: 'NumericKeypad', title: 'Numeric Keypad', category: 'Inputs', preview: 'numeric-keypad', description: 'An on-screen keypad for amounts and PINs, with the locale’s decimal key.', code: `<NumericKeypad decimal onKey={press} />` },
   { slug: 'expressive-money-input', name: 'ExpressiveMoneyInput', title: 'Expressive Money Input', category: 'Inputs', preview: 'expressive-money-input', description: 'The big amount on a send-money screen; pair with NumericKeypad.', code: `<ExpressiveMoneyInput label="Amount" currency="SGD" value={v} onValueChange={setV} caption="Balance S$2,400" />`, webAlternative: 'MoneyInput' },
@@ -362,7 +368,7 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
   },
   'auth-card': {
     name: 'SignInScreen',
-    preview: 'pattern/sign-in',
+    preview: 'pattern/signin',
     differences: [
       { aspect: 'Layout', web: 'A centred card on a page.', mobile: 'A full screen with the action pinned above the keyboard.' },
       { aspect: 'Biometrics', web: 'Passkeys through the browser.', mobile: '`onBiometric` + `biometricLabel` for Face ID or fingerprint.' },
@@ -397,7 +403,7 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
   },
   'list-detail': {
     name: 'ActivityList + TransactionDetail',
-    preview: 'pattern/transaction',
+    preview: 'pattern/detail',
     differences: [{ aspect: 'Layout', web: 'List and detail side by side; stacks on narrow screens.', mobile: 'The list pushes the detail screen onto the navigation stack.' }],
     code: `import { TransactionDetail } from '@nexub/react-native/patterns';
 
@@ -405,7 +411,7 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
   },
   'notification-item': {
     name: 'NotificationsInbox',
-    preview: 'pattern/notifications',
+    preview: 'pattern/inbox',
     differences: [{ aspect: 'Scope', web: 'One NotificationItem; lay out the list yourself.', mobile: 'The whole inbox with "Mark all read".' }],
     code: `import { NotificationsInbox } from '@nexub/react-native/patterns';
 

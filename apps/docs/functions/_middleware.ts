@@ -11,11 +11,12 @@
  * Static assets skip this function via public/_routes.json. The CSP in
  * public/_headers stays as the fallback policy if this function never runs.
  *
- * /m/* is the React Native web preview (apps/mobile build:web). Docs pages
- * frame it, so it alone may be framed, and only by this origin.
+ * /m/* is the React Native web preview (apps/mobile build:web) and /frame/*
+ * the page-template frames. Docs pages frame them, so they alone may be
+ * framed, and only by this origin.
  */
 
-const framedPreview = (path: string) => path === '/m' || path.startsWith('/m/');
+const framedPreview = (path: string) => path === '/m' || path.startsWith('/m/') || path.startsWith('/frame/');
 
 const CSP = (nonce: string, frameAncestors: string) =>
   [

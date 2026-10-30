@@ -69,7 +69,7 @@ export const templateEntries: TemplateEntry[] = [
     code: `<TransactionDetailPage transaction={tx} rows={[{ label: 'Reference', value: tx.ref }]} footer={<Button variant="tonal">Split bill</Button>} onBack={back} />`,
     native: {
       name: 'TransactionDetail',
-      preview: 'pattern/transaction',
+      preview: 'pattern/detail',
       differences: [{ aspect: 'Back', web: '`onBack` renders a back link.', mobile: 'The native stack header handles back.' }],
       code: `import { TransactionDetail } from '@nexub/react-native/patterns';
 
@@ -99,7 +99,7 @@ export const templateEntries: TemplateEntry[] = [
     code: `<SignInPage logo={<Logo product="Payub" />} onSubmit={signIn} onBiometric={passkey} biometricLabel="Sign in with a passkey" error={error} />`,
     native: {
       name: 'SignInScreen',
-      preview: 'pattern/sign-in',
+      preview: 'pattern/signin',
       differences: [
         { aspect: 'Autofill', web: '`autocomplete="username webauthn"` for password managers and passkeys.', mobile: 'Platform autofill hints for iCloud Keychain and Android Autofill.' },
         { aspect: 'Biometrics', web: 'Passkeys through the browser.', mobile: 'Face ID or fingerprint via `onBiometric`.' },

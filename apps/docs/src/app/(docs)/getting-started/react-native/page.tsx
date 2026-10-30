@@ -53,7 +53,7 @@ export default function ReactNativePage() {
           </Section>
         </div>
         <div className="flex justify-center">
-          <PhoneFrame path="preview/home" title="Payub home" height={600} />
+          <PhoneFrame path="preview/pattern/home" title="Payub home" height={600} />
         </div>
       </div>
 
