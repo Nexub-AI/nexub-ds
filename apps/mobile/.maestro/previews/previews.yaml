@@ -849,6 +849,18 @@ appId: ai.nexub.mobile
     timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-lock--${maestro.platform}
+- openLink: nexub://preview/pattern/home
+- runFlow:
+    when:
+      visible: "Open"
+    commands:
+      - tapOn: "Open"
+- extendedWaitUntil:
+    visible:
+      id: "preview-ready"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: pattern-home--${maestro.platform}
 - openLink: nexub://preview/pattern/activity
 - runFlow:
     when:

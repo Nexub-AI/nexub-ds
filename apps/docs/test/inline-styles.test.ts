@@ -24,22 +24,14 @@ const budget: Record<string, [max: number, reason: string]> = {
   'components/feedback/Annotator.tsx': [1, 'canvas size follows the captured image'],
   'components/landing/LandingHero.tsx': [4, 'cursor spotlight position; per-orb drift custom properties'],
   'components/kit/index.tsx': [3, 'grid min width prop; Do/Don’t accent per tone'],
+  'components/platform/PhoneFrame.tsx': [8, 'device size × scale; status bar and cutout geometry per device'],
+  'components/platform/BrowserFrame.tsx': [2, 'viewport width × scale to fit the column'],
   // Not yet converted (component/pattern pages, examples, motion, react-native,
   // app shell files). Reduce these as those pages move onto the kit.
-  'app/(docs)/components/[slug]/page.tsx': [1, 'pending conversion'],
-  'app/(docs)/patterns/[slug]/page.tsx': [6, 'pending conversion'],
-  'app/(docs)/examples/dashboard/page.tsx': [1, 'pending conversion'],
   'app/(docs)/foundations/motion/MotionDemo.tsx': [5, 'pending conversion (spring demo positions are dynamic)'],
   'app/(docs)/foundations/motion/page.tsx': [1, 'pending conversion'],
-  'app/(docs)/getting-started/react-native/page.tsx': [1, 'pending conversion'],
-  'app/error.tsx': [8, 'pending conversion'],
-  'app/not-found.tsx': [5, 'pending conversion'],
-  'app/layout.tsx': [1, 'pending conversion'],
   'components/docs/ColorSwatch.tsx': [3, 'swatch colour from props; pending conversion of the rest'],
   'components/docs/ComponentPreview.tsx': [8, 'preview width/background follow the toolbar; pending conversion'],
-  'components/docs/LivePreviewWrapper.tsx': [1, 'pending conversion'],
-  'components/docs/VersionBadge.tsx': [1, 'pending conversion'],
-  'components/layout/SkipToContent.tsx': [1, 'pending conversion'],
 };
 
 function walk(dir: string): string[] {

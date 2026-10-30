@@ -38,15 +38,18 @@ function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: str
           className={'shrink-0 transition-transform duration-spatial-fast ease-spatial-fast' + (open ? '' : ' -rotate-90')}
         />
       </Collapsible.Trigger>
-      <Collapsible.Content className={depth === 0 ? 'flex flex-col gap-px pb-2' : 'flex flex-col gap-px ps-2'}>
-        {group.items.map((item) => (
-          <Sidebar.Item key={item.href} asChild active={pathname === item.href} className="h-control-sm text-label-md">
-            <DocsLink href={item.href}>{item.title}</DocsLink>
-          </Sidebar.Item>
-        ))}
-        {(group.children ?? []).map((sub) => (
-          <NavSection key={sub.title} group={sub} pathname={pathname} depth={1} />
-        ))}
+      {/* No display utilities on Content itself: they would override the `hidden` attribute Radix sets when closed. */}
+      <Collapsible.Content>
+        <div className={depth === 0 ? 'flex flex-col gap-px pb-2' : 'flex flex-col gap-px ps-2'}>
+          {group.items.map((item) => (
+            <Sidebar.Item key={item.href} asChild active={pathname === item.href} className="h-control-sm text-label-md">
+              <DocsLink href={item.href}>{item.title}</DocsLink>
+            </Sidebar.Item>
+          ))}
+          {(group.children ?? []).map((sub) => (
+            <NavSection key={sub.title} group={sub} pathname={pathname} depth={1} />
+          ))}
+        </div>
       </Collapsible.Content>
     </Collapsible.Root>
   );

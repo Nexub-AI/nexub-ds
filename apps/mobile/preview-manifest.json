@@ -545,6 +545,11 @@
       "subtitle": "Biometric unlock",
       "path": "/m/preview/pattern/lock"
     },
+    "home": {
+      "title": "Home",
+      "subtitle": "Balance, quick actions, insights",
+      "path": "/m/preview/pattern/home"
+    },
     "activity": {
       "title": "Activity",
       "subtitle": "Grouped list, swipe, refresh",

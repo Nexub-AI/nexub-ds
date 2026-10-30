@@ -1,3 +1,4 @@
+import { Badge } from '@nexub/react';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -30,22 +31,8 @@ const VERSION = readLibVersion();
 
 export function VersionBadge() {
   return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        padding: '2px 8px',
-        background: 'var(--color-info-container)',
-        color: 'var(--color-info)',
-        border: '1px solid color-mix(in srgb, var(--color-info) 35%, transparent)',
-        borderRadius: 'var(--shape-control)',
-        fontSize: '0.7rem',
-        fontWeight: 600,
-        fontFamily: 'var(--font-family-mono)',
-        letterSpacing: '0.02em',
-      }}
-    >
+    <Badge tone="info" variant="soft" className="font-mono">
       v{VERSION}
-    </span>
+    </Badge>
   );
 }

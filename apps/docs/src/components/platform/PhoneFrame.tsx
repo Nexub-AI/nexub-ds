@@ -5,9 +5,9 @@ import { SegmentedControl, Text } from '@nexub/react';
 
 type Device = 'ios' | 'android';
 
-const DEVICES: Record<Device, { label: string; w: number; h: number; radius: number }> = {
-  ios: { label: 'iPhone', w: 393, h: 852, radius: 55 },
-  android: { label: 'Pixel', w: 412, h: 892, radius: 44 },
+const DEVICES: Record<Device, { label: string; w: number; h: number; radius: number; statusBar: number }> = {
+  ios: { label: 'iPhone', w: 393, h: 852, radius: 55, statusBar: 54 },
+  android: { label: 'Pixel', w: 412, h: 892, radius: 44, statusBar: 40 },
 };
 
 /** The docs' theme and brand, read from <html> (ThemeProvider + BrandSwitcher). */
@@ -78,6 +78,18 @@ export function PhoneFrame({
           className="relative overflow-hidden bg-[var(--color-surface)]"
           style={{ width: d.w * scale, height, borderRadius: d.radius * scale }}
         >
+          {/* Status bar: the preview starts below it, as under a native safe area. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 flex items-center justify-between font-semibold text-[var(--color-on-surface)]"
+            style={{ height: d.statusBar * scale, paddingInline: (device === 'ios' ? 34 : 22) * scale, fontSize: 15 * scale }}
+          >
+            <span>9:41</span>
+            <span className="flex items-center" style={{ gap: 5 * scale }}>
+              <span className="rounded-[2px] bg-current" style={{ width: 17 * scale, height: 10 * scale, opacity: 0.9 }} />
+              <span className="rounded-[3px] border border-current" style={{ width: 24 * scale, height: 11 * scale }} />
+            </span>
+          </div>
           {src && (
             <iframe
               ref={frame}
@@ -85,8 +97,8 @@ export function PhoneFrame({
               src={src}
               title={`${title}: live preview on ${d.label}`}
               loading="lazy"
-              className="absolute left-0 top-0 origin-top-left border-0"
-              style={{ width: d.w, height: d.h, transform: `scale(${scale})` }}
+              className="absolute left-0 origin-top-left border-0"
+              style={{ top: d.statusBar * scale, width: d.w, height: d.h - d.statusBar, transform: `scale(${scale})` }}
               onLoad={() => theme && frame.current?.contentWindow?.postMessage({ type: 'nexub-theme', ...theme }, window.location.origin)}
             />
           )}
