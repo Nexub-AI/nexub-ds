@@ -52,6 +52,26 @@
       "outputs": [
         "storybook-static/**"
       ]
+    },
+    "build:web": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist-web/**"
+      ]
+    },
+    "@nexub/docs#build": {
+      "dependsOn": [
+        "^build",
+        "@nexub/mobile#build:web"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "out/**",
+        "public/m/**"
+      ]
     }
   }
 }

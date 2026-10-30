@@ -5,7 +5,8 @@ import { FlatCompat } from '@eslint/eslintrc';
 const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) });
 
 const config = [
-  { ignores: ['.next/**', 'out/**', 'next-env.d.ts'] },
+  // public/m: the React Native web preview, copied in by build:mobile-web.
+  { ignores: ['.next/**', 'out/**', 'public/m/**', 'next-env.d.ts'] },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 ];
 
