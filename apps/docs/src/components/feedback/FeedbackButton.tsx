@@ -28,29 +28,7 @@ export function FeedbackButton() {
             setOpen(true);
           }}
           aria-label="Send feedback"
-          className="docs-feedback-fab"
-          style={{
-            position: 'fixed',
-            right: 'clamp(12px, 2vw, 24px)',
-            bottom: 'clamp(12px, 2vw, 24px)',
-            zIndex: 90,
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '10px 14px',
-            border: '1px solid var(--color-outline-variant)',
-            borderRadius: 'var(--shape-control)',
-            background: 'var(--color-surface)',
-            color: 'var(--color-on-surface)',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            fontFamily: 'inherit',
-            cursor: 'pointer',
-            boxShadow:
-              '0 6px 20px -6px color-mix(in srgb, var(--color-on-surface) 18%, transparent), 0 1px 2px color-mix(in srgb, var(--color-on-surface) 6%, transparent)',
-            transition:
-              'transform var(--duration-fast, 180ms) var(--ease-out, ease), box-shadow var(--duration-fast, 180ms) var(--ease-out, ease)',
-          }}
+          className="docs-feedback-fab nx-state-layer fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] inline-flex items-center gap-2 rounded-shape-control border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] px-3.5 py-2.5 text-label-lg font-semibold text-[var(--color-on-surface)] shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
         >
           <MessageSquare size={15} aria-hidden="true" />
           Feedback

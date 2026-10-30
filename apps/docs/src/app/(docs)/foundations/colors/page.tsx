@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PageIntro, Prose, Section } from '@/components/kit';
+import { PageIntro } from '@/components/kit';
 
 export const dynamic = 'force-static';
 

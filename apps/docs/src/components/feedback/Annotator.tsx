@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Button } from '@nexub/react';
 
 interface Props {
   source: Blob;
@@ -150,30 +151,13 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <div
-        style={{
-          position: 'relative',
-          width: previewDims.w,
-          height: previewDims.h,
-          maxWidth: '100%',
-          border: '1px solid var(--color-outline-variant)',
-          borderRadius: 'var(--shape-field)',
-          overflow: 'hidden',
-          background: 'var(--color-surface-container-low)',
-          touchAction: 'none',
-        }}
+        className="relative max-w-full touch-none overflow-hidden rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+        style={{ width: previewDims.w, height: previewDims.h }}
       >
         <img
           src={imageUrl}
           alt="Captured screenshot"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'fill',
-            pointerEvents: 'none',
-            userSelect: 'none',
-          }}
+          className="pointer-events-none absolute inset-0 h-full w-full select-none object-fill"
         />
         <canvas
           ref={canvasRef}
@@ -184,69 +168,34 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
           onPointerUp={stop}
           onPointerCancel={stop}
           onPointerLeave={stop}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            cursor: 'crosshair',
-            touchAction: 'none',
-          }}
+          className="absolute inset-0 h-full w-full cursor-crosshair touch-none"
         />
       </div>
 
       <div
-        className="flex items-center justify-between gap-2 text-[0.72rem] text-[var(--color-on-surface-muted)]"
+        className="flex items-center justify-between gap-2 text-label-sm text-[var(--color-on-surface-muted)]"
       >
         <span>Click and drag to mark the area. Strokes save with the screenshot.</span>
         <div className="flex gap-1.5">
           {hasStrokes && (
-            <button
-              type="button"
-              onClick={clearStrokes}
-              style={ghostBtn}
-            >
+            <Button type="button" size="xs" variant="text" onClick={clearStrokes}>
               Clear marks
-            </button>
+            </Button>
           )}
-          <button type="button" onClick={onDiscard} style={ghostBtn}>
+          <Button type="button" size="xs" variant="outlined" onClick={onDiscard}>
             Discard
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            size="xs"
             onClick={handleDone}
-            style={primaryBtn}
             disabled={!hasStrokes}
             title={hasStrokes ? 'Bake annotations into the screenshot' : 'Draw something to enable'}
           >
             Save annotations
-          </button>
+          </Button>
         </div>
       </div>
     </div>
   );
 }
-
-const ghostBtn: React.CSSProperties = {
-  padding: '4px 8px',
-  fontSize: '0.72rem',
-  fontFamily: 'inherit',
-  fontWeight: 500,
-  background: 'transparent',
-  color: 'var(--color-on-surface-variant)',
-  border: '1px solid var(--color-outline-variant)',
-  borderRadius: 'var(--shape-tooltip)',
-  cursor: 'pointer',
-};
-
-const primaryBtn: React.CSSProperties = {
-  padding: '4px 8px',
-  fontSize: '0.72rem',
-  fontFamily: 'inherit',
-  fontWeight: 600,
-  background: 'var(--color-primary)',
-  color: '#fff',
-  border: '1px solid var(--color-primary)',
-  borderRadius: 'var(--shape-tooltip)',
-  cursor: 'pointer',
-};

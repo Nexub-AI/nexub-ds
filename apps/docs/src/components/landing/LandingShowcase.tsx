@@ -8,7 +8,7 @@ export function LandingShowcase() {
     <div className="flex flex-wrap gap-8 justify-center items-center">
       {/* Buttons */}
       <div className="flex flex-col gap-3 items-center">
-        <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Button</Text>
+        <Text size="caption" tone="muted" weight="semibold" className="uppercase tracking-widest">Button</Text>
         <div className="flex gap-2 flex-wrap justify-center">
           <Button variant="filled" size="md">Filled</Button>
           <Button variant="tonal" size="md">Tonal</Button>
@@ -18,7 +18,7 @@ export function LandingShowcase() {
 
       {/* Badges */}
       <div className="flex flex-col gap-3 items-center">
-        <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Badge</Text>
+        <Text size="caption" tone="muted" weight="semibold" className="uppercase tracking-widest">Badge</Text>
         <div className="flex gap-2 flex-wrap justify-center">
           <Badge tone="info">Info</Badge>
           <Badge tone="success">Success</Badge>
@@ -29,7 +29,7 @@ export function LandingShowcase() {
 
       {/* Input */}
       <div className="flex flex-col gap-3 items-center">
-        <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Input</Text>
+        <Text size="caption" tone="muted" weight="semibold" className="uppercase tracking-widest">Input</Text>
         <div className="w-[200px]">
           <Input placeholder="Search components…" leadingIcon={<Search size="sm" />} />
         </div>
@@ -37,7 +37,7 @@ export function LandingShowcase() {
 
       {/* Spinner */}
       <div className="flex flex-col gap-3 items-center">
-        <Text size="caption" tone="muted" weight="semibold" style={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}>Spinner</Text>
+        <Text size="caption" tone="muted" weight="semibold" className="uppercase tracking-widest">Spinner</Text>
         <Stack direction="row" gap="md" align="center">
           <Spinner size="sm" />
           <Spinner size="md" />

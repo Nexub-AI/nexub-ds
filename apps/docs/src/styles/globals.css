@@ -180,11 +180,6 @@ body {
 .shiki span { color: light-dark(var(--shiki-light), var(--shiki-dark)); }
 
 /* ── Command-K search item: selected = secondary-container ───────────────── */
-.search-item[data-selected='true'] {
-  background: var(--color-secondary-container) !important;
-  color: var(--color-on-secondary-container) !important;
-  outline: none;
-}
 
 /* ── Link base ────────────────────────────────────────────────────────────── */
 a { color: inherit; }
@@ -264,113 +259,14 @@ html, body {
   gap: 1rem;
   margin-bottom: 1.75rem;
 }
-.docs-usage-card {
-  position: relative;
-  padding: 1.1rem 1.1rem 1.15rem;
-  border-radius: var(--shape-container);
-  border: 1px solid;
-  overflow: hidden;
-  transition: transform var(--duration-fast, 180ms) var(--ease-out, ease),
-              box-shadow var(--duration-fast, 180ms) var(--ease-out, ease);
-}
-.docs-usage-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at top right, var(--docs-usage-glow, transparent) 0%, transparent 55%);
-  opacity: 0.6;
-  pointer-events: none;
-}
-.docs-usage-card:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--elevation-1);
-}
-.docs-usage-card-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 0.85rem;
-  position: relative;
-}
-.docs-usage-card-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  color: #fff;
-  box-shadow: 0 4px 10px -4px var(--docs-usage-shadow, rgba(0,0,0,0.25));
-}
-.docs-usage-card-title {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-on-surface);
-  line-height: 1.25;
-}
-.docs-usage-card-subtitle {
-  margin: 2px 0 0;
-  font-size: 0.72rem;
-  color: var(--color-on-surface-muted);
-  letter-spacing: 0.01em;
-}
-.docs-usage-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.45rem;
-  position: relative;
-}
-.docs-usage-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  font-size: 0.84rem;
-  line-height: 1.55;
-  color: var(--color-on-surface-variant);
-}
-.docs-usage-bullet {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--shape-control);
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: #fff;
-}
-
-/* Do tone — success palette */
+/* Still used by patterns/[slug] (owned by the component/pattern page work). */
 .docs-usage-do {
-  background:
-    linear-gradient(135deg, var(--color-success-container) 0%, transparent 100%),
-    var(--color-surface);
+  background: linear-gradient(135deg, var(--color-success-container) 0%, transparent 100%), var(--color-surface);
   border-color: color-mix(in srgb, var(--color-success) 35%, transparent);
-  --docs-usage-glow: var(--color-success);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-success) 35%, transparent);
 }
-.docs-usage-do .docs-usage-card-icon,
-.docs-usage-do .docs-usage-bullet {
-  background: var(--color-success);
-}
-
-/* Don't tone — error palette */
 .docs-usage-dont {
-  background:
-    linear-gradient(135deg, var(--color-error-container) 0%, transparent 100%),
-    var(--color-surface);
+  background: linear-gradient(135deg, var(--color-error-container) 0%, transparent 100%), var(--color-surface);
   border-color: color-mix(in srgb, var(--color-error) 35%, transparent);
-  --docs-usage-glow: var(--color-error);
-  --docs-usage-shadow: color-mix(in srgb, var(--color-error) 35%, transparent);
-}
-.docs-usage-dont .docs-usage-card-icon,
-.docs-usage-dont .docs-usage-bullet {
-  background: var(--color-error);
 }
 
 @media (max-width: 639px) { .docs-usage-grid { grid-template-columns: 1fr; } }
@@ -413,16 +309,6 @@ html, body {
 }
 
 /* ── Hero accent bar ────────────────────────────────────────────────────── */
-.docs-hero-bar {
-  height: 3px;
-  width: 72px;
-  border-radius: var(--shape-control);
-  background: linear-gradient(
-    90deg,
-    var(--color-primary),
-    var(--color-info, var(--color-primary, var(--color-primary)))
-  );
-}
 
 /* ── Scroll-reveal animation ────────────────────────────────────────────── */
 @keyframes docs-reveal-up {
@@ -452,13 +338,6 @@ html, body {
 @keyframes landing-orb-float {
   0%, 100% { transform: translate(0, 0); }
   50%      { transform: translate(var(--orb-x, 0), var(--orb-y, 0)); }
-}
-.landing-card {
-  transition: transform 200ms var(--ease-out, ease-out), box-shadow 200ms var(--ease-out, ease-out);
-}
-.landing-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--elevation-3);
 }
 
 /* ── Playground grid ────────────────────────────────────────────────────── */
@@ -502,10 +381,6 @@ html, body {
   .docs-related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-.docs-related-card:hover {
-  border-color: var(--color-primary) !important;
-  transform: translateY(-1px);
 }
 
 /* ── Feedback floating action button ────────────────────────────────────── */

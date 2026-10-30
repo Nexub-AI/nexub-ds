@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Dialog, Button, Textarea, Select, FormField, toast } from '@nexub/react';
+import { Dialog, Button, Textarea, Select, FormField, toast, Input } from '@nexub/react';
 import { Turnstile, type TurnstileHandle } from './Turnstile';
 import { ScreenshotPicker } from './ScreenshotPicker';
 import {
@@ -140,14 +140,7 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
               aria-hidden="true"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              style={{
-                position: 'absolute',
-                left: '-9999px',
-                width: 1,
-                height: 1,
-                opacity: 0,
-                pointerEvents: 'none',
-              }}
+              className="pointer-events-none absolute -start-[9999px] h-px w-px opacity-0"
             />
 
             <FormField.Root required>
@@ -189,22 +182,12 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
             <FormField.Root invalid={Boolean(errors.email)}>
               <FormField.Label>Email (optional)</FormField.Label>
               <FormField.Control>
-                <input
+                <Input
                   type="email"
+                  size="sm"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{
-                    height: 36,
-                    padding: '0 12px',
-                    border: '1px solid var(--color-outline-variant)',
-                    borderRadius: 'var(--shape-field)',
-                    background: 'var(--color-surface)',
-                    color: 'var(--color-on-surface)',
-                    fontSize: '0.875rem',
-                    fontFamily: 'inherit',
-                    outline: 'none',
-                  }}
                 />
               </FormField.Control>
               <FormField.Description>

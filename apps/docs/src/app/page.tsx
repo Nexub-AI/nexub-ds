@@ -53,7 +53,7 @@ export default function HomePage() {
           <Heading level={2} size="h3" className="mb-3">
             Real components, live in your browser
           </Heading>
-          <Text tone="muted" style={{ maxWidth: '480px', margin: '0 auto 3rem' }}>
+          <Text tone="muted" className="mx-auto mb-12 max-w-[480px]">
             Every component is interactive, themeable, and accessible out of the box.
           </Text>
           <LandingShowcase />

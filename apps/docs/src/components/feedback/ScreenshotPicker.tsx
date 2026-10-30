@@ -100,13 +100,7 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
             disabled={busy !== null}
           />
         )}
-        <label
-          style={{
-            ...buttonBase,
-            cursor: busy ? 'not-allowed' : 'pointer',
-            opacity: busy ? 0.6 : 1,
-          }}
-        >
+        <label className={btnClass + (busy ? ' cursor-not-allowed opacity-60' : ' cursor-pointer')}>
           <UploadIcon size={14} aria-hidden="true" />
           Upload
           <input
@@ -114,17 +108,11 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
             accept={ACCEPTED_IMAGE_TYPES.join(',')}
             disabled={busy !== null}
             onChange={(e) => handleFile(e.target.files?.[0] ?? null)}
-            style={{
-              position: 'absolute',
-              width: 1,
-              height: 1,
-              opacity: 0,
-              pointerEvents: 'none',
-            }}
+            className="pointer-events-none absolute h-px w-px opacity-0"
           />
         </label>
       </div>
-      <p className="m-0 text-[0.72rem] text-[var(--color-on-surface-muted)]">
+      <p className="m-0 text-label-sm text-[var(--color-on-surface-muted)]">
         Capture page = current viewport (no permission). Capture screen = native picker (browser/window/screen). Max 2 MB.
       </p>
     </div>
@@ -151,17 +139,12 @@ function CaptureBtn({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      style={{
-        ...buttonBase,
-        ...(primary
-          ? {
-              borderColor: 'var(--color-primary)',
-              color: 'var(--color-primary)',
-            }
-          : null),
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        opacity: disabled && !busy ? 0.6 : 1,
-      }}
+      className={
+        btnClass +
+        (primary ? ' !border-[var(--color-primary)] !text-[var(--color-primary)]' : '') +
+        (disabled ? ' cursor-not-allowed' : ' cursor-pointer') +
+        (disabled && !busy ? ' opacity-60' : '')
+      }
     >
       {icon}
       {busy ? 'Capturing…' : label}
@@ -169,18 +152,5 @@ function CaptureBtn({
   );
 }
 
-const buttonBase: React.CSSProperties = {
-  position: 'relative',
-  display: 'inline-flex',
-  alignItems: 'center',
-  gap: 6,
-  padding: '6px 10px',
-  fontSize: '0.78rem',
-  fontWeight: 500,
-  fontFamily: 'inherit',
-  background: 'var(--color-surface)',
-  color: 'var(--color-on-surface-variant)',
-  border: '1px solid var(--color-outline-variant)',
-  borderRadius: 'var(--shape-field)',
-  whiteSpace: 'nowrap',
-};
+const btnClass =
+  'nx-state-layer relative inline-flex items-center gap-1.5 whitespace-nowrap rounded-shape-control border border-[var(--color-outline-variant)] bg-[var(--color-surface)] px-3 py-1.5 text-label-md font-medium text-[var(--color-on-surface-variant)]';
