@@ -66,7 +66,12 @@ const flow = [
   '    visible: "Components"',
   '    timeout: 60000',
 ];
+// Screens that open a native modal on mount: the modal is its own window on
+// Android, so Maestro can't see the screen's preview-ready marker underneath.
+// Wait for text inside the modal instead.
+const READY_TEXT = { 'pattern/apps': 'Nexub apps' };
 const open = (link, shot) => {
+  const text = READY_TEXT[link.replace(/^preview\//, '')];
   flow.push(
     `- openLink: nexub://${link}`,
     '- runFlow:',
@@ -75,8 +80,7 @@ const open = (link, shot) => {
     '    commands:',
     '      - tapOn: "Open"',
     '- extendedWaitUntil:',
-    '    visible:',
-    '      id: "preview-ready"',
+    ...(text ? [`    visible: "${text}"`] : ['    visible:', '      id: "preview-ready"']),
     '    timeout: 15000',
     '- waitForAnimationToEnd',
     `- takeScreenshot: ${shot}--\${maestro.platform}`,

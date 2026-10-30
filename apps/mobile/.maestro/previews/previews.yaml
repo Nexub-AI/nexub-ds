@@ -1000,8 +1000,7 @@ appId: ai.nexub.mobile
     commands:
       - tapOn: "Open"
 - extendedWaitUntil:
-    visible:
-      id: "preview-ready"
+    visible: "Nexub apps"
     timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-apps--${maestro.platform}
