@@ -506,3 +506,16 @@ html, body {
   border-radius: inherit;
   pointer-events: none;
 }
+
+/* ── Motion gallery (foundations/motion) ─────────────────────────────────── */
+@keyframes docs-spring-dot { from { inset-inline-start: 4px; } to { inset-inline-start: calc(100% - 36px); } }
+.docs-spring-dot { animation-name: docs-spring-dot; animation-fill-mode: both; }
+
+/* Reduced-motion preview: the same fallbacks @nexub/themes applies under
+   prefers-reduced-motion, scoped to the gallery. */
+.docs-reduce-motion .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
+.docs-reduce-motion .nx-stagger > * { --nx-y: 0px; animation-delay: 0s; }
+.docs-reduce-motion .nx-lift:hover,
+.docs-reduce-motion .nx-lift:active,
+.docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
+.docs-reduce-motion .docs-spring-dot { animation: none; inset-inline-start: calc(100% - 36px); }

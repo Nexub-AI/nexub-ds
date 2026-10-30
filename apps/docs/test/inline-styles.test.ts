@@ -25,11 +25,10 @@ const budget: Record<string, [max: number, reason: string]> = {
   'components/landing/LandingHero.tsx': [4, 'cursor spotlight position; per-orb drift custom properties'],
   'components/kit/index.tsx': [3, 'grid min width prop; Do/Don’t accent per tone'],
   'components/platform/PhoneFrame.tsx': [8, 'device size × scale; status bar and cutout geometry per device'],
+  'app/(docs)/foundations/motion/MotionGallery.tsx': [2, 'slow-motion duration variables; per-family spring timing on the demo dot'],
   'components/platform/BrowserFrame.tsx': [2, 'viewport width × scale to fit the column'],
   // Not yet converted (component/pattern pages, examples, motion, react-native,
   // app shell files). Reduce these as those pages move onto the kit.
-  'app/(docs)/foundations/motion/MotionDemo.tsx': [5, 'pending conversion (spring demo positions are dynamic)'],
-  'app/(docs)/foundations/motion/page.tsx': [1, 'pending conversion'],
   'components/docs/ColorSwatch.tsx': [3, 'swatch colour from props; pending conversion of the rest'],
   'components/docs/ComponentPreview.tsx': [8, 'preview width/background follow the toolbar; pending conversion'],
 };

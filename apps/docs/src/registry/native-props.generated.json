@@ -331,6 +331,13 @@
     "extends": [],
     "props": [
       {
+        "name": "animate",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Animate value changes: the new figure rises in on the spatial spring.\nWraps the text in a view, so leave it off when Amount sits inside other text."
+      },
+      {
         "name": "value",
         "type": "number",
         "required": true,
