@@ -65,7 +65,7 @@ export default function MotionPage() {
               code={`import Animated, { withSpring } from 'react-native-reanimated';
 import { nxEnter, nxExit, nxLayout, nxSpring } from '@nexub/react-native';
 
-// Enter and exit on the effects + spatial springs; off under Reduce Motion.
+// Enter and exit, timed to the spatial / effects springs; off under Reduce Motion.
 <Animated.View entering={nxEnter('up')} exiting={nxExit('down')} layout={nxLayout()} />
 
 // Lists: rows glide into place when others are added or removed.

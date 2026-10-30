@@ -13,6 +13,7 @@ import {
   nxLayout,
   nxSpring,
 } from '../index';
+import { springSettleMs } from '../theme/motion';
 
 jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
@@ -33,18 +34,33 @@ describe('motion presets ride the spring tokens', () => {
     expect(nxSpring('effects', 'slow')).toEqual({ ...native.motion.spring.effects.slow, reduceMotion: 'system' });
   });
 
-  it('enter uses the spatial spring', () => {
+  it('enter is timed to the spatial spring, decelerating', () => {
     const b = rec(nxEnter('up', 'fast'));
-    const s = native.motion.spring.spatial.fast;
     expect(b.__name).toBe('FadeInUp');
-    expect(b.__config).toMatchObject({ springify: true, stiffness: s.stiffness, damping: s.damping, mass: s.mass, reduceMotion: 'system' });
+    expect(b.__config).toMatchObject({
+      duration: springSettleMs(native.motion.spring.spatial.fast),
+      easing: { bezier: [0, 0, 0.2, 1] },
+      reduceMotion: 'system',
+    });
+    // Physics springs left entering views invisible on iOS; never use them here.
+    expect(b.__config.springify).toBeUndefined();
   });
 
-  it('exit uses the effects spring (quicker, no overshoot)', () => {
+  it('exit is timed to the effects spring: quicker than enter', () => {
     const b = rec(nxExit('down'));
-    const s = native.motion.spring.effects.fast;
     expect(b.__name).toBe('FadeOutDown');
-    expect(b.__config).toMatchObject({ stiffness: s.stiffness, damping: s.damping, reduceMotion: 'system' });
+    expect(b.__config).toMatchObject({ duration: springSettleMs(native.motion.spring.effects.fast), reduceMotion: 'system' });
+    expect(b.__config.duration as number).toBeLessThan(rec(nxEnter('up')).__config.duration as number);
+  });
+
+  it('settle times are sane', () => {
+    for (const fam of Object.values(native.motion.spring)) {
+      for (const s of Object.values(fam)) {
+        const ms = springSettleMs(s);
+        expect(ms).toBeGreaterThan(80);
+        expect(ms).toBeLessThan(1500);
+      }
+    }
   });
 
   it('exit toward the start edge follows RTL', () => {
@@ -53,10 +69,10 @@ describe('motion presets ride the spring tokens', () => {
     expect(rec(nxExit('end')).__name).toBe('SlideOutRight');
   });
 
-  it('layout uses the spatial spring', () => {
+  it('layout is timed to the spatial spring', () => {
     const b = rec(nxLayout());
     expect(b.__name).toBe('LinearTransition');
-    expect(b.__config).toMatchObject({ stiffness: native.motion.spring.spatial.default.stiffness, reduceMotion: 'system' });
+    expect(b.__config).toMatchObject({ duration: springSettleMs(native.motion.spring.spatial.default), reduceMotion: 'system' });
   });
 
   it('every spring is at most critically damped for effects (no overshoot)', () => {

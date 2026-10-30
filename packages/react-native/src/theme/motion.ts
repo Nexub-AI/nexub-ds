@@ -1,4 +1,5 @@
 import {
+  Easing,
   FadeIn,
   FadeInDown,
   FadeInUp,
@@ -35,7 +36,34 @@ const ENTER = { fade: FadeIn, up: FadeInUp, down: FadeInDown, scale: ZoomIn } as
 const EXIT = { fade: FadeOut, up: FadeOutUp, down: FadeOutDown, scale: ZoomOut } as const;
 
 /**
- * `entering` animation on the spatial spring.
+ * Settle time of a spring token (ms): when it is within 0.1% of rest. The
+ * same rule @nexub/tokens uses for the CSS spring durations.
+ */
+export function springSettleMs({ stiffness, damping, mass }: { stiffness: number; damping: number; mass: number }) {
+  const dt = 1 / 1000;
+  let x = 0;
+  let v = 0;
+  let still = 0;
+  for (let t = 0; t < 3; t += dt) {
+    const a = (stiffness * (1 - x) - damping * v) / mass;
+    v += a * dt;
+    x += v * dt;
+    still = Math.abs(1 - x) < 0.001 && Math.abs(v) < 0.01 ? still + 1 : 0;
+    if (still > 16) return Math.round((t - 0.016) * 1000);
+  }
+  return 3000;
+}
+
+// Enter, exit and layout run as timed animations lasting the spring token's
+// settle time, on the system decelerate / accelerate curves. Reanimated's
+// physics-spring layout animations (`springify()` with stiffness/damping)
+// left entering views invisible on iOS, so they aren't used here; withSpring
+// (nxSpring) is unaffected.
+const decelerate = Easing.bezier(0, 0, 0.2, 1);
+const accelerate = Easing.bezier(0.4, 0, 1, 1);
+
+/**
+ * `entering` animation, timed to the spatial spring.
  * `up` rises into place (rows, toasts from below); `down` drops in (banners).
  *
  * ```tsx
@@ -43,21 +71,17 @@ const EXIT = { fade: FadeOut, up: FadeOutUp, down: FadeOutDown, scale: ZoomOut }
  * ```
  */
 export function nxEnter(kind: EnterKind = 'fade', speed: SpringSpeed = 'default') {
-  const s = native.motion.spring.spatial[speed];
   return ENTER[kind]
-    .springify()
-    .stiffness(s.stiffness)
-    .damping(s.damping)
-    .mass(s.mass)
+    .duration(springSettleMs(native.motion.spring.spatial[speed]))
+    .easing(decelerate)
     .reduceMotion(ReduceMotion.System);
 }
 
 /**
- * `exiting` animation on the effects spring: quicker than enter, no overshoot.
+ * `exiting` animation, timed to the effects spring: quicker than enter.
  * `start` / `end` slide out toward that edge (swipe-to-delete), following RTL.
  */
 export function nxExit(kind: ExitKind = 'fade', speed: SpringSpeed = 'fast', rtl = false) {
-  const s = native.motion.spring.effects[speed];
   const builder =
     kind === 'start' || kind === 'end'
       ? (kind === 'start') !== rtl
@@ -65,19 +89,14 @@ export function nxExit(kind: ExitKind = 'fade', speed: SpringSpeed = 'fast', rtl
         : SlideOutRight
       : EXIT[kind];
   return builder
-    .springify()
-    .stiffness(s.stiffness)
-    .damping(s.damping)
-    .mass(s.mass)
+    .duration(springSettleMs(native.motion.spring.effects[speed]))
+    .easing(accelerate)
     .reduceMotion(ReduceMotion.System);
 }
 
-/** `layout` transition: siblings glide to their new place on the spatial spring. */
+/** `layout` transition: siblings glide into place, timed to the spatial spring. */
 export function nxLayout(speed: SpringSpeed = 'default') {
-  const s = native.motion.spring.spatial[speed];
-  return LinearTransition.springify()
-    .stiffness(s.stiffness)
-    .damping(s.damping)
-    .mass(s.mass)
+  return LinearTransition.duration(springSettleMs(native.motion.spring.spatial[speed]))
+    .easing(decelerate)
     .reduceMotion(ReduceMotion.System);
 }
