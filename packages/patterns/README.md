@@ -6,7 +6,10 @@ Composite UI patterns for the Nexub Design System, built on `@nexub/react`.
 pnpm add @nexub/patterns @nexub/react @nexub/icons @nexub/themes
 ```
 
-Like `@nexub/react`, the patterns are styled with Tailwind classes your app compiles: add `node_modules/@nexub/patterns/dist/**/*.js` to your Tailwind `content`, use the `@nexub/tokens/tailwind` preset, and import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`).
+Like `@nexub/react`, the patterns are styled with Tailwind classes your app compiles, on Tailwind 3 or 4. Import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`), then:
+
+- **Tailwind 3:** add `node_modules/@nexub/patterns/dist/**/*.js` to your Tailwind `content` and use the `@nexub/tokens/tailwind` preset.
+- **Tailwind 4:** `@import "@nexub/tokens/tailwind.css";` after `@import "tailwindcss";`, add `@source "../node_modules/@nexub/patterns/dist";`, and import the theme CSS with `layer(base)` so Tailwind's utilities still win over it. See [Getting Started](https://nexub-ds-docs.pages.dev/getting-started) for the full snippet.
 
 ## AppHeader
 
