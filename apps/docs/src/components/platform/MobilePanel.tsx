@@ -3,7 +3,9 @@ import { Badge } from '@nexub/react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { InlineCode } from '@/components/docs/PropsTable';
 import { DocTable, Note, Prose, Section } from '@/components/kit';
-import { nativePropsFor, type PlatformDifference } from '@/registry/native';
+import { NATIVE_STATUS, nativePropsFor, type PlatformDifference } from '@/registry/native';
+import type { ComponentStatus } from '@/registry/types';
+import { StatusBadge } from '@/components/docs/StatusBadge';
 import { DeviceShots } from './DeviceShots';
 import { PhoneFrame } from './PhoneFrame';
 
@@ -17,6 +19,7 @@ export function MobilePanel({
   webAlternative,
   intro,
   pkg = '@nexub/react-native',
+  status = NATIVE_STATUS,
 }: {
   /** Export name(s) in @nexub/react-native, e.g. "Button" or "ToastProvider + useToast". */
   name: string;
@@ -28,6 +31,7 @@ export function MobilePanel({
   webAlternative?: string;
   intro?: React.ReactNode;
   pkg?: string;
+  status?: ComponentStatus;
 }) {
   const primary = (name.split(/\s[+/]\s/)[0] ?? name).trim();
   const props = nativePropsFor(primary);
@@ -39,7 +43,7 @@ export function MobilePanel({
         <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="soft" tone="info">{pkg}</Badge>
-            <Badge variant="outline">alpha</Badge>
+            <StatusBadge status={status} />
             {webAlternative && <Badge variant="outline">Web: {webAlternative}</Badge>}
           </div>
           {intro && <Prose>{intro}</Prose>}

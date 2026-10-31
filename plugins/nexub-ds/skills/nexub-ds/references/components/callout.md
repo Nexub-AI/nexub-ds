@@ -1,6 +1,6 @@
 # Callout
 
-> **Deprecated.** Do not use in new code. Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Alert](alert.md). `<Alert>` covers tone and icon. Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
 
 - Package: `@nexub/react` · Category: Feedback · Status: deprecated
 - Import: `import { Callout } from '@nexub/react';`

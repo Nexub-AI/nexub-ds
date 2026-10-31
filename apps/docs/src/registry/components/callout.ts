@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Feedback',
     package: '@nexub/react',
     status: 'deprecated',
+    deprecation: { replacement: 'alert', removeIn: '3.0', migration: '`<Alert>` covers tone and icon.' },
     addedIn: '0.0.1',
   },
   props: [

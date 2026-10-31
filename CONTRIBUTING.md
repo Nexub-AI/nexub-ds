@@ -1,5 +1,7 @@
 # Contributing to Nexub Design System
 
+New components, new packages, breaking changes and new token categories need an RFC first. See [GOVERNANCE.md](./GOVERNANCE.md) for the RFC template, who decides, the component status lifecycle (alpha → beta → stable → deprecated) and the deprecation policy.
+
 ## Setup
 
 ```bash
@@ -28,10 +30,12 @@ Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it,
 
 ## Adding a component
 
-1. Create `packages/react/src/components/<Name>/` with `<Name>.tsx`, `<Name>.test.tsx`, `<Name>.stories.tsx`, `index.ts`.
-2. Add `export * from './components/<Name>/index.js';` to `packages/react/src/index.ts`.
-3. Add a changeset.
-4. Open a PR; CI must be green.
+1. Get the RFC accepted ([GOVERNANCE.md](./GOVERNANCE.md#proposing-a-change)).
+2. Create `packages/react/src/components/<Name>/` with `<Name>.tsx`, `<Name>.test.tsx`, `<Name>.stories.tsx`, `index.ts`.
+3. Add `export * from './components/<Name>/index.js';` to `packages/react/src/index.ts`.
+4. Add a docs registry entry (`apps/docs/src/registry/components/<slug>.ts`) with `status: 'alpha'`; promotion criteria are in [GOVERNANCE.md](./GOVERNANCE.md#status-lifecycle).
+5. Add a changeset.
+6. Open a PR; CI must be green.
 
 ## Running CI locally
 
