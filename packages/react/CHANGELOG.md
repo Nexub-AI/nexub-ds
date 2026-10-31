@@ -1,5 +1,14 @@
 # @nexub/react
 
+## 2.3.1
+
+### Patch Changes
+
+- c67c72a: Published with npm trusted publishing (OIDC) from the `Nexub-AI/nexub-ds` release workflow, so every version now carries npm provenance: you can check on npmjs.com that it was built from this repository's source. No code changes.
+- Updated dependencies [c67c72a]
+  - @nexub/icons@2.3.1
+  - @nexub/core@2.3.1
+
 ## 2.3.0
 
 ### Minor Changes
