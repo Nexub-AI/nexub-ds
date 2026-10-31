@@ -14,6 +14,18 @@ on:
       - 'apps/mobile/**'
       - 'pnpm-lock.yaml'
       - '.github/workflows/mobile.yml'
+  # Also on development itself, so its iOS compiler cache (ccache below) is
+  # saved under the base branch, where every new PR can restore it.
+  push:
+    branches: [development]
+    paths:
+      - 'packages/react-native/**'
+      - 'packages/tokens/**'
+      - 'packages/icons/**'
+      - 'packages/core/**'
+      - 'apps/mobile/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/mobile.yml'
 
 permissions:
   contents: read
@@ -108,6 +120,9 @@ jobs:
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" apps/mobile/ios/build/Build/Products/Release-iphonesimulator/NexubMobile.app
+          # Same status bar in every screenshot, so baselines don't drift on the clock.
+          xcrun simctl status_bar "$UDID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 \
+            --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
 
       - name: Maestro flows
         run: maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; exit 1; }
@@ -117,6 +132,15 @@ jobs:
       - name: Maestro preview screenshots
         run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
+      # Compare the preview screenshots with apps/mobile/.maestro/baselines/ios
+      # (or record them on a PR that has none; see screenshot-gate.sh).
+      - name: Screenshot baselines
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          PUSH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          REPO: ${{ github.repository }}
+        run: sh apps/mobile/scripts/screenshot-gate.sh ios
+
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -125,6 +149,7 @@ jobs:
           path: |
             maestro-out
             maestro-previews-out
+            screenshot-diffs
             *.png
           retention-days: 14
 
@@ -178,19 +203,28 @@ jobs:
 
       - name: Maestro flows
         uses: reactivecircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        # For screenshot-gate.sh (last line of the script): compare with
+        # apps/mobile/.maestro/baselines/android, or record them on a PR.
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          PUSH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          REPO: ${{ github.repository }}
         with:
           api-level: 35
           arch: x86_64
           target: google_apis
           disable-animations: true
           # android-ready.sh waits out adb flapping offline after boot and closes
-          # the launcher menu the runner's unlock keypress can leave open.
+          # the launcher menu the runner's unlock keypress can leave open;
+          # android-demo-mode.sh pins the status bar for the screenshots.
           script: |
             sh apps/mobile/scripts/android-ready.sh
+            sh apps/mobile/scripts/android-demo-mode.sh
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             sh apps/mobile/scripts/android-ready.sh
             maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
             maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
+            sh apps/mobile/scripts/screenshot-gate.sh android
 
       - name: Upload screenshots
         if: always()
@@ -200,5 +234,6 @@ jobs:
           path: |
             maestro-out
             maestro-previews-out
+            screenshot-diffs
             *.png
           retention-days: 14

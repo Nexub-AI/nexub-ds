@@ -4,6 +4,7 @@ import { CodeBlock } from '@/components/docs/CodeBlock';
 import { InlineCode } from '@/components/docs/PropsTable';
 import { DocTable, Note, Prose, Section } from '@/components/kit';
 import { nativePropsFor, type PlatformDifference } from '@/registry/native';
+import { DeviceShots } from './DeviceShots';
 import { PhoneFrame } from './PhoneFrame';
 
 /** The Mobile side of a component or pattern page. */
@@ -61,6 +62,8 @@ export function MobilePanel({
           <PhoneFrame path={preview} title={title} />
         </div>
       </div>
+
+      <DeviceShots preview={preview} title={title} />
 
       {props.length > 0 && (
         <Section id="native-props" title={`${primary} props`} level={3}>
