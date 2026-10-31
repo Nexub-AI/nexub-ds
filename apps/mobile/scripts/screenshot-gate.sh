@@ -3,7 +3,7 @@
 #   sh apps/mobile/scripts/screenshot-gate.sh <ios|android>
 #
 # With baselines in apps/mobile/.maestro/baselines/<platform>/: compare the
-# screenshots this run took (repo root) against them; diffs go to
+# screenshots this run took against them; diffs go to
 # screenshot-diffs/ (uploaded as an artifact) and the job fails on drift.
 #
 # Without baselines, on a pull request: record them and push them to the PR
@@ -17,8 +17,17 @@ set -eu
 platform="$1"
 dir="apps/mobile/.maestro/baselines/$platform"
 
+# takeScreenshot lands in the repo root or under --test-output-dir, depending
+# on the Maestro version; gather them in one place.
+shots="screenshots-$platform"
+mkdir -p "$shots"
+find . maestro-previews-out -maxdepth 4 -type f -name "*--$platform.png" \
+  -not -path "./apps/*" -not -path "./node_modules/*" -not -path "./$shots/*" \
+  -exec cp {} "$shots/" \; 2>/dev/null || true
+echo "Found $(ls "$shots" | wc -l | tr -d ' ') $platform preview screenshots."
+
 if ls "$dir"/*.png >/dev/null 2>&1; then
-  node apps/mobile/scripts/screenshots.mjs compare "$platform" . --out screenshot-diffs
+  node apps/mobile/scripts/screenshots.mjs compare "$platform" "$shots" --out screenshot-diffs
   exit $?
 fi
 
@@ -27,7 +36,7 @@ if [ -z "${HEAD_REF:-}" ] || [ -z "${PUSH_TOKEN:-}" ]; then
   exit 1
 fi
 
-node apps/mobile/scripts/screenshots.mjs record "$platform" .
+node apps/mobile/scripts/screenshots.mjs record "$platform" "$shots"
 work=$(mktemp -d)
 git clone --quiet --depth 1 --branch "$HEAD_REF" "https://x-access-token:${PUSH_TOKEN}@github.com/${REPO}.git" "$work"
 mkdir -p "$work/$dir"

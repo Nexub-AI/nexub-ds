@@ -24,3 +24,6 @@ playwright-report/
 
 # Local knowledge graph (rebuild with graphify; see .graphifyignore)
 graphify-out/
+screenshots-ios/
+screenshots-android/
+screenshot-diffs/
