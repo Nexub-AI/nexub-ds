@@ -8,6 +8,13 @@
  */
 import nativeProps from './native-props.generated.json';
 import previewManifest from '../../../mobile/preview-manifest.json';
+import type { ComponentStatus } from './types';
+
+/**
+ * Every @nexub/react-native component is alpha (MOBILE_PLAN.md). Promote one
+ * by setting `status` on its entry below, per GOVERNANCE.md's criteria.
+ */
+export const NATIVE_STATUS: ComponentStatus = 'alpha';
 
 /** A live preview in apps/mobile (its preview manifest), so a typo fails tsc. */
 export type PreviewSlug =
@@ -28,6 +35,8 @@ export interface NativeTwin {
   differences: PlatformDifference[];
   code: string;
   notes?: string[];
+  /** Defaults to NATIVE_STATUS. */
+  status?: ComponentStatus;
 }
 
 export interface NativePropDef {
@@ -324,6 +333,8 @@ export interface MobileOnlyEntry {
   preview: PreviewSlug;
   code: string;
   webAlternative?: string;
+  /** Defaults to NATIVE_STATUS. */
+  status?: ComponentStatus;
 }
 
 /** Components that exist only in @nexub/react-native. */

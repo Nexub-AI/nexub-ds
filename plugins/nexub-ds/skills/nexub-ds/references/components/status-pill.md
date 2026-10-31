@@ -1,6 +1,6 @@
 # Status Pill
 
-> **Deprecated.** Do not use in new code. Deprecated — use Badge. A pill indicator for status values like active, pending, error.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Badge](badge.md). `<Badge variant="soft" leadingIcon={dot}>` covers it. Deprecated — use Badge. A pill indicator for status values like active, pending, error.
 
 - Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
 - Import: `import { StatusPill } from '@nexub/react';`

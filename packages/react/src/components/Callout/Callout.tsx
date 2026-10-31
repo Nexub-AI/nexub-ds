@@ -41,7 +41,7 @@ export interface CalloutProps
   icon?: React.ReactNode;
 }
 
-/** @deprecated Use `Alert` instead: `<Alert>` covers tone + icon. Will be removed in 1.0. */
+/** @deprecated Use `Alert` instead: `<Alert>` covers tone + icon. Deprecated since 1.1.0; removal planned in 3.0. */
 export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
   ({ className, tone = 'neutral', icon, children, ...props }, ref) => {
     return (
