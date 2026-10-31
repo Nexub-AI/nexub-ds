@@ -5,7 +5,7 @@
  * site itself follows the design system (no hand-rolled inline styles).
  */
 import * as React from 'react';
-import { Alert, Badge, Card, Heading, Skeleton, Table, Text } from '@nexub/react';
+import { Alert, Badge, Card, Heading, Table, Text } from '@nexub/react';
 import { Check, X } from '@nexub/icons';
 
 /* ── Page intro ─────────────────────────────────────────────────────────────── */
@@ -204,40 +204,6 @@ export function CardGrid({ children, min = 240 }: { children: React.ReactNode; m
   return (
     <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(auto-fill, minmax(min(${min}px, 100%), 1fr))` }}>
       {children}
-    </div>
-  );
-}
-
-/* ── Loading skeleton ───────────────────────────────────────────────────────── */
-
-/**
- * Route loading state (loading.tsx): the page intro, a preview pane and a
- * table, drawn with Skeleton so the layout doesn't jump when content lands.
- */
-export function PageSkeleton({ label = 'Loading page content', badges = 0 }: { label?: string; badges?: number }) {
-  return (
-    <div className="docs-prose flex flex-col gap-3" aria-busy="true" aria-label={label}>
-      <Skeleton className="h-3 w-40" />
-      <div className="flex items-center gap-4">
-        <Skeleton className="h-9 w-60" />
-        {Array.from({ length: badges }, (_, i) => (
-          <Skeleton key={i} className="h-5 w-14 rounded-shape-control" />
-        ))}
-      </div>
-      <div className="mb-6 flex max-w-[520px] flex-col gap-2">
-        <Skeleton className="h-3.5 w-full" />
-        <Skeleton className="h-3.5 w-4/5" />
-      </div>
-      <Skeleton shape="rect" className="mb-6 h-[52px] max-w-[420px]" />
-      <div className="mb-6 overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)]">
-        <div className="h-10 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]" />
-        <Skeleton shape="rect" className="h-40 rounded-none" />
-      </div>
-      <div className="flex flex-col gap-px">
-        {[0, 1, 2, 3].map((i) => (
-          <Skeleton key={i} shape="rect" className="h-9 rounded-shape-tooltip" />
-        ))}
-      </div>
     </div>
   );
 }

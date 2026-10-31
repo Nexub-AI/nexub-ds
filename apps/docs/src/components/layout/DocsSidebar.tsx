@@ -17,12 +17,22 @@ const containsPath = (g: NavGroup, path: string): boolean =>
 function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: string; depth: 0 | 1 }) {
   const active = containsPath(group, pathname);
   const [open, setOpen] = React.useState(depth === 0 || active);
+  // Sections that are server-rendered open must not play the expand animation
+  // on first paint (it starts at height 0 before hydration and shifts the whole
+  // nav). Animate only once the visitor toggles a section.
+  const [animate, setAnimate] = React.useState(false);
   React.useEffect(() => {
     if (active) setOpen(true);
   }, [active]);
 
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
+    <Collapsible.Root
+      open={open}
+      onOpenChange={(o) => {
+        setAnimate(true);
+        setOpen(o);
+      }}
+    >
       <Collapsible.Trigger
         className={
           'nx-state-layer flex w-full items-center justify-between rounded-shape-control px-3 text-start ' +
@@ -39,7 +49,9 @@ function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: str
         />
       </Collapsible.Trigger>
       {/* No display utilities on Content itself: they would override the `hidden` attribute Radix sets when closed. */}
-      <Collapsible.Content>
+      <Collapsible.Content
+        className={animate ? undefined : 'data-[state=closed]:animate-none data-[state=open]:animate-none'}
+      >
         <div className={depth === 0 ? 'flex flex-col gap-px pb-2' : 'flex flex-col gap-px ps-2'}>
           {group.items.map((item) => (
             <Sidebar.Item key={item.href} asChild active={pathname === item.href} className="h-control-sm text-label-md">
