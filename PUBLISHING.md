@@ -94,7 +94,7 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
    Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
-4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, authenticated with the `NPM_TOKEN` secret; npm trusted publishing is prepared in `release.yml` but not yet configured on npmjs.com) and deploys the docs to production.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance) and deploys the docs to production.
 5. **Add a row** to the [Release History](#release-history) table.
 
 > The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.
