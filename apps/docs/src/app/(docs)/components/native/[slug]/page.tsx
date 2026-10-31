@@ -42,7 +42,7 @@ export default async function MobileOnlyComponentPage({ params }: Props) {
         }
       />
       <Section id="mobile" title="Usage">
-        <MobilePanel name={m.name} title={m.title} preview={`preview/${m.preview}`} code={m.code} webAlternative={m.webAlternative} status={status} />
+        <MobilePanel name={m.name} title={m.title} preview={`preview/${m.preview}`} code={m.code} webAlternative={m.webAlternative} status={status} showStatus={false} />
       </Section>
     </div>
   );

@@ -20,6 +20,7 @@ export function MobilePanel({
   intro,
   pkg = '@nexub/react-native',
   status = NATIVE_STATUS,
+  showStatus = true,
 }: {
   /** Export name(s) in @nexub/react-native, e.g. "Button" or "ToastProvider + useToast". */
   name: string;
@@ -32,6 +33,8 @@ export function MobilePanel({
   intro?: React.ReactNode;
   pkg?: string;
   status?: ComponentStatus;
+  /** False where the page hero already shows the status (mobile-only pages). */
+  showStatus?: boolean;
 }) {
   const primary = (name.split(/\s[+/]\s/)[0] ?? name).trim();
   const props = nativePropsFor(primary);
@@ -43,7 +46,7 @@ export function MobilePanel({
         <div className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="soft" tone="info">{pkg}</Badge>
-            <StatusBadge status={status} />
+            {showStatus && <StatusBadge status={status} />}
             {webAlternative && <Badge variant="outline">Web: {webAlternative}</Badge>}
           </div>
           {intro && <Prose>{intro}</Prose>}
