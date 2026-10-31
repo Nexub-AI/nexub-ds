@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Labels & Badges',
     package: '@nexub/react',
     status: 'deprecated',
+    deprecation: { replacement: 'badge', removeIn: '3.0', migration: '`<Badge size="sm">` covers it.' },
     addedIn: '0.0.1',
   },
   props: [

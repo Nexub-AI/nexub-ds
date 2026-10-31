@@ -8,6 +8,7 @@ const entry: ComponentEntry = {
     category: 'Feedback',
     package: '@nexub/react',
     status: 'deprecated',
+    deprecation: { replacement: 'alert', removeIn: '3.0', migration: '`<Alert>` has the same props (tone, title, icon, action, onClose), so rename the element.' },
     addedIn: '0.0.1',
   },
   props: [

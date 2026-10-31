@@ -56,7 +56,7 @@ export interface StatusPillProps
   dot?: boolean;
 }
 
-/** @deprecated Use `Badge` instead: `<Badge variant="soft" leadingIcon={dot}>` covers it. Will be removed in 1.0. */
+/** @deprecated Use `Badge` instead: `<Badge variant="soft" leadingIcon={dot}>` covers it. Deprecated since 1.1.0; removal planned in 3.0. */
 export const StatusPill = React.forwardRef<HTMLSpanElement, StatusPillProps>(
   ({ className, tone = 'neutral', label, dot = false, ...props }, ref) => {
     const shouldPulse = dot && pulseTones.includes(tone);
