@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
-import { BASE_WIDTH, TOLERANCE, diff, normalise } from './screenshots.mjs';
+import { ANIMATED_TOLERANCE, BASE_WIDTH, TOLERANCE, diff, limitFor, normalise } from './screenshots.mjs';
 
 // A 1080×2340 "screen": white with a dark card, like a preview example.
 async function screen({ cardColor = '#202020', statusBar = '#ffffff', dot = false } = {}) {
@@ -47,4 +47,10 @@ test('a speck of noise passes on Android, not a size change', async () => {
   assert.ok((await diff(a, await normalise(await screen({ dot: true })), 'android')).ratio <= TOLERANCE.android);
   const smaller = await sharp(a).resize({ width: BASE_WIDTH, height: 600, fit: 'fill' }).png().toBuffer();
   assert.equal((await diff(a, smaller, 'android')).ratio, 1);
+});
+
+test('animated examples get the looser limit', () => {
+  assert.equal(limitFor('loading-indicator--0--ios.png', 'ios'), ANIMATED_TOLERANCE);
+  assert.equal(limitFor('button--1--android.png', 'android'), ANIMATED_TOLERANCE);
+  assert.equal(limitFor('button--0--ios.png', 'ios'), TOLERANCE.ios);
 });

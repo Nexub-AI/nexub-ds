@@ -4,7 +4,9 @@ One PNG per docs preview example, per platform (`ios/`, `android/`), taken by
 `.maestro/previews` in the Mobile workflow and downscaled to 360 px wide.
 
 - **CI compares** every run against these files (`scripts/screenshot-gate.sh`).
-  Tolerance: iOS 0.1 % of pixels, Android 0.5 %; the status bar is masked.
+  Tolerance: iOS 0.1 % of pixels, Android 0.5 %; 1 % for the few examples
+  that animate (spinner, Skeleton; see `ANIMATED` in `scripts/screenshots.mjs`).
+  The status bar is masked.
   Diffs (changed pixels in magenta) are in the `maestro-<platform>` artifact
   under `screenshot-diffs/`.
 - **Intended visual change?** Delete the platform's folder in your PR and push.

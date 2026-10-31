@@ -25,6 +25,14 @@ const STATUS_BAR = { ios: 0.07, android: 0.045 };
 // Share of pixels allowed to differ. iOS renders deterministically; the
 // Android emulator's software GPU adds a little anti-aliasing noise.
 export const TOLERANCE = { ios: 0.001, android: 0.005 };
+// Examples that never stand still: the native spinner (UIActivityIndicatorView
+// spins regardless of Reduce Motion; the Android emulator has animations off)
+// and the Skeleton pulse are caught at a different frame each run. They get a
+// looser limit instead of the platform's.
+export const ANIMATED = new Set(['loading-indicator--0', 'button--1', 'skeleton--0']);
+export const ANIMATED_TOLERANCE = 0.01;
+export const limitFor = (file, platform) =>
+  ANIMATED.has(basename(file).replace(/--(ios|android)\.png$/, '')) ? ANIMATED_TOLERANCE : TOLERANCE[platform];
 // A pixel differs when any channel moves by more than this (0–255).
 const CHANNEL_DELTA = 32;
 
@@ -94,8 +102,9 @@ async function compare(platform, dir, outDir) {
       continue;
     }
     const { ratio, reason, image } = await diff(join(baselineDir(platform), f), await normalise(join(dir, f)), platform);
-    if (ratio > TOLERANCE[platform]) {
-      failures.push(`${f}: ${reason ?? `${(ratio * 100).toFixed(2)}% of pixels differ (limit ${(TOLERANCE[platform] * 100).toFixed(1)}%)`}`);
+    const limit = limitFor(f, platform);
+    if (ratio > limit) {
+      failures.push(`${f}: ${reason ?? `${(ratio * 100).toFixed(2)}% of pixels differ (limit ${(limit * 100).toFixed(1)}%)`}`);
       if (outDir && image) {
         mkdirSync(outDir, { recursive: true });
         writeFileSync(join(outDir, basename(f, '.png') + '--diff.png'), image);
