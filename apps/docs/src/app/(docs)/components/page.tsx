@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Badge, Card, CardLink, Text } from '@nexub/react';
+import { Card, CardLink, Text } from '@nexub/react';
 import { DocsLink } from '@/components/layout/DocsLink';
 import { componentEntries } from '@/registry/index';
 import { MiniPreviewCard } from '@/components/docs/MiniPreviewCard';
+import { StatusBadge } from '@/components/docs/StatusBadge';
 import { CardGrid, PageIntro, Section } from '@/components/kit';
 
 export const dynamic = 'force-static';
@@ -51,14 +52,7 @@ export default function ComponentsPage() {
                       {e.meta.description}
                     </Text>
                     {e.meta.status && e.meta.status !== 'stable' && (
-                      <Badge
-                        size="sm"
-                        variant="soft"
-                        tone={e.meta.status === 'beta' ? 'warning' : 'danger'}
-                        className="mt-1 self-start capitalize"
-                      >
-                        {e.meta.status}
-                      </Badge>
+                      <StatusBadge status={e.meta.status} size="sm" className="mt-1 self-start" />
                     )}
                   </div>
                 </Card>

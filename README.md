@@ -39,4 +39,4 @@ pnpm build
 
 ## Contributing
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md). How changes are proposed and decided (RFCs), what a component's status (alpha, beta, stable, deprecated) promises, and the deprecation policy are in [GOVERNANCE.md](./GOVERNANCE.md).

@@ -86,6 +86,7 @@ export default async function PatternPage({ params }: Props) {
               preview={`preview/${twin.preview}`}
               code={twin.code}
               differences={twin.differences}
+              status={twin.status}
               pkg="@nexub/react-native/patterns"
             />
           </Section>

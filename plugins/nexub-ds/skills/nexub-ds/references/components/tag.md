@@ -1,6 +1,6 @@
 # Tag
 
-> **Deprecated.** Do not use in new code. Deprecated — use Badge. Non-interactive label tag for categorisation.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Badge](badge.md). `<Badge size="sm">` covers it. Deprecated — use Badge. Non-interactive label tag for categorisation.
 
 - Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
 - Import: `import { Tag } from '@nexub/react';`
