@@ -29,6 +29,21 @@ function getHighlighter(): Promise<Highlighter> {
   return globalThis.__shikiHighlighter;
 }
 
+// The GitHub themes are tuned for a white/near-black editor; on the tonal
+// surface-container (neutral-94 / neutral-12) a few token colours fall under
+// WCAG AA 4.5:1. Same hue, nudged until each clears ~4.6:1 on that surface.
+const CODE_CONTRAST = {
+  'github-light': {
+    '#6a737d': '#626a73', // comments
+    '#22863a': '#1f7934', // tags, inserted
+    '#d73a49': '#c23442', // keywords
+    '#e36209': '#af4b07', // parameters, attributes
+  },
+  'github-dark': {
+    '#6a737d': '#838a93', // comments
+  },
+};
+
 export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
   const highlighter = await getHighlighter();
   const html = highlighter.codeToHtml(code, {
@@ -37,6 +52,7 @@ export async function CodeBlock({ code, lang = 'tsx' }: CodeBlockProps) {
     // by color-scheme so code reads on the tonal surface in both modes.
     themes: { light: 'github-light', dark: 'github-dark' },
     defaultColor: false,
+    colorReplacements: CODE_CONTRAST,
   });
 
   return (
