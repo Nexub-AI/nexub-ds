@@ -9,9 +9,12 @@ coverage/
 .env.local
 .next
 apps/docs/out/
+# Lighthouse CI runs and reports (apps/docs/lighthouserc.json)
+apps/docs/.lighthouseci/
 # React Native web export (apps/mobile build:web), copied into the docs at build time
 apps/mobile/dist-web/
 apps/docs/public/m/
+apps/docs/public/device-shots/
 .claude/
 
 # npm lockfile — this is a pnpm workspace
@@ -21,3 +24,6 @@ playwright-report/
 
 # Local knowledge graph (rebuild with graphify; see .graphifyignore)
 graphify-out/
+screenshots-ios/
+screenshots-android/
+screenshot-diffs/

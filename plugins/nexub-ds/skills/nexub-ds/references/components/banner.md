@@ -1,6 +1,6 @@
 # Banner
 
-> **Deprecated.** Do not use in new code. Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Alert](alert.md). `<Alert>` has the same props (tone, title, icon, action, onClose), so rename the element. Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
 
 - Package: `@nexub/react` · Category: Feedback · Status: deprecated
 - Import: `import { Banner } from '@nexub/react';`

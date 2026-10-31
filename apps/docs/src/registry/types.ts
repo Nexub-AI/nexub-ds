@@ -12,13 +12,27 @@ export interface ExampleDef {
   code: string;
 }
 
+/** Lifecycle status, see GOVERNANCE.md → "Status lifecycle". */
+export type ComponentStatus = 'alpha' | 'beta' | 'stable' | 'deprecated';
+
+export interface Deprecation {
+  /** Slug of the replacement component (a page under /components). */
+  replacement: string;
+  /** The major that removes it, e.g. '3.0'. Removal only ever happens in a major. */
+  removeIn: string;
+  /** One-line migration; `backticks` render as code. */
+  migration: string;
+}
+
 export interface ComponentMeta {
   slug: string;
   title: string;
   description: string;
   category: string;
   package: '@nexub/react' | '@nexub/patterns';
-  status?: 'stable' | 'beta' | 'deprecated';
+  status?: ComponentStatus;
+  /** Set with `status: 'deprecated'`: shown on the page and in the AI docs. */
+  deprecation?: Deprecation;
   addedIn?: string;   // semver e.g. '0.0.1' — shown as "Added in v0.0.1" badge
   updatedIn?: string; // shown alongside addedIn in the version timeline pill
   related?: string[]; // slugs surfaced in the "See also" block at page bottom

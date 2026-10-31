@@ -1,0 +1,78 @@
+name: Lighthouse
+
+# Lighthouse CI quality gate for the docs site: performance, accessibility,
+# best practices and SEO must each score >= 0.95 (median of 3 runs) on five
+# representative pages of the static export. Config: apps/docs/lighthouserc.json.
+on:
+  push:
+    branches: [development]
+    paths:
+      - 'apps/docs/**'
+      - 'packages/**'
+      - '!packages/react-native/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/lighthouse.yml'
+  pull_request:
+    branches: [development, staging, production]
+    paths:
+      - 'apps/docs/**'
+      - 'packages/**'
+      - '!packages/react-native/**'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/lighthouse.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse (docs)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        # version is read from packageManager field in package.json
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Only the workspace packages the docs depend on.
+      - name: Build packages
+        run: pnpm turbo build --filter='@nexub/docs^...'
+
+      # Static export to apps/docs/out. `next build` directly: the docs `build`
+      # script first runs the React Native web export for /m (NEXUB_SKIP_MOBILE_WEB
+      # only skips copying it), which the audited pages don't need. The motion
+      # page's /m preview iframe therefore 404s here (one console error).
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs exec next build
+
+      # Serves apps/docs/out with Cloudflare Pages-style clean URLs and
+      # compression (apps/docs/scripts/serve-static.mjs), runs Lighthouse
+      # 3x per page with the runner's Chrome and asserts the median scores.
+      - name: Lighthouse CI
+        working-directory: apps/docs
+        run: pnpm exec lhci autorun
+
+      - name: Upload Lighthouse report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-report
+          path: apps/docs/.lighthouseci
+          include-hidden-files: true
+          retention-days: 14

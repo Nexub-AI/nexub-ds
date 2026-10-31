@@ -108,7 +108,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v2.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v2.3.1. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -346,7 +346,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v2.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v2.3.1. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -986,7 +986,7 @@ Related: [chip](chip.md), [tag](tag.md), [status-pill](status-pill.md)
 
 # Banner
 
-> **Deprecated.** Do not use in new code. Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Alert](alert.md). `<Alert>` has the same props (tone, title, icon, action, onClose), so rename the element. Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
 
 - Package: `@nexub/react` · Category: Feedback · Status: deprecated
 - Import: `import { Banner } from '@nexub/react';`
@@ -1295,7 +1295,7 @@ Related: [icon-button](icon-button.md), [button-group](button-group.md), [link](
 
 # Callout
 
-> **Deprecated.** Do not use in new code. Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Alert](alert.md). `<Alert>` covers tone and icon. Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
 
 - Package: `@nexub/react` · Category: Feedback · Status: deprecated
 - Import: `import { Callout } from '@nexub/react';`
@@ -4286,7 +4286,7 @@ Vertical stack layout with configurable gap.
 
 # Status Pill
 
-> **Deprecated.** Do not use in new code. Deprecated — use Badge. A pill indicator for status values like active, pending, error.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Badge](badge.md). `<Badge variant="soft" leadingIcon={dot}>` covers it. Deprecated — use Badge. A pill indicator for status values like active, pending, error.
 
 - Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
 - Import: `import { StatusPill } from '@nexub/react';`
@@ -4572,7 +4572,7 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 
 # Tag
 
-> **Deprecated.** Do not use in new code. Deprecated — use Badge. Non-interactive label tag for categorisation.
+> **Deprecated.** Do not use in new code. Removal planned in 3.0: use [Badge](badge.md). `<Badge size="sm">` covers it. Deprecated — use Badge. Non-interactive label tag for categorisation.
 
 - Package: `@nexub/react` · Category: Labels & Badges · Status: deprecated
 - Import: `import { Tag } from '@nexub/react';`

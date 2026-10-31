@@ -121,6 +121,7 @@ export default async function ComponentPage({ params }: Props) {
                 preview={`preview/${twin.preview}`}
                 code={twin.code}
                 differences={twin.differences}
+                status={twin.status}
               />
             </Section>
           </PlatformPanel>
