@@ -49,7 +49,7 @@ export interface BannerProps
   onClose?: () => void;
 }
 
-/** @deprecated Use `Alert` instead: `<Alert>` has the same props (tone, title, icon, action, onClose). Will be removed in 1.0. */
+/** @deprecated Use `Alert` instead: `<Alert>` has the same props (tone, title, icon, action, onClose). Deprecated since 1.1.0; removal planned in 3.0. */
 export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
   (
     {

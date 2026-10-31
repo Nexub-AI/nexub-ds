@@ -11,6 +11,7 @@
       ],
       "outputs": [
         "dist/**",
+        "lib/**",
         ".next/**",
         "!.next/cache/**",
         "out/**"

@@ -26,6 +26,54 @@
 @source '../../../../packages/react/src/**/*.{ts,tsx}';
 @source '../../../../packages/patterns/src/**/*.{ts,tsx}';
 
+/* Metric-matched fallbacks for the webfonts (font-display: swap). Text is first
+   painted in Arial (Liberation Sans on Linux) scaled to Inter / Plus Jakarta
+   Sans, so lines don't rewrap and the page doesn't shift when the woff2 lands.
+   ascent/descent: the fonts' hhea metrics ÷ size-adjust. size-adjust: measured
+   rendered width of docs text vs Arial at prose (400, 16–18px) and heading
+   (600–700) weights, separately for the regular and bold Arial faces. Limited
+   to the webfonts' latin subset, so other glyphs (arrows, symbols) still fall
+   through to the system fonts exactly as before. */
+@font-face {
+  font-family: 'Inter Fallback';
+  font-weight: 100 500;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans'), local('Arimo');
+  size-adjust: 105%;
+  ascent-override: 92.26%;
+  descent-override: 22.97%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  font-weight: 600 900;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold');
+  size-adjust: 99%;
+  ascent-override: 97.85%;
+  descent-override: 24.36%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans Fallback';
+  font-weight: 100 500;
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans'), local('LiberationSans'), local('Arimo');
+  size-adjust: 105.3%;
+  ascent-override: 98.58%;
+  descent-override: 21.08%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans Fallback';
+  font-weight: 600 900;
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('LiberationSans-Bold'), local('Arimo Bold');
+  size-adjust: 101%;
+  ascent-override: 102.77%;
+  descent-override: 21.98%;
+  line-gap-override: 0%;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 @layer utilities {
 /* ── Kit headings (Heading + fluid docs sizes) ─────────────────────────────── */
@@ -38,6 +86,12 @@
   --docs-sidebar-width: 260px;
   --docs-header-height: 64px;
   --docs-content-max-width: 860px;
+
+  /* Token font stacks with the metric-matched fallbacks above. The site always
+     ships the variable webfonts, so a locally installed static Inter / Jakarta
+     (different metrics, no optical sizes) is skipped rather than swapped out. */
+  --font-family-sans: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-family-display: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans Fallback', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 
   /* Code blocks sit on the tonal container in both modes; Shiki emits
      dual-theme tokens (see .shiki below). */

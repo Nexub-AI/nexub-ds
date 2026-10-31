@@ -48,7 +48,11 @@ const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 function componentMd(e) {
   const { meta, props, examples, usage, a11y } = e;
   const out = [`# ${meta.title}`, ''];
-  if (meta.status === 'deprecated') out.push(`> **Deprecated.** Do not use in new code. ${meta.description}`, '');
+  if (meta.status === 'deprecated') {
+    const d = meta.deprecation;
+    const removal = d ? ` Removal planned in ${d.removeIn}: use [${pascal(d.replacement)}](${d.replacement}.md). ${d.migration}` : '';
+    out.push(`> **Deprecated.** Do not use in new code.${removal} ${meta.description}`, '');
+  }
   else out.push(meta.description, '');
   out.push(`- Package: \`${meta.package}\` · Category: ${meta.category} · Status: ${meta.status ?? 'stable'}`);
   out.push(`- Import: \`import { ${pascal(meta.slug)} } from '${meta.package}';\``);

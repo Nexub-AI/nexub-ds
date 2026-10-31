@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "build:web": "node scripts/build-web.mjs",
     "preview-manifest": "node --experimental-strip-types --no-warnings scripts/preview-manifest.mjs",
-    "test": "node --experimental-strip-types --no-warnings scripts/preview-manifest.mjs --check"
+    "test": "node --experimental-strip-types --no-warnings scripts/preview-manifest.mjs --check && node --test scripts/screenshots.test.mjs",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~58.0.15",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.3.0",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.3"
   }
 }
