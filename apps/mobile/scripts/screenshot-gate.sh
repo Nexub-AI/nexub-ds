@@ -18,12 +18,13 @@ platform="$1"
 dir="apps/mobile/.maestro/baselines/$platform"
 
 # takeScreenshot lands in the repo root or under --test-output-dir, depending
-# on the Maestro version; gather them in one place.
+# on the Maestro version (Android runs both flows into maestro-out); gather
+# them in one place.
 shots="screenshots-$platform"
 mkdir -p "$shots"
-find . maestro-previews-out -maxdepth 4 -type f -name "*--$platform.png" \
-  -not -path "./apps/*" -not -path "./node_modules/*" -not -path "./$shots/*" \
-  -exec cp {} "$shots/" \; 2>/dev/null || true
+{ find . -maxdepth 1 -type f -name "*--$platform.png"
+  find maestro-out maestro-previews-out -type f -name "*--$platform.png" 2>/dev/null; } |
+  while read -r f; do cp "$f" "$shots/"; done
 echo "Found $(ls "$shots" | wc -l | tr -d ' ') $platform preview screenshots."
 
 if ls "$dir"/*.png >/dev/null 2>&1; then

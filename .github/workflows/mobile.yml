@@ -214,18 +214,17 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
-          # android-ready.sh waits out adb flapping offline (after boot, and again
-          # after the first Maestro run tears its driver down) and closes
-          # the launcher menu the runner's unlock keypress can leave open;
+          # android-ready.sh waits out adb flapping offline after boot and
+          # install, and closes the launcher menu the runner's unlock keypress
+          # can leave open. Both flows run in one Maestro invocation: adb also
+          # drops when a run tears its driver down, which broke a second run.
           # android-demo-mode.sh pins the status bar for the screenshots.
           script: |
             sh apps/mobile/scripts/android-ready.sh
             sh apps/mobile/scripts/android-demo-mode.sh
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             sh apps/mobile/scripts/android-ready.sh
-            maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
-            sh apps/mobile/scripts/android-ready.sh
-            maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
+            maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
             sh apps/mobile/scripts/screenshot-gate.sh android
 
       - name: Upload screenshots
