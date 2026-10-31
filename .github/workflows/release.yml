@@ -47,8 +47,7 @@ jobs:
           # needs; `pnpm publish` hands the upload to this npm CLI.
           node-version: 24
           cache: pnpm
-          # registry-url makes setup-node write the .npmrc auth line that
-          # NODE_AUTH_TOKEN (below) fills. Publishing depends on it.
+          # registry-url points npm at the public registry for the OIDC exchange.
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -77,13 +76,10 @@ jobs:
           # Contents: write + Pull requests: write (or a classic token with the
           # `repo` scope). Falls back to GITHUB_TOKEN only for the publish phase.
           GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
-          # npm auth: the NPM_TOKEN secret (granular, 2FA-bypass, read+write on
-          # @nexub). changesets/action logs "using npm trusted publishing" when
-          # NPM_TOKEN isn't in *its* env, but npm still authenticates with this
-          # token via .npmrc. Trusted publishing (id-token: write is ready) only
-          # takes over once it's configured for every package on npmjs.com —
-          # until then, removing this line breaks publishing (it did in 1.7.0).
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # npm auth: trusted publishing (OIDC, `id-token: write` above). Every
+          # @nexub package trusts Nexub-AI/nexub-ds release.yml on npmjs.com, so
+          # npm exchanges the job's OIDC token for a short-lived publish token
+          # and attaches provenance. No NPM_TOKEN secret is used.
 
       # After a publish, the version commit (bumped package.json + CHANGELOGs)
       # only exists on production. Open a PR merging it back into development
