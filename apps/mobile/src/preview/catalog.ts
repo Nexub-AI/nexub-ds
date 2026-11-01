@@ -23,7 +23,7 @@ export const CATALOG = {
   heading: { title: 'Heading', kind: 'primitive', web: 'heading', examples: ['Levels'] },
   surface: { title: 'Surface', kind: 'primitive', web: 'box', examples: ['Tonal tiers', 'Elevation and glass'] },
   pressable: { title: 'Pressable', kind: 'primitive', web: null, examples: ['Press feedback'] },
-  icon: { title: 'Icon', kind: 'primitive', web: null, examples: ['Sizes and colours'] },
+  icon: { title: 'Icon', kind: 'primitive', web: null, examples: ['Sizes and colours', 'Nexub marks'] },
 
   // Actions
   button: { title: 'Button', kind: 'component', web: 'button', examples: ['Variants', 'Tones and states', 'Full width'] },
@@ -64,7 +64,7 @@ export const CATALOG = {
   dialog: { title: 'Dialog', kind: 'component', web: 'alert-dialog', examples: ['Destructive confirm'] },
   progress: { title: 'Progress', kind: 'component', web: 'progress', examples: ['Linear and circular'] },
   'loading-indicator': { title: 'LoadingIndicator', kind: 'component', web: 'spinner', examples: ['Default'] },
-  skeleton: { title: 'Skeleton', kind: 'component', web: 'skeleton', examples: ['Text lines'] },
+  skeleton: { title: 'Skeleton', kind: 'component', web: 'skeleton', examples: ['Text lines', 'Swap to content'] },
   'empty-state': { title: 'EmptyState', kind: 'component', web: 'empty-state', examples: ['With action'] },
   'error-state': { title: 'ErrorState', kind: 'component', web: 'error-state', examples: ['Retry'] },
 
