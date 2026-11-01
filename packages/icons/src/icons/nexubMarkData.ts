@@ -350,3 +350,6 @@ export const NEXUB_MARK_GRADIENTS = [
     ]
   }
 ] as const;
+
+// Hex for --color-brand-mark-n at index n-1, for React Native (no CSS variables).
+export const NEXUB_MARK_COLORS = ["#242cdd","#5b3ded","#5b5cf6","#5b78fe","#6180fe","#7297fe","#8ebdfe","#b5f2fe","#190e76","#3824b0","#462fca","#4e37cd","#654dd5","#8b72e3","#bfa4f6","#eeb4ff","#5328c7","#b34fed","#fca9f1","#353adf","#8683ef","#925dec","#311b9c","#f9abf9","#8d59eb","#2223bd","#4c2be1","#7b4cf5","#3125a9","#1b0e8a","#c5dcff","#f6ecfd","#b3d6fe","#f8f4fd","#e9bdf9","#ad6efc","#391fa7","#301a9c","#849bfd","#c6eefe","#fefdfe","#1f137a","#312285","#4f3c98","#795fb2","#ae8bd4","#f7fbfe"] as const;
