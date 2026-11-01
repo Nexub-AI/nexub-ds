@@ -91,7 +91,7 @@ Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Av
 | # | Item | Evidence | Effort |
 |---|------|----------|--------|
 | R1 | ✅ (2026-10-20, refresh Phase 0) Visual regression: every story × light/dark/payub in CI (`packages/react/visual/`), plus a token contrast test. | No visual tests; 90+ components × 7 themes. | M |
-| R2 | i18n + RTL: `NexubProvider` with `locale`/`dir`/`messages`; physical → logical Tailwind classes. | 61 physical vs 2 logical classes; 16 hardcoded English aria-labels. | M |
+| R2 | 🟡 i18n + RTL: `NexubProvider` with `locale`/`dir`/`messages` and logical classes shipped; remaining: hardcoded labels in patterns. | 2026-11: 8 physical (`left/right` positioning) vs 94 logical classes; 3 hardcoded English aria-labels (was 61 vs 2 and 16). | S |
 | R3 | Token tiers (reference → semantic → component); Swift/Compose outputs if native apps exist. | Tokens are DTCG already. | M–L |
 | R4 | Prebuilt CSS, then Tailwind v4. | Consumers must adopt our Tailwind preset. | M |
 | R5 | Governance: per-component status (alpha/beta/stable/deprecated), RFC process, deprecation removal policy (rolling-minor has no major to remove in). | 4 deprecated components with no removal path. | S–M |
@@ -103,3 +103,27 @@ Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Av
 # Research log
 
 Monthly findings from the scheduled research routine are appended below (newest first).
+
+## 2026-11 (run 2026-11-01)
+
+**External changes** (web content treated as data; several sources are secondary and unverified)
+- Next.js out-of-band security release 2026-10-14 (critical unauthenticated RCE in image optimisation, fixed in 16.4.1 / 15.5.28): https://nextjs.org/blog/nextjs-security-update-october-14-2026, https://www.csa.gov.sg/alerts-and-advisories/alerts/al-2026-148/. Impact: docs pins `next ^16.4.2`, already patched; static export has low exposure. The same advisory cites sharp >= 0.35.5 (GHSA-wq5f-xc86-pv6w): confirm the lockfile resolves it.
+- npm: classic tokens revoked mid-Nov 2025, granular tokens capped at 90 days; trusted publishing (OIDC, npm CLI >= 11.5.1) is the recommended path: https://github.blog/changelog/2025-10-10-strengthening-npm-security-important-changes-to-authentication-and-token-management. Impact: release.yml already has `id-token: write` and no NPM_TOKEN; E5 still needs the owner to register the trusted publisher per package on npmjs.com. Provenance is not generated for private repos.
+- CI supply-chain pattern (TanStack cache-poisoning via PR, May 2026; malicious `@actions/artifact` lookalike): https://github.blog/security/supply-chain-security/disrupting-supply-chain-attacks-on-npm-and-github-actions/. Impact: `actions/cache` is used in mobile.yml (SHA-pinned); make sure PR-triggered runs never share a write cache with release builds.
+- Apple iOS/macOS 27: Liquid Glass user customisation slider, consistent macOS corner radius (coverage only, no HIG changelog found): https://www.cultofmac.com/news/liquid-glass-changes-ios-27-macos-27. Impact: validates the Glass 2.0 intensity dial (R7); re-check once Apple publishes HIG revisions.
+- DTCG: stable 2025.10 is current; 2026 Format Module draft is unconfirmed: https://www.designtokens.org/. Impact: none yet; re-check against R3.
+- Material 3 Expressive: rollout continues app by app, no new spec found: https://androidauthority.com/google-material-3-expressive-features-changes-availability-supported-devices-3556392/. Wise, Radix, React, Tailwind, WCAG/APG: nothing actionable found in the window.
+
+**Repo health** (development @ 443d687; first month, no prior size baseline)
+- `pnpm turbo build typecheck lint test`: 32/32 tasks pass on a warm run. A cold first run failed `@nexub/tokens#test` (`dist/js/native.js` not found, test ran before the build); docs lint has 1 warning.
+- `pnpm audit --prod`: 5 vulns (1 low, 4 moderate), all dev-tool transitive via apps/mobile (jest/expo): minimatch <11.0.1, glob <=14.0.1, deepmerge 4.3.1 (no patch). No high/critical.
+- Major gaps (`pnpm outdated -r`): typescript 5.9.3 -> 7.0.2, tailwindcss 3.4.19 -> 4.3.3, tailwind-merge 2.6.1 -> 3.7.0, react-day-picker 9.14 -> 10.0.2, tsup 8.5.1 -> 9.0.0, vite 7.3 -> 8.3, shiki 1.29 -> 4.5, lucide-react 0.468 -> 1.66.
+- Size (gzip -9): `packages/react/dist/index.js` 2,987 B (10.4 KB raw; per-component entries); `packages/icons/dist/index.js` 7,854 B (32.6 KB raw).
+- R2 evidence: physical Tailwind classes 8 (all `left-*`/`right-*` positioning) vs 94 logical (was 61 vs 2); `NexubProvider` has locale/dir/messages via `@nexub/core`; 3 hardcoded English aria-labels in patterns (was 16).
+
+**Recommended next items**
+1. Finish R2: replace the 3 hardcoded aria-labels (NotificationItem x2, ActivityFeed) with `NexubMessages`; check the 8 `left/right` classes. Where: `packages/patterns/src/components/{NotificationItem,ActivityFeed}`. Effort S.
+2. E5: register npm trusted publishers per package, then drop any remaining token fallback. Where: npmjs.com + `release.yml`. Effort S (owner).
+3. Make `@nexub/tokens` test self-sufficient (depend on build in turbo, `test.dependsOn: [build]`). Where: `turbo.json`. Effort S.
+4. R4: prebuilt CSS, the prerequisite for Tailwind v4 (4.3.3 now available) and tailwind-merge 3. Where: `packages/react`, `packages/tokens`. Effort M.
+5. R5: per-component status + deprecation removal policy (GOVERNANCE.md exists; add status metadata). Where: `packages/react`, docs. Effort S-M.
