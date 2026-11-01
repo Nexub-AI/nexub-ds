@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { warnDeprecated } from '../../utils/deprecated.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const statusPillVariants = cva(
@@ -59,6 +60,7 @@ export interface StatusPillProps
 /** @deprecated Use `Badge` instead: `<Badge variant="soft" leadingIcon={dot}>` covers it. Deprecated since 1.1.0; removal planned in 3.0. */
 export const StatusPill = React.forwardRef<HTMLSpanElement, StatusPillProps>(
   ({ className, tone = 'neutral', label, dot = false, ...props }, ref) => {
+    warnDeprecated('StatusPill', 'Badge');
     const shouldPulse = dot && pulseTones.includes(tone);
 
     return (
