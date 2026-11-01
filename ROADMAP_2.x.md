@@ -38,7 +38,7 @@ Status: **proposed.** Roadmap row R10 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEM
 | Make `@nexub/tokens` tests depend on the build (a cold run fails today). | `turbo.json` | S |
 | Make sure PR runs never write a cache that release builds read. | `.github/workflows/*` | S |
 | Confirm the lockfile resolves sharp ≥ 0.35.5. | `pnpm-lock.yaml` | S |
-| Add `vitest-axe` (P1 #19 is still half done). | `packages/react` | S–M |
+| Widen the axe sweep (P1 #19): 36 components, open overlays included, axe-core directly rather than `vitest-axe`. ✅ in #180 | `packages/react` | S–M |
 
 ## 2.6: Prebuilt CSS (R4)
 
