@@ -53,9 +53,9 @@ Status: **proposed.** Roadmap row R10 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEM
 
 | Item | Where | Size |
 |---|---|---|
-| Promote native components from Payub's feedback: M1–M2 to `stable`, M3–M4 to `beta`. If the feedback is not in yet, this moves to 2.8 and the rest of 2.7 ships. | `packages/react-native`, docs badges | S–M |
+| Promote native components from Payub's feedback: M1–M2 to `stable`, M3–M4 to `beta`. If the feedback is not in yet, this moves to 2.8 and the rest of 2.7 ships. (Not in yet as of 2026-11-03.) | `packages/react-native`, docs badges | S–M |
 | R3, token tiers: reference → semantic → component, on DTCG 2025.10. Old names stay as aliases until 3.0. | `packages/tokens` | L |
-| Add a medium contrast level and a `data-contrast` toggle in the docs (deferred since refresh Phase 1). | `packages/tokens`, `apps/docs` | M |
+| Medium contrast level: already shipped in Wave 3. Left: a site-wide `data-contrast` switcher in the docs, applied before paint by `ThemeScript`'s new `contrastStorageKey`. | `packages/react`, `apps/docs` | S |
 
 ## 2.8: Toolchain and tech debt
 

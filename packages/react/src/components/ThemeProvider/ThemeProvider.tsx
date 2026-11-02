@@ -262,6 +262,8 @@ export interface ThemeScriptProps {
   productStorageKey?: string;
   /** Must match ThemeProvider's `glassStorageKey`. Defaults to 'nexub-glass'. */
   glassStorageKey?: string;
+  /** If set, a stored contrast level ('standard' | 'medium' | 'high') is applied as `data-contrast`. */
+  contrastStorageKey?: string;
   /** CSP nonce for pages whose script-src disallows inline scripts. */
   nonce?: string;
 }
@@ -270,24 +272,38 @@ export interface ThemeScriptProps {
 const jsString = (s: string) => JSON.stringify(s).replace(/</g, '\\u003c');
 
 /** @internal Exported for tests. */
-export function themeScriptSource(storageKey: string, productStorageKey?: string, glassStorageKey = 'nexub-glass'): string {
+export function themeScriptSource(
+  storageKey: string,
+  productStorageKey?: string,
+  glassStorageKey = 'nexub-glass',
+  contrastStorageKey?: string,
+): string {
+  const contrast = contrastStorageKey
+    ? `var c=localStorage.getItem(${jsString(contrastStorageKey)});if(['standard','medium','high'].indexOf(c)>-1)d.setAttribute('data-contrast',c);`
+    : '';
   const product = productStorageKey
     ? `var b=localStorage.getItem(${jsString(productStorageKey)});if(b&&b!=='base')d.setAttribute('data-product',b);`
     : '';
   const glass = `var g=localStorage.getItem(${jsString(glassStorageKey)});if(${JSON.stringify(GLASS_MODES)}.indexOf(g)>-1)d.setAttribute('data-glass',g);`;
-  return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}${glass}}catch(e){}`;
+  return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}${glass}${contrast}}catch(e){}`;
 }
 
 /**
  * Applies the stored theme before first paint, so there is no light/dark flash.
  * Render it in `<head>` (or at the top of `<body>`) on server-rendered pages.
  */
-export function ThemeScript({ storageKey = 'nexub-theme', productStorageKey, glassStorageKey, nonce }: ThemeScriptProps) {
+export function ThemeScript({
+  storageKey = 'nexub-theme',
+  productStorageKey,
+  glassStorageKey,
+  contrastStorageKey,
+  nonce,
+}: ThemeScriptProps) {
   return (
     <script
       nonce={nonce}
       suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: themeScriptSource(storageKey, productStorageKey, glassStorageKey) }}
+      dangerouslySetInnerHTML={{ __html: themeScriptSource(storageKey, productStorageKey, glassStorageKey, contrastStorageKey) }}
     />
   );
 }

@@ -203,6 +203,19 @@ describe('ThemeScript', () => {
     expect(document.documentElement.hasAttribute('data-glass')).toBe(false);
   });
 
+  it('applies a stored contrast level only when asked, and ignores unknown values', () => {
+    const root = document.documentElement;
+    localStorage.setItem('c', 'medium');
+    new Function(themeScriptSource('k'))();
+    expect(root.hasAttribute('data-contrast')).toBe(false);
+    new Function(themeScriptSource('k', undefined, undefined, 'c'))();
+    expect(root.getAttribute('data-contrast')).toBe('medium');
+    root.removeAttribute('data-contrast');
+    localStorage.setItem('c', 'bogus');
+    new Function(themeScriptSource('k', undefined, undefined, 'c'))();
+    expect(root.hasAttribute('data-contrast')).toBe(false);
+  });
+
   it('ignores unknown stored values', () => {
     localStorage.setItem('nexub-theme', 'system');
     new Function(themeScriptSource('nexub-theme'))();
