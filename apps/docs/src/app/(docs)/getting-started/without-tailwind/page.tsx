@@ -23,6 +23,13 @@ import '@nexub/react/styles.css';`} />
         subsets a page uses.
       </p>
 
+      <p>
+        Using <code>@nexub/patterns</code> too? Add its stylesheet after the react one. It only carries the
+        classes the patterns add (about 4 kB gzipped):
+      </p>
+      <CodeBlock code={`import '@nexub/react/styles.css';
+import '@nexub/patterns/styles.css';`} />
+
       <h2>Your CSS still wins</h2>
       <p>
         Everything in the stylesheet sits in CSS cascade layers (<code>theme</code>, <code>base</code>,{' '}
