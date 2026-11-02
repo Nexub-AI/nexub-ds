@@ -186,3 +186,27 @@ export const SPRINGS = {
   effects: { fast: [1, 3800], default: [1, 1600], slow: [1, 800] },
   expressive: { fast: [0.7, 800], default: [0.8, 380], slow: [0.8, 200] },
 };
+
+// Opt-in rem layer (2.6; the default in 3.0): spacing, radius, shape, type sizes,
+// line heights and control heights restated in rem at a 16px root, so they follow
+// the user's browser font size together. Hairlines (1px) and capsules (9999px)
+// stay px: they must not scale. `groups` maps a CSS variable prefix to a token
+// object; nested groups (type.body-md.size) flatten with '-'.
+const rem = (px) => `${px / 16}rem`;
+export function remCss(groups) {
+  const lines = [];
+  const walk = (prefix, node) => {
+    for (const [key, t] of Object.entries(node)) {
+      if (t.$value === undefined) walk(`${prefix}-${key}`, t);
+      else if (/^[\d.]+px$/.test(t.$value)) {
+        const px = parseFloat(t.$value);
+        if (px > 1 && px < 9999) lines.push(`  --${prefix}-${key}: ${rem(px)};`);
+      }
+    }
+  };
+  for (const [prefix, node] of Object.entries(groups)) walk(prefix, node);
+  // Compact density (themes/src/base.css) moves each control one step down the ladder.
+  const compact = { xs: 20, sm: 24, md: 32, lg: 40, xl: 48 };
+  const compactLines = Object.entries(compact).map(([k, px]) => `  --size-control-${k}: ${rem(px)};`);
+  return `/* @nexub/tokens/css/rem: import after @nexub/tokens/css (and @nexub/themes). */\n:root {\n${lines.join('\n')}\n}\n[data-density='compact'] {\n${compactLines.join('\n')}\n}\n`;
+}

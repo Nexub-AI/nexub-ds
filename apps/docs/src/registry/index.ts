@@ -302,6 +302,7 @@ export const searchIndex: SearchEntry[] = [
   // Static pages
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
+  { id: 'without-tailwind', label: 'Use without Tailwind', description: 'Prebuilt @nexub/react/styles.css and the opt-in rem layer', href: '/getting-started/without-tailwind', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'react-native', label: 'React Native', description: '@nexub/react-native for Expo and React Native apps: setup, components, screens', href: '/getting-started/react-native', category: 'Docs' },
@@ -367,6 +368,7 @@ export const navGroups: NavGroup[] = [
     items: [
       { title: 'Introduction', href: '/getting-started' },
       { title: 'Using the brand assets', href: '/getting-started/brand-assets' },
+      { title: 'Use without Tailwind', href: '/getting-started/without-tailwind' },
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
       { title: 'Internationalization', href: '/getting-started/internationalization' },
       { title: 'React Native', href: '/getting-started/react-native' },
