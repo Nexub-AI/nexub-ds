@@ -186,3 +186,18 @@ export const SPRINGS = {
   effects: { fast: [1, 3800], default: [1, 1600], slow: [1, 800] },
   expressive: { fast: [0.7, 800], default: [0.8, 380], slow: [0.8, 200] },
 };
+
+// Opt-in rem layer (2.6; the default in 3.0): spacing, radius and shape restated
+// in rem at a 16px root, so they follow the user's browser font size. Hairlines
+// (1px) and capsules (9999px) stay px: they must not scale.
+export function remCss(groups) {
+  const lines = [];
+  for (const [ns, tokens] of Object.entries(groups)) {
+    for (const [key, t] of Object.entries(tokens)) {
+      const px = parseFloat(t.$value);
+      if (px === 0 || px === 1 || px >= 9999) continue;
+      lines.push(`  --${ns}-${key}: ${px / 16}rem;`);
+    }
+  }
+  return `/* @nexub/tokens/css/rem: import after @nexub/tokens/css. */\n:root {\n${lines.join('\n')}\n}\n`;
+}

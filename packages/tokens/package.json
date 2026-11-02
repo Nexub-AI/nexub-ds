@@ -38,6 +38,7 @@
     },
     "./css": "./dist/css/variables.css",
     "./css/roles": "./dist/css/roles.css",
+    "./css/rem": "./dist/css/rem.css",
     "./seed": {
       "types": "./dist/js/seed.d.ts",
       "default": "./dist/js/seed.js"
