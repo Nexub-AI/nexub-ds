@@ -1,5 +1,17 @@
 # @nexub/react
 
+## 2.6.0
+
+### Minor Changes
+
+- 43c5314: Prebuilt CSS: `import '@nexub/react/styles.css'` gives you every style the components need (themes, product brands, the Inter and Plus Jakarta Sans fonts, the utilities they use), so you can use `@nexub/react` without Tailwind. It's all in cascade layers, so your own CSS always wins. Apps already on Tailwind 3 or 4 with the Nexub preset don't need it and keep working as before.
+- 9d8bc9b: `cn()` now uses tailwind-merge 3. Class merging is unchanged: every `cn()` call made across the test suite (421 distinct inputs) gives the same result as on tailwind-merge 2. A bare `outline` still counts as the outline style, as Tailwind 3 reads it, so focus rings keep working in Tailwind 3 apps.
+
+### Patch Changes
+
+- @nexub/icons@2.6.0
+- @nexub/core@2.6.0
+
 ## 2.5.0
 
 ### Minor Changes
