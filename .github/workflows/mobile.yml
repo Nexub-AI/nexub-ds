@@ -47,7 +47,9 @@ jobs:
   ios:
     name: iOS simulator (Maestro)
     runs-on: macos-26
-    timeout-minutes: 60
+    # A passing run takes ~58 min (Release build 23–34, previews ~19), so 60
+    # cancelled any slow runner.
+    timeout-minutes: 90
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       # Path-independent hits, and room for a full React Native build.
@@ -214,6 +216,11 @@ jobs:
           arch: x86_64
           target: google_apis
           disable-animations: true
+          # The defaults (2 cores, small RAM) took the emulator offline ~10 min
+          # into the preview flow on several runs. The runner has 4 cores / 16 GB.
+          cores: 4
+          ram-size: 4096M
+          heap-size: 512M
           # android-ready.sh waits out adb flapping offline after boot and
           # install, and closes the launcher menu the runner's unlock keypress
           # can leave open. Both flows run in one Maestro invocation: adb also

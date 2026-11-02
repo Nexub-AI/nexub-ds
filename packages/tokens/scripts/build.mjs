@@ -1,8 +1,8 @@
 import StyleDictionary from 'style-dictionary';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, SPRINGS, palettes, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, SPRINGS, palettes, remCss, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -430,6 +430,20 @@ await sd.buildAllPlatforms();
 
 // Color roles (light-dark() over the palette vars above).
 writeFileSync(`${root}/dist/css/roles.css`, rolesCss());
+
+// Opt-in rem layer.
+const readGroup = (f) => Object.values(JSON.parse(readFileSync(`${root}/tokens/${f}.json`, 'utf8')))[0];
+const typography = JSON.parse(readFileSync(`${root}/tokens/typography.json`, 'utf8'));
+writeFileSync(
+  `${root}/dist/css/rem.css`,
+  remCss({
+    spacing: readGroup('spacing'),
+    radius: readGroup('radius'),
+    shape: readGroup('shape'),
+    'size-control': readGroup('size').control,
+    type: Object.fromEntries(Object.entries(typography.type).filter(([r]) => !r.startsWith('$')).map(([r, v]) => [r, { size: v.size, lineHeight: v.lineHeight }])),
+  }),
+);
 
 // Emit tailwind preset type declaration
 mkdirSync(`${root}/dist/tailwind`, { recursive: true });

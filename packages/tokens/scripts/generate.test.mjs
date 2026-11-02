@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, remCss, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
 
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -174,4 +174,22 @@ test('springs run 0 → 1, effects never overshoot, slower tokens take longer', 
     const ms = (x) => parseInt(x.duration, 10);
     assert.ok(ms(s.fast) < ms(s.default) && ms(s.default) < ms(s.slow), `${kind} durations`);
   }
+});
+
+test('remCss restates spacing and radius in rem, keeping hairlines and capsules in px', () => {
+  const css = remCss({
+    spacing: { px: { $value: '1px' }, '0-5': { $value: '2px' }, 4: { $value: '16px' } },
+    shape: { control: { $value: '9999px' }, field: { $value: '12px' } },
+  });
+  assert.match(css, /--spacing-0-5: 0\.125rem;/);
+  assert.match(css, /--spacing-4: 1rem;/);
+  assert.match(css, /--shape-field: 0\.75rem;/);
+  assert.doesNotMatch(css, /--spacing-px|--shape-control/);
+});
+
+test('remCss flattens nested type tokens and adds the compact density block', () => {
+  const css = remCss({ type: { 'body-md': { size: { $value: '16px' }, lineHeight: { $value: '24px' } } } });
+  assert.match(css, /--type-body-md-size: 1rem;/);
+  assert.match(css, /--type-body-md-lineHeight: 1\.5rem;/);
+  assert.match(css, /\[data-density='compact'\] \{\n  --size-control-xs: 1\.25rem;/);
 });
