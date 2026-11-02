@@ -34,7 +34,9 @@ import '@nexub/themes/dark';   // optional: dark comes from light-dark() roles n
       <h2>Tailwind</h2>
       <p>
         Components ship Tailwind class names, so your Tailwind build must generate them. Tailwind v3 and v4 are both
-        supported and use the same class names; pick the setup that matches your Tailwind version.
+        supported and use the same class names; pick the setup that matches your Tailwind version. Not using
+        Tailwind? Import the prebuilt <code>@nexub/react/styles.css</code> instead: see{' '}
+        <a href="/getting-started/without-tailwind">Use without Tailwind</a>.
       </p>
 
       <h3>Tailwind v3</h3>

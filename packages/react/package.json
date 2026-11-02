@@ -39,7 +39,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && node scripts/check-dts.mjs && tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "build": "tsup && node scripts/check-dts.mjs && tailwindcss -i src/styles.css -o dist/styles.css --minify && cp -R ../themes/src/fonts dist/fonts",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
