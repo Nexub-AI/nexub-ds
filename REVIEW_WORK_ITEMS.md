@@ -99,6 +99,7 @@ Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Av
 | R8 | ✅ Next enhancements (security, pixel-perfect long tail, cards/effects, motion, colour, UX, AI surfaces). Proposal: [ENHANCEMENTS_PLAN.md](ENHANCEMENTS_PLAN.md). | Review 2026-10-21 | L+ |
 | R9 | ✅ (2026-10-30, ships in 2.1.0) React Native: `@nexub/react-native` (+ `/patterns`), `@nexub/core`, `@nexub/tokens/native`, `@nexub/icons/native`, mobile icons in `@nexub/brand`, Mobile CI. Plan: [MOBILE_PLAN.md](MOBILE_PLAN.md). | Mobile apps on Expo/RN | L+ |
 | R7 | ✅ Visual refresh "Calm Depth" + Glass 2.0 (M3-style roles/state layers/springs, Apple-style glass with user intensity dial, Wise-style clarity). Shipped in 1.4.0–1.5.x: [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md). Phase 0 = R1. | Audit 2026-10-20 | L+ |
+| R10 | Next versions 2.5 → 3.0: mobile adoption, prebuilt CSS, native promotion + token tiers, toolchain, 3.0 runway and breaking cleanup. Plan: [ROADMAP_2.x.md](ROADMAP_2.x.md). | Release review 2026-11-01 | L+ |
 
 # Research log
 
