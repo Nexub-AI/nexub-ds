@@ -1,5 +1,22 @@
 # @nexub/react-native
 
+## 2.5.0
+
+### Minor Changes
+
+- 9a97fb4: Native marks and `SkeletonSwap` for React Native.
+
+  - `@nexub/icons/native` now has the Nexub marks under the same names as on web: `NexubMark` (`variant="color"` draws the brand gradient), `LeapMark`, `BookubMark`, `PayubMark`, `FounderubMark`, `ACRA`, `IRAS`, `MCA` and `GST`. They take the usual `size`, `color` and `label` props.
+  - `@nexub/react-native` adds `SkeletonSwap`, the twin of the web component: it crossfades from a skeleton to the loaded content in place on the motion springs, marks itself busy for screen readers while loading, and follows Reduce Motion. Content that is ready on first render shows without a fade.
+
+### Patch Changes
+
+- Updated dependencies [3363ede]
+- Updated dependencies [9a97fb4]
+  - @nexub/core@2.5.0
+  - @nexub/icons@2.5.0
+  - @nexub/tokens@2.5.0
+
 ## 2.4.0
 
 ### Minor Changes

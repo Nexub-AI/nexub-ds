@@ -1,0 +1,22 @@
+/* @nexub/react/styles.css: every style the components need, prebuilt, so apps
+   can use @nexub/react without Tailwind (built to dist/styles.css). Same
+   pipeline as .storybook/preview.css. Everything sits in cascade layers, so the
+   app's own unlayered CSS always wins, preflight included. */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import '@nexub/themes/base' layer(base);
+@import '@nexub/themes/light' layer(base);
+@import '@nexub/themes/dark' layer(base);
+@import '@nexub/themes/glass' layer(base);
+@import '@nexub/themes/leap' layer(base);
+@import '@nexub/themes/bookub' layer(base);
+@import '@nexub/themes/payub' layer(base);
+@import '@nexub/themes/founderub' layer(base);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@nexub/tokens/tailwind.css';
+@import '../.storybook/tailwind-v3-compat.css';
+
+@source './**/*.{ts,tsx}';
+@source not './**/*.{stories,test}.tsx';
