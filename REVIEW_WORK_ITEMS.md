@@ -36,7 +36,7 @@ Effort: S = under half a day, M = 1–3 days, L = about a week.
 | 16 | ✅ **Link:** `{...rest}` is spread after `externalProps`, so a caller can override the hardened `rel`. `target="_blank"` without `external` gets no `rel`. Spread rest first and add `asChild`. | `Link/Link.tsx:44-45` | S |
 | 17 | ✅ **Token correctness:** `--shadow-focus` is hardcoded to white/blue, so dark and brands show the wrong ring; build it from `--color-ring-*`. `--shadow-card-hover` and `--color-gradient-eyebrow-chip` are undefined. brand 800 = 900. Icon `SIZE_MAP` and the GradientDivider/Rating hexes duplicate tokens. | `tokens`, `Card.tsx:15`, `EyebrowChip.tsx:30`, `createIcon.tsx:5-11` | S |
 | 18 | ✅ **Release correctness:** changesets uses `linked`, but the docs promise lockstep, so it should be `fixed` (then delete the manual realign script in PUBLISHING.md). `baseBranch: "main"` doesn't exist. Patterns peers are `"*"`; use `workspace:^`. Add npm provenance (`id-token: write`). Pin `changesets/action` by SHA and pin `wrangler` (it runs with secrets). | `.changeset/config.json`, `.github/workflows/*`, `patterns/package.json:47-49` | S |
-| 19 | 🟡 SSR smoke + keyboard tests done; vitest-axe not added. **Tests:** current tests are render smoke tests (1–6 per component). Add `vitest-axe`, a `renderToString` SSR smoke test over all exports (it would have caught #1 and #5), and keyboard tests for custom interactive components (Rating, Slider, SegmentedControl, NumberInput). | `packages/react` | M |
+| 19 | ✅ SSR smoke + keyboard tests done; axe sweep (`src/a11y.test.tsx`, axe-core directly, no vitest-axe wrapper) covers 36 components including open overlays (2026-11-02). **Tests:** current tests are render smoke tests (1–6 per component). Add `vitest-axe`, a `renderToString` SSR smoke test over all exports (it would have caught #1 and #5), and keyboard tests for custom interactive components (Rating, Slider, SegmentedControl, NumberInput). | `packages/react` | M |
 
 ## P2: Simplify, de-duplicate, lighten
 
@@ -66,7 +66,7 @@ Effort: S = under half a day, M = 1–3 days, L = about a week.
 
 1. **Sprint A (consumer-breaking): done 2026-10-12.** 1, 2, 3, 4, 5, 6, 7, 9 (ESM-only chosen for #4)
 2. **Sprint B (security + a11y): done 2026-10-12.** 8, 10–18 (+ SSR/keyboard tests from 19).
-   Input borders: done (decided 2026-10-12, `--color-border-input`). Left open: npm provenance (repo is private), icon SIZE_MAP/GradientDivider hex dedupe, vitest-axe.
+   Input borders: done (decided 2026-10-12, `--color-border-input`). Left open: npm provenance (repo is private), icon SIZE_MAP/GradientDivider hex dedupe.
 3. **Sprint C (lighten + simplify): done 2026-10-12.** 20, 21, 23, 24, 25, 27, 31; 22 won't-do. Also documented the Tailwind preset setup.
    Docs `/` First Load 192 → 129 kB; registry data no longer ships to the client; framer-motion removed.
 4. **Sprint D (larger refactors): in progress 2026-10-12.** 28 and 29 done; 26 and 30 partial (see rows). Full example single-sourcing deferred by decision.
@@ -99,6 +99,7 @@ Also fixed: feedback "Capture page" failed on any page with a non-CORS image (Av
 | R8 | ✅ Next enhancements (security, pixel-perfect long tail, cards/effects, motion, colour, UX, AI surfaces). Proposal: [ENHANCEMENTS_PLAN.md](ENHANCEMENTS_PLAN.md). | Review 2026-10-21 | L+ |
 | R9 | ✅ (2026-10-30, ships in 2.1.0) React Native: `@nexub/react-native` (+ `/patterns`), `@nexub/core`, `@nexub/tokens/native`, `@nexub/icons/native`, mobile icons in `@nexub/brand`, Mobile CI. Plan: [MOBILE_PLAN.md](MOBILE_PLAN.md). | Mobile apps on Expo/RN | L+ |
 | R7 | ✅ Visual refresh "Calm Depth" + Glass 2.0 (M3-style roles/state layers/springs, Apple-style glass with user intensity dial, Wise-style clarity). Shipped in 1.4.0–1.5.x: [DESIGN_REFRESH_PLAN.md](DESIGN_REFRESH_PLAN.md). Phase 0 = R1. | Audit 2026-10-20 | L+ |
+| R10 | Next versions 2.5 → 3.0: mobile adoption, prebuilt CSS, native promotion + token tiers, toolchain, 3.0 runway and breaking cleanup. Plan: [ROADMAP_2.x.md](ROADMAP_2.x.md). | Release review 2026-11-01 | L+ |
 
 # Research log
 

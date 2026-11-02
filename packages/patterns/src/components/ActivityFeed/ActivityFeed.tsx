@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@nexub/react';
+import { cn, useNexubMessages } from '@nexub/react';
 
 export interface ActivityItemProps {
   avatar?: React.ReactNode;
@@ -10,16 +10,19 @@ export interface ActivityItemProps {
 }
 
 const Root = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListElement>>(
-  ({ className, children, ...props }, ref) => (
-    <ul
-      ref={ref}
-      aria-label="Activity feed"
-      className={cn('flex flex-col divide-y divide-[var(--color-outline-variant)]', className)}
-      {...props}
-    >
-      {children}
-    </ul>
-  ),
+  ({ className, children, ...props }, ref) => {
+    const t = useNexubMessages();
+    return (
+      <ul
+        ref={ref}
+        aria-label={t.activityFeed}
+        className={cn('flex flex-col divide-y divide-[var(--color-outline-variant)]', className)}
+        {...props}
+      >
+        {children}
+      </ul>
+    );
+  },
 );
 Root.displayName = 'ActivityFeed.Root';
 

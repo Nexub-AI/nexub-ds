@@ -56,7 +56,8 @@
       "kind": "primitive",
       "web": null,
       "examples": [
-        "Sizes and colours"
+        "Sizes and colours",
+        "Nexub marks"
       ],
       "path": "/m/preview/icon"
     },
@@ -361,7 +362,8 @@
       "kind": "component",
       "web": "skeleton",
       "examples": [
-        "Text lines"
+        "Text lines",
+        "Swap to content"
       ],
       "path": "/m/preview/skeleton"
     },

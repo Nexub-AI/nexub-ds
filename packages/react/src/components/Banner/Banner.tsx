@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { warnDeprecated } from '../../utils/deprecated.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
@@ -64,6 +65,7 @@ export const Banner = React.forwardRef<HTMLDivElement, BannerProps>(
     },
     ref,
   ) => {
+    warnDeprecated('Banner', 'Alert');
     const messages = useNexubMessages();
     return (
       <div

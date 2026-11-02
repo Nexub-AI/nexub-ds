@@ -27,9 +27,10 @@ const STATUS_BAR = { ios: 0.07, android: 0.045 };
 export const TOLERANCE = { ios: 0.001, android: 0.005 };
 // Examples that never stand still: the native spinner (UIActivityIndicatorView
 // spins regardless of Reduce Motion; the Android emulator has animations off)
-// and the Skeleton pulse are caught at a different frame each run. They get a
-// looser limit instead of the platform's.
-export const ANIMATED = new Set(['loading-indicator--0', 'button--1', 'skeleton--0']);
+// and the Skeleton pulse are caught at a different frame each run. The search
+// pattern focuses its field, so the blinking caret and the iOS keyboard's word
+// suggestions are in the shot. They get a looser limit instead of the platform's.
+export const ANIMATED = new Set(['loading-indicator--0', 'button--1', 'skeleton--0', 'pattern-search']);
 export const ANIMATED_TOLERANCE = 0.01;
 export const limitFor = (file, platform) =>
   ANIMATED.has(basename(file).replace(/--(ios|android)\.png$/, '')) ? ANIMATED_TOLERANCE : TOLERANCE[platform];
