@@ -186,3 +186,10 @@ test('remCss restates spacing and radius in rem, keeping hairlines and capsules 
   assert.match(css, /--shape-field: 0\.75rem;/);
   assert.doesNotMatch(css, /--spacing-px|--shape-control/);
 });
+
+test('remCss flattens nested type tokens and adds the compact density block', () => {
+  const css = remCss({ type: { 'body-md': { size: { $value: '16px' }, lineHeight: { $value: '24px' } } } });
+  assert.match(css, /--type-body-md-size: 1rem;/);
+  assert.match(css, /--type-body-md-lineHeight: 1\.5rem;/);
+  assert.match(css, /\[data-density='compact'\] \{\n  --size-control-xs: 1\.25rem;/);
+});
