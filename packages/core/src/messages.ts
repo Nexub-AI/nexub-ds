@@ -94,6 +94,10 @@ export interface NexubMessages {
   signOut: string;
   signingOut: string;
   accountAndApps: string;
+  // NotificationItem, ActivityFeed (@nexub/patterns)
+  unread: string;
+  dismissNotification: string;
+  activityFeed: string;
   // Mobile (@nexub/react-native)
   /** Sheet grabber: cycles the sheet height. */
   resize: string;
@@ -195,6 +199,9 @@ export const defaultMessages: NexubMessages = {
   signOut: 'Sign out',
   signingOut: 'Signing out…',
   accountAndApps: 'Account and apps',
+  unread: 'Unread',
+  dismissNotification: 'Dismiss notification',
+  activityFeed: 'Activity feed',
   resize: 'Resize',
   cancel: 'Cancel',
   show: (label) => `Show ${label}`,

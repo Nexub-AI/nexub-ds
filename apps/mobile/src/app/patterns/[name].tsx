@@ -26,7 +26,8 @@ import {
   type Transaction,
 } from '@nexub/react-native/patterns';
 
-const day = (d: number) => new Date(Date.now() - d * 86_400_000);
+// Fixed dates, not relative to now, so the pattern screenshots don't change every day.
+const day = (d: number) => new Date(2026, 9, 31 - d, 10, 30);
 const TX: Transaction[] = [
   { id: '1', title: 'Amazon', subtitle: 'Card · Shopping', amount: -42.5, currency: 'USD', date: day(0) },
   { id: '2', title: 'Salary', subtitle: 'Acme Corp', amount: 4200, currency: 'USD', date: day(1) },

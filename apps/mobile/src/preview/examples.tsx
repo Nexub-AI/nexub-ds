@@ -2,7 +2,27 @@
 // docs previews (/preview/[slug]) both render these, so a demo is written once.
 import { useState } from 'react';
 import { Platform, View } from 'react-native';
-import { ArrowRight, Bell, Check, Copy, CreditCard, Globe, Heart, Lock, Moon, Plus, Search, Send, Trash2, Wallet } from '@nexub/icons/native';
+import {
+  ArrowRight,
+  Bell,
+  BookubMark,
+  Check,
+  Copy,
+  CreditCard,
+  FounderubMark,
+  Globe,
+  Heart,
+  LeapMark,
+  Lock,
+  Moon,
+  NexubMark,
+  PayubMark,
+  Plus,
+  Search,
+  Send,
+  Trash2,
+  Wallet,
+} from '@nexub/icons/native';
 import {
   Accordion,
   ActionSheet,
@@ -52,6 +72,7 @@ import {
   Select,
   SensitiveValue,
   Skeleton,
+  SkeletonSwap,
   Slider,
   Stack,
   Stepper,
@@ -159,6 +180,20 @@ export const EXAMPLES: Examples = {
         <Icon icon={Check} color="success" size="lg" label="Done" />
       </Inline>
     ),
+    () => {
+      const { roles } = useTheme();
+      const ink = roles['on-surface'];
+      return (
+        <Inline gap="4">
+          <NexubMark variant="color" size="xl" label="Nexub" />
+          <NexubMark size="xl" color={ink} label="Nexub, mono" />
+          <LeapMark size="lg" color={ink} label="Leap" />
+          <BookubMark size="lg" color={ink} label="Bookub" />
+          <PayubMark size="lg" color={ink} label="Payub" />
+          <FounderubMark size="lg" color={ink} label="Founderub" />
+        </Inline>
+      );
+    },
   ],
 
   button: [
@@ -502,6 +537,39 @@ export const EXAMPLES: Examples = {
         <Skeleton width="80%" height={14} />
       </Stack>
     ),
+    () => {
+      // Starts loaded so the screenshot is stable; Reload shows the swap.
+      const [loading, setLoading] = useState(false);
+      return (
+        <Stack gap="3">
+          <SkeletonSwap
+            loading={loading}
+            skeleton={
+              <Stack gap="2">
+                <Skeleton width="30%" height={14} />
+                <Skeleton width="55%" height={32} />
+              </Stack>
+            }
+          >
+            <Stack gap="1">
+              <Text variant="label-md" color="on-surface-variant">
+                Balance
+              </Text>
+              <Amount value={2400} currency="SGD" />
+            </Stack>
+          </SkeletonSwap>
+          <Button
+            variant="outlined"
+            onPress={() => {
+              setLoading(true);
+              setTimeout(() => setLoading(false), 1500);
+            }}
+          >
+            Reload
+          </Button>
+        </Stack>
+      );
+    },
   ],
   'empty-state': [
     () => (

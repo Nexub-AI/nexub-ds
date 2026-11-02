@@ -455,6 +455,45 @@ export function Skeleton({ width = '100%', height = 16, radius = 'field', style 
 // Half a skeleton breath, matching web's animate-pulse (2 s per cycle).
 const SHIMMER_MS = 1000;
 
+export interface SkeletonSwapProps extends ViewProps {
+  /** While true the skeleton shows; flipping to false crossfades to the content. */
+  loading: boolean;
+  /** Placeholder shown while loading, usually `Skeleton`s shaped like the content. */
+  skeleton: React.ReactNode;
+  children?: React.ReactNode;
+}
+
+/**
+ * Crossfades from a skeleton to the loaded content in place, instead of popping.
+ * The web `SkeletonSwap` twin. Marks itself busy for screen readers while loading.
+ * Content that is ready on first render appears without a fade.
+ *
+ * ```tsx
+ * <SkeletonSwap loading={isLoading} skeleton={<Skeleton height={120} radius="container" />}>
+ *   <Card>…</Card>
+ * </SkeletonSwap>
+ * ```
+ */
+export function SkeletonSwap({ loading, skeleton, children, accessibilityState, ...rest }: SkeletonSwapProps) {
+  // Fade the content in only when it replaces a skeleton the user saw.
+  const hadSkeleton = React.useRef(loading);
+  if (loading) hadSkeleton.current = true;
+  return (
+    <View accessibilityState={{ ...accessibilityState, busy: loading }} {...rest}>
+      {loading ? (
+        // Reanimated keeps an exiting view at its last frame, so it fades over the arriving content.
+        <Animated.View key="skeleton" exiting={nxExit('fade')}>
+          {skeleton}
+        </Animated.View>
+      ) : (
+        <Animated.View key="content" entering={hadSkeleton.current ? nxEnter('fade') : undefined}>
+          {children}
+        </Animated.View>
+      )}
+    </View>
+  );
+}
+
 // ─── EmptyState / ErrorState ─────────────────────────────────────────────────
 
 export interface EmptyStateProps extends ViewProps {

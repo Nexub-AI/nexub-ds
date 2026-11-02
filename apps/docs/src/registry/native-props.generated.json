@@ -685,6 +685,32 @@
       }
     ]
   },
+  "SkeletonSwap": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": true,
+        "description": "While true the skeleton shows; flipping to false crossfades to the content."
+      },
+      {
+        "name": "skeleton",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "Placeholder shown while loading, usually `Skeleton`s shaped like the content."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "EmptyState": {
     "file": "components/feedback.tsx",
     "extends": [
