@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { warnDeprecated } from '../../utils/deprecated.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const tagVariants = cva(
@@ -56,6 +57,7 @@ export interface TagProps
  */
 export const Tag = React.forwardRef<HTMLSpanElement, TagProps>(
   ({ className, size, tone = 'neutral', children, ...props }, ref) => {
+    warnDeprecated('Tag', 'Badge');
     return (
       <span
         ref={ref}

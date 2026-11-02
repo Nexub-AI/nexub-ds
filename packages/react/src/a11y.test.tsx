@@ -115,12 +115,101 @@ const cases: [string, React.ReactElement][] = [
       </N.Table.Body>
     </N.Table.Root>,
   ],
+  [
+    'SegmentedControl',
+    <N.SegmentedControl.Root aria-label="Period" defaultValue="m">
+      <N.SegmentedControl.Item value="w">Week</N.SegmentedControl.Item>
+      <N.SegmentedControl.Item value="m">Month</N.SegmentedControl.Item>
+    </N.SegmentedControl.Root>,
+  ],
+  [
+    'ToggleGroup',
+    <N.ToggleGroup.Root type="multiple" aria-label="Format">
+      <N.ToggleGroup.Item value="b" aria-label="Bold">B</N.ToggleGroup.Item>
+      <N.ToggleGroup.Item value="i" aria-label="Italic">I</N.ToggleGroup.Item>
+    </N.ToggleGroup.Root>,
+  ],
+  ['Toggle', <N.Toggle aria-label="Pin">P</N.Toggle>],
+  ['Spinner', <N.Spinner />],
+  [
+    'EmptyState',
+    <N.EmptyState.Root>
+      <N.EmptyState.Title>No invoices</N.EmptyState.Title>
+      <N.EmptyState.Description>Invoices you send show up here.</N.EmptyState.Description>
+    </N.EmptyState.Root>,
+  ],
+  [
+    'Select',
+    <N.Select.Root>
+      <N.Select.Trigger aria-label="Currency">
+        <N.Select.Value placeholder="Currency" />
+      </N.Select.Trigger>
+    </N.Select.Root>,
+  ],
+  // Overlays render open, into a portal on document.body.
+  [
+    'Dialog',
+    <N.Dialog.Root open>
+      <N.Dialog.Content>
+        <N.Dialog.Title>Rename</N.Dialog.Title>
+        <N.Dialog.Description>Give the file a new name.</N.Dialog.Description>
+      </N.Dialog.Content>
+    </N.Dialog.Root>,
+  ],
+  [
+    'AlertDialog',
+    <N.AlertDialog.Root open>
+      <N.AlertDialog.Content>
+        <N.AlertDialog.Title>Delete card?</N.AlertDialog.Title>
+        <N.AlertDialog.Description>This can't be undone.</N.AlertDialog.Description>
+        <N.AlertDialog.Cancel>Cancel</N.AlertDialog.Cancel>
+        <N.AlertDialog.Action>Delete</N.AlertDialog.Action>
+      </N.AlertDialog.Content>
+    </N.AlertDialog.Root>,
+  ],
+  [
+    'Drawer',
+    <N.Drawer.Root open>
+      <N.Drawer.Content>
+        <N.Drawer.Title>Filters</N.Drawer.Title>
+        <N.Drawer.Description>Narrow the list.</N.Drawer.Description>
+      </N.Drawer.Content>
+    </N.Drawer.Root>,
+  ],
+  [
+    'Popover',
+    <N.Popover.Root open>
+      <N.Popover.Trigger>Details</N.Popover.Trigger>
+      <N.Popover.Content aria-label="Fee details">Fee: $1.00</N.Popover.Content>
+    </N.Popover.Root>,
+  ],
+  [
+    'DropdownMenu',
+    <N.DropdownMenu.Root open>
+      <N.DropdownMenu.Trigger>Actions</N.DropdownMenu.Trigger>
+      <N.DropdownMenu.Content>
+        <N.DropdownMenu.Item>Edit</N.DropdownMenu.Item>
+        <N.DropdownMenu.Item>Delete</N.DropdownMenu.Item>
+      </N.DropdownMenu.Content>
+    </N.DropdownMenu.Root>,
+  ],
+  [
+    'Combobox',
+    <N.Combobox.Root label="Country">
+      <N.Combobox.Input placeholder="Search countries" aria-label="Country" />
+      <N.Combobox.List>
+        <N.Combobox.Item>Singapore</N.Combobox.Item>
+        <N.Combobox.Item>India</N.Combobox.Item>
+      </N.Combobox.List>
+    </N.Combobox.Root>,
+  ],
 ];
 
 describe('a11y (axe)', () => {
   it.each(cases)('%s has no axe violations', async (_name, el) => {
-    const { container } = render(el);
-    const { violations } = await axe.run(container, {
+    // baseElement (document.body), so portalled overlay content is scanned too.
+    const { baseElement } = render(el);
+    const { violations } = await axe.run(baseElement, {
       rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
     });
     expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(' | ')}`)).toEqual([]);

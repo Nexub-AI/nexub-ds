@@ -113,6 +113,7 @@ export {
   Progress,
   LoadingIndicator,
   Skeleton,
+  SkeletonSwap,
   EmptyState,
   ErrorState,
 } from './components/feedback';
@@ -123,6 +124,7 @@ export type {
   DialogProps,
   ProgressProps,
   SkeletonProps,
+  SkeletonSwapProps,
   EmptyStateProps,
   ErrorStateProps,
 } from './components/feedback';

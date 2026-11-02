@@ -39,6 +39,15 @@
         "coverage/**"
       ]
     },
+    "@nexub/tokens#test": {
+      "dependsOn": [
+        "^build",
+        "build"
+      ],
+      "outputs": [
+        "coverage/**"
+      ]
+    },
     "clean": {
       "cache": false
     },

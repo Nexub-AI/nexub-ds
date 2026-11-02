@@ -83,6 +83,9 @@ writeFileSync(
     '',
     `export const NEXUB_MARK_GRADIENTS = ${JSON.stringify(gradients, null, 2)} as const;`,
     '',
+    '// Hex for --color-brand-mark-n at index n-1, for React Native (no CSS variables).',
+    `export const NEXUB_MARK_COLORS = ${JSON.stringify(colors)} as const;`,
+    '',
   ].join('\n'),
 );
 

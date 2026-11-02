@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { warnDeprecated } from '../../utils/deprecated.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const calloutVariants = cva(
@@ -44,6 +45,7 @@ export interface CalloutProps
 /** @deprecated Use `Alert` instead: `<Alert>` covers tone + icon. Deprecated since 1.1.0; removal planned in 3.0. */
 export const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
   ({ className, tone = 'neutral', icon, children, ...props }, ref) => {
+    warnDeprecated('Callout', 'Alert');
     return (
       <div
         ref={ref}

@@ -93,6 +93,18 @@ appId: ai.nexub.mobile
     timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: icon--0--${maestro.platform}
+- openLink: nexub://preview/icon?ex=1
+- runFlow:
+    when:
+      visible: "Open"
+    commands:
+      - tapOn: "Open"
+- extendedWaitUntil:
+    visible:
+      id: "preview-ready"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: icon--1--${maestro.platform}
 - openLink: nexub://preview/button?ex=0
 - runFlow:
     when:
@@ -585,6 +597,18 @@ appId: ai.nexub.mobile
     timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: skeleton--0--${maestro.platform}
+- openLink: nexub://preview/skeleton?ex=1
+- runFlow:
+    when:
+      visible: "Open"
+    commands:
+      - tapOn: "Open"
+- extendedWaitUntil:
+    visible:
+      id: "preview-ready"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: skeleton--1--${maestro.platform}
 - openLink: nexub://preview/empty-state?ex=0
 - runFlow:
     when:
