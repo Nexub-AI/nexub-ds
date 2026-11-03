@@ -181,9 +181,11 @@ appId: ai.nexub.mobile
 - runFlow: subflows/back.yaml
 # Back on the Payub flows list: open Activity from it. (Deep links are covered
 # by previews/; on the iOS simulator a link sent while the app is open
-# sometimes never navigates.)
+# sometimes never navigates.) Scroll up to the section header, not to the row:
+# after the back swipe the row can sit just under the translucent navigation
+# bar, where "fully visible" still holds but a tap only highlights it.
 - scrollUntilVisible:
-    element: "Activity.*"
+    element: "Payub flows"
     direction: UP
 - tapOn:
     text: "Activity.*"
