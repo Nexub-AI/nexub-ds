@@ -14,6 +14,9 @@ A password field with a built-in toggle to reveal or hide the entered value.
 | `invalid` | `boolean` |  | Applies error styling to indicate a validation failure. |
 | `disabled` | `boolean` |  | Disables the input. |
 | `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+| `visible` | `boolean` |  | Shows the password as text. Controlled when set; pair with onVisibleChange. |
+| `defaultVisible` | `boolean` |  | Initial visibility when uncontrolled. Defaults to false. |
+| `onVisibleChange` | `(visible: boolean) => void` |  | Called when the reveal toggle is pressed. |
 
 ## Example: Default
 
