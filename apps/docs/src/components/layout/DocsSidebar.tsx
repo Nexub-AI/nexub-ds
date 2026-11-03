@@ -9,6 +9,7 @@ import { useSidebar } from './SidebarContext';
 import { DocsLink } from './DocsLink';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
+import { ContrastSwitcher } from '../docs/ContrastSwitcher';
 
 const containsPath = (g: NavGroup, path: string): boolean =>
   g.items.some((i) => i.href === path) || (g.children ?? []).some((c) => containsPath(c, path));
@@ -103,6 +104,10 @@ export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
             <div className="flex items-center justify-between gap-3 border-t border-[var(--color-outline-variant)] px-5 py-4">
               <BrandSwitcher />
               <ThemeSwitcher />
+            </div>
+            <div className="flex items-center justify-between gap-3 px-5 pb-4">
+              <span className="text-label-md text-[var(--color-on-surface-variant)]">Contrast</span>
+              <ContrastSwitcher />
             </div>
           </Drawer.Content>
         </Drawer.Portal>
