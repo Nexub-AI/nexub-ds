@@ -3,8 +3,8 @@
 
 /** Text field chrome: Input wrapper, Textarea, Select trigger. */
 export const field = [
-  'rounded-shape-field border border-[var(--color-outline)]',
-  'bg-[var(--color-surface-container-lowest)] text-[var(--color-on-surface)]',
+  'rounded-[var(--field-radius,var(--shape-field))] border border-[var(--field-border,var(--color-outline))]',
+  'bg-[var(--field-bg,var(--color-surface-container-lowest))] text-[var(--field-fg,var(--color-on-surface))]',
   'transition-[border-color,box-shadow] duration-effects-fast ease-effects-fast',
   'hover:border-[var(--color-on-surface-variant)]',
 ].join(' ');

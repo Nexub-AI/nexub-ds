@@ -5,7 +5,7 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const badgeVariants = cva(
   [
-    'inline-flex items-center gap-1 rounded-shape-control whitespace-nowrap select-none',
+    'inline-flex items-center gap-1 rounded-[var(--badge-radius,var(--shape-control))] whitespace-nowrap select-none',
   ],
   {
     variants: {

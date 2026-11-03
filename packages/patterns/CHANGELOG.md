@@ -1,5 +1,11 @@
 # @nexub/patterns
 
+## 2.6.0
+
+### Minor Changes
+
+- 7f6d0ae: Prebuilt CSS: `import '@nexub/patterns/styles.css'` after `@nexub/react/styles.css` to use the patterns without Tailwind. It carries only the classes the patterns add (about 4 kB gzipped).
+
 ## 2.5.0
 
 ### Minor Changes

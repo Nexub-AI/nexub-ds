@@ -9,16 +9,16 @@ import { usePointerSheen } from '../../hooks/usePointerSheen.js';
 export const cardVariants = cva(
   // In-flow content: tone + a soft alpha hairline, no shadow (shadows are for floating layers).
   // A CardLink inside stretches over the card; the card then carries its focus ring.
-  'rounded-shape-container bg-[var(--color-surface-elevated)] border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] text-[var(--color-on-surface)] has-[[data-card-link]]:relative has-[[data-card-link]:focus-visible]:outline has-[[data-card-link]:focus-visible]:outline-[3px] has-[[data-card-link]:focus-visible]:outline-offset-2 has-[[data-card-link]:focus-visible]:outline-[var(--color-primary)]',
+  'rounded-[var(--card-radius,var(--shape-container))] bg-[var(--card-bg,var(--color-surface-elevated))] border border-[color:var(--card-border,color-mix(in_srgb,var(--color-outline-variant)_60%,transparent))] text-[var(--card-fg,var(--color-on-surface))] has-[[data-card-link]]:relative has-[[data-card-link]:focus-visible]:outline has-[[data-card-link]:focus-visible]:outline-[3px] has-[[data-card-link]:focus-visible]:outline-offset-2 has-[[data-card-link]:focus-visible]:outline-[var(--color-primary)]',
   {
     variants: {
       variant: {
         flat: '',
-        surface: 'bg-[var(--color-surface-elevated)] shadow-elevation-1',
+        surface: 'bg-[var(--card-bg,var(--color-surface-elevated))] shadow-elevation-1',
         // Lift on hover (spring, elevation 1 → 2), sink on press, state layer
         // tint; see .nx-lift in themes/base.css.
         interactive:
-          'nx-state-layer nx-lift cursor-pointer bg-[var(--color-surface-elevated)] shadow-elevation-1',
+          'nx-state-layer nx-lift cursor-pointer bg-[var(--card-bg,var(--color-surface-elevated))] shadow-elevation-1',
       },
       // Material. 'glass' needs data-material="glass" on the element (set in the
       // component) for the --glass-* vars to resolve. Single box-shadow carries

@@ -1,5 +1,12 @@
 # @nexub/themes
 
+## 2.6.0
+
+### Patch Changes
+
+- Updated dependencies [ba4b800]
+  - @nexub/tokens@2.6.0
+
 ## 2.5.0
 
 ### Patch Changes

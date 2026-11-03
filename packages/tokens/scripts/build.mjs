@@ -445,6 +445,10 @@ writeFileSync(
   }),
 );
 
+// Component tier (DTCG, documentation + tooling only: components read these
+// with var() fallbacks, so nothing is declared on :root).
+writeFileSync(`${root}/dist/json/component.json`, readFileSync(`${root}/tokens/component/component.json`));
+
 // Emit tailwind preset type declaration
 mkdirSync(`${root}/dist/tailwind`, { recursive: true });
 writeFileSync(
