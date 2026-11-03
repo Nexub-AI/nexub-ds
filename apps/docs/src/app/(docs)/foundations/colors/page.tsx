@@ -208,6 +208,27 @@ color: var(--color-on-surface);
         primary (or tertiary) family; secondary, the chart palettes and P3 wide-gamut boosts stay on the Nexub brand.
       </p>
 
+      <h2>Token tiers</h2>
+      <p>
+        Tokens come in three tiers. <strong>Reference</strong> tokens are raw values:{' '}
+        <code>--color-palette-primary-40</code>, <code>--shape-field</code>. <strong>Semantic</strong> tokens are the
+        roles on this page, such as <code>--color-primary</code>. <strong>Component</strong> tokens restyle one component
+        without touching the roles it shares with others:
+      </p>
+      <pre><code>{`.checkout {
+  --button-filled-bg: var(--color-success);
+  --button-filled-fg: var(--color-on-success);
+  --card-radius: 24px;
+}`}</code></pre>
+      <p>
+        Component tokens are unset by default. Each component reads <code>var(--button-filled-bg, var(--color-primary))</code>,
+        so the default resolves where the component sits, and nested <code>data-theme</code>,{' '}
+        <code>data-contrast</code> and <code>data-product</code> keep working. Button (filled, tonal, outlined and
+        text colours), fields (Input, Textarea and Select: background, text, border, radius), Card (background, text,
+        border, radius) and Badge (radius) have them. The full list, in DTCG format, is{' '}
+        <code>@nexub/tokens/json/component</code>. Pick colours from the roles to keep the contrast guarantees.
+      </p>
+
       <h2>Legacy names</h2>
       <p>
         <code>--color-bg-*</code>, <code>--color-text-*</code>, <code>--color-border-*</code>,{' '}

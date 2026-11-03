@@ -39,10 +39,10 @@ const toneClasses: Record<ToneValue, string> = {
   founderub: 'bg-[var(--color-founderub)] text-[var(--color-on-founderub)]',
 };
 
-const filled = `bg-[var(--color-primary)] text-[var(--color-on-primary)] ${disabledContainer}`;
-const tonal = `bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] ${disabledContainer}`;
-const outlined = `bg-transparent border border-[var(--color-outline-variant)] text-[var(--color-on-surface)] ${disabledContainer}`;
-const text = `bg-transparent text-[var(--color-on-surface)] ${disabledText}`;
+const filled = `bg-[var(--button-filled-bg,var(--color-primary))] text-[var(--button-filled-fg,var(--color-on-primary))] ${disabledContainer}`;
+const tonal = `bg-[var(--button-tonal-bg,var(--color-secondary-container))] text-[var(--button-tonal-fg,var(--color-on-secondary-container))] ${disabledContainer}`;
+const outlined = `bg-transparent border border-[var(--button-outlined-border,var(--color-outline-variant))] text-[var(--button-outlined-fg,var(--color-on-surface))] ${disabledContainer}`;
+const text = `bg-transparent text-[var(--button-text-fg,var(--color-on-surface))] ${disabledText}`;
 
 export const buttonVariants = cva(
   [pressable, 'nx-hit relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
