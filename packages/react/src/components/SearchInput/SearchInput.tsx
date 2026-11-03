@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Search, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { useControllableState } from '../../hooks/useControllableState.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Input, type InputProps } from '../Input/Input.js';
 
@@ -10,22 +11,20 @@ export interface SearchInputProps extends Omit<InputProps, 'leadingIcon' | 'trai
 
 export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
   ({ value, defaultValue: _defaultValue, onChange, onClear, className, ...props }, ref) => {
-    const [internalValue, setInternalValue] = React.useState<string>(
-      ((_defaultValue as string | undefined) ?? ''),
-    );
-
-    const controlled = value !== undefined;
-    const currentValue = controlled ? String(value) : internalValue;
+    const [currentValue = '', setValue] = useControllableState<string>({
+      value: value === undefined ? undefined : String(value),
+      defaultValue: _defaultValue as string | undefined,
+    });
     const hasValue = currentValue.length > 0;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!controlled) setInternalValue(e.target.value);
+      setValue(e.target.value);
       onChange?.(e);
     };
 
     const messages = useNexubMessages();
     const handleClear = () => {
-      if (!controlled) setInternalValue('');
+      setValue('');
       onClear?.();
     };
 
@@ -46,7 +45,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       <Input
         ref={ref}
         type="search"
-        value={controlled ? value : internalValue}
+        value={currentValue}
         onChange={handleChange}
         className={className}
         leadingIcon={<Search className="h-4 w-4" aria-hidden="true" />}
