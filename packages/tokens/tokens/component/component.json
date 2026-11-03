@@ -1,0 +1,28 @@
+{
+  "$description": "Component tier. Unset by default: each component reads var(--<name>, <css>), so the default resolves where the component sits and nested data-contrast / data-product / data-theme keep working. Set one on any element to restyle that component below it. Kept out of variables.css on purpose (a :root declaration would freeze the role at :root).",
+  "button": {
+    "filled-bg":       { "$type": "color", "$value": "{color.primary}",                 "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
+    "filled-fg":       { "$type": "color", "$value": "{color.on-primary}",              "$extensions": { "dev.nexub": { "css": "var(--color-on-primary)" } } },
+    "tonal-bg":        { "$type": "color", "$value": "{color.secondary-container}",     "$extensions": { "dev.nexub": { "css": "var(--color-secondary-container)" } } },
+    "tonal-fg":        { "$type": "color", "$value": "{color.on-secondary-container}",  "$extensions": { "dev.nexub": { "css": "var(--color-on-secondary-container)" } } },
+    "outlined-border": { "$type": "color", "$value": "{color.outline-variant}",         "$extensions": { "dev.nexub": { "css": "var(--color-outline-variant)" } } },
+    "outlined-fg":     { "$type": "color", "$value": "{color.on-surface}",              "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "text-fg":         { "$type": "color", "$value": "{color.on-surface}",              "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } }
+  },
+  "field": {
+    "$description": "Input, Textarea, Select and Combobox triggers.",
+    "bg":     { "$type": "color",     "$value": "{color.surface-container-lowest}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-container-lowest)" } } },
+    "fg":     { "$type": "color",     "$value": "{color.on-surface}",               "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "border": { "$type": "color",     "$value": "{color.outline}",                  "$extensions": { "dev.nexub": { "css": "var(--color-outline)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.field}",                    "$extensions": { "dev.nexub": { "css": "var(--shape-field)" } } }
+  },
+  "card": {
+    "bg":     { "$type": "color",     "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
+    "fg":     { "$type": "color",     "$value": "{color.on-surface}",       "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "border": { "$type": "color",     "$value": "{color.outline-variant}",  "$description": "At 60% opacity.", "$extensions": { "dev.nexub": { "css": "color-mix(in srgb,var(--color-outline-variant) 60%,transparent)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.container}",        "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
+  },
+  "badge": {
+    "radius": { "$type": "dimension", "$value": "{shape.control}", "$extensions": { "dev.nexub": { "css": "var(--shape-control)" } } }
+  }
+}

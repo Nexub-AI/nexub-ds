@@ -6,6 +6,7 @@ import { Menu, Search } from '@nexub/icons';
 import { IconButton, Kbd, Logo, TopNav } from '@nexub/react';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
+import { ContrastSwitcher } from '../docs/ContrastSwitcher';
 import { useSidebar } from './SidebarContext';
 
 interface DocsHeaderProps {
@@ -50,6 +51,9 @@ export function DocsHeader({ versionBadge }: DocsHeaderProps) {
 
       <div className="docs-only-desktop">
         <BrandSwitcher />
+      </div>
+      <div className="docs-only-desktop">
+        <ContrastSwitcher />
       </div>
       <div className="docs-only-desktop">
         <ThemeSwitcher />

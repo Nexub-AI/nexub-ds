@@ -33,7 +33,7 @@ describe('BentoGrid', () => {
   ] as const)('tile %s spans', (size, has, hasNot) => {
     render(<BentoTile size={size}>T</BentoTile>);
     const tile = screen.getByText('T');
-    expect(tile).toHaveClass('rounded-shape-container', ...has);
+    expect(tile).toHaveClass('rounded-[var(--card-radius,var(--shape-container))]', ...has);
     hasNot.forEach((c) => expect(tile).not.toHaveClass(c));
     expect(tile).not.toHaveClass('col-span-2');
   });

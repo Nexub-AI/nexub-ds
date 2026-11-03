@@ -31,8 +31,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Keys must match ClientProviders' storageKey and BrandSwitcher. */}
-        <ThemeScript productStorageKey="nexub-brand" />
+        {/* Keys must match ClientProviders' storageKey, BrandSwitcher and ContrastSwitcher. */}
+        <ThemeScript productStorageKey="nexub-brand" contrastStorageKey="nexub-contrast" />
       </head>
       <body className="m-0" suppressHydrationWarning>
         <ClientProviders searchIndex={searchIndex}>
