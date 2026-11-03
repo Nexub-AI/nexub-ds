@@ -61,11 +61,11 @@ Status: **proposed.** Roadmap row R10 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEM
 
 | Item | Where | Size |
 |---|---|---|
-| Internal majors: TypeScript 7, tsup 9, vite 8, shiki 4. | repo | M |
-| Majors consumers can see: react-day-picker 10 (DatePicker), lucide-react 1.x. | `packages/react`, `packages/icons` | M |
-| Single-source the docs examples (#26): one `.tsx` per example. This deletes about 2k lines from `ComponentLivePreview.tsx`. | `apps/docs` | L |
-| API consistency (#30): a shared `Size` type, and `useControllableState` in SearchInput and PasswordInput. | `packages/react` | M |
-| R6 usage telemetry: scan the Leap, Bookub, Payub and Founderub repos for component usage. The 3.0 removals and the 2.9 codemods should follow this data. | `scripts/` | S |
+| Internal majors: tsup 9, vite 8, shiki 4, and TypeScript 6.0. TypeScript 7 is held back because it ships no compiler API, which tsup's declaration build and typescript-eslint (<6.1) need. Revisit when those support it. | repo | M |
+| Majors consumers can see: react-day-picker 10 (DatePicker), lucide-react 1.x. Done; no prop or icon-name changes. | `packages/react`, `packages/icons` | M |
+| Single-source the docs examples (#26): one `.tsx` per example. This deletes about 2k lines from `ComponentLivePreview.tsx`. 201 examples in 100 entries; its own PR, because it moves many docs screenshots. | `apps/docs` | L |
+| API consistency (#30): a shared `Size` type, and `useControllableState` in SearchInput and PasswordInput (which gains `visible`, `defaultVisible`, `onVisibleChange`). Done. | `packages/react` | M |
+| R6 usage telemetry: scan the Leap, Bookub, Payub and Founderub repos for component usage. The 3.0 removals and the 2.9 codemods should follow this data. The script is in (`node scripts/usage-scan.mjs <repo>...`); the data still needs access to those repos, which are not in the Nexub-AI org. | `scripts/` | S |
 
 ## 2.9: 3.0 release candidate
 
