@@ -11,6 +11,7 @@ appId: ai.nexub.mobile
 - extendedWaitUntil:
     visible: "Components"
     timeout: 60000
+- waitForAnimationToEnd
 - retry:
     maxRetries: 1
     commands:

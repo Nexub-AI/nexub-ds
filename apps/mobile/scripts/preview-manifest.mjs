@@ -67,6 +67,7 @@ const flow = [
   '- extendedWaitUntil:',
   '    visible: "Components"',
   '    timeout: 60000',
+  '- waitForAnimationToEnd',
 ];
 // Screens that open a native modal on mount: the modal is its own window on
 // Android, so Maestro can't see the screen's preview-ready marker underneath.
