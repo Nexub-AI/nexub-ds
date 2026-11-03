@@ -143,7 +143,7 @@ export const DateRangePicker = React.forwardRef<
             numberOfMonths={2}
             startMonth={minDate}
             endMonth={maxDate}
-            initialFocus
+            autoFocus
             // Two months side by side: outside days would repeat the range.
             showOutsideDays={false}
             className="relative p-3"
