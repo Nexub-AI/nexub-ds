@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "types": ["react-native"],
+    "rootDir": "./src",
     "noEmit": false,
     "declarationMap": false,
     "sourceMap": false

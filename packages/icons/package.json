@@ -61,8 +61,8 @@
     "lucide-react-native": "1.64.0",
     "react-native": "0.88.1",
     "react-native-svg": "15.16.0",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "tsup": "^9.0.0",
+    "typescript": "~6.0.3"
   },
   "peerDependenciesMeta": {
     "react-dom": {
