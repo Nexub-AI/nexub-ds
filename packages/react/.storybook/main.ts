@@ -9,7 +9,13 @@ const config: StorybookConfig = {
   },
   // Tailwind v4 through its Vite plugin (not PostCSS): it hands the @nexub/themes
   // @imports to Vite, so their relative font url()s resolve and get bundled.
-  viteFinal: (config) => ({ ...config, plugins: [...(config.plugins ?? []), tailwindcss()] }),
+  // cssTarget: vite 8's lightningcss lowers light-dark() for older targets into
+  // vars resolved once at :root, which breaks nested data-theme surfaces.
+  viteFinal: (config) => ({
+    ...config,
+    plugins: [...(config.plugins ?? []), tailwindcss()],
+    build: { ...config.build, cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5'] },
+  }),
 };
 
 export default config;
