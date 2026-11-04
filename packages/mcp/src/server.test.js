@@ -14,11 +14,11 @@ const call = async (name, args = {}) => {
   return res.content[0].text;
 };
 
-test('catalog parses every component and flags deprecations', () => {
+test('catalog parses every component; components removed in 3.0 are gone', () => {
   const catalog = loadCatalog();
   assert.ok(catalog.length > 50);
   assert.ok(catalog.some((c) => c.slug === 'stat-card' && c.package === '@nexub/patterns'));
-  assert.ok(catalog.find((c) => c.slug === 'tag')?.deprecated);
+  for (const slug of ['banner', 'callout', 'tag', 'status-pill']) assert.ok(!catalog.some((c) => c.slug === slug), slug);
 });
 
 test('tools answer from the skill files', async () => {

@@ -21,7 +21,7 @@ export const Default: Story = {
               style={{
                 fontSize: '13px',
                 padding: '4px 10px',
-                border: '1px solid var(--color-border-default, #e2e8f0)',
+                border: '1px solid var(--color-outline-variant, #e2e8f0)',
                 borderRadius: '6px',
                 background: 'transparent',
                 cursor: 'pointer',

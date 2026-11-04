@@ -11,9 +11,15 @@ const only = (...r) => new Set(r);
 const tsx = (src, opts = {}) => migrateSource(src, { ext: '.tsx', ...opts });
 
 // ─── legacy-tokens ───
-test('legacy-tokens: snapshot matches @nexub/themes source', () => {
-  const css = ['base', 'light'].map((f) => readFileSync(path.join(here, `../../themes/src/${f}.css`), 'utf8'));
-  assert.deepEqual(buildAliasMap(css), SNAPSHOT);
+test('legacy-tokens: 3.0 themes declare no alias in the table; brand-overridden tokens are not in it', () => {
+  const css = ['base', 'light', 'leap', 'bookub', 'payub', 'founderub'].map((f) => readFileSync(path.join(here, `../../themes/src/${f}.css`), 'utf8')).join('\n');
+  for (const name of [...Object.keys(SNAPSHOT.aliases), ...Object.keys(SNAPSHOT.mix)]) {
+    assert.ok(!new RegExp(`${name}\\s*:`).test(css), `${name} is still declared in @nexub/themes`);
+  }
+  for (const name of ['--color-ring-default', '--color-ring-offset', '--color-accent-500', '--color-text-disabled']) {
+    assert.ok(!(name in SNAPSHOT.aliases), name);
+    assert.equal(migrateSource(`a { color: var(${name}); }`, { ext: '.css' }).output, `a { color: var(${name}); }`);
+  }
 });
 
 test('legacy-tokens: rewrites aliases, brand -500, never --color-text-disabled', () => {
@@ -29,11 +35,11 @@ test('legacy-tokens: resolves alias chains, stops at palette tokens and cycles',
     ':root { --color-a: var(--color-b); --color-b: var(--color-c); --color-c: var(--color-on-surface); }',
     ':root { --color-fill: var(--color-palette-primary-40); --color-x: var(--color-y); --color-y: var(--color-x); }',
     ':root { --color-m: var(--color-n); --color-n: color-mix(in srgb, var(--color-error) 35%, transparent); --color-lit: #fff; }',
-    ':root { --color-accent-500: var(--color-brand-primary-500); }',
+    ':root { --color-old-accent: var(--color-brand-primary-500); }',
   ]);
   assert.equal(aliases['--color-a'], '--color-on-surface');
   assert.equal(aliases['--color-b'], '--color-on-surface');
-  assert.equal(aliases['--color-accent-500'], '--color-primary');
+  assert.equal(aliases['--color-old-accent'], '--color-primary');
   for (const k of ['--color-fill', '--color-x', '--color-y', '--color-lit']) assert.equal(aliases[k], undefined, k);
   assert.match(mix['--color-m'], /^color-mix/);
 });
@@ -43,6 +49,13 @@ test('legacy-tokens: color-mix aliases are reported, not rewritten; definitions 
   const { output, manual } = migrateSource(src, { ext: '.ts', rules: only('legacy-tokens') });
   assert.equal(output, src);
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[1, 'legacy-tokens']]);
+});
+
+test('legacy-tokens: Tailwind utilities on legacy names move to role utilities', () => {
+  const { output, manual } = tsx('<div className="bg-bg-default md:hover:text-text-primary/80 border-border-default bg-surface-raised ring-ring-default border-semantic-error-border" />');
+  assert.equal(output, '<div className="bg-surface md:hover:text-on-surface/80 border-outline-variant bg-surface-elevated ring-ring-default border-semantic-error-border" />');
+  assert.deepEqual(manual.map((m) => m.rule), ['legacy-tokens']);
+  assert.equal(tsx("const s = 'Text text-primary is fine';").output, "const s = 'Text text-primary is fine';");
 });
 
 // ─── logical-classes ───

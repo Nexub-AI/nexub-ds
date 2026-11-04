@@ -17,7 +17,7 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 
 - Critical errors that block the user — use Alert or AlertDialog
 - Information the user must read and acknowledge — use Dialog
-- Persistent status that should remain visible — use Banner or Alert
+- Persistent status that should remain visible — use Alert
 - Long messages with multiple lines of text
 
 ## Props

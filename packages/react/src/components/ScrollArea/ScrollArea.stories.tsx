@@ -29,7 +29,7 @@ const notifications = [
 
 export const Default: Story = {
   render: () => (
-    <ScrollArea style={{ height: '240px', width: '320px', border: '1px solid var(--color-border-default, #e2e8f0)', borderRadius: '8px' }}>
+    <ScrollArea style={{ height: '240px', width: '320px', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px' }}>
       <div style={{ padding: '12px 16px' }}>
         <p style={{ fontSize: '13px', fontWeight: 600, marginBottom: '8px', marginTop: 0 }}>Notifications</p>
         <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -38,8 +38,8 @@ export const Default: Story = {
               key={i}
               style={{
                 fontSize: '13px',
-                color: 'var(--color-text-primary, #0f172a)',
-                borderBottom: '1px solid var(--color-border-default, #e2e8f0)',
+                color: 'var(--color-on-surface, #0f172a)',
+                borderBottom: '1px solid var(--color-outline-variant, #e2e8f0)',
                 paddingBottom: '8px',
               }}
             >

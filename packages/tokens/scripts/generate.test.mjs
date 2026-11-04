@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, remCss, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
 
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -176,20 +176,19 @@ test('springs run 0 → 1, effects never overshoot, slower tokens take longer', 
   }
 });
 
-test('remCss restates spacing and radius in rem, keeping hairlines and capsules in px', () => {
-  const css = remCss({
+test('remValues restates spacing and radius in rem, keeping hairlines and capsules in px', () => {
+  const v = remValues({
     spacing: { px: { $value: '1px' }, '0-5': { $value: '2px' }, 4: { $value: '16px' } },
     shape: { control: { $value: '9999px' }, field: { $value: '12px' } },
   });
-  assert.match(css, /--spacing-0-5: 0\.125rem;/);
-  assert.match(css, /--spacing-4: 1rem;/);
-  assert.match(css, /--shape-field: 0\.75rem;/);
-  assert.doesNotMatch(css, /--spacing-px|--shape-control/);
+  assert.equal(v.get('--spacing-0-5'), '0.125rem');
+  assert.equal(v.get('--spacing-4'), '1rem');
+  assert.equal(v.get('--shape-field'), '0.75rem');
+  assert.ok(!v.has('--spacing-px') && !v.has('--shape-control'));
 });
 
-test('remCss flattens nested type tokens and adds the compact density block', () => {
-  const css = remCss({ type: { 'body-md': { size: { $value: '16px' }, lineHeight: { $value: '24px' } } } });
-  assert.match(css, /--type-body-md-size: 1rem;/);
-  assert.match(css, /--type-body-md-lineHeight: 1\.5rem;/);
-  assert.match(css, /\[data-density='compact'\] \{\n  --size-control-xs: 1\.25rem;/);
+test('applyRem rewrites only covered declarations, keeping comments and other tokens', () => {
+  const groups = { type: { 'body-md': { size: { $value: '16px' }, lineHeight: { $value: '24px' } } } };
+  const css = ':root {\n  --type-body-md-size: 16px; /** Body */\n  --type-body-md-lineHeight: 24px;\n  --border-width-1: 1px;\n}\n';
+  assert.equal(applyRem(css, groups), ':root {\n  --type-body-md-size: 1rem; /** Body */\n  --type-body-md-lineHeight: 1.5rem;\n  --border-width-1: 1px;\n}\n');
 });

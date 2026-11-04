@@ -25,7 +25,7 @@ export const Default: Story = {
                 width: '2.5rem',
                 height: '2.5rem',
                 borderRadius: '9999px',
-                background: 'var(--color-bg-subtle)',
+                background: 'var(--color-surface-container-low)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -37,13 +37,13 @@ export const Default: Story = {
             </div>
             <div>
               <p style={{ fontWeight: 600, fontSize: '0.875rem' }}>Jane Doe</p>
-              <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>@janedoe</p>
+              <p style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-muted)' }}>@janedoe</p>
             </div>
           </div>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-muted)' }}>
             Product designer and open-source contributor. Building great experiences.
           </p>
-          <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--color-on-surface-muted)' }}>
             Joined April 2021 &middot; 128 followers
           </p>
         </div>

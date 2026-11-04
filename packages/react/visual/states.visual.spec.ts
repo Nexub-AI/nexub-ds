@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url';
 import { expect, test, type Page } from '@playwright/test';
 
 // Interaction states and display modes the per-story suite can't see
@@ -52,13 +51,11 @@ for (const { id, target } of STATES) {
   });
 }
 
-// Opt-in rem layer (@nexub/tokens/css/rem) under a 20px browser default: text,
-// spacing and control heights should grow together without clipping.
-const REM_CSS = fileURLToPath(new URL('../../tokens/dist/css/rem.css', import.meta.url));
+// Tokens are rem by default (3.0). Under a 20px browser default text, spacing
+// and control heights should grow together without clipping.
 for (const id of OVERVIEWS) {
   test(`${id} rem at 20px root`, async ({ page }) => {
     await open(page, id);
-    await page.addStyleTag({ path: REM_CSS });
     await page.addStyleTag({ content: 'html { font-size: 20px; }' });
     await page.evaluate(() => document.fonts.ready);
     await expect(page).toHaveScreenshot(`${id}--rem-20.png`, { fullPage: true });

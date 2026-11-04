@@ -20,7 +20,7 @@ export const Default: Story = {
           <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
             Quick info
           </p>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-muted)' }}>
             This popover can contain any content, such as forms, links, or descriptions.
           </p>
           <Popover.Arrow />
@@ -41,7 +41,7 @@ export const Glass: Story = {
           <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
             Glass popover
           </p>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-muted)' }}>
             surface=&quot;glass&quot; frosts the content behind the panel.
           </p>
           <Popover.Arrow />
