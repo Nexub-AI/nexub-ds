@@ -1,5 +1,14 @@
 # @nexub/react-native
 
+## 2.8.0
+
+### Patch Changes
+
+- Updated dependencies [1ad3138]
+  - @nexub/icons@2.8.0
+  - @nexub/tokens@2.8.0
+  - @nexub/core@2.8.0
+
 ## 2.7.0
 
 ### Patch Changes

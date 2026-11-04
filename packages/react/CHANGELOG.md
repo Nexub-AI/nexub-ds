@@ -1,5 +1,18 @@
 # @nexub/react
 
+## 2.8.0
+
+### Minor Changes
+
+- e85caa3: API consistency. A shared `Size` type (`'sm' | 'md' | 'lg'`) is exported and used by Flag, Label, SegmentedControl, NumberInput, CountryBadge and Logo; Amount and Dialog extend it. `PasswordInput` gains `visible`, `defaultVisible` and `onVisibleChange` so the reveal toggle can be controlled. `SearchInput` now uses `useControllableState`, with no change in behaviour.
+- 1ad3138: Dependency upgrades. `@nexub/icons` now uses lucide-react 1.x; every exported icon keeps its name, and a few glyphs are redrawn upstream. `DatePicker` and `DateRangePicker` use react-day-picker 10; their props and behaviour are unchanged. The packages are now built with TypeScript 6.0, tsup 9 and vite 8.
+
+### Patch Changes
+
+- Updated dependencies [1ad3138]
+  - @nexub/icons@2.8.0
+  - @nexub/core@2.8.0
+
 ## 2.7.0
 
 ### Minor Changes
