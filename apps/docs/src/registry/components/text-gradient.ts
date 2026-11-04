@@ -18,14 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<TextGradient>Design system for ambitious teams</TextGradient>`,
     },
     {
       title: 'In heading',
-      code: `<Heading size="h1">
-  Build with{' '}
-  <TextGradient>Nexub</TextGradient>
-</Heading>`,
     },
   ],
 };

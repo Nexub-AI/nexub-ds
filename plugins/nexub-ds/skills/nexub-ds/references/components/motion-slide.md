@@ -21,38 +21,26 @@ Slides content in from a direction based on the `in` prop.
 ## Example: Default
 
 ```tsx
-<Slide in={true} direction="up">
-  <Card>Slid in from bottom</Card>
-</Slide>
+import { Slide, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Slide in direction="up"><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
+}
 ```
 
 ## Example: Directions
 
 ```tsx
-function SlideDirections() {
+import * as React from 'react';
+import { Button, Slide, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
-  const [direction, setDirection] = React.useState('up');
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {['up', 'down', 'left', 'right'].map((dir) => (
-          <Button
-            key={dir}
-            variant={direction === dir ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => { setDirection(dir); setVisible(true); }}
-          >
-            {dir}
-          </Button>
-        ))}
-        <Button variant="ghost" size="sm" onClick={() => setVisible((v) => !v)}>
-          Toggle
-        </Button>
-      </div>
-      <Slide in={visible} direction={direction} unmountOnExit>
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Sliding in from {direction}.
-        </div>
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Slide in={visible} direction="up" unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
       </Slide>
     </div>
   );

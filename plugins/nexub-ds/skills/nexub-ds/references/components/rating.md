@@ -19,21 +19,37 @@ Star rating input, supports controlled and read-only modes.
 ## Example: Default
 
 ```tsx
-<Rating defaultValue={3} />
+import * as React from 'react';
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  const [val, setVal] = React.useState(3);
+  return <Rating value={val} onValueChange={setVal} />;
+}
 ```
 
 ## Example: Read-only
 
 ```tsx
-<Rating value={4} readOnly />
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  return <Rating value={4} readOnly />;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Rating defaultValue={3} size="sm" />
-  <Rating defaultValue={3} size="md" />
-  <Rating defaultValue={3} size="lg" />
-</div>
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Rating size="sm" value={4} readOnly />
+      <Rating size="md" value={4} readOnly />
+      <Rating size="lg" value={4} readOnly />
+    </div>
+  );
+}
 ```

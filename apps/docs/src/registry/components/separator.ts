@@ -17,15 +17,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Separator />`,
     },
     {
       title: 'Vertical',
-      code: `<div style={{ display: 'flex', height: '32px', alignItems: 'center', gap: '16px' }}>
-  <span>Left</span>
-  <Separator orientation="vertical" />
-  <span>Right</span>
-</div>`,
     },
   ],
 };

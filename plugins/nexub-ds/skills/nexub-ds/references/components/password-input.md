@@ -14,15 +14,26 @@ A password field with a built-in toggle to reveal or hide the entered value.
 | `invalid` | `boolean` |  | Applies error styling to indicate a validation failure. |
 | `disabled` | `boolean` |  | Disables the input. |
 | `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+| `visible` | `boolean` |  | Shows the password as text. Controlled when set; pair with onVisibleChange. |
+| `defaultVisible` | `boolean` |  | Initial visibility when uncontrolled. Defaults to false. |
+| `onVisibleChange` | `(visible: boolean) => void` |  | Called when the reveal toggle is pressed. |
 
 ## Example: Default
 
 ```tsx
-<PasswordInput placeholder="Enter password…" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+}
 ```
 
 ## Example: Invalid
 
 ```tsx
-<PasswordInput invalid placeholder="Password is too short" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+}
 ```

@@ -24,28 +24,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'With link',
-      code: `<MediaCard
-  src="/covers/lisbon.jpg"
-  alt=""
-  eyebrow="Guide"
-  title="A weekend in Lisbon"
-  description="Where to eat, walk and stay."
-  href="/guides/lisbon"
-/>`,
     },
     {
       title: 'Without link, with actions',
-      code: `<MediaCard src="/covers/q3.jpg" alt="" title="Q3 brand shoot" description="48 photos">
-  <Button size="sm" variant="tonal">Open</Button>
-  <Button size="sm" variant="text">Share</Button>
-</MediaCard>`,
     },
     {
       title: 'Ratios',
-      code: `<MediaCard ratio="16/9" src={src} alt="" title="16/9" />
-<MediaCard ratio="4/3" src={src} alt="" title="4/3" />
-<MediaCard ratio="1/1" src={src} alt="" title="1/1" />
-<MediaCard ratio="3/4" src={src} alt="" title="3/4" />`,
     },
   ],
   a11y: {

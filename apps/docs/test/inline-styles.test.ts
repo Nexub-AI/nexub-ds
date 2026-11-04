@@ -19,7 +19,7 @@ const budget: Record<string, [max: number, reason: string]> = {
   'app/(docs)/foundations/colors/page.tsx': [6, 'swatch and ramp colours come from the role/palette name'],
   'app/(docs)/foundations/spacing/page.tsx': [1, 'bar width is the spacing step'],
   'components/docs/Playground.tsx': [1, 'preview width follows the toolbar'],
-  'components/docs/ComponentLivePreview.tsx': [1, 'chart bar heights from data'],
+  'examples/patterns/bento-grid/0.tsx': [1, 'chart bar heights from data'],
   'components/docs/BrandSwitcher.tsx': [1, 'swatch colour per brand (custom property)'],
   'components/feedback/Annotator.tsx': [1, 'canvas size follows the captured image'],
   'components/landing/LandingHero.tsx': [4, 'cursor spotlight position; per-orb drift custom properties'],

@@ -19,33 +19,46 @@ Binary checkbox input built on Radix UI.
 ## Example: Default
 
 ```tsx
-<Checkbox defaultChecked />
+import { Checkbox } from '@nexub/react';
+
+export default function Example() {
+  return <Checkbox defaultChecked />;
+}
 ```
 
 ## Example: With label
 
 ```tsx
-<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Checkbox id="terms" />
-  <Label htmlFor="terms">I agree to the terms</Label>
-</div>
+import { Checkbox, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox id="terms" />
+      <Label htmlFor="terms">I agree to the terms and conditions</Label>
+    </div>
+  );
+}
 ```
 
 ## Example: States
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="checked" defaultChecked />
-    <Label htmlFor="checked">Checked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="unchecked" />
-    <Label htmlFor="unchecked">Unchecked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="disabled" disabled />
-    <Label htmlFor="disabled">Disabled</Label>
-  </div>
-</div>
+import { Checkbox, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-start">
+      <div className="flex items-center gap-2">
+        <Checkbox defaultChecked /><Label>Checked</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox /><Label>Unchecked</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox disabled /><Label>Disabled</Label>
+      </div>
+    </div>
+  );
+}
 ```

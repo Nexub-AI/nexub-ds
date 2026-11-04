@@ -17,12 +17,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<InfoList.Root>
-  <InfoList.Item label="Plan" value="Pro" />
-  <InfoList.Item label="Status" value={<Badge tone="success">Active</Badge>} />
-  <InfoList.Item label="Member since" value="Jan 2024" />
-  <InfoList.Item label="Team size" value="12 members" />
-</InfoList.Root>`,
     },
   ],
 };

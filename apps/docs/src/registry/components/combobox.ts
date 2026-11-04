@@ -22,22 +22,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Combobox.Root>
-  <Combobox.Input placeholder="Search..." />
-  <Combobox.List>
-    <Combobox.Empty>No results found.</Combobox.Empty>
-    <Combobox.Group heading="Frameworks">
-      <Combobox.Item value="react">React</Combobox.Item>
-      <Combobox.Item value="vue">Vue</Combobox.Item>
-      <Combobox.Item value="svelte">Svelte</Combobox.Item>
-    </Combobox.Group>
-    <Combobox.Separator />
-    <Combobox.Group heading="Languages">
-      <Combobox.Item value="typescript">TypeScript</Combobox.Item>
-      <Combobox.Item value="rust">Rust</Combobox.Item>
-    </Combobox.Group>
-  </Combobox.List>
-</Combobox.Root>`,
     },
   ],
 };

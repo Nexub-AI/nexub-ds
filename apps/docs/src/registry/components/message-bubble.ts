@@ -27,22 +27,9 @@ const entry: ComponentEntry = {
     {
       title: 'Conversation',
       description: 'Hover or focus the assistant reply to show its actions.',
-      code: `<MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
-<MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
-  <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
-  <MessageActions
-    text="Open Settings, then Billing, and choose Cancel plan."
-    onFeedback={(value) => logFeedback(value)}
-    onRegenerate={() => regenerate()}
-  />
-</MessageBubble>
-<MessageBubble from="system">Conversation moved to Billing support</MessageBubble>`,
     },
     {
       title: 'Failed to send',
-      code: `<MessageBubble from="user" status="error" onRetry={() => resend()}>
-  Can I get a refund for last month?
-</MessageBubble>`,
     },
   ],
   usage: {

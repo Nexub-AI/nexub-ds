@@ -33,22 +33,40 @@ Inline contextual message with optional title, icon, and dismiss action.
 ## Example: Default
 
 ```tsx
-<Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return <Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Alert tone="info" title="Information">This is an informational message.</Alert>
-  <Alert tone="success" title="Success">Your changes have been saved.</Alert>
-  <Alert tone="warning" title="Warning">Please review before proceeding.</Alert>
-  <Alert tone="danger" title="Error">Something went wrong. Please try again.</Alert>
-</div>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-full max-w-[480px]">
+      <Alert tone="info" title="Info">Informational message.</Alert>
+      <Alert tone="success" title="Success">Operation completed successfully.</Alert>
+      <Alert tone="warning" title="Warning">Something needs your attention.</Alert>
+      <Alert tone="danger" title="Error">Something went wrong.</Alert>
+    </div>
+  );
+}
 ```
 
 ## Example: Dismissible
 
 ```tsx
-<Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
+    </div>
+  );
+}
 ```

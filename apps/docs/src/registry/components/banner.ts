@@ -19,16 +19,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Banner tone="info">New features available — <strong>see what's new</strong></Banner>`,
     },
     {
       title: 'With action',
-      code: `<Banner
-  tone="warning"
-  action={<Button size="sm" variant="outline">View details</Button>}
->
-  Your subscription renews in 5 days.
-</Banner>`,
     },
   ],
 };

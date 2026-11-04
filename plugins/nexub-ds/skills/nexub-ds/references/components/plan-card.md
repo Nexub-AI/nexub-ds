@@ -22,13 +22,21 @@ Pricing plan card with feature checklist, badge, and CTA button.
 ## Example: Default
 
 ```tsx
-<PlanCard
-  name="Pro"
-  price="$49/mo"
-  description="Everything you need to scale."
-  features={['Unlimited projects', 'Priority support', 'Custom domains', 'Analytics']}
-  highlighted
-  badge="Most Popular"
-  ctaLabel="Start free trial"
-/>
+import { PlanCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <PlanCard
+        name="Pro"
+        price="$49"
+        period="/ month"
+        description="For growing teams that need more power."
+        features={['Unlimited seats', 'Advanced analytics', 'Priority support']}
+        cta="Get started"
+        onSelect={() => {}}
+      />
+    </div>
+  );
+}
 ```

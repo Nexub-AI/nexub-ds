@@ -20,31 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Checkbox defaultChecked />`,
     },
     {
       title: 'With label',
-      code: `<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Checkbox id="terms" />
-  <Label htmlFor="terms">I agree to the terms</Label>
-</div>`,
     },
     {
       title: 'States',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="checked" defaultChecked />
-    <Label htmlFor="checked">Checked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="unchecked" />
-    <Label htmlFor="unchecked">Unchecked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="disabled" disabled />
-    <Label htmlFor="disabled">Disabled</Label>
-  </div>
-</div>`,
     },
   ],
 };

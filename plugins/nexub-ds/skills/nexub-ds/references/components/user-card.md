@@ -19,9 +19,13 @@ User profile card displaying avatar, name, role, and optional actions.
 ## Example: Default
 
 ```tsx
-<UserCard
-  name="Alex Morgan"
-  email="alex@nexub.io"
-  role="Design Lead"
-/>
+import { UserCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[300px]">
+      <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
+    </div>
+  );
+}
 ```

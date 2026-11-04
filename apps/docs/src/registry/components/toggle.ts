@@ -20,14 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Toggle>Bold</Toggle>`,
     },
     {
       title: 'Outline variants',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Toggle variant="outline">Unpressed</Toggle>
-  <Toggle variant="outline" defaultPressed>Pressed</Toggle>
-</div>`,
     },
   ],
 };

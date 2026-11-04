@@ -20,25 +20,28 @@ Animates opacity between 0 and 1 based on the `in` prop.
 ## Example: Default
 
 ```tsx
-<Fade in={true}>
-  <Card>Faded in content</Card>
-</Fade>
+import { Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Fade in><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>;
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function FadeToggle() {
+import * as React from 'react';
+import { Button, Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="flex flex-col gap-3 items-start">
       <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Fade out' : 'Fade in'}
+        {visible ? 'Hide' : 'Show'}
       </Button>
-      <Fade in={visible} duration="normal" easing="out" unmountOnExit>
-        <Card style={{ padding: '16px' }}>
-          This content fades in and out. Toggle the button to animate it.
-        </Card>
+      <Fade in={visible} unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
       </Fade>
     </div>
   );
@@ -48,15 +51,16 @@ function FadeToggle() {
 ## Example: Slow with spring easing
 
 ```tsx
-function SlowFade() {
+import * as React from 'react';
+import { Button, Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="flex flex-col gap-3 items-start">
       <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Fade in={visible} duration="slow" easing="spring">
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Slow spring fade animation.
-        </div>
+        <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>
   );

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 
 export interface FlagProps extends React.HTMLAttributes<HTMLSpanElement> {
   code: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
 }
 
 function countryCodeToEmoji(code: string): string {
@@ -14,7 +15,7 @@ function countryCodeToEmoji(code: string): string {
     .join('');
 }
 
-const sizeClass: Record<'sm' | 'md' | 'lg', string> = {
+const sizeClass: Record<Size, string> = {
   sm: 'text-base',
   md: 'text-xl',
   lg: 'text-3xl',

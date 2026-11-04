@@ -17,28 +17,35 @@ Tab-style control for mutually exclusive selections.
 ## Example: Default
 
 ```tsx
-<SegmentedControl.Root defaultValue="month">
-  <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
-  <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
-  <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
-</SegmentedControl.Root>
+import { SegmentedControl } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SegmentedControl.Root defaultValue="month">
+      <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
+      <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
+      <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
+    </SegmentedControl.Root>
+  );
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <SegmentedControl.Root defaultValue="b" size="sm">
-    <SegmentedControl.Item value="a">Small A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Small B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-  <SegmentedControl.Root defaultValue="b" size="md">
-    <SegmentedControl.Item value="a">Medium A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Medium B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-  <SegmentedControl.Root defaultValue="b" size="lg">
-    <SegmentedControl.Item value="a">Large A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Large B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-</div>
+import { SegmentedControl } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-start">
+      {(['sm', 'md', 'lg'] as const).map((s) => (
+        <SegmentedControl.Root key={s} size={s} defaultValue="a">
+          <SegmentedControl.Item value="a">A</SegmentedControl.Item>
+          <SegmentedControl.Item value="b">B</SegmentedControl.Item>
+          <SegmentedControl.Item value="c">C</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      ))}
+    </div>
+  );
+}
 ```

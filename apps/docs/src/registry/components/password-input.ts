@@ -15,15 +15,16 @@ const entry: ComponentEntry = {
     { name: 'invalid', type: 'boolean', required: false, description: 'Applies error styling to indicate a validation failure.' },
     { name: 'disabled', type: 'boolean', required: false, description: 'Disables the input.' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", required: false, description: 'Controls font size and padding.' },
+    { name: 'visible', type: 'boolean', required: false, description: 'Shows the password as text. Controlled when set; pair with onVisibleChange.' },
+    { name: 'defaultVisible', type: 'boolean', required: false, description: 'Initial visibility when uncontrolled. Defaults to false.' },
+    { name: 'onVisibleChange', type: '(visible: boolean) => void', required: false, description: 'Called when the reveal toggle is pressed.' },
   ],
   examples: [
     {
       title: 'Default',
-      code: `<PasswordInput placeholder="Enter password…" />`,
     },
     {
       title: 'Invalid',
-      code: `<PasswordInput invalid placeholder="Password is too short" />`,
     },
   ],
 };

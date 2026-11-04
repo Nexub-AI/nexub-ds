@@ -22,11 +22,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Slider defaultValue={[50]} min={0} max={100} style={{ width: '240px' }} />`,
     },
     {
       title: 'Range',
-      code: `<Slider defaultValue={[20, 80]} min={0} max={100} style={{ width: '240px' }} />`,
     },
   ],
 };

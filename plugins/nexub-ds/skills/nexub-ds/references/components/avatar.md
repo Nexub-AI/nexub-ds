@@ -20,29 +20,50 @@ Displays a user's profile picture with initials fallback.
 ## Example: Default
 
 ```tsx
-<Avatar name="Alex Johnson" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return <Avatar name="Alex Johnson" />;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Avatar size="xs" name="Alex Johnson" />
-  <Avatar size="sm" name="Alex Johnson" />
-  <Avatar size="md" name="Alex Johnson" />
-  <Avatar size="lg" name="Alex Johnson" />
-  <Avatar size="xl" name="Alex Johnson" />
-</div>
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => (
+        <Avatar key={s} name="Alex J" size={s} />
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Example: With image
 
 ```tsx
-<Avatar src="https://i.pravatar.cc/150?img=1" name="Alex Johnson" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return <Avatar src="https://i.pravatar.cc/150?img=3" name="Alex Johnson" />;
+}
 ```
 
 ## Example: With badge
 
 ```tsx
-<Avatar name="Online User" badge badgeColor="green" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      <Avatar name="Online" badge badgeColor="var(--color-success)" />
+      <Avatar name="Away" badge badgeColor="var(--color-warning)" />
+    </div>
+  );
+}
 ```

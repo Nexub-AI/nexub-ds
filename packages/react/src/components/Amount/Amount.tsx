@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useIntlLocale } from '../NexubProvider/NexubProvider.js';
 import { moneyFormatter } from '../../utils/money.js';
 import { NumberTicker } from '../NumberTicker/NumberTicker.js';
@@ -11,7 +12,7 @@ export interface AmountProps extends Omit<React.HTMLAttributes<HTMLSpanElement>,
   /** BCP 47 locale. Defaults to the user's. */
   locale?: string;
   /** `display`: a hero figure in the brand face with a quieter symbol and minor units. */
-  size?: 'sm' | 'md' | 'lg' | 'display';
+  size?: Size | 'display';
   /** `auto` colours gains success and losses error (use with signDisplay). */
   tone?: 'neutral' | 'auto';
   /** e.g. 'exceptZero' to show "+" on gains. */

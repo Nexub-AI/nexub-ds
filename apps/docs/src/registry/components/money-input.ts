@@ -20,11 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} onValueChange={setAmount} />`,
     },
     {
       title: 'German separators',
-      code: `<MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />`,
     },
   ],
 };

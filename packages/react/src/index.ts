@@ -1,5 +1,6 @@
 // Utilities
 export { cn } from './utils/cn.js';
+export type { Size } from './utils/control.js';
 export { startViewTransition } from './utils/viewTransition.js';
 
 // Hooks

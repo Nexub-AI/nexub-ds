@@ -19,19 +19,31 @@ Full-page or section error view with retry action.
 ## Example: Default
 
 ```tsx
-<ErrorState
-  title="Something went wrong"
-  description="We could not load the data. Please try again."
-  onRetry={() => {}}
-/>
+import { ErrorState } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ErrorState
+      title="Something went wrong"
+      description="We could not load the data. Please try again."
+      onRetry={() => {}}
+    />
+  );
+}
 ```
 
 ## Example: Warning
 
 ```tsx
-<ErrorState
-  tone="warning"
-  title="Connection issue"
-  description="Check your network and try again."
-/>
+import { ErrorState } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ErrorState
+      tone="warning"
+      title="Connection issue"
+      description="Check your network and try again."
+    />
+  );
+}
 ```

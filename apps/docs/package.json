@@ -22,7 +22,7 @@
     "next": "^16.4.2",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "shiki": "^1.29.2"
+    "shiki": "^4.6.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.7",
@@ -35,6 +35,6 @@
     "eslint-config-next": "^15.5.28",
     "postcss": "^8.5.31",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5.9.3"
+    "typescript": "~6.0.3"
   }
 }

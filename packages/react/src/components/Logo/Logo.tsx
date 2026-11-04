@@ -2,6 +2,7 @@ import * as React from 'react';
 import { NexubMark } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 
 // min-w-0/max-w-full: in a narrow container the product name truncates.
 export const logoVariants = cva('inline-flex min-w-0 max-w-full items-center gap-2', {
@@ -25,13 +26,13 @@ export const logoVariants = cva('inline-flex min-w-0 max-w-full items-center gap
 
 // The mark is 78×56: size it by height; aspect-ratio overrides the square
 // width/height attributes the icon wrapper sets.
-const iconSizeMap: Record<'sm' | 'md' | 'lg', string> = {
+const iconSizeMap: Record<Size, string> = {
   sm: 'h-5 w-auto aspect-[78/56]',
   md: 'h-7 w-auto aspect-[78/56]',
   lg: 'h-9 w-auto aspect-[78/56]',
 };
 
-const wordmarkSizeMap: Record<'sm' | 'md' | 'lg', string> = {
+const wordmarkSizeMap: Record<Size, string> = {
   sm: 'text-base',
   md: 'text-xl',
   lg: 'text-2xl',

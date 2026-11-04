@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
@@ -26,7 +27,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixDialog.DialogOverlayProps>
 Overlay.displayName = 'Dialog.Overlay';
 
 interface ContentProps extends RadixDialog.DialogContentProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  size?: Size | 'xl' | 'full';
   surface?: SurfaceValue;
 }
 

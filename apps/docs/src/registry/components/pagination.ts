@@ -22,32 +22,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `function DefaultPagination() {
-  const [page, setPage] = React.useState(3);
-  return (
-    <Pagination
-      page={page}
-      totalItems={100}
-      pageSize={10}
-      onPageChange={setPage}
-    />
-  );
-}`,
     },
     {
       title: 'Large dataset',
-      code: `function LargeDatasetPagination() {
-  const [page, setPage] = React.useState(5);
-  return (
-    <Pagination
-      page={page}
-      totalItems={500}
-      pageSize={20}
-      siblingCount={2}
-      onPageChange={setPage}
-    />
-  );
-}`,
     },
   ],
 };

@@ -19,16 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<SettingsSection
-  title="Profile"
-  description="Update your personal information."
-  action={<Button size="sm">Save changes</Button>}
->
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
-    <Input placeholder="Display name" />
-    <Input placeholder="Email address" type="email" />
-  </div>
-</SettingsSection>`,
     },
   ],
 };

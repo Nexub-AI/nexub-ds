@@ -24,12 +24,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Display',
-      code: `<Amount value={128450.75} currency="USD" size="display" />`,
     },
     {
       title: 'Gains and losses',
-      code: `<Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
-<Amount value={-89.99} currency="USD" tone="auto" />`,
     },
   ],
 };

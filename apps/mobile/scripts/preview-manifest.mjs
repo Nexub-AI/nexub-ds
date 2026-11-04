@@ -58,13 +58,16 @@ const flow = [
   '# One screenshot per docs preview example: <slug>--<example>--<platform>.png',
   '# (patterns: pattern-<name>--<platform>.png). Deep links into /preview/….',
   '# iOS asks "Open in Nexub Mobile?" the first time a link opens the app, hence',
-  '# the conditional tap after each link.',
+  '# the conditional tap after each link. On the iOS simulator a link accepted',
+  '# through that prompt (or sent while the app is open) sometimes never',
+  '# navigates, so each link is sent again once if its preview doesn\'t appear.',
   'appId: ai.nexub.mobile',
   '---',
   '- launchApp',
   '- extendedWaitUntil:',
   '    visible: "Components"',
   '    timeout: 60000',
+  '- waitForAnimationToEnd',
 ];
 // Screens that open a native modal on mount: the modal is its own window on
 // Android, so Maestro can't see the screen's preview-ready marker underneath.
@@ -73,15 +76,18 @@ const READY_TEXT = { 'pattern/apps': 'Nexub apps' };
 const open = (link, shot) => {
   const text = READY_TEXT[link.replace(/^preview\//, '')];
   flow.push(
-    `- openLink: nexub://${link}`,
-    '- runFlow:',
-    '    when:',
-    '      visible: "Open"',
+    '- retry:',
+    '    maxRetries: 1',
     '    commands:',
-    '      - tapOn: "Open"',
-    '- extendedWaitUntil:',
-    ...(text ? [`    visible: "${text}"`] : ['    visible:', '      id: "preview-ready"']),
-    '    timeout: 15000',
+    `      - openLink: nexub://${link}`,
+    '      - runFlow:',
+    '          when:',
+    '            visible: "Open"',
+    '          commands:',
+    '            - tapOn: "Open"',
+    '      - extendedWaitUntil:',
+    ...(text ? [`          visible: "${text}"`] : ['          visible:', '            id: "preview-ready"']),
+    '          timeout: 15000',
     '- waitForAnimationToEnd',
     `- takeScreenshot: ${shot}--\${maestro.platform}`,
   );

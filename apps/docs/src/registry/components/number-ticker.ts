@@ -21,17 +21,10 @@ const entry: ComponentEntry = {
     {
       title: 'Formatted number',
       description: 'Each digit is a 0–9 strip; separators and symbols stay still.',
-      code: `const [n, setN] = React.useState(12480);
-
-<NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
-<Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
-  Change
-</Button>`,
     },
     {
       title: 'Amount',
       description: '`Amount animate` uses the ticker and keeps the quieter symbol and minor units.',
-      code: `<Amount value={balance} currency="USD" size="display" animate />`,
     },
   ],
   a11y: {

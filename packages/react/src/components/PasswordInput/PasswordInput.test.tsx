@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { PasswordInput } from './PasswordInput.js';
 
 describe('PasswordInput', () => {
@@ -41,5 +41,20 @@ describe('PasswordInput', () => {
     render(<PasswordInput />);
     await user.click(screen.getByRole('button', { name: /show password/i }));
     expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+  });
+
+  it('starts shown with defaultVisible', () => {
+    render(<PasswordInput defaultVisible />);
+    expect(document.querySelector('input')).toHaveAttribute('type', 'text');
+  });
+
+  it('is controlled by visible and reports toggles through onVisibleChange', async () => {
+    const user = userEvent.setup();
+    const onVisibleChange = vi.fn();
+    render(<PasswordInput visible={false} onVisibleChange={onVisibleChange} />);
+    await user.click(screen.getByRole('button', { name: /show password/i }));
+    expect(onVisibleChange).toHaveBeenCalledWith(true);
+    // Controlled: stays hidden until the parent passes visible.
+    expect(document.querySelector('input')).toHaveAttribute('type', 'password');
   });
 });

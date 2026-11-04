@@ -17,18 +17,31 @@ Floating label that appears on hover. Built on Radix UI Tooltip.
 ## Example: Default
 
 ```tsx
-<Tooltip content="This is a tooltip">
-  <Button variant="outline">Hover me</Button>
-</Tooltip>
+import { TooltipProvider, Tooltip, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <TooltipProvider>
+      <Tooltip label="This is a tooltip" side="top">
+        <Button variant="outline">Hover me</Button>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 ```
 
 ## Example: Sides
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px' }}>
-  <Tooltip content="Top" side="top"><Button size="sm">Top</Button></Tooltip>
-  <Tooltip content="Right" side="right"><Button size="sm">Right</Button></Tooltip>
-  <Tooltip content="Bottom" side="bottom"><Button size="sm">Bottom</Button></Tooltip>
-  <Tooltip content="Left" side="left"><Button size="sm">Left</Button></Tooltip>
-</div>
+import { TooltipProvider, Tooltip, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <TooltipProvider>
+      <Tooltip label="This is a tooltip" side="top">
+        <Button variant="outline">Hover me</Button>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 ```

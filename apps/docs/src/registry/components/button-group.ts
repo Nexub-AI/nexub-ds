@@ -17,26 +17,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ButtonGroup>
-  <Button variant="primary">Save</Button>
-  <Button variant="outline">Cancel</Button>
-</ButtonGroup>`,
     },
     {
       title: 'Attached',
-      code: `<ButtonGroup attached>
-  <Button variant="outline">Left</Button>
-  <Button variant="outline">Center</Button>
-  <Button variant="outline">Right</Button>
-</ButtonGroup>`,
     },
     {
       title: 'Vertical',
-      code: `<ButtonGroup orientation="vertical">
-  <Button variant="outline">Option A</Button>
-  <Button variant="outline">Option B</Button>
-  <Button variant="outline">Option C</Button>
-</ButtonGroup>`,
     },
   ],
 };

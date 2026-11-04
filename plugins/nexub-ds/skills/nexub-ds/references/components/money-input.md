@@ -18,13 +18,21 @@ An amount field: locale-aware parsing as you type, grouped on blur, the currency
 ## Example: Default
 
 ```tsx
-<MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} onValueChange={setAmount} />
+import { MoneyInput } from '@nexub/react';
+
+export default function Example() {
+  return <MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} />;
+}
 ```
 
 ## Example: German separators
 
 ```tsx
-<MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />
+import { MoneyInput } from '@nexub/react';
+
+export default function Example() {
+  return <MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />;
+}
 ```
 
 Related: [amount](amount.md), [number-input](number-input.md), [input](input.md)

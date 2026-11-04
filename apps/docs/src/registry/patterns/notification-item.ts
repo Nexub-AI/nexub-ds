@@ -21,12 +21,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<NotificationItem
-  title="New comment on your post"
-  description="Alex left a comment on 'Design System v2'"
-  timestamp="5 min ago"
-  unread
-/>`,
     },
   ],
 };

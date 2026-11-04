@@ -30,15 +30,27 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 Send a message: it shows Thinking, then streams a cited reply. Stop or Escape ends the reply early.
 
 ```tsx
-type Message = { id: number; from: 'user' | 'assistant'; text: string };
+import * as React from 'react';
+import { type PromptInputStatus, PromptInput, MessageBubble, ThinkingIndicator, StreamingText, Citation, type CitationSource } from '@nexub/react';
+import { Conversation } from '@nexub/patterns';
 
-const REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
-const SOURCE = { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps' };
+const CITATION_SOURCES: CitationSource[] = [
+  { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { title: 'Grants for home heating', url: 'https://example.org/grants', domain: 'example.org' },
+  { title: 'Running costs compared', url: 'https://example.net/costs' },
+];
 
-function Chat() {
-  const [messages, setMessages] = React.useState<Message[]>([]);
-  const [status, setStatus] = React.useState<'idle' | 'submitting' | 'streaming'>('idle');
-  const timer = React.useRef<ReturnType<typeof setTimeout>>();
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string };
+
+const CHAT_REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
+
+const CHAT_SOURCE = CITATION_SOURCES[0]!;
+
+export default function Example() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
 
   function send(text: string) {
     const id = Date.now();
@@ -51,8 +63,8 @@ function Chat() {
   }
 
   function stream(id: number, length: number) {
-    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: REPLY.slice(0, length) } : msg)));
-    if (length >= REPLY.length) return setStatus('idle');
+    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: CHAT_REPLY.slice(0, length) } : msg)));
+    if (length >= CHAT_REPLY.length) return setStatus('idle');
     timer.current = setTimeout(() => stream(id, length + 4), 50);
   }
 
@@ -65,7 +77,7 @@ function Chat() {
 
   return (
     <Conversation
-      style={{ height: 420 }}
+      className="h-[420px] w-full"
       composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
     >
       {messages.map((msg) =>
@@ -78,7 +90,7 @@ function Chat() {
             ) : (
               <>
                 <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
-                {msg.text === REPLY && <Citation index={1} source={SOURCE} />}
+                {msg.text === CHAT_REPLY && <Citation index={1} source={CHAT_SOURCE} />}
               </>
             )}
           </MessageBubble>

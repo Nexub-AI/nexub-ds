@@ -17,16 +17,27 @@
 ## Example: Default
 
 ```tsx
-<Banner tone="info">New features available — <strong>see what's new</strong></Banner>
+import { Banner } from '@nexub/react';
+
+export default function Example() {
+  return <Banner tone="info">New features available — <strong>see what&apos;s new</strong></Banner>;
+}
 ```
 
 ## Example: With action
 
 ```tsx
-<Banner
-  tone="warning"
-  action={<Button size="sm" variant="outline">View details</Button>}
->
-  Your subscription renews in 5 days.
-</Banner>
+import { Banner, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Banner
+      tone="warning"
+      action={<Button variant="outline" size="sm">Review now</Button>}
+      onClose={() => {}}
+    >
+      Your payment method is expiring soon.
+    </Banner>
+  );
+}
 ```

@@ -26,24 +26,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<DateRangePicker placeholder="Select date range…" />`,
     },
     {
       title: 'Controlled',
-      code: `function ControlledDateRangePicker() {
-  const [range, setRange] = React.useState({
-    from: new Date('2026-04-01'),
-    to: new Date('2026-04-14'),
-  });
-  return (
-    <DateRangePicker
-      aria-label="Booking period"
-      value={range}
-      onChange={setRange}
-      placeholder="Select date range…"
-    />
-  );
-}`,
     },
   ],
 };

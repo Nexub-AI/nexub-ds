@@ -37,27 +37,48 @@ The composer for a chat: an auto-growing text field with Send, which turns into 
 Enter sends, Shift+Enter adds a line. Send stays inert until there is text.
 
 ```tsx
-<PromptInput placeholder="Ask anything" onSubmit={(text) => send(text)} />
+import { PromptInput } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput placeholder="Ask anything" />
+    </div>
+  );
+}
 ```
 
 ## Example: Attachments and actions
 
 ```tsx
-<PromptInput
-  placeholder="Ask about these files"
-  attachments={
-    <>
-      <Chip onRemove={() => remove('q3-report.pdf')}>q3-report.pdf</Chip>
-      <Chip onRemove={() => remove('pricing.csv')}>pricing.csv</Chip>
-    </>
-  }
-  actions={
-    <>
-      <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
-      <IconButton size="sm" label="Search the web"><Globe /></IconButton>
-    </>
-  }
-/>
+import * as React from 'react';
+import { PromptInput, Chip, IconButton } from '@nexub/react';
+import { Paperclip, Globe } from '@nexub/icons';
+
+export default function Example() {
+  const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput
+        placeholder="Ask about these files"
+        attachments={
+          files.length > 0 &&
+          files.map((f) => (
+            <Chip key={f} onRemove={() => setFiles((all) => all.filter((x) => x !== f))}>
+              {f}
+            </Chip>
+          ))
+        }
+        actions={
+          <>
+            <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
+            <IconButton size="sm" label="Search the web"><Globe /></IconButton>
+          </>
+        }
+      />
+    </div>
+  );
+}
 ```
 
 ## Example: Streaming
@@ -65,20 +86,27 @@ Enter sends, Shift+Enter adds a line. Send stays inert until there is text.
 Send a message: the button turns into Stop for three seconds. Stop or Escape ends it early.
 
 ```tsx
-const [status, setStatus] = React.useState<PromptInputStatus>('idle');
-const timer = React.useRef<ReturnType<typeof setTimeout>>();
+import * as React from 'react';
+import { type PromptInputStatus, PromptInput } from '@nexub/react';
 
-function send() {
-  setStatus('streaming');
-  timer.current = setTimeout(() => setStatus('idle'), 3000);
+export default function Example() {
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const send = () => {
+    setStatus('streaming');
+    timer.current = setTimeout(() => setStatus('idle'), 3000);
+  };
+  const stop = () => {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  };
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
+    </div>
+  );
 }
-
-function stop() {
-  clearTimeout(timer.current);
-  setStatus('idle');
-}
-
-<PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
 ```
 
 ## Accessibility

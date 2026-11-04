@@ -25,22 +25,28 @@ Dual-calendar date range selector.
 ## Example: Default
 
 ```tsx
-<DateRangePicker placeholder="Select date range…" />
+import { DateRangePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DateRangePicker placeholder="Select date range…" />;
+}
 ```
 
 ## Example: Controlled
 
 ```tsx
-function ControlledDateRangePicker() {
-  const [range, setRange] = React.useState({
+import * as React from 'react';
+import { DateRangePicker } from '@nexub/react';
+
+export default function Example() {
+  const [range, setRange] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
     from: new Date('2026-04-01'),
     to: new Date('2026-04-14'),
   });
   return (
     <DateRangePicker
-      aria-label="Booking period"
       value={range}
-      onChange={setRange}
+      onChange={(r) => setRange({ from: r?.from, to: r?.to })}
       placeholder="Select date range…"
     />
   );

@@ -18,18 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Tooltip content="This is a tooltip">
-  <Button variant="outline">Hover me</Button>
-</Tooltip>`,
     },
     {
       title: 'Sides',
-      code: `<div style={{ display: 'flex', gap: '12px' }}>
-  <Tooltip content="Top" side="top"><Button size="sm">Top</Button></Tooltip>
-  <Tooltip content="Right" side="right"><Button size="sm">Right</Button></Tooltip>
-  <Tooltip content="Bottom" side="bottom"><Button size="sm">Bottom</Button></Tooltip>
-  <Tooltip content="Left" side="left"><Button size="sm">Left</Button></Tooltip>
-</div>`,
     },
   ],
 };

@@ -18,16 +18,17 @@ Chronological list of activity events with avatar, description, and timestamp.
 ## Example: Default
 
 ```tsx
-<ActivityFeed.Root>
-  <ActivityFeed.Item
-    title="Alex created a new project"
-    description="Project 'Nexub DS v2' was created"
-    timestamp="2 hours ago"
-  />
-  <ActivityFeed.Item
-    title="Sam invited 3 members"
-    description="Jordan, Riley, and Taylor joined"
-    timestamp="Yesterday"
-  />
-</ActivityFeed.Root>
+import { ActivityFeed } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[340px]">
+      <ActivityFeed.Root>
+        <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
+        <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />
+        <ActivityFeed.Item title="Maria R. added a comment" description="On the design review document" timestamp="1 hr ago" />
+      </ActivityFeed.Root>
+    </div>
+  );
+}
 ```

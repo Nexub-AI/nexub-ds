@@ -23,15 +23,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<PlanCard
-  name="Pro"
-  price="$49/mo"
-  description="Everything you need to scale."
-  features={['Unlimited projects', 'Priority support', 'Custom domains', 'Analytics']}
-  highlighted
-  badge="Most Popular"
-  ctaLabel="Start free trial"
-/>`,
     },
   ],
 };
