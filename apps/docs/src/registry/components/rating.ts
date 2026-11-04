@@ -20,19 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Rating defaultValue={3} />`,
     },
     {
       title: 'Read-only',
-      code: `<Rating value={4} readOnly />`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Rating defaultValue={3} size="sm" />
-  <Rating defaultValue={3} size="md" />
-  <Rating defaultValue={3} size="lg" />
-</div>`,
     },
   ],
 };

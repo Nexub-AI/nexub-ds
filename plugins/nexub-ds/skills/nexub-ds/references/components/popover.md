@@ -23,31 +23,41 @@ Floating content panel anchored to a trigger element.
 ## Example: Default
 
 ```tsx
-<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Open popover</Button>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Text size="body-sm">Popover content goes here.</Text>
-  </Popover.Content>
-</Popover.Root>
+import { Popover, Button, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Button variant="outline">Open popover</Button>
+      </Popover.Trigger>
+      <Popover.Content>
+        <Text size="body-sm">This is popover content. You can put anything here.</Text>
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
 ```
 
 ## Example: With close button
 
 ```tsx
-<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Settings</Button>
-  </Popover.Trigger>
-  <Popover.Content side="bottom" align="end" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <Text weight="semibold">Preferences</Text>
-      <Text size="body-sm" tone="secondary">Adjust your display settings.</Text>
-      <Popover.Close asChild>
-        <Button variant="ghost" size="sm">Close</Button>
-      </Popover.Close>
+import { Popover, Button, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
+        <Popover.Root key={s}>
+          <Popover.Trigger asChild>
+            <Button variant="ghost" size="sm">{s}</Button>
+          </Popover.Trigger>
+          <Popover.Content side={s}>
+            <Text size="body-sm">Opens {s}</Text>
+          </Popover.Content>
+        </Popover.Root>
+      ))}
     </div>
-  </Popover.Content>
-</Popover.Root>
+  );
+}
 ```

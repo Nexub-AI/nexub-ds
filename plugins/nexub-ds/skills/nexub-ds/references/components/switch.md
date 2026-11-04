@@ -19,18 +19,19 @@ Toggle control for binary on/off settings. Built on Radix UI Switch.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Switch id="airplane" />
-  <Label htmlFor="airplane">Airplane mode</Label>
-</div>
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch defaultChecked /><Switch /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Switch size="sm" />
-  <Switch size="md" />
-  <Switch size="lg" />
-</div>
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch size="sm" defaultChecked /><Switch size="md" defaultChecked /><Switch size="lg" defaultChecked /></div>;
+}
 ```

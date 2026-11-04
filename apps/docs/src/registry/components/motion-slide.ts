@@ -22,40 +22,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Slide in={true} direction="up">
-  <Card>Slid in from bottom</Card>
-</Slide>`,
     },
     {
       title: 'Directions',
-      code: `function SlideDirections() {
-  const [visible, setVisible] = React.useState(true);
-  const [direction, setDirection] = React.useState('up');
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {['up', 'down', 'left', 'right'].map((dir) => (
-          <Button
-            key={dir}
-            variant={direction === dir ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => { setDirection(dir); setVisible(true); }}
-          >
-            {dir}
-          </Button>
-        ))}
-        <Button variant="ghost" size="sm" onClick={() => setVisible((v) => !v)}>
-          Toggle
-        </Button>
-      </div>
-      <Slide in={visible} direction={direction} unmountOnExit>
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Sliding in from {direction}.
-        </div>
-      </Slide>
-    </div>
-  );
-}`,
     },
   ],
 };

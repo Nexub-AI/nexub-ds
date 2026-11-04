@@ -22,63 +22,6 @@ const entry: ComponentEntry = {
     {
       title: 'Mini chat',
       description: 'Send a message: it shows Thinking, then streams a cited reply. Stop or Escape ends the reply early.',
-      code: `type Message = { id: number; from: 'user' | 'assistant'; text: string };
-
-const REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
-const SOURCE = { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps' };
-
-function Chat() {
-  const [messages, setMessages] = React.useState<Message[]>([]);
-  const [status, setStatus] = React.useState<'idle' | 'submitting' | 'streaming'>('idle');
-  const timer = React.useRef<ReturnType<typeof setTimeout>>();
-
-  function send(text: string) {
-    const id = Date.now();
-    setMessages((m) => [...m, { id, from: 'user', text }, { id: id + 1, from: 'assistant', text: '' }]);
-    setStatus('submitting');
-    timer.current = setTimeout(() => {
-      setStatus('streaming');
-      stream(id + 1, 0);
-    }, 800);
-  }
-
-  function stream(id: number, length: number) {
-    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: REPLY.slice(0, length) } : msg)));
-    if (length >= REPLY.length) return setStatus('idle');
-    timer.current = setTimeout(() => stream(id, length + 4), 50);
-  }
-
-  function stop() {
-    clearTimeout(timer.current);
-    setStatus('idle');
-  }
-
-  const last = messages[messages.length - 1];
-
-  return (
-    <Conversation
-      style={{ height: 420 }}
-      composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
-    >
-      {messages.map((msg) =>
-        msg.from === 'user' ? (
-          <MessageBubble key={msg.id} from="user">{msg.text}</MessageBubble>
-        ) : (
-          <MessageBubble key={msg.id} from="assistant">
-            {status === 'submitting' && msg === last ? (
-              <ThinkingIndicator />
-            ) : (
-              <>
-                <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
-                {msg.text === REPLY && <Citation index={1} source={SOURCE} />}
-              </>
-            )}
-          </MessageBubble>
-        ),
-      )}
-    </Conversation>
-  );
-}`,
     },
   ],
   usage: {

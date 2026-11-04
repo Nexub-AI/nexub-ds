@@ -19,11 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <FilterChip>All</FilterChip>
-  <FilterChip defaultSelected>Active</FilterChip>
-  <FilterChip>Archived</FilterChip>
-</div>`,
     },
   ],
 };

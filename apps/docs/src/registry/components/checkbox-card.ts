@@ -24,17 +24,9 @@ const entry: ComponentEntry = {
     {
       title: 'Features',
       description: 'Lay checkbox cards out with any grid; there is no group component.',
-      code: `<fieldset className="grid gap-3 sm:grid-cols-3">
-  <legend className="sr-only">Add-ons</legend>
-  <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
-  <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
-  <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
-</fieldset>`,
     },
     {
       title: 'Disabled',
-      code: `<CheckboxCard title="SSO" description="Available on Enterprise." disabled />
-<CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />`,
     },
   ],
   a11y: {

@@ -21,24 +21,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Text>The Nexub design system provides accessible, token-driven components.</Text>`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text size="body-lg">Body large — ideal for introductory paragraphs.</Text>
-  <Text size="body">Body — the default reading size.</Text>
-  <Text size="body-sm">Body small — secondary content and descriptions.</Text>
-  <Text size="caption">Caption — metadata and timestamps.</Text>
-</div>`,
     },
     {
       title: 'Tones',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text tone="default">Default tone</Text>
-  <Text tone="secondary">Secondary tone</Text>
-  <Text tone="muted">Muted tone</Text>
-</div>`,
     },
   ],
 };

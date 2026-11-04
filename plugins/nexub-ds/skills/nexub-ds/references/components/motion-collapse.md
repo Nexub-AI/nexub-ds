@@ -20,35 +20,35 @@ Expands and collapses content along the block axis.
 ## Example: Default
 
 ```tsx
-<Collapse in={true}>
-  <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-    Collapsed content
-  </div>
-</Collapse>
+import { Collapse, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Collapse in>
+      <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+        <Text size="body-sm">Collapsed content goes here.</Text>
+      </div>
+    </Collapse>
+  );
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function CollapseToggle() {
-  const [open, setOpen] = React.useState(false);
+import * as React from 'react';
+import { Button, Collapse, Text } from '@nexub/react';
+
+export default function Example() {
+  const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <Button variant="outline" onClick={() => setOpen((o) => !o)}>
-        {open ? 'Collapse' : 'Expand'}
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+        {visible ? 'Collapse' : 'Expand'}
       </Button>
-      <Collapse in={open} unmountOnExit>
-        <div
-          style={{
-            padding: '16px',
-            background: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            color: 'var(--color-text-secondary)',
-            fontSize: '0.875rem',
-          }}
-        >
-          This section smoothly expands and collapses along the vertical axis.
-          It preserves the natural document flow by animating the block size.
+      <Collapse in={visible}>
+        <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+          <Text size="body-sm">This content collapses and expands smoothly.</Text>
         </div>
       </Collapse>
     </div>

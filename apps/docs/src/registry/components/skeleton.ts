@@ -19,21 +19,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '280px', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' }}>
-  <Skeleton shape="circle" width={40} height={40} />
-  <Skeleton shape="line" width="60%" height={12} />
-  <Skeleton shape="line" width="100%" height={12} />
-  <Skeleton shape="line" width="80%" height={12} />
-  <Skeleton shape="rect" width="100%" height={80} />
-</div>`,
     },
     {
       title: 'Shapes',
-      code: `<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Skeleton shape="line" width={120} height={12} />
-  <Skeleton shape="rect" width={80} height={60} />
-  <Skeleton shape="circle" width={40} height={40} />
-</div>`,
     },
   ],
 };

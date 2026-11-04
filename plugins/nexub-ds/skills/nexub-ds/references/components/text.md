@@ -20,26 +20,43 @@ Paragraph text component with size, tone, and weight variants.
 ## Example: Default
 
 ```tsx
-<Text>The Nexub design system provides accessible, token-driven components.</Text>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return <Text>The Nexub design system provides accessible, token-driven components.</Text>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text size="body-lg">Body large — ideal for introductory paragraphs.</Text>
-  <Text size="body">Body — the default reading size.</Text>
-  <Text size="body-sm">Body small — secondary content and descriptions.</Text>
-  <Text size="caption">Caption — metadata and timestamps.</Text>
-</div>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <Text size="body-lg">Body Large — spacious reading.</Text>
+      <Text size="body">Body — default paragraph.</Text>
+      <Text size="body-sm">Body Small — compact content.</Text>
+      <Text size="caption">Caption — supporting info.</Text>
+    </div>
+  );
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text tone="default">Default tone</Text>
-  <Text tone="secondary">Secondary tone</Text>
-  <Text tone="muted">Muted tone</Text>
-</div>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <Text tone="default">Default</Text>
+      <Text tone="secondary">Secondary</Text>
+      <Text tone="muted">Muted</Text>
+      <Text tone="subtle">Subtle</Text>
+    </div>
+  );
+}
 ```

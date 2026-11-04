@@ -33,7 +33,7 @@ Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it,
 1. Get the RFC accepted ([GOVERNANCE.md](./GOVERNANCE.md#proposing-a-change)).
 2. Create `packages/react/src/components/<Name>/` with `<Name>.tsx`, `<Name>.test.tsx`, `<Name>.stories.tsx`, `index.ts`.
 3. Add `export * from './components/<Name>/index.js';` to `packages/react/src/index.ts`.
-4. Add a docs registry entry (`apps/docs/src/registry/components/<slug>.ts`) with `status: 'alpha'`; promotion criteria are in [GOVERNANCE.md](./GOVERNANCE.md#status-lifecycle).
+4. Add a docs registry entry (`apps/docs/src/registry/components/<slug>.ts`) with `status: 'alpha'`; promotion criteria are in [GOVERNANCE.md](./GOVERNANCE.md#status-lifecycle). Each entry in its `examples` gets one file, `apps/docs/src/examples/components/<slug>/<index>.tsx`, with a default export: it is the live preview, and its source is the code the docs and AI docs show.
 5. Add a changeset.
 6. Open a PR; CI must be green.
 

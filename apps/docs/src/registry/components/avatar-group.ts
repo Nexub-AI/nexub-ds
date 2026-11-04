@@ -18,12 +18,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<AvatarGroup max={3}>
-  <Avatar name="Alice" />
-  <Avatar name="Bob" />
-  <Avatar name="Carol" />
-  <Avatar name="Dave" />
-</AvatarGroup>`,
     },
   ],
 };

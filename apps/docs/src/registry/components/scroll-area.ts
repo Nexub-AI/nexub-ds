@@ -20,39 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ScrollArea style={{ height: '200px', width: '280px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  {Array.from({ length: 20 }, (_, i) => (
-    <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-      Item {i + 1}
-    </div>
-  ))}
-</ScrollArea>`,
     },
     {
       title: 'Horizontal',
-      code: `<ScrollArea orientation="horizontal" style={{ width: '320px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  <div style={{ display: 'flex', gap: '8px', width: 'max-content' }}>
-    {Array.from({ length: 12 }, (_, i) => (
-      <div
-        key={i}
-        style={{
-          width: '80px',
-          height: '80px',
-          background: 'var(--color-bg-subtle)',
-          borderRadius: 'var(--radius-sm)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '0.75rem',
-          color: 'var(--color-text-secondary)',
-          flexShrink: 0,
-        }}
-      >
-        Card {i + 1}
-      </div>
-    ))}
-  </div>
-</ScrollArea>`,
     },
   ],
 };

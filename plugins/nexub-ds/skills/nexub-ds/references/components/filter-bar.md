@@ -19,18 +19,22 @@ Search + filter toolbar pattern for data-heavy list or table views.
 ## Example: Default
 
 ```tsx
-<FilterBar
-  searchPlaceholder="Search users…"
-  onSearch={(v) => {}}
-  filters={
-    <Select.Root>
-      <Select.Trigger><Select.Value placeholder="Status" /></Select.Trigger>
-      <Select.Content>
-        <Select.Item value="active">Active</Select.Item>
-        <Select.Item value="inactive">Inactive</Select.Item>
-      </Select.Content>
-    </Select.Root>
-  }
-  actions={<Button variant="outline" size="sm">Export</Button>}
-/>
+import { FilterBar } from '@nexub/patterns';
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <FilterBar
+        searchPlaceholder="Search users…"
+        filters={
+          <div className="flex gap-2 flex-wrap items-center justify-center">
+            <Badge tone="neutral">Status: All</Badge>
+            <Badge tone="neutral">Plan: All</Badge>
+          </div>
+        }
+      />
+    </div>
+  );
+}
 ```

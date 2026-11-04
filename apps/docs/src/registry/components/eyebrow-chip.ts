@@ -16,14 +16,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<EyebrowChip>New release</EyebrowChip>`,
     },
     {
       title: 'Usage',
-      code: `<div>
-  <EyebrowChip>Now available</EyebrowChip>
-  <h2 style={{ marginTop: '8px', fontSize: '1.5rem', fontWeight: 700 }}>Version 2.0</h2>
-</div>`,
     },
   ],
 };

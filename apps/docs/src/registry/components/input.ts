@@ -25,27 +25,15 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Input placeholder="Enter value…" />`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '320px' }}>
-  <Input size="sm" placeholder="Small" />
-  <Input size="md" placeholder="Medium" />
-  <Input size="lg" placeholder="Large" />
-</div>`,
     },
     {
       title: 'Invalid state',
-      code: `<Input invalid placeholder="Invalid value" />`,
     },
     {
       title: 'With label and helper',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
-  <Label htmlFor="email">Email address</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-  <HelperText>We'll never share your email.</HelperText>
-</div>`,
     },
   ],
   usage: {

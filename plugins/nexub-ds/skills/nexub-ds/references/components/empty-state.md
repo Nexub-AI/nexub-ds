@@ -19,59 +19,49 @@ Placeholder UI shown when a list or page has no content.
 ## Example: Default
 
 ```tsx
-<EmptyState.Root>
-  <EmptyState.Illustration>
-    <svg
-      width="48"
-      height="48"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--color-text-disabled)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
-    </svg>
-  </EmptyState.Illustration>
-  <EmptyState.Title>No results found</EmptyState.Title>
-  <EmptyState.Description>
-    Try adjusting your search or filters to find what you're looking for.
-  </EmptyState.Description>
-  <EmptyState.Actions>
-    <Button variant="primary">Clear filters</Button>
-    <Button variant="outline">Browse all</Button>
-  </EmptyState.Actions>
-</EmptyState.Root>
+import { EmptyState, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Illustration>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="var(--color-outline-variant)" strokeWidth="2" />
+          <path d="M18 24h12M24 18v12" stroke="var(--color-on-surface-muted)" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </EmptyState.Illustration>
+      <EmptyState.Title>No results found</EmptyState.Title>
+      <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
+      <EmptyState.Actions>
+        <Button variant="primary" size="sm">Clear filters</Button>
+      </EmptyState.Actions>
+    </EmptyState.Root>
+  );
+}
 ```
 
 ## Example: Custom illustration
 
 ```tsx
-<EmptyState.Root>
-  <EmptyState.Illustration>
-    <svg
-      width="80"
-      height="80"
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <rect width="80" height="80" rx="40" fill="var(--color-bg-subtle)" />
-      <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-border-strong)" strokeWidth="2" />
-      <path d="M24 36h32" stroke="var(--color-border-strong)" strokeWidth="2" />
-      <circle cx="40" cy="48" r="4" fill="var(--color-text-disabled)" />
-    </svg>
-  </EmptyState.Illustration>
-  <EmptyState.Title>No documents yet</EmptyState.Title>
-  <EmptyState.Description>
-    Upload your first document to get started.
-  </EmptyState.Description>
-  <EmptyState.Actions>
-    <Button variant="primary">Upload document</Button>
-  </EmptyState.Actions>
-</EmptyState.Root>
+import { EmptyState, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Illustration>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+          <rect width="80" height="80" rx="40" fill="var(--color-surface-container-low)" />
+          <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-outline)" strokeWidth="2" />
+          <path d="M24 36h32" stroke="var(--color-outline)" strokeWidth="2" />
+          <circle cx="40" cy="48" r="4" fill="color-mix(in srgb, var(--color-on-surface) 38%, transparent)" />
+        </svg>
+      </EmptyState.Illustration>
+      <EmptyState.Title>No documents yet</EmptyState.Title>
+      <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
+      <EmptyState.Actions>
+        <Button variant="primary">Upload document</Button>
+      </EmptyState.Actions>
+    </EmptyState.Root>
+  );
+}
 ```

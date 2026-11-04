@@ -22,32 +22,71 @@ An image card with a glass caption over a soft scrim. With `href`, the whole car
 ## Example: With link
 
 ```tsx
-<MediaCard
-  src="/covers/lisbon.jpg"
-  alt=""
-  eyebrow="Guide"
-  title="A weekend in Lisbon"
-  description="Where to eat, walk and stay."
-  href="/guides/lisbon"
-/>
+import { MediaCard } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
+    </div>
+  );
+}
 ```
 
 ## Example: Without link, with actions
 
 ```tsx
-<MediaCard src="/covers/q3.jpg" alt="" title="Q3 brand shoot" description="48 photos">
-  <Button size="sm" variant="tonal">Open</Button>
-  <Button size="sm" variant="text">Share</Button>
-</MediaCard>
+import { MediaCard, Button } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
+        <Button size="sm" variant="tonal">Open</Button>
+        <Button size="sm" variant="text">Share</Button>
+      </MediaCard>
+    </div>
+  );
+}
 ```
 
 ## Example: Ratios
 
 ```tsx
-<MediaCard ratio="16/9" src={src} alt="" title="16/9" />
-<MediaCard ratio="4/3" src={src} alt="" title="4/3" />
-<MediaCard ratio="1/1" src={src} alt="" title="1/1" />
-<MediaCard ratio="3/4" src={src} alt="" title="3/4" />
+import { MediaCard } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-start justify-center">
+      {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
+        <div key={r} className="w-[160px]">
+          <MediaCard ratio={r} src={COVER} alt="" title={r} />
+        </div>
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Accessibility

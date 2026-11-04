@@ -21,11 +21,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<NumberInput defaultValue={0} />`,
     },
     {
       title: 'With range',
-      code: `<NumberInput defaultValue={5} min={0} max={10} />`,
     },
   ],
 };

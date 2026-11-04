@@ -19,14 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Select.Root>
-  <Select.Trigger placeholder="Pick a fruit" />
-  <Select.Content>
-    <Select.Item value="apple">Apple</Select.Item>
-    <Select.Item value="banana">Banana</Select.Item>
-    <Select.Item value="cherry">Cherry</Select.Item>
-  </Select.Content>
-</Select.Root>`,
     },
   ],
   usage: {

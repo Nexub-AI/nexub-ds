@@ -19,18 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ActivityFeed.Root>
-  <ActivityFeed.Item
-    title="Alex created a new project"
-    description="Project 'Nexub DS v2' was created"
-    timestamp="2 hours ago"
-  />
-  <ActivityFeed.Item
-    title="Sam invited 3 members"
-    description="Jordan, Riley, and Taylor joined"
-    timestamp="Yesterday"
-  />
-</ActivityFeed.Root>`,
     },
   ],
 };

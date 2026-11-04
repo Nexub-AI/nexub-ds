@@ -20,11 +20,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<UserCard
-  name="Alex Morgan"
-  email="alex@nexub.io"
-  role="Design Lead"
-/>`,
     },
   ],
 };

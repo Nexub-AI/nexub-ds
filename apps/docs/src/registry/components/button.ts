@@ -30,56 +30,19 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Button variant="primary">Click me</Button>`,
     },
     {
       title: 'Variants',
-      code: `<div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-  <Button variant="primary">Primary</Button>
-  <Button variant="outline">Outline</Button>
-  <Button variant="ghost">Ghost</Button>
-  <Button variant="subtle">Subtle</Button>
-  <Button variant="link">Link</Button>
-</div>`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <Button size="xs" variant="primary">XSmall</Button>
-  <Button size="sm" variant="primary">Small</Button>
-  <Button size="md" variant="primary">Medium</Button>
-  <Button size="lg" variant="primary">Large</Button>
-</div>`,
     },
     {
       title: 'States',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Button variant="primary" loading>Loading</Button>
-  <Button variant="outline" disabled>Disabled</Button>
-</div>`,
     },
     {
       title: 'Async',
       description: 'Drive `status` from the request. Each click here moves to the next status.',
-      code: `function SaveButton() {
-  const [status, setStatus] = React.useState<ButtonStatus>('idle');
-
-  async function save() {
-    setStatus('loading');
-    try {
-      await saveProfile();
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    }
-  }
-
-  return (
-    <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={save}>
-      Save
-    </Button>
-  );
-}`,
     },
   ],
   usage: {

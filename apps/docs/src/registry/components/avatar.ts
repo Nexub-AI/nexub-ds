@@ -21,25 +21,15 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Avatar name="Alex Johnson" />`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Avatar size="xs" name="Alex Johnson" />
-  <Avatar size="sm" name="Alex Johnson" />
-  <Avatar size="md" name="Alex Johnson" />
-  <Avatar size="lg" name="Alex Johnson" />
-  <Avatar size="xl" name="Alex Johnson" />
-</div>`,
     },
     {
       title: 'With image',
-      code: `<Avatar src="https://i.pravatar.cc/150?img=1" name="Alex Johnson" />`,
     },
     {
       title: 'With badge',
-      code: `<Avatar name="Online User" badge badgeColor="green" />`,
     },
   ],
 };

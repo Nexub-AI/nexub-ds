@@ -16,28 +16,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-  <Kbd>⌘</Kbd>
-  <Kbd>K</Kbd>
-</div>`,
     },
     {
       title: 'Combinations',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>⌘</Kbd>
-    <Kbd>K</Kbd>
-  </div>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>Ctrl</Kbd>
-    <Kbd>C</Kbd>
-  </div>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>⇧</Kbd>
-    <Kbd>⌘</Kbd>
-    <Kbd>P</Kbd>
-  </div>
-</div>`,
     },
   ],
 };

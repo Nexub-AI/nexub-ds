@@ -21,35 +21,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Scale in={true}>
-  <Card>Scaled content</Card>
-</Scale>`,
     },
     {
       title: 'Toggle',
-      code: `function ScaleToggle() {
-  const [visible, setVisible] = React.useState(true);
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Scale out' : 'Scale in'}
-      </Button>
-      <Scale in={visible} duration="fast" easing="spring" unmountOnExit>
-        <div
-          style={{
-            padding: '24px',
-            background: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            textAlign: 'center',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Pop!
-        </div>
-      </Scale>
-    </div>
-  );
-}`,
     },
   ],
 };

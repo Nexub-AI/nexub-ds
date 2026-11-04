@@ -19,14 +19,10 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ThinkingIndicator />`,
     },
     {
       title: 'Custom label and sizes',
       description: 'Name the step when you know it. `label={null}` keeps only the shape.',
-      code: `<ThinkingIndicator label="Searching 4 sources" />
-<ThinkingIndicator size="sm" />
-<ThinkingIndicator size="sm" label={null} />`,
     },
   ],
   usage: {

@@ -18,18 +18,30 @@ Generic container primitive with style token props.
 ## Example: Default
 
 ```tsx
-<Box padding="md" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-  Content inside a Box
-</Box>
+import { Box, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Box className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+      <Text size="body-sm">Content inside a Box</Text>
+    </Box>
+  );
+}
 ```
 
 ## Example: Nested
 
 ```tsx
-<Box padding="lg" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-lg)' }}>
-  <Heading size="h4">Section title</Heading>
-  <Box padding="sm" style={{ background: 'var(--color-bg-default)', borderRadius: 'var(--radius-md)', marginTop: '8px' }}>
-    <Text>Nested box content</Text>
-  </Box>
-</Box>
+import { Box, Heading, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Box className="p-6 bg-[var(--color-surface-container-low)] rounded-shape-container">
+      <Heading size="h4">Section title</Heading>
+      <Box className="p-3 bg-[var(--color-surface)] rounded-shape-field mt-2">
+        <Text size="body-sm">Nested box content</Text>
+      </Box>
+    </Box>
+  );
+}
 ```

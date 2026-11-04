@@ -36,24 +36,41 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 Hover or focus the assistant reply to show its actions.
 
 ```tsx
-<MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
-<MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
-  <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
-  <MessageActions
-    text="Open Settings, then Billing, and choose Cancel plan."
-    onFeedback={(value) => logFeedback(value)}
-    onRegenerate={() => regenerate()}
-  />
-</MessageBubble>
-<MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+import { MessageBubble, Avatar, MessageActions, toast } from '@nexub/react';
+import { Sparkles } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-[560px]">
+      <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
+      <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+        <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
+        <MessageActions
+          text="Open Settings, then Billing, and choose Cancel plan."
+          onFeedback={() => {}}
+          onRegenerate={() => toast.info('Regenerating…')}
+        />
+      </MessageBubble>
+      <MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+    </div>
+  );
+}
 ```
 
 ## Example: Failed to send
 
 ```tsx
-<MessageBubble from="user" status="error" onRetry={() => resend()}>
-  Can I get a refund for last month?
-</MessageBubble>
+import { MessageBubble, toast } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[560px]">
+      <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
+        Can I get a refund for last month?
+      </MessageBubble>
+    </div>
+  );
+}
 ```
 
 ## Accessibility

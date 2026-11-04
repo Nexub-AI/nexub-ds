@@ -19,17 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Dashboard',
-      code: `<BentoGrid>
-  <BentoTile size="2x2">
-    <h3 className="text-title-sm">Revenue, last 7 days</h3>
-    <RevenueChart />
-  </BentoTile>
-  <BentoTile><StatTile label="Active users" value="12,480" /></BentoTile>
-  <BentoTile><StatTile label="Conversion" value="3.2%" /></BentoTile>
-  <BentoTile size="2x1">3 invoices awaiting approval.</BentoTile>
-  <BentoTile><StatTile label="Churn" value="0.8%" /></BentoTile>
-  <BentoTile><StatTile label="NPS" value="61" /></BentoTile>
-</BentoGrid>`,
     },
   ],
   usage: {

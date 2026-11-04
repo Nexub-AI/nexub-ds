@@ -21,11 +21,19 @@ A password field with a built-in toggle to reveal or hide the entered value.
 ## Example: Default
 
 ```tsx
-<PasswordInput placeholder="Enter password…" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+}
 ```
 
 ## Example: Invalid
 
 ```tsx
-<PasswordInput invalid placeholder="Password is too short" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+}
 ```

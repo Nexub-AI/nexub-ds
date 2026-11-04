@@ -24,27 +24,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<StatCard
-  label="Total Revenue"
-  value="$48,295"
-  delta="+12.5%"
-  deltaType="increase"
-  description="vs last month"
-/>`,
     },
     {
       title: 'With icon',
-      code: `<StatCard
-  label="Active Users"
-  value="2,841"
-  delta="-3.2%"
-  deltaType="decrease"
-  icon={<Users size={20} />}
-/>`,
     },
     {
       title: 'Animated',
-      code: `<StatCard label="Orders today" value={orders.toLocaleString()} animate />`,
     },
   ],
 };

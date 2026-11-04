@@ -24,31 +24,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Open popover</Button>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Text size="body-sm">Popover content goes here.</Text>
-  </Popover.Content>
-</Popover.Root>`,
     },
     {
       title: 'With close button',
-      code: `<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Settings</Button>
-  </Popover.Trigger>
-  <Popover.Content side="bottom" align="end" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <Text weight="semibold">Preferences</Text>
-      <Text size="body-sm" tone="secondary">Adjust your display settings.</Text>
-      <Popover.Close asChild>
-        <Button variant="ghost" size="sm">Close</Button>
-      </Popover.Close>
-    </div>
-  </Popover.Content>
-</Popover.Root>`,
     },
   ],
 };

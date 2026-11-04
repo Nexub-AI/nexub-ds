@@ -24,54 +24,49 @@ Vertically stacked list of collapsible sections.
 ## Example: Default
 
 ```tsx
-<Accordion.Root type="single" collapsible defaultValue="item-1">
-  <Accordion.Item value="item-1">
-    <Accordion.Trigger>What is Nexub DS?</Accordion.Trigger>
-    <Accordion.Content>
-      Nexub DS is a design system providing accessible, themeable React components
-      built on Radix UI primitives.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-2">
-    <Accordion.Trigger>Is it accessible?</Accordion.Trigger>
-    <Accordion.Content>
-      Yes. All components follow WAI-ARIA patterns and are keyboard-navigable
-      out of the box.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-3">
-    <Accordion.Trigger>Can I customise the styles?</Accordion.Trigger>
-    <Accordion.Content>
-      Absolutely. Components expose design tokens via CSS custom properties,
-      and every element accepts a className prop.
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>
+import { Accordion, Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Accordion.Root type="single" collapsible>
+        <Accordion.Item value="a">
+          <Accordion.Trigger>What is Nexub?</Accordion.Trigger>
+          <Accordion.Content>A design system for ambitious SaaS teams, built on tokens and accessibility.</Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="b">
+          <Accordion.Trigger>How do I install?</Accordion.Trigger>
+          <Accordion.Content>Run: <Code>pnpm add @nexub/react</Code></Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="c">
+          <Accordion.Trigger>Is it open source?</Accordion.Trigger>
+          <Accordion.Content>Yes — MIT licensed and free to use.</Accordion.Content>
+        </Accordion.Item>
+      </Accordion.Root>
+    </div>
+  );
+}
 ```
 
 ## Example: Multiple
 
 ```tsx
-<Accordion.Root type="multiple" defaultValue={['item-1', 'item-2']}>
-  <Accordion.Item value="item-1">
-    <Accordion.Trigger>First section</Accordion.Trigger>
-    <Accordion.Content>
-      This section is open by default. Multiple items can be expanded
-      simultaneously when type is set to "multiple".
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-2">
-    <Accordion.Trigger>Second section</Accordion.Trigger>
-    <Accordion.Content>
-      Also open by default. Click any trigger to collapse individual sections
-      independently.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-3">
-    <Accordion.Trigger>Third section</Accordion.Trigger>
-    <Accordion.Content>
-      Closed by default. Expanding this does not close the others.
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>
+import { Accordion } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Accordion.Root type="multiple">
+        <Accordion.Item value="x">
+          <Accordion.Trigger>Section A</Accordion.Trigger>
+          <Accordion.Content>Content for section A — stays open when B is opened.</Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="y">
+          <Accordion.Trigger>Section B</Accordion.Trigger>
+          <Accordion.Content>Content for section B — multiple can be open at once.</Accordion.Content>
+        </Accordion.Item>
+      </Accordion.Root>
+    </div>
+  );
+}
 ```

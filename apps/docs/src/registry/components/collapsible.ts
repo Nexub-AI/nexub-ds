@@ -21,52 +21,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Collapsible.Root>
-  <Collapsible.Trigger asChild>
-    <Button variant="outline">Toggle details</Button>
-  </Collapsible.Trigger>
-  <Collapsible.Content>
-    <div style={{ paddingTop: '12px', color: 'var(--color-text-secondary)' }}>
-      Hidden content revealed on toggle.
-    </div>
-  </Collapsible.Content>
-</Collapsible.Root>`,
     },
     {
       title: 'Controlled',
-      code: `function ControlledExample() {
-  const [open, setOpen] = React.useState(false);
-  return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontWeight: 500 }}>Advanced settings</span>
-        <Collapsible.Trigger asChild>
-          <IconButton
-            aria-label={open ? 'Collapse' : 'Expand'}
-            variant="ghost"
-            size="sm"
-          />
-        </Collapsible.Trigger>
-      </div>
-      <Collapsible.Content>
-        <div style={{ paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="notif" />
-            <Label htmlFor="notif">Enable notifications</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="autosave" />
-            <Label htmlFor="autosave">Auto-save drafts</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="tooltips" />
-            <Label htmlFor="tooltips">Show tooltips</Label>
-          </div>
-        </div>
-      </Collapsible.Content>
-    </Collapsible.Root>
-  );
-}`,
     },
   ],
 };

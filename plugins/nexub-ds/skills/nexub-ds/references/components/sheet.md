@@ -26,26 +26,29 @@ Alias for Drawer — slide-in sheet panel.
 ## Example: Default
 
 ```tsx
-<Sheet.Root>
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Open sheet</Button>
-  </Sheet.Trigger>
-  <Sheet.Portal>
-    <Sheet.Overlay />
-    <Sheet.Content side="right">
-      <Sheet.Header>
-        <Sheet.Title>Notifications</Sheet.Title>
-        <Sheet.Description>Review your latest activity.</Sheet.Description>
-      </Sheet.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">No new notifications.</Text>
-      </div>
-      <Sheet.Footer>
-        <Sheet.Close asChild>
-          <Button variant="outline">Close</Button>
-        </Sheet.Close>
-      </Sheet.Footer>
-    </Sheet.Content>
-  </Sheet.Portal>
-</Sheet.Root>
+import * as React from 'react';
+import { Button, Sheet, Text } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Sheet</Button>
+      <Sheet.Root open={open} onOpenChange={setOpen}>
+        <Sheet.Portal>
+          <Sheet.Overlay />
+          <Sheet.Content side="right">
+            <Sheet.Header>
+              <Sheet.Title>Notifications</Sheet.Title>
+              <Sheet.Description>Your recent activity</Sheet.Description>
+            </Sheet.Header>
+            <div className="p-4 flex-1">
+              <Text size="body-sm" tone="muted">No new notifications.</Text>
+            </div>
+          </Sheet.Content>
+        </Sheet.Portal>
+      </Sheet.Root>
+    </>
+  );
+}
 ```

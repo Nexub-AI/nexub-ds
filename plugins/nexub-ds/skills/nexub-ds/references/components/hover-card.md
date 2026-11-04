@@ -19,16 +19,25 @@ Rich tooltip card revealed on hover.
 ## Example: Default
 
 ```tsx
-<HoverCard.Root openDelay={200} closeDelay={100}>
-  <HoverCard.Trigger asChild>
-    <Link href="#">@sasidharan</Link>
-  </HoverCard.Trigger>
-  <HoverCard.Content side="bottom" align="start" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '240px' }}>
-      <Text weight="semibold">Sasidharan</Text>
-      <Text size="body-sm" tone="secondary">Full-stack engineer building design systems.</Text>
-      <Text size="caption" tone="muted">Joined April 2024</Text>
-    </div>
-  </HoverCard.Content>
-</HoverCard.Root>
+import { HoverCard, Link, Avatar, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <HoverCard.Root>
+      <HoverCard.Trigger asChild>
+        <Link href="#">@alex_johnson</Link>
+      </HoverCard.Trigger>
+      <HoverCard.Content>
+        <div className="flex flex-col gap-2 items-start">
+          <Avatar name="Alex Johnson" size="lg" />
+          <div>
+            <Text weight="semibold">Alex Johnson</Text>
+            <Text size="body-sm" tone="muted">Product Designer</Text>
+          </div>
+          <Text size="body-sm" tone="secondary">Building design systems and making developers happy.</Text>
+        </div>
+      </HoverCard.Content>
+    </HoverCard.Root>
+  );
+}
 ```

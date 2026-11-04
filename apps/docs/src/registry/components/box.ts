@@ -19,18 +19,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Box padding="md" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-  Content inside a Box
-</Box>`,
     },
     {
       title: 'Nested',
-      code: `<Box padding="lg" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-lg)' }}>
-  <Heading size="h4">Section title</Heading>
-  <Box padding="sm" style={{ background: 'var(--color-bg-default)', borderRadius: 'var(--radius-md)', marginTop: '8px' }}>
-    <Text>Nested box content</Text>
-  </Box>
-</Box>`,
     },
   ],
 };

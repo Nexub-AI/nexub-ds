@@ -22,69 +22,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Table.Root>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Name</Table.Head>
-      <Table.Head>Status</Table.Head>
-      <Table.Head>Date</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell>Alice Johnson</Table.Cell>
-      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
-      <Table.Cell>12 Jan 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Bob Martinez</Table.Cell>
-      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
-      <Table.Cell>18 Feb 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Carol Smith</Table.Cell>
-      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
-      <Table.Cell>03 Mar 2026</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table.Root>`,
     },
     {
       title: 'With caption',
-      code: `<Table.Root>
-  <Table.Caption>Recent user activity — last 30 days</Table.Caption>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Name</Table.Head>
-      <Table.Head>Status</Table.Head>
-      <Table.Head>Date</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell>Alice Johnson</Table.Cell>
-      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
-      <Table.Cell>12 Jan 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Bob Martinez</Table.Cell>
-      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
-      <Table.Cell>18 Feb 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Carol Smith</Table.Cell>
-      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
-      <Table.Cell>03 Mar 2026</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-  <Table.Footer>
-    <Table.Row>
-      <Table.Cell colSpan={3} style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-        Showing 3 of 3 users
-      </Table.Cell>
-    </Table.Row>
-  </Table.Footer>
-</Table.Root>`,
     },
   ],
 };

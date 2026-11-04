@@ -15,11 +15,29 @@ Inline code span for technical terms and short code snippets.
 ## Example: Default
 
 ```tsx
-<Code>npm install @nexub/react</Code>
+import { Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      <Code>npm install</Code>
+      <Code>useTheme()</Code>
+      <Code>@nexub/react</Code>
+    </div>
+  );
+}
 ```
 
 ## Example: In prose
 
 ```tsx
-<Text>Use the <Code>useTheme()</Code> hook to access the current theme.</Text>
+import { Text, Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Text>
+      Use the <Code>useTheme()</Code> hook to access the current theme from any component.
+    </Text>
+  );
+}
 ```

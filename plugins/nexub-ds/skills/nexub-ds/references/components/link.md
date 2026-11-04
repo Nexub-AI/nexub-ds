@@ -18,21 +18,35 @@ Styled anchor link with variant and external support.
 ## Example: Default
 
 ```tsx
-<Link href="#">View documentation</Link>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return <Link href="#">View documentation</Link>;
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px' }}>
-  <Link href="#" variant="default">Default</Link>
-  <Link href="#" variant="muted">Muted</Link>
-  <Link href="#" variant="underline">Underline</Link>
-</div>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4 flex-wrap items-center justify-center">
+      <Link href="#" variant="default">Default</Link>
+      <Link href="#" variant="muted">Muted</Link>
+      <Link href="#" variant="underlined">Underline</Link>
+    </div>
+  );
+}
 ```
 
 ## Example: External
 
 ```tsx
-<Link href="#" external>Open in new tab</Link>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return <Link href="#" external>Open in new tab</Link>;
+}
 ```

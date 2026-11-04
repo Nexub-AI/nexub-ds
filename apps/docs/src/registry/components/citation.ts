@@ -26,18 +26,6 @@ const entry: ComponentEntry = {
     {
       title: 'Cited answer',
       description: 'Hover or focus a number to preview its source.',
-      code: `const sources: CitationSource[] = [
-  { url: 'https://example.com/guides/heat-pumps', title: 'Choosing a heat pump', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
-  { url: 'https://example.org/grants', title: 'Grants for home heating', domain: 'example.org' },
-  { url: 'https://example.net/costs', title: 'Running costs compared' },
-];
-
-<p>
-  Most homes can use an air-source heat pump<Citation index={1} source={sources[0]} />.
-  Grants cover part of the cost<Citation index={2} source={sources[1]} />, and running
-  costs are close to gas<Citation index={3} source={sources[2]} />.
-</p>
-<SourceList sources={sources} />`,
     },
   ],
   usage: {

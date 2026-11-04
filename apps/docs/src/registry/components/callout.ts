@@ -19,11 +19,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>`,
     },
     {
       title: 'Info',
-      code: `<Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>`,
     },
   ],
 };

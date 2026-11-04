@@ -27,7 +27,11 @@ Shows the assistant is working before the first token arrives: a morphing shape 
 ## Example: Default
 
 ```tsx
-<ThinkingIndicator />
+import { ThinkingIndicator } from '@nexub/react';
+
+export default function Example() {
+  return <ThinkingIndicator />;
+}
 ```
 
 ## Example: Custom label and sizes
@@ -35,9 +39,17 @@ Shows the assistant is working before the first token arrives: a morphing shape 
 Name the step when you know it. `label={null}` keeps only the shape.
 
 ```tsx
-<ThinkingIndicator label="Searching 4 sources" />
-<ThinkingIndicator size="sm" />
-<ThinkingIndicator size="sm" label={null} />
+import { ThinkingIndicator } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-start">
+      <ThinkingIndicator label="Searching 4 sources" />
+      <ThinkingIndicator size="sm" />
+      <ThinkingIndicator size="sm" label={null} />
+    </div>
+  );
+}
 ```
 
 ## Accessibility

@@ -19,28 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Dialog.Root>
-  <Dialog.Trigger asChild>
-    <Button>Open Dialog</Button>
-  </Dialog.Trigger>
-  <Dialog.Portal>
-    <Dialog.Overlay />
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>Edit profile</Dialog.Title>
-        <Dialog.Description>
-          Make changes to your profile here.
-        </Dialog.Description>
-      </Dialog.Header>
-      <Dialog.Footer>
-        <Dialog.Close asChild>
-          <Button variant="outline">Cancel</Button>
-        </Dialog.Close>
-        <Button>Save changes</Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </Dialog.Portal>
-</Dialog.Root>`,
     },
   ],
   usage: {

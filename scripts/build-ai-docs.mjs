@@ -31,6 +31,8 @@ const loadEntries = async (dir) => {
   return Promise.all(files.map(async (f) => (await import(pathToFileURL(join(registry, dir, f)).href)).default));
 };
 const entries = [...(await loadEntries('components')), ...(await loadEntries('patterns'))];
+const { exampleCode } = await import(pathToFileURL(join(root, 'apps/docs/src/examples/code.ts')).href);
+const examplesDir = join(root, 'apps/docs/src/examples');
 
 // Exported components with no registry entry still exist; list them so they are discoverable.
 const pascal = (slug) => slug.replace(/(^|-)(\w)/g, (_, __, c) => c.toUpperCase());
@@ -68,10 +70,11 @@ function componentMd(e) {
     }
     out.push('');
   }
-  for (const ex of examples) {
+  const kind = meta.package === '@nexub/patterns' ? 'patterns' : 'components';
+  for (const [i, ex] of examples.entries()) {
     out.push(`## Example: ${ex.title}`, '');
     if (ex.description) out.push(ex.description, '');
-    out.push('```tsx', ex.code.trim(), '```', '');
+    out.push('```tsx', exampleCode(examplesDir, kind, meta.slug, i), '```', '');
   }
   if (a11y) {
     out.push('## Accessibility', '');

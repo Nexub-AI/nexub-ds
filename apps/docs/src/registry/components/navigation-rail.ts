@@ -21,11 +21,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<NavigationRail.Root aria-label="Workspace">
-  <NavigationRail.Item href="/" icon={<Home />} label="Home" active />
-  <NavigationRail.Item href="/files" icon={<Folder />} label="Files" />
-  <NavigationRail.Item href="/settings" icon={<Settings />} label="Settings" />
-</NavigationRail.Root>`,
     },
   ],
 };

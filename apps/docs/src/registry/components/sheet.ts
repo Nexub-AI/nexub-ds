@@ -27,28 +27,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Sheet.Root>
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Open sheet</Button>
-  </Sheet.Trigger>
-  <Sheet.Portal>
-    <Sheet.Overlay />
-    <Sheet.Content side="right">
-      <Sheet.Header>
-        <Sheet.Title>Notifications</Sheet.Title>
-        <Sheet.Description>Review your latest activity.</Sheet.Description>
-      </Sheet.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">No new notifications.</Text>
-      </div>
-      <Sheet.Footer>
-        <Sheet.Close asChild>
-          <Button variant="outline">Close</Button>
-        </Sheet.Close>
-      </Sheet.Footer>
-    </Sheet.Content>
-  </Sheet.Portal>
-</Sheet.Root>`,
     },
   ],
 };

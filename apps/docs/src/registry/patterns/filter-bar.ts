@@ -20,20 +20,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<FilterBar
-  searchPlaceholder="Search users…"
-  onSearch={(v) => {}}
-  filters={
-    <Select.Root>
-      <Select.Trigger><Select.Value placeholder="Status" /></Select.Trigger>
-      <Select.Content>
-        <Select.Item value="active">Active</Select.Item>
-        <Select.Item value="inactive">Inactive</Select.Item>
-      </Select.Content>
-    </Select.Root>
-  }
-  actions={<Button variant="outline" size="sm">Export</Button>}
-/>`,
     },
   ],
 };

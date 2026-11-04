@@ -20,28 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Tones',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge tone="success">Active</Badge>
-  <Badge tone="danger">Error</Badge>
-  <Badge tone="warning">Warning</Badge>
-  <Badge tone="info">Info</Badge>
-  <Badge tone="neutral">Draft</Badge>
-</div>`,
     },
     {
       title: 'Variants',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge variant="solid" tone="success">Solid</Badge>
-  <Badge variant="soft" tone="info">Soft</Badge>
-  <Badge variant="outline" tone="warning">Outline</Badge>
-</div>`,
     },
     {
       title: 'With leading dot',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge tone="success" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Online</Badge>
-  <Badge tone="danger" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Offline</Badge>
-</div>`,
     },
   ],
   usage: {
