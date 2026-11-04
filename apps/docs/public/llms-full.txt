@@ -108,7 +108,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v2.7.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v2.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -346,7 +346,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v2.7.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v2.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -5221,7 +5221,7 @@ export default function Example() {
 ## Example: With caption
 
 ```tsx
-import { Table, StatusPill } from '@nexub/react';
+import { Table, Badge } from '@nexub/react';
 
 export default function Example() {
   const rows = [
@@ -5243,7 +5243,7 @@ export default function Example() {
         {rows.map((r) => (
           <Table.Row key={r.name}>
             <Table.Cell>{r.name}</Table.Cell>
-            <Table.Cell><StatusPill tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'} label={r.status} /></Table.Cell>
+            <Table.Cell><Badge variant="soft" tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'}>{r.status}</Badge></Table.Cell>
             <Table.Cell>{r.date}</Table.Cell>
           </Table.Row>
         ))}

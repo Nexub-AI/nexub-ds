@@ -1,0 +1,14 @@
+# Wait for ${TEXT} after opening a screen, and wait once more if it times out.
+# On iOS a hierarchy query right after a back swipe can stall past the timeout
+# while the screen is already right: CI 2026-11-04 failed "You send" is visible
+# with "You send" on screen in the failure screenshot and hierarchy. A fresh
+# wait gets a fresh query. No re-tap: the screen did open, and a tap at the old
+# row's position would land on a control of the new screen.
+appId: ai.nexub.mobile
+---
+- retry:
+    maxRetries: 1
+    commands:
+      - extendedWaitUntil:
+          visible: ${TEXT}
+          timeout: 10000

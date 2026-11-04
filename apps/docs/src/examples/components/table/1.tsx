@@ -1,4 +1,4 @@
-import { Table, StatusPill } from '@nexub/react';
+import { Table, Badge } from '@nexub/react';
 
 export default function Example() {
   const rows = [
@@ -20,7 +20,7 @@ export default function Example() {
         {rows.map((r) => (
           <Table.Row key={r.name}>
             <Table.Cell>{r.name}</Table.Cell>
-            <Table.Cell><StatusPill tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'} label={r.status} /></Table.Cell>
+            <Table.Cell><Badge variant="soft" tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'}>{r.status}</Badge></Table.Cell>
             <Table.Cell>{r.date}</Table.Cell>
           </Table.Row>
         ))}
