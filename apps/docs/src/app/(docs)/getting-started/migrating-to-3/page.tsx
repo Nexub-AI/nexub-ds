@@ -64,10 +64,18 @@ npx nexub-migrate src --check   # CI: exit 1 if anything is left`} />
       <h2>3. Other 3.0 changes</h2>
       <ul>
         <li>
-          <strong>rem spacing by default.</strong> The rem layer you can opt into today with{' '}
-          <code>@nexub/tokens/css/rem</code> becomes the default. If your app sets{' '}
-          <code>html {'{ font-size: 62.5% }'}</code> or similar, remove it first, or spacing shrinks with it. Turn
-          the rem layer on while you are on 2.9 to see the effect early.
+          <strong>rem spacing by default.</strong> Spacing, radius, type and control heights in{' '}
+          <code>@nexub/tokens/css</code> are in rem, as the 2.6 opt-in layer had them, and{' '}
+          <code>@nexub/themes</code> sets <code>html {'{ font-size: 100% }'}</code>. At the browser default
+          nothing moves. If your app sets <code>html {'{ font-size: 62.5% }'}</code> or another px size, remove
+          it, or spacing shrinks with it. <code>@nexub/tokens/css/rem</code> is now empty; drop the import when
+          convenient. To try it on 2.9 first, import <code>@nexub/tokens/css/rem</code> there.
+        </li>
+        <li>
+          <strong>Three colour tokens stay.</strong> <code>--color-ring-default</code>,{' '}
+          <code>--color-ring-offset</code> and <code>--color-accent-500</code> look like legacy names, but brand
+          themes override them, so they are kept. The 3.0 codemod leaves them alone; the 2.9 one rewrote them to{' '}
+          <code>--color-primary</code>, which loses the brand colour, so revert that if it touched them.
         </li>
         <li>
           <strong>ESM only.</strong> Every package already ships ESM only, so there is nothing to do.

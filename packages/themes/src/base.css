@@ -88,7 +88,8 @@
 
 html {
   font-family: var(--font-family-sans);
-  font-size: 16px;
+  /* 100%, not 16px: tokens are in rem (3.0) and follow the user's browser font size. */
+  font-size: 100%;
   line-height: 1.6;
   color: var(--color-on-surface);
   background-color: var(--color-surface);
@@ -498,13 +499,13 @@ code, kbd, pre, samp {
 }
 
 /* ─── Density ────────────────────────────────────────────────────────────────
-   Compact shifts every control one step down the ladder (md 40 → 32). */
+   Compact shifts every control one step down the ladder (md 40 → 32px at a 16px root). */
 [data-density='compact'] {
-  --size-control-xs: 20px;
-  --size-control-sm: 24px;
-  --size-control-md: 32px;
-  --size-control-lg: 40px;
-  --size-control-xl: 48px;
+  --size-control-xs: 1.25rem;
+  --size-control-sm: 1.5rem;
+  --size-control-md: 2rem;
+  --size-control-lg: 2.5rem;
+  --size-control-xl: 3rem;
 }
 
 /* Logo-scroll marquee keyframe (used by LogoWall) */

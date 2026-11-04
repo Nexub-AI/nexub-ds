@@ -46,20 +46,15 @@ import '@nexub/patterns/styles.css';`} />
 
       <h2>Bigger text for people who ask for it (rem)</h2>
       <p>
-        Spacing, radius, type and control heights are set in px today. To have them follow the user&apos;s
-        browser font size, add the rem layer after the stylesheet:
-      </p>
-      <CodeBlock code={`import '@nexub/react/styles.css';
-import '@nexub/tokens/css/rem';`} />
-      <p>
-        At the browser default (16px) nothing changes. When someone raises their default font size, text,
+        Since 3.0, spacing, radius, type and control heights are in rem, with or without Tailwind. At the
+        browser default (16px) they match the px values. When someone raises their default font size, text,
         spacing and controls grow together, so nothing clips. Hairlines, pill shapes, shadows, icon sizes
-        and breakpoints stay in px. The rem layer works with the Tailwind setup too, and becomes the default
-        in 3.0.
+        and breakpoints stay in px.
       </p>
       <p>
-        If your app sets <code>html {'{ font-size: 62.5% }'}</code>, the rem layer shrinks everything: leave
-        it out until you drop that rule.
+        Don&apos;t set a px font size on <code>html</code>: it pins rem to that size. If your app sets{' '}
+        <code>html {'{ font-size: 62.5% }'}</code>, everything shrinks with it, so drop that rule.{' '}
+        <code>@nexub/tokens/css/rem</code>, the opt-in layer from 2.6, is now empty; you can remove the import.
       </p>
     </div>
   );

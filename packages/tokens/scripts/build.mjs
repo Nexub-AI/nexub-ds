@@ -2,7 +2,7 @@ import StyleDictionary from 'style-dictionary';
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, SPRINGS, palettes, remCss, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SPRINGS, applyRem, palettes, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -431,12 +431,14 @@ await sd.buildAllPlatforms();
 // Color roles (light-dark() over the palette vars above).
 writeFileSync(`${root}/dist/css/roles.css`, rolesCss());
 
-// Opt-in rem layer.
+// rem by default (3.0): restate spacing, radius, shape, control heights and type
+// sizes in variables.css in rem. css/rem stays as an empty file for old imports.
 const readGroup = (f) => Object.values(JSON.parse(readFileSync(`${root}/tokens/${f}.json`, 'utf8')))[0];
 const typography = JSON.parse(readFileSync(`${root}/tokens/typography.json`, 'utf8'));
+const variablesCss = `${root}/dist/css/variables.css`;
 writeFileSync(
-  `${root}/dist/css/rem.css`,
-  remCss({
+  variablesCss,
+  applyRem(readFileSync(variablesCss, 'utf8'), {
     spacing: readGroup('spacing'),
     radius: readGroup('radius'),
     shape: readGroup('shape'),
@@ -444,6 +446,7 @@ writeFileSync(
     type: Object.fromEntries(Object.entries(typography.type).filter(([r]) => !r.startsWith('$')).map(([r, v]) => [r, { size: v.size, lineHeight: v.lineHeight }])),
   }),
 );
+writeFileSync(`${root}/dist/css/rem.css`, REM_COMPAT_CSS);
 
 // Component tier (DTCG, documentation + tooling only: components read these
 // with var() fallbacks, so nothing is declared on :root).
