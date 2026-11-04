@@ -50,7 +50,7 @@ export const Default: Story = {
                 height: '32px',
                 width: '32px',
                 borderRadius: '50%',
-                background: 'var(--color-bg-subtle, #f4f4f5)',
+                background: 'var(--color-surface-container-low, #f4f4f5)',
                 border: 'none',
                 cursor: 'pointer',
                 fontWeight: 600,
@@ -85,7 +85,7 @@ export const Default: Story = {
           <h1 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>
             Dashboard
           </h1>
-          <p style={{ color: 'var(--color-text-muted)' }}>
+          <p style={{ color: 'var(--color-on-surface-muted)' }}>
             Welcome back! Here is what is happening with your projects today.
           </p>
           <div
@@ -102,11 +102,11 @@ export const Default: Story = {
                 style={{
                   padding: '20px',
                   borderRadius: '12px',
-                  border: '1px solid var(--color-border-default)',
-                  background: 'var(--color-bg-default)',
+                  border: '1px solid var(--color-outline-variant)',
+                  background: 'var(--color-surface)',
                 }}
               >
-                <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>{title}</p>
+                <p style={{ fontSize: '13px', color: 'var(--color-on-surface-muted)' }}>{title}</p>
                 <p style={{ fontSize: '24px', fontWeight: 700, marginTop: '4px' }}>—</p>
               </div>
             ))}

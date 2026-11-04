@@ -51,7 +51,7 @@ export const ClientSideRouting: Story = {
     const [last, setLast] = React.useState<string>('none');
     return (
       <div className="flex items-center gap-4">
-        <span className="text-sm text-[var(--color-text-muted)]">onNavigate: {last}</span>
+        <span className="text-sm text-[var(--color-on-surface-muted)]">onNavigate: {last}</span>
         <AppLauncher {...args} onNavigate={(app) => setLast(app.name)} />
       </div>
     );

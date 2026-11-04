@@ -27,8 +27,8 @@
 /* v3 emitted this after the utilities, unlayered. */
 @layer utilities {
   body {
-    background: var(--color-bg-default);
-    color: var(--color-text-primary);
+    background: var(--color-surface);
+    color: var(--color-on-surface);
     font-family: var(--font-family-sans);
   }
 }

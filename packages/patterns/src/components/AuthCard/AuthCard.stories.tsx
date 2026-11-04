@@ -15,8 +15,8 @@ const inputStyle: React.CSSProperties = {
   height: '36px',
   padding: '4px 12px',
   borderRadius: '6px',
-  border: '1px solid var(--color-border-default)',
-  background: 'var(--color-bg-default)',
+  border: '1px solid var(--color-outline-variant)',
+  background: 'var(--color-surface)',
   fontSize: '14px',
   boxSizing: 'border-box',
 };
@@ -26,12 +26,12 @@ const labelStyle: React.CSSProperties = {
   fontSize: '13px',
   fontWeight: 500,
   marginBottom: '6px',
-  color: 'var(--color-text-primary)',
+  color: 'var(--color-on-surface)',
 };
 
 export const Default: Story = {
   render: () => (
-    <div style={{ padding: '40px 16px', background: 'var(--color-bg-subtle, #f9fafb)' }}>
+    <div style={{ padding: '40px 16px', background: 'var(--color-surface-container-low, #f9fafb)' }}>
       <AuthCard
         title="Sign in to Nexub"
         description="Enter your credentials to access your workspace."

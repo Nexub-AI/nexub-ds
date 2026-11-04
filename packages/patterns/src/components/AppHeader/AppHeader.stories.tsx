@@ -61,7 +61,7 @@ function Page(props: AppHeaderProps) {
   return (
     <>
       <AppHeader {...props} currentOrgId={orgId} onOrgChange={setOrgId} />
-      <main className="mx-auto flex max-w-3xl flex-col gap-4 p-6 text-[var(--color-text-secondary)]">
+      <main className="mx-auto flex max-w-3xl flex-col gap-4 p-6 text-[var(--color-on-surface-variant)]">
         {Array.from({ length: 30 }, (_, i) => (
           <p key={i}>Scroll: the header stays put. Paragraph {i + 1}.</p>
         ))}
@@ -151,7 +151,7 @@ export const SearchOpen: Story = {
 export const Glass: Story = {
   args: { surface: 'glass' },
   render: (args) => (
-    <div className="min-h-[200vh] bg-[linear-gradient(160deg,var(--color-fill-primary),var(--color-bg-default)_60%)]">
+    <div className="min-h-[200vh] bg-[linear-gradient(160deg,var(--color-fill-primary),var(--color-surface)_60%)]">
       <Page {...args} />
     </div>
   ),
@@ -165,7 +165,7 @@ export const InAppShell: Story = {
         <AppHeader {...args} />
       </AppShell.Header>
       <AppShell.Body>
-        <AppShell.Sidebar className="w-56 border-r border-[var(--color-border-default)] p-4 text-sm">Sidebar</AppShell.Sidebar>
+        <AppShell.Sidebar className="w-56 border-r border-[var(--color-outline-variant)] p-4 text-sm">Sidebar</AppShell.Sidebar>
         <AppShell.Main>Main content starts right under the header.</AppShell.Main>
       </AppShell.Body>
     </AppShell.Root>

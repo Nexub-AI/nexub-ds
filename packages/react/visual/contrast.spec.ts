@@ -20,18 +20,18 @@ const PAIRS: [string, string, number][] = [
       (b) => [`--color-text-${t}`, `--color-${b}`, TEXT] as [string, string, number],
     ),
   ),
-  ['--color-text-placeholder', '--color-bg-default', TEXT],
-  ['--color-text-link', '--color-bg-default', TEXT],
-  ['--color-text-info', '--color-bg-default', TEXT],
-  ['--color-text-success', '--color-bg-default', TEXT],
-  ['--color-text-warning', '--color-bg-default', TEXT],
-  ['--color-text-danger', '--color-bg-default', TEXT],
-  ['--color-text-inverse', '--color-bg-inverse', TEXT],
+  ['--color-on-surface-muted', '--color-surface', TEXT],
+  ['--color-primary', '--color-surface', TEXT],
+  ['--color-on-info-container', '--color-surface', TEXT],
+  ['--color-on-success-container', '--color-surface', TEXT],
+  ['--color-on-warning-container', '--color-surface', TEXT],
+  ['--color-on-error-container', '--color-surface', TEXT],
+  ['--color-inverse-on-surface', '--color-inverse-surface', TEXT],
   ...['primary', 'info', 'success', 'warning', 'danger', 'accent'].flatMap((f) =>
     ['', '-hover'].map((h) => ['#fff', `--color-fill-${f}${h}`, TEXT] as [string, string, number]),
   ),
-  ['--color-border-input', '--color-bg-default', UI],
-  ['--color-ring-default', '--color-bg-default', UI],
+  ['--color-outline', '--color-surface', UI],
+  ['--color-ring-default', '--color-surface', UI],
   ['--color-ring-default', '--color-surface-container-highest', UI],
   // Calm Depth roles
   ...['on-surface', 'on-surface-variant', 'on-surface-muted'].flatMap((t) =>
@@ -100,7 +100,7 @@ for (const { theme, contrast, brand } of contexts) {
         });
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
       };
-      const page = css('--color-bg-default');
+      const page = css('--color-surface');
       const out = pairs.map(([fg, bg]) => {
         const b = paint(page, css(bg));
         const f = paint(page, css(bg), css(fg));

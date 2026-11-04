@@ -2,7 +2,6 @@
 // nexub-migrate — move app code onto current Nexub DS conventions.
 // Dependency-free (node: built-ins only), Node >= 20. See ./README.md.
 import { readFileSync, readdirSync, realpathSync, statSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -13,7 +12,9 @@ const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'cov
 const MAX_BYTES = 1024 * 1024;
 
 // ─── legacy-tokens: alias map ────────────────────────────────────────────────
-const NEVER = new Set(['--color-text-disabled']); // the disabled-state role, not a legacy alias
+// Not legacy aliases: the disabled-state role, and three tokens brand themes override
+// ([data-product] sets ring-default to its tertiary and accent-500 to its scale).
+const NEVER = new Set(['--color-text-disabled', '--color-ring-default', '--color-ring-offset', '--color-accent-500']);
 const BRAND = {
   '--color-leap-500': '--color-leap',
   '--color-bookub-500': '--color-bookub',
@@ -52,8 +53,8 @@ export function buildAliasMap(cssTexts) {
   return { aliases, mix };
 }
 
-// Snapshot of buildAliasMap([@nexub/themes base.css, light.css]) at 1.8.0 — used when
-// @nexub/themes is not installed. bin/nexub-migrate.test.mjs fails if it drifts from source.
+// buildAliasMap([@nexub/themes 2.9 base.css, light.css]), frozen: 3.0 removed these
+// aliases from @nexub/themes, so this table is the only record of them.
 export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
   "aliases": {
     "--color-leap-500": "--color-leap",
@@ -82,7 +83,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-text-success": "--color-on-success-container",
     "--color-text-warning": "--color-on-warning-container",
     "--color-text-danger": "--color-on-error-container",
-    "--color-accent-500": "--color-primary",
     "--color-bg-default": "--color-surface",
     "--color-bg-subtle": "--color-surface-container-low",
     "--color-bg-muted": "--color-surface-container-high",
@@ -98,8 +98,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-border-subtle": "--color-surface-container-high",
     "--color-border-strong": "--color-outline",
     "--color-border-inverse": "--color-inverse-on-surface",
-    "--color-ring-default": "--color-primary",
-    "--color-ring-offset": "--color-surface",
     "--color-surface-muted": "--color-surface-container-low",
     "--color-surface-raised": "--color-surface-elevated",
     "--color-surface-sunken": "--color-surface-container-high",
@@ -129,17 +127,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-semantic-info-border": "color-mix(in srgb, var(--color-info) 35%, transparent)"
   }
 } /* SNAPSHOT:END */;
-
-export function loadAliasMap(cwd = process.cwd()) {
-  for (const from of [path.join(cwd, 'package.json'), import.meta.url]) {
-    try {
-      const req = createRequire(from);
-      const css = ['base', 'light'].map((f) => readFileSync(req.resolve(`@nexub/themes/${f}`), 'utf8'));
-      return { ...buildAliasMap(css), source: '@nexub/themes' };
-    } catch { /* not resolvable from here */ }
-  }
-  return { ...SNAPSHOT, source: 'snapshot' };
-}
 
 // ─── class-string contexts ───────────────────────────────────────────────────
 /**
@@ -492,11 +479,10 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   const unknown = [...rules].filter((r) => !RULES.includes(r));
   if (unknown.length) { stderr(`Unknown rule(s): ${unknown.join(', ')}. Known: ${RULES.join(', ')}\n`); return 2; }
 
-  const aliasMap = rules.has('legacy-tokens') ? loadAliasMap(cwd) : SNAPSHOT;
   const results = [];
   for (const abs of collectFiles(positionals.length ? positionals : ['src'], { cwd, ignore: o.ignore ?? [] })) {
     const src = readFileSync(abs, 'utf8');
-    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix, aliasMap });
+    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix });
     const a = src.split('\n');
     const b = output.split('\n');
     const changes = a.flatMap((line, i) => (line === b[i] ? [] : [{ line: i + 1, before: line, after: b[i] }]));
@@ -511,7 +497,7 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   };
 
   if (o.json) {
-    stdout(`${JSON.stringify({ written: !!o.write, aliasSource: aliasMap.source ?? 'snapshot', results, totals }, null, 2)}\n`);
+    stdout(`${JSON.stringify({ written: !!o.write, aliasSource: 'snapshot', results, totals }, null, 2)}\n`);
   } else {
     for (const r of results) {
       stdout(`--- ${r.file}\n+++ ${r.file}\n`);
