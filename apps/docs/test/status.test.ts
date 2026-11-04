@@ -19,7 +19,7 @@ const bySlug = new Map(entries.map((e) => [e.meta.slug, e]));
 const deprecated = entries.filter((e) => e.meta.status === 'deprecated');
 
 test('deprecated entries name a live replacement and a removal major', () => {
-  assert.ok(deprecated.length > 0);
+  // None right after 3.0 removed Banner, Callout, Tag and StatusPill; this checks any added later.
   for (const { meta } of deprecated) {
     const d = meta.deprecation;
     assert.ok(d, `${meta.slug}: deprecated without \`deprecation\``);

@@ -28,10 +28,8 @@ import datePickerEntry from './components/date-picker';
 import dateRangePickerEntry from './components/date-range-picker';
 
 // ─── Component entries — Labels & Badges ──────────────────────────────────────
-import statusPillEntry from './components/status-pill';
 import filterChipEntry from './components/filter-chip';
 import chipEntry from './components/chip';
-import tagEntry from './components/tag';
 import eyebrowChipEntry from './components/eyebrow-chip';
 
 // ─── Component entries — Avatar ───────────────────────────────────────────────
@@ -40,8 +38,6 @@ import avatarGroupEntry from './components/avatar-group';
 
 // ─── Component entries — Feedback ─────────────────────────────────────────────
 import alertEntry from './components/alert';
-import bannerEntry from './components/banner';
-import calloutEntry from './components/callout';
 import toastEntry from './components/toast';
 
 // ─── Component entries — Loading States ───────────────────────────────────────
@@ -171,18 +167,14 @@ export const componentEntries: ComponentEntry[] = [
   dateRangePickerEntry,
   // Labels & Badges
   badgeEntry,
-  statusPillEntry,
   filterChipEntry,
   chipEntry,
-  tagEntry,
   eyebrowChipEntry,
   // Avatar
   avatarEntry,
   avatarGroupEntry,
   // Feedback
   alertEntry,
-  bannerEntry,
-  calloutEntry,
   toastEntry,
   // Loading States
   skeletonEntry,

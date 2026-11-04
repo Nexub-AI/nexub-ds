@@ -76,17 +76,11 @@ export type { FormFieldRootProps, FormFieldContextValue } from './components/For
 export { Badge, badgeVariants } from './components/Badge/index.js';
 export type { BadgeProps } from './components/Badge/index.js';
 
-export { StatusPill, statusPillVariants } from './components/StatusPill/index.js';
-export type { StatusPillProps } from './components/StatusPill/index.js';
-
 export { FilterChip } from './components/FilterChip/index.js';
 export type { FilterChipProps } from './components/FilterChip/index.js';
 
 export { Chip, chipVariants } from './components/Chip/index.js';
 export type { ChipProps } from './components/Chip/index.js';
-
-export { Tag, tagVariants } from './components/Tag/index.js';
-export type { TagProps } from './components/Tag/index.js';
 
 export { EyebrowChip } from './components/EyebrowChip/index.js';
 export type { EyebrowChipProps } from './components/EyebrowChip/index.js';
@@ -111,12 +105,6 @@ export type { MediaCardProps, MediaCardRatio } from './components/MediaCard/inde
 // Components — Feedback
 export { Alert, alertVariants } from './components/Alert/index.js';
 export type { AlertProps } from './components/Alert/index.js';
-
-export { Banner, bannerVariants } from './components/Banner/index.js';
-export type { BannerProps } from './components/Banner/index.js';
-
-export { Callout, calloutVariants } from './components/Callout/index.js';
-export type { CalloutProps } from './components/Callout/index.js';
 
 // Components — Loading States
 export { Skeleton, skeletonVariants } from './components/Skeleton/index.js';

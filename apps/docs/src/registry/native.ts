@@ -144,7 +144,7 @@ import { Send } from '@nexub/icons/native';
     name: 'Badge',
     preview: 'badge',
     differences: [
-      { aspect: 'Dot', web: 'Use `leadingIcon` for a dot.', mobile: '`dot` renders a status dot; covers web’s deprecated Tag and StatusPill.' },
+      { aspect: 'Dot', web: 'Use `leadingIcon` for a dot.', mobile: '`dot` renders a status dot.' },
       { aspect: 'Sizes', web: 'sm, md, lg.', mobile: 'sm, md.' },
     ],
     code: `<Badge tone="success" variant="soft" dot>Paid</Badge>`,
@@ -259,12 +259,6 @@ import { Send } from '@nexub/icons/native';
     preview: 'date-time-field',
     differences: [{ aspect: 'Picker', web: 'Nexub calendar popover.', mobile: 'The platform date/time picker (needs @react-native-community/datetimepicker).' }],
     code: `<DateTimeField label="Date of birth" value={dob} onValueChange={setDob} mode="date" />`,
-  },
-  banner: {
-    name: 'Banner',
-    preview: 'banner',
-    differences: [{ aspect: 'Scope', web: 'Banner, Alert and Callout.', mobile: 'Banner covers all three.' }],
-    code: `<Banner tone="warning" title="Verify your identity" action={<Button variant="text" onPress={verify}>Start</Button>} />`,
   },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {

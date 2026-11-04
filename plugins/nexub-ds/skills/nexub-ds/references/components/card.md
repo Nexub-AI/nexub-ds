@@ -103,4 +103,4 @@ export default function Example() {
 - Prefer CardLink over wrapping the whole card in `<a>`: the link’s accessible name stays the title instead of every word on the card.
 - Group related content with a heading inside the Card so AT users can navigate by heading level.
 
-Related: [media-card](media-card.md), [radio-card](radio-card.md), [callout](callout.md)
+Related: [media-card](media-card.md), [radio-card](radio-card.md), [alert](alert.md)
