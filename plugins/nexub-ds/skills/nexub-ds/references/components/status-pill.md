@@ -17,21 +17,27 @@
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <StatusPill tone="success" label="Active" />
-  <StatusPill tone="warning" label="Pending" />
-  <StatusPill tone="danger" label="Error" />
-  <StatusPill tone="neutral" label="Draft" />
-  <StatusPill tone="info" label="Syncing" />
-</div>
+import { StatusPill } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <StatusPill tone="success" label="Active" />
+      <StatusPill tone="warning" label="Pending" />
+      <StatusPill tone="danger" label="Error" />
+      <StatusPill tone="neutral" label="Draft" />
+      <StatusPill tone="info" label="Syncing" />
+    </div>
+  );
+}
 ```
 
 ## Example: With dot
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <StatusPill tone="success" dot label="Live" />
-  <StatusPill tone="info" dot label="Syncing" />
-  <StatusPill tone="warning" dot label="Degraded" />
-</div>
+import { StatusPill } from '@nexub/react';
+
+export default function Example() {
+  return <StatusPill tone="success" dot label="Live" />;
+}
 ```

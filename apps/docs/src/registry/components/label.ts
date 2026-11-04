@@ -19,18 +19,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Label htmlFor="name">Full name</Label>`,
     },
     {
       title: 'Required',
-      code: `<Label required>Email address</Label>`,
     },
     {
       title: 'With input',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-  <Label htmlFor="email">Email</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-</div>`,
     },
   ],
 };

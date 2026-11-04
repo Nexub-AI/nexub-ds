@@ -25,47 +25,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `const columns = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'role', header: 'Role' },
-  { accessorKey: 'status', header: 'Status' },
-  { accessorKey: 'joined', header: 'Joined' },
-];
-
-const data = [
-  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
-  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
-  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
-  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
-  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
-];
-
-<DataTable columns={columns} data={data} />`,
     },
     {
       title: 'With sorting',
-      code: `const columns = [
-  { accessorKey: 'name', header: 'Name', enableSorting: true },
-  { accessorKey: 'role', header: 'Role', enableSorting: true },
-  { accessorKey: 'status', header: 'Status', enableSorting: true },
-  { accessorKey: 'joined', header: 'Joined', enableSorting: true },
-];
-
-const data = [
-  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
-  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
-  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
-  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
-  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
-];
-
-<DataTable
-  columns={columns}
-  data={data}
-  enableSorting
-  enableRowSelection
-  pagination={{ pageSize: 5, pageIndex: 0 }}
-/>`,
     },
   ],
 };

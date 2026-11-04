@@ -18,15 +18,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<StepIndicator
-  currentStep={1}
-  steps={[
-    { label: 'Account' },
-    { label: 'Profile' },
-    { label: 'Payment' },
-    { label: 'Review' },
-  ]}
-/>`,
     },
   ],
 };

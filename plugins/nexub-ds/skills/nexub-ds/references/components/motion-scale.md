@@ -20,33 +20,26 @@ Scales content in/out from its center.
 ## Example: Default
 
 ```tsx
-<Scale in={true}>
-  <Card>Scaled content</Card>
-</Scale>
+import { Scale, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Scale in><Card className="w-[200px]"><Text size="body-sm">Scaled content</Text></Card></Scale>;
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function ScaleToggle() {
+import * as React from 'react';
+import { Button, Scale, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Scale out' : 'Scale in'}
-      </Button>
-      <Scale in={visible} duration="fast" easing="spring" unmountOnExit>
-        <div
-          style={{
-            padding: '24px',
-            background: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            textAlign: 'center',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Pop!
-        </div>
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Scale in={visible} unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
       </Scale>
     </div>
   );

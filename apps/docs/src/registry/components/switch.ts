@@ -20,18 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Switch id="airplane" />
-  <Label htmlFor="airplane">Airplane mode</Label>
-</div>`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Switch size="sm" />
-  <Switch size="md" />
-  <Switch size="lg" />
-</div>`,
     },
   ],
 };

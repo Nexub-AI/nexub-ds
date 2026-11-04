@@ -21,43 +21,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Fade in={true}>
-  <Card>Faded in content</Card>
-</Fade>`,
     },
     {
       title: 'Toggle',
-      code: `function FadeToggle() {
-  const [visible, setVisible] = React.useState(true);
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Fade out' : 'Fade in'}
-      </Button>
-      <Fade in={visible} duration="normal" easing="out" unmountOnExit>
-        <Card style={{ padding: '16px' }}>
-          This content fades in and out. Toggle the button to animate it.
-        </Card>
-      </Fade>
-    </div>
-  );
-}`,
     },
     {
       title: 'Slow with spring easing',
-      code: `function SlowFade() {
-  const [visible, setVisible] = React.useState(true);
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
-      <Fade in={visible} duration="slow" easing="spring">
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Slow spring fade animation.
-        </div>
-      </Fade>
-    </div>
-  );
-}`,
     },
   ],
 };

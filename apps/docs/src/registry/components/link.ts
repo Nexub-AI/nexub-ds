@@ -19,19 +19,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Link href="#">View documentation</Link>`,
     },
     {
       title: 'Variants',
-      code: `<div style={{ display: 'flex', gap: '16px' }}>
-  <Link href="#" variant="default">Default</Link>
-  <Link href="#" variant="muted">Muted</Link>
-  <Link href="#" variant="underline">Underline</Link>
-</div>`,
     },
     {
       title: 'External',
-      code: `<Link href="#" external>Open in new tab</Link>`,
     },
   ],
 };

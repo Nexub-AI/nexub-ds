@@ -16,17 +16,26 @@ Animated loading indicator. Inherits color from context.
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Spinner size="xs" />
-  <Spinner size="sm" />
-  <Spinner size="md" />
-  <Spinner size="lg" />
-  <Spinner size="xl" />
-</div>
+import { Spinner } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-5 flex-wrap items-center justify-center"><Spinner size="sm" /><Spinner size="md" /><Spinner size="lg" /><Spinner size="xl" /></div>;
+}
 ```
 
 ## Example: Inside button
 
 ```tsx
-<Button loading>Saving…</Button>
+import { Spinner } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-5 flex-wrap items-center justify-center">
+      <Spinner size="md" tone="info" />
+      <Spinner size="md" tone="success" />
+      <Spinner size="md" tone="warning" />
+      <Spinner size="md" tone="danger" />
+    </div>
+  );
+}
 ```

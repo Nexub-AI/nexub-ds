@@ -21,18 +21,6 @@ const entry: ComponentEntry = {
     {
       title: 'Streaming a reply',
       description: 'Words arrive on a timer. Restart streams the paragraph again.',
-      code: `const reply = 'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
-const [length, setLength] = React.useState(0);
-const streaming = length < reply.length;
-
-React.useEffect(() => {
-  if (!streaming) return;
-  const id = setTimeout(() => setLength((n) => Math.min(reply.length, n + 6)), 60);
-  return () => clearTimeout(id);
-}, [length, streaming]);
-
-<StreamingText as="p" text={reply.slice(0, length)} streaming={streaming} />
-<Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>`,
     },
   ],
   usage: {

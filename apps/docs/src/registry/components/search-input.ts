@@ -19,7 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<SearchInput placeholder="Search…" />`,
     },
   ],
 };

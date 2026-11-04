@@ -20,11 +20,19 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 ## Example: Default
 
 ```tsx
-<NumberInput defaultValue={0} />
+import { NumberInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[180px]"><NumberInput defaultValue={0} /></div>;
+}
 ```
 
 ## Example: With range
 
 ```tsx
-<NumberInput defaultValue={5} min={0} max={10} />
+import { NumberInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[180px]"><NumberInput defaultValue={5} min={0} max={10} /></div>;
+}
 ```

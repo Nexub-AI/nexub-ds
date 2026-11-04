@@ -18,19 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip>Design</Chip>
-  <Chip>Engineering</Chip>
-  <Chip>Product</Chip>
-</div>`,
     },
     {
       title: 'Dismissible',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip onRemove={() => {}}>Design</Chip>
-  <Chip onRemove={() => {}}>Engineering</Chip>
-  <Chip onRemove={() => {}}>Product</Chip>
-</div>`,
     },
   ],
 };

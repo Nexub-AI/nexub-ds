@@ -23,19 +23,34 @@ A checkbox drawn as a whole card: title, description and optional icon. Pick any
 Lay checkbox cards out with any grid; there is no group component.
 
 ```tsx
-<fieldset className="grid gap-3 sm:grid-cols-3">
-  <legend className="sr-only">Add-ons</legend>
-  <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
-  <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
-  <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
-</fieldset>
+import { CheckboxCard } from '@nexub/react';
+import { Bell, Shield, Zap } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <fieldset className="grid gap-3 sm:grid-cols-3 w-full border-0 p-0 m-0">
+      <legend className="sr-only">Add-ons</legend>
+      <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
+      <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
+      <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
+    </fieldset>
+  );
+}
 ```
 
 ## Example: Disabled
 
 ```tsx
-<CheckboxCard title="SSO" description="Available on Enterprise." disabled />
-<CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+import { CheckboxCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-stretch w-[320px]">
+      <CheckboxCard title="SSO" description="Available on Enterprise." disabled />
+      <CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+    </div>
+  );
+}
 ```
 
 ## Accessibility

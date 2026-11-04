@@ -1,6 +1,9 @@
 // Calm Depth control styling shared by the core controls
 // (DESIGN_REFRESH_PLAN.md §4.2–4.8, §6). Static strings so Tailwind's JIT sees them.
 
+/** The shared size scale. Components with extra steps extend it (`Size | 'display'`). */
+export type Size = 'sm' | 'md' | 'lg';
+
 /** Text field chrome: Input wrapper, Textarea, Select trigger. */
 export const field = [
   'rounded-[var(--field-radius,var(--shape-field))] border border-[var(--field-border,var(--color-outline))]',

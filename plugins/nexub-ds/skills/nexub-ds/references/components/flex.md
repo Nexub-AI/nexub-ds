@@ -19,29 +19,45 @@ Flexbox layout primitive.
 ## Example: Default
 
 ```tsx
-<Flex gap="md" align="center">
-  <Button variant="primary">Action</Button>
-  <Button variant="outline">Cancel</Button>
-</Flex>
+import { Flex, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex gap="md" align="center">
+      <Button variant="primary">Action</Button>
+      <Button variant="outline">Cancel</Button>
+    </Flex>
+  );
+}
 ```
 
 ## Example: Space between
 
 ```tsx
-<Flex justify="between">
-  <Badge tone="success">Active</Badge>
-  <Badge tone="neutral">Draft</Badge>
-</Flex>
+import { Flex, Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex justify="between" className="w-full max-w-[320px]">
+      <Badge tone="success">Active</Badge>
+      <Badge tone="neutral">Draft</Badge>
+    </Flex>
+  );
+}
 ```
 
 ## Example: Wrap
 
 ```tsx
-<Flex gap="sm" wrap>
-  <Badge tone="info">React</Badge>
-  <Badge tone="info">TypeScript</Badge>
-  <Badge tone="info">Tailwind</Badge>
-  <Badge tone="info">Radix UI</Badge>
-  <Badge tone="info">Storybook</Badge>
-</Flex>
+import { Flex, Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex gap="sm" wrap className="max-w-[260px]">
+      {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
+        <Badge key={t} tone="info">{t}</Badge>
+      ))}
+    </Flex>
+  );
+}
 ```

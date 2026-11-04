@@ -21,37 +21,41 @@ Group of mutually exclusive radio inputs.
 ## Example: Default
 
 ```tsx
-<RadioGroup.Root defaultValue="option-2">
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-1" id="r1" />
-      <Label htmlFor="r1">Option one</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-2" id="r2" />
-      <Label htmlFor="r2">Option two</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-3" id="r3" />
-      <Label htmlFor="r3">Option three</Label>
-    </div>
-  </div>
-</RadioGroup.Root>
+import { RadioGroup, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioGroup.Root defaultValue="monthly">
+      <div className="flex flex-col gap-2 items-start">
+        {['Monthly', 'Yearly', 'Lifetime'].map((opt) => (
+          <div key={opt} className="flex items-center gap-2">
+            <RadioGroup.Item value={opt.toLowerCase()} id={`rg-${opt}`} />
+            <Label htmlFor={`rg-${opt}`}>{opt}</Label>
+          </div>
+        ))}
+      </div>
+    </RadioGroup.Root>
+  );
+}
 ```
 
 ## Example: Horizontal
 
 ```tsx
-<RadioGroup.Root defaultValue="monthly" orientation="horizontal">
-  <div style={{ display: 'flex', gap: '16px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="monthly" id="monthly" />
-      <Label htmlFor="monthly">Monthly</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="annual" id="annual" />
-      <Label htmlFor="annual">Annual</Label>
-    </div>
-  </div>
-</RadioGroup.Root>
+import { RadioGroup, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioGroup.Root defaultValue="monthly" orientation="horizontal">
+      <div className="flex gap-4">
+        {[{ value: 'monthly', label: 'Monthly' }, { value: 'annual', label: 'Annual' }].map(({ value, label }) => (
+          <div key={value} className="flex items-center gap-2">
+            <RadioGroup.Item value={value} id={`rgh-${value}`} />
+            <Label htmlFor={`rgh-${value}`}>{label}</Label>
+          </div>
+        ))}
+      </div>
+    </RadioGroup.Root>
+  );
+}
 ```

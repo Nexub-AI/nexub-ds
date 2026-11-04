@@ -16,16 +16,26 @@ Small supporting text placed beneath a form field to provide hints or validation
 ## Example: Default
 
 ```tsx
-<HelperText>We will never share your email with anyone else.</HelperText>
+import { HelperText } from '@nexub/react';
+
+export default function Example() {
+  return <HelperText>We will never share your email with anyone else.</HelperText>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <HelperText tone="info">Your password must be at least 8 characters.</HelperText>
-  <HelperText tone="success">Username is available.</HelperText>
-  <HelperText tone="warning">This action may affect other records.</HelperText>
-  <HelperText tone="danger">This field is required.</HelperText>
-</div>
+import { HelperText } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <HelperText tone="info">Sync runs every 10 minutes.</HelperText>
+      <HelperText tone="success">Your account is verified.</HelperText>
+      <HelperText tone="warning">This action cannot be reversed.</HelperText>
+      <HelperText tone="danger">Required field is missing.</HelperText>
+    </div>
+  );
+}
 ```

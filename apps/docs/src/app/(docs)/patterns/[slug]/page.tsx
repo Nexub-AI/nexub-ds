@@ -11,6 +11,10 @@ import { CopyButton } from '@/components/docs/CopyButton';
 import { PageIntro, Section } from '@/components/kit';
 import { PlatformPanel, PlatformSwitch } from '@/components/platform/PlatformTabs';
 import { MobilePanel, NoMobileTwin } from '@/components/platform/MobilePanel';
+import { exampleCode } from '@/examples/code';
+import { join } from 'node:path';
+
+const EXAMPLES_DIR = join(process.cwd(), 'src/examples');
 
 // Pre-render every pattern page at build time — same strategy as component pages.
 export const dynamic = 'force-static';
@@ -63,7 +67,7 @@ export default async function PatternPage({ params }: Props) {
         <Section id="examples" title="Examples">
           {examples.map((ex, i) => (
             <Section key={ex.title} title={ex.title} description={ex.description} level={3}>
-              <ComponentPreview code={ex.code} minHeight="180px">
+              <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} minHeight="180px">
                 <ComponentLivePreview slug={slug} idx={i} isPattern />
               </ComponentPreview>
             </Section>

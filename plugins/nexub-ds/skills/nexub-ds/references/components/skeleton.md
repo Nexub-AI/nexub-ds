@@ -18,21 +18,38 @@ Placeholder loading animation that mimics content layout.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '280px', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' }}>
-  <Skeleton shape="circle" width={40} height={40} />
-  <Skeleton shape="line" width="60%" height={12} />
-  <Skeleton shape="line" width="100%" height={12} />
-  <Skeleton shape="line" width="80%" height={12} />
-  <Skeleton shape="rect" width="100%" height={80} />
-</div>
+import { Skeleton } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Skeleton shape="line" width="60%" />
+      <Skeleton shape="line" width="100%" />
+      <Skeleton shape="line" width="80%" />
+      <div className="flex gap-2 flex-nowrap items-center justify-center">
+        <Skeleton shape="circle" width={40} height={40} />
+        <div className="flex flex-col gap-1.5 items-start flex-1">
+          <Skeleton shape="line" width="70%" />
+          <Skeleton shape="line" width="50%" />
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
 
 ## Example: Shapes
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Skeleton shape="line" width={120} height={12} />
-  <Skeleton shape="rect" width={80} height={60} />
-  <Skeleton shape="circle" width={40} height={40} />
-</div>
+import { Skeleton } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4 flex-wrap items-center justify-center">
+      <Skeleton shape="line" width={80} />
+      <Skeleton shape="rect" width={80} height={40} />
+      <Skeleton shape="circle" width={40} height={40} />
+    </div>
+  );
+}
 ```

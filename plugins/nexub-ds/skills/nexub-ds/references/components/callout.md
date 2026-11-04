@@ -17,11 +17,19 @@
 ## Example: Default
 
 ```tsx
-<Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>
+import { Callout } from '@nexub/react';
+
+export default function Example() {
+  return <Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>;
+}
 ```
 
 ## Example: Info
 
 ```tsx
-<Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>
+import { Callout } from '@nexub/react';
+
+export default function Example() {
+  return <Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>;
+}
 ```

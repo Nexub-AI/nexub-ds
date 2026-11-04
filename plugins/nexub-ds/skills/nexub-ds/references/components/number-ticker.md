@@ -20,12 +20,20 @@ A number whose digits roll to new values on the spatial spring. The first render
 Each digit is a 0–9 strip; separators and symbols stay still.
 
 ```tsx
-const [n, setN] = React.useState(12480);
+import * as React from 'react';
+import { NumberTicker, Button } from '@nexub/react';
 
-<NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
-<Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
-  Change
-</Button>
+export default function Example() {
+  const [n, setN] = React.useState(12480);
+  return (
+    <div className="flex flex-col gap-3 items-center">
+      <NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
+      <Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
+        Change
+      </Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Amount
@@ -33,7 +41,20 @@ const [n, setN] = React.useState(12480);
 `Amount animate` uses the ticker and keeps the quieter symbol and minor units.
 
 ```tsx
-<Amount value={balance} currency="USD" size="display" animate />
+import * as React from 'react';
+import { Amount, Button } from '@nexub/react';
+
+export default function Example() {
+  const [balance, setBalance] = React.useState(128450.75);
+  return (
+    <div className="flex flex-col gap-3 items-center">
+      <Amount value={balance} currency="USD" size="display" animate />
+      <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
+        Change
+      </Button>
+    </div>
+  );
+}
 ```
 
 ## Accessibility

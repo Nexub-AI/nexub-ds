@@ -19,39 +19,40 @@ Scrollable container with custom styled scrollbars.
 ## Example: Default
 
 ```tsx
-<ScrollArea style={{ height: '200px', width: '280px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  {Array.from({ length: 20 }, (_, i) => (
-    <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-      Item {i + 1}
-    </div>
-  ))}
-</ScrollArea>
+import { ScrollArea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ScrollArea className="h-[200px] w-[280px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+      {Array.from({ length: 20 }, (_, i) => (
+        <div key={i} className="py-1 px-0 text-body-sm text-[var(--color-on-surface-variant)]">
+          List item {i + 1}
+        </div>
+      ))}
+    </ScrollArea>
+  );
+}
 ```
 
 ## Example: Horizontal
 
 ```tsx
-<ScrollArea orientation="horizontal" style={{ width: '320px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  <div style={{ display: 'flex', gap: '8px', width: 'max-content' }}>
-    {Array.from({ length: 12 }, (_, i) => (
-      <div
-        key={i}
-        style={{
-          width: '80px',
-          height: '80px',
-          background: 'var(--color-bg-subtle)',
-          borderRadius: 'var(--radius-sm)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '0.75rem',
-          color: 'var(--color-text-secondary)',
-          flexShrink: 0,
-        }}
-      >
-        Card {i + 1}
+import { ScrollArea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ScrollArea orientation="horizontal" className="w-[320px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+      <div className="flex gap-2 w-max">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="w-[80px] h-[80px] bg-[var(--color-surface-container-low)] rounded-shape-tooltip flex items-center justify-center text-label-sm text-[var(--color-on-surface-variant)] shrink-0"
+          >
+            Card {i + 1}
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-</ScrollArea>
+    </ScrollArea>
+  );
+}
 ```

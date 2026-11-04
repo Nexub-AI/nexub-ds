@@ -32,20 +32,28 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 ## Example: Default
 
 ```tsx
-<Tabs.Root defaultValue="account">
-  <Tabs.List>
-    <Tabs.Trigger value="account">Account</Tabs.Trigger>
-    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
-    <Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="account">
-    <Text>Account settings content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="billing">
-    <Text>Billing details content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="notifications">
-    <Text>Notification preferences content.</Text>
-  </Tabs.Content>
-</Tabs.Root>
+import { Tabs } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <Tabs.Root defaultValue="tab1">
+        <Tabs.List>
+          <Tabs.Trigger value="tab1">Overview</Tabs.Trigger>
+          <Tabs.Trigger value="tab2">Analytics</Tabs.Trigger>
+          <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="tab1">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Overview content goes here.</div>
+        </Tabs.Content>
+        <Tabs.Content value="tab2">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Analytics content goes here.</div>
+        </Tabs.Content>
+        <Tabs.Content value="tab3">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
+        </Tabs.Content>
+      </Tabs.Root>
+    </div>
+  );
+}
 ```

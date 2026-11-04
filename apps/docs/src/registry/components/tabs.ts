@@ -19,22 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Tabs.Root defaultValue="account">
-  <Tabs.List>
-    <Tabs.Trigger value="account">Account</Tabs.Trigger>
-    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
-    <Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="account">
-    <Text>Account settings content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="billing">
-    <Text>Billing details content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="notifications">
-    <Text>Notification preferences content.</Text>
-  </Tabs.Content>
-</Tabs.Root>`,
     },
   ],
   usage: {

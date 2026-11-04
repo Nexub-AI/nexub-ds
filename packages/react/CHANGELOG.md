@@ -1,5 +1,17 @@
 # @nexub/react
 
+## 2.7.0
+
+### Minor Changes
+
+- 3ca7a3f: Component token tier. Button, the text fields (Input, Textarea, Select), Card and Badge now read component tokens such as `--button-filled-bg`, `--field-border` and `--card-radius`, each falling back to the role it used before, so nothing changes by default. Set one on any element to restyle that component below it, without changing the roles other components share. The tokens are unset by default, so nested `data-theme`, `data-contrast` and `data-product` keep working. The list is published in DTCG format as `@nexub/tokens/json/component`, and a test keeps it in step with the components.
+- c8df535: `ThemeScript` takes an optional `contrastStorageKey`. When set, a stored contrast level (`standard`, `medium` or `high`) is applied as `data-contrast` before first paint, so a saved contrast choice doesn't flash. The docs header now has a contrast switcher (Auto, Medium, High) that uses it.
+
+### Patch Changes
+
+- @nexub/icons@2.7.0
+- @nexub/core@2.7.0
+
 ## 2.6.0
 
 ### Minor Changes

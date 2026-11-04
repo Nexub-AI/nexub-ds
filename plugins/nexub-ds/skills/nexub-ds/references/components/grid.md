@@ -17,23 +17,31 @@ CSS Grid layout primitive.
 ## Example: 2-column
 
 ```tsx
-<Grid cols={2} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-</Grid>
+import { Grid, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Grid cols={2} gap="md" className="w-full max-w-[400px]">
+      {[1, 2, 3, 4].map((n) => (
+        <Card key={n}><Text size="body-sm" tone="muted">Card {n}</Text></Card>
+      ))}
+    </Grid>
+  );
+}
 ```
 
 ## Example: 3-column
 
 ```tsx
-<Grid cols={3} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card five</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card six</Text></Card.Body></Card>
-</Grid>
+import { Grid, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Grid cols={3} gap="sm" className="w-full max-w-[480px]">
+      {[1, 2, 3, 4, 5, 6].map((n) => (
+        <Card key={n}><Text size="caption" tone="muted">Item {n}</Text></Card>
+      ))}
+    </Grid>
+  );
+}
 ```

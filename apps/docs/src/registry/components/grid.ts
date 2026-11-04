@@ -18,23 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: '2-column',
-      code: `<Grid cols={2} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-</Grid>`,
     },
     {
       title: '3-column',
-      code: `<Grid cols={3} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card five</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card six</Text></Card.Body></Card>
-</Grid>`,
     },
   ],
 };

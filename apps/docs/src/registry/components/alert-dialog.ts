@@ -24,28 +24,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<AlertDialog.Root>
-  <AlertDialog.Trigger asChild>
-    <Button variant="destructive">Delete account</Button>
-  </AlertDialog.Trigger>
-  <AlertDialog.Portal>
-    <AlertDialog.Overlay />
-    <AlertDialog.Content>
-      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-      <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete your account and remove all associated data.
-      </AlertDialog.Description>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
-        <AlertDialog.Cancel asChild>
-          <Button variant="outline">Cancel</Button>
-        </AlertDialog.Cancel>
-        <AlertDialog.Action asChild>
-          <Button variant="destructive">Confirm delete</Button>
-        </AlertDialog.Action>
-      </div>
-    </AlertDialog.Content>
-  </AlertDialog.Portal>
-</AlertDialog.Root>`,
     },
   ],
 };

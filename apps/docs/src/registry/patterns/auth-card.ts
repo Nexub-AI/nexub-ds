@@ -20,17 +20,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Sign in',
-      code: `<AuthCard
-  title="Sign in to Nexub"
-  description="Enter your credentials below"
-  footer={<Text size="sm">Don't have an account? <Link href="/signup">Sign up</Link></Text>}
->
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-    <Input type="email" placeholder="Email" />
-    <Input type="password" placeholder="Password" />
-    <Button>Sign in</Button>
-  </div>
-</AuthCard>`,
     },
   ],
 };

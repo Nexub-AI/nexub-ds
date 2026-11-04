@@ -18,20 +18,34 @@ An accessible form label that optionally shows a required asterisk and links to 
 ## Example: Default
 
 ```tsx
-<Label htmlFor="name">Full name</Label>
+import { Label } from '@nexub/react';
+
+export default function Example() {
+  return <Label htmlFor="demo">Full name</Label>;
+}
 ```
 
 ## Example: Required
 
 ```tsx
-<Label required>Email address</Label>
+import { Label } from '@nexub/react';
+
+export default function Example() {
+  return <Label required>Email address</Label>;
+}
 ```
 
 ## Example: With input
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-  <Label htmlFor="email">Email</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-</div>
+import { Label, Input } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1 items-start w-[280px]">
+      <Label htmlFor="email-ex">Email</Label>
+      <Input id="email-ex" type="email" placeholder="you@example.com" />
+    </div>
+  );
+}
 ```

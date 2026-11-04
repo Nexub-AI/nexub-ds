@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { toneTextClasses, type ToneValue } from '../Button/Button.js';
 
 export const labelVariants = cva(
@@ -25,7 +26,7 @@ export const labelVariants = cva(
 export interface LabelProps
   extends React.LabelHTMLAttributes<HTMLLabelElement>,
     VariantProps<typeof labelVariants> {
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
   required?: boolean;
   disabled?: boolean;
   tone?: ToneValue;

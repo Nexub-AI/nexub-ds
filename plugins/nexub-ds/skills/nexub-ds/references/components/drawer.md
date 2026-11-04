@@ -27,53 +27,75 @@ Slide-in panel from any edge of the screen.
 ## Example: Default
 
 ```tsx
-<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open drawer</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="right">
-      <Drawer.Header>
-        <Drawer.Title>Edit profile</Drawer.Title>
-        <Drawer.Description>Make changes to your profile settings.</Drawer.Description>
-      </Drawer.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">Drawer body content goes here.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline">Cancel</Button>
-        </Drawer.Close>
-        <Button variant="primary">Save changes</Button>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>
+import * as React from 'react';
+import { Button, Drawer, Label, Input } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Drawer</Button>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay />
+          <Drawer.Content side="right">
+            <Drawer.Header>
+              <Drawer.Title>Edit profile</Drawer.Title>
+              <Drawer.Description>Update your profile details.</Drawer.Description>
+            </Drawer.Header>
+            <div className="p-4 flex-1 overflow-y-auto">
+              <div className="flex flex-col gap-3 items-start">
+                <div className="flex flex-col gap-1 items-start">
+                  <Label htmlFor="d-name">Name</Label>
+                  <Input id="d-name" placeholder="Jane Smith" />
+                </div>
+                <div className="flex flex-col gap-1 items-start">
+                  <Label htmlFor="d-email">Email</Label>
+                  <Input id="d-email" type="email" placeholder="jane@example.com" />
+                </div>
+              </div>
+            </div>
+            <Drawer.Footer>
+              <div className="flex gap-2 justify-end">
+                <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
+                <Button variant="primary">Save changes</Button>
+              </div>
+            </Drawer.Footer>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </>
+  );
+}
 ```
 
 ## Example: Bottom sheet
 
 ```tsx
-<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open bottom sheet</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="bottom">
-      <Drawer.Header>
-        <Drawer.Title>Share</Drawer.Title>
-      </Drawer.Header>
-      <div style={{ padding: '16px' }}>
-        <Text size="body-sm">Choose how you would like to share this item.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline" fullWidth>Cancel</Button>
-        </Drawer.Close>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>
+import * as React from 'react';
+import { Button, Drawer } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay />
+          <Drawer.Content side="bottom">
+            <Drawer.Header>
+              <Drawer.Title>Share to</Drawer.Title>
+            </Drawer.Header>
+            <div className="p-4 flex gap-3 flex-wrap">
+              {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
+                <Button key={s} variant="outline" size="sm">{s}</Button>
+              ))}
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </>
+  );
+}
 ```

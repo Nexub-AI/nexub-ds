@@ -165,7 +165,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               }}
               startMonth={minDate}
               endMonth={maxDate}
-              initialFocus
+              autoFocus
               showOutsideDays
               className="relative p-3"
               classNames={calendarClassNames}

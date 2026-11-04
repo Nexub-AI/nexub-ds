@@ -16,10 +16,19 @@ Key–value list for displaying structured metadata or details.
 ## Example: Default
 
 ```tsx
-<InfoList.Root>
-  <InfoList.Item label="Plan" value="Pro" />
-  <InfoList.Item label="Status" value={<Badge tone="success">Active</Badge>} />
-  <InfoList.Item label="Member since" value="Jan 2024" />
-  <InfoList.Item label="Team size" value="12 members" />
-</InfoList.Root>
+import { InfoList } from '@nexub/patterns';
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <InfoList.Root>
+        <InfoList.Item label="Plan" value="Pro" />
+        <InfoList.Item label="Seats" value="12 / 50" />
+        <InfoList.Item label="Renewal" value="Jan 15, 2026" />
+        <InfoList.Item label="Status" value={<Badge tone="success" size="sm">Active</Badge>} />
+      </InfoList.Root>
+    </div>
+  );
+}
 ```

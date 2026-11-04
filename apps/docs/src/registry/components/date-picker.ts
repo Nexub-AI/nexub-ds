@@ -26,30 +26,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<DatePicker placeholder="Select a date…" />`,
     },
     {
       title: 'With value',
-      code: `function ControlledDatePicker() {
-  const [date, setDate] = React.useState(new Date('2026-01-15'));
-  return (
-    <DatePicker
-      aria-label="Appointment date"
-      value={date}
-      onChange={setDate}
-      placeholder="Select a date…"
-    />
-  );
-}`,
     },
     {
       title: 'With constraints',
-      code: `<DatePicker
-  aria-label="Schedule for"
-  placeholder="Select a future date…"
-  minDate={new Date()}
-  maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
-/>`,
     },
   ],
 };
