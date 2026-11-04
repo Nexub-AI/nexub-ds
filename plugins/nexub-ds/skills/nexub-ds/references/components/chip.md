@@ -17,19 +17,31 @@ Compact label chip, optionally dismissible.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip>Design</Chip>
-  <Chip>Engineering</Chip>
-  <Chip>Product</Chip>
-</div>
+import { Chip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      {['Design', 'Engineering', 'Product'].map((c) => <Chip key={c}>{c}</Chip>)}
+    </div>
+  );
+}
 ```
 
 ## Example: Dismissible
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip onRemove={() => {}}>Design</Chip>
-  <Chip onRemove={() => {}}>Engineering</Chip>
-  <Chip onRemove={() => {}}>Product</Chip>
-</div>
+import * as React from 'react';
+import { Chip } from '@nexub/react';
+
+export default function Example() {
+  const [chips, setChips] = React.useState(['Design', 'Engineering', 'Product']);
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      {chips.map((c) => (
+        <Chip key={c} onRemove={() => setChips((prev) => prev.filter((x) => x !== c))}>{c}</Chip>
+      ))}
+    </div>
+  );
+}
 ```

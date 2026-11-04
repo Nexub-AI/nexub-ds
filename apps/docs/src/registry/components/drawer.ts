@@ -28,53 +28,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open drawer</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="right">
-      <Drawer.Header>
-        <Drawer.Title>Edit profile</Drawer.Title>
-        <Drawer.Description>Make changes to your profile settings.</Drawer.Description>
-      </Drawer.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">Drawer body content goes here.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline">Cancel</Button>
-        </Drawer.Close>
-        <Button variant="primary">Save changes</Button>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>`,
     },
     {
       title: 'Bottom sheet',
-      code: `<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open bottom sheet</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="bottom">
-      <Drawer.Header>
-        <Drawer.Title>Share</Drawer.Title>
-      </Drawer.Header>
-      <div style={{ padding: '16px' }}>
-        <Text size="body-sm">Choose how you would like to share this item.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline" fullWidth>Cancel</Button>
-        </Drawer.Close>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>`,
     },
   ],
 };

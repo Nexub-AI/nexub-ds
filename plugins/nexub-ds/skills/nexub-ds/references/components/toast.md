@@ -40,17 +40,14 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 ## Example: Default
 
 ```tsx
-function DefaultToast() {
+import { Button, toast } from '@nexub/react';
+
+// The docs root layout already renders <Toaster />; a second one doubles every toast.
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}
-      >
-        Show toast
-      </Button>
-    </>
+    <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
+      Show toast
+    </Button>
   );
 }
 ```
@@ -58,28 +55,16 @@ function DefaultToast() {
 ## Example: Variants
 
 ```tsx
-function ToastVariants() {
+import { Button, toast } from '@nexub/react';
+
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        <Button variant="outline" onClick={() => toast.custom('Default notification')}>
-          Default
-        </Button>
-        <Button variant="outline" onClick={() => toast.success('Saved successfully')}>
-          Success
-        </Button>
-        <Button variant="outline" onClick={() => toast.error('Something went wrong')}>
-          Error
-        </Button>
-        <Button variant="outline" onClick={() => toast.warning('Proceed with caution')}>
-          Warning
-        </Button>
-        <Button variant="outline" onClick={() => toast.info('New update available')}>
-          Info
-        </Button>
-      </div>
-    </>
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="outline" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
+    </div>
   );
 }
 ```
@@ -87,25 +72,21 @@ function ToastVariants() {
 ## Example: With action
 
 ```tsx
-function ToastWithAction() {
+import { Button, toast } from '@nexub/react';
+
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.custom('Message sent', {
-            description: 'Your message has been delivered to the team.',
-            action: {
-              label: 'Undo',
-              onClick: () => {},
-            },
-          })
-        }
-      >
-        Send message
-      </Button>
-    </>
+    <Button
+      variant="outline"
+      onClick={() =>
+        toast.custom('File deleted', {
+          description: 'The file was moved to trash.',
+          action: { label: 'Undo', onClick: () => {} },
+        })
+      }
+    >
+      Delete with undo
+    </Button>
   );
 }
 ```
@@ -115,27 +96,23 @@ function ToastWithAction() {
 Hide the item right away; delete it for real only when the toast closes without Undo.
 
 ```tsx
-function UndoableDelete() {
-  const [hidden, setHidden] = React.useState(false);
+import * as React from 'react';
+import { Button, toast } from '@nexub/react';
 
-  function remove() {
+export default function Example() {
+  const [hidden, setHidden] = React.useState(false);
+  const remove = () => {
     setHidden(true);
     toast.undoable('Invoice deleted', {
       description: 'INV-2041',
       onUndo: () => setHidden(false),
-      onCommit: () => deleteInvoice('INV-2041'),
+      onCommit: () => {},
     });
-  }
-
-  return (
-    <>
-      <Toaster />
-      {hidden ? (
-        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
-      ) : (
-        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
-      )}
-    </>
+  };
+  return hidden ? (
+    <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+  ) : (
+    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 ```

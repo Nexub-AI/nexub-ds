@@ -19,11 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '280px' }}>
-  <Label htmlFor="field-name" required>Full name</Label>
-  <Input id="field-name" placeholder="Jane Smith" />
-  <HelperText>Enter your legal name.</HelperText>
-</div>`,
     },
   ],
 };

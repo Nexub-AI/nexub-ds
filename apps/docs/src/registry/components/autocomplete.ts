@@ -21,33 +21,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Autocomplete
-  options={[
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'angular', label: 'Angular' },
-  ]}
-  placeholder="Search framework…"
-/>`,
     },
     {
       title: 'With loading state',
-      code: `<Autocomplete
-  options={[]}
-  loading
-  placeholder="Loading options…"
-/>`,
     },
     {
       title: 'Custom empty text',
-      code: `<Autocomplete
-  options={[
-    { value: 'nexub', label: 'Nexub' },
-    { value: 'acme', label: 'Acme Corp' },
-  ]}
-  placeholder="Search company…"
-  emptyText="No companies found. Try a different search."
-/>`,
     },
   ],
 };

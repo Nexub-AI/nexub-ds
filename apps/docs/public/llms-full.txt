@@ -566,56 +566,51 @@ Vertically stacked list of collapsible sections.
 ## Example: Default
 
 ```tsx
-<Accordion.Root type="single" collapsible defaultValue="item-1">
-  <Accordion.Item value="item-1">
-    <Accordion.Trigger>What is Nexub DS?</Accordion.Trigger>
-    <Accordion.Content>
-      Nexub DS is a design system providing accessible, themeable React components
-      built on Radix UI primitives.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-2">
-    <Accordion.Trigger>Is it accessible?</Accordion.Trigger>
-    <Accordion.Content>
-      Yes. All components follow WAI-ARIA patterns and are keyboard-navigable
-      out of the box.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-3">
-    <Accordion.Trigger>Can I customise the styles?</Accordion.Trigger>
-    <Accordion.Content>
-      Absolutely. Components expose design tokens via CSS custom properties,
-      and every element accepts a className prop.
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>
+import { Accordion, Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Accordion.Root type="single" collapsible>
+        <Accordion.Item value="a">
+          <Accordion.Trigger>What is Nexub?</Accordion.Trigger>
+          <Accordion.Content>A design system for ambitious SaaS teams, built on tokens and accessibility.</Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="b">
+          <Accordion.Trigger>How do I install?</Accordion.Trigger>
+          <Accordion.Content>Run: <Code>pnpm add @nexub/react</Code></Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="c">
+          <Accordion.Trigger>Is it open source?</Accordion.Trigger>
+          <Accordion.Content>Yes — MIT licensed and free to use.</Accordion.Content>
+        </Accordion.Item>
+      </Accordion.Root>
+    </div>
+  );
+}
 ```
 
 ## Example: Multiple
 
 ```tsx
-<Accordion.Root type="multiple" defaultValue={['item-1', 'item-2']}>
-  <Accordion.Item value="item-1">
-    <Accordion.Trigger>First section</Accordion.Trigger>
-    <Accordion.Content>
-      This section is open by default. Multiple items can be expanded
-      simultaneously when type is set to "multiple".
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-2">
-    <Accordion.Trigger>Second section</Accordion.Trigger>
-    <Accordion.Content>
-      Also open by default. Click any trigger to collapse individual sections
-      independently.
-    </Accordion.Content>
-  </Accordion.Item>
-  <Accordion.Item value="item-3">
-    <Accordion.Trigger>Third section</Accordion.Trigger>
-    <Accordion.Content>
-      Closed by default. Expanding this does not close the others.
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion.Root>
+import { Accordion } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Accordion.Root type="multiple">
+        <Accordion.Item value="x">
+          <Accordion.Trigger>Section A</Accordion.Trigger>
+          <Accordion.Content>Content for section A — stays open when B is opened.</Accordion.Content>
+        </Accordion.Item>
+        <Accordion.Item value="y">
+          <Accordion.Trigger>Section B</Accordion.Trigger>
+          <Accordion.Content>Content for section B — multiple can be open at once.</Accordion.Content>
+        </Accordion.Item>
+      </Accordion.Root>
+    </div>
+  );
+}
 ```
 
 
@@ -646,28 +641,32 @@ Confirmation dialog that requires an explicit user action before proceeding.
 ## Example: Default
 
 ```tsx
-<AlertDialog.Root>
-  <AlertDialog.Trigger asChild>
-    <Button variant="destructive">Delete account</Button>
-  </AlertDialog.Trigger>
-  <AlertDialog.Portal>
-    <AlertDialog.Overlay />
-    <AlertDialog.Content>
-      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
-      <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete your account and remove all associated data.
-      </AlertDialog.Description>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
-        <AlertDialog.Cancel asChild>
-          <Button variant="outline">Cancel</Button>
-        </AlertDialog.Cancel>
-        <AlertDialog.Action asChild>
-          <Button variant="destructive">Confirm delete</Button>
-        </AlertDialog.Action>
-      </div>
-    </AlertDialog.Content>
-  </AlertDialog.Portal>
-</AlertDialog.Root>
+import * as React from 'react';
+import { Button, AlertDialog } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="destructive" onClick={() => setOpen(true)}>Delete account</Button>
+      <AlertDialog.Root open={open} onOpenChange={setOpen}>
+        <AlertDialog.Portal>
+          <AlertDialog.Overlay />
+          <AlertDialog.Content>
+            <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+            <AlertDialog.Description>
+              This action cannot be undone. This will permanently delete your account and remove all your data.
+            </AlertDialog.Description>
+            <div className="flex gap-2 justify-end mt-6">
+              <AlertDialog.Cancel asChild><Button variant="outline">Cancel</Button></AlertDialog.Cancel>
+              <AlertDialog.Action asChild><Button variant="destructive">Yes, delete</Button></AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Portal>
+      </AlertDialog.Root>
+    </>
+  );
+}
 ```
 
 
@@ -708,24 +707,42 @@ Inline contextual message with optional title, icon, and dismiss action.
 ## Example: Default
 
 ```tsx
-<Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return <Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Alert tone="info" title="Information">This is an informational message.</Alert>
-  <Alert tone="success" title="Success">Your changes have been saved.</Alert>
-  <Alert tone="warning" title="Warning">Please review before proceeding.</Alert>
-  <Alert tone="danger" title="Error">Something went wrong. Please try again.</Alert>
-</div>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-full max-w-[480px]">
+      <Alert tone="info" title="Info">Informational message.</Alert>
+      <Alert tone="success" title="Success">Operation completed successfully.</Alert>
+      <Alert tone="warning" title="Warning">Something needs your attention.</Alert>
+      <Alert tone="danger" title="Error">Something went wrong.</Alert>
+    </div>
+  );
+}
 ```
 
 ## Example: Dismissible
 
 ```tsx
-<Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
+import { Alert } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
+    </div>
+  );
+}
 ```
 
 
@@ -754,14 +771,26 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 ## Example: Display
 
 ```tsx
-<Amount value={128450.75} currency="USD" size="display" />
+import { Amount } from '@nexub/react';
+
+export default function Example() {
+  return <Amount value={128450.75} currency="USD" size="display" />;
+}
 ```
 
 ## Example: Gains and losses
 
 ```tsx
-<Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
-<Amount value={-89.99} currency="USD" tone="auto" />
+import { Amount } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4">
+      <Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
+      <Amount value={-89.99} currency="USD" tone="auto" />
+    </div>
+  );
+}
 ```
 
 Related: [money-input](money-input.md), [number-ticker](number-ticker.md)
@@ -791,37 +820,58 @@ Type-to-search input with matching options dropdown.
 ## Example: Default
 
 ```tsx
-<Autocomplete
-  options={[
-    { value: 'react', label: 'React' },
-    { value: 'vue', label: 'Vue' },
-    { value: 'angular', label: 'Angular' },
-  ]}
-  placeholder="Search framework…"
-/>
+import { Autocomplete } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[260px]">
+      <Autocomplete
+        options={[
+          { value: 'react', label: 'React' },
+          { value: 'vue', label: 'Vue' },
+          { value: 'angular', label: 'Angular' },
+          { value: 'svelte', label: 'Svelte' },
+        ]}
+        placeholder="Search framework…"
+      />
+    </div>
+  );
+}
 ```
 
 ## Example: With loading state
 
 ```tsx
-<Autocomplete
-  options={[]}
-  loading
-  placeholder="Loading options…"
-/>
+import { Autocomplete } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[260px]">
+      <Autocomplete options={[]} loading placeholder="Loading options…" />
+    </div>
+  );
+}
 ```
 
 ## Example: Custom empty text
 
 ```tsx
-<Autocomplete
-  options={[
-    { value: 'nexub', label: 'Nexub' },
-    { value: 'acme', label: 'Acme Corp' },
-  ]}
-  placeholder="Search company…"
-  emptyText="No companies found. Try a different search."
-/>
+import { Autocomplete } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[260px]">
+      <Autocomplete
+        options={[
+          { value: 'nexub', label: 'Nexub' },
+          { value: 'acme', label: 'Acme Corp' },
+        ]}
+        placeholder="Search company…"
+        emptyText="No companies found. Try a different search."
+      />
+    </div>
+  );
+}
 ```
 
 
@@ -846,12 +896,19 @@ Stacked group of avatars with overflow count.
 ## Example: Default
 
 ```tsx
-<AvatarGroup max={3}>
-  <Avatar name="Alice" />
-  <Avatar name="Bob" />
-  <Avatar name="Carol" />
-  <Avatar name="Dave" />
-</AvatarGroup>
+import { AvatarGroup, Avatar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <AvatarGroup max={3}>
+      <Avatar name="Alice B" />
+      <Avatar name="Bob C" />
+      <Avatar name="Carol D" />
+      <Avatar name="Dave E" />
+      <Avatar name="Eve F" />
+    </AvatarGroup>
+  );
+}
 ```
 
 
@@ -879,31 +936,52 @@ Displays a user's profile picture with initials fallback.
 ## Example: Default
 
 ```tsx
-<Avatar name="Alex Johnson" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return <Avatar name="Alex Johnson" />;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Avatar size="xs" name="Alex Johnson" />
-  <Avatar size="sm" name="Alex Johnson" />
-  <Avatar size="md" name="Alex Johnson" />
-  <Avatar size="lg" name="Alex Johnson" />
-  <Avatar size="xl" name="Alex Johnson" />
-</div>
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      {(['xs', 'sm', 'md', 'lg', 'xl'] as const).map((s) => (
+        <Avatar key={s} name="Alex J" size={s} />
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Example: With image
 
 ```tsx
-<Avatar src="https://i.pravatar.cc/150?img=1" name="Alex Johnson" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return <Avatar src="https://i.pravatar.cc/150?img=3" name="Alex Johnson" />;
+}
 ```
 
 ## Example: With badge
 
 ```tsx
-<Avatar name="Online User" badge badgeColor="green" />
+import { Avatar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      <Avatar name="Online" badge badgeColor="var(--color-success)" />
+      <Avatar name="Away" badge badgeColor="var(--color-warning)" />
+    </div>
+  );
+}
 ```
 
 
@@ -943,32 +1021,53 @@ Small status indicator or label. Communicates state, category, or count.
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge tone="success">Active</Badge>
-  <Badge tone="danger">Error</Badge>
-  <Badge tone="warning">Warning</Badge>
-  <Badge tone="info">Info</Badge>
-  <Badge tone="neutral">Draft</Badge>
-</div>
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Badge tone="success">Active</Badge>
+      <Badge tone="danger">Error</Badge>
+      <Badge tone="warning">Warning</Badge>
+      <Badge tone="info">Info</Badge>
+      <Badge tone="neutral">Draft</Badge>
+    </div>
+  );
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge variant="solid" tone="success">Solid</Badge>
-  <Badge variant="soft" tone="info">Soft</Badge>
-  <Badge variant="outline" tone="warning">Outline</Badge>
-</div>
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Badge variant="solid" tone="success">Solid</Badge>
+      <Badge variant="soft" tone="info">Soft</Badge>
+      <Badge variant="outline" tone="warning">Outline</Badge>
+    </div>
+  );
+}
 ```
 
 ## Example: With leading dot
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Badge tone="success" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Online</Badge>
-  <Badge tone="danger" leadingIcon={<span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor' }} />}>Offline</Badge>
-</div>
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      {(['success', 'danger', 'warning'] as const).map((t) => (
+        <Badge key={t} tone={t} leadingIcon={<span className="w-[6px] h-[6px] rounded-full bg-current inline-block" />}>
+          {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
+        </Badge>
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -1003,18 +1102,29 @@ Related: [chip](chip.md), [tag](tag.md), [status-pill](status-pill.md)
 ## Example: Default
 
 ```tsx
-<Banner tone="info">New features available — <strong>see what's new</strong></Banner>
+import { Banner } from '@nexub/react';
+
+export default function Example() {
+  return <Banner tone="info">New features available — <strong>see what&apos;s new</strong></Banner>;
+}
 ```
 
 ## Example: With action
 
 ```tsx
-<Banner
-  tone="warning"
-  action={<Button size="sm" variant="outline">View details</Button>}
->
-  Your subscription renews in 5 days.
-</Banner>
+import { Banner, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Banner
+      tone="warning"
+      action={<Button variant="outline" size="sm">Review now</Button>}
+      onClose={() => {}}
+    >
+      Your payment method is expiring soon.
+    </Banner>
+  );
+}
 ```
 
 
@@ -1040,20 +1150,32 @@ Generic container primitive with style token props.
 ## Example: Default
 
 ```tsx
-<Box padding="md" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-  Content inside a Box
-</Box>
+import { Box, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Box className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+      <Text size="body-sm">Content inside a Box</Text>
+    </Box>
+  );
+}
 ```
 
 ## Example: Nested
 
 ```tsx
-<Box padding="lg" style={{ background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-lg)' }}>
-  <Heading size="h4">Section title</Heading>
-  <Box padding="sm" style={{ background: 'var(--color-bg-default)', borderRadius: 'var(--radius-md)', marginTop: '8px' }}>
-    <Text>Nested box content</Text>
-  </Box>
-</Box>
+import { Box, Heading, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Box className="p-6 bg-[var(--color-surface-container-low)] rounded-shape-container">
+      <Heading size="h4">Section title</Heading>
+      <Box className="p-3 bg-[var(--color-surface)] rounded-shape-field mt-2">
+        <Text size="body-sm">Nested box content</Text>
+      </Box>
+    </Box>
+  );
+}
 ```
 
 
@@ -1080,45 +1202,43 @@ Hierarchical navigation trail showing page location.
 ## Example: Default
 
 ```tsx
-<Breadcrumb.Root>
-  <Breadcrumb.List>
-    <Breadcrumb.Item>
-      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item>
-      <Breadcrumb.Link href="/components">Components</Breadcrumb.Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item>
-      <Breadcrumb.Page>Button</Breadcrumb.Page>
-    </Breadcrumb.Item>
-  </Breadcrumb.List>
-</Breadcrumb.Root>
+import { Breadcrumb } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Breadcrumb.Root>
+      <Breadcrumb.List>
+        <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item><Breadcrumb.Link href="/components">Components</Breadcrumb.Link></Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item><Breadcrumb.Page>Button</Breadcrumb.Page></Breadcrumb.Item>
+      </Breadcrumb.List>
+    </Breadcrumb.Root>
+  );
+}
 ```
 
 ## Example: With ellipsis
 
 ```tsx
-<Breadcrumb.Root>
-  <Breadcrumb.List>
-    <Breadcrumb.Item>
-      <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item>
-      <Breadcrumb.Ellipsis />
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item>
-      <Breadcrumb.Link href="/components/navigation">Navigation</Breadcrumb.Link>
-    </Breadcrumb.Item>
-    <Breadcrumb.Separator />
-    <Breadcrumb.Item>
-      <Breadcrumb.Page>Breadcrumb</Breadcrumb.Page>
-    </Breadcrumb.Item>
-  </Breadcrumb.List>
-</Breadcrumb.Root>
+import { Breadcrumb } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Breadcrumb.Root>
+      <Breadcrumb.List>
+        <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item><Breadcrumb.Ellipsis /></Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item><Breadcrumb.Link href="/components/navigation">Navigation</Breadcrumb.Link></Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item><Breadcrumb.Page>Breadcrumb</Breadcrumb.Page></Breadcrumb.Item>
+      </Breadcrumb.List>
+    </Breadcrumb.Root>
+  );
+}
 ```
 
 
@@ -1142,30 +1262,48 @@ Groups related buttons together with optional attachment and orientation.
 ## Example: Default
 
 ```tsx
-<ButtonGroup>
-  <Button variant="primary">Save</Button>
-  <Button variant="outline">Cancel</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup>
+      <Button variant="primary">Save</Button>
+      <Button variant="outline">Cancel</Button>
+    </ButtonGroup>
+  );
+}
 ```
 
 ## Example: Attached
 
 ```tsx
-<ButtonGroup attached>
-  <Button variant="outline">Left</Button>
-  <Button variant="outline">Center</Button>
-  <Button variant="outline">Right</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup attached>
+      <Button variant="outline">Left</Button>
+      <Button variant="outline">Center</Button>
+      <Button variant="outline">Right</Button>
+    </ButtonGroup>
+  );
+}
 ```
 
 ## Example: Vertical
 
 ```tsx
-<ButtonGroup orientation="vertical">
-  <Button variant="outline">Option A</Button>
-  <Button variant="outline">Option B</Button>
-  <Button variant="outline">Option C</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup orientation="vertical">
+      <Button variant="outline">Option A</Button>
+      <Button variant="outline">Option B</Button>
+      <Button variant="outline">Option C</Button>
+    </ButtonGroup>
+  );
+}
 ```
 
 
@@ -1214,39 +1352,61 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 ## Example: Default
 
 ```tsx
-<Button variant="primary">Click me</Button>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return <Button variant="primary">Click me</Button>;
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-  <Button variant="primary">Primary</Button>
-  <Button variant="outline">Outline</Button>
-  <Button variant="ghost">Ghost</Button>
-  <Button variant="subtle">Subtle</Button>
-  <Button variant="link">Link</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="primary">Primary</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="subtle">Subtle</Button>
+      <Button variant="link">Link</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <Button size="xs" variant="primary">XSmall</Button>
-  <Button size="sm" variant="primary">Small</Button>
-  <Button size="md" variant="primary">Medium</Button>
-  <Button size="lg" variant="primary">Large</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button size="xs" variant="primary">XSmall</Button>
+      <Button size="sm" variant="primary">Small</Button>
+      <Button size="md" variant="primary">Medium</Button>
+      <Button size="lg" variant="primary">Large</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: States
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Button variant="primary" loading>Loading</Button>
-  <Button variant="outline" disabled>Disabled</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="primary" loading>Loading</Button>
+      <Button variant="outline" disabled>Disabled</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Async
@@ -1254,23 +1414,26 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 Drive `status` from the request. Each click here moves to the next status.
 
 ```tsx
-function SaveButton() {
+import * as React from 'react';
+import { type ButtonStatus, Button } from '@nexub/react';
+
+const NEXT_STATUS: Record<ButtonStatus, ButtonStatus> = { idle: 'loading', loading: 'success', success: 'error', error: 'idle' };
+
+export default function Example() {
   const [status, setStatus] = React.useState<ButtonStatus>('idle');
-
-  async function save() {
-    setStatus('loading');
-    try {
-      await saveProfile();
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    }
-  }
-
+  // Clicks are ignored while loading, so loading moves on by itself.
+  React.useEffect(() => {
+    if (status !== 'loading') return;
+    const t = setTimeout(() => setStatus('success'), 1200);
+    return () => clearTimeout(t);
+  }, [status]);
   return (
-    <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={save}>
-      Save
-    </Button>
+    <div className="flex flex-col gap-2 items-start">
+      <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
+        Save
+      </Button>
+      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+    </div>
   );
 }
 ```
@@ -1312,13 +1475,21 @@ Related: [icon-button](icon-button.md), [button-group](button-group.md), [link](
 ## Example: Default
 
 ```tsx
-<Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>
+import { Callout } from '@nexub/react';
+
+export default function Example() {
+  return <Callout tone="warning" title="Before you continue">Deleting this record is permanent and cannot be undone.</Callout>;
+}
 ```
 
 ## Example: Info
 
 ```tsx
-<Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>
+import { Callout } from '@nexub/react';
+
+export default function Example() {
+  return <Callout tone="info">Use token names instead of raw hex values for consistent theming.</Callout>;
+}
 ```
 
 
@@ -1346,20 +1517,34 @@ Surface container for grouping related content. Supports flat, surface, and inte
 ## Example: Default
 
 ```tsx
-<Card>
-  <Heading level={3} size="h5">Card title</Heading>
-  <Text size="body-sm" tone="muted">Card description goes here.</Text>
-</Card>
+import { Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <Card>
+        <div className="font-semibold mb-1 text-[var(--color-on-surface)]">Card title</div>
+        <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
+      </Card>
+    </div>
+  );
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
-  <Card variant="surface"><Text size="body-sm">Surface (elevated)</Text></Card>
-  <Card variant="interactive"><Text size="body-sm">Interactive (hover)</Text></Card>
-</div>
+import { Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+      <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
+      <Card variant="surface"><Text size="body-sm">Surface</Text></Card>
+      <Card variant="interactive"><Text size="body-sm">Interactive</Text></Card>
+    </div>
+  );
+}
 ```
 
 ## Example: Card link
@@ -1367,15 +1552,25 @@ Surface container for grouping related content. Supports flat, surface, and inte
 The whole card is one link named by its title. The button sits above the link with `relative z-[1]`.
 
 ```tsx
-<Card variant="interactive" className="p-4">
-  <Heading level={3} size="h5">
-    <CardLink href="/projects/atlas">Atlas</CardLink>
-  </Heading>
-  <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
-  <Button size="sm" variant="text" className="relative z-[1]" onClick={star}>
-    Star
-  </Button>
-</Card>
+import * as React from 'react';
+import { Card, Heading, CardLink, Text, Button } from '@nexub/react';
+
+export default function Example() {
+  const [starred, setStarred] = React.useState(false);
+  return (
+    <div className="w-[280px]">
+      <Card variant="interactive" className="p-4">
+        <Heading level={3} size="h5">
+          <CardLink href="#">Atlas</CardLink>
+        </Heading>
+        <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
+        <Button size="sm" variant="text" className="relative z-[1] mt-2" onClick={() => setStarred((v) => !v)}>
+          {starred ? 'Starred' : 'Star'}
+        </Button>
+      </Card>
+    </div>
+  );
+}
 ```
 
 ## Example: Sheen
@@ -1383,10 +1578,18 @@ The whole card is one link named by its title. The button sits above the link wi
 Move the pointer over the card.
 
 ```tsx
-<Card variant="surface" effect="sheen" className="p-6">
-  <Heading level={3} size="h5">Pro</Heading>
-  <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
-</Card>
+import { Card, Heading, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <Card variant="surface" effect="sheen" className="p-6">
+        <Heading level={3} size="h5">Pro</Heading>
+        <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
+      </Card>
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -1427,19 +1630,34 @@ A checkbox drawn as a whole card: title, description and optional icon. Pick any
 Lay checkbox cards out with any grid; there is no group component.
 
 ```tsx
-<fieldset className="grid gap-3 sm:grid-cols-3">
-  <legend className="sr-only">Add-ons</legend>
-  <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
-  <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
-  <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
-</fieldset>
+import { CheckboxCard } from '@nexub/react';
+import { Bell, Shield, Zap } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <fieldset className="grid gap-3 sm:grid-cols-3 w-full border-0 p-0 m-0">
+      <legend className="sr-only">Add-ons</legend>
+      <CheckboxCard icon={<Bell />} title="Alerts" description="Email and push notifications." defaultChecked />
+      <CheckboxCard icon={<Shield />} title="Audit log" description="Keep a year of activity." />
+      <CheckboxCard icon={<Zap />} title="Automations" description="Run rules on new records." />
+    </fieldset>
+  );
+}
 ```
 
 ## Example: Disabled
 
 ```tsx
-<CheckboxCard title="SSO" description="Available on Enterprise." disabled />
-<CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+import { CheckboxCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-stretch w-[320px]">
+      <CheckboxCard title="SSO" description="Available on Enterprise." disabled />
+      <CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -1476,35 +1694,48 @@ Binary checkbox input built on Radix UI.
 ## Example: Default
 
 ```tsx
-<Checkbox defaultChecked />
+import { Checkbox } from '@nexub/react';
+
+export default function Example() {
+  return <Checkbox defaultChecked />;
+}
 ```
 
 ## Example: With label
 
 ```tsx
-<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Checkbox id="terms" />
-  <Label htmlFor="terms">I agree to the terms</Label>
-</div>
+import { Checkbox, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex items-center gap-2">
+      <Checkbox id="terms" />
+      <Label htmlFor="terms">I agree to the terms and conditions</Label>
+    </div>
+  );
+}
 ```
 
 ## Example: States
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="checked" defaultChecked />
-    <Label htmlFor="checked">Checked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="unchecked" />
-    <Label htmlFor="unchecked">Unchecked</Label>
-  </div>
-  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-    <Checkbox id="disabled" disabled />
-    <Label htmlFor="disabled">Disabled</Label>
-  </div>
-</div>
+import { Checkbox, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-start">
+      <div className="flex items-center gap-2">
+        <Checkbox defaultChecked /><Label>Checked</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox /><Label>Unchecked</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox disabled /><Label>Disabled</Label>
+      </div>
+    </div>
+  );
+}
 ```
 
 
@@ -1529,21 +1760,33 @@ Compact label chip, optionally dismissible.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip>Design</Chip>
-  <Chip>Engineering</Chip>
-  <Chip>Product</Chip>
-</div>
+import { Chip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      {['Design', 'Engineering', 'Product'].map((c) => <Chip key={c}>{c}</Chip>)}
+    </div>
+  );
+}
 ```
 
 ## Example: Dismissible
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Chip onRemove={() => {}}>Design</Chip>
-  <Chip onRemove={() => {}}>Engineering</Chip>
-  <Chip onRemove={() => {}}>Product</Chip>
-</div>
+import * as React from 'react';
+import { Chip } from '@nexub/react';
+
+export default function Example() {
+  const [chips, setChips] = React.useState(['Design', 'Engineering', 'Product']);
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      {chips.map((c) => (
+        <Chip key={c} onRemove={() => setChips((prev) => prev.filter((x) => x !== c))}>{c}</Chip>
+      ))}
+    </div>
+  );
+}
 ```
 
 
@@ -1586,18 +1829,26 @@ Numbered source markers for running text, with a hover preview, plus SourceChip 
 Hover or focus a number to preview its source.
 
 ```tsx
-const sources: CitationSource[] = [
-  { url: 'https://example.com/guides/heat-pumps', title: 'Choosing a heat pump', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
-  { url: 'https://example.org/grants', title: 'Grants for home heating', domain: 'example.org' },
-  { url: 'https://example.net/costs', title: 'Running costs compared' },
+import { Citation, SourceList, type CitationSource } from '@nexub/react';
+
+const CITATION_SOURCES: CitationSource[] = [
+  { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { title: 'Grants for home heating', url: 'https://example.org/grants', domain: 'example.org' },
+  { title: 'Running costs compared', url: 'https://example.net/costs' },
 ];
 
-<p>
-  Most homes can use an air-source heat pump<Citation index={1} source={sources[0]} />.
-  Grants cover part of the cost<Citation index={2} source={sources[1]} />, and running
-  costs are close to gas<Citation index={3} source={sources[2]} />.
-</p>
-<SourceList sources={sources} />
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-stretch max-w-[560px]">
+      <p>
+        Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
+        part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas
+        <Citation index={3} source={CITATION_SOURCES[2]!} />.
+      </p>
+      <SourceList sources={CITATION_SOURCES} />
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -1631,13 +1882,31 @@ Inline code span for technical terms and short code snippets.
 ## Example: Default
 
 ```tsx
-<Code>npm install @nexub/react</Code>
+import { Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      <Code>npm install</Code>
+      <Code>useTheme()</Code>
+      <Code>@nexub/react</Code>
+    </div>
+  );
+}
 ```
 
 ## Example: In prose
 
 ```tsx
-<Text>Use the <Code>useTheme()</Code> hook to access the current theme.</Text>
+import { Text, Code } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Text>
+      Use the <Code>useTheme()</Code> hook to access the current theme from any component.
+    </Text>
+  );
+}
 ```
 
 
@@ -1665,49 +1934,54 @@ Toggle visibility of content with smooth animation.
 ## Example: Default
 
 ```tsx
-<Collapsible.Root>
-  <Collapsible.Trigger asChild>
-    <Button variant="outline">Toggle details</Button>
-  </Collapsible.Trigger>
-  <Collapsible.Content>
-    <div style={{ paddingTop: '12px', color: 'var(--color-text-secondary)' }}>
-      Hidden content revealed on toggle.
-    </div>
-  </Collapsible.Content>
-</Collapsible.Root>
+import * as React from 'react';
+import { Collapsible, Button } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <Collapsible.Trigger asChild>
+        <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
+      </Collapsible.Trigger>
+      <Collapsible.Content>
+        <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
+          Hidden content revealed on toggle. This section can hold any content.
+        </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
+  );
+}
 ```
 
 ## Example: Controlled
 
 ```tsx
-function ControlledExample() {
-  const [open, setOpen] = React.useState(false);
+import * as React from 'react';
+import { Collapsible, Button, Switch, Label } from '@nexub/react';
+
+export default function Example() {
+  const [open2, setOpen2] = React.useState(false);
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontWeight: 500 }}>Advanced settings</span>
+    <Collapsible.Root open={open2} onOpenChange={setOpen2}>
+      <div className="flex items-center gap-2">
+        <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
-          <IconButton
-            aria-label={open ? 'Collapse' : 'Expand'}
-            variant="ghost"
-            size="sm"
-          />
+          <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>
-        <div style={{ paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="notif" />
-            <Label htmlFor="notif">Enable notifications</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="autosave" />
-            <Label htmlFor="autosave">Auto-save drafts</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="tooltips" />
-            <Label htmlFor="tooltips">Show tooltips</Label>
-          </div>
+        <div className="pt-3 flex flex-col gap-3">
+          {[
+            { id: 'notif', label: 'Enable notifications' },
+            { id: 'autosave', label: 'Auto-save drafts' },
+            { id: 'tooltips', label: 'Show tooltips' },
+          ].map(({ id, label }) => (
+            <div key={id} className="flex items-center gap-2">
+              <Switch id={id} />
+              <Label htmlFor={id}>{label}</Label>
+            </div>
+          ))}
         </div>
       </Collapsible.Content>
     </Collapsible.Root>
@@ -1741,22 +2015,24 @@ Command-palette style searchable dropdown built on cmdk.
 ## Example: Default
 
 ```tsx
-<Combobox.Root>
-  <Combobox.Input placeholder="Search..." />
-  <Combobox.List>
-    <Combobox.Empty>No results found.</Combobox.Empty>
-    <Combobox.Group heading="Frameworks">
-      <Combobox.Item value="react">React</Combobox.Item>
-      <Combobox.Item value="vue">Vue</Combobox.Item>
-      <Combobox.Item value="svelte">Svelte</Combobox.Item>
-    </Combobox.Group>
-    <Combobox.Separator />
-    <Combobox.Group heading="Languages">
-      <Combobox.Item value="typescript">TypeScript</Combobox.Item>
-      <Combobox.Item value="rust">Rust</Combobox.Item>
-    </Combobox.Group>
-  </Combobox.List>
-</Combobox.Root>
+import { Combobox } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Combobox.Root className="w-[260px]">
+      <Combobox.Input placeholder="Search…" />
+      <Combobox.List>
+        <Combobox.Empty>No results found.</Combobox.Empty>
+        <Combobox.Group heading="Frameworks">
+          <Combobox.Item value="react">React</Combobox.Item>
+          <Combobox.Item value="vue">Vue</Combobox.Item>
+          <Combobox.Item value="angular">Angular</Combobox.Item>
+          <Combobox.Item value="svelte">Svelte</Combobox.Item>
+        </Combobox.Group>
+      </Combobox.List>
+    </Combobox.Root>
+  );
+}
 ```
 
 
@@ -1788,49 +2064,53 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 ## Example: Default
 
 ```tsx
-const columns = [
-  { accessorKey: 'name', header: 'Name' },
-  { accessorKey: 'role', header: 'Role' },
-  { accessorKey: 'status', header: 'Status' },
-  { accessorKey: 'joined', header: 'Joined' },
-];
+import { DataTable } from '@nexub/react';
 
-const data = [
-  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
-  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
-  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
-  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
-  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
-];
-
-<DataTable columns={columns} data={data} />
+export default function Example() {
+  const data = [
+    { name: 'Alice Brown', email: 'alice@example.com', plan: 'Pro', status: 'Active' },
+    { name: 'Bob Carter', email: 'bob@example.com', plan: 'Free', status: 'Pending' },
+    { name: 'Carol Davis', email: 'carol@example.com', plan: 'Pro', status: 'Inactive' },
+    { name: 'Dave Evans', email: 'dave@example.com', plan: 'Enterprise', status: 'Active' },
+  ];
+  const columns = [
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'email', header: 'Email' },
+    { accessorKey: 'plan', header: 'Plan' },
+    { accessorKey: 'status', header: 'Status' },
+  ];
+  return (
+    <div className="w-full max-w-[600px]">
+      <DataTable columns={columns} data={data} />
+    </div>
+  );
+}
 ```
 
 ## Example: With sorting
 
 ```tsx
-const columns = [
-  { accessorKey: 'name', header: 'Name', enableSorting: true },
-  { accessorKey: 'role', header: 'Role', enableSorting: true },
-  { accessorKey: 'status', header: 'Status', enableSorting: true },
-  { accessorKey: 'joined', header: 'Joined', enableSorting: true },
-];
+import { DataTable } from '@nexub/react';
 
-const data = [
-  { name: 'Alice Johnson', role: 'Admin', status: 'Active', joined: '2024-01-10' },
-  { name: 'Bob Martinez', role: 'Editor', status: 'Pending', joined: '2024-03-22' },
-  { name: 'Carol Smith', role: 'Viewer', status: 'Inactive', joined: '2024-06-05' },
-  { name: 'David Lee', role: 'Editor', status: 'Active', joined: '2024-09-17' },
-  { name: 'Eva Chen', role: 'Admin', status: 'Active', joined: '2025-01-03' },
-];
-
-<DataTable
-  columns={columns}
-  data={data}
-  enableSorting
-  enableRowSelection
-  pagination={{ pageSize: 5, pageIndex: 0 }}
-/>
+export default function Example() {
+  const data = [
+    { name: 'Alice Brown', email: 'alice@example.com', plan: 'Pro', status: 'Active' },
+    { name: 'Bob Carter', email: 'bob@example.com', plan: 'Free', status: 'Pending' },
+    { name: 'Carol Davis', email: 'carol@example.com', plan: 'Pro', status: 'Inactive' },
+    { name: 'Dave Evans', email: 'dave@example.com', plan: 'Enterprise', status: 'Active' },
+  ];
+  const columns = [
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'email', header: 'Email' },
+    { accessorKey: 'plan', header: 'Plan' },
+    { accessorKey: 'status', header: 'Status' },
+  ];
+  return (
+    <div className="w-full max-w-[600px]">
+      <DataTable columns={columns} data={data} enableSorting />
+    </div>
+  );
+}
 ```
 
 
@@ -1863,34 +2143,38 @@ Calendar date picker with text input.
 ## Example: Default
 
 ```tsx
-<DatePicker placeholder="Select a date…" />
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DatePicker placeholder="Select a date…" />;
+}
 ```
 
 ## Example: With value
 
 ```tsx
-function ControlledDatePicker() {
-  const [date, setDate] = React.useState(new Date('2026-01-15'));
-  return (
-    <DatePicker
-      aria-label="Appointment date"
-      value={date}
-      onChange={setDate}
-      placeholder="Select a date…"
-    />
-  );
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DatePicker value={new Date('2026-01-15')} onChange={() => {}} />;
 }
 ```
 
 ## Example: With constraints
 
 ```tsx
-<DatePicker
-  aria-label="Schedule for"
-  placeholder="Select a future date…"
-  minDate={new Date()}
-  maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
-/>
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <DatePicker
+      aria-label="Schedule for"
+      placeholder="Select a future date…"
+      minDate={new Date()}
+      maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+    />
+  );
+}
 ```
 
 
@@ -1923,22 +2207,28 @@ Dual-calendar date range selector.
 ## Example: Default
 
 ```tsx
-<DateRangePicker placeholder="Select date range…" />
+import { DateRangePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DateRangePicker placeholder="Select date range…" />;
+}
 ```
 
 ## Example: Controlled
 
 ```tsx
-function ControlledDateRangePicker() {
-  const [range, setRange] = React.useState({
+import * as React from 'react';
+import { DateRangePicker } from '@nexub/react';
+
+export default function Example() {
+  const [range, setRange] = React.useState<{ from: Date | undefined; to: Date | undefined }>({
     from: new Date('2026-04-01'),
     to: new Date('2026-04-14'),
   });
   return (
     <DateRangePicker
-      aria-label="Booking period"
       value={range}
-      onChange={setRange}
+      onChange={(r) => setRange({ from: r?.from, to: r?.to })}
       placeholder="Select date range…"
     />
   );
@@ -1982,28 +2272,32 @@ Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA ro
 ## Example: Default
 
 ```tsx
-<Dialog.Root>
-  <Dialog.Trigger asChild>
-    <Button>Open Dialog</Button>
-  </Dialog.Trigger>
-  <Dialog.Portal>
-    <Dialog.Overlay />
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>Edit profile</Dialog.Title>
-        <Dialog.Description>
-          Make changes to your profile here.
-        </Dialog.Description>
-      </Dialog.Header>
-      <Dialog.Footer>
-        <Dialog.Close asChild>
-          <Button variant="outline">Cancel</Button>
-        </Dialog.Close>
-        <Button>Save changes</Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </Dialog.Portal>
-</Dialog.Root>
+import * as React from 'react';
+import { Button, Dialog } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="primary" onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay />
+          <Dialog.Content size="sm">
+            <Dialog.Title>Confirm action</Dialog.Title>
+            <Dialog.Description className="mt-2 mb-6">
+              Are you sure you want to continue? This action cannot be undone.
+            </Dialog.Description>
+            <div className="flex gap-2 justify-end">
+              <Dialog.Close asChild><Button variant="outline">Cancel</Button></Dialog.Close>
+              <Button variant="primary" onClick={() => setOpen(false)}>Confirm</Button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
+  );
+}
 ```
 
 
@@ -2038,55 +2332,77 @@ Slide-in panel from any edge of the screen.
 ## Example: Default
 
 ```tsx
-<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open drawer</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="right">
-      <Drawer.Header>
-        <Drawer.Title>Edit profile</Drawer.Title>
-        <Drawer.Description>Make changes to your profile settings.</Drawer.Description>
-      </Drawer.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">Drawer body content goes here.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline">Cancel</Button>
-        </Drawer.Close>
-        <Button variant="primary">Save changes</Button>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>
+import * as React from 'react';
+import { Button, Drawer, Label, Input } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Drawer</Button>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay />
+          <Drawer.Content side="right">
+            <Drawer.Header>
+              <Drawer.Title>Edit profile</Drawer.Title>
+              <Drawer.Description>Update your profile details.</Drawer.Description>
+            </Drawer.Header>
+            <div className="p-4 flex-1 overflow-y-auto">
+              <div className="flex flex-col gap-3 items-start">
+                <div className="flex flex-col gap-1 items-start">
+                  <Label htmlFor="d-name">Name</Label>
+                  <Input id="d-name" placeholder="Jane Smith" />
+                </div>
+                <div className="flex flex-col gap-1 items-start">
+                  <Label htmlFor="d-email">Email</Label>
+                  <Input id="d-email" type="email" placeholder="jane@example.com" />
+                </div>
+              </div>
+            </div>
+            <Drawer.Footer>
+              <div className="flex gap-2 justify-end">
+                <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
+                <Button variant="primary">Save changes</Button>
+              </div>
+            </Drawer.Footer>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </>
+  );
+}
 ```
 
 ## Example: Bottom sheet
 
 ```tsx
-<Drawer.Root>
-  <Drawer.Trigger asChild>
-    <Button variant="outline">Open bottom sheet</Button>
-  </Drawer.Trigger>
-  <Drawer.Portal>
-    <Drawer.Overlay />
-    <Drawer.Content side="bottom">
-      <Drawer.Header>
-        <Drawer.Title>Share</Drawer.Title>
-      </Drawer.Header>
-      <div style={{ padding: '16px' }}>
-        <Text size="body-sm">Choose how you would like to share this item.</Text>
-      </div>
-      <Drawer.Footer>
-        <Drawer.Close asChild>
-          <Button variant="outline" fullWidth>Cancel</Button>
-        </Drawer.Close>
-      </Drawer.Footer>
-    </Drawer.Content>
-  </Drawer.Portal>
-</Drawer.Root>
+import * as React from 'react';
+import { Button, Drawer } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Portal>
+          <Drawer.Overlay />
+          <Drawer.Content side="bottom">
+            <Drawer.Header>
+              <Drawer.Title>Share to</Drawer.Title>
+            </Drawer.Header>
+            <div className="p-4 flex gap-3 flex-wrap">
+              {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
+                <Button key={s} variant="outline" size="sm">{s}</Button>
+              ))}
+            </div>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    </>
+  );
+}
 ```
 
 
@@ -2113,61 +2429,51 @@ Placeholder UI shown when a list or page has no content.
 ## Example: Default
 
 ```tsx
-<EmptyState.Root>
-  <EmptyState.Illustration>
-    <svg
-      width="48"
-      height="48"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--color-text-disabled)"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.35-4.35" />
-    </svg>
-  </EmptyState.Illustration>
-  <EmptyState.Title>No results found</EmptyState.Title>
-  <EmptyState.Description>
-    Try adjusting your search or filters to find what you're looking for.
-  </EmptyState.Description>
-  <EmptyState.Actions>
-    <Button variant="primary">Clear filters</Button>
-    <Button variant="outline">Browse all</Button>
-  </EmptyState.Actions>
-</EmptyState.Root>
+import { EmptyState, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Illustration>
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="var(--color-outline-variant)" strokeWidth="2" />
+          <path d="M18 24h12M24 18v12" stroke="var(--color-on-surface-muted)" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </EmptyState.Illustration>
+      <EmptyState.Title>No results found</EmptyState.Title>
+      <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
+      <EmptyState.Actions>
+        <Button variant="primary" size="sm">Clear filters</Button>
+      </EmptyState.Actions>
+    </EmptyState.Root>
+  );
+}
 ```
 
 ## Example: Custom illustration
 
 ```tsx
-<EmptyState.Root>
-  <EmptyState.Illustration>
-    <svg
-      width="80"
-      height="80"
-      viewBox="0 0 80 80"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <rect width="80" height="80" rx="40" fill="var(--color-bg-subtle)" />
-      <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-border-strong)" strokeWidth="2" />
-      <path d="M24 36h32" stroke="var(--color-border-strong)" strokeWidth="2" />
-      <circle cx="40" cy="48" r="4" fill="var(--color-text-disabled)" />
-    </svg>
-  </EmptyState.Illustration>
-  <EmptyState.Title>No documents yet</EmptyState.Title>
-  <EmptyState.Description>
-    Upload your first document to get started.
-  </EmptyState.Description>
-  <EmptyState.Actions>
-    <Button variant="primary">Upload document</Button>
-  </EmptyState.Actions>
-</EmptyState.Root>
+import { EmptyState, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Illustration>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden="true">
+          <rect width="80" height="80" rx="40" fill="var(--color-surface-container-low)" />
+          <rect x="24" y="28" width="32" height="24" rx="4" stroke="var(--color-outline)" strokeWidth="2" />
+          <path d="M24 36h32" stroke="var(--color-outline)" strokeWidth="2" />
+          <circle cx="40" cy="48" r="4" fill="color-mix(in srgb, var(--color-on-surface) 38%, transparent)" />
+        </svg>
+      </EmptyState.Illustration>
+      <EmptyState.Title>No documents yet</EmptyState.Title>
+      <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
+      <EmptyState.Actions>
+        <Button variant="primary">Upload document</Button>
+      </EmptyState.Actions>
+    </EmptyState.Root>
+  );
+}
 ```
 
 
@@ -2194,21 +2500,33 @@ Full-page or section error view with retry action.
 ## Example: Default
 
 ```tsx
-<ErrorState
-  title="Something went wrong"
-  description="We could not load the data. Please try again."
-  onRetry={() => {}}
-/>
+import { ErrorState } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ErrorState
+      title="Something went wrong"
+      description="We could not load the data. Please try again."
+      onRetry={() => {}}
+    />
+  );
+}
 ```
 
 ## Example: Warning
 
 ```tsx
-<ErrorState
-  tone="warning"
-  title="Connection issue"
-  description="Check your network and try again."
-/>
+import { ErrorState } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ErrorState
+      tone="warning"
+      title="Connection issue"
+      description="Check your network and try again."
+    />
+  );
+}
 ```
 
 
@@ -2231,16 +2549,26 @@ A compact eyebrow label, typically used above headings.
 ## Example: Default
 
 ```tsx
-<EyebrowChip>New release</EyebrowChip>
+import { EyebrowChip } from '@nexub/react';
+
+export default function Example() {
+  return <EyebrowChip>New release</EyebrowChip>;
+}
 ```
 
 ## Example: Usage
 
 ```tsx
-<div>
-  <EyebrowChip>Now available</EyebrowChip>
-  <h2 style={{ marginTop: '8px', fontSize: '1.5rem', fontWeight: 700 }}>Version 2.0</h2>
-</div>
+import { EyebrowChip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <EyebrowChip>Now available</EyebrowChip>
+      <h2 className="m-0 text-[1.5rem] font-bold text-[var(--color-on-surface)]">Version 2.0</h2>
+    </div>
+  );
+}
 ```
 
 
@@ -2266,11 +2594,18 @@ Interactive chip for filtering, supports selected/unselected state.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <FilterChip>All</FilterChip>
-  <FilterChip defaultSelected>Active</FilterChip>
-  <FilterChip>Archived</FilterChip>
-</div>
+import { FilterChip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <FilterChip>All</FilterChip>
+      <FilterChip selected>Active</FilterChip>
+      <FilterChip>Archived</FilterChip>
+      <FilterChip>Draft</FilterChip>
+    </div>
+  );
+}
 ```
 
 
@@ -2297,31 +2632,47 @@ Flexbox layout primitive.
 ## Example: Default
 
 ```tsx
-<Flex gap="md" align="center">
-  <Button variant="primary">Action</Button>
-  <Button variant="outline">Cancel</Button>
-</Flex>
+import { Flex, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex gap="md" align="center">
+      <Button variant="primary">Action</Button>
+      <Button variant="outline">Cancel</Button>
+    </Flex>
+  );
+}
 ```
 
 ## Example: Space between
 
 ```tsx
-<Flex justify="between">
-  <Badge tone="success">Active</Badge>
-  <Badge tone="neutral">Draft</Badge>
-</Flex>
+import { Flex, Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex justify="between" className="w-full max-w-[320px]">
+      <Badge tone="success">Active</Badge>
+      <Badge tone="neutral">Draft</Badge>
+    </Flex>
+  );
+}
 ```
 
 ## Example: Wrap
 
 ```tsx
-<Flex gap="sm" wrap>
-  <Badge tone="info">React</Badge>
-  <Badge tone="info">TypeScript</Badge>
-  <Badge tone="info">Tailwind</Badge>
-  <Badge tone="info">Radix UI</Badge>
-  <Badge tone="info">Storybook</Badge>
-</Flex>
+import { Flex, Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Flex gap="sm" wrap className="max-w-[260px]">
+      {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
+        <Badge key={t} tone="info">{t}</Badge>
+      ))}
+    </Flex>
+  );
+}
 ```
 
 
@@ -2347,11 +2698,17 @@ Wraps Label, Input, HelperText and FormError into a single accessible group.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '280px' }}>
-  <Label htmlFor="field-name" required>Full name</Label>
-  <Input id="field-name" placeholder="Jane Smith" />
-  <HelperText>Enter your legal name.</HelperText>
-</div>
+import { Label, Input, HelperText } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1 items-start w-[280px]">
+      <Label htmlFor="field-name" required>Full name</Label>
+      <Input id="field-name" placeholder="Jane Smith" />
+      <HelperText>Enter your legal name.</HelperText>
+    </div>
+  );
+}
 ```
 
 
@@ -2368,7 +2725,11 @@ A decorative gradient-faded horizontal rule.
 ## Example: Default
 
 ```tsx
-<GradientDivider />
+import { GradientDivider } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><GradientDivider /></div>;
+}
 ```
 
 
@@ -2393,25 +2754,33 @@ CSS Grid layout primitive.
 ## Example: 2-column
 
 ```tsx
-<Grid cols={2} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-</Grid>
+import { Grid, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Grid cols={2} gap="md" className="w-full max-w-[400px]">
+      {[1, 2, 3, 4].map((n) => (
+        <Card key={n}><Text size="body-sm" tone="muted">Card {n}</Text></Card>
+      ))}
+    </Grid>
+  );
+}
 ```
 
 ## Example: 3-column
 
 ```tsx
-<Grid cols={3} gap="md">
-  <Card><Card.Body><Text>Card one</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card two</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card three</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card four</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card five</Text></Card.Body></Card>
-  <Card><Card.Body><Text>Card six</Text></Card.Body></Card>
-</Grid>
+import { Grid, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Grid cols={3} gap="sm" className="w-full max-w-[480px]">
+      {[1, 2, 3, 4, 5, 6].map((n) => (
+        <Card key={n}><Text size="caption" tone="muted">Item {n}</Text></Card>
+      ))}
+    </Grid>
+  );
+}
 ```
 
 
@@ -2438,30 +2807,46 @@ Semantic heading component with size, weight, and tone control.
 ## Example: Default
 
 ```tsx
-<Heading>The quick brown fox</Heading>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return <Heading>The quick brown fox</Heading>;
+}
 ```
 
 ## Example: Scale
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading size="h1">Heading H1</Heading>
-  <Heading size="h2">Heading H2</Heading>
-  <Heading size="h3">Heading H3</Heading>
-  <Heading size="h4">Heading H4</Heading>
-  <Heading size="h5">Heading H5</Heading>
-</div>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Heading size="h1">Heading 1</Heading>
+      <Heading size="h2">Heading 2</Heading>
+      <Heading size="h3">Heading 3</Heading>
+      <Heading size="h4">Heading 4</Heading>
+      <Heading size="h5">Heading 5</Heading>
+    </div>
+  );
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading tone="info">Info heading</Heading>
-  <Heading tone="success">Success heading</Heading>
-  <Heading tone="warning">Warning heading</Heading>
-  <Heading tone="danger">Danger heading</Heading>
-</div>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Heading tone="info">Info tone</Heading>
+      <Heading tone="success">Success tone</Heading>
+      <Heading tone="warning">Warning tone</Heading>
+      <Heading tone="danger">Danger tone</Heading>
+    </div>
+  );
+}
 ```
 
 
@@ -2485,18 +2870,28 @@ Small supporting text placed beneath a form field to provide hints or validation
 ## Example: Default
 
 ```tsx
-<HelperText>We will never share your email with anyone else.</HelperText>
+import { HelperText } from '@nexub/react';
+
+export default function Example() {
+  return <HelperText>We will never share your email with anyone else.</HelperText>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <HelperText tone="info">Your password must be at least 8 characters.</HelperText>
-  <HelperText tone="success">Username is available.</HelperText>
-  <HelperText tone="warning">This action may affect other records.</HelperText>
-  <HelperText tone="danger">This field is required.</HelperText>
-</div>
+import { HelperText } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <HelperText tone="info">Sync runs every 10 minutes.</HelperText>
+      <HelperText tone="success">Your account is verified.</HelperText>
+      <HelperText tone="warning">This action cannot be reversed.</HelperText>
+      <HelperText tone="danger">Required field is missing.</HelperText>
+    </div>
+  );
+}
 ```
 
 
@@ -2523,18 +2918,27 @@ Rich tooltip card revealed on hover.
 ## Example: Default
 
 ```tsx
-<HoverCard.Root openDelay={200} closeDelay={100}>
-  <HoverCard.Trigger asChild>
-    <Link href="#">@sasidharan</Link>
-  </HoverCard.Trigger>
-  <HoverCard.Content side="bottom" align="start" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '240px' }}>
-      <Text weight="semibold">Sasidharan</Text>
-      <Text size="body-sm" tone="secondary">Full-stack engineer building design systems.</Text>
-      <Text size="caption" tone="muted">Joined April 2024</Text>
-    </div>
-  </HoverCard.Content>
-</HoverCard.Root>
+import { HoverCard, Link, Avatar, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <HoverCard.Root>
+      <HoverCard.Trigger asChild>
+        <Link href="#">@alex_johnson</Link>
+      </HoverCard.Trigger>
+      <HoverCard.Content>
+        <div className="flex flex-col gap-2 items-start">
+          <Avatar name="Alex Johnson" size="lg" />
+          <div>
+            <Text weight="semibold">Alex Johnson</Text>
+            <Text size="body-sm" tone="muted">Product Designer</Text>
+          </div>
+          <Text size="body-sm" tone="secondary">Building design systems and making developers happy.</Text>
+        </div>
+      </HoverCard.Content>
+    </HoverCard.Root>
+  );
+}
 ```
 
 
@@ -2561,28 +2965,30 @@ A square button designed to hold a single icon, with an accessible label.
 ## Example: Default
 
 ```tsx
-<IconButton variant="ghost" aria-label="Settings">
-  <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-</IconButton>
+import { IconButton } from '@nexub/react';
+
+export default function Example() {
+  const icon = <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>;
+  return <IconButton variant="ghost" label="Add item">{icon}</IconButton>;
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <IconButton variant="ghost" aria-label="Ghost action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="solid" aria-label="Solid action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="outline" aria-label="Outline action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="subtle" aria-label="Subtle action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-</div>
+import { IconButton } from '@nexub/react';
+
+export default function Example() {
+  const icon = <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14" /></svg>;
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <IconButton variant="ghost" label="Ghost">{icon}</IconButton>
+      <IconButton variant="solid" label="Solid">{icon}</IconButton>
+      <IconButton variant="outline" label="Outline">{icon}</IconButton>
+      <IconButton variant="subtle" label="Subtle">{icon}</IconButton>
+    </div>
+  );
+}
 ```
 
 
@@ -2627,33 +3033,53 @@ Text input field for forms. Supports size variants, icons, addons, and validatio
 ## Example: Default
 
 ```tsx
-<Input placeholder="Enter value…" />
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Input placeholder="Enter value…" /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '320px' }}>
-  <Input size="sm" placeholder="Small" />
-  <Input size="md" placeholder="Medium" />
-  <Input size="lg" placeholder="Large" />
-</div>
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Input size="sm" placeholder="Small" />
+      <Input size="md" placeholder="Medium" />
+      <Input size="lg" placeholder="Large" />
+    </div>
+  );
+}
 ```
 
 ## Example: Invalid state
 
 ```tsx
-<Input invalid placeholder="Invalid value" />
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Input invalid placeholder="Invalid value" /></div>;
+}
 ```
 
 ## Example: With label and helper
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
-  <Label htmlFor="email">Email address</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-  <HelperText>We'll never share your email.</HelperText>
-</div>
+import { Label, Input, HelperText } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1 items-start w-[280px]">
+      <Label htmlFor="demo-email">Email address</Label>
+      <Input id="demo-email" type="email" placeholder="you@example.com" />
+      <HelperText>We&apos;ll never share your email.</HelperText>
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -2687,30 +3113,32 @@ Keyboard key display — renders a styled <kbd> element.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-  <Kbd>⌘</Kbd>
-  <Kbd>K</Kbd>
-</div>
+import { Kbd } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-1 flex-wrap items-center justify-center">
+      <Kbd>⌘</Kbd>
+      <Kbd>K</Kbd>
+    </div>
+  );
+}
 ```
 
 ## Example: Combinations
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>⌘</Kbd>
-    <Kbd>K</Kbd>
-  </div>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>Ctrl</Kbd>
-    <Kbd>C</Kbd>
-  </div>
-  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-    <Kbd>⇧</Kbd>
-    <Kbd>⌘</Kbd>
-    <Kbd>P</Kbd>
-  </div>
-</div>
+import { Kbd, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⌘</Kbd><Kbd>K</Kbd><Text size="body-sm" tone="secondary">— Open search</Text></div>
+      <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⌃</Kbd><Kbd>C</Kbd><Text size="body-sm" tone="secondary">— Copy</Text></div>
+      <div className="flex gap-1 flex-wrap items-center justify-center"><Kbd>⇧</Kbd><Kbd>⌘</Kbd><Kbd>P</Kbd><Text size="body-sm" tone="secondary">— Command palette</Text></div>
+    </div>
+  );
+}
 ```
 
 
@@ -2736,22 +3164,36 @@ An accessible form label that optionally shows a required asterisk and links to 
 ## Example: Default
 
 ```tsx
-<Label htmlFor="name">Full name</Label>
+import { Label } from '@nexub/react';
+
+export default function Example() {
+  return <Label htmlFor="demo">Full name</Label>;
+}
 ```
 
 ## Example: Required
 
 ```tsx
-<Label required>Email address</Label>
+import { Label } from '@nexub/react';
+
+export default function Example() {
+  return <Label required>Email address</Label>;
+}
 ```
 
 ## Example: With input
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-  <Label htmlFor="email">Email</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-</div>
+import { Label, Input } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1 items-start w-[280px]">
+      <Label htmlFor="email-ex">Email</Label>
+      <Input id="email-ex" type="email" placeholder="you@example.com" />
+    </div>
+  );
+}
 ```
 
 
@@ -2777,23 +3219,37 @@ Styled anchor link with variant and external support.
 ## Example: Default
 
 ```tsx
-<Link href="#">View documentation</Link>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return <Link href="#">View documentation</Link>;
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px' }}>
-  <Link href="#" variant="default">Default</Link>
-  <Link href="#" variant="muted">Muted</Link>
-  <Link href="#" variant="underline">Underline</Link>
-</div>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4 flex-wrap items-center justify-center">
+      <Link href="#" variant="default">Default</Link>
+      <Link href="#" variant="muted">Muted</Link>
+      <Link href="#" variant="underlined">Underline</Link>
+    </div>
+  );
+}
 ```
 
 ## Example: External
 
 ```tsx
-<Link href="#" external>Open in new tab</Link>
+import { Link } from '@nexub/react';
+
+export default function Example() {
+  return <Link href="#" external>Open in new tab</Link>;
+}
 ```
 
 
@@ -2823,32 +3279,71 @@ An image card with a glass caption over a soft scrim. With `href`, the whole car
 ## Example: With link
 
 ```tsx
-<MediaCard
-  src="/covers/lisbon.jpg"
-  alt=""
-  eyebrow="Guide"
-  title="A weekend in Lisbon"
-  description="Where to eat, walk and stay."
-  href="/guides/lisbon"
-/>
+import { MediaCard } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
+    </div>
+  );
+}
 ```
 
 ## Example: Without link, with actions
 
 ```tsx
-<MediaCard src="/covers/q3.jpg" alt="" title="Q3 brand shoot" description="48 photos">
-  <Button size="sm" variant="tonal">Open</Button>
-  <Button size="sm" variant="text">Share</Button>
-</MediaCard>
+import { MediaCard, Button } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
+        <Button size="sm" variant="tonal">Open</Button>
+        <Button size="sm" variant="text">Share</Button>
+      </MediaCard>
+    </div>
+  );
+}
 ```
 
 ## Example: Ratios
 
 ```tsx
-<MediaCard ratio="16/9" src={src} alt="" title="16/9" />
-<MediaCard ratio="4/3" src={src} alt="" title="4/3" />
-<MediaCard ratio="1/1" src={src} alt="" title="1/1" />
-<MediaCard ratio="3/4" src={src} alt="" title="3/4" />
+import { MediaCard } from '@nexub/react';
+
+// Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).
+const COVER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="g" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><rect width="400" height="300" fill="url(#g)"/></svg>',
+  );
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-start justify-center">
+      {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
+        <div key={r} className="w-[160px]">
+          <MediaCard ratio={r} src={COVER} alt="" title={r} />
+        </div>
+      ))}
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -2902,24 +3397,41 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 Hover or focus the assistant reply to show its actions.
 
 ```tsx
-<MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
-<MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
-  <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
-  <MessageActions
-    text="Open Settings, then Billing, and choose Cancel plan."
-    onFeedback={(value) => logFeedback(value)}
-    onRegenerate={() => regenerate()}
-  />
-</MessageBubble>
-<MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+import { MessageBubble, Avatar, MessageActions, toast } from '@nexub/react';
+import { Sparkles } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-[560px]">
+      <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
+      <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+        <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
+        <MessageActions
+          text="Open Settings, then Billing, and choose Cancel plan."
+          onFeedback={() => {}}
+          onRegenerate={() => toast.info('Regenerating…')}
+        />
+      </MessageBubble>
+      <MessageBubble from="system">Conversation moved to Billing support</MessageBubble>
+    </div>
+  );
+}
 ```
 
 ## Example: Failed to send
 
 ```tsx
-<MessageBubble from="user" status="error" onRetry={() => resend()}>
-  Can I get a refund for last month?
-</MessageBubble>
+import { MessageBubble, toast } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[560px]">
+      <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
+        Can I get a refund for last month?
+      </MessageBubble>
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -2956,13 +3468,21 @@ An amount field: locale-aware parsing as you type, grouped on blur, the currency
 ## Example: Default
 
 ```tsx
-<MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} onValueChange={setAmount} />
+import { MoneyInput } from '@nexub/react';
+
+export default function Example() {
+  return <MoneyInput aria-label="Amount to send" currency="USD" defaultValue={1250} />;
+}
 ```
 
 ## Example: German separators
 
 ```tsx
-<MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />
+import { MoneyInput } from '@nexub/react';
+
+export default function Example() {
+  return <MoneyInput aria-label="Betrag" currency="EUR" locale="de-DE" defaultValue={1234.5} />;
+}
 ```
 
 Related: [amount](amount.md), [number-input](number-input.md), [input](input.md)
@@ -2992,35 +3512,35 @@ Expands and collapses content along the block axis.
 ## Example: Default
 
 ```tsx
-<Collapse in={true}>
-  <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-    Collapsed content
-  </div>
-</Collapse>
+import { Collapse, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Collapse in>
+      <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+        <Text size="body-sm">Collapsed content goes here.</Text>
+      </div>
+    </Collapse>
+  );
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function CollapseToggle() {
-  const [open, setOpen] = React.useState(false);
+import * as React from 'react';
+import { Button, Collapse, Text } from '@nexub/react';
+
+export default function Example() {
+  const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <Button variant="outline" onClick={() => setOpen((o) => !o)}>
-        {open ? 'Collapse' : 'Expand'}
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+        {visible ? 'Collapse' : 'Expand'}
       </Button>
-      <Collapse in={open} unmountOnExit>
-        <div
-          style={{
-            padding: '16px',
-            background: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            color: 'var(--color-text-secondary)',
-            fontSize: '0.875rem',
-          }}
-        >
-          This section smoothly expands and collapses along the vertical axis.
-          It preserves the natural document flow by animating the block size.
+      <Collapse in={visible}>
+        <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+          <Text size="body-sm">This content collapses and expands smoothly.</Text>
         </div>
       </Collapse>
     </div>
@@ -3053,25 +3573,28 @@ Animates opacity between 0 and 1 based on the `in` prop.
 ## Example: Default
 
 ```tsx
-<Fade in={true}>
-  <Card>Faded in content</Card>
-</Fade>
+import { Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Fade in><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>;
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function FadeToggle() {
+import * as React from 'react';
+import { Button, Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="flex flex-col gap-3 items-start">
       <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Fade out' : 'Fade in'}
+        {visible ? 'Hide' : 'Show'}
       </Button>
-      <Fade in={visible} duration="normal" easing="out" unmountOnExit>
-        <Card style={{ padding: '16px' }}>
-          This content fades in and out. Toggle the button to animate it.
-        </Card>
+      <Fade in={visible} unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
       </Fade>
     </div>
   );
@@ -3081,15 +3604,16 @@ function FadeToggle() {
 ## Example: Slow with spring easing
 
 ```tsx
-function SlowFade() {
+import * as React from 'react';
+import { Button, Fade, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="flex flex-col gap-3 items-start">
       <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Fade in={visible} duration="slow" easing="spring">
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Slow spring fade animation.
-        </div>
+        <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>
   );
@@ -3121,33 +3645,26 @@ Scales content in/out from its center.
 ## Example: Default
 
 ```tsx
-<Scale in={true}>
-  <Card>Scaled content</Card>
-</Scale>
+import { Scale, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Scale in><Card className="w-[200px]"><Text size="body-sm">Scaled content</Text></Card></Scale>;
+}
 ```
 
 ## Example: Toggle
 
 ```tsx
-function ScaleToggle() {
+import * as React from 'react';
+import { Button, Scale, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
-        {visible ? 'Scale out' : 'Scale in'}
-      </Button>
-      <Scale in={visible} duration="fast" easing="spring" unmountOnExit>
-        <div
-          style={{
-            padding: '24px',
-            background: 'var(--color-bg-subtle)',
-            borderRadius: 'var(--radius-md)',
-            textAlign: 'center',
-            color: 'var(--color-text-secondary)',
-          }}
-        >
-          Pop!
-        </div>
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Scale in={visible} unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
       </Scale>
     </div>
   );
@@ -3180,38 +3697,26 @@ Slides content in from a direction based on the `in` prop.
 ## Example: Default
 
 ```tsx
-<Slide in={true} direction="up">
-  <Card>Slid in from bottom</Card>
-</Slide>
+import { Slide, Card, Text } from '@nexub/react';
+
+export default function Example() {
+  return <Slide in direction="up"><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
+}
 ```
 
 ## Example: Directions
 
 ```tsx
-function SlideDirections() {
+import * as React from 'react';
+import { Button, Slide, Card, Text } from '@nexub/react';
+
+export default function Example() {
   const [visible, setVisible] = React.useState(true);
-  const [direction, setDirection] = React.useState('up');
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {['up', 'down', 'left', 'right'].map((dir) => (
-          <Button
-            key={dir}
-            variant={direction === dir ? 'primary' : 'outline'}
-            size="sm"
-            onClick={() => { setDirection(dir); setVisible(true); }}
-          >
-            {dir}
-          </Button>
-        ))}
-        <Button variant="ghost" size="sm" onClick={() => setVisible((v) => !v)}>
-          Toggle
-        </Button>
-      </div>
-      <Slide in={visible} direction={direction} unmountOnExit>
-        <div style={{ padding: '16px', background: 'var(--color-bg-subtle)', borderRadius: 'var(--radius-md)' }}>
-          Sliding in from {direction}.
-        </div>
+    <div className="flex flex-col gap-3 items-start">
+      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Slide in={visible} direction="up" unmountOnExit>
+        <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
       </Slide>
     </div>
   );
@@ -3242,11 +3747,20 @@ Navigation for medium-width windows: icons over labels, with an active pill behi
 ## Example: Default
 
 ```tsx
-<NavigationRail.Root aria-label="Workspace">
-  <NavigationRail.Item href="/" icon={<Home />} label="Home" active />
-  <NavigationRail.Item href="/files" icon={<Folder />} label="Files" />
-  <NavigationRail.Item href="/settings" icon={<Settings />} label="Settings" />
-</NavigationRail.Root>
+import { NavigationRail } from '@nexub/react';
+
+export default function Example() {
+  const glyph = (d: string) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
+  );
+  return (
+    <NavigationRail.Root aria-label="Workspace" className="h-auto bg-[var(--color-surface-container-low)] rounded-[24px]">
+      <NavigationRail.Item href="#" icon={glyph('M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z')} label="Home" active />
+      <NavigationRail.Item href="#" icon={glyph('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z')} label="Files" />
+      <NavigationRail.Item href="#" icon={glyph('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')} label="Settings" />
+    </NavigationRail.Root>
+  );
+}
 ```
 
 Related: [sidebar](sidebar.md), [top-nav](top-nav.md)
@@ -3276,13 +3790,21 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 ## Example: Default
 
 ```tsx
-<NumberInput defaultValue={0} />
+import { NumberInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[180px]"><NumberInput defaultValue={0} /></div>;
+}
 ```
 
 ## Example: With range
 
 ```tsx
-<NumberInput defaultValue={5} min={0} max={10} />
+import { NumberInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[180px]"><NumberInput defaultValue={5} min={0} max={10} /></div>;
+}
 ```
 
 
@@ -3310,12 +3832,20 @@ A number whose digits roll to new values on the spatial spring. The first render
 Each digit is a 0–9 strip; separators and symbols stay still.
 
 ```tsx
-const [n, setN] = React.useState(12480);
+import * as React from 'react';
+import { NumberTicker, Button } from '@nexub/react';
 
-<NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
-<Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
-  Change
-</Button>
+export default function Example() {
+  const [n, setN] = React.useState(12480);
+  return (
+    <div className="flex flex-col gap-3 items-center">
+      <NumberTicker value={n} format={{ maximumFractionDigits: 0 }} className="text-title-lg" />
+      <Button size="sm" variant="outlined" onClick={() => setN(Math.round(Math.random() * 100000))}>
+        Change
+      </Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Amount
@@ -3323,7 +3853,20 @@ const [n, setN] = React.useState(12480);
 `Amount animate` uses the ticker and keeps the quieter symbol and minor units.
 
 ```tsx
-<Amount value={balance} currency="USD" size="display" animate />
+import * as React from 'react';
+import { Amount, Button } from '@nexub/react';
+
+export default function Example() {
+  const [balance, setBalance] = React.useState(128450.75);
+  return (
+    <div className="flex flex-col gap-3 items-center">
+      <Amount value={balance} currency="USD" size="display" animate />
+      <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
+        Change
+      </Button>
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -3359,33 +3902,24 @@ Page navigation control with prev/next and page number buttons.
 ## Example: Default
 
 ```tsx
-function DefaultPagination() {
+import * as React from 'react';
+import { Pagination } from '@nexub/react';
+
+export default function Example() {
   const [page, setPage] = React.useState(3);
-  return (
-    <Pagination
-      page={page}
-      totalItems={100}
-      pageSize={10}
-      onPageChange={setPage}
-    />
-  );
+  return <Pagination page={page} totalItems={100} pageSize={10} onPageChange={setPage} />;
 }
 ```
 
 ## Example: Large dataset
 
 ```tsx
-function LargeDatasetPagination() {
-  const [page, setPage] = React.useState(5);
-  return (
-    <Pagination
-      page={page}
-      totalItems={500}
-      pageSize={20}
-      siblingCount={2}
-      onPageChange={setPage}
-    />
-  );
+import * as React from 'react';
+import { Pagination } from '@nexub/react';
+
+export default function Example() {
+  const [page, setPage] = React.useState(3);
+  return <Pagination page={page} totalItems={500} pageSize={20} siblingCount={2} onPageChange={setPage} />;
 }
 ```
 
@@ -3415,13 +3949,21 @@ A password field with a built-in toggle to reveal or hide the entered value.
 ## Example: Default
 
 ```tsx
-<PasswordInput placeholder="Enter password…" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+}
 ```
 
 ## Example: Invalid
 
 ```tsx
-<PasswordInput invalid placeholder="Password is too short" />
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+}
 ```
 
 
@@ -3452,33 +3994,43 @@ Floating content panel anchored to a trigger element.
 ## Example: Default
 
 ```tsx
-<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Open popover</Button>
-  </Popover.Trigger>
-  <Popover.Content>
-    <Text size="body-sm">Popover content goes here.</Text>
-  </Popover.Content>
-</Popover.Root>
+import { Popover, Button, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Button variant="outline">Open popover</Button>
+      </Popover.Trigger>
+      <Popover.Content>
+        <Text size="body-sm">This is popover content. You can put anything here.</Text>
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
 ```
 
 ## Example: With close button
 
 ```tsx
-<Popover.Root>
-  <Popover.Trigger asChild>
-    <Button variant="outline">Settings</Button>
-  </Popover.Trigger>
-  <Popover.Content side="bottom" align="end" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <Text weight="semibold">Preferences</Text>
-      <Text size="body-sm" tone="secondary">Adjust your display settings.</Text>
-      <Popover.Close asChild>
-        <Button variant="ghost" size="sm">Close</Button>
-      </Popover.Close>
+import { Popover, Button, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
+        <Popover.Root key={s}>
+          <Popover.Trigger asChild>
+            <Button variant="ghost" size="sm">{s}</Button>
+          </Popover.Trigger>
+          <Popover.Content side={s}>
+            <Text size="body-sm">Opens {s}</Text>
+          </Popover.Content>
+        </Popover.Root>
+      ))}
     </div>
-  </Popover.Content>
-</Popover.Root>
+  );
+}
 ```
 
 
@@ -3504,24 +4056,38 @@ Horizontal progress bar with optional tone and animation.
 ## Example: Default
 
 ```tsx
-<Progress value={65} />
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Progress value={65} /></div>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Progress value={80} tone="info" />
-  <Progress value={60} tone="success" />
-  <Progress value={45} tone="warning" />
-  <Progress value={30} tone="danger" />
-</div>
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+      <Progress value={80} tone="success" />
+      <Progress value={55} tone="info" />
+      <Progress value={30} tone="warning" />
+      <Progress value={20} tone="danger" />
+    </div>
+  );
+}
 ```
 
 ## Example: Animated
 
 ```tsx
-<Progress value={40} animated tone="info" />
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Progress value={40} animated tone="info" /></div>;
+}
 ```
 
 
@@ -3566,27 +4132,48 @@ The composer for a chat: an auto-growing text field with Send, which turns into 
 Enter sends, Shift+Enter adds a line. Send stays inert until there is text.
 
 ```tsx
-<PromptInput placeholder="Ask anything" onSubmit={(text) => send(text)} />
+import { PromptInput } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput placeholder="Ask anything" />
+    </div>
+  );
+}
 ```
 
 ## Example: Attachments and actions
 
 ```tsx
-<PromptInput
-  placeholder="Ask about these files"
-  attachments={
-    <>
-      <Chip onRemove={() => remove('q3-report.pdf')}>q3-report.pdf</Chip>
-      <Chip onRemove={() => remove('pricing.csv')}>pricing.csv</Chip>
-    </>
-  }
-  actions={
-    <>
-      <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
-      <IconButton size="sm" label="Search the web"><Globe /></IconButton>
-    </>
-  }
-/>
+import * as React from 'react';
+import { PromptInput, Chip, IconButton } from '@nexub/react';
+import { Paperclip, Globe } from '@nexub/icons';
+
+export default function Example() {
+  const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput
+        placeholder="Ask about these files"
+        attachments={
+          files.length > 0 &&
+          files.map((f) => (
+            <Chip key={f} onRemove={() => setFiles((all) => all.filter((x) => x !== f))}>
+              {f}
+            </Chip>
+          ))
+        }
+        actions={
+          <>
+            <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
+            <IconButton size="sm" label="Search the web"><Globe /></IconButton>
+          </>
+        }
+      />
+    </div>
+  );
+}
 ```
 
 ## Example: Streaming
@@ -3594,20 +4181,27 @@ Enter sends, Shift+Enter adds a line. Send stays inert until there is text.
 Send a message: the button turns into Stop for three seconds. Stop or Escape ends it early.
 
 ```tsx
-const [status, setStatus] = React.useState<PromptInputStatus>('idle');
-const timer = React.useRef<ReturnType<typeof setTimeout>>();
+import * as React from 'react';
+import { type PromptInputStatus, PromptInput } from '@nexub/react';
 
-function send() {
-  setStatus('streaming');
-  timer.current = setTimeout(() => setStatus('idle'), 3000);
+export default function Example() {
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
+  const send = () => {
+    setStatus('streaming');
+    timer.current = setTimeout(() => setStatus('idle'), 3000);
+  };
+  const stop = () => {
+    clearTimeout(timer.current);
+    setStatus('idle');
+  };
+  return (
+    <div className="w-full max-w-[520px]">
+      <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
+    </div>
+  );
 }
-
-function stop() {
-  clearTimeout(timer.current);
-  setStatus('idle');
-}
-
-<PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
 ```
 
 ## Accessibility
@@ -3661,19 +4255,26 @@ A radio group where each option is a whole card: title, description and optional
 ## Example: Plan picker
 
 ```tsx
-const [plan, setPlan] = React.useState('team');
+import * as React from 'react';
+import { RadioCardGroup, RadioCard } from '@nexub/react';
+import { User, Users, Building2 } from '@nexub/icons';
 
-<RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan}>
-  <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features.">
-    <span className="text-sm font-medium">$0 / month</span>
-  </RadioCard>
-  <RadioCard value="team" icon={<Users />} title="Team" description="Up to 20 seats, shared workspaces.">
-    <span className="text-sm font-medium">$12 / seat</span>
-  </RadioCard>
-  <RadioCard value="enterprise" icon={<Building2 />} title="Enterprise" description="SSO, audit logs, priority support.">
-    <span className="text-sm font-medium">Contact sales</span>
-  </RadioCard>
-</RadioCardGroup>
+export default function Example() {
+  const [plan, setPlan] = React.useState('team');
+  return (
+    <RadioCardGroup aria-label="Plan" columns={3} value={plan} onValueChange={setPlan} className="w-full">
+      <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features.">
+        <span className="text-sm font-medium">$0 / month</span>
+      </RadioCard>
+      <RadioCard value="team" icon={<Users />} title="Team" description="Up to 20 seats, shared workspaces.">
+        <span className="text-sm font-medium">$12 / seat</span>
+      </RadioCard>
+      <RadioCard value="enterprise" icon={<Building2 />} title="Enterprise" description="SSO, audit logs, priority support.">
+        <span className="text-sm font-medium">Contact sales</span>
+      </RadioCard>
+    </RadioCardGroup>
+  );
+}
 ```
 
 ## Example: Columns
@@ -3681,10 +4282,16 @@ const [plan, setPlan] = React.useState('team');
 Two columns from the sm breakpoint up, one below.
 
 ```tsx
-<RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly">
-  <RadioCard value="monthly" title="Monthly" description="Billed every month." />
-  <RadioCard value="yearly" title="Yearly" description="Two months free." />
-</RadioCardGroup>
+import { RadioCardGroup, RadioCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioCardGroup aria-label="Billing" columns={2} defaultValue="yearly" className="w-full">
+      <RadioCard value="monthly" title="Monthly" description="Billed every month." />
+      <RadioCard value="yearly" title="Yearly" description="Two months free." />
+    </RadioCardGroup>
+  );
+}
 ```
 
 ## Example: Disabled
@@ -3692,11 +4299,17 @@ Two columns from the sm breakpoint up, one below.
 Disable one card, or pass `disabled` to the group to disable all of them.
 
 ```tsx
-<RadioCardGroup aria-label="Region" columns={2} defaultValue="eu">
-  <RadioCard value="eu" title="Europe" description="Frankfurt" />
-  <RadioCard value="us" title="United States" description="Virginia" />
-  <RadioCard value="ap" title="Asia Pacific" description="Coming soon" disabled />
-</RadioCardGroup>
+import { RadioCardGroup, RadioCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioCardGroup aria-label="Region" columns={2} defaultValue="eu" className="w-full">
+      <RadioCard value="eu" title="Europe" description="Frankfurt" />
+      <RadioCard value="us" title="United States" description="Virginia" />
+      <RadioCard value="ap" title="Asia Pacific" description="Coming soon" disabled />
+    </RadioCardGroup>
+  );
+}
 ```
 
 ## Accessibility
@@ -3736,39 +4349,43 @@ Group of mutually exclusive radio inputs.
 ## Example: Default
 
 ```tsx
-<RadioGroup.Root defaultValue="option-2">
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-1" id="r1" />
-      <Label htmlFor="r1">Option one</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-2" id="r2" />
-      <Label htmlFor="r2">Option two</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="option-3" id="r3" />
-      <Label htmlFor="r3">Option three</Label>
-    </div>
-  </div>
-</RadioGroup.Root>
+import { RadioGroup, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioGroup.Root defaultValue="monthly">
+      <div className="flex flex-col gap-2 items-start">
+        {['Monthly', 'Yearly', 'Lifetime'].map((opt) => (
+          <div key={opt} className="flex items-center gap-2">
+            <RadioGroup.Item value={opt.toLowerCase()} id={`rg-${opt}`} />
+            <Label htmlFor={`rg-${opt}`}>{opt}</Label>
+          </div>
+        ))}
+      </div>
+    </RadioGroup.Root>
+  );
+}
 ```
 
 ## Example: Horizontal
 
 ```tsx
-<RadioGroup.Root defaultValue="monthly" orientation="horizontal">
-  <div style={{ display: 'flex', gap: '16px' }}>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="monthly" id="monthly" />
-      <Label htmlFor="monthly">Monthly</Label>
-    </div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <RadioGroup.Item value="annual" id="annual" />
-      <Label htmlFor="annual">Annual</Label>
-    </div>
-  </div>
-</RadioGroup.Root>
+import { RadioGroup, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <RadioGroup.Root defaultValue="monthly" orientation="horizontal">
+      <div className="flex gap-4">
+        {[{ value: 'monthly', label: 'Monthly' }, { value: 'annual', label: 'Annual' }].map(({ value, label }) => (
+          <div key={value} className="flex items-center gap-2">
+            <RadioGroup.Item value={value} id={`rgh-${value}`} />
+            <Label htmlFor={`rgh-${value}`}>{label}</Label>
+          </div>
+        ))}
+      </div>
+    </RadioGroup.Root>
+  );
+}
 ```
 
 
@@ -3795,23 +4412,39 @@ Star rating input, supports controlled and read-only modes.
 ## Example: Default
 
 ```tsx
-<Rating defaultValue={3} />
+import * as React from 'react';
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  const [val, setVal] = React.useState(3);
+  return <Rating value={val} onValueChange={setVal} />;
+}
 ```
 
 ## Example: Read-only
 
 ```tsx
-<Rating value={4} readOnly />
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  return <Rating value={4} readOnly />;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Rating defaultValue={3} size="sm" />
-  <Rating defaultValue={3} size="md" />
-  <Rating defaultValue={3} size="lg" />
-</div>
+import { Rating } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Rating size="sm" value={4} readOnly />
+      <Rating size="md" value={4} readOnly />
+      <Rating size="lg" value={4} readOnly />
+    </div>
+  );
+}
 ```
 
 
@@ -3838,41 +4471,42 @@ Scrollable container with custom styled scrollbars.
 ## Example: Default
 
 ```tsx
-<ScrollArea style={{ height: '200px', width: '280px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  {Array.from({ length: 20 }, (_, i) => (
-    <div key={i} style={{ padding: '4px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
-      Item {i + 1}
-    </div>
-  ))}
-</ScrollArea>
+import { ScrollArea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ScrollArea className="h-[200px] w-[280px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+      {Array.from({ length: 20 }, (_, i) => (
+        <div key={i} className="py-1 px-0 text-body-sm text-[var(--color-on-surface-variant)]">
+          List item {i + 1}
+        </div>
+      ))}
+    </ScrollArea>
+  );
+}
 ```
 
 ## Example: Horizontal
 
 ```tsx
-<ScrollArea orientation="horizontal" style={{ width: '320px', border: '1px solid var(--color-border-default)', borderRadius: 'var(--radius-md)', padding: '12px' }}>
-  <div style={{ display: 'flex', gap: '8px', width: 'max-content' }}>
-    {Array.from({ length: 12 }, (_, i) => (
-      <div
-        key={i}
-        style={{
-          width: '80px',
-          height: '80px',
-          background: 'var(--color-bg-subtle)',
-          borderRadius: 'var(--radius-sm)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontSize: '0.75rem',
-          color: 'var(--color-text-secondary)',
-          flexShrink: 0,
-        }}
-      >
-        Card {i + 1}
+import { ScrollArea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ScrollArea orientation="horizontal" className="w-[320px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+      <div className="flex gap-2 w-max">
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="w-[80px] h-[80px] bg-[var(--color-surface-container-low)] rounded-shape-tooltip flex items-center justify-center text-label-sm text-[var(--color-on-surface-variant)] shrink-0"
+          >
+            Card {i + 1}
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-</ScrollArea>
+    </ScrollArea>
+  );
+}
 ```
 
 
@@ -3898,7 +4532,11 @@ A text input pre-wired with a search icon and a clear button for filtering conte
 ## Example: Default
 
 ```tsx
-<SearchInput placeholder="Search…" />
+import { SearchInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><SearchInput placeholder="Search…" /></div>;
+}
 ```
 
 
@@ -3923,30 +4561,37 @@ Tab-style control for mutually exclusive selections.
 ## Example: Default
 
 ```tsx
-<SegmentedControl.Root defaultValue="month">
-  <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
-  <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
-  <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
-</SegmentedControl.Root>
+import { SegmentedControl } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SegmentedControl.Root defaultValue="month">
+      <SegmentedControl.Item value="day">Day</SegmentedControl.Item>
+      <SegmentedControl.Item value="week">Week</SegmentedControl.Item>
+      <SegmentedControl.Item value="month">Month</SegmentedControl.Item>
+    </SegmentedControl.Root>
+  );
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <SegmentedControl.Root defaultValue="b" size="sm">
-    <SegmentedControl.Item value="a">Small A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Small B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-  <SegmentedControl.Root defaultValue="b" size="md">
-    <SegmentedControl.Item value="a">Medium A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Medium B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-  <SegmentedControl.Root defaultValue="b" size="lg">
-    <SegmentedControl.Item value="a">Large A</SegmentedControl.Item>
-    <SegmentedControl.Item value="b">Large B</SegmentedControl.Item>
-  </SegmentedControl.Root>
-</div>
+import { SegmentedControl } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-start">
+      {(['sm', 'md', 'lg'] as const).map((s) => (
+        <SegmentedControl.Root key={s} size={s} defaultValue="a">
+          <SegmentedControl.Item value="a">A</SegmentedControl.Item>
+          <SegmentedControl.Item value="b">B</SegmentedControl.Item>
+          <SegmentedControl.Item value="c">C</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      ))}
+    </div>
+  );
+}
 ```
 
 
@@ -3986,14 +4631,22 @@ Accessible dropdown select built on Radix UI. Supports groups and search.
 ## Example: Default
 
 ```tsx
-<Select.Root>
-  <Select.Trigger placeholder="Pick a fruit" />
-  <Select.Content>
-    <Select.Item value="apple">Apple</Select.Item>
-    <Select.Item value="banana">Banana</Select.Item>
-    <Select.Item value="cherry">Cherry</Select.Item>
-  </Select.Content>
-</Select.Root>
+import { Select } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[220px]">
+      <Select.Root>
+        <Select.Trigger><Select.Value placeholder="Select an option…" /></Select.Trigger>
+        <Select.Content>
+          <Select.Item value="option-1">Option 1</Select.Item>
+          <Select.Item value="option-2">Option 2</Select.Item>
+          <Select.Item value="option-3">Option 3</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </div>
+  );
+}
 ```
 
 
@@ -4017,17 +4670,27 @@ A horizontal or vertical visual divider.
 ## Example: Default
 
 ```tsx
-<Separator />
+import { Separator } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Separator /></div>;
+}
 ```
 
 ## Example: Vertical
 
 ```tsx
-<div style={{ display: 'flex', height: '32px', alignItems: 'center', gap: '16px' }}>
-  <span>Left</span>
-  <Separator orientation="vertical" />
-  <span>Right</span>
-</div>
+import { Separator } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex h-[32px] items-center gap-4">
+      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Left</span>
+      <Separator orientation="vertical" />
+      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Right</span>
+    </div>
+  );
+}
 ```
 
 
@@ -4061,28 +4724,31 @@ Alias for Drawer — slide-in sheet panel.
 ## Example: Default
 
 ```tsx
-<Sheet.Root>
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Open sheet</Button>
-  </Sheet.Trigger>
-  <Sheet.Portal>
-    <Sheet.Overlay />
-    <Sheet.Content side="right">
-      <Sheet.Header>
-        <Sheet.Title>Notifications</Sheet.Title>
-        <Sheet.Description>Review your latest activity.</Sheet.Description>
-      </Sheet.Header>
-      <div style={{ padding: '16px', flex: 1 }}>
-        <Text size="body-sm" tone="secondary">No new notifications.</Text>
-      </div>
-      <Sheet.Footer>
-        <Sheet.Close asChild>
-          <Button variant="outline">Close</Button>
-        </Sheet.Close>
-      </Sheet.Footer>
-    </Sheet.Content>
-  </Sheet.Portal>
-</Sheet.Root>
+import * as React from 'react';
+import { Button, Sheet, Text } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setOpen(true)}>Open Sheet</Button>
+      <Sheet.Root open={open} onOpenChange={setOpen}>
+        <Sheet.Portal>
+          <Sheet.Overlay />
+          <Sheet.Content side="right">
+            <Sheet.Header>
+              <Sheet.Title>Notifications</Sheet.Title>
+              <Sheet.Description>Your recent activity</Sheet.Description>
+            </Sheet.Header>
+            <div className="p-4 flex-1">
+              <Text size="body-sm" tone="muted">No new notifications.</Text>
+            </div>
+          </Sheet.Content>
+        </Sheet.Portal>
+      </Sheet.Root>
+    </>
+  );
+}
 ```
 
 
@@ -4108,23 +4774,40 @@ Placeholder loading animation that mimics content layout.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '280px', padding: '16px', border: '1px solid #e5e7eb', borderRadius: '8px' }}>
-  <Skeleton shape="circle" width={40} height={40} />
-  <Skeleton shape="line" width="60%" height={12} />
-  <Skeleton shape="line" width="100%" height={12} />
-  <Skeleton shape="line" width="80%" height={12} />
-  <Skeleton shape="rect" width="100%" height={80} />
-</div>
+import { Skeleton } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Skeleton shape="line" width="60%" />
+      <Skeleton shape="line" width="100%" />
+      <Skeleton shape="line" width="80%" />
+      <div className="flex gap-2 flex-nowrap items-center justify-center">
+        <Skeleton shape="circle" width={40} height={40} />
+        <div className="flex flex-col gap-1.5 items-start flex-1">
+          <Skeleton shape="line" width="70%" />
+          <Skeleton shape="line" width="50%" />
+        </div>
+      </div>
+    </div>
+  );
+}
 ```
 
 ## Example: Shapes
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Skeleton shape="line" width={120} height={12} />
-  <Skeleton shape="rect" width={80} height={60} />
-  <Skeleton shape="circle" width={40} height={40} />
-</div>
+import { Skeleton } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4 flex-wrap items-center justify-center">
+      <Skeleton shape="line" width={80} />
+      <Skeleton shape="rect" width={80} height={40} />
+      <Skeleton shape="circle" width={40} height={40} />
+    </div>
+  );
+}
 ```
 
 
@@ -4153,13 +4836,21 @@ Range slider built on Radix UI Slider.
 ## Example: Default
 
 ```tsx
-<Slider defaultValue={[50]} min={0} max={100} style={{ width: '240px' }} />
+import { Slider } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[240px]"><Slider defaultValue={[50]} min={0} max={100} /></div>;
+}
 ```
 
 ## Example: Range
 
 ```tsx
-<Slider defaultValue={[20, 80]} min={0} max={100} style={{ width: '240px' }} />
+import { Slider } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
+}
 ```
 
 
@@ -4183,19 +4874,28 @@ Animated loading indicator. Inherits color from context.
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Spinner size="xs" />
-  <Spinner size="sm" />
-  <Spinner size="md" />
-  <Spinner size="lg" />
-  <Spinner size="xl" />
-</div>
+import { Spinner } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-5 flex-wrap items-center justify-center"><Spinner size="sm" /><Spinner size="md" /><Spinner size="lg" /><Spinner size="xl" /></div>;
+}
 ```
 
 ## Example: Inside button
 
 ```tsx
-<Button loading>Saving…</Button>
+import { Spinner } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-5 flex-wrap items-center justify-center">
+      <Spinner size="md" tone="info" />
+      <Spinner size="md" tone="success" />
+      <Spinner size="md" tone="warning" />
+      <Spinner size="md" tone="danger" />
+    </div>
+  );
+}
 ```
 
 
@@ -4221,26 +4921,37 @@ A primary action with related secondary actions behind a chevron, as one connect
 ## Example: Default
 
 ```tsx
-<SplitButton
-  onClick={save}
-  menuLabel="More save options"
-  menu={
-    <>
-      <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
-      <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
-    </>
-  }
->
-  Save
-</SplitButton>
+import { SplitButton, DropdownMenu } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SplitButton
+      menuLabel="More save options"
+      menu={
+        <>
+          <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
+          <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
+        </>
+      }
+    >
+      Save
+    </SplitButton>
+  );
+}
 ```
 
 ## Example: Outlined
 
 ```tsx
-<SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
-  Export
-</SplitButton>
+import { SplitButton, DropdownMenu } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
+      Export
+    </SplitButton>
+  );
+}
 ```
 
 Related: [button](button.md), [button-group](button-group.md), [dropdown-menu](dropdown-menu.md)
@@ -4267,21 +4978,33 @@ Vertical stack layout with configurable gap.
 ## Example: Default
 
 ```tsx
-<Stack gap="md">
-  <Button variant="outline">Item 1</Button>
-  <Button variant="outline">Item 2</Button>
-  <Button variant="outline">Item 3</Button>
-</Stack>
+import { Stack, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stack gap="md">
+      <Button variant="outline">Item 1</Button>
+      <Button variant="outline">Item 2</Button>
+      <Button variant="outline">Item 3</Button>
+    </Stack>
+  );
+}
 ```
 
 ## Example: With dividers
 
 ```tsx
-<Stack gap="md" dividers>
-  <Text>First section</Text>
-  <Text>Second section</Text>
-  <Text>Third section</Text>
-</Stack>
+import { Stack, Separator, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stack gap="md" divider={<Separator />} className="w-[220px]">
+      <Text size="body-sm">First item</Text>
+      <Text size="body-sm">Second item</Text>
+      <Text size="body-sm">Third item</Text>
+    </Stack>
+  );
+}
 ```
 
 
@@ -4306,23 +5029,29 @@ Vertical stack layout with configurable gap.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <StatusPill tone="success" label="Active" />
-  <StatusPill tone="warning" label="Pending" />
-  <StatusPill tone="danger" label="Error" />
-  <StatusPill tone="neutral" label="Draft" />
-  <StatusPill tone="info" label="Syncing" />
-</div>
+import { StatusPill } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <StatusPill tone="success" label="Active" />
+      <StatusPill tone="warning" label="Pending" />
+      <StatusPill tone="danger" label="Error" />
+      <StatusPill tone="neutral" label="Draft" />
+      <StatusPill tone="info" label="Syncing" />
+    </div>
+  );
+}
 ```
 
 ## Example: With dot
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <StatusPill tone="success" dot label="Live" />
-  <StatusPill tone="info" dot label="Syncing" />
-  <StatusPill tone="warning" dot label="Degraded" />
-</div>
+import { StatusPill } from '@nexub/react';
+
+export default function Example() {
+  return <StatusPill tone="success" dot label="Live" />;
+}
 ```
 
 
@@ -4359,18 +5088,27 @@ Assistant text as it arrives: new chunks fade in, text already shown stays still
 Words arrive on a timer. Restart streams the paragraph again.
 
 ```tsx
-const reply = 'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
-const [length, setLength] = React.useState(0);
-const streaming = length < reply.length;
+import * as React from 'react';
+import { StreamingText, Button } from '@nexub/react';
 
-React.useEffect(() => {
-  if (!streaming) return;
-  const id = setTimeout(() => setLength((n) => Math.min(reply.length, n + 6)), 60);
-  return () => clearTimeout(id);
-}, [length, streaming]);
+const STREAM_DEMO_TEXT =
+  'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
 
-<StreamingText as="p" text={reply.slice(0, length)} streaming={streaming} />
-<Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+export default function Example() {
+  const [length, setLength] = React.useState(0);
+  const streaming = length < STREAM_DEMO_TEXT.length;
+  React.useEffect(() => {
+    if (!streaming) return;
+    const id = setTimeout(() => setLength((n) => Math.min(STREAM_DEMO_TEXT.length, n + 6)), 60);
+    return () => clearTimeout(id);
+  }, [length, streaming]);
+  return (
+    <div className="flex flex-col gap-3 items-start max-w-[480px]">
+      <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
+      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -4406,20 +5144,21 @@ Toggle control for binary on/off settings. Built on Radix UI Switch.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  <Switch id="airplane" />
-  <Label htmlFor="airplane">Airplane mode</Label>
-</div>
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch defaultChecked /><Switch /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-  <Switch size="sm" />
-  <Switch size="md" />
-  <Switch size="lg" />
-</div>
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return <div className="flex gap-4 flex-wrap items-center justify-center"><Switch size="sm" defaultChecked /><Switch size="md" defaultChecked /><Switch size="lg" defaultChecked /></div>;
+}
 ```
 
 
@@ -4448,71 +5187,77 @@ Semantic HTML table with styled variants.
 ## Example: Default
 
 ```tsx
-<Table.Root>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Name</Table.Head>
-      <Table.Head>Status</Table.Head>
-      <Table.Head>Date</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell>Alice Johnson</Table.Cell>
-      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
-      <Table.Cell>12 Jan 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Bob Martinez</Table.Cell>
-      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
-      <Table.Cell>18 Feb 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Carol Smith</Table.Cell>
-      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
-      <Table.Cell>03 Mar 2026</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-</Table.Root>
+import { Table, Badge } from '@nexub/react';
+
+export default function Example() {
+  const rows = [
+    { name: 'Alice Brown', status: 'Active', date: 'Jan 15, 2026' },
+    { name: 'Bob Carter', status: 'Pending', date: 'Jan 14, 2026' },
+    { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
+  ];
+  return (
+    <Table.Root className="w-full max-w-[480px]">
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Date</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((r) => (
+          <Table.Row key={r.name}>
+            <Table.Cell>{r.name}</Table.Cell>
+            <Table.Cell><Badge tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'} size="sm">{r.status}</Badge></Table.Cell>
+            <Table.Cell>{r.date}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  );
+}
 ```
 
 ## Example: With caption
 
 ```tsx
-<Table.Root>
-  <Table.Caption>Recent user activity — last 30 days</Table.Caption>
-  <Table.Header>
-    <Table.Row>
-      <Table.Head>Name</Table.Head>
-      <Table.Head>Status</Table.Head>
-      <Table.Head>Date</Table.Head>
-    </Table.Row>
-  </Table.Header>
-  <Table.Body>
-    <Table.Row>
-      <Table.Cell>Alice Johnson</Table.Cell>
-      <Table.Cell><StatusPill tone="success" label="Active" /></Table.Cell>
-      <Table.Cell>12 Jan 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Bob Martinez</Table.Cell>
-      <Table.Cell><StatusPill tone="warning" label="Pending" /></Table.Cell>
-      <Table.Cell>18 Feb 2026</Table.Cell>
-    </Table.Row>
-    <Table.Row>
-      <Table.Cell>Carol Smith</Table.Cell>
-      <Table.Cell><StatusPill tone="neutral" label="Inactive" /></Table.Cell>
-      <Table.Cell>03 Mar 2026</Table.Cell>
-    </Table.Row>
-  </Table.Body>
-  <Table.Footer>
-    <Table.Row>
-      <Table.Cell colSpan={3} style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem' }}>
-        Showing 3 of 3 users
-      </Table.Cell>
-    </Table.Row>
-  </Table.Footer>
-</Table.Root>
+import { Table, StatusPill } from '@nexub/react';
+
+export default function Example() {
+  const rows = [
+    { name: 'Alice Brown', status: 'Active', date: 'Jan 15, 2026' },
+    { name: 'Bob Carter', status: 'Pending', date: 'Jan 14, 2026' },
+    { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
+  ];
+  return (
+    <Table.Root className="w-full max-w-[480px]">
+      <Table.Caption>Recent user activity — last 30 days</Table.Caption>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Status</Table.Head>
+          <Table.Head>Date</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((r) => (
+          <Table.Row key={r.name}>
+            <Table.Cell>{r.name}</Table.Cell>
+            <Table.Cell><StatusPill tone={r.status === 'Active' ? 'success' : r.status === 'Pending' ? 'warning' : 'neutral'} label={r.status} /></Table.Cell>
+            <Table.Cell>{r.date}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+      <Table.Footer>
+        <Table.Row>
+          <Table.Cell colSpan={3} className="text-[var(--color-on-surface-variant)] text-body-sm">
+            Showing {rows.length} of {rows.length} users
+          </Table.Cell>
+        </Table.Row>
+      </Table.Footer>
+    </Table.Root>
+  );
+}
 ```
 
 
@@ -4552,22 +5297,30 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 ## Example: Default
 
 ```tsx
-<Tabs.Root defaultValue="account">
-  <Tabs.List>
-    <Tabs.Trigger value="account">Account</Tabs.Trigger>
-    <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
-    <Tabs.Trigger value="notifications">Notifications</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="account">
-    <Text>Account settings content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="billing">
-    <Text>Billing details content.</Text>
-  </Tabs.Content>
-  <Tabs.Content value="notifications">
-    <Text>Notification preferences content.</Text>
-  </Tabs.Content>
-</Tabs.Root>
+import { Tabs } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[320px]">
+      <Tabs.Root defaultValue="tab1">
+        <Tabs.List>
+          <Tabs.Trigger value="tab1">Overview</Tabs.Trigger>
+          <Tabs.Trigger value="tab2">Analytics</Tabs.Trigger>
+          <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="tab1">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Overview content goes here.</div>
+        </Tabs.Content>
+        <Tabs.Content value="tab2">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Analytics content goes here.</div>
+        </Tabs.Content>
+        <Tabs.Content value="tab3">
+          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
+        </Tabs.Content>
+      </Tabs.Root>
+    </div>
+  );
+}
 ```
 
 
@@ -4592,11 +5345,19 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Tag>Frontend</Tag>
-  <Tag tone="info">Backend</Tag>
-  <Tag tone="success">Deployed</Tag>
-</div>
+import { Tag } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Tag>Frontend</Tag>
+      <Tag tone="info">Backend</Tag>
+      <Tag tone="success">Deployed</Tag>
+      <Tag tone="warning">Review</Tag>
+      <Tag tone="danger">Blocked</Tag>
+    </div>
+  );
+}
 ```
 
 
@@ -4621,16 +5382,25 @@ Renders text with a brand gradient fill.
 ## Example: Default
 
 ```tsx
-<TextGradient>Design system for ambitious teams</TextGradient>
+import { TextGradient } from '@nexub/react';
+
+export default function Example() {
+  return <TextGradient className="text-[1.5rem] font-bold">Design system for ambitious teams</TextGradient>;
+}
 ```
 
 ## Example: In heading
 
 ```tsx
-<Heading size="h1">
-  Build with{' '}
-  <TextGradient>Nexub</TextGradient>
-</Heading>
+import { Heading, TextGradient } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Heading size="h2">
+      <TextGradient>Build faster, ship consistently</TextGradient>
+    </Heading>
+  );
+}
 ```
 
 
@@ -4658,28 +5428,45 @@ Paragraph text component with size, tone, and weight variants.
 ## Example: Default
 
 ```tsx
-<Text>The Nexub design system provides accessible, token-driven components.</Text>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return <Text>The Nexub design system provides accessible, token-driven components.</Text>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text size="body-lg">Body large — ideal for introductory paragraphs.</Text>
-  <Text size="body">Body — the default reading size.</Text>
-  <Text size="body-sm">Body small — secondary content and descriptions.</Text>
-  <Text size="caption">Caption — metadata and timestamps.</Text>
-</div>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <Text size="body-lg">Body Large — spacious reading.</Text>
+      <Text size="body">Body — default paragraph.</Text>
+      <Text size="body-sm">Body Small — compact content.</Text>
+      <Text size="caption">Caption — supporting info.</Text>
+    </div>
+  );
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Text tone="default">Default tone</Text>
-  <Text tone="secondary">Secondary tone</Text>
-  <Text tone="muted">Muted tone</Text>
-</div>
+import { Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1.5 items-start">
+      <Text tone="default">Default</Text>
+      <Text tone="secondary">Secondary</Text>
+      <Text tone="muted">Muted</Text>
+      <Text tone="subtle">Subtle</Text>
+    </div>
+  );
+}
 ```
 
 
@@ -4707,23 +5494,37 @@ A multi-line text input with configurable resize behaviour, size, and validation
 ## Example: Default
 
 ```tsx
-<Textarea placeholder="Enter your message…" />
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Textarea placeholder="Enter your message…" /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Textarea size="sm" placeholder="Small textarea" />
-  <Textarea size="md" placeholder="Medium textarea" />
-  <Textarea size="lg" placeholder="Large textarea" />
-</div>
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Textarea size="sm" placeholder="Small" rows={2} />
+      <Textarea size="md" placeholder="Medium" rows={3} />
+      <Textarea size="lg" placeholder="Large" rows={4} />
+    </div>
+  );
+}
 ```
 
 ## Example: Invalid
 
 ```tsx
-<Textarea invalid placeholder="This field has an error" />
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Textarea invalid placeholder="This field has an error" /></div>;
+}
 ```
 
 
@@ -4758,7 +5559,11 @@ Shows the assistant is working before the first token arrives: a morphing shape 
 ## Example: Default
 
 ```tsx
-<ThinkingIndicator />
+import { ThinkingIndicator } from '@nexub/react';
+
+export default function Example() {
+  return <ThinkingIndicator />;
+}
 ```
 
 ## Example: Custom label and sizes
@@ -4766,9 +5571,17 @@ Shows the assistant is working before the first token arrives: a morphing shape 
 Name the step when you know it. `label={null}` keeps only the shape.
 
 ```tsx
-<ThinkingIndicator label="Searching 4 sources" />
-<ThinkingIndicator size="sm" />
-<ThinkingIndicator size="sm" label={null} />
+import { ThinkingIndicator } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-start">
+      <ThinkingIndicator label="Searching 4 sources" />
+      <ThinkingIndicator size="sm" />
+      <ThinkingIndicator size="sm" label={null} />
+    </div>
+  );
+}
 ```
 
 ## Accessibility
@@ -4825,17 +5638,14 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 ## Example: Default
 
 ```tsx
-function DefaultToast() {
+import { Button, toast } from '@nexub/react';
+
+// The docs root layout already renders <Toaster />; a second one doubles every toast.
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}
-      >
-        Show toast
-      </Button>
-    </>
+    <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
+      Show toast
+    </Button>
   );
 }
 ```
@@ -4843,28 +5653,16 @@ function DefaultToast() {
 ## Example: Variants
 
 ```tsx
-function ToastVariants() {
+import { Button, toast } from '@nexub/react';
+
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        <Button variant="outline" onClick={() => toast.custom('Default notification')}>
-          Default
-        </Button>
-        <Button variant="outline" onClick={() => toast.success('Saved successfully')}>
-          Success
-        </Button>
-        <Button variant="outline" onClick={() => toast.error('Something went wrong')}>
-          Error
-        </Button>
-        <Button variant="outline" onClick={() => toast.warning('Proceed with caution')}>
-          Warning
-        </Button>
-        <Button variant="outline" onClick={() => toast.info('New update available')}>
-          Info
-        </Button>
-      </div>
-    </>
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="outline" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
+      <Button variant="outline" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
+    </div>
   );
 }
 ```
@@ -4872,25 +5670,21 @@ function ToastVariants() {
 ## Example: With action
 
 ```tsx
-function ToastWithAction() {
+import { Button, toast } from '@nexub/react';
+
+export default function Example() {
   return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.custom('Message sent', {
-            description: 'Your message has been delivered to the team.',
-            action: {
-              label: 'Undo',
-              onClick: () => {},
-            },
-          })
-        }
-      >
-        Send message
-      </Button>
-    </>
+    <Button
+      variant="outline"
+      onClick={() =>
+        toast.custom('File deleted', {
+          description: 'The file was moved to trash.',
+          action: { label: 'Undo', onClick: () => {} },
+        })
+      }
+    >
+      Delete with undo
+    </Button>
   );
 }
 ```
@@ -4900,27 +5694,23 @@ function ToastWithAction() {
 Hide the item right away; delete it for real only when the toast closes without Undo.
 
 ```tsx
-function UndoableDelete() {
-  const [hidden, setHidden] = React.useState(false);
+import * as React from 'react';
+import { Button, toast } from '@nexub/react';
 
-  function remove() {
+export default function Example() {
+  const [hidden, setHidden] = React.useState(false);
+  const remove = () => {
     setHidden(true);
     toast.undoable('Invoice deleted', {
       description: 'INV-2041',
       onUndo: () => setHidden(false),
-      onCommit: () => deleteInvoice('INV-2041'),
+      onCommit: () => {},
     });
-  }
-
-  return (
-    <>
-      <Toaster />
-      {hidden ? (
-        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
-      ) : (
-        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
-      )}
-    </>
+  };
+  return hidden ? (
+    <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
+  ) : (
+    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 ```
@@ -4947,21 +5737,33 @@ Group of toggle buttons where one or many can be active.
 ## Example: Single
 
 ```tsx
-<ToggleGroup.Root type="single" defaultValue="left">
-  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>
-  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>
-  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>
-</ToggleGroup.Root>
+import { ToggleGroup } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ToggleGroup.Root type="single" defaultValue="left">
+      <ToggleGroup.Item value="left">Left</ToggleGroup.Item>
+      <ToggleGroup.Item value="center">Center</ToggleGroup.Item>
+      <ToggleGroup.Item value="right">Right</ToggleGroup.Item>
+    </ToggleGroup.Root>
+  );
+}
 ```
 
 ## Example: Multiple
 
 ```tsx
-<ToggleGroup.Root type="multiple" defaultValue={["bold", "italic"]}>
-  <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
-  <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
-  <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
-</ToggleGroup.Root>
+import { ToggleGroup } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ToggleGroup.Root type="multiple" defaultValue={['bold', 'italic']}>
+      <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
+      <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
+      <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
+    </ToggleGroup.Root>
+  );
+}
 ```
 
 
@@ -4988,16 +5790,26 @@ Pressable toggle button built on Radix UI Toggle.
 ## Example: Default
 
 ```tsx
-<Toggle>Bold</Toggle>
+import { Toggle } from '@nexub/react';
+
+export default function Example() {
+  return <Toggle>Bold</Toggle>;
+}
 ```
 
 ## Example: Outline variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Toggle variant="outline">Unpressed</Toggle>
-  <Toggle variant="outline" defaultPressed>Pressed</Toggle>
-</div>
+import { Toggle } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Toggle variant="outline">Italic</Toggle>
+      <Toggle variant="outline" defaultPressed>Bold</Toggle>
+    </div>
+  );
+}
 ```
 
 
@@ -5022,20 +5834,33 @@ Floating label that appears on hover. Built on Radix UI Tooltip.
 ## Example: Default
 
 ```tsx
-<Tooltip content="This is a tooltip">
-  <Button variant="outline">Hover me</Button>
-</Tooltip>
+import { TooltipProvider, Tooltip, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <TooltipProvider>
+      <Tooltip label="This is a tooltip" side="top">
+        <Button variant="outline">Hover me</Button>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 ```
 
 ## Example: Sides
 
 ```tsx
-<div style={{ display: 'flex', gap: '12px' }}>
-  <Tooltip content="Top" side="top"><Button size="sm">Top</Button></Tooltip>
-  <Tooltip content="Right" side="right"><Button size="sm">Right</Button></Tooltip>
-  <Tooltip content="Bottom" side="bottom"><Button size="sm">Bottom</Button></Tooltip>
-  <Tooltip content="Left" side="left"><Button size="sm">Left</Button></Tooltip>
-</div>
+import { TooltipProvider, Tooltip, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <TooltipProvider>
+      <Tooltip label="This is a tooltip" side="top">
+        <Button variant="outline">Hover me</Button>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
 ```
 
 
@@ -5061,18 +5886,19 @@ Chronological list of activity events with avatar, description, and timestamp.
 ## Example: Default
 
 ```tsx
-<ActivityFeed.Root>
-  <ActivityFeed.Item
-    title="Alex created a new project"
-    description="Project 'Nexub DS v2' was created"
-    timestamp="2 hours ago"
-  />
-  <ActivityFeed.Item
-    title="Sam invited 3 members"
-    description="Jordan, Riley, and Taylor joined"
-    timestamp="Yesterday"
-  />
-</ActivityFeed.Root>
+import { ActivityFeed } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[340px]">
+      <ActivityFeed.Root>
+        <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
+        <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />
+        <ActivityFeed.Item title="Maria R. added a comment" description="On the design review document" timestamp="1 hr ago" />
+      </ActivityFeed.Root>
+    </div>
+  );
+}
 ```
 
 
@@ -5099,17 +5925,28 @@ Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a cent
 ## Example: Sign in
 
 ```tsx
-<AuthCard
-  title="Sign in to Nexub"
-  description="Enter your credentials below"
-  footer={<Text size="sm">Don't have an account? <Link href="/signup">Sign up</Link></Text>}
->
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-    <Input type="email" placeholder="Email" />
-    <Input type="password" placeholder="Password" />
-    <Button>Sign in</Button>
-  </div>
-</AuthCard>
+import { AuthCard } from '@nexub/patterns';
+import { Label, Input, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[360px]">
+      <AuthCard title="Sign in" description="Welcome back — enter your credentials to continue.">
+        <div className="flex flex-col gap-3 items-start">
+          <div className="flex flex-col gap-1 items-start">
+            <Label htmlFor="auth-email">Email</Label>
+            <Input id="auth-email" type="email" placeholder="you@company.com" />
+          </div>
+          <div className="flex flex-col gap-1 items-start">
+            <Label htmlFor="auth-pass">Password</Label>
+            <Input id="auth-pass" type="password" placeholder="••••••••" />
+          </div>
+          <Button variant="primary" className="w-full">Sign in</Button>
+        </div>
+      </AuthCard>
+    </div>
+  );
+}
 ```
 
 
@@ -5143,17 +5980,39 @@ A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 4
 ## Example: Dashboard
 
 ```tsx
-<BentoGrid>
-  <BentoTile size="2x2">
-    <h3 className="text-title-sm">Revenue, last 7 days</h3>
-    <RevenueChart />
-  </BentoTile>
-  <BentoTile><StatTile label="Active users" value="12,480" /></BentoTile>
-  <BentoTile><StatTile label="Conversion" value="3.2%" /></BentoTile>
-  <BentoTile size="2x1">3 invoices awaiting approval.</BentoTile>
-  <BentoTile><StatTile label="Churn" value="0.8%" /></BentoTile>
-  <BentoTile><StatTile label="NPS" value="61" /></BentoTile>
-</BentoGrid>
+import { BentoGrid, BentoTile } from '@nexub/patterns';
+
+function BentoStat({ label, value }: { label: string; value: string }) {
+  return (
+    <BentoTile className="flex flex-col justify-between">
+      <span className="text-label-md text-[var(--color-on-surface-variant)]">{label}</span>
+      <span className="text-title-lg text-[var(--color-on-surface)]">{value}</span>
+    </BentoTile>
+  );
+}
+
+export default function Example() {
+  const bars = ['40%', '65%', '50%', '80%', '72%', '90%', '60%'];
+  return (
+    <BentoGrid className="w-full">
+      <BentoTile size="2x2" className="flex flex-col gap-3">
+        <h3 className="text-title-sm text-[var(--color-on-surface)]">Revenue, last 7 days</h3>
+        <div role="img" aria-label={`Bar chart: ${bars.join(', ')}`} className="flex flex-1 items-end gap-2">
+          {bars.map((h, i) => (
+            <div key={i} className="flex-1 rounded-shape-min bg-[var(--color-primary-container)]" style={{ height: h }} />
+          ))}
+        </div>
+      </BentoTile>
+      <BentoStat label="Active users" value="12,480" />
+      <BentoStat label="Conversion" value="3.2%" />
+      <BentoTile size="2x1" className="flex items-center text-body-md text-[var(--color-on-surface-variant)]">
+        3 invoices awaiting approval.
+      </BentoTile>
+      <BentoStat label="Churn" value="0.8%" />
+      <BentoStat label="NPS" value="61" />
+    </BentoGrid>
+  );
+}
 ```
 
 Related: [card](card.md), [stat-card](stat-card.md)
@@ -5193,15 +6052,27 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 Send a message: it shows Thinking, then streams a cited reply. Stop or Escape ends the reply early.
 
 ```tsx
-type Message = { id: number; from: 'user' | 'assistant'; text: string };
+import * as React from 'react';
+import { type PromptInputStatus, PromptInput, MessageBubble, ThinkingIndicator, StreamingText, Citation, type CitationSource } from '@nexub/react';
+import { Conversation } from '@nexub/patterns';
 
-const REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
-const SOURCE = { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps' };
+const CITATION_SOURCES: CitationSource[] = [
+  { title: 'Choosing a heat pump', url: 'https://example.com/guides/heat-pumps', snippet: 'Air-source pumps suit most homes with a garden or outside wall.' },
+  { title: 'Grants for home heating', url: 'https://example.org/grants', domain: 'example.org' },
+  { title: 'Running costs compared', url: 'https://example.net/costs' },
+];
 
-function Chat() {
-  const [messages, setMessages] = React.useState<Message[]>([]);
-  const [status, setStatus] = React.useState<'idle' | 'submitting' | 'streaming'>('idle');
-  const timer = React.useRef<ReturnType<typeof setTimeout>>();
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string };
+
+const CHAT_REPLY = 'Air-source heat pumps work in most homes and run at roughly the cost of gas.';
+
+const CHAT_SOURCE = CITATION_SOURCES[0]!;
+
+export default function Example() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
+  const [status, setStatus] = React.useState<PromptInputStatus>('idle');
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  React.useEffect(() => () => clearTimeout(timer.current), []);
 
   function send(text: string) {
     const id = Date.now();
@@ -5214,8 +6085,8 @@ function Chat() {
   }
 
   function stream(id: number, length: number) {
-    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: REPLY.slice(0, length) } : msg)));
-    if (length >= REPLY.length) return setStatus('idle');
+    setMessages((m) => m.map((msg) => (msg.id === id ? { ...msg, text: CHAT_REPLY.slice(0, length) } : msg)));
+    if (length >= CHAT_REPLY.length) return setStatus('idle');
     timer.current = setTimeout(() => stream(id, length + 4), 50);
   }
 
@@ -5228,7 +6099,7 @@ function Chat() {
 
   return (
     <Conversation
-      style={{ height: 420 }}
+      className="h-[420px] w-full"
       composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
     >
       {messages.map((msg) =>
@@ -5241,7 +6112,7 @@ function Chat() {
             ) : (
               <>
                 <StreamingText as="span" text={msg.text} streaming={status === 'streaming' && msg === last} />
-                {msg.text === REPLY && <Citation index={1} source={SOURCE} />}
+                {msg.text === CHAT_REPLY && <Citation index={1} source={CHAT_SOURCE} />}
               </>
             )}
           </MessageBubble>
@@ -5300,28 +6171,34 @@ Lists a form’s errors after a failed submit, with a link to each field. useFor
 Submit empty to see the summary. A new map per submit moves focus to the summary; links jump to each field.
 
 ```tsx
-function SignUp() {
+import * as React from 'react';
+import { type FormErrorMap, useFormErrors, ErrorSummary } from '@nexub/patterns';
+import { Label, Input, FormError, Button } from '@nexub/react';
+
+export default function Example() {
   const [submitted, setSubmitted] = React.useState<FormErrorMap>({});
   const { errors, fieldProps, errorProps } = useFormErrors(submitted);
-
-  function submit(e: React.FormEvent<HTMLFormElement>) {
+  const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     setSubmitted({
-      name: String(data.get('name')).trim() ? undefined : 'Enter your name',
-      email: /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+      'es-name': String(data.get('name')).trim() ? undefined : 'Enter your name',
+      'es-email': /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
     });
-  }
-
+  };
   return (
-    <form noValidate onSubmit={submit}>
+    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-[340px]">
       <ErrorSummary errors={errors} />
-      <Label htmlFor="name">Name</Label>
-      <Input name="name" {...fieldProps('name')} invalid={Boolean(submitted.name)} />
-      {submitted.name && <FormError {...errorProps('name')}>{submitted.name}</FormError>}
-      <Label htmlFor="email">Email</Label>
-      <Input name="email" type="email" {...fieldProps('email')} invalid={Boolean(submitted.email)} />
-      {submitted.email && <FormError {...errorProps('email')}>{submitted.email}</FormError>}
+      <div className="flex flex-col gap-1 items-stretch">
+        <Label htmlFor="es-name">Name</Label>
+        <Input name="name" {...fieldProps('es-name')} invalid={Boolean(submitted['es-name'])} />
+        {submitted['es-name'] && <FormError {...errorProps('es-name')}>{submitted['es-name']}</FormError>}
+      </div>
+      <div className="flex flex-col gap-1 items-stretch">
+        <Label htmlFor="es-email">Email</Label>
+        <Input name="email" type="email" {...fieldProps('es-email')} invalid={Boolean(submitted['es-email'])} />
+        {submitted['es-email'] && <FormError {...errorProps('es-email')}>{submitted['es-email']}</FormError>}
+      </div>
       <Button type="submit">Create account</Button>
     </form>
   );
@@ -5361,20 +6238,24 @@ Search + filter toolbar pattern for data-heavy list or table views.
 ## Example: Default
 
 ```tsx
-<FilterBar
-  searchPlaceholder="Search users…"
-  onSearch={(v) => {}}
-  filters={
-    <Select.Root>
-      <Select.Trigger><Select.Value placeholder="Status" /></Select.Trigger>
-      <Select.Content>
-        <Select.Item value="active">Active</Select.Item>
-        <Select.Item value="inactive">Inactive</Select.Item>
-      </Select.Content>
-    </Select.Root>
-  }
-  actions={<Button variant="outline" size="sm">Export</Button>}
-/>
+import { FilterBar } from '@nexub/patterns';
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[480px]">
+      <FilterBar
+        searchPlaceholder="Search users…"
+        filters={
+          <div className="flex gap-2 flex-wrap items-center justify-center">
+            <Badge tone="neutral">Status: All</Badge>
+            <Badge tone="neutral">Plan: All</Badge>
+          </div>
+        }
+      />
+    </div>
+  );
+}
 ```
 
 
@@ -5398,12 +6279,21 @@ Key–value list for displaying structured metadata or details.
 ## Example: Default
 
 ```tsx
-<InfoList.Root>
-  <InfoList.Item label="Plan" value="Pro" />
-  <InfoList.Item label="Status" value={<Badge tone="success">Active</Badge>} />
-  <InfoList.Item label="Member since" value="Jan 2024" />
-  <InfoList.Item label="Team size" value="12 members" />
-</InfoList.Root>
+import { InfoList } from '@nexub/patterns';
+import { Badge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <InfoList.Root>
+        <InfoList.Item label="Plan" value="Pro" />
+        <InfoList.Item label="Seats" value="12 / 50" />
+        <InfoList.Item label="Renewal" value="Jan 15, 2026" />
+        <InfoList.Item label="Status" value={<Badge tone="success" size="sm">Active</Badge>} />
+      </InfoList.Root>
+    </div>
+  );
+}
 ```
 
 
@@ -5429,12 +6319,33 @@ The list-detail layout: side by side at 720px+ of its own width (a container que
 ## Example: Default
 
 ```tsx
-<ListDetail
-  showDetail={selected !== null}
-  onBack={() => setSelected(null)}
-  list={<MessageList onSelect={setSelected} />}
-  detail={<Message id={selected} />}
-/>
+import * as React from 'react';
+import { ListDetail } from '@nexub/patterns';
+
+export default function Example() {
+  const [selected, setSelected] = React.useState<number | null>(0);
+  const items = ['Quarterly report', 'Design review', 'Invoice #4821'];
+  return (
+    <div className="w-full h-[240px] border border-[var(--color-outline-variant)] rounded-[16px] overflow-hidden">
+      <ListDetail
+        showDetail={selected !== null}
+        onBack={() => setSelected(null)}
+        list={
+          <ul className="p-2 m-0 list-none">
+            {items.map((m, i) => (
+              <li key={m}>
+                <button type="button" onClick={() => setSelected(i)} className="nx-state-layer relative w-full rounded-shape-container px-3 py-2 text-left text-body-sm">
+                  {m}
+                </button>
+              </li>
+            ))}
+          </ul>
+        }
+        detail={<div className="text-title-md p-5">{selected === null ? 'Nothing selected' : items[selected]}</div>}
+      />
+    </div>
+  );
+}
 ```
 
 
@@ -5462,12 +6373,16 @@ Single notification row for notification panels or dropdowns.
 ## Example: Default
 
 ```tsx
-<NotificationItem
-  title="New comment on your post"
-  description="Alex left a comment on 'Design System v2'"
-  timestamp="5 min ago"
-  unread
-/>
+import { NotificationItem } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[340px]">
+      <NotificationItem title="New team member" description="Sarah joined your workspace." timestamp="2 min ago" read={false} />
+      <NotificationItem title="Invoice paid" description="Invoice #1042 was paid successfully." timestamp="1 hr ago" read />
+    </div>
+  );
+}
 ```
 
 
@@ -5497,15 +6412,23 @@ Pricing plan card with feature checklist, badge, and CTA button.
 ## Example: Default
 
 ```tsx
-<PlanCard
-  name="Pro"
-  price="$49/mo"
-  description="Everything you need to scale."
-  features={['Unlimited projects', 'Priority support', 'Custom domains', 'Analytics']}
-  highlighted
-  badge="Most Popular"
-  ctaLabel="Start free trial"
-/>
+import { PlanCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[280px]">
+      <PlanCard
+        name="Pro"
+        price="$49"
+        period="/ month"
+        description="For growing teams that need more power."
+        features={['Unlimited seats', 'Advanced analytics', 'Priority support']}
+        cta="Get started"
+        onSelect={() => {}}
+      />
+    </div>
+  );
+}
 ```
 
 
@@ -5531,16 +6454,25 @@ Grouped settings panel with title, description, and action area.
 ## Example: Default
 
 ```tsx
-<SettingsSection
-  title="Profile"
-  description="Update your personal information."
-  action={<Button size="sm">Save changes</Button>}
->
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
-    <Input placeholder="Display name" />
-    <Input placeholder="Email address" type="email" />
-  </div>
-</SettingsSection>
+import { SettingsSection } from '@nexub/patterns';
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[560px]">
+      <SettingsSection title="Notifications" description="Control how and when you receive notifications.">
+        <div className="flex flex-col gap-3 items-start">
+          {['Email alerts', 'Push notifications'].map((item) => (
+            <div key={item} className="flex items-center justify-between">
+              <span className="text-body-sm text-[var(--color-on-surface)]">{item}</span>
+              <Switch defaultChecked />
+            </div>
+          ))}
+        </div>
+      </SettingsSection>
+    </div>
+  );
+}
 ```
 
 
@@ -5570,31 +6502,50 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 ## Example: Default
 
 ```tsx
-<StatCard
-  label="Total Revenue"
-  value="$48,295"
-  delta="+12.5%"
-  deltaType="increase"
-  description="vs last month"
-/>
+import { StatCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[240px]">
+      <StatCard label="Total Revenue" value="$48,295" delta="+12.5%" deltaType="increase" description="vs last month" />
+    </div>
+  );
+}
 ```
 
 ## Example: With icon
 
 ```tsx
-<StatCard
-  label="Active Users"
-  value="2,841"
-  delta="-3.2%"
-  deltaType="decrease"
-  icon={<Users size={20} />}
-/>
+import { StatCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="flex gap-3 flex-wrap items-center justify-center">
+      <StatCard label="Users" value="2,841" delta="+8.3%" deltaType="increase" />
+      <StatCard label="Churn" value="3.2%" delta="-0.4%" deltaType="decrease" />
+    </div>
+  );
+}
 ```
 
 ## Example: Animated
 
 ```tsx
-<StatCard label="Orders today" value={orders.toLocaleString()} animate />
+import * as React from 'react';
+import { StatCard } from '@nexub/patterns';
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  const [orders, setOrders] = React.useState(1284);
+  return (
+    <div className="flex flex-col gap-3 items-stretch w-[240px]">
+      <StatCard label="Orders today" value={orders.toLocaleString('en-US')} animate />
+      <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
+        New orders
+      </Button>
+    </div>
+  );
+}
 ```
 
 
@@ -5619,15 +6570,16 @@ Visual progress indicator for multi-step flows like onboarding or checkout.
 ## Example: Default
 
 ```tsx
-<StepIndicator
-  currentStep={1}
-  steps={[
-    { label: 'Account' },
-    { label: 'Profile' },
-    { label: 'Payment' },
-    { label: 'Review' },
-  ]}
-/>
+import { StepIndicator } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <StepIndicator
+      currentStep={1}
+      steps={[{ label: 'Account' }, { label: 'Profile' }, { label: 'Billing' }, { label: 'Done' }]}
+    />
+  );
+}
 ```
 
 
@@ -5654,11 +6606,15 @@ User profile card displaying avatar, name, role, and optional actions.
 ## Example: Default
 
 ```tsx
-<UserCard
-  name="Alex Morgan"
-  email="alex@nexub.io"
-  role="Design Lead"
-/>
+import { UserCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-[300px]">
+      <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
+    </div>
+  );
+}
 ```
 
 

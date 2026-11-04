@@ -20,26 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<IconButton variant="ghost" aria-label="Settings">
-  <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-</IconButton>`,
     },
     {
       title: 'Variants',
-      code: `<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <IconButton variant="ghost" aria-label="Ghost action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="solid" aria-label="Solid action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="outline" aria-label="Outline action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-  <IconButton variant="subtle" aria-label="Subtle action">
-    <div style={{ width: 16, height: 16, background: 'currentColor', borderRadius: 2 }} />
-  </IconButton>
-</div>`,
     },
   ],
 };

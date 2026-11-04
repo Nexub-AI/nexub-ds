@@ -18,19 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Stack gap="md">
-  <Button variant="outline">Item 1</Button>
-  <Button variant="outline">Item 2</Button>
-  <Button variant="outline">Item 3</Button>
-</Stack>`,
     },
     {
       title: 'With dividers',
-      code: `<Stack gap="md" dividers>
-  <Text>First section</Text>
-  <Text>Second section</Text>
-  <Text>Third section</Text>
-</Stack>`,
     },
   ],
 };

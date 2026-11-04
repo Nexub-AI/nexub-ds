@@ -20,49 +20,54 @@ Toggle visibility of content with smooth animation.
 ## Example: Default
 
 ```tsx
-<Collapsible.Root>
-  <Collapsible.Trigger asChild>
-    <Button variant="outline">Toggle details</Button>
-  </Collapsible.Trigger>
-  <Collapsible.Content>
-    <div style={{ paddingTop: '12px', color: 'var(--color-text-secondary)' }}>
-      Hidden content revealed on toggle.
-    </div>
-  </Collapsible.Content>
-</Collapsible.Root>
+import * as React from 'react';
+import { Collapsible, Button } from '@nexub/react';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <Collapsible.Trigger asChild>
+        <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
+      </Collapsible.Trigger>
+      <Collapsible.Content>
+        <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
+          Hidden content revealed on toggle. This section can hold any content.
+        </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
+  );
+}
 ```
 
 ## Example: Controlled
 
 ```tsx
-function ControlledExample() {
-  const [open, setOpen] = React.useState(false);
+import * as React from 'react';
+import { Collapsible, Button, Switch, Label } from '@nexub/react';
+
+export default function Example() {
+  const [open2, setOpen2] = React.useState(false);
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontWeight: 500 }}>Advanced settings</span>
+    <Collapsible.Root open={open2} onOpenChange={setOpen2}>
+      <div className="flex items-center gap-2">
+        <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
-          <IconButton
-            aria-label={open ? 'Collapse' : 'Expand'}
-            variant="ghost"
-            size="sm"
-          />
+          <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>
-        <div style={{ paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="notif" />
-            <Label htmlFor="notif">Enable notifications</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="autosave" />
-            <Label htmlFor="autosave">Auto-save drafts</Label>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Switch id="tooltips" />
-            <Label htmlFor="tooltips">Show tooltips</Label>
-          </div>
+        <div className="pt-3 flex flex-col gap-3">
+          {[
+            { id: 'notif', label: 'Enable notifications' },
+            { id: 'autosave', label: 'Auto-save drafts' },
+            { id: 'tooltips', label: 'Show tooltips' },
+          ].map(({ id, label }) => (
+            <div key={id} className="flex items-center gap-2">
+              <Switch id={id} />
+              <Label htmlFor={id}>{label}</Label>
+            </div>
+          ))}
         </div>
       </Collapsible.Content>
     </Collapsible.Root>

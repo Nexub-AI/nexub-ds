@@ -37,33 +37,53 @@ Text input field for forms. Supports size variants, icons, addons, and validatio
 ## Example: Default
 
 ```tsx
-<Input placeholder="Enter value…" />
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Input placeholder="Enter value…" /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '320px' }}>
-  <Input size="sm" placeholder="Small" />
-  <Input size="md" placeholder="Medium" />
-  <Input size="lg" placeholder="Large" />
-</div>
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Input size="sm" placeholder="Small" />
+      <Input size="md" placeholder="Medium" />
+      <Input size="lg" placeholder="Large" />
+    </div>
+  );
+}
 ```
 
 ## Example: Invalid state
 
 ```tsx
-<Input invalid placeholder="Invalid value" />
+import { Input } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Input invalid placeholder="Invalid value" /></div>;
+}
 ```
 
 ## Example: With label and helper
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '4px', maxWidth: '320px' }}>
-  <Label htmlFor="email">Email address</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-  <HelperText>We'll never share your email.</HelperText>
-</div>
+import { Label, Input, HelperText } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-1 items-start w-[280px]">
+      <Label htmlFor="demo-email">Email address</Label>
+      <Input id="demo-email" type="email" placeholder="you@example.com" />
+      <HelperText>We&apos;ll never share your email.</HelperText>
+    </div>
+  );
+}
 ```
 
 ## Accessibility

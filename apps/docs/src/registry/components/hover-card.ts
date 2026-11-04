@@ -20,18 +20,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<HoverCard.Root openDelay={200} closeDelay={100}>
-  <HoverCard.Trigger asChild>
-    <Link href="#">@sasidharan</Link>
-  </HoverCard.Trigger>
-  <HoverCard.Content side="bottom" align="start" sideOffset={8}>
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', width: '240px' }}>
-      <Text weight="semibold">Sasidharan</Text>
-      <Text size="body-sm" tone="secondary">Full-stack engineer building design systems.</Text>
-      <Text size="caption" tone="muted">Joined April 2024</Text>
-    </div>
-  </HoverCard.Content>
-</HoverCard.Root>`,
     },
   ],
 };

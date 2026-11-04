@@ -18,22 +18,36 @@ Horizontal progress bar with optional tone and animation.
 ## Example: Default
 
 ```tsx
-<Progress value={65} />
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Progress value={65} /></div>;
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Progress value={80} tone="info" />
-  <Progress value={60} tone="success" />
-  <Progress value={45} tone="warning" />
-  <Progress value={30} tone="danger" />
-</div>
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+      <Progress value={80} tone="success" />
+      <Progress value={55} tone="info" />
+      <Progress value={30} tone="warning" />
+      <Progress value={20} tone="danger" />
+    </div>
+  );
+}
 ```
 
 ## Example: Animated
 
 ```tsx
-<Progress value={40} animated tone="info" />
+import { Progress } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Progress value={40} animated tone="info" /></div>;
+}
 ```

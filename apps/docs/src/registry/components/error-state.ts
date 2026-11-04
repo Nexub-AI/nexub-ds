@@ -20,19 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ErrorState
-  title="Something went wrong"
-  description="We could not load the data. Please try again."
-  onRetry={() => {}}
-/>`,
     },
     {
       title: 'Warning',
-      code: `<ErrorState
-  tone="warning"
-  title="Connection issue"
-  description="Check your network and try again."
-/>`,
     },
   ],
 };

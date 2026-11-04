@@ -29,18 +29,27 @@ Assistant text as it arrives: new chunks fade in, text already shown stays still
 Words arrive on a timer. Restart streams the paragraph again.
 
 ```tsx
-const reply = 'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
-const [length, setLength] = React.useState(0);
-const streaming = length < reply.length;
+import * as React from 'react';
+import { StreamingText, Button } from '@nexub/react';
 
-React.useEffect(() => {
-  if (!streaming) return;
-  const id = setTimeout(() => setLength((n) => Math.min(reply.length, n + 6)), 60);
-  return () => clearTimeout(id);
-}, [length, streaming]);
+const STREAM_DEMO_TEXT =
+  'Tokens arrive a few characters at a time. Each new chunk fades in while the text before it stays put, so the eye can keep reading.';
 
-<StreamingText as="p" text={reply.slice(0, length)} streaming={streaming} />
-<Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+export default function Example() {
+  const [length, setLength] = React.useState(0);
+  const streaming = length < STREAM_DEMO_TEXT.length;
+  React.useEffect(() => {
+    if (!streaming) return;
+    const id = setTimeout(() => setLength((n) => Math.min(STREAM_DEMO_TEXT.length, n + 6)), 60);
+    return () => clearTimeout(id);
+  }, [length, streaming]);
+  return (
+    <div className="flex flex-col gap-3 items-start max-w-[480px]">
+      <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
+      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+    </div>
+  );
+}
 ```
 
 ## Accessibility

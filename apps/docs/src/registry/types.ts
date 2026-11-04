@@ -6,10 +6,10 @@ export interface PropDef {
   description: string;
 }
 
+/** Its code and preview are apps/docs/src/examples/<kind>/<slug>/<index>.tsx. */
 export interface ExampleDef {
   title: string;
   description?: string;
-  code: string;
 }
 
 /** Lifecycle status, see GOVERNANCE.md → "Status lifecycle". */

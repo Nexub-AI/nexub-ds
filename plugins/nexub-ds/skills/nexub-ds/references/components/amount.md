@@ -21,14 +21,26 @@ Honest money: Intl formatting, tabular numerals, the currency’s minor unit and
 ## Example: Display
 
 ```tsx
-<Amount value={128450.75} currency="USD" size="display" />
+import { Amount } from '@nexub/react';
+
+export default function Example() {
+  return <Amount value={128450.75} currency="USD" size="display" />;
+}
 ```
 
 ## Example: Gains and losses
 
 ```tsx
-<Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
-<Amount value={-89.99} currency="USD" tone="auto" />
+import { Amount } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-4">
+      <Amount value={312.4} currency="USD" tone="auto" signDisplay="exceptZero" />
+      <Amount value={-89.99} currency="USD" tone="auto" />
+    </div>
+  );
+}
 ```
 
 Related: [money-input](money-input.md), [number-ticker](number-ticker.md)

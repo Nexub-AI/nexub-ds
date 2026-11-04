@@ -25,32 +25,36 @@ Calendar date picker with text input.
 ## Example: Default
 
 ```tsx
-<DatePicker placeholder="Select a date…" />
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DatePicker placeholder="Select a date…" />;
+}
 ```
 
 ## Example: With value
 
 ```tsx
-function ControlledDatePicker() {
-  const [date, setDate] = React.useState(new Date('2026-01-15'));
-  return (
-    <DatePicker
-      aria-label="Appointment date"
-      value={date}
-      onChange={setDate}
-      placeholder="Select a date…"
-    />
-  );
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return <DatePicker value={new Date('2026-01-15')} onChange={() => {}} />;
 }
 ```
 
 ## Example: With constraints
 
 ```tsx
-<DatePicker
-  aria-label="Schedule for"
-  placeholder="Select a future date…"
-  minDate={new Date()}
-  maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
-/>
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <DatePicker
+      aria-label="Schedule for"
+      placeholder="Select a future date…"
+      minDate={new Date()}
+      maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
+    />
+  );
+}
 ```

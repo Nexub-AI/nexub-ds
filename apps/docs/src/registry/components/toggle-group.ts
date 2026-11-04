@@ -18,19 +18,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Single',
-      code: `<ToggleGroup.Root type="single" defaultValue="left">
-  <ToggleGroup.Item value="left">Left</ToggleGroup.Item>
-  <ToggleGroup.Item value="center">Center</ToggleGroup.Item>
-  <ToggleGroup.Item value="right">Right</ToggleGroup.Item>
-</ToggleGroup.Root>`,
     },
     {
       title: 'Multiple',
-      code: `<ToggleGroup.Root type="multiple" defaultValue={["bold", "italic"]}>
-  <ToggleGroup.Item value="bold">Bold</ToggleGroup.Item>
-  <ToggleGroup.Item value="italic">Italic</ToggleGroup.Item>
-  <ToggleGroup.Item value="underline">Underline</ToggleGroup.Item>
-</ToggleGroup.Root>`,
     },
   ],
 };

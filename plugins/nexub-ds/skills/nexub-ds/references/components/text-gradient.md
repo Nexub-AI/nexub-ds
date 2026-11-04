@@ -17,14 +17,23 @@ Renders text with a brand gradient fill.
 ## Example: Default
 
 ```tsx
-<TextGradient>Design system for ambitious teams</TextGradient>
+import { TextGradient } from '@nexub/react';
+
+export default function Example() {
+  return <TextGradient className="text-[1.5rem] font-bold">Design system for ambitious teams</TextGradient>;
+}
 ```
 
 ## Example: In heading
 
 ```tsx
-<Heading size="h1">
-  Build with{' '}
-  <TextGradient>Nexub</TextGradient>
-</Heading>
+import { Heading, TextGradient } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Heading size="h2">
+      <TextGradient>Build faster, ship consistently</TextGradient>
+    </Heading>
+  );
+}
 ```

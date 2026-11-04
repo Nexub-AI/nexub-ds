@@ -20,27 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Flex gap="md" align="center">
-  <Button variant="primary">Action</Button>
-  <Button variant="outline">Cancel</Button>
-</Flex>`,
     },
     {
       title: 'Space between',
-      code: `<Flex justify="between">
-  <Badge tone="success">Active</Badge>
-  <Badge tone="neutral">Draft</Badge>
-</Flex>`,
     },
     {
       title: 'Wrap',
-      code: `<Flex gap="sm" wrap>
-  <Badge tone="info">React</Badge>
-  <Badge tone="info">TypeScript</Badge>
-  <Badge tone="info">Tailwind</Badge>
-  <Badge tone="info">Radix UI</Badge>
-  <Badge tone="info">Storybook</Badge>
-</Flex>`,
     },
   ],
 };

@@ -23,39 +23,17 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Card>
-  <Heading level={3} size="h5">Card title</Heading>
-  <Text size="body-sm" tone="muted">Card description goes here.</Text>
-</Card>`,
     },
     {
       title: 'Variants',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
-  <Card variant="surface"><Text size="body-sm">Surface (elevated)</Text></Card>
-  <Card variant="interactive"><Text size="body-sm">Interactive (hover)</Text></Card>
-</div>`,
     },
     {
       title: 'Card link',
       description: 'The whole card is one link named by its title. The button sits above the link with `relative z-[1]`.',
-      code: `<Card variant="interactive" className="p-4">
-  <Heading level={3} size="h5">
-    <CardLink href="/projects/atlas">Atlas</CardLink>
-  </Heading>
-  <Text size="body-sm" tone="muted">Updated 2 hours ago</Text>
-  <Button size="sm" variant="text" className="relative z-[1]" onClick={star}>
-    Star
-  </Button>
-</Card>`,
     },
     {
       title: 'Sheen',
       description: 'Move the pointer over the card.',
-      code: `<Card variant="surface" effect="sheen" className="p-6">
-  <Heading level={3} size="h5">Pro</Heading>
-  <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
-</Card>`,
     },
   ],
   playground: {

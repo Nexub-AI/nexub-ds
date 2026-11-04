@@ -28,43 +28,13 @@ const entry: ComponentEntry = {
     {
       title: 'Default',
       description: 'Enter sends, Shift+Enter adds a line. Send stays inert until there is text.',
-      code: `<PromptInput placeholder="Ask anything" onSubmit={(text) => send(text)} />`,
     },
     {
       title: 'Attachments and actions',
-      code: `<PromptInput
-  placeholder="Ask about these files"
-  attachments={
-    <>
-      <Chip onRemove={() => remove('q3-report.pdf')}>q3-report.pdf</Chip>
-      <Chip onRemove={() => remove('pricing.csv')}>pricing.csv</Chip>
-    </>
-  }
-  actions={
-    <>
-      <IconButton size="sm" label="Attach files"><Paperclip /></IconButton>
-      <IconButton size="sm" label="Search the web"><Globe /></IconButton>
-    </>
-  }
-/>`,
     },
     {
       title: 'Streaming',
       description: 'Send a message: the button turns into Stop for three seconds. Stop or Escape ends it early.',
-      code: `const [status, setStatus] = React.useState<PromptInputStatus>('idle');
-const timer = React.useRef<ReturnType<typeof setTimeout>>();
-
-function send() {
-  setStatus('streaming');
-  timer.current = setTimeout(() => setStatus('idle'), 3000);
-}
-
-function stop() {
-  clearTimeout(timer.current);
-  setStatus('idle');
-}
-
-<PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />`,
     },
   ],
   usage: {

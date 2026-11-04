@@ -18,26 +18,37 @@ A primary action with related secondary actions behind a chevron, as one connect
 ## Example: Default
 
 ```tsx
-<SplitButton
-  onClick={save}
-  menuLabel="More save options"
-  menu={
-    <>
-      <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
-      <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
-    </>
-  }
->
-  Save
-</SplitButton>
+import { SplitButton, DropdownMenu } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SplitButton
+      menuLabel="More save options"
+      menu={
+        <>
+          <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
+          <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
+        </>
+      }
+    >
+      Save
+    </SplitButton>
+  );
+}
 ```
 
 ## Example: Outlined
 
 ```tsx
-<SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
-  Export
-</SplitButton>
+import { SplitButton, DropdownMenu } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
+      Export
+    </SplitButton>
+  );
+}
 ```
 
 Related: [button](button.md), [button-group](button-group.md), [dropdown-menu](dropdown-menu.md)

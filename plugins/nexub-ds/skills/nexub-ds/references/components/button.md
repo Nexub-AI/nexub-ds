@@ -41,39 +41,61 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 ## Example: Default
 
 ```tsx
-<Button variant="primary">Click me</Button>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return <Button variant="primary">Click me</Button>;
+}
 ```
 
 ## Example: Variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-  <Button variant="primary">Primary</Button>
-  <Button variant="outline">Outline</Button>
-  <Button variant="ghost">Ghost</Button>
-  <Button variant="subtle">Subtle</Button>
-  <Button variant="link">Link</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="primary">Primary</Button>
+      <Button variant="outline">Outline</Button>
+      <Button variant="ghost">Ghost</Button>
+      <Button variant="subtle">Subtle</Button>
+      <Button variant="link">Link</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-  <Button size="xs" variant="primary">XSmall</Button>
-  <Button size="sm" variant="primary">Small</Button>
-  <Button size="md" variant="primary">Medium</Button>
-  <Button size="lg" variant="primary">Large</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button size="xs" variant="primary">XSmall</Button>
+      <Button size="sm" variant="primary">Small</Button>
+      <Button size="md" variant="primary">Medium</Button>
+      <Button size="lg" variant="primary">Large</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: States
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Button variant="primary" loading>Loading</Button>
-  <Button variant="outline" disabled>Disabled</Button>
-</div>
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Button variant="primary" loading>Loading</Button>
+      <Button variant="outline" disabled>Disabled</Button>
+    </div>
+  );
+}
 ```
 
 ## Example: Async
@@ -81,23 +103,26 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 Drive `status` from the request. Each click here moves to the next status.
 
 ```tsx
-function SaveButton() {
+import * as React from 'react';
+import { type ButtonStatus, Button } from '@nexub/react';
+
+const NEXT_STATUS: Record<ButtonStatus, ButtonStatus> = { idle: 'loading', loading: 'success', success: 'error', error: 'idle' };
+
+export default function Example() {
   const [status, setStatus] = React.useState<ButtonStatus>('idle');
-
-  async function save() {
-    setStatus('loading');
-    try {
-      await saveProfile();
-      setStatus('success');
-    } catch {
-      setStatus('error');
-    }
-  }
-
+  // Clicks are ignored while loading, so loading moves on by itself.
+  React.useEffect(() => {
+    if (status !== 'loading') return;
+    const t = setTimeout(() => setStatus('success'), 1200);
+    return () => clearTimeout(t);
+  }, [status]);
   return (
-    <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={save}>
-      Save
-    </Button>
+    <div className="flex flex-col gap-2 items-start">
+      <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
+        Save
+      </Button>
+      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+    </div>
   );
 }
 ```

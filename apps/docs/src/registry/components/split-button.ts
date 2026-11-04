@@ -20,24 +20,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<SplitButton
-  onClick={save}
-  menuLabel="More save options"
-  menu={
-    <>
-      <DropdownMenu.Item>Save as draft</DropdownMenu.Item>
-      <DropdownMenu.Item>Save a copy</DropdownMenu.Item>
-    </>
-  }
->
-  Save
-</SplitButton>`,
     },
     {
       title: 'Outlined',
-      code: `<SplitButton variant="outlined" menuLabel="More export options" menu={<DropdownMenu.Item>CSV</DropdownMenu.Item>}>
-  Export
-</SplitButton>`,
     },
   ],
 };

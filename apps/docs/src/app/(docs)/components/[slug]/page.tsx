@@ -15,6 +15,10 @@ import { RelatedComponents } from '@/components/docs/RelatedComponents';
 import { Section } from '@/components/kit';
 import { PlatformPanel, PlatformSwitch } from '@/components/platform/PlatformTabs';
 import { MobilePanel, NoMobileTwin } from '@/components/platform/MobilePanel';
+import { exampleCode } from '@/examples/code';
+import { join } from 'node:path';
+
+const EXAMPLES_DIR = join(process.cwd(), 'src/examples');
 
 // All component pages are fully static — pre-render every slug at build time
 // and serve from CDN. No per-request server work after the initial build.
@@ -84,7 +88,7 @@ export default async function ComponentPage({ params }: Props) {
                 const a11ySlot = a11y && i === 0 ? <A11yPanel a11y={a11y} /> : undefined;
                 return (
                   <Section key={ex.title} id={exampleId(ex.title, i)} title={ex.title} description={ex.description} level={3}>
-                    <ComponentPreview code={ex.code} a11ySlot={a11ySlot}>
+                    <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} a11ySlot={a11ySlot}>
                       <ComponentLivePreview slug={slug} idx={i} />
                     </ComponentPreview>
                   </Section>

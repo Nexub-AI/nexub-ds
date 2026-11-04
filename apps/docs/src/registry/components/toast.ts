@@ -28,97 +28,16 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `function DefaultToast() {
-  return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}
-      >
-        Show toast
-      </Button>
-    </>
-  );
-}`,
     },
     {
       title: 'Variants',
-      code: `function ToastVariants() {
-  return (
-    <>
-      <Toaster />
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        <Button variant="outline" onClick={() => toast.custom('Default notification')}>
-          Default
-        </Button>
-        <Button variant="outline" onClick={() => toast.success('Saved successfully')}>
-          Success
-        </Button>
-        <Button variant="outline" onClick={() => toast.error('Something went wrong')}>
-          Error
-        </Button>
-        <Button variant="outline" onClick={() => toast.warning('Proceed with caution')}>
-          Warning
-        </Button>
-        <Button variant="outline" onClick={() => toast.info('New update available')}>
-          Info
-        </Button>
-      </div>
-    </>
-  );
-}`,
     },
     {
       title: 'With action',
-      code: `function ToastWithAction() {
-  return (
-    <>
-      <Toaster />
-      <Button
-        variant="outline"
-        onClick={() =>
-          toast.custom('Message sent', {
-            description: 'Your message has been delivered to the team.',
-            action: {
-              label: 'Undo',
-              onClick: () => {},
-            },
-          })
-        }
-      >
-        Send message
-      </Button>
-    </>
-  );
-}`,
     },
     {
       title: 'Undoable delete',
       description: 'Hide the item right away; delete it for real only when the toast closes without Undo.',
-      code: `function UndoableDelete() {
-  const [hidden, setHidden] = React.useState(false);
-
-  function remove() {
-    setHidden(true);
-    toast.undoable('Invoice deleted', {
-      description: 'INV-2041',
-      onUndo: () => setHidden(false),
-      onCommit: () => deleteInvoice('INV-2041'),
-    });
-  }
-
-  return (
-    <>
-      <Toaster />
-      {hidden ? (
-        <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
-      ) : (
-        <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
-      )}
-    </>
-  );
-}`,
     },
   ],
   usage: {

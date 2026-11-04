@@ -21,19 +21,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Textarea placeholder="Enter your message…" />`,
     },
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Textarea size="sm" placeholder="Small textarea" />
-  <Textarea size="md" placeholder="Medium textarea" />
-  <Textarea size="lg" placeholder="Large textarea" />
-</div>`,
     },
     {
       title: 'Invalid',
-      code: `<Textarea invalid placeholder="This field has an error" />`,
     },
   ],
 };

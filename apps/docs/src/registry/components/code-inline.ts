@@ -16,11 +16,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Code>npm install @nexub/react</Code>`,
     },
     {
       title: 'In prose',
-      code: `<Text>Use the <Code>useTheme()</Code> hook to access the current theme.</Text>`,
     },
   ],
 };

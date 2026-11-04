@@ -19,28 +19,44 @@ Semantic heading component with size, weight, and tone control.
 ## Example: Default
 
 ```tsx
-<Heading>The quick brown fox</Heading>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return <Heading>The quick brown fox</Heading>;
+}
 ```
 
 ## Example: Scale
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading size="h1">Heading H1</Heading>
-  <Heading size="h2">Heading H2</Heading>
-  <Heading size="h3">Heading H3</Heading>
-  <Heading size="h4">Heading H4</Heading>
-  <Heading size="h5">Heading H5</Heading>
-</div>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Heading size="h1">Heading 1</Heading>
+      <Heading size="h2">Heading 2</Heading>
+      <Heading size="h3">Heading 3</Heading>
+      <Heading size="h4">Heading 4</Heading>
+      <Heading size="h5">Heading 5</Heading>
+    </div>
+  );
+}
 ```
 
 ## Example: Tones
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading tone="info">Info heading</Heading>
-  <Heading tone="success">Success heading</Heading>
-  <Heading tone="warning">Warning heading</Heading>
-  <Heading tone="danger">Danger heading</Heading>
-</div>
+import { Heading } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start">
+      <Heading tone="info">Info tone</Heading>
+      <Heading tone="success">Success tone</Heading>
+      <Heading tone="warning">Warning tone</Heading>
+      <Heading tone="danger">Danger tone</Heading>
+    </div>
+  );
+}
 ```

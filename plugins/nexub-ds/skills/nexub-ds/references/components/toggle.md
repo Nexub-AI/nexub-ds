@@ -19,14 +19,24 @@ Pressable toggle button built on Radix UI Toggle.
 ## Example: Default
 
 ```tsx
-<Toggle>Bold</Toggle>
+import { Toggle } from '@nexub/react';
+
+export default function Example() {
+  return <Toggle>Bold</Toggle>;
+}
 ```
 
 ## Example: Outline variants
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <Toggle variant="outline">Unpressed</Toggle>
-  <Toggle variant="outline" defaultPressed>Pressed</Toggle>
-</div>
+import { Toggle } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <Toggle variant="outline">Italic</Toggle>
+      <Toggle variant="outline" defaultPressed>Bold</Toggle>
+    </div>
+  );
+}
 ```

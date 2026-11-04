@@ -17,19 +17,31 @@ Vertical stack layout with configurable gap.
 ## Example: Default
 
 ```tsx
-<Stack gap="md">
-  <Button variant="outline">Item 1</Button>
-  <Button variant="outline">Item 2</Button>
-  <Button variant="outline">Item 3</Button>
-</Stack>
+import { Stack, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stack gap="md">
+      <Button variant="outline">Item 1</Button>
+      <Button variant="outline">Item 2</Button>
+      <Button variant="outline">Item 3</Button>
+    </Stack>
+  );
+}
 ```
 
 ## Example: With dividers
 
 ```tsx
-<Stack gap="md" dividers>
-  <Text>First section</Text>
-  <Text>Second section</Text>
-  <Text>Third section</Text>
-</Stack>
+import { Stack, Separator, Text } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stack gap="md" divider={<Separator />} className="w-[220px]">
+      <Text size="body-sm">First item</Text>
+      <Text size="body-sm">Second item</Text>
+      <Text size="body-sm">Third item</Text>
+    </Stack>
+  );
+}
 ```

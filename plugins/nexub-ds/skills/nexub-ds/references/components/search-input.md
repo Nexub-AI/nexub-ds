@@ -18,5 +18,9 @@ A text input pre-wired with a search icon and a clear button for filtering conte
 ## Example: Default
 
 ```tsx
-<SearchInput placeholder="Search…" />
+import { SearchInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><SearchInput placeholder="Search…" /></div>;
+}
 ```

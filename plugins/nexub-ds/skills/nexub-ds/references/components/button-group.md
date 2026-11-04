@@ -16,28 +16,46 @@ Groups related buttons together with optional attachment and orientation.
 ## Example: Default
 
 ```tsx
-<ButtonGroup>
-  <Button variant="primary">Save</Button>
-  <Button variant="outline">Cancel</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup>
+      <Button variant="primary">Save</Button>
+      <Button variant="outline">Cancel</Button>
+    </ButtonGroup>
+  );
+}
 ```
 
 ## Example: Attached
 
 ```tsx
-<ButtonGroup attached>
-  <Button variant="outline">Left</Button>
-  <Button variant="outline">Center</Button>
-  <Button variant="outline">Right</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup attached>
+      <Button variant="outline">Left</Button>
+      <Button variant="outline">Center</Button>
+      <Button variant="outline">Right</Button>
+    </ButtonGroup>
+  );
+}
 ```
 
 ## Example: Vertical
 
 ```tsx
-<ButtonGroup orientation="vertical">
-  <Button variant="outline">Option A</Button>
-  <Button variant="outline">Option B</Button>
-  <Button variant="outline">Option C</Button>
-</ButtonGroup>
+import { ButtonGroup, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ButtonGroup orientation="vertical">
+      <Button variant="outline">Option A</Button>
+      <Button variant="outline">Option B</Button>
+      <Button variant="outline">Option C</Button>
+    </ButtonGroup>
+  );
+}
 ```

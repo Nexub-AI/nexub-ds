@@ -19,11 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<div style={{ display: 'flex', gap: '8px' }}>
-  <Tag>Frontend</Tag>
-  <Tag tone="info">Backend</Tag>
-  <Tag tone="success">Deployed</Tag>
-</div>`,
     },
   ],
 };

@@ -22,11 +22,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<PasswordInput placeholder="Enter password…" />`,
     },
     {
       title: 'Invalid',
-      code: `<PasswordInput invalid placeholder="Password is too short" />`,
     },
   ],
 };

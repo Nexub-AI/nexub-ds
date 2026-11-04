@@ -20,20 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Alert tone="info" title="Heads up">Your trial expires in 3 days.</Alert>`,
     },
     {
       title: 'Tones',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Alert tone="info" title="Information">This is an informational message.</Alert>
-  <Alert tone="success" title="Success">Your changes have been saved.</Alert>
-  <Alert tone="warning" title="Warning">Please review before proceeding.</Alert>
-  <Alert tone="danger" title="Error">Something went wrong. Please try again.</Alert>
-</div>`,
     },
     {
       title: 'Dismissible',
-      code: `<Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>`,
     },
   ],
   usage: {

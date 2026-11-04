@@ -18,9 +18,16 @@ Interactive chip for filtering, supports selected/unselected state.
 ## Example: Default
 
 ```tsx
-<div style={{ display: 'flex', gap: '8px' }}>
-  <FilterChip>All</FilterChip>
-  <FilterChip defaultSelected>Active</FilterChip>
-  <FilterChip>Archived</FilterChip>
-</div>
+import { FilterChip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <FilterChip>All</FilterChip>
+      <FilterChip selected>Active</FilterChip>
+      <FilterChip>Archived</FilterChip>
+      <FilterChip>Draft</FilterChip>
+    </div>
+  );
+}
 ```

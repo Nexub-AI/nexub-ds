@@ -18,14 +18,23 @@ Grouped settings panel with title, description, and action area.
 ## Example: Default
 
 ```tsx
-<SettingsSection
-  title="Profile"
-  description="Update your personal information."
-  action={<Button size="sm">Save changes</Button>}
->
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
-    <Input placeholder="Display name" />
-    <Input placeholder="Email address" type="email" />
-  </div>
-</SettingsSection>
+import { SettingsSection } from '@nexub/patterns';
+import { Switch } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-[560px]">
+      <SettingsSection title="Notifications" description="Control how and when you receive notifications.">
+        <div className="flex flex-col gap-3 items-start">
+          {['Email alerts', 'Push notifications'].map((item) => (
+            <div key={item} className="flex items-center justify-between">
+              <span className="text-body-sm text-[var(--color-on-surface)]">{item}</span>
+              <Switch defaultChecked />
+            </div>
+          ))}
+        </div>
+      </SettingsSection>
+    </div>
+  );
+}
 ```

@@ -16,15 +16,25 @@ A horizontal or vertical visual divider.
 ## Example: Default
 
 ```tsx
-<Separator />
+import { Separator } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Separator /></div>;
+}
 ```
 
 ## Example: Vertical
 
 ```tsx
-<div style={{ display: 'flex', height: '32px', alignItems: 'center', gap: '16px' }}>
-  <span>Left</span>
-  <Separator orientation="vertical" />
-  <span>Right</span>
-</div>
+import { Separator } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex h-[32px] items-center gap-4">
+      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Left</span>
+      <Separator orientation="vertical" />
+      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Right</span>
+    </div>
+  );
+}
 ```

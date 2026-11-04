@@ -17,17 +17,9 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Sizes',
-      code: `<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-  <Spinner size="xs" />
-  <Spinner size="sm" />
-  <Spinner size="md" />
-  <Spinner size="lg" />
-  <Spinner size="xl" />
-</div>`,
     },
     {
       title: 'Inside button',
-      code: `<Button loading>Saving…</Button>`,
     },
   ],
 };

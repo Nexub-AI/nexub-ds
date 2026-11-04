@@ -21,11 +21,19 @@ Range slider built on Radix UI Slider.
 ## Example: Default
 
 ```tsx
-<Slider defaultValue={[50]} min={0} max={100} style={{ width: '240px' }} />
+import { Slider } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[240px]"><Slider defaultValue={[50]} min={0} max={100} /></div>;
+}
 ```
 
 ## Example: Range
 
 ```tsx
-<Slider defaultValue={[20, 80]} min={0} max={100} style={{ width: '240px' }} />
+import { Slider } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
+}
 ```

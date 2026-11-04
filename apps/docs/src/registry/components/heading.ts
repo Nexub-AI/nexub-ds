@@ -20,26 +20,12 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<Heading>The quick brown fox</Heading>`,
     },
     {
       title: 'Scale',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading size="h1">Heading H1</Heading>
-  <Heading size="h2">Heading H2</Heading>
-  <Heading size="h3">Heading H3</Heading>
-  <Heading size="h4">Heading H4</Heading>
-  <Heading size="h5">Heading H5</Heading>
-</div>`,
     },
     {
       title: 'Tones',
-      code: `<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-  <Heading tone="info">Info heading</Heading>
-  <Heading tone="success">Success heading</Heading>
-  <Heading tone="warning">Warning heading</Heading>
-  <Heading tone="danger">Danger heading</Heading>
-</div>`,
     },
   ],
 };

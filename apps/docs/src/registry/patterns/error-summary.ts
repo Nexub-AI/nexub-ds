@@ -24,32 +24,6 @@ const entry: ComponentEntry = {
     {
       title: 'Validate on submit',
       description: 'Submit empty to see the summary. A new map per submit moves focus to the summary; links jump to each field.',
-      code: `function SignUp() {
-  const [submitted, setSubmitted] = React.useState<FormErrorMap>({});
-  const { errors, fieldProps, errorProps } = useFormErrors(submitted);
-
-  function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    setSubmitted({
-      name: String(data.get('name')).trim() ? undefined : 'Enter your name',
-      email: /^\\S+@\\S+\\.\\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
-    });
-  }
-
-  return (
-    <form noValidate onSubmit={submit}>
-      <ErrorSummary errors={errors} />
-      <Label htmlFor="name">Name</Label>
-      <Input name="name" {...fieldProps('name')} invalid={Boolean(submitted.name)} />
-      {submitted.name && <FormError {...errorProps('name')}>{submitted.name}</FormError>}
-      <Label htmlFor="email">Email</Label>
-      <Input name="email" type="email" {...fieldProps('email')} invalid={Boolean(submitted.email)} />
-      {submitted.email && <FormError {...errorProps('email')}>{submitted.email}</FormError>}
-      <Button type="submit">Create account</Button>
-    </form>
-  );
-}`,
     },
   ],
   usage: {

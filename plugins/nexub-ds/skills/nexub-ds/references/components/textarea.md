@@ -20,21 +20,35 @@ A multi-line text input with configurable resize behaviour, size, and validation
 ## Example: Default
 
 ```tsx
-<Textarea placeholder="Enter your message…" />
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Textarea placeholder="Enter your message…" /></div>;
+}
 ```
 
 ## Example: Sizes
 
 ```tsx
-<div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-  <Textarea size="sm" placeholder="Small textarea" />
-  <Textarea size="md" placeholder="Medium textarea" />
-  <Textarea size="lg" placeholder="Large textarea" />
-</div>
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-2 items-start w-[280px]">
+      <Textarea size="sm" placeholder="Small" rows={2} />
+      <Textarea size="md" placeholder="Medium" rows={3} />
+      <Textarea size="lg" placeholder="Large" rows={4} />
+    </div>
+  );
+}
 ```
 
 ## Example: Invalid
 
 ```tsx
-<Textarea invalid placeholder="This field has an error" />
+import { Textarea } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><Textarea invalid placeholder="This field has an error" /></div>;
+}
 ```

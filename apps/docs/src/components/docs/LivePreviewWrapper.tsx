@@ -1,5 +1,6 @@
 'use client';
 
+import type * as React from 'react';
 import dynamic from 'next/dynamic';
 import { Skeleton } from '@nexub/react';
 
@@ -7,15 +8,27 @@ function PreviewSkeleton() {
   return <Skeleton className="h-[120px] w-full rounded-shape-container" />;
 }
 
-// Code-split the entire ComponentLivePreview (1965-line file, 88 component imports)
-// so it is NEVER included in the initial page bundle. It loads only when the
-// preview panel actually mounts on the client — not server-rendered, not blocking.
-//
-// This drops the per-page critical JS from ~6.6 MB to ~200 KB.
-// ssr:false ensures the component only executes in the browser where Radix UI
-// and event handlers are available.
-export const ComponentLivePreview = dynamic(
-  () =>
-    import('./ComponentLivePreview').then((m) => m.ComponentLivePreview),
-  { ssr: false, loading: PreviewSkeleton },
-);
+// Each example (src/examples/<kind>/<slug>/<idx>.tsx) is its own chunk, loaded
+// only when its preview mounts on the client. ssr:false: Radix and event
+// handlers need the browser. Cached so a re-render keeps the same component.
+const cache = new Map<string, React.ComponentType>();
+
+function example(key: string) {
+  let Example = cache.get(key);
+  if (!Example) {
+    Example = dynamic(() => import(`../../examples/${key}.tsx`), { ssr: false, loading: PreviewSkeleton });
+    cache.set(key, Example);
+  }
+  return Example;
+}
+
+export interface ComponentLivePreviewProps {
+  slug: string;
+  idx: number;
+  isPattern?: boolean;
+}
+
+export function ComponentLivePreview({ slug, idx, isPattern = false }: ComponentLivePreviewProps) {
+  const Example = example(`${isPattern ? 'patterns' : 'components'}/${slug}/${idx}`);
+  return <Example />;
+}

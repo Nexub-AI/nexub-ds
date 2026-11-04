@@ -19,12 +19,6 @@ const entry: ComponentEntry = {
   examples: [
     {
       title: 'Default',
-      code: `<ListDetail
-  showDetail={selected !== null}
-  onBack={() => setSelected(null)}
-  list={<MessageList onSelect={setSelected} />}
-  detail={<Message id={selected} />}
-/>`,
     },
   ],
 };
