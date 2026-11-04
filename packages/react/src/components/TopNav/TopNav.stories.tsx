@@ -29,7 +29,7 @@ export const Default: Story = {
             fill="none"
             aria-hidden="true"
           >
-            <rect width="24" height="24" rx="6" fill="var(--color-primary, #6366f1)" />
+            <rect width="24" height="24" rx="6" fill="var(--color-brand-primary-500, #6366f1)" />
             <path d="M7 17L12 7l5 10H7z" fill="white" />
           </svg>
           Nexub

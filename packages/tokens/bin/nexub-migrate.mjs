@@ -206,6 +206,9 @@ const LOGICAL = [
 const POSITION = /^(left|right)-/;
 const TW_ANIMATE = /^(animate-(in|out)|(fade|zoom|spin)-(in|out)(-.+)?|slide-(in-from|out-to)-.+)$/;
 const OPACITY = /^([\w-]+)-\[var\((--[\w-]+)\)\]\/(\d+)$/;
+// Tailwind colour utilities on a legacy name (bg-bg-default, text-text-primary/80):
+// the preset and tailwind.css dropped these in 3.0. Same utility, role name.
+const COLOR_UTILITY = /^(bg|text|border(?:-[xyselrtb])?|ring|ring-offset|outline|divide|fill|stroke|from|via|to|decoration|shadow|accent|caret|placeholder)-([a-z][\w-]*?)(\/\d+)?$/;
 
 /** Split `md:hover:!-ml-2` into { prefix: 'md:hover:', imp: '!', neg: '-', base: 'ml-2' }. */
 function splitToken(tok) {
@@ -223,7 +226,7 @@ function splitToken(tok) {
   return { prefix: tok.slice(0, cut), imp, neg, base: rest.slice(neg.length) };
 }
 
-function rewriteClassText(text, seg, offset, rules, fix, report) {
+function rewriteClassText(text, seg, offset, rules, fix, report, aliasMap) {
   return text.replace(/\S+/g, (tok, off) => {
     if ((seg.openLeft && off === 0) || (seg.openRight && off + tok.length === text.length)) return tok; // glued to ${…}
     const at = offset + off;
@@ -232,6 +235,12 @@ function rewriteClassText(text, seg, offset, rules, fix, report) {
     if (rules.has('logical-classes')) {
       for (const [re, fn] of LOGICAL) if (re.test(next)) { next = next.replace(re, fn); break; }
       if (POSITION.test(base)) report(at, 'logical-classes', `"${tok}" is a physical position; review for start-/end- (not auto-fixed)`);
+    }
+    if (rules.has('legacy-tokens')) {
+      const m = COLOR_UTILITY.exec(next);
+      const name = m && `--color-${m[2]}`;
+      if (m && aliasMap.aliases[name]) next = `${m[1]}-${aliasMap.aliases[name].slice('--color-'.length)}${m[3] ?? ''}`;
+      else if (m && aliasMap.mix[name]) report(at, 'legacy-tokens', `"${tok}" uses ${name}, a color-mix alias (${aliasMap.mix[name]}); rewrite by hand`);
     }
     if (rules.has('tw-animate') && TW_ANIMATE.test(base)) {
       report(at, 'tw-animate', `"${tok}" is a tailwindcss-animate class; use nx-motion / nx-pop / nx-dialog from @nexub/themes/base`);
@@ -372,12 +381,12 @@ function migrateComponents(src) {
 export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, aliasMap = SNAPSHOT }) {
   const items = [];
   let text = src;
-  if (['logical-classes', 'tw-animate', 'opacity-modifier'].some((r) => rules.has(r))) {
+  if (['logical-classes', 'tw-animate', 'opacity-modifier', 'legacy-tokens'].some((r) => rules.has(r))) {
     let out = '';
     let last = 0;
     for (const seg of classSegments(src, ext)) {
       out += src.slice(last, seg.start) + rewriteClassText(src.slice(seg.start, seg.end), seg, seg.start, rules, fix,
-        (at, rule, message) => items.push({ at, rule, message }));
+        (at, rule, message) => items.push({ at, rule, message }), aliasMap);
       last = seg.end;
     }
     text = out + src.slice(last);
@@ -444,7 +453,8 @@ Options:
 
 Rules:
   legacy-tokens      var(--color-text-primary) -> var(--color-on-surface), brand -500 -> role;
-                     color-mix aliases (e.g. --color-semantic-success-border) reported
+                     Tailwind utilities too (bg-bg-default -> bg-surface, text-text-primary
+                     -> text-on-surface); color-mix aliases (--color-semantic-success-border) reported
   logical-classes    ml/mr, pl/pr, border-l/r, rounded-l/r/tl/tr/bl/br, text-left/right
                      -> ms/me, ps/pe, border-s/e, rounded-s/e/ss/se/es/ee, text-start/end;
                      left-/right- positions reported

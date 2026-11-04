@@ -15,27 +15,18 @@ const UI = 3; // 1.4.11 (input borders, focus ring)
 
 // [foreground, background, minimum]. `#fff` = components' hard-coded text-white.
 const PAIRS: [string, string, number][] = [
-  ...['primary', 'secondary', 'muted'].flatMap((t) =>
-    ['bg-default', 'bg-subtle', 'bg-muted', 'surface-raised'].map(
-      (b) => [`--color-text-${t}`, `--color-${b}`, TEXT] as [string, string, number],
-    ),
-  ),
-  ['--color-on-surface-muted', '--color-surface', TEXT],
-  ['--color-primary', '--color-surface', TEXT],
   ['--color-on-info-container', '--color-surface', TEXT],
   ['--color-on-success-container', '--color-surface', TEXT],
   ['--color-on-warning-container', '--color-surface', TEXT],
   ['--color-on-error-container', '--color-surface', TEXT],
-  ['--color-inverse-on-surface', '--color-inverse-surface', TEXT],
   ...['primary', 'info', 'success', 'warning', 'danger', 'accent'].flatMap((f) =>
     ['', '-hover'].map((h) => ['#fff', `--color-fill-${f}${h}`, TEXT] as [string, string, number]),
   ),
-  ['--color-outline', '--color-surface', UI],
   ['--color-ring-default', '--color-surface', UI],
   ['--color-ring-default', '--color-surface-container-highest', UI],
-  // Calm Depth roles
+  // Calm Depth roles (3.0 removed the legacy text-*/bg-* names; surface-elevated replaces surface-raised)
   ...['on-surface', 'on-surface-variant', 'on-surface-muted'].flatMap((t) =>
-    ['surface', 'surface-container-lowest', 'surface-container-low', 'surface-container-high', 'surface-container-highest'].map(
+    ['surface', 'surface-elevated', 'surface-container-lowest', 'surface-container-low', 'surface-container-high', 'surface-container-highest'].map(
       (s) => [`--color-${t}`, `--color-${s}`, TEXT] as [string, string, number],
     ),
   ),

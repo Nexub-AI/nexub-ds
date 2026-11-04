@@ -51,6 +51,13 @@ test('legacy-tokens: color-mix aliases are reported, not rewritten; definitions 
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[1, 'legacy-tokens']]);
 });
 
+test('legacy-tokens: Tailwind utilities on legacy names move to role utilities', () => {
+  const { output, manual } = tsx('<div className="bg-bg-default md:hover:text-text-primary/80 border-border-default bg-surface-raised ring-ring-default border-semantic-error-border" />');
+  assert.equal(output, '<div className="bg-surface md:hover:text-on-surface/80 border-outline-variant bg-surface-elevated ring-ring-default border-semantic-error-border" />');
+  assert.deepEqual(manual.map((m) => m.rule), ['legacy-tokens']);
+  assert.equal(tsx("const s = 'Text text-primary is fine';").output, "const s = 'Text text-primary is fine';");
+});
+
 // ─── logical-classes ───
 test('logical-classes: rewrites physical classes, keeps variants/negatives/important', () => {
   const { output } = tsx('<div className="ml-2 mr-auto md:pl-4 hover:pr-[3px] -ml-2 !mr-1 border-l border-r-2 rounded-l-lg rounded-tl rounded-br-md text-left md:text-right" />');

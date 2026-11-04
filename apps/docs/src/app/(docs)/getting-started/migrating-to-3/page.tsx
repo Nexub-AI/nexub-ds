@@ -15,6 +15,7 @@ const removals: { what: string; replacement: string; codemod: string }[] = [
   { what: 'BannerProps, CalloutProps, TagProps, StatusPillProps', replacement: 'AlertProps, BadgeProps', codemod: 'Rewritten' },
   { what: 'bannerVariants, calloutVariants, tagVariants, statusPillVariants', replacement: 'alertVariants, badgeVariants', codemod: 'Reported' },
   { what: 'Legacy colour names (--color-text-primary, --color-bg-default, --color-success-500 …)', replacement: 'Calm Depth roles (--color-on-surface, --color-surface, --color-success …)', codemod: 'Rewritten; color-mix aliases reported' },
+  { what: 'Their Tailwind utilities and tokens (bg-bg-default, text-text-primary …; color.bg, color.text … in the JS tokens)', replacement: 'Role utilities (bg-surface, text-on-surface …)', codemod: 'Utilities rewritten; JS token paths by hand' },
 ];
 
 export default function MigratingTo3Page() {
