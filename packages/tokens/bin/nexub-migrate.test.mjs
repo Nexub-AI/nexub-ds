@@ -96,6 +96,63 @@ test('opacity-modifier: reports by default, rewrites with fix', () => {
   assert.equal(fixed.manual.length, 0);
 });
 
+// ─── deprecated-components ───
+const comp = (src) => migrateSource(src, { ext: '.tsx', rules: only('deprecated-components') });
+
+test('deprecated-components: Banner/Callout -> Alert, Tag -> soft Badge, imports deduped', () => {
+  const src = [
+    "import { Alert, Banner, Callout, Tag, type TagProps } from '@nexub/react';",
+    'const p: TagProps = {};',
+    '<Banner tone="info" title="Hi" onClose={close}>Body</Banner>',
+    '<Callout icon={<I />}>x</Callout>',
+    '<Tag size="sm" tone="success">New</Tag>',
+    '<Tag variant="outline">Keep</Tag>',
+  ].join('\n');
+  const { output, manual } = comp(src);
+  assert.equal(output, [
+    "import { Alert, Badge, type BadgeProps } from '@nexub/react';",
+    'const p: BadgeProps = {};',
+    '<Alert tone="info" title="Hi" onClose={close}>Body</Alert>',
+    '<Alert icon={<I />}>x</Alert>',
+    '<Badge variant="soft" size="sm" tone="success">New</Badge>',
+    '<Badge variant="outline">Keep</Badge>',
+  ].join('\n'));
+  assert.equal(manual.length, 0);
+});
+
+test('deprecated-components: StatusPill label -> children, dot reported, newlines kept', () => {
+  const src = [
+    "import { StatusPill } from '@nexub/react';",
+    '<StatusPill tone="success" label="Live" />',
+    '<StatusPill',
+    '  label={t("x")}',
+    '  dot',
+    '/>',
+    '<StatusPill label="a > b" dot={false} />',
+  ].join('\n');
+  const { output, manual } = comp(src);
+  assert.equal(output, [
+    "import { Badge } from '@nexub/react';",
+    '<Badge variant="soft" tone="success">Live</Badge>',
+    '<Badge variant="soft"',
+    '',
+    '',
+    '>{t("x")}</Badge>',
+    '<Badge variant="soft">{"a > b"}</Badge>',
+  ].join('\n'));
+  assert.deepEqual(manual.map((m) => m.line), [3]);
+});
+
+test('deprecated-components: aliases keep the local name; non-JSX uses reported; other packages untouched', () => {
+  const aliased = comp("import { Banner as B, Tag as T } from '@nexub/react';\n<B>x</B><T>y</T>\nstyled(T)");
+  assert.equal(aliased.output, "import { Alert as B, Badge as T } from '@nexub/react';\n<B>x</B><T variant=\"soft\">y</T>\nstyled(T)");
+  assert.deepEqual(aliased.manual.map((m) => m.line), [3]);
+  const other = "import { Banner } from '@nexub/react-native';\n<Banner />";
+  assert.equal(comp(other).output, other);
+  const typeOf = comp("import { Callout, calloutVariants } from '@nexub/react';\ntype P = React.ComponentProps<typeof Callout>;");
+  assert.equal(typeOf.manual.length, 2);
+});
+
 // ─── CLI ───
 const fixture = () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'nexub-migrate-'));

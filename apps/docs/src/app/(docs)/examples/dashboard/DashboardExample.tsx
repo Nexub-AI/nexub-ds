@@ -21,11 +21,11 @@ import {
   RadioCardGroup,
   SegmentedControl,
   SplitButton,
-  StatusPill,
+  Badge,
   ThinkingIndicator,
   toast,
   type DataTableProps,
-  type StatusPillProps,
+  type BadgeProps,
   type TextDirection,
 } from '@nexub/react';
 import { AppHeader, BentoGrid, BentoTile, Conversation, StatCard } from '@nexub/patterns';
@@ -51,7 +51,7 @@ const transactions: Tx[] = [
   { id: 'tx_1038', customer: 'Priya Natarajan', date: '2026-10-18', status: 'paid', amount: 4800 },
 ];
 
-const statusPill: Record<TxStatus, { tone: StatusPillProps['tone']; label: string }> = {
+const statusBadge: Record<TxStatus, { tone: BadgeProps['tone']; label: string }> = {
   paid: { tone: 'success', label: 'Paid' },
   pending: { tone: 'warning', label: 'Pending' },
   failed: { tone: 'danger', label: 'Failed' },
@@ -236,7 +236,10 @@ function Dashboard() {
     {
       accessorKey: 'status',
       header: 'Status',
-      cell: ({ row }) => <StatusPill {...statusPill[row.original.status]} />,
+      cell: ({ row }) => {
+        const { tone, label } = statusBadge[row.original.status];
+        return <Badge variant="soft" tone={tone}>{label}</Badge>;
+      },
     },
     {
       accessorKey: 'amount',
