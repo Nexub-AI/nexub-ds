@@ -73,7 +73,11 @@ const flow = [
 // Android, so Maestro can't see the screen's preview-ready marker underneath.
 // Wait for text inside the modal instead.
 const READY_TEXT = { 'pattern/apps': 'Nexub apps' };
-const open = (link, shot) => {
+// Each preview's marker names its own link (preview-ready-<slug>-<ex>,
+// preview-ready-pattern-<name>). A shared marker matched the previous preview
+// when a link never navigated, so the retry never fired and the wrong screen
+// was captured (iOS, banner--0 showing divider, 2026-11-04).
+const open = (link, shot, marker) => {
   const text = READY_TEXT[link.replace(/^preview\//, '')];
   flow.push(
     '- retry:',
@@ -86,16 +90,16 @@ const open = (link, shot) => {
     '          commands:',
     '            - tapOn: "Open"',
     '      - extendedWaitUntil:',
-    ...(text ? [`          visible: "${text}"`] : ['          visible:', '            id: "preview-ready"']),
+    ...(text ? [`          visible: "${text}"`] : ['          visible:', `            id: "${marker}"`]),
     '          timeout: 15000',
     '- waitForAnimationToEnd',
     `- takeScreenshot: ${shot}--\${maestro.platform}`,
   );
 };
 for (const [slug, e] of Object.entries(CATALOG)) {
-  e.examples.forEach((_, i) => open(`preview/${slug}?ex=${i}`, `${slug}--${i}`));
+  e.examples.forEach((_, i) => open(`preview/${slug}?ex=${i}`, `${slug}--${i}`, `preview-ready-${slug}-${i}`));
 }
-for (const name of Object.keys(patterns)) open(`preview/pattern/${name}`, `pattern-${name}`);
+for (const name of Object.keys(patterns)) open(`preview/pattern/${name}`, `pattern-${name}`, `preview-ready-pattern-${name}`);
 
 const outputs = [
   [join(root, 'preview-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`],
