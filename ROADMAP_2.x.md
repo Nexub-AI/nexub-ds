@@ -72,9 +72,9 @@ Status: **proposed.** Roadmap row R10 in [REVIEW_WORK_ITEMS.md](REVIEW_WORK_ITEM
 | Item | Where | Size |
 |---|---|---|
 | Feature freeze: only migration work and fixes. | — | — |
-| Codemods in `nexub-migrate`: `Banner`/`Callout` → `Alert`, `Tag`/`StatusPill` → `Badge`, old token names → new ones. | `scripts/`, `packages/react` | M |
-| Write the 3.0 migration guide, and add a development warning for every planned removal. | `apps/docs` | S |
-| **Decision:** ESM-only packages. If yes, warn CJS users in this release. | `packages/*` | S |
+| Codemods in `nexub-migrate`: `Banner`/`Callout` → `Alert`, `Tag`/`StatusPill` → `Badge`, old token names → new ones. Done: the new `deprecated-components` rule covers the components; the existing `legacy-tokens` rule already covers the token names. | `packages/tokens/bin` | M |
+| Write the 3.0 migration guide, and add a development warning for every planned removal. Done: `/getting-started/migrating-to-3`. The four components have warned since 2.5; CSS token aliases can't warn at runtime, so `nexub-migrate --check` is their check. | `apps/docs` | S |
+| **Decision:** ESM-only packages. If yes, warn CJS users in this release. Decided yes (2026-11-04). Nothing to warn: every package already builds ESM only (tsup `format: ['esm']`, no `require` exports). | `packages/*` | S |
 | Re-check Glass 2.0 against the iOS 27 Liquid Glass HIG, once Apple publishes it. | `packages/themes` | S |
 
 ## 3.0: Breaking cleanup

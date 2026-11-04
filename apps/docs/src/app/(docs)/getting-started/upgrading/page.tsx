@@ -216,6 +216,7 @@ npx nexub-migrate src --check   # CI: exit 1 if anything is left`} />
           <tr><td><code>logical-classes</code></td><td>Physical Tailwind classes (<code>ml-</code>, <code>pr-</code>, <code>left-</code>, <code>text-left</code>…) → logical ones.</td></tr>
           <tr><td><code>tw-animate</code></td><td>Reports <code>tailwindcss-animate</code> classes to replace with <code>nx-motion</code>. Report only.</td></tr>
           <tr><td><code>opacity-modifier</code></td><td>Opacity modifiers on role colours (<code>bg-primary/50</code>, <code>bg-[var(--color-primary)]/50</code>), which Tailwind 3 silently drops.</td></tr>
+          <tr><td><code>deprecated-components</code></td><td>Banner, Callout, Tag and StatusPill → Alert and Badge, ahead of their removal in 3.0. See <a href="/getting-started/migrating-to-3">Migrating to 3.0</a>.</td></tr>
         </tbody>
       </table>
       <p>Run your tests after <code>--write</code>, and review the diff: it rewrites class strings, not logic.</p>
