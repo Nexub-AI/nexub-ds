@@ -1,11 +1,12 @@
 import * as React from 'react';
 import * as RadixToggleGroup from '@radix-ui/react-toggle-group';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useSlidingIndicator } from '../../hooks/useSlidingIndicator.js';
 
 export interface SegmentedControlProps extends Omit<RadixToggleGroup.ToggleGroupSingleProps, 'type'> {
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
 }
 
 export interface SegmentedControlItemProps extends RadixToggleGroup.ToggleGroupItemProps {}
@@ -17,7 +18,7 @@ const sizeMap = {
   lg: 'h-control-lg text-label-lg',
 };
 
-const SegmentedControlContext = React.createContext<{ size: 'sm' | 'md' | 'lg' }>({ size: 'md' });
+const SegmentedControlContext = React.createContext<{ size: Size }>({ size: 'md' });
 
 const Root = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
   ({ className, size = 'md', children, ...props }, forwardedRef) => {

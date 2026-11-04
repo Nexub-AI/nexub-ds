@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { Flag } from '../Flag/Flag.js';
 
 export interface CountryBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   code: string;
   label?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
 }
 
-const sizeClass: Record<'sm' | 'md' | 'lg', string> = {
+const sizeClass: Record<Size, string> = {
   sm: 'px-2 py-0.5 text-xs gap-1',
   md: 'px-2.5 py-1 text-sm gap-1.5',
   lg: 'px-3 py-1.5 text-base gap-2',

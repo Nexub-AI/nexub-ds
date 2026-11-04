@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { disabledText } from '../../utils/control.js';
+import { disabledText, type Size } from '../../utils/control.js';
 import { inputWrapperVariants } from '../Input/Input.js';
 
 export interface NumberInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type' | 'size'> {
-  size?: 'sm' | 'md' | 'lg';
+  size?: Size;
   min?: number;
   max?: number;
   step?: number;
