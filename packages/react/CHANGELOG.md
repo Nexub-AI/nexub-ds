@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 2.9.0
+
+### Patch Changes
+
+- @nexub/icons@2.9.0
+- @nexub/core@2.9.0
+
 ## 2.8.0
 
 ### Minor Changes
