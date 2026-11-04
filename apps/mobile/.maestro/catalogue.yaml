@@ -43,9 +43,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Actions.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Continue"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Continue"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -59,9 +60,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Inputs.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "You send"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "You send"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -79,9 +81,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Lists & cards.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Total balance"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Total balance"
 - takeScreenshot: 04-lists
 - runFlow: subflows/back.yaml
 
@@ -92,9 +95,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Feedback.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Banners"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Banners"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -125,9 +129,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Mobile patterns.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Sheets and menus"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Sheets and menus"
 - tapOn:
     text: "Open sheet"
     retryTapIfNoChange: true
@@ -159,9 +164,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Screens.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Payub flows"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Payub flows"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -169,9 +175,10 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Send money.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "How much?"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "How much?"
 - tapOn:
     text: "2"
     retryTapIfNoChange: true
@@ -198,7 +205,8 @@ appId: ai.nexub.mobile
 - tapOn:
     text: "Activity.*"
     retryTapIfNoChange: true
-- extendedWaitUntil:
-    visible: "Amazon.*"
-    timeout: 10000
+- runFlow:
+    file: subflows/wait-for.yaml
+    env:
+      TEXT: "Amazon.*"
 - takeScreenshot: 09-activity
