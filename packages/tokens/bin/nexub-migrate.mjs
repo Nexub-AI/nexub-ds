@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components'];
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
 const MAX_BYTES = 1024 * 1024;
@@ -261,6 +261,122 @@ function rewriteClassText(text, seg, offset, rules, fix, report) {
   });
 }
 
+// ─── deprecated-components: @nexub/react components removed in 3.0 ───────────
+const REPLACED = { Banner: 'Alert', Callout: 'Alert', Tag: 'Badge', StatusPill: 'Badge' };
+const SOFT = new Set(['Tag', 'StatusPill']); // container-coloured, so Badge variant="soft", not its solid default
+const TYPES = { BannerProps: 'AlertProps', CalloutProps: 'AlertProps', TagProps: 'BadgeProps', StatusPillProps: 'BadgeProps' };
+const VARIANTS = new Set(['bannerVariants', 'calloutVariants', 'tagVariants', 'statusPillVariants']);
+const COMPONENT_EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.mdx']);
+
+const keepLines = (s) => s.replace(/[^\n]/g, ''); // removals keep line numbers stable
+
+/** Index just past the `{…}` or quoted value starting at i. ponytail: braces inside strings in the value count. */
+function skipValue(src, i) {
+  if (src[i] === '"' || src[i] === "'") return src.indexOf(src[i], i + 1) + 1;
+  let depth = 0;
+  for (let j = i; j < src.length; j++) {
+    if (src[j] === '{') depth++;
+    else if (src[j] === '}' && --depth === 0) return j + 1;
+  }
+  return src.length;
+}
+
+/** Parse a JSX opening tag's attributes from i (just past the name) to its `>` or `/>`. */
+function readTag(src, i) {
+  const attrs = [];
+  while (i < src.length) {
+    const ws = i;
+    while (/\s/.test(src[i])) i++;
+    if (src.startsWith('/>', i)) return { attrs, close: ws, end: i + 2, selfClosing: true };
+    if (src[i] === '>') return { attrs, close: ws, end: i + 1, selfClosing: false };
+    if (src[i] === '{') { i = skipValue(src, i); continue; } // {...spread}
+    const name = /^[\w:-]+/.exec(src.slice(i))?.[0];
+    if (!name) return null;
+    let j = i + name.length;
+    let value = null;
+    const eq = /^\s*=\s*/.exec(src.slice(j));
+    if (eq) {
+      const v = j + eq[0].length;
+      j = skipValue(src, v);
+      value = src.slice(v, j);
+    }
+    attrs.push({ name, start: ws, end: j, value });
+    i = j;
+  }
+  return null;
+}
+
+/** Rewrite deprecated @nexub/react components. Returns { output, items: [{ line, rule, message }] }. */
+function migrateComponents(src) {
+  const edits = [];
+  const items = [];
+  const lineOf = (at) => src.slice(0, at).split('\n').length;
+  const report = (at, message) => items.push({ line: lineOf(at), rule: 'deprecated-components', message });
+  const locals = new Map(); // local JSX name -> { from, to, aliased }
+  const types = new Set();
+  const seen = new Set();
+  const imports = [];
+  for (const m of src.matchAll(/\bimport\s+(?:type\s+)?\{([^}]*)\}\s*from\s*(['"])@nexub\/react\2/dg)) {
+    imports.push(m.indices[0]);
+    const base = m.indices[1][0];
+    for (const s of m[1].matchAll(/\s*(?:\btype\s+)?\b(\w+)(?:\s+as\s+(\w+))?(?:\s*,)?/dg)) {
+      const [spec, name, alias] = s;
+      const next = REPLACED[name] ?? TYPES[name] ?? name;
+      if (VARIANTS.has(name)) report(base + s.index, `${name} is removed in 3.0; use alertVariants / badgeVariants or Alert / Badge`);
+      if (REPLACED[name]) locals.set(alias ?? name, { from: name, to: REPLACED[name], aliased: !!alias });
+      if (TYPES[name] && !alias) types.add(name);
+      const out = alias ? `${next} as ${alias}` : next;
+      if (seen.has(out)) { edits.push({ start: base + s.index, end: base + s.index + spec.length, text: keepLines(spec) }); continue; }
+      seen.add(out);
+      if (next !== name) edits.push({ start: base + s.indices[1][0], end: base + s.indices[1][1], text: next });
+    }
+  }
+  for (const [local, { from, to, aliased }] of locals) {
+    const tagName = aliased ? local : to;
+    for (const m of src.matchAll(new RegExp(`<(/?)${local}(?![\\w.$-])`, 'g'))) {
+      const nameEnd = m.index + m[0].length;
+      edits.push({ start: m.index + 1 + m[1].length, end: nameEnd, text: tagName });
+      if (m[1]) continue;
+      const tag = readTag(src, nameEnd);
+      if (!tag) { report(m.index, `<${local}>: could not parse the tag; migrate it to <${to}> by hand`); continue; }
+      const attr = Object.fromEntries(tag.attrs.map((a) => [a.name, a]));
+      if (SOFT.has(from) && !attr.variant) edits.push({ start: nameEnd, end: nameEnd, text: ' variant="soft"' });
+      if (from !== 'StatusPill') continue;
+      // StatusPill label -> children; dot has no Badge equivalent.
+      const drop = (a) => edits.push({ start: a.start, end: a.end, text: keepLines(src.slice(a.start, a.end)) });
+      if (attr.dot) {
+        drop(attr.dot);
+        if (attr.dot.value !== '{false}') report(m.index, `<${local} dot>: Badge has no dot; pass leadingIcon={<StatusDot />} or similar`);
+      }
+      const label = attr.label;
+      if (!label?.value || label.value.includes('\n') || !tag.selfClosing) {
+        report(m.index, `<${local}>: move label into <${tagName}>children</${tagName}> by hand`);
+        continue;
+      }
+      const q = label.value[0];
+      const inner = label.value.slice(1, -1);
+      const children = q === '{' ? label.value : /[{}<>]/.test(inner) ? `{${label.value}}` : inner;
+      drop(label);
+      edits.push({ start: tag.close, end: tag.end, text: `${keepLines(src.slice(tag.close, tag.end))}>${children}</${tagName}>` });
+    }
+    // Non-JSX references (typeof X, styled(X), as={X}) keep the old name unless it was aliased.
+    if (!aliased || SOFT.has(from)) {
+      for (const m of src.matchAll(new RegExp(`(?:\\btypeof\\s+${local}\\b|[({]\\s*${local}\\s*[,)}])`, 'g'))) {
+        if (!imports.some(([a, b]) => a <= m.index && m.index < b)) report(m.index, `${local} is used outside JSX; it becomes ${to} in 3.0 (check props)`);
+      }
+    }
+  }
+  if (types.size) {
+    const re = new RegExp(`\\b(${[...types].join('|')})\\b`, 'g');
+    for (const m of src.matchAll(re)) {
+      if (!edits.some((e) => e.start <= m.index && m.index < e.end)) edits.push({ start: m.index, end: m.index + m[0].length, text: TYPES[m[0]] });
+    }
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.start - a.start || b.end - a.end)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return { output, items };
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -287,9 +403,14 @@ export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, a
       return name;
     });
   }
+  if (rules.has('deprecated-components') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"]/.test(text)) {
+    const r = migrateComponents(text);
+    text = r.output;
+    items.push(...r.items);
+  }
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
-  const manual = items.map(({ at, rule, message }) => ({ line: lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
+  const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
   return { output: text, manual };
 }
 
@@ -342,6 +463,10 @@ Rules:
                      left-/right- positions reported
   tw-animate         report tailwindcss-animate enter/exit classes (use nx-motion/nx-pop/nx-dialog)
   opacity-modifier   report [var(--x)]/NN (emits nothing in Tailwind 3); --fix rewrites to color-mix
+  deprecated-components
+                     @nexub/react components removed in 3.0: Banner, Callout -> Alert;
+                     Tag -> <Badge variant="soft">; StatusPill label -> Badge children
+                     (dot and non-JSX uses reported); *Props types renamed
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

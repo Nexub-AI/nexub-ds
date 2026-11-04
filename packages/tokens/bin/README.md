@@ -16,6 +16,7 @@ npx nexub-migrate --rules logical-classes --ignore 'src/legacy/**'
 | `logical-classes` | `ml/mr` `pl/pr` `border-l/r` `rounded-l/r/tl/tr/bl/br` `text-left/right` → `ms/me` `ps/pe` `border-s/e` `rounded-s/e/ss/se/es/ee` `text-start/end`, keeping variants, `!` and `-`. `left-*`/`right-*` positions are reported only. |
 | `tw-animate` | Reports tailwindcss-animate classes (`animate-in`, `fade-in-0`, `zoom-in-95`, `slide-in-from-*` …). Use `nx-motion` / `nx-pop` / `nx-dialog` from `@nexub/themes/base`. |
 | `opacity-modifier` | Reports `bg-[var(--x)]/10` (Tailwind 3 emits nothing). `--fix` rewrites to `bg-[color-mix(in_srgb,var(--x)_10%,transparent)]`. |
+| `deprecated-components` | `@nexub/react` components removed in 3.0, in files that import from `@nexub/react`: `Banner`/`Callout` → `Alert`; `Tag` → `<Badge variant="soft">`; `StatusPill label="x"` → `<Badge variant="soft">x</Badge>`; `*Props` types renamed; imports deduped; aliases (`Tag as T`) keep their local name. Reported only: `StatusPill dot`, `*Variants`, and uses outside JSX (`typeof Banner`, `styled(Tag)`). |
 
 **Where classes are looked for.** `.html`/`.mdx`: `class=`/`className=` attributes. `.css`/`.scss`: `@apply`.
 JS/TS: string and template literals (static parts only) that are either in an explicit class context —
