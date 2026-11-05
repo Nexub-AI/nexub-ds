@@ -23,7 +23,8 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "accessibility.json"
   ],
   "sideEffects": [
     "*.css"
@@ -42,6 +43,7 @@
       "types": "./dist/components/*/index.d.ts",
       "default": "./dist/components/*/index.js"
     },
+    "./accessibility.json": "./accessibility.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
