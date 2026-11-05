@@ -2,6 +2,7 @@ import StyleDictionary from 'style-dictionary';
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compose, swift } from './platforms.mjs';
 import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SPRINGS, applyRem, palettes, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -427,6 +428,16 @@ const sd = new StyleDictionary({
 });
 
 await sd.buildAllPlatforms();
+
+// Swift (SwiftUI) and Kotlin (Jetpack Compose) tokens from the resolved native tokens.
+{
+  const src = readFileSync(`${root}/src/generated/native.ts`, 'utf8');
+  const native = JSON.parse(src.slice(src.indexOf('{'), src.lastIndexOf('}') + 1));
+  mkdirSync(`${root}/dist/swift`, { recursive: true });
+  mkdirSync(`${root}/dist/compose`, { recursive: true });
+  writeFileSync(`${root}/dist/swift/NexubTokens.swift`, swift(native));
+  writeFileSync(`${root}/dist/compose/NexubTokens.kt`, compose(native));
+}
 
 // Color roles (light-dark() over the palette vars above).
 writeFileSync(`${root}/dist/css/roles.css`, rolesCss());
