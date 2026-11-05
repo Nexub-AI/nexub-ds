@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Container, NumberTicker, cn, type ToneValue } from '@nexub/react';
+import type { ToneValue } from '@nexub/react/Button';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { NumberTicker } from '@nexub/react/NumberTicker';
 
 export interface StatBandProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   /** Optional heading above the stats (h2). */

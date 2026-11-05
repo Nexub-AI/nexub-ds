@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { CheckList, Container, EyebrowChip, cn } from '@nexub/react';
+import { CheckList } from '@nexub/react/CheckList';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { EyebrowChip } from '@nexub/react/EyebrowChip';
 
 export interface FeatureSplitProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   eyebrow?: React.ReactNode;

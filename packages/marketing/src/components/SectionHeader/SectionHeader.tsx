@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { EyebrowChip, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { EyebrowChip } from '@nexub/react/EyebrowChip';
 
 export interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   /** A string becomes a gradient EyebrowChip. */

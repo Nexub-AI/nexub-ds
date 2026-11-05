@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Container, EyebrowChip, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { EyebrowChip } from '@nexub/react/EyebrowChip';
 
 export interface HeroProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   /** A string becomes a gradient EyebrowChip; pass a node for your own. */

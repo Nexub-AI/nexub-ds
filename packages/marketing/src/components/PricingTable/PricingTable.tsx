@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Container, SegmentedControl, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { SegmentedControl } from '@nexub/react/SegmentedControl';
 import { PlanCard } from '@nexub/patterns';
 
 export type BillingPeriod = 'monthly' | 'yearly';

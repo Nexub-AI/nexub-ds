@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Container, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
 
 export interface CTABandProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   title: React.ReactNode;

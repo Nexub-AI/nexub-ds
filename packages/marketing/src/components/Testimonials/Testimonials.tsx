@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Avatar, Card, Container, cn } from '@nexub/react';
+import { Avatar } from '@nexub/react/Avatar';
+import { Card } from '@nexub/react/Card';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
 import { Star } from '@nexub/icons';
 
 export interface TestimonialGridProps extends React.HTMLAttributes<HTMLElement> {

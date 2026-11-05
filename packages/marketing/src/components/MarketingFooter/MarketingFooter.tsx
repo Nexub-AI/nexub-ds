@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Container, Marquee, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { Marquee } from '@nexub/react/Motion';
 
 export interface MarketingFooterColumn {
   title: string;

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Card, CardLink, Container, cn } from '@nexub/react';
+import { Card, CardLink } from '@nexub/react/Card';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
 import { ArrowRight } from '@nexub/icons';
 
 export interface ProductGridProps extends React.HTMLAttributes<HTMLElement> {

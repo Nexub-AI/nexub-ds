@@ -1,7 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { Accordion, Container, cn } from '@nexub/react';
+import { Accordion } from '@nexub/react/Accordion';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
 
 export interface FAQItem {
   question: string;

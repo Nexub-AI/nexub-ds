@@ -1,7 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { Container, Drawer, DropdownMenu, Flag, IconButton, NavigationMenu, TopNav, cn } from '@nexub/react';
+import { cn } from '@nexub/react/cn';
+import { Container } from '@nexub/react/Container';
+import { Drawer } from '@nexub/react/Drawer';
+import { DropdownMenu } from '@nexub/react/DropdownMenu';
+import { Flag } from '@nexub/react/Flag';
+import { IconButton } from '@nexub/react/IconButton';
+import { NavigationMenu } from '@nexub/react/NavigationMenu';
+import { TopNav } from '@nexub/react/TopNav';
 import { ChevronDown, Menu } from '@nexub/icons';
 
 export interface MarketingNavLink {
