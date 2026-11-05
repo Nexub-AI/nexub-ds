@@ -293,6 +293,7 @@ export interface SearchEntry {
 export const searchIndex: SearchEntry[] = [
   // Static pages
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
+  { id: 'changelog', label: 'Changelog', description: 'What changed in each release, across every @nexub package', href: '/changelog', category: 'Docs' },
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
   { id: 'without-tailwind', label: 'Use without Tailwind', description: 'Prebuilt @nexub/react/styles.css; rem sizing', href: '/getting-started/without-tailwind', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
@@ -368,6 +369,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Building AI surfaces', href: '/getting-started/ai-surfaces' },
       { title: 'Upgrading', href: '/getting-started/upgrading' },
       { title: 'Migrating to 3.0', href: '/getting-started/migrating-to-3' },
+      { title: 'Changelog', href: '/changelog' },
     ],
   },
   {
@@ -384,7 +386,7 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Components',
-    items: [], // sub-items live in children
+    items: [{ title: 'Overview', href: '/components' }],
     children: [
       { title: 'Actions',        items: componentsByCategory('Actions') },
       { title: 'Form & Input',   items: componentsByCategory('Form & Input') },
@@ -409,7 +411,7 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Patterns',
-    items: [],
+    items: [{ title: 'Overview', href: '/patterns' }],
     children: [
       { title: 'Pages', items: templateEntries.map((t) => ({ title: t.title, href: `/patterns/pages/${t.slug}` })) },
       { title: 'Blocks', items: patternEntries.map((e) => ({ title: e.meta.title, href: `/patterns/${e.meta.slug}` })) },
