@@ -37,6 +37,15 @@ claude plugin install nexub-ds@nexub
 | `get_tokens` | Color roles, typography, spacing, shape, elevation, motion, with Tailwind utilities (`section: "Motion"`) |
 | `get_react_native` | Mobile apps: `@nexub/react-native` setup, components, screen patterns and mobile rules |
 
+## Prompts
+
+Ready-made starting points, listed by your client (in Claude Code: `/mcp__nexub-ds__build_screen`). Each carries the guidelines, so the model has the rules without a separate call.
+
+| Prompt | Arguments |
+| --- | --- |
+| `build_screen` | `screen`: what to build; `platform`: `web` (default) or `mobile` |
+| `review_screen` | `code`: the UI to review against the checklist (optional) |
+
 ## Staying current
 
 The server reports the reference of the version it was published with, and it is versioned with `@nexub/react`. `npx -y @nexub/mcp` always fetches the latest release. Pin `@nexub/mcp@<version>` to match an older install.
