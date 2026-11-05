@@ -16,3 +16,10 @@ export type { ListTransitionProps, SkeletonSwapProps } from './ListTransition.js
 export { usePrefersReducedMotion } from './useMotion.js';
 
 export type { MotionDuration, MotionEasing, MotionBaseProps } from './motion.types.js';
+
+export { Reveal } from './Reveal.js';
+export type { RevealProps } from './Reveal.js';
+export { Float } from './Float.js';
+export type { FloatProps } from './Float.js';
+export { Marquee } from './Marquee.js';
+export type { MarqueeProps } from './Marquee.js';

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';

@@ -1,3 +1,5 @@
+'use client';
+
 // Shared look for RadioCard and CheckboxCard. The card root is the Radix
 // control (button), so it carries data-state / data-disabled; everything
 // inside reacts through `group-data-*`. Static strings so Tailwind's JIT sees them.

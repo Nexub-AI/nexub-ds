@@ -44,7 +44,7 @@ const undocumented = Object.fromEntries(
   ]),
 );
 
-const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/patterns' ? 'patterns' : 'components'}/${e.meta.slug}`;
+const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
 const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
 function componentMd(e) {
@@ -70,7 +70,7 @@ function componentMd(e) {
     }
     out.push('');
   }
-  const kind = meta.package === '@nexub/patterns' ? 'patterns' : 'components';
+  const kind = meta.package === '@nexub/react' ? 'components' : 'patterns';
   for (const [i, ex] of examples.entries()) {
     out.push(`## Example: ${ex.title}`, '');
     if (ex.description) out.push(ex.description, '');
@@ -90,7 +90,7 @@ function componentMd(e) {
 function componentsIndexMd() {
   const byCategory = new Map();
   for (const e of entries) {
-    const key = `${e.meta.package === '@nexub/patterns' ? 'Patterns' : 'Components'} — ${e.meta.category}`;
+    const key = `${{ '@nexub/react': 'Components', '@nexub/patterns': 'Patterns', '@nexub/marketing': 'Marketing' }[e.meta.package]} — ${e.meta.category}`;
     if (!byCategory.has(key)) byCategory.set(key, []);
     byCategory.get(key).push(e);
   }
@@ -246,6 +246,12 @@ function llmsTxt() {
     '## Patterns',
     '',
     ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    '',
+    '## Marketing (@nexub/marketing, under data-mode="marketing")',
+    '',
+    `- [Marketing mode](${SITE_URL}/foundations/marketing-mode): guidelines, tokens and what changes`,
+    `- [Next.js and server components](${SITE_URL}/getting-started/nextjs): per-component imports, next/font, Tailwind 4`,
+    ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
     '',
     '## React Native',
     '',

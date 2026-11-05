@@ -59,6 +59,9 @@ Version 3.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Money Input](https://nexub-ds-docs.pages.dev/components/money-input): An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
 - [Collapse](https://nexub-ds-docs.pages.dev/components/motion-collapse): Expands and collapses content along the block axis.
 - [Fade](https://nexub-ds-docs.pages.dev/components/motion-fade): Animates opacity between 0 and 1 based on the `in` prop.
+- [Float](https://nexub-ds-docs.pages.dev/components/motion-float): Gently bobs its content (floating cards over a hero visual), in marketing mode. Server component; still under reduced motion.
+- [Marquee](https://nexub-ds-docs.pages.dev/components/motion-marquee): A row that scrolls sideways forever (logo strips, tool lists), in marketing mode. Pauses on hover and while focus is inside, stands still under reduced motion; the repeated copy is hidden from assistive tech and can’t be focused. Server component.
+- [Reveal](https://nexub-ds-docs.pages.dev/components/motion-reveal): Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
 - [Scale](https://nexub-ds-docs.pages.dev/components/motion-scale): Scales content in/out from its center.
 - [Slide](https://nexub-ds-docs.pages.dev/components/motion-slide): Slides content in from a direction based on the `in` prop.
 - [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
@@ -112,6 +115,24 @@ Version 3.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card): Metric display card showing a KPI value, label, optional delta, and icon.
 - [StepIndicator](https://nexub-ds-docs.pages.dev/patterns/step-indicator): Visual progress indicator for multi-step flows like onboarding or checkout.
 - [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card): User profile card displaying avatar, name, role, and optional actions.
+
+## Marketing (@nexub/marketing, under data-mode="marketing")
+
+- [Marketing mode](https://nexub-ds-docs.pages.dev/foundations/marketing-mode): guidelines, tokens and what changes
+- [Next.js and server components](https://nexub-ds-docs.pages.dev/getting-started/nextjs): per-component imports, next/font, Tailwind 4
+- [CTABand](https://nexub-ds-docs.pages.dev/patterns/cta-band): The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
+- [FAQ](https://nexub-ds-docs.pages.dev/patterns/faq): Questions and answers in an Accordion, one open at a time. Client component.
+- [FeatureSplit](https://nexub-ds-docs.pages.dev/patterns/feature-split): Text and a check list beside a visual; `reverse` swaps the sides on wide screens. Server component.
+- [Hero](https://nexub-ds-docs.pages.dev/patterns/hero): The page hero: ambient backdrop, eyebrow, display headline (the page's one h1), lead, actions and a visual. Server component.
+- [HowItWorks](https://nexub-ds-docs.pages.dev/patterns/how-it-works): Numbered steps in an ordered list. Server component.
+- [LogoStrip](https://nexub-ds-docs.pages.dev/patterns/logo-strip): A row of customer logos under the hero, scrolling sideways (paused on hover and focus) or wrapped. Server component.
+- [MarketingFooter](https://nexub-ds-docs.pages.dev/patterns/marketing-footer): The site footer: a tools strip, the logo, link columns and the legal line. Server component.
+- [MarketingNav](https://nexub-ds-docs.pages.dev/patterns/marketing-nav): The site header: logo, links with mega-menus, a country switcher and actions. Below `lg` the links move into a side sheet.
+- [PricingTable](https://nexub-ds-docs.pages.dev/patterns/pricing-table): Plans side by side with a monthly / yearly switch, built on PlanCard and SegmentedControl. Client component.
+- [ProductGrid](https://nexub-ds-docs.pages.dev/patterns/product-grid): Product cards in a grid; each card is one link with the product's accent. Server component.
+- [SectionHeader](https://nexub-ds-docs.pages.dev/patterns/section-header): Eyebrow, headline and lead that open a section. Server component.
+- [StatBand](https://nexub-ds-docs.pages.dev/patterns/stat-band): A band of headline numbers that count up as they scroll into view. StatBandItem is named apart from the StatCard pattern. Server component.
+- [TestimonialGrid](https://nexub-ds-docs.pages.dev/patterns/testimonial-grid): Customer quotes in product-coloured cards, with an optional star rating. Server component.
 
 ## React Native
 

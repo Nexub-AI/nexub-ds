@@ -71,8 +71,8 @@ describe('Logo', () => {
     const html = renderToString(<Logo mark="color" />);
     expect(html).toContain('<stop');
     expect(html).not.toMatch(/\sstyle=/);
-    // Every stop class has its rule in @nexub/themes base.css.
-    const css = readFileSync(createRequire(import.meta.url).resolve('@nexub/themes/base'), 'utf8');
+    // Every stop class has its rule in @nexub/themes core.css (which base.css imports).
+    const css = readFileSync(createRequire(import.meta.url).resolve('@nexub/themes/core'), 'utf8');
     const classes = new Set([...html.matchAll(/class="(nxm-[^"]+)"/g)].flatMap((m) => (m[1] ?? '').split(' ')));
     expect(classes.size).toBeGreaterThan(0);
     for (const c of classes) expect(css).toContain(`.${c}{`);

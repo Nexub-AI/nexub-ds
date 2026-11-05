@@ -1,0 +1,59 @@
+{
+  "marketing": {
+    "$description": "Marketing mode. Declared on :root but read only under [data-mode=\"marketing\"] (@nexub/themes/marketing), so apps don't change. Built from palette tones and roles, so dark mode, data-contrast and data-product keep working.",
+    "hero-ambient": {
+      "$value": "radial-gradient(ellipse 80% 50% at 50% -20%, light-dark(rgb(64 153 241 / 0.12), rgb(64 153 241 / 0.08)) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, light-dark(rgb(28 206 102 / 0.06), transparent) 0%, transparent 50%)",
+      "$type": "other",
+      "$description": "Hero backdrop, layered over the page surface"
+    },
+    "button-gradient": {
+      "$value": "linear-gradient(180deg, var(--color-palette-primary-45) 0%, var(--color-palette-primary-40) 100%)",
+      "$type": "other",
+      "$description": "Button variant=\"hero\" (primary tones 45 → 40; 50 fails AA with white text)"
+    },
+    "button-gradient-hover": {
+      "$value": "linear-gradient(180deg, var(--color-palette-primary-45) 0%, var(--color-palette-primary-35) 100%)",
+      "$type": "other"
+    },
+    "button-fg": {
+      "$value": "var(--color-palette-primary-100)",
+      "$type": "color",
+      "$description": "Text on the hero button gradient (AA on both stops)"
+    },
+    "button-shadow": {
+      "$value": "0 14px 30px -12px color-mix(in srgb, var(--color-palette-primary-40) 65%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.22)",
+      "$type": "shadow",
+      "$description": "Hero button glow. At most one glowing button per screen."
+    },
+    "button-shadow-hover": {
+      "$value": "0 20px 36px -12px color-mix(in srgb, var(--color-palette-primary-40) 70%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.25)",
+      "$type": "shadow"
+    },
+    "eyebrow-gradient": {
+      "$value": "linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 4%, var(--color-surface-container-lowest)) 0%, color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-container-lowest)) 100%)",
+      "$type": "other",
+      "$description": "EyebrowChip variant=\"gradient\""
+    },
+    "card-radius": { "$value": "24px", "$type": "dimension", "$description": "Card variant=\"showcase\"" },
+    "card-shadow": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 18px 40px -28px rgb(15 23 42 / 0.38)",
+      "$type": "shadow"
+    },
+    "card-shadow-hover": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 30px 60px -28px rgb(15 23 42 / 0.48)",
+      "$type": "shadow"
+    },
+    "float-shadow": {
+      "$value": "0 0 0 1px light-dark(rgb(26 28 30 / 0.05), rgb(255 255 255 / 0.08)), 0 24px 50px -22px rgb(15 23 42 / 0.45)",
+      "$type": "shadow",
+      "$description": "Floating cards over a hero visual"
+    },
+    "accent-line": {
+      "$value": "linear-gradient(90deg, var(--color-primary) 0%, var(--color-bookub) 35%, var(--color-founderub) 70%, var(--color-payub) 100%)",
+      "$type": "other",
+      "$description": "Brand accent line: Nexub and the product colours"
+    },
+    "lift": { "$value": "-6px", "$type": "dimension", "$description": "Card hover lift" },
+    "button-lift": { "$value": "-2px", "$type": "dimension", "$description": "Hero button hover lift" }
+  }
+}

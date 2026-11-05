@@ -10,7 +10,8 @@ Surface container for grouping related content. Supports flat, surface, and inte
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'flat' \| 'surface' \| 'interactive'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. |
+| `variant` | `'flat' \| 'surface' \| 'interactive' \| 'showcase'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`. |
+| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content. |
 | `effect` | `'none' \| 'sheen'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency. |
 | `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
 | `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
@@ -90,6 +91,32 @@ export default function Example() {
         <Heading level={3} size="h5">Pro</Heading>
         <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
       </Card>
+    </div>
+  );
+}
+```
+
+## Example: Showcase (marketing mode)
+
+Product accents on showcase cards, inside `data-mode="marketing"`.
+
+```tsx
+import { Card } from '@nexub/react';
+
+const products = [
+  { accent: 'payub', name: 'Payub', line: 'Payroll and HR' },
+  { accent: 'bookub', name: 'Bookub', line: 'Bookkeeping' },
+] as const;
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="grid w-full gap-6 sm:grid-cols-2">
+      {products.map((p) => (
+        <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
+          <h3 className="m-0 text-title-lg">{p.name}</h3>
+          <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+        </Card>
+      ))}
     </div>
   );
 }
