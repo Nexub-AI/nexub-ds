@@ -351,6 +351,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-motion', label: 'Motion & interaction', description: 'Spring tokens, state layers, focus ring', href: '/foundations/motion', category: 'Foundations' },
   { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },
   { id: 'foundations-materials', label: 'Materials', description: 'Glass 2.0 and the intensity dial', href: '/foundations/materials', category: 'Foundations' },
+  { id: 'foundations-accessibility', label: 'Accessibility conformance', description: 'WCAG 2.2 AA report per component: automated, documented and not yet covered', href: '/foundations/accessibility', category: 'Foundations' },
   { id: 'foundations-marketing-mode', label: 'Marketing mode', description: 'The nexub.com look, opt-in under data-mode="marketing"', href: '/foundations/marketing-mode', category: 'Foundations' },
   { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
   { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
@@ -427,6 +428,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Motion & interaction', href: '/foundations/motion' },
       { title: 'Materials', href: '/foundations/materials' },
       { title: 'Marketing mode', href: '/foundations/marketing-mode' },
+      { title: 'Accessibility', href: '/foundations/accessibility' },
     ],
   },
   {

@@ -1,7 +1,7 @@
 {
   "name": "@nexub/react",
   "version": "3.1.0",
-  "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
+  "description": "React component library for Nexub Design System \u2014 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -23,7 +23,8 @@
     "access": "public"
   },
   "files": [
-    "dist"
+    "dist",
+    "accessibility.json"
   ],
   "sideEffects": [
     "*.css"
@@ -42,6 +43,7 @@
       "types": "./dist/components/*/index.d.ts",
       "default": "./dist/components/*/index.js"
     },
+    "./accessibility.json": "./accessibility.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

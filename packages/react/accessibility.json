@@ -1,0 +1,1133 @@
+{
+  "version": "3.1.0",
+  "standard": "WCAG 2.2 Level AA",
+  "method": {
+    "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
+    "contrast": "Every colour role pair is tested for 4.5:1 (text) and 3:1 (non-text) at standard, medium and high contrast in light and dark.",
+    "manual": "Keyboard behaviour and screen-reader output are documented per component; recorded VoiceOver, NVDA and TalkBack sessions are not published yet."
+  },
+  "exceptions": [
+    {
+      "component": "appshell",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
+    },
+    {
+      "component": "topnav",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
+    },
+    {
+      "component": "appheader",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
+    },
+    {
+      "component": "settingslayout",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "slug": "accordion",
+      "name": "Accordion",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "alert-dialog",
+      "name": "Alert Dialog",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "alert",
+      "name": "Alert",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "amount",
+      "name": "Amount",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "autocomplete",
+      "name": "Autocomplete",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "avatar-group",
+      "name": "Avatar Group",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "avatar",
+      "name": "Avatar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "badge",
+      "name": "Badge",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "—: Badges are non-interactive and have no keyboard handlers."
+      ],
+      "screenReader": [
+        "Reads as inline text. For live status changes, wrap in an element with `role=\"status\"` and `aria-live=\"polite\"`.",
+        "Skipped in tab order. Decorative — never trap focus on a Badge."
+      ]
+    },
+    {
+      "slug": "box",
+      "name": "Box",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "breadcrumb",
+      "name": "Breadcrumb",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "button-group",
+      "name": "Button Group",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "button",
+      "name": "Button",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Space: Activates the focused button.",
+        "Enter: Activates the focused button.",
+        "Tab: Moves focus to the button in document order."
+      ],
+      "screenReader": [
+        "Announces the visible label plus the implicit \"button\" role.",
+        "While loading the button sets `aria-busy` and `aria-disabled` (not `disabled`), so focus stays on it and clicks are ignored.",
+        "A button with `status` or `loading` renders a polite `role=\"status\"` region next to it that announces `loadingLabel`, `successLabel` or `errorLabel` as the status changes.",
+        "Receives focus in document order; `disabled` removes it from the tab sequence.",
+        "Visible focus ring uses `--color-border-focus` and meets WCAG 2.4.7 contrast."
+      ]
+    },
+    {
+      "slug": "card",
+      "name": "Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Focuses interactive children. The card itself is never focusable; with a CardLink, the link is."
+      ],
+      "screenReader": [
+        "Group related content with a heading inside the Card so AT users can navigate by heading level.",
+        "With a CardLink inside, the focus ring is drawn on the card, not around the title.",
+        "Prefer CardLink over wrapping the whole card in `<a>`: the link’s accessible name stays the title instead of every word on the card."
+      ]
+    },
+    {
+      "slug": "checkbox-card",
+      "name": "Checkbox Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves focus to the card.",
+        "Space: Toggles the card."
+      ],
+      "screenReader": [
+        "The title is the accessible name and the description is the accessible description.",
+        "Wrap related cards in a `fieldset` with a `legend` so the set has a name."
+      ]
+    },
+    {
+      "slug": "checkbox",
+      "name": "Checkbox",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "chip",
+      "name": "Chip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "citation",
+      "name": "Citation",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Focuses a marker and opens its preview.",
+        "Enter: Opens the source in a new tab."
+      ],
+      "screenReader": [
+        "Markers are named \"Source 1: <title>\", not just the number.",
+        "The hover preview repeats the marker’s information; nothing in it is only available on hover."
+      ]
+    },
+    {
+      "slug": "code-inline",
+      "name": "Code",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "collapsible",
+      "name": "Collapsible",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "combobox",
+      "name": "Combobox",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "data-table",
+      "name": "Data Table",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "date-picker",
+      "name": "Date Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "date-range-picker",
+      "name": "Date Range Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "dialog",
+      "name": "Dialog",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "drawer",
+      "name": "Drawer",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "empty-state",
+      "name": "Empty State",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "error-state",
+      "name": "Error State",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "eyebrow-chip",
+      "name": "Eyebrow Chip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "filter-chip",
+      "name": "Filter Chip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "flex",
+      "name": "Flex",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "form-field",
+      "name": "Form Field",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "gradient-divider",
+      "name": "Gradient Divider",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "grid",
+      "name": "Grid",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "heading",
+      "name": "Heading",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "helper-text",
+      "name": "Helper Text",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "hover-card",
+      "name": "Hover Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "icon-button",
+      "name": "Icon Button",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "input",
+      "name": "Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves focus to the input.",
+        "Esc: Browsers may revert recent changes (autofill suggestions)."
+      ],
+      "screenReader": [
+        "`invalid` toggles `aria-invalid=\"true\"` so AT users hear the error state.",
+        "Use `aria-describedby` to associate `HelperText` or error messages.",
+        "Visible focus ring on `:focus-visible`. Pair with a `<Label htmlFor>` so clicking the label moves focus into the field."
+      ]
+    },
+    {
+      "slug": "kbd",
+      "name": "Kbd",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "label",
+      "name": "Label",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "link",
+      "name": "Link",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "media-card",
+      "name": "Media Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Focuses the link (the card shows the focus ring), then any actions.",
+        "Enter: Follows the link."
+      ],
+      "screenReader": [
+        "With `href`, the link’s name is the title only, not the whole caption.",
+        "Most card images repeat the title, so `alt=\"\"` is usually right."
+      ]
+    },
+    {
+      "slug": "message-bubble",
+      "name": "Message Bubble",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves through the action buttons; focusing one reveals the row.",
+        "Space / Enter: Activates an action. Feedback buttons toggle."
+      ],
+      "screenReader": [
+        "Each message is an `article` named \"You said\" or \"Assistant said\", so users can jump between messages.",
+        "Feedback buttons expose `aria-pressed`. Copy announces \"Copied\" through a status region.",
+        "The action row is only visually hidden until hover; it stays in the tab order and accessibility tree."
+      ]
+    },
+    {
+      "slug": "money-input",
+      "name": "Money Input",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-collapse",
+      "name": "Collapse",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-fade",
+      "name": "Fade",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-float",
+      "name": "Float",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-marquee",
+      "name": "Marquee",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-reveal",
+      "name": "Reveal",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-scale",
+      "name": "Scale",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "motion-slide",
+      "name": "Slide",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "navigation-rail",
+      "name": "Navigation Rail",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "number-input",
+      "name": "Number Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "number-ticker",
+      "name": "Number Ticker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The full value is read as one string; the rolling digits are hidden from assistive tech.",
+        "Under reduced motion digits change instantly."
+      ]
+    },
+    {
+      "slug": "pagination",
+      "name": "Pagination",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "password-input",
+      "name": "Password Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "popover",
+      "name": "Popover",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "progress",
+      "name": "Progress",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "prompt-input",
+      "name": "Prompt Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter: Sends. Ignored while an IME composition is open.",
+        "Shift + Enter: New line.",
+        "Escape: Stops the reply while streaming."
+      ],
+      "screenReader": [
+        "The field is named by `label` (default \"Message\") and described by the Enter/Shift+Enter hint.",
+        "Send and Stop are icon buttons with their own names; the swap does not move focus.",
+        "Focus stays in the field after sending, so the user can type the next message straight away.",
+        "An empty field keeps Send focusable with `aria-disabled`, rather than removing it from the tab order."
+      ]
+    },
+    {
+      "slug": "radio-card",
+      "name": "Radio Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves focus into the group, to the selected card.",
+        "Arrow keys: Move between cards and select.",
+        "Space: Selects the focused card."
+      ],
+      "screenReader": [
+        "The title is the accessible name and the description is the accessible description.",
+        "Give the group an `aria-label` or `aria-labelledby`."
+      ]
+    },
+    {
+      "slug": "radio-group",
+      "name": "Radio Group",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "rating",
+      "name": "Rating",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "scroll-area",
+      "name": "Scroll Area",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "search-input",
+      "name": "Search Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "segmented-control",
+      "name": "Segmented Control",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "select",
+      "name": "Select",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "separator",
+      "name": "Separator",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "sheet",
+      "name": "Sheet",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "skeleton",
+      "name": "Skeleton",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "slider",
+      "name": "Slider",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "spinner",
+      "name": "Spinner",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "split-button",
+      "name": "Split Button",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "stack",
+      "name": "Stack",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "streaming-text",
+      "name": "Streaming Text",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Not a live region by default. Announce the finished message once instead, e.g. through a polite status or Conversation’s `announce` for whole messages.",
+        "`aria-busy` is true while streaming, so assistive tech can wait for the final text."
+      ]
+    },
+    {
+      "slug": "switch",
+      "name": "Switch",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "table",
+      "name": "Table",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "tabs",
+      "name": "Tabs",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "text-gradient",
+      "name": "Text Gradient",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "text",
+      "name": "Text",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "textarea",
+      "name": "Textarea",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "thinking-indicator",
+      "name": "Thinking Indicator",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "A polite live region: the label is announced once when it mounts. Changing the label announces the new step.",
+        "Render it only while waiting and remove it when tokens start, so it is not announced again."
+      ]
+    },
+    {
+      "slug": "toast",
+      "name": "Toast",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "toggle-group",
+      "name": "Toggle Group",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "toggle",
+      "name": "Toggle",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "tooltip",
+      "name": "Tooltip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "activity-feed",
+      "name": "ActivityFeed",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "auth-card",
+      "name": "AuthCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "bento-grid",
+      "name": "Bento Grid",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "conversation",
+      "name": "Conversation",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: The message list is focusable so keyboard users can scroll it."
+      ],
+      "screenReader": [
+        "The list is named \"Conversation\". Leave `announce` off while streaming tokens and announce the finished reply once instead.",
+        "With reduced motion, \"Jump to latest\" scrolls instantly.",
+        "Keep focus in the composer while a reply streams; don’t move it to the new message."
+      ]
+    },
+    {
+      "slug": "cta-band",
+      "name": "CTABand",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "error-summary",
+      "name": "Error Summary",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "An `alert` labelled by its heading. Fields get `aria-invalid` and `aria-describedby` pointing at their inline message.",
+        "Takes focus whenever it receives a new, non-empty `errors` array, so screen readers read it and keyboard users start from it.",
+        "Each link scrolls its field into view and focuses it."
+      ]
+    },
+    {
+      "slug": "faq",
+      "name": "FAQ",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "feature-split",
+      "name": "FeatureSplit",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "filter-bar",
+      "name": "FilterBar",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "hero",
+      "name": "Hero",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "how-it-works",
+      "name": "HowItWorks",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "info-list",
+      "name": "InfoList",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "list-detail",
+      "name": "List Detail",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "logo-strip",
+      "name": "LogoStrip",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "marketing-footer",
+      "name": "MarketingFooter",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "marketing-nav",
+      "name": "MarketingNav",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "notification-item",
+      "name": "NotificationItem",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "plan-card",
+      "name": "PlanCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "pricing-table",
+      "name": "PricingTable",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "product-grid",
+      "name": "ProductGrid",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "section-header",
+      "name": "SectionHeader",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "settings-section",
+      "name": "SettingsSection",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "stat-band",
+      "name": "StatBand",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "stat-card",
+      "name": "StatCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "step-indicator",
+      "name": "StepIndicator",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "testimonial-grid",
+      "name": "TestimonialGrid",
+      "package": "@nexub/marketing",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "user-card",
+      "name": "UserCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    }
+  ]
+}
