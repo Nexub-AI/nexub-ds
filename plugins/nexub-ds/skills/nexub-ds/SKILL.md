@@ -70,7 +70,8 @@ Starting points for typical SaaS screens:
 | Screen | Build with |
 | --- | --- |
 | App frame | `AppShell` (`AppShell.Root/Header/Body/Sidebar/Main`) + `Sidebar` or `NavigationRail` + `AppHeader` or `TopNav` |
-| Dashboard | `PageHeader` + a `Grid` of `StatCard` + `DataTable` or `Table` + `ActivityFeed` |
+| Dashboard | `PageHeader` + a `Grid` of `StatCard` + `BarChart` / `LineChart` + `DataTable` or `Table` + `ActivityFeed` |
+| Charts | `BarChart` (compare categories), `LineChart` (trend over time), `DonutChart` (parts of a whole, six slices at most), `Sparkline` (trend inside a stat or table cell). Pass `title`, `data`, `index` and `series`; colours come from the chart palette, never hex |
 | List / detail | `ListDetail` + `FilterBar` + `EmptyState` |
 | Settings | `SettingsLayout` / `SettingsRow` + `SettingsSection` + `FormField` |
 | Sign in / sign up | `AuthCard` + `FormField` + `PasswordInput` |
