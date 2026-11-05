@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 3.6.0
+
+### Patch Changes
+
+- @nexub/icons@3.6.0
+- @nexub/core@3.6.0
+
 ## 3.5.0
 
 ### Patch Changes
