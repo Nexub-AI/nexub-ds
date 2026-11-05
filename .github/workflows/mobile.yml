@@ -3,9 +3,14 @@ name: Mobile
 # Builds the Expo showcase (apps/mobile) as a release app and drives it with
 # Maestro on an iOS simulator and an Android emulator. Runs only when the
 # native packages, their inputs, or the app change.
+#
+# Only PRs into development: staging and production promotions, the Version
+# Packages PR and the production -> development back-merge carry code that
+# already passed here, so re-running the ~1 h simulators on them only slowed
+# releases down.
 on:
   pull_request:
-    branches: [development, staging, production]
+    branches: [development]
     paths:
       - 'packages/react-native/**'
       - 'packages/tokens/**'
@@ -46,6 +51,8 @@ env:
 jobs:
   ios:
     name: iOS simulator (Maestro)
+    # Skip the back-merge (head: production); it's already-tested code.
+    if: github.head_ref != 'production'
     runs-on: macos-26
     # A passing run takes ~58 min (Release build 23–34, previews ~19), so 60
     # cancelled any slow runner.
@@ -157,6 +164,8 @@ jobs:
 
   android:
     name: Android emulator (Maestro)
+    # Skip the back-merge (head: production); it's already-tested code.
+    if: github.head_ref != 'production'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
