@@ -45,7 +45,63 @@ const undocumented = Object.fromEntries(
 );
 
 const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
+// llms.txt points at the Markdown version of each page (apps/docs/scripts/copy-ai-md.mjs).
+const mdUrl = (e) => `${docsUrl(e)}.md`;
 const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+
+// ─── Accessibility conformance report (@nexub/react/accessibility.json) ─────
+// Evidence per component from what CI runs: axe-core WCAG 2.2 A/AA over every
+// Storybook story in light and dark (packages/react/visual/a11y.visual.spec.ts,
+// whose KNOWN map lists the only accepted exceptions), plus the documented
+// keyboard and screen-reader behaviour from the docs registry.
+function a11yReport() {
+  const spec = readFileSync(join(root, 'packages/react/visual/a11y.visual.spec.ts'), 'utf8');
+  const lists = Object.fromEntries([...spec.matchAll(/const (\w+) = \[([^\]]*)\]/g)].map(([, n, v]) => [n, [...v.matchAll(/'([\w-]+)'/g)].map((m) => m[1])]));
+  const known = {};
+  for (const [, id, list] of spec.matchAll(/^\s+'([\w-]+?)(?: (?:light|dark))?': (\w+),$/gm)) {
+    const comp = id.split('--')[0].split('-').slice(1).join('');
+    known[comp] = [...new Set([...(known[comp] ?? []), ...(lists[list] ?? [])])];
+  }
+  // A component is covered when any story renders it (Fade lives in Motion.stories, Amount in NumberTicker's).
+  const stories = ['react', 'patterns', 'marketing']
+    .map((p) => join(root, `packages/${p}/src/components`))
+    .filter(existsSync)
+    .flatMap((dir) => readdirSync(dir).flatMap((c) => (existsSync(join(dir, c)) ? readdirSync(join(dir, c)).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(dir, c, f), 'utf8')) : [])))
+    .join('\n');
+  // Covered by its own stories file, as a story's `component`, or rendered as JSX in any story.
+  const storyFile = (e) =>
+    [pascal(e.meta.slug), e.meta.title.replace(/\s+/g, '')].some(
+      (n) =>
+        ['react', 'patterns', 'marketing'].some((p) => existsSync(join(root, `packages/${p}/src/components/${n}/${n}.stories.tsx`))) ||
+        new RegExp(`(<${n}[\\s/>.])|(component: ${n}\\b)`).test(stories),
+    );
+  return {
+    version,
+    standard: 'WCAG 2.2 Level AA',
+    method: {
+      automated: 'axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.',
+      contrast: 'Every colour role pair is tested for 4.5:1 (text) and 3:1 (non-text) at standard, medium and high contrast in light and dark.',
+      manual: 'Keyboard behaviour and screen-reader output are documented per component; recorded VoiceOver, NVDA and TalkBack sessions are not published yet.',
+    },
+    // Every accepted axe exception, by story (from KNOWN in a11y.visual.spec.ts; each has a reason there).
+    exceptions: Object.entries(known).map(([component, rules]) => ({ component, rules })),
+    components: entries
+      .filter((e) => e.meta.status !== 'deprecated')
+      .map((e) => {
+        const tested = storyFile(e);
+        const exceptions = known[e.meta.slug.replace(/-/g, '')] ?? [];
+        return {
+          slug: e.meta.slug,
+          name: e.meta.title,
+          package: e.meta.package,
+          automated: !tested ? 'not covered' : exceptions.length ? 'pass with documented exception' : 'pass',
+          exceptions,
+          keyboard: (e.a11y?.keyboard ?? []).map((k) => `${k.key}: ${k.description}`),
+          screenReader: [...(e.a11y?.screenReader ?? []), ...(e.a11y?.focus ?? [])],
+        };
+      }),
+  };
+}
 
 function componentMd(e) {
   const { meta, props, examples, usage, a11y } = e;
@@ -238,20 +294,22 @@ function llmsTxt() {
     `- [Principles](${SITE_URL}/foundations/principles): the six Calm Depth rules`,
     `- [Colors](${SITE_URL}/foundations/colors): color roles and contrast`,
     `- [Materials](${SITE_URL}/foundations/materials): Liquid Glass rules`,
+    `- [Theme builder](${SITE_URL}/foundations/theme-builder): one brand colour to a contrast-checked theme`,
+    `- [AI tools and MCP](${SITE_URL}/getting-started/ai-tools): connect @nexub/mcp, the Claude Code plugin and these files to your AI tool`,
     '',
     '## Components',
     '',
-    ...entries.filter((e) => e.meta.package === '@nexub/react').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/react').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## Patterns',
     '',
-    ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## Marketing (@nexub/marketing, under data-mode="marketing")',
     '',
     `- [Marketing mode](${SITE_URL}/foundations/marketing-mode): guidelines, tokens and what changes`,
     `- [Next.js and server components](${SITE_URL}/getting-started/nextjs): per-component imports, next/font, Tailwind 4`,
-    ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## React Native',
     '',
@@ -280,6 +338,7 @@ const outputs = {
   [join(plugin, '.claude-plugin/plugin.json')]: JSON.stringify({ ...pluginJson, version }, null, 2) + '\n',
   [join(root, 'apps/docs/public/llms.txt')]: llmsTxt(),
   [join(root, 'apps/docs/public/llms-full.txt')]: llmsFullTxt(files),
+  [join(root, 'packages/react/accessibility.json')]: JSON.stringify(a11yReport(), null, 2) + '\n',
 };
 
 if (process.argv.includes('--check')) {

@@ -65,7 +65,8 @@ Starting points for typical SaaS screens:
 | Screen | Build with |
 | --- | --- |
 | App frame | `AppShell` (`AppShell.Root/Header/Body/Sidebar/Main`) + `Sidebar` or `NavigationRail` + `AppHeader` or `TopNav` |
-| Dashboard | `PageHeader` + a `Grid` of `StatCard` + `DataTable` or `Table` + `ActivityFeed` |
+| Dashboard | `PageHeader` + a `Grid` of `StatCard` + `BarChart` / `LineChart` + `DataTable` or `Table` + `ActivityFeed` |
+| Charts | `BarChart` (compare categories), `LineChart` (trend over time), `DonutChart` (parts of a whole, six slices at most), `Sparkline` (trend inside a stat or table cell). Pass `title`, `data`, `index` and `series`; colours come from the chart palette, never hex |
 | List / detail | `ListDetail` + `FilterBar` + `EmptyState` |
 | Settings | `SettingsLayout` / `SettingsRow` + `SettingsSection` + `FormField` |
 | Sign in / sign up | `AuthCard` + `FormField` + `PasswordInput` |
@@ -73,6 +74,7 @@ Starting points for typical SaaS screens:
 | Onboarding | `StepIndicator` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+| White-label / customer brand | `<ThemeProvider seed="#hex">` (native: `<NexubNativeProvider seed>`), plus `createSeedStylesheet(seed)` from `@nexub/tokens/seed` rendered on the server so there is no flash. Never hand-pick brand hex for roles; try colours at nexub.design/foundations/theme-builder |
 | Marketing / landing page | `@nexub/marketing` under `data-mode="marketing"`: `MarketingNav`, `Hero`, `LogoStrip`, `StatBand`, `FeatureSplit`, `HowItWorks`, `ProductGrid`, `TestimonialGrid`, `PricingTable`, `FAQ`, `CTABand`, `MarketingFooter` |
 
 Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's own minor unit and a true minus sign. Icons: import from `@nexub/icons`, not `lucide-react` directly.
@@ -121,7 +123,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v3.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v3.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -360,7 +362,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v3.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v3.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -386,10 +388,14 @@ Never use a component marked deprecated.
 ## Components — Data Display
 
 - [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
+- [Bar Chart](components/bar-chart.md) `@nexub/react`: Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
+- [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
 ## Components — Disclosure
@@ -563,7 +569,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AppShell, AspectRatio, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage
 
 
@@ -1108,6 +1114,91 @@ export default function Example() {
 - For interactive equivalents (filtering, dismissing) reach for `Chip` or `FilterChip`.
 
 Related: [chip](chip.md)
+
+
+---
+
+# Bar Chart
+
+Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { BarChart } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/bar-chart
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Accessible name of the chart and caption of its data table. |
+| `data` (required) | `T[]` |  | One row per category, in order. |
+| `index` (required) | `keyof T` |  | Key of the category label in each row (the x axis). |
+| `series` (required) | `ChartSeries[]` |  | `{ key, label?, color? }` per series. `color` is 1–8 from the categorical chart palette; defaults to the series position. |
+| `valueFormat` | `(value: number) => string` |  | Formats axis labels, hover text and the data table. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
+| `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
+| `stacked` | `boolean` | `false` | One bar per category with the series stacked. |
+
+## Example: Grouped
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const data = [
+  { month: 'May', thisYear: 42, lastYear: 35 },
+  { month: 'Jun', thisYear: 48, lastYear: 37 },
+  { month: 'Jul', thisYear: 45, lastYear: 40 },
+  { month: 'Aug', thisYear: 56, lastYear: 41 },
+  { month: 'Sep', thisYear: 61, lastYear: 47 },
+  { month: 'Oct', thisYear: 68, lastYear: 50 },
+];
+
+export default function Example() {
+  return (
+    <BarChart
+      className="w-full"
+      title="Revenue by month"
+      data={data}
+      index="month"
+      series={[{ key: 'thisYear', label: '2026' }, { key: 'lastYear', label: '2025' }]}
+      valueFormat={(v) => `$${v}k`}
+    />
+  );
+}
+```
+
+## Example: Stacked
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const data = [
+  { quarter: 'Q1', web: 120, ios: 80, android: 60 },
+  { quarter: 'Q2', web: 140, ios: 95, android: 72 },
+  { quarter: 'Q3', web: 150, ios: 110, android: 90 },
+  { quarter: 'Q4', web: 170, ios: 128, android: 101 },
+];
+
+export default function Example() {
+  return (
+    <BarChart
+      stacked
+      className="w-full"
+      title="Signups by platform"
+      data={data}
+      index="quarter"
+      series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
+- Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+
+Related: [line-chart](line-chart.md), [donut-chart](donut-chart.md), [sparkline](sparkline.md)
 
 
 ---
@@ -2291,6 +2382,63 @@ export default function Example() {
 
 ---
 
+# Donut Chart
+
+Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { DonutChart } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/donut-chart
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Accessible name of the chart. |
+| `data` (required) | `{ label: string; value: number; color?: ChartColor }[]` |  | One entry per slice. |
+| `center` | `ReactNode` |  | Content in the hole, such as the total. |
+| `valueFormat` | `(value: number) => string` |  | Formats the hover text and the data table. |
+| `legend` | `boolean` | `true` | Show the legend beside the donut. |
+
+## Example: With total
+
+```tsx
+import { DonutChart } from '@nexub/react';
+
+const plans = [
+  { label: 'Pro', value: 540 },
+  { label: 'Team', value: 310 },
+  { label: 'Starter', value: 220 },
+  { label: 'Free', value: 130 },
+];
+
+export default function Example() {
+  return (
+    <DonutChart
+      title="Customers by plan"
+      data={plans}
+      center={
+        <span>
+          1,200
+          <br />
+          <span className="text-label-sm text-[var(--color-on-surface-muted)]">customers</span>
+        </span>
+      }
+    />
+  );
+}
+```
+
+## Accessibility
+
+- The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
+- Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+
+Related: [bar-chart](bar-chart.md)
+
+
+---
+
 # Drawer
 
 Slide-in panel from any edge of the screen.
@@ -3203,6 +3351,93 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Line Chart
+
+Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { LineChart } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/line-chart
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | Accessible name of the chart and caption of its data table. |
+| `data` (required) | `T[]` |  | One row per category, in order. |
+| `index` (required) | `keyof T` |  | Key of the category label in each row (the x axis). |
+| `series` (required) | `ChartSeries[]` |  | `{ key, label?, color? }` per series. `color` is 1–8 from the categorical chart palette; defaults to the series position. |
+| `valueFormat` | `(value: number) => string` |  | Formats axis labels, hover text and the data table. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
+| `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
+| `area` | `boolean` | `false` | Fill the area under each line. |
+
+## Example: Two series
+
+```tsx
+import { LineChart } from '@nexub/react';
+
+const data = [
+  { week: 'W1', active: 820, trial: 310 },
+  { week: 'W2', active: 870, trial: 290 },
+  { week: 'W3', active: 905, trial: 340 },
+  { week: 'W4', active: 960, trial: 330 },
+  { week: 'W5', active: 1010, trial: 360 },
+  { week: 'W6', active: 1080, trial: 355 },
+];
+
+export default function Example() {
+  return (
+    <LineChart
+      className="w-full"
+      title="Weekly users"
+      data={data}
+      index="week"
+      series={[{ key: 'active', label: 'Active' }, { key: 'trial', label: 'Trial' }]}
+    />
+  );
+}
+```
+
+## Example: Area
+
+```tsx
+import { LineChart } from '@nexub/react';
+
+const data = [
+  { day: 'Mon', p95: 210 },
+  { day: 'Tue', p95: 190 },
+  { day: 'Wed', p95: 240 },
+  { day: 'Thu', p95: 205 },
+  { day: 'Fri', p95: 180 },
+];
+
+export default function Example() {
+  return (
+    <LineChart
+      area
+      size="sm"
+      className="w-full"
+      title="API latency, p95"
+      data={data}
+      index="day"
+      series={[{ key: 'p95', label: 'p95 latency', color: 6 }]}
+      valueFormat={(v) => `${v} ms`}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
+- Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+
+Related: [bar-chart](bar-chart.md), [sparkline](sparkline.md)
 
 
 ---
@@ -4991,6 +5226,51 @@ export default function Example() {
   return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
 }
 ```
+
+
+---
+
+# Sparkline
+
+A tiny trend line with no axes, for stat cards and table cells.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Sparkline } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/sparkline
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `values` (required) | `number[]` |  | The points, oldest first. |
+| `label` | `string` |  | Accessible summary, such as "Revenue, last 12 weeks, up 8%". Without it the sparkline is decorative. |
+| `color` | `ChartColor` | `1` | Palette colour, 1–8. |
+| `area` | `boolean` | `false` | Fill the area under the line. |
+
+## Example: In a stat
+
+```tsx
+import { Sparkline } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex items-end gap-4 rounded-2xl border border-[var(--color-outline-variant)] p-4">
+      <div>
+        <p className="text-label-md text-[var(--color-on-surface-variant)]">Monthly revenue</p>
+        <p className="text-title-lg text-[var(--color-on-surface)]">$68,420</p>
+      </div>
+      <Sparkline area values={[42, 48, 45, 56, 61, 68]} label="Up 62% over six months" color={2} />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
+- Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+
+Related: [line-chart](line-chart.md), [stat-card](stat-card.md)
 
 
 ---

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { scanSource } from './usage-scan.mjs';
+import { scanSource } from './nexub-usage.mjs';
 
 test('reads named, aliased, type and multi-line @nexub imports; ignores others', () => {
   const src = `
