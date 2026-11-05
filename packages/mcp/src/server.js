@@ -102,6 +102,45 @@ export function createServer() {
     async () => text(read('references/react-native.md')),
   );
 
+  // Prompts: ready-made starting points the user picks in their MCP client
+  // (e.g. "/mcp__nexub-ds__build_screen" in Claude Code). Each one carries the
+  // guidelines, so the model has the rules without a separate tool call.
+  const guidelines = () => read('SKILL.md').replace(/^---\n[\s\S]*?\n---\n/, '');
+  const user = (t) => ({ messages: [{ role: 'user', content: { type: 'text', text: t } }] });
+
+  server.registerPrompt(
+    'build_screen',
+    {
+      title: 'Build a screen with Nexub',
+      description: 'Build a page or screen from a short description, using only Nexub components, patterns and tokens.',
+      argsSchema: {
+        screen: z.string().describe('What to build, e.g. "billing settings with plan, payment method and invoices"'),
+        platform: z.string().optional().describe('"web" (default) or "mobile"'),
+      },
+    },
+    ({ screen, platform }) =>
+      user(
+        `Build this ${platform === 'mobile' ? 'React Native screen with @nexub/react-native' : 'screen with @nexub/react and @nexub/patterns'}: ${screen}\n\n` +
+          'Start from the matching row of "How to build a screen", call get_component for any component whose props you are unsure of, ' +
+          `use only tokens (no hex, no arbitrary px), and finish with the "Before you finish" checklist.\n\n---\n\n${guidelines()}`,
+      ),
+  );
+
+  server.registerPrompt(
+    'review_screen',
+    {
+      title: 'Review UI against Nexub',
+      description: 'Review UI code against the Nexub checklist and fix what is not a Nexub component or token.',
+      argsSchema: { code: z.string().optional().describe('The code to review. Leave empty to review the open file.') },
+    },
+    ({ code }) =>
+      user(
+        'Review this UI against the Nexub "Before you finish" checklist. List each problem with the line, then fix it: ' +
+          'swap custom controls for Nexub components, hex or palette colours for role tokens, arbitrary values for scale tokens, ' +
+          `and add missing labels.\n\n${code ? `\`\`\`tsx\n${code}\n\`\`\`\n\n` : ''}---\n\n${guidelines()}`,
+      ),
+  );
+
   return server;
 }
 

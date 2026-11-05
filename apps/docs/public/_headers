@@ -5,6 +5,10 @@
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Markdown versions of component and pattern pages, for AI tools (llms.txt links here)
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
 # Short cache + security headers for all HTML pages
 /*
   Cache-Control: public, max-age=60, stale-while-revalidate=600
