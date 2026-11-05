@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp } from '@nexub/icons';

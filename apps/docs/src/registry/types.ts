@@ -29,7 +29,7 @@ export interface ComponentMeta {
   title: string;
   description: string;
   category: string;
-  package: '@nexub/react' | '@nexub/patterns';
+  package: '@nexub/react' | '@nexub/patterns' | '@nexub/marketing';
   status?: ComponentStatus;
   /** Set with `status: 'deprecated'`: shown on the page and in the AI docs. */
   deprecation?: Deprecation;

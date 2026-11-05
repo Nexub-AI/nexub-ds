@@ -35,7 +35,8 @@
     "lg":    { "$value": "1024px", "$type": "dimension" },
     "xl":    { "$value": "1280px", "$type": "dimension" },
     "2xl":   { "$value": "1536px", "$type": "dimension" },
-    "nexub": { "$value": "1440px", "$type": "dimension" },
+    "nexub": { "$value": "1440px", "$type": "dimension", "$description": "App shell width" },
+    "marketing": { "$value": "1280px", "$type": "dimension", "$description": "Marketing pages (Container size=\"marketing\")" },
     "prose": { "$value": "65ch",   "$type": "dimension" }
   }
 }

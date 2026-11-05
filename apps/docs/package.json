@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@nexub/icons": "workspace:*",
+    "@nexub/marketing": "workspace:*",
     "@nexub/patterns": "workspace:*",
     "@nexub/react": "workspace:*",
     "@nexub/themes": "workspace:*",

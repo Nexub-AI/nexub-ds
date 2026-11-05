@@ -12,6 +12,7 @@ export const containerVariants = cva('mx-auto w-full', {
       xl: 'max-w-[var(--container-xl,1280px)]',
       '2xl': 'max-w-[var(--container-2xl,1536px)]',
       nexub: 'max-w-[var(--container-nexub,1440px)]',
+      marketing: 'max-w-[var(--container-marketing,1280px)]',
       prose: 'max-w-[var(--container-prose,65ch)]',
     },
     paddingX: {

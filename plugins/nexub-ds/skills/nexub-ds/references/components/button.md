@@ -24,7 +24,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
 | `loading` | `boolean` | `false` | Alias for `status="loading"`. |
@@ -122,6 +122,24 @@ export default function Example() {
         Save
       </Button>
       <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+    </div>
+  );
+}
+```
+
+## Example: Hero (marketing mode)
+
+Inside `data-mode="marketing"` with `@nexub/themes/marketing` loaded. The focus ring sits outside the gradient.
+
+```tsx
+import { Button } from '@nexub/react';
+import { ArrowRight } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="flex flex-wrap items-center gap-3">
+      <Button variant="hero" size="lg" trailingIcon={<ArrowRight size={16} />}>Start free</Button>
+      <Button variant="outlined" size="lg">Book a demo</Button>
     </div>
   );
 }

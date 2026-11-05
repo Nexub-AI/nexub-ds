@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from '@nexub/icons';
@@ -8,20 +10,7 @@ import { disabledContainer, disabledText, pressable } from '../../utils/control.
 import { glassSurfaceClass } from '../../utils/glass.js';
 
 export type { ToneValue };
-
-// Text-only tone for content on surfaces (Heading, Label, HelperText,
-// EyebrowChip): accent roles (tone 40 / 80, AA on every surface).
-export const toneTextClasses: Record<ToneValue, string> = {
-  neutral: 'text-[var(--color-on-surface-variant)]',
-  info: 'text-[var(--color-info)]',
-  success: 'text-[var(--color-success)]',
-  warning: 'text-[var(--color-warning)]',
-  danger: 'text-[var(--color-error)]',
-  leap: 'text-[var(--color-leap)]',
-  bookub: 'text-[var(--color-bookub)]',
-  payub: 'text-[var(--color-payub)]',
-  founderub: 'text-[var(--color-founderub)]',
-};
+export { toneTextClasses } from '../../utils/control.js';
 
 // Tone overrides the variant colour with a solid role (or brand palette tone
 // 40/80) and its on-color. Hover/press come from the state layer. Static
@@ -55,6 +44,9 @@ export const buttonVariants = cva(
         text,
         // Thin glass: for buttons floating over content/media (toolbars, media controls).
         glass: `border ${glassSurfaceClass} text-[var(--color-on-surface)] ${disabledContainer}`,
+        // Marketing mode (@nexub/themes/marketing): gradient, glow and a spring
+        // lift. Without [data-mode="marketing"] it is a filled button.
+        hero: `${filled} nx-mkt-hero-button`,
         // Legacy names (kept as aliases).
         primary: filled,
         secondary: tonal,

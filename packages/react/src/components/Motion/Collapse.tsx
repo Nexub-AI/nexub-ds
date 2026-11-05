@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import type { MotionBaseProps } from './motion.types.js';
 import { DURATION_MS, SPRING_MS, SPRING_SPEED, spring, usePrefersReducedMotion } from './useMotion.js';

@@ -13,7 +13,8 @@ const entry: ComponentEntry = {
     related: ['media-card', 'radio-card', 'alert'],
   },
   props: [
-    { name: 'variant', type: "'flat' | 'surface' | 'interactive'", default: "'flat'", required: false, description: '`interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons.' },
+    { name: 'variant', type: "'flat' | 'surface' | 'interactive' | 'showcase'", default: "'flat'", required: false, description: '`interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`.' },
+    { name: 'accent', type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: 'With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content.' },
     { name: 'effect', type: "'none' | 'sheen'", default: "'none'", required: false, description: 'Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency.' },
     { name: 'tone', type: "ToneValue", default: 'undefined', required: false, description: 'Applies a semantic left-border accent.' },
     { name: 'asChild', type: 'boolean', default: 'false', required: false, description: 'Merges props onto the immediate child element.' },
@@ -34,6 +35,10 @@ const entry: ComponentEntry = {
     {
       title: 'Sheen',
       description: 'Move the pointer over the card.',
+    },
+    {
+      title: 'Showcase (marketing mode)',
+      description: 'Product accents on showcase cards, inside `data-mode="marketing"`.',
     },
   ],
   playground: {

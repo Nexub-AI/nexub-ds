@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixToolbar from '@radix-ui/react-toolbar';
 import { cn } from '../../utils/cn.js';

@@ -1,6 +1,9 @@
+'use client';
+
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { useIntlLocale } from '../NexubProvider/NexubProvider.js';
+import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 
 /** A run of already-formatted text with its own class (Amount's muted symbol and minor units). */
 export interface NumberTickerPart {
@@ -16,6 +19,10 @@ export interface NumberTickerProps extends Omit<React.HTMLAttributes<HTMLSpanEle
   locale?: string;
   /** Announce changes to screen readers. */
   'aria-live'?: 'off' | 'polite';
+  /** Count up from zeros when the number first scrolls into view. Only for a ticker that starts
+   *  below the fold; the server-rendered HTML and screen readers always get the real value.
+   *  Off under reduced motion. */
+  countOnView?: boolean;
 }
 
 // Literal classes (no style attribute): the strip is 10 lines tall, so each
@@ -99,7 +106,7 @@ function Char({ char, className, enter }: { char: string; className?: string; en
  * shows the value as-is; only later changes animate.
  */
 export const NumberTicker = React.forwardRef<HTMLSpanElement, NumberTickerProps>(
-  ({ value, format, locale: localeProp, className, 'aria-live': ariaLive = 'off', ...props }, ref) => {
+  ({ value, format, locale: localeProp, className, 'aria-live': ariaLive = 'off', countOnView = false, ...props }, ref) => {
     const locale = useIntlLocale(localeProp);
     const parts: readonly NumberTickerPart[] =
       typeof value === 'number'
@@ -107,8 +114,27 @@ export const NumberTicker = React.forwardRef<HTMLSpanElement, NumberTickerProps>
         : typeof value === 'string'
           ? [{ value }]
           : value;
-    const chars = parts.flatMap((p) => Array.from(p.value, (char) => ({ char, className: p.className })));
     const text = parts.map((p) => p.value).join('');
+
+    // countOnView: digits show as zeros (same width) until the ticker scrolls into view.
+    const self = React.useRef<HTMLSpanElement>(null);
+    const [zeroed, setZeroed] = React.useState(false);
+    React.useEffect(() => {
+      const el = self.current;
+      if (!countOnView || !el || typeof IntersectionObserver === 'undefined') return;
+      if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+      if (el.getBoundingClientRect().top < window.innerHeight) return; // already on screen
+      setZeroed(true);
+      const io = new IntersectionObserver(([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setZeroed(false);
+        io.disconnect();
+      }, { threshold: 0.5 });
+      io.observe(el);
+      return () => io.disconnect();
+    }, [countOnView]);
+    const shown = zeroed ? parts.map((p) => ({ ...p, value: p.value.replace(/[0-9]/g, '0') })) : parts;
+    const chars = shown.flatMap((p) => Array.from(p.value, (char) => ({ char, className: p.className })));
 
     const mounted = React.useRef(false);
     React.useEffect(() => {
@@ -124,7 +150,7 @@ export const NumberTicker = React.forwardRef<HTMLSpanElement, NumberTickerProps>
 
     return (
       <span
-        ref={ref}
+        ref={useMergedRefs(ref, self)}
         className={cn('whitespace-nowrap tabular-nums', className)}
         aria-live={ariaLive}
         aria-atomic="true"

@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useRef, type Ref } from 'react';
 import type React from 'react';
 

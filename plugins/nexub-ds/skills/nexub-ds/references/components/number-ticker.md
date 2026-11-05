@@ -14,6 +14,7 @@ A number whose digits roll to new values on the spatial spring. The first render
 | `format` | `Intl.NumberFormatOptions` |  | Formatting for a number `value`. |
 | `locale` | `string` |  | BCP 47 locale. Defaults to the user's. |
 | `aria-live` | `'off' \| 'polite'` | `'off'` | Announce changes to screen readers. Use `polite` only for values the user is waiting on. |
+| `countOnView` | `boolean` | `false` | Count up from zeros when the ticker first scrolls into view (3.1). Only for a ticker that starts below the fold; the server HTML and screen readers always get the real value. Off under reduced motion. |
 
 ## Example: Formatted number
 
@@ -52,6 +53,23 @@ export default function Example() {
       <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
         Change
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Count on view
+
+Scroll the preview so the number enters the view; it counts up once.
+
+```tsx
+import { NumberTicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex h-48 w-full flex-col overflow-y-auto">
+      <p className="m-0 shrink-0 pb-64 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
+      <NumberTicker value={2000} countOnView className="shrink-0 text-display-sm" />
     </div>
   );
 }

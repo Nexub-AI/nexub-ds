@@ -14,7 +14,7 @@
 //   assets/favicon.ico                    16/32/48 from the Nexub tile
 //   ../tokens/tokens/brand-mark.json      --color-brand-mark-1…n
 //   ../icons/src/icons/nexubMarkData.ts   mark geometry for <NexubMark>/<Logo>
-//   ../themes/src/base.css                .nxm-* stop classes (marked block)
+//   ../themes/src/core.css                .nxm-* stop classes (marked block)
 
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -96,10 +96,10 @@ const stopCss = [
   ...colors.map((_, i) => `.nxm-s-${i + 1}{stop-color:var(--color-brand-mark-${i + 1})}`),
   ...opacities.map((o) => `.nxm-o-${String(o).replace('.', '_')}{stop-opacity:${o}}`),
 ].join('\n');
-const baseCssPath = `${root}../themes/src/base.css`;
+const baseCssPath = `${root}../themes/src/core.css`;
 const baseCss = readFileSync(baseCssPath, 'utf8');
 const block = /(\/\* nexub-mark-stops:start[^*]*\*\/\n)[\s\S]*?(\/\* nexub-mark-stops:end \*\/)/;
-if (!block.test(baseCss)) throw new Error('base.css: nexub-mark-stops markers missing');
+if (!block.test(baseCss)) throw new Error('core.css: nexub-mark-stops markers missing');
 writeFileSync(baseCssPath, baseCss.replace(block, `$1${stopCss}\n$2`));
 
 // ─── Mono mark: the master's shapes merged into one currentColor path ────────

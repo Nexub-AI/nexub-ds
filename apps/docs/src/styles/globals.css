@@ -14,6 +14,7 @@
 @import '@nexub/themes/bookub' layer(base);
 @import '@nexub/themes/payub' layer(base);
 @import '@nexub/themes/founderub' layer(base);
+@import '@nexub/themes/marketing' layer(base);
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 /* Nexub token utilities (bg-primary, rounded-shape-*, text-label-md, …):
@@ -25,6 +26,7 @@
 @source '../**/*.{ts,tsx}';
 @source '../../../../packages/react/src/**/*.{ts,tsx}';
 @source '../../../../packages/patterns/src/**/*.{ts,tsx}';
+@source '../../../../packages/marketing/src/**/*.{ts,tsx}';
 
 /* Metric-matched fallbacks for the webfonts (font-display: swap). Text is first
    painted in Arial (Liberation Sans on Linux) scaled to Inter / Plus Jakarta

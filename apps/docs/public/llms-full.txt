@@ -1,7 +1,7 @@
 
 # Nexub Design System
 
-Nexub DS is a token-driven React design system for SaaS products. The visual language is **Calm Depth**: tonal surfaces, one accent per view, spring motion, honest numbers. **Liquid Glass** is an optional material for the floating control layer.
+Nexub DS is a token-driven React design system for SaaS products. The visual language is **Calm Depth**: tonal surfaces, one accent per view, spring motion, honest numbers. **Liquid Glass** is an optional material for the floating control layer. **Marketing mode** (`data-mode="marketing"`) is the livelier look for marketing sites, on the same tokens.
 
 Reference files (read only what the task needs):
 
@@ -49,6 +49,8 @@ export default {
 @source "../node_modules/@nexub/patterns/dist";
 ```
 
+**Next.js App Router:** presentational components (Heading, Text, Container, Section, Stack, Badge, EyebrowChip, Logo, Float, Marquee and every `@nexub/marketing` section except `MarketingNav`, `PricingTable` and `FAQ`) are server components. Import per component (`@nexub/react/Button`, `@nexub/marketing/Hero`, `cn` from `@nexub/react/cn`) or set `experimental.optimizePackageImports: ['@nexub/react', '@nexub/marketing', '@nexub/icons']`, or the page ships every client component. Compound components (`Accordion.Root`, `TopNav.Root`) only work inside a `'use client'` file. To use `next/font`, import `@nexub/themes/core` (no fonts, no page backdrop) instead of `base` and name the font variables `--font-family-sans` and `--font-family-display`. With Tailwind, never also import `@nexub/react/styles.css`.
+
 Wrap the app in `<ThemeProvider defaultTheme="system" storageKey="app-theme">` from `@nexub/react`. In server-rendered apps (Next.js), put `<ThemeScript storageKey="app-theme" />` in `<head>` and add `suppressHydrationWarning` to `<html>`. Product brands: set `data-product="leap" | "bookub" | "payub" | "founderub"` on the root. This remaps the `tertiary` role.
 
 ## 2. How to build a screen
@@ -71,13 +73,14 @@ Starting points for typical SaaS screens:
 | Onboarding | `StepIndicator` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+| Marketing / landing page | `@nexub/marketing` under `data-mode="marketing"`: `MarketingNav`, `Hero`, `LogoStrip`, `StatBand`, `FeatureSplit`, `HowItWorks`, `ProductGrid`, `TestimonialGrid`, `PricingTable`, `FAQ`, `CTABand`, `MarketingFooter` |
 
 Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's own minor unit and a true minus sign. Icons: import from `@nexub/icons`, not `lucide-react` directly.
 
 ## 3. Calm Depth principles
 
 1. **Content leads, chrome recedes.** Navigation is quieter than content. Remove a divider before you add one; let spacing and tone separate regions. Do: a tonal sidebar with no border, where the active item is a soft pill. Don't: a saturated brand-blue sidebar item, or a hard line around every region.
-2. **Hierarchy through tone and layout, not decoration.** Surfaces step `surface` → `surface-container-*` → `surface-elevated`. Shadows are only for things that float. Product UI has no gradients, no colored icon tiles and no gradient eyebrow chips.
+2. **Hierarchy through tone and layout, not decoration.** Surfaces step `surface` → `surface-container-*` → `surface-elevated`. Shadows are only for things that float. Product UI has no gradients, no colored icon tiles and no gradient eyebrow chips (those belong to marketing mode only).
 3. **One accent, spent deliberately.** Each view gets one filled (primary) button. Everything else is `tonal`, `outlined` or `text`. Never put two filled buttons side by side.
 4. **Physical, interruptible motion.** Use the spring tokens (`ease-spatial-default duration-spatial-default`), not raw durations. Exits are faster than entrances. Honor `prefers-reduced-motion`.
 5. **Honest numbers and states.** Use tabular figures in data. Hover, pressed, selected and disabled are explicit component states. Never fake a state with opacity.
@@ -90,16 +93,26 @@ Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's o
 - Never put glass on glass. Show at most three glass layers at a time. Tint only the one primary action (`data-glass-tint="primary"`).
 - Never put white text on glass over an unknown background.
 
-## 5. UI copy
+## 5. Marketing mode rules
+
+- Turn it on with `data-mode="marketing"` and `@nexub/themes/marketing`. Nothing outside the attribute changes; never use it in product UI.
+- Gradients in three places only: the `Hero`, the main button (`Button variant="hero"`) and the `CTABand`.
+- At most one `variant="hero"` button per screen; pair it with an outlined button.
+- Product accents (`Card variant="showcase" accent="payub"`, `TestimonialCard accent`) only on product-specific content.
+- Motion budget: one entrance per section (`Reveal` or the hero's rise), at most two `Float`s in view, one `Marquee` plus the footer's. All of it stops under reduced motion.
+- Page width `Container size="marketing"` (1280px); headlines `text-display-xl` on the hero only; one h1 per page (the `Hero` title).
+
+## 6. UI copy
 
 Copy is clear, direct, human and confident. Use sentence case, active voice, contractions and specific verbs ("Save changes", not "Submit"). Errors say what happened and what to do: "Your session expired. Sign in again." No "Oops", no emoji in errors, no "Please be advised".
 
-## 6. Before you finish
+## 7. Before you finish
 
 - [ ] Every control comes from `@nexub/react` or `@nexub/patterns`. No deprecated component (see the index).
 - [ ] There are no hex or rgb colors, Tailwind palette colors, arbitrary px values or custom shadows. Everything is a token utility or `var(--…)`.
 - [ ] Every background role is paired with its `on-` role. Secondary text uses `on-surface-variant` or `on-surface-muted`.
-- [ ] Each view has at most one filled button.
+- [ ] Each view has at most one filled button (marketing: at most one hero button).
+- [ ] In Next.js, server pages import per component and use no compound component outside a `'use client'` file.
 - [ ] The screen works in light and dark (`data-theme`) and at `data-contrast="high"`.
 - [ ] Every input has a label. Icon-only buttons have an `aria-label`. Keyboard paths work.
 
@@ -201,6 +214,7 @@ Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `
 
 | Tailwind | Size / line height | Weight |
 | --- | --- | --- |
+| `text-display-xl` | 64px / 68px | 800 |
 | `text-display-lg` | 56px / 60px | 700 |
 | `text-display-md` | 44px / 48px | 700 |
 | `text-display-sm` | 36px / 40px | 700 |
@@ -250,7 +264,7 @@ Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `
 | `--spacing-2-5` | `2-5` | 10px |
 | `--spacing-3-5` | `3-5` | 14px |
 
-Containers: `max-w-container-sm` (640px), `max-w-container-md` (768px), `max-w-container-lg` (1024px), `max-w-container-xl` (1280px), `max-w-container-2xl` (1536px), `max-w-container-nexub` (1440px), `max-w-container-prose` (65ch).
+Containers: `max-w-container-sm` (640px), `max-w-container-md` (768px), `max-w-container-lg` (1024px), `max-w-container-xl` (1280px), `max-w-container-2xl` (1536px), `max-w-container-nexub` (1440px), `max-w-container-marketing` (1280px), `max-w-container-prose` (65ch).
 
 ## Control and component sizes
 
@@ -460,6 +474,9 @@ Never use a component marked deprecated.
 
 - [Collapse](components/motion-collapse.md) `@nexub/react`: Expands and collapses content along the block axis.
 - [Fade](components/motion-fade.md) `@nexub/react`: Animates opacity between 0 and 1 based on the `in` prop.
+- [Float](components/motion-float.md) `@nexub/react`: Gently bobs its content (floating cards over a hero visual), in marketing mode. Server component; still under reduced motion.
+- [Marquee](components/motion-marquee.md) `@nexub/react`: A row that scrolls sideways forever (logo strips, tool lists), in marketing mode. Pauses on hover and while focus is inside, stands still under reduced motion; the repeated copy is hidden from assistive tech and can’t be focused. Server component.
+- [Reveal](components/motion-reveal.md) `@nexub/react`: Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
 - [Scale](components/motion-scale.md) `@nexub/react`: Scales content in/out from its center.
 - [Slide](components/motion-slide.md) `@nexub/react`: Slides content in from a direction based on the `in` prop.
 
@@ -484,6 +501,22 @@ Never use a component marked deprecated.
 
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
+
+## Marketing — Marketing
+
+- [CTABand](components/cta-band.md) `@nexub/marketing`: The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
+- [FAQ](components/faq.md) `@nexub/marketing`: Questions and answers in an Accordion, one open at a time. Client component.
+- [FeatureSplit](components/feature-split.md) `@nexub/marketing`: Text and a check list beside a visual; `reverse` swaps the sides on wide screens. Server component.
+- [Hero](components/hero.md) `@nexub/marketing`: The page hero: ambient backdrop, eyebrow, display headline (the page's one h1), lead, actions and a visual. Server component.
+- [HowItWorks](components/how-it-works.md) `@nexub/marketing`: Numbered steps in an ordered list. Server component.
+- [LogoStrip](components/logo-strip.md) `@nexub/marketing`: A row of customer logos under the hero, scrolling sideways (paused on hover and focus) or wrapped. Server component.
+- [MarketingFooter](components/marketing-footer.md) `@nexub/marketing`: The site footer: a tools strip, the logo, link columns and the legal line. Server component.
+- [MarketingNav](components/marketing-nav.md) `@nexub/marketing`: The site header: logo, links with mega-menus, a country switcher and actions. Below `lg` the links move into a side sheet.
+- [PricingTable](components/pricing-table.md) `@nexub/marketing`: Plans side by side with a monthly / yearly switch, built on PlanCard and SegmentedControl. Client component.
+- [ProductGrid](components/product-grid.md) `@nexub/marketing`: Product cards in a grid; each card is one link with the product's accent. Server component.
+- [SectionHeader](components/section-header.md) `@nexub/marketing`: Eyebrow, headline and lead that open a section. Server component.
+- [StatBand](components/stat-band.md) `@nexub/marketing`: A band of headline numbers that count up as they scroll into view. StatBandItem is named apart from the StatCard pattern. Server component.
+- [TestimonialGrid](components/testimonial-grid.md) `@nexub/marketing`: Customer quotes in product-coloured cards, with an optional star rating. Server component.
 
 ## Patterns — AI
 
@@ -1284,7 +1317,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
 | `loading` | `boolean` | `false` | Alias for `status="loading"`. |
@@ -1387,6 +1420,24 @@ export default function Example() {
 }
 ```
 
+## Example: Hero (marketing mode)
+
+Inside `data-mode="marketing"` with `@nexub/themes/marketing` loaded. The focus ring sits outside the gradient.
+
+```tsx
+import { Button } from '@nexub/react';
+import { ArrowRight } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="flex flex-wrap items-center gap-3">
+      <Button variant="hero" size="lg" trailingIcon={<ArrowRight size={16} />}>Start free</Button>
+      <Button variant="outlined" size="lg">Book a demo</Button>
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: button
@@ -1417,7 +1468,8 @@ Surface container for grouping related content. Supports flat, surface, and inte
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'flat' \| 'surface' \| 'interactive'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. |
+| `variant` | `'flat' \| 'surface' \| 'interactive' \| 'showcase'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`. |
+| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content. |
 | `effect` | `'none' \| 'sheen'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency. |
 | `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
 | `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
@@ -1497,6 +1549,32 @@ export default function Example() {
         <Heading level={3} size="h5">Pro</Heading>
         <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
       </Card>
+    </div>
+  );
+}
+```
+
+## Example: Showcase (marketing mode)
+
+Product accents on showcase cards, inside `data-mode="marketing"`.
+
+```tsx
+import { Card } from '@nexub/react';
+
+const products = [
+  { accent: 'payub', name: 'Payub', line: 'Payroll and HR' },
+  { accent: 'bookub', name: 'Bookub', line: 'Bookkeeping' },
+] as const;
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="grid w-full gap-6 sm:grid-cols-2">
+      {products.map((p) => (
+        <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
+          <h3 className="m-0 text-title-lg">{p.name}</h3>
+          <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+        </Card>
+      ))}
     </div>
   );
 }
@@ -2454,7 +2532,10 @@ A compact eyebrow label, typically used above headings.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'sm' \| 'md'` |  | Controls chip size. |
+| `tone` | `ToneValue` | `'neutral'` | Text colour. |
+| `variant` | `'soft' \| 'gradient'` | `'soft'` | `gradient`: the marketing-mode chip; looks like `soft` outside `data-mode="marketing"`. |
+| `live` | `boolean` | `false` | A decorative "live" dot before the label; it pings in marketing mode and stays still under reduced motion. |
+| `leadingIcon` | `React.ReactNode` |  | Icon before the label. |
 
 ## Example: Default
 
@@ -2476,6 +2557,23 @@ export default function Example() {
     <div className="flex flex-col gap-2 items-start">
       <EyebrowChip>Now available</EyebrowChip>
       <h2 className="m-0 text-[1.5rem] font-bold text-[var(--color-on-surface)]">Version 2.0</h2>
+    </div>
+  );
+}
+```
+
+## Example: Gradient and live (marketing mode)
+
+Inside `data-mode="marketing"`.
+
+```tsx
+import { EyebrowChip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="flex flex-wrap items-center gap-3">
+      <EyebrowChip variant="gradient" tone="info">Now in Vietnam</EyebrowChip>
+      <EyebrowChip variant="gradient" tone="success" live>Live</EyebrowChip>
     </div>
   );
 }
@@ -3533,6 +3631,119 @@ export default function Example() {
 
 ---
 
+# Float
+
+Gently bobs its content (floating cards over a hero visual), in marketing mode. Server component; still under reduced motion.
+
+- Package: `@nexub/react` · Category: Motion · Status: beta
+- Import: `import { MotionFloat } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-float
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `speed` | `'normal' \| 'slow'` | `'normal'` | `slow` drifts on a longer, reversed loop, so two floating cards don’t move in step. |
+| `asChild` | `boolean` | `false` | Merge onto the child element instead of a div. |
+
+## Example: Default
+
+```tsx
+import { Card, Float } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="flex gap-8 p-6">
+      <Float>
+        <Card variant="showcase" className="nx-mkt-float-card p-5">Payroll approved</Card>
+      </Float>
+      <Float speed="slow">
+        <Card variant="showcase" className="nx-mkt-float-card p-5">Books closed</Card>
+      </Float>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Marquee
+
+A row that scrolls sideways forever (logo strips, tool lists), in marketing mode. Pauses on hover and while focus is inside, stands still under reduced motion; the repeated copy is hidden from assistive tech and can’t be focused. Server component.
+
+- Package: `@nexub/react` · Category: Motion · Status: beta
+- Import: `import { MotionMarquee } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-marquee
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `speed` | `'slow' \| 'normal' \| 'fast'` | `'normal'` | Loop length: 44s, 28s or 18s. |
+| `rowClassName` | `string` | `'gap-12 pe-12 items-center'` | Classes for each copy of the row. |
+| `children` (required) | `React.ReactNode` |  | The items. |
+
+## Example: Default
+
+```tsx
+import { Marquee } from '@nexub/react';
+
+const tools = ['Slack', 'Xero', 'Google Workspace', 'Stripe', 'QuickBooks', 'WhatsApp'];
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <Marquee>
+        {tools.map((t) => (
+          <span key={t} className="text-title-md text-[var(--color-on-surface-variant)]">{t}</span>
+        ))}
+      </Marquee>
+    </div>
+  );
+}
+```
+
+
+---
+
+# Reveal
+
+Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
+
+- Package: `@nexub/react` · Category: Motion · Status: beta
+- Import: `import { MotionReveal } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/motion-reveal
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `asChild` | `boolean` | `false` | Merge onto the child element instead of a div. |
+| `children` (required) | `React.ReactNode` |  | Content to reveal. |
+
+## Example: Default
+
+```tsx
+import { Card, Reveal } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="flex h-64 w-full flex-col gap-6 overflow-y-auto p-2">
+      <p className="m-0 shrink-0 pb-40 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
+      {[1, 2, 3].map((n) => (
+        <Reveal key={n} className="shrink-0">
+          <Card variant="showcase" className="p-6">Section {n}</Card>
+        </Reveal>
+      ))}
+    </div>
+  );
+}
+```
+
+
+---
+
 # Scale
 
 Scales content in/out from its center.
@@ -3736,6 +3947,7 @@ A number whose digits roll to new values on the spatial spring. The first render
 | `format` | `Intl.NumberFormatOptions` |  | Formatting for a number `value`. |
 | `locale` | `string` |  | BCP 47 locale. Defaults to the user's. |
 | `aria-live` | `'off' \| 'polite'` | `'off'` | Announce changes to screen readers. Use `polite` only for values the user is waiting on. |
+| `countOnView` | `boolean` | `false` | Count up from zeros when the ticker first scrolls into view (3.1). Only for a ticker that starts below the fold; the server HTML and screen readers always get the real value. Off under reduced motion. |
 
 ## Example: Formatted number
 
@@ -3774,6 +3986,23 @@ export default function Example() {
       <Button size="sm" variant="outlined" onClick={() => setBalance(Math.round(Math.random() * 20000000) / 100)}>
         Change
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Count on view
+
+Scroll the preview so the number enters the view; it counts up once.
+
+```tsx
+import { NumberTicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex h-48 w-full flex-col overflow-y-auto">
+      <p className="m-0 shrink-0 pb-64 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
+      <NumberTicker value={2000} countOnView className="shrink-0 text-display-sm" />
     </div>
   );
 }
@@ -5962,6 +6191,44 @@ Related: [message-bubble](message-bubble.md), [prompt-input](prompt-input.md), [
 
 ---
 
+# CTABand
+
+The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { CtaBand } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/cta-band
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | The heading (h2). |
+| `description` | `React.ReactNode` |  | One supporting line. |
+| `actions` | `React.ReactNode` |  | Buttons. On the band use `variant="filled" tone="neutral"` or an outlined button. |
+
+## Example: Default
+
+```tsx
+import { Button } from '@nexub/react';
+import { CTABand } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <CTABand
+        title="Start running your company on Nexub"
+        description="Free for 30 days. No card needed."
+        actions={<Button variant="filled" tone="neutral" size="lg">Create an account</Button>}
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
 # Error Summary
 
 Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
@@ -6043,6 +6310,89 @@ Related: [form-field](form-field.md), [input](input.md), [alert](alert.md)
 
 ---
 
+# FAQ
+
+Questions and answers in an Accordion, one open at a time. Client component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { Faq } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/faq
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` (required) | `{ question, answer }[]` |  | The questions; answers can hold links. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+
+## Example: Default
+
+```tsx
+import { FAQ, SectionHeader } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <FAQ
+        header={<SectionHeader title="Questions" />}
+        items={[
+          { question: 'Which countries do you support?', answer: 'Singapore, India, Indonesia, Malaysia and Vietnam.' },
+          { question: 'Can I switch plans later?', answer: 'Yes, at any time. We prorate the difference.' },
+          { question: 'Is my data secure?', answer: 'Data is encrypted at rest and in transit, and stored in the region you choose.' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
+# FeatureSplit
+
+Text and a check list beside a visual; `reverse` swaps the sides on wide screens. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { FeatureSplit } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/feature-split
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | The heading (h2). |
+| `visual` (required) | `React.ReactNode` |  | Screenshot or illustration. |
+| `eyebrow` | `React.ReactNode` |  | A string becomes a gradient EyebrowChip. |
+| `description` | `React.ReactNode` |  | Body copy. |
+| `points` | `string[]` |  | Benefit lines, shown as a check list. |
+| `actions` | `React.ReactNode` |  | Buttons. |
+| `reverse` | `boolean` | `false` | Visual on the left on wide screens. |
+
+## Example: Default
+
+```tsx
+import { Card } from '@nexub/react';
+import { FeatureSplit } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <FeatureSplit
+        eyebrow="Payroll"
+        title="Pay your team on time, every time"
+        description="Run payroll in minutes with tax and statutory filings handled for you."
+        points={['CPF, EPF and BPJS filed for you', 'Payslips in every employee’s language', 'Approvals on your phone']}
+        visual={<Card variant="showcase" accent="payub" className="aspect-[4/3] w-full" aria-label="Payroll screenshot" />}
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
 # FilterBar
 
 Search + filter toolbar pattern for data-heavy list or table views.
@@ -6078,6 +6428,93 @@ export default function Example() {
             <Badge tone="neutral">Plan: All</Badge>
           </div>
         }
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
+# Hero
+
+The page hero: ambient backdrop, eyebrow, display headline (the page's one h1), lead, actions and a visual. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { Hero } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/hero
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | The headline, rendered as the h1. |
+| `eyebrow` | `React.ReactNode` |  | A string becomes a gradient EyebrowChip. |
+| `description` | `React.ReactNode` |  | The lead paragraph. |
+| `actions` | `React.ReactNode` |  | One `Button variant="hero"` and one outlined button, usually. |
+| `visual` | `React.ReactNode` |  | Product shot or illustration. Beside the text on wide screens with `align="start"`. |
+| `align` | `'center' \| 'start'` | `'center'` | Text alignment and layout. |
+
+## Example: Default
+
+```tsx
+import { Button } from '@nexub/react';
+import { Hero } from '@nexub/marketing';
+import { ArrowRight } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <Hero
+        eyebrow="Now in Vietnam"
+        title="Run your whole company in one place"
+        description="Payroll, bookkeeping and compliance for growing teams across Southeast Asia and India."
+        actions={
+          <>
+            <Button variant="hero" size="lg" trailingIcon={<ArrowRight size={16} />}>Start free</Button>
+            <Button variant="outlined" size="lg">Book a demo</Button>
+          </>
+        }
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
+# HowItWorks
+
+Numbered steps in an ordered list. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { HowItWorks } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/how-it-works
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` (required) | `{ title, description, icon? }[]` |  | The steps; the number shows unless an icon is given. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+
+## Example: Default
+
+```tsx
+import { HowItWorks, SectionHeader } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <HowItWorks
+        header={<SectionHeader title="Up and running in a day" />}
+        steps={[
+          { title: 'Create your account', description: 'Sign up with your company details.' },
+          { title: 'Invite your team', description: 'Add people and their bank details.' },
+          { title: 'Run your first payroll', description: 'Review, approve and pay.' },
+        ]}
       />
     </div>
   );
@@ -6177,6 +6614,159 @@ export default function Example() {
 
 ---
 
+# LogoStrip
+
+A row of customer logos under the hero, scrolling sideways (paused on hover and focus) or wrapped. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { LogoStrip } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/logo-strip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `React.ReactNode` |  | e.g. "Trusted by 2,000+ teams". |
+| `scroll` | `boolean` | `true` | Scroll the logos (marketing mode only); off gives a wrapped row. |
+| `children` (required) | `React.ReactNode` |  | The logos. Give each its alt text. |
+
+## Example: Default
+
+```tsx
+import { LogoStrip } from '@nexub/marketing';
+
+const customers = ['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Vandelay'];
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <LogoStrip label="Trusted by 2,000+ teams">
+        {customers.map((name) => (
+          <span key={name} className="text-title-lg text-[var(--color-on-surface-muted)]">{name}</span>
+        ))}
+      </LogoStrip>
+    </div>
+  );
+}
+```
+
+
+---
+
+# MarketingFooter
+
+The site footer: a tools strip, the logo, link columns and the legal line. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { MarketingFooter } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/marketing-footer
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` (required) | `{ title, links: { label, href }[] }[]` |  | Link columns, each a labelled nav. |
+| `logo` | `React.ReactNode` |  | Logo. |
+| `tagline` | `React.ReactNode` |  | A line under the logo. |
+| `tools` | `React.ReactNode[]` |  | Tools or integrations, scrolling in a strip. |
+| `toolsLabel` | `string` | `'Works with'` | Label of the tools strip. |
+| `bottom` | `React.ReactNode` |  | Copyright and legal links. |
+
+## Example: Default
+
+```tsx
+import { Logo } from '@nexub/react';
+import { MarketingFooter } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <MarketingFooter
+        logo={<Logo size="sm" />}
+        tagline="The operating system for growing companies."
+        tools={['Slack', 'Xero', 'Google Workspace', 'Stripe', 'QuickBooks', 'WhatsApp']}
+        columns={[
+          { title: 'Products', links: [{ label: 'Payub', href: '#payub' }, { label: 'Bookub', href: '#bookub' }, { label: 'Leap', href: '#leap' }] },
+          { title: 'Company', links: [{ label: 'About', href: '#about' }, { label: 'Careers', href: '#careers' }] },
+          { title: 'Resources', links: [{ label: 'Help centre', href: '#help' }, { label: 'Status', href: '#status' }] },
+        ]}
+        bottom="© 2026 Nexub Pte. Ltd., Singapore"
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
+# MarketingNav
+
+The site header: logo, links with mega-menus, a country switcher and actions. Below `lg` the links move into a side sheet.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { MarketingNav } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/marketing-nav
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `logo` (required) | `React.ReactNode` |  | Logo, wrapped in a link to `logoHref`. |
+| `items` (required) | `MarketingNavItem[]` |  | Links; an item with `items` opens a mega-menu of links with descriptions. |
+| `countries` | `MarketingCountry[]` |  | Country sites: `{ code, label, href }`. The switcher shows when there are two or more. |
+| `country` | `string` |  | Current country code. |
+| `actions` | `React.ReactNode` |  | Sign in / Get started buttons. |
+| `logoHref` | `string` | `'/'` | Where the logo links. |
+| `menuLabel` | `string` | `'Open menu'` | Accessible name of the mobile menu button. |
+
+## Example: Default
+
+```tsx
+import { Button, Logo } from '@nexub/react';
+import { MarketingNav } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <MarketingNav
+        logo={<Logo size="sm" />}
+        items={[
+          {
+            label: 'Products',
+            items: [
+              { label: 'Payub', href: '#payub', description: 'Payroll and HR' },
+              { label: 'Bookub', href: '#bookub', description: 'Bookkeeping' },
+              { label: 'Leap', href: '#leap', description: 'Company formation' },
+              { label: 'Founderub', href: '#founderub', description: 'Founder tools' },
+            ],
+          },
+          { label: 'Pricing', href: '#pricing' },
+          { label: 'Customers', href: '#customers' },
+        ]}
+        countries={[
+          { code: 'SG', label: 'Singapore', href: '#sg' },
+          { code: 'IN', label: 'India', href: '#in' },
+          { code: 'ID', label: 'Indonesia', href: '#id' },
+          { code: 'MY', label: 'Malaysia', href: '#my' },
+          { code: 'VN', label: 'Vietnam', href: '#vn' },
+        ]}
+        country="SG"
+        actions={
+          <>
+            <Button variant="text" size="sm" asChild><a href="#signin">Sign in</a></Button>
+            <Button variant="filled" size="sm" asChild><a href="#start">Get started</a></Button>
+          </>
+        }
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
 # NotificationItem
 
 Single notification row for notification panels or dropdowns.
@@ -6260,6 +6850,134 @@ export default function Example() {
 
 ---
 
+# PricingTable
+
+Plans side by side with a monthly / yearly switch, built on PlanCard and SegmentedControl. Client component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { PricingTable } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/pricing-table
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `plans` (required) | `PricingPlan[]` |  | Each plan: `name`, `price: { monthly, yearly }` per month, `features`, `cta`, and `href` or `onSelect`; `highlighted` and `badge` optional. |
+| `currency` (required) | `string` |  | ISO 4217 code. |
+| `locale` | `string` |  | BCP 47 locale for the prices. |
+| `defaultPeriod` | `'monthly' \| 'yearly'` | `'monthly'` | Billing period shown first. |
+| `periodLabels` | `Record<BillingPeriod, string>` |  | Labels of the switch. |
+| `perMonthLabel` | `string` | `'/month'` | Shown after each price. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+
+## Example: Default
+
+```tsx
+import { PricingTable, SectionHeader } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <PricingTable
+        header={<SectionHeader title="Simple pricing" description="Save two months with yearly billing." />}
+        currency="SGD"
+        locale="en-SG"
+        plans={[
+          { name: 'Starter', price: { monthly: 29, yearly: 24 }, features: ['Up to 10 people', 'Payroll', 'Email support'], cta: 'Start free', href: '#starter' },
+          { name: 'Growth', price: { monthly: 79, yearly: 66 }, features: ['Up to 100 people', 'Payroll and HR', 'Bookkeeping'], cta: 'Start free', href: '#growth', highlighted: true, badge: 'Most popular' },
+          { name: 'Scale', price: { monthly: 199, yearly: 166 }, features: ['Unlimited people', 'All products', 'Dedicated manager'], cta: 'Talk to sales', href: '#scale' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
+# ProductGrid
+
+Product cards in a grid; each card is one link with the product's accent. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { ProductGrid } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/product-grid
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `header` | `React.ReactNode` |  | ProductGrid: a SectionHeader, usually. |
+| `name` (required) | `string` |  | ProductCard: product name, the card's link text. |
+| `description` (required) | `React.ReactNode` |  | ProductCard: one line on what it does. |
+| `href` (required) | `string` |  | ProductCard: the product page. |
+| `icon` | `React.ReactNode` |  | ProductCard: the product mark. |
+| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | ProductCard: coloured top edge and tint in marketing mode. |
+| `linkLabel` | `string` | `'Learn more'` | ProductCard: the visual link cue. |
+
+## Example: Default
+
+```tsx
+import { BookubMark, FounderubMark, LeapMark, PayubMark } from '@nexub/icons';
+import { ProductCard, ProductGrid, SectionHeader } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <ProductGrid header={<SectionHeader eyebrow="Platform" title="One account, four products" />}>
+        <ProductCard name="Leap" description="Incorporate and stay compliant." href="#leap" accent="leap" icon={<LeapMark size={24} />} />
+        <ProductCard name="Bookub" description="Bookkeeping that closes itself." href="#bookub" accent="bookub" icon={<BookubMark size={24} />} />
+        <ProductCard name="Payub" description="Payroll and HR in one place." href="#payub" accent="payub" icon={<PayubMark size={24} />} />
+        <ProductCard name="Founderub" description="Cap table and fundraising." href="#founderub" accent="founderub" icon={<FounderubMark size={24} />} />
+      </ProductGrid>
+    </div>
+  );
+}
+```
+
+
+---
+
+# SectionHeader
+
+Eyebrow, headline and lead that open a section. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { SectionHeader } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/section-header
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | The section heading (h2 by default). |
+| `eyebrow` | `React.ReactNode` |  | A string becomes a gradient EyebrowChip. |
+| `description` | `React.ReactNode` |  | The lead paragraph. |
+| `align` | `'center' \| 'start'` | `'center'` | Alignment. |
+| `level` | `2 \| 3` | `2` | Heading level. |
+
+## Example: Default
+
+```tsx
+import { SectionHeader } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full py-10">
+      <SectionHeader
+        eyebrow="Platform"
+        title="Everything your company needs"
+        description="Four products on one account, one login and one bill."
+      />
+    </div>
+  );
+}
+```
+
+
+---
+
 # SettingsSection
 
 Grouped settings panel with title, description, and action area.
@@ -6296,6 +7014,47 @@ export default function Example() {
           ))}
         </div>
       </SettingsSection>
+    </div>
+  );
+}
+```
+
+
+---
+
+# StatBand
+
+A band of headline numbers that count up as they scroll into view. StatBandItem is named apart from the StatCard pattern. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { StatBand } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/stat-band
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `React.ReactNode` |  | StatBand: a heading above the stats. |
+| `value` (required) | `number \| string` |  | StatBandItem: a number counts up from zeros when it scrolls into view; the server HTML keeps the real value. |
+| `label` (required) | `React.ReactNode` |  | StatBandItem: what the number counts. |
+| `prefix / suffix` | `string` |  | StatBandItem: e.g. "$" or "+". |
+| `tone` | `ToneValue` | `'info'` | StatBandItem: the number's colour (accent roles, AA as large text). |
+| `format` | `Intl.NumberFormatOptions` |  | StatBandItem: number formatting. |
+
+## Example: Default
+
+```tsx
+import { StatBand, StatBandItem } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <StatBand title="Teams run on Nexub">
+        <StatBandItem value={2000} suffix="+" label="Companies" />
+        <StatBandItem value={5} label="Countries" tone="success" />
+        <StatBandItem value={98} suffix="%" label="On-time payroll" tone="payub" />
+        <StatBandItem value={4.9} label="Average rating" tone="founderub" format={{ minimumFractionDigits: 1 }} />
+      </StatBand>
     </div>
   );
 }
@@ -6404,6 +7163,47 @@ export default function Example() {
       currentStep={1}
       steps={[{ label: 'Account' }, { label: 'Profile' }, { label: 'Billing' }, { label: 'Done' }]}
     />
+  );
+}
+```
+
+
+---
+
+# TestimonialGrid
+
+Customer quotes in product-coloured cards, with an optional star rating. Server component.
+
+- Package: `@nexub/marketing` · Category: Marketing · Status: beta
+- Import: `import { TestimonialGrid } from '@nexub/marketing';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/testimonial-grid
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `header` | `React.ReactNode` |  | TestimonialGrid: a SectionHeader, usually. |
+| `quote` (required) | `React.ReactNode` |  | TestimonialCard: the quote. |
+| `name` (required) | `string` |  | TestimonialCard: who said it. |
+| `role` | `React.ReactNode` |  | TestimonialCard: job title and company. |
+| `avatarSrc` | `string` |  | TestimonialCard: photo; initials otherwise. |
+| `rating` | `number` |  | TestimonialCard: stars out of 5, announced as "Rated n out of 5". |
+| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | TestimonialCard: the product the customer uses. |
+
+## Example: Default
+
+```tsx
+import { SectionHeader, TestimonialCard, TestimonialGrid } from '@nexub/marketing';
+
+export default function Example() {
+  return (
+    <div data-mode="marketing" className="w-full">
+      <TestimonialGrid header={<SectionHeader eyebrow="Customers" title="Loved by finance teams" />}>
+        <TestimonialCard accent="payub" rating={5} name="Priya Nair" role="Head of People, Kopi Labs" quote="Payroll used to take two days. Now it takes twenty minutes." />
+        <TestimonialCard accent="bookub" rating={5} name="Daniel Tan" role="CFO, Harbourline" quote="Our books close on the third working day, every month." />
+        <TestimonialCard accent="leap" rating={5} name="Linh Pham" role="Founder, Sonvo" quote="We incorporated in Singapore without leaving Hanoi." />
+      </TestimonialGrid>
+    </div>
   );
 }
 ```

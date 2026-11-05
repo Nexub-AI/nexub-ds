@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixNav from '@radix-ui/react-navigation-menu';
 import { ChevronDown } from '@nexub/icons';

@@ -8,6 +8,7 @@ type Ramp = NonNullable<RNTextProps['dynamicTypeRamp']>;
 
 // iOS Dynamic Type: each role follows its Apple text style's scaling curve.
 const RAMP: Record<NativeTypeRole, Ramp> = {
+  'display-xl': 'largeTitle',
   'display-lg': 'largeTitle',
   'display-md': 'largeTitle',
   'display-sm': 'largeTitle',

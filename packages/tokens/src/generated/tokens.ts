@@ -656,6 +656,22 @@ export const tokens = {
     "surface-muted": "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
     "eyebrow-chip": "linear-gradient(90deg, rgba(64,153,241,0.12) 0%, rgba(28,206,102,0.08) 100%)"
   },
+  "marketing": {
+    "hero-ambient": "radial-gradient(ellipse 80% 50% at 50% -20%, light-dark(rgb(64 153 241 / 0.12), rgb(64 153 241 / 0.08)) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 80% 80%, light-dark(rgb(28 206 102 / 0.06), transparent) 0%, transparent 50%)",
+    "button-gradient": "linear-gradient(180deg, var(--color-palette-primary-45) 0%, var(--color-palette-primary-40) 100%)",
+    "button-gradient-hover": "linear-gradient(180deg, var(--color-palette-primary-45) 0%, var(--color-palette-primary-35) 100%)",
+    "button-fg": "var(--color-palette-primary-100)",
+    "button-shadow": "0 14px 30px -12px color-mix(in srgb, var(--color-palette-primary-40) 65%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.22)",
+    "button-shadow-hover": "0 20px 36px -12px color-mix(in srgb, var(--color-palette-primary-40) 70%, transparent), inset 0 1px 0 rgb(255 255 255 / 0.25)",
+    "eyebrow-gradient": "linear-gradient(180deg, color-mix(in srgb, var(--color-primary) 4%, var(--color-surface-container-lowest)) 0%, color-mix(in srgb, var(--color-primary) 10%, var(--color-surface-container-lowest)) 100%)",
+    "card-radius": "24px",
+    "card-shadow": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 18px 40px -28px rgb(15 23 42 / 0.38)",
+    "card-shadow-hover": "0 0 0 1px light-dark(rgb(26 28 30 / 0.06), rgb(255 255 255 / 0.08)), 0 30px 60px -28px rgb(15 23 42 / 0.48)",
+    "float-shadow": "0 0 0 1px light-dark(rgb(26 28 30 / 0.05), rgb(255 255 255 / 0.08)), 0 24px 50px -22px rgb(15 23 42 / 0.45)",
+    "accent-line": "linear-gradient(90deg, var(--color-primary) 0%, var(--color-bookub) 35%, var(--color-founderub) 70%, var(--color-payub) 100%)",
+    "lift": "-6px",
+    "button-lift": "-2px"
+  },
   "duration": {
     "instant": "0ms",
     "fast": "150ms",
@@ -770,6 +786,7 @@ export const tokens = {
     "xl": "1280px",
     "2xl": "1536px",
     "nexub": "1440px",
+    "marketing": "1280px",
     "prose": "65ch"
   },
   "font": {
@@ -869,6 +886,12 @@ export const tokens = {
     }
   },
   "type": {
+    "display-xl": {
+      "size": "64px",
+      "lineHeight": "68px",
+      "letterSpacing": "-0.045em",
+      "weight": "800"
+    },
     "display-lg": {
       "size": "56px",
       "lineHeight": "60px",
