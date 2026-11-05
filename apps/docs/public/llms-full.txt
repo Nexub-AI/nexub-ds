@@ -7254,6 +7254,8 @@ React Native components and screen patterns for Nexub Design System. They use th
 
 Status: **alpha**. Built for Expo SDK 57+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
 
+> **Expo SDK 57 is deprecated.** 4.0 requires Expo SDK 58 or later. See [Migrating to 4.0](https://nexub-ds-docs.pages.dev/getting-started/migrating-to-4).
+
 ## Install
 
 ```bash
