@@ -1,0 +1,12 @@
+/* @nexub/marketing/styles.css: the utility classes the sections use, prebuilt
+   (built to dist/styles.css), for apps without Tailwind. Import it after
+   @nexub/react/styles.css and @nexub/themes/marketing. Apps on Tailwind add
+   @source "../node_modules/@nexub/marketing/dist"; instead. */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@nexub/tokens/tailwind.css';
+
+@source './**/*.{ts,tsx}';
+@source not './**/*.{stories,test}.tsx';

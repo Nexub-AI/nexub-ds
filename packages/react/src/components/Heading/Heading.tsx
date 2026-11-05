@@ -2,7 +2,8 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
-import { toneTextClasses, type ToneValue } from '../Button/Button.js';
+import type { ToneValue } from '../Button/Button.js';
+import { toneTextClasses } from '../../utils/control.js';
 
 export const headingVariants = cva('', {
   variants: {

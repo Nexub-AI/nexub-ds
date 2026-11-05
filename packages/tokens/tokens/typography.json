@@ -97,6 +97,7 @@
   },
   "type": {
     "$description": "Role scale (Calm Depth). display/headline use font-display; the rest font-sans. Tracking tightens as size grows.",
+    "display-xl":  { "size": { "$value": "64px", "$type": "dimension" }, "lineHeight": { "$value": "68px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.045em",  "$type": "dimension" }, "weight": { "$value": "800", "$type": "fontWeight" } },
     "display-lg":  { "size": { "$value": "56px", "$type": "dimension" }, "lineHeight": { "$value": "60px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.03em",   "$type": "dimension" }, "weight": { "$value": "700", "$type": "fontWeight" } },
     "display-md":  { "size": { "$value": "44px", "$type": "dimension" }, "lineHeight": { "$value": "48px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.025em",  "$type": "dimension" }, "weight": { "$value": "700", "$type": "fontWeight" } },
     "display-sm":  { "size": { "$value": "36px", "$type": "dimension" }, "lineHeight": { "$value": "40px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.02em",   "$type": "dimension" }, "weight": { "$value": "700", "$type": "fontWeight" } },

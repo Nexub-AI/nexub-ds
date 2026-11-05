@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixTabs from '@radix-ui/react-tabs';
 import { cn } from '../../utils/cn.js';

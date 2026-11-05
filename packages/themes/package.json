@@ -27,6 +27,8 @@
   ],
   "exports": {
     "./base": "./src/base.css",
+    "./core": "./src/core.css",
+    "./fonts": "./src/fonts.css",
     "./light": "./src/light.css",
     "./dark": "./src/dark.css",
     "./glass": "./src/glass.css",
@@ -34,7 +36,8 @@
     "./leap": "./src/leap.css",
     "./bookub": "./src/bookub.css",
     "./payub": "./src/payub.css",
-    "./founderub": "./src/founderub.css"
+    "./founderub": "./src/founderub.css",
+    "./marketing": "./src/marketing.css"
   },
   "scripts": {
     "build:fonts": "node scripts/build-fonts.mjs",

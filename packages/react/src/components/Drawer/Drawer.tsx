@@ -1,7 +1,9 @@
+'use client';
+
 import * as React from 'react';
 import type * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Slot } from '@radix-ui/react-slot';
-import { Drawer as VaulDrawer } from 'vaul';
+import { Drawer as VaulDrawer } from '../../vendor/vaul.js';
 import { cn } from '../../utils/cn.js';
 import { scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
