@@ -54,6 +54,7 @@
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
+    "./figma/*": "./dist/figma/*",
     "./package.json": "./package.json"
   },
   "scripts": {
