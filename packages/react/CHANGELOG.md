@@ -1,5 +1,13 @@
 # @nexub/react
 
+## 3.5.0
+
+### Patch Changes
+
+- 488f288: `Toaster` clears its pending "remove from the store" timers when it unmounts, so none fires after the tree is gone (it could throw in test environments after teardown).
+  - @nexub/icons@3.5.0
+  - @nexub/core@3.5.0
+
 ## 3.4.0
 
 ### Patch Changes
