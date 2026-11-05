@@ -33,33 +33,16 @@ import '@nexub/themes/dark';   // optional: dark comes from light-dark() roles n
 
       <h2>Tailwind</h2>
       <p>
-        Components ship Tailwind class names, so your Tailwind build must generate them. Tailwind v3 and v4 are both
-        supported and use the same class names; pick the setup that matches your Tailwind version. Not using
+        Components ship Tailwind class names, so your Tailwind build must generate them. Nexub 4.0 supports Tailwind
+        v4; the Tailwind 3 preset was removed (see <a href="/getting-started/migrating-to-4">Migrating to 4.0</a>). Not using
         Tailwind? Import the prebuilt <code>@nexub/react/styles.css</code> instead: see{' '}
         <a href="/getting-started/without-tailwind">Use without Tailwind</a>.
       </p>
 
-      <h3>Tailwind v3</h3>
-      <p>
-        Use the Nexub preset and scan the package output. The preset maps the tokens and registers{' '}
-        <code>tailwindcss-animate</code>.
-      </p>
-      <CodeBlock code={`// tailwind.config.ts
-import nexub from '@nexub/tokens/tailwind';
-
-export default {
-  presets: [nexub],
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/@nexub/react/dist/**/*.js',
-    './node_modules/@nexub/patterns/dist/**/*.js',
-  ],
-};`} />
-
       <h3>Tailwind v4</h3>
       <p>
-        On Tailwind v4, skip the config file and import the CSS-first theme instead. It is generated from the same
-        tokens as the v3 preset, so the class names are identical (<code>bg-surface-container-high</code>,{' '}
+        On Tailwind v4, skip the config file and import the CSS-first theme instead. It maps every token to a
+        utility (<code>bg-surface-container-high</code>,{' '}
         <code>rounded-shape-container</code>, <code>shadow-elevation-2</code>, <code>text-body-md</code>,{' '}
         <code>duration-spatial-default</code>, <code>ease-spatial-default</code>, <code>h-control-md</code>, …) and
         every utility resolves to the token&apos;s <code>var(--…)</code> at runtime, so light/dark, brand, contrast and
@@ -85,11 +68,10 @@ export default {
         utilities.
       </p>
       <p>
-        Known differences on v4: the overlays animate with <code>nx-motion</code> from <code>@nexub/themes</code>, so you
-        need a v4 port of <code>tailwindcss-animate</code> (such as <code>tw-animate-css</code>) only if your own code
-        uses <code>animate-in</code>/<code>zoom-in-95</code> (the accordion keyframes are already in the theme). Opacity
-        modifiers like <code>bg-primary/50</code> work on v4 (via <code>color-mix()</code>) but not with the v3 preset.
-        Tailwind v4 also changed some defaults that affect your own markup (a bare <code>border</code> is{' '}
+        Good to know: the overlays animate with <code>nx-motion</code> from <code>@nexub/themes</code>, so you need{' '}
+        <code>tw-animate-css</code> only if your own code uses <code>animate-in</code>/<code>zoom-in-95</code> (the
+        accordion keyframes are already in the theme). Opacity modifiers like <code>bg-primary/50</code> work through{' '}
+        <code>color-mix()</code>. Tailwind v4 also changed some defaults that affect your own markup (a bare <code>border</code> is{' '}
         <code>currentColor</code>, a bare <code>ring</code> is 1px, placeholders are 50% <code>currentColor</code>);
         Nexub components set their border, ring and placeholder styles explicitly, and{' '}
         <code>@nexub/themes/base</code> restores the pointer cursor on buttons, so components look and behave the same
