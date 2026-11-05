@@ -1,6 +1,6 @@
 {
   "name": "@nexub/tokens",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, Tailwind presets and React Native objects.",
   "type": "module",
   "license": "MIT",
@@ -54,6 +54,7 @@
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
+    "./figma/*": "./dist/figma/*",
     "./package.json": "./package.json"
   },
   "scripts": {
