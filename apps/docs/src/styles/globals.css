@@ -277,6 +277,17 @@ a { color: inherit; }
 
 .docs-header { height: var(--docs-header-height); }
 
+/* Header: the search field folds to an icon, then the section links go
+   (they're in the drawer), as the bar narrows. */
+.docs-header-search-icon { display: none; }
+@media (max-width: 1199px) {
+  .docs-header-search { display: none; }
+  .docs-header-search-icon { display: inline-flex; }
+}
+@media (max-width: 1023px) {
+  .docs-header-sections { display: none; }
+}
+
 /* Content fills the space after the sidebar; prose width is capped on .docs-prose p. */
 .docs-main {
   flex: 1;
@@ -473,16 +484,9 @@ html, body {
 }
 
 /* ── Landing page responsive ─────────────────────────────────────────────── */
-.landing-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
 @media (max-width: 639px) {
-  .landing-nav-link { display: none; }
   .landing-stats { gap: 24px !important; margin-top: 3rem !important; }
-  .landing-hero { padding: 5rem 1.25rem 2rem !important; }
+  .landing-hero { padding: 3rem 1.25rem 2rem !important; }
 }
 
 /* ── Landing page — hero entrance (CSS, SSR-safe) ────────────────────────── */
