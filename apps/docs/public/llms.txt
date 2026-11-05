@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 3.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 3.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -23,6 +23,7 @@ Version 3.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Avatar Group](https://nexub-ds-docs.pages.dev/components/avatar-group.md): Stacked group of avatars with overflow count.
 - [Avatar](https://nexub-ds-docs.pages.dev/components/avatar.md): Displays a user's profile picture with initials fallback.
 - [Badge](https://nexub-ds-docs.pages.dev/components/badge.md): Small status indicator or label. Communicates state, category, or count.
+- [Bar Chart](https://nexub-ds-docs.pages.dev/components/bar-chart.md): Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 - [Box](https://nexub-ds-docs.pages.dev/components/box.md): Generic container primitive with style token props.
 - [Breadcrumb](https://nexub-ds-docs.pages.dev/components/breadcrumb.md): Hierarchical navigation trail showing page location.
 - [Button Group](https://nexub-ds-docs.pages.dev/components/button-group.md): Groups related buttons together with optional attachment and orientation.
@@ -39,6 +40,7 @@ Version 3.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
 - [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker.md): Dual-calendar date range selector.
 - [Dialog](https://nexub-ds-docs.pages.dev/components/dialog.md): Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
+- [Donut Chart](https://nexub-ds-docs.pages.dev/components/donut-chart.md): Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Drawer](https://nexub-ds-docs.pages.dev/components/drawer.md): Slide-in panel from any edge of the screen.
 - [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state.md): Placeholder UI shown when a list or page has no content.
 - [Error State](https://nexub-ds-docs.pages.dev/components/error-state.md): Full-page or section error view with retry action.
@@ -55,6 +57,7 @@ Version 3.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Kbd](https://nexub-ds-docs.pages.dev/components/kbd.md): Keyboard key display — renders a styled <kbd> element.
 - [Label](https://nexub-ds-docs.pages.dev/components/label.md): An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
+- [Line Chart](https://nexub-ds-docs.pages.dev/components/line-chart.md): Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Link](https://nexub-ds-docs.pages.dev/components/link.md): Styled anchor link with variant and external support.
 - [Media Card](https://nexub-ds-docs.pages.dev/components/media-card.md): An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
 - [Message Bubble](https://nexub-ds-docs.pages.dev/components/message-bubble.md): One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
@@ -85,6 +88,7 @@ Version 3.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Sheet](https://nexub-ds-docs.pages.dev/components/sheet.md): Alias for Drawer — slide-in sheet panel.
 - [Skeleton](https://nexub-ds-docs.pages.dev/components/skeleton.md): Placeholder loading animation that mimics content layout.
 - [Slider](https://nexub-ds-docs.pages.dev/components/slider.md): Range slider built on Radix UI Slider.
+- [Sparkline](https://nexub-ds-docs.pages.dev/components/sparkline.md): A tiny trend line with no axes, for stat cards and table cells.
 - [Spinner](https://nexub-ds-docs.pages.dev/components/spinner.md): Animated loading indicator. Inherits color from context.
 - [Split Button](https://nexub-ds-docs.pages.dev/components/split-button.md): A primary action with related secondary actions behind a chevron, as one connected control.
 - [Stack](https://nexub-ds-docs.pages.dev/components/stack.md): Vertical stack layout with configurable gap.
