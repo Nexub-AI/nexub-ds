@@ -1,5 +1,5 @@
 {
-  "version": "3.1.0",
+  "version": "3.7.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
@@ -108,6 +108,18 @@
       "screenReader": [
         "Reads as inline text. For live status changes, wrap in an element with `role=\"status\"` and `aria-live=\"polite\"`.",
         "Skipped in tab order. Decorative — never trap focus on a Badge."
+      ]
+    },
+    {
+      "slug": "bar-chart",
+      "name": "Bar Chart",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
       ]
     },
     {
@@ -283,6 +295,18 @@
       "screenReader": []
     },
     {
+      "slug": "donut-chart",
+      "name": "Donut Chart",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+      ]
+    },
+    {
       "slug": "drawer",
       "name": "Drawer",
       "package": "@nexub/react",
@@ -432,6 +456,18 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "line-chart",
+      "name": "Line Chart",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+      ]
     },
     {
       "slug": "link",
@@ -734,6 +770,18 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "sparkline",
+      "name": "Sparkline",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+      ]
     },
     {
       "slug": "spinner",

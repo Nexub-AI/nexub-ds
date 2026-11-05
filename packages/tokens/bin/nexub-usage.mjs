@@ -1,8 +1,9 @@
-// Counts which @nexub exports product repos import (roadmap R6), so the 3.0
-// removals and the 2.9 codemods follow real usage.
+#!/usr/bin/env node
+// nexub-usage: counts which @nexub exports your repos import, so the design
+// system's deprecations and codemods follow real usage (roadmap R6).
 //
-//   node scripts/usage-scan.mjs ../leap ../payub        markdown table
-//   node scripts/usage-scan.mjs ../leap --json          JSON
+//   npx -p @nexub/tokens nexub-usage ./apps/web ./apps/admin   markdown table
+//   npx -p @nexub/tokens nexub-usage . --json                   JSON
 //
 // ponytail: regex over import statements, not a TS parse. It misses
 // `import * as N` member use and re-exports; switch to the TS API if those matter.
@@ -57,7 +58,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   const roots = args.filter((a) => !a.startsWith('--'));
   if (!roots.length) {
-    console.error('usage: node scripts/usage-scan.mjs <repo-dir>... [--json]');
+    console.error('usage: nexub-usage <repo-dir>... [--json]');
     process.exit(1);
   }
   const rows = scanRepos(roots);

@@ -45,6 +45,8 @@ const undocumented = Object.fromEntries(
 );
 
 const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
+// llms.txt points at the Markdown version of each page (apps/docs/scripts/copy-ai-md.mjs).
+const mdUrl = (e) => `${docsUrl(e)}.md`;
 const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
 // ─── Accessibility conformance report (@nexub/react/accessibility.json) ─────
@@ -292,20 +294,22 @@ function llmsTxt() {
     `- [Principles](${SITE_URL}/foundations/principles): the six Calm Depth rules`,
     `- [Colors](${SITE_URL}/foundations/colors): color roles and contrast`,
     `- [Materials](${SITE_URL}/foundations/materials): Liquid Glass rules`,
+    `- [Theme builder](${SITE_URL}/foundations/theme-builder): one brand colour to a contrast-checked theme`,
+    `- [AI tools and MCP](${SITE_URL}/getting-started/ai-tools): connect @nexub/mcp, the Claude Code plugin and these files to your AI tool`,
     '',
     '## Components',
     '',
-    ...entries.filter((e) => e.meta.package === '@nexub/react').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/react').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## Patterns',
     '',
-    ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/patterns').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## Marketing (@nexub/marketing, under data-mode="marketing")',
     '',
     `- [Marketing mode](${SITE_URL}/foundations/marketing-mode): guidelines, tokens and what changes`,
     `- [Next.js and server components](${SITE_URL}/getting-started/nextjs): per-component imports, next/font, Tailwind 4`,
-    ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${docsUrl(e)}): ${e.meta.description}`),
+    ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## React Native',
     '',

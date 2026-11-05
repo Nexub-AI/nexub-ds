@@ -143,6 +143,32 @@ export default function RootLayout() {
           ]}
         />
       </Section>
+
+      <Section
+        id="swift-compose"
+        title="SwiftUI and Jetpack Compose tokens"
+        description="For native screens next to React Native, or fully native apps."
+      >
+        <Prose>
+          <code>@nexub/tokens</code> also ships the tokens as Swift and Kotlin source, from the same resolved values as
+          the web and React Native tokens: every colour role for light and dark at standard, medium and high contrast,
+          plus spacing, radius, shape, sizes and the type scale in points or dp.
+        </Prose>
+        <DocTable
+          head={['File', 'Platform', 'Use']}
+          mono={[0, 2]}
+          rows={[
+            ['@nexub/tokens/swift/NexubTokens.swift', 'SwiftUI (iOS 17+)', 'NexubTokens.dark.primary, NexubTokens.space4, NexubTokens.typeBodyMd.size'],
+            ['@nexub/tokens/compose/NexubTokens.kt', 'Jetpack Compose', 'NexubTokens.dark.primary, NexubTokens.space4, NexubTokens.typeBodyMd.size'],
+          ]}
+        />
+        <Prose>
+          Copy the file into your Xcode or Android project, or reference it from <code>node_modules</code> in a build
+          step. Pick the colour set from the system appearance and the user&apos;s contrast setting
+          (<code>colorScheme</code> and <code>colorSchemeContrast</code> in SwiftUI; <code>isSystemInDarkTheme()</code> in
+          Compose).
+        </Prose>
+      </Section>
     </div>
   );
 }

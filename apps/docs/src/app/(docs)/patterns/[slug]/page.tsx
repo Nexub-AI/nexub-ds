@@ -8,6 +8,7 @@ import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
 import { UsageGrid } from '@/components/docs/UsageGrid';
 import { CopyButton } from '@/components/docs/CopyButton';
+import { MarkdownActions } from '@/components/docs/MarkdownActions';
 import { PageIntro, Section } from '@/components/kit';
 import { PlatformPanel, PlatformSwitch } from '@/components/platform/PlatformTabs';
 import { MobilePanel, NoMobileTwin } from '@/components/platform/MobilePanel';
@@ -40,7 +41,7 @@ export default async function PatternPage({ params }: Props) {
 
   const { meta, props, examples, usage } = entry;
   const twin = nativePatternTwins[slug];
-  const importLine = `import { ${meta.title.replace(/\s+/g, '')} } from '@nexub/patterns';`;
+  const importLine = `import { ${meta.title.replace(/\s+/g, '')} } from '${meta.package}';`;
 
   return (
     <div className="docs-prose">
@@ -54,6 +55,7 @@ export default async function PatternPage({ params }: Props) {
           <code className="truncate">{importLine}</code>
           <CopyButton text={importLine} />
         </div>
+        <MarkdownActions href={`/patterns/${slug}.md`} />
         <PlatformSwitch available={twin ? ['web', 'mobile'] : ['web']} />
       </PageIntro>
 
