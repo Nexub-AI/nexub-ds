@@ -354,6 +354,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
   { id: 'migrating-to-3', label: 'Migrating to 3.0', description: 'What 3.0 removes (Banner, Callout, Tag, StatusPill, legacy colour names) and the codemod that moves you off it', href: '/getting-started/migrating-to-3', category: 'Docs' },
   { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
+  { id: 'components-status', label: 'Component status', description: 'Lifecycle status of every component and pattern on web and native', href: '/components/status', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
@@ -445,7 +446,7 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Components',
-    items: [{ title: 'Overview', href: '/components' }],
+    items: [{ title: 'Overview', href: '/components' }, { title: 'Status', href: '/components/status' }],
     children: [
       { title: 'Actions',        items: componentsByCategory('Actions') },
       { title: 'Form & Input',   items: componentsByCategory('Form & Input') },
