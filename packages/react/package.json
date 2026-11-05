@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "2.8.0",
+  "version": "3.0.0",
   "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
@@ -34,12 +34,20 @@
       "default": "./dist/index.js"
     },
     "./styles.css": "./dist/styles.css",
+    "./cn": {
+      "types": "./dist/utils/cn.d.ts",
+      "default": "./dist/utils/cn.js"
+    },
+    "./*": {
+      "types": "./dist/components/*/index.d.ts",
+      "default": "./dist/components/*/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && node scripts/check-dts.mjs && tailwindcss -i src/styles.css -o dist/styles.css --minify && cp -R ../themes/src/fonts dist/fonts",
+    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && rm -f dist/vendor/*.d.ts && node scripts/check-dts.mjs && tailwindcss -i src/styles.css -o dist/styles.css --minify && cp -R ../themes/src/fonts dist/fonts",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

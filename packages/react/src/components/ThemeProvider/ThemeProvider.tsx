@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import type { GlassMode } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';

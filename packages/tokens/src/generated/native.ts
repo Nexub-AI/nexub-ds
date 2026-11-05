@@ -651,6 +651,13 @@ export const native = {
     }
   },
   "type": {
+    "display-xl": {
+      "family": "display",
+      "weight": 800,
+      "size": 64,
+      "lineHeight": 68,
+      "letterSpacing": -2.88
+    },
     "display-lg": {
       "family": "display",
       "weight": 700,

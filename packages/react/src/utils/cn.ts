@@ -5,9 +5,10 @@ import { extendTailwindMerge, getDefaultConfig } from 'tailwind-merge';
 // this it reads `text-label-lg` as a text *color* (and drops it next to
 // `text-[var(--color-…)]`) and never resolves `rounded-shape-*` vs `rounded-md`.
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
-const typeRoles = ['display', 'headline', 'title', 'body', 'label'].flatMap((r) =>
-  ['lg', 'md', 'sm'].map((s) => `${r}-${s}`),
-);
+const typeRoles = [
+  'display-xl',
+  ...['display', 'headline', 'title', 'body', 'label'].flatMap((r) => ['lg', 'md', 'sm'].map((s) => `${r}-${s}`)),
+];
 const springs = ['spatial', 'effects', 'expressive'].flatMap((k) =>
   ['fast', 'default', 'slow'].map((s) => `${k}-${s}`),
 );

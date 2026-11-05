@@ -28,10 +28,8 @@ import datePickerEntry from './components/date-picker';
 import dateRangePickerEntry from './components/date-range-picker';
 
 // ─── Component entries — Labels & Badges ──────────────────────────────────────
-import statusPillEntry from './components/status-pill';
 import filterChipEntry from './components/filter-chip';
 import chipEntry from './components/chip';
-import tagEntry from './components/tag';
 import eyebrowChipEntry from './components/eyebrow-chip';
 
 // ─── Component entries — Avatar ───────────────────────────────────────────────
@@ -40,8 +38,6 @@ import avatarGroupEntry from './components/avatar-group';
 
 // ─── Component entries — Feedback ─────────────────────────────────────────────
 import alertEntry from './components/alert';
-import bannerEntry from './components/banner';
-import calloutEntry from './components/callout';
 import toastEntry from './components/toast';
 
 // ─── Component entries — Loading States ───────────────────────────────────────
@@ -105,6 +101,9 @@ import boxEntry from './components/box';
 
 // ─── Component entries — Motion ───────────────────────────────────────────────
 import motionFadeEntry from './components/motion-fade';
+import motionRevealEntry from './components/motion-reveal';
+import motionFloatEntry from './components/motion-float';
+import motionMarqueeEntry from './components/motion-marquee';
 import motionSlideEntry from './components/motion-slide';
 import motionScaleEntry from './components/motion-scale';
 import motionCollapseEntry from './components/motion-collapse';
@@ -145,6 +144,21 @@ import streamingTextEntry from './components/streaming-text';
 import messageBubbleEntry from './components/message-bubble';
 import citationEntry from './components/citation';
 import conversationEntry from './patterns/conversation';
+
+// ─── Marketing sections (@nexub/marketing) ───────────────────────────────────
+import marketingNavEntry from './patterns/marketing-nav';
+import heroEntry from './patterns/hero';
+import logoStripEntry from './patterns/logo-strip';
+import statBandEntry from './patterns/stat-band';
+import sectionHeaderEntry from './patterns/section-header';
+import featureSplitEntry from './patterns/feature-split';
+import howItWorksEntry from './patterns/how-it-works';
+import productGridEntry from './patterns/product-grid';
+import testimonialGridEntry from './patterns/testimonial-grid';
+import pricingTableEntry from './patterns/pricing-table';
+import faqEntry from './patterns/faq';
+import ctaBandEntry from './patterns/cta-band';
+import marketingFooterEntry from './patterns/marketing-footer';
 import { mobileOnly } from './native';
 import { templateEntries } from './templates';
 
@@ -171,18 +185,14 @@ export const componentEntries: ComponentEntry[] = [
   dateRangePickerEntry,
   // Labels & Badges
   badgeEntry,
-  statusPillEntry,
   filterChipEntry,
   chipEntry,
-  tagEntry,
   eyebrowChipEntry,
   // Avatar
   avatarEntry,
   avatarGroupEntry,
   // Feedback
   alertEntry,
-  bannerEntry,
-  calloutEntry,
   toastEntry,
   // Loading States
   skeletonEntry,
@@ -245,6 +255,9 @@ export const componentEntries: ComponentEntry[] = [
   boxEntry,
   // Motion
   motionFadeEntry,
+  motionRevealEntry,
+  motionFloatEntry,
+  motionMarqueeEntry,
   motionSlideEntry,
   motionScaleEntry,
   motionCollapseEntry,
@@ -254,6 +267,23 @@ export const componentEntries: ComponentEntry[] = [
   streamingTextEntry,
   thinkingIndicatorEntry,
   citationEntry,
+];
+
+// Marketing sections share the pattern pages (/patterns/<slug>) under their own nav group.
+export const marketingEntries: ComponentEntry[] = [
+  marketingNavEntry,
+  heroEntry,
+  logoStripEntry,
+  statBandEntry,
+  sectionHeaderEntry,
+  featureSplitEntry,
+  howItWorksEntry,
+  productGridEntry,
+  testimonialGridEntry,
+  pricingTableEntry,
+  faqEntry,
+  ctaBandEntry,
+  marketingFooterEntry,
 ];
 
 // ─── All pattern entries (flat) ───────────────────────────────────────────────
@@ -272,7 +302,9 @@ export const patternEntries: ComponentEntry[] = [
   bentoGridEntry,
   errorSummaryEntry,
   conversationEntry,
+  ...marketingEntries,
 ];
+
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
 // Pre-build Maps at module-load time so every lookup is O(1).
@@ -301,13 +333,15 @@ export interface SearchEntry {
 export const searchIndex: SearchEntry[] = [
   // Static pages
   { id: 'getting-started', label: 'Getting Started', description: 'Install and set up Nexub DS', href: '/getting-started', category: 'Docs' },
+  { id: 'changelog', label: 'Changelog', description: 'What changed in each release, across every @nexub package', href: '/changelog', category: 'Docs' },
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
-  { id: 'without-tailwind', label: 'Use without Tailwind', description: 'Prebuilt @nexub/react/styles.css and the opt-in rem layer', href: '/getting-started/without-tailwind', category: 'Docs' },
+  { id: 'without-tailwind', label: 'Use without Tailwind', description: 'Prebuilt @nexub/react/styles.css; rem sizing', href: '/getting-started/without-tailwind', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'react-native', label: 'React Native', description: '@nexub/react-native for Expo and React Native apps: setup, components, screens', href: '/getting-started/react-native', category: 'Docs' },
   { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
+  { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
   { id: 'migrating-to-3', label: 'Migrating to 3.0', description: 'What 3.0 removes (Banner, Callout, Tag, StatusPill, legacy colour names) and the codemod that moves you off it', href: '/getting-started/migrating-to-3', category: 'Docs' },
   { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
@@ -317,6 +351,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-motion', label: 'Motion & interaction', description: 'Spring tokens, state layers, focus ring', href: '/foundations/motion', category: 'Foundations' },
   { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },
   { id: 'foundations-materials', label: 'Materials', description: 'Glass 2.0 and the intensity dial', href: '/foundations/materials', category: 'Foundations' },
+  { id: 'foundations-marketing-mode', label: 'Marketing mode', description: 'The nexub.com look, opt-in under data-mode="marketing"', href: '/foundations/marketing-mode', category: 'Foundations' },
   { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
   { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
   { id: 'content-vocabulary', label: 'Vocabulary', description: 'Approved terms and words to avoid', href: '/content/vocabulary', category: 'Content' },
@@ -346,6 +381,7 @@ export const searchIndex: SearchEntry[] = [
     category: 'Pattern · Pages',
   })),
   { id: 'examples', label: 'Examples', description: 'Web and mobile dashboards and full-page references', href: '/examples', category: 'Examples' },
+  { id: 'example-marketing', label: 'Example: Marketing page', description: 'A landing page from @nexub/marketing, rendered as server components', href: '/examples/marketing', category: 'Examples' },
   { id: 'example-mobile', label: 'Example: Mobile dashboard', description: 'The Payub-style home screen in @nexub/react-native', href: '/examples/mobile', category: 'Examples' },
   // Patterns
   ...patternEntries.map((e) => ({
@@ -375,7 +411,9 @@ export const navGroups: NavGroup[] = [
       { title: 'React Native', href: '/getting-started/react-native' },
       { title: 'Building AI surfaces', href: '/getting-started/ai-surfaces' },
       { title: 'Upgrading', href: '/getting-started/upgrading' },
+      { title: 'Next.js and server components', href: '/getting-started/nextjs' },
       { title: 'Migrating to 3.0', href: '/getting-started/migrating-to-3' },
+      { title: 'Changelog', href: '/changelog' },
     ],
   },
   {
@@ -388,11 +426,12 @@ export const navGroups: NavGroup[] = [
       { title: 'Elevation & shape', href: '/foundations/shadows' },
       { title: 'Motion & interaction', href: '/foundations/motion' },
       { title: 'Materials', href: '/foundations/materials' },
+      { title: 'Marketing mode', href: '/foundations/marketing-mode' },
     ],
   },
   {
     title: 'Components',
-    items: [], // sub-items live in children
+    items: [{ title: 'Overview', href: '/components' }],
     children: [
       { title: 'Actions',        items: componentsByCategory('Actions') },
       { title: 'Form & Input',   items: componentsByCategory('Form & Input') },
@@ -417,10 +456,11 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Patterns',
-    items: [],
+    items: [{ title: 'Overview', href: '/patterns' }],
     children: [
       { title: 'Pages', items: templateEntries.map((t) => ({ title: t.title, href: `/patterns/pages/${t.slug}` })) },
-      { title: 'Blocks', items: patternEntries.map((e) => ({ title: e.meta.title, href: `/patterns/${e.meta.slug}` })) },
+      { title: 'Blocks', items: patternEntries.filter((e) => e.meta.category !== 'Marketing').map((e) => ({ title: e.meta.title, href: `/patterns/${e.meta.slug}` })) },
+      { title: 'Marketing', items: marketingEntries.map((e) => ({ title: e.meta.title, href: `/patterns/${e.meta.slug}` })) },
     ],
   },
   {
@@ -429,6 +469,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Overview', href: '/examples' },
       { title: 'Web dashboard', href: '/examples/dashboard' },
       { title: 'Mobile dashboard', href: '/examples/mobile' },
+      { title: 'Marketing page', href: '/examples/marketing' },
     ],
   },
   {

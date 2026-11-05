@@ -1,0 +1,631 @@
+/* @nexub/themes — core.css
+   Global resets, focus ring, body, scrollbar, reduced-motion, without the
+   fonts and the body backdrop. For apps that bring their own fonts (Next.js
+   next/font sets --font-family-sans and --font-family-display) and their own
+   page background. Most apps import base.css, which is core.css plus both.
+   Import it once at the root of your app before light.css or dark.css. */
+
+@import '@nexub/tokens/css';
+@import '@nexub/tokens/css/roles';
+
+/* ─── Theme tokens beside the color roles ─────────────────────────────────
+   3.0 removed the legacy semantic aliases (--color-success-500,
+   --color-text-info, …); use the roles. `npx nexub-migrate --write` moves old
+   code over.                                                               */
+:root {
+  /* Focus ring follows the theme's ring tokens (the tokens default is a fixed
+     white/blue pair, wrong in dark mode and brand themes). */
+  --shadow-focus: 0 0 0 2px var(--color-ring-offset), 0 0 0 4px var(--color-ring-default);
+
+  /* Solid fills under white text. Fixed palette tones (they do NOT flip in dark
+     mode): tone 40 vs white is >= 4.5:1 by HCT construction; hover = tone 30.
+     Brand themes override accent. Phase 2 moves components to on-* roles. */
+  --color-fill-primary:         var(--color-palette-primary-40);
+  --color-fill-primary-hover:   var(--color-palette-primary-30);
+  --color-fill-info:            var(--color-palette-info-40);
+  --color-fill-info-hover:      var(--color-palette-info-30);
+  --color-fill-success:         var(--color-palette-success-40);
+  --color-fill-success-hover:   var(--color-palette-success-30);
+  --color-fill-warning:         var(--color-palette-warning-40);
+  --color-fill-warning-hover:   var(--color-palette-warning-30);
+  --color-fill-danger:          var(--color-palette-error-40);
+  --color-fill-danger-hover:    var(--color-palette-error-30);
+  --color-fill-leap:            var(--color-palette-leap-40);
+  --color-fill-leap-hover:      var(--color-palette-leap-30);
+  --color-fill-bookub:          var(--color-palette-bookub-40);
+  --color-fill-bookub-hover:    var(--color-palette-bookub-30);
+  --color-fill-payub:           var(--color-palette-payub-40);
+  --color-fill-payub-hover:     var(--color-palette-payub-30);
+  --color-fill-founderub:       var(--color-palette-founderub-40);
+  --color-fill-founderub-hover: var(--color-palette-founderub-30);
+  --color-fill-accent:          var(--color-fill-primary);
+  --color-fill-accent-hover:    var(--color-fill-primary-hover);
+
+  /* scrim behind modal surfaces (Dialog, AlertDialog, Sheet/Drawer, CommandPalette) */
+  --color-overlay: rgb(0 0 0 / 0.5);
+
+  /* accent fallback — used without any brand theme applied (PKG-B03) */
+  --color-accent-500: var(--color-brand-primary-500);
+  --color-accent-600: var(--color-brand-primary-600);
+
+  /* brand tone shorthands — aliased from full token names (PKG-B02) */
+  --color-leap-50:          var(--color-accent-leap-50);
+  --color-leap-100:         var(--color-accent-leap-100);
+  --color-leap-600:         var(--color-accent-leap-600);
+  --color-leap-700:         var(--color-accent-leap-700);
+  --color-leap-bg:          rgba(99, 102, 241, 0.10);
+  --color-leap-border:      rgba(99, 102, 241, 0.25);
+
+  --color-bookub-50:        var(--color-accent-bookub-50);
+  --color-bookub-100:       var(--color-accent-bookub-100);
+  --color-bookub-600:       var(--color-accent-bookub-600);
+  --color-bookub-700:       var(--color-accent-bookub-700);
+  --color-bookub-bg:        rgba(16, 185, 129, 0.10);
+  --color-bookub-border:    rgba(16, 185, 129, 0.25);
+
+  --color-payub-50:         var(--color-accent-payub-50);
+  --color-payub-100:        var(--color-accent-payub-100);
+  --color-payub-600:        var(--color-accent-payub-600);
+  --color-payub-700:        var(--color-accent-payub-700);
+  --color-payub-bg:         rgba(139, 92, 246, 0.10);
+  --color-payub-border:     rgba(139, 92, 246, 0.25);
+
+  --color-founderub-50:     var(--color-accent-founderub-50);
+  --color-founderub-100:    var(--color-accent-founderub-100);
+  --color-founderub-600:    var(--color-accent-founderub-600);
+  --color-founderub-700:    var(--color-accent-founderub-700);
+  --color-founderub-bg:     rgba(245, 158, 11, 0.10);
+  --color-founderub-border: rgba(245, 158, 11, 0.25);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-color: var(--color-outline-variant);
+}
+
+html {
+  font-family: var(--font-family-sans);
+  /* 100%, not 16px: tokens are in rem (3.0) and follow the user's browser font size. */
+  font-size: 100%;
+  line-height: 1.6;
+  color: var(--color-on-surface);
+  background-color: var(--color-surface);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  /* never fake bold/italic; Inter's optical sizes follow font-size */
+  font-synthesis: none;
+  font-optical-sizing: auto;
+}
+
+/* Form controls don't inherit fonts by default — without this, apps that
+   don't use Tailwind's preflight would render buttons/inputs in the system UI
+   font instead of Inter. */
+button, input, select, textarea, optgroup {
+  font-family: inherit;
+}
+
+/* Pointer cursor on buttons. Tailwind v3's preflight set it; v4's doesn't, so
+   this keeps Nexub buttons the same on both. Zero specificity (:where), so any
+   cursor-* utility and v3's preflight still win. */
+:where(button:not(:disabled), [role='button']:not(:disabled)) {
+  cursor: pointer;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Focus ring: one ring for everything. The outline follows border-radius, so
+   it hugs capsules and fields. Contrast >= 3:1 on every surface (ring = primary). */
+:focus-visible {
+  outline: 3px solid var(--color-ring-default);
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  :focus-visible { outline-color: Highlight; }
+}
+
+/* Headings: brand display face, balanced wrapping */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  color: var(--color-on-surface);
+  text-wrap: balance;
+}
+
+/* Paragraphs / lists */
+p, ul, ol {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Links */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Images */
+img, video, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Code */
+code, kbd, pre, samp {
+  font-family: var(--font-family-mono);
+  font-size: 0.875em;
+}
+
+/* Selection */
+::selection {
+  background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  color: var(--color-on-surface);
+}
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-surface-container-low);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-on-surface-muted);
+}
+
+/* Reduced motion */
+/* Reduced motion: everything is instant, except the designed fallbacks
+   (nx-motion, nx-reveal), which keep their crossfade with no travel. */
+@media (prefers-reduced-motion: reduce) {
+  *:not(.nx-motion, .nx-reveal), *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── State layer (Calm Depth §4.2) ──────────────────────────────────────────
+   An overlay of the element's own text color (its on-* role) at the
+   --state-* opacity, so hover/focus/press read correctly on any fill, theme,
+   brand or glass. The ::before paints above the background, below content. */
+.nx-state-layer { position: relative; isolation: isolate; }
+.nx-state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+.nx-state-layer:hover::before { opacity: var(--state-hover); }
+.nx-state-layer:focus-visible::before { opacity: var(--state-focus); }
+.nx-state-layer:active::before { opacity: var(--state-pressed); }
+.nx-state-layer:is(:disabled, [aria-disabled='true'], [data-disabled])::before { opacity: 0; }
+
+/* Press feedback: a fast spatial spring, no ripple. */
+.nx-press {
+  transition: transform var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+}
+.nx-press:active:not(:disabled, [aria-disabled='true'], [data-disabled]) { transform: scale(0.97); }
+
+/* ─── Enter / exit (overlays, menus, tooltips, toasts) ───────────────────────
+   Opacity rides the effects spring; position and scale ride the spatial
+   spring, so a little overshoot reads as physical without flashing.
+   Keyframes, not transitions: Radix keeps closing content mounted until its
+   exit animation ends. Standalone translate/scale compose with the
+   component's own transform (e.g. a centred dialog's -50% offsets).
+   Modifiers set where the layer comes from: --nx-x, --nx-y, --nx-scale. */
+@keyframes nx-fade-in { from { opacity: 0; } }
+@keyframes nx-fade-out { to { opacity: 0; } }
+@keyframes nx-move-in { from { translate: var(--nx-x, 0) var(--nx-y, 0); scale: var(--nx-scale, 1); } }
+@keyframes nx-move-out { to { translate: var(--nx-x, 0) var(--nx-y, 0); scale: var(--nx-scale, 1); } }
+
+.nx-motion:is([data-state='open'], [data-state='delayed-open'], [data-state='instant-open'], [data-motion^='from-']) {
+  animation:
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing),
+    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+}
+/* Exit is quicker than enter and never overshoots. */
+.nx-motion:is([data-state='closed'], [data-motion^='to-']) {
+  animation:
+    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards,
+    nx-move-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+}
+
+/* Floating layers grow from their trigger: a small scale plus a 4px nudge
+   away from the side they open on (Radix sets data-side). Components set
+   transform-origin to Radix's --radix-*-transform-origin. */
+.nx-pop { --nx-scale: 0.96; }
+.nx-pop[data-side='bottom'] { --nx-y: -4px; }
+.nx-pop[data-side='top'] { --nx-y: 4px; }
+.nx-pop[data-side='left'] { --nx-x: 4px; }
+.nx-pop[data-side='right'] { --nx-x: -4px; }
+/* Modal dialogs rise slightly as they scale in. */
+.nx-dialog { --nx-scale: 0.96; --nx-y: 8px; }
+/* NavigationMenu content slides in from the item's direction. */
+.nx-motion:is([data-motion='from-start'], [data-motion='to-start']) { --nx-x: -24px; }
+.nx-motion:is([data-motion='from-end'], [data-motion='to-end']) { --nx-x: 24px; }
+
+/* Reduced motion: a designed fallback, not a cut. Keep the crossfade, drop
+   the travel and scale. */
+@media (prefers-reduced-motion: reduce) {
+  .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
+}
+
+/* Stagger: children of .nx-stagger rise in one after another (40ms apart, up
+   to the 12th; later ones arrive with the 12th). Set --nx-stagger to change
+   the step. Re-key the parent to replay. */
+.nx-stagger > * {
+  --nx-y: 8px;
+  animation:
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both,
+    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing) both;
+  animation-delay: calc(var(--nx-i, 0) * var(--nx-stagger, 40ms));
+}
+.nx-stagger > :nth-child(2) { --nx-i: 1; }
+.nx-stagger > :nth-child(3) { --nx-i: 2; }
+.nx-stagger > :nth-child(4) { --nx-i: 3; }
+.nx-stagger > :nth-child(5) { --nx-i: 4; }
+.nx-stagger > :nth-child(6) { --nx-i: 5; }
+.nx-stagger > :nth-child(7) { --nx-i: 6; }
+.nx-stagger > :nth-child(8) { --nx-i: 7; }
+.nx-stagger > :nth-child(9) { --nx-i: 8; }
+.nx-stagger > :nth-child(10) { --nx-i: 9; }
+.nx-stagger > :nth-child(11) { --nx-i: 10; }
+.nx-stagger > :nth-child(n + 12) { --nx-i: 11; }
+
+/* ListTransition items: grow in from zero height and fade in; exit collapses
+   and fades (quicker, no overshoot). Rows animate via grid-template-rows so
+   the item needs no measured height. */
+.nx-list-item { display: grid; grid-template-rows: 1fr; }
+.nx-list-item-inner { min-height: 0; overflow: hidden; }
+@keyframes nx-rows-in { from { grid-template-rows: 0fr; } }
+@keyframes nx-rows-out { to { grid-template-rows: 0fr; } }
+.nx-list-item[data-state='enter'] {
+  animation:
+    nx-rows-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing),
+    nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+.nx-list-item[data-state='exit'] {
+  pointer-events: none;
+  animation:
+    nx-rows-out var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) forwards,
+    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+}
+
+/* SkeletonSwap: skeleton and content share one grid cell and crossfade. */
+.nx-swap { display: grid; }
+.nx-swap > * { grid-area: 1 / 1; min-width: 0; }
+.nx-swap-in { animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) both; }
+.nx-swap-out {
+  pointer-events: none;
+  animation: nx-fade-out var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nx-stagger > * { --nx-y: 0px; animation-delay: 0s; }
+  .nx-list-item[data-state='enter'] { animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing); }
+  .nx-list-item[data-state='exit'] { animation: nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards; }
+}
+
+/* ─── Cards: lift, press, sheen ──────────────────────────────────────────────
+   Lift: hover raises 2px on the spatial spring with elevation 1 → 2; leaving
+   settles faster on the effects spring (a transition uses the *destination*
+   state's timing). Press sinks to 0.99. Hover only where a real pointer
+   hovers, so touch never gets a stuck lift. */
+.nx-lift {
+  transition:
+    translate var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing),
+    scale var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing),
+    box-shadow var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+@media (hover: hover) {
+  .nx-lift:hover {
+    translate: 0 -2px;
+    transition:
+      translate var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing),
+      scale var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing),
+      box-shadow var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+  }
+  /* Glass keeps its own shadow (it carries the specular edge). */
+  .nx-lift:not([data-material='glass']):hover { box-shadow: var(--elevation-2); }
+}
+.nx-lift:active { translate: 0 0; scale: 0.99; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-lift:hover, .nx-lift:active { translate: none; scale: none; }
+}
+
+/* Sheen (opt-in): a soft light that follows the pointer across the surface,
+   plus a brighter rim where the pointer is nearest the edge. JS sets
+   --nx-mx/--nx-my through the CSSOM (CSP-safe); --nx-sheen fades it in.
+   Primary-tinted on light surfaces, white on dark and on glass. Off for touch
+   (no hover), reduced motion and reduced transparency. */
+@property --nx-sheen { syntax: '<number>'; inherits: true; initial-value: 0; }
+.nx-sheen {
+  position: relative;
+  --nx-sheen-tint: light-dark(var(--color-primary), #fff);
+  background-image: radial-gradient(
+    28rem circle at var(--nx-mx, 50%) var(--nx-my, 0%),
+    color-mix(in srgb, var(--nx-sheen-tint) calc(var(--nx-sheen) * 9%), transparent),
+    transparent 70%
+  );
+  transition: --nx-sheen var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+}
+.nx-sheen::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    14rem circle at var(--nx-mx, 50%) var(--nx-my, 0%),
+    color-mix(in srgb, var(--nx-sheen-tint) calc(var(--nx-sheen) * 70%), transparent),
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+[data-material='glass'].nx-sheen { --nx-sheen-tint: #fff; }
+/* On a sheen surface the light is the hover feedback; the grey state layer
+   would wash it out. Press still darkens. */
+.nx-sheen.nx-state-layer:hover:not(:active)::before { opacity: 0; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .nx-sheen:hover {
+    --nx-sheen: 1;
+    transition: --nx-sheen var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nx-sheen { background-image: none; }
+  .nx-sheen::after { display: none; }
+}
+
+/* ─── AI: thinking indicator ─────────────────────────────────────────────────
+   nx-morph: a small shape that breathes between a circle and a soft squircle
+   on the expressive spring. nx-shimmer: a decorative light sweep across label
+   text (the text stays in the DOM). Reduced motion: both static. */
+@keyframes nx-morph {
+  from { border-radius: 50%; rotate: 0deg; }
+  to { border-radius: 38% 62% 38% 62% / 62% 38% 62% 38%; rotate: 90deg; }
+}
+@keyframes nx-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -100% 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nx-morph {
+    animation: nx-morph calc(var(--motion-spring-expressive-slow-duration) * 2)
+      var(--motion-spring-expressive-slow-easing) infinite alternate;
+  }
+  .nx-shimmer {
+    background-image: linear-gradient(90deg,
+      currentColor 0%, currentColor 40%, var(--color-on-surface) 50%, currentColor 60%, currentColor 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* A steady sweep: linear, not a spring (a spring would pulse each loop). */
+    animation: nx-shimmer 2s linear infinite;
+  }
+}
+@media (forced-colors: active) {
+  .nx-shimmer { background: none; -webkit-text-fill-color: currentColor; }
+}
+
+/* Streaming caret: a steady blink while text is arriving. */
+@keyframes nx-caret { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.nx-caret { animation: nx-caret 1s steps(1, end) infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-caret { animation: none; }
+}
+
+/* ─── Touch targets ─────────────────────────────────────────────────────────
+   Small controls keep their visual size but get an invisible 44×44 hit area
+   on touch screens (Apple HIG, WCAG 2.5.5). Uses ::after; the state layer
+   uses ::before. */
+@media (pointer: coarse) {
+  .nx-hit { position: relative; }
+  .nx-hit::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
+/* ─── Micro-moments ──────────────────────────────────────────────────────────
+   Reveal: content replacing a skeleton crossfades in (no travel). */
+.nx-reveal {
+  animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+/* Check draw: a checkmark path (pathLength="1") draws itself in. */
+@keyframes nx-draw { from { stroke-dashoffset: 1; } }
+.nx-check-draw {
+  stroke-dasharray: 1;
+  animation: nx-draw var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-check-draw { animation: none; }
+}
+/* Shake: a short horizontal "no" on the spatial-fast spring (async Button error). */
+@keyframes nx-shake {
+  0%, 100% { translate: 0; }
+  20% { translate: -4px; }
+  40% { translate: 4px; }
+  60% { translate: -3px; }
+  80% { translate: 2px; }
+}
+.nx-shake {
+  animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-shake { animation: none; }
+}
+
+/* ─── Density ────────────────────────────────────────────────────────────────
+   Compact shifts every control one step down the ladder (md 40 → 32px at a 16px root). */
+[data-density='compact'] {
+  --size-control-xs: 1.25rem;
+  --size-control-sm: 1.5rem;
+  --size-control-md: 2rem;
+  --size-control-lg: 2.5rem;
+  --size-control-xl: 3rem;
+}
+
+/* Logo-scroll marquee keyframe (used by LogoWall) */
+@keyframes logo-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── App header (@nexub/patterns AppHeader) ─────────────────────────────────
+   One height for the fixed top header everywhere. Offset layouts with
+   var(--app-header-height); AppHeader's own spacer already does in flow. */
+:root { --app-header-height: 64px; }
+/* condense: scroll-driven, no JS. The page spacer stays 64px; only the bar
+   tightens. Glass keeps its own shadow. */
+@keyframes nx-condense { to { height: 52px; } }
+@keyframes nx-condense-lift { to { height: 52px; box-shadow: var(--elevation-1); } }
+@supports (animation-timeline: scroll()) {
+  [data-condense] {
+    animation: nx-condense-lift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+  [data-condense][data-material='glass'] { animation-name: nx-condense; }
+}
+
+/* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
+   A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
+   instead of injecting a <style> tag. The gutter class keeps the scrollbar's
+   space so the page doesn't shift sideways. */
+html.nexub-scroll-lock { overflow: hidden; }
+html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
+
+/* ─── Nexub mark gradient stops (<NexubMark variant="color">, <Logo>) ───────
+   Classes instead of style= attributes, which a strict CSP blocks in
+   server-rendered HTML. */
+/* nexub-mark-stops:start — generated by packages/brand/scripts/build-assets.mjs */
+.nxm-s-1{stop-color:var(--color-brand-mark-1)}
+.nxm-s-2{stop-color:var(--color-brand-mark-2)}
+.nxm-s-3{stop-color:var(--color-brand-mark-3)}
+.nxm-s-4{stop-color:var(--color-brand-mark-4)}
+.nxm-s-5{stop-color:var(--color-brand-mark-5)}
+.nxm-s-6{stop-color:var(--color-brand-mark-6)}
+.nxm-s-7{stop-color:var(--color-brand-mark-7)}
+.nxm-s-8{stop-color:var(--color-brand-mark-8)}
+.nxm-s-9{stop-color:var(--color-brand-mark-9)}
+.nxm-s-10{stop-color:var(--color-brand-mark-10)}
+.nxm-s-11{stop-color:var(--color-brand-mark-11)}
+.nxm-s-12{stop-color:var(--color-brand-mark-12)}
+.nxm-s-13{stop-color:var(--color-brand-mark-13)}
+.nxm-s-14{stop-color:var(--color-brand-mark-14)}
+.nxm-s-15{stop-color:var(--color-brand-mark-15)}
+.nxm-s-16{stop-color:var(--color-brand-mark-16)}
+.nxm-s-17{stop-color:var(--color-brand-mark-17)}
+.nxm-s-18{stop-color:var(--color-brand-mark-18)}
+.nxm-s-19{stop-color:var(--color-brand-mark-19)}
+.nxm-s-20{stop-color:var(--color-brand-mark-20)}
+.nxm-s-21{stop-color:var(--color-brand-mark-21)}
+.nxm-s-22{stop-color:var(--color-brand-mark-22)}
+.nxm-s-23{stop-color:var(--color-brand-mark-23)}
+.nxm-s-24{stop-color:var(--color-brand-mark-24)}
+.nxm-s-25{stop-color:var(--color-brand-mark-25)}
+.nxm-s-26{stop-color:var(--color-brand-mark-26)}
+.nxm-s-27{stop-color:var(--color-brand-mark-27)}
+.nxm-s-28{stop-color:var(--color-brand-mark-28)}
+.nxm-s-29{stop-color:var(--color-brand-mark-29)}
+.nxm-s-30{stop-color:var(--color-brand-mark-30)}
+.nxm-s-31{stop-color:var(--color-brand-mark-31)}
+.nxm-s-32{stop-color:var(--color-brand-mark-32)}
+.nxm-s-33{stop-color:var(--color-brand-mark-33)}
+.nxm-s-34{stop-color:var(--color-brand-mark-34)}
+.nxm-s-35{stop-color:var(--color-brand-mark-35)}
+.nxm-s-36{stop-color:var(--color-brand-mark-36)}
+.nxm-s-37{stop-color:var(--color-brand-mark-37)}
+.nxm-s-38{stop-color:var(--color-brand-mark-38)}
+.nxm-s-39{stop-color:var(--color-brand-mark-39)}
+.nxm-s-40{stop-color:var(--color-brand-mark-40)}
+.nxm-s-41{stop-color:var(--color-brand-mark-41)}
+.nxm-s-42{stop-color:var(--color-brand-mark-42)}
+.nxm-s-43{stop-color:var(--color-brand-mark-43)}
+.nxm-s-44{stop-color:var(--color-brand-mark-44)}
+.nxm-s-45{stop-color:var(--color-brand-mark-45)}
+.nxm-s-46{stop-color:var(--color-brand-mark-46)}
+.nxm-s-47{stop-color:var(--color-brand-mark-47)}
+.nxm-o-0{stop-opacity:0}
+/* nexub-mark-stops:end */
+
+/* ─── Radix ScrollArea / Select viewports ────────────────────────────────────
+   Radix renders these rules in a <style> tag, which a strict CSP blocks. The
+   same rules here keep the native scrollbar hidden either way. */
+[data-radix-scroll-area-viewport],[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar,[data-radix-select-viewport]::-webkit-scrollbar{display:none}
+
+/* ─── Drawer / Sheet (vaul 1.1.2) ─────────────────────────────────────────────
+   vaul's own styles. vaul normally injects these in a <style> tag when
+   @nexub/react loads, which strict CSP pages block; @nexub/react strips that
+   and ships them here instead. Verbatim copy: the @nexub/react build fails if
+   it no longer matches vaul. One rule is left out: vaul's invalid
+   `[data-vaul-handle-hitarea]:{…}` media rule, which browsers ignore and strict
+   CSS parsers (lightningcss, Turbopack) reject. */
+[data-vaul-drawer]{touch-action:none;will-change:transform;transition:transform .5s cubic-bezier(.32, .72, 0, 1);animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=open]{animation-name:slideFromBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=bottom][data-state=closed]{animation-name:slideToBottom}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=open]{animation-name:slideFromTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=top][data-state=closed]{animation-name:slideToTop}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=open]{animation-name:slideFromLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=left][data-state=closed]{animation-name:slideToLeft}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=open]{animation-name:slideFromRight}[data-vaul-drawer][data-vaul-snap-points=false][data-vaul-drawer-direction=right][data-state=closed]{animation-name:slideToRight}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--initial-transform,100%),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}[data-vaul-drawer][data-vaul-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--initial-transform,100%),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=top]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=bottom]{transform:translate3d(0,var(--snap-point-height,0),0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=left]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-drawer][data-vaul-delayed-snap-points=true][data-vaul-drawer-direction=right]{transform:translate3d(var(--snap-point-height,0),0,0)}[data-vaul-overlay][data-vaul-snap-points=false]{animation-duration:.5s;animation-timing-function:cubic-bezier(0.32,0.72,0,1)}[data-vaul-overlay][data-vaul-snap-points=false][data-state=open]{animation-name:fadeIn}[data-vaul-overlay][data-state=closed]{animation-name:fadeOut}[data-vaul-animate=false]{animation:none!important}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:0;transition:opacity .5s cubic-bezier(.32, .72, 0, 1)}[data-vaul-overlay][data-vaul-snap-points=true]{opacity:1}[data-vaul-drawer]:not([data-vaul-custom-container=true])::after{content:'';position:absolute;background:inherit;background-color:inherit}[data-vaul-drawer][data-vaul-drawer-direction=top]::after{top:initial;bottom:100%;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=bottom]::after{top:100%;bottom:initial;left:0;right:0;height:200%}[data-vaul-drawer][data-vaul-drawer-direction=left]::after{left:initial;right:100%;top:0;bottom:0;width:200%}[data-vaul-drawer][data-vaul-drawer-direction=right]::after{left:100%;right:initial;top:0;bottom:0;width:200%}[data-vaul-overlay][data-vaul-snap-points=true]:not([data-vaul-snap-points-overlay=true]):not(
+[data-state=closed]
+){opacity:0}[data-vaul-overlay][data-vaul-snap-points-overlay=true]{opacity:1}[data-vaul-handle]{display:block;position:relative;opacity:.7;background:#e2e2e4;margin-left:auto;margin-right:auto;height:5px;width:32px;border-radius:1rem;touch-action:pan-y}[data-vaul-handle]:active,[data-vaul-handle]:hover{opacity:1}[data-vaul-handle-hitarea]{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(100%,2.75rem);height:max(100%,2.75rem);touch-action:inherit}@media (hover:hover) and (pointer:fine){[data-vaul-drawer]{user-select:none}}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{to{opacity:0}}@keyframes slideFromBottom{from{transform:translate3d(0,var(--initial-transform,100%),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToBottom{to{transform:translate3d(0,var(--initial-transform,100%),0)}}@keyframes slideFromTop{from{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}to{transform:translate3d(0,0,0)}}@keyframes slideToTop{to{transform:translate3d(0,calc(var(--initial-transform,100%) * -1),0)}}@keyframes slideFromLeft{from{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToLeft{to{transform:translate3d(calc(var(--initial-transform,100%) * -1),0,0)}}@keyframes slideFromRight{from{transform:translate3d(var(--initial-transform,100%),0,0)}to{transform:translate3d(0,0,0)}}@keyframes slideToRight{to{transform:translate3d(var(--initial-transform,100%),0,0)}}
+
+/* Drawer / Sheet on our springs. vaul's copy above stays verbatim (tsup checks
+   it); these override its .5s iOS curve. Enter rides spatial, exit is quicker
+   on effects and never overshoots. Placed after vaul's rules so ties win. */
+.nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'] {
+  animation-duration: var(--motion-spring-spatial-default-duration);
+  animation-timing-function: var(--motion-spring-spatial-default-easing);
+}
+.nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] {
+  animation-duration: var(--motion-spring-effects-default-duration);
+  animation-timing-function: var(--motion-spring-effects-default-easing);
+}
+.nx-drawer-overlay[data-vaul-overlay][data-vaul-snap-points='false'] {
+  animation-duration: var(--motion-spring-effects-default-duration);
+  animation-timing-function: var(--motion-spring-effects-default-easing);
+}
+.nx-drawer-overlay[data-vaul-overlay][data-state='closed'] {
+  animation-duration: var(--motion-spring-effects-fast-duration);
+  animation-timing-function: var(--motion-spring-effects-fast-easing);
+}
+/* Reduced motion: the panel fades instead of sliding. */
+@media (prefers-reduced-motion: reduce) {
+  .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='open'] { animation-name: fadeIn; }
+  .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] { animation-name: fadeOut; }
+}

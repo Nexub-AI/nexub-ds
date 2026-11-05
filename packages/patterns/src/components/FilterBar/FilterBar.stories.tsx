@@ -16,10 +16,10 @@ const chipStyle = (active: boolean): React.CSSProperties => ({
   borderRadius: '9999px',
   fontSize: '13px',
   fontWeight: 500,
-  border: '1px solid var(--color-border-default)',
+  border: '1px solid var(--color-outline-variant)',
   cursor: 'pointer',
   background: active ? 'var(--color-primary)' : 'transparent',
-  color: active ? 'var(--color-on-primary)' : 'var(--color-text-primary)',
+  color: active ? 'var(--color-on-primary)' : 'var(--color-on-surface)',
 });
 
 function FilterBarDemo() {

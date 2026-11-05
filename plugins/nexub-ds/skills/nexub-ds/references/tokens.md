@@ -1,6 +1,6 @@
 # Tokens
 
-Nexub DS v2.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v3.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -93,6 +93,7 @@ Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `
 
 | Tailwind | Size / line height | Weight |
 | --- | --- | --- |
+| `text-display-xl` | 64px / 68px | 800 |
 | `text-display-lg` | 56px / 60px | 700 |
 | `text-display-md` | 44px / 48px | 700 |
 | `text-display-sm` | 36px / 40px | 700 |
@@ -142,7 +143,7 @@ Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `
 | `--spacing-2-5` | `2-5` | 10px |
 | `--spacing-3-5` | `3-5` | 14px |
 
-Containers: `max-w-container-sm` (640px), `max-w-container-md` (768px), `max-w-container-lg` (1024px), `max-w-container-xl` (1280px), `max-w-container-2xl` (1536px), `max-w-container-nexub` (1440px), `max-w-container-prose` (65ch).
+Containers: `max-w-container-sm` (640px), `max-w-container-md` (768px), `max-w-container-lg` (1024px), `max-w-container-xl` (1280px), `max-w-container-2xl` (1536px), `max-w-container-nexub` (1440px), `max-w-container-marketing` (1280px), `max-w-container-prose` (65ch).
 
 ## Control and component sizes
 

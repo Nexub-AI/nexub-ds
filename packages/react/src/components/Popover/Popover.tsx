@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { cn } from '../../utils/cn.js';

@@ -89,4 +89,4 @@ export default function Example() {
 - Reads as inline text. For live status changes, wrap in an element with `role="status"` and `aria-live="polite"`.
 - For interactive equivalents (filtering, dismissing) reach for `Chip` or `FilterChip`.
 
-Related: [chip](chip.md), [tag](tag.md), [status-pill](status-pill.md)
+Related: [chip](chip.md)

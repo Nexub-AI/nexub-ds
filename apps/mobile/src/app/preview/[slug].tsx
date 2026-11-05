@@ -15,7 +15,8 @@ export default function ComponentPreview() {
   const One = Number.isInteger(index) ? examples[index] : undefined;
 
   return (
-    <ScreenContainer testID="preview-ready" edges={['top', 'left', 'right', 'bottom']} onContentSizeChange={onContentSizeChange}>
+    // Per-link marker: a deep link that never navigates must not match the screen still showing.
+    <ScreenContainer testID={`preview-ready-${slug}-${ex ?? 'all'}`} edges={['top', 'left', 'right', 'bottom']} onContentSizeChange={onContentSizeChange}>
       {!known ? (
         <ErrorState title="No preview" description={`There is no React Native preview called “${slug}”.`} />
       ) : One ? (

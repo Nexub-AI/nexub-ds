@@ -3,9 +3,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, EyebrowChip, Heading, Logo, Text, TextGradient, TopNav } from '@nexub/react';
+import { Button, EyebrowChip, Heading, Text, TextGradient } from '@nexub/react';
 import { ArrowRight } from '@nexub/icons';
-import { ThemeSwitcher } from '@/components/docs/ThemeSwitcher';
 
 interface LandingHeroProps {
   version: string;
@@ -43,7 +42,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   return (
     <section
       ref={heroRef}
-      className="landing-hero relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-32 text-center [background:var(--gradient-hero-ambient)]"
+      className="landing-hero relative flex min-h-[calc(100vh-var(--docs-header-height))] flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-16 text-center [background:var(--gradient-hero-ambient)]"
     >
       {/* ── Cursor spotlight (pure client, no SSR impact) ─────────────────── */}
       <div
@@ -72,20 +71,6 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
           style={{ ['--orb-y' as string]: '-18px', ['--orb-x' as string]: '10px' }}
         />
       </div>
-
-      {/* ── Nav strip ─────────────────────────────────────────────────────── */}
-      <TopNav.Root surface="glass" className="absolute inset-x-0 top-0 z-10 justify-between gap-6 border-x-0 border-t-0 px-8">
-        <Link href="/" aria-label="Nexub Design System home" className="no-underline">
-          <Logo size="sm" product="Design System" />
-        </Link>
-
-        <div className="landing-nav-links">
-          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/getting-started">Docs</Link></Button>
-          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/components">Components</Link></Button>
-          <Button asChild variant="text" size="sm" className="landing-nav-link"><Link href="/patterns">Patterns</Link></Button>
-          <ThemeSwitcher />
-        </div>
-      </TopNav.Root>
 
       {/* ── Hero icon with orbital rings ──────────────────────────────────── */}
       <div className="hero-icon-wrap relative z-[2]">

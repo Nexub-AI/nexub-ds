@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixCollapsible from '@radix-ui/react-collapsible';
 import { cn } from '../../utils/cn.js';

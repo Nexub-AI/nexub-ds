@@ -23,7 +23,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-text-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: text--0--${maestro.platform}
@@ -38,7 +38,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-text-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: text--1--${maestro.platform}
@@ -53,7 +53,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-heading-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: heading--0--${maestro.platform}
@@ -68,7 +68,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-surface-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: surface--0--${maestro.platform}
@@ -83,7 +83,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-surface-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: surface--1--${maestro.platform}
@@ -98,7 +98,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pressable-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pressable--0--${maestro.platform}
@@ -113,7 +113,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-icon-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: icon--0--${maestro.platform}
@@ -128,7 +128,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-icon-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: icon--1--${maestro.platform}
@@ -143,7 +143,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-button-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: button--0--${maestro.platform}
@@ -158,7 +158,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-button-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: button--1--${maestro.platform}
@@ -173,7 +173,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-button-2"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: button--2--${maestro.platform}
@@ -188,7 +188,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-button-group-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: button-group--0--${maestro.platform}
@@ -203,7 +203,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-button-group-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: button-group--1--${maestro.platform}
@@ -218,7 +218,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-icon-button-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: icon-button--0--${maestro.platform}
@@ -233,7 +233,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-link-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: link--0--${maestro.platform}
@@ -248,7 +248,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-chip-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: chip--0--${maestro.platform}
@@ -263,7 +263,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-filter-chip-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: filter-chip--0--${maestro.platform}
@@ -278,7 +278,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-badge-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: badge--0--${maestro.platform}
@@ -293,7 +293,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-badge-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: badge--1--${maestro.platform}
@@ -308,7 +308,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-avatar-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: avatar--0--${maestro.platform}
@@ -323,7 +323,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-avatar-group-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: avatar-group--0--${maestro.platform}
@@ -338,7 +338,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-text-field-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: text-field--0--${maestro.platform}
@@ -353,7 +353,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-text-field-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: text-field--1--${maestro.platform}
@@ -368,7 +368,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-password-input-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: password-input--0--${maestro.platform}
@@ -383,7 +383,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-search-field-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: search-field--0--${maestro.platform}
@@ -398,7 +398,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-money-input-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: money-input--0--${maestro.platform}
@@ -413,7 +413,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-stepper-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: stepper--0--${maestro.platform}
@@ -428,7 +428,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-checkbox-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: checkbox--0--${maestro.platform}
@@ -443,7 +443,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-radio-group-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: radio-group--0--${maestro.platform}
@@ -458,7 +458,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-switch-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: switch--0--${maestro.platform}
@@ -473,7 +473,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-segmented-control-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: segmented-control--0--${maestro.platform}
@@ -488,7 +488,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-slider-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: slider--0--${maestro.platform}
@@ -503,7 +503,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-select-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: select--0--${maestro.platform}
@@ -518,7 +518,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-date-time-field-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: date-time-field--0--${maestro.platform}
@@ -533,7 +533,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-card-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: card--0--${maestro.platform}
@@ -548,7 +548,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-list-item-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: list-item--0--${maestro.platform}
@@ -563,7 +563,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-list-item-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: list-item--1--${maestro.platform}
@@ -578,7 +578,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-list-section-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: list-section--0--${maestro.platform}
@@ -593,7 +593,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-accordion-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: accordion--0--${maestro.platform}
@@ -608,7 +608,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-amount-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: amount--0--${maestro.platform}
@@ -623,7 +623,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-amount-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: amount--1--${maestro.platform}
@@ -638,7 +638,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-divider-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: divider--0--${maestro.platform}
@@ -653,7 +653,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-banner-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: banner--0--${maestro.platform}
@@ -668,7 +668,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-banner-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: banner--1--${maestro.platform}
@@ -683,7 +683,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-toast-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: toast--0--${maestro.platform}
@@ -698,7 +698,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-dialog-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: dialog--0--${maestro.platform}
@@ -713,7 +713,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-progress-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: progress--0--${maestro.platform}
@@ -728,7 +728,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-loading-indicator-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: loading-indicator--0--${maestro.platform}
@@ -743,7 +743,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-skeleton-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: skeleton--0--${maestro.platform}
@@ -758,7 +758,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-skeleton-1"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: skeleton--1--${maestro.platform}
@@ -773,7 +773,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-empty-state-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: empty-state--0--${maestro.platform}
@@ -788,7 +788,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-error-state-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: error-state--0--${maestro.platform}
@@ -803,7 +803,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-bottom-sheet-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: bottom-sheet--0--${maestro.platform}
@@ -818,7 +818,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-action-sheet-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: action-sheet--0--${maestro.platform}
@@ -833,7 +833,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-context-menu-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: context-menu--0--${maestro.platform}
@@ -848,7 +848,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-swipeable-row-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: swipeable-row--0--${maestro.platform}
@@ -863,7 +863,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-otp-input-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: otp-input--0--${maestro.platform}
@@ -878,7 +878,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-numeric-keypad-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: numeric-keypad--0--${maestro.platform}
@@ -893,7 +893,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-expressive-money-input-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: expressive-money-input--0--${maestro.platform}
@@ -908,7 +908,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-sensitive-value-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: sensitive-value--0--${maestro.platform}
@@ -923,7 +923,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-privacy-shield-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: privacy-shield--0--${maestro.platform}
@@ -938,7 +938,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-offline-banner-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: offline-banner--0--${maestro.platform}
@@ -953,7 +953,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-coachmark-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: coachmark--0--${maestro.platform}
@@ -968,7 +968,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-carousel-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: carousel--0--${maestro.platform}
@@ -983,7 +983,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-page-indicator-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: page-indicator--0--${maestro.platform}
@@ -998,7 +998,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-sticky-footer-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: sticky-footer--0--${maestro.platform}
@@ -1013,7 +1013,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-fab-0"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: fab--0--${maestro.platform}
@@ -1028,7 +1028,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-onboarding"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-onboarding--${maestro.platform}
@@ -1043,7 +1043,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-permission"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-permission--${maestro.platform}
@@ -1058,7 +1058,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-signin"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-signin--${maestro.platform}
@@ -1073,7 +1073,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-verify"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-verify--${maestro.platform}
@@ -1088,7 +1088,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-lock"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-lock--${maestro.platform}
@@ -1103,7 +1103,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-home"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-home--${maestro.platform}
@@ -1118,7 +1118,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-activity"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-activity--${maestro.platform}
@@ -1133,7 +1133,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-detail"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-detail--${maestro.platform}
@@ -1148,7 +1148,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-send"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-send--${maestro.platform}
@@ -1163,7 +1163,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-review"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-review--${maestro.platform}
@@ -1178,7 +1178,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-success"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-success--${maestro.platform}
@@ -1193,7 +1193,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-settings"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-settings--${maestro.platform}
@@ -1208,7 +1208,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-appearance"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-appearance--${maestro.platform}
@@ -1223,7 +1223,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-inbox"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-inbox--${maestro.platform}
@@ -1238,7 +1238,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-search"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-search--${maestro.platform}
@@ -1253,7 +1253,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-chat"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-chat--${maestro.platform}
@@ -1268,7 +1268,7 @@ appId: ai.nexub.mobile
             - tapOn: "Open"
       - extendedWaitUntil:
           visible:
-            id: "preview-ready"
+            id: "preview-ready-pattern-paywall"
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-paywall--${maestro.platform}

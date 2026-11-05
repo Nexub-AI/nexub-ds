@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import type { MotionDuration, MotionEasing } from './motion.types.js';
 import { useMediaQuery } from '../../hooks/useMediaQuery.js';

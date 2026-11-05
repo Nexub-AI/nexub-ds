@@ -187,26 +187,33 @@ export const SPRINGS = {
   expressive: { fast: [0.7, 800], default: [0.8, 380], slow: [0.8, 200] },
 };
 
-// Opt-in rem layer (2.6; the default in 3.0): spacing, radius, shape, type sizes,
-// line heights and control heights restated in rem at a 16px root, so they follow
-// the user's browser font size together. Hairlines (1px) and capsules (9999px)
-// stay px: they must not scale. `groups` maps a CSS variable prefix to a token
-// object; nested groups (type.body-md.size) flatten with '-'.
+// rem by default (opt-in layer in 2.6, the default since 3.0): spacing, radius,
+// shape, type sizes, line heights and control heights in rem at a 16px root, so
+// they follow the user's browser font size together. Hairlines (1px) and capsules
+// (9999px) stay px: they must not scale. `groups` maps a CSS variable prefix to a
+// token object; nested groups (type.body-md.size) flatten with '-'. The JS and
+// native outputs keep px / points.
 const rem = (px) => `${px / 16}rem`;
-export function remCss(groups) {
-  const lines = [];
+export function remValues(groups) {
+  const out = new Map();
   const walk = (prefix, node) => {
     for (const [key, t] of Object.entries(node)) {
       if (t.$value === undefined) walk(`${prefix}-${key}`, t);
       else if (/^[\d.]+px$/.test(t.$value)) {
         const px = parseFloat(t.$value);
-        if (px > 1 && px < 9999) lines.push(`  --${prefix}-${key}: ${rem(px)};`);
+        if (px > 1 && px < 9999) out.set(`--${prefix}-${key}`, rem(px));
       }
     }
   };
   for (const [prefix, node] of Object.entries(groups)) walk(prefix, node);
-  // Compact density (themes/src/base.css) moves each control one step down the ladder.
-  const compact = { xs: 20, sm: 24, md: 32, lg: 40, xl: 48 };
-  const compactLines = Object.entries(compact).map(([k, px]) => `  --size-control-${k}: ${rem(px)};`);
-  return `/* @nexub/tokens/css/rem: import after @nexub/tokens/css (and @nexub/themes). */\n:root {\n${lines.join('\n')}\n}\n[data-density='compact'] {\n${compactLines.join('\n')}\n}\n`;
+  return out;
 }
+
+/** Rewrite those declarations in generated CSS (variables.css) to their rem values. */
+export function applyRem(css, groups) {
+  const values = remValues(groups);
+  return css.replace(/^(\s*)(--[\w-]+): [^;]+;/gm, (m, indent, name) => (values.has(name) ? `${indent}${name}: ${values.get(name)};` : m));
+}
+
+// @nexub/tokens/css/rem stays importable so 2.x setups keep working; it is a no-op now.
+export const REM_COMPAT_CSS = '/* @nexub/tokens/css/rem: since 3.0 @nexub/tokens/css is in rem by default, so this file is empty. Kept so existing imports keep working. */\n';

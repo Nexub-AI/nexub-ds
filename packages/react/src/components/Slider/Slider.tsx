@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { cn } from '../../utils/cn.js';

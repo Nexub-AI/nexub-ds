@@ -5,7 +5,6 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { NexubProvider, useLocale, useNexubMessages, defaultMessages } from './NexubProvider.js';
 import { Tabs } from '../Tabs/Tabs.js';
 import { Alert } from '../Alert/Alert.js';
-import { Banner } from '../Banner/Banner.js';
 import { Chip } from '../Chip/Chip.js';
 import { FilterChip } from '../FilterChip/FilterChip.js';
 import { Spinner } from '../Spinner/Spinner.js';
@@ -129,7 +128,6 @@ describe('English defaults still render', () => {
     render(
       <>
         <Alert onClose={noop}>a</Alert>
-        <Banner onClose={noop}>b</Banner>
         <Chip onRemove={noop}>c</Chip>
         <FilterChip onRemove={noop}>f</FilterChip>
         <SearchInput defaultValue="q" />
@@ -138,7 +136,7 @@ describe('English defaults still render', () => {
         <Spinner />
       </>,
     );
-    for (const name of ['Dismiss alert', 'Dismiss banner', 'Remove', 'Remove filter', 'Clear search', 'Show password', 'Increment', 'Decrement']) {
+    for (const name of ['Dismiss alert', 'Remove', 'Remove filter', 'Clear search', 'Show password', 'Increment', 'Decrement']) {
       expect(screen.getByRole('button', { name })).toBeInTheDocument();
     }
     fireEvent.click(screen.getByRole('button', { name: 'Show password' }));

@@ -1,3 +1,11 @@
+import { readFileSync } from 'node:fs';
+
+// Captured once per build: the footer shows the @nexub/react version and when the site was built.
+const DS_VERSION = JSON.parse(
+  readFileSync(new URL('../../packages/react/package.json', import.meta.url), 'utf-8'),
+).version;
+const BUILD_TIME = new Date().toISOString();
+
 // Bundle analysis: ANALYZE=true pnpm build
 let withBundleAnalyzer = (config) => config;
 try {
@@ -40,6 +48,8 @@ const nextConfig = {
   // Production and Preview environments. See apps/docs/FEEDBACK_SETUP.md.
   env: {
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? '',
+    NEXT_PUBLIC_DS_VERSION: DS_VERSION,
+    NEXT_PUBLIC_BUILD_TIME: BUILD_TIME,
   },
 };
 

@@ -2,7 +2,6 @@
 // nexub-migrate — move app code onto current Nexub DS conventions.
 // Dependency-free (node: built-ins only), Node >= 20. See ./README.md.
 import { readFileSync, readdirSync, realpathSync, statSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -13,7 +12,9 @@ const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'cov
 const MAX_BYTES = 1024 * 1024;
 
 // ─── legacy-tokens: alias map ────────────────────────────────────────────────
-const NEVER = new Set(['--color-text-disabled']); // the disabled-state role, not a legacy alias
+// Not legacy aliases: the disabled-state role, and three tokens brand themes override
+// ([data-product] sets ring-default to its tertiary and accent-500 to its scale).
+const NEVER = new Set(['--color-text-disabled', '--color-ring-default', '--color-ring-offset', '--color-accent-500']);
 const BRAND = {
   '--color-leap-500': '--color-leap',
   '--color-bookub-500': '--color-bookub',
@@ -52,8 +53,8 @@ export function buildAliasMap(cssTexts) {
   return { aliases, mix };
 }
 
-// Snapshot of buildAliasMap([@nexub/themes base.css, light.css]) at 1.8.0 — used when
-// @nexub/themes is not installed. bin/nexub-migrate.test.mjs fails if it drifts from source.
+// buildAliasMap([@nexub/themes 2.9 base.css, light.css]), frozen: 3.0 removed these
+// aliases from @nexub/themes, so this table is the only record of them.
 export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
   "aliases": {
     "--color-leap-500": "--color-leap",
@@ -82,7 +83,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-text-success": "--color-on-success-container",
     "--color-text-warning": "--color-on-warning-container",
     "--color-text-danger": "--color-on-error-container",
-    "--color-accent-500": "--color-primary",
     "--color-bg-default": "--color-surface",
     "--color-bg-subtle": "--color-surface-container-low",
     "--color-bg-muted": "--color-surface-container-high",
@@ -98,8 +98,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-border-subtle": "--color-surface-container-high",
     "--color-border-strong": "--color-outline",
     "--color-border-inverse": "--color-inverse-on-surface",
-    "--color-ring-default": "--color-primary",
-    "--color-ring-offset": "--color-surface",
     "--color-surface-muted": "--color-surface-container-low",
     "--color-surface-raised": "--color-surface-elevated",
     "--color-surface-sunken": "--color-surface-container-high",
@@ -129,17 +127,6 @@ export const SNAPSHOT = /* SNAPSHOT:BEGIN */ {
     "--color-semantic-info-border": "color-mix(in srgb, var(--color-info) 35%, transparent)"
   }
 } /* SNAPSHOT:END */;
-
-export function loadAliasMap(cwd = process.cwd()) {
-  for (const from of [path.join(cwd, 'package.json'), import.meta.url]) {
-    try {
-      const req = createRequire(from);
-      const css = ['base', 'light'].map((f) => readFileSync(req.resolve(`@nexub/themes/${f}`), 'utf8'));
-      return { ...buildAliasMap(css), source: '@nexub/themes' };
-    } catch { /* not resolvable from here */ }
-  }
-  return { ...SNAPSHOT, source: 'snapshot' };
-}
 
 // ─── class-string contexts ───────────────────────────────────────────────────
 /**
@@ -219,6 +206,9 @@ const LOGICAL = [
 const POSITION = /^(left|right)-/;
 const TW_ANIMATE = /^(animate-(in|out)|(fade|zoom|spin)-(in|out)(-.+)?|slide-(in-from|out-to)-.+)$/;
 const OPACITY = /^([\w-]+)-\[var\((--[\w-]+)\)\]\/(\d+)$/;
+// Tailwind colour utilities on a legacy name (bg-bg-default, text-text-primary/80):
+// the preset and tailwind.css dropped these in 3.0. Same utility, role name.
+const COLOR_UTILITY = /^(bg|text|border(?:-[xyselrtb])?|ring|ring-offset|outline|divide|fill|stroke|from|via|to|decoration|shadow|accent|caret|placeholder)-([a-z][\w-]*?)(\/\d+)?$/;
 
 /** Split `md:hover:!-ml-2` into { prefix: 'md:hover:', imp: '!', neg: '-', base: 'ml-2' }. */
 function splitToken(tok) {
@@ -236,7 +226,7 @@ function splitToken(tok) {
   return { prefix: tok.slice(0, cut), imp, neg, base: rest.slice(neg.length) };
 }
 
-function rewriteClassText(text, seg, offset, rules, fix, report) {
+function rewriteClassText(text, seg, offset, rules, fix, report, aliasMap) {
   return text.replace(/\S+/g, (tok, off) => {
     if ((seg.openLeft && off === 0) || (seg.openRight && off + tok.length === text.length)) return tok; // glued to ${…}
     const at = offset + off;
@@ -245,6 +235,12 @@ function rewriteClassText(text, seg, offset, rules, fix, report) {
     if (rules.has('logical-classes')) {
       for (const [re, fn] of LOGICAL) if (re.test(next)) { next = next.replace(re, fn); break; }
       if (POSITION.test(base)) report(at, 'logical-classes', `"${tok}" is a physical position; review for start-/end- (not auto-fixed)`);
+    }
+    if (rules.has('legacy-tokens')) {
+      const m = COLOR_UTILITY.exec(next);
+      const name = m && `--color-${m[2]}`;
+      if (m && aliasMap.aliases[name]) next = `${m[1]}-${aliasMap.aliases[name].slice('--color-'.length)}${m[3] ?? ''}`;
+      else if (m && aliasMap.mix[name]) report(at, 'legacy-tokens', `"${tok}" uses ${name}, a color-mix alias (${aliasMap.mix[name]}); rewrite by hand`);
     }
     if (rules.has('tw-animate') && TW_ANIMATE.test(base)) {
       report(at, 'tw-animate', `"${tok}" is a tailwindcss-animate class; use nx-motion / nx-pop / nx-dialog from @nexub/themes/base`);
@@ -385,12 +381,12 @@ function migrateComponents(src) {
 export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, aliasMap = SNAPSHOT }) {
   const items = [];
   let text = src;
-  if (['logical-classes', 'tw-animate', 'opacity-modifier'].some((r) => rules.has(r))) {
+  if (['logical-classes', 'tw-animate', 'opacity-modifier', 'legacy-tokens'].some((r) => rules.has(r))) {
     let out = '';
     let last = 0;
     for (const seg of classSegments(src, ext)) {
       out += src.slice(last, seg.start) + rewriteClassText(src.slice(seg.start, seg.end), seg, seg.start, rules, fix,
-        (at, rule, message) => items.push({ at, rule, message }));
+        (at, rule, message) => items.push({ at, rule, message }), aliasMap);
       last = seg.end;
     }
     text = out + src.slice(last);
@@ -457,7 +453,8 @@ Options:
 
 Rules:
   legacy-tokens      var(--color-text-primary) -> var(--color-on-surface), brand -500 -> role;
-                     color-mix aliases (e.g. --color-semantic-success-border) reported
+                     Tailwind utilities too (bg-bg-default -> bg-surface, text-text-primary
+                     -> text-on-surface); color-mix aliases (--color-semantic-success-border) reported
   logical-classes    ml/mr, pl/pr, border-l/r, rounded-l/r/tl/tr/bl/br, text-left/right
                      -> ms/me, ps/pe, border-s/e, rounded-s/e/ss/se/es/ee, text-start/end;
                      left-/right- positions reported
@@ -492,11 +489,10 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   const unknown = [...rules].filter((r) => !RULES.includes(r));
   if (unknown.length) { stderr(`Unknown rule(s): ${unknown.join(', ')}. Known: ${RULES.join(', ')}\n`); return 2; }
 
-  const aliasMap = rules.has('legacy-tokens') ? loadAliasMap(cwd) : SNAPSHOT;
   const results = [];
   for (const abs of collectFiles(positionals.length ? positionals : ['src'], { cwd, ignore: o.ignore ?? [] })) {
     const src = readFileSync(abs, 'utf8');
-    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix, aliasMap });
+    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix });
     const a = src.split('\n');
     const b = output.split('\n');
     const changes = a.flatMap((line, i) => (line === b[i] ? [] : [{ line: i + 1, before: line, after: b[i] }]));
@@ -511,7 +507,7 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   };
 
   if (o.json) {
-    stdout(`${JSON.stringify({ written: !!o.write, aliasSource: aliasMap.source ?? 'snapshot', results, totals }, null, 2)}\n`);
+    stdout(`${JSON.stringify({ written: !!o.write, aliasSource: 'snapshot', results, totals }, null, 2)}\n`);
   } else {
     for (const r of results) {
       stdout(`--- ${r.file}\n+++ ${r.file}\n`);

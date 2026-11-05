@@ -25,7 +25,7 @@ export const Default: Story = {
             </Drawer.Description>
           </Drawer.Header>
           <div style={{ padding: '0 1.5rem', flex: 1 }}>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-muted)' }}>
               Your preferences are saved automatically as you make changes.
             </p>
           </div>
@@ -74,7 +74,7 @@ export const Glass: Story = {
 export const SideSheetLongContent: Story = {
   render: () => (
     <Drawer.Root direction="left" defaultOpen>
-      <Drawer.Trigger className="rounded-md border border-[var(--color-border-default)] px-4 py-2 text-sm">
+      <Drawer.Trigger className="rounded-md border border-[var(--color-outline-variant)] px-4 py-2 text-sm">
         Open left sheet
       </Drawer.Trigger>
       <Drawer.Portal>
@@ -85,7 +85,7 @@ export const SideSheetLongContent: Story = {
           </Drawer.Header>
           <ul className="flex flex-col gap-1 px-6 pb-6">
             {Array.from({ length: 40 }, (_, i) => (
-              <li key={i} className="rounded-md px-3 py-2 text-sm hover:bg-[var(--color-bg-subtle)]">
+              <li key={i} className="rounded-md px-3 py-2 text-sm hover:bg-[var(--color-surface-container-low)]">
                 Section {i + 1}
               </li>
             ))}

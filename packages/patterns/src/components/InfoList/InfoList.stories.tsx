@@ -14,10 +14,10 @@ export const Default: Story = {
     <div
       style={{
         maxWidth: '420px',
-        border: '1px solid var(--color-border-default)',
+        border: '1px solid var(--color-outline-variant)',
         borderRadius: '12px',
         padding: '16px',
-        background: 'var(--color-bg-default)',
+        background: 'var(--color-surface)',
       }}
     >
       <InfoList.Root>

@@ -1,8 +1,24 @@
 // Calm Depth control styling shared by the core controls
 // (DESIGN_REFRESH_PLAN.md §4.2–4.8, §6). Static strings so Tailwind's JIT sees them.
 
+import type { ToneValue } from '@nexub/core';
+
 /** The shared size scale. Components with extra steps extend it (`Size | 'display'`). */
 export type Size = 'sm' | 'md' | 'lg';
+
+// Text-only tone for content on surfaces (Heading, Label, HelperText,
+// EyebrowChip): accent roles (tone 40 / 80, AA on every surface).
+export const toneTextClasses: Record<ToneValue, string> = {
+  neutral: 'text-[var(--color-on-surface-variant)]',
+  info: 'text-[var(--color-info)]',
+  success: 'text-[var(--color-success)]',
+  warning: 'text-[var(--color-warning)]',
+  danger: 'text-[var(--color-error)]',
+  leap: 'text-[var(--color-leap)]',
+  bookub: 'text-[var(--color-bookub)]',
+  payub: 'text-[var(--color-payub)]',
+  founderub: 'text-[var(--color-founderub)]',
+};
 
 /** Text field chrome: Input wrapper, Textarea, Select trigger. */
 export const field = [

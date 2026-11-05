@@ -20,6 +20,7 @@ export default function ExamplesPage() {
         <CardGrid min={300}>
           <ExampleCard href="/examples/dashboard" title="Web dashboard" badge="@nexub/react" body="AppHeader, NavigationRail, StatCards, a chart, a DataTable, a plan picker and an assistant panel." />
           <ExampleCard href="/examples/mobile" title="Mobile dashboard" badge="@nexub/react-native" body="HomeScreen: balance, quick actions, activity and insights, live in a phone frame." />
+          <ExampleCard href="/examples/marketing" title="Marketing page" badge="@nexub/marketing" body="A landing page in marketing mode: nav with mega-menu, hero, stats, testimonials, products, CTA and footer, rendered as server components." />
         </CardGrid>
       </Section>
 

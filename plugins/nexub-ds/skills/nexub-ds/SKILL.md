@@ -1,12 +1,12 @@
 ---
 name: nexub-ds
-description: Build SaaS UI with the Nexub Design System (@nexub/react, @nexub/patterns, @nexub/tokens, @nexub/themes, @nexub/icons). Use when building or restyling any React screen, page, dashboard, form, settings page, auth flow, pricing page or component in a project that uses Nexub DS, or when the user asks for Nexub, Calm Depth or Liquid Glass UI.
+description: Build SaaS UI with the Nexub Design System (@nexub/react, @nexub/patterns, @nexub/marketing, @nexub/tokens, @nexub/themes, @nexub/icons). Use when building or restyling any React screen, page, dashboard, form, settings page, auth flow, pricing page, marketing or landing page, or component in a project that uses Nexub DS, or when the user asks for Nexub, Calm Depth, marketing mode or Liquid Glass UI.
 license: MIT
 ---
 
 # Nexub Design System
 
-Nexub DS is a token-driven React design system for SaaS products. The visual language is **Calm Depth**: tonal surfaces, one accent per view, spring motion, honest numbers. **Liquid Glass** is an optional material for the floating control layer.
+Nexub DS is a token-driven React design system for SaaS products. The visual language is **Calm Depth**: tonal surfaces, one accent per view, spring motion, honest numbers. **Liquid Glass** is an optional material for the floating control layer. **Marketing mode** (`data-mode="marketing"`) is the livelier look for marketing sites, on the same tokens.
 
 Reference files (read only what the task needs):
 
@@ -54,6 +54,8 @@ export default {
 @source "../node_modules/@nexub/patterns/dist";
 ```
 
+**Next.js App Router:** presentational components (Heading, Text, Container, Section, Stack, Badge, EyebrowChip, Logo, Float, Marquee and every `@nexub/marketing` section except `MarketingNav`, `PricingTable` and `FAQ`) are server components. Import per component (`@nexub/react/Button`, `@nexub/marketing/Hero`, `cn` from `@nexub/react/cn`) or set `experimental.optimizePackageImports: ['@nexub/react', '@nexub/marketing', '@nexub/icons']`, or the page ships every client component. Compound components (`Accordion.Root`, `TopNav.Root`) only work inside a `'use client'` file. To use `next/font`, import `@nexub/themes/core` (no fonts, no page backdrop) instead of `base` and name the font variables `--font-family-sans` and `--font-family-display`. With Tailwind, never also import `@nexub/react/styles.css`.
+
 Wrap the app in `<ThemeProvider defaultTheme="system" storageKey="app-theme">` from `@nexub/react`. In server-rendered apps (Next.js), put `<ThemeScript storageKey="app-theme" />` in `<head>` and add `suppressHydrationWarning` to `<html>`. Product brands: set `data-product="leap" | "bookub" | "payub" | "founderub"` on the root. This remaps the `tertiary` role.
 
 ## 2. How to build a screen
@@ -76,13 +78,14 @@ Starting points for typical SaaS screens:
 | Onboarding | `StepIndicator` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+| Marketing / landing page | `@nexub/marketing` under `data-mode="marketing"`: `MarketingNav`, `Hero`, `LogoStrip`, `StatBand`, `FeatureSplit`, `HowItWorks`, `ProductGrid`, `TestimonialGrid`, `PricingTable`, `FAQ`, `CTABand`, `MarketingFooter` |
 
 Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's own minor unit and a true minus sign. Icons: import from `@nexub/icons`, not `lucide-react` directly.
 
 ## 3. Calm Depth principles
 
 1. **Content leads, chrome recedes.** Navigation is quieter than content. Remove a divider before you add one; let spacing and tone separate regions. Do: a tonal sidebar with no border, where the active item is a soft pill. Don't: a saturated brand-blue sidebar item, or a hard line around every region.
-2. **Hierarchy through tone and layout, not decoration.** Surfaces step `surface` → `surface-container-*` → `surface-elevated`. Shadows are only for things that float. Product UI has no gradients, no colored icon tiles and no gradient eyebrow chips.
+2. **Hierarchy through tone and layout, not decoration.** Surfaces step `surface` → `surface-container-*` → `surface-elevated`. Shadows are only for things that float. Product UI has no gradients, no colored icon tiles and no gradient eyebrow chips (those belong to marketing mode only).
 3. **One accent, spent deliberately.** Each view gets one filled (primary) button. Everything else is `tonal`, `outlined` or `text`. Never put two filled buttons side by side.
 4. **Physical, interruptible motion.** Use the spring tokens (`ease-spatial-default duration-spatial-default`), not raw durations. Exits are faster than entrances. Honor `prefers-reduced-motion`.
 5. **Honest numbers and states.** Use tabular figures in data. Hover, pressed, selected and disabled are explicit component states. Never fake a state with opacity.
@@ -95,15 +98,25 @@ Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's o
 - Never put glass on glass. Show at most three glass layers at a time. Tint only the one primary action (`data-glass-tint="primary"`).
 - Never put white text on glass over an unknown background.
 
-## 5. UI copy
+## 5. Marketing mode rules
+
+- Turn it on with `data-mode="marketing"` and `@nexub/themes/marketing`. Nothing outside the attribute changes; never use it in product UI.
+- Gradients in three places only: the `Hero`, the main button (`Button variant="hero"`) and the `CTABand`.
+- At most one `variant="hero"` button per screen; pair it with an outlined button.
+- Product accents (`Card variant="showcase" accent="payub"`, `TestimonialCard accent`) only on product-specific content.
+- Motion budget: one entrance per section (`Reveal` or the hero's rise), at most two `Float`s in view, one `Marquee` plus the footer's. All of it stops under reduced motion.
+- Page width `Container size="marketing"` (1280px); headlines `text-display-xl` on the hero only; one h1 per page (the `Hero` title).
+
+## 6. UI copy
 
 Copy is clear, direct, human and confident. Use sentence case, active voice, contractions and specific verbs ("Save changes", not "Submit"). Errors say what happened and what to do: "Your session expired. Sign in again." No "Oops", no emoji in errors, no "Please be advised".
 
-## 6. Before you finish
+## 7. Before you finish
 
 - [ ] Every control comes from `@nexub/react` or `@nexub/patterns`. No deprecated component (see the index).
 - [ ] There are no hex or rgb colors, Tailwind palette colors, arbitrary px values or custom shadows. Everything is a token utility or `var(--…)`.
 - [ ] Every background role is paired with its `on-` role. Secondary text uses `on-surface-variant` or `on-surface-muted`.
-- [ ] Each view has at most one filled button.
+- [ ] Each view has at most one filled button (marketing: at most one hero button).
+- [ ] In Next.js, server pages import per component and use no compound component outside a `'use client'` file.
 - [ ] The screen works in light and dark (`data-theme`) and at `data-contrast="high"`.
 - [ ] Every input has a label. Icon-only buttons have an `aria-label`. Keyboard paths work.

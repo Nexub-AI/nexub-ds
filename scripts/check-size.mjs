@@ -66,7 +66,7 @@ add('tokens (js)', join(pkgs, 'tokens/dist/js/index.js'));
 // Runtime seed theming (lazy-loaded by ThemeProvider seed); MCU is a dependency, not counted.
 add('tokens/seed', join(pkgs, 'tokens/dist/js/seed.js'));
 // Every CSS file a consumer can import (package.json exports ending in .css).
-for (const pkg of ['tokens', 'themes', 'react', 'patterns']) {
+for (const pkg of ['tokens', 'themes', 'react', 'patterns', 'marketing']) {
   const { exports } = JSON.parse(readFileSync(join(pkgs, pkg, 'package.json'), 'utf8'));
   for (const [key, target] of Object.entries(exports)) {
     if (typeof target === 'string' && target.endsWith('.css'))
@@ -82,7 +82,8 @@ add('react-native', join(pkgs, 'react-native/lib/module/index.js'));
 add('react-native/patterns', join(pkgs, 'react-native/lib/module/patterns/index.js'));
 add('react', join(pkgs, 'react/dist/index.js'));
 add('patterns', join(pkgs, 'patterns/dist/index.js'));
-for (const dir of ['react', 'patterns']) {
+add('marketing', join(pkgs, 'marketing/dist/index.js'));
+for (const dir of ['react', 'patterns', 'marketing']) {
   const comps = join(pkgs, dir, 'dist/components');
   if (!existsSync(comps)) continue;
   for (const c of readdirSync(comps).sort()) {

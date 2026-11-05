@@ -14,6 +14,7 @@
 @import '@nexub/themes/bookub' layer(base);
 @import '@nexub/themes/payub' layer(base);
 @import '@nexub/themes/founderub' layer(base);
+@import '@nexub/themes/marketing' layer(base);
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 /* Nexub token utilities (bg-primary, rounded-shape-*, text-label-md, …):
@@ -25,6 +26,7 @@
 @source '../**/*.{ts,tsx}';
 @source '../../../../packages/react/src/**/*.{ts,tsx}';
 @source '../../../../packages/patterns/src/**/*.{ts,tsx}';
+@source '../../../../packages/marketing/src/**/*.{ts,tsx}';
 
 /* Metric-matched fallbacks for the webfonts (font-display: swap). Text is first
    painted in Arial (Liberation Sans on Linux) scaled to Inter / Plus Jakarta
@@ -277,6 +279,17 @@ a { color: inherit; }
 
 .docs-header { height: var(--docs-header-height); }
 
+/* Header: the search field folds to an icon, then the section links go
+   (they're in the drawer), as the bar narrows. */
+.docs-header-search-icon { display: none; }
+@media (max-width: 1199px) {
+  .docs-header-search { display: none; }
+  .docs-header-search-icon { display: inline-flex; }
+}
+@media (max-width: 1023px) {
+  .docs-header-sections { display: none; }
+}
+
 /* Content fills the space after the sidebar; prose width is capped on .docs-prose p. */
 .docs-main {
   flex: 1;
@@ -473,16 +486,9 @@ html, body {
 }
 
 /* ── Landing page responsive ─────────────────────────────────────────────── */
-.landing-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
 @media (max-width: 639px) {
-  .landing-nav-link { display: none; }
   .landing-stats { gap: 24px !important; margin-top: 3rem !important; }
-  .landing-hero { padding: 5rem 1.25rem 2rem !important; }
+  .landing-hero { padding: 3rem 1.25rem 2rem !important; }
 }
 
 /* ── Landing page — hero entrance (CSS, SSR-safe) ────────────────────────── */

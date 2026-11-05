@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v2.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v3.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -46,8 +46,6 @@ Never use a component marked deprecated.
 ## Components — Feedback
 
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
-- [Banner](components/banner.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
-- [Callout](components/callout.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 
@@ -97,8 +95,6 @@ Never use a component marked deprecated.
 - [Chip](components/chip.md) `@nexub/react`: Compact label chip, optionally dismissible.
 - [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
 - [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
-- [Status Pill](components/status-pill.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. A pill indicator for status values like active, pending, error.
-- [Tag](components/tag.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. Non-interactive label tag for categorisation.
 
 ## Components — Layout
 
@@ -118,6 +114,9 @@ Never use a component marked deprecated.
 
 - [Collapse](components/motion-collapse.md) `@nexub/react`: Expands and collapses content along the block axis.
 - [Fade](components/motion-fade.md) `@nexub/react`: Animates opacity between 0 and 1 based on the `in` prop.
+- [Float](components/motion-float.md) `@nexub/react`: Gently bobs its content (floating cards over a hero visual), in marketing mode. Server component; still under reduced motion.
+- [Marquee](components/motion-marquee.md) `@nexub/react`: A row that scrolls sideways forever (logo strips, tool lists), in marketing mode. Pauses on hover and while focus is inside, stands still under reduced motion; the repeated copy is hidden from assistive tech and can’t be focused. Server component.
+- [Reveal](components/motion-reveal.md) `@nexub/react`: Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
 - [Scale](components/motion-scale.md) `@nexub/react`: Scales content in/out from its center.
 - [Slide](components/motion-slide.md) `@nexub/react`: Slides content in from a direction based on the `in` prop.
 
@@ -142,6 +141,22 @@ Never use a component marked deprecated.
 
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
+
+## Marketing — Marketing
+
+- [CTABand](components/cta-band.md) `@nexub/marketing`: The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
+- [FAQ](components/faq.md) `@nexub/marketing`: Questions and answers in an Accordion, one open at a time. Client component.
+- [FeatureSplit](components/feature-split.md) `@nexub/marketing`: Text and a check list beside a visual; `reverse` swaps the sides on wide screens. Server component.
+- [Hero](components/hero.md) `@nexub/marketing`: The page hero: ambient backdrop, eyebrow, display headline (the page's one h1), lead, actions and a visual. Server component.
+- [HowItWorks](components/how-it-works.md) `@nexub/marketing`: Numbered steps in an ordered list. Server component.
+- [LogoStrip](components/logo-strip.md) `@nexub/marketing`: A row of customer logos under the hero, scrolling sideways (paused on hover and focus) or wrapped. Server component.
+- [MarketingFooter](components/marketing-footer.md) `@nexub/marketing`: The site footer: a tools strip, the logo, link columns and the legal line. Server component.
+- [MarketingNav](components/marketing-nav.md) `@nexub/marketing`: The site header: logo, links with mega-menus, a country switcher and actions. Below `lg` the links move into a side sheet.
+- [PricingTable](components/pricing-table.md) `@nexub/marketing`: Plans side by side with a monthly / yearly switch, built on PlanCard and SegmentedControl. Client component.
+- [ProductGrid](components/product-grid.md) `@nexub/marketing`: Product cards in a grid; each card is one link with the product's accent. Server component.
+- [SectionHeader](components/section-header.md) `@nexub/marketing`: Eyebrow, headline and lead that open a section. Server component.
+- [StatBand](components/stat-band.md) `@nexub/marketing`: A band of headline numbers that count up as they scroll into view. StatBandItem is named apart from the StatCard pattern. Server component.
+- [TestimonialGrid](components/testimonial-grid.md) `@nexub/marketing`: Customer quotes in product-coloured cards, with an optional star rating. Server component.
 
 ## Patterns — AI
 
