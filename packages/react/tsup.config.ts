@@ -45,6 +45,7 @@ export default defineConfig([
     format: ['esm'],
     bundle: false,
     clean: false,
+    silent: true, // one line per file otherwise
   },
   // vaul is bundled (it isn't a dependency) with its style injection removed.
   {

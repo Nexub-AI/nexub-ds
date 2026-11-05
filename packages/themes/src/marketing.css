@@ -51,6 +51,14 @@
   translate: 0 var(--marketing-button-lift);
 }
 
+/* ─── CTA band (@nexub/marketing CTABand) ─────────────────────────────────
+   The closing band: same gradient and text colour as the hero button. */
+[data-mode='marketing'] .nx-mkt-cta-band {
+  background-color: var(--color-palette-primary-40);
+  background-image: var(--marketing-button-gradient);
+  color: var(--marketing-button-fg);
+}
+
 /* ─── Card variant="showcase" ─────────────────────────────────────────────
    accent="leap|bookub|payub|founderub" sets data-product on the card, so
    --color-tertiary is that product's colour: a top edge and a light tint. */

@@ -9,6 +9,8 @@ export interface PlanCardProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   features: string[];
   cta: string;
+  /** Makes the button a link. */
+  ctaHref?: string;
   onSelect?: () => void;
   highlighted?: boolean;
   badge?: string;
@@ -23,6 +25,7 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
       description,
       features,
       cta,
+      ctaHref,
       onSelect,
       highlighted = false,
       badge,
@@ -77,8 +80,9 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
         variant={highlighted ? 'primary' : 'outline'}
         className="mt-auto w-full"
         onClick={onSelect}
+        asChild={Boolean(ctaHref)}
       >
-        {cta}
+        {ctaHref ? <a href={ctaHref}>{cta}</a> : cta}
       </Button>
     </div>
   ),
