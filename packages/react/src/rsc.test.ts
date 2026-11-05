@@ -33,6 +33,7 @@ describe('server component boundaries', () => {
     for (const name of ['Heading', 'Text', 'Container', 'Section', 'Stack', 'Badge', 'EyebrowChip', 'Logo']) {
       expect(isClient(join(src, `components/${name}/${name}.tsx`)), name).toBe(false);
     }
+    for (const f of ['Motion/Float.tsx', 'Motion/Marquee.tsx']) expect(isClient(join(src, 'components', f)), f).toBe(false);
     expect(isClient(join(src, 'index.ts'))).toBe(false);
   });
 

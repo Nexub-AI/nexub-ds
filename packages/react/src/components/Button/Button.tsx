@@ -44,6 +44,9 @@ export const buttonVariants = cva(
         text,
         // Thin glass: for buttons floating over content/media (toolbars, media controls).
         glass: `border ${glassSurfaceClass} text-[var(--color-on-surface)] ${disabledContainer}`,
+        // Marketing mode (@nexub/themes/marketing): gradient, glow and a spring
+        // lift. Without [data-mode="marketing"] it is a filled button.
+        hero: `${filled} nx-mkt-hero-button`,
         // Legacy names (kept as aliases).
         primary: filled,
         secondary: tonal,

@@ -5,11 +5,15 @@ import { toneTextClasses } from '../../utils/control.js';
 
 export interface EyebrowChipProps extends React.HTMLAttributes<HTMLSpanElement> {
   tone?: ToneValue;
+  /** `gradient`: the marketing-mode chip (@nexub/themes/marketing). Elsewhere it looks like `soft`. */
+  variant?: 'soft' | 'gradient';
+  /** A pinging "live" dot before the label (it pings only in marketing mode). Decorative. */
+  live?: boolean;
   leadingIcon?: React.ReactNode;
 }
 
 export const EyebrowChip = React.forwardRef<HTMLSpanElement, EyebrowChipProps>(
-  ({ className, tone = 'neutral', leadingIcon, children, ...props }, ref) => {
+  ({ className, tone = 'neutral', variant = 'soft', live = false, leadingIcon, children, ...props }, ref) => {
     return (
       <span
         ref={ref}
@@ -18,10 +22,12 @@ export const EyebrowChip = React.forwardRef<HTMLSpanElement, EyebrowChipProps>(
           'text-xs font-semibold uppercase tracking-wider select-none',
           'bg-[var(--color-surface-container-low)]',
           toneTextClasses[tone],
+          variant === 'gradient' && 'nx-mkt-eyebrow',
           className,
         )}
         {...props}
       >
+        {live && <span className="nx-mkt-live-dot shrink-0" aria-hidden="true" />}
         {leadingIcon && (
           <span className="shrink-0 inline-flex items-center" aria-hidden="true">
             {leadingIcon}

@@ -21,6 +21,9 @@ export const cardVariants = cva(
         // tint; see .nx-lift in themes/base.css.
         interactive:
           'nx-state-layer nx-lift cursor-pointer bg-[var(--card-bg,var(--color-surface-elevated))] shadow-elevation-1',
+        // Marketing mode (@nexub/themes/marketing): 24px corners, soft shadow,
+        // lift on hover, product accent via `accent`. Elsewhere a flat card.
+        showcase: 'nx-mkt-showcase',
       },
       // Material. 'glass' needs data-material="glass" on the element (set in the
       // component) for the --glass-* vars to resolve. Single box-shadow carries
@@ -57,12 +60,14 @@ export interface CardProps
   surface?: 'solid' | 'glass';
   /** `sheen`: a soft light follows the pointer (opt-in; off for touch and reduced motion). */
   effect?: 'none' | 'sheen';
+  /** Product accent for `variant="showcase"`: a coloured top edge and tint in marketing mode. Sets `data-product`. */
+  accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
   asChild?: boolean;
 }
 
 export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   (
-    { className, variant = 'flat', surface = 'solid', effect = 'none', tone, asChild = false, onPointerMove, children, ...props },
+    { className, variant = 'flat', surface = 'solid', effect = 'none', tone, accent, asChild = false, onPointerMove, children, ...props },
     ref,
   ) => {
     const Comp = asChild ? Slot : 'div';
@@ -76,6 +81,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(cardVariants({ variant, surface }), toneStyle, sheen && 'nx-sheen', className)}
         onPointerMove={handlePointerMove}
         data-tone={tone}
+        data-product={accent}
         data-material={surface === 'glass' ? 'glass' : undefined}
         {...props}
       >
