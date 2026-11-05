@@ -132,6 +132,10 @@ import radioCardEntry from './components/radio-card';
 import checkboxCardEntry from './components/checkbox-card';
 import mediaCardEntry from './components/media-card';
 import numberTickerEntry from './components/number-ticker';
+import barChartEntry from './components/bar-chart';
+import lineChartEntry from './components/line-chart';
+import donutChartEntry from './components/donut-chart';
+import sparklineEntry from './components/sparkline';
 import bentoGridEntry from './patterns/bento-grid';
 
 // ─── 1.7.0 ────────────────────────────────────────────────────────────────────
@@ -235,6 +239,10 @@ export const componentEntries: ComponentEntry[] = [
   emptyStateEntry,
   errorStateEntry,
   numberTickerEntry,
+  barChartEntry,
+  lineChartEntry,
+  donutChartEntry,
+  sparklineEntry,
   cardEntry,
   mediaCardEntry,
   // Dividers
