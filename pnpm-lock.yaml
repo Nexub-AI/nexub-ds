@@ -53,6 +53,9 @@ importers:
       '@nexub/icons':
         specifier: workspace:*
         version: link:../../packages/icons
+      '@nexub/marketing':
+        specifier: workspace:*
+        version: link:../../packages/marketing
       '@nexub/patterns':
         specifier: workspace:*
         version: link:../../packages/patterns
