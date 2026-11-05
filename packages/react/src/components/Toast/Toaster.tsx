@@ -53,6 +53,12 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   const heights = React.useRef(new Map<string, number>());
   const state = React.useRef({ order, expanded, visibleToasts });
   state.current = { order, expanded, visibleToasts };
+  // Pending "drop from the store" timers, cleared on unmount so none fires on a dead tree.
+  const timers = React.useRef(new Set<ReturnType<typeof setTimeout>>());
+  React.useEffect(() => {
+    const pending = timers.current;
+    return () => pending.forEach(clearTimeout);
+  }, []);
 
   const layout = React.useCallback(() => {
     const ol = viewportRef.current;
@@ -144,7 +150,8 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               // Drop it from the store once the exit animation has played, so a
               // long session doesn't keep every toast it ever showed.
               // ponytail: fixed 1s > the effects-fast exit; read the computed duration if exits get longer.
-              setTimeout(() => {
+              const timer = setTimeout(() => {
+                timers.current.delete(timer);
                 toast.dismiss(t.id);
                 setClosed((s) => {
                   const next = new Set(s);
@@ -152,6 +159,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
                   return next;
                 });
               }, 1000);
+              timers.current.add(timer);
             }}
             className={cn(
               'group pointer-events-auto absolute inset-x-4 top-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',

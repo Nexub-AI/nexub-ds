@@ -132,6 +132,10 @@ import radioCardEntry from './components/radio-card';
 import checkboxCardEntry from './components/checkbox-card';
 import mediaCardEntry from './components/media-card';
 import numberTickerEntry from './components/number-ticker';
+import barChartEntry from './components/bar-chart';
+import lineChartEntry from './components/line-chart';
+import donutChartEntry from './components/donut-chart';
+import sparklineEntry from './components/sparkline';
 import bentoGridEntry from './patterns/bento-grid';
 
 // ─── 1.7.0 ────────────────────────────────────────────────────────────────────
@@ -235,6 +239,10 @@ export const componentEntries: ComponentEntry[] = [
   emptyStateEntry,
   errorStateEntry,
   numberTickerEntry,
+  barChartEntry,
+  lineChartEntry,
+  donutChartEntry,
+  sparklineEntry,
   cardEntry,
   mediaCardEntry,
   // Dividers
@@ -339,6 +347,8 @@ export const searchIndex: SearchEntry[] = [
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'react-native', label: 'React Native', description: '@nexub/react-native for Expo and React Native apps: setup, components, screens', href: '/getting-started/react-native', category: 'Docs' },
+  { id: 'ai-tools', label: 'AI tools and MCP', description: 'Connect @nexub/mcp, the Claude Code plugin, llms.txt and Markdown pages to your AI tool', href: '/getting-started/ai-tools', category: 'Docs' },
+  { id: 'figma', label: 'Figma', description: 'Import the tokens into Figma as variables with light, dark and contrast modes', href: '/getting-started/figma', category: 'Docs' },
   { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
@@ -352,6 +362,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },
   { id: 'foundations-materials', label: 'Materials', description: 'Glass 2.0 and the intensity dial', href: '/foundations/materials', category: 'Foundations' },
   { id: 'foundations-marketing-mode', label: 'Marketing mode', description: 'The nexub.com look, opt-in under data-mode="marketing"', href: '/foundations/marketing-mode', category: 'Foundations' },
+  { id: 'foundations-theme-builder', label: 'Theme builder', description: 'One brand colour to a contrast-checked theme, exported as CSS, React, React Native or tokens', href: '/foundations/theme-builder', category: 'Foundations' },
   { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
   { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
   { id: 'content-vocabulary', label: 'Vocabulary', description: 'Approved terms and words to avoid', href: '/content/vocabulary', category: 'Content' },
@@ -409,7 +420,9 @@ export const navGroups: NavGroup[] = [
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
       { title: 'Internationalization', href: '/getting-started/internationalization' },
       { title: 'React Native', href: '/getting-started/react-native' },
+      { title: 'AI tools and MCP', href: '/getting-started/ai-tools' },
       { title: 'Building AI surfaces', href: '/getting-started/ai-surfaces' },
+      { title: 'Figma', href: '/getting-started/figma' },
       { title: 'Upgrading', href: '/getting-started/upgrading' },
       { title: 'Next.js and server components', href: '/getting-started/nextjs' },
       { title: 'Migrating to 3.0', href: '/getting-started/migrating-to-3' },
@@ -427,6 +440,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Motion & interaction', href: '/foundations/motion' },
       { title: 'Materials', href: '/foundations/materials' },
       { title: 'Marketing mode', href: '/foundations/marketing-mode' },
+      { title: 'Theme builder', href: '/foundations/theme-builder' },
     ],
   },
   {

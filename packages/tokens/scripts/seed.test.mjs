@@ -97,3 +97,29 @@ test('createSeedRoles gives the same hex pairs as createSeedTheme (native)', asy
   for (const [k, v] of Object.entries(css)) assert.deepEqual(split(v), [light[k.slice(8)], dark[k.slice(8)]]);
   assert.throws(() => createSeedRoles('blue'), TypeError);
 });
+
+test('contrastRatio matches the WCAG formula', async () => {
+  const { contrastRatio } = await import('../src/seed.js');
+  assert.equal(contrastRatio('#000000', '#ffffff').toFixed(2), '21.00');
+  assert.equal(contrastRatio('#777777', '#ffffff').toFixed(2), ratio('#777777', '#ffffff').toFixed(2));
+  assert.equal(contrastRatio('#ffffff', '#ffffff'), 1);
+});
+
+test('createSeedStylesheet layers every contrast level like roles.css', async () => {
+  const { createSeedStylesheet } = await import('../src/seed.js');
+  const css = createSeedStylesheet('#e4572e');
+  const block = (lvl) => Object.entries(createSeedTheme('#e4572e', { contrast: lvl })).map(([k, v]) => `  ${k}: ${v};`).join('\n');
+  assert.ok(css.startsWith(`:root {\n${block('standard')}\n}`));
+  assert.ok(css.includes(`:root[data-contrast='medium'], [data-contrast='medium'] :root {\n${block('medium')}\n}`));
+  assert.ok(css.includes(`:root[data-contrast='high'], [data-contrast='high'] :root {\n${block('high')}\n}`));
+  assert.ok(css.includes('@media (prefers-contrast: more)'));
+  assert.ok(createSeedStylesheet('#e4572e', { target: 'tertiary', selector: '.acme' }).includes(".acme[data-contrast='high'], [data-contrast='high'] .acme {\n  --color-tertiary:"));
+});
+
+test('createSeedTokens is DTCG per scheme with the same hex as createSeedRoles', async () => {
+  const { createSeedTokens, createSeedRoles } = await import('../src/seed.js');
+  const { light, dark } = createSeedTokens('#7b1fa2');
+  const roles = createSeedRoles('#7b1fa2');
+  assert.deepEqual(light.color.primary, { $type: 'color', $value: roles.light.primary });
+  assert.deepEqual(dark.color['on-primary-container'], { $type: 'color', $value: roles.dark['on-primary-container'] });
+});

@@ -1,0 +1,39 @@
+# Password Input
+
+A password field with a built-in toggle to reveal or hide the entered value.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
+- Import: `import { PasswordInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/password-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | `string` |  | Placeholder text shown when the field is empty. |
+| `invalid` | `boolean` |  | Applies error styling to indicate a validation failure. |
+| `disabled` | `boolean` |  | Disables the input. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
+| `visible` | `boolean` |  | Shows the password as text. Controlled when set; pair with onVisibleChange. |
+| `defaultVisible` | `boolean` |  | Initial visibility when uncontrolled. Defaults to false. |
+| `onVisibleChange` | `(visible: boolean) => void` |  | Called when the reveal toggle is pressed. |
+
+## Example: Default
+
+```tsx
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+}
+```
+
+## Example: Invalid
+
+```tsx
+import { PasswordInput } from '@nexub/react';
+
+export default function Example() {
+  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+}
+```
