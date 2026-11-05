@@ -55,6 +55,8 @@
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
     "./figma/*": "./dist/figma/*",
+    "./swift/*": "./dist/swift/*",
+    "./compose/*": "./dist/compose/*",
     "./package.json": "./package.json"
   },
   "scripts": {
