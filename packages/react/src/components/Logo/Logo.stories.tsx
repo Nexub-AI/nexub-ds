@@ -51,9 +51,9 @@ export const LightAndDark: Story = {
         <div
           key={theme}
           data-theme={theme}
-          className="flex flex-col items-start gap-5 rounded-xl border border-[var(--color-border-default)] bg-[var(--color-bg-default)] p-6"
+          className="flex flex-col items-start gap-5 rounded-xl border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-6"
         >
-          <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-on-surface-muted)]">
             {theme}
           </span>
           <Logo />

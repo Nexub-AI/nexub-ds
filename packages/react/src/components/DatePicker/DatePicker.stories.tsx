@@ -19,7 +19,7 @@ function ControlledDatePicker() {
     <div style={{ maxWidth: '280px' }}>
       <DatePicker value={date} onChange={setDate} placeholder="Pick a date" />
       {date && (
-        <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-text-muted)' }}>
+        <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-on-surface-muted)' }}>
           Selected: {date.toLocaleDateString()}
         </p>
       )}

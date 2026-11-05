@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v2.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v2.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -46,8 +46,6 @@ Never use a component marked deprecated.
 ## Components — Feedback
 
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
-- [Banner](components/banner.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Full-width announcement banner, typically used at the top of a page.
-- [Callout](components/callout.md) `@nexub/react` **(deprecated)**: Deprecated — use Alert. Highlighted content block for tips, warnings, or notes.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 
@@ -97,8 +95,6 @@ Never use a component marked deprecated.
 - [Chip](components/chip.md) `@nexub/react`: Compact label chip, optionally dismissible.
 - [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
 - [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
-- [Status Pill](components/status-pill.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. A pill indicator for status values like active, pending, error.
-- [Tag](components/tag.md) `@nexub/react` **(deprecated)**: Deprecated — use Badge. Non-interactive label tag for categorisation.
 
 ## Components — Layout
 

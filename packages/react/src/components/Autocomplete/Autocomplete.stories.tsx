@@ -30,7 +30,7 @@ export const Default: Story = {
           onValueChange={setSelected}
         />
         {selected && (
-          <p style={{ marginTop: '8px', fontSize: '13px', color: 'var(--color-text-muted, #64748b)' }}>
+          <p style={{ marginTop: '8px', fontSize: '13px', color: 'var(--color-on-surface-muted, #64748b)' }}>
             Selected: {countryOptions.find((o) => o.value === selected)?.label}
           </p>
         )}

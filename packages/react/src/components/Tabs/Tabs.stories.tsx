@@ -21,7 +21,7 @@ export const Default: Story = {
         <Tabs.Content value="overview">
           <div style={{ padding: '16px 4px', fontSize: '14px', lineHeight: '1.6' }}>
             <p style={{ fontWeight: 600, marginBottom: '4px' }}>Project Overview</p>
-            <p style={{ color: 'var(--color-text-muted, #64748b)', margin: 0 }}>
+            <p style={{ color: 'var(--color-on-surface-muted, #64748b)', margin: 0 }}>
               This is your project dashboard. Track progress, review recent activity, and manage
               your team from this central hub.
             </p>
@@ -30,7 +30,7 @@ export const Default: Story = {
         <Tabs.Content value="settings">
           <div style={{ padding: '16px 4px', fontSize: '14px', lineHeight: '1.6' }}>
             <p style={{ fontWeight: 600, marginBottom: '4px' }}>Settings</p>
-            <p style={{ color: 'var(--color-text-muted, #64748b)', margin: 0 }}>
+            <p style={{ color: 'var(--color-on-surface-muted, #64748b)', margin: 0 }}>
               Configure your project name, visibility, integrations, and notification preferences
               here.
             </p>
@@ -39,7 +39,7 @@ export const Default: Story = {
         <Tabs.Content value="billing">
           <div style={{ padding: '16px 4px', fontSize: '14px', lineHeight: '1.6' }}>
             <p style={{ fontWeight: 600, marginBottom: '4px' }}>Billing</p>
-            <p style={{ color: 'var(--color-text-muted, #64748b)', margin: 0 }}>
+            <p style={{ color: 'var(--color-on-surface-muted, #64748b)', margin: 0 }}>
               Manage your subscription plan, payment method, and view past invoices on this page.
             </p>
           </div>

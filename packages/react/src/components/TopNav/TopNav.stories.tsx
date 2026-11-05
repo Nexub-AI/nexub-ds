@@ -54,7 +54,7 @@ export const Default: Story = {
             height: '32px',
             width: '32px',
             borderRadius: '50%',
-            background: 'var(--color-bg-subtle, #f4f4f5)',
+            background: 'var(--color-surface-container-low, #f4f4f5)',
             border: 'none',
             cursor: 'pointer',
             fontWeight: 600,

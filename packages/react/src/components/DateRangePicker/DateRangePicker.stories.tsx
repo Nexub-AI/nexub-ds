@@ -16,7 +16,7 @@ function ControlledDateRangePicker() {
     <div style={{ maxWidth: '360px' }}>
       <DateRangePicker value={range} onChange={setRange} placeholder="Select date range" />
       {range?.from && (
-        <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-text-muted)' }}>
+        <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-on-surface-muted)' }}>
           {range.from.toLocaleDateString()}
           {range.to ? ` – ${range.to.toLocaleDateString()}` : ' – …'}
         </p>
