@@ -11,7 +11,10 @@ const entry: ComponentEntry = {
     addedIn: '0.0.1',
   },
   props: [
-    { name: 'size', type: "'sm' | 'md'", required: false, description: 'Controls chip size.' },
+    { name: 'tone', type: 'ToneValue', default: "'neutral'", required: false, description: 'Text colour.' },
+    { name: 'variant', type: "'soft' | 'gradient'", default: "'soft'", required: false, description: '`gradient`: the marketing-mode chip; looks like `soft` outside `data-mode="marketing"`.' },
+    { name: 'live', type: 'boolean', default: 'false', required: false, description: 'A decorative "live" dot before the label; it pings in marketing mode and stays still under reduced motion.' },
+    { name: 'leadingIcon', type: 'React.ReactNode', required: false, description: 'Icon before the label.' },
   ],
   examples: [
     {
@@ -19,6 +22,10 @@ const entry: ComponentEntry = {
     },
     {
       title: 'Usage',
+    },
+    {
+      title: 'Gradient and live (marketing mode)',
+      description: 'Inside `data-mode="marketing"`.',
     },
   ],
 };
