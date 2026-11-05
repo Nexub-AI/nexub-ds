@@ -4,8 +4,9 @@
 // Next.js app sees. Two rules keep that safe:
 // 1. A module that needs the browser or client-only React APIs says 'use client'.
 // 2. A server module imports only components (PascalCase) and types from client
-//    modules: any other value it imports there is a client reference, and
-//    calling it on the server throws.
+//    modules, and renders them whole: any other value it imports there is a
+//    client reference, and calling it or dotting into it (<Menu.Root>) on the
+//    server throws.
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -45,7 +46,10 @@ describe('server component boundaries', () => {
         const file = [`${target}.tsx`, `${target}.ts`].find((p) => source.has(p));
         if (!file || !isClient(file)) continue;
         for (const name of m[1]!.split(',').map((s) => s.trim()).filter(Boolean)) {
-          if (!name.startsWith('type ') && !/^[A-Z]/.test(name)) bad.push(`${relative(src, f)} imports ${name}`);
+          if (name.startsWith('type ')) continue;
+          if (!/^[A-Z]/.test(name)) bad.push(`${relative(src, f)} imports ${name}`);
+          // A client reference can't be dotted into on the server (<Menu.Root>).
+          else if (new RegExp(`\\b${name}\\.[A-Z]`).test(source.get(f)!)) bad.push(`${relative(src, f)} uses ${name}.*`);
         }
       }
     }
