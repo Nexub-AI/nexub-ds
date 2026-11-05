@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixCheckbox from '@radix-ui/react-checkbox';
 import { Minus } from '@nexub/icons';

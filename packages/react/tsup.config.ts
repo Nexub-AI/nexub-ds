@@ -28,18 +28,32 @@ const vaulWithoutStyleInjection: EsbuildPlugin = {
   },
 };
 
-export default defineConfig({
-  // One entry per component so consumers' bundlers can drop unused modules
-  // (sideEffects:false only works at module granularity).
-  entry: ['src/index.ts', 'src/components/*/index.ts'],
-  format: ['esm'],
-  dts: { entry: 'src/index.ts' },
-  splitting: true,
-  clean: true,
-  external: ['react', 'react-dom'],
-  noExternal: ['vaul'],
-  esbuildPlugins: [vaulWithoutStyleInjection],
-  // esbuild strips module-level directives when bundling; re-add on every
-  // output file so Next.js RSC consumers can import from server components.
-  banner: { js: "'use client';" },
-});
+export default defineConfig([
+  // One output file per source file, not a bundle: each module keeps its own
+  // 'use client' directive (or none), so React Server Components can render
+  // the presentational ones on the server and bundlers ship only the client
+  // modules a page uses. Types come from tsc (see the build script).
+  {
+    entry: [
+      'src/**/*.{ts,tsx}',
+      '!src/**/*.test.{ts,tsx}',
+      '!src/**/*.stories.tsx',
+      '!src/stories/**',
+      '!src/test-setup.ts',
+      '!src/vendor/**',
+    ],
+    format: ['esm'],
+    bundle: false,
+    clean: false,
+  },
+  // vaul is bundled (it isn't a dependency) with its style injection removed.
+  {
+    entry: { 'vendor/vaul': 'src/vendor/vaul.ts' },
+    format: ['esm'],
+    clean: false,
+    external: ['react', 'react-dom'],
+    noExternal: ['vaul'],
+    esbuildPlugins: [vaulWithoutStyleInjection],
+    banner: { js: "'use client';" },
+  },
+]);

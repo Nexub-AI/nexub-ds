@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import type { MotionBaseProps } from './motion.types.js';
 import { useMotion } from './useMotion.js';

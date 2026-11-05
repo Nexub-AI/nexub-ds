@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
-import { toneTextClasses, type ToneValue } from '../Button/Button.js';
+import type { ToneValue } from '../Button/Button.js';
+import { toneTextClasses } from '../../utils/control.js';
 
 export interface EyebrowChipProps extends React.HTMLAttributes<HTMLSpanElement> {
   tone?: ToneValue;

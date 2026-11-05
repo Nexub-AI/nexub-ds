@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixRadioGroup from '@radix-ui/react-radio-group';
 import { cn } from '../../utils/cn.js';

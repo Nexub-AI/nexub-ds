@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import * as RadixAccordion from '@radix-ui/react-accordion';
 import { ChevronDown } from '@nexub/icons';

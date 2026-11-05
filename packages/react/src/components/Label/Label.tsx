@@ -2,7 +2,8 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
-import { toneTextClasses, type ToneValue } from '../Button/Button.js';
+import type { ToneValue } from '../Button/Button.js';
+import { toneTextClasses } from '../../utils/control.js';
 
 export const labelVariants = cva(
   ['inline-flex items-center gap-1 font-medium leading-none select-none'],
