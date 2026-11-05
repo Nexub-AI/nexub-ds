@@ -83,7 +83,7 @@ function NavTree({ navGroups }: { navGroups: NavGroup[] }) {
 
 // `navGroups` is passed from the server layout so the full registry (props,
 // code strings, a11y notes) never ships to the client just to draw links.
-export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
+export function DocsSidebar({ navGroups, drawerOnly = false }: { navGroups: NavGroup[]; drawerOnly?: boolean }) {
   const pathname = usePathname();
   const { isOpen, close } = useSidebar();
 
@@ -92,9 +92,11 @@ export function DocsSidebar({ navGroups }: { navGroups: NavGroup[] }) {
 
   return (
     <>
-      <aside aria-label="Documentation navigation" className="docs-sidebar">
-        <NavTree navGroups={navGroups} />
-      </aside>
+      {!drawerOnly && (
+        <aside aria-label="Documentation navigation" className="docs-sidebar">
+          <NavTree navGroups={navGroups} />
+        </aside>
+      )}
       <Drawer.Root open={isOpen} onOpenChange={(o) => { if (!o) close(); }} scrollLock="class">
         <Drawer.Portal>
           <Drawer.Overlay />
