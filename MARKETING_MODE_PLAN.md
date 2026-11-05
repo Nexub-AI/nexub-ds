@@ -19,7 +19,7 @@ Visual target (private, my account; read it with the Artifact tool): https://cla
 
 - All packages are at 2.8.0. 2.9 (migration rules, 3.0 guide) is merged and 3.0 is next, so this is 3.1.
 - `@nexub/react` already builds one file per component (`tsup` entry `src/components/*/index.ts`) and has `sideEffects: ["*.css"]`. But `tsup`'s `banner` stamps `'use client'` on **every** output file, and `exports` only exposes `"."`, so the per-component files can't be imported and nothing renders as a server component.
-- `--shadow-plans`, `--shadow-glow`, `--shadow-lift` and a `container-nexub` token **don't exist**. `Container size="nexub"` hardcodes `var(--container-nexub, 1440px)`. Only `--gradient-hero-ambient` (in `themes/src/light.css`) and `--gradient-brand-*` exist. So the marketing tokens are new, not promoted.
+- The legacy marketing tokens do exist in `packages/tokens/tokens/*.json`: `shadow.plans/glow/lift` and `gradient.*` (hero-ambient, button-primary, eyebrow-chip, ...), generated as `--shadow-plans`, `--gradient-hero-ambient` and so on. `--container-nexub` (1440px) exists too. (Corrected 2026-11-05: the first review missed them.) They are promoted into a `marketing` group; the old names stay.
 - 3.0 removes the legacy token aliases. Don't bring old names back.
 - Fonts are already a separate file (`themes/src/fonts.css`), but `base.css` imports it, and `base.css` also sets `body { background: var(--gradient-hero-ambient) }`.
 - `@nexub/tokens/tailwind.css` (the Tailwind v4 theme) already exists, and the nexub-ds skill already documents v4 next to the v3 preset. It doesn't say v1.9.0.
@@ -40,14 +40,14 @@ Visual target (private, my account; read it with the Artifact tool): https://cla
 
 - New `marketing` group:
   - hero ambient background (move `--gradient-hero-ambient` here and keep the old name as an alias)
-  - button gradient (#2563eb → #0059c7, built from palette tones rather than raw hex) and its hover version
+  - button gradient: primary tones 45 → 40 (#2066d5 → #0059c7; tone 50 fails AA with white text) and its hover version, 45 → 35
   - button glow shadow
   - card radius (24px), card shadow at rest and on hover
   - floating-card shadow
   - eyebrow gradient
   - brand accent line
 - Type: `display-xl` (64/68, 800, -0.045em) and heavier marketing heading weights.
-- Container: add `container-marketing` at **1280px** (decided 2026-11-05; the site moves up from 1260). Turn the existing 1440px into a real `container-nexub` token, and document both.
+- Container: add `container-marketing` at **1280px** (decided 2026-11-05; the site moves up from 1260). `container-nexub` (1440px) stays the app width. Document both.
 
 ### 3. `@nexub/themes/marketing`
 
