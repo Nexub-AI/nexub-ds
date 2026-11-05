@@ -78,6 +78,7 @@ Starting points for typical SaaS screens:
 | Onboarding | `StepIndicator` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+| White-label / customer brand | `<ThemeProvider seed="#hex">` (native: `<NexubNativeProvider seed>`), plus `createSeedStylesheet(seed)` from `@nexub/tokens/seed` rendered on the server so there is no flash. Never hand-pick brand hex for roles; try colours at nexub.design/foundations/theme-builder |
 | Marketing / landing page | `@nexub/marketing` under `data-mode="marketing"`: `MarketingNav`, `Hero`, `LogoStrip`, `StatBand`, `FeatureSplit`, `HowItWorks`, `ProductGrid`, `TestimonialGrid`, `PricingTable`, `FAQ`, `CTABand`, `MarketingFooter` |
 
 Money: use `Amount` and `MoneyInput`. They use tabular figures, the currency's own minor unit and a true minus sign. Icons: import from `@nexub/icons`, not `lucide-react` directly.
