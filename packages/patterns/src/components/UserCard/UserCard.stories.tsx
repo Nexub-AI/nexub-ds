@@ -36,7 +36,7 @@ export const WithActions: Story = {
             style={{
               padding: '6px 12px',
               borderRadius: '6px',
-              border: '1px solid var(--color-border-default)',
+              border: '1px solid var(--color-outline-variant)',
               background: 'transparent',
               cursor: 'pointer',
               fontSize: '13px',

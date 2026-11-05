@@ -12,13 +12,13 @@ const SIZE_MAP = {
 
 const TONE_MAP = {
   current: 'currentColor',
-  muted: 'var(--color-text-muted)',
-  primary: 'var(--color-text-primary)',
+  muted: 'var(--color-on-surface-muted)',
+  primary: 'var(--color-on-surface)',
   accent: 'var(--color-accent-500)',
-  success: 'var(--color-text-success)',
-  danger: 'var(--color-text-danger)',
-  warning: 'var(--color-text-warning)',
-  info: 'var(--color-text-info)',
+  success: 'var(--color-on-success-container)',
+  danger: 'var(--color-on-error-container)',
+  warning: 'var(--color-on-warning-container)',
+  info: 'var(--color-on-info-container)',
 } as const;
 
 // Accepts both Lucide icons and custom SVG forwardRef components

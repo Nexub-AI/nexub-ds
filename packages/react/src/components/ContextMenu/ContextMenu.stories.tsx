@@ -20,10 +20,10 @@ export const Default: Story = {
             justifyContent: 'center',
             width: '16rem',
             height: '8rem',
-            border: '2px dashed var(--color-border-default)',
+            border: '2px dashed var(--color-outline-variant)',
             borderRadius: '0.5rem',
             fontSize: '0.875rem',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-on-surface-muted)',
             userSelect: 'none',
           }}
         >

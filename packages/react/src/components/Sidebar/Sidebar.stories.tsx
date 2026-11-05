@@ -69,7 +69,7 @@ export const Default: Story = {
         </Sidebar.Group>
 
         <Sidebar.Footer>
-          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <span style={{ fontSize: '12px', color: 'var(--color-on-surface-muted)' }}>
             Nexub DS v1.0
           </span>
         </Sidebar.Footer>

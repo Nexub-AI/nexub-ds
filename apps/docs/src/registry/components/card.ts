@@ -10,7 +10,7 @@ const entry: ComponentEntry = {
     status: 'stable',
     addedIn: '0.0.1',
     updatedIn: '1.6.0',
-    related: ['media-card', 'radio-card', 'callout'],
+    related: ['media-card', 'radio-card', 'alert'],
   },
   props: [
     { name: 'variant', type: "'flat' | 'surface' | 'interactive'", default: "'flat'", required: false, description: '`interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons.' },

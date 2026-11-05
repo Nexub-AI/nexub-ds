@@ -9,7 +9,7 @@ export default function PatternPreview() {
   const p = Object.hasOwn(PATTERNS, name) ? PATTERNS[name] : undefined;
   if (!p) return <ErrorState title="No preview" description={`There is no screen pattern called “${name}”.`} />;
   return (
-    <View testID="preview-ready" style={{ flex: 1 }}>
+    <View testID={`preview-ready-pattern-${name}`} style={{ flex: 1 }}>
       <Screen.Screen options={{ title: p.title, headerShown: p.headerShown ?? true, headerLargeTitle: false }} />
       <p.Component />
     </View>

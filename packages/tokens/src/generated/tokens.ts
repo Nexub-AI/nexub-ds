@@ -558,59 +558,10 @@ export const tokens = {
       "1000": "#000000"
     },
     "surface": {
-      "warm": "#fefce8",
-      "muted": "#f8fafc",
-      "raised": "#ffffff",
-      "sunken": "#f1f5f9",
-      "inverse": "#0f172a"
-    },
-    "semantic": {
-      "success": {
-        "default": "#10b981",
-        "bg": "#ecfdf5",
-        "border": "#a7f3d0",
-        "strong": "#047857"
-      },
-      "error": {
-        "default": "#ef4444",
-        "bg": "#fef2f2",
-        "border": "#fecaca",
-        "strong": "#b91c1c"
-      },
-      "warning": {
-        "default": "#f59e0b",
-        "bg": "#fffbeb",
-        "border": "#fde68a",
-        "strong": "#b45309"
-      },
-      "info": {
-        "default": "#4099f1",
-        "bg": "#eff6ff",
-        "border": "#bfdbfe",
-        "strong": "#1d4ed8"
-      }
+      "warm": "#fefce8"
     },
     "text": {
-      "primary": "#0f172a",
-      "secondary": "#334155",
-      "muted": "#64748b",
-      "subtle": "#94a3b8",
-      "inverse": "#f8fafc",
-      "link": "#2563eb",
       "disabled": "#94a3b8"
-    },
-    "bg": {
-      "default": "#ffffff",
-      "subtle": "#f8fafc",
-      "muted": "#f1f5f9",
-      "raised": "#ffffff",
-      "inverse": "#0f172a"
-    },
-    "border": {
-      "default": "#e2e8f0",
-      "subtle": "#f1f5f9",
-      "strong": "#94a3b8",
-      "inverse": "#334155"
     },
     "ring": {
       "default": "#4099f1",

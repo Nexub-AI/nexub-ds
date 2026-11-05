@@ -9,7 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
-    related: ['chip', 'tag', 'status-pill'],
+    related: ['chip'],
   },
   props: [
     { name: 'variant', type: "'solid' | 'soft' | 'outline'", default: "'solid'", required: false, description: 'Visual fill style.' },

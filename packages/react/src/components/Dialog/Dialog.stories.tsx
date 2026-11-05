@@ -24,7 +24,7 @@ export const Default: Story = {
               Make changes to your profile here. Click save when you&apos;re done.
             </Dialog.Description>
           </Dialog.Header>
-          <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--color-on-surface-muted)' }}>
             Your profile information is visible to other members of your workspace.
           </p>
           <Dialog.Footer>

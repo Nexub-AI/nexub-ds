@@ -20,7 +20,7 @@ const fruits = [
 
 export const Default: Story = {
   render: () => (
-    <div style={{ width: '280px', border: '1px solid var(--color-border-default, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
+    <div style={{ width: '280px', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
       <Combobox.Root>
         <Combobox.Input placeholder="Search fruits..." />
         <Combobox.List>

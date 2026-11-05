@@ -15,8 +15,8 @@ const inputStyle: React.CSSProperties = {
   height: '36px',
   padding: '4px 12px',
   borderRadius: '6px',
-  border: '1px solid var(--color-border-default)',
-  background: 'var(--color-bg-default)',
+  border: '1px solid var(--color-outline-variant)',
+  background: 'var(--color-surface)',
   fontSize: '14px',
   boxSizing: 'border-box',
 };
@@ -26,7 +26,7 @@ const labelStyle: React.CSSProperties = {
   fontSize: '13px',
   fontWeight: 500,
   marginBottom: '4px',
-  color: 'var(--color-text-primary)',
+  color: 'var(--color-on-surface)',
 };
 
 export const Default: Story = {
@@ -41,7 +41,7 @@ export const Default: Story = {
               style={{
                 padding: '7px 16px',
                 borderRadius: '6px',
-                border: '1px solid var(--color-border-default)',
+                border: '1px solid var(--color-outline-variant)',
                 background: 'transparent',
                 cursor: 'pointer',
                 fontSize: '13px',

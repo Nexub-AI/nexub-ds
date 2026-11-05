@@ -14,6 +14,6 @@ type Story = StoryObj<typeof AspectRatio>;
 export const Default: Story = {
   args: {
     ratio: 16 / 9,
-    children: <div style={{ background: 'var(--color-bg-muted)', width: '100%', height: '100%' }} />,
+    children: <div style={{ background: 'var(--color-surface-container-high)', width: '100%', height: '100%' }} />,
   },
 };
