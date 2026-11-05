@@ -1,5 +1,13 @@
 # @nexub/react-native
 
+## 3.2.0
+
+### Patch Changes
+
+- @nexub/tokens@3.2.0
+- @nexub/icons@3.2.0
+- @nexub/core@3.2.0
+
 ## 3.1.0
 
 ### Minor Changes
