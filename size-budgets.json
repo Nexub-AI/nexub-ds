@@ -1,6 +1,6 @@
 {
   "tokens (js)": 6700,
-  "tokens/seed": 3500,
+  "tokens/seed": 4300,
   "tokens/css": 8000,
   "tokens/css/roles": 3100,
   "tokens/css/rem": 700,
@@ -42,6 +42,7 @@
   "react/Box": 1100,
   "react/Breadcrumb": 3600,
   "react/Button": 3800,
+  "react/Chart": 3900,
   "react/ButtonGroup": 1400,
   "react/Card": 2800,
   "react/CheckList": 1400,

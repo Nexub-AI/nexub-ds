@@ -22,6 +22,7 @@ import {
   SegmentedControl,
   SplitButton,
   Badge,
+  BarChart,
   ThinkingIndicator,
   toast,
   type DataTableProps,
@@ -81,56 +82,17 @@ const nav = [
 // ─── Pieces ───────────────────────────────────────────────────────────────────
 
 function RevenueChart() {
-  const max = 80;
-  const h = 160;
-  const slot = 300 / months.length;
-  const bar = slot / 3;
-  const summary = months
-    .map((m, i) => `${m}: $${revenue.thisYear[i]}k (last year $${revenue.lastYear[i]}k)`)
-    .join('; ');
+  const data = months.map((month, i) => ({ month, thisYear: revenue.thisYear[i]!, lastYear: revenue.lastYear[i]! }));
   return (
     <div className="flex h-full flex-col gap-3">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="text-title-md text-[var(--color-on-surface)]">Revenue</h2>
-        <ul className="flex gap-4 text-label-md text-[var(--color-on-surface-variant)]">
-          <li className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-chart-1" />
-            2026
-          </li>
-          <li className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-chart-2" />
-            2025
-          </li>
-        </ul>
-      </div>
-      {/* Bars follow reading order: mirrored in RTL, like the month labels below. */}
-      <svg
-        viewBox={`0 0 300 ${h}`}
-        preserveAspectRatio="none"
-        role="img"
-        aria-label={`Revenue by month, in thousands of dollars. ${summary}.`}
-        className="min-h-40 w-full flex-1 rtl:-scale-x-100"
-      >
-        {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" x2="300" y1={h * f} y2={h * f} className="stroke-[var(--color-outline-variant)]" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-        ))}
-        {months.map((m, i) => {
-          const a = (revenue.thisYear[i]! / max) * h;
-          const b = (revenue.lastYear[i]! / max) * h;
-          const x = i * slot + bar / 2;
-          return (
-            <g key={m}>
-              <rect x={x} y={h - a} width={bar} height={a} rx="2" className="fill-chart-1" />
-              <rect x={x + bar} y={h - b} width={bar} height={b} rx="2" className="fill-chart-2" />
-            </g>
-          );
-        })}
-      </svg>
-      <ol aria-hidden="true" className="grid grid-cols-6 text-center text-label-sm text-[var(--color-on-surface-muted)]">
-        {months.map((m) => (
-          <li key={m}>{m}</li>
-        ))}
-      </ol>
+      <h2 className="text-title-md text-[var(--color-on-surface)]">Revenue</h2>
+      <BarChart
+        title="Revenue by month, in thousands of dollars"
+        data={data}
+        index="month"
+        series={[{ key: 'thisYear', label: '2026' }, { key: 'lastYear', label: '2025' }]}
+        valueFormat={(v) => `$${v}k`}
+      />
     </div>
   );
 }
