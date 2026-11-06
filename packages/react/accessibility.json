@@ -206,6 +206,19 @@
       ]
     },
     {
+      "slug": "chart-toggle",
+      "name": "Chart Toggle",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab / Space: Move between series and switch one on or off."
+      ],
+      "screenReader": [
+        "Each series is a toggle button with `aria-pressed`. The last visible series cannot be switched off."
+      ]
+    },
+    {
       "slug": "checkbox-card",
       "name": "Checkbox Card",
       "package": "@nexub/react",
