@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DocTable, PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
+import { MigrationPicker } from '@/components/docs/MigrationPicker';
 
 export const dynamic = 'force-static';
 
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
 export default function MigratingTo4Page() {
   return (
     <div className="docs-prose">
-      <PageIntro eyebrow="Getting Started" title="Migrating to 4.0" />
+      <PageIntro eyebrow="Getting Started" title="Migrating to 4.0">
+        <MigrationPicker />
+      </PageIntro>
       <p>
         4.0 removes only what 3.9 deprecates, and nothing else changes. 3.9 is the release candidate: it warns about
         everything 4.0 removes. Update to 3.9, clear the warnings and the codemod report, and 4.0 is a version bump. No

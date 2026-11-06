@@ -82,3 +82,18 @@ export function mergeChangelogs(changelogs: { name: string; md: string }[]): Rel
     .sort(([a], [b]) => compareVersions(a, b))
     .map(([version, packages]) => ({ version, packages }));
 }
+
+/** `data-table` → `DataTable`: the export name a changelog writes in backticks. */
+export function exportName(slug: string): string {
+  return slug.replace(/(^|-)([a-z0-9])/g, (_, _dash, c: string) => c.toUpperCase());
+}
+
+/**
+ * The docs page for a changelog code span, if it names one: `BarChart`,
+ * `<Button variant="hero">` and `Card effect="tilt"` all start with a known
+ * export name. `pages` maps export name → href.
+ */
+export function pageForCode(code: string, pages: Map<string, string>): string | undefined {
+  const name = /^<?([A-Z][A-Za-z0-9]*)(?![A-Za-z0-9.])/.exec(code)?.[1];
+  return name ? pages.get(name) : undefined;
+}
