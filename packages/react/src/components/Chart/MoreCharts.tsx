@@ -149,7 +149,7 @@ export interface KpiTileProps extends React.HTMLAttributes<HTMLDivElement> {
   trend?: number[];
 }
 
-/** A headline number with its change and a trend line. */
+/** A headline number with its change and a trend line. The change text carries good/bad colour; the trend stays the accent. */
 export function KpiTile({ label, value, change, invert = false, trend, className, ...props }: KpiTileProps) {
   const good = change === undefined ? undefined : invert ? change < 0 : change > 0;
   const pct = change === undefined ? '' : `${change > 0 ? '+' : change < 0 ? '−' : ''}${Math.abs(change * 100).toFixed(1)}%`;
@@ -164,7 +164,7 @@ export function KpiTile({ label, value, change, invert = false, trend, className
           </span>
         )}
       </div>
-      {trend && trend.length > 1 && <Sparkline values={trend} area color={good === false ? 5 : 2} className="h-10 w-28 shrink-0" />}
+      {trend && trend.length > 1 && <Sparkline values={trend} area color={1} className="h-10 w-28 shrink-0" />}
     </div>
   );
 }
