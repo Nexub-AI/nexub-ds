@@ -70,6 +70,17 @@
       "screenReader": []
     },
     {
+      "slug": "aurora",
+      "name": "Aurora",
+      "package": "@nexub/react",
+      "automated": "not covered",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Decorative: the whole layer is `aria-hidden`."
+      ]
+    },
+    {
       "slug": "autocomplete",
       "name": "Autocomplete",
       "package": "@nexub/react",

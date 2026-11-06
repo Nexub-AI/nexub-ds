@@ -643,3 +643,54 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   .nx-chart-bar[data-negative] { transform-origin: top; }
   .nx-chart-line { animation: nx-chart-reveal 900ms var(--motion-spring-spatial-slow-easing, ease-out) both; }
 }
+
+/* Aurora (@nexub/react, 4.2): a decorative background of slow-drifting colour
+   fields from the accent roles. Subtle by default, richer under
+   data-expression="vivid". Still under reduced motion; hidden in forced colours. */
+.nx-aurora {
+  --nx-aurora-strength: 0.26;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.nx-aurora > span {
+  position: absolute;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  filter: blur(64px);
+  opacity: var(--nx-aurora-strength);
+  animation: nx-aurora-drift 22s ease-in-out infinite alternate;
+}
+.nx-aurora > span:nth-child(1) {
+  inset-block-start: -20%;
+  inset-inline-start: -10%;
+  background: var(--color-primary);
+  /* Dark mode: a deeper, more saturated field so it glows instead of greying out. */
+  background: light-dark(var(--color-primary), oklch(from var(--color-primary) 0.5 calc(c * 1.8) h));
+}
+.nx-aurora > span:nth-child(2) {
+  inset-block-start: 10%;
+  inset-inline-end: -15%;
+  background: var(--color-tertiary);
+  background: light-dark(oklch(from var(--color-primary) l c calc(h + 60)), oklch(from var(--color-primary) 0.48 calc(c * 1.8) calc(h + 60))); /* a second hue from the brand; tertiary where unsupported */
+  animation-delay: -8s;
+}
+.nx-aurora > span:nth-child(3) {
+  inset-block-end: -30%;
+  inset-inline-start: 25%;
+  background: var(--color-tertiary);
+  background: light-dark(var(--color-tertiary), oklch(from var(--color-tertiary) 0.45 calc(c * 1.6) h));
+  animation-delay: -15s;
+}
+@keyframes nx-aurora-drift {
+  to { translate: 8% 6%; scale: 1.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-aurora > span { animation: none; }
+}
+@media (forced-colors: active) {
+  .nx-aurora { display: none; }
+}

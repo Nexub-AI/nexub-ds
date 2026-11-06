@@ -81,6 +81,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         className={cn(cardVariants({ variant, surface }), toneStyle, sheen && 'nx-sheen', className)}
         onPointerMove={handlePointerMove}
         data-tone={tone}
+        data-variant={variant ?? 'flat'}
         data-product={accent}
         data-material={surface === 'glass' ? 'glass' : undefined}
         {...props}
