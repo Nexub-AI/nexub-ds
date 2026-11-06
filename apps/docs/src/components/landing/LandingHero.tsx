@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button, EyebrowChip, Heading, Text, TextGradient } from '@nexub/react';
+import { Aurora, Button, EyebrowChip, Heading, SegmentedControl, Text, TextGradient, useScopedSeed } from '@nexub/react';
 import { ArrowRight } from '@nexub/icons';
 
 interface LandingHeroProps {
@@ -15,6 +15,12 @@ interface LandingHeroProps {
 export function LandingHero({ version, componentCount, patternCount }: LandingHeroProps) {
   const heroRef = React.useRef<HTMLElement>(null);
   const [cursor, setCursor] = React.useState({ x: 0, y: 0, active: false });
+  // 4.7 remix: a brand seed recolours the hero live (CSSOM, so CSP-safe), and
+  // Calm/Vivid switches the expression layer.
+  const [seed, setSeed] = React.useState<string | null>(null);
+  const [expression, setExpression] = React.useState<'calm' | 'vivid'>('vivid');
+  useScopedSeed(heroRef, seed);
+  useScopedSeed(heroRef, seed, { target: 'tertiary' });
 
   React.useEffect(() => {
     const hero = heroRef.current;
@@ -42,7 +48,8 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   return (
     <section
       ref={heroRef}
-      className="landing-hero relative flex min-h-[calc(100vh-var(--docs-header-height))] flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-16 text-center [background:var(--gradient-hero-ambient)]"
+      data-expression={expression === 'vivid' ? 'vivid' : undefined}
+      className="landing-hero relative isolate flex min-h-[calc(100vh-var(--docs-header-height))] flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-16 text-center [background:var(--gradient-hero-ambient)]"
     >
       {/* ── Cursor spotlight (pure client, no SSR impact) ─────────────────── */}
       <div
@@ -56,21 +63,9 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         }}
       />
 
-      {/* ── Floating gradient orbs — CSS keyframes (.landing-orb in globals.css) ────── */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div
-          className="landing-orb absolute left-[12%] top-[8%] h-[420px] w-[420px] rounded-full bg-[var(--color-primary)] opacity-[0.07] blur-[80px] [animation-delay:0s] [animation-duration:8s]"
-          style={{ ['--orb-y' as string]: '-30px', ['--orb-x' as string]: '15px' }}
-        />
-        <div
-          className="landing-orb absolute bottom-[12%] right-[8%] h-[360px] w-[360px] rounded-full bg-[var(--color-primary)] opacity-[0.06] blur-[70px] [animation-delay:2s] [animation-duration:11s]"
-          style={{ ['--orb-y' as string]: '25px', ['--orb-x' as string]: '-20px' }}
-        />
-        <div
-          className="landing-orb absolute right-[20%] top-[20%] h-[280px] w-[280px] rounded-full bg-[var(--color-primary)] opacity-[0.05] blur-[60px] [animation-delay:5s] [animation-duration:14s]"
-          style={{ ['--orb-y' as string]: '-18px', ['--orb-x' as string]: '10px' }}
-        />
-      </div>
+      {/* ── Aurora (the library component; richer under Vivid) ─────────────── */}
+      {/* A full-screen hero needs a quieter aurora than a card. */}
+      <Aurora className="[--nx-aurora-strength:0.2]!" />
 
       {/* ── Hero icon with orbital rings ──────────────────────────────────── */}
       <div className="hero-icon-wrap relative z-[2]">
@@ -112,6 +107,29 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
         <Button asChild variant="outlined" size="lg">
           <Link href="/components">Browse components</Link>
         </Button>
+      </div>
+
+      {/* ── Remix: try a brand colour and the expression layer ────────────── */}
+      <div className="hero-anim-4 relative z-[2] mt-8 flex flex-wrap items-center justify-center gap-3">
+        <span className="text-label-md text-[var(--color-on-surface-variant)]">Remix this page</span>
+        <div role="group" aria-label="Brand colour" className="flex gap-1.5">
+          {[null, '#e4572e', '#0f9d58', '#7b1fa2', '#ffb300', '#00897b'].map((c) => (
+            <button
+              key={c ?? 'nexub'}
+              type="button"
+              aria-pressed={seed === c}
+              aria-label={c ? `Use ${c}` : 'Nexub blue'}
+              onClick={() => setSeed(c)}
+              ref={(el) => el?.style.setProperty('background', c ?? 'var(--color-primary)')}
+              className="size-7 rounded-full border-2 border-[var(--color-surface)] outline-offset-2 aria-pressed:outline-2 aria-pressed:outline-solid aria-pressed:outline-[var(--color-on-surface)]"
+            />
+          ))}
+        </div>
+        <SegmentedControl.Root aria-label="Expression" size="sm" value={expression} onValueChange={(v) => v && setExpression(v as 'calm' | 'vivid')}>
+          <SegmentedControl.Item value="calm">Calm</SegmentedControl.Item>
+          <SegmentedControl.Item value="vivid">Vivid</SegmentedControl.Item>
+        </SegmentedControl.Root>
+        <Link href="/foundations/theme-builder" className="text-label-md">Open the theme builder</Link>
       </div>
 
       {/* ── Stats strip — CSS animation ───────────────────────────────────── */}
