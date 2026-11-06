@@ -49,6 +49,7 @@ Version 4.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Eyebrow Chip](https://nexub-ds-docs.pages.dev/components/eyebrow-chip.md): A compact eyebrow label, typically used above headings.
 - [Filter Chip](https://nexub-ds-docs.pages.dev/components/filter-chip.md): Interactive chip for filtering, supports selected/unselected state.
 - [Flex](https://nexub-ds-docs.pages.dev/components/flex.md): Flexbox layout primitive.
+- [Floating Input](https://nexub-ds-docs.pages.dev/components/floating-input.md): A text field whose label sits inside and floats up on focus or input. CSS only.
 - [Form Field](https://nexub-ds-docs.pages.dev/components/form-field.md): Wraps Label, Input, HelperText and FormError into a single accessible group.
 - [Gradient Divider](https://nexub-ds-docs.pages.dev/components/gradient-divider.md): A decorative gradient-faded horizontal rule.
 - [Grid](https://nexub-ds-docs.pages.dev/components/grid.md): CSS Grid layout primitive.
@@ -83,10 +84,12 @@ Version 4.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group.md): Group of mutually exclusive radio inputs.
 - [Rating](https://nexub-ds-docs.pages.dev/components/rating.md): Star rating input, supports controlled and read-only modes.
 - [Scroll Area](https://nexub-ds-docs.pages.dev/components/scroll-area.md): Scrollable container with custom styled scrollbars.
+- [Scroll Progress](https://nexub-ds-docs.pages.dev/components/scroll-progress.md): A thin bar along the top that fills as the page scrolls. CSS only.
 - [Search Input](https://nexub-ds-docs.pages.dev/components/search-input.md): A text input pre-wired with a search icon and a clear button for filtering content.
 - [Segmented Control](https://nexub-ds-docs.pages.dev/components/segmented-control.md): Tab-style control for mutually exclusive selections.
 - [Select](https://nexub-ds-docs.pages.dev/components/select.md): Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Separator](https://nexub-ds-docs.pages.dev/components/separator.md): A horizontal or vertical visual divider.
+- [Shared Element](https://nexub-ds-docs.pages.dev/components/shared-element.md): Morphs the same element between two states or pages inside a view transition.
 - [Sheet](https://nexub-ds-docs.pages.dev/components/sheet.md): Alias for Drawer — slide-in sheet panel.
 - [Skeleton](https://nexub-ds-docs.pages.dev/components/skeleton.md): Placeholder loading animation that mimics content layout.
 - [Slider](https://nexub-ds-docs.pages.dev/components/slider.md): Range slider built on Radix UI Slider.

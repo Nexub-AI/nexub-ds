@@ -383,6 +383,17 @@
       "screenReader": []
     },
     {
+      "slug": "floating-input",
+      "name": "Floating Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "A real `<label>` tied to the input, so the name never disappears."
+      ]
+    },
+    {
       "slug": "form-field",
       "name": "Form Field",
       "package": "@nexub/react",
@@ -731,6 +742,17 @@
       "screenReader": []
     },
     {
+      "slug": "scroll-progress",
+      "name": "Scroll Progress",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Decorative (`aria-hidden`); hidden under reduced motion and where scroll-driven animations are not supported."
+      ]
+    },
+    {
       "slug": "search-input",
       "name": "Search Input",
       "package": "@nexub/react",
@@ -765,6 +787,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "shared-element",
+      "name": "Shared Element",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Visual only: run the change in `startViewTransition()` and move focus to the new view as usual."
+      ]
     },
     {
       "slug": "sheet",
