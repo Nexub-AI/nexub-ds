@@ -30,21 +30,8 @@ import '@nexub/themes/light';
 import '@nexub/themes/glass';  // only if you use Liquid Glass
 ```
 
-```ts
-// tailwind.config.ts (Tailwind v3)
-import nexub from '@nexub/tokens/tailwind';
-export default {
-  presets: [nexub],
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/@nexub/react/dist/**/*.js',
-    './node_modules/@nexub/patterns/dist/**/*.js',
-  ],
-};
-```
-
 ```css
-/* Tailwind v4: no config file. Load the theme CSS here, in the base layer, instead of from JS */
+/* Tailwind 4 (Tailwind 3 is not supported from 4.0): no config file. Load the theme CSS here, in the base layer, instead of from JS */
 @layer theme, base, components, utilities;
 @import "@nexub/themes/base" layer(base);
 @import "@nexub/themes/light" layer(base);

@@ -75,15 +75,15 @@
     "lucide-react-native": "^1.64.0"
   },
   "peerDependencies": {
-    "expo-glass-effect": ">=57.0.0",
-    "expo-haptics": ">=57.0.0",
+    "expo-glass-effect": ">=58.0.0",
+    "expo-haptics": ">=58.0.0",
     "react": ">=19.1.0",
     "react-native": ">=0.86.0",
     "react-native-reanimated": ">=4.5.0",
     "react-native-safe-area-context": ">=5.6.0",
     "react-native-svg": ">=15.0.0",
     "@react-native-community/datetimepicker": ">=8.4.0",
-    "expo-screen-capture": ">=57.0.0"
+    "expo-screen-capture": ">=58.0.0"
   },
   "peerDependenciesMeta": {
     "expo-glass-effect": {
