@@ -25,21 +25,8 @@ import '@nexub/themes/light';
 import '@nexub/themes/glass';  // only if you use Liquid Glass
 ```
 
-```ts
-// tailwind.config.ts (Tailwind v3)
-import nexub from '@nexub/tokens/tailwind';
-export default {
-  presets: [nexub],
-  content: [
-    './src/**/*.{ts,tsx}',
-    './node_modules/@nexub/react/dist/**/*.js',
-    './node_modules/@nexub/patterns/dist/**/*.js',
-  ],
-};
-```
-
 ```css
-/* Tailwind v4: no config file. Load the theme CSS here, in the base layer, instead of from JS */
+/* Tailwind 4 (Tailwind 3 is not supported from 4.0): no config file. Load the theme CSS here, in the base layer, instead of from JS */
 @layer theme, base, components, utilities;
 @import "@nexub/themes/base" layer(base);
 @import "@nexub/themes/light" layer(base);
@@ -123,7 +110,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v3.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v3.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -362,7 +349,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v3.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v3.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -7532,9 +7519,7 @@ React Native components and screen patterns for Nexub Design System. They use th
 
 **Native chrome, Nexub content.** The system draws the tab bar, stack header, back gesture, action sheets, pickers and iOS 26 Liquid Glass; Nexub themes them. Everything inside a screen (lists, cards, buttons, inputs, money) is drawn by Nexub, so it looks the same on iOS, Android and the web.
 
-Status: **alpha**. Built for Expo SDK 57+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
-
-> **Expo SDK 57 is deprecated.** 4.0 requires Expo SDK 58 or later. See [Migrating to 4.0](https://nexub-ds-docs.pages.dev/getting-started/migrating-to-4).
+Status: **alpha**. Built for Expo SDK 58+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
 
 ## Install
 
