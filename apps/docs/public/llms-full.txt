@@ -61,6 +61,7 @@ Starting points for typical SaaS screens:
 | Onboarding | `StepIndicator` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
+| Expressive moment (onboarding, hero, success) | `@nexub/themes/vivid` + `data-expression="vivid"` on that area, `Aurora` behind the hero. One expressive moment per screen; keep dense tables and forms Calm |
 | White-label / customer brand | `<ThemeProvider seed="#hex">` (native: `<NexubNativeProvider seed>`), plus `createSeedStylesheet(seed)` from `@nexub/tokens/seed` rendered on the server so there is no flash. Never hand-pick brand hex for roles; try colours at nexub.design/foundations/theme-builder |
 | Marketing / landing page | `@nexub/marketing` under `data-mode="marketing"`: `MarketingNav`, `Hero`, `LogoStrip`, `StatBand`, `FeatureSplit`, `HowItWorks`, `ProductGrid`, `TestimonialGrid`, `PricingTable`, `FAQ`, `CTABand`, `MarketingFooter` |
 
@@ -429,6 +430,7 @@ Never use a component marked deprecated.
 
 ## Components — Inline Primitives
 
+- [Aurora](components/aurora.md) `@nexub/react`: A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
 - [Code](components/code-inline.md) `@nexub/react`: Inline code span for technical terms and short code snippets.
 - [Kbd](components/kbd.md) `@nexub/react`: Keyboard key display — renders a styled <kbd> element.
 - [Link](components/link.md) `@nexub/react`: Styled anchor link with variant and external support.
@@ -816,6 +818,48 @@ export default function Example() {
 ```
 
 Related: [money-input](money-input.md), [number-ticker](number-ticker.md)
+
+
+---
+
+# Aurora
+
+A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
+
+- Package: `@nexub/react` · Category: Inline Primitives · Status: beta
+- Import: `import { Aurora } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/aurora
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` |  | Shape it to its container, e.g. `rounded-shape-container`. The parent needs `position: relative` and `isolate` so the aurora stays behind the content. |
+
+## Example: Behind a hero
+
+```tsx
+import { Aurora, Button, EyebrowChip } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="relative isolate flex w-full flex-col items-center gap-4 overflow-hidden rounded-shape-container px-6 py-14 text-center">
+      <Aurora />
+      <EyebrowChip>New</EyebrowChip>
+      <h3 className="m-0 text-headline-md text-[var(--color-on-surface)]">Your money, at a glance</h3>
+      <p className="m-0 max-w-[40ch] text-body-md text-[var(--color-on-surface)]">The colour follows your brand, theme and dark mode.</p>
+      <Button>Get started</Button>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Decorative: the whole layer is `aria-hidden`.
+- The fields stop drifting under reduced motion and the layer is hidden in forced-colours mode.
+
+Related: [text-gradient](text-gradient.md)
 
 
 ---

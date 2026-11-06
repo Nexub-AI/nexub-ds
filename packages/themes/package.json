@@ -37,7 +37,8 @@
     "./bookub": "./src/bookub.css",
     "./payub": "./src/payub.css",
     "./founderub": "./src/founderub.css",
-    "./marketing": "./src/marketing.css"
+    "./marketing": "./src/marketing.css",
+    "./vivid": "./src/vivid.css"
   },
   "scripts": {
     "build:fonts": "node scripts/build-fonts.mjs",
