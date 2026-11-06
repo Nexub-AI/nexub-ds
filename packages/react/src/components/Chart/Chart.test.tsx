@@ -2,7 +2,7 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { BarChart, DonutChart, LineChart, Sparkline, niceMax } from './Chart.js';
+import { BarChart, DonutChart, LineChart, Sparkline, niceDomain, niceMax } from './Chart.js';
 
 const data = [
   { month: 'Jan', a: 10, b: 30 },
@@ -51,6 +51,31 @@ describe('charts', () => {
     expect(container.querySelector('svg')!.getAttribute('aria-hidden')).toBe('true');
     rerender(<Sparkline values={[1, 3, 2]} label="Up 8%" />);
     expect(screen.getByRole('img', { name: 'Up 8%' })).toBeTruthy();
+  });
+
+  it('niceDomain spans zero and rounds both ends', () => {
+    expect(niceDomain([3, 18])).toEqual([0, 20]);
+    expect(niceDomain([-7, 18])).toEqual([-10, 20]);
+    expect(niceDomain([-40, -5])).toEqual([-50, 0]);
+  });
+
+  it('negative bars grow down from the zero line and are marked for the draw-in', () => {
+    const { container } = render(<BarChart title="P&L" data={[{ m: 'Jan', v: 20 }, { m: 'Feb', v: -10 }]} index="m" series={[{ key: 'v' }]} />);
+    const [pos, neg] = [...container.querySelectorAll('rect.nx-chart-bar')];
+    // Domain [-10, 20] → zero at y = 100 - (10/30)·100 = 66.67.
+    expect(Number(pos!.getAttribute('y')) + Number(pos!.getAttribute('height'))).toBeCloseTo(66.67, 1);
+    expect(Number(neg!.getAttribute('y'))).toBeCloseTo(66.67, 1);
+    expect(neg!.hasAttribute('data-negative')).toBe(true);
+    expect(screen.getByRole('cell', { name: '-10' })).toBeTruthy();
+  });
+
+  it('every category gets a hover tooltip with all series values, hidden from assistive tech', () => {
+    const { container } = render(<BarChart title="R" data={data} index="month" series={series} />);
+    const cols = container.querySelectorAll('.group\\/col');
+    expect(cols).toHaveLength(2);
+    expect(cols[1]!.textContent).toContain('Feb');
+    expect(cols[1]!.textContent).toContain('Last year');
+    expect(cols[1]!.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 
   it('renders on the server with no style attributes (strict CSP)', () => {
