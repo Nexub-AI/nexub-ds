@@ -50,6 +50,7 @@ Version 5.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state.md): Placeholder UI shown when a list or page has no content.
 - [Error State](https://nexub-ds-docs.pages.dev/components/error-state.md): Full-page or section error view with retry action.
 - [Eyebrow Chip](https://nexub-ds-docs.pages.dev/components/eyebrow-chip.md): A compact eyebrow label, typically used above headings.
+- [Filter Builder](https://nexub-ds-docs.pages.dev/components/filter-builder.md): Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Filter Chip](https://nexub-ds-docs.pages.dev/components/filter-chip.md): Interactive chip for filtering, supports selected/unselected state.
 - [Flex](https://nexub-ds-docs.pages.dev/components/flex.md): Flexbox layout primitive.
 - [Floating Input](https://nexub-ds-docs.pages.dev/components/floating-input.md): A text field whose label sits inside and floats up on focus or input. CSS only.
@@ -92,6 +93,7 @@ Version 5.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Radio Card](https://nexub-ds-docs.pages.dev/components/radio-card.md): A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group.md): Group of mutually exclusive radio inputs.
 - [Rating](https://nexub-ds-docs.pages.dev/components/rating.md): Star rating input, supports controlled and read-only modes.
+- [Saved Views](https://nexub-ds-docs.pages.dev/components/saved-views.md): A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Scroll Area](https://nexub-ds-docs.pages.dev/components/scroll-area.md): Scrollable container with custom styled scrollbars.
 - [Scroll Progress](https://nexub-ds-docs.pages.dev/components/scroll-progress.md): A thin bar along the top that fills as the page scrolls. CSS only.
 - [Search Input](https://nexub-ds-docs.pages.dev/components/search-input.md): A text input pre-wired with a search icon and a clear button for filtering content.
