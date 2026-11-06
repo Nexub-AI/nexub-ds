@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v4.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -79,6 +79,10 @@ Never use a component marked deprecated.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
 
+## Components — Forms
+
+- [Floating Input](components/floating-input.md) `@nexub/react`: A text field whose label sits inside and floats up on focus or input. CSS only.
+
 ## Components — Inline Primitives
 
 - [Aurora](components/aurora.md) `@nexub/react`: A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
@@ -125,6 +129,8 @@ Never use a component marked deprecated.
 - [Reveal](components/motion-reveal.md) `@nexub/react`: Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
 - [Scale](components/motion-scale.md) `@nexub/react`: Scales content in/out from its center.
 - [Slide](components/motion-slide.md) `@nexub/react`: Slides content in from a direction based on the `in` prop.
+- [Scroll Progress](components/scroll-progress.md) `@nexub/react`: A thin bar along the top that fills as the page scrolls. CSS only.
+- [Shared Element](components/shared-element.md) `@nexub/react`: Morphs the same element between two states or pages inside a view transition.
 
 ## Components — Navigation
 
