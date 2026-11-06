@@ -71,6 +71,14 @@ export default function ExpressionPage() {
         </div>
       </Section>
 
+      <Section id="shape" title="Shape and glass">
+        <Prose>
+          Add <code>data-shape=&quot;squircle&quot;</code> to an area for continuous, Apple-style corners where the browser supports
+          CSS <code>corner-shape</code>. Under Vivid, glass surfaces get a specular edge that catches light like a lens; elsewhere
+          add the <code>nx-glass-edge</code> class.
+        </Prose>
+      </Section>
+
       <Section id="setup" title="Turn it on">
         <CodeBlock lang="css" code={`@import "@nexub/themes/vivid";   /* after your theme files */`} />
         <CodeBlock lang="html" code={`<html data-expression="vivid">        <!-- the whole app -->

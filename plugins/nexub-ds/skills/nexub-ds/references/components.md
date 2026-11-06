@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v4.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.5.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -27,6 +27,7 @@ Never use a component marked deprecated.
 
 - [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
 - [Bar Chart](components/bar-chart.md) `@nexub/react`: Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
+- [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.

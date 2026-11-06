@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 4.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 4.5.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -31,6 +31,7 @@ Version 4.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Button](https://nexub-ds-docs.pages.dev/components/button.md): Triggers an action or event. Supports multiple variants, sizes, and semantic tones.
 - [Card](https://nexub-ds-docs.pages.dev/components/card.md): Surface container for grouping related content. Supports flat, surface, and interactive variants.
 - [Celebrate](https://nexub-ds-docs.pages.dev/components/celebrate.md): A short confetti burst for a real win, such as a first payment or finishing onboarding.
+- [Chart Toggle](https://nexub-ds-docs.pages.dev/components/chart-toggle.md): A legend whose entries switch series on and off, wrapped around any chart.
 - [Checkbox Card](https://nexub-ds-docs.pages.dev/components/checkbox-card.md): A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Checkbox](https://nexub-ds-docs.pages.dev/components/checkbox.md): Binary checkbox input built on Radix UI.
 - [Chip](https://nexub-ds-docs.pages.dev/components/chip.md): Compact label chip, optionally dismissible.
