@@ -435,6 +435,7 @@ Never use a component marked deprecated.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
+- [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
@@ -577,7 +578,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DataTableVirtual, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AgentKit, AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DataTableVirtual, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, OTPInput, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage
 
 
@@ -680,6 +681,7 @@ Confirmation dialog that requires an explicit user action before proceeding.
 | `AlertDialog.Description` | `compound` |  | Supporting description text for the dialog. |
 | `AlertDialog.Action` | `compound` |  | Confirms the destructive or affirmative action and closes the dialog. |
 | `AlertDialog.Cancel` | `compound` |  | Cancels the action and closes the dialog. |
+| `AlertDialog.Confirm text` | `string` |  | Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources. |
 
 ## Example: Default
 
@@ -708,6 +710,37 @@ export default function Example() {
         </AlertDialog.Portal>
       </AlertDialog.Root>
     </>
+  );
+}
+```
+
+## Example: Type to confirm
+
+Deleting a workspace asks for its name first.
+
+```tsx
+'use client';
+
+import { AlertDialog, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <AlertDialog.Root>
+      <AlertDialog.Trigger asChild>
+        <Button variant="destructive">Delete workspace</Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Content>
+        <AlertDialog.Header>
+          <AlertDialog.Title>Delete acme-prod?</AlertDialog.Title>
+          <AlertDialog.Description>All projects, members and billing history go with it. This can’t be undone.</AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Confirm text="acme-prod" />
+        <AlertDialog.Footer>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action>Delete workspace</AlertDialog.Action>
+        </AlertDialog.Footer>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 }
 ```
@@ -3093,6 +3126,8 @@ Placeholder UI shown when a list or page has no content.
 | `EmptyState.Title children` (required) | `React.ReactNode` |  | Primary heading text for the empty state. |
 | `EmptyState.Description children` | `React.ReactNode` |  | Supporting text providing more context or guidance. |
 | `EmptyState.Actions children` | `React.ReactNode` |  | One or more action buttons rendered below the description. |
+| `EmptyStatePreset kind` (required) | `'noData' \| 'noResults' \| 'noAccess' \| 'serverError' \| 'offline'` |  | Ready-made icon, title and description (5.6). serverError and offline are announced as alerts. |
+| `EmptyStatePreset title / description / actions` | `ReactNode` |  | Override the localised text; add buttons such as Retry. |
 
 ## Example: Default
 
@@ -3140,6 +3175,23 @@ export default function Example() {
         <Button variant="primary">Upload document</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
+  );
+}
+```
+
+## Example: Presets
+
+`EmptyStatePreset` for no data, no results, no access (403), server error (500) and offline.
+
+```tsx
+import { Button, EmptyStatePreset } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full gap-4 sm:grid-cols-2">
+      <EmptyStatePreset kind="noResults" actions={<Button variant="outline" size="sm">Clear filters</Button>} />
+      <EmptyStatePreset kind="serverError" actions={<Button size="sm">Retry</Button>} />
+    </div>
   );
 }
 ```
@@ -5126,6 +5178,59 @@ export default function Example() {
 - Under reduced motion digits change instantly.
 
 Related: [amount](amount.md), [stat-card](stat-card.md)
+
+
+---
+
+# OTP Input
+
+One box per digit for verification codes, with paste and one-time-code autofill.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Import: `import { OtpInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/otp-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `length` | `number` | `6` | Number of boxes. |
+| `value / defaultValue / onValueChange` | `string` |  | The code so far, without gaps. |
+| `onComplete` | `(code: string) => void` |  | Called when every box is filled; submit or verify here. |
+| `mode` | `'numeric' \| 'alphanumeric'` | `'numeric'` | Numeric shows the number keypad on phones. |
+| `invalid / disabled` | `boolean` |  | Error styling (pair with a FormError) and the disabled state. |
+| `name` | `string` |  | Submits the code with a form. |
+| `aria-label` | `string` | `'Verification code'` | Group name; each box reads "Digit N of M". |
+
+## Example: Verification code
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { OTPInput } from '@nexub/react';
+
+export default function Example() {
+  const [status, setStatus] = React.useState('');
+  return (
+    <div className="flex flex-col items-start gap-3">
+      <OTPInput onComplete={(code) => setStatus(code === '123456' ? 'Verified' : 'That code didn’t work')} onValueChange={() => setStatus('')} />
+      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+        {status || 'Try 123456'}
+      </p>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Type`: Fills the box and moves to the next.
+- `Backspace`: Clears the box, or the previous one when empty.
+- `ArrowLeft / ArrowRight`: Moves between boxes.
+- The first box has `autocomplete="one-time-code"`, so the code from an SMS fills every box.
+
+Related: [input](input.md), [password-input](password-input.md)
 
 
 ---

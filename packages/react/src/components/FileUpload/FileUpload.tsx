@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Upload, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { Progress } from '../Progress/Progress.js';
 
 /** Localised file size ("12.3 kB", "1,5 Mo"), 1024-based as before. */
 export function formatFileSize(bytes: number, locale: string): string {
@@ -210,15 +211,24 @@ const List = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListEl
 );
 List.displayName = 'FileUpload.List';
 
-const Item = React.forwardRef<
-  HTMLLIElement,
-  React.HTMLAttributes<HTMLLIElement> & { index: number }
->(({ className, index, ...props }, ref) => {
+export interface FileUploadItemProps extends React.HTMLAttributes<HTMLLIElement> {
+  index: number;
+  /** Upload progress 0–100. Below 100 shows a bar and, with `onCancel`, a cancel button. Your app does the upload. */
+  progress?: number;
+  /** Stops this file's upload (e.g. AbortController.abort()); shown while `progress` is below 100. */
+  onCancel?: () => void;
+  /** Why this file failed; shown under its name. */
+  error?: string;
+}
+
+const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, index, progress, onCancel, error, ...props }, ref) => {
   const { files, removeFile } = useFileUpload();
   const messages = useNexubMessages();
   const { locale } = useLocale();
   const file = files[index];
   if (!file) return null;
+  const uploading = progress !== undefined && progress < 100;
+  const percent = Math.round(Math.max(0, Math.min(100, progress ?? 0)));
   return (
     <li
       ref={ref}
@@ -234,11 +244,21 @@ const Item = React.forwardRef<
         </p>
         <p className="text-xs text-[var(--color-on-surface-muted)]">
           {formatFileSize(file.size, locale)}
+          {uploading && ` · ${percent}%`}
         </p>
+        {uploading && (
+          <Progress value={percent} size="sm" className="mt-1.5" aria-label={messages.uploadProgress(file.name, percent)} />
+        )}
+        {error && (
+          <p role="alert" className="mt-1 text-xs text-[var(--color-error)]">
+            {error}
+          </p>
+        )}
       </div>
       <button
-        onClick={() => removeFile(index)}
-        aria-label={messages.removeFile(file.name)}
+        type="button"
+        onClick={() => (uploading && onCancel ? onCancel() : removeFile(index))}
+        aria-label={uploading && onCancel ? messages.cancelUpload(file.name) : messages.removeFile(file.name)}
         className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
       >
         <X size="sm" aria-hidden="true" />

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { EmptyState } from './EmptyState.js';
+import { EmptyStatePreset } from './EmptyStatePreset.js';
 
 const meta: Meta = {
   title: 'Components/EmptyState',
@@ -51,5 +52,17 @@ export const Simple: StoryObj = {
       <EmptyState.Title>No results found</EmptyState.Title>
       <EmptyState.Description>Try adjusting your search or filters.</EmptyState.Description>
     </EmptyState.Root>
+  ),
+};
+
+export const Presets: StoryObj = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+      <EmptyStatePreset kind="noData" />
+      <EmptyStatePreset kind="noResults" />
+      <EmptyStatePreset kind="noAccess" />
+      <EmptyStatePreset kind="serverError" />
+      <EmptyStatePreset kind="offline" />
+    </div>
   ),
 };

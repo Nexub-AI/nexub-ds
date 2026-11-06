@@ -211,6 +211,7 @@ export type { KeyboardShortcutProps } from './components/KeyboardShortcut/index.
 // Components — Overlays
 export { Dialog } from './components/Dialog/index.js';
 export { AlertDialog } from './components/AlertDialog/index.js';
+export type { AlertDialogConfirmProps } from './components/AlertDialog/index.js';
 export { Popover } from './components/Popover/index.js';
 export { Tooltip } from './components/Tooltip/index.js';
 export { Provider as TooltipProvider } from './components/Tooltip/index.js';
@@ -286,13 +287,16 @@ export type { CommandPaletteRootProps } from './components/CommandPalette/index.
 export { Table } from './components/Table/index.js';
 export { DataTable } from './components/DataTable/index.js';
 export type { DataTableProps, DataTableDensity } from './components/DataTable/index.js';
-export { EmptyState } from './components/EmptyState/index.js';
+export { EmptyState, EmptyStatePreset } from './components/EmptyState/index.js';
+export type { EmptyStatePresetProps, EmptyStateKind } from './components/EmptyState/index.js';
 export { ErrorState } from './components/ErrorState/index.js';
 export type { ErrorStateProps } from './components/ErrorState/index.js';
 
 // Components — Input
 export { FileUpload, fileAccepted } from './components/FileUpload/index.js';
-export type { FileUploadRootProps, FileRejection } from './components/FileUpload/index.js';
+export type { FileUploadRootProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
+export { OTPInput } from './components/OTPInput/index.js';
+export type { OTPInputProps } from './components/OTPInput/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
 export type { DatePickerProps } from './components/DatePicker/index.js';
 export { DateRangePicker } from './components/DateRangePicker/index.js';
