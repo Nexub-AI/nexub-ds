@@ -96,6 +96,36 @@ export interface NexubMessages {
   resizeColumn: (column: string) => string;
   /** Announced after a keyboard column move, e.g. "Email moved to position 2 of 4". */
   columnMoved: (column: string, position: number, total: number) => string;
+  /** DateRangePicker presets. */
+  today: string;
+  last7Days: string;
+  last30Days: string;
+  monthToDate: string;
+  lastMonth: string;
+  /** DateRangePicker footer, e.g. "Time zone: GMT+1". */
+  timeZoneLabel: (zone: string) => string;
+  /** FilterBuilder. */
+  addFilter: string;
+  addGroup: string;
+  removeGroup: string;
+  matchAll: string;
+  matchAny: string;
+  /** Names a filter group for screen readers. */
+  filterGroup: (combinator: 'and' | 'or') => string;
+  filterField: string;
+  filterOperator: string;
+  filterValue: string;
+  filterOperators: Record<'contains' | 'equals' | 'notEquals' | 'startsWith' | 'isEmpty' | 'greaterThan' | 'lessThan' | 'before' | 'after', string>;
+  /** SavedViews. */
+  views: string;
+  saveView: string;
+  updateView: (name: string) => string;
+  deleteView: (name: string) => string;
+  viewName: string;
+  save: string;
+  /** FilterBar, e.g. "3 filters". */
+  filtersApplied: (count: number) => string;
+  clearAll: string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -220,6 +250,40 @@ export const defaultMessages: NexubMessages = {
   sortOrder: (index) => `sort ${index}`,
   resizeColumn: (column) => `Resize ${column}`,
   columnMoved: (column, position, total) => `${column} moved to position ${position} of ${total}`,
+  today: 'Today',
+  last7Days: 'Last 7 days',
+  last30Days: 'Last 30 days',
+  monthToDate: 'Month to date',
+  lastMonth: 'Last month',
+  timeZoneLabel: (zone) => `Time zone: ${zone}`,
+  addFilter: 'Add filter',
+  addGroup: 'Add group',
+  removeGroup: 'Remove group',
+  matchAll: 'All',
+  matchAny: 'Any',
+  filterGroup: (combinator) => (combinator === 'and' ? 'Filters, match all' : 'Filters, match any'),
+  filterField: 'Field',
+  filterOperator: 'Condition',
+  filterValue: 'Value',
+  filterOperators: {
+    contains: 'contains',
+    equals: 'is',
+    notEquals: 'is not',
+    startsWith: 'starts with',
+    isEmpty: 'is empty',
+    greaterThan: 'greater than',
+    lessThan: 'less than',
+    before: 'before',
+    after: 'after',
+  },
+  views: 'Views',
+  saveView: 'Save as new view…',
+  updateView: (name) => `Update “${name}”`,
+  deleteView: (name) => `Delete “${name}”`,
+  viewName: 'View name',
+  save: 'Save',
+  filtersApplied: (count) => `${count} filter${count !== 1 ? 's' : ''}`,
+  clearAll: 'Clear all',
   previous: 'Previous',
   next: 'Next',
   search: 'Search',

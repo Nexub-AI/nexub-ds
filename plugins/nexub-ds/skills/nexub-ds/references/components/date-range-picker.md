@@ -17,10 +17,10 @@ Dual-calendar date range selector.
 | `disabled` | `boolean` | `false` | Disables the trigger input and calendar popover. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
 | `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
-| `numberOfMonths` | `number` | `2` | Number of months to display in the calendar popover. |
 | `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
 | `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
-| `error` | `string` |  | Error message displayed below the input. |
+| `presets` | `boolean \| { label: string; range: (today: Date) => DateRange }[]` |  | `true` adds Today, Last 7 days, Last 30 days, Month to date and Last month beside the calendar; or pass your own (5.5). |
+| `timeZone` | `string` |  | IANA zone the dates mean, e.g. `Europe/London`. Shown under the calendar; presets count "today" there (5.5). `todayIn(zone)` is exported. |
 
 ## Example: Default
 
@@ -49,6 +49,26 @@ export default function Example() {
       onChange={(r) => setRange({ from: r?.from, to: r?.to })}
       placeholder="Select date range…"
     />
+  );
+}
+```
+
+## Example: Presets and time zone
+
+Quick ranges counted in the chosen time zone, which is labelled under the calendar.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { DateRangePicker, type DateRange } from '@nexub/react';
+
+export default function Example() {
+  const [range, setRange] = React.useState<DateRange | undefined>();
+  return (
+    <div className="w-[300px]">
+      <DateRangePicker aria-label="Report period" value={range} onChange={setRange} presets timeZone="Europe/London" />
+    </div>
   );
 }
 ```

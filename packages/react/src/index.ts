@@ -234,6 +234,10 @@ export { Combobox } from './components/Combobox/index.js';
 export { Autocomplete } from './components/Autocomplete/index.js';
 export type { AutocompleteOption, AutocompleteProps } from './components/Autocomplete/index.js';
 export { MultiSelect } from './components/MultiSelect/index.js';
+export { FilterBuilder, filterOperators, isFilterGroup, emptyFilter, countFilters } from './components/FilterBuilder/index.js';
+export type { FilterBuilderProps, FilterField, FilterFieldType, FilterOperator, FilterRule, FilterGroup } from './components/FilterBuilder/index.js';
+export { SavedViews } from './components/SavedViews/index.js';
+export type { SavedViewsProps, SavedView } from './components/SavedViews/index.js';
 export type { MultiSelectOption, MultiSelectProps } from './components/MultiSelect/index.js';
 export { Switch } from './components/Switch/index.js';
 export type { SwitchProps } from './components/Switch/index.js';
@@ -292,7 +296,8 @@ export type { FileUploadRootProps, FileRejection } from './components/FileUpload
 export { DatePicker } from './components/DatePicker/index.js';
 export type { DatePickerProps } from './components/DatePicker/index.js';
 export { DateRangePicker } from './components/DateRangePicker/index.js';
-export type { DateRangePickerProps, DateRange } from './components/DateRangePicker/index.js';
+export { todayIn } from './components/DateRangePicker/index.js';
+export type { DateRangePickerProps, DateRange, DateRangePreset } from './components/DateRangePicker/index.js';
 
 // Components — Theme
 export { ThemeProvider, ThemeScript, useTheme } from './components/ThemeProvider/index.js';

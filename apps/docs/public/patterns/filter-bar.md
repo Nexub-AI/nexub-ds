@@ -15,6 +15,8 @@ Search + filter toolbar pattern for data-heavy list or table views.
 | `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
 | `searchLabel` | `string` | `'Search'` | Accessible name of the search field (5.1). Defaults to the localised `search` message. |
 | `filters` | `React.ReactNode` |  | Filter controls rendered to the right of search. |
+| `activeCount` | `number` | `0` | Applied filters; above 0 shows "N filters" (5.5). `countFilters(group)` counts a FilterBuilder query. |
+| `onClearAll` | `() => void` |  | Shows a Clear all button next to the count (5.5). |
 | `actions` | `React.ReactNode` |  | Action buttons (e.g. "Export") rendered on the far right. |
 
 ## Example: Default

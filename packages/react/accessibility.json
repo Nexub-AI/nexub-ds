@@ -400,6 +400,17 @@
       "screenReader": []
     },
     {
+      "slug": "filter-builder",
+      "name": "Filter Builder",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Field, condition and value controls are labelled; remove buttons say what they remove."
+      ]
+    },
+    {
       "slug": "filter-chip",
       "name": "Filter Chip",
       "package": "@nexub/react",
@@ -833,6 +844,15 @@
     {
       "slug": "rating",
       "name": "Rating",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "saved-views",
+      "name": "Saved Views",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
