@@ -5,6 +5,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ToneValue } from '@nexub/core';
+import { usePointerSheen } from '../../hooks/usePointerSheen.js';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
@@ -97,6 +98,9 @@ export interface ButtonProps
   leadingIcon?: React.ReactNode;
   trailingIcon?: React.ReactNode;
   asChild?: boolean;
+  /** 4.3: the button drifts a few pixels toward the pointer on hover. For one key action per screen.
+   *  Off for touch and reduced motion. */
+  magnetic?: boolean;
 }
 
 const CheckIcon = () => (
@@ -121,21 +125,26 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       leadingIcon,
       trailingIcon,
       asChild = false,
+      magnetic = false,
       disabled,
       onClick,
+      onPointerMove,
       children,
       ...props
     },
     ref,
   ) => {
     const status: ButtonStatus = statusProp ?? (loading ? 'loading' : 'idle');
+    const handlePointerMove = usePointerSheen<HTMLButtonElement>(magnetic, onPointerMove);
     const sharedProps = {
       className: cn(
         buttonVariants({ variant, size, fullWidth }),
         tone ? toneClasses[tone] : '',
         !asChild && status === 'error' && 'nx-shake',
+        magnetic && 'nx-magnetic',
         className,
       ),
+      onPointerMove: handlePointerMove,
       'data-tone': tone,
       // Styling hook for opt-in layers (vivid, marketing); no styles depend on it by default.
       'data-variant': variant ?? 'primary',

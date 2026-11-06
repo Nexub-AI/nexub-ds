@@ -50,6 +50,8 @@ export type { NumberInputProps } from './components/NumberInput/index.js';
 export { MoneyInput } from './components/MoneyInput/index.js';
 export type { MoneyInputProps } from './components/MoneyInput/index.js';
 export { Amount } from './components/Amount/index.js';
+export { Celebrate } from './components/Celebrate/index.js';
+export type { CelebrateProps } from './components/Celebrate/index.js';
 export { Aurora } from './components/Aurora/index.js';
 export type { AuroraProps } from './components/Aurora/index.js';
 export { BarChart, LineChart, DonutChart, Sparkline, ChartLegend, niceMax, niceDomain } from './components/Chart/index.js';

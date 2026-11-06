@@ -92,6 +92,7 @@ import codeInlineEntry from './components/code-inline';
 import kbdEntry from './components/kbd';
 import linkEntry from './components/link';
 import textGradientEntry from './components/text-gradient';
+import celebrateEntry from './components/celebrate';
 import auroraEntry from './components/aurora';
 
 // ─── Component entries — Layout ───────────────────────────────────────────────
@@ -257,6 +258,7 @@ export const componentEntries: ComponentEntry[] = [
   kbdEntry,
   linkEntry,
   textGradientEntry,
+  celebrateEntry,
   auroraEntry,
   // Layout
   stackEntry,

@@ -58,8 +58,9 @@ export interface CardProps
     VariantProps<typeof cardVariants> {
   tone?: ToneValue;
   surface?: 'solid' | 'glass';
-  /** `sheen`: a soft light follows the pointer (opt-in; off for touch and reduced motion). */
-  effect?: 'none' | 'sheen';
+  /** `sheen`: a soft light follows the pointer. `tilt` (4.3): the card also leans toward the pointer in 3D.
+   *  Opt-in; off for touch and reduced motion. */
+  effect?: 'none' | 'sheen' | 'tilt';
   /** Product accent for `variant="showcase"`: a coloured top edge and tint in marketing mode. Sets `data-product`. */
   accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
   asChild?: boolean;
@@ -72,13 +73,13 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ) => {
     const Comp = asChild ? Slot : 'div';
     const toneStyle = tone ? toneBorderMap[tone] : '';
-    const sheen = effect === 'sheen';
+    const sheen = effect === 'sheen' || effect === 'tilt';
     const handlePointerMove = usePointerSheen<HTMLDivElement>(sheen, onPointerMove);
 
     return (
       <Comp
         ref={ref}
-        className={cn(cardVariants({ variant, surface }), toneStyle, sheen && 'nx-sheen', className)}
+        className={cn(cardVariants({ variant, surface }), toneStyle, sheen && 'nx-sheen', effect === 'tilt' && 'nx-tilt', className)}
         onPointerMove={handlePointerMove}
         data-tone={tone}
         data-variant={variant ?? 'flat'}
