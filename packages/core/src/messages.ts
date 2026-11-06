@@ -76,6 +76,22 @@ export interface NexubMessages {
   conversation: string;
   // DataTable pager
   pageOf: (page: number, total: number) => string;
+  /** DataTable selection column. */
+  selectRow: string;
+  selectAllOnPage: string;
+  /** DataTable bulk-action bar, e.g. "3 selected"; `count` is already formatted. */
+  selectedCount: (count: string) => string;
+  /** Offered when a whole page is selected, e.g. "Select all 1,240". */
+  selectAllRows: (count: string) => string;
+  clearSelection: string;
+  /** DataTable view menu. */
+  view: string;
+  density: string;
+  comfortable: string;
+  compact: string;
+  columns: string;
+  /** Read after a sorted column's name when several columns are sorted, e.g. "sort 2". */
+  sortOrder: (index: number) => string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -187,6 +203,17 @@ export const defaultMessages: NexubMessages = {
   jumpToLatest: 'Jump to latest',
   conversation: 'Conversation',
   pageOf: (page, total) => `Page ${page} of ${total}`,
+  selectRow: 'Select row',
+  selectAllOnPage: 'Select all rows on this page',
+  selectedCount: (count) => `${count} selected`,
+  selectAllRows: (count) => `Select all ${count}`,
+  clearSelection: 'Clear selection',
+  view: 'View',
+  density: 'Density',
+  comfortable: 'Comfortable',
+  compact: 'Compact',
+  columns: 'Columns',
+  sortOrder: (index) => `sort ${index}`,
   previous: 'Previous',
   next: 'Next',
   search: 'Search',
