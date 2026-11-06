@@ -123,7 +123,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v3.7.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v3.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -362,7 +362,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v3.7.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v3.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -7533,6 +7533,8 @@ React Native components and screen patterns for Nexub Design System. They use th
 **Native chrome, Nexub content.** The system draws the tab bar, stack header, back gesture, action sheets, pickers and iOS 26 Liquid Glass; Nexub themes them. Everything inside a screen (lists, cards, buttons, inputs, money) is drawn by Nexub, so it looks the same on iOS, Android and the web.
 
 Status: **alpha**. Built for Expo SDK 57+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
+
+> **Expo SDK 57 is deprecated.** 4.0 requires Expo SDK 58 or later. See [Migrating to 4.0](https://nexub-ds-docs.pages.dev/getting-started/migrating-to-4).
 
 ## Install
 

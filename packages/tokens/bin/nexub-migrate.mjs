@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset'];
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
 const MAX_BYTES = 1024 * 1024;
@@ -404,6 +404,11 @@ export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, a
     text = r.output;
     items.push(...r.items);
   }
+  if (rules.has('tailwind-3-preset')) {
+    // Report only: moving a tailwind.config preset to CSS-first Tailwind 4 is a config change, not a rewrite.
+    for (const m of src.matchAll(/['"]@nexub\/tokens\/tailwind['"]/g))
+      items.push({ at: m.index, rule: 'tailwind-3-preset', message: '@nexub/tokens/tailwind (the Tailwind 3 preset) is removed in 4.0: move to Tailwind 4 and @import "@nexub/tokens/tailwind.css" in your CSS' });
+  }
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -464,6 +469,8 @@ Rules:
                      @nexub/react components removed in 3.0: Banner, Callout -> Alert;
                      Tag -> <Badge variant="soft">; StatusPill label -> Badge children
                      (dot and non-JSX uses reported); *Props types renamed
+  tailwind-3-preset  report the Tailwind 3 preset (@nexub/tokens/tailwind), removed in 4.0;
+                     use Tailwind 4 with @import "@nexub/tokens/tailwind.css"
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
