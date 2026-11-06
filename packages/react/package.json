@@ -98,8 +98,8 @@
   },
   "peerDependencies": {
     "@nexub/tokens": "workspace:^",
-    "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
   },
   "devDependencies": {
     "@nexub/themes": "workspace:*",

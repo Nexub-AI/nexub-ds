@@ -15,8 +15,8 @@ Approved 2026-11-06. One release per version, rolling-minor (4.9 rolls over to 5
 | 4.7 | Docs site "wow" | Live Vivid + Aurora hero with "Remix this page" (brand seeds, Calm/Vivid), `useScopedSeed` (shipped). Playground and showcase gallery: backlog |
 | 4.8 | AI-native UI kit | PlanTracker, ToolCall, ApprovalCard, DiffView (shipped; StreamingText already existed). Voice input: backlog (needs microphone flows) |
 | 4.9 | 5.0 release candidate | API freeze; dev warnings for the Vivid default and React 18; `data-expression="calm"`; Migrating to 5.0 (shipped) |
-| 5.0 | Vivid by default for new apps | Removes the 4.x deprecations; docs version switcher; Calm stays fully supported |
+| 5.0 | Vivid by default for new apps | ThemeProvider defaults `<html>` to Vivid (`defaultExpression`), React 19 peers, 4.9 warnings removed (shipped). Docs version switcher: backlog (needs hosted 4.x docs) |
 
 Blocked on outside input: Figma Code Connect (library file and access), native promotion to stable (Payub pilot), Expo Go QR (EAS project), recorded screen-reader sessions.
 
-Backlog (needs client-side chart state, which the server-rendered charts avoid on purpose): chart zoom and brush, live-updating charts.
+Backlog (needs client-side chart state, which the server-rendered charts avoid on purpose): chart zoom and brush, live-updating charts. Also: docs version switcher (needs a hosted 4.x docs build).
