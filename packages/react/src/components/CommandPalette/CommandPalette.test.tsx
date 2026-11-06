@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { CommandPalette } from './CommandPalette.js';
@@ -84,5 +84,20 @@ describe('CommandPalette', () => {
     await user.keyboard('{Escape}');
     expect(queryByRole('dialog')).not.toBeInTheDocument();
     expect(getByRole('button', { name: 'Open' })).toHaveFocus();
+  });
+
+  it('shortcut toggles the palette with Cmd or Ctrl', () => {
+    render(
+      <CommandPalette.Root shortcut="k">
+        <CommandPalette.Input />
+      </CommandPalette.Root>,
+    );
+    expect(screen.queryByRole('dialog')).toBeNull();
+    fireEvent.keyDown(document, { key: 'k', metaKey: true });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'K', ctrlKey: true });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    fireEvent.keyDown(document, { key: 'k' }); // no modifier
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });

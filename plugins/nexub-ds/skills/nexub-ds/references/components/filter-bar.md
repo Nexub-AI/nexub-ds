@@ -13,6 +13,7 @@ Search + filter toolbar pattern for data-heavy list or table views.
 | `searchPlaceholder` | `string` | `'Search…'` | Placeholder text for the search input. |
 | `searchValue` | `string` |  | Controlled search value. |
 | `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
+| `searchLabel` | `string` | `'Search'` | Accessible name of the search field (5.1). Defaults to the localised `search` message. |
 | `filters` | `React.ReactNode` |  | Filter controls rendered to the right of search. |
 | `actions` | `React.ReactNode` |  | Action buttons (e.g. "Export") rendered on the far right. |
 

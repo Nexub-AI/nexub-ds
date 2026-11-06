@@ -10,6 +10,12 @@ export interface NexubMessages {
   removeFilter: string;
   removeFile: (fileName: string) => string;
   uploadFiles: string;
+  /** FileUpload: a file outside `accept`. */
+  fileTypeRejected: (fileName: string) => string;
+  /** FileUpload: a file over `maxSize`; `maxSize` is already formatted ("5 MB"). */
+  fileTooLarge: (fileName: string, maxSize: string) => string;
+  /** FileUpload: files past `maxFiles`. */
+  tooManyFiles: (maxFiles: number) => string;
   clickToUpload: string;
   orDragAndDrop: string;
   clearSearch: string;
@@ -122,6 +128,9 @@ export const defaultMessages: NexubMessages = {
   removeFilter: 'Remove filter',
   removeFile: (fileName) => `Remove ${fileName}`,
   uploadFiles: 'Upload files',
+  fileTypeRejected: (fileName) => `${fileName} isn’t an accepted file type`,
+  fileTooLarge: (fileName, maxSize) => `${fileName} is larger than ${maxSize}`,
+  tooManyFiles: (maxFiles) => `You can add up to ${maxFiles} file${maxFiles !== 1 ? 's' : ''}`,
   clickToUpload: 'Click to upload',
   orDragAndDrop: 'or drag and drop',
   clearSearch: 'Clear search',
