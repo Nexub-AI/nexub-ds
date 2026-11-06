@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v4.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -80,6 +80,7 @@ Never use a component marked deprecated.
 
 ## Components — Inline Primitives
 
+- [Aurora](components/aurora.md) `@nexub/react`: A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
 - [Code](components/code-inline.md) `@nexub/react`: Inline code span for technical terms and short code snippets.
 - [Kbd](components/kbd.md) `@nexub/react`: Keyboard key display — renders a styled <kbd> element.
 - [Link](components/link.md) `@nexub/react`: Styled anchor link with variant and external support.

@@ -1,0 +1,87 @@
+/* @nexub/themes/vivid — the expressive layer (4.2).
+   Opt in with data-expression="vivid" on <html> or any wrapper. Everything here
+   is scoped to that attribute, so an app that never sets it looks exactly as
+   before. Every value is derived from the colour roles with color-mix(), so it
+   follows light/dark, data-contrast, data-product brands and seeded themes.
+   Contrast: gradients run between two roles of the same tone (primary →
+   primary mixed with tertiary), so on-primary text keeps its 4.5:1. */
+
+[data-expression='vivid'] {
+  /* Seed-derived accent gradient: the primary sweeping 50° round the hue wheel at
+     the same lightness and chroma (oklch), so on-primary text keeps its contrast
+     and every brand gets its own pair (blue → violet, green → teal, orange → pink).
+     Browsers without relative colour syntax drop the gradient and keep the flat fill. */
+  --vivid-accent-2: oklch(from var(--color-primary) l c calc(h + 50));
+  --vivid-gradient: linear-gradient(135deg, var(--color-primary) 0%, var(--vivid-accent-2) 100%);
+  --vivid-gradient-hover: linear-gradient(135deg, oklch(from var(--color-primary) calc(l + 0.04) c h) 0%, oklch(from var(--vivid-accent-2) calc(l + 0.04) c h) 100%);
+  --vivid-glow: color-mix(in oklab, var(--color-primary) 38%, transparent);
+  --vivid-ring: color-mix(in oklab, var(--color-primary) 30%, transparent);
+  --vivid-edge: color-mix(in oklab, var(--color-on-surface) 10%, transparent);
+
+  /* Elevation tinted with the accent instead of grey: cooler and more alive. */
+  --elevation-1: 0 0 0 1px var(--vivid-edge), 0 1px 2px color-mix(in oklab, var(--color-primary) 10%, transparent), 0 4px 12px -2px color-mix(in oklab, var(--color-primary) 14%, transparent);
+  --elevation-2: 0 0 0 1px var(--vivid-edge), 0 2px 4px color-mix(in oklab, var(--color-primary) 10%, transparent), 0 12px 28px -6px color-mix(in oklab, var(--color-primary) 22%, transparent);
+  --elevation-3: 0 0 0 1px var(--vivid-edge), 0 4px 8px color-mix(in oklab, var(--color-primary) 12%, transparent), 0 24px 48px -12px color-mix(in oklab, var(--color-primary) 30%, transparent);
+}
+
+/* High contrast: flat accent fills, no glow. The roles already carry the contrast. */
+[data-expression='vivid'][data-contrast='high'],
+[data-contrast='high'] [data-expression='vivid'] {
+  --vivid-gradient: linear-gradient(var(--color-primary), var(--color-primary));
+  --vivid-gradient-hover: var(--vivid-gradient);
+  --vivid-glow: transparent;
+  --vivid-ring: transparent;
+}
+@media (prefers-contrast: more) {
+  :root:not([data-contrast]) [data-expression='vivid'],
+  :root:not([data-contrast])[data-expression='vivid'] {
+    --vivid-gradient: linear-gradient(var(--color-primary), var(--color-primary));
+    --vivid-gradient-hover: var(--vivid-gradient);
+    --vivid-glow: transparent;
+    --vivid-ring: transparent;
+  }
+}
+
+/* Filled (primary) buttons: gradient fill, a soft accent glow, a small lift on hover. */
+[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled) {
+  background-image: var(--vivid-gradient);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, white 25%, transparent) inset, 0 6px 18px -6px var(--vivid-glow);
+  transition: box-shadow var(--motion-spring-effects-default-duration, 200ms) ease, translate var(--motion-spring-spatial-fast-duration, 200ms) var(--motion-spring-spatial-fast-easing, ease-out);
+}
+[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):hover {
+  background-image: var(--vivid-gradient-hover);
+  box-shadow: 0 1px 0 0 color-mix(in oklab, white 30%, transparent) inset, 0 10px 26px -6px var(--vivid-glow);
+  translate: 0 -1px;
+}
+[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):active {
+  translate: 0 0;
+  box-shadow: 0 2px 8px -4px var(--vivid-glow);
+}
+
+/* Interactive cards: an accent-gradient edge and glow on hover. */
+[data-expression='vivid'] [data-variant='interactive']:hover {
+  border-color: transparent;
+  background-image: linear-gradient(var(--card-bg, var(--color-surface-elevated)), var(--card-bg, var(--color-surface-elevated))), var(--vivid-gradient);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: var(--elevation-2), 0 0 0 4px color-mix(in oklab, var(--color-primary) 8%, transparent);
+}
+
+/* Selection controls and progress pick up the gradient. */
+[data-expression='vivid'] :is(button[role='switch'], button[role='checkbox'], button[role='radio'])[data-state='checked']:not(:disabled) {
+  background-image: var(--vivid-gradient);
+  border-color: transparent;
+}
+[data-expression='vivid'] [role='progressbar'] > [data-part='fill'] {
+  background-image: var(--vivid-gradient);
+}
+
+/* Focus on controls: the usual outline plus a soft accent halo. */
+[data-expression='vivid'] :is(a, button, input, textarea, select, [role='combobox'], [role='tab']):focus-visible {
+  box-shadow: 0 0 0 6px var(--vivid-ring);
+}
+
+/* Aurora is richer under vivid (base styles live in core.css). */
+[data-expression='vivid'] .nx-aurora {
+  --nx-aurora-strength: 0.42;
+}

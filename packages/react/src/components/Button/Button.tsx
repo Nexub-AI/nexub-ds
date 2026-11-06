@@ -137,6 +137,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className,
       ),
       'data-tone': tone,
+      // Styling hook for opt-in layers (vivid, marketing); no styles depend on it by default.
+      'data-variant': variant ?? 'primary',
       ...(variant === 'glass' && { 'data-material': 'glass', 'data-glass-thickness': 'thin' }),
       ...props,
     };
