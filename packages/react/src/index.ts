@@ -233,6 +233,8 @@ export { Select } from './components/Select/index.js';
 export { Combobox } from './components/Combobox/index.js';
 export { Autocomplete } from './components/Autocomplete/index.js';
 export type { AutocompleteOption, AutocompleteProps } from './components/Autocomplete/index.js';
+export { MultiSelect } from './components/MultiSelect/index.js';
+export type { MultiSelectOption, MultiSelectProps } from './components/MultiSelect/index.js';
 export { Switch } from './components/Switch/index.js';
 export type { SwitchProps } from './components/Switch/index.js';
 export { Checkbox } from './components/Checkbox/index.js';

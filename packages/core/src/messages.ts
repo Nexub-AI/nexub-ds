@@ -31,6 +31,10 @@ export interface NexubMessages {
   breadcrumb: string;
   breadcrumbMore: string;
   moreCount: (count: number) => string;
+  /** Combobox "create" option for text that matches nothing. */
+  createOption: (text: string) => string;
+  /** MultiSelect chip remove button. */
+  removeOption: (label: string) => string;
   rating: string;
   ratingStars: (stars: number) => string;
   mainNavigation: string;
@@ -146,6 +150,8 @@ export const defaultMessages: NexubMessages = {
   breadcrumb: 'breadcrumb',
   breadcrumbMore: 'More',
   moreCount: (count) => `${count} more`,
+  createOption: (text) => `Create “${text}”`,
+  removeOption: (label) => `Remove ${label}`,
   rating: 'Rating',
   ratingStars: (stars) => `${stars} star${stars !== 1 ? 's' : ''}`,
   mainNavigation: 'Main',
