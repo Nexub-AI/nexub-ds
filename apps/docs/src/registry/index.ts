@@ -141,6 +141,10 @@ import barChartEntry from './components/bar-chart';
 import lineChartEntry from './components/line-chart';
 import donutChartEntry from './components/donut-chart';
 import sparklineEntry from './components/sparkline';
+import diffViewEntry from './components/diff-view';
+import approvalCardEntry from './components/approval-card';
+import toolCallEntry from './components/tool-call';
+import planTrackerEntry from './components/plan-tracker';
 import chartToggleEntry from './components/chart-toggle';
 import kpiTileEntry from './components/kpi-tile';
 import funnelEntry from './components/funnel';
@@ -253,6 +257,10 @@ export const componentEntries: ComponentEntry[] = [
   lineChartEntry,
   donutChartEntry,
   sparklineEntry,
+  diffViewEntry,
+  approvalCardEntry,
+  toolCallEntry,
+  planTrackerEntry,
   chartToggleEntry,
   kpiTileEntry,
   funnelEntry,
