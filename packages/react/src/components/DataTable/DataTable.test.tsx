@@ -217,3 +217,41 @@ describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
   });
 });
 
+
+describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
+  it('resize handles change a column width with the keyboard', async () => {
+    const onSizing = vi.fn();
+    render(<DataTable columns={columns} data={data} enableColumnResizing onColumnSizingChange={onSizing} />);
+    const handle = screen.getByRole('separator', { name: 'Resize Name' });
+    expect(handle).toHaveAttribute('aria-valuenow', '150');
+    handle.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(onSizing).toHaveBeenLastCalledWith({ name: 166 });
+    expect(screen.getByRole('table')).toHaveClass('table-fixed');
+    expect(screen.getAllByRole('columnheader')[0]!.style.width).toBe('166px');
+  });
+
+  it('Alt+Arrow moves a column and announces it', async () => {
+    const onOrder = vi.fn();
+    render(<DataTable columns={columns} data={data} enableColumnReordering onColumnOrderChange={onOrder} />);
+    screen.getByRole('columnheader', { name: 'Name' }).focus();
+    await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}');
+    expect(onOrder).toHaveBeenLastCalledWith(['age', 'name']);
+    expect(screen.getByText('Name moved to position 2 of 2')).toBeInTheDocument();
+  });
+
+  it('pinned columns are sticky at their offset', () => {
+    render(<DataTable columns={columns} data={data} columnPinning={{ left: ['name'] }} enableColumnResizing />);
+    const head = screen.getByRole('columnheader', { name: /Name/ });
+    expect(head).toHaveClass('sticky');
+    expect(head).not.toHaveClass('relative');
+    expect(head.style.insetInlineStart).toBe('0px');
+    expect(screen.getByRole('cell', { name: 'Alice' })).toHaveClass('sticky');
+  });
+
+  it('maxHeight caps the scroll area and sticks the header', () => {
+    render(<DataTable columns={columns} data={data} maxHeight={300} />);
+    expect(screen.getByRole('table').parentElement!.style.maxHeight).toBe('300px');
+    expect(screen.getByRole('columnheader', { name: 'Name' })).toHaveClass('sticky', 'top-0');
+  });
+});

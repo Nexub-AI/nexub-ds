@@ -92,6 +92,10 @@ export interface NexubMessages {
   columns: string;
   /** Read after a sorted column's name when several columns are sorted, e.g. "sort 2". */
   sortOrder: (index: number) => string;
+  /** DataTable column resize handle. */
+  resizeColumn: (column: string) => string;
+  /** Announced after a keyboard column move, e.g. "Email moved to position 2 of 4". */
+  columnMoved: (column: string, position: number, total: number) => string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -214,6 +218,8 @@ export const defaultMessages: NexubMessages = {
   compact: 'Compact',
   columns: 'Columns',
   sortOrder: (index) => `sort ${index}`,
+  resizeColumn: (column) => `Resize ${column}`,
+  columnMoved: (column, position, total) => `${column} moved to position ${position} of ${total}`,
   previous: 'Previous',
   next: 'Next',
   search: 'Search',
