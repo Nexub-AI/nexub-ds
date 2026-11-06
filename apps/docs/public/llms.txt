@@ -84,6 +84,7 @@ Version 5.5.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail.md): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Number Input](https://nexub-ds-docs.pages.dev/components/number-input.md): A numeric input with increment and decrement controls, supporting min/max clamping and step.
 - [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker.md): A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [OTP Input](https://nexub-ds-docs.pages.dev/components/otp-input.md): One box per digit for verification codes, with paste and one-time-code autofill.
 - [Pagination](https://nexub-ds-docs.pages.dev/components/pagination.md): Page navigation control with prev/next and page number buttons.
 - [Password Input](https://nexub-ds-docs.pages.dev/components/password-input.md): A password field with a built-in toggle to reveal or hide the entered value.
 - [Plan Tracker](https://nexub-ds-docs.pages.dev/components/plan-tracker.md): An agent plan: ordered steps with done, active, pending or failed status.

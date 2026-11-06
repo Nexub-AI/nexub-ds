@@ -126,6 +126,15 @@ export interface NexubMessages {
   /** FilterBar, e.g. "3 filters". */
   filtersApplied: (count: number) => string;
   clearAll: string;
+  /** EmptyState presets. */
+  emptyStates: Record<'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline', { title: string; description: string }>;
+  /** AlertDialog type-to-confirm, e.g. "Type acme-prod to confirm". */
+  typeToConfirm: (text: string) => string;
+  /** OTPInput group name when no aria-label is given. */
+  verificationCode: string;
+  /** FileUpload per-file progress and cancel. */
+  uploadProgress: (fileName: string, percent: number) => string;
+  cancelUpload: (fileName: string) => string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -284,6 +293,17 @@ export const defaultMessages: NexubMessages = {
   save: 'Save',
   filtersApplied: (count) => `${count} filter${count !== 1 ? 's' : ''}`,
   clearAll: 'Clear all',
+  emptyStates: {
+    noData: { title: 'Nothing here yet', description: 'When there’s something to show, it’ll appear here.' },
+    noResults: { title: 'No results', description: 'Try other words or remove some filters.' },
+    noAccess: { title: 'You don’t have access', description: 'Ask an admin of this workspace to give you access.' },
+    serverError: { title: 'Something went wrong', description: 'We couldn’t load this. Try again in a moment.' },
+    offline: { title: 'You’re offline', description: 'Check your connection, then try again.' },
+  },
+  typeToConfirm: (text) => `Type ${text} to confirm`,
+  verificationCode: 'Verification code',
+  uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
+  cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
   previous: 'Previous',
   next: 'Next',
   search: 'Search',

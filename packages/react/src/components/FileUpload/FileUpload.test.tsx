@@ -100,3 +100,28 @@ describe('formatFileSize', () => {
     expect(alert).toHaveTextContent('You can add up to 1 file');
   });
 });
+
+describe('FileUpload.Item progress', () => {
+  it('shows progress and cancels while uploading, then removes when done', async () => {
+    const onCancel = vi.fn();
+    const file = new File(['x'], 'report.pdf', { type: 'application/pdf' });
+    function Harness({ progress }: { progress?: number }) {
+      return (
+        <FileUpload.Root>
+          <FileUpload.Dropzone data-testid="zone" />
+          <FileUpload.List>
+            <FileUpload.Item index={0} progress={progress} onCancel={onCancel} />
+          </FileUpload.List>
+        </FileUpload.Root>
+      );
+    }
+    const { rerender } = render(<Harness progress={40} />);
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [file] } });
+    expect(screen.getByRole('progressbar', { name: 'report.pdf, 40% uploaded' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel upload of report.pdf' }));
+    expect(onCancel).toHaveBeenCalled();
+    rerender(<Harness progress={100} />);
+    expect(screen.queryByRole('progressbar')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Remove report.pdf' })).toBeInTheDocument();
+  });
+});
