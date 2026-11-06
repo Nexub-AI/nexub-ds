@@ -1,7 +1,7 @@
 {
   "name": "@nexub/react-native",
-  "version": "3.1.0",
-  "description": "React Native components for Nexub Design System \u2014 native chrome, Nexub content. Same tokens, brands and prop names as @nexub/react, for Expo and bare React Native apps.",
+  "version": "3.9.0",
+  "description": "React Native components for Nexub Design System — native chrome, Nexub content. Same tokens, brands and prop names as @nexub/react, for Expo and bare React Native apps.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
   "repository": {

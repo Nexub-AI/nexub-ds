@@ -5,6 +5,7 @@ import { getComponentEntry } from '@/registry/index';
 import { DocsLink } from '@/components/layout/DocsLink';
 import { Note, PageIntro } from '@/components/kit';
 import { CopyButton } from './CopyButton';
+import { MarkdownActions } from './MarkdownActions';
 import { InlineCode } from './PropsTable';
 import { StatusBadge } from './StatusBadge';
 
@@ -42,6 +43,7 @@ export function ComponentHero({ entry, children }: { entry: ComponentEntry; chil
         <code className="truncate">{importLine}</code>
         <CopyButton text={importLine} />
       </div>
+      <MarkdownActions href={`/components/${meta.slug}.md`} />
       {children}
     </PageIntro>
   );

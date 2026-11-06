@@ -1,5 +1,63 @@
 # @nexub/tokens
 
+## 3.9.0
+
+### Minor Changes
+
+- 474744c: 4.0 release candidate.
+
+  - **The API is frozen until 4.0.** 3.9 adds no features: only the deprecations below and fixes. 4.0 removes exactly these, and changes no component API.
+  - **Deprecated: the Tailwind 3 preset** (`@nexub/tokens/tailwind`). It now logs a one-time warning when it loads, and its type is marked `@deprecated`. Move to Tailwind 4 with `@import "@nexub/tokens/tailwind.css"`; the utilities keep their names.
+  - **Deprecated: Expo SDK 57** for `@nexub/react-native`. 4.0 requires Expo SDK 58 or later.
+  - **`nexub-migrate` rule `tailwind-3-preset`** finds every use of the Tailwind 3 preset (report only): `npx -p @nexub/tokens nexub-migrate . --rules tailwind-3-preset`.
+  - **New guide: Migrating to 4.0**, with the removals, the codemod and the Tailwind 4 and Expo SDK 58 steps.
+
+## 3.8.0
+
+## 3.7.0
+
+### Minor Changes
+
+- b1bf182: Data and governance.
+
+  - **`nexub-usage`**: a new CLI in `@nexub/tokens` that counts which `@nexub` exports your code imports, per package and export, across one or more folders. Run `npx -p @nexub/tokens nexub-usage ./apps/web ./apps/admin` for a Markdown table or add `--json`. Share the result with the design system team so deprecations and codemods follow real usage.
+  - **Component status page** at /components/status: every component and pattern with its lifecycle status on web and native (alpha, beta, stable, deprecated), the version it was added in and last changed in, and a count per status.
+
+## 3.6.0
+
+### Minor Changes
+
+- 11c151d: SwiftUI and Jetpack Compose tokens.
+
+  - **`@nexub/tokens/swift/NexubTokens.swift`** and **`@nexub/tokens/compose/NexubTokens.kt`**: the tokens as native source. Each has a colour set per scheme and contrast level (`light`, `dark`, `lightHighContrast`, `darkMediumContrast`…) with every role (`primary`, `onPrimary`, `surfaceContainerHigh`…), plus spacing (`space4`), radius (`radiusLg`), shape, sizes and the type scale (`typeBodyMd`: size, line height, weight, tracking) in points or dp.
+  - Built from the same resolved values as `@nexub/tokens/native` and the web tokens, with a test that fails the build if they drift; the Swift file type-checks against the iOS 17 SDK.
+  - Documented on Getting started → React Native.
+
+## 3.5.0
+
+### Minor Changes
+
+- 147da58: Figma variables.
+
+  - **`@nexub/tokens/figma/*`**: the tokens as Figma variables in the W3C Design Tokens (DTCG) format, one file per mode. `color.<light|dark>.<standard|medium|high>.tokens.json` holds every colour role and the four product brands resolved to hex; `primitives.tokens.json` holds spacing, radius, shape, sizes and the type scale as numbers. Import them with Figma's Import variables (one collection, six modes) or Tokens Studio.
+  - Built from the same resolved values as `@nexub/tokens/native`, and a test fails the build if they differ, so a Figma library made from them can't drift from the code.
+  - New docs page: Getting started → Figma, with the import steps and download links.
+
+## 3.4.0
+
+## 3.3.0
+
+### Minor Changes
+
+- 6a0521b: Theme builder.
+
+  - **nexub.design/foundations/theme-builder**: pick one brand colour and see the accent family live on real components in light and dark, at standard, medium and high contrast. Every text pair is checked against WCAG 2.2 (4.5:1), including the accent on the actual surface. Export the theme as CSS, React (`<ThemeProvider seed>`), React Native (`<NexubNativeProvider seed>`) or W3C design tokens (DTCG JSON).
+  - **`createSeedStylesheet(seed, { target, selector })`** in `@nexub/tokens/seed`: the whole seeded theme as one stylesheet, with all three `data-contrast` levels and `prefers-contrast: more`, layered like the built-in roles so the contrast switch works with your brand.
+  - **`createSeedTokens(seed, options)`**: the seeded roles as DTCG JSON, one document per scheme, for Figma Variables, Tokens Studio or Style Dictionary.
+  - **`contrastRatio(a, b)`**: the WCAG 2.x contrast ratio of two hex colours.
+
+## 3.2.0
+
 ## 3.1.0
 
 ### Minor Changes
