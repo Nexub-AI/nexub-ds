@@ -39,10 +39,12 @@ export interface ChipProps
     VariantProps<typeof chipVariants> {
   tone?: ToneValue;
   onRemove?: () => void;
+  /** Accessible name of the remove button. Defaults to the localised "Remove". */
+  removeLabel?: string;
 }
 
 export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
-  ({ className, size, tone = 'neutral', onRemove, children, ...props }, ref) => {
+  ({ className, size, tone = 'neutral', onRemove, removeLabel, children, ...props }, ref) => {
     const messages = useNexubMessages();
     return (
       <span
@@ -54,7 +56,7 @@ export const Chip = React.forwardRef<HTMLSpanElement, ChipProps>(
         {onRemove && (
           <button
             type="button"
-            aria-label={messages.remove}
+            aria-label={removeLabel ?? messages.remove}
             onClick={(e) => {
               e.stopPropagation();
               onRemove();

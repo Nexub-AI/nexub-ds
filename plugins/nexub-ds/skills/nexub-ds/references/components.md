@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v5.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v5.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -83,6 +83,7 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.

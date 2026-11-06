@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 5.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 5.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -79,6 +79,7 @@ Version 5.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Reveal](https://nexub-ds-docs.pages.dev/components/motion-reveal.md): Fades its content up as it scrolls into view, in marketing mode. CSS scroll-driven where supported, an IntersectionObserver elsewhere; content on screen at load, and every visitor without JS or with reduced motion, just sees it.
 - [Scale](https://nexub-ds-docs.pages.dev/components/motion-scale.md): Scales content in/out from its center.
 - [Slide](https://nexub-ds-docs.pages.dev/components/motion-slide.md): Slides content in from a direction based on the `in` prop.
+- [Multi Select](https://nexub-ds-docs.pages.dev/components/multi-select.md): Pick several options as chips, with search, "+N more" and an optional create option.
 - [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail.md): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Number Input](https://nexub-ds-docs.pages.dev/components/number-input.md): A numeric input with increment and decrement controls, supporting min/max clamping and step.
 - [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker.md): A number whose digits roll to new values on the spatial spring. The first render never animates.
