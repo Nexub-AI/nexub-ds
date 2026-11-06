@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '5.5.0',
   },
   props: [
     { name: 'value', type: '{ from: Date | undefined; to: Date | undefined }', required: false, description: 'Controlled date range value.' },
@@ -18,10 +19,10 @@ const entry: ComponentEntry = {
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the trigger input and calendar popover.' },
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },
     { name: 'maxDate', type: 'Date', required: false, description: 'Latest selectable date. Dates after this are greyed out.' },
-    { name: 'numberOfMonths', type: 'number', default: '2', required: false, description: 'Number of months to display in the calendar popover.' },
     { name: 'aria-label', type: 'string', required: false, description: 'Field name for screen readers; the selected value is appended.' },
     { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
-    { name: 'error', type: 'string', required: false, description: 'Error message displayed below the input.' },
+    { name: 'presets', type: 'boolean | { label: string; range: (today: Date) => DateRange }[]', required: false, description: '`true` adds Today, Last 7 days, Last 30 days, Month to date and Last month beside the calendar; or pass your own (5.5).' },
+    { name: 'timeZone', type: 'string', required: false, description: 'IANA zone the dates mean, e.g. `Europe/London`. Shown under the calendar; presets count "today" there (5.5). `todayIn(zone)` is exported.' },
   ],
   examples: [
     {
@@ -29,6 +30,10 @@ const entry: ComponentEntry = {
     },
     {
       title: 'Controlled',
+    },
+    {
+      title: 'Presets and time zone',
+      description: 'Quick ranges counted in the chosen time zone, which is labelled under the calendar.',
     },
   ],
 };

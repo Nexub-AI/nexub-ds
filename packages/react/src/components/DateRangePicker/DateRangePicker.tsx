@@ -6,12 +6,33 @@ import { DayPicker, type DateRange } from 'react-day-picker';
 import type { Locale } from 'date-fns';
 import { CalendarDays } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { useCalendarLocale } from '../DatePicker/DatePicker.js';
 import { field, fieldFocusVisible } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 
 export type { DateRange };
+
+export interface DateRangePreset {
+  label: string;
+  /** `today` is the current date in the picker's time zone (midnight, local Date). */
+  range: (today: Date) => DateRange;
+}
+
+/** Today's calendar date in `timeZone`, as a local midnight Date. */
+export function todayIn(timeZone?: string, now = new Date()): Date {
+  if (!timeZone) return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  }).formatToParts(now);
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  return new Date(get('year'), get('month') - 1, get('day'));
+}
+
+const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 
 export interface DateRangePickerProps {
   value?: DateRange;
@@ -27,6 +48,16 @@ export interface DateRangePickerProps {
   'aria-label'?: string;
   /** date-fns Locale for the calendar and trigger text; wins over NexubProvider's `dateLocale`. */
   locale?: Locale;
+  /**
+   * Quick ranges beside the calendar. `true` shows Today, Last 7 days,
+   * Last 30 days, Month to date and Last month; or pass your own.
+   */
+  presets?: boolean | DateRangePreset[];
+  /**
+   * IANA time zone the dates mean, e.g. 'Europe/London'. Shown under the
+   * calendar, and presets count "today" there.
+   */
+  timeZone?: string;
 }
 
 function formatRange(
@@ -55,8 +86,7 @@ const calendarClassNames = {
     'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
-  weekday:
-    'text-[var(--color-on-surface-muted)] w-8 text-label-sm flex-1 text-center',
+  weekday: 'text-[var(--color-on-surface-muted)] w-8 text-label-sm flex-1 text-center',
   week: 'flex w-full mt-2',
   day: 'relative flex flex-1 justify-center p-0 text-center focus-within:z-20',
   day_button: cn(
@@ -68,94 +98,152 @@ const calendarClassNames = {
   // Ends (and a lone start) are filled primary capsules; the middle is a
   // primary-container band. `nx-range-middle` is a marker so `selected`
   // skips middle days without depending on CSS order.
-  selected: '[&:not(.nx-range-middle)>button]:bg-[var(--color-primary)] [&:not(.nx-range-middle)>button]:text-[var(--color-on-primary)]',
+  selected:
+    '[&:not(.nx-range-middle)>button]:bg-[var(--color-primary)] [&:not(.nx-range-middle)>button]:text-[var(--color-on-primary)]',
   // Half bands join the end capsules to the middle band (not on a one-day range).
   // RTL (DayPicker's dir): the bands run the other way.
-  range_start: 'nx-range-start [&:not(.nx-range-end)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-end)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)]',
-  range_end: 'nx-range-end [&:not(.nx-range-start)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-start)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)]',
-  range_middle: 'nx-range-middle bg-[var(--color-primary-container)] [&>button]:text-[var(--color-on-primary-container)]',
+  range_start:
+    'nx-range-start [&:not(.nx-range-end)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-end)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)]',
+  range_end:
+    'nx-range-end [&:not(.nx-range-start)]:bg-[linear-gradient(to_left,transparent_50%,var(--color-primary-container)_50%)] rtl:[&:not(.nx-range-start)]:bg-[linear-gradient(to_right,transparent_50%,var(--color-primary-container)_50%)]',
+  range_middle:
+    'nx-range-middle bg-[var(--color-primary-container)] [&>button]:text-[var(--color-on-primary-container)]',
   today: '[&>button]:border-[var(--color-primary)]',
-  outside: '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
+  outside:
+    '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
   disabled: '',
   hidden: 'invisible',
 } as Record<string, string>;
 
-export const DateRangePicker = React.forwardRef<
-  HTMLButtonElement,
-  DateRangePickerProps
->(function DateRangePicker(
-  {
-    value,
-    onChange,
-    placeholder: placeholderProp,
-    disabled = false,
-    minDate,
-    maxDate,
-    className,
-    id,
-    'aria-label': ariaLabel,
-    locale: localeProp,
-  },
-  ref,
-) {
-  const [open, setOpen] = React.useState(false);
-  const messages = useNexubMessages();
-  const calendar = useCalendarLocale(localeProp);
-  const placeholder = placeholderProp ?? messages.pickDateRange;
-  const display = formatRange(value, placeholder, calendar.format);
-  const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
+export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps>(
+  function DateRangePicker(
+    {
+      value,
+      onChange,
+      placeholder: placeholderProp,
+      disabled = false,
+      minDate,
+      maxDate,
+      className,
+      id,
+      'aria-label': ariaLabel,
+      locale: localeProp,
+      presets: presetsProp,
+      timeZone,
+    },
+    ref,
+  ) {
+    const [open, setOpen] = React.useState(false);
+    const messages = useNexubMessages();
+    const { locale } = useLocale();
+    const presets: DateRangePreset[] =
+      presetsProp === true
+        ? [
+            { label: messages.today, range: (t) => ({ from: t, to: t }) },
+            { label: messages.last7Days, range: (t) => ({ from: addDays(t, -6), to: t }) },
+            { label: messages.last30Days, range: (t) => ({ from: addDays(t, -29), to: t }) },
+            {
+              label: messages.monthToDate,
+              range: (t) => ({ from: new Date(t.getFullYear(), t.getMonth(), 1), to: t }),
+            },
+            {
+              label: messages.lastMonth,
+              range: (t) => ({
+                from: new Date(t.getFullYear(), t.getMonth() - 1, 1),
+                to: new Date(t.getFullYear(), t.getMonth(), 0),
+              }),
+            },
+          ]
+        : presetsProp || [];
+    const zoneName = timeZone
+      ? (new Intl.DateTimeFormat(locale, { timeZone, timeZoneName: 'shortOffset' })
+          .formatToParts(new Date())
+          .find((p) => p.type === 'timeZoneName')?.value ?? timeZone)
+      : undefined;
+    const calendar = useCalendarLocale(localeProp);
+    const placeholder = placeholderProp ?? messages.pickDateRange;
+    const display = formatRange(value, placeholder, calendar.format);
+    const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
-  return (
-    <RadixPopover.Root open={open} onOpenChange={setOpen}>
-      <RadixPopover.Trigger asChild>
-        <button
-          ref={ref}
-          id={id}
-          disabled={disabled}
-          aria-label={label}
-          className={cn(
-            'inline-flex h-control-md w-full items-center justify-start gap-2 px-3.5 text-body-md',
-            field,
-            fieldFocusVisible,
-            // Open reads like focus: the 2px primary border (as Select).
-            'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
-            'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
-            !value && 'text-[var(--color-on-surface-muted)]',
-            className,
-          )}
-        >
-          <CalendarDays size="sm" aria-hidden="true" />
-          {display}
-        </button>
-      </RadixPopover.Trigger>
-      <RadixPopover.Portal>
-        <RadixPopover.Content
-          align="start"
-          className={cn(
-            'z-[var(--z-popover)] outline-none',
-            floatingSurface,
-            'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
-          )}
-        >
-          <DayPicker
-            mode="range"
-            selected={value}
-            defaultMonth={value?.from}
-            onSelect={onChange}
-            numberOfMonths={2}
-            startMonth={minDate}
-            endMonth={maxDate}
-            autoFocus
-            // Two months side by side: outside days would repeat the range.
-            showOutsideDays={false}
-            className="relative p-3"
-            classNames={calendarClassNames}
-            {...calendar.dayPickerProps}
-          />
-        </RadixPopover.Content>
-      </RadixPopover.Portal>
-    </RadixPopover.Root>
-  );
-});
+    return (
+      <RadixPopover.Root open={open} onOpenChange={setOpen}>
+        <RadixPopover.Trigger asChild>
+          <button
+            ref={ref}
+            id={id}
+            disabled={disabled}
+            aria-label={label}
+            className={cn(
+              'inline-flex h-control-md w-full items-center justify-start gap-2 px-3.5 text-body-md',
+              field,
+              fieldFocusVisible,
+              // Open reads like focus: the 2px primary border (as Select).
+              'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
+              'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
+              !value && 'text-[var(--color-on-surface-muted)]',
+              className,
+            )}
+          >
+            <CalendarDays size="sm" aria-hidden="true" />
+            {display}
+          </button>
+        </RadixPopover.Trigger>
+        <RadixPopover.Portal>
+          <RadixPopover.Content
+            align="start"
+            className={cn(
+              'z-[var(--z-popover)] outline-none',
+              floatingSurface,
+              'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
+            )}
+          >
+            <div className="flex flex-col sm:flex-row">
+              {presets.length > 0 && (
+                <ul className="flex flex-wrap gap-1 border-b border-[var(--color-outline-variant)] p-2 sm:flex-col sm:flex-nowrap sm:border-b-0 sm:border-e">
+                  {presets.map((p) => (
+                    <li key={p.label}>
+                      <button
+                        type="button"
+                        className="nx-state-layer w-full rounded-shape-control px-3 py-1.5 text-start text-body-sm text-[var(--color-on-surface)]"
+                        onClick={() => {
+                          onChange?.(p.range(todayIn(timeZone)));
+                          setOpen(false);
+                        }}
+                      >
+                        {p.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <div>
+                <DayPicker
+                  mode="range"
+                  selected={value}
+                  defaultMonth={value?.from}
+                  onSelect={onChange}
+                  numberOfMonths={2}
+                  startMonth={minDate}
+                  endMonth={maxDate}
+                  autoFocus
+                  // Two months side by side: outside days would repeat the range.
+                  showOutsideDays={false}
+                  className="relative p-3"
+                  classNames={calendarClassNames}
+                  {...calendar.dayPickerProps}
+                />
+                {zoneName && (
+                  <p className="px-4 pb-3 text-label-sm text-[var(--color-on-surface-muted)]">
+                    {messages.timeZoneLabel(`${zoneName} (${timeZone})`)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </RadixPopover.Content>
+        </RadixPopover.Portal>
+      </RadixPopover.Root>
+    );
+  },
+);
 
 DateRangePicker.displayName = 'DateRangePicker';

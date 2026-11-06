@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v5.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v5.4.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v5.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v5.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -433,6 +433,7 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
@@ -497,6 +498,7 @@ Never use a component marked deprecated.
 - [Breadcrumb](components/breadcrumb.md) `@nexub/react`: Hierarchical navigation trail showing page location.
 - [Navigation Rail](components/navigation-rail.md) `@nexub/react`: Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
+- [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 
 ## Components — Overlays
@@ -2747,10 +2749,10 @@ Dual-calendar date range selector.
 | `disabled` | `boolean` | `false` | Disables the trigger input and calendar popover. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
 | `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
-| `numberOfMonths` | `number` | `2` | Number of months to display in the calendar popover. |
 | `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
 | `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
-| `error` | `string` |  | Error message displayed below the input. |
+| `presets` | `boolean \| { label: string; range: (today: Date) => DateRange }[]` |  | `true` adds Today, Last 7 days, Last 30 days, Month to date and Last month beside the calendar; or pass your own (5.5). |
+| `timeZone` | `string` |  | IANA zone the dates mean, e.g. `Europe/London`. Shown under the calendar; presets count "today" there (5.5). `todayIn(zone)` is exported. |
 
 ## Example: Default
 
@@ -2779,6 +2781,26 @@ export default function Example() {
       onChange={(r) => setRange({ from: r?.from, to: r?.to })}
       placeholder="Select date range…"
     />
+  );
+}
+```
+
+## Example: Presets and time zone
+
+Quick ranges counted in the chosen time zone, which is labelled under the calendar.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { DateRangePicker, type DateRange } from '@nexub/react';
+
+export default function Example() {
+  const [range, setRange] = React.useState<DateRange | undefined>();
+  return (
+    <div className="w-[300px]">
+      <DateRangePicker aria-label="Report period" value={range} onChange={setRange} presets timeZone="Europe/London" />
+    </div>
   );
 }
 ```
@@ -3236,6 +3258,78 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Filter Builder
+
+Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Import: `import { FilterBuilder } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/filter-builder
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `fields` (required) | `{ id; label; type: "text" \| "number" \| "select" \| "date"; options? }[]` |  | What can be filtered. The type picks the operators and the value input. |
+| `value / defaultValue` | `FilterGroup` |  | `{ id, combinator: "and" \| "or", rules: (FilterRule \| FilterGroup)[] }`; a rule is `{ id, field, operator, value: string }`. |
+| `onValueChange` | `(value: FilterGroup) => void` |  | Called with the whole query on every change. |
+| `maxDepth` | `number` | `1` | Levels of nested groups "Add group" may create; 0 hides it. |
+
+## Example: Deals filter
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { FilterBuilder, type FilterField, type FilterGroup } from '@nexub/react';
+
+const fields: FilterField[] = [
+  { id: 'name', label: 'Deal name', type: 'text' },
+  { id: 'amount', label: 'Amount', type: 'number' },
+  {
+    id: 'stage',
+    label: 'Stage',
+    type: 'select',
+    options: [
+      { value: 'lead', label: 'Lead' },
+      { value: 'proposal', label: 'Proposal' },
+      { value: 'won', label: 'Won' },
+    ],
+  },
+  { id: 'close', label: 'Close date', type: 'date' },
+];
+
+export default function Example() {
+  const [query, setQuery] = React.useState<FilterGroup>({
+    id: 'root',
+    combinator: 'and',
+    rules: [
+      { id: 'r1', field: 'stage', operator: 'equals', value: 'proposal' },
+      { id: 'r2', field: 'amount', operator: 'greaterThan', value: '10000' },
+    ],
+  });
+  return (
+    <div className="flex w-full max-w-[640px] flex-col gap-4">
+      <FilterBuilder fields={fields} value={query} onValueChange={setQuery} />
+      <pre className="max-h-40 overflow-auto rounded-shape-container bg-[var(--color-surface-container-low)] p-3 text-label-sm">
+        {JSON.stringify(query, null, 2)}
+      </pre>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: Each group is a `group` named "Filters, match all/any".
+- Field, condition and value controls are labelled; remove buttons say what they remove.
+- Helpers: `emptyFilter()`, `countFilters(group)`, `isFilterGroup(rule)`, `filterOperators`.
+
+Related: [filter-bar](filter-bar.md), [saved-views](saved-views.md), [data-table](data-table.md)
 
 
 ---
@@ -5649,6 +5743,63 @@ export default function Example() {
 
 ---
 
+# Saved Views
+
+A menu to switch, save, update and delete saved filter views. Your app stores them.
+
+- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Import: `import { SavedViews } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/saved-views
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `views` (required) | `{ id: string; name: string }[]` |  | The saved views. |
+| `activeId` | `string` |  | The view in use; its name shows on the button. |
+| `onSelect` (required) | `(id: string) => void` |  | Switch to a view: restore its filters, sort and columns. |
+| `onSave` | `(name: string) => void` |  | Adds "Save as new view…", which asks for a name. |
+| `onUpdate / onDelete` | `(id: string) => void` |  | Add "Update" and "Delete" for the active view. |
+
+## Example: Views for a deals table
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { SavedViews, type SavedView } from '@nexub/react';
+
+export default function Example() {
+  const [views, setViews] = React.useState<SavedView[]>([
+    { id: 'mine', name: 'My open deals' },
+    { id: 'big', name: 'Over $10k' },
+  ]);
+  const [active, setActive] = React.useState('mine');
+  return (
+    <SavedViews
+      views={views}
+      activeId={active}
+      onSelect={setActive}
+      onSave={(name) => {
+        const id = crypto.randomUUID();
+        setViews((v) => [...v, { id, name }]);
+        setActive(id);
+      }}
+      onUpdate={() => {}}
+      onDelete={(id) => {
+        setViews((v) => v.filter((x) => x.id !== id));
+        setActive('');
+      }}
+    />
+  );
+}
+```
+
+Related: [filter-builder](filter-builder.md), [filter-bar](filter-bar.md), [data-table](data-table.md)
+
+
+---
+
 # Scroll Area
 
 Scrollable container with custom styled scrollbars.
@@ -7652,6 +7803,8 @@ Search + filter toolbar pattern for data-heavy list or table views.
 | `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
 | `searchLabel` | `string` | `'Search'` | Accessible name of the search field (5.1). Defaults to the localised `search` message. |
 | `filters` | `React.ReactNode` |  | Filter controls rendered to the right of search. |
+| `activeCount` | `number` | `0` | Applied filters; above 0 shows "N filters" (5.5). `countFilters(group)` counts a FilterBuilder query. |
+| `onClearAll` | `() => void` |  | Shows a Clear all button next to the count (5.5). |
 | `actions` | `React.ReactNode` |  | Action buttons (e.g. "Export") rendered on the far right. |
 
 ## Example: Default

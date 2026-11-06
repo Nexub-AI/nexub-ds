@@ -1,5 +1,5 @@
 {
-  "version": "5.3.0",
+  "version": "5.4.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
@@ -398,6 +398,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "filter-builder",
+      "name": "Filter Builder",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Field, condition and value controls are labelled; remove buttons say what they remove."
+      ]
     },
     {
       "slug": "filter-chip",
@@ -833,6 +844,15 @@
     {
       "slug": "rating",
       "name": "Rating",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "saved-views",
+      "name": "Saved Views",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],

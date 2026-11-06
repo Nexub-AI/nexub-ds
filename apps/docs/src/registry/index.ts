@@ -62,6 +62,8 @@ import radioGroupEntry from './components/radio-group';
 import comboboxEntry from './components/combobox';
 import autocompleteEntry from './components/autocomplete';
 import multiSelectEntry from './components/multi-select';
+import filterBuilderEntry from './components/filter-builder';
+import savedViewsEntry from './components/saved-views';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -238,6 +240,8 @@ export const componentEntries: ComponentEntry[] = [
   comboboxEntry,
   autocompleteEntry,
   multiSelectEntry,
+  filterBuilderEntry,
+  savedViewsEntry,
   // Overlays
   dialogEntry,
   alertDialogEntry,
