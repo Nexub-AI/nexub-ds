@@ -64,6 +64,7 @@ import autocompleteEntry from './components/autocomplete';
 import multiSelectEntry from './components/multi-select';
 import filterBuilderEntry from './components/filter-builder';
 import savedViewsEntry from './components/saved-views';
+import otpInputEntry from './components/otp-input';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -242,6 +243,7 @@ export const componentEntries: ComponentEntry[] = [
   multiSelectEntry,
   filterBuilderEntry,
   savedViewsEntry,
+  otpInputEntry,
   // Overlays
   dialogEntry,
   alertDialogEntry,

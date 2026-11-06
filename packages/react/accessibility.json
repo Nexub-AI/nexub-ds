@@ -1,5 +1,5 @@
 {
-  "version": "5.4.0",
+  "version": "5.5.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
@@ -750,6 +750,19 @@
         "The full value is read as one string; the rolling digits are hidden from assistive tech.",
         "Under reduced motion digits change instantly."
       ]
+    },
+    {
+      "slug": "otp-input",
+      "name": "OTP Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Type: Fills the box and moves to the next.",
+        "Backspace: Clears the box, or the previous one when empty.",
+        "ArrowLeft / ArrowRight: Moves between boxes."
+      ],
+      "screenReader": []
     },
     {
       "slug": "pagination",

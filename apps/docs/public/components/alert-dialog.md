@@ -19,6 +19,7 @@ Confirmation dialog that requires an explicit user action before proceeding.
 | `AlertDialog.Description` | `compound` |  | Supporting description text for the dialog. |
 | `AlertDialog.Action` | `compound` |  | Confirms the destructive or affirmative action and closes the dialog. |
 | `AlertDialog.Cancel` | `compound` |  | Cancels the action and closes the dialog. |
+| `AlertDialog.Confirm text` | `string` |  | Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources. |
 
 ## Example: Default
 
@@ -47,6 +48,37 @@ export default function Example() {
         </AlertDialog.Portal>
       </AlertDialog.Root>
     </>
+  );
+}
+```
+
+## Example: Type to confirm
+
+Deleting a workspace asks for its name first.
+
+```tsx
+'use client';
+
+import { AlertDialog, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <AlertDialog.Root>
+      <AlertDialog.Trigger asChild>
+        <Button variant="destructive">Delete workspace</Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Content>
+        <AlertDialog.Header>
+          <AlertDialog.Title>Delete acme-prod?</AlertDialog.Title>
+          <AlertDialog.Description>All projects, members and billing history go with it. This can’t be undone.</AlertDialog.Description>
+        </AlertDialog.Header>
+        <AlertDialog.Confirm text="acme-prod" />
+        <AlertDialog.Footer>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+          <AlertDialog.Action>Delete workspace</AlertDialog.Action>
+        </AlertDialog.Footer>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 }
 ```
