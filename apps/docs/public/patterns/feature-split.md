@@ -32,7 +32,7 @@ export default function Example() {
         title="Pay your team on time, every time"
         description="Run payroll in minutes with tax and statutory filings handled for you."
         points={['CPF, EPF and BPJS filed for you', 'Payslips in every employee’s language', 'Approvals on your phone']}
-        visual={<Card variant="showcase" accent="payub" className="aspect-[4/3] w-full" aria-label="Payroll screenshot" />}
+        visual={<Card variant="showcase" accent="payub" className="aspect-[4/3] w-full" role="img" aria-label="Payroll screenshot" />}
       />
     </div>
   );
