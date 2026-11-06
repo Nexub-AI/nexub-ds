@@ -8,6 +8,7 @@ import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
+import { useControllableState } from '../../hooks/useControllableState.js';
 
 export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   className?: string;
@@ -21,6 +22,11 @@ export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   scrollLock?: 'style' | 'class';
   /** `false` when the items are already filtered (e.g. async search results). @default true */
   shouldFilter?: boolean;
+  /**
+   * A letter that toggles the palette with Cmd (macOS) or Ctrl, anywhere on
+   * the page, e.g. `'k'` for Cmd+K / Ctrl+K. Off by default.
+   */
+  shortcut?: string;
 }
 
 const overlayClasses = cn('fixed inset-0 z-[var(--z-modal)] nx-motion', scrim);
@@ -33,14 +39,26 @@ function ClassLockOverlay() {
 }
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
-  ({ children, label: labelProp, scrollLock = 'style', shouldFilter, ...props }, ref) => {
+  ({ children, label: labelProp, scrollLock = 'style', shouldFilter, shortcut, open: openProp, defaultOpen, onOpenChange, ...props }, ref) => {
   const messages = useNexubMessages();
+  const [open = false, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
+  React.useEffect(() => {
+    if (!shortcut) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.altKey || e.shiftKey || !(e.metaKey || e.ctrlKey)) return;
+      if (e.key.toLowerCase() !== shortcut.toLowerCase()) return;
+      e.preventDefault();
+      setOpen(!open);
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [shortcut, open, setOpen]);
   const label = labelProp ?? messages.commandPalette;
   // Radix returns focus to Dialog.Trigger, which a palette (opened by a shortcut
   // or its own button) doesn't have. Return it to whatever had it before.
   const returnFocusRef = React.useRef<HTMLElement | null>(null);
   return (
-  <RadixDialog.Root {...props}>
+  <RadixDialog.Root open={open} onOpenChange={setOpen} {...props}>
     <RadixDialog.Portal>
       {scrollLock === 'class' ? <ClassLockOverlay /> : <RadixDialog.Overlay className={overlayClasses} />}
       <RadixDialog.Content

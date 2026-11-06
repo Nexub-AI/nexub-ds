@@ -196,14 +196,16 @@ Description.displayName = 'Drawer.Description';
 
 const Header = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col gap-1.5 p-6', className)} {...props} />
+    // Sticky: long content scrolls under the header and footer. Inherits the
+    // panel's background (solid or glass) so nothing shows through.
+    <div ref={ref} className={cn('sticky top-0 z-10 flex flex-col gap-1.5 bg-inherit p-6', className)} {...props} />
   ),
 );
 Header.displayName = 'Drawer.Header';
 
 const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('mt-auto flex flex-col gap-2 p-6', className)} {...props} />
+    <div ref={ref} className={cn('sticky bottom-0 z-10 mt-auto flex flex-col gap-2 bg-inherit p-6', className)} {...props} />
   ),
 );
 Footer.displayName = 'Drawer.Footer';

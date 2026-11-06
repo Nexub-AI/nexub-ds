@@ -25,6 +25,7 @@ Imperative toast notifications using the toast object. Render <Toaster /> once i
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Toaster expand` | `boolean` | `false` | Always show toasts as a list. By default they collapse into a stack that fans out on hover or focus, which also pauses their timers. |
+| `Toaster position` | `'top-start' \| 'top-center' \| 'top-end' \| 'bottom-start' \| 'bottom-center' \| 'bottom-end'` | `'top-end'` | Where the stack sits (5.1). Start and end follow the reading direction; bottom positions stack upward. |
 | `Toaster visibleToasts` | `number` | `3` | How many toasts show at once. Older ones are hidden visually but stay in the live region. |
 | `toast.success(title, opts?)` (required) | `string` |  | Show a success toast with an optional options object. |
 | `toast.error(title, opts?)` (required) | `string` |  | Show an error toast. |
