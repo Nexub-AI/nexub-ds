@@ -2,6 +2,7 @@
 export { cn } from './utils/cn.js';
 export type { Size } from './utils/control.js';
 export { startViewTransition } from './utils/viewTransition.js';
+export { useScopedSeed } from './hooks/useScopedSeed.js';
 
 // Hooks
 export { useControllableState } from './hooks/useControllableState.js';
