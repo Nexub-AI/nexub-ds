@@ -433,6 +433,7 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
@@ -937,9 +938,12 @@ Type-to-search input with matching options dropdown.
 | `onValueChange` | `(value: string) => void` |  | Callback fired when the selected value changes. |
 | `placeholder` | `string` |  | Placeholder text shown in the input when empty. |
 | `emptyText` | `string` |  | Text shown when no options match the current search query. |
-| `loading` | `boolean` |  | Shows a loading indicator while options are being fetched. |
+| `loading` | `boolean` |  | Skeleton rows while options are being fetched (5.2); "Loading" is announced. |
 | `inputValue` | `string` |  | Controlled input text (5.1). |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
+| `mode` | `'inline' \| 'popover'` | `'inline'` | Popover (5.2): a field whose list opens below it while typing. Inline keeps the list always visible; it stays the default until 6.0. |
+| `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
+| `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
 
 ## Example: Default
 
@@ -992,6 +996,47 @@ export default function Example() {
         ]}
         placeholder="Search company…"
         emptyText="No companies found. Try a different search."
+      />
+    </div>
+  );
+}
+```
+
+## Example: Popover, fetch as you type
+
+`mode="popover"` with `onInputChange`: the app filters, the list shows skeleton rows while loading.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Autocomplete } from '@nexub/react';
+
+const all = ['Amsterdam', 'Berlin', 'Lisbon', 'London', 'Madrid', 'Paris', 'Singapore', 'Tokyo'];
+
+// Fetch-as-you-type: onInputChange turns built-in filtering off.
+export default function Example() {
+  const [query, setQuery] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [options, setOptions] = React.useState(all.map((c) => ({ value: c, label: c })));
+  React.useEffect(() => {
+    setLoading(true);
+    const t = setTimeout(() => {
+      const q = query.toLowerCase();
+      setOptions(all.filter((c) => c.toLowerCase().includes(q)).map((c) => ({ value: c, label: c })));
+      setLoading(false);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [query]);
+  return (
+    <div className="w-[280px]">
+      <Autocomplete
+        mode="popover"
+        aria-label="City"
+        placeholder="Search cities…"
+        options={options}
+        loading={loading}
+        onInputChange={setQuery}
       />
     </div>
   );
@@ -2088,6 +2133,7 @@ Compact label chip, optionally dismissible.
 | --- | --- | --- | --- |
 | `variant` | `'filled' \| 'outline'` | `'filled'` | Visual style of the chip. |
 | `onRemove` | `() => void` |  | When provided, renders a dismiss button that calls this handler. |
+| `removeLabel` | `string` | `'Remove'` | Accessible name of the dismiss button (5.2), e.g. "Remove Bug". Use it when several chips sit together. |
 | `size` | `'sm' \| 'md'` |  | Controls chip size. |
 
 ## Example: Default
@@ -4572,6 +4618,80 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Multi Select
+
+Pick several options as chips, with search, "+N more" and an optional create option.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Import: `import { MultiSelect } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/multi-select
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `options` (required) | `{ value: string; label: string }[]` |  | The options to pick from. |
+| `value / defaultValue` | `string[]` |  | Selected values, controlled or not. |
+| `onValueChange` | `(value: string[]) => void` |  | Called with the new selection. |
+| `maxVisibleChips` | `number` | `3` | Chips shown before the rest collapse into "+N more". |
+| `onInputChange` | `(text: string) => void` |  | Called as the user types. When set, options are shown as given, so you can fetch them. |
+| `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option. |
+| `loading` | `boolean` |  | Skeleton rows instead of options; "Loading" is announced. |
+| `aria-label / aria-labelledby` | `string` |  | Name the field: there is no visible label inside it. |
+
+## Example: Labels with create
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { MultiSelect } from '@nexub/react';
+
+const labels = [
+  { value: 'bug', label: 'Bug' },
+  { value: 'design', label: 'Design' },
+  { value: 'docs', label: 'Docs' },
+  { value: 'perf', label: 'Performance' },
+  { value: 'a11y', label: 'Accessibility' },
+  { value: 'security', label: 'Security' },
+];
+
+export default function Example() {
+  const [options, setOptions] = React.useState(labels);
+  const [value, setValue] = React.useState(['bug', 'a11y']);
+  return (
+    <div className="w-[320px]">
+      <MultiSelect
+        aria-label="Labels"
+        placeholder="Add labels…"
+        options={options}
+        value={value}
+        onValueChange={setValue}
+        onCreate={(text) => {
+          const v = text.toLowerCase();
+          setOptions((o) => [...o, { value: v, label: text }]);
+          setValue((s) => [...s, v]);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Type`: Filters the options and opens the list.
+- `ArrowDown / ArrowUp`: Moves through the options.
+- `Enter`: Toggles the highlighted option.
+- `Backspace`: In an empty field, removes the last chip.
+- `Escape`: Closes the list.
+- Options carry `aria-checked`; each chip has a "Remove <label>" button.
+
+Related: [autocomplete](autocomplete.md), [chip](chip.md), [select](select.md)
 
 
 ---

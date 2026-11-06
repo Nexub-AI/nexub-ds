@@ -38,3 +38,11 @@ export const Default: Story = {
     );
   },
 };
+
+export const Popover: Story = {
+  render: () => (
+    <div style={{ width: '280px' }}>
+      <Autocomplete mode="popover" aria-label="Country" options={countryOptions} placeholder="Search countries..." />
+    </div>
+  ),
+};
