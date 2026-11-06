@@ -2,7 +2,7 @@ import type { StorybookConfig } from '@storybook/react-vite';
 import tailwindcss from '@tailwindcss/vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.tsx', '../../patterns/src/**/*.stories.tsx'],
+  stories: ['../src/**/*.stories.tsx', '../../patterns/src/**/*.stories.tsx', '../../../apps/docs/src/stories/*.stories.tsx'],
   framework: {
     name: '@storybook/react-vite',
     options: {},
@@ -14,6 +14,9 @@ const config: StorybookConfig = {
   viteFinal: (config) => ({
     ...config,
     plugins: [...(config.plugins ?? []), tailwindcss()],
+    // apps/docs (coverage stories render its examples) has jsx: "preserve" for Next;
+    // compile JSX here regardless of the nearest tsconfig.
+    oxc: { ...(config as { oxc?: object }).oxc, jsx: { runtime: 'automatic' } },
     build: { ...config.build, cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5'] },
   }),
 };

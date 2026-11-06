@@ -31,7 +31,7 @@ export interface MarketingNavProps extends React.HTMLAttributes<HTMLElement> {
   /** e.g. <Logo />, wrapped in a link to `logoHref`. */
   logo: React.ReactNode;
   logoHref?: string;
-  /** @default 'Home' */
+  /** Accessible name for the logo link. Defaults to the logo's own name; set it only if it still contains the visible wordmark. */
   logoLabel?: string;
   /** Top-level links; an item with `items` opens a mega-menu. */
   items: MarketingNavItem[];
@@ -60,7 +60,7 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
     {
       logo,
       logoHref = '/',
-      logoLabel = 'Home',
+      logoLabel,
       items,
       countries,
       country,
@@ -76,6 +76,8 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
     return (
       <TopNav.Root ref={ref} surface="glass" scrollEdge="soft" className={cn('border-x-0 border-t-0 px-0', className)} {...props}>
         <Container size="marketing" className="flex items-center gap-6">
+          {/* Without logoLabel the link takes the logo's own name ("Nexub"), so the visible
+              wordmark is the accessible name (WCAG 2.5.3 Label in Name). */}
           <a href={logoHref} aria-label={logoLabel} className="flex shrink-0 items-center no-underline">
             {logo}
           </a>
@@ -118,7 +120,8 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
           {current && countries && countries.length > 1 && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger
-                aria-label={`${countryLabel}: ${current.label}`}
+                // Starts with the visible code so the name contains the label (WCAG 2.5.3).
+                aria-label={`${current.code}, ${countryLabel}: ${current.label}`}
                 className="nx-state-layer inline-flex h-control-sm items-center gap-1.5 rounded-shape-control px-2 text-label-lg text-[var(--color-on-surface)]"
               >
                 <Flag code={current.code} size="sm" aria-hidden="true" />

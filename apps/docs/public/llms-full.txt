@@ -110,7 +110,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v3.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v4.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -349,7 +349,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v3.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -3951,7 +3951,7 @@ import { Card, Reveal } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div data-mode="marketing" className="flex h-64 w-full flex-col gap-6 overflow-y-auto p-2">
+    <div data-mode="marketing" role="region" aria-label="Reveal demo" tabIndex={0} className="flex h-64 w-full flex-col gap-6 overflow-y-auto p-2">
       <p className="m-0 shrink-0 pb-40 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
       {[1, 2, 3].map((n) => (
         <Reveal key={n} className="shrink-0">
@@ -6650,7 +6650,7 @@ export default function Example() {
         title="Pay your team on time, every time"
         description="Run payroll in minutes with tax and statutory filings handled for you."
         points={['CPF, EPF and BPJS filed for you', 'Payslips in every employee’s language', 'Approvals on your phone']}
-        visual={<Card variant="showcase" accent="payub" className="aspect-[4/3] w-full" aria-label="Payroll screenshot" />}
+        visual={<Card variant="showcase" accent="payub" className="aspect-[4/3] w-full" role="img" aria-label="Payroll screenshot" />}
       />
     </div>
   );

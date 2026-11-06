@@ -1,11 +1,13 @@
-// Charts kit (3.2): small, dependency-free SVG charts on the --color-chart-*
-// palette. Server components (no hooks), so they render in RSC and ship no JS.
-// Geometry is SVG attributes only (no style attributes), so server HTML stays
-// valid under a strict CSP. Every chart carries a visually hidden data table
-// for screen readers; the SVG itself is decorative.
+// Charts kit (3.2, interactive in 4.1): small, dependency-free SVG charts on
+// the --color-chart-* palette. Server components (no hooks), so they render in
+// RSC and ship no JS. Geometry is SVG attributes only (no style attributes), so
+// server HTML stays valid under a strict CSP. Every chart carries a visually
+// hidden data table for screen readers; the drawing is decorative.
 //
-// ponytail: values are assumed >= 0 and hover is the native SVG <title>.
-// Add negative domains or an interactive tooltip when a product asks for them.
+// 4.1: negative values (a zero line, bars grow up or down from it), a hover
+// tooltip per category built from a CSS grid over the plot (no JS), and a
+// draw-in on first paint (.nx-chart-bar / .nx-chart-line in @nexub/themes,
+// off under reduced motion).
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 
@@ -22,7 +24,7 @@ const colorIndex = (color: ChartColor | undefined, i: number) => ((color ?? (i %
 export interface ChartSeries {
   /** Key of the value in each data row. */
   key: string;
-  /** Name shown in the legend and the data table. Defaults to `key`. */
+  /** Name shown in the legend, the tooltip and the data table. Defaults to `key`. */
   label?: string;
   /** Palette colour, 1–8. Defaults to the series' position. */
   color?: ChartColor;
@@ -34,6 +36,15 @@ export function niceMax(max: number): number {
   const pow = 10 ** Math.floor(Math.log10(max));
   const step = [1, 2, 2.5, 5, 10].find((s) => s * pow >= max)!;
   return step * pow;
+}
+
+/** The axis range for a set of values: [0, nice max], or [−nice, +nice] when some are negative. */
+export function niceDomain(values: number[]): [number, number] {
+  const lo = Math.min(0, ...values);
+  const hi = Math.max(0, ...values);
+  if (lo === 0) return [0, niceMax(hi)];
+  if (hi === 0) return [-niceMax(-lo), 0];
+  return [-niceMax(-lo), niceMax(hi)];
 }
 
 const defaultFormat = (n: number) => n.toLocaleString();
@@ -68,7 +79,7 @@ interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
   series: ChartSeries[];
   /** Accessible name of the chart, e.g. "Revenue by month". */
   title: string;
-  /** Formats axis labels, the hover text and the data table. */
+  /** Formats axis labels, the tooltip and the data table. */
   valueFormat?: (value: number) => string;
   /** Height of the plot area. */
   size?: keyof typeof PLOT_HEIGHT;
@@ -76,11 +87,15 @@ interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
   legend?: boolean;
 }
 
+const valueOf = <T,>(row: T, key: string) => Number(row[key as keyof T]) || 0;
+
 function Frame<T>({
-  data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, max, className, children, ...props
-}: CartesianProps<T> & { max: number; children: React.ReactNode }) {
+  data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, domain, className, children, ...props
+}: CartesianProps<T> & { domain: [number, number]; children: React.ReactNode }) {
   const labels = series.map((s) => s.label ?? s.key);
+  const [lo, hi] = domain;
   const ticks = [1, 0.75, 0.5, 0.25, 0];
+  const zero = VB_H - ((0 - lo) / (hi - lo)) * VB_H;
   return (
     <figure aria-label={title} className={cn('m-0 flex flex-col gap-3', className)} {...props}>
       {(legend ?? series.length > 1) && (
@@ -89,18 +104,38 @@ function Frame<T>({
       <div aria-hidden="true" className="flex gap-2">
         <div className={cn('flex flex-col justify-between text-end text-label-sm tabular-nums text-[var(--color-on-surface-muted)]', PLOT_HEIGHT[size])}>
           {ticks.map((t) => (
-            <span key={t} className="flex h-0 items-center justify-end">{valueFormat(max * t)}</span>
+            <span key={t} className="flex h-0 items-center justify-end">{valueFormat(lo + (hi - lo) * t)}</span>
           ))}
         </div>
         <div className="flex min-w-0 flex-1 flex-col gap-1">
-          {/* Mirrored in RTL, like the category labels under it. */}
-          <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none" className={cn('w-full overflow-visible rtl:-scale-x-100', PLOT_HEIGHT[size])}>
-            {ticks.map((t) => (
-              <line key={t} x1="0" x2={VB_W} y1={VB_H * (1 - t)} y2={VB_H * (1 - t)} strokeWidth="1" vectorEffect="non-scaling-stroke"
-                className={t === 0 ? 'stroke-[var(--color-outline)]' : 'stroke-[var(--color-outline-variant)]'} />
-            ))}
-            {children}
-          </svg>
+          <div className={cn('relative', PLOT_HEIGHT[size])}>
+            {/* Mirrored in RTL, like the category labels under it. */}
+            <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none" className="size-full overflow-visible rtl:-scale-x-100">
+              {ticks.map((t) => (
+                <line key={t} x1="0" x2={VB_W} y1={VB_H * (1 - t)} y2={VB_H * (1 - t)} strokeWidth="1" vectorEffect="non-scaling-stroke"
+                  className="stroke-[var(--color-outline-variant)]" />
+              ))}
+              <line x1="0" x2={VB_W} y1={zero} y2={zero} strokeWidth="1" vectorEffect="non-scaling-stroke" className="stroke-[var(--color-outline)]" />
+              {children}
+            </svg>
+            {/* Hover tooltip: one column per category over the plot, CSS only. */}
+            <div className="absolute inset-0 grid auto-cols-fr grid-flow-col">
+              {data.map((row, i) => (
+                <div key={i} className="group/col relative rounded-shape-tooltip transition-colors hover:bg-[color-mix(in_oklab,var(--color-on-surface)_6%,transparent)]">
+                  <div className="pointer-events-none absolute top-1 start-1/2 z-10 min-w-max -translate-x-1/2 rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-3 py-2 text-label-md text-[var(--color-inverse-on-surface)] opacity-0 shadow-elevation-2 transition-opacity group-hover/col:opacity-100 rtl:translate-x-1/2">
+                    <div className="mb-1 font-semibold">{String(row[index])}</div>
+                    {series.map((s, j) => (
+                      <div key={s.key} className="flex items-center gap-2 tabular-nums">
+                        <span className={cn('size-2 shrink-0 rounded-full', BG[colorIndex(s.color, j)])} />
+                        <span className="flex-1">{labels[j]}</span>
+                        <span className="ps-3">{valueFormat(valueOf(row, s.key))}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="grid auto-cols-fr grid-flow-col text-center text-label-sm text-[var(--color-on-surface-muted)]">
             {data.map((row, i) => (
               <span key={i} className="truncate px-0.5">{String(row[index])}</span>
@@ -120,7 +155,7 @@ function Frame<T>({
           {data.map((row, i) => (
             <tr key={i}>
               <th scope="row">{String(row[index])}</th>
-              {series.map((s) => <td key={s.key}>{valueFormat(Number(row[s.key as keyof T]) || 0)}</td>)}
+              {series.map((s) => <td key={s.key}>{valueFormat(valueOf(row, s.key))}</td>)}
             </tr>
           ))}
         </tbody>
@@ -129,37 +164,45 @@ function Frame<T>({
   );
 }
 
-const valueOf = <T,>(row: T, key: string) => Math.max(0, Number(row[key as keyof T]) || 0);
-
 export interface BarChartProps<T> extends CartesianProps<T> {
   /** Stack the series in one bar per category instead of side by side. */
   stacked?: boolean;
 }
 
-/** Bars per category, grouped or stacked. Values must be 0 or more. */
+/** Bars per category, grouped or stacked. Negative values grow down from the zero line. */
 export function BarChart<T extends object>({ stacked = false, ...props }: BarChartProps<T>) {
-  const { data, series, index, valueFormat = defaultFormat } = props;
-  const max = niceMax(Math.max(0, ...data.map((row) =>
-    stacked ? series.reduce((sum, s) => sum + valueOf(row, s.key), 0) : Math.max(0, ...series.map((s) => valueOf(row, s.key))))));
+  const { data, series } = props;
+  const totals = data.flatMap((row) => {
+    if (!stacked) return series.map((s) => valueOf(row, s.key));
+    const vals = series.map((s) => valueOf(row, s.key));
+    return [vals.filter((v) => v > 0).reduce((a, b) => a + b, 0), vals.filter((v) => v < 0).reduce((a, b) => a + b, 0)];
+  });
+  const domain = niceDomain(totals);
+  const [lo, hi] = domain;
+  const y = (v: number) => VB_H - ((v - lo) / (hi - lo)) * VB_H;
   const slot = VB_W / Math.max(1, data.length);
   const groupW = slot * 0.7;
   const barW = stacked ? groupW : groupW / series.length;
   return (
-    <Frame {...props} max={max}>
+    <Frame {...props} domain={domain}>
       {data.map((row, i) => {
-        let base = 0;
+        let up = 0;
+        let down = 0;
         return (
           <g key={i}>
             {series.map((s, j) => {
               const v = valueOf(row, s.key);
-              const h = (v / max) * VB_H;
+              const from = stacked ? (v >= 0 ? up : down) : 0;
+              const to = from + v;
+              if (stacked) {
+                if (v >= 0) up = to;
+                else down = to;
+              }
+              const top = Math.min(y(from), y(to));
               const x = i * slot + (slot - groupW) / 2 + (stacked ? 0 : j * barW);
-              const y = VB_H - base - h;
-              if (stacked) base += h;
               return (
-                <rect key={s.key} x={x} y={y} width={Math.max(0, barW - (stacked ? 0 : 1))} height={h} className={FILL[colorIndex(s.color, j)]}>
-                  <title>{`${String(row[index])} · ${s.label ?? s.key}: ${valueFormat(v)}`}</title>
-                </rect>
+                <rect key={s.key} x={x} y={top} width={Math.max(0, barW - (stacked ? 0 : 1))} height={Math.abs(y(to) - y(from))}
+                  data-negative={v < 0 ? '' : undefined} className={cn('nx-chart-bar', FILL[colorIndex(s.color, j)])} />
               );
             })}
           </g>
@@ -170,34 +213,29 @@ export function BarChart<T extends object>({ stacked = false, ...props }: BarCha
 }
 
 export interface LineChartProps<T> extends CartesianProps<T> {
-  /** Fill the area under each line. */
+  /** Fill the area under each line (down to the zero line). */
   area?: boolean;
 }
 
-/** One line per series across the categories. Values must be 0 or more. */
+/** One line per series across the categories. Negative values go below the zero line. */
 export function LineChart<T extends object>({ area = false, ...props }: LineChartProps<T>) {
-  const { data, series, index, valueFormat = defaultFormat } = props;
-  const max = niceMax(Math.max(0, ...data.flatMap((row) => series.map((s) => valueOf(row, s.key)))));
+  const { data, series } = props;
+  const domain = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))));
+  const [lo, hi] = domain;
   const slot = VB_W / Math.max(1, data.length);
   const x = (i: number) => i * slot + slot / 2;
-  const y = (v: number) => VB_H - (v / max) * VB_H;
+  const y = (v: number) => VB_H - ((v - lo) / (hi - lo)) * VB_H;
   return (
-    <Frame {...props} max={max}>
+    <Frame {...props} domain={domain}>
       {series.map((s, j) => {
         const c = colorIndex(s.color, j);
         const pts = data.map((row, i) => `${x(i)},${y(valueOf(row, s.key))}`);
         return (
-          <g key={s.key}>
+          <g key={s.key} className="nx-chart-line">
             {area && data.length > 0 && (
-              <polygon points={`${x(0)},${VB_H} ${pts.join(' ')} ${x(data.length - 1)},${VB_H}`} className={cn(FILL[c], 'opacity-15')} />
+              <polygon points={`${x(0)},${y(0)} ${pts.join(' ')} ${x(data.length - 1)},${y(0)}`} className={cn(FILL[c], 'opacity-15')} />
             )}
             <polyline points={pts.join(' ')} fill="none" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" className={STROKE[c]} />
-            {data.map((row, i) => (
-              // A wide, invisible hit area per point carries the hover text.
-              <rect key={i} x={x(i) - slot / 2} y="0" width={slot} height={VB_H} className="fill-transparent">
-                <title>{`${String(row[index])} · ${s.label ?? s.key}: ${valueFormat(valueOf(row, s.key))}`}</title>
-              </rect>
-            ))}
           </g>
         );
       })}
@@ -278,8 +316,10 @@ export function Sparkline({ values, label, color = 1, area = false, className, .
     <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none"
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       className={cn('h-8 w-24 overflow-visible rtl:-scale-x-100', className)} {...props}>
-      {area && values.length > 1 && <polygon points={`0,${VB_H} ${pts} ${VB_W},${VB_H}`} className={cn(FILL[c], 'opacity-15')} />}
-      <polyline points={pts} fill="none" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" className={STROKE[c]} />
+      <g className="nx-chart-line">
+        {area && values.length > 1 && <polygon points={`0,${VB_H} ${pts} ${VB_W},${VB_H}`} className={cn(FILL[c], 'opacity-15')} />}
+        <polyline points={pts} fill="none" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" className={STROKE[c]} />
+      </g>
     </svg>
   );
 }
