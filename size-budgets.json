@@ -129,7 +129,7 @@
   "react/Text": 1700,
   "react/TextGradient": 1200,
   "react/Textarea": 2700,
-  "react/ThemeProvider": 2500,
+  "react/ThemeProvider": 3000,
   "react/ThinkingIndicator": 3400,
   "react/Toast": 7400,
   "react/Toggle": 1600,

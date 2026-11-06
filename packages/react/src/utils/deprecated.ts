@@ -17,3 +17,15 @@ export function warnDeprecated(name: string, replacement: string): void {
     `[@nexub/react] ${name} is deprecated and will be removed in 3.0. Use ${replacement} instead.`,
   );
 }
+
+/** Warns once per key, outside production (same rules as warnDeprecated). Used for 4.9 → 5.0 notices. */
+export function warnOnce(key: string, message: string): void {
+  try {
+    if (process.env.NODE_ENV === 'production') return;
+  } catch {
+    return;
+  }
+  if (warned.has(key)) return;
+  warned.add(key);
+  console.warn(`[@nexub/react] ${message}`);
+}
