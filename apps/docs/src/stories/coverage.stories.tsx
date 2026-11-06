@@ -16,6 +16,7 @@ import SplitButton from '../examples/components/split-button/0';
 import Float from '../examples/components/motion-float/0';
 import Marquee from '../examples/components/motion-marquee/0';
 import Reveal from '../examples/components/motion-reveal/0';
+import Celebrate from '../examples/components/celebrate/0';
 import Hero from '../examples/patterns/hero/0';
 import SectionHeader from '../examples/patterns/section-header/0';
 import LogoStrip from '../examples/patterns/logo-strip/0';
@@ -42,6 +43,7 @@ export const SplitButtonStory = { name: 'SplitButton', render: () => createEleme
 export const FloatStory = { name: 'Float', render: () => createElement(Float) };
 export const MarqueeStory = { name: 'Marquee', render: () => createElement(Marquee) };
 export const RevealStory = { name: 'Reveal', render: () => createElement(Reveal) };
+export const CelebrateStory = { name: 'Celebrate', render: () => createElement(Celebrate) };
 export const HeroStory = { name: 'Hero', render: () => createElement(Hero) };
 export const SectionHeaderStory = { name: 'SectionHeader', render: () => createElement(SectionHeader) };
 export const LogoStripStory = { name: 'LogoStrip', render: () => createElement(LogoStrip) };

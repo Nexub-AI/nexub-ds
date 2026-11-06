@@ -400,6 +400,7 @@ Never use a component marked deprecated.
 ## Components — Feedback
 
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
+- [Celebrate](components/celebrate.md) `@nexub/react`: A short confetti burst for a real win, such as a first payment or finishing onboarding.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 
@@ -1447,6 +1448,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 | `successLabel` | `string` | `'Done'` | Announced on `success`. When set, it also replaces the visible label (with a check) instead of showing the check alone. |
 | `errorLabel` | `string` | `'Something went wrong'` | Announced on `error`. |
 | `disabled` | `boolean` | `false` | Disables the button. |
+| `magnetic` | `boolean` | `false` | 4.3: drifts a few pixels toward the pointer on hover. For one key action per screen. Off for touch and reduced motion. |
 | `fullWidth` | `boolean` | `false` | Stretches the button to fill its container. |
 | `leadingIcon` | `React.ReactNode` |  | Icon rendered before the label. |
 | `trailingIcon` | `React.ReactNode` |  | Icon rendered after the label. |
@@ -1560,6 +1562,18 @@ export default function Example() {
 }
 ```
 
+## Example: Magnetic
+
+`magnetic` (4.3): drifts toward the pointer. Use it for one key action per screen.
+
+```tsx
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return <Button magnetic size="lg">Start free trial</Button>;
+}
+```
+
 ## Accessibility
 
 - Roles: button
@@ -1592,7 +1606,7 @@ Surface container for grouping related content. Supports flat, surface, and inte
 | --- | --- | --- | --- |
 | `variant` | `'flat' \| 'surface' \| 'interactive' \| 'showcase'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`. |
 | `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content. |
-| `effect` | `'none' \| 'sheen'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency. |
+| `effect` | `'none' \| 'sheen' \| 'tilt'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. `tilt` (4.3) also leans the card toward the pointer in 3D. Off for touch, reduced motion and reduced transparency. |
 | `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
 | `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Liquid-glass material treatment — see Foundations → Materials. |
@@ -1702,6 +1716,27 @@ export default function Example() {
 }
 ```
 
+## Example: Tilt
+
+`effect="tilt"` (4.3): the card leans toward the pointer and the sheen catches the light. Hover with a mouse.
+
+```tsx
+import { Card } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full grid-cols-2 gap-4">
+      {['Revenue', 'Customers'].map((t) => (
+        <Card key={t} variant="interactive" effect="tilt" className="p-6">
+          <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{t}</p>
+          <p className="m-0 text-title-lg">{t === 'Revenue' ? '$68,420' : '1,204'}</p>
+        </Card>
+      ))}
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: region (when used as a landmark)
@@ -1711,6 +1746,62 @@ export default function Example() {
 - Group related content with a heading inside the Card so AT users can navigate by heading level.
 
 Related: [media-card](media-card.md), [radio-card](radio-card.md), [alert](alert.md)
+
+
+---
+
+# Celebrate
+
+A short confetti burst for a real win, such as a first payment or finishing onboarding.
+
+- Package: `@nexub/react` · Category: Feedback · Status: beta
+- Import: `import { Celebrate } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/celebrate
+
+## When to use
+
+- A rare, real win the user worked for: first payment received, onboarding finished, a goal reached.
+
+## When not to use
+
+- Routine saves or every success; use the Button success state or a Toast.
+- As the only feedback: say what happened in text too.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `active` (required) | `boolean` |  | Bursts each time this goes from false to true. |
+| `count` | `number` | `28` | Number of pieces. |
+
+## Example: On a win
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Button, Celebrate } from '@nexub/react';
+
+export default function Example() {
+  const [paid, setPaid] = React.useState(false);
+  return (
+    <div className="relative flex flex-col items-center gap-3 py-10">
+      <Celebrate active={paid} />
+      <Button magnetic status={paid ? 'success' : 'idle'} successLabel="Paid" onClick={() => setPaid((p) => !p)}>
+        Pay $1,250
+      </Button>
+      <p role="status" className="m-0 min-h-5 text-body-sm text-[var(--color-on-surface-variant)]">{paid ? 'Payment sent. Your first one!' : ''}</p>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Decorative (`aria-hidden`). Announce the win in text, for example in a Toast or a status message.
+- Hidden under reduced motion.
+
+Related: [toast](toast.md), [button](button.md)
 
 
 ---

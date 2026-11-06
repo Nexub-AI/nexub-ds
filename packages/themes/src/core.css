@@ -694,3 +694,60 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (forced-colors: active) {
   .nx-aurora { display: none; }
 }
+
+/* Micro-interactions (4.3). Pointer-driven ones read --nx-px/--nx-py (0–1, set
+   through the CSSOM by usePointerSheen) and only run for a fine pointer with
+   motion allowed; everything else is pure CSS. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  /* Card effect="tilt": leans toward the pointer; the sheen catches the light. */
+  .nx-tilt { transition: transform var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing); }
+  .nx-tilt:hover {
+    transform: perspective(900px) rotateX(calc((0.5 - var(--nx-py, 0.5)) * 7deg)) rotateY(calc((var(--nx-px, 0.5) - 0.5) * 9deg));
+  }
+  /* Button magnetic: drifts a few pixels toward the pointer. */
+  .nx-magnetic { transition: transform var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing); }
+  .nx-magnetic:hover:not(:disabled) {
+    transform: translate(calc((var(--nx-px, 0.5) - 0.5) * 8px), calc((var(--nx-py, 0.5) - 0.5) * 6px));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* Switch: the thumb stretches toward where it is going while pressed. */
+  button[role='switch']:active:not(:disabled) > span {
+    scale: 1.22 1;
+    transform-origin: left center;
+    transition: scale var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  }
+  button[role='switch'][data-state='checked']:active:not(:disabled) > span,
+  [dir='rtl'] button[role='switch'][data-state='unchecked']:active:not(:disabled) > span { transform-origin: right center; }
+  [dir='rtl'] button[role='switch'][data-state='checked']:active:not(:disabled) > span { transform-origin: left center; }
+  /* A field shakes once when it becomes invalid (the attribute change restarts it). */
+  :is(input, textarea, select, [role='combobox'])[aria-invalid='true'] {
+    animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  }
+  /* The focus ring pops out instead of appearing (controls only, so panels keep their own entrance). */
+  :is(a, button, input, textarea, select, summary, [role='combobox'], [role='tab'], [role='switch'], [role='checkbox'], [role='radio'], [role='menuitem']):focus-visible {
+    animation: nx-focus-pop var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  }
+}
+@keyframes nx-focus-pop { from { outline-offset: 0; } }
+
+/* Celebrate (@nexub/react, 4.3): a confetti burst from the centre. */
+.nx-celebrate { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 1; }
+.nx-celebrate > span {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  width: 7px;
+  height: 11px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: nx-confetti 1000ms cubic-bezier(0.15, 0.65, 0.3, 1) var(--d, 0ms) forwards;
+}
+@keyframes nx-confetti {
+  0% { opacity: 1; translate: 0 0; rotate: 0deg; }
+  70% { opacity: 1; }
+  100% { opacity: 0; translate: var(--x, 0) var(--y, 0); rotate: var(--r, 180deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nx-celebrate { display: none; }
+}
