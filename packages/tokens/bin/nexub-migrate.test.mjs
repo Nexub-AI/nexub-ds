@@ -223,3 +223,11 @@ test('globToRegExp: * stays in a segment, ** crosses them', () => {
   assert.ok(globToRegExp('src/**/*.tsx').test('src/x/y/a.tsx'));
   assert.ok(globToRegExp('**/gen/**').test('src/gen/g.tsx'));
 });
+
+test('tailwind-3-preset: reports the deprecated preset import, never rewrites it', () => {
+  const src = "import nexub from '@nexub/tokens/tailwind';\nexport default { presets: [nexub] };\n";
+  const { output, manual } = migrateSource(src, { ext: '.js', rules: new Set(['tailwind-3-preset']), fix: true });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[1, 'tailwind-3-preset']]);
+  assert.equal(migrateSource('@import "@nexub/tokens/tailwind.css";', { ext: '.css', rules: new Set(['tailwind-3-preset']) }).manual.length, 0);
+});
