@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-type Brand = 'base' | 'leap' | 'bookub' | 'payub' | 'founderub';
+type Brand = 'base' | 'leap' | 'bookub' | 'payub' | 'founderub' | 'matchub';
 
 const brands: { value: Brand; label: string; color: string }[] = [
   { value: 'base',      label: 'Base',      color: '#4099f1' },
@@ -10,6 +10,7 @@ const brands: { value: Brand; label: string; color: string }[] = [
   { value: 'bookub',    label: 'Bookub',    color: '#10b981' },
   { value: 'payub',     label: 'Payub',     color: '#8b5cf6' },
   { value: 'founderub', label: 'Founderub', color: '#f59e0b' },
+  { value: 'matchub', label: 'Matchub', color: '#7bc62d' },
 ];
 
 const STORAGE_KEY = 'nexub-brand';

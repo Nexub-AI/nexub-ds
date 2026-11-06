@@ -19,6 +19,7 @@ export const separatorVariants = cva('', {
       bookub: 'border-[color-mix(in_srgb,var(--color-bookub)_30%,transparent)]',
       payub: 'border-[color-mix(in_srgb,var(--color-payub)_30%,transparent)]',
       founderub: 'border-[color-mix(in_srgb,var(--color-founderub)_30%,transparent)]',
+      matchub: 'border-[color-mix(in_srgb,var(--color-matchub)_30%,transparent)]',
     },
   },
   defaultVariants: {

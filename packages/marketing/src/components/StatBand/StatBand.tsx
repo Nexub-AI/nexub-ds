@@ -31,6 +31,7 @@ const toneClass: Record<ToneValue, string> = {
   bookub: 'text-[var(--color-bookub)]',
   payub: 'text-[var(--color-payub)]',
   founderub: 'text-[var(--color-founderub)]',
+  matchub: 'text-[var(--color-matchub)]',
 };
 
 export interface StatBandItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'prefix'> {

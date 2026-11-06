@@ -1,7 +1,7 @@
 {
   "name": "@nexub/themes",
   "version": "4.5.0",
-  "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (Leap, Bookub, Payub, Founderub) as importable CSS.",
+  "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (Leap, Bookub, Payub, Founderub, Matchub) as importable CSS.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
   "repository": {
@@ -35,6 +35,7 @@
     "./view-transitions": "./src/view-transitions.css",
     "./leap": "./src/leap.css",
     "./bookub": "./src/bookub.css",
+    "./matchub": "./src/matchub.css",
     "./payub": "./src/payub.css",
     "./founderub": "./src/founderub.css",
     "./marketing": "./src/marketing.css",

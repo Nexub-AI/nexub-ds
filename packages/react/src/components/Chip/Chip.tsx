@@ -25,6 +25,7 @@ export const chipVariants = cva(
         bookub: 'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)]',
         payub: 'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)]',
         founderub: 'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
+        matchub: 'bg-[var(--color-matchub-container)] text-[var(--color-on-matchub-container)]',
       },
     },
     defaultVariants: {

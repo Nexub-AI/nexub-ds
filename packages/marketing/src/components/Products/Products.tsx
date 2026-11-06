@@ -25,7 +25,7 @@ export interface ProductCardProps extends Omit<React.HTMLAttributes<HTMLLIElemen
   href: string;
   /** Product mark, e.g. <PayubMark size={24} />. */
   icon?: React.ReactNode;
-  accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
+  accent?: 'leap' | 'bookub' | 'payub' | 'founderub' | 'matchub';
   /** @default 'Learn more' */
   linkLabel?: string;
 }

@@ -12,6 +12,7 @@ export const TONE_ROLES: Record<ToneValue, [RoleName, RoleName]> = {
   bookub: ['bookub', 'on-bookub'],
   payub: ['payub', 'on-payub'],
   founderub: ['founderub', 'on-founderub'],
+  matchub: ['matchub', 'on-matchub'],
 };
 
 /** Soft container variant per tone (banners, tags, badges). */
@@ -25,6 +26,7 @@ export const TONE_CONTAINERS: Record<ToneValue, [RoleName, RoleName]> = {
   bookub: ['bookub-container', 'on-bookub-container'],
   payub: ['payub-container', 'on-payub-container'],
   founderub: ['founderub-container', 'on-founderub-container'],
+  matchub: ['matchub-container', 'on-matchub-container'],
 };
 
 /** Accent (text/icon) role per tone. */
@@ -38,6 +40,7 @@ export const TONE_TEXT: Record<ToneValue, RoleName> = {
   bookub: 'bookub',
   payub: 'payub',
   founderub: 'founderub',
+  matchub: 'matchub',
 };
 
 /** Every touch target reaches 44pt (Apple; Android's 48dp is met by md+ controls). */

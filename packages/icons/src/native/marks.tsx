@@ -81,6 +81,17 @@ export const FounderubMark = /* @__PURE__ */ createIcon(
   'FounderubMark',
 );
 
+export const MatchubMark = /* @__PURE__ */ createIcon(
+  glyph(
+    <>
+      <Path d="M20.16 8.2A9 9 0 1 1 15.8 3.84" />
+      <Circle cx="18.36" cy="5.64" r="0.6" />
+      <Path d="M8.5 16V9l3.5 3.5L15.5 9v7" />
+    </>,
+  ),
+  'MatchubMark',
+);
+
 export const ACRA = /* @__PURE__ */ createIcon(
   glyph(
     <>

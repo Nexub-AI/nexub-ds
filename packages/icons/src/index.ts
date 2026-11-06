@@ -11,6 +11,7 @@ export { LeapMark } from './icons/LeapMark.js';
 export { BookubMark } from './icons/BookubMark.js';
 export { PayubMark } from './icons/PayubMark.js';
 export { FounderubMark } from './icons/FounderubMark.js';
+export { MatchubMark } from './icons/MatchubMark.js';
 export { ACRA } from './icons/ACRA.js';
 export { IRAS } from './icons/IRAS.js';
 export { MCA } from './icons/MCA.js';

@@ -26,7 +26,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Brand',
         icon: 'circlehollow',
-        items: ['none', 'leap', 'bookub', 'payub', 'founderub'],
+        items: ['none', 'leap', 'bookub', 'payub', 'founderub', 'matchub'],
         dynamicTitle: true,
       },
     },

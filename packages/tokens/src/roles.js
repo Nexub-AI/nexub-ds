@@ -46,6 +46,7 @@ export const ROLES = {
   ...accent('bookub'),
   ...accent('payub'),
   ...accent('founderub'),
+  ...accent('matchub'),
   surface: ['neutral', 98, 6, 98, 6],
   'surface-dim': ['neutral', 87, 6, 87, 6],
   'surface-bright': ['neutral', 98, 24, 98, 24],

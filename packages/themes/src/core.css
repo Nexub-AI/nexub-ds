@@ -38,6 +38,8 @@
   --color-fill-payub-hover:     var(--color-palette-payub-30);
   --color-fill-founderub:       var(--color-palette-founderub-40);
   --color-fill-founderub-hover: var(--color-palette-founderub-30);
+  --color-fill-matchub:         var(--color-palette-matchub-40);
+  --color-fill-matchub-hover:   var(--color-palette-matchub-30);
   --color-fill-accent:          var(--color-fill-primary);
   --color-fill-accent-hover:    var(--color-fill-primary-hover);
 
@@ -76,6 +78,12 @@
   --color-founderub-700:    var(--color-accent-founderub-700);
   --color-founderub-bg:     rgba(245, 158, 11, 0.10);
   --color-founderub-border: rgba(245, 158, 11, 0.25);
+  --color-matchub-50:       var(--color-accent-matchub-50);
+  --color-matchub-100:      var(--color-accent-matchub-100);
+  --color-matchub-600:      var(--color-accent-matchub-600);
+  --color-matchub-700:      var(--color-accent-matchub-700);
+  --color-matchub-bg:       rgba(123, 198, 45, 0.10);
+  --color-matchub-border:   rgba(123, 198, 45, 0.25);
 }
 
 *, *::before, *::after {

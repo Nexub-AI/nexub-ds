@@ -67,6 +67,19 @@
         "800": { "$value": "#92400e", "$type": "color" },
         "900": { "$value": "#78350f", "$type": "color" },
         "950": { "$value": "#451a03", "$type": "color" }
+      },
+      "matchub": {
+        "50":  { "$value": "#f3faea", "$type": "color" },
+        "100": { "$value": "#e3f3d0", "$type": "color" },
+        "200": { "$value": "#c8e7a3", "$type": "color" },
+        "300": { "$value": "#a9d872", "$type": "color" },
+        "400": { "$value": "#8fcc48", "$type": "color" },
+        "500": { "$value": "#7bc62d", "$type": "color" },
+        "600": { "$value": "#5e9e1f", "$type": "color" },
+        "700": { "$value": "#4a7d19", "$type": "color" },
+        "800": { "$value": "#3b6316", "$type": "color" },
+        "900": { "$value": "#2f5013", "$type": "color" },
+        "950": { "$value": "#182c07", "$type": "color" }
       }
     },
     "neutral": {

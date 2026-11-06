@@ -13,6 +13,7 @@
 @import '@nexub/themes/bookub' layer(base);
 @import '@nexub/themes/payub' layer(base);
 @import '@nexub/themes/founderub' layer(base);
+@import '@nexub/themes/matchub' layer(base);
 @import '@nexub/themes/marketing' layer(base);
 @import '@nexub/themes/vivid' layer(base);
 @import 'tailwindcss/preflight.css' layer(base);

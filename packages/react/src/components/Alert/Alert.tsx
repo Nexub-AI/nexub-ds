@@ -32,6 +32,8 @@ export const alertVariants = cva(
           'bg-[var(--color-payub-container)] border-s-[var(--color-payub)] text-[var(--color-on-payub-container)]',
         founderub:
           'bg-[var(--color-founderub-container)] border-s-[var(--color-founderub)] text-[var(--color-on-founderub-container)]',
+        matchub:
+          'bg-[var(--color-matchub-container)] border-s-[var(--color-matchub)] text-[var(--color-on-matchub-container)]',
       },
     },
     defaultVariants: {

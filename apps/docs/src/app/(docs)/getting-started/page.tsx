@@ -133,7 +133,7 @@ function ThemeToggle() {
       <h2>Brand themes</h2>
       <p>
         Apply a brand theme by adding the <code>data-product</code> attribute to your root element.
-        Four brands are available: <code>leap</code>, <code>bookub</code>, <code>payub</code>, <code>founderub</code>.
+        Five brands are available: <code>leap</code>, <code>bookub</code>, <code>payub</code>, <code>founderub</code>, <code>matchub</code>.
       </p>
       <CodeBlock lang="html" code={`<!-- Apply leap brand theme -->
 <html data-theme="light" data-product="leap">
