@@ -1,5 +1,12 @@
 # @nexub/themes
 
+## 4.0.0
+
+### Patch Changes
+
+- Updated dependencies [82df5ba]
+  - @nexub/tokens@4.0.0
+
 ## 3.9.0
 
 ### Patch Changes
