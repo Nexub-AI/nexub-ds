@@ -51,14 +51,18 @@ Version 4.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Flex](https://nexub-ds-docs.pages.dev/components/flex.md): Flexbox layout primitive.
 - [Floating Input](https://nexub-ds-docs.pages.dev/components/floating-input.md): A text field whose label sits inside and floats up on focus or input. CSS only.
 - [Form Field](https://nexub-ds-docs.pages.dev/components/form-field.md): Wraps Label, Input, HelperText and FormError into a single accessible group.
+- [Funnel](https://nexub-ds-docs.pages.dev/components/funnel.md): Drop-off through ordered steps, with conversion from the first step.
+- [Gauge](https://nexub-ds-docs.pages.dev/components/gauge.md): Progress toward a target on a 270° arc.
 - [Gradient Divider](https://nexub-ds-docs.pages.dev/components/gradient-divider.md): A decorative gradient-faded horizontal rule.
 - [Grid](https://nexub-ds-docs.pages.dev/components/grid.md): CSS Grid layout primitive.
 - [Heading](https://nexub-ds-docs.pages.dev/components/heading.md): Semantic heading component with size, weight, and tone control.
+- [Heatmap](https://nexub-ds-docs.pages.dev/components/heatmap.md): Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
 - [Helper Text](https://nexub-ds-docs.pages.dev/components/helper-text.md): Small supporting text placed beneath a form field to provide hints or validation feedback.
 - [Hover Card](https://nexub-ds-docs.pages.dev/components/hover-card.md): Rich tooltip card revealed on hover.
 - [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button.md): A square button designed to hold a single icon, with an accessible label.
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Kbd](https://nexub-ds-docs.pages.dev/components/kbd.md): Keyboard key display — renders a styled <kbd> element.
+- [KPI Tile](https://nexub-ds-docs.pages.dev/components/kpi-tile.md): A headline number with its change versus last period and a trend line.
 - [Label](https://nexub-ds-docs.pages.dev/components/label.md): An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Line Chart](https://nexub-ds-docs.pages.dev/components/line-chart.md): Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Link](https://nexub-ds-docs.pages.dev/components/link.md): Styled anchor link with variant and external support.
