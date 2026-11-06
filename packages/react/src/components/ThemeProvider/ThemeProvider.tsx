@@ -1,5 +1,6 @@
 'use client';
 
+import { warnOnce } from '../../utils/deprecated.js';
 import * as React from 'react';
 import type { GlassMode } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
@@ -188,6 +189,16 @@ export function ThemeProvider({
   seedTarget = 'primary',
 }: ThemeProviderProps) {
   useSeedTheme(seed, seedTarget);
+
+  // 4.9: what changes in 5.0 (see /getting-started/migrating-to-5). Development only, once.
+  React.useEffect(() => {
+    if (React.version.startsWith('18.')) warnOnce('react-18', 'React 18 support is deprecated; 5.0 requires React 19.');
+    if (!document.documentElement.closest('[data-expression]') && !document.querySelector('[data-expression]'))
+      warnOnce(
+        'expression-default',
+        'In 5.0 the Vivid expression becomes the default. Set data-expression="calm" on <html> to keep today\'s look, or data-expression="vivid" to opt in now.',
+      );
+  }, []);
 
   // Start from props (not storage/matchMedia) so server and client render the
   // same tree; real values are synced before paint below.
