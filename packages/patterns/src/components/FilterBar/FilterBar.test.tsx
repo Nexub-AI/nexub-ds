@@ -96,4 +96,13 @@ describe('FilterBar', () => {
     rerender(<FilterBar searchLabel="Search invoices" />);
     expect(screen.getByRole('searchbox', { name: 'Search invoices' })).toBeDefined();
   });
+
+  it('shows the applied count and clears all', async () => {
+    const onClearAll = vi.fn();
+    render(<FilterBar activeCount={3} onClearAll={onClearAll} />);
+    expect(screen.getByText('3 filters')).toBeDefined();
+    await userEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+    expect(onClearAll).toHaveBeenCalled();
+  });
 });
+
