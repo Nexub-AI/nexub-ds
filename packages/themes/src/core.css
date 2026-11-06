@@ -797,3 +797,32 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
     transition: inset-block-start var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), font-size var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), color 150ms ease;
   }
 }
+
+/* Shape (4.6): data-shape="squircle" gives every rounded corner inside it the
+   continuous (superellipse) curve where CSS corner-shape is supported; other
+   browsers keep the normal round corners. */
+[data-shape='squircle'],
+[data-shape='squircle'] * {
+  corner-shape: squircle;
+}
+
+/* Glass 3.0 edge (4.6): a specular rim that catches light along the top-left
+   and fades round the edge, like a lens. Opt in with .nx-glass-edge (on by
+   default for glass under data-expression="vivid"). Off for reduced
+   transparency and forced colours. */
+.nx-glass-edge { position: relative; }
+.nx-glass-edge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, light-dark(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.45)) 0%, transparent 38%, transparent 62%, light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.18)) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+@media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+  .nx-glass-edge::after { display: none; }
+}

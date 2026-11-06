@@ -141,6 +141,7 @@ import barChartEntry from './components/bar-chart';
 import lineChartEntry from './components/line-chart';
 import donutChartEntry from './components/donut-chart';
 import sparklineEntry from './components/sparkline';
+import chartToggleEntry from './components/chart-toggle';
 import kpiTileEntry from './components/kpi-tile';
 import funnelEntry from './components/funnel';
 import heatmapEntry from './components/heatmap';
@@ -252,6 +253,7 @@ export const componentEntries: ComponentEntry[] = [
   lineChartEntry,
   donutChartEntry,
   sparklineEntry,
+  chartToggleEntry,
   kpiTileEntry,
   funnelEntry,
   heatmapEntry,
