@@ -281,7 +281,7 @@ export type { CommandPaletteRootProps } from './components/CommandPalette/index.
 // Components — Data Display
 export { Table } from './components/Table/index.js';
 export { DataTable } from './components/DataTable/index.js';
-export type { DataTableProps } from './components/DataTable/index.js';
+export type { DataTableProps, DataTableDensity } from './components/DataTable/index.js';
 export { EmptyState } from './components/EmptyState/index.js';
 export { ErrorState } from './components/ErrorState/index.js';
 export type { ErrorStateProps } from './components/ErrorState/index.js';
