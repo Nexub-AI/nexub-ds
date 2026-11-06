@@ -12,7 +12,7 @@ Surface container for grouping related content. Supports flat, surface, and inte
 | --- | --- | --- | --- |
 | `variant` | `'flat' \| 'surface' \| 'interactive' \| 'showcase'` | `'flat'` | `interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`. |
 | `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content. |
-| `effect` | `'none' \| 'sheen'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. Off for touch, reduced motion and reduced transparency. |
+| `effect` | `'none' \| 'sheen' \| 'tilt'` | `'none'` | Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. `tilt` (4.3) also leans the card toward the pointer in 3D. Off for touch, reduced motion and reduced transparency. |
 | `tone` | `ToneValue` | `undefined` | Applies a semantic left-border accent. |
 | `asChild` | `boolean` | `false` | Merges props onto the immediate child element. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Liquid-glass material treatment — see Foundations → Materials. |
@@ -115,6 +115,27 @@ export default function Example() {
         <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
           <h3 className="m-0 text-title-lg">{p.name}</h3>
           <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+        </Card>
+      ))}
+    </div>
+  );
+}
+```
+
+## Example: Tilt
+
+`effect="tilt"` (4.3): the card leans toward the pointer and the sheen catches the light. Hover with a mouse.
+
+```tsx
+import { Card } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full grid-cols-2 gap-4">
+      {['Revenue', 'Customers'].map((t) => (
+        <Card key={t} variant="interactive" effect="tilt" className="p-6">
+          <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{t}</p>
+          <p className="m-0 text-title-lg">{t === 'Revenue' ? '$68,420' : '1,204'}</p>
         </Card>
       ))}
     </div>

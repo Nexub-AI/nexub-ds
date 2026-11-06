@@ -32,6 +32,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 | `successLabel` | `string` | `'Done'` | Announced on `success`. When set, it also replaces the visible label (with a check) instead of showing the check alone. |
 | `errorLabel` | `string` | `'Something went wrong'` | Announced on `error`. |
 | `disabled` | `boolean` | `false` | Disables the button. |
+| `magnetic` | `boolean` | `false` | 4.3: drifts a few pixels toward the pointer on hover. For one key action per screen. Off for touch and reduced motion. |
 | `fullWidth` | `boolean` | `false` | Stretches the button to fill its container. |
 | `leadingIcon` | `React.ReactNode` |  | Icon rendered before the label. |
 | `trailingIcon` | `React.ReactNode` |  | Icon rendered after the label. |
@@ -142,6 +143,18 @@ export default function Example() {
       <Button variant="outlined" size="lg">Book a demo</Button>
     </div>
   );
+}
+```
+
+## Example: Magnetic
+
+`magnetic` (4.3): drifts toward the pointer. Use it for one key action per screen.
+
+```tsx
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return <Button magnetic size="lg">Start free trial</Button>;
 }
 ```
 

@@ -21,6 +21,7 @@ const entry: ComponentEntry = {
     { name: 'successLabel', type: 'string', default: "'Done'", required: false, description: 'Announced on `success`. When set, it also replaces the visible label (with a check) instead of showing the check alone.' },
     { name: 'errorLabel', type: 'string', default: "'Something went wrong'", required: false, description: 'Announced on `error`.' },
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the button.' },
+    { name: 'magnetic', type: 'boolean', default: 'false', required: false, description: '4.3: drifts a few pixels toward the pointer on hover. For one key action per screen. Off for touch and reduced motion.' },
     { name: 'fullWidth', type: 'boolean', default: 'false', required: false, description: 'Stretches the button to fill its container.' },
     { name: 'leadingIcon', type: 'React.ReactNode', required: false, description: 'Icon rendered before the label.' },
     { name: 'trailingIcon', type: 'React.ReactNode', required: false, description: 'Icon rendered after the label.' },
@@ -48,6 +49,7 @@ const entry: ComponentEntry = {
       title: 'Hero (marketing mode)',
       description: 'Inside `data-mode="marketing"` with `@nexub/themes/marketing` loaded. The focus ring sits outside the gradient.',
     },
+    { title: 'Magnetic', description: '`magnetic` (4.3): drifts toward the pointer. Use it for one key action per screen.' },
   ],
   usage: {
     whenToUse: [
