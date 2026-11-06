@@ -16,6 +16,8 @@ Type-to-search input with matching options dropdown.
 | `placeholder` | `string` |  | Placeholder text shown in the input when empty. |
 | `emptyText` | `string` |  | Text shown when no options match the current search query. |
 | `loading` | `boolean` |  | Shows a loading indicator while options are being fetched. |
+| `inputValue` | `string` |  | Controlled input text (5.1). |
+| `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
 
 ## Example: Default
 

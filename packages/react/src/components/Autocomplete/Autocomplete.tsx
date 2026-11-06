@@ -16,6 +16,13 @@ export interface AutocompleteProps {
   placeholder?: string;
   emptyText?: string;
   loading?: boolean;
+  /** Controlled input text. */
+  inputValue?: string;
+  /**
+   * Called as the user types. When set, the options are taken as already
+   * filtered (fetched for this text), so the built-in filtering is off.
+   */
+  onInputChange?: (text: string) => void;
   className?: string;
 }
 
@@ -26,21 +33,28 @@ export function Autocomplete({
   placeholder,
   emptyText,
   loading = false,
+  inputValue,
+  onInputChange,
   className,
 }: AutocompleteProps) {
   const messages = useNexubMessages();
   const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
   // Input text. Follows the selected option's label when `value` changes from
   // outside (adjusted during render, not in an effect).
-  const [search, setSearch] = React.useState(selectedLabel);
+  const [innerSearch, setInnerSearch] = React.useState(selectedLabel);
   const [prevValue, setPrevValue] = React.useState(value);
+  const search = inputValue ?? innerSearch;
+  const setSearch = (text: string) => {
+    setInnerSearch(text);
+    onInputChange?.(text);
+  };
   if (value !== prevValue) {
     setPrevValue(value);
-    setSearch(selectedLabel);
+    setInnerSearch(selectedLabel);
   }
 
   return (
-    <Combobox.Root className={className}>
+    <Combobox.Root className={className} shouldFilter={!onInputChange}>
       <Combobox.Input placeholder={placeholder ?? messages.searchPlaceholder} value={search} onValueChange={setSearch} />
       <Combobox.List>
         {loading ? (

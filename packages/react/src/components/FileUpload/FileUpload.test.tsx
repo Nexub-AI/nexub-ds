@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { FileUpload, formatFileSize } from './FileUpload.js';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { FileUpload, fileAccepted, formatFileSize } from './FileUpload.js';
 
 describe('FileUpload', () => {
   it('renders dropzone', () => {
@@ -67,5 +67,36 @@ describe('formatFileSize', () => {
 
   it('follows the locale', () => {
     expect(formatFileSize(1536, 'de')).toMatch(/^1,5/);
+  });
+
+  it('fileAccepted matches MIME types, wildcards and extensions', () => {
+    const png = new File(['x'], 'a.PNG', { type: 'image/png' });
+    expect(fileAccepted(png)).toBe(true);
+    expect(fileAccepted(png, ['image/*'])).toBe(true);
+    expect(fileAccepted(png, ['.png'])).toBe(true);
+    expect(fileAccepted(png, ['image/png'])).toBe(true);
+    expect(fileAccepted(png, ['application/pdf', '.pdf'])).toBe(false);
+  });
+
+  it('filters dropped files by accept, maxSize and maxFiles, and says why', () => {
+    const onFilesChange = vi.fn();
+    const onReject = vi.fn();
+    render(
+      <FileUpload.Root accept={['image/*']} maxSize={10} maxFiles={1} onFilesChange={onFilesChange} onReject={onReject}>
+        <FileUpload.Dropzone data-testid="zone" />
+      </FileUpload.Root>,
+    );
+    const ok = new File(['12345'], 'ok.png', { type: 'image/png' });
+    const exe = new File(['x'], 'evil.exe', { type: 'application/octet-stream' });
+    const big = new File(['x'.repeat(20)], 'big.png', { type: 'image/png' });
+    const extra = new File(['1'], 'extra.png', { type: 'image/png' });
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [ok, exe, big, extra] } });
+
+    expect(onFilesChange).toHaveBeenCalledWith([ok]);
+    expect(onReject.mock.calls[0]![0].map((r: { reason: string }) => r.reason)).toEqual(['type', 'size', 'count']);
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveTextContent('evil.exe isn’t an accepted file type');
+    expect(alert).toHaveTextContent('big.png is larger than');
+    expect(alert).toHaveTextContent('You can add up to 1 file');
   });
 });
