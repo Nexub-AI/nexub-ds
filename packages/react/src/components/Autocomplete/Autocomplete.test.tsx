@@ -71,4 +71,32 @@ describe('Autocomplete behaviour', () => {
     render(<Autocomplete options={options} inputValue="Rea" onInputChange={() => {}} />);
     expect(screen.getByRole('combobox')).toHaveValue('Rea');
   });
+
+  it('popover mode opens a list under the field and closes on select', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const onValueChange = vi.fn();
+    render(<Autocomplete mode="popover" options={options} onValueChange={onValueChange} aria-label="Framework" />);
+    const input = screen.getByRole('combobox', { name: 'Framework' });
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('option')).toBeNull();
+    await userEvent.type(input, 'sve');
+    expect(input).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(screen.getByRole('option', { name: 'Svelte' }));
+    expect(onValueChange).toHaveBeenCalledWith('svelte');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('shows skeleton rows with a status while loading', () => {
+    render(<Autocomplete options={options} loading />);
+    expect(screen.getByRole('status')).toHaveAttribute('aria-busy', 'true');
+  });
+
+  it('offers a create option for new text', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const onCreate = vi.fn();
+    render(<Autocomplete options={options} onCreate={onCreate} />);
+    await userEvent.type(screen.getByRole('combobox'), 'Solid');
+    await userEvent.click(screen.getByRole('option', { name: /Create “Solid”/ }));
+    expect(onCreate).toHaveBeenCalledWith('Solid');
+  });
 });

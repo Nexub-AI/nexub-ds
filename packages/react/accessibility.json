@@ -694,6 +694,23 @@
       "screenReader": []
     },
     {
+      "slug": "multi-select",
+      "name": "Multi Select",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Type: Filters the options and opens the list.",
+        "ArrowDown / ArrowUp: Moves through the options.",
+        "Enter: Toggles the highlighted option.",
+        "Backspace: In an empty field, removes the last chip.",
+        "Escape: Closes the list."
+      ],
+      "screenReader": [
+        "Options carry `aria-checked`; each chip has a \"Remove <label>\" button."
+      ]
+    },
+    {
       "slug": "navigation-rail",
       "name": "Navigation Rail",
       "package": "@nexub/react",

@@ -17,8 +17,8 @@ Slide-in panel from any edge of the screen.
 | `Drawer.Content` | `compound` |  | The drawer panel. Accepts a side prop. |
 | `scrollLock` | `'style' \| 'class'` |  | On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src 'self'). Default `style`. |
 | `side` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
-| `Drawer.Header` | `compound` |  | Header section of the drawer panel. Sticky (5.1): long content scrolls under it. |
-| `Drawer.Footer` | `compound` |  | Footer section of the drawer panel. Sticky (5.1): actions stay in view while content scrolls. |
+| `Drawer.Header` | `compound` |  | Header section of the drawer panel. Sticky on solid panels (5.1): long content scrolls under it. |
+| `Drawer.Footer` | `compound` |  | Footer section of the drawer panel. Sticky on solid panels (5.1): actions stay in view while content scrolls. |
 | `Drawer.Title` | `compound` |  | Accessible title for the drawer. |
 | `Drawer.Description` | `compound` |  | Supporting description text for the drawer. |
 | `Drawer.Close` | `compound` |  | Element that closes the drawer. |

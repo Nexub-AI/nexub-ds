@@ -61,6 +61,7 @@ import checkboxEntry from './components/checkbox';
 import radioGroupEntry from './components/radio-group';
 import comboboxEntry from './components/combobox';
 import autocompleteEntry from './components/autocomplete';
+import multiSelectEntry from './components/multi-select';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -236,6 +237,7 @@ export const componentEntries: ComponentEntry[] = [
   switchEntry,
   comboboxEntry,
   autocompleteEntry,
+  multiSelectEntry,
   // Overlays
   dialogEntry,
   alertDialogEntry,
