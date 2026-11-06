@@ -2,7 +2,7 @@ import { renderToString } from 'react-dom/server';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { type ColumnDef } from '@tanstack/react-table';
 import { DataTable, type DataTableColumn } from './DataTable.js';
 import { NexubProvider } from '../NexubProvider/NexubProvider.js';
@@ -140,3 +140,80 @@ describe('DataTable', () => {
     });
   });
 });
+
+describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
+  const many: Person[] = Array.from({ length: 5 }, (_, i) => ({ name: `P${i}`, age: 20 + i }));
+
+  it('selection column: row and page checkboxes, bulk bar with the selected rows', async () => {
+    const onBulk = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableRowSelection
+        selectionColumn
+        bulkActions={(rows) => (
+          <button type="button" onClick={() => onBulk(rows)}>
+            Archive
+          </button>
+        )}
+      />,
+    );
+    const [all, first] = screen.getAllByRole('checkbox');
+    expect(all).toHaveAccessibleName('Select all rows on this page');
+    await userEvent.click(first!);
+    expect(all).toHaveAttribute('data-state', 'indeterminate');
+    expect(screen.getByRole('region', { name: '1 selected' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Archive' }));
+    expect(onBulk).toHaveBeenCalledWith([data[0]]);
+    await userEvent.click(screen.getByRole('button', { name: 'Clear selection' }));
+    expect(screen.queryByRole('region', { name: /selected/ })).toBeNull();
+  });
+
+  it('offers "Select all N" when a whole page is selected', async () => {
+    render(<DataTable columns={columns} data={many} enableRowSelection selectionColumn pagination={{ pageSize: 2 }} />);
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Select all rows on this page' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Select all 5' }));
+    expect(screen.getByText('5 selected')).toBeInTheDocument();
+  });
+
+  it('controlled selection with getRowId', async () => {
+    const onChange = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableRowSelection
+        selectionColumn
+        getRowId={(r) => r.name}
+        rowSelection={{ Bob: true }}
+        onRowSelectionChange={onChange}
+      />,
+    );
+    const rows = screen.getAllByRole('checkbox', { name: 'Select row' });
+    expect(rows[1]).toHaveAttribute('data-state', 'checked');
+    await userEvent.click(rows[0]!);
+    expect(onChange).toHaveBeenCalledWith({ Bob: true, Alice: true });
+  });
+
+  it('view menu switches density and hides columns', async () => {
+    const { container } = render(<DataTable columns={columns} data={data} viewOptions />);
+    await userEvent.click(screen.getByRole('button', { name: 'View' }));
+    await userEvent.click(screen.getByRole('menuitemradio', { name: 'Compact' }));
+    expect(container.firstElementChild).toHaveAttribute('data-density', 'compact');
+    await userEvent.click(screen.getByRole('button', { name: 'View' }));
+    await userEvent.click(screen.getByRole('menuitemcheckbox', { name: 'Age' }));
+    expect(screen.queryByRole('columnheader', { name: 'Age' })).toBeNull();
+  });
+
+  it('numbers sort order when several columns are sorted', async () => {
+    const user = userEvent.setup();
+    render(<DataTable columns={columns} data={data} enableSorting />);
+    await user.click(screen.getByRole('button', { name: /Name/ }));
+    await user.keyboard('{Shift>}');
+    await user.click(screen.getByRole('button', { name: /Age/ }));
+    await user.keyboard('{/Shift}');
+    expect(screen.getByText('sort 2')).toBeInTheDocument();
+  });
+});
+
