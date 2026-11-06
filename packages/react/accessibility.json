@@ -114,7 +114,7 @@
       "slug": "bar-chart",
       "name": "Bar Chart",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
@@ -298,7 +298,7 @@
       "slug": "donut-chart",
       "name": "Donut Chart",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
@@ -461,7 +461,7 @@
       "slug": "line-chart",
       "name": "Line Chart",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
@@ -513,7 +513,7 @@
       "slug": "money-input",
       "name": "Money Input",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -540,7 +540,7 @@
       "slug": "motion-float",
       "name": "Float",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -549,7 +549,7 @@
       "slug": "motion-marquee",
       "name": "Marquee",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -558,7 +558,7 @@
       "slug": "motion-reveal",
       "name": "Reveal",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -585,7 +585,7 @@
       "slug": "navigation-rail",
       "name": "Navigation Rail",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -748,7 +748,7 @@
       "slug": "sheet",
       "name": "Sheet",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -775,7 +775,7 @@
       "slug": "sparkline",
       "name": "Sparkline",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
@@ -796,7 +796,7 @@
       "slug": "split-button",
       "name": "Split Button",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -970,7 +970,7 @@
       "slug": "cta-band",
       "name": "CTABand",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -992,7 +992,7 @@
       "slug": "faq",
       "name": "FAQ",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1001,7 +1001,7 @@
       "slug": "feature-split",
       "name": "FeatureSplit",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1019,7 +1019,7 @@
       "slug": "hero",
       "name": "Hero",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1028,7 +1028,7 @@
       "slug": "how-it-works",
       "name": "HowItWorks",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1055,7 +1055,7 @@
       "slug": "logo-strip",
       "name": "LogoStrip",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1064,7 +1064,7 @@
       "slug": "marketing-footer",
       "name": "MarketingFooter",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1073,7 +1073,7 @@
       "slug": "marketing-nav",
       "name": "MarketingNav",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1100,7 +1100,7 @@
       "slug": "pricing-table",
       "name": "PricingTable",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1109,7 +1109,7 @@
       "slug": "product-grid",
       "name": "ProductGrid",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1118,7 +1118,7 @@
       "slug": "section-header",
       "name": "SectionHeader",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1136,7 +1136,7 @@
       "slug": "stat-band",
       "name": "StatBand",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
@@ -1163,7 +1163,7 @@
       "slug": "testimonial-grid",
       "name": "TestimonialGrid",
       "package": "@nexub/marketing",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": []

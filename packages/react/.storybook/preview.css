@@ -13,6 +13,7 @@
 @import '@nexub/themes/bookub' layer(base);
 @import '@nexub/themes/payub' layer(base);
 @import '@nexub/themes/founderub' layer(base);
+@import '@nexub/themes/marketing' layer(base);
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 /* Nexub token utilities: the v4 counterpart of the @nexub/tokens/tailwind preset. */
@@ -23,6 +24,8 @@
 @source '../src/**/*.{ts,tsx}';
 @source './**/*.{ts,tsx}';
 @source '../../patterns/src/**/*.{ts,tsx}';
+@source '../../marketing/src/**/*.{ts,tsx}';
+@source '../../../apps/docs/src/examples/**/*.tsx';
 
 /* v3 emitted this after the utilities, unlayered. */
 @layer utilities {

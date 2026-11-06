@@ -629,3 +629,17 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='open'] { animation-name: fadeIn; }
   .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] { animation-name: fadeOut; }
 }
+
+/* Charts (@nexub/react BarChart / LineChart / Sparkline, 4.1): bars grow from the
+   zero line and lines reveal left to right on first paint. Off under reduced motion. */
+@keyframes nx-chart-grow { from { transform: scaleY(0); } }
+@keyframes nx-chart-reveal { from { clip-path: inset(0 100% 0 0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .nx-chart-bar {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: nx-chart-grow var(--motion-spring-spatial-default-duration, 500ms) var(--motion-spring-spatial-default-easing, ease-out) both;
+  }
+  .nx-chart-bar[data-negative] { transform-origin: top; }
+  .nx-chart-line { animation: nx-chart-reveal 900ms var(--motion-spring-spatial-slow-easing, ease-out) both; }
+}
