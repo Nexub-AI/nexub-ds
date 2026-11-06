@@ -4,9 +4,7 @@ React Native components and screen patterns for Nexub Design System. They use th
 
 **Native chrome, Nexub content.** The system draws the tab bar, stack header, back gesture, action sheets, pickers and iOS 26 Liquid Glass; Nexub themes them. Everything inside a screen (lists, cards, buttons, inputs, money) is drawn by Nexub, so it looks the same on iOS, Android and the web.
 
-Status: **alpha**. Built for Expo SDK 57+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
-
-> **Expo SDK 57 is deprecated.** 4.0 requires Expo SDK 58 or later. See [Migrating to 4.0](https://nexub-ds-docs.pages.dev/getting-started/migrating-to-4).
+Status: **alpha**. Built for Expo SDK 58+ / React Native 0.86+ (New Architecture). Works in Expo apps and bare React Native apps.
 
 ## Install
 

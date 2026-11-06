@@ -1,7 +1,7 @@
 {
   "name": "@nexub/tokens",
   "version": "3.9.0",
-  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, Tailwind presets and React Native objects.",
+  "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, a Tailwind 4 theme, Figma variables and native (React Native, SwiftUI, Compose) tokens.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -48,10 +48,6 @@
       "types": "./dist/js/native.d.ts",
       "default": "./dist/js/native.js"
     },
-    "./tailwind": {
-      "types": "./dist/tailwind/preset.d.ts",
-      "default": "./dist/tailwind/preset.js"
-    },
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
@@ -71,15 +67,13 @@
   "devDependencies": {
     "style-dictionary": "^5.7.0",
     "tailwindcss": "^4.3.3",
-    "tailwindcss-v3": "npm:tailwindcss@^3.4.19",
     "typescript": "~6.0.3"
   },
   "dependencies": {
-    "@material/material-color-utilities": "0.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "@material/material-color-utilities": "0.3.0"
   },
   "peerDependencies": {
-    "tailwindcss": "^3.0.0 || ^4.0.0"
+    "tailwindcss": "^4.0.0"
   },
   "peerDependenciesMeta": {
     "tailwindcss": {
