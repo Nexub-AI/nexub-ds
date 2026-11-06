@@ -80,9 +80,18 @@ export default function ExpressionPage() {
       </Section>
 
       <Section id="setup" title="Turn it on">
+        <Prose>
+          Since 5.0, Vivid is the default: <code>ThemeProvider</code> sets <code>data-expression=&quot;vivid&quot;</code> on{' '}
+          <code>&lt;html&gt;</code> when the app has not set one. Import the stylesheet after your theme files, and set the
+          attribute in your server HTML too so the first paint is already Vivid.
+        </Prose>
         <CodeBlock lang="css" code={`@import "@nexub/themes/vivid";   /* after your theme files */`} />
-        <CodeBlock lang="html" code={`<html data-expression="vivid">        <!-- the whole app -->
-<section data-expression="vivid">     <!-- or one area, like a dashboard header -->`} />
+        <CodeBlock lang="html" code={`<html data-expression="vivid">   <!-- the default from 5.0 -->
+<html data-expression="calm">    <!-- keep the Calm look -->`} />
+        <Prose>
+          Or pass <code>defaultExpression=&quot;calm&quot;</code> to <code>ThemeProvider</code>. Without ThemeProvider, set the
+          attribute yourself; a <code>&lt;section data-expression=&quot;vivid&quot;&gt;</code> still opts in one area of a Calm app.
+        </Prose>
       </Section>
 
       <Section id="rules" title="Rules">

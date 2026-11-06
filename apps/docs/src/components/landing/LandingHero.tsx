@@ -16,11 +16,16 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   const heroRef = React.useRef<HTMLElement>(null);
   const [cursor, setCursor] = React.useState({ x: 0, y: 0, active: false });
   // 4.7 remix: a brand seed recolours the hero live (CSSOM, so CSP-safe), and
-  // Calm/Vivid switches the expression layer.
+  // Calm/Vivid switches the page's expression (on <html>; Vivid is the 5.0 default).
   const [seed, setSeed] = React.useState<string | null>(null);
   const [expression, setExpression] = React.useState<'calm' | 'vivid'>('vivid');
   useScopedSeed(heroRef, seed);
   useScopedSeed(heroRef, seed, { target: 'tertiary' });
+  React.useEffect(() => {
+    const html = document.documentElement;
+    html.setAttribute('data-expression', expression);
+    return () => html.setAttribute('data-expression', 'vivid');
+  }, [expression]);
 
   React.useEffect(() => {
     const hero = heroRef.current;
@@ -48,7 +53,6 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   return (
     <section
       ref={heroRef}
-      data-expression={expression === 'vivid' ? 'vivid' : undefined}
       className="landing-hero relative isolate flex min-h-[calc(100vh-var(--docs-header-height))] flex-col items-center justify-center overflow-hidden px-8 pb-20 pt-16 text-center [background:var(--gradient-hero-ambient)]"
     >
       {/* ── Cursor spotlight (pure client, no SSR impact) ─────────────────── */}
