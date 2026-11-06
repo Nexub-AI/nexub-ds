@@ -70,6 +70,17 @@
       "screenReader": []
     },
     {
+      "slug": "approval-card",
+      "name": "Approval Card",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The outcome is announced in a polite live region and replaces the buttons."
+      ]
+    },
+    {
       "slug": "aurora",
       "name": "Aurora",
       "package": "@nexub/react",
@@ -328,6 +339,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "diff-view",
+      "name": "Diff View",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Added and removed lines are spelled out for screen readers; colour is not the only cue."
+      ]
     },
     {
       "slug": "donut-chart",
@@ -720,6 +742,17 @@
       "screenReader": []
     },
     {
+      "slug": "plan-tracker",
+      "name": "Plan Tracker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Each step reads its status in text; the active step has `aria-current=\"step\"`."
+      ]
+    },
+    {
       "slug": "popover",
       "name": "Popover",
       "package": "@nexub/react",
@@ -1026,6 +1059,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "tool-call",
+      "name": "Tool Call",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "A native `<details>` disclosure: opens with Enter or Space."
+      ]
     },
     {
       "slug": "tooltip",

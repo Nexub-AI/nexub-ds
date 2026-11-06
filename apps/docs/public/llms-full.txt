@@ -362,11 +362,15 @@ Never use a component marked deprecated.
 
 ## Components — AI
 
+- [Approval Card](components/approval-card.md) `@nexub/react`: The agent asks before it acts: what will happen, then Approve or Deny.
 - [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+- [Diff View](components/diff-view.md) `@nexub/react`: A unified diff with added and removed lines, for agent changes.
 - [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Plan Tracker](components/plan-tracker.md) `@nexub/react`: An agent plan: ordered steps with done, active, pending or failed status.
 - [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 - [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
 - [Thinking Indicator](components/thinking-indicator.md) `@nexub/react`: Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
+- [Tool Call](components/tool-call.md) `@nexub/react`: One tool call: its name and status, expandable to input and output.
 
 ## Components — Avatar
 
@@ -570,7 +574,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AgentKit, AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage
 
 
@@ -830,6 +834,46 @@ export default function Example() {
 ```
 
 Related: [money-input](money-input.md), [number-ticker](number-ticker.md)
+
+
+---
+
+# Approval Card
+
+The agent asks before it acts: what will happen, then Approve or Deny.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { ApprovalCard } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/approval-card
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `string` |  | What the agent wants to do. |
+| `onApprove / onDeny` | `() => void` |  | Called once with the choice. |
+
+## Example: Before sending
+
+```tsx
+'use client';
+
+import { ApprovalCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ApprovalCard title="Send 3 payment reminders to Acme" approveLabel="Send reminders">
+      Invoices INV-1042, INV-1051 and INV-1063, $4,120 in total, to ap@acme.example.
+    </ApprovalCard>
+  );
+}
+```
+
+## Accessibility
+
+- The outcome is announced in a polite live region and replaces the buttons.
+
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
 
 
 ---
@@ -2561,6 +2605,47 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Diff View
+
+A unified diff with added and removed lines, for agent changes.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { DiffView } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/diff-view
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `diff` (required) | `string` |  | Unified diff text. |
+| `file` | `string` |  | File name above the diff. |
+
+## Example: Proposed change
+
+```tsx
+import { DiffView } from '@nexub/react';
+
+const diff = `@@ -3,4 +3,4 @@
+ export const reminder = {
+-  subject: 'Invoice overdue',
++  subject: 'A friendly reminder about your invoice',
+   tone: 'polite',
+ };`;
+
+export default function Example() {
+  return <DiffView className="w-full" file="templates/reminder.ts" diff={diff} />;
+}
+```
+
+## Accessibility
+
+- Added and removed lines are spelled out for screen readers; colour is not the only cue.
+
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
 
 
 ---
@@ -4725,6 +4810,48 @@ export default function Example() {
 
 ---
 
+# Plan Tracker
+
+An agent plan: ordered steps with done, active, pending or failed status.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { PlanTracker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/plan-tracker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` (required) | `{ title; status; detail? }[]` |  | Status is done, active, pending or failed. |
+
+## Example: Agent plan
+
+```tsx
+import { PlanTracker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <PlanTracker
+      steps={[
+        { title: 'Read October invoices', status: 'done', detail: '42 invoices' },
+        { title: 'Match payments to invoices', status: 'active', detail: '31 of 42 matched' },
+        { title: 'Draft reminders for the unpaid ones', status: 'pending' },
+        { title: 'Ask you before sending', status: 'pending' },
+      ]}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- Each step reads its status in text; the active step has `aria-current="step"`.
+
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
+
+
+---
+
 # Popover
 
 Floating content panel anchored to a trigger element.
@@ -6623,6 +6750,47 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Tool Call
+
+One tool call: its name and status, expandable to input and output.
+
+- Package: `@nexub/react` · Category: AI · Status: beta
+- Import: `import { ToolCall } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/tool-call
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` (required) | `string` |  | Tool name. |
+| `status` (required) | `'running' \| 'done' \| 'failed'` |  | Shown as a badge. |
+| `input` | `unknown` |  | Arguments, shown as JSON. |
+| `output` | `unknown` |  | Result, as text or JSON. |
+
+## Example: Tool call
+
+```tsx
+import { ToolCall } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <ToolCall name="search_invoices" status="done" input={{ customer: 'Acme', status: 'unpaid' }} output={{ found: 3, total: '$4,120' }} open />
+      <ToolCall name="draft_email" status="running" input={{ to: 'ap@acme.example', template: 'reminder' }} />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- A native `<details>` disclosure: opens with Enter or Space.
+
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
 
 
 ---

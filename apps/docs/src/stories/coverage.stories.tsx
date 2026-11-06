@@ -10,6 +10,10 @@ import BarChart from '../examples/components/bar-chart/0';
 import LineChart from '../examples/components/line-chart/0';
 import DonutChart from '../examples/components/donut-chart/0';
 import Sparkline from '../examples/components/sparkline/0';
+import PlanTracker from '../examples/components/plan-tracker/0';
+import ToolCall from '../examples/components/tool-call/0';
+import ApprovalCard from '../examples/components/approval-card/0';
+import DiffView from '../examples/components/diff-view/0';
 import ChartToggle from '../examples/components/chart-toggle/0';
 import Gauge from '../examples/components/gauge/0';
 import Heatmap from '../examples/components/heatmap/0';
@@ -73,3 +77,7 @@ export const HeatmapStory = { name: 'Heatmap', render: () => createElement(Heatm
 export const FunnelStory = { name: 'Funnel', render: () => createElement(Funnel) };
 export const KpiTileStory = { name: 'KpiTile', render: () => createElement(KpiTile) };
 export const ChartToggleStory = { name: 'ChartToggle', render: () => createElement(ChartToggle) };
+export const PlanTrackerStory = { name: 'PlanTracker', render: () => createElement(PlanTracker) };
+export const ToolCallStory = { name: 'ToolCall', render: () => createElement(ToolCall) };
+export const ApprovalCardStory = { name: 'ApprovalCard', render: () => createElement(ApprovalCard) };
+export const DiffViewStory = { name: 'DiffView', render: () => createElement(DiffView) };

@@ -51,6 +51,8 @@ export type { NumberInputProps } from './components/NumberInput/index.js';
 export { MoneyInput } from './components/MoneyInput/index.js';
 export type { MoneyInputProps } from './components/MoneyInput/index.js';
 export { Amount } from './components/Amount/index.js';
+export { PlanTracker, ToolCall, DiffView, ApprovalCard } from './components/AgentKit/index.js';
+export type { PlanTrackerProps, PlanStep, PlanStepStatus, ToolCallProps, DiffViewProps, ApprovalCardProps } from './components/AgentKit/index.js';
 export { SharedElement, transitionName } from './components/SharedElement/index.js';
 export type { SharedElementProps } from './components/SharedElement/index.js';
 export { ScrollProgress } from './components/ScrollProgress/index.js';
