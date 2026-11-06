@@ -67,13 +67,14 @@ function a11yReport() {
     .map((p) => join(root, `packages/${p}/src/components`))
     .filter(existsSync)
     .flatMap((dir) => readdirSync(dir).flatMap((c) => (existsSync(join(dir, c)) ? readdirSync(join(dir, c)).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(dir, c, f), 'utf8')) : [])))
+    .concat(readdirSync(join(root, 'apps/docs/src/stories')).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(root, 'apps/docs/src/stories', f), 'utf8')))
     .join('\n');
   // Covered by its own stories file, as a story's `component`, or rendered as JSX in any story.
   const storyFile = (e) =>
     [pascal(e.meta.slug), e.meta.title.replace(/\s+/g, '')].some(
       (n) =>
         ['react', 'patterns', 'marketing'].some((p) => existsSync(join(root, `packages/${p}/src/components/${n}/${n}.stories.tsx`))) ||
-        new RegExp(`(<${n}[\\s/>.])|(component: ${n}\\b)`).test(stories),
+        new RegExp(`(<${n}[\\s/>.])|(component: ${n}\\b)|(createElement\\(${n}\\))`).test(stories),
     );
   return {
     version,
