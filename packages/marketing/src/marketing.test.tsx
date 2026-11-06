@@ -71,7 +71,7 @@ describe('@nexub/marketing', () => {
 
   it('names the country switcher and the testimonial rating', () => {
     render(page);
-    expect(screen.getByRole('button', { name: 'Choose country: Singapore' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'SG, Choose country: Singapore' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Rated 5 out of 5' })).toBeInTheDocument();
   });
 
