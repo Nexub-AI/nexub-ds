@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 const RULES: Record<string, RegExp> = {
   // Legacy colour names; roles only (--color-text-disabled is the disabled state).
   'legacy-color':
-    /--color-(?:bg|text-(?!disabled\b)|border|brand|neutral|semantic|fill|accent|ring|chart)-|--color-(?:leap|bookub|payub|founderub)-\d|--color-(?:success|error|warning|info|primary|danger)-\d|\b(?:bg|text|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|accent|decoration)-(?:brand|accent|neutral|semantic|text|bg|border|ring)-/g,
+    /--color-(?:bg|text-(?!disabled\b)|border|brand|neutral|semantic|fill|accent|ring|chart)-|--color-(?:leap|bookub|payub|founderub|matchub)-\d|--color-(?:success|error|warning|info|primary|danger)-\d|\b(?:bg|text|border|ring|fill|stroke|from|to|via|outline|divide|placeholder|caret|accent|decoration)-(?:brand|accent|neutral|semantic|text|bg|border|ring)-/g,
   // Shape tokens (rounded-shape-*), rounded-full or rounded-none only.
   'legacy-radius': /\brounded(?:-[trblse]{1,2})?(?:-(?:xs|sm|md|lg|xl|2xl|3xl))?(?![\w\-[])/g,
   // Elevation tokens only.

@@ -79,6 +79,11 @@ const toneClasses: Record<
     soft: 'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
     outline: 'border-[color:light-dark(var(--color-palette-founderub-80),var(--color-palette-founderub-40))] text-[var(--color-founderub)]',
   },
+  matchub: {
+    solid: 'bg-[var(--color-matchub)] text-[var(--color-on-matchub)]',
+    soft: 'bg-[var(--color-matchub-container)] text-[var(--color-on-matchub-container)]',
+    outline: 'border-[color:light-dark(var(--color-palette-matchub-80),var(--color-palette-matchub-40))] text-[var(--color-matchub)]',
+  },
 };
 
 export interface BadgeProps

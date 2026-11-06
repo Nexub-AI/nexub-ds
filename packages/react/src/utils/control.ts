@@ -18,6 +18,7 @@ export const toneTextClasses: Record<ToneValue, string> = {
   bookub: 'text-[var(--color-bookub)]',
   payub: 'text-[var(--color-payub)]',
   founderub: 'text-[var(--color-founderub)]',
+  matchub: 'text-[var(--color-matchub)]',
 };
 
 /** Text field chrome: Input wrapper, Textarea, Select trigger. */

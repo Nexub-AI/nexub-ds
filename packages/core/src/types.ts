@@ -11,10 +11,11 @@ export type ToneValue =
   | 'leap'
   | 'bookub'
   | 'payub'
-  | 'founderub';
+  | 'founderub'
+  | 'matchub';
 
 /** Nexub product brands; each remaps the tertiary role family. */
-export type Product = 'leap' | 'bookub' | 'payub' | 'founderub';
+export type Product = 'leap' | 'bookub' | 'payub' | 'founderub' | 'matchub';
 
 /** Glass intensity dial (user preference). 'off' makes every glass surface solid. */
 export type GlassMode = 'clear' | 'balanced' | 'tinted' | 'off';

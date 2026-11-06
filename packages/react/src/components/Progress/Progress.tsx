@@ -36,6 +36,7 @@ export const progressFillVariants = cva(
         bookub: 'bg-[var(--color-bookub)]',
         payub: 'bg-[var(--color-payub)]',
         founderub: 'bg-[var(--color-founderub)]',
+        matchub: 'bg-[var(--color-matchub)]',
       },
       animated: {
         true: 'bg-[length:200%_100%] animate-[progress-stripes_1s_linear_infinite]',

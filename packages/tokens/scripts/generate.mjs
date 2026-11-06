@@ -26,8 +26,9 @@ const SEEDS = {
   bookub: '#10b981',
   payub: '#8b5cf6',
   founderub: '#f59e0b',
+  matchub: '#7bc62d',
 };
-export const PRODUCTS = ['leap', 'bookub', 'payub', 'founderub'];
+export const PRODUCTS = ['leap', 'bookub', 'payub', 'founderub', 'matchub'];
 
 export function palettes() {
   const p = Object.fromEntries(Object.entries(SEEDS).map(([name, hex]) => [name, tonalPalette(hex)]));

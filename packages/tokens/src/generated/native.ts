@@ -45,6 +45,10 @@ export const native = {
           "on-founderub": "#ffffff",
           "founderub-container": "#ffddb8",
           "on-founderub-container": "#2a1700",
+          "matchub": "#3a6a00",
+          "on-matchub": "#ffffff",
+          "matchub-container": "#a9f85b",
+          "on-matchub-container": "#0e2000",
           "surface": "#faf9fd",
           "surface-dim": "#dad9dd",
           "surface-bright": "#faf9fd",
@@ -109,6 +113,10 @@ export const native = {
           "on-founderub": "#472a00",
           "founderub-container": "#653e00",
           "on-founderub-container": "#ffddb8",
+          "matchub": "#8edb41",
+          "on-matchub": "#1c3700",
+          "matchub-container": "#2b5000",
+          "on-matchub-container": "#a9f85b",
           "surface": "#121316",
           "surface-dim": "#121316",
           "surface-bright": "#38393c",
@@ -175,6 +183,10 @@ export const native = {
           "on-founderub": "#ffffff",
           "founderub-container": "#ffddb8",
           "on-founderub-container": "#1c0e00",
+          "matchub": "#325d00",
+          "on-matchub": "#ffffff",
+          "matchub-container": "#a9f85b",
+          "on-matchub-container": "#071400",
           "surface": "#faf9fd",
           "surface-dim": "#dad9dd",
           "surface-bright": "#faf9fd",
@@ -239,6 +251,10 @@ export const native = {
           "on-founderub": "#382100",
           "founderub-container": "#653e00",
           "on-founderub-container": "#ffeede",
+          "matchub": "#9be94e",
+          "on-matchub": "#152b00",
+          "matchub-container": "#2b5000",
+          "on-matchub-container": "#d1ffa2",
           "surface": "#121316",
           "surface-dim": "#121316",
           "surface-bright": "#38393c",
@@ -305,6 +321,10 @@ export const native = {
           "on-founderub": "#ffffff",
           "founderub-container": "#ffddb8",
           "on-founderub-container": "#000000",
+          "matchub": "#2b5000",
+          "on-matchub": "#ffffff",
+          "matchub-container": "#a9f85b",
+          "on-matchub-container": "#000000",
           "surface": "#faf9fd",
           "surface-dim": "#dad9dd",
           "surface-bright": "#faf9fd",
@@ -369,6 +389,10 @@ export const native = {
           "on-founderub": "#2a1700",
           "founderub-container": "#653e00",
           "on-founderub-container": "#ffffff",
+          "matchub": "#a9f85b",
+          "on-matchub": "#0e2000",
+          "matchub-container": "#2b5000",
+          "on-matchub-container": "#ffffff",
           "surface": "#121316",
           "surface-dim": "#121316",
           "surface-bright": "#38393c",
@@ -567,6 +591,50 @@ export const native = {
             "tertiary": "#ffddb8",
             "on-tertiary": "#2a1700",
             "tertiary-container": "#653e00",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      },
+      "matchub": {
+        "standard": {
+          "light": {
+            "tertiary": "#3a6a00",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#a9f85b",
+            "on-tertiary-container": "#0e2000"
+          },
+          "dark": {
+            "tertiary": "#8edb41",
+            "on-tertiary": "#1c3700",
+            "tertiary-container": "#2b5000",
+            "on-tertiary-container": "#a9f85b"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#325d00",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#a9f85b",
+            "on-tertiary-container": "#071400"
+          },
+          "dark": {
+            "tertiary": "#9be94e",
+            "on-tertiary": "#152b00",
+            "tertiary-container": "#2b5000",
+            "on-tertiary-container": "#d1ffa2"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#2b5000",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#a9f85b",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#a9f85b",
+            "on-tertiary": "#0e2000",
+            "tertiary-container": "#2b5000",
             "on-tertiary-container": "#ffffff"
           }
         }

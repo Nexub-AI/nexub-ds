@@ -27,6 +27,7 @@ const toneClasses: Record<ToneValue, string> = {
   bookub: 'bg-[var(--color-bookub)] text-[var(--color-on-bookub)]',
   payub: 'bg-[var(--color-payub)] text-[var(--color-on-payub)]',
   founderub: 'bg-[var(--color-founderub)] text-[var(--color-on-founderub)]',
+  matchub: 'bg-[var(--color-matchub)] text-[var(--color-on-matchub)]',
 };
 
 const filled = `bg-[var(--button-filled-bg,var(--color-primary))] text-[var(--button-filled-fg,var(--color-on-primary))] ${disabledContainer}`;

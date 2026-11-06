@@ -32,6 +32,7 @@ export const spinnerVariants = cva(
         bookub: 'border-[var(--color-bookub)]',
         payub: 'border-[var(--color-payub)]',
         founderub: 'border-[var(--color-founderub)]',
+        matchub: 'border-[var(--color-matchub)]',
       },
     },
     defaultVariants: {

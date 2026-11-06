@@ -51,6 +51,7 @@ const toneBorderMap: Record<ToneValue, string> = {
   bookub: 'border-s-4 border-s-[var(--color-bookub)]',
   payub: 'border-s-4 border-s-[var(--color-payub)]',
   founderub: 'border-s-4 border-s-[var(--color-founderub)]',
+  matchub: 'border-s-4 border-s-[var(--color-matchub)]',
 };
 
 export interface CardProps
@@ -62,7 +63,7 @@ export interface CardProps
    *  Opt-in; off for touch and reduced motion. */
   effect?: 'none' | 'sheen' | 'tilt';
   /** Product accent for `variant="showcase"`: a coloured top edge and tint in marketing mode. Sets `data-product`. */
-  accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
+  accent?: 'leap' | 'bookub' | 'payub' | 'founderub' | 'matchub';
   asChild?: boolean;
 }
 

@@ -22,7 +22,7 @@ export const Default: Story = {
 
 const variants = ['filled', 'tonal', 'outlined', 'text', 'glass', 'destructive', 'accent', 'link'] as const;
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
-const tones = ['neutral', 'info', 'success', 'warning', 'danger', 'leap', 'bookub', 'payub', 'founderub'] as const;
+const tones = ['neutral', 'info', 'success', 'warning', 'danger', 'leap', 'bookub', 'payub', 'founderub', 'matchub'] as const;
 
 /** Every variant, enabled and disabled, plus the size ladder and tones. */
 export const Gallery: Story = {

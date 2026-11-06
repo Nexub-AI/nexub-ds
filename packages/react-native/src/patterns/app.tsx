@@ -647,7 +647,7 @@ export interface NexubApp {
   name: string;
   /** Tile art (e.g. @nexub/brand icon as an Image), else initials on the product tone. */
   icon?: React.ReactNode;
-  tone?: 'leap' | 'bookub' | 'payub' | 'founderub' | 'primary';
+  tone?: 'leap' | 'bookub' | 'payub' | 'founderub' | 'matchub' | 'primary';
 }
 
 export interface AppSwitcherSheetProps {

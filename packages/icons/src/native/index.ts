@@ -5,5 +5,5 @@ export { createIcon } from './createIcon.js';
 export * from './lucide.js';
 
 // Custom Nexub icons (same names as @nexub/icons)
-export { NexubMark, LeapMark, BookubMark, PayubMark, FounderubMark, ACRA, IRAS, MCA, GST } from './marks.js';
+export { NexubMark, LeapMark, BookubMark, PayubMark, FounderubMark, MatchubMark, ACRA, IRAS, MCA, GST } from './marks.js';
 export type { NexubMarkProps } from './marks.js';
