@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v4.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.5.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
