@@ -138,6 +138,10 @@ import barChartEntry from './components/bar-chart';
 import lineChartEntry from './components/line-chart';
 import donutChartEntry from './components/donut-chart';
 import sparklineEntry from './components/sparkline';
+import kpiTileEntry from './components/kpi-tile';
+import funnelEntry from './components/funnel';
+import heatmapEntry from './components/heatmap';
+import gaugeEntry from './components/gauge';
 import bentoGridEntry from './patterns/bento-grid';
 
 // ─── 1.7.0 ────────────────────────────────────────────────────────────────────
@@ -245,6 +249,10 @@ export const componentEntries: ComponentEntry[] = [
   lineChartEntry,
   donutChartEntry,
   sparklineEntry,
+  kpiTileEntry,
+  funnelEntry,
+  heatmapEntry,
+  gaugeEntry,
   cardEntry,
   mediaCardEntry,
   // Dividers

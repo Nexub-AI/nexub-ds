@@ -55,6 +55,8 @@ export type { CelebrateProps } from './components/Celebrate/index.js';
 export { Aurora } from './components/Aurora/index.js';
 export type { AuroraProps } from './components/Aurora/index.js';
 export { BarChart, LineChart, DonutChart, Sparkline, ChartLegend, niceMax, niceDomain } from './components/Chart/index.js';
+export { Gauge, Heatmap, Funnel, KpiTile } from './components/Chart/index.js';
+export type { GaugeProps, HeatmapProps, FunnelProps, KpiTileProps } from './components/Chart/index.js';
 export type { BarChartProps, LineChartProps, DonutChartProps, SparklineProps, ChartLegendProps, ChartSeries, ChartColor } from './components/Chart/index.js';
 export type { AmountProps } from './components/Amount/index.js';
 export { NumberTicker } from './components/NumberTicker/index.js';
