@@ -1,6 +1,5 @@
 'use client';
 
-import { warnOnce } from '../../utils/deprecated.js';
 import * as React from 'react';
 import type { GlassMode } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
@@ -56,6 +55,8 @@ export interface ThemeProviderProps {
   seed?: string;
   /** Accent family the seed recolours: 'primary' (default) or 'tertiary' (product brand). */
   seedTarget?: 'primary' | 'tertiary';
+  /** Expression set on <html> when it has no data-expression. Needs `@nexub/themes/vivid` for Vivid. @default 'vivid' */
+  defaultExpression?: 'vivid' | 'calm';
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -187,18 +188,17 @@ export function ThemeProvider({
   glassStorageKey = 'nexub-glass',
   seed,
   seedTarget = 'primary',
+  defaultExpression = 'vivid',
 }: ThemeProviderProps) {
   useSeedTheme(seed, seedTarget);
 
-  // 4.9: what changes in 5.0 (see /getting-started/migrating-to-5). Development only, once.
-  React.useEffect(() => {
-    if (React.version.startsWith('18.')) warnOnce('react-18', 'React 18 support is deprecated; 5.0 requires React 19.');
-    if (!document.documentElement.closest('[data-expression]') && !document.querySelector('[data-expression]'))
-      warnOnce(
-        'expression-default',
-        'In 5.0 the Vivid expression becomes the default. Set data-expression="calm" on <html> to keep today\'s look, or data-expression="vivid" to opt in now.',
-      );
-  }, []);
+  // 5.0: Vivid is the default expression. An app keeps Calm with
+  // defaultExpression="calm" or by setting data-expression on <html> itself
+  // (set it in server HTML to avoid a first paint in Calm).
+  useIsomorphicLayoutEffect(() => {
+    const html = document.documentElement;
+    if (!html.hasAttribute('data-expression')) html.setAttribute('data-expression', defaultExpression);
+  }, [defaultExpression]);
 
   // Start from props (not storage/matchMedia) so server and client render the
   // same tree; real values are synced before paint below.

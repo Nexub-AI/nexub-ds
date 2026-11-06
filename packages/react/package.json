@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
@@ -98,8 +98,8 @@
   },
   "peerDependencies": {
     "@nexub/tokens": "workspace:^",
-    "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
   },
   "devDependencies": {
     "@nexub/themes": "workspace:*",

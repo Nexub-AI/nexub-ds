@@ -1,6 +1,6 @@
 {
   "name": "@nexub/marketing",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "description": "Marketing sections for the Nexub Design System: hero, stats, testimonials, products, pricing, FAQ, CTA, nav and footer, built on @nexub/react in marketing mode. Server components by default.",
   "type": "module",
   "license": "MIT",
@@ -55,8 +55,8 @@
     "@nexub/react": "workspace:^",
     "@nexub/themes": "workspace:^",
     "@nexub/tokens": "workspace:^",
-    "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
   },
   "peerDependenciesMeta": {
     "@nexub/icons": {
