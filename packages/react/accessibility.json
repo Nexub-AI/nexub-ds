@@ -752,6 +752,19 @@
       ]
     },
     {
+      "slug": "otp-input",
+      "name": "OTP Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Type: Fills the box and moves to the next.",
+        "Backspace: Clears the box, or the previous one when empty.",
+        "ArrowLeft / ArrowRight: Moves between boxes."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "pagination",
       "name": "Pagination",
       "package": "@nexub/react",

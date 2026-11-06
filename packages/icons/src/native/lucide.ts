@@ -47,6 +47,9 @@ import {
   LucideFileText,
   LucideFileCheck,
   LucideFileX,
+  LucideInbox,
+  LucideServerCrash,
+  LucideWifiOff,
   LucideFolder,
   LucidePaperclip,
   LucideImage,
@@ -179,6 +182,9 @@ export const Briefcase       = /* @__PURE__ */ createIcon(LucideBriefcase,      
 export const FileText        = /* @__PURE__ */ createIcon(LucideFileText,        'FileText');
 export const FileCheck       = /* @__PURE__ */ createIcon(LucideFileCheck,       'FileCheck');
 export const FileX           = /* @__PURE__ */ createIcon(LucideFileX,           'FileX');
+export const Inbox           = /* @__PURE__ */ createIcon(LucideInbox,           'Inbox');
+export const ServerCrash     = /* @__PURE__ */ createIcon(LucideServerCrash,     'ServerCrash');
+export const WifiOff         = /* @__PURE__ */ createIcon(LucideWifiOff,         'WifiOff');
 export const Folder          = /* @__PURE__ */ createIcon(LucideFolder,          'Folder');
 export const Paperclip       = /* @__PURE__ */ createIcon(LucidePaperclip,       'Paperclip');
 export const Image           = /* @__PURE__ */ createIcon(LucideImage,           'Image');
