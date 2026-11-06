@@ -121,3 +121,18 @@ export const Selection: Story = {
 export const Compact: Story = {
   render: () => <DataTable caption="Users" captionHidden columns={columns} data={data} density="compact" />,
 };
+
+export const ResizePinSticky: Story = {
+  render: () => (
+    <DataTable
+      caption="Users"
+      captionHidden
+      columns={columns}
+      data={data}
+      enableColumnResizing
+      enableColumnReordering
+      columnPinning={{ left: ['name'] }}
+      maxHeight={200}
+    />
+  ),
+};
