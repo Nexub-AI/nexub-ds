@@ -19,6 +19,7 @@ Version 4.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Alert Dialog](https://nexub-ds-docs.pages.dev/components/alert-dialog.md): Confirmation dialog that requires an explicit user action before proceeding.
 - [Alert](https://nexub-ds-docs.pages.dev/components/alert.md): Inline contextual message with optional title, icon, and dismiss action.
 - [Amount](https://nexub-ds-docs.pages.dev/components/amount.md): Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
+- [Approval Card](https://nexub-ds-docs.pages.dev/components/approval-card.md): The agent asks before it acts: what will happen, then Approve or Deny.
 - [Aurora](https://nexub-ds-docs.pages.dev/components/aurora.md): A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
 - [Autocomplete](https://nexub-ds-docs.pages.dev/components/autocomplete.md): Type-to-search input with matching options dropdown.
 - [Avatar Group](https://nexub-ds-docs.pages.dev/components/avatar-group.md): Stacked group of avatars with overflow count.
@@ -43,6 +44,7 @@ Version 4.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
 - [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker.md): Dual-calendar date range selector.
 - [Dialog](https://nexub-ds-docs.pages.dev/components/dialog.md): Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
+- [Diff View](https://nexub-ds-docs.pages.dev/components/diff-view.md): A unified diff with added and removed lines, for agent changes.
 - [Donut Chart](https://nexub-ds-docs.pages.dev/components/donut-chart.md): Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Drawer](https://nexub-ds-docs.pages.dev/components/drawer.md): Slide-in panel from any edge of the screen.
 - [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state.md): Placeholder UI shown when a list or page has no content.
@@ -82,6 +84,7 @@ Version 4.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker.md): A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [Pagination](https://nexub-ds-docs.pages.dev/components/pagination.md): Page navigation control with prev/next and page number buttons.
 - [Password Input](https://nexub-ds-docs.pages.dev/components/password-input.md): A password field with a built-in toggle to reveal or hide the entered value.
+- [Plan Tracker](https://nexub-ds-docs.pages.dev/components/plan-tracker.md): An agent plan: ordered steps with done, active, pending or failed status.
 - [Popover](https://nexub-ds-docs.pages.dev/components/popover.md): Floating content panel anchored to a trigger element.
 - [Progress](https://nexub-ds-docs.pages.dev/components/progress.md): Horizontal progress bar with optional tone and animation.
 - [Prompt Input](https://nexub-ds-docs.pages.dev/components/prompt-input.md): The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
@@ -113,6 +116,7 @@ Version 4.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Toast](https://nexub-ds-docs.pages.dev/components/toast.md): Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 - [Toggle Group](https://nexub-ds-docs.pages.dev/components/toggle-group.md): Group of toggle buttons where one or many can be active.
 - [Toggle](https://nexub-ds-docs.pages.dev/components/toggle.md): Pressable toggle button built on Radix UI Toggle.
+- [Tool Call](https://nexub-ds-docs.pages.dev/components/tool-call.md): One tool call: its name and status, expandable to input and output.
 - [Tooltip](https://nexub-ds-docs.pages.dev/components/tooltip.md): Floating label that appears on hover. Built on Radix UI Tooltip.
 
 ## Patterns
