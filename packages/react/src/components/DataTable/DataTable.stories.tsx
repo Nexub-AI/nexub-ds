@@ -101,3 +101,23 @@ export const NumericColumns: Story = {
     />
   ),
 };
+
+export const Selection: Story = {
+  render: () => (
+    <DataTable
+      caption="Users"
+      captionHidden
+      columns={columns}
+      data={data}
+      enableRowSelection
+      selectionColumn
+      viewOptions
+      rowSelection={{ 0: true, 2: true }}
+      bulkActions={() => <button type="button">Archive</button>}
+    />
+  ),
+};
+
+export const Compact: Story = {
+  render: () => <DataTable caption="Users" captionHidden columns={columns} data={data} density="compact" />,
+};
