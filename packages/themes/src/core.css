@@ -751,3 +751,49 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (prefers-reduced-motion: reduce) {
   .nx-celebrate { display: none; }
 }
+
+/* Transitions (4.4). */
+/* ScrollProgress: a bar that fills with the root scroll, CSS only. */
+.nx-scroll-progress { display: none; }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .nx-scroll-progress {
+      display: block;
+      position: fixed;
+      inset-inline: 0;
+      inset-block-start: 0;
+      z-index: 60;
+      height: 3px;
+      background: var(--vivid-gradient, var(--color-primary));
+      transform-origin: 0 50%;
+      animation: nx-scroll-progress linear both;
+      animation-timeline: scroll(root);
+    }
+    [dir='rtl'] .nx-scroll-progress { transform-origin: 100% 50%; }
+  }
+}
+@keyframes nx-scroll-progress { from { scale: 0 1; } to { scale: 1 1; } }
+/* FloatingInput: the label sits inside the empty, unfocused field and floats
+   above the value otherwise. Sibling selectors, so no JavaScript. */
+.nx-float-field > label {
+  position: absolute;
+  inset-inline-start: 1rem;
+  inset-block-start: 0.5rem;
+  margin: 0;
+  font-size: var(--type-label-sm-size);
+  line-height: var(--type-label-sm-lineHeight);
+  color: var(--color-on-surface-variant);
+  pointer-events: none;
+}
+.nx-float-field > input:not(:focus):placeholder-shown + label {
+  inset-block-start: 1rem;
+  font-size: var(--type-body-md-size);
+  line-height: var(--type-body-md-lineHeight);
+}
+.nx-float-field > input:focus + label { color: var(--color-primary); }
+.nx-float-field > input[aria-invalid='true'] + label { color: var(--color-error); }
+@media (prefers-reduced-motion: no-preference) {
+  .nx-float-field > label {
+    transition: inset-block-start var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), font-size var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), color 150ms ease;
+  }
+}

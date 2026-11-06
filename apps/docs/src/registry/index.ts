@@ -92,6 +92,9 @@ import codeInlineEntry from './components/code-inline';
 import kbdEntry from './components/kbd';
 import linkEntry from './components/link';
 import textGradientEntry from './components/text-gradient';
+import floatingInputEntry from './components/floating-input';
+import scrollProgressEntry from './components/scroll-progress';
+import sharedElementEntry from './components/shared-element';
 import celebrateEntry from './components/celebrate';
 import auroraEntry from './components/aurora';
 
@@ -266,6 +269,9 @@ export const componentEntries: ComponentEntry[] = [
   kbdEntry,
   linkEntry,
   textGradientEntry,
+  floatingInputEntry,
+  scrollProgressEntry,
+  sharedElementEntry,
   celebrateEntry,
   auroraEntry,
   // Layout
