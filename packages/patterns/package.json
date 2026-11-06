@@ -48,8 +48,8 @@
     "@nexub/icons": "workspace:^",
     "@nexub/react": "workspace:^",
     "@nexub/tokens": "workspace:^",
-    "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
   },
   "peerDependenciesMeta": {
     "@nexub/icons": {

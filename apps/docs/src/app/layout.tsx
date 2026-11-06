@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-expression="vivid" suppressHydrationWarning>
       <head>
         {/* Keys must match ClientProviders' storageKey, BrandSwitcher and ContrastSwitcher. */}
         <ThemeScript productStorageKey="nexub-brand" contrastStorageKey="nexub-contrast" />

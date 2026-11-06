@@ -261,10 +261,10 @@ importers:
   packages/marketing:
     dependencies:
       react:
-        specifier: '>=18 <20'
+        specifier: '>=19 <20'
         version: 19.3.1
       react-dom:
-        specifier: '>=18 <20'
+        specifier: '>=19 <20'
         version: 19.3.1(react@19.3.1)
     devDependencies:
       '@nexub/icons':
@@ -331,10 +331,10 @@ importers:
   packages/patterns:
     dependencies:
       react:
-        specifier: '>=18 <20'
+        specifier: '>=19 <20'
         version: 19.3.1
       react-dom:
-        specifier: '>=18 <20'
+        specifier: '>=19 <20'
         version: 19.3.1(react@19.3.1)
     devDependencies:
       '@nexub/icons':
