@@ -13,12 +13,19 @@ import {
   type RowSelectionState,
   type PaginationState,
   type RowData,
+  type Updater,
+  type VisibilityState,
 } from '@tanstack/react-table';
-import { ArrowUp, ArrowDown, ChevronsUpDown } from '@nexub/icons';
+import { ArrowUp, ArrowDown, ChevronsUpDown, SlidersHorizontal, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, pressable } from '../../utils/control.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { floatingSurface } from '../../utils/surface.js';
+import { useControllableState } from '../../hooks/useControllableState.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Table } from '../Table/Table.js';
+import { Checkbox } from '../Checkbox/Checkbox.js';
+import { Button } from '../Button/Button.js';
+import { DropdownMenu } from '../DropdownMenu/DropdownMenu.js';
 
 type ColumnAlign = 'start' | 'end' | 'center';
 
@@ -83,7 +90,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[var(--color-surface-container-low)]',
+        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]',
         className,
       )}
       {...props}
@@ -126,6 +133,8 @@ TableCell.displayName = 'DataTable.TableCell';
 // DataTable
 // ---------------------------------------------------------------------------
 
+export type DataTableDensity = 'comfortable' | 'compact';
+
 export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   columns: DataTableColumn<TData>[];
   /** Names the table for assistive tech (and is shown below it unless `captionHidden`). */
@@ -135,14 +144,53 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   data: TData[];
   enableSorting?: boolean;
   enableRowSelection?: boolean;
+  /**
+   * With `enableRowSelection`: a checkbox column with select-page in its
+   * header, and "Select all N" across pages. On by default from 6.0.
+   */
+  selectionColumn?: boolean;
+  /** Controlled selection, keyed by row id (see `getRowId`). */
+  rowSelection?: RowSelectionState;
+  onRowSelectionChange?: (selection: RowSelectionState) => void;
+  /** Stable row ids for selection; defaults to the row index. */
+  getRowId?: (row: TData, index: number) => string;
+  /** A floating bar while rows are selected: render your actions for the selected rows. */
+  bulkActions?: (rows: TData[], clear: () => void) => React.ReactNode;
+  density?: DataTableDensity;
+  defaultDensity?: DataTableDensity;
+  onDensityChange?: (density: DataTableDensity) => void;
+  columnVisibility?: VisibilityState;
+  onColumnVisibilityChange?: (visibility: VisibilityState) => void;
+  /** A "View" menu above the table: density and which columns show. */
+  viewOptions?: boolean;
+  /** Content at the start of the row above the table (filters, a title). */
+  toolbar?: React.ReactNode;
   pagination?: { pageSize?: number };
 }
+
+/** TanStack hands back updaters; apply one to the current value. */
+const apply = <T,>(u: Updater<T>, prev: T): T => (typeof u === 'function' ? (u as (p: T) => T)(prev) : u);
+
+const columnLabel = <TData,>(c: { id: string; columnDef: DataTableColumn<TData> }) =>
+  typeof c.columnDef.header === 'string' ? c.columnDef.header : c.id;
 
 export function DataTable<TData>({
   columns,
   data,
   enableSorting = false,
   enableRowSelection = false,
+  selectionColumn = false,
+  rowSelection: rowSelectionProp,
+  onRowSelectionChange,
+  getRowId,
+  bulkActions,
+  density: densityProp,
+  defaultDensity = 'comfortable',
+  onDensityChange,
+  columnVisibility: columnVisibilityProp,
+  onColumnVisibilityChange,
+  viewOptions = false,
+  toolbar,
   pagination,
   caption,
   captionHidden = false,
@@ -152,12 +200,60 @@ export function DataTable<TData>({
   ...props
 }: DataTableProps<TData>) {
   const messages = useNexubMessages();
+  const { locale } = useLocale();
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [rowSelection = {}, setRowSelection] = useControllableState<RowSelectionState>({
+    value: rowSelectionProp,
+    defaultValue: {},
+    onChange: onRowSelectionChange,
+  });
+  const [density = 'comfortable', setDensity] = useControllableState<DataTableDensity>({
+    value: densityProp,
+    defaultValue: defaultDensity,
+    onChange: onDensityChange,
+  });
+  const [columnVisibility = {}, setColumnVisibility] = useControllableState<VisibilityState>({
+    value: columnVisibilityProp,
+    defaultValue: {},
+    onChange: onColumnVisibilityChange,
+  });
   const [paginationState, setPaginationState] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: pagination?.pageSize ?? 20,
   });
+
+  const withSelectColumn = enableRowSelection && selectionColumn;
+  const allColumns = React.useMemo<DataTableColumn<TData>[]>(
+    () =>
+      withSelectColumn
+        ? [
+            {
+              id: '__select',
+              enableSorting: false,
+              enableHiding: false,
+              header: ({ table }) => (
+                <Checkbox
+                  aria-label={messages.selectAllOnPage}
+                  checked={
+                    table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? 'indeterminate' : false
+                  }
+                  onCheckedChange={(v) => table.toggleAllPageRowsSelected(v === true)}
+                />
+              ),
+              cell: ({ row }) => (
+                <Checkbox
+                  aria-label={messages.selectRow}
+                  checked={row.getIsSelected()}
+                  disabled={!row.getCanSelect()}
+                  onCheckedChange={(v) => row.toggleSelected(v === true)}
+                />
+              ),
+            },
+            ...columns,
+          ]
+        : columns,
+    [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow],
+  );
 
   // Memoize the state bag so a parent re-render with stable sort/selection/pagination
   // values doesn't hand a new object reference to TanStack on every render.
@@ -166,17 +262,20 @@ export function DataTable<TData>({
       sorting: enableSorting ? sorting : undefined,
       rowSelection: enableRowSelection ? rowSelection : undefined,
       pagination: pagination ? paginationState : undefined,
+      columnVisibility,
     }),
 
-    [enableSorting, sorting, enableRowSelection, rowSelection, pagination, paginationState],
+    [enableSorting, sorting, enableRowSelection, rowSelection, pagination, paginationState, columnVisibility],
   );
 
   const table = useReactTable({
     data,
-    columns,
+    columns: allColumns,
     state: tableState,
+    getRowId,
     onSortingChange: enableSorting ? setSorting : undefined,
-    onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
+    onRowSelectionChange: enableRowSelection ? (u) => setRowSelection(apply(u, rowSelection)) : undefined,
+    onColumnVisibilityChange: (u) => setColumnVisibility(apply(u, columnVisibility)),
     onPaginationChange: pagination ? setPaginationState : undefined,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
@@ -186,8 +285,75 @@ export function DataTable<TData>({
     manualPagination: false,
   });
 
+  const compact = density === 'compact';
+  const selectedRows = enableRowSelection ? table.getSelectedRowModel().rows : [];
+  const totalRows = table.getCoreRowModel().rows.length;
+  const fmt = (n: number) => new Intl.NumberFormat(locale).format(n);
+  const multiSort = sorting.length > 1;
+  // Whole page selected but more rows exist on other pages: offer the rest.
+  const offerAll =
+    withSelectColumn && !!pagination && table.getIsAllPageRowsSelected() && totalRows > table.getRowModel().rows.length;
+  const clear = () => table.resetRowSelection(true);
+
   return (
-    <div className={cn('space-y-4', className)} {...props}>
+    <div className={cn('space-y-4', className)} data-density={density} {...props}>
+      {(toolbar != null || viewOptions) && (
+        <div className="flex flex-wrap items-center gap-2">
+          {toolbar}
+          {viewOptions && (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <Button variant="outline" size="sm" className="ms-auto">
+                  <SlidersHorizontal size="sm" aria-hidden="true" />
+                  {messages.view}
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content align="end">
+                <DropdownMenu.Label>{messages.density}</DropdownMenu.Label>
+                <DropdownMenu.RadioGroup value={density} onValueChange={(v) => setDensity(v as DataTableDensity)}>
+                  <DropdownMenu.RadioItem value="comfortable">{messages.comfortable}</DropdownMenu.RadioItem>
+                  <DropdownMenu.RadioItem value="compact">{messages.compact}</DropdownMenu.RadioItem>
+                </DropdownMenu.RadioGroup>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Label>{messages.columns}</DropdownMenu.Label>
+                {table
+                  .getAllLeafColumns()
+                  .filter((c) => c.getCanHide())
+                  .map((c) => (
+                    <DropdownMenu.CheckboxItem
+                      key={c.id}
+                      checked={c.getIsVisible()}
+                      onCheckedChange={(v) => c.toggleVisibility(v === true)}
+                      // Keep the menu open while toggling several columns.
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      {columnLabel(c)}
+                    </DropdownMenu.CheckboxItem>
+                  ))}
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          )}
+        </div>
+      )}
+      {offerAll && (
+        <div className="flex flex-wrap items-center gap-2 rounded-shape-container bg-[var(--color-surface-container-low)] px-4 py-2 text-body-sm">
+          {table.getIsAllRowsSelected() ? (
+            <>
+              <span>{messages.selectedCount(fmt(totalRows))}</span>
+              <Button variant="link" size="sm" onClick={clear}>
+                {messages.clearSelection}
+              </Button>
+            </>
+          ) : (
+            <>
+              <span>{messages.selectedCount(fmt(selectedRows.length))}</span>
+              <Button variant="link" size="sm" onClick={() => table.toggleAllRowsSelected(true)}>
+                {messages.selectAllRows(fmt(totalRows))}
+              </Button>
+            </>
+          )}
+        </div>
+      )}
       <TableRoot aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
         {caption != null && (
           <Table.Caption className={cn(captionHidden && 'sr-only')}>{caption}</Table.Caption>
@@ -200,7 +366,7 @@ export function DataTable<TData>({
                 return (
                   <TableHead
                     key={header.id}
-                    className={alignText[align]}
+                    className={cn(alignText[align], compact && 'h-8', header.column.id === '__select' && 'w-10')}
                     aria-sort={
                       enableSorting && header.column.getCanSort()
                         ? header.column.getIsSorted() === 'asc'
@@ -221,6 +387,12 @@ export function DataTable<TData>({
                         )}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
+                        {multiSort && header.column.getIsSorted() && (
+                          <span className="text-[10px] tabular-nums leading-none">
+                            <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
+                            <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
+                          </span>
+                        )}
                         {header.column.getIsSorted() === 'asc' ? (
                           <ArrowUp size="xs" aria-hidden="true" />
                         ) : header.column.getIsSorted() === 'desc' ? (
@@ -248,7 +420,7 @@ export function DataTable<TData>({
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
                     key={cell.id}
-                    className={alignText[cell.column.columnDef.meta?.align ?? 'start']}
+                    className={cn(alignText[cell.column.columnDef.meta?.align ?? 'start'], compact && 'py-1.5')}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
@@ -258,7 +430,7 @@ export function DataTable<TData>({
           ) : (
             <TableRow>
               <TableCell
-                colSpan={columns.length}
+                colSpan={table.getVisibleLeafColumns().length}
                 className="h-24 text-center text-[var(--color-on-surface-muted)]"
               >
                 {messages.noResults}
@@ -291,6 +463,29 @@ export function DataTable<TData>({
               {messages.next}
             </button>
           </div>
+        </div>
+      )}
+
+      {bulkActions && selectedRows.length > 0 && (
+        <div
+          role="region"
+          aria-label={messages.selectedCount(fmt(selectedRows.length))}
+          className={cn(
+            floatingSurface,
+            'nx-motion sticky bottom-4 z-10 mx-auto flex w-fit max-w-full flex-wrap items-center gap-3 px-4 py-2',
+          )}
+          data-state="open"
+        >
+          <span aria-live="polite" className="text-label-lg tabular-nums">
+            {messages.selectedCount(fmt(selectedRows.length))}
+          </span>
+          {bulkActions(
+            selectedRows.map((r) => r.original),
+            clear,
+          )}
+          <Button variant="ghost" size="sm" onClick={clear} aria-label={messages.clearSelection}>
+            <X size="sm" aria-hidden="true" />
+          </Button>
         </div>
       )}
     </div>
