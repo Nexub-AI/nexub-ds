@@ -31,6 +31,10 @@ Never use a component marked deprecated.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
+- [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
+- [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
