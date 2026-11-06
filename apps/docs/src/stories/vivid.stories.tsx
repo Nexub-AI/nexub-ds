@@ -17,4 +17,4 @@ export const Components = {
       h('div', { className: 'flex items-center gap-4' }, h(Switch, { 'aria-label': 'Notifications', defaultChecked: true }), h(Checkbox, { 'aria-label': 'Remember me', defaultChecked: true }), h(Badge, null, 'New')),
       h(Progress, { value: 64, 'aria-label': 'Setup progress' })),
 };
-export const AuroraHero = { render: () => h('div', { 'data-expression': 'vivid', className: 'w-[640px]' }, h(Aurora)) };
+export const AuroraHero = { render: () => h('div', { 'data-expression': 'vivid', className: 'w-[640px]' }, createElement(Aurora)) };

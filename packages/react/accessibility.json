@@ -73,7 +73,7 @@
       "slug": "aurora",
       "name": "Aurora",
       "package": "@nexub/react",
-      "automated": "not covered",
+      "automated": "pass",
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
@@ -192,6 +192,17 @@
         "Group related content with a heading inside the Card so AT users can navigate by heading level.",
         "With a CardLink inside, the focus ring is drawn on the card, not around the title.",
         "Prefer CardLink over wrapping the whole card in `<a>`: the link’s accessible name stays the title instead of every word on the card."
+      ]
+    },
+    {
+      "slug": "celebrate",
+      "name": "Celebrate",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Decorative (`aria-hidden`). Announce the win in text, for example in a Toast or a status message."
       ]
     },
     {

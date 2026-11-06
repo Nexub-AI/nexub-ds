@@ -30,6 +30,7 @@ Version 4.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Button Group](https://nexub-ds-docs.pages.dev/components/button-group.md): Groups related buttons together with optional attachment and orientation.
 - [Button](https://nexub-ds-docs.pages.dev/components/button.md): Triggers an action or event. Supports multiple variants, sizes, and semantic tones.
 - [Card](https://nexub-ds-docs.pages.dev/components/card.md): Surface container for grouping related content. Supports flat, surface, and interactive variants.
+- [Celebrate](https://nexub-ds-docs.pages.dev/components/celebrate.md): A short confetti burst for a real win, such as a first payment or finishing onboarding.
 - [Checkbox Card](https://nexub-ds-docs.pages.dev/components/checkbox-card.md): A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Checkbox](https://nexub-ds-docs.pages.dev/components/checkbox.md): Binary checkbox input built on Radix UI.
 - [Chip](https://nexub-ds-docs.pages.dev/components/chip.md): Compact label chip, optionally dismissible.
