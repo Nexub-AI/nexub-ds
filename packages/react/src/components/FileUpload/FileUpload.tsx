@@ -12,11 +12,35 @@ export function formatFileSize(bytes: number, locale: string): string {
   return new Intl.NumberFormat(locale, { style: 'unit', unit, unitDisplay: 'short', maximumFractionDigits: 1 }).format(value);
 }
 
+/**
+ * Whether `file` matches an `accept` list: MIME types (`image/png`), wildcards
+ * (`image/*`) and extensions (`.pdf`), like the native input. A UX filter only:
+ * the server must still check what it receives.
+ */
+export function fileAccepted(file: File, accept?: string[]): boolean {
+  if (!accept?.length) return true;
+  const name = file.name.toLowerCase();
+  const type = file.type.toLowerCase();
+  return accept.some((raw) => {
+    const a = raw.trim().toLowerCase();
+    if (a.startsWith('.')) return name.endsWith(a);
+    if (a.endsWith('/*')) return type.startsWith(a.slice(0, -1));
+    return type === a;
+  });
+}
+
+export interface FileRejection {
+  file: File;
+  reason: 'type' | 'size' | 'count';
+}
+
 interface FileUploadContextValue {
   accept?: string[];
   maxFiles?: number;
+  maxSize?: number;
   onFilesChange?: (files: File[]) => void;
   files: File[];
+  rejections: FileRejection[];
   addFiles: (newFiles: File[]) => void;
   removeFile: (index: number) => void;
   isDragging: boolean;
@@ -34,41 +58,55 @@ function useFileUpload() {
 export interface FileUploadRootProps extends React.HTMLAttributes<HTMLDivElement> {
   accept?: string[];
   maxFiles?: number;
+  /** Largest file in bytes. Bigger files are rejected with a message. */
+  maxSize?: number;
   onFilesChange?: (files: File[]) => void;
+  /** Files turned away by `accept`, `maxSize` or `maxFiles`, from the picker or a drop. */
+  onReject?: (rejections: FileRejection[]) => void;
 }
 
 const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
-  ({ className, accept, maxFiles, onFilesChange, children, ...props }, ref) => {
+  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, children, ...props }, ref) => {
     const [files, setFiles] = React.useState<File[]>([]);
+    const [rejections, setRejections] = React.useState<FileRejection[]>([]);
     const [isDragging, setIsDragging] = React.useState(false);
 
+    // Picker and drop both come through here, so both are filtered.
     const addFiles = React.useCallback(
       (newFiles: File[]) => {
-        setFiles((prev) => {
-          const next = [...prev, ...newFiles].slice(0, maxFiles);
+        const rejected: FileRejection[] = [];
+        const next = [...files];
+        for (const file of newFiles) {
+          if (!fileAccepted(file, accept)) rejected.push({ file, reason: 'type' });
+          else if (maxSize !== undefined && file.size > maxSize) rejected.push({ file, reason: 'size' });
+          else if (maxFiles !== undefined && next.length >= maxFiles) rejected.push({ file, reason: 'count' });
+          else next.push(file);
+        }
+        setRejections(rejected);
+        if (next.length !== files.length) {
+          setFiles(next);
           onFilesChange?.(next);
-          return next;
-        });
+        }
+        if (rejected.length) onReject?.(rejected);
       },
-      [maxFiles, onFilesChange],
+      [files, accept, maxFiles, maxSize, onFilesChange, onReject],
     );
 
     const removeFile = React.useCallback(
       (index: number) => {
-        setFiles((prev) => {
-          const next = prev.filter((_, i) => i !== index);
-          onFilesChange?.(next);
-          return next;
-        });
+        const next = files.filter((_, i) => i !== index);
+        setFiles(next);
+        setRejections([]);
+        onFilesChange?.(next);
       },
-      [onFilesChange],
+      [files, onFilesChange],
     );
 
     // Memoize the context value so that consumers only re-render when one of
     // the tracked values actually changes — not on every parent render cycle.
     const contextValue = React.useMemo(
-      () => ({ accept, maxFiles, onFilesChange, files, addFiles, removeFile, isDragging, setIsDragging }),
-      [accept, maxFiles, onFilesChange, files, addFiles, removeFile, isDragging, setIsDragging],
+      () => ({ accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging }),
+      [accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging],
     );
 
     return (
@@ -84,8 +122,10 @@ Root.displayName = 'FileUpload.Root';
 
 const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
-    const { accept, addFiles, isDragging, setIsDragging } = useFileUpload();
+    const { accept, maxFiles, maxSize, rejections, addFiles, isDragging, setIsDragging } = useFileUpload();
     const messages = useNexubMessages();
+    const { locale } = useLocale();
+    const errorId = React.useId();
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     function handleDrop(e: React.DragEvent) {
@@ -136,8 +176,25 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
               if (e.target.files) addFiles(Array.from(e.target.files));
               e.target.value = '';
             }}
+            aria-describedby={rejections.length ? errorId : undefined}
           />
         </label>
+        {/* Always mounted so screen readers announce new errors. */}
+        <div id={errorId} role="alert" className="empty:hidden px-4 pb-3 text-start text-sm text-[var(--color-error)]">
+          {rejections.length > 0 && (
+            <ul>
+              {rejections.map(({ file, reason }, i) => (
+                <li key={`${file.name}-${i}`}>
+                  {reason === 'type'
+                    ? messages.fileTypeRejected(file.name)
+                    : reason === 'size'
+                      ? messages.fileTooLarge(file.name, formatFileSize(maxSize ?? 0, locale))
+                      : messages.tooManyFiles(maxFiles ?? 0)}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     );
   },

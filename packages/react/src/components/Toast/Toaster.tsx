@@ -19,7 +19,22 @@ const toneMap: Record<string, string> = {
 /** Gap between toasts when the stack fans out into a list. */
 const GAP = 8;
 
+export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
+
+// Full class strings so Tailwind sees them. --nx-dir flips the stack for bottom positions.
+const vertical = {
+  top: { viewport: 'top-0', toast: 'top-4 origin-bottom', enter: '[--nx-y:calc(-100%-1rem)]' },
+  bottom: { viewport: 'bottom-0 [--nx-dir:-1]', toast: 'bottom-4 origin-top', enter: '[--nx-y:calc(100%+1rem)]' },
+};
+const horizontal = {
+  start: { viewport: 'start-0', enter: '[--nx-x:calc(-100%-1rem)] rtl:[--nx-x:calc(100%+1rem)]' },
+  center: { viewport: 'inset-x-0 mx-auto', enter: '' },
+  end: { viewport: 'end-0', enter: '[--nx-x:calc(100%+1rem)] rtl:[--nx-x:calc(-100%-1rem)]' },
+};
+
 export interface ToasterProps {
+  /** Where the stack sits. Default `top-end`; start/end follow the reading direction. */
+  position?: ToasterPosition;
   /** Always show the toasts as a list instead of a collapsed stack. */
   expand?: boolean;
   /** How many toasts are visible at once; older ones are visually hidden. Default 3. */
@@ -36,7 +51,10 @@ export interface ToasterProps {
  * (--nx-toast-index / --nx-toast-offset per toast, --nx-front-height and
  * --nx-stack-height on the viewport), never a style attribute (strict CSP).
  */
-export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
+export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end' }: ToasterProps) {
+  const [side, align] = position.split('-') as ['top' | 'bottom', 'start' | 'center' | 'end'];
+  const v = vertical[side];
+  const h = horizontal[align];
   const toasts = useToastStore();
   const messages = useNexubMessages();
   const { dir } = useLocale();
@@ -133,7 +151,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   }, [order.length]);
 
   return (
-    <RadixToast.Provider swipeDirection={dir === 'rtl' ? 'left' : 'right'}>
+    <RadixToast.Provider swipeDirection={(align === 'start') === (dir === 'rtl') ? 'right' : 'left'}>
       {toasts.map((t) => {
         const i = order.indexOf(t.id);
         const action = t.action ?? (t.undo && { label: t.undo.label ?? messages.undo, onClick: t.undo.onUndo });
@@ -162,12 +180,13 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               timers.current.add(timer);
             }}
             className={cn(
-              'group pointer-events-auto absolute inset-x-4 top-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+              'group pointer-events-auto absolute inset-x-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
               // Stack: older toasts sit behind, scaled from their bottom edge so it peeks out.
               // Transition-only timing: duration-*/ease-* utilities would also retime nx-motion's enter/exit keyframes.
-              'origin-bottom transition-[transform,opacity] [transition-duration:var(--motion-spring-spatial-default-duration)] [transition-timing-function:var(--motion-spring-spatial-default-easing)]',
-              'translate-y-[calc(var(--nx-toast-index,0)*var(--nx-toast-step))] scale-[calc(1_-_var(--nx-toast-index,0)*var(--nx-toast-shrink))]',
-              'group-data-[expanded=true]/toaster:translate-y-[var(--nx-toast-offset,0px)] group-data-[expanded=true]/toaster:scale-100',
+              v.toast,
+              'transition-[transform,opacity] [transition-duration:var(--motion-spring-spatial-default-duration)] [transition-timing-function:var(--motion-spring-spatial-default-easing)]',
+              'translate-y-[calc(var(--nx-toast-index,0)*var(--nx-toast-step)*var(--nx-dir,1))] scale-[calc(1_-_var(--nx-toast-index,0)*var(--nx-toast-shrink))]',
+              'group-data-[expanded=true]/toaster:translate-y-[calc(var(--nx-toast-offset,0px)*var(--nx-dir,1))] group-data-[expanded=true]/toaster:scale-100',
               // Collapsing settles faster than expanding.
               'group-data-[expanded=false]/toaster:[transition-duration:var(--motion-spring-effects-fast-duration)] group-data-[expanded=false]/toaster:[transition-timing-function:var(--motion-spring-effects-fast-easing)]',
               'group-data-[expanded=false]/toaster:data-[front=false]:h-[var(--nx-front-height)]',
@@ -179,7 +198,8 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               'motion-reduce:[transition-property:opacity] motion-reduce:group-data-[expanded=false]/toaster:data-[front=false]:pointer-events-none motion-reduce:group-data-[expanded=false]/toaster:data-[front=false]:opacity-0',
               'data-[state=closed]:duration-effects-fast',
               'data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none',
-              'nx-motion [--nx-x:calc(100%+1rem)] rtl:[--nx-x:calc(-100%-1rem)]',
+              'nx-motion',
+              align === 'center' ? v.enter : h.enter,
               toneMap[t.tone ?? 'neutral'],
             )}
             duration={t.duration ?? 5000}
@@ -213,8 +233,11 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
         ref={viewportRef}
         label={messages.notifications}
         data-expanded={expanded}
+        data-position={position}
         className={cn(
-          'group/toaster fixed top-0 end-0 z-[var(--z-toast,2000)] max-h-screen w-full p-4 sm:max-w-sm',
+          v.viewport,
+          h.viewport,
+          'group/toaster fixed z-[var(--z-toast,2000)] max-h-screen w-full p-4 sm:max-w-sm',
           // Collapsed: the front toast's height (older edges peek below); expanded: the whole list.
           'h-[calc(var(--nx-stack-height,0px)+2rem)]',
           '[--nx-toast-step:10px] [--nx-toast-shrink:0.05] motion-reduce:[--nx-toast-step:0px] motion-reduce:[--nx-toast-shrink:0]',

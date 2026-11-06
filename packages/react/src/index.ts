@@ -259,7 +259,7 @@ export type { ToolbarRootProps } from './components/Toolbar/index.js';
 export { Toast } from './components/Toast/index.js';
 export { Toaster } from './components/Toast/index.js';
 export { toast, useToastStore } from './components/Toast/index.js';
-export type { ToastItem, ToasterProps, UndoableToastOptions } from './components/Toast/index.js';
+export type { ToastItem, ToasterProps, ToasterPosition, UndoableToastOptions } from './components/Toast/index.js';
 
 // Components — Navigation Shells
 export { TopNav } from './components/TopNav/index.js';
@@ -270,6 +270,7 @@ export { AppShell } from './components/AppShell/index.js';
 export { PageHeader } from './components/PageHeader/index.js';
 export type { PageHeaderProps } from './components/PageHeader/index.js';
 export { Breadcrumb } from './components/Breadcrumb/index.js';
+export type { BreadcrumbTrailItem, BreadcrumbTrailProps } from './components/Breadcrumb/index.js';
 export { Pagination } from './components/Pagination/index.js';
 export type { PaginationProps } from './components/Pagination/index.js';
 export { CommandPalette } from './components/CommandPalette/index.js';
@@ -284,8 +285,8 @@ export { ErrorState } from './components/ErrorState/index.js';
 export type { ErrorStateProps } from './components/ErrorState/index.js';
 
 // Components — Input
-export { FileUpload } from './components/FileUpload/index.js';
-export type { FileUploadRootProps } from './components/FileUpload/index.js';
+export { FileUpload, fileAccepted } from './components/FileUpload/index.js';
+export type { FileUploadRootProps, FileRejection } from './components/FileUpload/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
 export type { DatePickerProps } from './components/DatePicker/index.js';
 export { DateRangePicker } from './components/DateRangePicker/index.js';

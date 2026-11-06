@@ -99,6 +99,15 @@ describe('Toaster', () => {
     expect(viewport()).toHaveAttribute('data-expanded', 'false');
   });
 
+  it('places the stack by position', () => {
+    const { rerender } = render(<Toaster />);
+    expect(viewport()).toHaveClass('top-0', 'end-0');
+    rerender(<Toaster position="bottom-center" />);
+    expect(viewport()).toHaveAttribute('data-position', 'bottom-center');
+    expect(viewport()).toHaveClass('bottom-0', 'mx-auto');
+    expect(viewport()).not.toHaveClass('top-0');
+  });
+
   it('expand forces the list', () => {
     render(<Toaster expand />);
     fire(2);

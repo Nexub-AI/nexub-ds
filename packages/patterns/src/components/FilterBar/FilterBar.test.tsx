@@ -89,4 +89,11 @@ describe('FilterBar', () => {
     expect(screen.getByTestId('chip')).toBeDefined();
     expect(screen.getByTestId('btn')).toBeDefined();
   });
+
+  it('names the search field (default and custom)', () => {
+    const { rerender } = render(<FilterBar />);
+    expect(screen.getByRole('searchbox', { name: 'Search' })).toBeDefined();
+    rerender(<FilterBar searchLabel="Search invoices" />);
+    expect(screen.getByRole('searchbox', { name: 'Search invoices' })).toBeDefined();
+  });
 });

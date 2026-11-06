@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Autocomplete } from './Autocomplete.js';
 
 const options = [
@@ -55,5 +55,20 @@ describe('Autocomplete behaviour', () => {
   it('renders a real ellipsis while loading', () => {
     render(<Autocomplete options={options} loading />);
     expect(screen.getByText('Loading…')).toBeInTheDocument();
+  });
+
+  it('passes the typed text out and shows async options unfiltered', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const onInputChange = vi.fn();
+    // Server results that don't contain the typed text must still show.
+    render(<Autocomplete options={[{ value: 'nyc', label: 'New York' }]} onInputChange={onInputChange} />);
+    await userEvent.type(screen.getByRole('combobox'), 'big apple');
+    expect(onInputChange).toHaveBeenLastCalledWith('big apple');
+    expect(screen.getByText('New York')).toBeInTheDocument();
+  });
+
+  it('follows a controlled inputValue', () => {
+    render(<Autocomplete options={options} inputValue="Rea" onInputChange={() => {}} />);
+    expect(screen.getByRole('combobox')).toHaveValue('Rea');
   });
 });
