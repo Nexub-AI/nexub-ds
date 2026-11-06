@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v4.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v4.4.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v4.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v4.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -381,6 +381,10 @@ Never use a component marked deprecated.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
+- [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
+- [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
@@ -3038,6 +3042,83 @@ export default function Example() {
 
 ---
 
+# Funnel
+
+Drop-off through ordered steps, with conversion from the first step.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Funnel } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/funnel
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` (required) | `{ label: string; value: number }[]` |  | Steps in order, largest first. |
+| `title` (required) | `string` |  | Accessible name and table caption. |
+
+## Example: Signup funnel
+
+```tsx
+import { Funnel } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Funnel
+      className="w-full"
+      title="Signup funnel, October"
+      data={[{ label: 'Visited', value: 12400 }, { label: 'Started signup', value: 4100 }, { label: 'Verified email', value: 2900 }, { label: 'First payment', value: 1240 }]}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- The drawing is hidden from assistive tech; a visually hidden table or caption carries every value.
+
+Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
+
+
+---
+
+# Gauge
+
+Progress toward a target on a 270° arc.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Gauge } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/gauge
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` (required) | `number` |  | Current value. |
+| `max` | `number` | `100` | Target. |
+| `title` (required) | `string` |  | Accessible name. |
+| `label` | `ReactNode` |  | Centre text; defaults to the percentage. |
+| `color` | `ChartColor` | `1` | Palette colour, 1–8. |
+
+## Example: Storage used
+
+```tsx
+import { Gauge } from '@nexub/react';
+
+export default function Example() {
+  return <Gauge title="Storage used" value={68} max={100} label="68 GB" color={2} />;
+}
+```
+
+## Accessibility
+
+- The drawing is hidden from assistive tech; a visually hidden table or caption carries every value.
+
+Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
+
+
+---
+
 # Gradient Divider
 
 A decorative gradient-faded horizontal rule.
@@ -3172,6 +3253,45 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Heatmap
+
+Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Heatmap } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/heatmap
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` (required) | `number[][]` |  | Rows of values. |
+| `rowLabels` (required) | `string[]` |  | One label per row. |
+| `columnLabels` | `string[]` |  | Used in the hover text. |
+| `title` (required) | `string` |  | Accessible name and table caption. |
+
+## Example: Weekly activity
+
+```tsx
+import { Heatmap } from '@nexub/react';
+
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const data = days.map((_, d) => Array.from({ length: 16 }, (_, w) => ((d * 7 + w * 3) % 11) + (w > 10 ? 4 : 0)));
+
+export default function Example() {
+  return <Heatmap className="w-full" title="Payments sent per day, last 16 weeks" rowLabels={days} data={data} />;
+}
+```
+
+## Accessibility
+
+- The drawing is hidden from assistive tech; a visually hidden table or caption carries every value.
+
+Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
 
 
 ---
@@ -3464,6 +3584,49 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# KPI Tile
+
+A headline number with its change versus last period and a trend line.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { KpiTile } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/kpi-tile
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | What the number is. |
+| `value` (required) | `ReactNode` |  | The formatted number. |
+| `change` | `number` |  | Change as a fraction, e.g. 0.114 for +11.4%. |
+| `invert` | `boolean` | `false` | Down is good (churn, costs): flips the colour. |
+| `trend` | `number[]` |  | Recent values for the sparkline, oldest first. |
+
+## Example: Dashboard row
+
+```tsx
+import { KpiTile } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full gap-3 sm:grid-cols-3">
+      <KpiTile label="Monthly revenue" value="$68,420" change={0.114} trend={[42, 48, 45, 56, 61, 68]} />
+      <KpiTile label="Customers" value="1,204" change={0.032} trend={[1080, 1100, 1150, 1170, 1190, 1204]} />
+      <KpiTile label="Churn" value="2.1%" change={0.004} invert trend={[1.8, 1.9, 2.0, 1.9, 2.0, 2.1]} />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- The drawing is hidden from assistive tech; a visually hidden table or caption carries every value.
+
+Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
 
 
 ---

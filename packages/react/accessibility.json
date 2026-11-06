@@ -1,5 +1,5 @@
 {
-  "version": "4.3.0",
+  "version": "4.4.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
@@ -403,6 +403,28 @@
       "screenReader": []
     },
     {
+      "slug": "funnel",
+      "name": "Funnel",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The drawing is hidden from assistive tech; a visually hidden table or caption carries every value."
+      ]
+    },
+    {
+      "slug": "gauge",
+      "name": "Gauge",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The drawing is hidden from assistive tech; a visually hidden table or caption carries every value."
+      ]
+    },
+    {
       "slug": "gradient-divider",
       "name": "Gradient Divider",
       "package": "@nexub/react",
@@ -428,6 +450,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "heatmap",
+      "name": "Heatmap",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The drawing is hidden from assistive tech; a visually hidden table or caption carries every value."
+      ]
     },
     {
       "slug": "helper-text",
@@ -480,6 +513,17 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "kpi-tile",
+      "name": "KPI Tile",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "The drawing is hidden from assistive tech; a visually hidden table or caption carries every value."
+      ]
     },
     {
       "slug": "label",
