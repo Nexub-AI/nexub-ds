@@ -71,7 +71,7 @@ export function ComboboxPopover({ open, onOpenChange, before, input, disabled, c
               input.onKeyDown?.(e);
             }}
             className={cn(
-              'min-w-[6ch] flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)]',
+              'min-w-8 flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)]',
               input.className,
             )}
           />
