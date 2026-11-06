@@ -1,10 +1,29 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Combobox } from './Combobox.js';
 
 describe('Combobox', () => {
+  it('never scrolls the page to the highlighted item on mount', () => {
+    const native = vi.spyOn(HTMLElement.prototype, 'scrollIntoView');
+    const itemRef = React.createRef<HTMLDivElement>();
+    render(
+      <Combobox.Root>
+        <Combobox.Input placeholder="Search…" />
+        <Combobox.List>
+          <Combobox.Group heading="Fruit">
+            <Combobox.Item ref={itemRef} value="apple">Apple</Combobox.Item>
+            <Combobox.Item value="banana">Banana</Combobox.Item>
+          </Combobox.Group>
+        </Combobox.List>
+      </Combobox.Root>,
+    );
+    expect(itemRef.current).toHaveAttribute('aria-selected', 'true');
+    expect(native).not.toHaveBeenCalled();
+    native.mockRestore();
+  });
+
   it('renders without crashing', () => {
     render(
       <Combobox.Root>
