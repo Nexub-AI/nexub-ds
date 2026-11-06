@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DocTable, PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
+import { MigrationPicker } from '@/components/docs/MigrationPicker';
 
 export const dynamic = 'force-static';
 
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
 export default function MigratingTo5Page() {
   return (
     <div className="docs-prose">
-      <PageIntro eyebrow="Getting Started" title="Migrating to 5.0" />
+      <PageIntro eyebrow="Getting Started" title="Migrating to 5.0">
+        <MigrationPicker />
+      </PageIntro>
       <p>
         5.0 makes Vivid the default and requires React 19. There are no component API changes, so for most apps the upgrade
         is a version bump plus one decision: keep Vivid, or pin Calm.

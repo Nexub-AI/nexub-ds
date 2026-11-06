@@ -38,7 +38,7 @@ export default function ComponentsPage() {
                   {/* Live preview: decorative, never interactive inside the link card. */}
                   <div
                     aria-hidden="true"
-                    className="docs-dot-grid pointer-events-none relative flex h-[100px] items-center justify-center overflow-hidden border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+                    className="docs-dot-grid pointer-events-none relative flex h-[120px] items-center justify-center overflow-hidden border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
                   >
                     <MiniPreviewCard slug={e.meta.slug} />
                   </div>
