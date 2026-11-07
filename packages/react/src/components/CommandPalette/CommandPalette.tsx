@@ -9,6 +9,7 @@ import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
+import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 
 export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   className?: string;
@@ -171,12 +172,14 @@ const Item = React.forwardRef<
 ));
 Item.displayName = 'CommandPalette.Item';
 
+// cmdk hard-codes role="separator", which a listbox may not contain (only options and
+// groups): make it presentational. The line is decoration; groups carry the structure.
 const Separator = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof Command.Separator>
 >(({ className, ...props }, ref) => (
   <Command.Separator
-    ref={ref}
+    ref={useMergedRefs(ref, (el: HTMLDivElement | null) => el?.setAttribute('role', 'none'))}
     className={cn('-mx-1 my-1 h-px bg-[var(--color-outline-variant)]', className)}
     {...props}
   />

@@ -2483,6 +2483,7 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `columnOrder / onColumnOrderChange` | `string[]` |  | Column ids in display order (5.4). |
 | `columnPinning / onColumnPinningChange` | `{ left?: string[]; right?: string[] }` |  | Columns that stay in view while the rest scroll sideways (5.4). The selection column pins with them. |
 | `maxHeight` | `number \| string` |  | Caps the height: rows scroll and the header sticks (5.4). |
+| `grid` | `boolean` | `false` | ARIA grid keyboard model for tables whose cells hold actions (5.8): the table is one tab stop; Arrow keys move between cells and the controls in them, Home/End to the row ends, Ctrl+Home/End to the corners. |
 | `DataTableVirtual` | `import from '@nexub/react/DataTableVirtual'` |  | Same props plus `maxHeight` (required), `estimateRowHeight` and `overscan`: renders only the rows in view, for thousands of rows. Needs `@tanstack/react-virtual` installed (5.4). No pagination. |
 | `pagination.pageSize` | `number` | `20` | Rows per page; pagination is on when `pagination` is set. |
 
@@ -2695,6 +2696,20 @@ export default function Example() {
   );
 }
 ```
+
+## Accessibility
+
+- Roles: table (default), grid (with `grid`), columnheader with aria-sort when sortable
+- `Tab`: Without `grid`: every control in the table is a tab stop. With `grid`: the table is one tab stop and remembers the last cell.
+- `Arrow keys`: With `grid`: move between cells, and between the controls inside a cell. Mirrored in RTL.
+- `Home / End`: With `grid`: first or last cell in the row. Ctrl+Home / Ctrl+End: first or last cell in the grid.
+- `Space`: Toggles a focused row checkbox.
+- `Alt+Arrow`: Moves a focused header when `enableColumnReordering` is on.
+- With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none.
+- Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.
+- Sorting, selection counts and column moves are announced from a polite live region.
+- DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.
+- Use `grid` when rows hold actions (edit, menus); plain tables of text read better as a table.
 
 
 ---

@@ -31,6 +31,7 @@ import { Table } from '../Table/Table.js';
 import { Checkbox } from '../Checkbox/Checkbox.js';
 import { Button } from '../Button/Button.js';
 import { DropdownMenu } from '../DropdownMenu/DropdownMenu.js';
+import { createGridNavigation } from './gridNavigation.js';
 
 type ColumnAlign = 'start' | 'end' | 'center';
 
@@ -220,6 +221,11 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   onColumnPinningChange?: (pinning: ColumnPinningState) => void;
   /** Cap the table's height. Rows scroll and the header stays in view. */
   maxHeight?: number | string;
+  /**
+   * ARIA grid keyboard model for tables whose cells hold actions: the table is
+   * one tab stop, and Arrow keys, Home/End and Ctrl+Home/End move between cells.
+   */
+  grid?: boolean;
   /** Rows to render; set by DataTableVirtual. */
   rowWindow?: DataTableRowWindowHook;
   pagination?: { pageSize?: number };
@@ -257,6 +263,7 @@ export function DataTable<TData>({
   columnPinning: columnPinningProp,
   onColumnPinningChange,
   maxHeight,
+  grid = false,
   rowWindow,
   pagination,
   caption,
@@ -301,6 +308,7 @@ export function DataTable<TData>({
   });
   const [announcement, setAnnouncement] = React.useState('');
   const tableRef = React.useRef<HTMLTableElement>(null);
+  const gridNav = React.useMemo(() => createGridNavigation(dir), [dir]);
   const dragged = React.useRef<string | null>(null);
   const [paginationState, setPaginationState] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -420,6 +428,7 @@ export function DataTable<TData>({
     t.style.width = enableColumnResizing ? px(table.getTotalSize()) : '';
     const scroller = t.parentElement;
     if (scroller) scroller.style.maxHeight = maxHeight == null ? '' : px(maxHeight);
+    if (grid) gridNav.sync(t);
   });
   const placeCell = (column: Column<TData, unknown>) => (el: HTMLTableCellElement | null) => {
     if (!el) return;
@@ -524,6 +533,9 @@ export function DataTable<TData>({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-rowcount={rowWin.virtual ? rows.length + 1 : undefined}
+        role={grid ? 'grid' : undefined}
+        onKeyDown={grid ? gridNav.onKeyDown : undefined}
+        onFocus={grid ? gridNav.onFocus : undefined}
         className={cn(enableColumnResizing && 'table-fixed')}
       >
         {caption != null && (

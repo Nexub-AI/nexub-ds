@@ -136,3 +136,30 @@ export const ResizePinSticky: Story = {
     />
   ),
 };
+
+// Cells with actions: the table is one tab stop; Arrow keys move between cells.
+export const Grid: Story = {
+  render: () => (
+    <DataTable
+      grid
+      caption="Users"
+      captionHidden
+      enableSorting
+      enableRowSelection
+      selectionColumn
+      columns={[
+        ...columns,
+        {
+          id: 'actions',
+          header: 'Actions',
+          cell: ({ row }) => (
+            <button type="button" aria-label={`Edit ${row.original.name}`}>
+              Edit
+            </button>
+          ),
+        },
+      ]}
+      data={data}
+    />
+  ),
+};

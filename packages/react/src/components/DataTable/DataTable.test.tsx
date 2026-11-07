@@ -23,6 +23,39 @@ const data: Person[] = [
 ];
 
 describe('DataTable', () => {
+  it('grid: one tab stop, arrows move between cells and their controls', async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <DataTable
+          grid
+          enableSorting
+          aria-label="People"
+          columns={[...columns, { id: 'act', header: 'Actions', cell: ({ row }) => <button>Edit {row.original.name}</button> }]}
+          data={data}
+        />
+        <button>After</button>
+      </>,
+    );
+    expect(screen.getByRole('grid', { name: 'People' })).toBeInTheDocument();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Name' })).toHaveFocus();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getByText('Alice')).toHaveFocus();
+    await user.keyboard('{End}');
+    expect(screen.getByRole('button', { name: 'Edit Alice' })).toHaveFocus();
+    await user.keyboard('{ArrowDown}{ArrowLeft}');
+    expect(screen.getByText('25')).toHaveFocus();
+    await user.keyboard('{Control>}{Home}{/Control}');
+    expect(screen.getByRole('button', { name: 'Name' })).toHaveFocus();
+    // The grid is one tab stop, and it remembers the last cell.
+    await user.keyboard('{Control>}{End}{/Control}');
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'After' })).toHaveFocus();
+    await user.tab({ shift: true });
+    expect(screen.getByRole('button', { name: 'Edit Bob' })).toHaveFocus();
+  });
+
   it('renders column headers', () => {
     render(<DataTable columns={columns} data={data} />);
     expect(screen.getByText('Name')).toBeInTheDocument();
