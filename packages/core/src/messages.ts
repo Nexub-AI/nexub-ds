@@ -137,6 +137,15 @@ export interface NexubMessages {
   cancelUpload: (fileName: string) => string;
   /** InlineEdit display button, e.g. "Edit Company name". */
   editField: (label: string) => string;
+  /** DateTimePicker part labels. */
+  dateLabel: string;
+  timeLabel: string;
+  /** EventCalendar navigation and view switch. */
+  previousWeek: string;
+  nextWeek: string;
+  calendarView: string;
+  monthView: string;
+  weekView: string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -312,6 +321,13 @@ export const defaultMessages: NexubMessages = {
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
   editField: (label) => `Edit ${label}`,
+  dateLabel: 'Date',
+  timeLabel: 'Time',
+  previousWeek: 'Go to previous week',
+  nextWeek: 'Go to next week',
+  calendarView: 'Calendar view',
+  monthView: 'Month',
+  weekView: 'Week',
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
