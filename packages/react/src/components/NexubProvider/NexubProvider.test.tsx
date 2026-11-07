@@ -202,7 +202,7 @@ describe('English defaults still render', () => {
       <>
         <DatePicker />
         <DateRangePicker />
-        <Autocomplete options={[]} loading />
+        <Autocomplete mode="inline" options={[]} loading />
       </>,
     );
     expect(screen.getByRole('button', { name: 'Pick a date' })).toBeInTheDocument();

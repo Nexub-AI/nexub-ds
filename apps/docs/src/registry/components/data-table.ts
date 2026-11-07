@@ -17,7 +17,7 @@ const entry: ComponentEntry = {
     { name: 'caption', type: 'ReactNode', required: false, description: 'Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only.' },
     { name: 'enableSorting', type: 'boolean', default: 'false', required: false, description: 'Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3).' },
     { name: 'enableRowSelection', type: 'boolean', default: 'false', required: false, description: 'Turns on row selection state.' },
-    { name: 'selectionColumn', type: 'boolean', default: 'false', required: false, description: 'With `enableRowSelection` (5.3): a checkbox column, select-page in its header, and "Select all N" across pages. On by default from 6.0.' },
+    { name: 'selectionColumn', type: 'boolean', default: 'true', required: false, description: 'With `enableRowSelection`: a checkbox column, select-page in its header, and "Select all N" across pages (on by default from 6.0). `false` keeps selection without the column.' },
     { name: 'rowSelection / onRowSelectionChange', type: 'Record<string, boolean>', required: false, description: 'Controlled selection keyed by row id (5.3).' },
     { name: 'getRowId', type: '(row: TData, index: number) => string', required: false, description: 'Stable row ids for selection; defaults to the row index (5.3).' },
     { name: 'bulkActions', type: '(rows: TData[], clear: () => void) => ReactNode', required: false, description: 'A floating bar while rows are selected, with the count, your actions and a clear button (5.3).' },

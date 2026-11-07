@@ -154,7 +154,7 @@
   "patterns/Conversation": 1900,
   "patterns/DashboardPage": 6000,
   "patterns/ErrorSummary": 1300,
-  "patterns/FilterBar": 800,
+  "patterns/FilterBar": 900,
   "patterns/InfoList": 700,
   "patterns/ListDetail": 1000,
   "patterns/NotificationItem": 900,

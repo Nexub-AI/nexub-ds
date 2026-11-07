@@ -15,7 +15,7 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `enableSorting` | `boolean` | `false` | Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3). |
 | `enableRowSelection` | `boolean` | `false` | Turns on row selection state. |
-| `selectionColumn` | `boolean` | `false` | With `enableRowSelection` (5.3): a checkbox column, select-page in its header, and "Select all N" across pages. On by default from 6.0. |
+| `selectionColumn` | `boolean` | `true` | With `enableRowSelection`: a checkbox column, select-page in its header, and "Select all N" across pages (on by default from 6.0). `false` keeps selection without the column. |
 | `rowSelection / onRowSelectionChange` | `Record<string, boolean>` |  | Controlled selection keyed by row id (5.3). |
 | `getRowId` | `(row: TData, index: number) => string` |  | Stable row ids for selection; defaults to the row index (5.3). |
 | `bulkActions` | `(rows: TData[], clear: () => void) => ReactNode` |  | A floating bar while rows are selected, with the count, your actions and a clear button (5.3). |
@@ -129,7 +129,6 @@ export default function Example() {
         getRowId={(r) => r.id}
         enableSorting
         enableRowSelection
-        selectionColumn
         rowSelection={selection}
         onRowSelectionChange={setSelection}
         viewOptions

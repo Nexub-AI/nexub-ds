@@ -18,7 +18,7 @@ Type-to-search input with matching options dropdown.
 | `loading` | `boolean` |  | Skeleton rows while options are being fetched (5.2); "Loading" is announced. |
 | `inputValue` | `string` |  | Controlled input text (5.1). |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
-| `mode` | `'inline' \| 'popover'` | `'inline'` | Popover (5.2): a field whose list opens below it while typing. Inline keeps the list always visible; it stays the default until 6.0. |
+| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
 
@@ -52,7 +52,7 @@ import { Autocomplete } from '@nexub/react';
 export default function Example() {
   return (
     <div className="w-[260px]">
-      <Autocomplete options={[]} loading placeholder="Loading options…" />
+      <Autocomplete mode="inline" options={[]} loading placeholder="Loading options…" />
     </div>
   );
 }
@@ -79,7 +79,7 @@ export default function Example() {
 }
 ```
 
-## Example: Popover, fetch as you type
+## Example: Fetch as you type
 
 `mode="popover"` with `onInputChange`: the app filters, the list shows skeleton rows while loading.
 
@@ -108,7 +108,6 @@ export default function Example() {
   return (
     <div className="w-[280px]">
       <Autocomplete
-        mode="popover"
         aria-label="City"
         placeholder="Search cities…"
         options={options}

@@ -189,7 +189,8 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   enableRowSelection?: boolean;
   /**
    * With `enableRowSelection`: a checkbox column with select-page in its
-   * header, and "Select all N" across pages. On by default from 6.0.
+   * header, and "Select all N" across pages. Default true; false keeps selection
+   * without the column (you render your own checkboxes).
    */
   selectionColumn?: boolean;
   /** Controlled selection, keyed by row id (see `getRowId`). */
@@ -242,7 +243,7 @@ export function DataTable<TData>({
   data,
   enableSorting = false,
   enableRowSelection = false,
-  selectionColumn = false,
+  selectionColumn = true,
   rowSelection: rowSelectionProp,
   onRowSelectionChange,
   getRowId,
