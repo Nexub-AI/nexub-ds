@@ -5,6 +5,7 @@ import { cn } from '../../utils/cn.js';
 import { Label } from '../Label/Label.js';
 import { HelperText } from '../HelperText/HelperText.js';
 import { FormError } from '../FormError/FormError.js';
+import { useForm } from '../Form/Form.js';
 
 export interface FormFieldContextValue {
   id: string;
@@ -14,6 +15,8 @@ export interface FormFieldContextValue {
   disabled?: boolean;
   descriptionId: string;
   errorId: string;
+  /** The message from the enclosing Form for this field's `name`. */
+  formError?: string;
 }
 
 const FormFieldContext = React.createContext<FormFieldContextValue | null>(null);
@@ -35,11 +38,14 @@ export interface FormFieldRootProps extends React.HTMLAttributes<HTMLDivElement>
 }
 
 const Root = React.forwardRef<HTMLDivElement, FormFieldRootProps>(function Root(
-  { id: idProp, name, invalid, required, disabled, className, children, ...props },
+  { id: idProp, name, invalid: invalidProp, required, disabled, className, children, ...props },
   ref,
 ) {
   const generatedId = React.useId();
   const id = idProp ?? generatedId;
+  const form = useForm();
+  const formError = name ? form?.errors[name] : undefined;
+  const invalid = invalidProp ?? (formError ? true : undefined);
 
   const value: FormFieldContextValue = React.useMemo(
     () => ({
@@ -50,8 +56,9 @@ const Root = React.forwardRef<HTMLDivElement, FormFieldRootProps>(function Root(
       disabled,
       descriptionId: `${id}-description`,
       errorId: `${id}-error`,
+      formError,
     }),
-    [id, name, invalid, required, disabled],
+    [id, name, invalid, required, disabled, formError],
   );
 
   return (
@@ -128,11 +135,11 @@ function FieldError({
   children,
   ...props
 }: React.ComponentProps<typeof FormError>) {
-  const { errorId, invalid } = useFormField();
+  const { errorId, invalid, formError } = useFormField();
   if (!invalid) return null;
   return (
     <FormError id={errorId} className={className} {...props}>
-      {children}
+      {children ?? formError}
     </FormError>
   );
 }

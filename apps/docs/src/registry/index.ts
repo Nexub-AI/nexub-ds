@@ -65,6 +65,9 @@ import multiSelectEntry from './components/multi-select';
 import filterBuilderEntry from './components/filter-builder';
 import savedViewsEntry from './components/saved-views';
 import otpInputEntry from './components/otp-input';
+import formEntry from './components/form';
+import fieldsetEntry from './components/fieldset';
+import inlineEditEntry from './components/inline-edit';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -203,6 +206,9 @@ export const componentEntries: ComponentEntry[] = [
   labelEntry,
   helperTextEntry,
   formFieldEntry,
+  formEntry,
+  fieldsetEntry,
+  inlineEditEntry,
   datePickerEntry,
   dateRangePickerEntry,
   // Labels & Badges

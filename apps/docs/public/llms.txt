@@ -50,11 +50,13 @@ Version 6.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state.md): Placeholder UI shown when a list or page has no content.
 - [Error State](https://nexub-ds-docs.pages.dev/components/error-state.md): Full-page or section error view with retry action.
 - [Eyebrow Chip](https://nexub-ds-docs.pages.dev/components/eyebrow-chip.md): A compact eyebrow label, typically used above headings.
+- [Fieldset](https://nexub-ds-docs.pages.dev/components/fieldset.md): Groups related fields under a legend; disabling it disables everything inside.
 - [Filter Builder](https://nexub-ds-docs.pages.dev/components/filter-builder.md): Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Filter Chip](https://nexub-ds-docs.pages.dev/components/filter-chip.md): Interactive chip for filtering, supports selected/unselected state.
 - [Flex](https://nexub-ds-docs.pages.dev/components/flex.md): Flexbox layout primitive.
 - [Floating Input](https://nexub-ds-docs.pages.dev/components/floating-input.md): A text field whose label sits inside and floats up on focus or input. CSS only.
 - [Form Field](https://nexub-ds-docs.pages.dev/components/form-field.md): Wraps Label, Input, HelperText and FormError into a single accessible group.
+- [Form](https://nexub-ds-docs.pages.dev/components/form.md): Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
 - [Funnel](https://nexub-ds-docs.pages.dev/components/funnel.md): Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](https://nexub-ds-docs.pages.dev/components/gauge.md): Progress toward a target on a 270° arc.
 - [Gradient Divider](https://nexub-ds-docs.pages.dev/components/gradient-divider.md): A decorative gradient-faded horizontal rule.
@@ -64,6 +66,7 @@ Version 6.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Helper Text](https://nexub-ds-docs.pages.dev/components/helper-text.md): Small supporting text placed beneath a form field to provide hints or validation feedback.
 - [Hover Card](https://nexub-ds-docs.pages.dev/components/hover-card.md): Rich tooltip card revealed on hover.
 - [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button.md): A square button designed to hold a single icon, with an accessible label.
+- [Inline Edit](https://nexub-ds-docs.pages.dev/components/inline-edit.md): Text that becomes an input on click, for renaming things in place.
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Kbd](https://nexub-ds-docs.pages.dev/components/kbd.md): Keyboard key display — renders a styled <kbd> element.
 - [KPI Tile](https://nexub-ds-docs.pages.dev/components/kpi-tile.md): A headline number with its change versus last period and a trend line.

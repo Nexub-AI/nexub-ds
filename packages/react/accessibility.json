@@ -411,6 +411,15 @@
       "screenReader": []
     },
     {
+      "slug": "fieldset",
+      "name": "Fieldset",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "filter-builder",
       "name": "Filter Builder",
       "package": "@nexub/react",
@@ -457,6 +466,17 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "form",
+      "name": "Form",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter: Submits from any text field; the first invalid field takes focus."
+      ],
       "screenReader": []
     },
     {
@@ -544,6 +564,19 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "inline-edit",
+      "name": "Inline Edit",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space: On the text: starts editing.",
+        "Enter: In the input: saves.",
+        "Escape: Reverts and returns focus to the text."
+      ],
       "screenReader": []
     },
     {
