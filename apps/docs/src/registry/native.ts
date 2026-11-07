@@ -248,6 +248,43 @@ import { Send } from '@nexub/icons/native';
   slider: { name: 'Slider', preview: 'slider', differences: [label], code: `<Slider label="Volume" defaultValue={40} formatValue={(v) => \`\${v}%\`} />` },
   chip: { name: 'Chip', preview: 'chip', differences: [touch], code: `<Chip label="Food" selected={on} onPress={toggle} />` },
   'filter-chip': { name: 'FilterChip', preview: 'chip', differences: [touch], code: `<FilterChip label="This month" selected onPress={toggle} />` },
+  'multi-select': {
+    name: 'MultiSelect',
+    preview: 'multi-select',
+    differences: [
+      { aspect: 'Menu', web: 'A popover list with chips in the field.', mobile: 'A sheet of checkbox rows (search above 8 options); the field summarises the picks.' },
+      label,
+    ],
+    code: `<MultiSelect label="Labels" options={labels} value={picked} onValueChange={setPicked} />`,
+  },
+  'data-table': {
+    name: 'DataList',
+    preview: 'data-list',
+    differences: [
+      { aspect: 'Layout', web: 'Columns: resize, reorder, pin, virtualize.', mobile: 'One row per record with its key fields: no horizontal scrolling.' },
+      { aspect: 'Sort', web: 'Click headers; Shift+click for more.', mobile: 'A Sort button opens a sheet: one sort and a direction.' },
+      { aspect: 'Selection', web: 'Checkbox column and a floating bulk bar.', mobile: 'Checkbox rows; the bar above the list shows the count and your actions.' },
+    ],
+    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />`,
+  },
+  'filter-builder': {
+    name: 'FilterSheet',
+    preview: 'filter-sheet',
+    differences: [
+      { aspect: 'Groups', web: 'Nested AND/OR groups.', mobile: 'One flat AND/OR list; nested groups from the web are kept, not edited.' },
+      { aspect: 'Query', web: 'FilterGroup JSON.', mobile: 'The same FilterGroup JSON (from @nexub/core), so views move between platforms.' },
+    ],
+    code: `<FilterSheet open={open} onOpenChange={setOpen} fields={fields} value={query} onValueChange={setQuery} />`,
+  },
+  'otp-input': {
+    name: 'OTPInput',
+    preview: 'otp-input',
+    differences: [
+      { aspect: 'Fields', web: 'One input per digit; the first takes one-time-code autofill.', mobile: 'One field drawn as cells, so SMS autofill works on iOS and Android.' },
+      label,
+    ],
+    code: `<OTPInput label="Verification code" length={6} onComplete={verify} />`,
+  },
   select: {
     name: 'Select',
     preview: 'select',
@@ -346,7 +383,7 @@ export const mobileOnly: MobileOnlyEntry[] = [
   { slug: 'context-menu', name: 'ContextMenu', title: 'Context Menu', category: 'Overlays', preview: 'context-menu', description: 'Long-press menu with the actions also exposed as accessibility actions.', code: `<ContextMenu actions={actions}><ListItem title="Amazon" value="−S$42.50" /></ContextMenu>`, webAlternative: 'ContextMenu' },
   { slug: 'swipeable-row', name: 'SwipeableRow', title: 'Swipeable Row', category: 'Lists', preview: 'swipeable-row', description: 'Swipe a row to reveal actions; every swipe action is also an accessibility action.', code: `<SwipeableRow label="Amazon" actions={[{ label: 'Archive', onPress: archive }, { label: 'Delete', tone: 'danger', onPress: del }]}>…</SwipeableRow>` },
   { slug: 'refresh-control', name: 'RefreshControl', title: 'Refresh Control', category: 'Lists', preview: 'pattern/activity', description: 'Pull to refresh in Nexub colours.', code: `<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>…</ScrollView>` },
-  { slug: 'otp-input', name: 'OTPInput', title: 'OTP Input', category: 'Inputs', preview: 'otp-input', description: 'One field drawn as cells, so SMS one-time-code autofill works on iOS and Android.', code: `<OTPInput label="Verification code" length={6} onComplete={verify} />` },
+  { slug: 'file-list', name: 'FileList', title: 'File List', category: 'Inputs', preview: 'file-list', description: 'Files picked for upload with progress, errors and remove or cancel. Bring your own picker (expo-document-picker).', code: `<FileList files={files} onAdd={pick} onRemove={remove} onCancel={cancel} />`, webAlternative: 'FileUpload' },
   { slug: 'numeric-keypad', name: 'NumericKeypad', title: 'Numeric Keypad', category: 'Inputs', preview: 'numeric-keypad', description: 'An on-screen keypad for amounts and PINs, with the locale’s decimal key.', code: `<NumericKeypad decimal onKey={press} />` },
   { slug: 'expressive-money-input', name: 'ExpressiveMoneyInput', title: 'Expressive Money Input', category: 'Inputs', preview: 'expressive-money-input', description: 'The big amount on a send-money screen; pair with NumericKeypad.', code: `<ExpressiveMoneyInput label="Amount" currency="SGD" value={v} onValueChange={setV} caption="Balance S$2,400" />`, webAlternative: 'MoneyInput' },
   { slug: 'date-time-field', name: 'DateTimeField', title: 'Date Time Field', category: 'Inputs', preview: 'date-time-field', description: 'Opens the platform date or time picker.', code: `<DateTimeField label="Date" mode="date" value={d} onValueChange={setD} />`, webAlternative: 'DatePicker' },

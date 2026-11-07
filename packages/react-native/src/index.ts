@@ -170,6 +170,19 @@ export type {
   DateTimeFieldProps,
 } from './components/mobile';
 
+export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
+export type {
+  MultiSelectOption,
+  MultiSelectProps,
+  DataListProps,
+  DataListSort,
+  FileListItem,
+  FileListProps,
+  FilterSheetProps,
+} from './components/data';
+export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
+export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
+
 // Navigation (native chrome, Nexub colours)
 export {
   nexubStackOptions,

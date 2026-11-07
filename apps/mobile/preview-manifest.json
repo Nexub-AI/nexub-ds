@@ -255,6 +255,24 @@
       ],
       "path": "/m/preview/date-time-field"
     },
+    "multi-select": {
+      "title": "MultiSelect",
+      "kind": "component",
+      "web": "multi-select",
+      "examples": [
+        "Labels in a sheet"
+      ],
+      "path": "/m/preview/multi-select"
+    },
+    "filter-sheet": {
+      "title": "FilterSheet",
+      "kind": "component",
+      "web": "filter-builder",
+      "examples": [
+        "Deal filters"
+      ],
+      "path": "/m/preview/filter-sheet"
+    },
     "card": {
       "title": "Card",
       "kind": "component",
@@ -282,6 +300,24 @@
         "Inset grouped"
       ],
       "path": "/m/preview/list-section"
+    },
+    "data-list": {
+      "title": "DataList",
+      "kind": "component",
+      "web": "data-table",
+      "examples": [
+        "Sort and select"
+      ],
+      "path": "/m/preview/data-list"
+    },
+    "file-list": {
+      "title": "FileList",
+      "kind": "mobile",
+      "web": null,
+      "examples": [
+        "Uploading"
+      ],
+      "path": "/m/preview/file-list"
     },
     "accordion": {
       "title": "Accordion",
@@ -423,8 +459,8 @@
     },
     "otp-input": {
       "title": "OTPInput",
-      "kind": "mobile",
-      "web": null,
+      "kind": "component",
+      "web": "otp-input",
       "examples": [
         "Six digits"
       ],
@@ -683,8 +719,17 @@
     "date-picker": [
       "date-time-field"
     ],
+    "multi-select": [
+      "multi-select"
+    ],
+    "filter-builder": [
+      "filter-sheet"
+    ],
     "card": [
       "card"
+    ],
+    "data-table": [
+      "data-list"
     ],
     "accordion": [
       "accordion"
@@ -721,6 +766,9 @@
     ],
     "sheet": [
       "bottom-sheet"
+    ],
+    "otp-input": [
+      "otp-input"
     ]
   }
 }
