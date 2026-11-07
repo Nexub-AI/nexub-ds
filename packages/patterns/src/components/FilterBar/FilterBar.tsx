@@ -3,7 +3,10 @@ import { Button, cn, SearchInput, useNexubMessages } from '@nexub/react';
 
 export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   searchPlaceholder?: string;
-  /** Accessible name of the search field. Defaults to the localised "Search". */
+  /**
+   * Accessible name of the search field. Defaults to the localised "Search"; from 6.0,
+   * to `searchPlaceholder` (without a trailing "…") when that is set.
+   */
   searchLabel?: string;
   onSearch?: (value: string) => void;
   searchValue?: string;
