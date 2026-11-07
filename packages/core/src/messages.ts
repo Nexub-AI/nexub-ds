@@ -135,6 +135,8 @@ export interface NexubMessages {
   /** FileUpload per-file progress and cancel. */
   uploadProgress: (fileName: string, percent: number) => string;
   cancelUpload: (fileName: string) => string;
+  /** InlineEdit display button, e.g. "Edit Company name". */
+  editField: (label: string) => string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -309,6 +311,7 @@ export const defaultMessages: NexubMessages = {
   verificationCode: 'Verification code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
+  editField: (label) => `Edit ${label}`,
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
