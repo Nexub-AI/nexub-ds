@@ -27,9 +27,8 @@ export interface AutocompleteProps {
    */
   onInputChange?: (text: string) => void;
   /**
-   * `'inline'` (default in 5.x): the list always shows under the input.
-   * `'popover'`: a field whose list opens below it while typing. The default from 6.0;
-   * set `mode` explicitly to keep either behaviour across the upgrade.
+   * `'popover'` (default): a field whose list opens below it while typing.
+   * `'inline'`: the list always shows under the input (the 5.x default).
    */
   mode?: 'inline' | 'popover';
   /** Adds a "Create “text”" option when the text matches no option exactly. */
@@ -48,7 +47,7 @@ export function Autocomplete({
   loading = false,
   inputValue,
   onInputChange,
-  mode = 'inline',
+  mode = 'popover',
   onCreate,
   disabled,
   className,

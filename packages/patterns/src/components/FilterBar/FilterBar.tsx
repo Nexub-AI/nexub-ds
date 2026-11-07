@@ -4,8 +4,8 @@ import { Button, cn, SearchInput, useNexubMessages } from '@nexub/react';
 export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   searchPlaceholder?: string;
   /**
-   * Accessible name of the search field. Defaults to the localised "Search"; from 6.0,
-   * to `searchPlaceholder` (without a trailing "…") when that is set.
+   * Accessible name of the search field. Defaults to `searchPlaceholder` without a
+   * trailing "…", else the localised "Search".
    */
   searchLabel?: string;
   onSearch?: (value: string) => void;
@@ -24,7 +24,7 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
     return (
       <div ref={ref} className={cn('flex flex-wrap items-center gap-3', className)} {...props}>
         <SearchInput
-          aria-label={searchLabel ?? t.search}
+          aria-label={searchLabel ?? searchPlaceholder?.replace(/\s*(…|\.\.\.)$/, '') ?? t.search}
           placeholder={searchPlaceholder ?? t.searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearch?.(e.target.value)}

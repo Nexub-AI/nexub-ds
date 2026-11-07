@@ -89,7 +89,7 @@ for (const { id } of stories) {
 // keeps it unreachable): that's the intended modal pattern, not a defect.
 const OPEN: { id: string; trigger?: string }[] = [
   { id: 'components-multiselect--default', trigger: '[role=combobox]' },
-  { id: 'components-autocomplete--popover', trigger: '[role=combobox]' },
+  { id: 'components-autocomplete--default', trigger: '[role=combobox]' },
   { id: 'components-savedviews--default', trigger: 'button' },
   { id: 'forms-daterangepicker--default', trigger: 'button' },
   { id: 'navigation-commandpalette--default' }, // story renders it open
