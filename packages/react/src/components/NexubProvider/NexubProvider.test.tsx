@@ -202,13 +202,12 @@ describe('English defaults still render', () => {
       <>
         <DatePicker />
         <DateRangePicker />
-        <Autocomplete mode="inline" options={[]} loading />
+        <Autocomplete options={[]} loading />
       </>,
     );
     expect(screen.getByRole('button', { name: 'Pick a date' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Pick a date range' })).toBeInTheDocument();
     expect(screen.getAllByPlaceholderText('Search…').length).toBeGreaterThan(0);
-    expect(screen.getByText('Loading…')).toBeInTheDocument();
   });
 
   it('command palette', () => {

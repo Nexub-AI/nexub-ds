@@ -40,10 +40,3 @@ export const Default: Story = {
 };
 
 // The 5.x default: the list always shows under the input.
-export const Inline: Story = {
-  render: () => (
-    <div style={{ width: '280px' }}>
-      <Autocomplete mode="inline" aria-label="Country" options={countryOptions} placeholder="Search countries..." />
-    </div>
-  ),
-};

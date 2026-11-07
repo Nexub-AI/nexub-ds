@@ -380,7 +380,6 @@ function migrateComponents(src) {
 // Adds the 5.x value as an explicit prop, so upgrading to 6.0 changes nothing.
 const selection = (a) => (a.enableRowSelection && !a.selectionColumn ? ' selectionColumn={false}' : null);
 const PINS = {
-  Autocomplete: (a) => (a.mode ? null : ' mode="inline"'),
   DataTable: selection,
   DataTableVirtual: selection,
 };
@@ -456,8 +455,8 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
       for (const m of src.matchAll(/<StepIndicator\b/g))
         items.push({ at: m.index, rule: 'removed-in-7', message: 'StepIndicator (@nexub/patterns) is removed in 7.0: use <Stepper orientation="vertical" current={…}> from @nexub/react (currentStep -> current)' });
     if (/@nexub\/react['"/]/.test(src))
-      for (const m of src.matchAll(/<Autocomplete\b[^>]*\bmode=(?:"inline"|'inline'|\{\s*['"]inline['"]\s*\})/g))
-        items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete mode="inline" is removed in 7.0: drop mode (popover), or build an always-open list with the Combobox parts' });
+      for (const m of src.matchAll(/<Autocomplete\b[^>]*\bmode=/g))
+        items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete `mode` is removed in 7.0 (the popover is the only layout): remove it; for an always-open list use the Combobox parts' });
   }
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
@@ -521,11 +520,11 @@ Rules:
                      (dot and non-JSX uses reported); *Props types renamed
   tailwind-3-preset  report the Tailwind 3 preset (@nexub/tokens/tailwind), removed in 4.0;
                      use Tailwind 4 with @import "@nexub/tokens/tailwind.css"
-  keep-5-defaults    opt-in: keep 5.x behaviour on 6.0 by pinning the defaults it changes:
-                     <Autocomplete> gets mode="inline"; <DataTable enableRowSelection>
-                     gets selectionColumn={false}
+  keep-5-defaults    opt-in: keep 5.x behaviour by pinning the defaults 6.0 changed:
+                     <DataTable enableRowSelection> gets selectionColumn={false}
+                     (Autocomplete's inline layout is gone in 7.0, so it is not pinned)
   removed-in-7       report what 7.0 removes: <StepIndicator> (use Stepper) and
-                     <Autocomplete mode="inline">
+                     Autocomplete's mode prop
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

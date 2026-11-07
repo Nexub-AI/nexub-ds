@@ -235,7 +235,7 @@ test('tailwind-3-preset: reports the deprecated preset import, never rewrites it
 // ─── keep-5-defaults ───
 const pin = (src) => migrateSource(src, { ext: '.tsx', rules: only('keep-5-defaults') });
 
-test('keep-5-defaults: pins the 6.0 defaults, leaves explicit props alone', () => {
+test('keep-5-defaults: pins the DataTable 6.0 default, leaves explicit props alone', () => {
   const src = `import { Autocomplete, DataTable as Table } from '@nexub/react';
 import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
 <Autocomplete options={o} />
@@ -253,7 +253,7 @@ import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
     output,
     `import { Autocomplete, DataTable as Table } from '@nexub/react';
 import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
-<Autocomplete mode="inline" options={o} />
+<Autocomplete options={o} />
 <Autocomplete mode="popover" options={o} />
 <Table selectionColumn={false} enableRowSelection columns={c} data={d} />
 <Table enableRowSelection selectionColumn columns={c} data={d} />
@@ -264,7 +264,7 @@ import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
 />
 <Autocomplete {...rest} />`,
   );
-  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[12, 'keep-5-defaults']]);
+  assert.deepEqual(manual, []);
 });
 
 test('keep-5-defaults is opt-in', () => {
@@ -273,7 +273,7 @@ test('keep-5-defaults is opt-in', () => {
 });
 
 // ─── removed-in-7 ───
-test('removed-in-7: reports StepIndicator and inline Autocomplete, never rewrites', () => {
+test('removed-in-7: reports StepIndicator and Autocomplete mode, never rewrites', () => {
   const src = `import { StepIndicator } from '@nexub/patterns';
 import { Autocomplete } from '@nexub/react';
 <StepIndicator steps={steps} currentStep={1} />;
@@ -283,5 +283,5 @@ import { Autocomplete } from '@nexub/react';
 `;
   const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('removed-in-7') });
   assert.equal(output, src);
-  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[3, 'removed-in-7'], [4, 'removed-in-7'], [5, 'removed-in-7']]);
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[3, 'removed-in-7'], [4, 'removed-in-7'], [5, 'removed-in-7'], [6, 'removed-in-7']]);
 });
