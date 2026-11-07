@@ -6,7 +6,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults'];
+// Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
+const OPT_IN = new Set(['keep-5-defaults']);
+export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
 const MAX_BYTES = 1024 * 1024;
@@ -373,12 +376,45 @@ function migrateComponents(src) {
   return { output, items };
 }
 
+// ─── keep-5-defaults (opt-in): pin the defaults 6.0 changes ──────────────────
+// Adds the 5.x value as an explicit prop, so upgrading to 6.0 changes nothing.
+const selection = (a) => (a.enableRowSelection && !a.selectionColumn ? ' selectionColumn={false}' : null);
+const PINS = {
+  Autocomplete: (a) => (a.mode ? null : ' mode="inline"'),
+  DataTable: selection,
+  DataTableVirtual: selection,
+};
+
+function pinDefaults(src) {
+  const edits = [];
+  const items = [];
+  const locals = new Map(); // local JSX name -> exported name
+  for (const m of src.matchAll(/\bimport\s+\{([^}]*)\}\s*from\s*(['"])@nexub\/react(?:\/\w+)?\2/g)) {
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (PINS[name]) locals.set(alias ?? name, name);
+  }
+  for (const [local, name] of locals) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const at = m.index + m[0].length;
+      const tag = readTag(src, at);
+      const report = (message) => items.push({ line: src.slice(0, m.index).split('\n').length, rule: 'keep-5-defaults', message });
+      if (!tag) { report(`<${local}>: could not parse the tag; check its 6.0 defaults by hand`); continue; }
+      const pin = PINS[name](Object.fromEntries(tag.attrs.map((a) => [a.name, a])));
+      if (!pin) continue;
+      if (src.slice(at, tag.end).includes('{...')) { report(`<${local} {...spread}>: add${pin} unless the spread sets it`); continue; }
+      edits.push({ at, text: pin });
+    }
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.at - a.at)) output = output.slice(0, e.at) + e.text + output.slice(e.at);
+  return { output, items };
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
  * opts: { ext, rules: Set, fix: boolean, aliasMap: { aliases, mix } }
  */
-export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, aliasMap = SNAPSHOT }) {
+export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = false, aliasMap = SNAPSHOT }) {
   const items = [];
   let text = src;
   if (['logical-classes', 'tw-animate', 'opacity-modifier', 'legacy-tokens'].some((r) => rules.has(r))) {
@@ -401,6 +437,11 @@ export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, a
   }
   if (rules.has('deprecated-components') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"]/.test(text)) {
     const r = migrateComponents(text);
+    text = r.output;
+    items.push(...r.items);
+  }
+  if (rules.has('keep-5-defaults') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(text)) {
+    const r = pinDefaults(text);
     text = r.output;
     items.push(...r.items);
   }
@@ -452,7 +493,7 @@ Options:
   --check            exit 1 if anything fixable or reportable is found (CI)
   --json             print machine-readable results
   --fix              also rewrite opacity-modifier hits (preview, or apply with --write)
-  --rules <a,b>      run only these rules (default: all)
+  --rules <a,b>      run only these rules (default: all except keep-5-defaults)
   --ignore <glob>    skip paths matching glob (repeatable; supports * and **)
   -h, --help         show this help
 
@@ -471,6 +512,9 @@ Rules:
                      (dot and non-JSX uses reported); *Props types renamed
   tailwind-3-preset  report the Tailwind 3 preset (@nexub/tokens/tailwind), removed in 4.0;
                      use Tailwind 4 with @import "@nexub/tokens/tailwind.css"
+  keep-5-defaults    opt-in: keep 5.x behaviour on 6.0 by pinning the defaults it changes:
+                     <Autocomplete> gets mode="inline"; <DataTable enableRowSelection>
+                     gets selectionColumn={false}
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
@@ -492,7 +536,7 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   }
   const { values: o, positionals } = args;
   if (o.help) { stdout(`${USAGE}\n`); return 0; }
-  const rules = new Set(o.rules ? o.rules.split(',').map((r) => r.trim()).filter(Boolean) : RULES);
+  const rules = new Set(o.rules ? o.rules.split(',').map((r) => r.trim()).filter(Boolean) : DEFAULT_RULES);
   const unknown = [...rules].filter((r) => !RULES.includes(r));
   if (unknown.length) { stderr(`Unknown rule(s): ${unknown.join(', ')}. Known: ${RULES.join(', ')}\n`); return 2; }
 

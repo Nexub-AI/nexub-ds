@@ -27,8 +27,9 @@ export interface AutocompleteProps {
    */
   onInputChange?: (text: string) => void;
   /**
-   * `'inline'` (default): the list always shows under the input.
-   * `'popover'`: a field whose list opens below it while typing.
+   * `'inline'` (default in 5.x): the list always shows under the input.
+   * `'popover'`: a field whose list opens below it while typing. The default from 6.0;
+   * set `mode` explicitly to keep either behaviour across the upgrade.
    */
   mode?: 'inline' | 'popover';
   /** Adds a "Create “text”" option when the text matches no option exactly. */
