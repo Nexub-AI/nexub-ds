@@ -231,3 +231,43 @@ test('tailwind-3-preset: reports the deprecated preset import, never rewrites it
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[1, 'tailwind-3-preset']]);
   assert.equal(migrateSource('@import "@nexub/tokens/tailwind.css";', { ext: '.css', rules: new Set(['tailwind-3-preset']) }).manual.length, 0);
 });
+
+// ─── keep-5-defaults ───
+const pin = (src) => migrateSource(src, { ext: '.tsx', rules: only('keep-5-defaults') });
+
+test('keep-5-defaults: pins the 6.0 defaults, leaves explicit props alone', () => {
+  const src = `import { Autocomplete, DataTable as Table } from '@nexub/react';
+import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
+<Autocomplete options={o} />
+<Autocomplete mode="popover" options={o} />
+<Table enableRowSelection columns={c} data={d} />
+<Table enableRowSelection selectionColumn columns={c} data={d} />
+<Table columns={c} data={d} />
+<DataTableVirtual
+  enableRowSelection
+  maxHeight={400}
+/>
+<Autocomplete {...rest} />`;
+  const { output, manual } = pin(src);
+  assert.equal(
+    output,
+    `import { Autocomplete, DataTable as Table } from '@nexub/react';
+import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
+<Autocomplete mode="inline" options={o} />
+<Autocomplete mode="popover" options={o} />
+<Table selectionColumn={false} enableRowSelection columns={c} data={d} />
+<Table enableRowSelection selectionColumn columns={c} data={d} />
+<Table columns={c} data={d} />
+<DataTableVirtual selectionColumn={false}
+  enableRowSelection
+  maxHeight={400}
+/>
+<Autocomplete {...rest} />`,
+  );
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[12, 'keep-5-defaults']]);
+});
+
+test('keep-5-defaults is opt-in', () => {
+  const src = `import { Autocomplete } from '@nexub/react';\n<Autocomplete options={o} />`;
+  assert.equal(migrateSource(src, { ext: '.tsx' }).output, src);
+});
