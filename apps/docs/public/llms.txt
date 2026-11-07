@@ -128,6 +128,7 @@ Version 6.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Toggle](https://nexub-ds-docs.pages.dev/components/toggle.md): Pressable toggle button built on Radix UI Toggle.
 - [Tool Call](https://nexub-ds-docs.pages.dev/components/tool-call.md): One tool call: its name and status, expandable to input and output.
 - [Tooltip](https://nexub-ds-docs.pages.dev/components/tooltip.md): Floating label that appears on hover. Built on Radix UI Tooltip.
+- [Tree View](https://nexub-ds-docs.pages.dev/components/tree-view.md): A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
 ## Patterns
 

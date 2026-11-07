@@ -14,6 +14,8 @@ const entry: ComponentEntry = {
   props: [
     { name: 'columns', type: 'DataTableColumn<TData>[]', required: true, description: 'TanStack Table column definitions (`DataTableColumn` is exported from @nexub/react). Set `meta: { align: \'end\' }` for numeric columns; headers, sort buttons and cells follow it.' },
     { name: 'data', type: 'TData[]', required: true, description: 'Array of row data objects to render.' },
+    { name: 'getSubRows', type: '(row, index) => TData[] | undefined', required: false, description: 'Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level.' },
+    { name: 'expanded / defaultExpanded / onExpandedChange', type: 'ExpandedState', required: false, description: 'Expanded rows by row id (see `getRowId`), or `true` for all.' },
     { name: 'caption', type: 'ReactNode', required: false, description: 'Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only.' },
     { name: 'enableSorting', type: 'boolean', default: 'false', required: false, description: 'Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3).' },
     { name: 'enableRowSelection', type: 'boolean', default: 'false', required: false, description: 'Turns on row selection state.' },
@@ -53,6 +55,10 @@ const entry: ComponentEntry = {
     {
       title: '10,000 rows (DataTableVirtual)',
       description: "`import { DataTableVirtual } from '@nexub/react/DataTableVirtual'` and install `@tanstack/react-virtual`. Only the rows in view are rendered.",
+    },
+    {
+      title: 'Tree rows',
+      description: '`getSubRows` nests rows: the first column gets an expand toggle and indents each level. With pages, a parent and its children stay on one page.',
     },
   ],
   a11y: {

@@ -288,3 +288,24 @@ describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
     expect(screen.getByRole('columnheader', { name: 'Name' })).toHaveClass('sticky', 'top-0');
   });
 });
+
+describe('DataTable sub-rows', () => {
+  it('indents children under an expand toggle', async () => {
+    type Row = { name: string; children?: Row[] };
+    const data: Row[] = [{ name: 'Acme', children: [{ name: 'Acme EU' }, { name: 'Acme US' }] }, { name: 'Globex' }];
+    render(
+      <DataTable<Row>
+        caption="Accounts"
+        columns={[{ accessorKey: 'name', header: 'Name' }]}
+        data={data}
+        getSubRows={(r) => r.children}
+      />,
+    );
+    expect(screen.queryByText('Acme EU')).not.toBeInTheDocument();
+    const toggle = screen.getByRole('button', { name: 'Expand row' });
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Acme EU')).toBeInTheDocument();
+    expect(screen.getAllByRole('row')).toHaveLength(5);
+  });
+});
