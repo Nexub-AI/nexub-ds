@@ -382,6 +382,7 @@ Never use a component marked deprecated.
 - [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
 - [Bar Chart](components/bar-chart.md) `@nexub/react`: Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 - [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
+- [Chart Zoom](components/chart-zoom.md) `@nexub/react`: Zoom any chart to part of its range with a two-thumb slider.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
@@ -562,6 +563,7 @@ Never use a component marked deprecated.
 
 ## Patterns — Feedback
 
+- [NotificationCenter](components/notification-center.md) `@nexub/patterns`: A bell with an unread count that opens the notification list.
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
 
 ## Patterns — Forms
@@ -2081,6 +2083,57 @@ Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
 
 ---
 
+# Chart Zoom
+
+Zoom any chart to part of its range with a two-thumb slider.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { ChartZoom } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/chart-zoom
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `data` (required) | `T[]` |  | The full data. |
+| `index` (required) | `keyof T` |  | The category key; its values label the range. |
+| `children` (required) | `(slice: T[]) => ReactNode` |  | Render the chart for the visible slice. |
+| `defaultRange` | `[start, end]` |  | Starting indexes; the whole range by default. |
+| `minSpan` | `number` | `2` | Fewest categories shown. |
+
+## Example: Zoom a year of revenue
+
+```tsx
+'use client';
+
+import { ChartZoom, LineChart } from '@nexub/react';
+
+const data = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, i) => ({
+  month,
+  revenue: 120 + i * 14 + (i % 3) * 9,
+}));
+
+export default function Example() {
+  return (
+    <ChartZoom data={data} index="month" defaultRange={[3, 8]} className="w-full">
+      {(slice) => (
+        <LineChart className="w-full" title="Revenue ($k)" data={slice} index="month" series={[{ key: 'revenue', label: 'Revenue' }]} />
+      )}
+    </ChartZoom>
+  );
+}
+```
+
+## Accessibility
+
+- `Arrow keys / Home / End`: Move the focused thumb.
+- Thumbs read "Zoom start: Mar" and "Zoom end: Sep". Charts themselves stay server components; only this wrapper runs on the client.
+
+Related: [line-chart](line-chart.md), [bar-chart](bar-chart.md), [chart-toggle](chart-toggle.md)
+
+
+---
+
 # Checkbox Card
 
 A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
@@ -2808,6 +2861,53 @@ export default function Example() {
       getSubRows={(row) => row.children}
       getRowId={(row) => row.name}
       defaultExpanded={{ 'Acme Group': true }}
+    />
+  );
+}
+```
+
+## Example: Export CSV
+
+`toCSV(rows, columns)` quotes and escapes per RFC 4180 and neutralises cells that start like a spreadsheet formula. Pass what the person sees.
+
+```tsx
+'use client';
+
+import { Button, DataTable, toCSV, type DataTableColumn } from '@nexub/react';
+
+type Invoice = { id: string; customer: string; amount: number };
+
+const data: Invoice[] = [
+  { id: 'INV-1042', customer: 'Acme, Inc.', amount: 1200 },
+  { id: 'INV-1043', customer: 'Globex', amount: 860 },
+];
+
+const columns: DataTableColumn<Invoice>[] = [
+  { accessorKey: 'id', header: 'Invoice' },
+  { accessorKey: 'customer', header: 'Customer' },
+  { accessorKey: 'amount', header: 'Amount', meta: { align: 'end' } },
+];
+
+function download() {
+  const csv = toCSV(data, [
+    { header: 'Invoice', value: 'id' },
+    { header: 'Customer', value: 'customer' },
+    { header: 'Amount', value: 'amount' },
+  ]);
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: 'invoices.csv' });
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export default function Example() {
+  return (
+    <DataTable
+      caption="Invoices"
+      captionHidden
+      columns={columns}
+      data={data}
+      toolbar={<Button variant="outlined" size="sm" onClick={download}>Export CSV</Button>}
     />
   );
 }
@@ -9070,6 +9170,61 @@ export default function Example() {
 
 ---
 
+# NotificationCenter
+
+A bell with an unread count that opens the notification list.
+
+- Package: `@nexub/patterns` · Category: Feedback · Status: beta
+- Import: `import { NotificationCenter } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/notification-center
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `notifications` (required) | `{ id, title, description?, timestamp?, read?, icon?, href? }[]` |  | Newest first. Your app owns them and their read state. |
+| `onOpen` | `(id) => void` |  | A notification was opened; mark it read here. |
+| `onDismiss` | `(id) => void` |  | Shows a dismiss button per item. |
+| `onMarkAllRead` | `() => void` |  | Shows "Mark all as read" while some are unread. |
+| `emptyText` | `ReactNode` | `"You’re all caught up"` | Shown with no notifications. |
+
+## Example: Inbox
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { NotificationCenter, type NotificationCenterItem } from '@nexub/patterns';
+
+export default function Example() {
+  const [items, setItems] = React.useState<NotificationCenterItem[]>([
+    { id: '1', title: 'Deploy failed on main', description: 'Build step "test" exited with 1.', timestamp: '2 min ago' },
+    { id: '2', title: 'Invoice #1042 paid', timestamp: '1 h ago' },
+    { id: '3', title: 'Ada commented on Q4 plan', timestamp: 'Yesterday', read: true },
+  ]);
+  const markRead = (id?: string) => setItems((list) => list.map((n) => (!id || n.id === id ? { ...n, read: true } : n)));
+  return (
+    <NotificationCenter
+      notifications={items}
+      onOpen={(id) => markRead(id)}
+      onDismiss={(id) => setItems((list) => list.filter((n) => n.id !== id))}
+      onMarkAllRead={() => markRead()}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- The bell reads "Notifications, 3 unread"; the count badge is decorative.
+- The list opens in a popover labelled by its heading; Escape closes it and focus returns to the bell.
+- Each item’s title is its link or button, stretched over the whole item.
+
+Related: [notification-item](notification-item.md)
+
+
+---
+
 # NotificationItem
 
 Single notification row for notification panels or dropdowns.
@@ -9085,9 +9240,10 @@ Single notification row for notification panels or dropdowns.
 | `title` (required) | `string` |  | Notification title. |
 | `description` | `string` |  | Supporting text. |
 | `timestamp` | `string` |  | Relative time string. |
-| `unread` | `boolean` | `false` | Applies unread indicator styling. |
-| `avatar` | `React.ReactNode` |  | Avatar for the notification actor. |
-| `onClick` | `() => void` |  | Click handler for the item. |
+| `read` | `boolean` | `false` | Unread items get a tinted background and an "Unread" dot. |
+| `icon` | `ReactNode` |  | Icon or avatar before the text. |
+| `href / onSelect` | `string / () => void` |  | Makes the whole item a link or a button (6.6). |
+| `onDismiss` | `() => void` |  | Shows a dismiss button. |
 
 ## Example: Default
 

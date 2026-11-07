@@ -62,6 +62,10 @@ const entry: ComponentEntry = {
       title: 'Tree rows',
       description: '`getSubRows` nests rows: the first column gets an expand toggle and indents each level. With pages, a parent and its children stay on one page.',
     },
+    {
+      title: 'Export CSV',
+      description: '`toCSV(rows, columns)` quotes and escapes per RFC 4180 and neutralises cells that start like a spreadsheet formula. Pass what the person sees.',
+    },
   ],
   a11y: {
     roles: ['table (default)', 'grid (with `grid`)', 'columnheader with aria-sort when sortable'],
