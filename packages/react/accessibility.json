@@ -623,6 +623,18 @@
       ]
     },
     {
+      "slug": "kanban",
+      "name": "Kanban",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the card within its column.",
+        "Alt+ArrowLeft / Alt+ArrowRight: Moves the card to the previous or next column. Mirrored in RTL."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "kbd",
       "name": "Kbd",
       "package": "@nexub/react",
@@ -1048,6 +1060,17 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "sortable",
+      "name": "Sortable",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the item; focus stays on its handle."
+      ],
       "screenReader": []
     },
     {

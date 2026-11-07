@@ -16,6 +16,8 @@ const entry: ComponentEntry = {
     { name: 'data', type: 'TData[]', required: true, description: 'Array of row data objects to render.' },
     { name: 'getSubRows', type: '(row, index) => TData[] | undefined', required: false, description: 'Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level.' },
     { name: 'expanded / defaultExpanded / onExpandedChange', type: 'ExpandedState', required: false, description: 'Expanded rows by row id (see `getRowId`), or `true` for all.' },
+    { name: 'onRowOrderChange', type: '(data: TData[]) => void', required: false, description: 'Adds a handle column: drag rows, or Alt+ArrowUp/Down on a handle. Hidden while a column is sorted.' },
+    { name: 'getRowLabel', type: '(row) => string', required: false, description: 'Names a row in "Move ‹label›" and the move announcements.' },
     { name: 'caption', type: 'ReactNode', required: false, description: 'Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only.' },
     { name: 'enableSorting', type: 'boolean', default: 'false', required: false, description: 'Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3).' },
     { name: 'enableRowSelection', type: 'boolean', default: 'false', required: false, description: 'Turns on row selection state.' },

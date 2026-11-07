@@ -154,6 +154,11 @@ export interface NexubMessages {
   stepCompleted: string;
   /** ResizablePanels separator. */
   resizePanels: string;
+  /** Sortable, Kanban and DataTable row handles. */
+  moveItem: (label: string) => string;
+  reorderHint: string;
+  itemMoved: (label: string, position: number, total: number) => string;
+  itemMovedToColumn: (label: string, column: string, position: number, total: number) => string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -341,6 +346,10 @@ export const defaultMessages: NexubMessages = {
   stepOf: (step, total) => `Step ${step} of ${total}`,
   stepCompleted: 'completed',
   resizePanels: 'Resize panels',
+  moveItem: (label) => `Move ${label}`,
+  reorderHint: 'Alt+Arrow keys move it',
+  itemMoved: (label, position, total) => `${label} moved to position ${position} of ${total}`,
+  itemMovedToColumn: (label, column, position, total) => `${label} moved to ${column}, position ${position} of ${total}`,
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',

@@ -34,6 +34,7 @@ import { Checkbox } from '../Checkbox/Checkbox.js';
 import { Button } from '../Button/Button.js';
 import { DropdownMenu } from '../DropdownMenu/DropdownMenu.js';
 import { createGridNavigation } from './gridNavigation.js';
+import { useReorder } from '../Sortable/reorder.js';
 
 type ColumnAlign = 'start' | 'end' | 'center';
 
@@ -281,6 +282,13 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   expanded?: ExpandedState;
   defaultExpanded?: ExpandedState;
   onExpandedChange?: (expanded: ExpandedState) => void;
+  /**
+   * Lets people reorder rows: a handle column (drag, or Alt+ArrowUp/Down on the
+   * handle). Called with the reordered data. Hidden while a column is sorted.
+   */
+  onRowOrderChange?: (data: TData[]) => void;
+  /** Names a row in "Move ‹label›" and the move announcements. @default its position */
+  getRowLabel?: (row: TData) => string;
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
@@ -322,6 +330,8 @@ export function DataTable<TData>({
   expanded: expandedProp,
   defaultExpanded,
   onExpandedChange,
+  onRowOrderChange,
+  getRowLabel,
   caption,
   captionHidden = false,
   className,
@@ -377,6 +387,13 @@ export function DataTable<TData>({
   });
 
   const withSelectColumn = enableRowSelection && selectionColumn;
+  const reorderRows = Boolean(onRowOrderChange) && sorting.length === 0;
+  const rowReorder = useReorder({
+    lists: [data],
+    getId: (r: TData) => (getRowId ? getRowId(r, data.indexOf(r)) : String(data.indexOf(r))),
+    getLabel: (r: TData) => getRowLabel?.(r) ?? String(data.indexOf(r) + 1),
+    onMove: (next) => onRowOrderChange?.(next[0]!),
+  });
   // The checkbox column stays first: pinned along with any left-pinned column.
   const columnPinning = React.useMemo<ColumnPinningState>(
     () =>
@@ -385,9 +402,27 @@ export function DataTable<TData>({
         : pinningIn,
     [withSelectColumn, pinningIn],
   );
+  const withRowHandles = React.useCallback(
+    (cols: DataTableColumn<TData>[]): DataTableColumn<TData>[] =>
+      reorderRows
+        ? [
+            {
+              id: '__drag',
+              enableSorting: false,
+              enableHiding: false,
+              header: () => null,
+              cell: ({ row }) => (row.depth === 0 ? rowReorder.handle([0, row.index]) : null),
+            },
+            ...cols,
+          ]
+        : cols,
+    // rowReorder changes every render; the handle reads fresh data through it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [reorderRows, data],
+  );
   const allColumns = React.useMemo<DataTableColumn<TData>[]>(
     () =>
-      withSelectColumn
+      withRowHandles(withSelectColumn
         ? [
             {
               id: '__select',
@@ -413,8 +448,8 @@ export function DataTable<TData>({
             },
             ...columns,
           ]
-        : columns,
-    [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow],
+        : columns),
+    [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow, withRowHandles],
   );
 
   // Memoize the state bag so a parent re-render with stable sort/selection/pagination
@@ -598,6 +633,7 @@ export function DataTable<TData>({
       <span aria-live="polite" className="sr-only">
         {announcement}
       </span>
+      {reorderRows && rowReorder.live}
       <TableRoot
         ref={tableRef}
         aria-label={ariaLabel}
@@ -626,7 +662,7 @@ export function DataTable<TData>({
                     className={cn(
                       alignText[align],
                       compact && 'h-8',
-                      col.id === '__select' && 'w-10',
+                      (col.id === '__select' || col.id === '__drag') && 'w-10',
                       // Anchors the resize handle; sticky (below) wins when set and anchors it too.
                       (enableColumnResizing || reorderable) && 'relative',
                       maxHeight != null && 'sticky top-0 z-[2] bg-[var(--color-surface)]',
@@ -744,6 +780,7 @@ export function DataTable<TData>({
                     data-index={i}
                     aria-rowindex={rowWin.virtual ? i + 2 : undefined}
                     data-state={enableRowSelection && row.getIsSelected() ? 'selected' : undefined}
+                    {...(reorderRows && row.depth === 0 ? rowReorder.itemProps([0, row.index]) : {})}
                   >
                     {row.getVisibleCells().map((cell, _i, cells) => (
                       <TableCell

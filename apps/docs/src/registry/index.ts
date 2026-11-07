@@ -75,6 +75,8 @@ import treeViewEntry from './components/tree-view';
 import stepperEntry from './components/stepper';
 import resizablePanelsEntry from './components/resizable-panels';
 import actionBarEntry from './components/action-bar';
+import sortableEntry from './components/sortable';
+import kanbanEntry from './components/kanban';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -277,6 +279,8 @@ export const componentEntries: ComponentEntry[] = [
   tableEntry,
   dataTableEntry,
   eventCalendarEntry,
+  sortableEntry,
+  kanbanEntry,
   emptyStateEntry,
   errorStateEntry,
   numberTickerEntry,
