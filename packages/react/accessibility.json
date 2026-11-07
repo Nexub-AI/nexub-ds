@@ -1205,6 +1205,24 @@
       "screenReader": []
     },
     {
+      "slug": "tree-view",
+      "name": "Tree View",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "ArrowDown / ArrowUp: Next or previous visible item.",
+        "ArrowRight: Opens a closed item, or moves to its first child. Mirrored in RTL.",
+        "ArrowLeft: Closes an open item, or moves to its parent. Mirrored in RTL.",
+        "Home / End: First or last visible item.",
+        "Enter / Space: Selects the item, or toggles its checkbox.",
+        "Type a letter: Moves to the next item starting with the typed text."
+      ],
+      "screenReader": [
+        "The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item."
+      ]
+    },
+    {
       "slug": "activity-feed",
       "name": "ActivityFeed",
       "package": "@nexub/patterns",

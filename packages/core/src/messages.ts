@@ -146,6 +146,9 @@ export interface NexubMessages {
   calendarView: string;
   monthView: string;
   weekView: string;
+  /** DataTable sub-row toggle. */
+  expandRow: string;
+  collapseRow: string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -328,6 +331,8 @@ export const defaultMessages: NexubMessages = {
   calendarView: 'Calendar view',
   monthView: 'Month',
   weekView: 'Week',
+  expandRow: 'Expand row',
+  collapseRow: 'Collapse row',
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
