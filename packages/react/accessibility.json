@@ -2,9 +2,9 @@
   "version": "5.7.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
-    "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.",
+    "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
     "contrast": "Every colour role pair is tested for 4.5:1 (text) and 3:1 (non-text) at standard, medium and high contrast in light and dark.",
-    "manual": "Keyboard behaviour and screen-reader output are documented per component; recorded VoiceOver, NVDA and TalkBack sessions are not published yet."
+    "manual": "Keyboard behaviour and screen-reader output are documented per component, with step-by-step VoiceOver and NVDA scripts for the complex ones (/foundations/accessibility#screen-reader-scripts); recorded sessions are not published yet."
   },
   "exceptions": [
     {
@@ -310,8 +310,19 @@
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
-      "keyboard": [],
-      "screenReader": []
+      "keyboard": [
+        "Tab: Without `grid`: every control in the table is a tab stop. With `grid`: the table is one tab stop and remembers the last cell.",
+        "Arrow keys: With `grid`: move between cells, and between the controls inside a cell. Mirrored in RTL.",
+        "Home / End: With `grid`: first or last cell in the row. Ctrl+Home / Ctrl+End: first or last cell in the grid.",
+        "Space: Toggles a focused row checkbox.",
+        "Alt+Arrow: Moves a focused header when `enableColumnReordering` is on."
+      ],
+      "screenReader": [
+        "Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.",
+        "Sorting, selection counts and column moves are announced from a polite live region.",
+        "DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.",
+        "With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none."
+      ]
     },
     {
       "slug": "date-picker",

@@ -31,6 +31,7 @@ const entry: ComponentEntry = {
     { name: 'columnOrder / onColumnOrderChange', type: 'string[]', required: false, description: 'Column ids in display order (5.4).' },
     { name: 'columnPinning / onColumnPinningChange', type: '{ left?: string[]; right?: string[] }', required: false, description: 'Columns that stay in view while the rest scroll sideways (5.4). The selection column pins with them.' },
     { name: 'maxHeight', type: 'number | string', required: false, description: 'Caps the height: rows scroll and the header sticks (5.4).' },
+    { name: 'grid', type: 'boolean', default: 'false', required: false, description: 'ARIA grid keyboard model for tables whose cells hold actions (5.8): the table is one tab stop; Arrow keys move between cells and the controls in them, Home/End to the row ends, Ctrl+Home/End to the corners.' },
     { name: 'DataTableVirtual', type: "import from '@nexub/react/DataTableVirtual'", required: false, description: 'Same props plus `maxHeight` (required), `estimateRowHeight` and `overscan`: renders only the rows in view, for thousands of rows. Needs `@tanstack/react-virtual` installed (5.4). No pagination.' },
     { name: 'pagination.pageSize', type: 'number', default: '20', required: false, description: 'Rows per page; pagination is on when `pagination` is set.' },
   ],
@@ -54,6 +55,23 @@ const entry: ComponentEntry = {
       description: "`import { DataTableVirtual } from '@nexub/react/DataTableVirtual'` and install `@tanstack/react-virtual`. Only the rows in view are rendered.",
     },
   ],
+  a11y: {
+    roles: ['table (default)', 'grid (with `grid`)', 'columnheader with aria-sort when sortable'],
+    keyboard: [
+      { key: 'Tab', description: 'Without `grid`: every control in the table is a tab stop. With `grid`: the table is one tab stop and remembers the last cell.' },
+      { key: 'Arrow keys', description: 'With `grid`: move between cells, and between the controls inside a cell. Mirrored in RTL.' },
+      { key: 'Home / End', description: 'With `grid`: first or last cell in the row. Ctrl+Home / Ctrl+End: first or last cell in the grid.' },
+      { key: 'Space', description: 'Toggles a focused row checkbox.' },
+      { key: 'Alt+Arrow', description: 'Moves a focused header when `enableColumnReordering` is on.' },
+    ],
+    focus: ['With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none.'],
+    screenReader: [
+      'Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.',
+      'Sorting, selection counts and column moves are announced from a polite live region.',
+      'DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.',
+    ],
+    notes: ['Use `grid` when rows hold actions (edit, menus); plain tables of text read better as a table.'],
+  },
 };
 
 export default entry;

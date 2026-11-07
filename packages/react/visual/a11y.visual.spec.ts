@@ -82,3 +82,45 @@ for (const { id } of stories) {
     });
   }
 }
+
+// Popups render in portals outside #storybook-root, so the per-story scan above never
+// sees them open. Open each one and scan the popup itself (light theme). Scanning the
+// page would flag the trigger behind a modal (aria-hidden by the focus trap, which
+// keeps it unreachable): that's the intended modal pattern, not a defect.
+const OPEN: { id: string; trigger?: string }[] = [
+  { id: 'components-multiselect--default', trigger: '[role=combobox]' },
+  { id: 'components-autocomplete--popover', trigger: '[role=combobox]' },
+  { id: 'components-savedviews--default', trigger: 'button' },
+  { id: 'forms-daterangepicker--default', trigger: 'button' },
+  { id: 'navigation-commandpalette--default' }, // story renders it open
+  { id: 'overlays-alertdialog--type-to-confirm', trigger: 'button' },
+  { id: 'data-display-datatable--selection', trigger: 'button[aria-haspopup=menu]' },
+];
+const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
+
+for (const { id, trigger } of OPEN) {
+  test(`a11y ${id} open`, async ({ page }) => {
+    await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=theme:light;brand:none`);
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    await page.evaluate(() => document.fonts.ready);
+    if (trigger) await page.locator(`#storybook-root ${trigger}`).first().click();
+    await page.locator(POPUP).first().waitFor();
+    await page.evaluate(() =>
+      Promise.all(
+        document
+          .getAnimations()
+          .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+          .map((a) => a.finished.catch(() => undefined)),
+      ),
+    );
+    await page.addScriptTag({ path: axePath });
+    const violations = await page.evaluate(async ({ tags, popup }) => {
+      // @ts-expect-error injected global
+      const r = await window.axe.run({ include: Array.from(document.querySelectorAll(popup)) }, { runOnly: { type: 'tag', values: tags } });
+      return (r.violations as { id: string; nodes: { target: string[]; failureSummary: string }[] }[]).map(
+        (v) => ({ id: v.id, nodes: v.nodes.slice(0, 3).map((n) => `${n.target.join(' ')}: ${n.failureSummary}`) }),
+      );
+    }, { tags: TAGS, popup: POPUP });
+    expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
+  });
+}
