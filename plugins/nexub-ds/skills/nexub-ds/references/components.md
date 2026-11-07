@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v6.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -36,6 +36,7 @@ Never use a component marked deprecated.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Event Calendar](components/event-calendar.md) `@nexub/react`: A month or week grid of events. Display only: your app owns the events and what a click does.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
@@ -67,6 +68,7 @@ Never use a component marked deprecated.
 
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
 - [Form](components/form.md) `@nexub/react`: Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
 - [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
@@ -79,6 +81,7 @@ Never use a component marked deprecated.
 - [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
 - [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
 - [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
+- [Time Picker](components/time-picker.md) `@nexub/react`: A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 
 ## Components — Form Controls
 

@@ -1,5 +1,5 @@
 {
-  "version": "6.0.0",
+  "version": "6.1.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -343,6 +343,15 @@
       "screenReader": []
     },
     {
+      "slug": "date-time-picker",
+      "name": "Date Time Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "dialog",
       "name": "Dialog",
       "package": "@nexub/react",
@@ -395,6 +404,15 @@
     {
       "slug": "error-state",
       "name": "Error State",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "event-calendar",
+      "name": "Event Calendar",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -1126,6 +1144,18 @@
         "A polite live region: the label is announced once when it mounts. Changing the label announces the new step.",
         "Render it only while waiting and remove it when tokens start, so it is not announced again."
       ]
+    },
+    {
+      "slug": "time-picker",
+      "name": "Time Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "ArrowUp / ArrowDown: Changes the focused segment (hour, minute, AM/PM).",
+        "ArrowLeft / ArrowRight: Moves between segments."
+      ],
+      "screenReader": []
     },
     {
       "slug": "toast",

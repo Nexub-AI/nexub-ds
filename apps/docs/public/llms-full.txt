@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v6.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v6.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v6.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -386,6 +386,7 @@ Never use a component marked deprecated.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Event Calendar](components/event-calendar.md) `@nexub/react`: A month or week grid of events. Display only: your app owns the events and what a click does.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
@@ -417,6 +418,7 @@ Never use a component marked deprecated.
 
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
 - [Form](components/form.md) `@nexub/react`: Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
 - [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
@@ -429,6 +431,7 @@ Never use a component marked deprecated.
 - [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
 - [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
 - [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
+- [Time Picker](components/time-picker.md) `@nexub/react`: A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 
 ## Components — Form Controls
 
@@ -2857,6 +2860,53 @@ export default function Example() {
 
 ---
 
+# Date Time Picker
+
+A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { DateTimePicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/date-time-picker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / onChange` | `Date \| undefined` |  | Date and time in the reader’s local time. |
+| `defaultTime` | `string` | `'09:00'` | Time used when the date is picked first. |
+| `minuteStep` | `number` |  | Passed to the TimePicker. |
+| `minDate / maxDate` | `Date` |  | Limits the calendar. |
+| `timeZone` | `string` |  | IANA zone named next to the fields, e.g. "Time zone: GMT+8 (Asia/Singapore)". Label only. |
+| `aria-label` | `string` |  | Names the group; the parts read "Date" and "Time". |
+
+## Example: Meeting start
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { DateTimePicker } from '@nexub/react';
+
+export default function Example() {
+  const [starts, setStarts] = React.useState<Date | undefined>();
+  return (
+    <div className="flex w-full max-w-md flex-col gap-2">
+      <DateTimePicker aria-label="Meeting starts" value={starts} onChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
+      <p className="text-body-sm text-[var(--color-on-surface-muted)]">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- A labelled group holding the DatePicker button and the native time input.
+
+Related: [date-picker](date-picker.md), [time-picker](time-picker.md)
+
+
+---
+
 # Dialog
 
 Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
@@ -3264,6 +3314,71 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Event Calendar
+
+A month or week grid of events. Display only: your app owns the events and what a click does.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { EventCalendar } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/event-calendar
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `events` (required) | `CalendarEvent[]` |  | `{ id, title, start, end?, allDay?, tone? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. |
+| `date / defaultDate / onDateChange` | `Date` |  | Any day in the shown month or week; Today and the arrows change it. |
+| `view / defaultView / onViewChange` | `'month' \| 'week'` | `'month'` | Week shows every event; month shows `maxEventsPerDay` then "N more". |
+| `onEventClick` | `(event) => void` |  | Makes events buttons. |
+| `onDayClick` | `(date) => void` |  | Makes day numbers and "N more" buttons, for example to open the day. |
+| `maxEventsPerDay` | `number` | `3` | Month view only. |
+| `weekStartsOn` | `0–6` |  | Defaults to the locale’s first day (Monday for en-GB, Sunday for en-US). |
+
+## Example: Team calendar
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { EventCalendar, type CalendarEvent } from '@nexub/react';
+
+const today = new Date();
+const on = (day: number, hour?: number) => new Date(today.getFullYear(), today.getMonth(), day, hour ?? 0);
+
+const events: CalendarEvent[] = [
+  { id: '1', title: 'Design review', start: on(3, 10) },
+  { id: '2', title: 'Offsite', start: on(11), end: on(12), allDay: true, tone: 'success' },
+  { id: '3', title: 'Standup', start: on(16, 9) },
+  { id: '4', title: 'Launch', start: on(16, 14), tone: 'warning' },
+  { id: '5', title: 'Retro', start: on(16, 16) },
+  { id: '6', title: 'Incident review', start: on(16, 17), tone: 'error' },
+];
+
+export default function Example() {
+  const [picked, setPicked] = React.useState('');
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <EventCalendar
+        events={events}
+        onEventClick={(e) => setPicked(e.title)}
+        onDayClick={(d) => setPicked(d.toDateString())}
+      />
+      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{picked && `Opened: ${picked}`}</p>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.
+- The title is a polite live region, so Today and the arrows announce the new month or week.
+
+Related: [date-picker](date-picker.md), [date-time-picker](date-time-picker.md)
 
 
 ---
@@ -7297,6 +7412,50 @@ export default function Example() {
 - With reduced motion the shape and shimmer are static.
 
 Related: [streaming-text](streaming-text.md), [spinner](spinner.md), [conversation](conversation.md)
+
+
+---
+
+# Time Picker
+
+A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { TimePicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/time-picker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue / onValueChange` | `string` |  | 24-hour `"HH:mm"`, whatever the display format. |
+| `minuteStep` | `number` | `1` | Minutes per step for the arrow keys and the picker. |
+| `min / max / required / name` | `string \| boolean` |  | Native attributes; Form validates them. |
+
+## Example: Reminder time
+
+```tsx
+import { FormField, TimePicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <FormField.Root name="reminder" className="w-40">
+      <FormField.Label>Remind me at</FormField.Label>
+      <FormField.Control>
+        <TimePicker defaultValue="09:00" minuteStep={15} />
+      </FormField.Control>
+    </FormField.Root>
+  );
+}
+```
+
+## Accessibility
+
+- `ArrowUp / ArrowDown`: Changes the focused segment (hour, minute, AM/PM).
+- `ArrowLeft / ArrowRight`: Moves between segments.
+- Native `<input type="time">`: screen readers announce each segment, and phones open their own time picker.
+
+Related: [date-time-picker](date-time-picker.md), [date-picker](date-picker.md)
 
 
 ---
