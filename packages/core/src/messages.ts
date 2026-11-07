@@ -149,6 +149,11 @@ export interface NexubMessages {
   /** DataTable sub-row toggle. */
   expandRow: string;
   collapseRow: string;
+  /** Stepper, e.g. "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
+  stepCompleted: string;
+  /** ResizablePanels separator. */
+  resizePanels: string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -333,6 +338,9 @@ export const defaultMessages: NexubMessages = {
   weekView: 'Week',
   expandRow: 'Expand row',
   collapseRow: 'Collapse row',
+  stepOf: (step, total) => `Step ${step} of ${total}`,
+  stepCompleted: 'completed',
+  resizePanels: 'Resize panels',
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
