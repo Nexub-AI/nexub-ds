@@ -525,6 +525,36 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
+      - openLink: nexub://preview/multi-select?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-multi-select-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: multi-select--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/filter-sheet?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-filter-sheet-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: filter-sheet--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
       - openLink: nexub://preview/card?ex=0
       - runFlow:
           when:
@@ -582,6 +612,36 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: list-section--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/data-list?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-data-list-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: data-list--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/file-list?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-file-list-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: file-list--0--${maestro.platform}
 - retry:
     maxRetries: 1
     commands:

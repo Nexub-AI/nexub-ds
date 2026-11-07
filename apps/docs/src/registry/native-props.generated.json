@@ -326,6 +326,270 @@
       }
     ]
   },
+  "MultiSelect": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "options",
+        "type": "readonly MultiSelectOption<T>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "T[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "T[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: T[]) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "searchable",
+        "type": "boolean",
+        "required": false,
+        "description": "A search field above the options."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "DataList": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "readonly T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "keyExtractor",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "subtitle",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": "Trailing key value, e.g. an amount or status."
+      },
+      {
+        "name": "leading",
+        "type": "(item: T) => React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onPressItem",
+        "type": "(item: T) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "sorts",
+        "type": "DataListSort<T>[]",
+        "required": false,
+        "description": "Sort choices; a Sort button opens them in a sheet."
+      },
+      {
+        "name": "sort",
+        "type": "{ id: string; desc: boolean }",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultSort",
+        "type": "{ id: string; desc: boolean }",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSortChange",
+        "type": "(sort: { id: string; desc: boolean }) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "selectable",
+        "type": "boolean",
+        "required": false,
+        "description": "Checkbox rows; the selection bar shows `bulkActions` while rows are selected."
+      },
+      {
+        "name": "selected",
+        "type": "string[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSelectedChange",
+        "type": "(keys: string[]) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "bulkActions",
+        "type": "(keys: string[], clear: () => void) => React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "empty",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when `data` is empty."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "FileList": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "files",
+        "type": "FileListItem[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onAdd",
+        "type": "() => void",
+        "required": false,
+        "description": "Opens your picker (expo-document-picker, image picker…); add what it returns to `files`."
+      },
+      {
+        "name": "onRemove",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onCancel",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": "Stops an upload in progress."
+      },
+      {
+        "name": "addLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "FilterSheet": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "fields",
+        "type": "FilterField[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "FilterGroup",
+        "required": true,
+        "description": "The same JSON as the web FilterBuilder. Mobile edits one flat AND/OR list; nested groups are kept as they are."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: FilterGroup) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "Amount": {
     "file": "components/display.tsx",
     "extends": [],

@@ -49,11 +49,15 @@ export const CATALOG = {
   slider: { title: 'Slider', kind: 'component', web: 'slider', examples: ['Formatted value'] },
   select: { title: 'Select', kind: 'component', web: 'select', examples: ['Opens a sheet'] },
   'date-time-field': { title: 'DateTimeField', kind: 'component', web: 'date-picker', examples: ['Date'] },
+  'multi-select': { title: 'MultiSelect', kind: 'component', web: 'multi-select', examples: ['Labels in a sheet'] },
+  'filter-sheet': { title: 'FilterSheet', kind: 'component', web: 'filter-builder', examples: ['Deal filters'] },
 
   // Lists and containers
   card: { title: 'Card', kind: 'component', web: 'card', examples: ['Balance card'] },
   'list-item': { title: 'ListItem', kind: 'component', web: null, examples: ['Navigation and value', 'Switch and radio'] },
   'list-section': { title: 'ListSection', kind: 'component', web: null, examples: ['Inset grouped'] },
+  'data-list': { title: 'DataList', kind: 'component', web: 'data-table', examples: ['Sort and select'] },
+  'file-list': { title: 'FileList', kind: 'mobile', web: null, examples: ['Uploading'] },
   accordion: { title: 'Accordion', kind: 'component', web: 'accordion', examples: ['FAQ'] },
   amount: { title: 'Amount', kind: 'component', web: 'amount', examples: ['Display size', 'Signed tones'] },
   divider: { title: 'Divider', kind: 'component', web: 'separator', examples: ['Inset'] },
@@ -73,7 +77,7 @@ export const CATALOG = {
   'action-sheet': { title: 'ActionSheet', kind: 'mobile', web: null, examples: ['Card actions'] },
   'context-menu': { title: 'ContextMenu', kind: 'mobile', web: null, examples: ['Long-press to copy'] },
   'swipeable-row': { title: 'SwipeableRow', kind: 'mobile', web: null, examples: ['Swipe actions'] },
-  'otp-input': { title: 'OTPInput', kind: 'mobile', web: null, examples: ['Six digits'] },
+  'otp-input': { title: 'OTPInput', kind: 'component', web: 'otp-input', examples: ['Six digits'] },
   'numeric-keypad': { title: 'NumericKeypad', kind: 'mobile', web: null, examples: ['Decimal'] },
   'expressive-money-input': { title: 'ExpressiveMoneyInput', kind: 'mobile', web: null, examples: ['Amount to send'] },
   'sensitive-value': { title: 'SensitiveValue', kind: 'mobile', web: null, examples: ['Hidden balance'] },
@@ -109,6 +113,7 @@ export const SECTIONS = {
   lists: [
     { heading: 'Cards', slugs: ['card', 'amount'] },
     { heading: 'Lists', slugs: ['list-section', 'list-item', 'divider'] },
+    { heading: 'Data', slugs: ['data-list', 'file-list'] },
     { heading: 'FAQ', slugs: ['accordion'] },
   ],
   feedback: [
@@ -118,7 +123,7 @@ export const SECTIONS = {
     { heading: 'States', slugs: ['empty-state', 'error-state'] },
   ],
   mobile: [
-    { heading: 'Sheets and menus', slugs: ['bottom-sheet', 'action-sheet', 'select', 'date-time-field'] },
+    { heading: 'Sheets and menus', slugs: ['bottom-sheet', 'action-sheet', 'select', 'multi-select', 'filter-sheet', 'date-time-field'] },
     { heading: 'Money', slugs: ['sensitive-value', 'expressive-money-input', 'numeric-keypad'] },
     { heading: 'Swipe and long-press', slugs: ['swipeable-row', 'context-menu'] },
     { heading: 'Verify', slugs: ['otp-input'] },
