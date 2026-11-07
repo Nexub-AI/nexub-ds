@@ -135,6 +135,11 @@ export interface NexubMessages {
   /** FileUpload per-file progress and cancel. */
   uploadProgress: (fileName: string, percent: number) => string;
   cancelUpload: (fileName: string) => string;
+  /** Mobile DataList sort sheet. */
+  sortBy: string;
+  sortDirection: string;
+  ascending: string;
+  descending: string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -304,6 +309,10 @@ export const defaultMessages: NexubMessages = {
   verificationCode: 'Verification code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
+  sortBy: 'Sort',
+  sortDirection: 'Direction',
+  ascending: 'Ascending',
+  descending: 'Descending',
   previous: 'Previous',
   next: 'Next',
   search: 'Search',

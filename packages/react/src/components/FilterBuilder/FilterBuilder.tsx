@@ -2,7 +2,19 @@
 
 import * as React from 'react';
 import { Plus, X } from '@nexub/icons';
-import type { NexubMessages } from '@nexub/core';
+import {
+  countFilters,
+  emptyFilter,
+  filterId as uid,
+  filterOperators,
+  isFilterGroup,
+  newFilterRule,
+  type FilterField,
+  type FilterFieldType,
+  type FilterGroup,
+  type FilterOperator,
+  type FilterRule,
+} from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -12,54 +24,8 @@ import { Input } from '../Input/Input.js';
 import { Select } from '../Select/Select.js';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl.js';
 
-export type FilterFieldType = 'text' | 'number' | 'select' | 'date';
-export type FilterOperator = keyof NexubMessages['filterOperators'];
-
-export interface FilterField {
-  id: string;
-  label: string;
-  type: FilterFieldType;
-  /** Choices for `type: 'select'`. */
-  options?: { value: string; label: string }[];
-}
-
-export interface FilterRule {
-  id: string;
-  field: string;
-  operator: FilterOperator;
-  /** Always a string (dates as YYYY-MM-DD), so the query serialises as-is. */
-  value: string;
-}
-
-export interface FilterGroup {
-  id: string;
-  combinator: 'and' | 'or';
-  rules: Array<FilterRule | FilterGroup>;
-}
-
-/** Operators offered for each field type, in menu order. */
-export const filterOperators: Record<FilterFieldType, FilterOperator[]> = {
-  text: ['contains', 'equals', 'notEquals', 'startsWith', 'isEmpty'],
-  number: ['equals', 'notEquals', 'greaterThan', 'lessThan'],
-  select: ['equals', 'notEquals'],
-  date: ['equals', 'before', 'after'],
-};
-
-export const isFilterGroup = (r: FilterRule | FilterGroup): r is FilterGroup => 'rules' in r;
-
-let seq = 0;
-const uid = () => `f${(++seq).toString(36)}${Math.random().toString(36).slice(2, 6)}`;
-
-/** An empty top-level group, a starting `value`. */
-export const emptyFilter = (): FilterGroup => ({ id: uid(), combinator: 'and', rules: [] });
-
-/** Rules with a field, operator and (unless "is empty") a value. Counts nested groups too. */
-export function countFilters(group: FilterGroup): number {
-  return group.rules.reduce(
-    (n, r) => n + (isFilterGroup(r) ? countFilters(r) : r.operator === 'isEmpty' || r.value !== '' ? 1 : 0),
-    0,
-  );
-}
+export type { FilterFieldType, FilterOperator, FilterField, FilterRule, FilterGroup };
+export { filterOperators, isFilterGroup, emptyFilter, countFilters };
 
 export interface FilterBuilderProps {
   fields: FilterField[];
@@ -109,12 +75,7 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
   const t = useNexubMessages();
   const first = fields[0];
   const setRules = (rules: FilterGroup['rules']) => onChange({ ...group, rules });
-  const newRule = (): FilterRule => ({
-    id: uid(),
-    field: first?.id ?? '',
-    operator: filterOperators[first?.type ?? 'text'][0]!,
-    value: '',
-  });
+  const newRule = () => newFilterRule(first);
 
   return (
     <div
