@@ -71,6 +71,7 @@ import inlineEditEntry from './components/inline-edit';
 import timePickerEntry from './components/time-picker';
 import dateTimePickerEntry from './components/date-time-picker';
 import eventCalendarEntry from './components/event-calendar';
+import treeViewEntry from './components/tree-view';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -265,6 +266,7 @@ export const componentEntries: ComponentEntry[] = [
   sheetEntry,
   // Navigation
   breadcrumbEntry,
+  treeViewEntry,
   paginationEntry,
   // Data Display
   tableEntry,

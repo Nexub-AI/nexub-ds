@@ -7,6 +7,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getExpandedRowModel,
   flexRender,
   type ColumnDef,
   type SortingState,
@@ -19,8 +20,9 @@ import {
   type ColumnOrderState,
   type ColumnPinningState,
   type Column,
+  type ExpandedState,
 } from '@tanstack/react-table';
-import { ArrowUp, ArrowDown, ChevronsUpDown, SlidersHorizontal, X } from '@nexub/icons';
+import { ArrowUp, ArrowDown, ChevronDown, ChevronRight, ChevronsUpDown, SlidersHorizontal, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, pressable } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
@@ -175,6 +177,46 @@ const useAllRows: DataTableRowWindowHook = (count) => ({
   after: 0,
 });
 
+/** First cell of a tree-table row: indent per level and the expand toggle. */
+function TreeCell({
+  row,
+  expandLabel,
+  collapseLabel,
+  children,
+}: {
+  row: { depth: number; getCanExpand: () => boolean; getIsExpanded: () => boolean; toggleExpanded: () => void };
+  expandLabel: string;
+  collapseLabel: string;
+  children: React.ReactNode;
+}) {
+  const open = row.getIsExpanded();
+  const ref = React.useCallback(
+    (el: HTMLDivElement | null) => {
+      // CSSOM so strict-CSP pages still get the indent.
+      if (el) el.style.paddingInlineStart = `${row.depth * 1.5}rem`;
+    },
+    [row.depth],
+  );
+  return (
+    <div ref={ref} className="flex items-center gap-1">
+      {row.getCanExpand() ? (
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-label={open ? collapseLabel : expandLabel}
+          onClick={row.toggleExpanded}
+          className="-ms-1 inline-flex size-6 shrink-0 items-center justify-center rounded-shape-min text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
+        >
+          {open ? <ChevronDown size="xs" aria-hidden="true" /> : <ChevronRight size="xs" aria-hidden="true" className="rtl:-scale-x-100" />}
+        </button>
+      ) : (
+        <span className="-ms-1 size-6 shrink-0" aria-hidden="true" />
+      )}
+      {children}
+    </div>
+  );
+}
+
 /** CSSOM, not a style attribute: strict CSP pages block inline styles. */
 const px = (n: number | string) => (typeof n === 'number' ? `${n}px` : n);
 
@@ -230,6 +272,15 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   /** Rows to render; set by DataTableVirtual. */
   rowWindow?: DataTableRowWindowHook;
   pagination?: { pageSize?: number };
+  /**
+   * Nested rows (a tree table): return a row's children. The first column gets
+   * an expand toggle and indents each level. Sorting sorts within each level.
+   */
+  getSubRows?: (row: TData, index: number) => TData[] | undefined;
+  /** Expanded rows by id, or `true` for all. */
+  expanded?: ExpandedState;
+  defaultExpanded?: ExpandedState;
+  onExpandedChange?: (expanded: ExpandedState) => void;
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
@@ -267,6 +318,10 @@ export function DataTable<TData>({
   grid = false,
   rowWindow,
   pagination,
+  getSubRows,
+  expanded: expandedProp,
+  defaultExpanded,
+  onExpandedChange,
   caption,
   captionHidden = false,
   className,
@@ -306,6 +361,11 @@ export function DataTable<TData>({
     value: columnPinningProp,
     defaultValue: {},
     onChange: onColumnPinningChange,
+  });
+  const [expanded = {}, setExpanded] = useControllableState<ExpandedState>({
+    value: expandedProp,
+    defaultValue: defaultExpanded ?? {},
+    onChange: onExpandedChange,
   });
   const [announcement, setAnnouncement] = React.useState('');
   const tableRef = React.useRef<HTMLTableElement>(null);
@@ -368,9 +428,12 @@ export function DataTable<TData>({
       columnSizing,
       columnOrder,
       columnPinning,
+      expanded: getSubRows ? expanded : undefined,
     }),
 
     [
+      getSubRows,
+      expanded,
       enableSorting,
       sorting,
       enableRowSelection,
@@ -403,6 +466,12 @@ export function DataTable<TData>({
     getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: pagination ? getPaginationRowModel() : undefined,
+    getSubRows,
+    getExpandedRowModel: getSubRows ? getExpandedRowModel() : undefined,
+    onExpandedChange: getSubRows ? (u) => setExpanded(apply(u, expanded)) : undefined,
+    // With pages, count top-level rows so a parent and its children stay together
+    // (TanStack then expands inside the page model; without pages it must not).
+    paginateExpandedRows: !pagination,
     enableRowSelection,
     manualPagination: false,
   });
@@ -676,7 +745,7 @@ export function DataTable<TData>({
                     aria-rowindex={rowWin.virtual ? i + 2 : undefined}
                     data-state={enableRowSelection && row.getIsSelected() ? 'selected' : undefined}
                   >
-                    {row.getVisibleCells().map((cell) => (
+                    {row.getVisibleCells().map((cell, _i, cells) => (
                       <TableCell
                         key={cell.id}
                         ref={pinned || enableColumnResizing ? placeCell(cell.column) : undefined}
@@ -687,7 +756,13 @@ export function DataTable<TData>({
                           enableColumnResizing && 'truncate',
                         )}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {getSubRows && cell === cells.find((c) => c.column.id !== '__select') ? (
+                          <TreeCell row={row} expandLabel={messages.expandRow} collapseLabel={messages.collapseRow}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TreeCell>
+                        ) : (
+                          flexRender(cell.column.columnDef.cell, cell.getContext())
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
