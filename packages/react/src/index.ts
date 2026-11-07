@@ -309,6 +309,8 @@ export { DateTimePicker } from './components/DateTimePicker/index.js';
 export type { DateTimePickerProps } from './components/DateTimePicker/index.js';
 export { EventCalendar } from './components/EventCalendar/index.js';
 export type { EventCalendarProps, EventCalendarView, CalendarEvent, EventTone } from './components/EventCalendar/index.js';
+export { TreeView } from './components/TreeView/index.js';
+export type { TreeViewProps, TreeNode } from './components/TreeView/index.js';
 export type { OTPInputProps } from './components/OTPInput/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
 export type { DatePickerProps } from './components/DatePicker/index.js';
