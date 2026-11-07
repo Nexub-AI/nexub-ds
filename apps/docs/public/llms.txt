@@ -43,12 +43,14 @@ Version 6.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Data Table](https://nexub-ds-docs.pages.dev/components/data-table.md): Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
 - [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker.md): Dual-calendar date range selector.
+- [Date Time Picker](https://nexub-ds-docs.pages.dev/components/date-time-picker.md): A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Dialog](https://nexub-ds-docs.pages.dev/components/dialog.md): Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
 - [Diff View](https://nexub-ds-docs.pages.dev/components/diff-view.md): A unified diff with added and removed lines, for agent changes.
 - [Donut Chart](https://nexub-ds-docs.pages.dev/components/donut-chart.md): Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Drawer](https://nexub-ds-docs.pages.dev/components/drawer.md): Slide-in panel from any edge of the screen.
 - [Empty State](https://nexub-ds-docs.pages.dev/components/empty-state.md): Placeholder UI shown when a list or page has no content.
 - [Error State](https://nexub-ds-docs.pages.dev/components/error-state.md): Full-page or section error view with retry action.
+- [Event Calendar](https://nexub-ds-docs.pages.dev/components/event-calendar.md): A month or week grid of events. Display only: your app owns the events and what a click does.
 - [Eyebrow Chip](https://nexub-ds-docs.pages.dev/components/eyebrow-chip.md): A compact eyebrow label, typically used above headings.
 - [Fieldset](https://nexub-ds-docs.pages.dev/components/fieldset.md): Groups related fields under a legend; disabling it disables everything inside.
 - [Filter Builder](https://nexub-ds-docs.pages.dev/components/filter-builder.md): Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
@@ -120,6 +122,7 @@ Version 6.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Text](https://nexub-ds-docs.pages.dev/components/text.md): Paragraph text component with size, tone, and weight variants.
 - [Textarea](https://nexub-ds-docs.pages.dev/components/textarea.md): A multi-line text input with configurable resize behaviour, size, and validation states.
 - [Thinking Indicator](https://nexub-ds-docs.pages.dev/components/thinking-indicator.md): Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
+- [Time Picker](https://nexub-ds-docs.pages.dev/components/time-picker.md): A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 - [Toast](https://nexub-ds-docs.pages.dev/components/toast.md): Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 - [Toggle Group](https://nexub-ds-docs.pages.dev/components/toggle-group.md): Group of toggle buttons where one or many can be active.
 - [Toggle](https://nexub-ds-docs.pages.dev/components/toggle.md): Pressable toggle button built on Radix UI Toggle.

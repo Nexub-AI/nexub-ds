@@ -68,6 +68,9 @@ import otpInputEntry from './components/otp-input';
 import formEntry from './components/form';
 import fieldsetEntry from './components/fieldset';
 import inlineEditEntry from './components/inline-edit';
+import timePickerEntry from './components/time-picker';
+import dateTimePickerEntry from './components/date-time-picker';
+import eventCalendarEntry from './components/event-calendar';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -211,6 +214,8 @@ export const componentEntries: ComponentEntry[] = [
   inlineEditEntry,
   datePickerEntry,
   dateRangePickerEntry,
+  timePickerEntry,
+  dateTimePickerEntry,
   // Labels & Badges
   badgeEntry,
   filterChipEntry,
@@ -264,6 +269,7 @@ export const componentEntries: ComponentEntry[] = [
   // Data Display
   tableEntry,
   dataTableEntry,
+  eventCalendarEntry,
   emptyStateEntry,
   errorStateEntry,
   numberTickerEntry,
