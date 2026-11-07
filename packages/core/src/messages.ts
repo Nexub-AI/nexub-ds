@@ -168,6 +168,10 @@ export interface NexubMessages {
   zoomStart: string;
   zoomEnd: string;
   resetZoom: string;
+  /** React Native SortableList and TreeList. */
+  moveUp: string;
+  moveDown: string;
+  backTo: (label: string) => string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -366,6 +370,9 @@ export const defaultMessages: NexubMessages = {
   zoomStart: 'Zoom start',
   zoomEnd: 'Zoom end',
   resetZoom: 'Reset zoom',
+  moveUp: 'Move up',
+  moveDown: 'Move down',
+  backTo: (label) => `Back to ${label}`,
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
