@@ -20,7 +20,7 @@ const entry: ComponentEntry = {
     { name: 'loading', type: 'boolean', required: false, description: 'Skeleton rows while options are being fetched (5.2); "Loading" is announced.' },
     { name: 'inputValue', type: 'string', required: false, description: 'Controlled input text (5.1).' },
     { name: 'onInputChange', type: '(text: string) => void', required: false, description: 'Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering.' },
-    { name: 'mode', type: "'inline' | 'popover'", default: "'inline'", required: false, description: 'Popover (5.2): a field whose list opens below it while typing. Inline keeps the list always visible; it stays the default until 6.0.' },
+    { name: 'mode', type: "'inline' | 'popover'", default: "'popover'", required: false, description: 'Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x.' },
     { name: 'onCreate', type: '(text: string) => void', required: false, description: 'Adds a "Create “text”" option when the text matches no option (5.2).' },
     { name: 'aria-label', type: 'string', required: false, description: 'Accessible name of the field when it has no visible label.' },
   ],
@@ -35,7 +35,7 @@ const entry: ComponentEntry = {
       title: 'Custom empty text',
     },
     {
-      title: 'Popover, fetch as you type',
+      title: 'Fetch as you type',
       description: '`mode="popover"` with `onInputChange`: the app filters, the list shows skeleton rows while loading.',
     },
   ],

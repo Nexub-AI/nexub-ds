@@ -37,7 +37,6 @@ export default function Example() {
         getRowId={(r) => r.id}
         enableSorting
         enableRowSelection
-        selectionColumn
         rowSelection={selection}
         onRowSelectionChange={setSelection}
         viewOptions

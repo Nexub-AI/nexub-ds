@@ -16,6 +16,14 @@ describe('FilterBar', () => {
     expect(input.getAttribute('placeholder')).toBe('Find something…');
   });
 
+  it('names the search field from the placeholder, else "Search"', () => {
+    const { unmount } = render(<FilterBar searchPlaceholder="Search invoices…" />);
+    expect(screen.getByRole('searchbox', { name: 'Search invoices' })).toBeDefined();
+    unmount();
+    render(<FilterBar searchPlaceholder="e.g. INV-2041" searchLabel="Invoice number" />);
+    expect(screen.getByRole('searchbox', { name: 'Invoice number' })).toBeDefined();
+  });
+
   it('uses default placeholder when not provided', () => {
     render(<FilterBar />);
     const input = screen.getByRole('searchbox');
