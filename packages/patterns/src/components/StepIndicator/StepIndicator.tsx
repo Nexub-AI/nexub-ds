@@ -12,6 +12,10 @@ export interface StepIndicatorProps extends React.HTMLAttributes<HTMLOListElemen
   currentStep: number;
 }
 
+/**
+ * @deprecated Removed in 7.0. Use `<Stepper orientation="vertical" current={…}>`
+ * from @nexub/react (`currentStep` becomes `current`; `steps` works as is).
+ */
 export const StepIndicator = React.forwardRef<HTMLOListElement, StepIndicatorProps>(
   ({ steps, currentStep, className, ...props }, ref) => (
     <ol ref={ref} className={cn('flex flex-col gap-0', className)} {...props}>

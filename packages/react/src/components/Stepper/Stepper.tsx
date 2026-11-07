@@ -6,7 +6,8 @@ import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface StepperStep {
-  id: string;
+  /** Stable key. @default the label */
+  id?: string;
   label: string;
   description?: string;
 }
@@ -86,7 +87,7 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
           );
           return (
             <li
-              key={step.id}
+              key={step.id ?? step.label}
               aria-current={isCurrent ? 'step' : undefined}
               className={cn(
                 'relative flex',

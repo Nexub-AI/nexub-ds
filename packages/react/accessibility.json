@@ -1523,15 +1523,6 @@
       "screenReader": []
     },
     {
-      "slug": "step-indicator",
-      "name": "StepIndicator",
-      "package": "@nexub/patterns",
-      "automated": "pass",
-      "exceptions": [],
-      "keyboard": [],
-      "screenReader": []
-    },
-    {
       "slug": "testimonial-grid",
       "name": "TestimonialGrid",
       "package": "@nexub/marketing",

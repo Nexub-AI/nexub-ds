@@ -151,7 +151,7 @@ Version 6.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [PlanCard](https://nexub-ds-docs.pages.dev/patterns/plan-card.md): Pricing plan card with feature checklist, badge, and CTA button.
 - [SettingsSection](https://nexub-ds-docs.pages.dev/patterns/settings-section.md): Grouped settings panel with title, description, and action area.
 - [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card.md): Metric display card showing a KPI value, label, optional delta, and icon.
-- [StepIndicator](https://nexub-ds-docs.pages.dev/patterns/step-indicator.md): Visual progress indicator for multi-step flows like onboarding or checkout.
+- [StepIndicator](https://nexub-ds-docs.pages.dev/patterns/step-indicator.md): Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
 - [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card.md): User profile card displaying avatar, name, role, and optional actions.
 
 ## Marketing (@nexub/marketing, under data-mode="marketing")

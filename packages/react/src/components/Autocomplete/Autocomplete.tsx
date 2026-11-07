@@ -29,6 +29,8 @@ export interface AutocompleteProps {
   /**
    * `'popover'` (default): a field whose list opens below it while typing.
    * `'inline'`: the list always shows under the input (the 5.x default).
+   * @deprecated `mode` is removed in 7.0 with the inline layout; the popover stays.
+   * For an always-open list, use the Combobox parts.
    */
   mode?: 'inline' | 'popover';
   /** Adds a "Create “text”" option when the text matches no option exactly. */

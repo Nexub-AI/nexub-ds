@@ -4,10 +4,10 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'step-indicator',
     title: 'StepIndicator',
-    description: 'Visual progress indicator for multi-step flows like onboarding or checkout.',
+    description: 'Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.',
     category: 'Navigation',
     package: '@nexub/patterns',
-    status: 'stable',
+    status: 'deprecated',
     addedIn: '0.0.1',
   },
   props: [
