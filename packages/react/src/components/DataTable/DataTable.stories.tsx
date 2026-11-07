@@ -163,3 +163,32 @@ export const Grid: Story = {
     />
   ),
 };
+
+type OrgRow = { name: string; owner: string; children?: OrgRow[] };
+const orgRows: OrgRow[] = [
+  {
+    name: 'Acme Group',
+    owner: 'Ada',
+    children: [
+      { name: 'Acme EU', owner: 'Grace', children: [{ name: 'Acme Berlin', owner: 'Grace' }] },
+      { name: 'Acme US', owner: 'Alan' },
+    ],
+  },
+  { name: 'Globex', owner: 'Linus' },
+];
+
+export const TreeRows: Story = {
+  render: () => (
+    <DataTable<OrgRow>
+      caption="Accounts"
+      captionHidden
+      columns={[
+        { accessorKey: 'name', header: 'Account' },
+        { accessorKey: 'owner', header: 'Owner' },
+      ]}
+      data={orgRows}
+      getSubRows={(r) => r.children}
+      defaultExpanded={true}
+    />
+  ),
+};

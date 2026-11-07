@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v6.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -157,6 +157,7 @@ Never use a component marked deprecated.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
 - [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+- [Tree View](components/tree-view.md) `@nexub/react`: A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
 ## Components — Overlays
 

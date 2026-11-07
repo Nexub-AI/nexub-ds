@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v6.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v6.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v6.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -507,6 +507,7 @@ Never use a component marked deprecated.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
 - [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+- [Tree View](components/tree-view.md) `@nexub/react`: A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
 ## Components — Overlays
 
@@ -2471,6 +2472,8 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | --- | --- | --- | --- |
 | `columns` (required) | `DataTableColumn<TData>[]` |  | TanStack Table column definitions (`DataTableColumn` is exported from @nexub/react). Set `meta: { align: 'end' }` for numeric columns; headers, sort buttons and cells follow it. |
 | `data` (required) | `TData[]` |  | Array of row data objects to render. |
+| `getSubRows` | `(row, index) => TData[] \| undefined` |  | Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level. |
+| `expanded / defaultExpanded / onExpandedChange` | `ExpandedState` |  | Expanded rows by row id (see `getRowId`), or `true` for all. |
 | `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `enableSorting` | `boolean` | `false` | Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3). |
 | `enableRowSelection` | `boolean` | `false` | Turns on row selection state. |
@@ -2697,6 +2700,56 @@ export default function Example() {
     <div className="w-full max-w-[640px]">
       <DataTableVirtual caption="Audit log" captionHidden columns={columns} data={events} maxHeight={360} enableSorting />
     </div>
+  );
+}
+```
+
+## Example: Tree rows
+
+`getSubRows` nests rows: the first column gets an expand toggle and indents each level. With pages, a parent and its children stay on one page.
+
+```tsx
+'use client';
+
+import { DataTable, type DataTableColumn } from '@nexub/react';
+
+type Account = { name: string; owner: string; arr: number; children?: Account[] };
+
+const data: Account[] = [
+  {
+    name: 'Acme Group',
+    owner: 'Ada',
+    arr: 420000,
+    children: [
+      { name: 'Acme EU', owner: 'Grace', arr: 180000, children: [{ name: 'Acme Berlin', owner: 'Grace', arr: 60000 }] },
+      { name: 'Acme US', owner: 'Alan', arr: 240000 },
+    ],
+  },
+  { name: 'Globex', owner: 'Linus', arr: 95000 },
+];
+
+const columns: DataTableColumn<Account>[] = [
+  { accessorKey: 'name', header: 'Account' },
+  { accessorKey: 'owner', header: 'Owner' },
+  {
+    accessorKey: 'arr',
+    header: 'ARR',
+    meta: { align: 'end' },
+    cell: ({ getValue }) => new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(getValue<number>()),
+  },
+];
+
+export default function Example() {
+  return (
+    <DataTable
+      caption="Accounts by region"
+      captionHidden
+      columns={columns}
+      data={data}
+      getSubRows={(row) => row.children}
+      getRowId={(row) => row.name}
+      defaultExpanded={{ 'Acme Group': true }}
+    />
   );
 }
 ```
@@ -7768,6 +7821,116 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Tree View
+
+A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
+
+- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Import: `import { TreeView } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/tree-view
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `nodes` (required) | `TreeNode[]` |  | `{ id, label, textValue?, icon?, children?, hasChildren?, disabled? }`. |
+| `aria-label / aria-labelledby` (required) | `string` |  | Names the tree. |
+| `expanded / defaultExpanded / onExpandedChange` | `string[]` |  | Open node ids. |
+| `selected / defaultSelected / onSelectedChange` | `string \| null` |  | Single selection, set by click, Enter or Space. |
+| `checkable` | `boolean` |  | Checkboxes instead of selection. A parent is checked when all its children are and mixed when some are. |
+| `checked / defaultChecked / onCheckedChange` | `string[]` |  | Every checked id, parents included. |
+| `onLoadChildren` | `(node) => Promise` |  | Called when a `hasChildren` node without `children` opens. Load them and pass the new `nodes`; the item is `aria-busy` meanwhile. |
+
+## Example: Lazy loading and selection
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { TreeView, type TreeNode } from '@nexub/react';
+
+export default function Example() {
+  const [nodes, setNodes] = React.useState<TreeNode[]>([
+    {
+      id: 'eng',
+      label: 'Engineering',
+      children: [
+        { id: 'web', label: 'Web', children: [{ id: 'ada', label: 'Ada Lovelace' }, { id: 'alan', label: 'Alan Turing' }] },
+        { id: 'mobile', label: 'Mobile', hasChildren: true },
+      ],
+    },
+    { id: 'design', label: 'Design', children: [{ id: 'grace', label: 'Grace Hopper' }] },
+  ]);
+  const [selected, setSelected] = React.useState<string | null>('ada');
+
+  // Pretend server call: fills Mobile's children the first time it opens.
+  const load = async (node: TreeNode) => {
+    await new Promise((r) => setTimeout(r, 700));
+    const fill = (list: TreeNode[]): TreeNode[] =>
+      list.map((n) =>
+        n.id === node.id
+          ? { ...n, children: [{ id: 'linus', label: 'Linus Torvalds' }, { id: 'margaret', label: 'Margaret Hamilton' }] }
+          : { ...n, children: n.children && fill(n.children) },
+      );
+    setNodes(fill);
+  };
+
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-2">
+      <TreeView aria-label="Teams" nodes={nodes} defaultExpanded={['eng', 'web']} selected={selected} onSelectedChange={setSelected} onLoadChildren={load} />
+      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Selected: {selected ?? 'none'}</p>
+    </div>
+  );
+}
+```
+
+## Example: Checkboxes
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { TreeView, type TreeNode } from '@nexub/react';
+
+const nodes: TreeNode[] = [
+  {
+    id: 'reports',
+    label: 'Reports',
+    children: [
+      { id: 'revenue', label: 'Revenue' },
+      { id: 'churn', label: 'Churn' },
+    ],
+  },
+  { id: 'settings', label: 'Settings', children: [{ id: 'billing', label: 'Billing' }, { id: 'members', label: 'Members' }] },
+];
+
+export default function Example() {
+  const [checked, setChecked] = React.useState<string[]>(['revenue']);
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-2">
+      <TreeView aria-label="Permissions" nodes={nodes} checkable defaultExpanded={['reports', 'settings']} checked={checked} onCheckedChange={setChecked} />
+      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Granted: {checked.join(', ') || 'nothing'}</p>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: tree, treeitem with aria-level, aria-setsize, aria-posinset, aria-expanded, group
+- `ArrowDown / ArrowUp`: Next or previous visible item.
+- `ArrowRight`: Opens a closed item, or moves to its first child. Mirrored in RTL.
+- `ArrowLeft`: Closes an open item, or moves to its parent. Mirrored in RTL.
+- `Home / End`: First or last visible item.
+- `Enter / Space`: Selects the item, or toggles its checkbox.
+- `Type a letter`: Moves to the next item starting with the typed text.
+- The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item.
+
+Related: [data-table](data-table.md), [sidebar](sidebar.md)
 
 
 ---

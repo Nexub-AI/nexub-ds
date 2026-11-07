@@ -12,6 +12,8 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | --- | --- | --- | --- |
 | `columns` (required) | `DataTableColumn<TData>[]` |  | TanStack Table column definitions (`DataTableColumn` is exported from @nexub/react). Set `meta: { align: 'end' }` for numeric columns; headers, sort buttons and cells follow it. |
 | `data` (required) | `TData[]` |  | Array of row data objects to render. |
+| `getSubRows` | `(row, index) => TData[] \| undefined` |  | Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level. |
+| `expanded / defaultExpanded / onExpandedChange` | `ExpandedState` |  | Expanded rows by row id (see `getRowId`), or `true` for all. |
 | `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `enableSorting` | `boolean` | `false` | Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3). |
 | `enableRowSelection` | `boolean` | `false` | Turns on row selection state. |
@@ -238,6 +240,56 @@ export default function Example() {
     <div className="w-full max-w-[640px]">
       <DataTableVirtual caption="Audit log" captionHidden columns={columns} data={events} maxHeight={360} enableSorting />
     </div>
+  );
+}
+```
+
+## Example: Tree rows
+
+`getSubRows` nests rows: the first column gets an expand toggle and indents each level. With pages, a parent and its children stay on one page.
+
+```tsx
+'use client';
+
+import { DataTable, type DataTableColumn } from '@nexub/react';
+
+type Account = { name: string; owner: string; arr: number; children?: Account[] };
+
+const data: Account[] = [
+  {
+    name: 'Acme Group',
+    owner: 'Ada',
+    arr: 420000,
+    children: [
+      { name: 'Acme EU', owner: 'Grace', arr: 180000, children: [{ name: 'Acme Berlin', owner: 'Grace', arr: 60000 }] },
+      { name: 'Acme US', owner: 'Alan', arr: 240000 },
+    ],
+  },
+  { name: 'Globex', owner: 'Linus', arr: 95000 },
+];
+
+const columns: DataTableColumn<Account>[] = [
+  { accessorKey: 'name', header: 'Account' },
+  { accessorKey: 'owner', header: 'Owner' },
+  {
+    accessorKey: 'arr',
+    header: 'ARR',
+    meta: { align: 'end' },
+    cell: ({ getValue }) => new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(getValue<number>()),
+  },
+];
+
+export default function Example() {
+  return (
+    <DataTable
+      caption="Accounts by region"
+      captionHidden
+      columns={columns}
+      data={data}
+      getSubRows={(row) => row.children}
+      getRowId={(row) => row.name}
+      defaultExpanded={{ 'Acme Group': true }}
+    />
   );
 }
 ```

@@ -1,5 +1,5 @@
 {
-  "version": "6.1.0",
+  "version": "6.2.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -1203,6 +1203,24 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "tree-view",
+      "name": "Tree View",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "ArrowDown / ArrowUp: Next or previous visible item.",
+        "ArrowRight: Opens a closed item, or moves to its first child. Mirrored in RTL.",
+        "ArrowLeft: Closes an open item, or moves to its parent. Mirrored in RTL.",
+        "Home / End: First or last visible item.",
+        "Enter / Space: Selects the item, or toggles its checkbox.",
+        "Type a letter: Moves to the next item starting with the typed text."
+      ],
+      "screenReader": [
+        "The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item."
+      ]
     },
     {
       "slug": "activity-feed",
