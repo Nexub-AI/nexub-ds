@@ -1,5 +1,7 @@
 # @nexub/tokens
 
+## 6.0.0
+
 ## 5.9.0
 
 ### Minor Changes

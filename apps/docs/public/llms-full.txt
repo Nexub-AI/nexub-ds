@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v5.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v6.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v5.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -417,8 +417,11 @@ Never use a component marked deprecated.
 
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
+- [Form](components/form.md) `@nexub/react`: Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
 - [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
 - [Helper Text](components/helper-text.md) `@nexub/react`: Small supporting text placed beneath a form field to provide hints or validation feedback.
+- [Inline Edit](components/inline-edit.md) `@nexub/react`: Text that becomes an input on click, for renaming things in place.
 - [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
@@ -3327,6 +3330,56 @@ export default function Example() {
 
 ---
 
+# Fieldset
+
+Groups related fields under a legend; disabling it disables everything inside.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { Fieldset } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/fieldset
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `legend` (required) | `ReactNode` |  | The group’s name, read before each field inside it. |
+| `description` | `ReactNode` |  | Hint under the legend, linked with `aria-describedby`. |
+| `disabled` | `boolean` |  | Disables every control inside, natively. |
+
+## Example: Grouped fields
+
+```tsx
+import { Fieldset, FormField, Input } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Fieldset legend="Billing address" description="Printed on every invoice." className="w-full max-w-sm">
+      <FormField.Root name="street">
+        <FormField.Label>Street</FormField.Label>
+        <FormField.Control>
+          <Input autoComplete="street-address" />
+        </FormField.Control>
+      </FormField.Root>
+      <FormField.Root name="city">
+        <FormField.Label>City</FormField.Label>
+        <FormField.Control>
+          <Input autoComplete="address-level2" />
+        </FormField.Control>
+      </FormField.Root>
+    </Fieldset>
+  );
+}
+```
+
+## Accessibility
+
+- Renders a native `<fieldset>` and `<legend>`; screen readers announce the legend on entering the group.
+
+Related: [form](form.md), [form-field](form-field.md)
+
+
+---
+
 # Filter Builder
 
 Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
@@ -3575,6 +3628,80 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Form
+
+Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { Form } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/form
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onSubmit` | `(data: FormData, event) => void \| Promise` |  | Runs only when every field is valid. Return a promise to mark the form busy (`aria-busy`, `useForm().submitting`) until it settles. |
+| `validate` | `(data: FormData) => Record<string, string \| false \| null \| undefined>` |  | Checks the browser can’t do (cross-field rules, a zod schema, a server answer). Keys are field names; empty values mean valid. |
+| `onInvalidSubmit` | `(errors: FormErrorItem[]) => void` |  | Errors in field order after a failed submit, ready for ErrorSummary. |
+| `useForm()` | `{ errors, submitting } \| null` |  | Reads the closest Form’s state, for a submit button or a custom field. |
+
+## Example: Native validation plus a custom rule
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Button, Form, FormField, Input, useForm } from '@nexub/react';
+
+function Submit() {
+  const submitting = useForm()?.submitting;
+  return (
+    <Button type="submit" className="self-start" disabled={submitting}>
+      {submitting ? 'Inviting…' : 'Send invite'}
+    </Button>
+  );
+}
+
+export default function Example() {
+  const [sent, setSent] = React.useState('');
+  return (
+    <Form
+      className="w-full max-w-sm"
+      validate={(data) => ({
+        email: String(data.get('email')).endsWith('@example.com') && 'Use a work address, not example.com',
+      })}
+      onSubmit={async (data) => {
+        await new Promise((r) => setTimeout(r, 600));
+        setSent(`Invite sent to ${data.get('email')}`);
+      }}
+    >
+      <FormField.Root name="email" required>
+        <FormField.Label>Email</FormField.Label>
+        <FormField.Control>
+          <Input type="email" autoComplete="email" />
+        </FormField.Control>
+        <FormField.Error />
+      </FormField.Root>
+      <Submit />
+      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{sent}</p>
+    </Form>
+  );
+}
+```
+
+## Accessibility
+
+- `Enter`: Submits from any text field; the first invalid field takes focus.
+- Messages come from the browser’s constraint validation (`required`, `type="email"`, `pattern`, `min`…), so they are already in the reader’s language.
+- FormField.Root with the same `name` picks the message up: the control gets `aria-invalid` and `aria-describedby`, and FormField.Error shows the text.
+- A field’s error clears as soon as it is edited; the rest stay until the next submit.
+- For long forms, render ErrorSummary (@nexub/patterns) from `onInvalidSubmit`.
+
+Related: [form-field](form-field.md), [fieldset](fieldset.md)
 
 
 ---
@@ -3971,6 +4098,60 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Inline Edit
+
+Text that becomes an input on click, for renaming things in place.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { InlineEdit } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/inline-edit
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` (required) | `string` |  | The saved text. |
+| `onSave` (required) | `(value: string) => void \| Promise` |  | Called on Enter or blur when the text changed. A promise keeps the field open and busy; a rejection keeps it open and invalid. |
+| `label` (required) | `string` |  | Names the input, and the button reads "Edit ‹label›, ‹value›". |
+| `placeholder` | `string` |  | Shown when the value is empty. |
+| `disabled` | `boolean` |  | Shows the text without editing. |
+
+## Example: Rename
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { InlineEdit } from '@nexub/react';
+
+export default function Example() {
+  const [name, setName] = React.useState('Q4 launch plan');
+  return (
+    <InlineEdit
+      label="Project name"
+      placeholder="Add a name"
+      value={name}
+      onSave={(next) => {
+        if (!next.trim()) return Promise.reject(new Error('Name is required'));
+        setName(next.trim());
+      }}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- `Enter / Space`: On the text: starts editing.
+- `Enter`: In the input: saves.
+- `Escape`: Reverts and returns focus to the text.
+- Moving focus away saves too. Validate in `onSave` and reject to keep the field open.
+
+Related: [input](input.md), [form](form.md)
 
 
 ---

@@ -10,6 +10,7 @@ export { useDisclosure } from './hooks/useDisclosure.js';
 export { useIsomorphicLayoutEffect } from './hooks/useIsomorphicLayoutEffect.js';
 export { useMediaQuery } from './hooks/useMediaQuery.js';
 export { useMergedRefs } from './hooks/useMergedRefs.js';
+export { useUnsavedChanges } from './hooks/useUnsavedChanges.js';
 export { usePointerSheen } from './hooks/usePointerSheen.js';
 
 // Components — AI
@@ -296,6 +297,12 @@ export type { ErrorStateProps } from './components/ErrorState/index.js';
 export { FileUpload, fileAccepted } from './components/FileUpload/index.js';
 export type { FileUploadRootProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
 export { OTPInput } from './components/OTPInput/index.js';
+export { Form, useForm } from './components/Form/index.js';
+export type { FormProps, FormErrorItem, FormErrors, FormContextValue } from './components/Form/index.js';
+export { Fieldset } from './components/Fieldset/index.js';
+export type { FieldsetProps } from './components/Fieldset/index.js';
+export { InlineEdit } from './components/InlineEdit/index.js';
+export type { InlineEditProps } from './components/InlineEdit/index.js';
 export type { OTPInputProps } from './components/OTPInput/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
 export type { DatePickerProps } from './components/DatePicker/index.js';

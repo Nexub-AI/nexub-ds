@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v5.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -67,8 +67,11 @@ Never use a component marked deprecated.
 
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
+- [Form](components/form.md) `@nexub/react`: Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
 - [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
 - [Helper Text](components/helper-text.md) `@nexub/react`: Small supporting text placed beneath a form field to provide hints or validation feedback.
+- [Inline Edit](components/inline-edit.md) `@nexub/react`: Text that becomes an input on click, for renaming things in place.
 - [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
