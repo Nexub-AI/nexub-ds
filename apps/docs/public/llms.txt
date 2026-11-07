@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 6.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 6.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -16,6 +16,7 @@ Version 6.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 ## Components
 
 - [Accordion](https://nexub-ds-docs.pages.dev/components/accordion.md): Vertically stacked list of collapsible sections.
+- [Action Bar](https://nexub-ds-docs.pages.dev/components/action-bar.md): Save and cancel that stay in view at the bottom of a long form.
 - [Alert Dialog](https://nexub-ds-docs.pages.dev/components/alert-dialog.md): Confirmation dialog that requires an explicit user action before proceeding.
 - [Alert](https://nexub-ds-docs.pages.dev/components/alert.md): Inline contextual message with optional title, icon, and dismiss action.
 - [Amount](https://nexub-ds-docs.pages.dev/components/amount.md): Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
@@ -99,6 +100,7 @@ Version 6.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Radio Card](https://nexub-ds-docs.pages.dev/components/radio-card.md): A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group.md): Group of mutually exclusive radio inputs.
 - [Rating](https://nexub-ds-docs.pages.dev/components/rating.md): Star rating input, supports controlled and read-only modes.
+- [Resizable Panels](https://nexub-ds-docs.pages.dev/components/resizable-panels.md): Panels with draggable separators, for list–detail and editor layouts.
 - [Saved Views](https://nexub-ds-docs.pages.dev/components/saved-views.md): A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Scroll Area](https://nexub-ds-docs.pages.dev/components/scroll-area.md): Scrollable container with custom styled scrollbars.
 - [Scroll Progress](https://nexub-ds-docs.pages.dev/components/scroll-progress.md): A thin bar along the top that fills as the page scrolls. CSS only.
@@ -114,6 +116,7 @@ Version 6.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Spinner](https://nexub-ds-docs.pages.dev/components/spinner.md): Animated loading indicator. Inherits color from context.
 - [Split Button](https://nexub-ds-docs.pages.dev/components/split-button.md): A primary action with related secondary actions behind a chevron, as one connected control.
 - [Stack](https://nexub-ds-docs.pages.dev/components/stack.md): Vertical stack layout with configurable gap.
+- [Stepper](https://nexub-ds-docs.pages.dev/components/stepper.md): Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Streaming Text](https://nexub-ds-docs.pages.dev/components/streaming-text.md): Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
 - [Switch](https://nexub-ds-docs.pages.dev/components/switch.md): Toggle control for binary on/off settings. Built on Radix UI Switch.
 - [Table](https://nexub-ds-docs.pages.dev/components/table.md): Semantic HTML table with styled variants.

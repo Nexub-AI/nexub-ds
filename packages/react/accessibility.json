@@ -1,5 +1,5 @@
 {
-  "version": "6.2.0",
+  "version": "6.3.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -36,6 +36,15 @@
     {
       "slug": "accordion",
       "name": "Accordion",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "action-bar",
+      "name": "Action Bar",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -926,6 +935,19 @@
       "screenReader": []
     },
     {
+      "slug": "resizable-panels",
+      "name": "Resizable Panels",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow keys: Move the focused separator by 5%. Mirrored in RTL.",
+        "Home / End: To the smallest or largest size.",
+        "Enter: Back to the default split."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "saved-views",
       "name": "Saved Views",
       "package": "@nexub/react",
@@ -1061,6 +1083,15 @@
     {
       "slug": "stack",
       "name": "Stack",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "stepper",
+      "name": "Stepper",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],

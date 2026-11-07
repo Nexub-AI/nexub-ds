@@ -72,6 +72,9 @@ import timePickerEntry from './components/time-picker';
 import dateTimePickerEntry from './components/date-time-picker';
 import eventCalendarEntry from './components/event-calendar';
 import treeViewEntry from './components/tree-view';
+import stepperEntry from './components/stepper';
+import resizablePanelsEntry from './components/resizable-panels';
+import actionBarEntry from './components/action-bar';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -213,6 +216,7 @@ export const componentEntries: ComponentEntry[] = [
   formEntry,
   fieldsetEntry,
   inlineEditEntry,
+  actionBarEntry,
   datePickerEntry,
   dateRangePickerEntry,
   timePickerEntry,
@@ -267,6 +271,7 @@ export const componentEntries: ComponentEntry[] = [
   // Navigation
   breadcrumbEntry,
   treeViewEntry,
+  stepperEntry,
   paginationEntry,
   // Data Display
   tableEntry,
@@ -310,6 +315,7 @@ export const componentEntries: ComponentEntry[] = [
   stackEntry,
   flexEntry,
   gridEntry,
+  resizablePanelsEntry,
   boxEntry,
   // Motion
   motionFadeEntry,

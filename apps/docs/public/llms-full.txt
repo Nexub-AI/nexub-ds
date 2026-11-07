@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v6.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v6.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v6.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -416,6 +416,7 @@ Never use a component marked deprecated.
 
 ## Components — Form & Input
 
+- [Action Bar](components/action-bar.md) `@nexub/react`: Save and cancel that stay in view at the bottom of a long form.
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
 - [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
@@ -481,6 +482,7 @@ Never use a component marked deprecated.
 - [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
 - [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
 - [Media Card](components/media-card.md) `@nexub/react`: An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
+- [Resizable Panels](components/resizable-panels.md) `@nexub/react`: Panels with draggable separators, for list–detail and editor layouts.
 - [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
 
 ## Components — Loading States
@@ -506,6 +508,7 @@ Never use a component marked deprecated.
 - [Navigation Rail](components/navigation-rail.md) `@nexub/react`: Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
 - [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
+- [Stepper](components/stepper.md) `@nexub/react`: Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 - [Tree View](components/tree-view.md) `@nexub/react`: A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
@@ -663,6 +666,58 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Action Bar
+
+Save and cancel that stay in view at the bottom of a long form.
+
+- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Import: `import { ActionBar } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/action-bar
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `message` | `ReactNode` |  | Status on the start side, e.g. "Unsaved changes"; announced politely and names the region. |
+| `children` (required) | `ReactNode` |  | The actions, primary last. |
+
+## Example: Unsaved changes
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { ActionBar, Button, Input, useUnsavedChanges } from '@nexub/react';
+
+export default function Example() {
+  const [saved, setSaved] = React.useState('Acme');
+  const [name, setName] = React.useState('Acme');
+  const dirty = name !== saved;
+  useUnsavedChanges(dirty);
+  return (
+    <div className="flex w-full max-w-lg flex-col gap-4">
+      <Input aria-label="Company name" value={name} onChange={(e) => setName(e.target.value)} />
+      {dirty && (
+        <ActionBar message="Unsaved changes">
+          <Button variant="text" onClick={() => setName(saved)}>Discard</Button>
+          <Button onClick={() => setSaved(name)}>Save</Button>
+        </ActionBar>
+      )}
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- A region named by its message. Sticky at the bottom of its scrolling parent, so put it last in the form.
+- Pair with `useUnsavedChanges(dirty)` to warn before leaving the page.
+
+Related: [form](form.md), [data-table](data-table.md)
 
 
 ---
@@ -6210,6 +6265,55 @@ export default function Example() {
 
 ---
 
+# Resizable Panels
+
+Panels with draggable separators, for list–detail and editor layouts.
+
+- Package: `@nexub/react` · Category: Layout · Status: beta
+- Import: `import { ResizablePanels } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/resizable-panels
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` (required) | `ReactNode` |  | The panels; a separator goes between each pair. |
+| `direction` | `'horizontal' \| 'vertical'` | `'horizontal'` | Side by side or stacked. |
+| `sizes / defaultSizes / onSizesChange` | `number[]` |  | One percentage per panel, adding up to 100. Save them (localStorage, user settings) to restore the layout. |
+| `minSizes` | `number[]` | `10 each` | Smallest size per panel, in percent. |
+| `handleLabel` | `string` | `"Resize panels"` | Names the separators. |
+
+## Example: List and detail
+
+```tsx
+import { ResizablePanels } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-[var(--color-outline-variant)]">
+      <ul className="flex flex-col gap-2 p-4 text-body-md">
+        <li>Quarterly report</li>
+        <li>Launch checklist</li>
+        <li>Hiring plan</li>
+      </ul>
+      <div className="p-4 text-body-md">Drag the line, or focus it with Tab and use the arrow keys.</div>
+    </ResizablePanels>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: separator (focusable, with aria-valuenow / min / max and aria-controls)
+- `Arrow keys`: Move the focused separator by 5%. Mirrored in RTL.
+- `Home / End`: To the smallest or largest size.
+- `Enter`: Back to the default split.
+
+Related: [sidebar](sidebar.md), [app-shell](app-shell.md)
+
+
+---
+
 # Saved Views
 
 A menu to switch, save, update and delete saved filter views. Your app stores them.
@@ -6963,6 +7067,75 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Stepper
+
+Progress through a multi-step flow, with clickable steps that follow the order you allow.
+
+- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Import: `import { Stepper } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/stepper
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` (required) | `{ id, label, description? }[]` |  | The steps in order. |
+| `current` (required) | `number` |  | Index of the step being shown. |
+| `completed` | `number[]` |  | Finished steps. Defaults to every step before `current`. |
+| `onStepChange` | `(index) => void` |  | Makes reachable steps buttons: finished ones and the first unfinished one. |
+| `nonLinear` | `boolean` |  | Every step is reachable. |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Vertical suits side columns and narrow screens. |
+| `aria-label` | `string` |  | Names the navigation landmark, e.g. "Setup steps". |
+
+## Example: Wizard with a form per step
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Button, Form, FormField, Input, Stepper } from '@nexub/react';
+
+const steps = [
+  { id: 'account', label: 'Account' },
+  { id: 'workspace', label: 'Workspace' },
+  { id: 'done', label: 'Done' },
+];
+
+export default function Example() {
+  const [current, setCurrent] = React.useState(0);
+  return (
+    <div className="flex w-full max-w-lg flex-col gap-6">
+      <Stepper aria-label="Sign-up steps" steps={steps} current={current} onStepChange={setCurrent} />
+      {current < 2 ? (
+        <Form key={current} onSubmit={() => setCurrent(current + 1)}>
+          <FormField.Root name={current === 0 ? 'email' : 'workspace'} required>
+            <FormField.Label>{current === 0 ? 'Work email' : 'Workspace name'}</FormField.Label>
+            <FormField.Control>
+              <Input type={current === 0 ? 'email' : 'text'} />
+            </FormField.Control>
+            <FormField.Error />
+          </FormField.Root>
+          <Button type="submit" className="self-start">Continue</Button>
+        </Form>
+      ) : (
+        <p className="text-body-md">All set.</p>
+      )}
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- A `nav` with an ordered list; the current step has `aria-current="step"`.
+- Each step reads "Step 2 of 4: Billing", plus "completed" when finished.
+- Validate each step with a Form and move `current` on its submit.
+
+Related: [form](form.md), [tabs](tabs.md)
 
 
 ---

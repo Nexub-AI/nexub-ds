@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v6.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -66,6 +66,7 @@ Never use a component marked deprecated.
 
 ## Components — Form & Input
 
+- [Action Bar](components/action-bar.md) `@nexub/react`: Save and cancel that stay in view at the bottom of a long form.
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
 - [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
@@ -131,6 +132,7 @@ Never use a component marked deprecated.
 - [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
 - [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
 - [Media Card](components/media-card.md) `@nexub/react`: An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
+- [Resizable Panels](components/resizable-panels.md) `@nexub/react`: Panels with draggable separators, for list–detail and editor layouts.
 - [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
 
 ## Components — Loading States
@@ -156,6 +158,7 @@ Never use a component marked deprecated.
 - [Navigation Rail](components/navigation-rail.md) `@nexub/react`: Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
 - [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
+- [Stepper](components/stepper.md) `@nexub/react`: Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 - [Tree View](components/tree-view.md) `@nexub/react`: A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
