@@ -22,7 +22,6 @@ export default function Example() {
   return (
     <div className="w-[280px]">
       <Autocomplete
-        mode="popover"
         aria-label="City"
         placeholder="Search cities…"
         options={options}
