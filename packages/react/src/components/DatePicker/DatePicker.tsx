@@ -38,7 +38,9 @@ export function useCalendarLocale(localeProp?: Locale) {
   const locale = localeProp ?? dateLocale;
   const labels = React.useMemo<Partial<Labels>>(() => {
     const day = (date: Date, modifiers: Modifiers | undefined, withSelected: boolean) => {
-      let label = format(date, 'PPPP', locale ? { locale } : undefined);
+      // Intl's full date keeps the day as a plain number ("November 2", not "2nd"), so the
+      // visible "2" is in the button's name (WCAG 2.5.3, voice control).
+      let label = new Intl.DateTimeFormat(intlLocale, { dateStyle: 'full' }).format(date);
       if (modifiers?.today) label = messages.todayDate(label);
       if (withSelected && modifiers?.selected) label = messages.selectedDate(label);
       return label;
@@ -50,7 +52,7 @@ export function useCalendarLocale(localeProp?: Locale) {
       labelDayButton: (date, modifiers) => day(date, modifiers, true),
       labelGridcell: (date, modifiers) => day(date, modifiers, false),
     };
-  }, [messages, locale]);
+  }, [messages, intlLocale]);
   return {
     dayPickerProps: { locale, dir, labels, components: { Chevron: CalendarChevron } },
     format: (date: Date) => formatDate(date, intlLocale, locale),
