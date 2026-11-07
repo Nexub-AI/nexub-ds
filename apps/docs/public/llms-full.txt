@@ -58,7 +58,7 @@ Starting points for typical SaaS screens:
 | Settings | `SettingsLayout` / `SettingsRow` + `SettingsSection` + `FormField` |
 | Sign in / sign up | `AuthCard` + `FormField` + `PasswordInput` |
 | Pricing / billing | `PlanCard` + `SegmentedControl` (monthly / yearly) + `Amount` |
-| Onboarding | `StepIndicator` + `CheckList` |
+| Onboarding | `Stepper` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
 | Expressive moment (onboarding, hero, success) | `@nexub/themes/vivid` + `data-expression="vivid"` on that area, `Aurora` behind the hero. One expressive moment per screen; keep dense tables and forms Calm |
