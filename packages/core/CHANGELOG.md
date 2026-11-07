@@ -1,5 +1,39 @@
 # @nexub/core
 
+## 6.3.0
+
+### Minor Changes
+
+- 0290a12: Hierarchy.
+
+  - **`TreeView`** (new, beta): an ARIA tree. Arrow keys move, open and close (mirrored in RTL), Home/End jump, typing finds an item, and the tree is one tab stop. Single selection, or `checkable` with tri-state parents (`checked` lists every checked id). `hasChildren` + `onLoadChildren` load children on first open, with the item `aria-busy` meanwhile.
+  - **`DataTable`**: `getSubRows` makes a tree table. The first column gets an expand toggle and indents each level; `expanded` / `defaultExpanded` / `onExpandedChange` control it. With `pagination`, a parent and its children stay on one page.
+  - New messages: `expandRow`, `collapseRow`.
+
+## 6.2.0
+
+### Minor Changes
+
+- 653ee48: Time.
+
+  - **`TimePicker`** (new, beta): a time field on the native `<input type="time">`. Value is 24-hour `"HH:mm"`; the display is 12 or 24 hours from the reader's locale; `minuteStep` sets the arrow-key and picker step; phones open their own picker.
+  - **`DateTimePicker`** (new, beta): a `DatePicker` and a `TimePicker` that edit one `Date` (local time). `defaultTime` fills the time when the date is picked first; `timeZone` names the zone next to the fields.
+  - **`EventCalendar`** (new, beta): month and week grids of events (`{ id, title, start, end?, allDay?, tone? }`). Multi-day events show on each day, month view collapses extras into "N more", the week starts on the locale's first day, and Today / previous / next / Month–Week controls are built in. Display only: `onEventClick` and `onDayClick` hand the action to your app.
+  - New messages: `dateLabel`, `timeLabel`, `previousWeek`, `nextWeek`, `calendarView`, `monthView`, `weekView`.
+
+## 6.1.0
+
+### Minor Changes
+
+- 67643af: Forms 2.0.
+
+  - **`Form`** (new, beta): validates on submit with the browser's constraint validation (`required`, `type`, `pattern`, `min`…) plus an optional `validate(data)` for your own rules (zod plugs in here). Messages show on the matching `FormField` by `name`, the first invalid field takes focus, a field's error clears as you edit it, and `onInvalidSubmit` hands the list to `ErrorSummary`. An async `onSubmit` marks the form `aria-busy`; `useForm()` reads `{ errors, submitting }`.
+  - **`FormField`**: `Root` with a `name` inside a `Form` picks up that field's error (`invalid`, and `FormField.Error` shows the message when it has no children).
+  - **`Fieldset`** (new, beta): native `<fieldset>` and `<legend>` with an optional description; `disabled` disables every control inside.
+  - **`InlineEdit`** (new, beta): text that becomes an input on click. Enter or blur saves, Escape reverts, focus returns to the text; a rejected `onSave` promise keeps it open and invalid.
+  - **`useUnsavedChanges(dirty)`** (new): asks the browser to confirm before the page unloads while there are unsaved changes.
+  - New message: `editField`.
+
 ## 6.0.0
 
 ## 5.9.0
