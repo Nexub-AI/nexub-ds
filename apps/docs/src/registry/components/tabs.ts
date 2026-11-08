@@ -30,7 +30,7 @@ const entry: ComponentEntry = {
     ],
     whenNotToUse: [
     "Global site navigation — use the sidebar or top nav",
-    "Sequential steps in order — use StepIndicator",
+    "Sequential steps in order — use Stepper",
     "Comparing content side-by-side — keep both views visible",
     "More than 5–7 tabs — consider a Select or sub-navigation",
     ],
