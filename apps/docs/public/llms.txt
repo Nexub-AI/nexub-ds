@@ -34,6 +34,7 @@ Version 6.5.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Card](https://nexub-ds-docs.pages.dev/components/card.md): Surface container for grouping related content. Supports flat, surface, and interactive variants.
 - [Celebrate](https://nexub-ds-docs.pages.dev/components/celebrate.md): A short confetti burst for a real win, such as a first payment or finishing onboarding.
 - [Chart Toggle](https://nexub-ds-docs.pages.dev/components/chart-toggle.md): A legend whose entries switch series on and off, wrapped around any chart.
+- [Chart Zoom](https://nexub-ds-docs.pages.dev/components/chart-zoom.md): Zoom any chart to part of its range with a two-thumb slider.
 - [Checkbox Card](https://nexub-ds-docs.pages.dev/components/checkbox-card.md): A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Checkbox](https://nexub-ds-docs.pages.dev/components/checkbox.md): Binary checkbox input built on Radix UI.
 - [Chip](https://nexub-ds-docs.pages.dev/components/chip.md): Compact label chip, optionally dismissible.
@@ -145,6 +146,7 @@ Version 6.5.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [FilterBar](https://nexub-ds-docs.pages.dev/patterns/filter-bar.md): Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](https://nexub-ds-docs.pages.dev/patterns/info-list.md): Key–value list for displaying structured metadata or details.
 - [List Detail](https://nexub-ds-docs.pages.dev/patterns/list-detail.md): The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
+- [NotificationCenter](https://nexub-ds-docs.pages.dev/patterns/notification-center.md): A bell with an unread count that opens the notification list.
 - [NotificationItem](https://nexub-ds-docs.pages.dev/patterns/notification-item.md): Single notification row for notification panels or dropdowns.
 - [PlanCard](https://nexub-ds-docs.pages.dev/patterns/plan-card.md): Pricing plan card with feature checklist, badge, and CTA button.
 - [SettingsSection](https://nexub-ds-docs.pages.dev/patterns/settings-section.md): Grouped settings panel with title, description, and action area.

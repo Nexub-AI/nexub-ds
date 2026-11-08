@@ -32,6 +32,7 @@ Never use a component marked deprecated.
 - [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
 - [Bar Chart](components/bar-chart.md) `@nexub/react`: Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 - [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
+- [Chart Zoom](components/chart-zoom.md) `@nexub/react`: Zoom any chart to part of its range with a two-thumb slider.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
@@ -212,6 +213,7 @@ Never use a component marked deprecated.
 
 ## Patterns — Feedback
 
+- [NotificationCenter](components/notification-center.md) `@nexub/patterns`: A bell with an unread count that opens the notification list.
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
 
 ## Patterns — Forms
