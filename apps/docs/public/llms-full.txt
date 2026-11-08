@@ -390,9 +390,11 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
@@ -2529,6 +2531,8 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `data` (required) | `TData[]` |  | Array of row data objects to render. |
 | `getSubRows` | `(row, index) => TData[] \| undefined` |  | Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level. |
 | `expanded / defaultExpanded / onExpandedChange` | `ExpandedState` |  | Expanded rows by row id (see `getRowId`), or `true` for all. |
+| `onRowOrderChange` | `(data: TData[]) => void` |  | Adds a handle column: drag rows, or Alt+ArrowUp/Down on a handle. Hidden while a column is sorted. |
+| `getRowLabel` | `(row) => string` |  | Names a row in "Move ‹label›" and the move announcements. |
 | `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `enableSorting` | `boolean` | `false` | Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3). |
 | `enableRowSelection` | `boolean` | `false` | Turns on row selection state. |
@@ -4477,6 +4481,67 @@ export default function Example() {
 - Use `aria-describedby` to associate `HelperText` or error messages.
 
 Related: [textarea](textarea.md), [number-input](number-input.md), [password-input](password-input.md), [search-input](search-input.md)
+
+
+---
+
+# Kanban
+
+Columns of cards people move by dragging or with Alt+Arrow keys.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Kanban } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/kanban
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `columns` (required) | `{ id, title, items: T[] }[]` |  | The board. |
+| `getId / getLabel` (required) | `(item) => string` |  | Stable key and the name read when it moves. |
+| `onChange` (required) | `(columns) => void` |  | Called with the columns after a move; store them (and save to your server). |
+| `renderCard` (required) | `(item) => ReactNode` |  | The card’s content. |
+
+## Example: Task board
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Badge, Kanban, type KanbanColumn } from '@nexub/react';
+
+type Task = { id: string; title: string; tag?: string };
+
+export default function Example() {
+  const [columns, setColumns] = React.useState<KanbanColumn<Task>[]>([
+    { id: 'todo', title: 'To do', items: [{ id: '1', title: 'Write release notes', tag: 'Docs' }, { id: '2', title: 'Update pricing page' }] },
+    { id: 'doing', title: 'In progress', items: [{ id: '3', title: 'Billing migration', tag: 'Backend' }] },
+    { id: 'done', title: 'Done', items: [{ id: '4', title: 'Hire designer' }] },
+  ]);
+  return (
+    <Kanban
+      columns={columns}
+      getId={(t) => t.id}
+      getLabel={(t) => t.title}
+      onChange={setColumns}
+      renderCard={(t) => (
+        <div className="flex flex-col items-start gap-1">
+          {t.title}
+          {t.tag && <Badge>{t.tag}</Badge>}
+        </div>
+      )}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- `Alt+ArrowUp / Alt+ArrowDown`: On a handle: moves the card within its column.
+- `Alt+ArrowLeft / Alt+ArrowRight`: Moves the card to the previous or next column. Mirrored in RTL.
+- Each column is a region named by its heading. Moves are announced: "Bravo moved to Done, position 2 of 2".
+
+Related: [sortable](sortable.md)
 
 
 ---
@@ -6868,6 +6933,54 @@ export default function Example() {
   return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
 }
 ```
+
+
+---
+
+# Sortable
+
+A list people reorder by dragging or with Alt+Arrow keys on a handle.
+
+- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Import: `import { Sortable } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/sortable
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` (required) | `T[]` |  | The list, in order. |
+| `getId / getLabel` (required) | `(item) => string` |  | Stable key, and the name read in "Move ‹label›" and the move announcements. |
+| `onReorder` (required) | `(items: T[]) => void` |  | Called with the new order; store it. |
+| `children` (required) | `(item) => ReactNode` |  | The item’s content; the handle sits before it. |
+| `aria-label` | `string` |  | Names the list. |
+
+## Example: Widget order
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Sortable } from '@nexub/react';
+
+export default function Example() {
+  const [widgets, setWidgets] = React.useState(['Revenue', 'Active users', 'Churn', 'Support tickets']);
+  return (
+    <Sortable aria-label="Dashboard widgets" items={widgets} getId={(w) => w} getLabel={(w) => w} onReorder={setWidgets} className="w-full max-w-sm">
+      {(w) => w}
+    </Sortable>
+  );
+}
+```
+
+## Accessibility
+
+- `Alt+ArrowUp / Alt+ArrowDown`: On a handle: moves the item; focus stays on its handle.
+- Every handle is a button named "Move ‹label›", described by the key hint.
+- Moves are announced: "Alpha moved to position 3 of 5".
+- Mouse drag uses the native drag-and-drop API, so there is no extra dependency.
+
+Related: [kanban](kanban.md), [data-table](data-table.md)
 
 
 ---
