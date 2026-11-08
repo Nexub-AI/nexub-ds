@@ -1,5 +1,16 @@
 # @nexub/tokens
 
+## 6.9.0
+
+### Minor Changes
+
+- 88329d9: 7.0 release candidate.
+
+  - **Deprecated, removed in 7.0**: `StepIndicator` (@nexub/patterns), use `<Stepper orientation="vertical" current={…}>` from @nexub/react; and Autocomplete's `mode="inline"` (and so `mode`), the popover stays.
+  - **`Stepper`**: a step's `id` is optional (the label is the key), so a StepIndicator `steps` array works as is.
+  - **`nexub-migrate`**: new default rule `removed-in-7` reports `<StepIndicator>` and `<Autocomplete mode="inline">`.
+  - Docs: Migrating to 7.0.
+
 ## 6.8.0
 
 ## 6.7.0

@@ -26,13 +26,6 @@ export interface AutocompleteProps {
    * filtered (fetched for this text), so the built-in filtering is off.
    */
   onInputChange?: (text: string) => void;
-  /**
-   * `'popover'` (default): a field whose list opens below it while typing.
-   * `'inline'`: the list always shows under the input (the 5.x default).
-   * @deprecated `mode` is removed in 7.0 with the inline layout; the popover stays.
-   * For an always-open list, use the Combobox parts.
-   */
-  mode?: 'inline' | 'popover';
   /** Adds a "Create “text”" option when the text matches no option exactly. */
   onCreate?: (text: string) => void;
   disabled?: boolean;
@@ -49,7 +42,6 @@ export function Autocomplete({
   loading = false,
   inputValue,
   onInputChange,
-  mode = 'popover',
   onCreate,
   disabled,
   className,
@@ -128,24 +120,15 @@ export function Autocomplete({
     },
   };
 
-  if (mode === 'popover') {
-    return (
-      <Combobox.Root
-        label={ariaLabel}
-        className={cn('overflow-visible rounded-none bg-transparent', className)}
-        shouldFilter={!onInputChange}
-      >
-        <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled}>
-          {list}
-        </ComboboxPopover>
-      </Combobox.Root>
-    );
-  }
-
   return (
-    <Combobox.Root label={ariaLabel} className={className} shouldFilter={!onInputChange}>
-      <Combobox.Input {...input} disabled={disabled} />
-      {list}
+    <Combobox.Root
+      label={ariaLabel}
+      className={cn('overflow-visible rounded-none bg-transparent', className)}
+      shouldFilter={!onInputChange}
+    >
+      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled}>
+        {list}
+      </ComboboxPopover>
     </Combobox.Root>
   );
 }

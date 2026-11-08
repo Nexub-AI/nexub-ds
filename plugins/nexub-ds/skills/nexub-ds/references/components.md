@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v6.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -229,10 +229,6 @@ Never use a component marked deprecated.
 ## Patterns — Marketing
 
 - [PlanCard](components/plan-card.md) `@nexub/patterns`: Pricing plan card with feature checklist, badge, and CTA button.
-
-## Patterns — Navigation
-
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns` **(deprecated)**: Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
 
 ## Patterns — People
 
