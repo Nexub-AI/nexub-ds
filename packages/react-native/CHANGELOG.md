@@ -1,5 +1,96 @@
 # @nexub/react-native
 
+## 6.9.0
+
+### Patch Changes
+
+- Updated dependencies [88329d9]
+  - @nexub/tokens@6.9.0
+  - @nexub/icons@6.9.0
+  - @nexub/core@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+- @nexub/tokens@6.8.0
+- @nexub/icons@6.8.0
+- @nexub/core@6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+- 4d94b73: React Native parity for 6.x.
+
+  - **`TreeList`** (new): the web TreeView on mobile, as drill-down lists with a back row; leaves are picked like radio rows.
+  - **`StepProgress`** (new): the web Stepper on mobile: segments and "Step 2 of 4: Billing", read as a progress bar. (The existing `Stepper` stays the − value + control.)
+  - **`SortableList`** (new): the web Sortable on mobile: Move up / Move down buttons while `editing`, and the same moves as VoiceOver and TalkBack actions on every row.
+  - **`InlineEdit`** (new): text that turns into a field when tapped; Return or leaving the field saves.
+  - Docs: native twins for TimePicker and DateTimePicker (`DateTimeField` with `mode="time"`), TreeView, Sortable, Stepper and InlineEdit, with live mobile previews.
+  - New messages: `moveUp`, `moveDown`, `backTo`.
+
+### Patch Changes
+
+- Updated dependencies [4d94b73]
+  - @nexub/core@6.7.0
+  - @nexub/tokens@6.7.0
+  - @nexub/icons@6.7.0
+
+## 6.6.0
+
+### Patch Changes
+
+- Updated dependencies [46bd41c]
+  - @nexub/core@6.6.0
+  - @nexub/tokens@6.6.0
+  - @nexub/icons@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+- Updated dependencies [efe17f9]
+  - @nexub/core@6.5.0
+  - @nexub/icons@6.5.0
+  - @nexub/tokens@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+- Updated dependencies [5839e96]
+  - @nexub/core@6.4.0
+  - @nexub/tokens@6.4.0
+  - @nexub/icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+- Updated dependencies [0290a12]
+  - @nexub/core@6.3.0
+  - @nexub/tokens@6.3.0
+  - @nexub/icons@6.3.0
+
+## 6.2.0
+
+### Patch Changes
+
+- Updated dependencies [653ee48]
+  - @nexub/core@6.2.0
+  - @nexub/tokens@6.2.0
+  - @nexub/icons@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [67643af]
+  - @nexub/core@6.1.0
+  - @nexub/tokens@6.1.0
+  - @nexub/icons@6.1.0
+
 ## 6.0.0
 
 ### Patch Changes

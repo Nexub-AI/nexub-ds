@@ -65,8 +65,8 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
             </span>
           );
           const text = (
-            <span className="flex min-w-0 flex-col items-start gap-0.5 text-start">
-              <span className="sr-only">{t.stepOf(i + 1, steps.length)}: </span>
+            <span className={cn('flex min-w-0 flex-col gap-0.5', vertical ? 'items-start text-start' : 'items-center text-center')}>
+              <span className="sr-only">{t.stepOf(i + 1, steps.length)}:</span>{' '}
               <span className={cn('text-label-lg font-medium', isCurrent || done ? 'text-[var(--color-on-surface)]' : 'text-[var(--color-on-surface-muted)]')}>
                 {step.label}
               </span>
@@ -103,7 +103,6 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
               {reachable ? (
                 <button
                   type="button"
-                  aria-label={`${t.stepOf(i + 1, steps.length)}: ${step.label}${done ? `, ${t.stepCompleted}` : ''}`}
                   onClick={() => onStepChange!(i)}
                   className="rounded-shape-control p-1 hover:bg-[var(--color-surface-container-high)]"
                 >

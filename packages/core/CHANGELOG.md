@@ -1,5 +1,92 @@
 # @nexub/core
 
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+- 4d94b73: React Native parity for 6.x.
+
+  - **`TreeList`** (new): the web TreeView on mobile, as drill-down lists with a back row; leaves are picked like radio rows.
+  - **`StepProgress`** (new): the web Stepper on mobile: segments and "Step 2 of 4: Billing", read as a progress bar. (The existing `Stepper` stays the − value + control.)
+  - **`SortableList`** (new): the web Sortable on mobile: Move up / Move down buttons while `editing`, and the same moves as VoiceOver and TalkBack actions on every row.
+  - **`InlineEdit`** (new): text that turns into a field when tapped; Return or leaving the field saves.
+  - Docs: native twins for TimePicker and DateTimePicker (`DateTimeField` with `mode="time"`), TreeView, Sortable, Stepper and InlineEdit, with live mobile previews.
+  - New messages: `moveUp`, `moveDown`, `backTo`.
+
+## 6.6.0
+
+### Minor Changes
+
+- 46bd41c: Inbox, export and zoom.
+
+  - **`NotificationCenter`** (new, beta, patterns): a bell with an unread count ("Notifications, 3 unread") that opens the notification list in a popover, with "Mark all as read", dismiss and an empty state. Your app owns the notifications.
+  - **`NotificationItem`**: `href` or `onSelect` makes the whole item a link or a button (the dismiss button stays separate).
+  - **`toCSV(rows, columns)`** (new): CSV text per RFC 4180 with CRLF line ends. Cells that start like a spreadsheet formula (`=`, `+`, `-`, `@`) get a leading `'`, so exports can't run formulas.
+  - **`ChartZoom`** (new, beta): zoom any chart to part of its range with a two-thumb slider and a reset button. Only the wrapper is a client component; charts stay server-rendered.
+  - New messages: `notificationCenter`, `unreadNotifications`, `markAllRead`, `noNotifications`, `zoomStart`, `zoomEnd`, `resetZoom`.
+
+## 6.5.0
+
+### Minor Changes
+
+- efe17f9: Reorder.
+
+  - **`Sortable`** (new, beta): a list people reorder by dragging an item or with Alt+ArrowUp/Down on its handle. Focus stays on the moved item's handle and every move is announced ("Alpha moved to position 3 of 5").
+  - **`Kanban`** (new, beta): columns of cards. Drag cards, or Alt+ArrowUp/Down within a column and Alt+ArrowLeft/Right across columns (mirrored in RTL). Columns are regions named by their headings.
+  - **`DataTable`**: `onRowOrderChange` adds a row handle column for the same drag and Alt+Arrow moves; `getRowLabel` names rows. Handles hide while a column is sorted.
+  - Built on the native drag-and-drop API, the same model as DataTable column reordering: no new dependency.
+  - **Icons**: `GripVertical`.
+  - New messages: `moveItem`, `reorderHint`, `itemMoved`, `itemMovedToColumn`.
+
+## 6.4.0
+
+### Minor Changes
+
+- 5839e96: Layout and flow.
+
+  - **`ResizablePanels`** (new, beta): panels with draggable separators (ARIA window splitter). Arrow keys move a focused separator by 5% (mirrored in RTL), Home/End to its limits, Enter back to the default split. `sizes` / `onSizesChange` in percent so your app can persist the layout; `minSizes` per panel; horizontal or vertical.
+  - **`Stepper`** (new, beta): progress through a multi-step flow. `current`, `completed`, and `onStepChange` makes reachable steps clickable (linear by default, `nonLinear` to allow any). Each step reads "Step 2 of 4: Billing", with "completed" when done. Horizontal or vertical. It will replace the patterns `StepIndicator` in 7.0.
+  - **`ActionBar`** (new, beta): save / cancel that stay in view at the bottom of a long form, with a polite status `message`.
+  - New messages: `stepOf`, `stepCompleted`, `resizePanels`.
+
+## 6.3.0
+
+### Minor Changes
+
+- 0290a12: Hierarchy.
+
+  - **`TreeView`** (new, beta): an ARIA tree. Arrow keys move, open and close (mirrored in RTL), Home/End jump, typing finds an item, and the tree is one tab stop. Single selection, or `checkable` with tri-state parents (`checked` lists every checked id). `hasChildren` + `onLoadChildren` load children on first open, with the item `aria-busy` meanwhile.
+  - **`DataTable`**: `getSubRows` makes a tree table. The first column gets an expand toggle and indents each level; `expanded` / `defaultExpanded` / `onExpandedChange` control it. With `pagination`, a parent and its children stay on one page.
+  - New messages: `expandRow`, `collapseRow`.
+
+## 6.2.0
+
+### Minor Changes
+
+- 653ee48: Time.
+
+  - **`TimePicker`** (new, beta): a time field on the native `<input type="time">`. Value is 24-hour `"HH:mm"`; the display is 12 or 24 hours from the reader's locale; `minuteStep` sets the arrow-key and picker step; phones open their own picker.
+  - **`DateTimePicker`** (new, beta): a `DatePicker` and a `TimePicker` that edit one `Date` (local time). `defaultTime` fills the time when the date is picked first; `timeZone` names the zone next to the fields.
+  - **`EventCalendar`** (new, beta): month and week grids of events (`{ id, title, start, end?, allDay?, tone? }`). Multi-day events show on each day, month view collapses extras into "N more", the week starts on the locale's first day, and Today / previous / next / Month–Week controls are built in. Display only: `onEventClick` and `onDayClick` hand the action to your app.
+  - New messages: `dateLabel`, `timeLabel`, `previousWeek`, `nextWeek`, `calendarView`, `monthView`, `weekView`.
+
+## 6.1.0
+
+### Minor Changes
+
+- 67643af: Forms 2.0.
+
+  - **`Form`** (new, beta): validates on submit with the browser's constraint validation (`required`, `type`, `pattern`, `min`…) plus an optional `validate(data)` for your own rules (zod plugs in here). Messages show on the matching `FormField` by `name`, the first invalid field takes focus, a field's error clears as you edit it, and `onInvalidSubmit` hands the list to `ErrorSummary`. An async `onSubmit` marks the form `aria-busy`; `useForm()` reads `{ errors, submitting }`.
+  - **`FormField`**: `Root` with a `name` inside a `Form` picks up that field's error (`invalid`, and `FormField.Error` shows the message when it has no children).
+  - **`Fieldset`** (new, beta): native `<fieldset>` and `<legend>` with an optional description; `disabled` disables every control inside.
+  - **`InlineEdit`** (new, beta): text that becomes an input on click. Enter or blur saves, Escape reverts, focus returns to the text; a rejected `onSave` promise keeps it open and invalid.
+  - **`useUnsavedChanges(dirty)`** (new): asks the browser to confirm before the page unloads while there are unsaved changes.
+  - New message: `editField`.
+
 ## 6.0.0
 
 ## 5.9.0
