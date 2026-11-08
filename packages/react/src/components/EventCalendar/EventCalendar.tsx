@@ -236,7 +236,7 @@ export function EventCalendar({
                       (onDayClick ? (
                         <button
                           type="button"
-                          className="mt-0.5 px-1.5 text-label-md text-[var(--color-on-surface-variant)] hover:underline"
+                          className="min-h-6 px-1.5 text-label-md text-[var(--color-on-surface-variant)] hover:underline"
                           onClick={() => onDayClick(day)}
                         >
                           {t.moreCount(hidden)}
