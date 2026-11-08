@@ -58,6 +58,10 @@ export const CATALOG = {
   'list-section': { title: 'ListSection', kind: 'component', web: null, examples: ['Inset grouped'] },
   'data-list': { title: 'DataList', kind: 'component', web: 'data-table', examples: ['Sort and select'] },
   'file-list': { title: 'FileList', kind: 'mobile', web: null, examples: ['Uploading'] },
+  'tree-list': { title: 'TreeList', kind: 'component', web: 'tree-view', examples: ['Drill down'] },
+  'sortable-list': { title: 'SortableList', kind: 'component', web: 'sortable', examples: ['Widget order'] },
+  'step-progress': { title: 'StepProgress', kind: 'component', web: 'stepper', examples: ['Step 2 of 4'] },
+  'inline-edit': { title: 'InlineEdit', kind: 'component', web: 'inline-edit', examples: ['Rename'] },
   accordion: { title: 'Accordion', kind: 'component', web: 'accordion', examples: ['FAQ'] },
   amount: { title: 'Amount', kind: 'component', web: 'amount', examples: ['Display size', 'Signed tones'] },
   divider: { title: 'Divider', kind: 'component', web: 'separator', examples: ['Inset'] },
@@ -113,7 +117,8 @@ export const SECTIONS = {
   lists: [
     { heading: 'Cards', slugs: ['card', 'amount'] },
     { heading: 'Lists', slugs: ['list-section', 'list-item', 'divider'] },
-    { heading: 'Data', slugs: ['data-list', 'file-list'] },
+    { heading: 'Data', slugs: ['data-list', 'file-list', 'tree-list', 'sortable-list'] },
+    { heading: 'Flow', slugs: ['step-progress', 'inline-edit'] },
     { heading: 'FAQ', slugs: ['accordion'] },
   ],
   feedback: [

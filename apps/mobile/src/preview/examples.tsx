@@ -49,6 +49,10 @@ import {
   ExpressiveMoneyInput,
   FAB,
   FileList,
+  InlineEdit,
+  SortableList,
+  StepProgress,
+  TreeList,
   FilterChip,
   FilterSheet,
   countFilters,
@@ -530,6 +534,48 @@ export const EXAMPLES: Examples = {
         onCancel={() => {}}
       />
     ),
+  ],
+  'tree-list': [
+    function TeamsExample() {
+      const [picked, setPicked] = useState<string | null>('ada');
+      return (
+        <TreeList
+          rootTitle="Teams"
+          selected={picked}
+          onSelect={setPicked}
+          nodes={[
+            { id: 'eng', title: 'Engineering', children: [{ id: 'ada', title: 'Ada Lovelace' }, { id: 'alan', title: 'Alan Turing' }] },
+            { id: 'design', title: 'Design', children: [{ id: 'grace', title: 'Grace Hopper' }] },
+            { id: 'ops', title: 'Operations' },
+          ]}
+        />
+      );
+    },
+  ],
+  'sortable-list': [
+    function WidgetsExample() {
+      const [items, setItems] = useState(['Revenue', 'Active users', 'Churn']);
+      return <SortableList items={items} keyExtractor={(i) => i} title={(i) => i} onReorder={setItems} />;
+    },
+  ],
+  'step-progress': [
+    () => (
+      <StepProgress
+        current={1}
+        steps={[
+          { id: 'account', label: 'Account' },
+          { id: 'billing', label: 'Billing' },
+          { id: 'team', label: 'Team' },
+          { id: 'review', label: 'Review' },
+        ]}
+      />
+    ),
+  ],
+  'inline-edit': [
+    function RenameExample() {
+      const [name, setName] = useState('Q4 launch plan');
+      return <InlineEdit label="Project name" value={name} onSave={setName} />;
+    },
   ],
   'list-section': [
     function Security() {
