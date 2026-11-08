@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -450,6 +450,15 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
     for (const m of src.matchAll(/['"]@nexub\/tokens\/tailwind['"]/g))
       items.push({ at: m.index, rule: 'tailwind-3-preset', message: '@nexub/tokens/tailwind (the Tailwind 3 preset) is removed in 4.0: move to Tailwind 4 and @import "@nexub/tokens/tailwind.css" in your CSS' });
   }
+  if (rules.has('removed-in-7') && COMPONENT_EXTS.has(ext)) {
+    // Report only: both need a human choice (Stepper's import and props, or a Combobox layout).
+    if (/@nexub\/patterns['"]/.test(src))
+      for (const m of src.matchAll(/<StepIndicator\b/g))
+        items.push({ at: m.index, rule: 'removed-in-7', message: 'StepIndicator (@nexub/patterns) is removed in 7.0: use <Stepper orientation="vertical" current={…}> from @nexub/react (currentStep -> current)' });
+    if (/@nexub\/react['"/]/.test(src))
+      for (const m of src.matchAll(/<Autocomplete\b[^>]*\bmode=(?:"inline"|'inline'|\{\s*['"]inline['"]\s*\})/g))
+        items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete mode="inline" is removed in 7.0: drop mode (popover), or build an always-open list with the Combobox parts' });
+  }
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -515,6 +524,8 @@ Rules:
   keep-5-defaults    opt-in: keep 5.x behaviour on 6.0 by pinning the defaults it changes:
                      <Autocomplete> gets mode="inline"; <DataTable enableRowSelection>
                      gets selectionColumn={false}
+  removed-in-7       report what 7.0 removes: <StepIndicator> (use Stepper) and
+                     <Autocomplete mode="inline">
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

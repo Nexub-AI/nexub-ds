@@ -271,3 +271,17 @@ test('keep-5-defaults is opt-in', () => {
   const src = `import { Autocomplete } from '@nexub/react';\n<Autocomplete options={o} />`;
   assert.equal(migrateSource(src, { ext: '.tsx' }).output, src);
 });
+
+// ─── removed-in-7 ───
+test('removed-in-7: reports StepIndicator and inline Autocomplete, never rewrites', () => {
+  const src = `import { StepIndicator } from '@nexub/patterns';
+import { Autocomplete } from '@nexub/react';
+<StepIndicator steps={steps} currentStep={1} />;
+<Autocomplete options={o} mode="inline" />;
+<Autocomplete options={o} mode={'inline'} />;
+<Autocomplete options={o} mode="popover" />;
+`;
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('removed-in-7') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[3, 'removed-in-7'], [4, 'removed-in-7'], [5, 'removed-in-7']]);
+});

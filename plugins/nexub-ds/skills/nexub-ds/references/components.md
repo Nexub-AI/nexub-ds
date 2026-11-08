@@ -232,7 +232,7 @@ Never use a component marked deprecated.
 
 ## Patterns — Navigation
 
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns`: Visual progress indicator for multi-step flows like onboarding or checkout.
+- [StepIndicator](components/step-indicator.md) `@nexub/patterns` **(deprecated)**: Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
 
 ## Patterns — People
 
