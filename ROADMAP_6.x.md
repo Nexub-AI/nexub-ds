@@ -16,7 +16,7 @@ Drafted 2026-11-07, after 6.0 reached production. Follows [ROADMAP_5.x.md](ROADM
 | No reordering | no sortable list, no Kanban, no DataTable row reorder |
 | No notification inbox | `NotificationItem` (patterns) only |
 | Chart zoom/brush | backlog since 4.x (charts are server-rendered on purpose) |
-| Autocomplete and Combobox overlap | since 5.2 both are popover comboboxes over cmdk with async support |
+| Autocomplete has two layouts | since 6.0 the popover is the default; `mode="inline"` is a second code path |
 
 ## Versions
 
@@ -30,8 +30,8 @@ Drafted 2026-11-07, after 6.0 reached production. Follows [ROADMAP_5.x.md](ROADM
 | 6.6 | Inbox & charts | `NotificationCenter` popover (unread count, mark-all-read, built on `NotificationItem`). `toCSV()` export helper for DataTable (visible columns, current sort). Chart zoom and brush as an opt-in client island, so the default charts stay server-rendered |
 | 6.7 | React Native parity | TimePicker / DateTimePicker as sheets, TreeView as drill-down lists, Stepper, Sortable list (long-press to drag plus accessibility actions), InlineEdit |
 | 6.8 | Proof 4 | axe + Storybook for every new 6.x component, a written screen-reader script per complex component (TreeView, Sortable, ResizablePanels, Calendar), an RTL sweep, a React Compiler compatibility check, and a perf budget for tree tables and DataTableVirtual |
-| 6.9 | 7.0 release candidate | Feature freeze, deprecations (Autocomplete, StepIndicator), `nexub-migrate` rules, Migrating to 7.0 |
-| 7.0 | Consolidate | Autocomplete folded into Combobox (one API for one job), `Stepper` replaces `StepIndicator`, 6.x deprecations removed |
+| 6.9 | 7.0 release candidate | Feature freeze, deprecations (StepIndicator, Autocomplete `mode="inline"`), `nexub-migrate` rule `removed-in-7`, Migrating to 7.0 |
+| 7.0 | Consolidate | `Stepper` replaces `StepIndicator`, Autocomplete loses `mode` (popover only), 6.x deprecations removed |
 
 ## Why this order
 
@@ -39,12 +39,16 @@ Drafted 2026-11-07, after 6.0 reached production. Follows [ROADMAP_5.x.md](ROADM
 - **Time and hierarchy next**: self-contained components, low risk, no new dependencies.
 - **Reorder late**: the only release with a dependency decision, and Kanban sits on top of the 6.4 layout.
 - **RN after web**, as in 5.x: it ports settled APIs instead of chasing them.
-- **7.0 consolidates**: fewer overlapping components beats more components.
+- **7.0 consolidates**: fewer overlapping components and code paths beats more of them.
 
-## Decisions (open)
+## Decisions
 
-1. **Drag and drop.** Recommended: `@dnd-kit` as an optional peer, imported only by the `Sortable` subpath (same pattern as `@tanstack/react-virtual` in 5.4). Alternative: native HTML drag and drop plus our own keyboard and touch handling, which native DnD lacks.
-2. **7.0 breaking merges.** Fold Autocomplete into Combobox, and replace StepIndicator with Stepper.
+Approved 2026-11-07 ("develop all the features from 6.1 until 7.0 one by one"). Two calls changed during the build:
+
+1. **Drag and drop (6.5).** Not `@dnd-kit`: the native drag-and-drop API plus Alt+Arrow on a handle, the model DataTable column reordering already used. No new dependency; moves are announced. React Native gets Move up / down buttons and accessibility actions instead of a drag gesture.
+2. **7.0 removals (6.9).** StepIndicator → Stepper as planned. Autocomplete is **not** folded into Combobox: Combobox is the parts, Autocomplete (like MultiSelect) the ready-made field built from them. 7.0 removes Autocomplete's second layout, `mode="inline"`, instead.
+
+Smaller ones: the calendar ships as `EventCalendar` (not `Calendar`, which reads like a date picker); `DateTimePicker` takes a `Date` like `DatePicker`; the React Native step tracker is `StepProgress` (RN `Stepper` is the − value + control); `ChartZoom` has its own subpath so `react/Chart` stays server-only. The React Compiler healthcheck in 6.8 was not run (the tool could not be run in this environment).
 
 ## Out of scope
 

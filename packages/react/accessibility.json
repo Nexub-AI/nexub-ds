@@ -1,5 +1,5 @@
 {
-  "version": "6.7.0",
+  "version": "6.8.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -1516,15 +1516,6 @@
     {
       "slug": "stat-card",
       "name": "StatCard",
-      "package": "@nexub/patterns",
-      "automated": "pass",
-      "exceptions": [],
-      "keyboard": [],
-      "screenReader": []
-    },
-    {
-      "slug": "step-indicator",
-      "name": "StepIndicator",
       "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],

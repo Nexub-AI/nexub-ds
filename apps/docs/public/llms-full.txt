@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v6.7.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v6.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v6.7.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -582,7 +582,7 @@ Never use a component marked deprecated.
 
 ## Patterns — Navigation
 
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns`: Visual progress indicator for multi-step flows like onboarding or checkout.
+- [StepIndicator](components/step-indicator.md) `@nexub/patterns` **(deprecated)**: Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
 
 ## Patterns — People
 
@@ -1042,7 +1042,7 @@ Type-to-search input with matching options dropdown.
 | `loading` | `boolean` |  | Skeleton rows while options are being fetched (5.2); "Loading" is announced. |
 | `inputValue` | `string` |  | Controlled input text (5.1). |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
-| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. |
+| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. Deprecated: `mode` and the inline layout are removed in 7.0. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
 
@@ -9597,9 +9597,9 @@ export default function Example() {
 
 # StepIndicator
 
-Visual progress indicator for multi-step flows like onboarding or checkout.
+> **Deprecated.** Do not use in new code. Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
 
-- Package: `@nexub/patterns` · Category: Navigation · Status: stable
+- Package: `@nexub/patterns` · Category: Navigation · Status: deprecated
 - Import: `import { StepIndicator } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/step-indicator
 
