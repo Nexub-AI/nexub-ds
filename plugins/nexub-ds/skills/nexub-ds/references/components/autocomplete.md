@@ -18,7 +18,7 @@ Type-to-search input with matching options dropdown.
 | `loading` | `boolean` |  | Skeleton rows while options are being fetched (5.2); "Loading" is announced. |
 | `inputValue` | `string` |  | Controlled input text (5.1). |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
-| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. |
+| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. Deprecated: `mode` and the inline layout are removed in 7.0. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
 
