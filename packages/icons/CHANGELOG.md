@@ -1,5 +1,7 @@
 # @nexub/icons
 
+## 6.6.0
+
 ## 6.5.0
 
 ### Minor Changes
