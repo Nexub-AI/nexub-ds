@@ -1,5 +1,20 @@
 # @nexub/react
 
+## 6.8.0
+
+### Minor Changes
+
+- 5aec98d: Accessibility proof 4.
+
+  - Screen-reader test scripts (VoiceOver, NVDA) for Form, TreeView, Sortable / Kanban, ResizablePanels and EventCalendar on Foundations → Accessibility.
+  - Every 6.x component has Storybook stories, so axe (WCAG 2.2 AA) runs on each in light and dark in CI.
+  - RTL keyboard tests: TreeView, ResizablePanels and Kanban follow the reading direction.
+
+### Patch Changes
+
+- @nexub/icons@6.8.0
+- @nexub/core@6.8.0
+
 ## 6.7.0
 
 ### Patch Changes
