@@ -1,5 +1,13 @@
 # @nexub/react
 
+## 6.7.0
+
+### Patch Changes
+
+- Updated dependencies [4d94b73]
+  - @nexub/core@6.7.0
+  - @nexub/icons@6.7.0
+
 ## 6.6.0
 
 ### Minor Changes
