@@ -115,6 +115,53 @@ const SCRIPTS: { component: string; slug: string; page?: false; steps: [string, 
       ['Paste a full code', 'All digits fill; focus on the last'],
     ],
   },
+  {
+    component: 'Form',
+    slug: 'form',
+    steps: [
+      ['Leave a required field empty and press Enter', 'Focus moves to that field: its label, "invalid entry", then the message'],
+      ['Type in the field', 'The error is gone when you tab away; the field no longer reads "invalid"'],
+      ['Submit a long form with onInvalidSubmit + ErrorSummary', '"There is a problem" and the list of errors; each link moves to its field'],
+    ],
+  },
+  {
+    component: 'TreeView',
+    slug: 'tree-view',
+    steps: [
+      ['Tab into the tree', 'Tree, its name, the first item, "collapsed", "1 of 3", "level 1"'],
+      ['Arrow Right, then Arrow Down', '"Expanded", then the first child with "level 2"'],
+      ['Arrow Left twice', '"Collapsed" on the parent after moving back to it'],
+      ['Type a letter', 'Focus jumps to the next item starting with it'],
+      ['Enter (or Space with checkboxes)', '"Selected", or "checked" / "partially checked" on the parent'],
+    ],
+  },
+  {
+    component: 'Sortable / Kanban',
+    slug: 'sortable',
+    steps: [
+      ['Tab to a handle', '"Move Alpha, button", then the hint "Alt+Arrow keys move it"'],
+      ['Alt+Arrow Down', '"Alpha moved to position 2 of 5"; focus stays on the handle'],
+      ['On a Kanban card, Alt+Arrow Right', '"Bravo moved to Done, position 1 of 3"'],
+    ],
+  },
+  {
+    component: 'ResizablePanels',
+    slug: 'resizable-panels',
+    steps: [
+      ['Tab to the separator', '"Resize panels, separator" and its value, e.g. "30"'],
+      ['Arrow Right (Arrow Left in RTL)', 'The new value, 5 higher'],
+      ['Home, End, Enter', 'The smallest and largest values, then back to the default split'],
+    ],
+  },
+  {
+    component: 'EventCalendar',
+    slug: 'event-calendar',
+    steps: [
+      ['Move into the table (VO: Control+Option+Arrow; NVDA: T)', 'Table, the month as its caption, 7 columns'],
+      ['Read a day cell', 'The weekday header, the full date ("Today, …" on today), then each event with its time'],
+      ['Activate the next-month button', 'The new month from the heading’s live region'],
+    ],
+  },
 ];
 
 const RESULT = {
