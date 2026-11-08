@@ -43,6 +43,15 @@
       "screenReader": []
     },
     {
+      "slug": "action-bar",
+      "name": "Action Bar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "alert-dialog",
       "name": "Alert Dialog",
       "package": "@nexub/react",
@@ -926,6 +935,19 @@
       "screenReader": []
     },
     {
+      "slug": "resizable-panels",
+      "name": "Resizable Panels",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow keys: Move the focused separator by 5%. Mirrored in RTL.",
+        "Home / End: To the smallest or largest size.",
+        "Enter: Back to the default split."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "saved-views",
       "name": "Saved Views",
       "package": "@nexub/react",
@@ -1061,6 +1083,15 @@
     {
       "slug": "stack",
       "name": "Stack",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "stepper",
+      "name": "Stepper",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
