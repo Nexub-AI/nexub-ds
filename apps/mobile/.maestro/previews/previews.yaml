@@ -645,6 +645,66 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
+      - openLink: nexub://preview/tree-list?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-tree-list-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: tree-list--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/sortable-list?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-sortable-list-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: sortable-list--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/step-progress?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-step-progress-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: step-progress--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/inline-edit?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-inline-edit-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: inline-edit--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
       - openLink: nexub://preview/accordion?ex=0
       - runFlow:
           when:
