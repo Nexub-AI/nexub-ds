@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 6.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 6.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -71,6 +71,7 @@ Version 6.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button.md): A square button designed to hold a single icon, with an accessible label.
 - [Inline Edit](https://nexub-ds-docs.pages.dev/components/inline-edit.md): Text that becomes an input on click, for renaming things in place.
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
+- [Kanban](https://nexub-ds-docs.pages.dev/components/kanban.md): Columns of cards people move by dragging or with Alt+Arrow keys.
 - [Kbd](https://nexub-ds-docs.pages.dev/components/kbd.md): Keyboard key display — renders a styled <kbd> element.
 - [KPI Tile](https://nexub-ds-docs.pages.dev/components/kpi-tile.md): A headline number with its change versus last period and a trend line.
 - [Label](https://nexub-ds-docs.pages.dev/components/label.md): An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
@@ -112,6 +113,7 @@ Version 6.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes 
 - [Sheet](https://nexub-ds-docs.pages.dev/components/sheet.md): Alias for Drawer — slide-in sheet panel.
 - [Skeleton](https://nexub-ds-docs.pages.dev/components/skeleton.md): Placeholder loading animation that mimics content layout.
 - [Slider](https://nexub-ds-docs.pages.dev/components/slider.md): Range slider built on Radix UI Slider.
+- [Sortable](https://nexub-ds-docs.pages.dev/components/sortable.md): A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](https://nexub-ds-docs.pages.dev/components/sparkline.md): A tiny trend line with no axes, for stat cards and table cells.
 - [Spinner](https://nexub-ds-docs.pages.dev/components/spinner.md): Animated loading indicator. Inherits color from context.
 - [Split Button](https://nexub-ds-docs.pages.dev/components/split-button.md): A primary action with related secondary actions behind a chevron, as one connected control.

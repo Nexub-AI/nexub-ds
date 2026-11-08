@@ -14,6 +14,8 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `data` (required) | `TData[]` |  | Array of row data objects to render. |
 | `getSubRows` | `(row, index) => TData[] \| undefined` |  | Nested rows (a tree table). The first column gets an expand toggle (`aria-expanded`) and indents each level; sorting sorts within each level. |
 | `expanded / defaultExpanded / onExpandedChange` | `ExpandedState` |  | Expanded rows by row id (see `getRowId`), or `true` for all. |
+| `onRowOrderChange` | `(data: TData[]) => void` |  | Adds a handle column: drag rows, or Alt+ArrowUp/Down on a handle. Hidden while a column is sorted. |
+| `getRowLabel` | `(row) => string` |  | Names a row in "Move ‹label›" and the move announcements. |
 | `caption` | `ReactNode` |  | Names the table for assistive tech (and its scroll region). Shown below the table; add `captionHidden` to keep it screen-reader only. |
 | `enableSorting` | `boolean` | `false` | Click a header to sort; Shift+click adds more columns, numbered 1, 2… (5.3). |
 | `enableRowSelection` | `boolean` | `false` | Turns on row selection state. |

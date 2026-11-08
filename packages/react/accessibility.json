@@ -1,5 +1,5 @@
 {
-  "version": "6.3.0",
+  "version": "6.4.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -623,6 +623,18 @@
       ]
     },
     {
+      "slug": "kanban",
+      "name": "Kanban",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the card within its column.",
+        "Alt+ArrowLeft / Alt+ArrowRight: Moves the card to the previous or next column. Mirrored in RTL."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "kbd",
       "name": "Kbd",
       "package": "@nexub/react",
@@ -1048,6 +1060,17 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "sortable",
+      "name": "Sortable",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the item; focus stays on its handle."
+      ],
       "screenReader": []
     },
     {

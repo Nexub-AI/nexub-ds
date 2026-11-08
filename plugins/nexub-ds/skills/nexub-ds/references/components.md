@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v6.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v6.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -40,9 +40,11 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
