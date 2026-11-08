@@ -14,9 +14,10 @@ const entry: ComponentEntry = {
     { name: 'title', type: 'string', required: true, description: 'Notification title.' },
     { name: 'description', type: 'string', required: false, description: 'Supporting text.' },
     { name: 'timestamp', type: 'string', required: false, description: 'Relative time string.' },
-    { name: 'unread', type: 'boolean', default: 'false', required: false, description: 'Applies unread indicator styling.' },
-    { name: 'avatar', type: 'React.ReactNode', required: false, description: 'Avatar for the notification actor.' },
-    { name: 'onClick', type: '() => void', required: false, description: 'Click handler for the item.' },
+    { name: 'read', type: 'boolean', default: 'false', required: false, description: 'Unread items get a tinted background and an "Unread" dot.' },
+    { name: 'icon', type: 'ReactNode', required: false, description: 'Icon or avatar before the text.' },
+    { name: 'href / onSelect', type: 'string / () => void', required: false, description: 'Makes the whole item a link or a button (6.6).' },
+    { name: 'onDismiss', type: '() => void', required: false, description: 'Shows a dismiss button.' },
   ],
   examples: [
     {

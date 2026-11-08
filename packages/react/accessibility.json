@@ -1,5 +1,5 @@
 {
-  "version": "6.4.0",
+  "version": "6.5.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -237,6 +237,17 @@
       "screenReader": [
         "Each series is a toggle button with `aria-pressed`. The last visible series cannot be switched off."
       ]
+    },
+    {
+      "slug": "chart-zoom",
+      "name": "Chart Zoom",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow keys / Home / End: Move the focused thumb."
+      ],
+      "screenReader": []
     },
     {
       "slug": "checkbox-card",
@@ -1425,6 +1436,15 @@
       "slug": "marketing-nav",
       "name": "MarketingNav",
       "package": "@nexub/marketing",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "notification-center",
+      "name": "NotificationCenter",
+      "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],

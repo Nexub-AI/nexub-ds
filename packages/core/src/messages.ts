@@ -159,6 +159,15 @@ export interface NexubMessages {
   reorderHint: string;
   itemMoved: (label: string, position: number, total: number) => string;
   itemMovedToColumn: (label: string, column: string, position: number, total: number) => string;
+  /** NotificationCenter (@nexub/patterns). */
+  notificationCenter: string;
+  unreadNotifications: (count: number) => string;
+  markAllRead: string;
+  noNotifications: string;
+  /** ChartZoom range thumbs and reset. */
+  zoomStart: string;
+  zoomEnd: string;
+  resetZoom: string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -350,6 +359,13 @@ export const defaultMessages: NexubMessages = {
   reorderHint: 'Alt+Arrow keys move it',
   itemMoved: (label, position, total) => `${label} moved to position ${position} of ${total}`,
   itemMovedToColumn: (label, column, position, total) => `${label} moved to ${column}, position ${position} of ${total}`,
+  notificationCenter: 'Notifications',
+  unreadNotifications: (count) => `${count} unread`,
+  markAllRead: 'Mark all as read',
+  noNotifications: 'You’re all caught up',
+  zoomStart: 'Zoom start',
+  zoomEnd: 'Zoom end',
+  resetZoom: 'Reset zoom',
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
