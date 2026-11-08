@@ -2207,6 +2207,151 @@
       }
     ]
   },
+  "TreeList": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "nodes",
+        "type": "TreeListNode[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "rootTitle",
+        "type": "string",
+        "required": true,
+        "description": "Title of the top level, shown on the back row from the first level down."
+      },
+      {
+        "name": "selected",
+        "type": "string | null",
+        "required": false,
+        "description": "The picked leaf."
+      },
+      {
+        "name": "onSelect",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "StepProgress": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "steps",
+        "type": "{ id: string; label: string }[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "required": true,
+        "description": "Index of the step being shown."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SortableList": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "keyExtractor",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "subtitle",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onReorder",
+        "type": "(items: T[]) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "editing",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Shows the move buttons. Screen readers always get Move up / Move down actions."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "InlineEdit": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onSave",
+        "type": "(value: string) => void",
+        "required": true,
+        "description": "Called on Return or when the field loses focus, if the text changed."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "OnboardingScreen": {
     "file": "patterns/app.tsx",
     "extends": [],

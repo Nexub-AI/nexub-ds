@@ -297,6 +297,42 @@ import { Send } from '@nexub/icons/native';
     differences: [{ aspect: 'Picker', web: 'Nexub calendar popover.', mobile: 'The platform date/time picker (needs @react-native-community/datetimepicker).' }],
     code: `<DateTimeField label="Date of birth" value={dob} onValueChange={setDob} mode="date" />`,
   },
+  'time-picker': {
+    name: 'DateTimeField',
+    preview: 'date-time-field',
+    differences: [{ aspect: 'Picker', web: 'Native time input.', mobile: 'The platform time picker: `mode="time"`.' }],
+    code: `<DateTimeField label="Remind me at" mode="time" value={at} onValueChange={setAt} />`,
+  },
+  'date-time-picker': {
+    name: 'DateTimeField',
+    preview: 'date-time-field',
+    differences: [{ aspect: 'Fields', web: 'One group: date button and time input.', mobile: 'Two DateTimeFields, `mode="date"` and `mode="time"`, on the same Date.' }],
+    code: `<DateTimeField label="Date" mode="date" value={start} onValueChange={setStart} />\n<DateTimeField label="Time" mode="time" value={start} onValueChange={setStart} />`,
+  },
+  'tree-view': {
+    name: 'TreeList',
+    preview: 'tree-list',
+    differences: [{ aspect: 'Layout', web: 'An indented tree; Arrow keys open and close.', mobile: 'Drill-down lists with a back row: one level at a time.' }],
+    code: `<TreeList rootTitle="Teams" nodes={teams} selected={picked} onSelect={setPicked} />`,
+  },
+  sortable: {
+    name: 'SortableList',
+    preview: 'sortable-list',
+    differences: [{ aspect: 'Moving', web: 'Drag, or Alt+Arrow on a handle.', mobile: 'Move up / down buttons, and the same moves as VoiceOver and TalkBack actions.' }],
+    code: `<SortableList items={widgets} keyExtractor={(w) => w.id} title={(w) => w.name} onReorder={setWidgets} />`,
+  },
+  stepper: {
+    name: 'StepProgress',
+    preview: 'step-progress',
+    differences: [{ aspect: 'Steps', web: 'Every step with its label; reachable steps are buttons.', mobile: 'Segments and "Step 2 of 4: Billing"; move with your screen’s Back and Continue.' }],
+    code: `<StepProgress steps={steps} current={1} />`,
+  },
+  'inline-edit': {
+    name: 'InlineEdit',
+    preview: 'inline-edit',
+    differences: [{ aspect: 'Saving', web: 'Enter or blur saves; Escape reverts.', mobile: 'Return or leaving the field saves.' }],
+    code: `<InlineEdit label="Project name" value={name} onSave={setName} />`,
+  },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {
     name: 'ToastProvider + useToast',

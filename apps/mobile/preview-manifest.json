@@ -319,6 +319,42 @@
       ],
       "path": "/m/preview/file-list"
     },
+    "tree-list": {
+      "title": "TreeList",
+      "kind": "component",
+      "web": "tree-view",
+      "examples": [
+        "Drill down"
+      ],
+      "path": "/m/preview/tree-list"
+    },
+    "sortable-list": {
+      "title": "SortableList",
+      "kind": "component",
+      "web": "sortable",
+      "examples": [
+        "Widget order"
+      ],
+      "path": "/m/preview/sortable-list"
+    },
+    "step-progress": {
+      "title": "StepProgress",
+      "kind": "component",
+      "web": "stepper",
+      "examples": [
+        "Step 2 of 4"
+      ],
+      "path": "/m/preview/step-progress"
+    },
+    "inline-edit": {
+      "title": "InlineEdit",
+      "kind": "component",
+      "web": "inline-edit",
+      "examples": [
+        "Rename"
+      ],
+      "path": "/m/preview/inline-edit"
+    },
     "accordion": {
       "title": "Accordion",
       "kind": "component",
@@ -730,6 +766,18 @@
     ],
     "data-table": [
       "data-list"
+    ],
+    "tree-view": [
+      "tree-list"
+    ],
+    "sortable": [
+      "sortable-list"
+    ],
+    "stepper": [
+      "step-progress"
+    ],
+    "inline-edit": [
+      "inline-edit"
     ],
     "accordion": [
       "accordion"
