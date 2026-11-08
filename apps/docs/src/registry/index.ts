@@ -140,6 +140,7 @@ import settingsSectionEntry from './patterns/settings-section';
 import infoListEntry from './patterns/info-list';
 import stepIndicatorEntry from './patterns/step-indicator';
 import notificationItemEntry from './patterns/notification-item';
+import notificationCenterEntry from './patterns/notification-center';
 import listDetailEntry from './patterns/list-detail';
 
 // ─── Design refresh Phase 5 ───────────────────────────────────────────────────
@@ -162,6 +163,7 @@ import approvalCardEntry from './components/approval-card';
 import toolCallEntry from './components/tool-call';
 import planTrackerEntry from './components/plan-tracker';
 import chartToggleEntry from './components/chart-toggle';
+import chartZoomEntry from './components/chart-zoom';
 import kpiTileEntry from './components/kpi-tile';
 import funnelEntry from './components/funnel';
 import heatmapEntry from './components/heatmap';
@@ -293,6 +295,7 @@ export const componentEntries: ComponentEntry[] = [
   toolCallEntry,
   planTrackerEntry,
   chartToggleEntry,
+  chartZoomEntry,
   kpiTileEntry,
   funnelEntry,
   heatmapEntry,
@@ -366,6 +369,7 @@ export const patternEntries: ComponentEntry[] = [
   infoListEntry,
   stepIndicatorEntry,
   notificationItemEntry,
+  notificationCenterEntry,
   listDetailEntry,
   bentoGridEntry,
   errorSummaryEntry,

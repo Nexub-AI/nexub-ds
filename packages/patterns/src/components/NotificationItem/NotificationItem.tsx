@@ -8,16 +8,24 @@ export interface NotificationItemProps extends React.HTMLAttributes<HTMLDivEleme
   read?: boolean;
   icon?: React.ReactNode;
   onDismiss?: () => void;
+  /** Makes the whole item a link to the notification's target. */
+  href?: string;
+  /** Makes the whole item a button (when there's no `href`). */
+  onSelect?: () => void;
 }
 
+// Stretched: the title's link or button covers the whole item; dismiss sits above it.
+const stretched =
+  'outline-none after:absolute after:inset-0 after:rounded-shape-container focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-[var(--color-primary)]';
+
 export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationItemProps>(
-  ({ title, description, timestamp, read = false, icon, onDismiss, className, ...props }, ref) => {
+  ({ title, description, timestamp, read = false, icon, onDismiss, href, onSelect, className, ...props }, ref) => {
     const t = useNexubMessages();
     return (
       <div
         ref={ref}
         className={cn(
-          'nx-state-layer flex items-start gap-3 p-3 rounded-shape-container',
+          'nx-state-layer relative flex items-start gap-3 p-3 rounded-shape-container',
           !read && 'bg-[var(--color-surface-container-low)]',
           className,
         )}
@@ -37,7 +45,19 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
 
         {/* content */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[var(--color-on-surface)] truncate">{title}</p>
+          <p className="text-sm font-medium text-[var(--color-on-surface)] truncate">
+            {href ? (
+              <a href={href} onClick={onSelect} className={stretched}>
+                {title}
+              </a>
+            ) : onSelect ? (
+              <button type="button" onClick={onSelect} className={cn('text-start', stretched)}>
+                {title}
+              </button>
+            ) : (
+              title
+            )}
+          </p>
           {description && (
             <p className="text-sm text-[var(--color-on-surface-muted)] mt-0.5 line-clamp-2">
               {description}
@@ -56,7 +76,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
             type="button"
             onClick={onDismiss}
             aria-label={t.dismissNotification}
-            className="shrink-0 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] p-1 rounded-shape-control"
+            className="relative z-[1] shrink-0 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] p-1 rounded-shape-control"
           >
             ×
           </button>

@@ -239,6 +239,17 @@
       ]
     },
     {
+      "slug": "chart-zoom",
+      "name": "Chart Zoom",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow keys / Home / End: Move the focused thumb."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "checkbox-card",
       "name": "Checkbox Card",
       "package": "@nexub/react",
@@ -1425,6 +1436,15 @@
       "slug": "marketing-nav",
       "name": "MarketingNav",
       "package": "@nexub/marketing",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "notification-center",
+      "name": "NotificationCenter",
+      "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
