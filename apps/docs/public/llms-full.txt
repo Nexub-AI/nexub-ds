@@ -58,7 +58,7 @@ Starting points for typical SaaS screens:
 | Settings | `SettingsLayout` / `SettingsRow` + `SettingsSection` + `FormField` |
 | Sign in / sign up | `AuthCard` + `FormField` + `PasswordInput` |
 | Pricing / billing | `PlanCard` + `SegmentedControl` (monthly / yearly) + `Amount` |
-| Onboarding | `StepIndicator` + `CheckList` |
+| Onboarding | `Stepper` + `CheckList` |
 | Search / commands | `CommandPalette` + `KeyboardShortcut` |
 | Empty, loading, error | `EmptyState`, `Skeleton`, `ErrorState`, `Toast` |
 | Expressive moment (onboarding, hero, success) | `@nexub/themes/vivid` + `data-expression="vivid"` on that area, `Aurora` behind the hero. One expressive moment per screen; keep dense tables and forms Calm |
@@ -580,10 +580,6 @@ Never use a component marked deprecated.
 
 - [PlanCard](components/plan-card.md) `@nexub/patterns`: Pricing plan card with feature checklist, badge, and CTA button.
 
-## Patterns — Navigation
-
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns` **(deprecated)**: Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
-
 ## Patterns — People
 
 - [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.
@@ -1042,7 +1038,6 @@ Type-to-search input with matching options dropdown.
 | `loading` | `boolean` |  | Skeleton rows while options are being fetched (5.2); "Loading" is announced. |
 | `inputValue` | `string` |  | Controlled input text (5.1). |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
-| `mode` | `'inline' \| 'popover'` | `'popover'` | Popover: a field whose list opens below it while typing (the default from 6.0). Inline keeps the list always visible, as in 5.x. Deprecated: `mode` and the inline layout are removed in 7.0. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
 
@@ -1076,7 +1071,7 @@ import { Autocomplete } from '@nexub/react';
 export default function Example() {
   return (
     <div className="w-[260px]">
-      <Autocomplete mode="inline" options={[]} loading placeholder="Loading options…" />
+      <Autocomplete options={[]} loading placeholder="Type to see the loading state" />
     </div>
   );
 }
@@ -1105,7 +1100,7 @@ export default function Example() {
 
 ## Example: Fetch as you type
 
-`mode="popover"` with `onInputChange`: the app filters, the list shows skeleton rows while loading.
+`onInputChange`: the app filters, the list shows skeleton rows while loading.
 
 ```tsx
 'use client';
@@ -7577,7 +7572,7 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 ## When not to use
 
 - Global site navigation — use the sidebar or top nav
-- Sequential steps in order — use StepIndicator
+- Sequential steps in order — use Stepper
 - Comparing content side-by-side — keep both views visible
 - More than 5–7 tabs — consider a Select or sub-navigation
 
@@ -9588,40 +9583,6 @@ export default function Example() {
         New orders
       </Button>
     </div>
-  );
-}
-```
-
-
----
-
-# StepIndicator
-
-> **Deprecated.** Do not use in new code. Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
-
-- Package: `@nexub/patterns` · Category: Navigation · Status: deprecated
-- Import: `import { StepIndicator } from '@nexub/patterns';`
-- Docs: https://nexub-ds-docs.pages.dev/patterns/step-indicator
-
-## Props
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `steps` (required) | `StepIndicatorStep[]` |  | Array of step definitions. |
-| `currentStep` (required) | `number` |  | Zero-based index of the active step. |
-| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction. |
-
-## Example: Default
-
-```tsx
-import { StepIndicator } from '@nexub/patterns';
-
-export default function Example() {
-  return (
-    <StepIndicator
-      currentStep={1}
-      steps={[{ label: 'Account' }, { label: 'Profile' }, { label: 'Billing' }, { label: 'Done' }]}
-    />
   );
 }
 ```

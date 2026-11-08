@@ -509,12 +509,4 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
 
 <ProfileHeader name="Sasi" detail="sasi@nexub.ai" onPress={editProfile} />`,
   },
-  'step-indicator': {
-    name: 'FlowStep',
-    preview: 'pattern/send',
-    differences: [{ aspect: 'Progress', web: 'Numbered steps you can see at once.', mobile: 'One step per screen with "Step 2 of 3" and the action in the footer.' }],
-    code: `import { FlowStep } from '@nexub/react-native/patterns';
-
-<FlowStep step={2} total={3} title="Review" footer={<Button size="lg">Send</Button>}>…</FlowStep>`,
-  },
 };

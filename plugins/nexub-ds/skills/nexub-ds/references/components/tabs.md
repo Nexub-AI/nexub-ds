@@ -16,7 +16,7 @@ Layered content panels switched by tab triggers. Built on Radix UI Tabs.
 ## When not to use
 
 - Global site navigation — use the sidebar or top nav
-- Sequential steps in order — use StepIndicator
+- Sequential steps in order — use Stepper
 - Comparing content side-by-side — keep both views visible
 - More than 5–7 tabs — consider a Select or sub-navigation
 

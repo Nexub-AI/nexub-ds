@@ -230,10 +230,6 @@ Never use a component marked deprecated.
 
 - [PlanCard](components/plan-card.md) `@nexub/patterns`: Pricing plan card with feature checklist, badge, and CTA button.
 
-## Patterns — Navigation
-
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns` **(deprecated)**: Deprecated, removed in 7.0: use Stepper (orientation="vertical"). Visual progress indicator for multi-step flows.
-
 ## Patterns — People
 
 - [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.

@@ -138,7 +138,6 @@ import planCardEntry from './patterns/plan-card';
 import activityFeedEntry from './patterns/activity-feed';
 import settingsSectionEntry from './patterns/settings-section';
 import infoListEntry from './patterns/info-list';
-import stepIndicatorEntry from './patterns/step-indicator';
 import notificationItemEntry from './patterns/notification-item';
 import notificationCenterEntry from './patterns/notification-center';
 import listDetailEntry from './patterns/list-detail';
@@ -367,7 +366,6 @@ export const patternEntries: ComponentEntry[] = [
   activityFeedEntry,
   settingsSectionEntry,
   infoListEntry,
-  stepIndicatorEntry,
   notificationItemEntry,
   notificationCenterEntry,
   listDetailEntry,

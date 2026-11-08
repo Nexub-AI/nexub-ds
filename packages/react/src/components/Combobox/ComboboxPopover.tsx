@@ -1,6 +1,6 @@
 'use client';
 
-// Internal: the popover shell shared by Autocomplete (mode="popover") and
+// Internal: the popover shell shared by Autocomplete and
 // MultiSelect. Not exported from the package.
 
 import * as React from 'react';

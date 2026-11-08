@@ -25,8 +25,6 @@ export type { ListDetailProps } from './components/ListDetail/index.js';
 export { PlanCard } from './components/PlanCard/index.js';
 export type { PlanCardProps } from './components/PlanCard/index.js';
 
-export { StepIndicator } from './components/StepIndicator/index.js';
-export type { StepIndicatorProps, StepIndicatorStep } from './components/StepIndicator/index.js';
 
 export { NotificationItem } from './components/NotificationItem/index.js';
 export type { NotificationItemProps } from './components/NotificationItem/index.js';
