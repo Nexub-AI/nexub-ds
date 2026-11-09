@@ -10,6 +10,9 @@ on:
   push:
     branches: [staging]
 
+permissions:
+  contents: read
+
 concurrency:
   group: staging-deploy
   cancel-in-progress: true  # only the latest push to staging matters
@@ -18,10 +21,6 @@ jobs:
   deploy-staging:
     name: Build & deploy to Cloudflare Pages (staging)
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      deployments: write  # required so wrangler can register a GitHub Deployment for the Pages preview URL
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -68,4 +67,4 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx -y wrangler@3.114.17 pages deploy out --project-name=nexub-ds-docs --branch=staging --commit-dirty=true
+        run: pnpm exec wrangler pages deploy out --project-name=nexub-ds-docs --branch=staging --commit-dirty=true
