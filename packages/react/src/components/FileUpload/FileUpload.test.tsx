@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { FileUpload, fileAccepted, formatFileSize } from './FileUpload.js';
 
@@ -157,6 +157,7 @@ describe('FileUpload previews, paste and list motion', () => {
   it('previews images and revokes the URL on remove', async () => {
     const create = vi.fn(() => 'blob:x');
     const revoke = vi.fn();
+    const original = { createObjectURL: URL.createObjectURL, revokeObjectURL: URL.revokeObjectURL };
     Object.assign(URL, { createObjectURL: create, revokeObjectURL: revoke });
     const { container } = render(<Harness />);
     const img = new File(['x'], 'a.png', { type: 'image/png' });
@@ -165,11 +166,18 @@ describe('FileUpload previews, paste and list motion', () => {
     expect(container.querySelectorAll('img')).toHaveLength(1);
     expect(container.querySelector('img')).toHaveAttribute('alt', '');
     expect(create).toHaveBeenCalledWith(img);
+    // Fake timers: the exit fallback timer is deterministic, not raced against load.
+    vi.useFakeTimers();
     fireEvent.click(screen.getByRole('button', { name: 'Remove a.png' }));
     expect(screen.getByRole('button', { name: 'Remove a.png' }).closest('li')).toHaveAttribute('data-state', 'exit');
-    await waitFor(() => expect(screen.queryByText('a.png')).toBeNull());
+    act(() => {
+      vi.advanceTimersByTime(2000);
+    });
+    vi.useRealTimers();
+    expect(screen.queryByText('a.png')).toBeNull();
     expect(revoke).toHaveBeenCalledWith('blob:x');
     expect(screen.getByText('b.pdf').closest('li')).not.toHaveAttribute('data-state', 'exit');
+    Object.assign(URL, original);
   });
 
   it('adds pasted files through the same filters', () => {
