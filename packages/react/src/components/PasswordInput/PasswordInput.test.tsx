@@ -57,4 +57,19 @@ describe('PasswordInput', () => {
     // Controlled: stays hidden until the parent passes visible.
     expect(document.querySelector('input')).toHaveAttribute('type', 'password');
   });
+
+  it('keeps revealed text away from spellcheck and autocorrect', () => {
+    render(<PasswordInput defaultVisible spellCheck autoCorrect="on" autoCapitalize="on" />);
+    const input = document.querySelector('input');
+    expect(input).toHaveAttribute('spellcheck', 'false');
+    expect(input).toHaveAttribute('autocorrect', 'off');
+    expect(input).toHaveAttribute('autocapitalize', 'off');
+  });
+
+  it('defaults autocomplete to current-password and lets it be overridden', () => {
+    const { rerender } = render(<PasswordInput />);
+    expect(document.querySelector('input')).toHaveAttribute('autocomplete', 'current-password');
+    rerender(<PasswordInput autoComplete="new-password" />);
+    expect(document.querySelector('input')).toHaveAttribute('autocomplete', 'new-password');
+  });
 });

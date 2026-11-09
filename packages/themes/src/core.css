@@ -417,6 +417,12 @@ code, kbd, pre, samp {
   from { border-radius: 50%; rotate: 0deg; }
   to { border-radius: 38% 62% 38% 62% / 62% 38% 62% 38%; rotate: 90deg; }
 }
+/* Progress with no value: a 40%-wide segment slides across the track.
+   Reduced motion: the global rule stops it, leaving a static segment. */
+@keyframes nx-progress-indeterminate {
+  from { translate: -100% 0; }
+  to { translate: 250% 0; }
+}
 @keyframes nx-shimmer {
   from { background-position: 100% 0; }
   to { background-position: -100% 0; }
