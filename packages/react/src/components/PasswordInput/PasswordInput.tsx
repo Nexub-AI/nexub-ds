@@ -43,10 +43,17 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
     return (
       <Input
         ref={ref}
+        // Default autofill hint (override with 'new-password' on sign-up).
+        autoComplete="current-password"
+        {...props}
         type={showPassword ? 'text' : 'password'}
         className={className}
         trailingIcon={toggleButton}
-        {...props}
+        // Revealed text must not reach cloud spellcheck/autocorrect, so these
+        // stay off and can't be overridden.
+        spellCheck={false}
+        autoCorrect="off"
+        autoCapitalize="off"
       />
     );
   },

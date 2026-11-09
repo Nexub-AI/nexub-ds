@@ -41,6 +41,22 @@ describe('Progress', () => {
     expect(fill.style.width).toBe('50%');
   });
 
+  it('is indeterminate without a value', () => {
+    const { container } = render(<Progress />);
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-valuenow');
+    const fill = container.querySelector('[data-part="fill"]') as HTMLElement;
+    expect(fill).toHaveAttribute('data-indeterminate');
+    expect(fill.className).toContain('nx-progress-indeterminate');
+  });
+
+  it('is determinate at value 0', () => {
+    const { container } = render(<Progress value={0} />);
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+    const fill = container.querySelector('[data-part="fill"]') as HTMLElement;
+    expect(fill).not.toHaveAttribute('data-indeterminate');
+    expect(fill.style.width).toBe('0%');
+  });
+
   it('applies size variant', () => {
     render(<Progress size="lg" value={50} />);
     expect(screen.getByRole('progressbar')).toHaveClass('h-3');
