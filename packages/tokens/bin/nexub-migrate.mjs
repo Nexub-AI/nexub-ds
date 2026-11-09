@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -408,6 +408,48 @@ function pinDefaults(src) {
   return { output, items };
 }
 
+// ─── changes-in-8: report what 8.0 removes and which defaults it flips ───────
+// Report only: each needs a choice (adopt the new default now, or pin the old one).
+// The 7.x legacy motion tokens (tokens/motion.json); the spring tokens (--ease-spatial-* …) stay.
+const LEGACY_MOTION = /(?<![\w-])--(?:duration-(?:instant|fast|normal|slow|slower)|ease-(?:linear|in|out|in-out|out-expo|spring))(?![\w-])(?!['"]?\s*:)/g;
+const EASING_COMPONENTS = /<(Fade|Scale|Slide|Collapse)\b[^>]*\beasing=/g;
+const SCROLL_LOCKED = /<((?:Dialog|AlertDialog|Drawer|Sheet)\.Root|CommandPalette)(?![\w.$-])/g;
+const STRICT_SCHEMES = new Set(['http', 'https', 'mailto', 'tel', 'sms']);
+const SCRIPT_SCHEMES = new Set(['javascript', 'vbscript', 'data', 'file']); // already dropped in 7.x
+const SIGNATURE_NOTE = 'Signature becomes the default look in 8.0: try it now with data-style="signature" on <html>, or set data-style="classic" to keep the 7.x (Material 3) look';
+const HREF_LITERAL = /\b\w*href\s*[=:]\s*\{?\s*(['"`])\s*([a-z][a-z0-9+.-]*):/gi;
+
+function changesIn8(src, ext, report) {
+  for (const m of src.matchAll(LEGACY_MOTION))
+    report(m.index, `${m[0]} is removed in 8.0 (deprecated in 7.3): use the spring tokens, e.g. var(--motion-spring-effects-default-duration) and var(--motion-spring-effects-default-easing)`);
+  if (!COMPONENT_EXTS.has(ext)) {
+    if (ext === '.css' && /@nexub\/themes/.test(src) && !/data-style/.test(src))
+      for (const m of src.matchAll(/@import\s+(?:url\()?['"]@nexub\/themes/g)) { report(m.index, SIGNATURE_NOTE); break; }
+    return;
+  }
+  if (/@nexub\/react['"/]/.test(src)) {
+    for (const m of src.matchAll(EASING_COMPONENTS))
+      report(m.index, `<${m[1]} easing> is removed in 8.0 (deprecated in 7.3): drop easing and use duration, which rides the spring tokens`);
+    for (const m of src.matchAll(SCROLL_LOCKED)) {
+      const tag = readTag(src, m.index + m[0].length);
+      if (tag && tag.attrs.some((a) => a.name === 'scrollLock')) continue;
+      const spread = tag && src.slice(m.index, tag.end).includes('{...') ? ' (unless the spread sets scrollLock)' : '';
+      report(m.index, `<${m[1]}> uses the default scrollLock${spread}, which becomes "class" in 8.0: load @nexub/themes/base CSS (it styles html.nexub-scroll-lock) and try scrollLock="class" now, or pin scrollLock="style" to keep 7.x`);
+    }
+    for (const m of src.matchAll(/\bsafeHref\(([^()]*)\)/g))
+      if (!/\bstrict\b/.test(m[1])) report(m.index, 'safeHref() turns strict in 8.0 (only relative, http(s), mailto, tel, sms): pass { strict: true } now, or { strict: false } to keep custom schemes');
+  }
+  if (/@nexub\/(react|patterns|marketing)['"/]/.test(src)) {
+    for (const m of src.matchAll(HREF_LITERAL)) {
+      const s = m[2].toLowerCase();
+      if (!STRICT_SCHEMES.has(s) && !SCRIPT_SCHEMES.has(s))
+        report(m.index, `"${m[2]}:" link: 8.0 Nexub links use strict safeHref and drop it (only relative, http(s), mailto, tel, sms); render your own <a> for custom schemes`);
+    }
+  }
+  const themes = /\bimport\s+['"]@nexub\/themes/.exec(src);
+  if (themes && !/data-style/.test(src)) report(themes.index, SIGNATURE_NOTE);
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -458,6 +500,7 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
       for (const m of src.matchAll(/<Autocomplete\b[^>]*\bmode=/g))
         items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete `mode` is removed in 7.0 (the popover is the only layout): remove it; for an always-open list use the Combobox parts' });
   }
+  if (rules.has('changes-in-8')) changesIn8(src, ext, (at, message) => items.push({ at, rule: 'changes-in-8', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -525,6 +568,9 @@ Rules:
                      (Autocomplete's inline layout is gone in 7.0, so it is not pinned)
   removed-in-7       report what 7.0 removes: <StepIndicator> (use Stepper) and
                      Autocomplete's mode prop
+  changes-in-8       report what 8.0 removes and flips: legacy --duration-*/--ease-* tokens,
+                     the Motion easing prop, the default scrollLock (becomes "class"),
+                     non-strict safeHref and custom-scheme links, and the Signature look
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

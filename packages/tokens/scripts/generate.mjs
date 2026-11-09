@@ -29,16 +29,74 @@ const SEEDS = {
 };
 export const PRODUCTS = ['leap', 'bookub', 'payub', 'founderub'];
 
+// { name: TonalPalette } → { name: { tone: hex } } over every generated tone.
+const toneMap = (p) =>
+  Object.fromEntries(
+    Object.entries(p).map(([name, pal]) => [name, Object.fromEntries(TONES.map((t) => [t, toneHex(pal, t)]))]),
+  );
+
 export function palettes() {
   const p = Object.fromEntries(Object.entries(SEEDS).map(([name, hex]) => [name, tonalPalette(hex)]));
   const hue = tonalPalette(BRAND).hue;
   p.secondary = TonalPalette.fromHueAndChroma(tonalPalette(SEEDS.primary).hue, 16);
   p.neutral = TonalPalette.fromHueAndChroma(hue, 4);
   p['neutral-variant'] = TonalPalette.fromHueAndChroma(hue, 8);
-  return Object.fromEntries(
-    Object.entries(p).map(([name, pal]) => [name, Object.fromEntries(TONES.map((t) => [t, toneHex(pal, t)]))]),
-  );
+  return toneMap(p);
 }
+
+// ─── Signature style (7.9 opt-in, the default in 8.0) ────────────────────────
+// ROADMAP_7.x.md "The Material question": keep the engine (HCT roles, tone
+// gaps, state layers, springs), change the face. Signature swaps only the four
+// palettes behind the roles and keeps the role → tone table, so every WCAG
+// pair still holds by construction (generate.test.mjs checks it again).
+//
+// Primary leads with the Nexub mark's indigo (--color-brand-mark-1) instead of
+// the M3-adjacent #0059c8. It shares Leap's hue family (#6366f1, hue 285).
+export const SIGNATURE_SEED = '#242cdd';
+// Neutrals instead of the brand-tinted lavender (chroma 4/8 at hue 255):
+// surfaces at zero chroma (true grey), and a faint warm cast (hue 70) only on
+// neutral-variant (secondary text, outlines). HCT tints near-white tones hard,
+// so even chroma 1 reads pink on a surface: keep surfaces at 0.
+const SIGNATURE_NEUTRAL = { hue: 70, chroma: 0, variantChroma: 1.5 };
+// Secondary drives `tonal` buttons and nav indicators: chroma 6 on the brand
+// hue reads as a neutral-tinted container, not M3's pastel (chroma 16).
+const SIGNATURE_SECONDARY_CHROMA = 6;
+
+/** Signature replacements for primary, secondary, neutral and neutral-variant (same shape as palettes()). */
+export function signaturePalettes() {
+  const brand = tonalPalette(SIGNATURE_SEED);
+  const { hue, chroma, variantChroma } = SIGNATURE_NEUTRAL;
+  return toneMap({
+    primary: brand,
+    secondary: TonalPalette.fromHueAndChroma(brand.hue, SIGNATURE_SECONDARY_CHROMA),
+    neutral: TonalPalette.fromHueAndChroma(hue, chroma),
+    'neutral-variant': TonalPalette.fromHueAndChroma(hue, variantChroma),
+  });
+}
+
+// Non-colour signature values, shared by roles.css and @nexub/tokens/native.
+export const SIGNATURE = {
+  // px. Controls and fields at ~10px, cards 16px (overlay/tooltip/min unchanged).
+  // Chips, tags, segmented and toggles should stay pills: see --shape-pill in
+  // @nexub/themes/signature.css.
+  shape: { control: 10, field: 10, container: 16 },
+  // em. Display roles one notch tighter than classic.
+  tracking: { 'display-xl': -0.05, 'display-lg': -0.035, 'display-md': -0.03, 'display-sm': -0.025 },
+  // Crisper, lower elevation: a hairline ring does the separating, so blur is
+  // smaller and tighter (negative spread) than classic.
+  elevation: {
+    1: '0 0 0 1px light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.08)), 0 1px 2px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.4))',
+    2: '0 0 0 1px light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.1)), 0 1px 2px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.4)), 0 6px 16px -4px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.5))',
+    3: '0 0 0 1px light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.1)), 0 2px 4px light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.45)), 0 16px 36px -8px light-dark(rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.6))',
+  },
+};
+
+// Roles that read a signature palette. Restated on a signature *subtree*
+// (on <html> the palette swap alone is enough, see signatureCss()).
+export const signatureRoles = () => {
+  const sig = signaturePalettes();
+  return Object.fromEntries(Object.entries(ROLES).filter(([, [pal]]) => pal in sig));
+};
 
 // Wide gamut: accent fills get 18% more OKLCH chroma on P3 screens. Lightness
 // is untouched, so contrast pairs move by a hair at most.
@@ -105,26 +163,57 @@ function chartCss() {
   ].join('\n');
 }
 
+const at = (lvl, sel) => `[data-contrast='${lvl}']${sel}, [data-contrast='${lvl}'] ${sel}`;
+const auto = (sel) => `:root:not([data-contrast])${sel}, :root:not([data-contrast]) ${sel}`;
+// A scoped role set at every contrast level (products, signature subtrees).
+const levelBlocks = (sel, roles, p3) =>
+  [
+    `${sel} {\n${decls(roles, 'standard', p3)}\n}`,
+    `${at('medium', sel)} {\n${decls(roles, 'medium', p3)}\n}`,
+    `${at('high', sel)} {\n${decls(roles, 'high', p3)}\n}`,
+    `@media (prefers-contrast: more) {\n${auto(sel)} {\n${decls(roles, 'high', p3)}\n}\n}`,
+  ].join('\n');
+
 function contrastBlocks(p3) {
   const all = { ...ROLES, ...tertiary('primary') };
-  const at = (lvl, sel) => `[data-contrast='${lvl}']${sel}, [data-contrast='${lvl}'] ${sel}`;
-  const auto = (sel) => `:root:not([data-contrast])${sel}, :root:not([data-contrast]) ${sel}`;
-  const brands = PRODUCTS.map((p) => {
-    const sel = `[data-product='${p}']`;
-    const roles = tertiary(p);
-    return [
-      `${sel} {\n${decls(roles, 'standard', p3)}\n}`,
-      `${at('medium', sel)} {\n${decls(roles, 'medium', p3)}\n}`,
-      `${at('high', sel)} {\n${decls(roles, 'high', p3)}\n}`,
-      `@media (prefers-contrast: more) {\n${auto(sel)} {\n${decls(roles, 'high', p3)}\n}\n}`,
-    ].join('\n');
-  });
+  const brands = PRODUCTS.map((p) => levelBlocks(`[data-product='${p}']`, tertiary(p), p3));
   return [
     `:root, [data-contrast='standard'] {\n${decls(all, 'standard', p3)}\n}`,
     `[data-contrast='medium'] {\n${decls(all, 'medium', p3)}\n}`,
     `[data-contrast='high'] {\n${decls(all, 'high', p3)}\n}`,
     `@media (prefers-contrast: more) {\n:root:not([data-contrast]) {\n${decls(all, 'high', p3)}\n}\n}`,
     ...brands,
+  ].join('\n\n');
+}
+
+// Signature, opt-in with data-style="signature" on <html> or any subtree.
+// It re-points the palette tones the roles read, so on <html> every role,
+// contrast level, product, P3 boost and dark scheme follows with no restated
+// role table. A subtree inherits roles already computed above it, so there the
+// signature roles are restated at each level too. Tertiary isn't restated
+// (it would hide a data-product set on an ancestor): in a signature subtree
+// without a product it keeps the classic primary.
+// Order: after variables.css (same specificity as its :root), so it wins.
+export const SIGNATURE_SELECTOR = "[data-style='signature']";
+const SUBTREE = `:not(:root)${SIGNATURE_SELECTOR}`;
+function signatureCss() {
+  // Only the tones the generated roles and charts read (about half), to keep
+  // roles.css small. Direct --color-palette-* use outside the roles stays classic.
+  const used = new Set(contrastBlocks(false).concat(chartCss()).match(/--color-palette-[\w-]+?-\d+\b/g));
+  const vars = [
+    ...Object.entries(signaturePalettes()).flatMap(([name, tones]) =>
+      Object.entries(tones)
+        .filter(([t]) => used.has(`--color-palette-${name}-${t}`))
+        .map(([t, hex]) => `  --color-palette-${name}-${t}: ${hex};`),
+    ),
+    ...Object.entries(SIGNATURE.shape).map(([k, px]) => `  --shape-${k}: ${rem(px)};`),
+    ...Object.entries(SIGNATURE.tracking).map(([role, em]) => `  --type-${role}-letterSpacing: ${em}em;`),
+    ...Object.entries(SIGNATURE.elevation).map(([lvl, v]) => `  --elevation-${lvl}: ${v};`),
+  ];
+  return [
+    `/* Signature style (7.9 opt-in): neutral palettes, brand-indigo primary, ~10px controls, crisp elevation. */`,
+    `${SIGNATURE_SELECTOR} {\n${vars.join('\n')}\n}`,
+    levelBlocks(SUBTREE, signatureRoles(), false),
   ].join('\n\n');
 }
 
@@ -148,9 +237,13 @@ ${contrastBlocks(false)}
 ${chartCss()}
 }
 
+${signatureCss()}
+
 @media (color-gamut: p3) {
 @supports (color: oklch(from red l c h)) {
 ${contrastBlocks(true)}
+
+${levelBlocks(SUBTREE, signatureRoles(), true)}
 }
 }
 `;
