@@ -39,8 +39,8 @@ export function ComponentHero({ entry, children }: { entry: ComponentEntry; chil
           {deprecation.removeIn}.
         </Note>
       )}
-      <div className="docs-snippet inline-flex max-w-full items-center gap-2 self-start rounded-shape-field bg-[var(--docs-snippet-bg)] py-1.5 pe-2 ps-3 font-mono text-body-sm text-[var(--docs-snippet-fg)]">
-        <code className="truncate">{importLine}</code>
+      <div className="docs-code-strip">
+        <code>{importLine}</code>
         <CopyButton text={importLine} />
       </div>
       <MarkdownActions href={`/components/${meta.slug}.md`} />

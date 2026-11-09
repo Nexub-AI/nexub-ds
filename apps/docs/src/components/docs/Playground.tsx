@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Badge, Input, Label, NumberInput, Select, Switch, Text } from '@nexub/react';
 import type { ControlDef, PlaygroundDef } from '@/registry/types';
 import { renderPlayground, hasPlaygroundRenderer } from './PlaygroundRegistry';
-import { CopyButton } from './CopyButton';
+import { CodeSnippet } from './CodeFrame';
 import { PreviewToolbar, DEFAULT_TOOLBAR_STATE, bgClass, widthPx, type PreviewToolbarState } from './PreviewToolbar';
 
 interface Props {
@@ -76,14 +76,7 @@ export function Playground({ slug, componentName, def }: Props) {
 
           <PreviewToolbar state={toolbar} onChange={setToolbar} />
 
-          <div className="relative border-t border-[var(--color-outline-variant)]">
-            <pre className="docs-snippet m-0 overflow-x-auto bg-[var(--docs-snippet-bg)] py-4 pe-14 ps-5 font-mono text-label-md leading-relaxed text-[var(--docs-snippet-fg)]">
-              <code>{code}</code>
-            </pre>
-            <div className="absolute end-2 top-2">
-              <CopyButton text={code} />
-            </div>
-          </div>
+          <CodeSnippet code={code} lang="tsx" className="rounded-none border-x-0 border-b-0" />
         </div>
       </div>
     </div>

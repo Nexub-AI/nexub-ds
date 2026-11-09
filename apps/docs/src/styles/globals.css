@@ -79,10 +79,13 @@
 }
 
 @layer utilities {
-/* ── Kit headings (Heading + fluid docs sizes) ─────────────────────────────── */
-.docs-title { font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.015em; font-family: var(--font-family-display); }
-.docs-h2 { font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem); line-height: 1.25; letter-spacing: -0.01em; font-family: var(--font-family-display); }
-.docs-h3 { font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); line-height: 1.3; font-family: var(--font-family-display); }
+/* ── Docs type map: the ONE definition of each heading size ─────────────────
+ * Kit headings (`.docs-title/.docs-h2/.docs-h3`) and raw prose headings share
+ * these rules, so a page can't end up with two h3 scales.
+ *   title 28→44px · h2 22→32px · h3 18→22px · body = body-lg · code 13px */
+.docs-title, .docs-prose h1:not([class]) { font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.015em; font-family: var(--font-family-display); }
+.docs-h2, .docs-prose h2:not([class]) { font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem); line-height: 1.25; letter-spacing: -0.01em; font-family: var(--font-family-display); }
+.docs-h3, .docs-prose h3:not([class]) { font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); line-height: 1.3; font-family: var(--font-family-display); }
 
 /* ── Docs-site layout vars ────────────────────────────────────────────────── */
 :root {
@@ -96,14 +99,15 @@
   --font-family-sans: 'Inter Variable', 'Inter Fallback', ui-sans-serif, system-ui, sans-serif;
   --font-family-display: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans Fallback', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
 
-  /* Code blocks sit on the tonal container in both modes; Shiki emits
-     dual-theme tokens (see .shiki below). */
-  --docs-code-bg: var(--color-surface-container);
-
-  /* Plain (non-Shiki) snippets: Hero import strip, Playground code, preview fallback. */
-  --docs-snippet-bg: var(--color-surface-container);
-  --docs-snippet-fg: var(--color-on-surface);
-  --docs-snippet-border: transparent;
+  /* Code surface: its own editor surface, theme-matched (white in light,
+     near-black in dark) with a hairline, never surface-container, so a code
+     block can't be mistaken for inline code. Shiki's github-*-default themes
+     are tuned for exactly these surfaces (see .shiki below). */
+  --docs-code-surface: var(--color-surface-container-lowest);
+  --docs-code-border: var(--color-outline-variant);
+  --docs-code-header: color-mix(in srgb, var(--color-on-surface) 3%, var(--docs-code-surface));
+  --docs-code-highlight: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --docs-code-size: 0.8125rem; /* 13px, every code block */
 }
 
 /* ── Base resets ──────────────────────────────────────────────────────────── */
@@ -145,31 +149,12 @@ body {
 /* Headings: display face, fluid sizes via clamp() (no hard breakpoint jump).
  *   h1: 28px → 44px, h2: 22px → 32px, h3: 18px → 24px
  * Body: Inter on the body-lg type role. */
-.docs-prose :is(h1, h2, h3):not([class]) {
-  font-family: var(--font-family-display);
-  color: var(--color-on-surface);
-  letter-spacing: -0.01em;
-}
-.docs-prose h1:not([class]) {
-  font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem);
-  font-weight: var(--type-display-sm-weight);
-  line-height: 1.15;
-  margin-bottom: 0.5rem;
-}
-.docs-prose h2:not([class]) {
-  font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem);
-  font-weight: var(--type-headline-sm-weight);
-  line-height: 1.25;
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-}
-.docs-prose h3:not([class]) {
-  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.5rem);
-  font-weight: var(--type-title-lg-weight);
-  line-height: 1.3;
-  margin-top: 1.5rem;
-  margin-bottom: 0.25rem;
-}
+/* Sizes come from the type map at the top; prose only adds colour, weight
+ * and spacing. */
+.docs-prose :is(h1, h2, h3):not([class]) { color: var(--color-on-surface); }
+.docs-prose h1:not([class]) { font-weight: var(--type-display-sm-weight); margin-bottom: 0.5rem; }
+.docs-prose h2:not([class]) { font-weight: var(--type-headline-sm-weight); margin-top: 2rem; margin-bottom: 0.5rem; }
+.docs-prose h3:not([class]) { font-weight: var(--type-title-lg-weight); margin-top: 1.5rem; margin-bottom: 0.25rem; }
 .docs-prose p:not([class]) {
   font-family: var(--font-family-sans);
   font-size: var(--type-body-lg-size);
@@ -222,21 +207,82 @@ body {
   text-decoration-thickness: 1px;
 }
 .docs-prose a:not([class]):hover { text-decoration-thickness: 2px; opacity: 1; }
-.docs-prose code:not([class]) {
+/* Inline code: a faint tint + hairline. Never the block surface, and never
+ * applied inside a block (:not(pre) >). */
+.docs-prose :not(pre) > code:not([class]) {
   font-family: var(--font-family-mono);
-  font-size: 0.85em;
-  background: var(--color-surface-container);
+  font-size: 0.875em;
+  background: color-mix(in srgb, var(--color-on-surface) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
   border-radius: var(--shape-tooltip);
-  padding: 0.1em 0.4em;
+  padding: 0.05em 0.35em;
   color: var(--color-on-surface);
 }
-.docs-prose pre:not(.shiki, [style]) {
-  background: var(--docs-code-bg);
+
+/* ── Code block anatomy (CodeFrame: CodeBlock + client snippets) ──────────── */
+.docs-code {
+  overflow: hidden;
+  border: 1px solid var(--docs-code-border);
   border-radius: var(--shape-container);
-  padding: 1.25rem 1.5rem;
-  overflow-x: auto;
+  background: var(--docs-code-surface);
+  color: var(--color-on-surface);
 }
-.docs-prose pre code { background: transparent; padding: 0; }
+.docs-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.25rem 0.375rem 0.25rem 1rem;
+  border-bottom: 1px solid var(--docs-code-border);
+  background: var(--docs-code-header);
+}
+.docs-code-label {
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  color: var(--color-on-surface-variant);
+}
+.docs-code-body { overflow-x: auto; }
+.docs-code pre {
+  margin: 0;
+  padding: 1rem 0;
+  background: transparent;
+  font-family: var(--font-family-mono);
+  font-size: var(--docs-code-size);
+  line-height: 1.6;
+  tab-size: 2;
+}
+.docs-code pre code { display: block; min-width: max-content; padding-inline: 1.25rem; background: transparent; border: 0; }
+.docs-code .shiki code { padding-inline: 0; }
+.docs-code .line { display: inline-block; min-width: 100%; padding-inline: 1.25rem; }
+.docs-code .line.highlighted { background: var(--docs-code-highlight); box-shadow: inset 2px 0 var(--color-primary); }
+.docs-code-lines code { counter-reset: docs-line; }
+.docs-code-lines .line::before {
+  counter-increment: docs-line;
+  content: counter(docs-line);
+  display: inline-block;
+  width: 2ch;
+  margin-inline-end: 1.25rem;
+  text-align: end;
+  color: var(--color-on-surface-muted);
+  user-select: none;
+}
+/* Single-line import strip (component / pattern page heroes). */
+.docs-code-strip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+  border: 1px solid var(--docs-code-border);
+  border-radius: var(--shape-field);
+  background: var(--docs-code-surface);
+  font-family: var(--font-family-mono);
+  font-size: var(--docs-code-size);
+  color: var(--color-on-surface);
+}
+.docs-code-strip code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; background: transparent; border: 0; padding: 0; }
 .docs-prose table:not([class]) { border-collapse: collapse; width: 100%; }
 .docs-prose table:not([class]) :is(th, td) {
   padding: 8px 12px;
@@ -361,15 +407,6 @@ html, body {
   .docs-preview-pane { padding: 1rem !important; }
 }
 
-/* ── Plain snippet wrapper (Hero import strip, Playground generated code) ── */
-.docs-snippet code {
-  /* Reset the global .docs-prose code pill treatment when inside a snippet pre */
-  background: transparent;
-  border: none;
-  padding: 0;
-  color: inherit;
-}
-/* Inline (single-line) variant — Hero copy-import strip */
 
 /* ── Component page layout (content + right-rail TOC) ───────────────────── */
 .docs-layout-with-toc {

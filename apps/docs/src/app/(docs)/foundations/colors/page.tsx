@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PageIntro } from '@/components/kit';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
@@ -71,9 +72,9 @@ export default function ColorsPage() {
           </>
         }
       />
-      <pre><code>{`background: var(--color-surface-container-low);
+      <CodeBlock lang="css" code={`background: var(--color-surface-container-low);
 color: var(--color-on-surface);
-/* Tailwind: bg-surface-container-low text-on-surface */`}</code></pre>
+/* Tailwind: bg-surface-container-low text-on-surface */`} />
 
       <h2>Surfaces</h2>
       <p>
@@ -130,7 +131,7 @@ color: var(--color-on-surface);
         outlines move further from their surfaces; surfaces stay put. Medium takes the tone halfway
         between the other two, for users who want more separation without the starkness of high.
       </p>
-      <pre><code>{`<html data-contrast="medium">   <!-- standard | medium | high -->`}</code></pre>
+      <CodeBlock lang="html" code={`<html data-contrast="medium">   <!-- standard | medium | high -->`} />
       <div className={grid}>
         {(['standard', 'medium', 'high'] as const).map((level) => (
           <div key={level} data-contrast={level} className="grid gap-2 p-3 rounded-[16px] bg-[var(--color-surface)]">
@@ -197,9 +198,9 @@ color: var(--color-on-surface);
         HCT tone table as the built-in themes, so every pair still meets WCAG AA in light, dark and every contrast
         level. Like Material 3, the seed is a starting hue, not a fixed swatch: a light yellow becomes a readable olive.
       </p>
-      <pre><code>{`<ThemeProvider seed="#e4572e">…</ThemeProvider>
+      <CodeBlock lang="tsx" code={`<ThemeProvider seed="#e4572e">…</ThemeProvider>
 // a product brand instead of the primary accent:
-<ThemeProvider seed="#e4572e" seedTarget="tertiary">…</ThemeProvider>`}</code></pre>
+<ThemeProvider seed="#e4572e" seedTarget="tertiary">…</ThemeProvider>`} />
       <p>
         <code>ThemeProvider</code> loads the colour maths only when <code>seed</code> is set and applies the roles
         through the CSSOM, so it works under a strict CSP. Because that happens after hydration, server-rendered apps
@@ -215,11 +216,11 @@ color: var(--color-on-surface);
         roles on this page, such as <code>--color-primary</code>. <strong>Component</strong> tokens restyle one component
         without touching the roles it shares with others:
       </p>
-      <pre><code>{`.checkout {
+      <CodeBlock lang="css" code={`.checkout {
   --button-filled-bg: var(--color-success);
   --button-filled-fg: var(--color-on-success);
   --card-radius: 24px;
-}`}</code></pre>
+}`} />
       <p>
         Component tokens are unset by default. Each component reads <code>var(--button-filled-bg, var(--color-primary))</code>,
         so the default resolves where the component sits, and nested <code>data-theme</code>,{' '}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DocTable, List, PageIntro, Prose, Section } from '@/components/kit';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
@@ -26,10 +27,10 @@ export default function MarketingModePage() {
       />
 
       <Section id="setup" title="Turn it on">
-        <pre><code>{`/* CSS, after your theme files */
+        <CodeBlock lang="css" code={`/* CSS, after your theme files */
 @import "@nexub/themes/marketing";
 
-<html data-mode="marketing">   // or any wrapper`}</code></pre>
+<html data-mode="marketing">   // or any wrapper`} />
         <Prose>
           The sections live in <code>@nexub/marketing</code>; see the{' '}
           <Link href="/examples/marketing">marketing page example</Link> and{' '}
