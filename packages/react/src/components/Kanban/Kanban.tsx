@@ -21,7 +21,7 @@ export interface KanbanProps<T> {
 }
 
 /**
- * Columns of cards people can move: drag a card, or focus its handle and press
+ * Columns of cards people can move: drag a card's handle (Escape cancels), or focus it and press
  * Alt+Arrow keys (up/down within a column, left/right across columns).
  */
 export function Kanban<T>({ columns, getId, getLabel, onChange, renderCard, className }: KanbanProps<T>) {

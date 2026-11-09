@@ -231,6 +231,8 @@ describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
 
   it('view menu switches density and hides columns', async () => {
     const { container } = render(<DataTable columns={columns} data={data} viewOptions />);
+    // The menu loads lazily; the plain button stands in until then.
+    await vi.waitFor(() => expect(screen.getByRole('button', { name: 'View' })).toHaveAttribute('aria-haspopup', 'menu'));
     await userEvent.click(screen.getByRole('button', { name: 'View' }));
     await userEvent.click(screen.getByRole('menuitemradio', { name: 'Compact' }));
     expect(container.firstElementChild).toHaveAttribute('data-density', 'compact');
@@ -324,5 +326,73 @@ describe('DataTable 7.4: loading and emptyState', () => {
     render(<DataTable columns={columns} data={[]} emptyState={<p>Nothing here</p>} />);
     expect(screen.getByText('Nothing here').closest('td')).toHaveAttribute('colspan', String(columns.length));
     expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy');
+  });
+});
+
+describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', () => {
+  const many: Person[] = Array.from({ length: 5 }, (_, i) => ({ name: `P${i}`, age: 20 + i }));
+
+  it('selecting one row re-renders only that row', async () => {
+    const cell = vi.fn(({ row }: { row: { original: Person } }) => row.original.name);
+    const cols: DataTableColumn<Person>[] = [{ accessorKey: 'name', header: 'Name', cell }, { accessorKey: 'age', header: 'Age' }];
+    render(<DataTable columns={cols} data={many} enableRowSelection />);
+    expect(cell).toHaveBeenCalledTimes(5);
+    cell.mockClear();
+    await userEvent.click(screen.getAllByRole('checkbox', { name: 'Select row' })[2]!);
+    expect(cell).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByRole('row')[3]).toHaveAttribute('data-state', 'selected');
+  });
+
+  it('a parent re-render with a new but equal data array re-renders no rows', () => {
+    const cell = vi.fn(({ row }: { row: { original: Person } }) => row.original.name);
+    const cols: DataTableColumn<Person>[] = [{ accessorKey: 'name', header: 'Name', cell }];
+    const { rerender } = render(<DataTable columns={cols} data={[...many]} />);
+    cell.mockClear();
+    rerender(<DataTable columns={cols} data={[...many]} />);
+    expect(cell).not.toHaveBeenCalled();
+  });
+
+  it('controlled sort: reports header clicks, renders the given sort', async () => {
+    const onSortChange = vi.fn();
+    const { rerender } = render(
+      <DataTable columns={columns} data={data} enableSorting sort={[]} onSortChange={onSortChange} />,
+    );
+    await userEvent.click(screen.getByRole('button', { name: /Age/ }));
+    expect(onSortChange).toHaveBeenCalledWith([{ id: 'age', desc: true }]); // numbers sort descending first
+    expect(screen.getAllByRole('row')[1]).toHaveTextContent('Alice'); // still unsorted: controlled
+    rerender(<DataTable columns={columns} data={data} enableSorting sort={[{ id: 'age', desc: false }]} onSortChange={onSortChange} />);
+    expect(screen.getAllByRole('row')[1]).toHaveTextContent('Bob');
+    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  it('manualSort: shows the sort but keeps the given row order', async () => {
+    const onSortChange = vi.fn();
+    render(<DataTable columns={columns} data={data} enableSorting manualSort onSortChange={onSortChange} />);
+    await userEvent.click(screen.getByRole('button', { name: /Age/ }));
+    expect(onSortChange).toHaveBeenCalledWith([{ id: 'age', desc: true }]); // numbers sort descending first
+    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute('aria-sort', 'descending');
+    expect(screen.getAllByRole('row')[1]).toHaveTextContent('Alice');
+  });
+
+  it('controlled page and pageSize', async () => {
+    const onPageChange = vi.fn();
+    render(<DataTable columns={columns} data={many} page={1} pageSize={2} onPageChange={onPageChange} />);
+    expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
+    expect(screen.getAllByRole('row')[1]).toHaveTextContent('P2');
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(onPageChange).toHaveBeenCalledWith(2);
+    expect(screen.getByText('Page 2 of 3')).toBeInTheDocument(); // controlled
+  });
+
+  it('manualPagination: renders data as the page, counts pages from rowCount', async () => {
+    const onPageChange = vi.fn();
+    render(
+      <DataTable columns={columns} data={many.slice(0, 2)} manualPagination rowCount={50} pageSize={2} onPageChange={onPageChange} />,
+    );
+    expect(screen.getByText('Page 1 of 25')).toBeInTheDocument();
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(onPageChange).toHaveBeenCalledWith(1);
+    expect(screen.getByText('Page 2 of 25')).toBeInTheDocument(); // uncontrolled page
   });
 });

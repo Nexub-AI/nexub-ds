@@ -8,6 +8,11 @@ export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
    * trailing "…", else the localised "Search".
    */
   searchLabel?: string;
+  /**
+   * Fires on every keystroke. Filter big lists from a deferred copy so typing stays
+   * responsive: `const query = React.useDeferredValue(search)`, then filter by `query`
+   * (in a memoised component or `useMemo`).
+   */
   onSearch?: (value: string) => void;
   searchValue?: string;
   filters?: React.ReactNode;

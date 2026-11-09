@@ -51,6 +51,29 @@ describe('FilterBuilder', () => {
     expect(screen.getAllByRole('group', { name: /Filters, match/ })).toHaveLength(1);
   });
 
+  it('shows each keystroke in the value field at once and reports every edit', async () => {
+    const onChange = vi.fn();
+    render(<Harness onChange={onChange} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    onChange.mockClear();
+    const input = screen.getByRole('textbox', { name: 'Value' }) as HTMLInputElement;
+    for (const [i, ch] of [...'acme'].entries()) {
+      await userEvent.type(input, ch);
+      expect(input.value).toBe('acme'.slice(0, i + 1));
+    }
+    expect(onChange.mock.calls.map(([g]) => (g as FilterGroup).rules[0]).map((r) => (r as { value: string }).value)).toEqual([
+      'a',
+      'ac',
+      'acm',
+      'acme',
+    ]);
+    // Edits apply to the latest value: adding a rule keeps the typed text.
+    await userEvent.click(screen.getByRole('button', { name: 'Add filter' }));
+    const last = onChange.mock.lastCall![0] as FilterGroup;
+    expect(last.rules).toHaveLength(2);
+    expect(last.rules[0]).toMatchObject({ value: 'acme' });
+  });
+
   it('countFilters counts filled rules, nested ones and "is empty"', () => {
     const g: FilterGroup = {
       id: 'a',
