@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Avatar } from './Avatar.js';
 
@@ -28,6 +28,15 @@ describe('Avatar', () => {
   it('renders image when src is provided', () => {
     const { container } = render(<Avatar src="https://example.com/photo.jpg" name="John Doe" />);
     expect(container.querySelector('img[src]')).toBeInTheDocument();
+  });
+
+  it('falls back on image error and retries when src changes', () => {
+    const { container, rerender } = render(<Avatar name="Jane Doe" src="/broken.png" />);
+    fireEvent.error(container.querySelector('img')!);
+    expect(container.querySelector('img')).toBeNull();
+    expect(screen.getByText('JD')).toBeInTheDocument();
+    rerender(<Avatar name="Jane Doe" src="/fixed.png" />);
+    expect(container.querySelector('img')).toHaveAttribute('src', '/fixed.png');
   });
 
   it('renders fallback when no src or name', () => {

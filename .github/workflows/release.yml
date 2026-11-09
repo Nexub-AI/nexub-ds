@@ -3,13 +3,24 @@ name: Release
 # Triggered on every push to production.
 #
 # Two-phase behaviour via changesets/action:
-#   Phase A — no pending changesets: nothing to publish, just deploys docs.
-#   Phase B — pending changesets exist:
-#     1. Opens/updates a "Version Packages" PR against production.
-#     2. When THAT PR is merged → publishes all @nexub/* packages to npm.
-#     3. Deploys docs to Cloudflare Pages production.
+#   Phase A — pending changesets: opens/updates the "Version Packages" PR.
+#   Phase B — none pending (that PR was merged): publishes every unpublished
+#             @nexub/* package to npm, then opens the back-merge PR.
+#   Docs deploy to Cloudflare Pages production on every push.
 #
 # Flow: development → staging → PR → production (this workflow)
+#
+# One credential per job (7.1). Building runs third-party code (every dev
+# dependency, Next, turbo), so it happens in `build`, which holds no secrets.
+# The jobs that hold a credential install with scripts off and run only the
+# tool they need:
+#   build        no secrets         build packages + docs, upload them
+#   version      RELEASE_PAT        Version Packages PR (phase A)
+#   publish      npm OIDC + token   publish the built dist, tags, releases, SBOM (phase B)
+#   back-merge   RELEASE_PAT        production → development PR (after a publish)
+#   deploy-docs  Cloudflare token   deploy the built docs
+# RELEASE_PAT and the Cloudflare secrets live in the `release` environment
+# (deployment branch: production only), so PR workflows can't read them.
 
 on:
   push:
@@ -17,41 +28,27 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: read
+
 jobs:
-  release:
-    name: Publish to npm & deploy docs
+  build:
+    name: Build packages and docs
     runs-on: ubuntu-latest
-    # RELEASE_PAT belongs in this environment's secrets (deployment branch:
-    # production only), not repo secrets, so PR-triggered workflows can't read it.
-    environment: release
-
-    permissions:
-      contents: write       # changesets needs to push version commits
-      pull-requests: write  # changesets opens the Version Packages PR
-      deployments: write    # required so wrangler can register a GitHub Deployment for the Pages production URL
-      id-token: write       # npm trusted publishing (OIDC) — no long-lived npm token needed
-
+    outputs:
+      has_changesets: ${{ steps.phase.outputs.has_changesets }}
     steps:
-      # Credentials must persist: changesets pushes the version branch with them.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: # zizmor: ignore[artipacked]
-          fetch-depth: 0  # changesets needs full history to detect changes
-          # Check out with the PAT so the Version Packages PR (and its branch)
-          # is created by a real user — the org forbids the Actions bot from
-          # creating or approving pull requests.
-          token: ${{ secrets.RELEASE_PAT }}
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        # version is read from packageManager field in package.json (pnpm@10.34.7)
+        # version is read from packageManager field in package.json
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          # Node 24 bundles npm 11 (>= 11.5.1), which npm trusted publishing (OIDC)
-          # needs; `pnpm publish` hands the upload to this npm CLI.
           node-version: 24
           cache: pnpm
-          # registry-url points npm at the public registry for the OIDC exchange.
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -60,84 +57,214 @@ jobs:
       - name: Build packages
         run: pnpm turbo build --filter='./packages/*'
 
-      # changesets/action:
-      #   - If .changeset/*.md files exist → opens/updates "Version Packages" PR
-      #   - If already versioned (PR was merged) → runs `pnpm release` to publish
-      - name: Create Release PR or Publish to npm
-        id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
-        with:
-          # `changeset version` + minor rollover (1.9.x → 2.0.0), see PUBLISHING.md.
-          version: pnpm version-packages
-          publish: pnpm release
-          commit: "chore(release): version packages"
-          title: "chore(release): version packages"
-        env:
-          # Use a PAT, not the default GITHUB_TOKEN: the org blocks the Actions
-          # bot from creating/approving PRs, which breaks the "Version Packages"
-          # PR step. RELEASE_PAT must be a repo secret — a fine-grained PAT with
-          # Contents: write + Pull requests: write (or a classic token with the
-          # `repo` scope). Falls back to GITHUB_TOKEN only for the publish phase.
-          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
-          # npm auth: trusted publishing (OIDC, `id-token: write` above). Every
-          # @nexub package trusts Nexub-AI/nexub-ds release.yml on npmjs.com, so
-          # npm exchanges the job's OIDC token for a short-lived publish token
-          # and attaches provenance. No NPM_TOKEN secret is used.
-
-      # After a publish, the version commit (bumped package.json + CHANGELOGs)
-      # only exists on production. Open a PR merging it back into development
-      # so the next promotion doesn't conflict on the version lines.
-      - name: Open back-merge PR (production → development)
-        if: steps.changesets.outputs.published == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
-        run: |
-          version=$(node -p "require('./packages/react/package.json').version")
-          existing=$(gh pr list --base development --head production --state open --json number --jq 'length')
-          if [ "$existing" = "0" ]; then
-            gh pr create --base development --head production \
-              --title "chore(release): back-merge v$version into development" \
-              --body "Brings the v$version version bump and CHANGELOGs back into development. Merge before the next promotion."
-          fi
-
-      # Build docs static export (always, not just on publish)
-      # We deploy on every production push so the site always matches the code.
-      # NEXT_PUBLIC_* values are baked into the JS bundle at build time, so we
-      # must inject them HERE (in the GH Actions runner) — Cloudflare Pages
-      # dashboard env vars only reach the Pages runtime, not the build.
-      # The Turnstile *site* key is public by design (it lands in every page's
-      # HTML), so it's stored as a repo Variable, not a Secret.
+      # NEXT_PUBLIC_* values are baked into the JS bundle at build time, so they
+      # must be set here, not in the Cloudflare dashboard. The Turnstile *site*
+      # key is public by design, so it's a repo Variable, not a Secret.
       - name: Build docs (static export)
         env:
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
         run: pnpm --filter @nexub/docs build
 
-      # Deploy to Cloudflare Pages production.
-      # The production alias maps to your custom domain (e.g. docs.nexub.com).
-      #
-      # Wrangler 3 expects two siblings at the cwd it runs from:
-      #   - <deploy-dir>/        ← static files (here: out/)
-      #   - functions/           ← Pages Functions source (sibling of out/)
-      # That's why we cd into apps/docs first, then point wrangler at out/.
-      # The Functions live at apps/docs/functions/ in source.
-      - name: Deploy to Cloudflare Pages (production)
-        working-directory: apps/docs
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx -y wrangler@3.114.17 pages deploy out --project-name=nexub-ds-docs --branch=production --commit-dirty=true
+      # Same rule changesets/action uses: any .changeset/*.md except README.md.
+      - name: Detect release phase
+        id: phase
+        run: |
+          n=$(find .changeset -maxdepth 1 -name '*.md' ! -name README.md | wc -l)
+          if [ "$n" -gt 0 ]; then echo "has_changesets=true"; else echo "has_changesets=false"; fi >> "$GITHUB_OUTPUT"
 
-      # Post-publish check: every version changesets published must be on the
-      # registry with an npm provenance attestation (trusted publishing). The
-      # registry lags a publish by 1–2 minutes, so scripts/verify-published.mjs
-      # retries missing versions with backoff for up to 5 minutes, then fails
-      # the job naming each missing or unattested package. It runs last so a
-      # slow registry never holds up the back-merge PR or the docs deploy (which
-      # also gives the registry time), and `!cancelled()` keeps it running even
-      # if one of those steps failed.
+      # Everything the packages publish that isn't committed: */dist and the
+      # React Native lib/. Stored relative to packages/.
+      - name: Upload built packages
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: packages
+          path: |
+            packages/*/dist
+            packages/react-native/lib
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload built docs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: docs-out
+          path: apps/docs/out
+          if-no-files-found: error
+          retention-days: 1
+
+  version:
+    name: Version Packages PR
+    needs: build
+    if: needs.build.outputs.has_changesets == 'true'
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0  # changesets needs full history to detect changes
+          persist-credentials: false  # changesets/action writes its own ~/.netrc
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # Scripts off: nothing here needs a native build, and none should run
+      # where the PAT is.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Create or update the Version Packages PR
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        with:
+          # `changeset version` + minor rollover (1.9.x → 2.0.0), see PUBLISHING.md.
+          version: pnpm version-packages
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
+        env:
+          # A PAT, not GITHUB_TOKEN: the org blocks the Actions bot from
+          # creating PRs. Fine-grained, Contents + Pull requests: write.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PAT }}
+
+  publish:
+    name: Publish to npm
+    needs: build
+    if: needs.build.outputs.has_changesets == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # git tags + GitHub releases (job token, no PAT)
+      id-token: write   # npm trusted publishing (OIDC): short-lived token + provenance
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false  # changesets/action writes its own ~/.netrc
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Node 24 bundles npm 11 (>= 11.5.1), which trusted publishing needs;
+          # `pnpm publish` hands the upload to this npm CLI.
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      # Scripts off: any step in this job can mint an npm OIDC token.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # Publish exactly what `build` produced; nothing is built in this job.
+      - name: Download built packages
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: packages
+          path: packages
+
+      - name: Publish unpublished packages
+        id: changesets
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        with:
+          publish: pnpm changeset publish
+        env:
+          # Tags and GitHub releases only; npm auth is OIDC (every @nexub
+          # package trusts Nexub-AI/nexub-ds release.yml on npmjs.com).
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Read released version
+        id: version
+        if: steps.changesets.outputs.published == 'true'
+        run: echo "version=$(node -p "require('./packages/react/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      # GitHub's dependency-graph SBOM (SPDX) for the released commit, attached
+      # to the @nexub/react release (all packages release in lockstep).
+      - name: Attach SBOM to the release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/dependency-graph/sbom" --jq .sbom > "nexub-${VERSION}.spdx.json"
+          gh release upload "@nexub/react@${VERSION}" "nexub-${VERSION}.spdx.json" --clobber
+
+      # Every version changesets published must be on the registry with an npm
+      # provenance attestation. The registry lags 1–2 minutes, so the script
+      # retries for up to 5 minutes, then fails naming each missing or
+      # unattested package. `!cancelled()` keeps it running if the SBOM step failed.
       - name: Verify published versions and provenance on npm
         if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
         timeout-minutes: 8
         env:
           PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
         run: node scripts/verify-published.mjs
+
+  # After a publish, the version commit (bumped package.json + CHANGELOGs)
+  # only exists on production. Open a PR merging it back into development so
+  # the next promotion doesn't conflict on the version lines. No checkout:
+  # no repository code runs next to the PAT.
+  back-merge:
+    name: Open back-merge PR
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
+    runs-on: ubuntu-latest
+    environment: release
+    permissions: {}
+    steps:
+      - name: Open back-merge PR (production → development)
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: |
+          existing=$(gh pr list --repo "$GITHUB_REPOSITORY" --base development --head production --state open --json number --jq 'length')
+          if [ "$existing" = "0" ]; then
+            gh pr create --repo "$GITHUB_REPOSITORY" --base development --head production \
+              --title "chore(release): back-merge v$VERSION into development" \
+              --body "Brings the v$VERSION version bump and CHANGELOGs back into development. Merge before the next promotion."
+          fi
+
+  # Deploy to Cloudflare Pages production on every push, so the site always
+  # matches the code. The production alias maps to the custom domain.
+  deploy-docs:
+    name: Deploy docs
+    needs: build
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: read
+      deployments: write  # wrangler registers a GitHub Deployment for the Pages production URL
+    steps:
+      # Checkout for apps/docs/functions (Pages Functions source) and the lockfile.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # wrangler is pinned in apps/docs devDependencies (lockfile), not npx.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Download built docs
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: docs-out
+          path: apps/docs/out
+
+      # Wrangler 3 expects out/ (static files) and functions/ as siblings of
+      # the cwd, hence apps/docs.
+      - name: Deploy to Cloudflare Pages (production)
+        working-directory: apps/docs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm exec wrangler pages deploy out --project-name=nexub-ds-docs --branch=production --commit-dirty=true
