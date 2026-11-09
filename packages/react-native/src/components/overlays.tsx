@@ -13,6 +13,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -28,6 +29,8 @@ import { nxSpring } from '../theme/motion';
 import { ListItem, ListSection } from './containers';
 
 const SHEET_SPRING = nxSpring('spatial', 'default');
+// Exit rides the quicker, non-overshooting effects spring (as nxExit does).
+const SHEET_EXIT = nxSpring('effects', 'default');
 
 // ─── BottomSheet ─────────────────────────────────────────────────────────────
 
@@ -35,6 +38,22 @@ export type SheetDetent = 'content' | number;
 
 /** Height of the grabber row above the sheet body. */
 const GRABBER = 24;
+
+/**
+ * Where a released sheet goes: a detent index, or -1 to close.
+ * `offsets` are each detent's translateY (0 = tallest), `y` the release
+ * position and `vy` the release velocity in px/s (down is positive).
+ */
+export function sheetRelease(y: number, vy: number, offsets: number[], dismissable: boolean) {
+  if (dismissable && (y > Math.max(...offsets) + 80 || vy > 1200)) return -1;
+  // Nearest detent to where the fling would carry it.
+  const target = y + vy * 0.12;
+  let best = 0;
+  offsets.forEach((o, i) => {
+    if (Math.abs(o - target) < Math.abs(offsets[best]! - target)) best = i;
+  });
+  return best;
+}
 
 export interface BottomSheetProps {
   open: boolean;
@@ -83,11 +102,15 @@ export function BottomSheet({
   const height = heights[Math.min(index, heights.length - 1)]!;
   const tallest = heights[heights.length - 1]!;
 
+  // Release velocity (px/s) handed from a drag to the next spring.
+  const fling = React.useRef(0);
+
   // Sheet sits at translateY = tallest - height (0 = fully up).
   const snapTo = React.useCallback(
     (i: number) => {
       setIndex(i);
-      translate.value = withSpring(tallest - heights[i]!, spring);
+      translate.value = withSpring(tallest - heights[i]!, { ...spring, velocity: fling.current });
+      fling.current = 0;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tallest, heights.join(), spring],
@@ -101,10 +124,17 @@ export function BottomSheet({
       translate.value = withSpring(tallest - heights[0]!, spring);
       scrim.value = withTiming(1, { duration: tokens.motion.duration.normal });
     } else if (visible) {
-      translate.value = withTiming(screen, { duration: tokens.motion.duration.normal });
+      // Unmount when the spring lands, not on a guessed timer. An interrupted
+      // spring (reopened mid-close) reports finished=false and keeps it up.
+      translate.value = withSpring(
+        screen,
+        { ...SHEET_EXIT, velocity: fling.current },
+        (finished) => {
+          if (finished) runOnJS(setVisible)(false);
+        },
+      );
+      fling.current = 0;
       scrim.value = withTiming(0, { duration: tokens.motion.duration.normal });
-      const t = setTimeout(() => setVisible(false), tokens.motion.duration.normal);
-      return () => clearTimeout(t);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
@@ -115,6 +145,8 @@ export function BottomSheet({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content]);
 
+  // ponytail: PanResponder moves arrive on the JS thread and write the shared
+  // value; a UI-thread drag needs react-native-gesture-handler as a peer.
   const start = React.useRef(0);
   const responder = React.useMemo(
     () =>
@@ -127,16 +159,14 @@ export function BottomSheet({
           translate.value = Math.max(0, start.current + g.dy);
         },
         onPanResponderRelease: (_, g) => {
-          const y = start.current + g.dy;
-          const lowest = tallest - heights[0]!;
-          if (dismissable && (y > lowest + 80 || g.vy > 1.2)) return onOpenChange(false);
-          // Nearest detent, biased by fling direction.
-          const target = y - g.vy * 120;
-          let best = 0;
-          heights.forEach((h, i) => {
-            if (Math.abs(tallest - h - target) < Math.abs(tallest - heights[best]! - target))
-              best = i;
-          });
+          fling.current = g.vy * 1000; // PanResponder px/ms → Reanimated px/s
+          const best = sheetRelease(
+            start.current + g.dy,
+            fling.current,
+            heights.map((h) => tallest - h),
+            dismissable,
+          );
+          if (best < 0) return onOpenChange(false);
           if (best !== index) play('snap');
           snapTo(best);
         },

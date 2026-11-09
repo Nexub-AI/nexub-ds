@@ -192,3 +192,6 @@ export {
   nexubTabsOptions,
   useNexubNavigation,
 } from './theme/navigation';
+export { SkeletonText } from './components/feedback';
+export type { SkeletonTextProps } from './components/feedback';
+export type { AvatarStatus } from './components/display';

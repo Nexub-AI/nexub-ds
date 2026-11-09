@@ -144,7 +144,6 @@ import { Send } from '@nexub/icons/native';
     name: 'Badge',
     preview: 'badge',
     differences: [
-      { aspect: 'Dot', web: 'Use `leadingIcon` for a dot.', mobile: '`dot` renders a status dot.' },
       { aspect: 'Sizes', web: 'sm, md, lg.', mobile: 'sm, md.' },
     ],
     code: `<Badge tone="success" variant="soft" dot>Paid</Badge>`,
@@ -152,8 +151,8 @@ import { Send } from '@nexub/icons/native';
   avatar: {
     name: 'Avatar',
     preview: 'avatar',
-    differences: [{ aspect: 'Status', web: 'Compose a Badge.', mobile: '`badge` adds the presence dot.' }],
-    code: `<Avatar src={user.photo} name={user.name} size="lg" badge />`,
+    differences: [],
+    code: `<Avatar src={user.photo} name={user.name} size="lg" status="online" />`,
   },
   'avatar-group': {
     name: 'AvatarGroup',
