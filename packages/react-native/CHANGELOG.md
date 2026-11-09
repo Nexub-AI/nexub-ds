@@ -1,5 +1,13 @@
 # @nexub/react-native
 
+## 7.1.0
+
+### Patch Changes
+
+- @nexub/tokens@7.1.0
+- @nexub/icons@7.1.0
+- @nexub/core@7.1.0
+
 ## 7.0.1
 
 ### Patch Changes
