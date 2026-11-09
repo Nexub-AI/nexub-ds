@@ -1,5 +1,7 @@
 # @nexub/patterns
 
+## 7.0.1
+
 ## 7.0.0
 
 ### Minor Changes
