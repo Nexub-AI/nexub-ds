@@ -209,6 +209,15 @@ describe('ThemeScript', () => {
     document.documentElement.removeAttribute('data-product');
   });
 
+  it('ignores a stored product that has no theme (user-controlled storage)', () => {
+    localStorage.setItem('p', '" onload=alert(1) x="');
+    new Function(themeScriptSource('k', 'p'))();
+    expect(document.documentElement.hasAttribute('data-product')).toBe(false);
+    localStorage.setItem('p', 'base');
+    new Function(themeScriptSource('k', 'p'))();
+    expect(document.documentElement.hasAttribute('data-product')).toBe(false);
+  });
+
   it('applies the stored glass intensity and ignores unknown values', () => {
     localStorage.setItem('nexub-glass', 'tinted');
     new Function(themeScriptSource('k'))();

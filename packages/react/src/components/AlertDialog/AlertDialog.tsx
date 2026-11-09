@@ -7,6 +7,7 @@ import { overlaySurface, scrim } from '../../utils/surface.js';
 import { buttonVariants } from '../Button/Button.js';
 import { Input } from '../Input/Input.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { ClassLockOverlay, ScrollLockContext, type ScrollLock } from '../../hooks/useClassScrollLock.js';
 
 // Type-to-confirm: Confirm registers the text, Action stays disabled until it's typed.
 const ConfirmContext = React.createContext<{
@@ -16,12 +17,28 @@ const ConfirmContext = React.createContext<{
   setTyped: (t: string) => void;
 } | null>(null);
 
-const Root = RadixAlertDialog.Root;
+export interface AlertDialogRootProps extends RadixAlertDialog.AlertDialogProps {
+  /** See Dialog.Root `scrollLock`. @default 'style' (becomes 'class' in 8.0) */
+  scrollLock?: ScrollLock;
+}
+
+const ALERT_LOCK = { style: { scrollLock: 'style', modal: true }, class: { scrollLock: 'class', modal: true } } as const;
+
+function Root({ scrollLock = 'style', ...props }: AlertDialogRootProps) {
+  return (
+    <ScrollLockContext.Provider value={ALERT_LOCK[scrollLock]}>
+      <RadixAlertDialog.Root {...props} />
+    </ScrollLockContext.Provider>
+  );
+}
 const Trigger = RadixAlertDialog.Trigger;
 const Portal = RadixAlertDialog.Portal;
 
 const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOverlayProps>(
   function AlertDialogOverlay({ className, ...props }, ref) {
+    const { scrollLock } = React.useContext(ScrollLockContext);
+    if (scrollLock === 'class')
+      return <ClassLockOverlay ref={ref} className={cn('fixed inset-0 z-[var(--z-modal)] nx-motion', scrim, className)} />;
     return (
       <RadixAlertDialog.Overlay
         ref={ref}

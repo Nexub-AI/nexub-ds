@@ -36,11 +36,14 @@ describe('PasswordInput', () => {
     expect(input).toHaveAttribute('type', 'text');
   });
 
-  it('shows hide button after reveal', async () => {
+  it('reveal is a pressed toggle with a stable name that controls the input', async () => {
     const user = userEvent.setup();
-    render(<PasswordInput />);
-    await user.click(screen.getByRole('button', { name: /show password/i }));
-    expect(screen.getByRole('button', { name: /hide password/i })).toBeInTheDocument();
+    render(<PasswordInput aria-label="Password" />);
+    const toggle = screen.getByRole('button', { name: /show password/i });
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    expect(toggle).toHaveAttribute('aria-controls', screen.getByLabelText('Password').id);
+    await user.click(toggle);
+    expect(screen.getByRole('button', { name: /show password/i, pressed: true })).toBeInTheDocument();
   });
 
   it('starts shown with defaultVisible', () => {

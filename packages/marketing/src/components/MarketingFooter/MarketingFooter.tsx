@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@nexub/react/cn';
+import { safeHref } from '@nexub/react/safeHref';
 import { Container } from '@nexub/react/Container';
 import { Marquee } from '@nexub/react/Motion';
 
@@ -52,7 +53,7 @@ export const MarketingFooter = React.forwardRef<HTMLElement, MarketingFooterProp
             <ul className="m-0 flex list-none flex-col gap-2 p-0">
               {col.links.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="text-body-md text-[var(--color-on-surface-variant)] no-underline hover:text-[var(--color-on-surface)] hover:underline">
+                  <a href={safeHref(link.href)} className="text-body-md text-[var(--color-on-surface-variant)] no-underline hover:text-[var(--color-on-surface)] hover:underline">
                     {link.label}
                   </a>
                 </li>

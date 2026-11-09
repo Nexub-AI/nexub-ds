@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, IconButton, Sheet, Sidebar, TopNav, cn } from '@nexub/react';
+import { Card, IconButton, Sheet, Sidebar, TopNav, cn, safeHref } from '@nexub/react';
 import { Menu } from '@nexub/icons';
 
 export interface SettingsLayoutItem {
@@ -58,7 +58,7 @@ function SectionNav({
         {items.map((item) => (
           <Sidebar.Item
             key={item.id}
-            href={item.href}
+            href={safeHref(item.href)}
             icon={item.icon}
             active={item.id === activeId}
             onClick={(e) => onChoose(e, item)}

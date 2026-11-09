@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { ChevronRight, MoreHorizontal } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { safeHref } from '../../utils/safeHref.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { DropdownMenu } from '../DropdownMenu/DropdownMenu.js';
 
@@ -115,7 +116,7 @@ const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxI
   const hidden = collapsed ? items.slice(1, items.length - (keep - 1)) : [];
   const shown = collapsed ? [items[0]!, ...items.slice(items.length - (keep - 1))] : items;
   const crumb = (item: BreadcrumbTrailItem, last: boolean) =>
-    last ? <Page>{item.label}</Page> : <Link href={item.href}>{item.label}</Link>;
+    last ? <Page>{item.label}</Page> : <Link href={safeHref(item.href)}>{item.label}</Link>;
 
   return (
     <Root ref={ref} {...props}>
@@ -138,7 +139,7 @@ const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxI
                     <DropdownMenu.Content align="start">
                       {hidden.map((h, j) => (
                         <DropdownMenu.Item key={j} asChild>
-                          <a href={h.href}>{h.label}</a>
+                          <a href={safeHref(h.href)}>{h.label}</a>
                         </DropdownMenu.Item>
                       ))}
                     </DropdownMenu.Content>

@@ -39,6 +39,10 @@
       "types": "./dist/utils/cn.d.ts",
       "default": "./dist/utils/cn.js"
     },
+    "./safeHref": {
+      "types": "./dist/utils/safeHref.d.ts",
+      "default": "./dist/utils/safeHref.js"
+    },
     "./*": {
       "types": "./dist/components/*/index.d.ts",
       "default": "./dist/components/*/index.js"
@@ -93,6 +97,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
+    "get-nonce": "^1.0.1",
     "react-day-picker": "^10.0.2",
     "tailwind-merge": "^3.7.0"
   },

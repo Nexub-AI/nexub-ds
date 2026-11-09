@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button, IconButton, Popover, cn, useNexubMessages } from '@nexub/react';
+import { Button, IconButton, Popover, cn, safeHref, useNexubMessages } from '@nexub/react';
 import { Bell } from '@nexub/icons';
 import { NotificationItem } from '../NotificationItem/NotificationItem.js';
 
@@ -84,7 +84,7 @@ export function NotificationCenter({
                   timestamp={n.timestamp}
                   read={n.read}
                   icon={n.icon}
-                  href={n.href}
+                  href={safeHref(n.href)}
                   onSelect={onOpen ? () => onOpen(n.id) : undefined}
                   onDismiss={onDismiss ? () => onDismiss(n.id) : undefined}
                 />

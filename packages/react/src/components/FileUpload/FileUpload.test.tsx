@@ -99,6 +99,20 @@ describe('formatFileSize', () => {
     expect(alert).toHaveTextContent('big.png is larger than');
     expect(alert).toHaveTextContent('You can add up to 1 file');
   });
+
+  it('rejects files that fail validate, with its message', () => {
+    const onReject = vi.fn();
+    render(
+      <FileUpload.Root validate={(f) => (f.name.startsWith('.') ? 'Hidden files can’t be uploaded' : null)} onReject={onReject}>
+        <FileUpload.Dropzone data-testid="zone" />
+      </FileUpload.Root>,
+    );
+    const ok = new File(['1'], 'a.txt');
+    const hidden = new File(['1'], '.env');
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [ok, hidden] } });
+    expect(onReject.mock.calls[0]![0]).toEqual([{ file: hidden, reason: 'custom', message: 'Hidden files can’t be uploaded' }]);
+    expect(screen.getByRole('alert')).toHaveTextContent('Hidden files can’t be uploaded');
+  });
 });
 
 describe('FileUpload.Item progress', () => {

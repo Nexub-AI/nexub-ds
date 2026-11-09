@@ -2,6 +2,8 @@
 export { cn } from './utils/cn.js';
 export type { Size } from './utils/control.js';
 export { startViewTransition } from './utils/viewTransition.js';
+export { safeHref, safeSrc } from './utils/safeHref.js';
+export type { SafeHrefOptions } from './utils/safeHref.js';
 export { useScopedSeed } from './hooks/useScopedSeed.js';
 
 // Hooks
