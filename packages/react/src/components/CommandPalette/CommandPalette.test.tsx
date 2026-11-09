@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { CommandPalette } from './CommandPalette.js';
 
@@ -99,5 +99,101 @@ describe('CommandPalette', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
     fireEvent.keyDown(document, { key: 'k' }); // no modifier
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  describe('pages', () => {
+    function Paged() {
+      return (
+        <CommandPalette.Root open>
+          <CommandPalette.Input placeholder="Search" />
+          <CommandPalette.List>
+            <CommandPalette.Page>
+              <CommandPalette.Item page="projects">Projects</CommandPalette.Item>
+            </CommandPalette.Page>
+            <CommandPalette.Page id="projects" title="All projects">
+              <CommandPalette.Item>Nexub</CommandPalette.Item>
+            </CommandPalette.Page>
+          </CommandPalette.List>
+        </CommandPalette.Root>
+      );
+    }
+
+    it('an item opens its page, with a breadcrumb; Backspace on empty goes back', async () => {
+      const user = userEvent.setup();
+      render(<Paged />);
+      expect(screen.queryByText('Nexub')).toBeNull();
+      await user.type(screen.getByRole('combobox'), 'proj');
+      await user.click(screen.getByText('Projects'));
+      expect(screen.getByText('Nexub')).toBeInTheDocument();
+      expect(screen.getByText('All projects')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toHaveValue(''); // query cleared
+      await user.type(screen.getByRole('combobox'), 'x{Backspace}');
+      expect(screen.getByText('Nexub')).toBeInTheDocument(); // deleting text doesn't pop
+      await user.keyboard('{Backspace}');
+      expect(screen.queryByText('Nexub')).toBeNull();
+      expect(screen.getByText('Projects')).toBeInTheDocument();
+    });
+  });
+
+  it('loading shows a loading row instead of Empty', () => {
+    render(
+      <CommandPalette.Root open loading>
+        <CommandPalette.List>
+          <CommandPalette.Empty>No results.</CommandPalette.Empty>
+        </CommandPalette.List>
+      </CommandPalette.Root>,
+    );
+    expect(screen.getByRole('progressbar', { name: 'Loading…' })).toBeInTheDocument();
+    expect(screen.queryByText('No results.')).toBeNull();
+  });
+
+  describe('recents', () => {
+    beforeEach(() => localStorage.clear());
+
+    function Recents({ onSelect }: { onSelect?: (v: string) => void }) {
+      return (
+        <CommandPalette.Root open recentKey="test-recents" recentLimit={2}>
+          <CommandPalette.Input placeholder="Search" />
+          <CommandPalette.List>
+            <CommandPalette.Item onSelect={onSelect}>Alpha</CommandPalette.Item>
+            <CommandPalette.Item>Beta</CommandPalette.Item>
+            <CommandPalette.Item>Gamma</CommandPalette.Item>
+          </CommandPalette.List>
+        </CommandPalette.Root>
+      );
+    }
+
+    it('keeps the last picks in localStorage and shows them while the query is empty', async () => {
+      const user = userEvent.setup();
+      const picked: string[] = [];
+      const { unmount } = render(<Recents onSelect={(v) => picked.push(v)} />);
+      expect(screen.queryByText('Recent')).toBeNull();
+      await user.click(screen.getByText('Alpha'));
+      await user.click(screen.getByText('Beta'));
+      await user.click(screen.getByText('Gamma'));
+      expect(JSON.parse(localStorage.getItem('test-recents')!).map((r: { label: string }) => r.label)).toEqual(['Gamma', 'Beta']);
+      unmount();
+
+      render(<Recents onSelect={(v) => picked.push(v)} />);
+      const group = await screen.findByRole('group', { name: 'Recent' });
+      expect(group).toHaveTextContent('GammaBeta');
+      await user.type(screen.getByRole('combobox'), 'a');
+      expect(screen.queryByRole('group', { name: 'Recent' })).toBeNull();
+    });
+
+    it('a recent row runs the real item', async () => {
+      localStorage.setItem('test-recents', JSON.stringify([{ value: 'Alpha', label: 'Alpha' }]));
+      const user = userEvent.setup();
+      const picked: string[] = [];
+      render(<Recents onSelect={(v) => picked.push(v)} />);
+      const group = await screen.findByRole('group', { name: 'Recent' });
+      await user.click(group.querySelector('[cmdk-item]')!);
+      expect(picked).toEqual(['Alpha']);
+    });
+
+    it('ignores corrupt storage', () => {
+      localStorage.setItem('test-recents', '{not json');
+      expect(() => render(<Recents />)).not.toThrow();
+    });
   });
 });

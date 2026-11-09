@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Provider, Tooltip } from './Tooltip.js';
 
@@ -61,5 +61,17 @@ describe('Tooltip', () => {
       </WithProvider>,
     );
     expect(screen.getByText('Target')).toBeInTheDocument();
+  });
+
+  it('works without a Provider and renders rich content, shortcut and arrow', async () => {
+    render(
+      <Tooltip label="Save" description="Writes the draft" shortcut="⌘S" arrow delayDuration={0}>
+        <button>Save</button>
+      </Tooltip>,
+    );
+    act(() => screen.getByRole('button').focus());
+    expect((await screen.findAllByText('Writes the draft')).length).toBeGreaterThan(0);
+    expect(document.querySelector('kbd')).toHaveTextContent('⌘S');
+    expect(document.querySelector('[data-radix-popper-content-wrapper] svg')).toBeInTheDocument();
   });
 });
