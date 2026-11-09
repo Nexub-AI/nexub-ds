@@ -107,3 +107,45 @@ describe('DatePicker locale + RTL', () => {
     expect(renderToString(<DatePicker value={jan} onChange={vi.fn()} locale={fr} />)).not.toContain('style="');
   });
 });
+
+describe('DatePicker 7.5', () => {
+  it('typeable: Enter commits a valid typed date', () => {
+    const onChange = vi.fn();
+    render(<DatePicker typeable aria-label="Due" onChange={onChange} />);
+    const input = screen.getByRole('textbox', { name: 'Due' });
+    fireEvent.change(input, { target: { value: '01/15/2024' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalledWith(new Date(2024, 0, 15));
+  });
+
+  it('typeable: invalid or disabled text stays, is aria-invalid and leaves the value', () => {
+    const onChange = vi.fn();
+    render(<DatePicker typeable aria-label="Due" onChange={onChange} disabledDates={{ dayOfWeek: [0, 6] }} />);
+    const input = screen.getByRole('textbox', { name: 'Due' });
+    fireEvent.change(input, { target: { value: 'nope' } });
+    fireEvent.blur(input);
+    expect(input).toHaveValue('nope');
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    fireEvent.change(input, { target: { value: '01/13/2024' } }); // a Saturday
+    fireEvent.blur(input);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('presets set the value and close', () => {
+    const onChange = vi.fn();
+    const date = new Date(2024, 0, 22);
+    render(<DatePicker onChange={onChange} presets={[{ label: 'In a week', date }]} />);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button', { name: 'In a week' }));
+    expect(onChange).toHaveBeenCalledWith(date);
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+  });
+
+  it('disabledDates disables matching days', () => {
+    render(<DatePicker value={new Date(2024, 0, 15)} disabledDates={{ dayOfWeek: [0, 6] }} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByRole('button', { name: /January 13, 2024/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /January 15, 2024/ })).toBeEnabled();
+  });
+});

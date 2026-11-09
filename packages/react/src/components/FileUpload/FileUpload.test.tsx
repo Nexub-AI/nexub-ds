@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { FileUpload, fileAccepted, formatFileSize } from './FileUpload.js';
 
@@ -137,5 +137,49 @@ describe('FileUpload.Item progress', () => {
     rerender(<Harness progress={100} />);
     expect(screen.queryByRole('progressbar')).toBeNull();
     expect(screen.getByRole('button', { name: 'Remove report.pdf' })).toBeInTheDocument();
+  });
+});
+
+describe('FileUpload previews, paste and list motion', () => {
+  function Harness(props: React.ComponentProps<typeof FileUpload.Root>) {
+    return (
+      <FileUpload.Root {...props}>
+        <FileUpload.Dropzone data-testid="zone" />
+        <FileUpload.List>
+          {[0, 1].map((i) => (
+            <FileUpload.Item key={i} index={i} />
+          ))}
+        </FileUpload.List>
+      </FileUpload.Root>
+    );
+  }
+
+  it('previews images and revokes the URL on remove', async () => {
+    const create = vi.fn(() => 'blob:x');
+    const revoke = vi.fn();
+    Object.assign(URL, { createObjectURL: create, revokeObjectURL: revoke });
+    const { container } = render(<Harness />);
+    const img = new File(['x'], 'a.png', { type: 'image/png' });
+    const doc = new File(['x'], 'b.pdf', { type: 'application/pdf' });
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [img, doc] } });
+    expect(container.querySelectorAll('img')).toHaveLength(1);
+    expect(container.querySelector('img')).toHaveAttribute('alt', '');
+    expect(create).toHaveBeenCalledWith(img);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove a.png' }));
+    expect(screen.getByRole('button', { name: 'Remove a.png' }).closest('li')).toHaveAttribute('data-state', 'exit');
+    await waitFor(() => expect(screen.queryByText('a.png')).toBeNull());
+    expect(revoke).toHaveBeenCalledWith('blob:x');
+    expect(screen.getByText('b.pdf').closest('li')).not.toHaveAttribute('data-state', 'exit');
+  });
+
+  it('adds pasted files through the same filters', () => {
+    const onFilesChange = vi.fn();
+    const onReject = vi.fn();
+    render(<Harness accept={['.txt']} onFilesChange={onFilesChange} onReject={onReject} />);
+    const ok = new File(['1'], 'a.txt');
+    const bad = new File(['1'], 'b.exe');
+    fireEvent.paste(screen.getByTestId('zone'), { clipboardData: { files: [ok, bad] } });
+    expect(onFilesChange).toHaveBeenCalledWith([ok]);
+    expect(onReject.mock.calls[0]![0][0].reason).toBe('type');
   });
 });

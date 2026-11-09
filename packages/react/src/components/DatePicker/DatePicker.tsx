@@ -2,13 +2,14 @@
 
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
-import { DayPicker, type ChevronProps, type Labels, type Modifiers } from 'react-day-picker';
-import { format, type Locale } from 'date-fns';
+import { DayPicker, dateMatchModifiers, type ChevronProps, type Labels, type Matcher, type Modifiers } from 'react-day-picker';
+import { format, isValid, parse, type Locale } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { field, fieldFocusVisible } from '../../utils/control.js';
+import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
+import { Button } from '../Button/Button.js';
 
 /**
  * A date-fns Locale wins (date-fns 'PP'); else with a NexubProvider locale,
@@ -73,6 +74,18 @@ export interface DatePickerProps {
   'aria-label'?: string;
   /** date-fns Locale for the calendar and trigger text; wins over NexubProvider's `dateLocale`. */
   locale?: Locale;
+  /** Days that can't be picked (react-day-picker Matcher), e.g. `{ dayOfWeek: [0, 6] }`. */
+  disabledDates?: Matcher | Matcher[];
+  /** Quick picks under the calendar (Today, In a week…); choosing one sets the value and closes. */
+  presets?: { label: string; date: Date }[];
+  /**
+   * The trigger is a text input that also accepts a typed date in the locale's
+   * short format (date-fns `P`, e.g. 01/15/2024). Enter or blur commits; an
+   * invalid or unavailable date stays as typed, marked aria-invalid, and the
+   * value is unchanged. `id` and `aria-label` go to the input, `ref` to the
+   * calendar button.
+   */
+  typeable?: boolean;
 }
 
 const calendarClassNames = {
@@ -103,6 +116,17 @@ const calendarClassNames = {
   outside: '[&:not([data-selected]):not([data-disabled])>button]:text-[var(--color-on-surface-muted)]',
   disabled: '',
   hidden: 'invisible',
+  // Month change (animate): the months crossfade. react-day-picker adds each of
+  // these with classList.add, so one class apiece. Keyframes from @nexub/themes
+  // core.css; reduced motion collapses them and animationend still cleans up.
+  caption_after_enter: 'animate-[nx-fade-in_var(--motion-spring-effects-default-duration)_var(--motion-spring-effects-default-easing)]',
+  caption_before_enter: 'animate-[nx-fade-in_var(--motion-spring-effects-default-duration)_var(--motion-spring-effects-default-easing)]',
+  weeks_after_enter: 'animate-[nx-fade-in_var(--motion-spring-effects-default-duration)_var(--motion-spring-effects-default-easing)]',
+  weeks_before_enter: 'animate-[nx-fade-in_var(--motion-spring-effects-default-duration)_var(--motion-spring-effects-default-easing)]',
+  caption_after_exit: 'animate-[nx-fade-out_var(--motion-spring-effects-fast-duration)_var(--motion-spring-effects-fast-easing)_forwards]',
+  caption_before_exit: 'animate-[nx-fade-out_var(--motion-spring-effects-fast-duration)_var(--motion-spring-effects-fast-easing)_forwards]',
+  weeks_after_exit: 'animate-[nx-fade-out_var(--motion-spring-effects-fast-duration)_var(--motion-spring-effects-fast-easing)_forwards]',
+  weeks_before_exit: 'animate-[nx-fade-out_var(--motion-spring-effects-fast-duration)_var(--motion-spring-effects-fast-easing)_forwards]',
 } as Record<string, string>;
 
 export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
@@ -118,6 +142,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       id,
       'aria-label': ariaLabel,
       locale: localeProp,
+      disabledDates,
+      presets,
+      typeable = false,
     },
     ref,
   ) {
@@ -127,8 +154,70 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     const calendar = useCalendarLocale(localeProp);
     const display = value ? calendar.format(value) : placeholder;
 
+    // Typed entry: `text` is what was typed since the last commit (null = show the value).
+    const [text, setText] = React.useState<string | null>(null);
+    const dateLocale = calendar.dayPickerProps.locale;
+    const typed = text?.trim() ? parse(text.trim(), 'P', new Date(), { locale: dateLocale }) : undefined;
+    const invalid =
+      typed !== undefined &&
+      (!isValid(typed) ||
+        (minDate !== undefined && typed < minDate) ||
+        (maxDate !== undefined && typed > maxDate) ||
+        (disabledDates !== undefined && dateMatchModifiers(typed, disabledDates)));
+    const commit = () => {
+      if (text === null || invalid) return;
+      onChange?.(typed);
+      setText(null);
+    };
+    const pick = (date: Date | undefined) => {
+      onChange?.(date);
+      setText(null);
+      setOpen(false);
+    };
+
     return (
       <RadixPopover.Root open={open} onOpenChange={setOpen}>
+        {typeable ? (
+          <RadixPopover.Anchor asChild>
+            <div
+              className={cn(
+                'flex h-control-md w-full items-center gap-1 ps-3.5 pe-1',
+                field,
+                fieldFocusWithin,
+                invalid && fieldInvalid,
+                disabled && fieldDisabled,
+                className,
+              )}
+            >
+              <input
+                id={id}
+                type="text"
+                disabled={disabled}
+                aria-label={ariaLabel}
+                aria-invalid={invalid || undefined}
+                placeholder={placeholder}
+                value={text ?? (value ? format(value, 'P', { locale: dateLocale }) : '')}
+                onChange={(e) => setText(e.target.value)}
+                onBlur={commit}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') commit();
+                }}
+                className="min-w-0 flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed"
+              />
+              <RadixPopover.Trigger asChild>
+                <button
+                  ref={ref}
+                  type="button"
+                  disabled={disabled}
+                  aria-label={messages.pickDate}
+                  className="nx-state-layer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full disabled:pointer-events-none"
+                >
+                  <CalendarDays size="sm" aria-hidden="true" />
+                </button>
+              </RadixPopover.Trigger>
+            </div>
+          </RadixPopover.Anchor>
+        ) : (
         <RadixPopover.Trigger asChild>
           <button
             ref={ref}
@@ -150,6 +239,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             {display}
           </button>
         </RadixPopover.Trigger>
+        )}
         <RadixPopover.Portal>
           <RadixPopover.Content
             align="start"
@@ -163,18 +253,26 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
               mode="single"
               selected={value}
               defaultMonth={value}
-              onSelect={(date) => {
-                onChange?.(date);
-                setOpen(false);
-              }}
+              onSelect={pick}
+              disabled={disabledDates}
               startMonth={minDate}
               endMonth={maxDate}
               autoFocus
+              animate
               showOutsideDays
               className="relative p-3"
               classNames={calendarClassNames}
               {...calendar.dayPickerProps}
             />
+            {presets && presets.length > 0 && (
+              <div className="flex flex-wrap gap-1 border-t border-[var(--color-outline-variant)] p-2">
+                {presets.map((p) => (
+                  <Button key={p.label} variant="ghost" size="xs" onClick={() => pick(p.date)}>
+                    {p.label}
+                  </Button>
+                ))}
+              </div>
+            )}
           </RadixPopover.Content>
         </RadixPopover.Portal>
       </RadixPopover.Root>

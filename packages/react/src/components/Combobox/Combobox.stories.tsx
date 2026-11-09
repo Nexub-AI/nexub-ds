@@ -37,3 +37,16 @@ export const Default: Story = {
     </div>
   ),
 };
+
+export const Loading: Story = {
+  render: () => (
+    <div style={{ width: '280px', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
+      <Combobox.Root>
+        <Combobox.Input placeholder="Search fruits..." />
+        <Combobox.List loading>
+          <Combobox.Empty>No fruit found.</Combobox.Empty>
+        </Combobox.List>
+      </Combobox.Root>
+    </div>
+  ),
+};

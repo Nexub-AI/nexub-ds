@@ -67,4 +67,18 @@ describe('Combobox', () => {
     expect(screen.queryByText('Apple')).not.toBeInTheDocument();
     expect(screen.getByText('Banana')).toBeInTheDocument();
   });
+
+  it('loading shows a loading row, sets aria-busy and hides Empty', () => {
+    render(
+      <Combobox.Root>
+        <Combobox.Input />
+        <Combobox.List loading>
+          <Combobox.Empty>No results.</Combobox.Empty>
+        </Combobox.List>
+      </Combobox.Root>,
+    );
+    expect(screen.getByRole('listbox')).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByRole('progressbar', { name: 'Loading…' })).toHaveTextContent('Loading…');
+    expect(screen.getByText('No results.').closest('[cmdk-list]')).toHaveClass('[&_[cmdk-empty]]:hidden');
+  });
 });

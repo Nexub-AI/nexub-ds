@@ -253,7 +253,7 @@ export { Checkbox } from './components/Checkbox/index.js';
 export type { CheckboxProps } from './components/Checkbox/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
-export type { SliderProps } from './components/Slider/index.js';
+export type { SliderProps, SliderMark } from './components/Slider/index.js';
 export { Toggle, toggleVariants } from './components/Toggle/index.js';
 export type { ToggleProps } from './components/Toggle/index.js';
 export { ToggleGroup } from './components/ToggleGroup/index.js';
