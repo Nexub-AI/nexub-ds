@@ -140,7 +140,7 @@ describe('English defaults still render', () => {
       expect(screen.getByRole('button', { name })).toBeInTheDocument();
     }
     fireEvent.click(screen.getByRole('button', { name: 'Show password' }));
-    expect(screen.getByRole('button', { name: 'Hide password' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Show password', pressed: true })).toBeInTheDocument();
     expect(screen.getByRole('status', { name: 'Loading…' })).toBeInTheDocument();
   });
 
@@ -242,5 +242,13 @@ describe('overrides through the provider', () => {
     expect(screen.getByRole('button', { name: 'Page 2' })).toBeInTheDocument();
     expect(screen.getByRole('status', { name: 'Chargement…' })).toBeInTheDocument();
     expect(screen.getByRole('status', { name: 'Envoi…' })).toBeInTheDocument();
+  });
+});
+
+describe('NexubProvider nonce', () => {
+  it('hands the nonce to the <style> tags Radix overlays inject', async () => {
+    const { getNonce } = await import('get-nonce');
+    render(<NexubProvider nonce="abc123"><span /></NexubProvider>);
+    expect(getNonce()).toBe('abc123');
   });
 });

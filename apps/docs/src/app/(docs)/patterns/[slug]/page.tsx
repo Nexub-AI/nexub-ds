@@ -4,6 +4,7 @@ import { Badge } from '@nexub/react';
 import { patternEntries, getPatternEntry } from '@/registry/index';
 import { nativePatternTwins } from '@/registry/native';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
 import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
 import { UsageGrid } from '@/components/docs/UsageGrid';
@@ -51,7 +52,7 @@ export default async function PatternPage({ params }: Props) {
         lead={meta.description}
         badges={meta.addedIn && <Badge variant="outline">Since v{meta.addedIn}</Badge>}
       >
-        <div className="docs-snippet inline-flex max-w-full items-center gap-2 self-start rounded-shape-field bg-[var(--docs-snippet-bg)] py-1.5 pe-2 ps-3 font-mono text-body-sm text-[var(--docs-snippet-fg)]">
+        <div className="docs-code-strip">
           <code className="truncate">{importLine}</code>
           <CopyButton text={importLine} />
         </div>
@@ -69,7 +70,7 @@ export default async function PatternPage({ params }: Props) {
         <Section id="examples" title="Examples">
           {examples.map((ex, i) => (
             <Section key={ex.title} title={ex.title} description={ex.description} level={3}>
-              <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} minHeight="180px">
+              <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} codeSlot={<CodeBlock code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} />} minHeight="180px">
                 <ComponentLivePreview slug={slug} idx={i} isPattern />
               </ComponentPreview>
             </Section>

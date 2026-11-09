@@ -32,7 +32,9 @@ export function fileAccepted(file: File, accept?: string[]): boolean {
 
 export interface FileRejection {
   file: File;
-  reason: 'type' | 'size' | 'count';
+  reason: 'type' | 'size' | 'count' | 'custom';
+  /** The message returned by `validate` (reason `'custom'`). */
+  message?: string;
 }
 
 interface FileUploadContextValue {
@@ -64,10 +66,15 @@ export interface FileUploadRootProps extends React.HTMLAttributes<HTMLDivElement
   onFilesChange?: (files: File[]) => void;
   /** Files turned away by `accept`, `maxSize` or `maxFiles`, from the picker or a drop. */
   onReject?: (rejections: FileRejection[]) => void;
+  /**
+   * Your own check, run after `accept` and `maxSize`: return a message to reject
+   * the file. Client-side checks are a convenience; validate again on the server.
+   */
+  validate?: (file: File) => string | null | undefined;
 }
 
 const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
-  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, children, ...props }, ref) => {
+  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, children, ...props }, ref) => {
     const [files, setFiles] = React.useState<File[]>([]);
     const [rejections, setRejections] = React.useState<FileRejection[]>([]);
     const [isDragging, setIsDragging] = React.useState(false);
@@ -76,10 +83,12 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
     const addFiles = React.useCallback(
       (newFiles: File[]) => {
         const rejected: FileRejection[] = [];
+        let custom: string | null;
         const next = [...files];
         for (const file of newFiles) {
           if (!fileAccepted(file, accept)) rejected.push({ file, reason: 'type' });
           else if (maxSize !== undefined && file.size > maxSize) rejected.push({ file, reason: 'size' });
+          else if ((custom = validate?.(file) || null)) rejected.push({ file, reason: 'custom', message: custom });
           else if (maxFiles !== undefined && next.length >= maxFiles) rejected.push({ file, reason: 'count' });
           else next.push(file);
         }
@@ -90,7 +99,7 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
         }
         if (rejected.length) onReject?.(rejected);
       },
-      [files, accept, maxFiles, maxSize, onFilesChange, onReject],
+      [files, accept, maxFiles, maxSize, onFilesChange, onReject, validate],
     );
 
     const removeFile = React.useCallback(
@@ -184,9 +193,11 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         <div id={errorId} role="alert" className="empty:hidden px-4 pb-3 text-start text-sm text-[var(--color-error)]">
           {rejections.length > 0 && (
             <ul>
-              {rejections.map(({ file, reason }, i) => (
+              {rejections.map(({ file, reason, message }, i) => (
                 <li key={`${file.name}-${i}`}>
-                  {reason === 'type'
+                  {reason === 'custom'
+                    ? message
+                    : reason === 'type'
                     ? messages.fileTypeRejected(file.name)
                     : reason === 'size'
                       ? messages.fileTooLarge(file.name, formatFileSize(maxSize ?? 0, locale))

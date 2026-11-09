@@ -71,6 +71,14 @@ function rateLimit(ip: string): { ok: boolean; retryAfter: number } {
   return { ok: true, retryAfter: 0 };
 }
 
+// Browsers always send Origin on a POST fetch. Same-origin covers the custom
+// domain; the pages.dev host and its branch previews are listed explicitly.
+const PAGES_ORIGIN = /^https:\/\/([a-z0-9-]+\.)?nexub-ds-docs\.pages\.dev$/;
+export function isAllowedOrigin(origin: string | null, requestUrl: string): boolean {
+  if (!origin) return false;
+  return origin === new URL(requestUrl).origin || PAGES_ORIGIN.test(origin);
+}
+
 function jsonResponse(status: number, body: unknown, extraHeaders?: HeadersInit): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -247,6 +255,9 @@ function buildChatCard(input: ChatCardInput): unknown {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  if (!isAllowedOrigin(request.headers.get('origin'), request.url)) {
+    return jsonResponse(403, { error: 'forbidden' });
+  }
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
 
   const limit = rateLimit(ip);

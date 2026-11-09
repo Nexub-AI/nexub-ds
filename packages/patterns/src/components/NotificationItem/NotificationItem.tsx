@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn, useNexubMessages } from '@nexub/react';
+import { cn, safeHref, useNexubMessages } from '@nexub/react';
 
 export interface NotificationItemProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -47,7 +47,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-[var(--color-on-surface)] truncate">
             {href ? (
-              <a href={href} onClick={onSelect} className={stretched}>
+              <a href={safeHref(href)} onClick={onSelect} className={stretched}>
                 {title}
               </a>
             ) : onSelect ? (

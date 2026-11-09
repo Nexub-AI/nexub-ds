@@ -94,11 +94,17 @@ This reverses one approved decision, "capsule controls" (2026-10-20), so it need
 - **RN after web**, as in 5.x and 6.x.
 - **8.0 flips defaults only**: no surprise features in a major.
 
-## Decisions (open)
+## Decisions (all settled 2026-11-09)
 
-1. **Patch S1 + S5 + M1 now, as 7.0.1**, instead of waiting for 7.1? Recommended: yes. S1 is exploitable today by anyone with push access.
-2. **Signature look.** It reverses the approved "capsule controls" decision. Recommended: keep the M3 engine (HCT roles, state layers, springs) and replace the five visible signatures, opt-in in 7.9 and default in 8.0. Alternative: a lighter tweak in 7.x (neutral surfaces + 10px fields only), with no default change.
-3. **`classic` lifetime.** Keep it through 8.x as a supported style, or deprecate it in 8.x and remove it in 9.0.
+1. **Patch S1 + S5 + M1 as 7.0.1.** Yes. Shipped on npm 2026-11-09.
+2. **Signature look.** Full Signature: keep the M3 engine (HCT roles, state layers, springs) and replace the five visible signatures, opt-in in 7.9 and default in 8.0. This reverses the 2026-10-20 "capsule controls" decision.
+3. **`classic` lifetime.** Deprecated through 8.x, removed in 9.0, so 9.x tests one look.
+
+## Status (2026-11-09)
+
+- **7.1.0 shipped** to npm on 2026-11-09 (#439 + #441 → #440 → #442 → Version #443 → back-merge #444). Every 7.1 item landed.
+- **Next: the docs fix** (type map + one editor-style `CodeBlock`, from [ROADMAP_8.x.md](ROADMAP_8.x.md) 8.1), pulled forward as a docs-only change before 7.2.
+- Then 7.2 → 8.0 as above, followed by [ROADMAP_8.x.md](ROADMAP_8.x.md) (8.1 → 10.0).
 
 ## Out of scope
 

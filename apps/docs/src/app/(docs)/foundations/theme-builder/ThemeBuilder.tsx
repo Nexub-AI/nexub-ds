@@ -13,7 +13,7 @@ import {
   createSeedTokens,
 } from '@nexub/tokens/seed';
 import { Badge, Button, Checkbox, Input, Progress, SegmentedControl, Switch, Tabs } from '@nexub/react';
-import { CopyButton } from '@/components/docs/CopyButton';
+import { CodeSnippet } from '@/components/docs/CodeFrame';
 
 type Target = 'primary' | 'tertiary';
 type Level = 'standard' | 'medium' | 'high';
@@ -237,12 +237,9 @@ import { createSeedStylesheet } from '@nexub/tokens/seed';
           <Tabs.List aria-label="Export format">
             {exports.map(([k, label]) => <Tabs.Trigger key={k} value={k}>{label}</Tabs.Trigger>)}
           </Tabs.List>
-          {exports.map(([k, , code]) => (
+          {exports.map(([k, label, code]) => (
             <Tabs.Content key={k} value={k}>
-              <div className="relative">
-                <div className="absolute end-2 top-2"><CopyButton text={code} /></div>
-                <pre className="max-h-80 overflow-auto"><code>{code}</code></pre>
-              </div>
+              <CodeSnippet code={code} title={label} className="[&_.docs-code-body]:max-h-80 [&_.docs-code-body]:overflow-y-auto" />
             </Tabs.Content>
           ))}
         </Tabs.Root>

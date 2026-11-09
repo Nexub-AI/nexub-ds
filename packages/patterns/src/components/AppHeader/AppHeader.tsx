@@ -11,6 +11,7 @@ import {
   useNexubMessages,
   useTheme,
   type GlassMode,
+  safeHref,
 } from '@nexub/react';
 import { Building2, ChevronDown, Moon, Search, Sun } from '@nexub/icons';
 import { AppLauncher, type AppLauncherApp } from '../AppLauncher/AppLauncher.js';
@@ -364,7 +365,7 @@ function AccountMenu({
 
   const link = (href: string, label: string) => (
     <DropdownMenu.Item asChild>
-      <a href={href}>{label}</a>
+      <a href={safeHref(href)}>{label}</a>
     </DropdownMenu.Item>
   );
   const legal = (privacyHref || termsHref) && (
@@ -466,7 +467,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
           <div className="flex w-full min-w-0 items-center gap-1 sm:gap-2">
             {menu && <div className="flex shrink-0 md:hidden">{menu}</div>}
             <a
-              href={homeHref}
+              href={safeHref(homeHref)}
               onClick={(e) => {
                 if (onNavigate && isPlainClick(e)) {
                   e.preventDefault();

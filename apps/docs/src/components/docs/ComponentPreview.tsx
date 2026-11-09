@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { CodeSnippet } from './CodeFrame';
 import {
   PreviewToolbar,
   DEFAULT_TOOLBAR_STATE,
@@ -137,22 +138,7 @@ export function ComponentPreview({
       {tab === 'code' && (
         <div role="tabpanel" id="tabpanel-code" aria-labelledby="tab-code" style={{ padding: '0 8px 8px' }}>
           {codeSlot ?? (
-            <pre
-              className="docs-snippet"
-              style={{
-                background: 'var(--docs-snippet-bg)',
-                color: 'var(--docs-snippet-fg)',
-                borderRadius: 'calc(var(--shape-container) - 8px)',
-                padding: '1.25rem 1.5rem',
-                overflowX: 'auto',
-                fontSize: '0.8125rem',
-                lineHeight: 1.6,
-                fontFamily: 'var(--font-family-mono)',
-                margin: 0,
-              }}
-            >
-              <code>{code}</code>
-            </pre>
+            <CodeSnippet code={code} lang="tsx" />
           )}
         </div>
       )}

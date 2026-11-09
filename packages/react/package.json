@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "7.0.1",
+  "version": "7.1.0",
   "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
@@ -38,6 +38,10 @@
     "./cn": {
       "types": "./dist/utils/cn.d.ts",
       "default": "./dist/utils/cn.js"
+    },
+    "./safeHref": {
+      "types": "./dist/utils/safeHref.d.ts",
+      "default": "./dist/utils/safeHref.js"
     },
     "./*": {
       "types": "./dist/components/*/index.d.ts",
@@ -93,6 +97,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
+    "get-nonce": "^1.0.1",
     "react-day-picker": "^10.0.2",
     "tailwind-merge": "^3.7.0"
   },

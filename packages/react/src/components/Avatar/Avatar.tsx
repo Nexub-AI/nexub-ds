@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { safeSrc } from '../../utils/safeHref.js';
 
 export const avatarVariants = cva(
   'relative inline-flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-muted)] font-medium select-none',
@@ -53,7 +54,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     {
       className,
       size = 'md',
-      src,
+      src: srcProp,
       name,
       fallback,
       badge,
@@ -62,6 +63,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     },
     ref,
   ) => {
+    const src = safeSrc(srcProp);
     // Remember which src failed, so a new src gets a fresh try.
     const [failedSrc, setFailedSrc] = React.useState<string>();
 
