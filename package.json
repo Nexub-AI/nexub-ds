@@ -46,11 +46,6 @@
       "sharp": "^0.35.5",
       "body-parser@2": "^2.4.0",
       "@expo/cli>zod": "^4.6.6"
-    },
-    "auditConfig": {
-      "ignoreGhsas": [
-        "GHSA-vfj7-8cjw-p6xm"
-      ]
     }
   }
 }
