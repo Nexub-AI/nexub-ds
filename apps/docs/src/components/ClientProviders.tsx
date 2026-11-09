@@ -3,7 +3,15 @@
 import * as React from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
-import { ThemeProvider, TooltipProvider, Toaster } from '@nexub/react';
+import { NexubProvider, ThemeProvider, TooltipProvider, Toaster } from '@nexub/react';
+
+// The Pages middleware puts a per-request CSP nonce in <meta name="csp-nonce">;
+// NexubProvider hands it to the <style> tags Radix overlays inject, so docs
+// can run style-src-elem without 'unsafe-inline'. Absent at build time.
+const cspNonce =
+  typeof document === 'undefined'
+    ? undefined
+    : (document.querySelector<HTMLMetaElement>('meta[name="csp-nonce"]')?.content ?? undefined);
 import type { SearchEntry } from '@/registry/index';
 
 // ssr:false is only valid inside a Client Component — that's why this lives here
@@ -32,13 +40,15 @@ export function ClientProviders({
   // Preview frames (/frame/…) render one page template, without docs chrome.
   const inFrame = usePathname()?.startsWith('/frame/') ?? false;
   return (
-    <ThemeProvider defaultTheme="system" storageKey="nexub-theme">
-      <TooltipProvider delayDuration={400}>
-        {children}
-        {!inFrame && <SearchModal searchIndex={searchIndex} />}
-        {!inFrame && <FeedbackButton />}
-        <Toaster />
-      </TooltipProvider>
-    </ThemeProvider>
+    <NexubProvider nonce={cspNonce}>
+      <ThemeProvider defaultTheme="system" storageKey="nexub-theme">
+        <TooltipProvider delayDuration={400}>
+          {children}
+          {!inFrame && <SearchModal searchIndex={searchIndex} />}
+          {!inFrame && <FeedbackButton />}
+          <Toaster />
+        </TooltipProvider>
+      </ThemeProvider>
+    </NexubProvider>
   );
 }

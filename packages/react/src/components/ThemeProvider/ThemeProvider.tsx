@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import type { GlassMode } from '@nexub/core';
+import type { GlassMode, Product } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -11,6 +11,10 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 /** Glass intensity dial (user preference, like iOS 27's clear → tinted slider).
  *  'off' makes every glass surface solid. Set as `data-glass` on <html>. */
 export type { GlassMode };
+// Products with a theme file in @nexub/themes. The stored value is user-controlled
+// (localStorage), so only these names reach data-product.
+const PRODUCTS: readonly Product[] = ['leap', 'bookub', 'payub', 'founderub'];
+
 const GLASS_MODES: readonly GlassMode[] = ['clear', 'balanced', 'tinted', 'off'];
 
 export interface ThemeContextValue {
@@ -295,7 +299,7 @@ export function themeScriptSource(
     ? `var c=localStorage.getItem(${jsString(contrastStorageKey)});if(['standard','medium','high'].indexOf(c)>-1)d.setAttribute('data-contrast',c);`
     : '';
   const product = productStorageKey
-    ? `var b=localStorage.getItem(${jsString(productStorageKey)});if(b&&b!=='base')d.setAttribute('data-product',b);`
+    ? `var b=localStorage.getItem(${jsString(productStorageKey)});if(${JSON.stringify(PRODUCTS)}.indexOf(b)>-1)d.setAttribute('data-product',b);`
     : '';
   const glass = `var g=localStorage.getItem(${jsString(glassStorageKey)});if(${JSON.stringify(GLASS_MODES)}.indexOf(g)>-1)d.setAttribute('data-glass',g);`;
   return `try{var d=document.documentElement,t=localStorage.getItem(${jsString(storageKey)});if(t==='light'||t==='dark')d.setAttribute('data-theme',t);${product}${glass}${contrast}}catch(e){}`;

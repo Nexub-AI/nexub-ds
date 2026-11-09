@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { safeHref } from '../../utils/safeHref.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
 import type { ToneValue } from '../Button/Button.js';
 import { usePointerSheen } from '../../hooks/usePointerSheen.js';
@@ -106,7 +107,7 @@ export interface CardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
  * interactive elements inside the card `relative z-[1]` to keep them clickable.
  */
 export const CardLink = React.forwardRef<HTMLAnchorElement, CardLinkProps>(
-  ({ className, asChild = false, ...props }, ref) => {
+  ({ className, asChild = false, href, ...props }, ref) => {
     const Comp = asChild ? Slot : 'a';
     return (
       <Comp
@@ -116,6 +117,7 @@ export const CardLink = React.forwardRef<HTMLAnchorElement, CardLinkProps>(
           'text-inherit no-underline outline-none after:absolute after:inset-0 after:rounded-[inherit] after:content-[\'\']',
           className,
         )}
+        href={safeHref(href)}
         {...props}
       />
     );

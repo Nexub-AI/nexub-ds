@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn } from '@nexub/react';
+import { cn, safeHref } from '@nexub/react';
 import { ChevronRight } from '@nexub/icons';
 import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 
@@ -59,7 +59,7 @@ function Row({ item }: { item: SettingsItem }) {
   const row = 'flex min-h-[56px] w-full items-center gap-3 px-4 py-3';
   if (item.href)
     return (
-      <a href={item.href} onClick={item.onSelect && ((e) => { e.preventDefault(); item.onSelect?.(); })} className={cn(row, 'nx-state-layer')}>
+      <a href={safeHref(item.href)} onClick={item.onSelect && ((e) => { e.preventDefault(); item.onSelect?.(); })} className={cn(row, 'nx-state-layer')}>
         {content}
       </a>
     );

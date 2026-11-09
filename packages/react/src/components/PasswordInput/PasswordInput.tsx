@@ -23,11 +23,17 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
     });
     const messages = useNexubMessages();
 
+    const autoId = React.useId();
+    const inputId = props.id ?? autoId;
+
     const toggleButton = (
       <button
         type="button"
         onClick={() => setShowPassword(!showPassword)}
-        aria-label={showPassword ? messages.hidePassword : messages.showPassword}
+        // One stable name + pressed state (APG toggle button), not a label that flips.
+        aria-label={messages.showPassword}
+        aria-pressed={showPassword}
+        aria-controls={inputId}
         className={cn(
           'shrink-0 rounded-full text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors',
         )}
@@ -43,6 +49,7 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputPro
     return (
       <Input
         ref={ref}
+        id={inputId}
         // Default autofill hint (override with 'new-password' on sign-up).
         autoComplete="current-password"
         {...props}

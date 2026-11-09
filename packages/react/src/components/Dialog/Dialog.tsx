@@ -6,14 +6,34 @@ import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
+import { ClassLockOverlay, ScrollLockContext, type ScrollLock } from '../../hooks/useClassScrollLock.js';
 
-const Root = RadixDialog.Root;
+export interface DialogRootProps extends RadixDialog.DialogProps {
+  /**
+   * `'class'` locks page scroll with a class on <html> instead of the <style>
+   * Radix injects, so the dialog works under a strict `style-src` with no nonce.
+   * @default 'style' (becomes 'class' in 8.0)
+   */
+  scrollLock?: ScrollLock;
+}
+
+function Root({ scrollLock = 'style', modal = true, ...props }: DialogRootProps) {
+  const lock = React.useMemo(() => ({ scrollLock, modal }), [scrollLock, modal]);
+  return (
+    <ScrollLockContext.Provider value={lock}>
+      <RadixDialog.Root modal={modal} {...props} />
+    </ScrollLockContext.Provider>
+  );
+}
 const Trigger = RadixDialog.Trigger;
 const Portal = RadixDialog.Portal;
 const Close = RadixDialog.Close;
 
 const Overlay = React.forwardRef<HTMLDivElement, RadixDialog.DialogOverlayProps>(
   function DialogOverlay({ className, ...props }, ref) {
+    const { scrollLock, modal } = React.useContext(ScrollLockContext);
+    const cls = cn('fixed inset-0 z-[var(--z-modal)] nx-motion', scrim, className);
+    if (scrollLock === 'class') return modal ? <ClassLockOverlay ref={ref} className={cls} /> : null;
     return (
       <RadixDialog.Overlay
         ref={ref}
