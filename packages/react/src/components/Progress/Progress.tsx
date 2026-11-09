@@ -62,22 +62,23 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
       className,
       size,
       tone = 'neutral',
-      value = 0,
+      value,
       max = 100,
       animated = false,
       ...props
     },
     ref,
   ) => {
-    const clampedValue = Math.min(Math.max(value, 0), max);
-    const percentage = (clampedValue / max) * 100;
+    // No value = indeterminate (ARIA: omit aria-valuenow); a sliding segment.
+    const isIndeterminate = value === undefined || value === null;
+    const clampedValue = isIndeterminate ? 0 : Math.min(Math.max(value, 0), max);
+    const percentage = isIndeterminate ? 40 : (clampedValue / max) * 100;
     // Width is set through CSSOM, not a style attribute, so server HTML stays
     // valid under a strict CSP (style-src without 'unsafe-inline').
     const fillRef = React.useRef<HTMLDivElement>(null);
     useIsomorphicLayoutEffect(() => {
       fillRef.current?.style.setProperty('width', `${percentage}%`);
     }, [percentage]);
-    const isIndeterminate = value === undefined || value === null;
 
     return (
       <div
@@ -93,9 +94,11 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
           className={cn(
             progressFillVariants({ tone }),
             animated && 'animate-pulse',
+            isIndeterminate && 'animate-[nx-progress-indeterminate_1.4s_ease-in-out_infinite]',
           )}
           ref={fillRef}
           data-part="fill"
+          data-indeterminate={isIndeterminate || undefined}
         />
       </div>
     );

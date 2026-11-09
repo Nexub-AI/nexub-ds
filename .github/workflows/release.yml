@@ -21,6 +21,9 @@ jobs:
   release:
     name: Publish to npm & deploy docs
     runs-on: ubuntu-latest
+    # RELEASE_PAT belongs in this environment's secrets (deployment branch:
+    # production only), not repo secrets, so PR-triggered workflows can't read it.
+    environment: release
 
     permissions:
       contents: write       # changesets needs to push version commits
