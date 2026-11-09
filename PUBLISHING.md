@@ -96,10 +96,12 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
    Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
-4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance) and deploys the docs to production. The job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`changeset publish` on the dist built by the `build` job, authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance), attaches an SPDX SBOM to the `@nexub/react` GitHub release, and deploys the docs to production. The `publish` job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
 5. **Add a row** to the [Release History](#release-history) table.
 
-> The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.
+> `release.yml` holds one credential per job (since 7.1). `build` has no secrets and builds packages and docs; `version` (Version PR) and `back-merge` use `RELEASE_PAT`; `publish` uses only npm OIDC and the job's own token; `deploy-docs` uses only the Cloudflare token, with wrangler pinned in the lockfile. Jobs that hold a credential install with `--ignore-scripts` and build nothing.
+>
+> `RELEASE_PAT` (a fine-grained PAT with Contents + Pull requests write; the org blocks the Actions bot from creating PRs) and the Cloudflare secrets belong in the **`release` environment** (Settings → Environments, deployment branch `production` only), not in repo secrets, so no PR-triggered workflow can read them. Since the version PR is opened by a real user, CI runs on it like any other PR.
 
 ### Pre-flight check (optional)
 

@@ -62,9 +62,10 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     },
     ref,
   ) => {
-    const [imgError, setImgError] = React.useState(false);
+    // Remember which src failed, so a new src gets a fresh try.
+    const [failedSrc, setFailedSrc] = React.useState<string>();
 
-    const showImage = Boolean(src) && !imgError;
+    const showImage = Boolean(src) && failedSrc !== src;
     const initials = name ? getInitials(name) : null;
     // An unnamed avatar is decorative: an unlabelled role="img" is an a11y violation.
     const labelled = Boolean(name || props['aria-label'] || props['aria-labelledby']);
@@ -83,7 +84,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
             src={src}
             alt={name ?? ''}
             className="h-full w-full object-cover"
-            onError={() => setImgError(true)}
+            onError={() => setFailedSrc(src)}
           />
         ) : initials ? (
           <span aria-hidden="true">{initials}</span>
