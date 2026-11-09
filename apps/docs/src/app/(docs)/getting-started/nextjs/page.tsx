@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { List, Note, PageIntro, Prose, Section } from '@/components/kit';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
@@ -25,7 +26,7 @@ export default function NextjsPage() {
       />
 
       <Section id="css" title="CSS with Tailwind 4">
-        <pre><code>{`/* app/globals.css */
+        <CodeBlock lang="css" code={`/* app/globals.css */
 @import "tailwindcss";
 @import "@nexub/tokens/tailwind.css";
 @import "@nexub/themes/core" layer(base);      /* resets, no fonts, no page backdrop */
@@ -33,7 +34,7 @@ export default function NextjsPage() {
 @import "@nexub/themes/dark" layer(base);
 @import "@nexub/themes/marketing" layer(base); /* marketing pages only */
 @source "../node_modules/@nexub/react/dist";
-@source "../node_modules/@nexub/marketing/dist";`}</code></pre>
+@source "../node_modules/@nexub/marketing/dist";`} />
         <Note>
           Don’t also import <code>@nexub/react/styles.css</code>: it is the prebuilt CSS for apps without Tailwind and
           brings a second preflight.
@@ -45,11 +46,11 @@ export default function NextjsPage() {
           <code>@nexub/themes/base</code> self-hosts Inter and Plus Jakarta Sans; <code>@nexub/themes/core</code> leaves
           fonts to you. With <code>next/font</code>, name its variables after the tokens:
         </Prose>
-        <pre><code>{`import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+        <CodeBlock lang="tsx" code={`import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 const sans = Inter({ subsets: ['latin'], variable: '--font-family-sans' });
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-display' });
 
-<html className={\`\${sans.variable} \${display.variable}\`}>`}</code></pre>
+<html className={\`\${sans.variable} \${display.variable}\`}>`} />
       </Section>
 
       <Section id="imports" title="Import per component">
@@ -57,7 +58,7 @@ const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family
           Next.js sends every client component a barrel import can reach to the browser. Import each component from its
           own entry point, or let Next.js do it for you:
         </Prose>
-        <pre><code>{`import { Button } from '@nexub/react/Button';
+        <CodeBlock lang="tsx" code={`import { Button } from '@nexub/react/Button';
 import { Hero } from '@nexub/marketing/Hero';
 import { cn } from '@nexub/react/cn';
 
@@ -65,7 +66,7 @@ import { cn } from '@nexub/react/cn';
 // next.config.mjs
 export default {
   experimental: { optimizePackageImports: ['@nexub/react', '@nexub/marketing', '@nexub/icons'] },
-};`}</code></pre>
+};`} />
         <Prose>
           Measured in a fresh Next.js 15.5 app with Hero, StatBand and CTABand: 181 kB of page JavaScript through barrels,
           19.4 kB either way above, with only Button and NumberTicker sent to the browser.

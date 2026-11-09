@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { DocTable, List, PageIntro, Prose, Section } from '@/components/kit';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
@@ -37,10 +38,10 @@ export default function AiToolsPage() {
           published with, and is versioned with <code>@nexub/react</code>.
         </Prose>
         <h3>Claude Code</h3>
-        <pre><code>claude mcp add nexub-ds -- npx -y @nexub/mcp</code></pre>
+        <CodeBlock lang="bash" code={"claude mcp add nexub-ds -- npx -y @nexub/mcp"} />
         <h3>Cursor, Windsurf, VS Code and other clients</h3>
         <Prose>Add it to the client&apos;s <code>mcpServers</code> config:</Prose>
-        <pre><code>{mcpJson}</code></pre>
+        <CodeBlock lang="json" code={mcpJson} />
         <h3>Tools</h3>
         <DocTable
           head={['Tool', 'Returns']}
@@ -60,8 +61,8 @@ export default function AiToolsPage() {
           The <code>nexub-ds</code> plugin ships the same content as a skill, so Claude Code loads the rules only when you
           build UI:
         </Prose>
-        <pre><code>{`claude plugin marketplace add Nexub-AI/nexub-ds
-claude plugin install nexub-ds@nexub`}</code></pre>
+        <CodeBlock lang="bash" code={`claude plugin marketplace add Nexub-AI/nexub-ds
+claude plugin install nexub-ds@nexub`} />
       </Section>
 
       <Section id="files" title="llms.txt and Markdown pages">
