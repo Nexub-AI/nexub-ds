@@ -13,6 +13,8 @@ export interface MotionBaseProps {
   /**
    * Legacy: set it to use the old `--duration-*` + `--ease-{value}` tokens
    * instead of springs. Omit it to ride the spring tokens.
+   * @deprecated since 7.3: the `--duration-*` / `--ease-*` tokens (tokens/motion.json) are
+   * retired in favour of the spring tokens. Removed in 8.0.
    */
   easing?: MotionEasing;
   /**

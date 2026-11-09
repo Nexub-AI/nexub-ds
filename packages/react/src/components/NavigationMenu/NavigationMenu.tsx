@@ -48,7 +48,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixNav.NavigationMenuTrigg
       {children}
       <ChevronDown
         size="xs"
-        className="relative ms-1 transition duration-300 group-data-[state=open]:rotate-180"
+        className="relative ms-1 transition-transform duration-spatial-fast ease-spatial-fast group-data-[state=open]:rotate-180"
         aria-hidden="true"
       />
     </RadixNav.Trigger>
@@ -92,6 +92,8 @@ const Viewport = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuViewpor
         className={cn(
           'nx-motion nx-pop origin-top relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden', floatingSurface,
           'md:w-[var(--radix-navigation-menu-viewport-width)]',
+          // Resize between items on the spatial spring instead of snapping.
+          'transition-[width,height] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
           className,
         )}
         {...props}
