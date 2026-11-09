@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Avatar } from './Avatar.js';
 
 describe('Avatar', () => {
@@ -63,5 +63,35 @@ describe('Avatar', () => {
   it('keeps role="img" when labelled via aria-label', () => {
     render(<Avatar fallback="N" aria-label="Nexub" />);
     expect(screen.getByRole('img', { name: 'Nexub' })).toBeInTheDocument();
+  });
+
+  it('fades the image in once it loads', () => {
+    const { container } = render(<Avatar name="Ada" src="/a.png" />);
+    const img = container.querySelector('img')!;
+    // Not loaded yet after hydration: hidden, then fades in.
+    expect(img).toHaveClass('opacity-0', 'transition-opacity');
+    fireEvent.load(img);
+    expect(img).not.toHaveClass('opacity-0');
+  });
+
+  it('shows an already-cached image at once', () => {
+    const w = vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(40);
+    const c = vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
+    const { container } = render(<Avatar name="Ada" src="/cached.png" />);
+    expect(container.querySelector('img')).not.toHaveClass('opacity-0');
+    w.mockRestore();
+    c.mockRestore();
+  });
+
+  it('status draws a dot and joins the accessible name', () => {
+    const { container } = render(<Avatar name="Ada Lovelace" status="away" />);
+    expect(screen.getByRole('img', { name: 'Ada Lovelace, Away' })).toBeInTheDocument();
+    expect(container.querySelector('.bg-\\[var\\(--color-warning\\)\\]')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('badge still works without status', () => {
+    const { container } = render(<Avatar name="Ada" badge />);
+    expect(container.querySelector('.bg-\\[var\\(--color-success\\)\\]')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Ada' })).toBeInTheDocument();
   });
 });

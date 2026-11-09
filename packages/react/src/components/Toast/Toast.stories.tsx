@@ -112,3 +112,33 @@ export const UndoDelete: Story = {
   name: 'Undo delete',
   render: () => <UndoDeleteDemo />,
 };
+
+/** `toast.promise`: one toast goes loading → success/error in place. `showProgress` adds a countdown bar. */
+export const Promise_: Story = {
+  name: 'Promise & countdown',
+  render: () => (
+    <div className="flex flex-wrap gap-2 p-4">
+      <Button
+        onClick={() =>
+          toast.promise(new Promise((r) => setTimeout(r, 1500)), { loading: 'Saving…', success: 'Saved', error: 'Save failed' })
+        }
+      >
+        Save (resolves)
+      </Button>
+      <Button
+        tone="danger"
+        onClick={() =>
+          toast
+            .promise(new Promise((_, j) => setTimeout(j, 1500)), { loading: 'Uploading…', success: 'Uploaded', error: 'Upload failed' })
+            .catch(() => {})
+        }
+      >
+        Upload (rejects)
+      </Button>
+      <Button variant="tonal" onClick={() => toast.info('Auto-dismissing', { showProgress: true })}>
+        With countdown
+      </Button>
+      <Toaster />
+    </div>
+  ),
+};

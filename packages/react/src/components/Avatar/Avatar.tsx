@@ -4,6 +4,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import { safeSrc } from '../../utils/safeHref.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export const avatarVariants = cva(
   'relative inline-flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-muted)] font-medium select-none',
@@ -31,6 +32,15 @@ const badgeSizeMap: Record<string, string> = {
   xl: 'h-3.5 w-3.5',
 };
 
+export type AvatarStatus = 'online' | 'away' | 'busy' | 'offline';
+
+const statusColor: Record<AvatarStatus, string> = {
+  online: 'bg-[var(--color-success)]',
+  away: 'bg-[var(--color-warning)]',
+  busy: 'bg-[var(--color-error)]',
+  offline: 'bg-[var(--color-outline)]',
+};
+
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
   const first = parts[0] ?? '';
@@ -47,6 +57,8 @@ export interface AvatarProps
   fallback?: React.ReactNode;
   badge?: boolean;
   badgeColor?: string;
+  /** Presence dot, added to the accessible name ("Ada Lovelace, Away"). Replaces `badge` when both are set. */
+  status?: AvatarStatus;
 }
 
 export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
@@ -59,6 +71,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       fallback,
       badge,
       badgeColor,
+      status,
       ...props
     },
     ref,
@@ -66,17 +79,30 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     const src = safeSrc(srcProp);
     // Remember which src failed, so a new src gets a fresh try.
     const [failedSrc, setFailedSrc] = React.useState<string>();
+    // Fades in on load. Visible by default (server HTML, no-JS, cached images);
+    // hidden only after hydration while a not-yet-loaded image draws nothing anyway.
+    const [pendingSrc, setPendingSrc] = React.useState<string>();
+    // Stable per src, so a re-render after load does not re-hide the image.
+    const hideUntilLoaded = React.useCallback(
+      (img: HTMLImageElement | null) => {
+        if (img && !img.complete) setPendingSrc(img.getAttribute('src') ?? undefined);
+      },
+      [],
+    );
+    const messages = useNexubMessages();
+    const statusLabel = status ? messages.presence[status] : undefined;
+    const label = [name, statusLabel].filter(Boolean).join(', ') || undefined;
 
     const showImage = Boolean(src) && failedSrc !== src;
     const initials = name ? getInitials(name) : null;
     // An unnamed avatar is decorative: an unlabelled role="img" is an a11y violation.
-    const labelled = Boolean(name || props['aria-label'] || props['aria-labelledby']);
+    const labelled = Boolean(label || props['aria-label'] || props['aria-labelledby']);
 
     return (
       <span
         ref={ref}
         className={cn(avatarVariants({ size }), className)}
-        aria-label={name ?? undefined}
+        aria-label={label}
         role={labelled ? 'img' : undefined}
         aria-hidden={labelled ? undefined : true}
         {...props}
@@ -85,7 +111,12 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
           <img
             src={src}
             alt={name ?? ''}
-            className="h-full w-full object-cover"
+            ref={hideUntilLoaded}
+            className={cn(
+              'h-full w-full object-cover transition-opacity duration-effects-default ease-effects-default',
+              pendingSrc === src && 'opacity-0',
+            )}
+            onLoad={() => setPendingSrc(undefined)}
             onError={() => setFailedSrc(src)}
           />
         ) : initials ? (
@@ -104,12 +135,12 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
           </svg>
         )}
 
-        {badge && (
+        {(badge || status) && (
           <span
             className={cn(
               'absolute bottom-0 end-0 rounded-full ring-2 ring-[var(--color-surface)]',
               badgeSizeMap[size ?? 'md'],
-              badgeColor ?? 'bg-[var(--color-success)]',
+              status ? statusColor[status] : (badgeColor ?? 'bg-[var(--color-success)]'),
             )}
             aria-hidden="true"
           />

@@ -309,3 +309,20 @@ describe('DataTable sub-rows', () => {
     expect(screen.getAllByRole('row')).toHaveLength(5);
   });
 });
+
+describe('DataTable 7.4: loading and emptyState', () => {
+  it('loading shows skeleton rows (pageSize) and sets aria-busy', () => {
+    const { container } = render(<DataTable columns={columns} data={data} loading pagination={{ pageSize: 3 }} />);
+    expect(screen.getByRole('table')).toHaveAttribute('aria-busy', 'true');
+    const skel = container.querySelectorAll('tbody tr[data-loading]');
+    expect(skel).toHaveLength(3);
+    expect(skel[0]!.children).toHaveLength(columns.length);
+    expect(screen.queryByText(data[0]!.name)).not.toBeInTheDocument();
+  });
+
+  it('renders emptyState in a full-width row when there are no rows', () => {
+    render(<DataTable columns={columns} data={[]} emptyState={<p>Nothing here</p>} />);
+    expect(screen.getByText('Nothing here').closest('td')).toHaveAttribute('colspan', String(columns.length));
+    expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy');
+  });
+});
