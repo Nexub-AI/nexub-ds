@@ -235,8 +235,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      contents: read
-      deployments: write  # wrangler registers a GitHub Deployment for the Pages production URL
+      contents: read  # wrangler gets only the Cloudflare token, never GITHUB_TOKEN
     steps:
       # Checkout for apps/docs/functions (Pages Functions source) and the lockfile.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
