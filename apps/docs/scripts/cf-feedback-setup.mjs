@@ -67,7 +67,8 @@ async function cf(method, path, body) {
 // 1. R2 lifecycle (PUT replaces the bucket's rules, so re-running is safe).
 const lifecyclePath = `/accounts/${account ?? '<account_id>'}/r2/buckets/${bucket}/lifecycle`;
 if (dryRun) {
-  console.log(`PUT ${lifecyclePath}\n${JSON.stringify(lifecycle, null, 2)}\n`);
+  // Never echo the account id from the environment.
+  console.log(`PUT /accounts/<account_id>/r2/buckets/${bucket}/lifecycle\n${JSON.stringify(lifecycle, null, 2)}\n`);
 } else {
   await cf('PUT', lifecyclePath, lifecycle);
   console.log(`R2 lifecycle set on ${bucket}: delete after 30 days.`);
