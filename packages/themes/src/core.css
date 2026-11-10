@@ -972,30 +972,33 @@ body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
    primary on, no outline), and a surface thumb filling the track's inner
    height in both states (no grow-on-check) that slides on the expressive
    spring. --switch-track-off / --switch-thumb let signature tokens retune it.
-   Disabled keeps the classic disabled colours. The [role='switch'] / [data-state]
-   bumps outrank the Tailwind state utilities. */
-[data-style='signature'] [role='switch'].nx-switch[data-state] { border-color: transparent; }
+   Disabled keeps the classic disabled colours.
+   !important: apps import the themes into a cascade layer before Tailwind's
+   utilities (layer(base) in our docs and Storybook), and layer order beats
+   specificity, so the Switch's own h-*, translate-x-* and border utilities
+   won. An important declaration in an earlier layer outranks later layers. */
+[data-style='signature'] [role='switch'].nx-switch[data-state] { border-color: transparent !important; }
 [data-style='signature'] [role='switch'].nx-switch[data-state='unchecked']:not(:disabled) {
-  background-color: var(--switch-track-off, var(--color-outline));
+  background-color: var(--switch-track-off, var(--color-outline)) !important;
 }
 [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state] {
-  height: 100%;
-  width: auto;
+  height: 100% !important;
+  width: auto !important;
   aspect-ratio: 1;
-  transform: none;
-  translate: 0;
-  background-color: var(--switch-thumb, var(--color-surface-container-lowest));
+  transform: none !important;
+  translate: 0 !important;
+  background-color: var(--switch-thumb, var(--color-surface-container-lowest)) !important;
   transition:
     translate var(--motion-spring-expressive-fast-duration) var(--motion-spring-expressive-fast-easing),
-    background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+    background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) !important;
 }
 /* Icon / spinner colour follows the track, as in classic. */
 [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='unchecked'] {
-  color: var(--switch-track-off, var(--color-outline));
+  color: var(--switch-track-off, var(--color-outline)) !important;
 }
-[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked'] { translate: var(--nx-switch-travel) 0; }
+[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked'] { translate: var(--nx-switch-travel) 0 !important; }
 [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked']:dir(rtl) {
-  translate: calc(var(--nx-switch-travel) * -1) 0;
+  translate: calc(var(--nx-switch-travel) * -1) 0 !important;
 }
 
 /* Radio dot: scales in on the spatial spring when selected (Radix mounts the
