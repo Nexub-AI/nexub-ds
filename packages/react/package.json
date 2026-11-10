@@ -62,7 +62,8 @@
     "build-storybook": "storybook build",
     "test:visual": "playwright test -c visual",
     "test:visual:docker": "docker run --rm --ipc=host -e CI -v \"$PWD/../..\":/work -w /work/packages/react mcr.microsoft.com/playwright:v1.64.0-noble npx playwright test -c visual",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test:perf": "playwright test -c visual --project=perf"
   },
   "dependencies": {
     "@nexub/core": "workspace:*",

@@ -202,3 +202,45 @@ export const CustomEmpty: Story = {
     <DataTable caption="Users" captionHidden columns={columns} data={[]} emptyState="No users yet. Invite someone to get started." />
   ),
 };
+
+/** Server-side sort and pages: the server sorts and slices; the table shows the controls. */
+export const ServerSide: Story = {
+  render: function ServerSide() {
+    const all = React.useMemo(
+      () => Array.from({ length: 23 }, (_, i) => ({ ...data[i % data.length]!, id: String(i), name: `User ${i + 1}` })),
+      [],
+    );
+    const [sort, setSort] = React.useState<{ id: string; desc: boolean }[]>([]);
+    const [page, setPage] = React.useState(0);
+    const pageSize = 5;
+    // Stand-in for a fetch: sort and slice as a server would.
+    const rows = React.useMemo(() => {
+      const s = sort[0];
+      const sorted = s
+        ? [...all].sort((a, b) => String(a[s.id as keyof User]).localeCompare(String(b[s.id as keyof User])) * (s.desc ? -1 : 1))
+        : all;
+      return sorted.slice(page * pageSize, (page + 1) * pageSize);
+    }, [all, sort, page]);
+    return (
+      <DataTable
+        caption="Users"
+        captionHidden
+        columns={columns}
+        data={rows}
+        getRowId={(r) => r.id}
+        enableSorting
+        manualSort
+        sort={sort}
+        onSortChange={(s) => {
+          setSort(s);
+          setPage(0);
+        }}
+        manualPagination
+        rowCount={all.length}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+      />
+    );
+  },
+};

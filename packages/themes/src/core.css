@@ -935,3 +935,31 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 .nx-scroll-fade[data-nx-overflow][data-orientation='vertical'] { --nx-fade-dir: to bottom; }
 .nx-scroll-fade[data-nx-overflow~='start'] { --nx-fade-s: 2rem; }
 .nx-scroll-fade[data-nx-overflow~='end'] { --nx-fade-e: 2rem; }
+
+/* ─── Reorder (7.7): Sortable, Kanban, DataTable rows ────────────────────────
+   Pointer drag (react/src/components/Sortable/reorder.tsx). The dragged item
+   follows the pointer (inline translate) lifted above its neighbours;
+   data-nx-drop draws the drop line on the leading/trailing block edge of the
+   item it lands next to (inset-inline, so RTL needs nothing), or outlines an
+   empty list. The settle animation is inline FLIP on the spatial spring. */
+[data-nx-dragging] {
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--elevation-2);
+  cursor: grabbing;
+}
+body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
+[data-nx-drop] { position: relative; }
+[data-nx-drop]::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-primary);
+  pointer-events: none;
+}
+[data-nx-drop='before']::after { top: -0.1875rem; }
+[data-nx-drop='after']::after { bottom: -0.1875rem; }
+[data-nx-drop='inside'] { outline: 2px dashed var(--color-primary); outline-offset: 2px; }
+[data-nx-drop='inside']::after { content: none; }
