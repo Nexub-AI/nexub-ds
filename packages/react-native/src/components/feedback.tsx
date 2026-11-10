@@ -3,19 +3,21 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Modal,
+  PanResponder,
   Pressable as RNPressable,
   View,
+  useWindowDimensions,
   type StyleProp,
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
 import Animated, {
-  FadeInDown,
-  FadeOutDown,
   ReduceMotion,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -32,7 +34,7 @@ import {
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
-import { nxEnter, nxExit, nxLayout } from '../theme/motion';
+import { nxEnter, nxExit, nxLayout, nxSpring } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { TONE_CONTAINERS, TONE_TEXT } from './shared';
 
@@ -135,83 +137,161 @@ export interface ToastProviderProps {
   bottomOffset?: number;
 }
 
+/**
+ * Where a released toast goes: -1 / 1 swipes it off toward that side, 0
+ * springs it back. `dx` in px, `vx` in px/s; a quick flick wins over distance.
+ */
+export function toastRelease(dx: number, vx: number): -1 | 0 | 1 {
+  if (Math.abs(vx) > 500) return vx < 0 ? -1 : 1;
+  if (Math.abs(dx) > 96) return dx < 0 ? -1 : 1;
+  return 0;
+}
+
+/** How far the toast rises into place (and sinks on its way out). */
+const TOAST_RISE = 24;
+const TOAST_EXIT = nxSpring('effects', 'fast');
+
+type LiveToast = ToastOptions & { id: number; leaving?: boolean };
+
 /** Hosts one toast at a time above the bottom safe area. Put it inside NexubNativeProvider. */
 export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps) {
-  const { roles, tokens } = useTheme();
   const insets = useSafeAreaInsets();
-  const [toast, setToast] = React.useState<(ToastOptions & { id: number }) | null>(null);
+  const [toast, setToast] = React.useState<LiveToast | null>(null);
   const show = React.useCallback((t: ToastOptions) => {
     setToast({ ...t, id: Date.now() });
     AccessibilityInfo.announceForAccessibility(t.message);
   }, []);
+  // Leaving plays the exit spring; the toast unmounts when it lands (onGone).
+  const leave = React.useCallback(() => setToast((t) => t && { ...t, leaving: true }), []);
+  const gone = React.useCallback(
+    (id: number) => setToast((t) => (t && t.id === id ? null : t)),
+    [],
+  );
+  const id = toast?.id;
+  const ms =
+    toast && ((toast.duration ?? (toast.action ? 'long' : 'short')) === 'long' ? 10_000 : 4_000);
   React.useEffect(() => {
-    if (!toast) return;
-    const timer = setTimeout(
-      () => setToast(null),
-      (toast.duration ?? (toast.action ? 'long' : 'short')) === 'long' ? 10_000 : 4_000,
-    );
+    if (!ms) return;
+    const timer = setTimeout(leave, ms);
     return () => clearTimeout(timer);
-  }, [toast]);
-  const Glyph = toast?.tone ? TONE_ICON[toast.tone] : undefined;
+  }, [id, ms, leave]);
   return (
     <ToastCtx.Provider value={show}>
       {children}
       {toast && (
-        // Reanimated's stock fade, as in 2.1.0. With the nxEnter/nxExit presets
-        // (spring or timed) iOS UI tests never found the toast on screen.
-        <Animated.View
+        <ToastSurface
           key={toast.id}
-          entering={FadeInDown}
-          exiting={FadeOutDown}
-          pointerEvents="box-none"
-          style={{
-            position: 'absolute',
-            start: 16,
-            end: 16,
-            bottom: insets.bottom + 8 + bottomOffset,
-          }}
-        >
-          <View
-            accessibilityLiveRegion="polite"
-            style={{
-              minHeight: 48,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: tokens.spacing[3],
-              paddingStart: tokens.spacing[4],
-              paddingEnd: toast.action ? tokens.spacing[1] : tokens.spacing[4],
-              paddingVertical: tokens.spacing[2],
-              borderRadius: tokens.shape.container,
-              backgroundColor: roles['inverse-surface'],
-              boxShadow: tokens.elevation[3].light,
-            }}
-          >
-            {Glyph && toast.tone && (
-              <Glyph
-                size="md"
-                color={roles[toast.tone === 'neutral' ? 'inverse-on-surface' : 'inverse-primary']}
-              />
-            )}
-            <Text variant="body-md" color="inverse-on-surface" style={{ flex: 1 }}>
-              {toast.message}
-            </Text>
-            {toast.action && (
-              <Button
-                variant="text"
-                size="sm"
-                onPress={() => {
-                  toast.action!.onPress();
-                  setToast(null);
-                }}
-                style={{ backgroundColor: 'transparent' }}
-              >
-                {toast.action.label}
-              </Button>
-            )}
-          </View>
-        </Animated.View>
+          toast={toast}
+          bottom={insets.bottom + 8 + bottomOffset}
+          onLeave={leave}
+          onGone={gone}
+        />
       )}
     </ToastCtx.Provider>
+  );
+}
+
+function ToastSurface({
+  toast,
+  bottom,
+  onLeave,
+  onGone,
+}: {
+  toast: LiveToast;
+  bottom: number;
+  onLeave: () => void;
+  onGone: (id: number) => void;
+}) {
+  const { roles, tokens } = useTheme();
+  const { width } = useWindowDimensions();
+  const { id, leaving } = toast;
+  // Shared values, not layout animations: with the nxEnter/nxExit layout
+  // presets iOS UI tests never found the toast; this rests at opacity 1.
+  const x = useSharedValue(0);
+  const y = useSharedValue(TOAST_RISE);
+  React.useEffect(() => {
+    y.value = leaving
+      ? withSpring(TOAST_RISE, TOAST_EXIT, (finished) => {
+          if (finished) runOnJS(onGone)(id);
+        })
+      : withSpring(0, nxSpring('spatial', 'default'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leaving]);
+  // ponytail: PanResponder writes the shared value from the JS thread; a
+  // UI-thread swipe needs react-native-gesture-handler as a peer.
+  const swipe = React.useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy),
+        onPanResponderMove: (_, g) => {
+          x.value = g.dx;
+        },
+        onPanResponderRelease: (_, g) => {
+          const velocity = g.vx * 1000; // px/ms → px/s
+          const side = toastRelease(g.dx, velocity);
+          x.value = side
+            ? withSpring(side * width, { ...TOAST_EXIT, velocity }, (finished) => {
+                if (finished) runOnJS(onGone)(id);
+              })
+            : withSpring(0, { ...nxSpring('spatial', 'default'), velocity });
+        },
+        onPanResponderTerminate: () => {
+          x.value = withSpring(0, nxSpring('spatial', 'default'));
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [width, id, onGone],
+  );
+  const motion = useAnimatedStyle(() => ({
+    opacity: Math.max(0, Math.min(1, 1 - Math.abs(x.value) / width - y.value / TOAST_RISE)),
+    transform: [{ translateX: x.value }, { translateY: y.value }],
+  }));
+  const Glyph = toast.tone ? TONE_ICON[toast.tone] : undefined;
+  return (
+    <Animated.View
+      pointerEvents="box-none"
+      style={[{ position: 'absolute', start: 16, end: 16, bottom }, motion]}
+    >
+      <View
+        {...swipe.panHandlers}
+        accessibilityLiveRegion="polite"
+        style={{
+          minHeight: 48,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: tokens.spacing[3],
+          paddingStart: tokens.spacing[4],
+          paddingEnd: toast.action ? tokens.spacing[1] : tokens.spacing[4],
+          paddingVertical: tokens.spacing[2],
+          borderRadius: tokens.shape.container,
+          backgroundColor: roles['inverse-surface'],
+          boxShadow: tokens.elevation[3].light,
+        }}
+      >
+        {Glyph && toast.tone && (
+          <Glyph
+            size="md"
+            color={roles[toast.tone === 'neutral' ? 'inverse-on-surface' : 'inverse-primary']}
+          />
+        )}
+        <Text variant="body-md" color="inverse-on-surface" style={{ flex: 1 }}>
+          {toast.message}
+        </Text>
+        {toast.action && (
+          <Button
+            variant="text"
+            size="sm"
+            onPress={() => {
+              toast.action!.onPress();
+              onLeave();
+            }}
+            style={{ backgroundColor: 'transparent' }}
+          >
+            {toast.action.label}
+          </Button>
+        )}
+      </View>
+    </Animated.View>
   );
 }
 
@@ -327,11 +407,13 @@ export interface ProgressProps {
   variant?: 'linear' | 'circular';
   /** Circular diameter. @default 40 */
   size?: number;
+  /** Linear only: splits the bar into N equal steps, filled up to the value. */
+  segments?: number;
   style?: StyleProp<ViewStyle>;
 }
 
 /** Determinate progress. For unknown waits use LoadingIndicator. */
-export function Progress({ value, label, variant = 'linear', size = 40, style }: ProgressProps) {
+export function Progress({ value, label, variant = 'linear', size = 40, segments, style }: ProgressProps) {
   const { roles } = useTheme();
   const v = Math.min(1, Math.max(0, value));
   const a11y = {
@@ -366,6 +448,24 @@ export function Progress({ value, label, variant = 'linear', size = 40, style }:
             strokeDasharray={`${c * v} ${c}`}
           />
         </Svg>
+      </View>
+    );
+  }
+  if (segments && segments > 0) {
+    const filled = Math.round(v * segments);
+    return (
+      <View {...a11y} style={[{ height: 6, flexDirection: 'row', gap: 4 }, style]}>
+        {Array.from({ length: segments }, (_, i) => (
+          <View
+            key={i}
+            testID={i < filled ? 'progress-segment-filled' : 'progress-segment'}
+            style={{
+              flex: 1,
+              borderRadius: 3,
+              backgroundColor: roles[i < filled ? 'primary' : 'surface-container-highest'],
+            }}
+          />
+        ))}
       </View>
     );
   }
@@ -415,6 +515,8 @@ export interface SkeletonProps {
   height?: number;
   /** @default 'field' */
   radius?: 'field' | 'control' | 'container' | number;
+  /** `pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion. @default 'pulse' */
+  animation?: 'pulse' | 'shimmer';
   style?: StyleProp<ViewStyle>;
 }
 
@@ -422,18 +524,38 @@ export interface SkeletonProps {
  * Loading placeholder. Breathes between full and half opacity (a slow, calm
  * shimmer); static under Reduce Motion. Hidden from screen readers.
  */
-export function Skeleton({ width = '100%', height = 16, radius = 'field', style }: SkeletonProps) {
+export function Skeleton({
+  width = '100%',
+  height = 16,
+  radius = 'field',
+  animation = 'pulse',
+  style,
+}: SkeletonProps) {
   const { roles, tokens, reducedMotion } = useTheme();
+  const shimmer = animation === 'shimmer';
   const pulse = useSharedValue(1);
+  // Shimmer: a highlight band crosses the measured width, then pauses off-screen.
+  const [w, setW] = React.useState(0);
+  const sweep = useSharedValue(0);
   React.useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || shimmer) return;
     pulse.value = withRepeat(
       withTiming(0.5, { duration: SHIMMER_MS, reduceMotion: ReduceMotion.System }),
       -1,
       true,
     );
-  }, [reducedMotion, pulse]);
+  }, [reducedMotion, shimmer, pulse]);
+  React.useEffect(() => {
+    if (reducedMotion || !shimmer) return;
+    sweep.value = withRepeat(
+      withTiming(1, { duration: SHIMMER_MS * 2, reduceMotion: ReduceMotion.System }),
+      -1,
+    );
+  }, [reducedMotion, shimmer, sweep]);
   const animated = useAnimatedStyle(() => ({ opacity: pulse.value }));
+  const band = useAnimatedStyle(() => ({
+    transform: [{ translateX: -w * 0.4 + sweep.value * w * 1.4 }],
+  }));
   return (
     <Animated.View
       accessibilityElementsHidden
@@ -445,10 +567,52 @@ export function Skeleton({ width = '100%', height = 16, radius = 'field', style 
           borderRadius: typeof radius === 'number' ? radius : tokens.shape[radius],
           backgroundColor: roles['surface-container-high'],
         },
+        shimmer && { overflow: 'hidden' },
         animated,
         style,
       ]}
-    />
+      onLayout={shimmer ? (e) => setW(e.nativeEvent.layout.width) : undefined}
+    >
+      {shimmer && !reducedMotion && (
+        <Animated.View
+          testID="skeleton-shimmer"
+          style={[
+            {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              width: '40%',
+              backgroundColor: roles['surface-container-highest'],
+            },
+            band,
+          ]}
+        />
+      )}
+    </Animated.View>
+  );
+}
+
+export interface SkeletonTextProps extends Pick<SkeletonProps, 'animation'> {
+  /** Number of lines; the last is shorter. @default 3 */
+  lines?: number;
+  style?: StyleProp<ViewStyle>;
+}
+
+/** Placeholder paragraph. Each line is one body-md line tall, so the real text doesn't shift layout. */
+export function SkeletonText({ lines = 3, animation, style }: SkeletonTextProps) {
+  const { tokens } = useTheme();
+  return (
+    <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={style}>
+      {Array.from({ length: lines }, (_, i) => (
+        <View key={i} style={{ height: tokens.type['body-md'].lineHeight, justifyContent: 'center' }}>
+          <Skeleton
+            height={12}
+            animation={animation}
+            width={i === lines - 1 && lines > 1 ? '60%' : '100%'}
+          />
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -504,7 +668,15 @@ export interface EmptyStateProps extends ViewProps {
   tone?: ToneValue;
   /** Primary next step, e.g. <Button>Add money</Button>. */
   action?: React.ReactNode;
+  /** Scales spacing, icon and title. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
 }
+
+const EMPTY_SIZE = {
+  sm: { pad: 6, gap: 2, disc: 48, icon: 'md', title: 'title-md' },
+  md: { pad: 10, gap: 3, disc: 64, icon: 'lg', title: 'title-lg' },
+  lg: { pad: 16, gap: 4, disc: 80, icon: 'xl', title: 'headline-sm' },
+} as const;
 
 /** Nothing here yet: say why and offer the next step. */
 export function EmptyState({
@@ -513,18 +685,20 @@ export function EmptyState({
   icon: Glyph = Info,
   tone = 'neutral',
   action,
+  size = 'md',
   style,
   ...rest
 }: EmptyStateProps) {
   const { roles, tokens } = useTheme();
   const [bg] = TONE_CONTAINERS[tone];
+  const sz = EMPTY_SIZE[size];
   return (
     <View
       style={[
         {
           alignItems: 'center',
-          gap: tokens.spacing[3],
-          paddingVertical: tokens.spacing[10],
+          gap: tokens.spacing[sz.gap],
+          paddingVertical: tokens.spacing[sz.pad],
           paddingHorizontal: tokens.spacing[6],
         },
         style,
@@ -533,17 +707,17 @@ export function EmptyState({
     >
       <View
         style={{
-          width: 64,
-          height: 64,
-          borderRadius: 32,
+          width: sz.disc,
+          height: sz.disc,
+          borderRadius: sz.disc / 2,
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: roles[bg],
         }}
       >
-        <Glyph size="lg" color={roles[TONE_TEXT[tone]]} />
+        <Glyph size={sz.icon} color={roles[TONE_TEXT[tone]]} />
       </View>
-      <Text variant="title-lg" accessibilityRole="header" style={{ textAlign: 'center' }}>
+      <Text variant={sz.title} accessibilityRole="header" style={{ textAlign: 'center' }}>
         {title}
       </Text>
       {description && (

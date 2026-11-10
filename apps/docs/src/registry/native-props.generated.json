@@ -34,7 +34,7 @@
         "name": "loading",
         "type": "boolean",
         "required": false,
-        "description": "Shows a spinner, blocks presses and announces `loadingLabel`."
+        "description": "Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`."
       },
       {
         "name": "loadingLabel",
@@ -685,6 +685,18 @@
         "description": "A status dot before the label (replaces web StatusPill)."
       },
       {
+        "name": "count",
+        "type": "number",
+        "required": false,
+        "description": "A number to show. Above `max` it reads \"99+\"; screen readers get the full number."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
         "name": "leadingIcon",
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
@@ -721,6 +733,12 @@
         "type": "boolean",
         "required": false,
         "description": "Online/status dot."
+      },
+      {
+        "name": "status",
+        "type": "'online' | 'away' | 'busy' | 'offline'",
+        "required": false,
+        "description": "Presence dot; its name is added to the accessible label (\"Ada Lovelace, Away\")."
       }
     ]
   },
@@ -740,7 +758,6 @@
         "name": "max",
         "type": "number",
         "required": false,
-        "default": "4",
         "description": "Avatars shown before \"+N\"."
       },
       {
@@ -909,6 +926,12 @@
         "description": "Circular diameter."
       },
       {
+        "name": "segments",
+        "type": "number",
+        "required": false,
+        "description": "Linear only: splits the bar into N equal steps, filled up to the value."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -940,6 +963,34 @@
         "required": false,
         "default": "'field'",
         "description": ""
+      },
+      {
+        "name": "animation",
+        "type": "'pulse' | 'shimmer'",
+        "required": false,
+        "default": "'pulse'",
+        "description": "`pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SkeletonText": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "Pick<SkeletonProps, 'animation'>"
+    ],
+    "props": [
+      {
+        "name": "lines",
+        "type": "number",
+        "required": false,
+        "default": "3",
+        "description": "Number of lines; the last is shorter."
       },
       {
         "name": "style",
@@ -1011,6 +1062,12 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "Primary next step, e.g. <Button>Add money</Button>."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "description": "Scales spacing, icon and title."
       }
     ]
   },
@@ -1082,6 +1139,24 @@
         "type": "React.ReactNode",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\"."
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers."
       },
       {
         "name": "style",
@@ -1378,6 +1453,12 @@
         "type": "boolean",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner beside the switch and busy for screen readers; it can't toggle while loading."
       }
     ]
   },
