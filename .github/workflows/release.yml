@@ -194,11 +194,11 @@ jobs:
 
       # Every version changesets published must be on the registry with an npm
       # provenance attestation. The registry lags 1–2 minutes, so the script
-      # retries for up to 5 minutes, then fails naming each missing or
+      # retries for up to 10 minutes, then fails naming each missing or
       # unattested package. `!cancelled()` keeps it running if the SBOM step failed.
       - name: Verify published versions and provenance on npm
         if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
-        timeout-minutes: 8
+        timeout-minutes: 13
         env:
           PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
         run: node scripts/verify-published.mjs

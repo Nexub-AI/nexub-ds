@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { Spinner } from '../Spinner/Spinner.js';
 
 /**
  * cmdk calls scrollIntoView on the highlighted item (and its group heading) on
@@ -57,14 +59,39 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Com
 );
 Input.displayName = 'Combobox.Input';
 
-const List = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Command.List>>(
-  ({ className, ...props }, ref) => (
-    <Command.List
-      ref={ref}
-      className={cn('max-h-64 overflow-y-auto overflow-x-hidden p-1', className)}
-      {...props}
-    />
-  ),
+export interface ComboboxListProps extends React.ComponentProps<typeof Command.List> {
+  /** Options are loading: shows a loading row, sets aria-busy and hides Empty. */
+  loading?: boolean;
+}
+
+const List = React.forwardRef<HTMLDivElement, ComboboxListProps>(
+  ({ className, loading, children, ...props }, ref) => {
+    const messages = useNexubMessages();
+    return (
+      <Command.List
+        ref={ref}
+        aria-busy={loading || undefined}
+        className={cn(
+          // cmdk measures its content into --cmdk-list-height; box-content keeps the padding outside it.
+          'box-content h-[var(--cmdk-list-height)] max-h-64 overflow-y-auto overflow-x-hidden p-1',
+          'transition-[height] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
+          loading && '[&_[cmdk-empty]]:hidden',
+          className,
+        )}
+        {...props}
+      >
+        {loading && (
+          // Not Command.Loading: its role="progressbar" isn't allowed inside a listbox
+          // (axe aria-required-children). The listbox's aria-busy carries the state.
+          <div className="flex items-center gap-2 px-2.5 py-2 text-body-sm text-[var(--color-on-surface-muted)]">
+            <Spinner size="sm" aria-hidden="true" />
+            {messages.loading}
+          </div>
+        )}
+        {children}
+      </Command.List>
+    );
+  },
 );
 List.displayName = 'Combobox.List';
 

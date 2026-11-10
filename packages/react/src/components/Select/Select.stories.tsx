@@ -32,3 +32,20 @@ export const Default: Story = {
     </Select.Root>
   ),
 };
+
+export const ClearableSearchable: Story = {
+  render: () => (
+    <div style={{ width: '260px' }}>
+      <Select.Root clearable defaultValue="pro">
+        <Select.Trigger aria-label="Plan">
+          <Select.Value placeholder="Select a plan" />
+        </Select.Trigger>
+        <Select.Content searchable>
+          <Select.Item value="free" description="For personal projects">Free</Select.Item>
+          <Select.Item value="pro" description="For small teams">Pro</Select.Item>
+          <Select.Item value="enterprise" description="SSO, audit logs and support">Enterprise</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </div>
+  ),
+};
