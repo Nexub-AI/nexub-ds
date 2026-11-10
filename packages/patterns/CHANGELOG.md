@@ -1,5 +1,39 @@
 # @nexub/patterns
 
+## 7.7.0
+
+### Minor Changes
+
+- fc7b955: 7.7: reorder and data at scale.
+
+  - `Sortable` and `Kanban` drag with Pointer Events (mouse, pen and touch) instead of native drag-and-drop: a drop line, items settle on the spatial spring, edge auto-scroll, and Escape or a cancelled pointer puts the item back. Alt+Arrow keyboard moves are unchanged. `DataTable` row reorder now drags from the grip only.
+  - `DataTable` rows are memoised, so selecting a row or re-rendering with equal data no longer redraws every row. Cell renderers should depend only on their row and `columns`; if a renderer reads other state, include it in the `columns` memo.
+  - `DataTable`: controlled and server-side sort and pagination: `sort` / `onSortChange` / `manualSort`, `page` / `pageSize` / `onPageChange` / `manualPagination` / `rowCount`.
+  - The DataTable "View" menu loads only when `viewOptions` is used.
+  - `FilterBuilder` renders its rule tree from a deferred value and keeps every keystroke; `FilterBar` documents the `useDeferredValue` recipe for big lists.
+  - New perf tripwire (`pnpm --filter @nexub/react test:perf`, also part of the visual CI job): filtering 1,000 DataTable rows, typing in a 1,000-option Combobox and moving a Kanban card must stay under 200 ms per interaction with no long task over 100 ms.
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+## 7.2.0
+
+### Minor Changes
+
+- 1bfe041: 7.2: secure by default.
+
+  - **New** `safeHref` and `safeSrc` (also `@nexub/react/safeHref`). Every consumer-supplied link and image URL now goes through them: `Breadcrumb`, `MediaCard`, `CardLink`, `Avatar`, and the navs/links in `AppHeader`, `NotificationItem`, `NotificationCenter`, `SettingsPage`, `SettingsLayout`, `PlanCard`, `AppLauncher`, `MarketingNav`, `MarketingFooter`. `javascript:`, `vbscript:`, `data:` and `file:` links are dropped; images allow relative, http(s), `blob:` and `data:image/*`. `safeHref(url, { strict: true })` allows only web, mailto, tel and sms; it becomes the default in 8.0.
+  - **New** `NexubProvider` `nonce`: hands your CSP nonce to the `<style>` tags Radix overlays inject, so every overlay works under `style-src-elem 'nonce-…'`.
+  - **New** `scrollLock="class"` on `Dialog.Root` and `AlertDialog.Root` (already on Sheet/Drawer and CommandPalette): no `<style>` at all. It becomes the default in 8.0.
+  - **New** `FileUpload.Root` `validate(file)`: return a message to reject a file (reason `'custom'`).
+  - `PasswordInput`: the reveal button keeps one name ("Show password") and reports its state with `aria-pressed` and `aria-controls`. The `hidePassword` message is deprecated (removed in 9.0).
+  - `ThemeScript`: a stored product brand is applied only when it's a known product.
+
 ## 7.1.0
 
 ## 7.0.1

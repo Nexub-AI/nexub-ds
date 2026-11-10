@@ -81,13 +81,12 @@ const List = React.forwardRef<HTMLDivElement, ComboboxListProps>(
         {...props}
       >
         {loading && (
-          <Command.Loading
-            label={messages.loading}
-            className="flex items-center gap-2 px-2.5 py-2 text-body-sm text-[var(--color-on-surface-muted)]"
-          >
+          // Not Command.Loading: its role="progressbar" isn't allowed inside a listbox
+          // (axe aria-required-children). The listbox's aria-busy carries the state.
+          <div className="flex items-center gap-2 px-2.5 py-2 text-body-sm text-[var(--color-on-surface-muted)]">
             <Spinner size="sm" aria-hidden="true" />
             {messages.loading}
-          </Command.Loading>
+          </div>
         )}
         {children}
       </Command.List>

@@ -6,8 +6,8 @@
 //
 // Writes:
 //   assets/nexub-mark-mono.svg            single-colour mark (currentColor)
-//   assets/app-icon[-<product>].svg       black glass tile + glyph (dark theme)
-//   assets/app-icon[-<product>]-light.svg white glass tile + glyph (light theme)
+//   assets/app-icon[-<product>].svg       dark glass tile + violet line glyph (dark theme)
+//   assets/app-icon[-<product>]-light.svg white tile + violet line glyph (light theme)
 //   assets/app-icon[-<product>]-{192,512}.png
 //   assets/mobile/<product>-ios.png       1024 full-bleed (iOS app icon)
 //   assets/mobile/<product>-android-{foreground,background,monochrome}.png  adaptive icon layers
@@ -24,21 +24,20 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const read = (p) => readFileSync(root + p, 'utf8');
 const master = read('assets/nexub-mark.svg');
 
-// Per-product tiles: same tile, different glyph. `glyph` is an SVG fragment in
-// the 512×512 tile space (glyphs/<id>.svg); `halo` tints the glow behind it.
-const MARK_GLYPH = `<svg x="97" y="148" width="318" height="228" viewBox="0 0 78 56">${inner(master)}</svg>`;
-const PRODUCTS = [
-  { id: '', glyph: MARK_GLYPH, halo: '#8b6cff' }, // app-icon.svg — the Nexub mark
-  { id: 'account', glyph: read('glyphs/account.svg'), halo: '#4099f1' },
-  { id: 'command-hub', glyph: read('glyphs/command-hub.svg'), halo: '#8b5cf6' },
-  { id: 'admin', glyph: read('glyphs/admin.svg'), halo: '#06b6d4' },
-  { id: 'people', glyph: read('glyphs/people.svg'), halo: '#f59e0b' },
-  { id: 'payhub', glyph: read('glyphs/payhub.svg'), halo: '#22c55e' },
-  { id: 'commerce', glyph: read('glyphs/commerce.svg'), halo: '#ec4899' },
-  { id: 'contracts', glyph: read('glyphs/contracts.svg'), halo: '#6366f1' },
-  { id: 'leap', glyph: read('glyphs/leap.svg'), halo: '#14b8a6' },
-  { id: 'founder-hub', glyph: read('glyphs/founder-hub.svg'), halo: '#f97316' },
-];
+// Per-product tiles: same tile, same violet, different glyph. Glyphs are line
+// art on a 24-unit grid (glyphs/<id>.svg, no colours); the hub tile carries the
+// Nexub mark. A glyph is a function of its ink colour.
+const PRODUCTS = ['', 'account', 'command-hub', 'admin', 'people', 'payhub', 'commerce', 'contracts', 'leap', 'founder-hub', 'mind', 'go', 'verify'];
+const VIOLET = '#8b6cff'; // ink on dark glass, and the halo
+const VIOLET_DEEP = '#6d4ae8'; // ink on white (≥ 4.5:1)
+// Glyph files put their description comment on its own line; drop those lines.
+const strip = (svg) => svg.split('\n').filter((l) => !l.trimStart().startsWith('<!--')).join('\n').trim();
+const glyphOf = (id) => {
+  if (!id) return (ink) => `<svg x="97" y="148" width="318" height="228" viewBox="0 0 78 56"><path d="${paths.map((p) => p.d).join(' ')}" fill="${ink}"/></svg>`;
+  const art = strip(read(`glyphs/${id}.svg`));
+  // 24 → 300 px box centred in the 512 tile: stroke 1.6 on the grid = 20 px.
+  return (ink) => `<svg x="106" y="106" width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="${ink}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${art}</svg>`;
+};
 
 // ─── Parse the master ────────────────────────────────────────────────────────
 const attr = (tag, name) => new RegExp(`\\s${name}="([^"]*)"`).exec(tag)?.[1];
@@ -112,12 +111,13 @@ const mono = master.replace(
 writeFileSync(`${root}assets/nexub-mark-mono.svg`, mono);
 
 // ─── App tiles ───────────────────────────────────────────────────────────────
-// `light`: the same tile in white glass, for light themes (glyphs are mid-tone, so they read on both).
+// dark: violet line on dark glass. light: violet line on a plain white tile.
 const TILE = {
-  dark: { top: '#26282e', bottom: '#050506', sheen: '.2', halo: '.32', edge: '#fff', edgeOpacity: '.14' },
-  light: { top: '#ffffff', bottom: '#e8eaef', sheen: '.7', halo: '.22', edge: '#0b0c10', edgeOpacity: '.1' },
+  dark: { top: '#26282e', bottom: '#050506', sheen: '.2', halo: '.24', edge: '#fff', edgeOpacity: '.14', ink: VIOLET },
+  light: { top: '#ffffff', bottom: '#ffffff', sheen: '0', halo: '0', edge: '#0b0c10', edgeOpacity: '.1', ink: VIOLET_DEEP },
 };
-const tile = (glyph, halo, look = TILE.dark) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+const halo = VIOLET;
+const tile = (glyph, look = TILE.dark) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${look.top}"/><stop offset="1" stop-color="${look.bottom}"/></linearGradient>
     <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity="${look.sheen}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
@@ -127,18 +127,18 @@ const tile = (glyph, halo, look = TILE.dark) => `<svg xmlns="http://www.w3.org/2
   <rect width="512" height="512" rx="115" fill="url(#halo)"/>
   <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
   <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="${look.edge}" stroke-opacity="${look.edgeOpacity}" stroke-width="6"/>
-  ${glyph.replace(/<!--[\s\S]*?-->\s*/g, '').trim()}
+  ${glyph ? glyph(look.ink) : ''}
 </svg>
 `;
 
 const png = (svg, size) => sharp(Buffer.from(svg), { density: 72 * (size / 512) * 4 }).resize(size, size).png().toBuffer();
 
-for (const { id, glyph, halo } of PRODUCTS) {
+for (const id of PRODUCTS) {
   const name = id ? `app-icon-${id}` : 'app-icon';
-  const svg = tile(glyph, halo);
+  const svg = tile(glyphOf(id));
   writeFileSync(`${root}assets/${name}.svg`, svg);
   for (const size of [192, 512]) writeFileSync(`${root}assets/${name}-${size}.png`, await png(svg, size));
-  writeFileSync(`${root}assets/${name}-light.svg`, tile(glyph, halo, TILE.light));
+  writeFileSync(`${root}assets/${name}-light.svg`, tile(glyphOf(id), TILE.light));
 }
 
 // ─── Mobile app icons (Expo app.json `icon` / `android.adaptiveIcon`) ────────
@@ -148,18 +148,19 @@ for (const { id, glyph, halo } of PRODUCTS) {
 // glyph's silhouette in white, for Android 13+ themed icons.
 mkdirSync(`${root}assets/mobile`, { recursive: true });
 const SAFE = 0.66;
-const square = (glyph, halo, look = TILE.dark) =>
-  tile(glyph, halo, look).replaceAll(' rx="115"', '').replace(/<rect x="3"[^>]*\/>/, '');
+const square = (glyph, look = TILE.dark) =>
+  tile(glyph, look).replaceAll(' rx="115"', '').replace(/<rect x="3"[^>]*\/>/, '');
 const foreground = (glyph) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <g transform="translate(${(256 * (1 - SAFE)).toFixed(2)} ${(256 * (1 - SAFE)).toFixed(2)}) scale(${SAFE})">${glyph.replace(/<!--[\s\S]*?-->\s*/g, '').trim()}</g>
+  <g transform="translate(${(256 * (1 - SAFE)).toFixed(2)} ${(256 * (1 - SAFE)).toFixed(2)}) scale(${SAFE})">${glyph(VIOLET)}</g>
 </svg>
 `;
 const small = (buf) => sharp(buf).png({ compressionLevel: 9, palette: true }).toBuffer();
-for (const { id, glyph, halo } of PRODUCTS) {
+for (const id of PRODUCTS) {
   const name = id || 'nexub';
-  const ios = await sharp(await png(square(glyph, halo), 1024)).flatten({ background: TILE.dark.bottom }).toBuffer();
+  const glyph = glyphOf(id);
+  const ios = await sharp(await png(square(glyph), 1024)).flatten({ background: TILE.dark.bottom }).toBuffer();
   writeFileSync(`${root}assets/mobile/${name}-ios.png`, await small(ios));
-  writeFileSync(`${root}assets/mobile/${name}-android-background.png`, await small(await png(square('', halo), 432)));
+  writeFileSync(`${root}assets/mobile/${name}-android-background.png`, await small(await png(square(null), 432)));
   const fg = await png(foreground(glyph), 432);
   writeFileSync(`${root}assets/mobile/${name}-android-foreground.png`, await small(fg));
   const alpha = await sharp(fg).ensureAlpha().extractChannel(3).toBuffer();
@@ -169,7 +170,7 @@ for (const { id, glyph, halo } of PRODUCTS) {
 
 // favicon.ico: PNG-in-ICO (supported by every current browser).
 const icoSizes = [16, 32, 48];
-const images = await Promise.all(icoSizes.map((s) => png(tile(MARK_GLYPH, '#8b6cff'), s)));
+const images = await Promise.all(icoSizes.map((s) => png(tile(glyphOf('')), s)));
 const header = Buffer.alloc(6 + 16 * images.length);
 header.writeUInt16LE(1, 2);
 header.writeUInt16LE(images.length, 4);
@@ -187,7 +188,3 @@ images.forEach((img, i) => {
 writeFileSync(`${root}assets/favicon.ico`, Buffer.concat([header, ...images]));
 
 console.log(`brand: ${paths.length} paths, ${gradients.length} gradients, ${colors.length} colour tokens`);
-
-function inner(svg) {
-  return svg.replace(/^[\s\S]*?<svg\b[^>]*>/, '').replace(/<\/svg>\s*$/, '').trim();
-}

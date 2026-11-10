@@ -78,7 +78,9 @@ describe('Combobox', () => {
       </Combobox.Root>,
     );
     expect(screen.getByRole('listbox')).toHaveAttribute('aria-busy', 'true');
-    expect(screen.getByRole('progressbar', { name: 'Loading…' })).toHaveTextContent('Loading…');
+    expect(screen.getByRole('listbox')).toHaveTextContent('Loading…');
+    // Only options/groups may sit in a listbox: no progressbar row.
+    expect(screen.queryByRole('progressbar')).toBeNull();
     expect(screen.getByText('No results.').closest('[cmdk-list]')).toHaveClass('[&_[cmdk-empty]]:hidden');
   });
 });

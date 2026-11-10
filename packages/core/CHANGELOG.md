@@ -1,5 +1,66 @@
 # @nexub/core
 
+## 7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+- 90b8f7d: 7.6: rich surfaces and navigation.
+
+  - `Dialog.Content`: `showClose` (+ `closeLabel`), `sheet` (`true` or `'auto'`: a bottom sheet below `md`); **new** `Dialog.Body` scrolls while Header and Footer stay put, with hairlines that appear as you scroll (CSS scroll timeline; always shown where unsupported); a nested Dialog steps its parent back.
+  - `Tabs.List`: overflowing lists fade at the scrollable edges and keep the active tab in view (without scrolling the page); `variant="pill"`.
+  - `Tooltip`: `label` accepts any node, plus `description`, `shortcut` (a Kbd) and `arrow`. A Tooltip now works without an app-level `TooltipProvider`.
+  - `IconButton`: `loading` and `tooltip` (`true` shows the `label`). The tooltip code loads only when used.
+  - `Badge`: `dot`, `count` + `max` ("99+", full number for screen readers) with a tick when the count changes.
+  - `CommandPalette`: pages (`CommandPalette.Page`, `Item page`, Backspace goes back), `loading`, and opt-in recents (`recentKey`).
+  - `EmptyState.Root`: `size` (`sm` / `md` / `lg`) and opt-in `animate`.
+  - New message: `recent`.
+
+## 7.5.0
+
+### Minor Changes
+
+- c5738fa: 7.5: rich inputs.
+
+  - `Input`: `clearable`, `showCount` (with `maxLength`; announced only near the limit) and `loading`.
+  - `Select`: `Root clearable`, `Item description` (the option's accessible description), and `Content searchable` (a filter field at the top; typeahead is unchanged when it's off).
+  - `Switch`: `loading` (spinner in the thumb, can't toggle) and `checkedIcon` / `uncheckedIcon`.
+  - `Combobox.List loading`; the list height animates as results change (also Autocomplete and MultiSelect).
+  - `DatePicker`: `typeable` (type a date in the locale's short format; invalid text is marked, the value is kept), `presets`, `disabledDates`, and a month crossfade.
+  - `Slider`: `marks` (ticks and labels, RTL-aware), `showValue` (`true` or `'hover'`) and `formatValue` (also sets `aria-valuetext`).
+  - `FileUpload`: image previews, paste to upload (through the same `accept` / `maxSize` / `validate` checks), and items that grow in and collapse out. A removed file now leaves after its exit animation, so tests that assert right after clicking Remove need `waitFor`.
+  - New messages: `clear`, `characterCount`.
+
+## 7.4.0
+
+### Minor Changes
+
+- ad149cc: 7.4: feedback and loading.
+
+  - `Button`: the loading spinner waits 150ms before showing and then stays at least 400ms (no flicker); `successLabel` no longer changes the button's width; `type="submit"` inside a pending React 19 `<form action>` shows loading on its own (`useFormStatus`).
+  - **New** `useAsyncAction(fn)` → `{ run, pending, error, reset }`: latest call wins, errors are captured, nothing updates after unmount.
+  - `toast.promise(promise, { loading, success, error })` and `toast.update(id, partial)`; a `loading` tone; tone icons (`icon={false}` hides them); `showProgress` countdown bar that pauses with the timer; a quick flick dismisses even under the distance threshold.
+  - `Skeleton animation="shimmer"` and **new** `SkeletonText` (`lines`), one line-height per line so the swap to real text doesn't shift.
+  - `DataTable`: `loading` (skeleton rows, `aria-busy`) and `emptyState`.
+  - `Avatar`: images fade in once loaded (server-rendered and cached images show at once); `status` (`online` / `away` / `busy` / `offline`) with the label in the accessible name.
+  - `Progress`: `variant="circular"` and `segments` for step-style progress.
+
+## 7.3.0
+
+## 7.2.0
+
+### Minor Changes
+
+- 1bfe041: 7.2: secure by default.
+
+  - **New** `safeHref` and `safeSrc` (also `@nexub/react/safeHref`). Every consumer-supplied link and image URL now goes through them: `Breadcrumb`, `MediaCard`, `CardLink`, `Avatar`, and the navs/links in `AppHeader`, `NotificationItem`, `NotificationCenter`, `SettingsPage`, `SettingsLayout`, `PlanCard`, `AppLauncher`, `MarketingNav`, `MarketingFooter`. `javascript:`, `vbscript:`, `data:` and `file:` links are dropped; images allow relative, http(s), `blob:` and `data:image/*`. `safeHref(url, { strict: true })` allows only web, mailto, tel and sms; it becomes the default in 8.0.
+  - **New** `NexubProvider` `nonce`: hands your CSP nonce to the `<style>` tags Radix overlays inject, so every overlay works under `style-src-elem 'nonce-…'`.
+  - **New** `scrollLock="class"` on `Dialog.Root` and `AlertDialog.Root` (already on Sheet/Drawer and CommandPalette): no `<style>` at all. It becomes the default in 8.0.
+  - **New** `FileUpload.Root` `validate(file)`: return a message to reject a file (reason `'custom'`).
+  - `PasswordInput`: the reveal button keeps one name ("Show password") and reports its state with `aria-pressed` and `aria-controls`. The `hidePassword` message is deprecated (removed in 9.0).
+  - `ThemeScript`: a stored product brand is applied only when it's a known product.
+
 ## 7.1.0
 
 ## 7.0.1
