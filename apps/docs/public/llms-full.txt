@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v7.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v7.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v7.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v7.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -7607,6 +7607,37 @@ export default function Example() {
         </Tabs.Content>
         <Tabs.Content value="tab3">
           <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
+        </Tabs.Content>
+      </Tabs.Root>
+    </div>
+  );
+}
+```
+
+## Example: Vertical
+
+orientation="vertical": the indicator slides on the inline-end edge, and arrow up/down move between tabs.
+
+```tsx
+import { Tabs } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-[420px]">
+      <Tabs.Root defaultValue="profile" orientation="vertical">
+        <Tabs.List aria-label="Account">
+          <Tabs.Trigger value="profile">Profile</Tabs.Trigger>
+          <Tabs.Trigger value="security">Security</Tabs.Trigger>
+          <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="profile">
+          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Name, photo and contact details.</div>
+        </Tabs.Content>
+        <Tabs.Content value="security">
+          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Password, passkeys and sessions.</div>
+        </Tabs.Content>
+        <Tabs.Content value="billing">
+          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Plan, invoices and payment method.</div>
         </Tabs.Content>
       </Tabs.Root>
     </div>

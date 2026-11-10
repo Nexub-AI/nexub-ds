@@ -20,6 +20,10 @@ const entry: ComponentEntry = {
     {
       title: 'Default',
     },
+    {
+      title: 'Vertical',
+      description: 'orientation="vertical": the indicator slides on the inline-end edge, and arrow up/down move between tabs.',
+    },
   ],
   usage: {
     whenToUse: [

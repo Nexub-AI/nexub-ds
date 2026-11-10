@@ -157,6 +157,10 @@ StyleDictionary.registerFormat({
     add('ease', t.transitionTimingFunction);
     add('transition-duration', t.transitionDuration); // v4's duration-* reads --transition-duration-*
     add('animate', t.animation);
+    // Bare `transition` / `transition-colors` use these: the effects spring, not
+    // Tailwind's 150ms ease, so every transition comes from the one motion source.
+    lines.push('  --default-transition-duration: var(--motion-spring-effects-default-duration);');
+    lines.push('  --default-transition-timing-function: var(--motion-spring-effects-default-easing);');
     // Tailwind v4's max-w-sm … max-w-2xl read var(--container-*), and the Nexub layout
     // tokens use the same names (--container-sm: 640px …), so v4 would widen them.
     // Pin Tailwind's own scale (v3's maxWidth) inline; max-w-container-* stay the tokens.

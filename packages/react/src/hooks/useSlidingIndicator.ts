@@ -5,7 +5,7 @@ import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect.js';
 
 /**
  * One indicator that slides to the active item (SegmentedControl thumb, Tabs
- * underline). Writes --nx-ind-x / -w / -o (opacity) on the (position: relative) root;
+ * underline). Writes --nx-ind-x / -w / -y / -h / -o (opacity) on the (position: relative) root;
  * CSS transitions do the motion. Sets data-nx-indicator="ready" one frame after
  * the first measure so the indicator doesn't animate in on mount.
  */
@@ -20,6 +20,9 @@ export function useSlidingIndicator(ref: React.RefObject<HTMLElement | null>, ac
       if (!el) return;
       root.style.setProperty('--nx-ind-x', `${el.offsetLeft}px`);
       root.style.setProperty('--nx-ind-w', `${el.offsetWidth}px`);
+      // Vertical lists (Tabs orientation="vertical") slide on y.
+      root.style.setProperty('--nx-ind-y', `${el.offsetTop}px`);
+      root.style.setProperty('--nx-ind-h', `${el.offsetHeight}px`);
     };
     update();
     const frame = requestAnimationFrame(() => (root.dataset.nxIndicator = 'ready'));
