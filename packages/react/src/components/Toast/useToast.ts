@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 
-export type ToastTone = 'success' | 'error' | 'warning' | 'info' | 'neutral';
+/** `loading` shows a spinner and never auto-dismisses; update it (or use `toast.promise`) to settle it. */
+export type ToastTone = 'success' | 'error' | 'warning' | 'info' | 'neutral' | 'loading';
 
 export interface ToastItem {
   id: string;
@@ -10,6 +11,10 @@ export interface ToastItem {
   description?: string;
   tone?: ToastTone;
   duration?: number;
+  /** Leading icon. Defaults to the tone's icon (none for neutral); `false` hides it. */
+  icon?: ReactNode | false;
+  /** A thin bar counting down the time left before auto-dismiss; pauses with the timer. */
+  showProgress?: boolean;
   action?: { label: string; onClick: () => void };
   /** An Undo action; its label defaults to the `undo` message. Set by `toast.undoable`. */
   undo?: { label?: string; onUndo: () => void };
@@ -95,6 +100,28 @@ function dismiss(id?: string) {
   }
 }
 
+/** Changes an open toast in place (same element; a settled tone is announced once). No-op if it's gone. */
+function update(id: string, patch: Partial<Omit<ToastItem, 'id'>>) {
+  g.__nexub_toast_items = g.__nexub_toast_items.map((i) => (i.id === id ? { ...i, ...patch } : i));
+  notify();
+}
+
+export interface PromiseToastOptions<T> {
+  loading: string;
+  success: string | ((value: T) => string);
+  error: string | ((error: unknown) => string);
+}
+
+/** Shows a loading toast, then turns that same toast into success or error. Returns `promise` as is. */
+function promise<T>(promise: Promise<T>, { loading, success, error }: PromiseToastOptions<T>): Promise<T> {
+  const id = add({ title: loading, tone: 'loading' });
+  promise.then(
+    (v) => update(id, { title: typeof success === 'function' ? success(v) : success, tone: 'success' }),
+    (e) => update(id, { title: typeof error === 'function' ? error(e) : error, tone: 'error' }),
+  );
+  return promise;
+}
+
 function undoable(title: string, { onUndo, onCommit, undoLabel, description, duration }: UndoableToastOptions) {
   let undone = false;
   return add({
@@ -120,5 +147,7 @@ export const toast = {
     add({ title, tone: 'neutral', ...opts }),
   /** A toast with an Undo action: Undo calls `onUndo`; any other close calls `onCommit`, once. */
   undoable,
+  update,
+  promise,
   dismiss,
 };

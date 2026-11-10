@@ -61,4 +61,20 @@ describe('Progress', () => {
     render(<Progress size="lg" value={50} />);
     expect(screen.getByRole('progressbar')).toHaveClass('h-3');
   });
+
+  it('circular: one progressbar, ring fill follows value, spins when indeterminate', () => {
+    const { container, rerender } = render(<Progress variant="circular" value={30} />);
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '30');
+    expect(container.querySelector('[data-part="fill"]')).toHaveAttribute('stroke-dasharray', '30 100');
+    rerender(<Progress variant="circular" />);
+    expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-valuenow');
+    expect(container.querySelector('svg')).toHaveClass('animate-spin');
+  });
+
+  it('segments: N steps filled up to value, still one progressbar', () => {
+    const { container } = render(<Progress segments={5} value={3} max={5} />);
+    expect(screen.getAllByRole('progressbar')).toHaveLength(1);
+    expect(container.querySelectorAll('[data-part="segment"]')).toHaveLength(5);
+    expect(container.querySelectorAll('[data-filled]')).toHaveLength(3);
+  });
 });

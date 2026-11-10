@@ -35,6 +35,7 @@ import { Button } from '../Button/Button.js';
 import { DropdownMenu } from '../DropdownMenu/DropdownMenu.js';
 import { createGridNavigation } from './gridNavigation.js';
 import { useReorder } from '../Sortable/reorder.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
 
 type ColumnAlign = 'start' | 'end' | 'center';
 
@@ -289,6 +290,10 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   onRowOrderChange?: (data: TData[]) => void;
   /** Names a row in "Move ‹label›" and the move announcements. @default its position */
   getRowLabel?: (row: TData) => string;
+  /** Shows skeleton rows (one page's worth) and sets aria-busy on the table. */
+  loading?: boolean;
+  /** Shown in a full-width row when there are no rows. @default messages.noResults */
+  emptyState?: React.ReactNode;
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
@@ -332,6 +337,8 @@ export function DataTable<TData>({
   onExpandedChange,
   onRowOrderChange,
   getRowLabel,
+  loading = false,
+  emptyState,
   caption,
   captionHidden = false,
   className,
@@ -639,6 +646,7 @@ export function DataTable<TData>({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-rowcount={rowWin.virtual ? rows.length + 1 : undefined}
+        aria-busy={loading || undefined}
         role={grid ? 'grid' : undefined}
         onKeyDown={grid ? gridNav.onKeyDown : undefined}
         onFocus={grid ? gridNav.onFocus : undefined}
@@ -768,7 +776,17 @@ export function DataTable<TData>({
           ))}
         </TableHeader>
         <TableBody>
-          {rows.length ? (
+          {loading ? (
+            Array.from({ length: pagination?.pageSize ?? 5 }, (_, i) => (
+              <TableRow key={i} data-loading="" className="hover:bg-transparent">
+                {table.getVisibleLeafColumns().map((c) => (
+                  <TableCell key={c.id} className={cn(compact && 'py-1.5')}>
+                    <Skeleton />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : rows.length ? (
             <>
               {rowWin.before > 0 && <Spacer height={rowWin.before} />}
               {rowWin.indexes.map((i) => {
@@ -813,7 +831,7 @@ export function DataTable<TData>({
                 colSpan={table.getVisibleLeafColumns().length}
                 className="h-24 text-center text-[var(--color-on-surface-muted)]"
               >
-                {messages.noResults}
+                {emptyState ?? messages.noResults}
               </TableCell>
             </TableRow>
           )}

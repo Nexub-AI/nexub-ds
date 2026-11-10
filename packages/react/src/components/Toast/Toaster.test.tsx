@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-import { render, screen, act, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, act, fireEvent, waitFor, within } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Toaster } from './Toaster.js';
 import { toast } from './useToast.js';
@@ -228,5 +228,96 @@ describe('toast.undoable', () => {
     setup();
     act(() => { toast.undoable('Archived', { onUndo: () => {}, undoLabel: 'Restore' }); });
     expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument();
+  });
+});
+
+describe('7.4 feedback', () => {
+  it('toast.promise: loading, then the same toast settles to success and is announced once', async () => {
+    let resolve!: (v: number) => void;
+    const p = new Promise<number>((r) => { resolve = r; });
+    render(<Toaster />);
+    let returned: Promise<number> | undefined;
+    act(() => { returned = toast.promise(p, { loading: 'Saving…', success: (n) => `Saved ${n}`, error: 'Failed' }); });
+    expect(returned).toBe(p);
+    const li = toastEl('Saving…');
+    expect(li.querySelector('.animate-spin')).toBeInTheDocument();
+    expect(within(li).getByRole('status')).toHaveTextContent('');
+    await act(async () => { resolve(3); await p; });
+    expect(screen.getByText('Saved 3', { selector: '.text-title-sm' }).closest('li')).toBe(li); // same element, no remount
+    expect(within(li).getByRole('status')).toHaveTextContent('Saved 3');
+    expect(li.className).toContain('border-[var(--color-success)]');
+  });
+
+  it('toast.promise: error, from a function of the error', async () => {
+    const p = Promise.reject(new Error('nope'));
+    render(<Toaster />);
+    act(() => { toast.promise(p, { loading: 'Saving…', success: 'ok', error: (e) => (e as Error).message }).catch(() => {}); });
+    await waitFor(() => expect(screen.getByText('nope', { selector: '.text-title-sm' })).toBeInTheDocument());
+  });
+
+  it('a loading toast never auto-dismisses; updating it starts the timer', () => {
+    vi.useFakeTimers();
+    render(<Toaster />);
+    let id = '';
+    act(() => {
+      id = toast.custom('Working', { duration: 1000 });
+      toast.update(id, { tone: 'loading' });
+    });
+    act(() => vi.advanceTimersByTime(5000));
+    expect(screen.getByText('Working')).toBeInTheDocument();
+    act(() => toast.update(id, { title: 'Done', tone: 'success' }));
+    act(() => vi.advanceTimersByTime(1100));
+    expect(screen.queryByText('Done', { selector: 'li *' })).toBeNull();
+  });
+
+  it('tone icons: default per tone, icon={false} hides, custom replaces', () => {
+    render(<Toaster />);
+    act(() => {
+      toast.success('A');
+      toast.success('B', { icon: false });
+      toast.info('C', { icon: <i data-testid="custom" /> });
+      toast.custom('D');
+    });
+    expect(toastEl('A').querySelector('svg[aria-hidden="true"]:not(button svg)')).toBeInTheDocument();
+    expect(toastEl('B').querySelector('svg:not(button svg)')).toBeNull();
+    expect(within(toastEl('C')).getByTestId('custom')).toBeInTheDocument();
+    expect(toastEl('D').querySelector('svg:not(button svg)')).toBeNull();
+  });
+
+  it('showProgress renders a countdown bar that pauses with the timer', () => {
+    render(<Toaster />);
+    act(() => { toast.info('Bar', { showProgress: true, duration: 3000 }); });
+    const bar = toastEl('Bar').querySelector('span[aria-hidden="true"].origin-left') as HTMLElement;
+    expect(bar.style.animationDuration).toBe('3000ms');
+    expect(bar.className).toContain('group-data-[paused]:[animation-play-state:paused]');
+    fireEvent.pointerMove(viewport());
+    expect(toastEl('Bar')).toHaveAttribute('data-paused');
+    fireEvent.pointerLeave(region());
+    expect(toastEl('Bar')).not.toHaveAttribute('data-paused');
+  });
+
+  it('a fast short flick toward the edge dismisses; a slow one snaps back', () => {
+    const proto = HTMLElement.prototype as unknown as Record<string, unknown>;
+    proto.setPointerCapture = () => {};
+    proto.hasPointerCapture = () => false;
+    proto.releasePointerCapture = () => {};
+    const now = vi.spyOn(performance, 'now');
+    render(<Toaster />);
+    fire(2);
+    const swipe = (li: HTMLElement, ms: number) => {
+      now.mockReturnValue(0);
+      fireEvent.pointerDown(li, { button: 0, clientX: 0, clientY: 0 });
+      fireEvent.pointerMove(li, { clientX: 5, clientY: 0 });
+      now.mockReturnValue(ms);
+      fireEvent.pointerMove(li, { clientX: 20, clientY: 0 });
+      fireEvent.pointerUp(li, { clientX: 20, clientY: 0 });
+    };
+    swipe(toastEl('T1'), 1000); // 20px in 1s: below threshold and slow
+    expect(toastEl('T1')).toHaveAttribute('data-state', 'open');
+    expect(toastEl('T1')).toHaveAttribute('data-swipe', 'cancel');
+    swipe(toastEl('T1'), 50); // 20px in 50ms: a flick (jsdom has no exit animation, so it unmounts)
+    expect(screen.queryByText('T1', { selector: 'li *' })).toBeNull();
+    expect(screen.getByText('T0', { selector: 'li *' })).toBeInTheDocument();
+    now.mockRestore();
   });
 });
