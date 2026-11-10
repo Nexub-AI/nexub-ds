@@ -71,7 +71,7 @@ test('retries a lagging package with backoff until it appears', async () => {
   assert.equal(h.calls.filter((u) => u.includes('tokens')).length, 1);
 });
 
-test('gives up after ~5 minutes and reports what is missing or unattested', async () => {
+test('gives up after ~10 minutes and reports what is missing or unattested', async () => {
   const h = harness((url) => (url.includes('react') ? json({}, 404) : json({ version: '2.4.0', dist: {} })));
   const { failed } = await verifyPublished(
     [
@@ -87,7 +87,7 @@ test('gives up after ~5 minutes and reports what is missing or unattested', asyn
   // Unattested is final: looked up once, not retried.
   assert.equal(h.calls.filter((u) => u.includes('icons')).length, 1);
   const waited = h.sleeps.reduce((a, b) => a + b, 0);
-  assert.ok(waited <= 5 * 60_000 && waited >= 4 * 60_000, `waited ${waited} ms`);
+  assert.ok(waited <= 10 * 60_000 && waited >= 9 * 60_000, `waited ${waited} ms`);
   assert.ok(Math.max(...h.sleeps) <= 60_000);
   const msg = failureMessage(failed);
   assert.match(msg, /2 published package\(s\) failed/);
