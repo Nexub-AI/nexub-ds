@@ -25,7 +25,24 @@ for (const path of pages) {
       await page.evaluate(() => document.fonts.ready);
       // Client components (live previews, measured motion wrappers) settle after load.
       await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(400);
+      // Wait until the page height holds for 3 polls: a full-page shot taken mid-settle
+      // comes out a different height and fails (seen on /foundations/motion).
+      await page.waitForFunction(
+        () =>
+          new Promise<boolean>((done) => {
+            let last = -1;
+            let same = 0;
+            const t = setInterval(() => {
+              const h = document.documentElement.scrollHeight;
+              same = h === last ? same + 1 : 0;
+              last = h;
+              if (same >= 3) {
+                clearInterval(t);
+                done(true);
+              }
+            }, 150);
+          }),
+      );
       await expect(page).toHaveScreenshot(`docs${path.replaceAll('/', '-')}--${theme}.png`, {
         fullPage: true,
         // Version badge and footer year change every release / year, not with the page.

@@ -80,6 +80,11 @@ export const Pill: Story = {
         <Tabs.Trigger value="week">Week</Tabs.Trigger>
         <Tabs.Trigger value="month">Month</Tabs.Trigger>
       </Tabs.List>
+      {['day', 'week', 'month'].map((v) => (
+        <Tabs.Content key={v} value={v}>
+          {v} view
+        </Tabs.Content>
+      ))}
     </Tabs.Root>
   ),
 };
@@ -95,6 +100,11 @@ export const Overflow: Story = {
             </Tabs.Trigger>
           ))}
         </Tabs.List>
+        {Array.from({ length: 10 }, (_, i) => (
+          <Tabs.Content key={i} value={`t${i}`}>
+            Section {i + 1} content
+          </Tabs.Content>
+        ))}
       </Tabs.Root>
     </div>
   ),

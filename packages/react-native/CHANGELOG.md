@@ -1,5 +1,41 @@
 # @nexub/react-native
 
+## 7.5.0
+
+### Patch Changes
+
+- Updated dependencies [c5738fa]
+  - @nexub/core@7.5.0
+  - @nexub/tokens@7.5.0
+  - @nexub/icons@7.5.0
+
+## 7.4.0
+
+### Patch Changes
+
+- Updated dependencies [ad149cc]
+  - @nexub/core@7.4.0
+  - @nexub/tokens@7.4.0
+  - @nexub/icons@7.4.0
+
+## 7.3.0
+
+### Patch Changes
+
+- Updated dependencies [fe8c22b]
+  - @nexub/tokens@7.3.0
+  - @nexub/icons@7.3.0
+  - @nexub/core@7.3.0
+
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [1bfe041]
+  - @nexub/core@7.2.0
+  - @nexub/tokens@7.2.0
+  - @nexub/icons@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes
