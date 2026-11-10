@@ -22,6 +22,9 @@ const RULES: Record<string, RegExp> = {
   'hex-color': /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![0-9a-fA-F])/g,
   // Enter/exit is nx-motion (themes/base.css), not tailwindcss-animate.
   'tw-animate': /\b(?:animate-in|animate-out|fade-in-\d|fade-out-\d|zoom-in-\d|zoom-out-\d|slide-in-from-|slide-out-to-)/g,
+  // One motion source: the spring tokens (duration-spatial-default …). Bare
+  // `transition` is fine, it defaults to the effects spring.
+  'raw-motion': /(?<![\w_[-])(?:duration-\d+|ease-(?:in|out|in-out|linear)(?![\w-]))/g,
   // RTL: logical spacing, borders, radii and alignment (ms/me, ps/pe, border-s/e,
   // rounded-s/e, text-start/end). left/right positions aren't linted: centring
   // (left-1/2) and explicit sides (Drawer side="left") are physical on purpose.
