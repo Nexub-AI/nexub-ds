@@ -4,7 +4,7 @@
 // by release.yml's OIDC identity).
 //
 // The registry lags a publish by a minute or two (one package took ~90 s in
-// 2.3.1), so missing versions are retried with backoff for up to 5 minutes.
+// 2.3.1), so missing versions are retried with backoff for up to 10 minutes.
 //
 //   PUBLISHED_PACKAGES='[{"name":"@nexub/react","version":"2.4.0"}]' node scripts/verify-published.mjs
 //   node scripts/verify-published.mjs '[{"name":"@nexub/react","version":"2.4.0"}]'
@@ -70,7 +70,7 @@ export async function verifyPublished(
     sleep = (ms) => new Promise((r) => setTimeout(r, ms)),
     now = Date.now,
     log = console.log,
-    timeoutMs = 5 * 60_000,
+    timeoutMs = 10 * 60_000, // npm can take >5 min to list a version (patterns@7.3.0)
     initialDelayMs = 10_000,
     maxDelayMs = 60_000,
   } = {},

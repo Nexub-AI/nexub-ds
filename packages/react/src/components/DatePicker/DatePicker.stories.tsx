@@ -91,3 +91,26 @@ export const Arabic: Story = {
     );
   },
 };
+
+export const TypeablePresetsWeekdays: Story = {
+  render: () => {
+    const [date, setDate] = React.useState<Date | undefined>(undefined);
+    const today = new Date();
+    const inAWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+    return (
+      <div style={{ maxWidth: '280px' }}>
+        <DatePicker
+          typeable
+          aria-label="Due date"
+          value={date}
+          onChange={setDate}
+          disabledDates={{ dayOfWeek: [0, 6] }}
+          presets={[
+            { label: 'Today', date: today },
+            { label: 'In a week', date: inAWeek },
+          ]}
+        />
+      </div>
+    );
+  },
+};

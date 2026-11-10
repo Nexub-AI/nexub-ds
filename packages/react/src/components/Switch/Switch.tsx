@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RadixSwitch from '@radix-ui/react-switch';
 import { cn } from '../../utils/cn.js';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { spinnerVariants } from '../Spinner/Spinner.js';
 
 export const switchVariants = cva(
   // Off: tonal track with a 2px outline (>= 3:1, WCAG 1.4.11). On: primary.
@@ -46,12 +47,47 @@ export const thumbVariants = cva(
   }
 );
 
-export interface SwitchProps extends RadixSwitch.SwitchProps, VariantProps<typeof switchVariants> {}
+export interface SwitchProps extends RadixSwitch.SwitchProps, VariantProps<typeof switchVariants> {
+  /** Spinner in the thumb and `aria-busy`; clicks don't toggle while loading. Stays focusable. */
+  loading?: boolean;
+  /** Small icon inside the thumb while on. */
+  checkedIcon?: React.ReactNode;
+  /** Small icon inside the thumb while off. */
+  uncheckedIcon?: React.ReactNode;
+}
+
+// Thumb content inherits the thumb's text colour (the track colour, for contrast).
+const thumbSlot = 'hidden h-full w-full items-center justify-center [&>svg]:h-2/3 [&>svg]:w-2/3';
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
-  ({ className, size, ...props }, ref) => (
-    <RadixSwitch.Root ref={ref} className={cn(switchVariants({ size }), 'nx-hit', className)} {...props}>
-      <RadixSwitch.Thumb className={cn(thumbVariants({ size }))} />
+  ({ className, size, loading, checkedIcon, uncheckedIcon, onClick, ...props }, ref) => (
+    <RadixSwitch.Root
+      ref={ref}
+      className={cn(switchVariants({ size }), 'nx-hit', loading && 'cursor-progress', className)}
+      aria-busy={loading || undefined}
+      onClick={(e) => {
+        onClick?.(e);
+        // Radix skips its toggle when the click is default-prevented.
+        if (loading) e.preventDefault();
+      }}
+      {...props}
+    >
+      <RadixSwitch.Thumb
+        className={cn(
+          thumbVariants({ size }),
+          (loading || checkedIcon || uncheckedIcon) &&
+            'group/thumb flex items-center justify-center data-[state=checked]:text-[var(--color-primary)] data-[state=unchecked]:text-[var(--color-surface-container-highest)]',
+        )}
+      >
+        {loading ? (
+          <span aria-hidden="true" className={cn(spinnerVariants({ size: 'xs' }), 'h-2/3 w-2/3 border-current border-t-transparent')} />
+        ) : (
+          <>
+            {checkedIcon && <span aria-hidden="true" className={cn(thumbSlot, 'group-data-[state=checked]/thumb:flex')}>{checkedIcon}</span>}
+            {uncheckedIcon && <span aria-hidden="true" className={cn(thumbSlot, 'group-data-[state=unchecked]/thumb:flex')}>{uncheckedIcon}</span>}
+          </>
+        )}
+      </RadixSwitch.Thumb>
     </RadixSwitch.Root>
   ),
 );
