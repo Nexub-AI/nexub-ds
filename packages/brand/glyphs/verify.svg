@@ -1,0 +1,2 @@
+<!-- Verify glyph: a check in a ring. Line art on a 24-unit grid; the build sets stroke and colour. -->
+<circle cx="12" cy="12" r="8"/><path d="M8.5 12.2l2.3 2.3 4.7-4.8"/>

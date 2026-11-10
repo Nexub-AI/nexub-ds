@@ -1,10 +1,44 @@
 import type { Metadata } from 'next';
 import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = { title: 'Using the brand assets' };
+
+// Same ids as PRODUCTS in packages/brand/scripts/build-assets.mjs.
+const apps = [
+  ['', 'Nexub (hub)'], ['account', 'Account'], ['command-hub', 'Command Hub'], ['admin', 'Admin'],
+  ['people', 'People'], ['payhub', 'PayHub'], ['commerce', 'Commerce'], ['contracts', 'Contracts'],
+  ['leap', 'Leap'], ['founder-hub', 'Founder Hub'], ['mind', 'Mind'], ['go', 'Go'], ['verify', 'Verify'],
+] as const;
+
+// Read at build time and inline, so the docs need no copy of the brand assets.
+const tile = (file: string) =>
+  'data:image/svg+xml;base64,' +
+  fs.readFileSync(path.resolve(process.cwd(), '../../packages/brand/assets', file)).toString('base64');
+
+function AppTiles() {
+  return (
+    <ul className="not-prose grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3">
+      {apps.map(([id, name]) => {
+        const base = id ? `app-icon-${id}` : 'app-icon';
+        return (
+          <li key={base} className="flex flex-col items-center gap-2 rounded-shape-container bg-[var(--color-surface-container-low)] p-4">
+            <div className="flex gap-2">
+              <img src={tile(`${base}.svg`)} alt={`${name} app icon, dark`} width={56} height={56} />
+              <img src={tile(`${base}-light.svg`)} alt={`${name} app icon, light`} width={56} height={56} />
+            </div>
+            <span className="text-label-md">{name}</span>
+            <code className="text-label-sm">{base}.svg</code>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 export default function BrandAssetsPage() {
   return (
@@ -17,6 +51,15 @@ export default function BrandAssetsPage() {
       </p>
       <CodeBlock lang="bash" code={`pnpm add @nexub/brand`} />
 
+      <h2>App icons</h2>
+      <p>
+        Every Nexub app gets the same tile and the same violet, with its own line glyph: dark glass for
+        dark themes, plain white (<code>-light.svg</code>) for light themes. Apps differ by shape, never by
+        colour. Each also ships as 192 and 512 px PNGs, plus iOS and
+        Android icons under <code>mobile/</code>.
+      </p>
+      <AppTiles />
+
       <h2>What&apos;s in the package</h2>
       <table>
         <thead>
@@ -25,7 +68,7 @@ export default function BrandAssetsPage() {
         <tbody>
           <tr><td><code>nexub-mark.svg</code></td><td>The mark in brand colours.</td></tr>
           <tr><td><code>nexub-mark-mono.svg</code></td><td>Single-colour mark (<code>fill=&quot;currentColor&quot;</code>).</td></tr>
-          <tr><td><code>app-icon.svg</code></td><td>App icon: the black glass tile with the mark. SVG favicon, launcher tiles.</td></tr>
+          <tr><td><code>app-icon.svg</code></td><td>App icon: the dark glass tile with the mark in violet. SVG favicon, launcher tiles.</td></tr>
           <tr><td><code>app-icon-192.png</code>, <code>app-icon-512.png</code></td><td>Web manifest icons, <code>apple-touch-icon</code>.</td></tr>
           <tr><td><code>app-icon-account.svg</code>, <code>-192.png</code>, <code>-512.png</code></td><td>The Account tile: same tile, person glyph.</td></tr>
           <tr><td><code>favicon.ico</code></td><td>16, 32 and 48 px favicon.</td></tr>
@@ -99,15 +142,14 @@ import accountIcon from '@nexub/brand/app-icon-account.svg';
       <p>Every product uses the same tile with its own glyph; don&apos;t edit the tile. In the nexub-ds repo:</p>
       <ol>
         <li>
-          Draw the glyph as an SVG fragment in the 512 × 512 tile space and save it as{' '}
-          <code>packages/brand/glyphs/&lt;product&gt;.svg</code>. Keep it inside roughly x/y 90–422, where
-          the mark sits. Put gradients in a <code>&lt;defs&gt;</code> with <code>id=&quot;glyph&quot;</code>{' '}
-          (see <code>glyphs/account.svg</code>).
+          Draw the glyph as line art on a 24 × 24 grid, the same way Lucide icons are drawn: paths, circles and
+          rects only, with no colours, fills or stroke attributes. The build draws it in violet with a 1.6 stroke
+          and round ends. Save it as <code>packages/brand/glyphs/&lt;product&gt;.svg</code> (see{' '}
+          <code>glyphs/payhub.svg</code>).
         </li>
         <li>
-          Add <code>{`{ id: '<product>', glyph: read('glyphs/<product>.svg'), halo: '<hex>' }`}</code> to{' '}
-          <code>PRODUCTS</code> in <code>packages/brand/scripts/build-assets.mjs</code>. <code>halo</code>{' '}
-          tints the glow behind the glyph.
+          Add <code>&apos;&lt;product&gt;&apos;</code> to <code>PRODUCTS</code> in{' '}
+          <code>packages/brand/scripts/build-assets.mjs</code>, and to the list at the top of this page.
         </li>
         <li>
           Run <code>pnpm --filter @nexub/brand build:assets</code>, commit{' '}

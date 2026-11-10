@@ -10,11 +10,11 @@ pnpm add @nexub/brand
 |---|---|
 | `nexub-mark.svg` | The Nexub mark in brand colours. Verbatim copy of the master (`5. Logos/Nexub Logo/icon_nexub.svg`). |
 | `nexub-mark-mono.svg` | Single-colour mark (`fill="currentColor"`), derived from the master's shapes. |
-| `app-icon.svg` | App icon: black glass rounded tile with the Nexub mark. |
+| `app-icon.svg` | App icon: dark glass rounded tile with the Nexub mark in violet. |
 | `app-icon-192.png`, `app-icon-512.png` | The same tile for web manifests. |
 | `app-icon-account.svg`, `app-icon-account-192.png`, `app-icon-account-512.png` | The Account tile: same tile, person glyph. |
-| `app-icon-<product>.svg`, `-192.png`, `-512.png` | Each Nexub app's tile, same tile with its own glyph: `command-hub` (a hub of agents), `admin` (a shield), `people` (two people), `payhub` (a banknote), `commerce` (a shopping bag), `contracts` (a signed page), `leap` (a leap forward), `founder-hub` (a rocket). |
-| `app-icon[-<product>]-light.svg` | Every tile again in white glass, for light themes. The black tiles are for dark themes. |
+| `app-icon-<product>.svg`, `-192.png`, `-512.png` | Each Nexub app's tile, same tile with its own glyph: `command-hub` (a hub of agents), `admin` (a shield), `people` (two people), `payhub` (a banknote), `commerce` (a shopping bag), `contracts` (a signed page), `leap` (a leap forward), `founder-hub` (a rocket), `mind` (an idea), `go` (a chat bubble), `verify` (a check in a ring). Every glyph is a violet line drawing; apps differ by shape, not colour. |
+| `app-icon[-<product>]-light.svg` | Every tile again on plain white with a deeper violet, for light themes. The dark glass tiles are for dark themes. |
 | `favicon.ico` | 16, 32 and 48 px, from `app-icon.svg`. |
 | `mobile/<product>-ios.png` | iOS app icon: 1024 px, full bleed, opaque (iOS draws the corners). `<product>` is `nexub` for the hub or a product id. |
 | `mobile/<product>-android-{foreground,background,monochrome}.png` | Android adaptive icon layers (432 px), glyph inside the safe zone; `monochrome` for Android 13+ themed icons. |
@@ -93,10 +93,10 @@ For a quick prototype you can also link the published files directly, e.g. `http
 
 Every product gets the same tile with its own glyph. Don't edit the tile itself.
 
-1. Draw the glyph as an SVG fragment in the 512 × 512 tile space and save it as `glyphs/<product>.svg`. Keep it inside roughly x/y 90–422, the area the Nexub mark uses. Gradients go in a `<defs>` inside the fragment; use `id="glyph"` (see `glyphs/account.svg`).
-2. Add `{ id: '<product>', glyph: read('glyphs/<product>.svg'), halo: '<hex>' }` to `PRODUCTS` in `scripts/build-assets.mjs`. `halo` tints the glow behind the glyph.
+1. Draw the glyph as line art on a 24 × 24 grid, the same way Lucide icons are drawn: paths, circles and rects only, with no colours, fills or stroke attributes. Save it as `glyphs/<product>.svg` (see `glyphs/payhub.svg`). The build draws it in violet with a 1.6 stroke and round ends.
+2. Add `'<product>'` to `PRODUCTS` in `scripts/build-assets.mjs`.
 3. Run `pnpm --filter @nexub/brand build:assets` and commit `assets/app-icon-<product>*` and `assets/mobile/<product>-*` (it also writes the `-light.svg` tile and the mobile icon set).
 
-Use mid-tone gradient colours for a glyph (roughly Tailwind's 300 to 700 shades), so it reads on both the black and the white tile.
+Keep one colour: don't give a glyph its own hue. The violet comes from the build, so every app stays in the same family.
 
 The same script regenerates everything from the master, `assets/nexub-mark.svg`: the mono mark, every tile and PNG, the favicon, the `--color-brand-mark-*` tokens in `@nexub/tokens`, and the path data behind `<NexubMark>`. If the master changes, replace that file (verbatim, never redrawn) and run the script.
