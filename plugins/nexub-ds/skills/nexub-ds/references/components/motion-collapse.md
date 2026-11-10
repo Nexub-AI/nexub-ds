@@ -12,7 +12,6 @@ Expands and collapses content along the block axis.
 | --- | --- | --- | --- |
 | `in` (required) | `boolean` |  | When true, expands the content to its natural height. When false, collapses it to zero height. |
 | `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
-| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
 | `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the collapse animation completes. |
 | `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
 | `children` (required) | `React.ReactNode` |  | Content to expand and collapse. |

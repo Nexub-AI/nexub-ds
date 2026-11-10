@@ -33,7 +33,7 @@ export interface DrawerRootProps {
    * - `'class'`: adds the `nexub-scroll-lock` class from `@nexub/themes/base` to `<html>`.
    *   Injects nothing, so it works under `style-src 'self'`. Focus trap, Escape and
    *   outside-click dismissal are unchanged.
-   * @default 'style'
+   * @default 'class' (since 8.0)
    */
   scrollLock?: 'style' | 'class';
   /** When `false`, dragging, outside clicks and Escape don't close the drawer. @default true */
@@ -74,7 +74,7 @@ type VaulRootProps = React.ComponentProps<typeof VaulDrawer.Root>;
 
 const DrawerContext = React.createContext({ scrollLock: 'style' as 'style' | 'class', open: false, modal: true });
 
-function Root({ scrollLock = 'style', onOpenChange, ...props }: DrawerRootProps) {
+function Root({ scrollLock = 'class', onOpenChange, ...props }: DrawerRootProps) {
   // Mirror the open state (controlled or not) for the class-lock overlay's data-state.
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(props.defaultOpen ?? false);
   const open = props.open ?? uncontrolledOpen;

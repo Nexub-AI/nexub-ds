@@ -46,7 +46,7 @@ test('dimensions are numbers and shadows have no CSS-only syntax', () => {
 
 test('signature roles match the [data-style=signature] palette tones in roles.css', () => {
   const css = readFileSync(new URL('roles.css', dist), 'utf8');
-  const block = css.slice(css.indexOf("[data-style='signature'] {"));
+  const block = css.slice(css.indexOf(":root, [data-style='signature'] {"));
   const sig = Object.fromEntries([...block.split('\n}')[0].matchAll(/--color-palette-([\w-]+?-\d+): (#[0-9a-f]{6});/g)].map((m) => [m[1], m[2]]));
   const { light, dark } = native.color.roles.standard;
   const s = native.signature.roles.standard;

@@ -25,7 +25,8 @@ jest.mock('expo-haptics', () => ({
 
 const wrap = (ui: React.ReactElement, props: Partial<NexubNativeProviderProps> = {}) =>
   render(
-    <NexubNativeProvider scheme="light" contrast="standard" {...props}>
+    // Pinned to classic: these assertions read native.color.roles (classic). Signature is tested below.
+    <NexubNativeProvider scheme="light" contrast="standard" style="classic" {...props}>
       {ui}
     </NexubNativeProvider>,
   );
@@ -49,6 +50,17 @@ describe('NexubNativeProvider', () => {
     await wrap(<Roles onTheme={(t) => (theme = t)} />, { product: 'payub', seed: '#ff0000' });
     expect(theme.roles.tertiary).toBe(native.color.products.payub.standard.light.tertiary);
     expect(theme.roles.primary).not.toBe(native.color.roles.standard.light.primary);
+  });
+
+  it('defaults to style="signature" (8.0)', async () => {
+    let theme!: ReturnType<typeof useTheme>;
+    await render(
+      <NexubNativeProvider scheme="light" contrast="standard">
+        <Roles onTheme={(t) => (theme = t)} />
+      </NexubNativeProvider>,
+    );
+    expect(theme.style).toBe('signature');
+    expect(theme.roles.primary).toBe(native.signature.roles.standard.light.primary);
   });
 
   it('style="signature" swaps roles, shape, display tracking and elevation; a product still wins', async () => {

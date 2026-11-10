@@ -15,7 +15,7 @@ export type { ListTransitionProps, SkeletonSwapProps } from './ListTransition.js
 
 export { usePrefersReducedMotion } from './useMotion.js';
 
-export type { MotionDuration, MotionEasing, MotionBaseProps } from './motion.types.js';
+export type { MotionDuration, MotionBaseProps } from './motion.types.js';
 
 export { Reveal } from './Reveal.js';
 export type { RevealProps } from './Reveal.js';

@@ -25,7 +25,7 @@ export type Scheme = 'light' | 'dark';
 export type Roles = { -readonly [K in keyof NativeRoles]: string };
 export type RoleName = keyof Roles;
 export type ElevationLevel = 0 | 1 | 2 | 3;
-/** 'signature' (7.9 opt-in, the default in 8.0) or the M3-derived 'classic' look. */
+/** 'signature' (the default since 8.0) or the M3-derived 'classic' 7.x look (removed in 9.0). */
 export type DesignStyle = 'classic' | 'signature';
 
 export interface NexubTheme {
@@ -59,7 +59,7 @@ export interface NexubNativeProviderProps {
   /**
    * 'signature': neutral surfaces, brand-indigo primary, ~10px controls, tighter
    * display tracking, crisper elevation (web: data-style="signature").
-   * @default 'classic'
+   * @default 'signature'
    */
   style?: DesignStyle;
   /** White-label seed colour (#rgb / #rrggbb); regenerates the `seedTarget` family. */
@@ -146,7 +146,7 @@ export function NexubNativeProvider({
   scheme: schemeProp = 'system',
   contrast: contrastProp = 'system',
   product,
-  style = 'classic',
+  style = 'signature',
   seed,
   seedTarget = 'primary',
   glass = 'balanced',
