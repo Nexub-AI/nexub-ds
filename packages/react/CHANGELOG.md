@@ -1,5 +1,43 @@
 # @nexub/react
 
+## 7.3.0
+
+### Minor Changes
+
+- fe8c22b: 7.3: Motion 2, one motion source.
+
+  - `@nexub/tokens/tailwind.css` sets `--default-transition-duration` / `--default-transition-timing-function` to the effects spring, so a bare `transition` / `transition-colors` uses the spring tokens instead of Tailwind's 150ms ease. The last raw `duration-*` / `ease-*` classes are gone, and a `raw-motion` design-lint rule keeps them out.
+  - The legacy `--duration-*` / `--ease-*` tokens (`tokens/motion.json`) and the Motion `easing` prop are deprecated, removed in 8.0.
+  - `Collapse` animates grid rows (`0fr` → `1fr`) instead of measuring `scrollHeight` in JS; content that grows while open just grows. Same props.
+  - `NavigationMenu`'s viewport resizes between items on the spatial spring instead of snapping.
+  - `Tabs`: `orientation="vertical"` is styled (indicator on the inline-end edge), and the incoming panel crossfades (`@starting-style`).
+  - `startViewTransition` flushes React state inside the transition (`flushSync`), so the snapshot is never stale, and returns a promise that resolves when the transition finishes.
+  - Thick glass overlays fade in without scaling.
+
+### Patch Changes
+
+- @nexub/icons@7.3.0
+- @nexub/core@7.3.0
+
+## 7.2.0
+
+### Minor Changes
+
+- 1bfe041: 7.2: secure by default.
+
+  - **New** `safeHref` and `safeSrc` (also `@nexub/react/safeHref`). Every consumer-supplied link and image URL now goes through them: `Breadcrumb`, `MediaCard`, `CardLink`, `Avatar`, and the navs/links in `AppHeader`, `NotificationItem`, `NotificationCenter`, `SettingsPage`, `SettingsLayout`, `PlanCard`, `AppLauncher`, `MarketingNav`, `MarketingFooter`. `javascript:`, `vbscript:`, `data:` and `file:` links are dropped; images allow relative, http(s), `blob:` and `data:image/*`. `safeHref(url, { strict: true })` allows only web, mailto, tel and sms; it becomes the default in 8.0.
+  - **New** `NexubProvider` `nonce`: hands your CSP nonce to the `<style>` tags Radix overlays inject, so every overlay works under `style-src-elem 'nonce-…'`.
+  - **New** `scrollLock="class"` on `Dialog.Root` and `AlertDialog.Root` (already on Sheet/Drawer and CommandPalette): no `<style>` at all. It becomes the default in 8.0.
+  - **New** `FileUpload.Root` `validate(file)`: return a message to reject a file (reason `'custom'`).
+  - `PasswordInput`: the reveal button keeps one name ("Show password") and reports its state with `aria-pressed` and `aria-controls`. The `hidePassword` message is deprecated (removed in 9.0).
+  - `ThemeScript`: a stored product brand is applied only when it's a known product.
+
+### Patch Changes
+
+- Updated dependencies [1bfe041]
+  - @nexub/core@7.2.0
+  - @nexub/icons@7.2.0
+
 ## 7.1.0
 
 ### Minor Changes
