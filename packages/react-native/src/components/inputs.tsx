@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ActivityIndicator,
   PanResponder,
   Switch as RNSwitch,
   TextInput,
@@ -49,8 +50,17 @@ export interface TextFieldProps extends Omit<TextInputProps, 'style' | 'editable
   size?: Extract<ControlSize, 'md' | 'lg' | 'xl'>;
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
+  /** Shows a clear button while there is a value. Clearing fires `onChangeText` with "". */
+  clearable?: boolean;
+  /** Shows a "12/80" counter; needs `maxLength`. Announced politely near the limit. */
+  showCount?: boolean;
+  /** Spinner in the trailing slot and busy for screen readers. */
+  loading?: boolean;
   style?: StyleProp<ViewStyle>;
 }
+
+// Near the limit = the last 10% (at least 1 character).
+const nearLimit = (length: number, max: number) => length >= max - Math.max(1, Math.ceil(max * 0.1));
 
 /** Labelled text input (web Input + Label + HelperText + FormError in one). */
 export function TextField({
@@ -62,15 +72,40 @@ export function TextField({
   size = 'lg',
   leading,
   trailing,
+  clearable,
+  showCount,
+  loading,
   style,
   multiline,
   onFocus,
   onBlur,
+  onChangeText,
   ...rest
 }: TextFieldProps) {
   const theme = useTheme();
-  const { roles, tokens, fonts } = theme;
+  const { roles, tokens, fonts, messages } = theme;
   const [focused, setFocused] = React.useState(false);
+  // Track the length for uncontrolled use; controlled reads `value`.
+  const [uncontrolledLength, setLength] = React.useState((rest.defaultValue ?? '').length);
+  const length = rest.value != null ? rest.value.length : uncontrolledLength;
+  const max = rest.maxLength;
+  const counting = !!showCount && max !== undefined && max >= 0;
+  const inner = React.useRef<React.ComponentRef<typeof TextInput>>(null);
+  const setRefs = (node: React.ComponentRef<typeof TextInput> | null) => {
+    inner.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) (ref as React.RefObject<typeof node>).current = node;
+  };
+  const changeText = (text: string) => {
+    setLength(text.length);
+    onChangeText?.(text);
+  };
+  const clear = () => {
+    inner.current?.clear();
+    changeText('');
+    inner.current?.focus();
+  };
+  const showClear = clearable && length > 0 && !disabled && rest.readOnly !== true;
   const body = tokens.type['body-lg'];
   const border = error ? roles.error : focused ? roles.primary : roles.outline;
   return (
@@ -97,8 +132,9 @@ export function TextField({
       >
         {leading}
         <TextInput
-          ref={ref}
+          ref={setRefs}
           accessibilityLabel={label}
+          accessibilityState={loading ? { busy: true } : undefined}
           accessibilityHint={error ?? helperText}
           aria-invalid={!!error}
           editable={!disabled}
@@ -123,7 +159,21 @@ export function TextField({
             textAlignVertical: multiline ? 'top' : 'center',
           }}
           {...rest}
+          onChangeText={changeText}
         />
+        {counting && (
+          <Text
+            variant="label-sm"
+            color="on-surface-muted"
+            tabular
+            accessibilityLabel={messages.characterCount(length, max)}
+            accessibilityLiveRegion={nearLimit(length, max) ? 'polite' : 'none'}
+          >
+            {`${length}/${max}`}
+          </Text>
+        )}
+        {loading && <ActivityIndicator size="small" color={roles['on-surface-variant']} />}
+        {showClear && <IconButton icon={X} label={messages.clear} size="xs" variant="text" onPress={clear} />}
         {trailing}
       </View>
       {(error || helperText) && (
@@ -557,6 +607,8 @@ export interface SwitchProps {
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  /** Spinner beside the switch and busy for screen readers; it can't toggle while loading. */
+  loading?: boolean;
 }
 
 /** The platform switch (UISwitch / Material), coloured with Nexub roles. The OS plays its haptic. */
@@ -566,6 +618,7 @@ export function Switch({
   defaultChecked = false,
   onCheckedChange,
   disabled,
+  loading,
 }: SwitchProps) {
   const { roles } = useTheme();
   const [on, setOn] = useControllableState({
@@ -574,15 +627,19 @@ export function Switch({
     onChange: onCheckedChange,
   });
   return (
-    <RNSwitch
-      accessibilityLabel={label}
-      value={on}
-      onValueChange={setOn}
-      disabled={disabled}
-      trackColor={{ false: roles['surface-container-highest'], true: roles.primary }}
-      ios_backgroundColor={roles['surface-container-highest']}
-      thumbColor={roles['surface-container-lowest']}
-    />
+    <>
+      {loading && <ActivityIndicator size="small" color={roles.primary} />}
+      <RNSwitch
+        accessibilityLabel={label}
+        accessibilityState={loading ? { busy: true, disabled: true, checked: on } : undefined}
+        value={on}
+        onValueChange={setOn}
+        disabled={disabled || loading}
+        trackColor={{ false: roles['surface-container-highest'], true: roles.primary }}
+        ios_backgroundColor={roles['surface-container-highest']}
+        thumbColor={roles['surface-container-lowest']}
+      />
+    </>
   );
 }
 
