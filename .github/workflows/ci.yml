@@ -95,6 +95,9 @@ jobs:
   # font rendering matches pixel for pixel.
   visual:
     name: Visual regression & contrast
+    # Skip on promotion, Version Packages and back-merge PRs: they carry code that
+    # already passed this job on development (push), so it only slowed releases.
+    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:

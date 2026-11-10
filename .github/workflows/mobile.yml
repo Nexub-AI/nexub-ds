@@ -4,23 +4,13 @@ name: Mobile
 # Maestro on an iOS simulator and an Android emulator. Runs only when the
 # native packages, their inputs, or the app change.
 #
-# Only PRs into development: staging and production promotions, the Version
-# Packages PR and the production -> development back-merge carry code that
-# already passed here, so re-running the ~1 h simulators on them only slowed
-# releases down.
+# After merge to development only (not on PRs): the ~1 h simulators run while
+# the release is promoted to staging, instead of blocking every feature PR and
+# restarting on each push to it. The release script waits for this run to pass
+# on the exact development commit before it merges staging -> production, so
+# nothing reaches npm without it. workflow_dispatch runs it on any branch early.
 on:
-  pull_request:
-    branches: [development]
-    paths:
-      - 'packages/react-native/**'
-      - 'packages/tokens/**'
-      - 'packages/icons/**'
-      - 'packages/core/**'
-      - 'apps/mobile/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/mobile.yml'
-  # Also on development itself, so its iOS compiler cache (ccache below) is
-  # saved under the base branch, where every new PR can restore it.
+  workflow_dispatch:
   push:
     branches: [development]
     paths:
@@ -149,7 +139,8 @@ jobs:
       # (or record them on a PR that has none; see screenshot-gate.sh).
       - name: Screenshot baselines
         env:
-          HEAD_REF: ${{ github.head_ref }}
+          # PR branch, or the branch a manual run targets (to record new baselines before merge).
+          HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
           PUSH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: sh apps/mobile/scripts/screenshot-gate.sh ios
@@ -224,7 +215,8 @@ jobs:
         # For screenshot-gate.sh (last line of the script): compare with
         # apps/mobile/.maestro/baselines/android, or record them on a PR.
         env:
-          HEAD_REF: ${{ github.head_ref }}
+          # PR branch, or the branch a manual run targets (to record new baselines before merge).
+          HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
           PUSH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         with:
