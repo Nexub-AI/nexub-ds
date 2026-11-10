@@ -513,6 +513,16 @@ code, kbd, pre, samp {
 @media (prefers-reduced-motion: reduce) {
   .nx-shake { animation: none; }
 }
+/* 7.4 Feedback & loading: Skeleton animation="shimmer". A highlight sweeps
+   across the placeholder (reuses nx-shimmer). Reduced motion: plain fill. */
+@media (prefers-reduced-motion: no-preference) {
+  .nx-skeleton-shimmer {
+    background-image: linear-gradient(90deg,
+      transparent 30%, var(--color-surface-container-low) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: nx-shimmer 2s linear infinite;
+  }
+}
 
 /* ─── Density ────────────────────────────────────────────────────────────────
    Compact shifts every control one step down the ladder (md 40 → 32px at a 16px root). */

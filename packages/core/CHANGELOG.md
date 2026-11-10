@@ -1,5 +1,7 @@
 # @nexub/core
 
+## 7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

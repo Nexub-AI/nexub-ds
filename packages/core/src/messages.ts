@@ -224,6 +224,8 @@ export interface NexubMessages {
   offline: string;
   page: (index: number, total: number) => string;
   moreActions: string;
+  /** Avatar `status` dot, read after the name ("Ada Lovelace, Away"). */
+  presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -418,6 +420,7 @@ export const defaultMessages: NexubMessages = {
   offline: 'You’re offline. Some things may not be up to date.',
   page: (index, total) => `Page ${index} of ${total}`,
   moreActions: 'More actions',
+  presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
 };
 
 export type Direction = 'ltr' | 'rtl';
