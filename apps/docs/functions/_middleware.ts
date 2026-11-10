@@ -11,18 +11,32 @@
  * Static assets skip this function via public/_routes.json. The CSP in
  * public/_headers stays as the fallback policy if this function never runs.
  *
+ * Styles: <style> elements need the nonce too (style-src-elem). Inline style=""
+ * attributes (React style={}) are allowed via style-src-attr. Runtime-injected
+ * <style> (Radix / react-remove-scroll) reads the nonce from
+ * <meta name="csp-nonce">, which this function adds to <head>.
+ * Exception: /m (Expo / react-native-web) injects <style> at runtime with no
+ * nonce support, so it keeps 'unsafe-inline' for style elements.
+ *
+ * Trusted Types is report-only for now: violations show in the console.
+ * 'nextjs' and 'nextjs#bundler' are the policies Next 16 creates.
+ *
  * /m/* is the React Native web preview (apps/mobile build:web) and /frame/*
  * the page-template frames. Docs pages frame them, so they alone may be
  * framed, and only by this origin.
  */
 
-const framedPreview = (path: string) => path === '/m' || path.startsWith('/m/') || path.startsWith('/frame/');
+const mobilePreview = (path: string) => path === '/m' || path.startsWith('/m/');
 
-const CSP = (nonce: string, frameAncestors: string) =>
+const framedPreview = (path: string) => mobilePreview(path) || path.startsWith('/frame/');
+
+const CSP = (nonce: string, frameAncestors: string, styleElem: string) =>
   [
     "default-src 'self'",
     `script-src 'nonce-${nonce}' 'strict-dynamic' 'self' https: 'unsafe-inline'`,
-    "style-src 'self' 'unsafe-inline'",
+    "style-src 'self'",
+    `style-src-elem 'self' ${styleElem}`,
+    "style-src-attr 'unsafe-inline'",
     "img-src 'self' data: blob: https://i.pravatar.cc",
     "font-src 'self' data:",
     "connect-src 'self' https://challenges.cloudflare.com",
@@ -43,8 +57,14 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   const nonce = btoa(String.fromCharCode(...bytes));
 
   const out = new Response(res.body, res);
-  const preview = framedPreview(new URL(request.url).pathname);
-  out.headers.set('Content-Security-Policy', CSP(nonce, preview ? "'self'" : "'none'"));
+  const path = new URL(request.url).pathname;
+  const preview = framedPreview(path);
+  const styleElem = mobilePreview(path) ? "'unsafe-inline'" : `'nonce-${nonce}'`;
+  out.headers.set('Content-Security-Policy', CSP(nonce, preview ? "'self'" : "'none'", styleElem));
+  out.headers.set(
+    'Content-Security-Policy-Report-Only',
+    "require-trusted-types-for 'script'; trusted-types nextjs nextjs#bundler",
+  );
   out.headers.set('X-Frame-Options', preview ? 'SAMEORIGIN' : 'DENY');
   const addNonce = {
     element(el: Element) {
@@ -53,7 +73,12 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   };
   // Script preloads are checked against script-src too, so they need it.
   return new HTMLRewriter()
-    .on('script', addNonce)
+    .on('script, style', addNonce)
     .on('link[rel="preload"][as="script"], link[rel="modulepreload"]', addNonce)
+    .on('head', {
+      element(el: Element) {
+        el.prepend(`<meta name="csp-nonce" content="${nonce}">`, { html: true });
+      },
+    })
     .transform(out);
 };

@@ -74,7 +74,7 @@ export function Section({
           {title}
         </Heading>
         {description && (
-          <Text tone="secondary" className="max-w-[72ch]">
+          <Text size="body-lg" tone="secondary" className="max-w-[72ch]">
             {description}
           </Text>
         )}
@@ -222,7 +222,7 @@ export function List({ items, ordered = false }: { items: React.ReactNode[]; ord
     >
       {items.map((item, i) => (
         <li key={i} className="ps-1">
-          <Text className="text-[var(--color-on-surface-variant)] [&_strong]:text-[var(--color-on-surface)]">{item}</Text>
+          <Text size="body-lg" className="text-[var(--color-on-surface-variant)] [&_strong]:text-[var(--color-on-surface)]">{item}</Text>
         </li>
       ))}
     </Tag>

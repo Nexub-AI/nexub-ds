@@ -20,6 +20,7 @@ export interface NexubMessages {
   orDragAndDrop: string;
   clearSearch: string;
   showPassword: string;
+  /** @deprecated since 7.2: the reveal toggle keeps one name ("Show password") and uses aria-pressed. Removed in 9.0. */
   hidePassword: string;
   increment: string;
   decrement: string;

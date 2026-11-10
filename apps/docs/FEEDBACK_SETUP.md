@@ -42,9 +42,30 @@ a `warning: webhook_not_configured` and silently drop.
 3. Default storage class: **Standard**.
 4. Public access: **leave disabled**. Screenshots are served via a same-origin
    Pages Function (`/api/feedback/screenshot/[key]`), not directly from R2.
-5. **Settings → Object lifecycle rules → Add rule**: delete objects after
-   **30 days**. Screenshot links are unauthenticated bearer URLs, so they
-   should not live forever.
+5. Lifecycle (delete after **30 days**) is applied by the script in
+   step 3½. Screenshot links are unauthenticated bearer URLs, so they should
+   not live forever; the screenshot function also 404s anything older than
+   30 days.
+
+## 3½. Apply R2 lifecycle + WAF rate limit (script)
+
+```sh
+cd apps/docs
+node scripts/cf-feedback-setup.mjs --dry-run nexub-feedback-screenshots  # print payloads
+CLOUDFLARE_API_TOKEN=… CLOUDFLARE_ACCOUNT_ID=… CLOUDFLARE_ZONE_ID=… \
+  node scripts/cf-feedback-setup.mjs nexub-feedback-screenshots
+```
+
+Token permissions: **Account › Workers R2 Storage › Edit** and
+**Zone › Zone WAF › Edit**. Safe to re-run. It sets the bucket lifecycle rule
+and upserts a rate-limit rule (`POST /api/feedback`, 5/min per IP, block
+10 min) in the zone's `http_ratelimit` ruleset. Without `CLOUDFLARE_ZONE_ID`
+(no custom domain yet — `*.pages.dev` has no zone) the WAF step is skipped.
+
+Manual fallback: R2 bucket → **Settings → Object lifecycle rules** → delete
+after 30 days; zone → **Security → WAF → Rate limiting rules** → path equals
+`/api/feedback` and method `POST`, 5 per minute per IP, **Block** 10 min.
+(The Free plan only allows a 10 s period/timeout; adjust if so.)
 
 ## 4. Wire the Pages project
 
@@ -65,10 +86,8 @@ and returns `503 not_configured` for every submission.
 ### Rate limiting (WAF)
 
 The in-function rate limit is per Worker isolate, so it is only a speed bump.
-Add the real limit in the Cloudflare dashboard → **Security → WAF →
-Rate limiting rules**: match `URI Path equals /api/feedback` and
-`Request Method equals POST`, **5 requests per 1 minute per IP**, action
-**Block** for 10 minutes.
+The real limit is the WAF rule from step 3½. The function also rejects POSTs
+whose `Origin` is not the site itself or `*.nexub-ds-docs.pages.dev` (403).
 
 > **Important — `NEXT_PUBLIC_TURNSTILE_SITE_KEY` does NOT go here.**
 > Public Next.js env vars are baked into the JS bundle at **build time**,
@@ -166,6 +185,7 @@ touching the client form.
 | `apps/docs/src/components/feedback/submit.ts` | `submitFeedback()` + browser context |
 | `apps/docs/src/components/ClientProviders.tsx` | Mount point (lazy) |
 | `apps/docs/functions/api/feedback.ts` | Server: verify, R2 upload, Chat POST |
-| `apps/docs/functions/api/feedback/screenshot/[key].ts` | Streams R2 image |
+| `apps/docs/functions/api/feedback/screenshot/[key].ts` | Streams R2 image (404 after 30 days) |
+| `apps/docs/scripts/cf-feedback-setup.mjs` | R2 lifecycle + WAF rate limit as code |
 | `apps/docs/next.config.mjs` | Surfaces `NEXT_PUBLIC_TURNSTILE_SITE_KEY` |
 | `.github/workflows/{staging,release}.yml` | Run `wrangler pages deploy out` from `apps/docs/`; wrangler picks up `apps/docs/functions/` automatically |

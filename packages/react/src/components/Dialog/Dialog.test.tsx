@@ -128,3 +128,31 @@ describe('Dialog', () => {
     expect(dialog).toHaveClass('bg-[var(--glass-bg)]');
   });
 });
+
+describe('Dialog scrollLock', () => {
+  function Locked({ scrollLock }: { scrollLock?: 'style' | 'class' }) {
+    return (
+      <Dialog.Root defaultOpen scrollLock={scrollLock}>
+        <Dialog.Portal>
+          <Dialog.Overlay />
+          <Dialog.Content aria-describedby={undefined}>
+            <Dialog.Title>Locked</Dialog.Title>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  }
+
+  it('"class" locks with a class on <html> and injects no <style>', () => {
+    const { unmount } = render(<Locked scrollLock="class" />);
+    expect(document.documentElement).toHaveClass('nexub-scroll-lock');
+    expect(document.head.querySelectorAll('style')).toHaveLength(0);
+    unmount();
+    expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
+  });
+
+  it('"style" (default) keeps Radix\'s scroll lock', () => {
+    render(<Locked />);
+    expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
+  });
+});
