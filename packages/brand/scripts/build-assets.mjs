@@ -30,7 +30,8 @@ const master = read('assets/nexub-mark.svg');
 const PRODUCTS = ['', 'account', 'command-hub', 'admin', 'people', 'payhub', 'commerce', 'contracts', 'leap', 'founder-hub', 'mind', 'go', 'verify'];
 const VIOLET = '#8b6cff'; // ink on dark glass, and the halo
 const VIOLET_DEEP = '#6d4ae8'; // ink on white (≥ 4.5:1)
-const strip = (svg) => svg.replace(/<!--[\s\S]*?-->\s*/g, '').trim();
+// Glyph files put their description comment on its own line; drop those lines.
+const strip = (svg) => svg.split('\n').filter((l) => !l.trimStart().startsWith('<!--')).join('\n').trim();
 const glyphOf = (id) => {
   if (!id) return (ink) => `<svg x="97" y="148" width="318" height="228" viewBox="0 0 78 56"><path d="${paths.map((p) => p.d).join(' ')}" fill="${ink}"/></svg>`;
   const art = strip(read(`glyphs/${id}.svg`));
