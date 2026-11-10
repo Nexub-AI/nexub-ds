@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "7.5.0",
+  "version": "7.6.0",
   "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
@@ -62,7 +62,8 @@
     "build-storybook": "storybook build",
     "test:visual": "playwright test -c visual",
     "test:visual:docker": "docker run --rm --ipc=host -e CI -v \"$PWD/../..\":/work -w /work/packages/react mcr.microsoft.com/playwright:v1.64.0-noble npx playwright test -c visual",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test:perf": "playwright test -c visual --project=perf"
   },
   "dependencies": {
     "@nexub/core": "workspace:*",

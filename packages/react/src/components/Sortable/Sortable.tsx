@@ -18,8 +18,8 @@ export interface SortableProps<T> {
 }
 
 /**
- * A list people can reorder: drag an item, or focus its handle and press
- * Alt+ArrowUp / Alt+ArrowDown. Each move is announced.
+ * A list people can reorder: drag an item's handle (mouse, pen or touch; Escape
+ * cancels), or focus the handle and press Alt+ArrowUp / Alt+ArrowDown. Each move is announced.
  */
 export function Sortable<T>({ items, getId, getLabel, onReorder, children, className, ...aria }: SortableProps<T>) {
   const { itemProps, listProps, handle, live } = useReorder({
