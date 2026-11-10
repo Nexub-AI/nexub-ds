@@ -1,0 +1,30 @@
+/* @nexub/themes — signature.css: the Signature style (7.9 opt-in, the default in 8.0).
+   Opt in with data-style="signature" on <html> or any wrapper; every rule here is
+   scoped to it, so an app that never sets it looks exactly as before.
+   The colour, shape, display tracking and elevation tokens are generated into
+   @nexub/tokens/css/roles (same HCT engine, signature palettes; contrast tests
+   cover both styles). This file adds what isn't a generated token.
+   Imported by core.css (and so base.css). */
+
+[data-style='signature'] {
+  /* Full pills only where meaning calls for them (chips, tags, segmented,
+     toggles): --shape-control is ~10px under signature, so those components
+     move to var(--shape-pill, var(--shape-control)) (Chip, FilterChip,
+     SegmentedControl, Toggle, Badge, Tabs pill: a 7.9 follow-up). */
+  --shape-pill: 9999px;
+  /* The Nexub mark's gradient, for moments (primary CTA sheen, focus glow,
+     progress, celebrate). Decorative: never put text on it. */
+  --gradient-signature: linear-gradient(135deg, var(--color-brand-mark-1) 0%, var(--color-brand-mark-2) 50%, var(--color-brand-mark-6) 100%);
+}
+
+/* On <html> the fills follow the re-pointed palette by themselves; a subtree
+   inherits them already computed, so restate the primary fills there. */
+:not(:root)[data-style='signature'] {
+  --color-fill-primary: var(--color-palette-primary-40);
+  --color-fill-primary-hover: var(--color-palette-primary-30);
+}
+
+/* Data reads in columns: tabular numerals for tables and machine-readable values. */
+[data-style='signature'] :is(table, data, time, output, meter) {
+  font-variant-numeric: tabular-nums;
+}

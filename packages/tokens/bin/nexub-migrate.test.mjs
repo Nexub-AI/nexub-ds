@@ -285,3 +285,41 @@ import { Autocomplete } from '@nexub/react';
   assert.equal(output, src);
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[3, 'removed-in-7'], [4, 'removed-in-7'], [5, 'removed-in-7'], [6, 'removed-in-7']]);
 });
+
+// ─── changes-in-8 ───
+test('changes-in-8: reports legacy motion tokens, never the spring ones or definitions', () => {
+  const src = `.a { transition: opacity var(--duration-normal) var(--ease-out); }
+.b { transition: transform var(--motion-spring-effects-default-duration) var(--ease-spatial-default); }
+.c { --duration-fast: 1ms; animation-timing-function: var(--ease-in-out); }
+`;
+  const { output, manual } = migrateSource(src, { ext: '.css', rules: only('changes-in-8') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => [m.line, m.message.split(' ')[0]]), [[1, '--duration-normal'], [1, '--ease-out'], [3, '--ease-in-out']]);
+});
+
+test('changes-in-8: Motion easing, default scrollLock, safeHref and custom-scheme links', () => {
+  const src = `import { Fade, Dialog, Drawer, CommandPalette, safeHref } from '@nexub/react';
+<Fade in easing="out">x</Fade>;
+<Fade in duration="fast">x</Fade>;
+<Dialog.Root open={o}>x</Dialog.Root>;
+<Drawer.Root scrollLock="class">x</Drawer.Root>;
+<CommandPalette {...p} />;
+const a = safeHref(u);
+const b = safeHref(u, { strict: true });
+<AppHeader homeHref="slack://open" logoHref="https://x.dev" />;
+const items = [{ href: 'tel:123' }, { href: 'zoommtg://join' }];
+`;
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('changes-in-8') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => m.line), [2, 4, 6, 7, 9, 10]);
+  assert.match(manual[2].message, /unless the spread sets scrollLock/);
+});
+
+test('changes-in-8: Signature note where @nexub/themes is imported, unless data-style is set', () => {
+  const report = (src, ext) => migrateSource(src, { ext, rules: only('changes-in-8') }).manual.map((m) => m.line);
+  assert.deepEqual(report(`@import "tailwindcss";\n@import "@nexub/themes/base";\n@import "@nexub/themes/light";\n`, '.css'), [2]);
+  assert.deepEqual(report(`import '@nexub/themes/base.css';\n`, '.tsx'), [1]);
+  assert.deepEqual(report(`import '@nexub/themes/base.css';\n<html data-style="classic" />;\n`, '.tsx'), []);
+  // Files that don't import Nexub are left alone.
+  assert.deepEqual(report(`<Dialog.Root /><Fade easing="out" />;\nconst x = { href: 'slack://a' };\n`, '.tsx'), []);
+});

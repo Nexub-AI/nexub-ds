@@ -18,10 +18,11 @@ export const switchVariants = cva(
   ],
   {
     variants: {
+      // --nx-switch-travel: the Signature full thumb's slide (track width - height).
       size: {
-        sm: 'h-5 w-9',
-        md: 'h-7 w-12',
-        lg: 'h-8 w-14',
+        sm: 'h-5 w-9 [--nx-switch-travel:16px]',
+        md: 'h-7 w-12 [--nx-switch-travel:20px]',
+        lg: 'h-8 w-14 [--nx-switch-travel:24px]',
       },
     },
     defaultVariants: { size: 'md' },
@@ -63,7 +64,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
   ({ className, size, loading, checkedIcon, uncheckedIcon, onClick, ...props }, ref) => (
     <RadixSwitch.Root
       ref={ref}
-      className={cn(switchVariants({ size }), 'nx-hit', loading && 'cursor-progress', className)}
+      className={cn(switchVariants({ size }), 'nx-switch nx-hit', loading && 'cursor-progress', className)}
       aria-busy={loading || undefined}
       onClick={(e) => {
         onClick?.(e);
@@ -75,6 +76,7 @@ export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
       <RadixSwitch.Thumb
         className={cn(
           thumbVariants({ size }),
+          'nx-switch-thumb',
           (loading || checkedIcon || uncheckedIcon) &&
             'group/thumb flex items-center justify-center data-[state=checked]:text-[var(--color-primary)] data-[state=unchecked]:text-[var(--color-surface-container-highest)]',
         )}

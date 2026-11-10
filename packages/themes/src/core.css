@@ -7,6 +7,8 @@
 
 @import '@nexub/tokens/css';
 @import '@nexub/tokens/css/roles';
+/* Signature style, opt-in with data-style="signature" (7.9; default in 8.0). */
+@import './signature.css';
 
 /* ─── Theme tokens beside the color roles ─────────────────────────────────
    3.0 removed the legacy semantic aliases (--color-success-500,
@@ -963,3 +965,47 @@ body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
 [data-nx-drop='after']::after { bottom: -0.1875rem; }
 [data-nx-drop='inside'] { outline: 2px dashed var(--color-primary); outline-offset: 2px; }
 [data-nx-drop='inside']::after { content: none; }
+
+/* ─── Signature controls (7.9) ───────────────────────────────────────────────
+   Opt-in under an ancestor [data-style='signature'] (default in 8.0); classic
+   is untouched. Switch: iOS-style full thumb. A filled track (neutral off,
+   primary on, no outline), and a surface thumb filling the track's inner
+   height in both states (no grow-on-check) that slides on the expressive
+   spring. --switch-track-off / --switch-thumb let signature tokens retune it.
+   Disabled keeps the classic disabled colours.
+   !important: apps import the themes into a cascade layer before Tailwind's
+   utilities (layer(base) in our docs and Storybook), and layer order beats
+   specificity, so the Switch's own h-*, translate-x-* and border utilities
+   won. An important declaration in an earlier layer outranks later layers. */
+[data-style='signature'] [role='switch'].nx-switch[data-state] { border-color: transparent !important; }
+[data-style='signature'] [role='switch'].nx-switch[data-state='unchecked']:not(:disabled) {
+  background-color: var(--switch-track-off, var(--color-outline)) !important;
+}
+[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state] {
+  height: 100% !important;
+  width: auto !important;
+  aspect-ratio: 1;
+  transform: none !important;
+  translate: 0 !important;
+  background-color: var(--switch-thumb, var(--color-surface-container-lowest)) !important;
+  transition:
+    translate var(--motion-spring-expressive-fast-duration) var(--motion-spring-expressive-fast-easing),
+    background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) !important;
+}
+/* Icon / spinner colour follows the track, as in classic. */
+[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='unchecked'] {
+  color: var(--switch-track-off, var(--color-outline)) !important;
+}
+[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked'] { translate: var(--nx-switch-travel) 0 !important; }
+[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked']:dir(rtl) {
+  translate: calc(var(--nx-switch-travel) * -1) 0 !important;
+}
+
+/* Radio dot: scales in on the spatial spring when selected (Radix mounts the
+   indicator on check, so this only plays on that change; the settled dot is
+   unchanged, in both styles). The Checkbox tick is .nx-check-draw above.
+   Reduced motion collapses it (global rule). */
+@keyframes nx-dot-in { from { scale: 0; } }
+.nx-dot-in {
+  animation: nx-dot-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+}

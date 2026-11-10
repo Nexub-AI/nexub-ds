@@ -15,3 +15,19 @@ export const Default = () => (
     <RadioGroup.Item value="c" aria-label="Option C" />
   </RadioGroup.Root>
 );
+
+/** 7.9: classic beside Signature (`data-style="signature"`). Select to see the dot spring in. */
+export const Signature = () => (
+  <div className="flex gap-8">
+    {(['classic', 'signature'] as const).map((style) => (
+      <div key={style} data-style={style} className="flex flex-col gap-2">
+        <span className="text-label-md">{style}</span>
+        <RadioGroup.Root aria-label={`${style} options`} defaultValue="a">
+          <RadioGroup.Item value="a" aria-label="Option A" />
+          <RadioGroup.Item value="b" aria-label="Option B" />
+          <RadioGroup.Item value="c" aria-label="Option C" disabled />
+        </RadioGroup.Root>
+      </div>
+    ))}
+  </div>
+);
