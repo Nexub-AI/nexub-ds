@@ -23,7 +23,7 @@ export const progressTrackVariants = cva(
 );
 
 export const progressFillVariants = cva(
-  'h-full rounded-full transition-all duration-300 ease-in-out',
+  'h-full rounded-full transition-all duration-spatial-default ease-spatial-default',
   {
     variants: {
       tone: {

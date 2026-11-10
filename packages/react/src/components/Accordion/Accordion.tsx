@@ -40,7 +40,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixAccordion.AccordionTrig
         {...props}
       >
         {children}
-        <ChevronDown size="sm" className="shrink-0 transition-transform duration-200" aria-hidden="true" />
+        <ChevronDown size="sm" className="shrink-0 transition-transform duration-spatial-fast ease-spatial-fast" aria-hidden="true" />
       </RadixAccordion.Trigger>
     </RadixAccordion.Header>
   ),

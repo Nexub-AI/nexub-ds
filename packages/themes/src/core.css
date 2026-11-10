@@ -279,6 +279,20 @@ code, kbd, pre, samp {
   .nx-motion { --nx-x: 0px !important; --nx-y: 0px !important; --nx-scale: 1 !important; }
 }
 
+/* Thick glass (28px blur) is costly to rescale every frame: it fades and
+   nudges in, without the scale. */
+.nx-motion[data-glass-thickness='thick'] { --nx-scale: 1; }
+
+/* Tabs: the incoming panel crossfades on the effects spring. Inactive panels
+   are display:none, so @starting-style runs on every switch. Reduced motion
+   collapses the duration (see above). */
+.nx-tab-panel[data-state='active'] {
+  transition: opacity var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing);
+}
+@starting-style {
+  .nx-tab-panel[data-state='active'] { opacity: 0; }
+}
+
 /* Stagger: children of .nx-stagger rise in one after another (40ms apart, up
    to the 12th; later ones arrive with the 12th). Set --nx-stagger to change
    the step. Re-key the parent to replay. */
