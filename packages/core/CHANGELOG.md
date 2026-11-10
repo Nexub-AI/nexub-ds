@@ -1,5 +1,34 @@
 # @nexub/core
 
+## 7.5.0
+
+### Minor Changes
+
+- c5738fa: 7.5: rich inputs.
+
+  - `Input`: `clearable`, `showCount` (with `maxLength`; announced only near the limit) and `loading`.
+  - `Select`: `Root clearable`, `Item description` (the option's accessible description), and `Content searchable` (a filter field at the top; typeahead is unchanged when it's off).
+  - `Switch`: `loading` (spinner in the thumb, can't toggle) and `checkedIcon` / `uncheckedIcon`.
+  - `Combobox.List loading`; the list height animates as results change (also Autocomplete and MultiSelect).
+  - `DatePicker`: `typeable` (type a date in the locale's short format; invalid text is marked, the value is kept), `presets`, `disabledDates`, and a month crossfade.
+  - `Slider`: `marks` (ticks and labels, RTL-aware), `showValue` (`true` or `'hover'`) and `formatValue` (also sets `aria-valuetext`).
+  - `FileUpload`: image previews, paste to upload (through the same `accept` / `maxSize` / `validate` checks), and items that grow in and collapse out. A removed file now leaves after its exit animation, so tests that assert right after clicking Remove need `waitFor`.
+  - New messages: `clear`, `characterCount`.
+
+## 7.4.0
+
+### Minor Changes
+
+- ad149cc: 7.4: feedback and loading.
+
+  - `Button`: the loading spinner waits 150ms before showing and then stays at least 400ms (no flicker); `successLabel` no longer changes the button's width; `type="submit"` inside a pending React 19 `<form action>` shows loading on its own (`useFormStatus`).
+  - **New** `useAsyncAction(fn)` → `{ run, pending, error, reset }`: latest call wins, errors are captured, nothing updates after unmount.
+  - `toast.promise(promise, { loading, success, error })` and `toast.update(id, partial)`; a `loading` tone; tone icons (`icon={false}` hides them); `showProgress` countdown bar that pauses with the timer; a quick flick dismisses even under the distance threshold.
+  - `Skeleton animation="shimmer"` and **new** `SkeletonText` (`lines`), one line-height per line so the swap to real text doesn't shift.
+  - `DataTable`: `loading` (skeleton rows, `aria-busy`) and `emptyState`.
+  - `Avatar`: images fade in once loaded (server-rendered and cached images show at once); `status` (`online` / `away` / `busy` / `offline`) with the label in the accessible name.
+  - `Progress`: `variant="circular"` and `segments` for step-style progress.
+
 ## 7.3.0
 
 ## 7.2.0
