@@ -29,6 +29,7 @@ async function open(page: Page, id: string, globals = 'theme:light') {
   await page.evaluate(() => document.fonts.ready);
 }
 
+// Soft: one run reports hover, focus and pressed together (re-baselines in one pass).
 for (const { id, target } of STATES) {
   test(`${id} states`, async ({ page }) => {
     await open(page, id);
@@ -36,17 +37,17 @@ for (const { id, target } of STATES) {
     const root = page.locator('#storybook-root');
 
     await el.hover();
-    await expect(root).toHaveScreenshot(`${id}--hover.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--hover.png`);
 
     await page.mouse.move(0, 0);
     // Keyboard focus, so :focus-visible matches.
     await el.evaluate((node: HTMLElement) => node.blur());
     await el.focus();
-    await expect(root).toHaveScreenshot(`${id}--focus.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--focus.png`);
 
     await el.hover();
     await page.mouse.down();
-    await expect(root).toHaveScreenshot(`${id}--pressed.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--pressed.png`);
     await page.mouse.up();
   });
 }

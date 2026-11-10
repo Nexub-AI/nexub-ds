@@ -12,7 +12,6 @@ Scales content in/out from its center.
 | --- | --- | --- | --- |
 | `in` (required) | `boolean` |  | When true, scales content in from 0 to 1. When false, scales it back down to 0. |
 | `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
-| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
 | `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
 | `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
 | `children` (required) | `React.ReactNode` |  | Content to animate. |

@@ -6,7 +6,7 @@ export default function Example() {
   return (
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
-      <Fade in={visible} duration="slow" easing="spring">
+      <Fade in={visible} duration="slow">
         <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>

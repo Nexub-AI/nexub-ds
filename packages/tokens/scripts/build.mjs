@@ -266,7 +266,6 @@ export function nativeTokens(t) {
         ];
       }),
   );
-  const bezier = (v) => v.match(/[\d.]+/g).map(Number);
   return {
     color: {
       roles: schemes({ ...ROLES, ...tertiary('primary') }),
@@ -296,8 +295,6 @@ export function nativeTokens(t) {
       ),
     },
     motion: {
-      duration: numbers(t.duration),
-      easing: Object.fromEntries(Object.entries(t.ease).map(([k, v]) => [k, bezier(v)])),
       // Reanimated withSpring: damping is the absolute coefficient c = 2ζ√(k·m), m = 1.
       spring: Object.fromEntries(
         Object.entries(SPRINGS).map(([kind, speeds]) => [

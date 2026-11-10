@@ -15,15 +15,15 @@ function scheme(url: string): string | null {
 
 export interface SafeHrefOptions {
   /**
-   * `false` (7.x default): block script-capable schemes (`javascript:`,
+   * `false`: block script-capable schemes (`javascript:`,
    * `vbscript:`, `data:`, `file:`), allow everything else.
-   * `true` (8.0 default): allow only relative URLs, `#…`, http(s), mailto, tel and sms.
+   * `true` (default since 8.0): allow only relative URLs, `#…`, http(s), mailto, tel and sms.
    */
   strict?: boolean;
 }
 
 /** A link target that can't run script. Returns `undefined` when blocked. */
-export function safeHref(url: string | null | undefined, { strict = false }: SafeHrefOptions = {}): string | undefined {
+export function safeHref(url: string | null | undefined, { strict = true }: SafeHrefOptions = {}): string | undefined {
   if (!url) return undefined;
   const s = scheme(url);
   if (s === null) return url; // relative, #hash, ?query

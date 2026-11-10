@@ -20,8 +20,8 @@ export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   label?: string;
   /**
    * How page scroll is locked while open.
-   * - `'style'` (default): Radix's lock, which injects a `<style>` tag (blocked by `style-src 'self'`).
-   * - `'class'`: the `nexub-scroll-lock` class from `@nexub/themes/base`. Strict-CSP safe.
+   * - `'class'` (default since 8.0): the `nexub-scroll-lock` class from `@nexub/themes/base`. Strict-CSP safe.
+   * - `'style'`: Radix's lock, which injects a `<style>` tag (blocked by `style-src 'self'`).
    */
   scrollLock?: 'style' | 'class';
   /** `false` when the items are already filtered (e.g. async search results). @default true */
@@ -86,7 +86,7 @@ function ClassLockOverlay() {
 }
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
-  ({ children, label: labelProp, scrollLock = 'style', shouldFilter, shortcut, open: openProp, defaultOpen, onOpenChange,
+  ({ children, label: labelProp, scrollLock = 'class', shouldFilter, shortcut, open: openProp, defaultOpen, onOpenChange,
     pages: pagesProp, defaultPages, onPagesChange, loading, recentKey, recentLimit = 5, ...props }, ref) => {
   const messages = useNexubMessages();
   const [pages = [], setPages] = useControllableState({ value: pagesProp, defaultValue: defaultPages, onChange: onPagesChange });

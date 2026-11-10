@@ -7,7 +7,7 @@
 
 @import '@nexub/tokens/css';
 @import '@nexub/tokens/css/roles';
-/* Signature style, opt-in with data-style="signature" (7.9; default in 8.0). */
+/* Signature style: the default since 8.0; data-style="classic" keeps the 7.x look. */
 @import './signature.css';
 
 /* ─── Theme tokens beside the color roles ─────────────────────────────────
@@ -967,8 +967,8 @@ body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
 [data-nx-drop='inside']::after { content: none; }
 
 /* ─── Signature controls (7.9) ───────────────────────────────────────────────
-   Opt-in under an ancestor [data-style='signature'] (default in 8.0); classic
-   is untouched. Switch: iOS-style full thumb. A filled track (neutral off,
+   The default since 8.0; skipped under data-style="classic" (see signature.css
+   for the selector pattern). Switch: iOS-style full thumb. A filled track (neutral off,
    primary on, no outline), and a surface thumb filling the track's inner
    height in both states (no grow-on-check) that slides on the expressive
    spring. --switch-track-off / --switch-thumb let signature tokens retune it.
@@ -977,11 +977,14 @@ body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
    utilities (layer(base) in our docs and Storybook), and layer order beats
    specificity, so the Switch's own h-*, translate-x-* and border utilities
    won. An important declaration in an earlier layer outranks later layers. */
-[data-style='signature'] [role='switch'].nx-switch[data-state] { border-color: transparent !important; }
-[data-style='signature'] [role='switch'].nx-switch[data-state='unchecked']:not(:disabled) {
+[role='switch'].nx-switch[data-state]:not([data-style='classic'] *),
+[data-style='classic'] [data-style='signature'] [role='switch'].nx-switch[data-state] { border-color: transparent !important; }
+[role='switch'].nx-switch[data-state='unchecked']:not([data-style='classic'] *):not(:disabled),
+[data-style='classic'] [data-style='signature'] [role='switch'].nx-switch[data-state='unchecked']:not(:disabled) {
   background-color: var(--switch-track-off, var(--color-outline)) !important;
 }
-[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state] {
+.nx-switch:not([data-style='classic'] *) > .nx-switch-thumb[data-state],
+[data-style='classic'] [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state] {
   height: 100% !important;
   width: auto !important;
   aspect-ratio: 1;
@@ -993,11 +996,14 @@ body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
     background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) !important;
 }
 /* Icon / spinner colour follows the track, as in classic. */
-[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='unchecked'] {
+.nx-switch:not([data-style='classic'] *) > .nx-switch-thumb[data-state='unchecked'],
+[data-style='classic'] [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='unchecked'] {
   color: var(--switch-track-off, var(--color-outline)) !important;
 }
-[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked'] { translate: var(--nx-switch-travel) 0 !important; }
-[data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked']:dir(rtl) {
+.nx-switch:not([data-style='classic'] *) > .nx-switch-thumb[data-state='checked'],
+[data-style='classic'] [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked'] { translate: var(--nx-switch-travel) 0 !important; }
+.nx-switch:not([data-style='classic'] *) > .nx-switch-thumb[data-state='checked']:dir(rtl),
+[data-style='classic'] [data-style='signature'] .nx-switch > .nx-switch-thumb[data-state='checked']:dir(rtl) {
   translate: calc(var(--nx-switch-travel) * -1) 0 !important;
 }
 
