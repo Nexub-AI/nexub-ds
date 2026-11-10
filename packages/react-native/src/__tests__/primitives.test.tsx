@@ -51,6 +51,22 @@ describe('NexubNativeProvider', () => {
     expect(theme.roles.primary).not.toBe(native.color.roles.standard.light.primary);
   });
 
+  it('style="signature" swaps roles, shape, display tracking and elevation; a product still wins', async () => {
+    let theme!: ReturnType<typeof useTheme>;
+    await wrap(<Roles onTheme={(t) => (theme = t)} />, { style: 'signature', scheme: 'dark', product: 'leap' });
+    const sig = native.signature;
+    expect(theme.style).toBe('signature');
+    expect(theme.roles.surface).toBe(sig.roles.standard.dark.surface);
+    expect(theme.roles.primary).toBe(sig.roles.standard.dark.primary);
+    expect(theme.roles.error).toBe(native.color.roles.standard.dark.error);
+    expect(theme.roles.tertiary).toBe(native.color.products.leap.standard.dark.tertiary);
+    expect(theme.tokens.shape.control).toBe(10);
+    expect(theme.tokens.shape.overlay).toBe(native.shape.overlay);
+    expect(theme.tokens.type['display-lg'].letterSpacing).toBe(sig.type['display-lg'].letterSpacing);
+    expect(theme.tokens.type['body-md']).toEqual(native.type['body-md']);
+    expect(theme.elevation(2)).toBe(sig.elevation[2].dark);
+  });
+
   it('derives RTL from the locale and merges message overrides', async () => {
     let theme!: ReturnType<typeof useTheme>;
     await wrap(<Roles onTheme={(t) => (theme = t)} />, {

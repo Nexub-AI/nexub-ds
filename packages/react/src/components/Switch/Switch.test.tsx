@@ -51,4 +51,11 @@ describe('Switch', () => {
     expect(screen.getByTestId('off').parentElement).toHaveClass('group-data-[state=unchecked]/thumb:flex');
     expect(screen.getByRole('switch')).toHaveAccessibleName('Toggle setting');
   });
+
+  it('exposes the Signature hooks: classes and the per-size thumb travel', () => {
+    render(<Switch aria-label="Toggle setting" size="lg" />);
+    const root = screen.getByRole('switch');
+    expect(root).toHaveClass('nx-switch', '[--nx-switch-travel:24px]');
+    expect(root.firstElementChild).toHaveClass('nx-switch-thumb');
+  });
 });

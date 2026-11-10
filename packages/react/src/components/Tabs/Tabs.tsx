@@ -39,7 +39,7 @@ const List = React.forwardRef<HTMLDivElement, TabsListProps>(
             'data-[orientation=vertical]:w-auto data-[orientation=vertical]:shrink-0 data-[orientation=vertical]:flex-col',
             'data-[orientation=vertical]:overflow-x-visible data-[orientation=vertical]:overflow-y-auto',
             pill
-              ? 'w-fit max-w-full rounded-shape-control bg-[var(--color-surface-container-high)] p-0.5'
+              ? 'w-fit max-w-full rounded-[var(--shape-pill,var(--shape-control))] bg-[var(--color-surface-container-high)] p-0.5'
               : 'border-b border-[var(--color-outline-variant)] data-[orientation=vertical]:border-b-0 data-[orientation=vertical]:border-e',
             className,
           )}
@@ -51,7 +51,7 @@ const List = React.forwardRef<HTMLDivElement, TabsListProps>(
             <span
               aria-hidden="true"
               className={cn(
-                'pointer-events-none absolute left-0 top-0 rounded-shape-control',
+                'pointer-events-none absolute left-0 top-0 rounded-[var(--shape-pill,var(--shape-control))]',
                 'bg-[var(--color-surface-container-lowest)] shadow-elevation-1',
                 'h-[var(--nx-ind-h,0px)] w-[var(--nx-ind-w,0px)] translate-x-[var(--nx-ind-x,0px)] translate-y-[var(--nx-ind-y,0px)] opacity-[var(--nx-ind-o,0)]',
                 '[[data-nx-indicator=ready]>&]:transition-[transform,width,height] [[data-nx-indicator=ready]>&]:duration-spatial-default [[data-nx-indicator=ready]>&]:ease-spatial-default',
@@ -134,7 +134,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixTabs.TabsTriggerProps>(
           'group-data-[orientation=vertical]/tabs:justify-start',
           'text-[var(--color-on-surface-variant)] transition-colors duration-effects-fast ease-effects-fast',
           pill
-            ? 'z-10 rounded-shape-control hover:text-[var(--color-on-surface)] data-[state=active]:text-[var(--color-on-surface)]'
+            ? 'z-10 rounded-[var(--shape-pill,var(--shape-control))] hover:text-[var(--color-on-surface)] data-[state=active]:text-[var(--color-on-surface)]'
             : cn(
                 'rounded-t-[var(--shape-field)] data-[state=active]:text-[var(--color-primary)]',
                 'group-data-[orientation=vertical]/tabs:rounded-none group-data-[orientation=vertical]/tabs:rounded-s-[var(--shape-field)]',

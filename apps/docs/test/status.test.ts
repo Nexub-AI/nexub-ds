@@ -54,3 +54,34 @@ test('@deprecated components in @nexub/react match the registry', () => {
     assert.ok(text.includes(`removal planned in ${e.meta.deprecation!.removeIn}`), `${e.meta.slug}: JSDoc must say "removal planned in ${e.meta.deprecation!.removeIn}"`);
   }
 });
+
+// 7.9 freeze list: every 7.x deprecation of a prop, message or token (not a whole
+// component, so not in the registry) with the major that removes it. Its JSDoc must
+// agree, and "Migrating to 8.0" lists the same removals.
+const FROZEN_7X = [
+  { what: 'Motion `easing` prop + `--duration-*` / `--ease-*` tokens', file: 'packages/react/src/components/Motion/motion.types.ts', since: '7.3', removeIn: '8.0' },
+  { what: 'Collapse `easing` prop', file: 'packages/react/src/components/Motion/Collapse.tsx', since: '7.3', removeIn: '8.0' },
+  { what: 'messages.hidePassword', file: 'packages/core/src/messages.ts', since: '7.2', removeIn: '9.0' },
+];
+
+test('7.x deprecations are frozen with their removal major', () => {
+  const root = new URL('../../../', import.meta.url);
+  const found = new Set<string>();
+  for (const pkg of ['core', 'react', 'patterns', 'marketing', 'react-native']) {
+    const walk = (dir: URL) => {
+      for (const e of readdirSync(dir, { withFileTypes: true })) {
+        if (e.isDirectory()) walk(new URL(`${e.name}/`, dir));
+        else if (/\.tsx?$/.test(e.name) && !/\.(test|stories)\./.test(e.name) && /@deprecated since 7\./.test(readFileSync(new URL(e.name, dir), 'utf8')))
+          found.add(new URL(e.name, dir).href.slice(root.href.length));
+      }
+    };
+    walk(new URL(`packages/${pkg}/src/`, root));
+  }
+  assert.deepEqual([...found].sort(), FROZEN_7X.map((d) => d.file).sort(), 'A `@deprecated since 7.x` JSDoc must be in FROZEN_7X, and vice versa');
+  for (const d of FROZEN_7X) {
+    const src = readFileSync(new URL(d.file, root), 'utf8');
+    const m = src.match(/@deprecated since (7\.\d)[\s\S]*?removed in (\d+\.0)/i);
+    assert.ok(m, `${d.file}: JSDoc must say "@deprecated since ${d.since} … removed in ${d.removeIn}"`);
+    assert.deepEqual([m[1], m[2]], [d.since, d.removeIn], `${d.what}: JSDoc disagrees with the freeze list`);
+  }
+});
