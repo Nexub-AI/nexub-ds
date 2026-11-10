@@ -71,3 +71,41 @@ export const ContentWithDisplayClass: Story = {
     </Tabs.Root>
   ),
 };
+
+export const Pill: Story = {
+  render: () => (
+    <Tabs.Root defaultValue="day">
+      <Tabs.List variant="pill">
+        <Tabs.Trigger value="day">Day</Tabs.Trigger>
+        <Tabs.Trigger value="week">Week</Tabs.Trigger>
+        <Tabs.Trigger value="month">Month</Tabs.Trigger>
+      </Tabs.List>
+      {['day', 'week', 'month'].map((v) => (
+        <Tabs.Content key={v} value={v}>
+          {v} view
+        </Tabs.Content>
+      ))}
+    </Tabs.Root>
+  ),
+};
+
+export const Overflow: Story = {
+  render: () => (
+    <div style={{ width: '320px' }}>
+      <Tabs.Root defaultValue="t0">
+        <Tabs.List>
+          {Array.from({ length: 10 }, (_, i) => (
+            <Tabs.Trigger key={i} value={`t${i}`}>
+              Section {i + 1}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+        {Array.from({ length: 10 }, (_, i) => (
+          <Tabs.Content key={i} value={`t${i}`}>
+            Section {i + 1} content
+          </Tabs.Content>
+        ))}
+      </Tabs.Root>
+    </div>
+  ),
+};
