@@ -156,3 +156,86 @@ describe('Dialog scrollLock', () => {
     expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
   });
 });
+
+describe('Dialog 7.6 surfaces', () => {
+  it('showClose adds a labelled close button that closes the dialog', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog.Root defaultOpen>
+        <Dialog.Portal>
+          <Dialog.Content showClose aria-describedby={undefined}>
+            <Dialog.Title>T</Dialog.Title>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('has no close button by default; closeLabel overrides the label', () => {
+    const { rerender } = render(
+      <Dialog.Root open>
+        <Dialog.Content aria-describedby={undefined}><Dialog.Title>T</Dialog.Title></Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+    rerender(
+      <Dialog.Root open>
+        <Dialog.Content showClose closeLabel="Dismiss" aria-describedby={undefined}><Dialog.Title>T</Dialog.Title></Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
+  });
+
+  it('sheet renders bottom-anchored; Body renders between Header and Footer', () => {
+    render(
+      <Dialog.Root open>
+        <Dialog.Content sheet aria-describedby={undefined}>
+          <Dialog.Header><Dialog.Title>T</Dialog.Title></Dialog.Header>
+          <Dialog.Body>Body text</Dialog.Body>
+          <Dialog.Footer>F</Dialog.Footer>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveAttribute('data-sheet');
+    expect(dialog.className).toContain('bottom-0');
+    expect(screen.getByText('Body text')).toHaveClass('nx-dialog-body');
+  });
+
+  it('sheet="auto" stays centred on wide screens', () => {
+    render(
+      <Dialog.Root open>
+        <Dialog.Content sheet="auto" aria-describedby={undefined}><Dialog.Title>T</Dialog.Title></Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('data-sheet');
+  });
+
+  it('marks the parent data-nested while a child dialog is open', async () => {
+    const user = userEvent.setup();
+    render(
+      <Dialog.Root open>
+        <Dialog.Content aria-describedby={undefined} data-testid="parent">
+          <Dialog.Title>Parent</Dialog.Title>
+          <Dialog.Root>
+            <Dialog.Trigger>Open child</Dialog.Trigger>
+            <Dialog.Portal>
+              <Dialog.Content aria-describedby={undefined} data-testid="child">
+                <Dialog.Title>Child</Dialog.Title>
+                <Dialog.Close>Done</Dialog.Close>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </Dialog.Content>
+      </Dialog.Root>,
+    );
+    expect(screen.getByTestId('parent')).not.toHaveAttribute('data-nested');
+    await user.click(screen.getByText('Open child'));
+    expect(screen.getByTestId('parent')).toHaveAttribute('data-nested');
+    expect(screen.getByTestId('child')).not.toHaveAttribute('data-nested');
+    await user.click(screen.getByText('Done'));
+    await waitFor(() => expect(screen.getByTestId('parent')).not.toHaveAttribute('data-nested'));
+  });
+});
