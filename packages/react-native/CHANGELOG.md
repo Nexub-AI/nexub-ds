@@ -1,5 +1,14 @@
 # @nexub/react-native
 
+## 7.3.0
+
+### Patch Changes
+
+- Updated dependencies [fe8c22b]
+  - @nexub/tokens@7.3.0
+  - @nexub/icons@7.3.0
+  - @nexub/core@7.3.0
+
 ## 7.2.0
 
 ### Patch Changes
