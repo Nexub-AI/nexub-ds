@@ -30,6 +30,8 @@ export interface SkeletonProps
   width?: string | number;
   height?: string | number;
   animated?: boolean;
+  /** Effect when `animated`: `pulse` fades, `shimmer` sweeps a highlight across. Both stop under reduced motion. @default 'pulse' */
+  animation?: 'pulse' | 'shimmer';
 }
 
 const px = (v: string | number) => (typeof v === 'number' ? `${v}px` : v);
@@ -42,6 +44,7 @@ export const Skeleton = React.forwardRef<HTMLSpanElement, SkeletonProps>(
       width,
       height,
       animated = true,
+      animation = 'pulse',
       style,
       ...props
     },
@@ -60,7 +63,11 @@ export const Skeleton = React.forwardRef<HTMLSpanElement, SkeletonProps>(
       <span
         ref={ref}
         aria-hidden="true"
-        className={cn(skeletonVariants({ shape, animated }), className)}
+        className={cn(
+          skeletonVariants({ shape, animated: animated && animation === 'pulse' }),
+          animated && animation === 'shimmer' && 'nx-skeleton-shimmer',
+          className,
+        )}
         style={sizeStyle || style ? { ...sizeStyle, ...style } : undefined}
         {...props}
       />
@@ -69,3 +76,30 @@ export const Skeleton = React.forwardRef<HTMLSpanElement, SkeletonProps>(
 );
 
 Skeleton.displayName = 'Skeleton';
+
+export interface SkeletonTextProps
+  extends React.HTMLAttributes<HTMLSpanElement>,
+    Pick<SkeletonProps, 'animated' | 'animation'> {
+  /** Number of lines; the last is shorter. @default 3 */
+  lines?: number;
+}
+
+/** Placeholder paragraph. Each line is one line-height tall (inherited from the
+ *  surrounding text style), so swapping in the real text doesn't shift layout. */
+export const SkeletonText = React.forwardRef<HTMLSpanElement, SkeletonTextProps>(
+  ({ className, lines = 3, animated, animation, ...props }, ref) => (
+    <span ref={ref} aria-hidden="true" className={cn('block', className)} {...props}>
+      {Array.from({ length: lines }, (_, i) => (
+        <span key={i} className="flex h-[1lh] items-center">
+          <Skeleton
+            animated={animated}
+            animation={animation}
+            className={i === lines - 1 && lines > 1 ? 'w-3/5' : undefined}
+          />
+        </span>
+      ))}
+    </span>
+  ),
+);
+
+SkeletonText.displayName = 'SkeletonText';

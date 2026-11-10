@@ -192,3 +192,13 @@ export const TreeRows: Story = {
     />
   ),
 };
+
+export const Loading: Story = {
+  render: () => <DataTable caption="Users" captionHidden columns={columns} data={[]} loading />,
+};
+
+export const CustomEmpty: Story = {
+  render: () => (
+    <DataTable caption="Users" captionHidden columns={columns} data={[]} emptyState="No users yet. Invite someone to get started." />
+  ),
+};

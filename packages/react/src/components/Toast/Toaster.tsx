@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import * as RadixToast from '@radix-ui/react-toast';
-import { X } from '@nexub/icons';
+import { AlertTriangle, CheckCircle2, Info, Loader2, X, XCircle } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { fireToastClose, toast, useToastStore } from './useToast.js';
+import { fireToastClose, toast, useToastStore, type ToastItem } from './useToast.js';
 
 const toneMap: Record<string, string> = {
   success: 'border-s-4 border-[var(--color-success)]',
@@ -14,7 +14,21 @@ const toneMap: Record<string, string> = {
   warning: 'border-s-4 border-[var(--color-warning)]',
   info: 'border-s-4 border-[var(--color-info)]',
   neutral: '',
+  loading: '',
 };
+
+// Toasts sit on the inverse surface, where the plain status colours fall to ~2:1.
+// The *-container roles invert with it and clear 7:1+ in both schemes.
+const toneIcon: Record<string, React.ReactNode> = {
+  success: <CheckCircle2 size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-success-container)]" />,
+  error: <XCircle size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-error-container)]" />,
+  warning: <AlertTriangle size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-warning-container)]" />,
+  info: <Info size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-info-container)]" />,
+  loading: <Loader2 size="sm" aria-hidden="true" className="shrink-0 animate-spin motion-reduce:animate-none" />,
+};
+
+/** A swipe shorter than Radix's threshold still dismisses when flicked faster than this (px/ms). */
+const FLICK_VELOCITY = 0.11;
 
 /** Gap between toasts when the stack fans out into a list. */
 const GAP = 8;
@@ -73,6 +87,9 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
   state.current = { order, expanded, visibleToasts };
   // Pending "drop from the store" timers, cleared on unmount so none fires on a dead tree.
   const timers = React.useRef(new Set<ReturnType<typeof setTimeout>>());
+  // Each toast as first rendered: Radix announces only that, so later updates go to the toast's own live region.
+  const firstSeen = React.useRef(new Map<string, ToastItem>());
+  const swipeStart = React.useRef(0);
   React.useEffect(() => {
     const pending = timers.current;
     return () => pending.forEach(clearTimeout);
@@ -150,34 +167,60 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
     }
   }, [order.length]);
 
+  const el = (id: string) => viewportRef.current?.querySelector<HTMLElement>(`[data-toast-id="${id}"]`);
+  const close = (t: ToastItem) => {
+    if (closed.has(t.id)) return;
+    fireToastClose(t);
+    setClosed((s) => new Set(s).add(t.id));
+    // Drop it from the store once the exit animation has played, so a
+    // long session doesn't keep every toast it ever showed.
+    // ponytail: fixed 1s > the effects-fast exit; read the computed duration if exits get longer.
+    const timer = setTimeout(() => {
+      timers.current.delete(timer);
+      firstSeen.current.delete(t.id);
+      toast.dismiss(t.id);
+      setClosed((s) => {
+        const next = new Set(s);
+        next.delete(t.id);
+        return next;
+      });
+    }, 1000);
+    timers.current.add(timer);
+  };
+
   return (
     <RadixToast.Provider swipeDirection={(align === 'start') === (dir === 'rtl') ? 'right' : 'left'}>
       {toasts.map((t) => {
         const i = order.indexOf(t.id);
         const action = t.action ?? (t.undo && { label: t.undo.label ?? messages.undo, onClick: t.undo.onUndo });
+        if (!firstSeen.current.has(t.id)) firstSeen.current.set(t.id, t);
+        // Announce an update once it settles; a loading step is never re-announced.
+        const announce = firstSeen.current.get(t.id) !== t && t.tone !== 'loading' ? [t.title, t.description].filter(Boolean).join('. ') : '';
+        const icon = t.icon === false ? null : (t.icon ?? toneIcon[t.tone ?? 'neutral']);
+        const duration = t.tone === 'loading' ? Infinity : (t.duration ?? 5000);
         return (
           <RadixToast.Root
             key={t.id}
             data-toast-id={t.id}
             data-front={i === -1 ? undefined : i === 0}
             data-hidden={i === -1 ? undefined : i >= visibleToasts}
+            open={!closed.has(t.id)}
             onOpenChange={(open) => {
-              if (open) return;
-              fireToastClose(t);
-              setClosed((s) => new Set(s).add(t.id));
-              // Drop it from the store once the exit animation has played, so a
-              // long session doesn't keep every toast it ever showed.
-              // ponytail: fixed 1s > the effects-fast exit; read the computed duration if exits get longer.
-              const timer = setTimeout(() => {
-                timers.current.delete(timer);
-                toast.dismiss(t.id);
-                setClosed((s) => {
-                  const next = new Set(s);
-                  next.delete(t.id);
-                  return next;
-                });
-              }, 1000);
-              timers.current.add(timer);
+              if (!open) close(t);
+            }}
+            onPause={() => el(t.id)?.setAttribute('data-paused', '')}
+            onResume={() => el(t.id)?.removeAttribute('data-paused')}
+            onSwipeStart={() => {
+              swipeStart.current = performance.now();
+            }}
+            onSwipeCancel={(e) => {
+              // Radix only measures distance; a fast flick toward the edge dismisses too.
+              const { x, y } = e.detail.delta;
+              if (Math.hypot(x, y) / Math.max(1, performance.now() - swipeStart.current) < FLICK_VELOCITY) return;
+              e.preventDefault(); // skip Radix's snap-back; leave from where it was let go, like a swipe end
+              e.currentTarget.setAttribute('data-swipe', 'end');
+              e.currentTarget.style.setProperty('--radix-toast-swipe-end-x', `${x}px`);
+              close(t);
             }}
             className={cn(
               'group pointer-events-auto absolute inset-x-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
@@ -202,9 +245,10 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
               align === 'center' ? v.enter : h.enter,
               toneMap[t.tone ?? 'neutral'],
             )}
-            duration={t.duration ?? 5000}
+            duration={duration}
           >
-            <div className="grid gap-1">
+            {icon}
+            <div className="grid flex-1 gap-1">
               <RadixToast.Title className="text-title-sm">{t.title}</RadixToast.Title>
               {t.description && (
                 <RadixToast.Description className="text-body-sm text-[color-mix(in_srgb,var(--color-inverse-on-surface)_80%,transparent)]">
@@ -226,6 +270,16 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
               <X size="sm" aria-hidden="true" />
               <span className="sr-only">{messages.close}</span>
             </RadixToast.Close>
+            <span role="status" className="sr-only">{announce}</span>
+            {t.showProgress && duration !== Infinity && (
+              <span
+                key={duration}
+                aria-hidden="true"
+                // Countdown: the theme's scroll-progress scaleX keyframes, reversed; duration via the CSSOM (strict CSP).
+                ref={(bar) => bar?.style.setProperty('animation-duration', `${duration}ms`)}
+                className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-current opacity-40 rtl:origin-right [animation:nx-scroll-progress_1s_linear_reverse_forwards] group-data-[paused]:[animation-play-state:paused] motion-reduce:hidden"
+              />
+            )}
           </RadixToast.Root>
         );
       })}

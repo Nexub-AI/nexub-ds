@@ -14,6 +14,8 @@ export { useMediaQuery } from './hooks/useMediaQuery.js';
 export { useMergedRefs } from './hooks/useMergedRefs.js';
 export { useUnsavedChanges } from './hooks/useUnsavedChanges.js';
 export { usePointerSheen } from './hooks/usePointerSheen.js';
+export { useAsyncAction } from './hooks/useAsyncAction.js';
+export type { AsyncAction } from './hooks/useAsyncAction.js';
 
 // Components — AI
 export { PromptInput } from './components/PromptInput/index.js';
@@ -111,7 +113,7 @@ export type { EyebrowChipProps } from './components/EyebrowChip/index.js';
 
 // Components — Avatar
 export { Avatar, avatarVariants } from './components/Avatar/index.js';
-export type { AvatarProps } from './components/Avatar/index.js';
+export type { AvatarProps, AvatarStatus } from './components/Avatar/index.js';
 
 export { AvatarGroup, avatarGroupVariants } from './components/AvatarGroup/index.js';
 export type { AvatarGroupProps } from './components/AvatarGroup/index.js';
@@ -131,8 +133,8 @@ export { Alert, alertVariants } from './components/Alert/index.js';
 export type { AlertProps } from './components/Alert/index.js';
 
 // Components — Loading States
-export { Skeleton, skeletonVariants } from './components/Skeleton/index.js';
-export type { SkeletonProps } from './components/Skeleton/index.js';
+export { Skeleton, SkeletonText, skeletonVariants } from './components/Skeleton/index.js';
+export type { SkeletonProps, SkeletonTextProps } from './components/Skeleton/index.js';
 
 export { Spinner, spinnerVariants } from './components/Spinner/index.js';
 export type { SpinnerProps } from './components/Spinner/index.js';
@@ -343,3 +345,6 @@ export { Fade, Slide, Scale, Collapse, ListTransition, SkeletonSwap, usePrefersR
 export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, ListTransitionProps, SkeletonSwapProps, MotionDuration, MotionEasing, MotionBaseProps, RevealProps, FloatProps, MarqueeProps } from './components/Motion/index.js';
 export type { DataTableColumn } from './components/DataTable/index.js';
 export type { TableRootProps } from './components/Table/index.js';
+
+// 7.4 Toast
+export type { PromiseToastOptions } from './components/Toast/index.js';
