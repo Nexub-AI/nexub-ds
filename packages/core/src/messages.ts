@@ -226,6 +226,10 @@ export interface NexubMessages {
   moreActions: string;
   /** Avatar `status` dot, read after the name ("Ada Lovelace, Away"). */
   presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
+  /** Input `clearable` button. */
+  clear: string;
+  /** Input `showCount`, read near the limit ("72 of 80 characters"). */
+  characterCount: (count: number, max: number) => string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -421,6 +425,8 @@ export const defaultMessages: NexubMessages = {
   page: (index, total) => `Page ${index} of ${total}`,
   moreActions: 'More actions',
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
+  clear: 'Clear',
+  characterCount: (count, max) => `${count} of ${max} characters`,
 };
 
 export type Direction = 'ltr' | 'rtl';

@@ -5,6 +5,7 @@ import { Upload, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Progress } from '../Progress/Progress.js';
+import { SPRING_MS } from '../Motion/useMotion.js';
 
 /** Localised file size ("12.3 kB", "1,5 Mo"), 1024-based as before. */
 export function formatFileSize(bytes: number, locale: string): string {
@@ -74,7 +75,7 @@ export interface FileUploadRootProps extends React.HTMLAttributes<HTMLDivElement
 }
 
 const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
-  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, children, ...props }, ref) => {
+  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, onPaste, children, ...props }, ref) => {
     const [files, setFiles] = React.useState<File[]>([]);
     const [rejections, setRejections] = React.useState<FileRejection[]>([]);
     const [isDragging, setIsDragging] = React.useState(false);
@@ -121,7 +122,19 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
 
     return (
       <FileUploadContext.Provider value={contextValue}>
-        <div ref={ref} className={cn('flex flex-col gap-4', className)} {...props}>
+        <div
+          ref={ref}
+          className={cn('flex flex-col gap-4', className)}
+          // Pasted files (focus anywhere inside, e.g. the drop zone) take the picker's path.
+          onPaste={(e) => {
+            onPaste?.(e);
+            const pasted = Array.from(e.clipboardData?.files ?? []);
+            if (e.defaultPrevented || !pasted.length) return;
+            e.preventDefault();
+            addFiles(pasted);
+          }}
+          {...props}
+        >
           {children}
         </div>
       </FileUploadContext.Provider>
@@ -217,7 +230,8 @@ const List = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListEl
   ({ className, ...props }, ref) => {
     const { files } = useFileUpload();
     if (files.length === 0) return null;
-    return <ul ref={ref} className={cn('flex flex-col gap-2', className)} {...props} />;
+    // No gap: each item carries its own spacing so it collapses with it.
+    return <ul ref={ref} className={cn('flex flex-col', className)} {...props} />;
   },
 );
 List.displayName = 'FileUpload.List';
@@ -237,43 +251,83 @@ const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, 
   const messages = useNexubMessages();
   const { locale } = useLocale();
   const file = files[index];
+  // Exit is tied to the file, so an index-keyed item reused for the next file isn't stuck exiting.
+  const [exiting, setExiting] = React.useState<File | null>(null);
+  const [entered, setEntered] = React.useState(false);
+  const [thumb, setThumb] = React.useState<string>();
+  React.useEffect(() => {
+    if (!file?.type.startsWith('image/') || typeof URL.createObjectURL !== 'function') return;
+    const url = URL.createObjectURL(file);
+    setThumb(url);
+    return () => {
+      URL.revokeObjectURL(url);
+      setThumb(undefined);
+    };
+  }, [file]);
+  const isExiting = !!file && exiting === file;
+  React.useEffect(() => {
+    if (!isExiting) return;
+    // animationend may never fire (hidden, reduced motion), so a timer backs it up.
+    const t = setTimeout(() => removeFile(index), SPRING_MS.effects.default + 50);
+    return () => clearTimeout(t);
+  }, [isExiting, index, removeFile]);
   if (!file) return null;
   const uploading = progress !== undefined && progress < 100;
   const percent = Math.round(Math.max(0, Math.min(100, progress ?? 0)));
   return (
+    // nx-list-item: grows in on add, collapses out on remove (grid rows, spring tokens).
     <li
       ref={ref}
-      className={cn(
-        'flex items-center justify-between gap-3 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-3',
-        className,
-      )}
+      className="nx-list-item"
+      data-state={isExiting ? 'exit' : entered ? undefined : 'enter'}
+      onAnimationEnd={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (isExiting) removeFile(index);
+        else setEntered(true);
+      }}
       {...props}
     >
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-[var(--color-on-surface)]">
-          {file.name}
-        </p>
-        <p className="text-xs text-[var(--color-on-surface-muted)]">
-          {formatFileSize(file.size, locale)}
-          {uploading && ` · ${percent}%`}
-        </p>
-        {uploading && (
-          <Progress value={percent} size="sm" className="mt-1.5" aria-label={messages.uploadProgress(file.name, percent)} />
-        )}
-        {error && (
-          <p role="alert" className="mt-1 text-xs text-[var(--color-error)]">
-            {error}
-          </p>
-        )}
+      <div className="nx-list-item-inner">
+        <div className="[li:not(:last-child)>.nx-list-item-inner>&]:pb-2">
+          <div
+            className={cn(
+              'flex items-center justify-between gap-3 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-3',
+              className,
+            )}
+          >
+            {thumb && <img src={thumb} alt="" className="h-10 w-10 shrink-0 rounded-shape-min object-cover" />}
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium text-[var(--color-on-surface)]">
+                {file.name}
+              </p>
+              <p className="text-xs text-[var(--color-on-surface-muted)]">
+                {formatFileSize(file.size, locale)}
+                {uploading && ` · ${percent}%`}
+              </p>
+              {uploading && (
+                <Progress value={percent} size="sm" className="mt-1.5" aria-label={messages.uploadProgress(file.name, percent)} />
+              )}
+              {error && (
+                <p role="alert" className="mt-1 text-xs text-[var(--color-error)]">
+                  {error}
+                </p>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (uploading && onCancel) return onCancel();
+                setEntered(true);
+                setExiting(file);
+              }}
+              aria-label={uploading && onCancel ? messages.cancelUpload(file.name) : messages.removeFile(file.name)}
+              className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
+            >
+              <X size="sm" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
       </div>
-      <button
-        type="button"
-        onClick={() => (uploading && onCancel ? onCancel() : removeFile(index))}
-        aria-label={uploading && onCancel ? messages.cancelUpload(file.name) : messages.removeFile(file.name)}
-        className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
-      >
-        <X size="sm" aria-hidden="true" />
-      </button>
     </li>
   );
 });
