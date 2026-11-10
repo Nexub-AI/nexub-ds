@@ -72,9 +72,9 @@ describe('Sheet scroll lock', () => {
     );
   }
 
-  it('by default locks scroll with an injected <style> (Radix)', () => {
+  it('scrollLock="style" locks scroll with an injected <style> (Radix)', () => {
     const before = styleTags();
-    render(<Example />);
+    render(<Example scrollLock="style" />);
     fireEvent.click(screen.getByText('Open'));
     expect(screen.getByRole('dialog')).toBeInTheDocument();
     expect(styleTags()).toBeGreaterThan(before);

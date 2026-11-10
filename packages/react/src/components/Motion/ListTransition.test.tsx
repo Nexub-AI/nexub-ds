@@ -34,13 +34,6 @@ describe('Motion springs', () => {
     expect(t).toContain('transform var(--motion-spring-effects-fast-duration)');
   });
 
-  it('keeps the legacy tokens when easing is passed', () => {
-    const { container } = render(<Fade in easing="out"><span>x</span></Fade>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.style.transitionTimingFunction).toBe('var(--ease-out)');
-    expect(el.style.transitionDuration).toBe('var(--duration-normal)');
-  });
-
   it('drops travel under reduced motion', () => {
     const original = window.matchMedia;
     window.matchMedia = ((q: string) => ({

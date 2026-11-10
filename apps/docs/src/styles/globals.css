@@ -439,7 +439,7 @@ html, body {
 }
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
-    animation: docs-reveal-up 420ms var(--ease-out, cubic-bezier(0.2, 0, 0, 1)) both;
+    animation: docs-reveal-up 420ms var(--motion-spring-effects-default-easing, cubic-bezier(0.2, 0, 0, 1)) both;
   }
 }
 

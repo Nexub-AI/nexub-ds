@@ -16,12 +16,12 @@ export interface DialogRootProps extends RadixDialog.DialogProps {
   /**
    * `'class'` locks page scroll with a class on <html> instead of the <style>
    * Radix injects, so the dialog works under a strict `style-src` with no nonce.
-   * @default 'style' (becomes 'class' in 8.0)
+   * @default 'class' (since 8.0)
    */
   scrollLock?: ScrollLock;
 }
 
-function Root({ scrollLock = 'style', modal = true, ...props }: DialogRootProps) {
+function Root({ scrollLock = 'class', modal = true, ...props }: DialogRootProps) {
   const lock = React.useMemo(() => ({ scrollLock, modal }), [scrollLock, modal]);
   return (
     <ScrollLockContext.Provider value={lock}>

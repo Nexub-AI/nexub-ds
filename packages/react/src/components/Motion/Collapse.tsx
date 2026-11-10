@@ -2,15 +2,9 @@
 
 import * as React from 'react';
 import type { MotionBaseProps } from './motion.types.js';
-import { DURATION_MS, SPRING_MS, SPRING_SPEED, spring, usePrefersReducedMotion } from './useMotion.js';
+import { SPRING_MS, SPRING_SPEED, spring, usePrefersReducedMotion } from './useMotion.js';
 
-export interface CollapseProps extends Omit<MotionBaseProps, 'easing'>, React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * Legacy: set it to use `--duration-*` + `--ease-{value}` instead of the
-   * spatial spring for the height transition.
-   * @deprecated since 7.3, removed in 8.0 (see MotionBaseProps.easing).
-   */
-  easing?: MotionBaseProps['easing'];
+export interface CollapseProps extends MotionBaseProps, React.HTMLAttributes<HTMLDivElement> {
   /**
    * Starting height when collapsed. Useful for "peek" effects.
    * @default 0
@@ -36,7 +30,6 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
   {
     in: visible,
     duration = 'normal',
-    easing,
     unmountOnExit = false,
     collapsedHeight = 0,
     children,
@@ -47,9 +40,8 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
   ref,
 ) {
   const reduced = usePrefersReducedMotion();
-  const legacy = easing !== undefined;
   const instant = duration === 'instant' || reduced;
-  const settleMs = instant ? 0 : legacy ? DURATION_MS[duration] : SPRING_MS.spatial[SPRING_SPEED[duration]];
+  const settleMs = instant ? 0 : SPRING_MS.spatial[SPRING_SPEED[duration]];
   // Only unmount initially when unmountOnExit is requested AND not visible.
   const [mounted, setMounted] = React.useState(unmountOnExit ? visible : true);
   // `expanded` lags `visible` by a frame on entry, so a freshly mounted
@@ -101,9 +93,7 @@ export const Collapse = React.forwardRef<HTMLDivElement, CollapseProps>(function
         overflow,
         transition: instant
           ? 'none'
-          : legacy
-            ? `grid-template-rows var(--duration-${duration}) var(--ease-${easing})`
-            : spring('grid-template-rows', 'spatial', SPRING_SPEED[duration]),
+          : spring('grid-template-rows', 'spatial', SPRING_SPEED[duration]),
         ...style,
       }}
       onTransitionEnd={(e: React.TransitionEvent<HTMLDivElement>) => {

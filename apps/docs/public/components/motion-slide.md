@@ -13,7 +13,6 @@ Slides content in from a direction based on the `in` prop.
 | `in` (required) | `boolean` |  | When true, slides content in. When false, slides it out. |
 | `direction` | `'up' \| 'down' \| 'left' \| 'right'` | `'up'` | The direction from which the content slides in. |
 | `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
-| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
 | `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
 | `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
 | `children` (required) | `React.ReactNode` |  | Content to animate. |

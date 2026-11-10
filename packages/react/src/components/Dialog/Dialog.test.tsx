@@ -143,16 +143,16 @@ describe('Dialog scrollLock', () => {
     );
   }
 
-  it('"class" locks with a class on <html> and injects no <style>', () => {
-    const { unmount } = render(<Locked scrollLock="class" />);
+  it('"class" (default since 8.0) locks with a class on <html> and injects no <style>', () => {
+    const { unmount } = render(<Locked />);
     expect(document.documentElement).toHaveClass('nexub-scroll-lock');
     expect(document.head.querySelectorAll('style')).toHaveLength(0);
     unmount();
     expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
   });
 
-  it('"style" (default) keeps Radix\'s scroll lock', () => {
-    render(<Locked />);
+  it('"style" keeps Radix\'s scroll lock', () => {
+    render(<Locked scrollLock="style" />);
     expect(document.documentElement).not.toHaveClass('nexub-scroll-lock');
   });
 });

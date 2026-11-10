@@ -342,7 +342,7 @@ export type { ThemeMode, GlassMode, ThemeContextValue, ThemeProviderProps, Theme
 
 // Components — Motion
 export { Fade, Slide, Scale, Collapse, ListTransition, SkeletonSwap, usePrefersReducedMotion, Reveal, Float, Marquee } from './components/Motion/index.js';
-export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, ListTransitionProps, SkeletonSwapProps, MotionDuration, MotionEasing, MotionBaseProps, RevealProps, FloatProps, MarqueeProps } from './components/Motion/index.js';
+export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, ListTransitionProps, SkeletonSwapProps, MotionDuration, MotionBaseProps, RevealProps, FloatProps, MarqueeProps } from './components/Motion/index.js';
 export type { DataTableColumn } from './components/DataTable/index.js';
 export type { TableRootProps } from './components/Table/index.js';
 

@@ -1,17 +1,28 @@
-// signature.css must be opt-in: every rule is scoped to data-style="signature",
-// so an app that never sets it is unchanged (core.css imports it).
+// signature.css: Signature is the default (8.0), data-style="classic" opts out.
+// Every descendant rule must exclude classic subtrees, so classic stays 7.x.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 
 const read = (f) => readFileSync(new URL(`../src/${f}`, import.meta.url), 'utf8');
-const css = read('signature.css').replace(/\/\*[\s\S]*?\*\//g, '');
+const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
+const selectors = (css) =>
+  [...strip(css).matchAll(/([^{};@]+)\{/g)].flatMap((m) => m[1].split(/,(?![^(]*\))/).map((s) => s.trim())).filter(Boolean);
+const SKIPS_CLASSIC = /:not\(\[data-style='classic'\] \*\)|\[data-style='classic'\] \[data-style='signature'\]/;
 
-test('every selector is scoped to data-style="signature"', () => {
-  const selectors = [...css.matchAll(/([^{}@]+)\{/g)].map((m) => m[1].trim()).filter(Boolean);
-  assert.ok(selectors.length >= 3);
-  for (const group of selectors)
-    for (const sel of group.split(/,(?![^(]*\))/)) assert.match(sel.trim(), /\[data-style='signature'\]/, sel.trim());
+test('signature.css: descendant rules skip classic subtrees (or re-opt-in with data-style="signature")', () => {
+  const sels = selectors(read('signature.css'));
+  assert.ok(sels.length >= 4);
+  for (const sel of sels) {
+    if (sel === ':root' || sel.startsWith(':not(:root)')) continue; // custom properties only
+    assert.match(sel, SKIPS_CLASSIC, sel);
+  }
+});
+
+test('core.css: Signature Switch rules skip classic subtrees too', () => {
+  const sw = selectors(read('core.css')).filter((s) => /nx-switch/.test(s));
+  assert.ok(sw.length >= 6, 'Signature switch rules present');
+  for (const sel of sw) assert.match(sel, SKIPS_CLASSIC, sel);
 });
 
 test('core.css imports it after the generated roles', () => {

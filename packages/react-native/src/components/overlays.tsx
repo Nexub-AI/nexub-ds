@@ -17,7 +17,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronsUpDown } from '@nexub/icons/native';
@@ -122,7 +121,7 @@ export function BottomSheet({
       setIndex(0);
       translate.value = screen;
       translate.value = withSpring(tallest - heights[0]!, spring);
-      scrim.value = withTiming(1, { duration: tokens.motion.duration.normal });
+      scrim.value = withSpring(1, SHEET_EXIT);
     } else if (visible) {
       // Unmount when the spring lands, not on a guessed timer. An interrupted
       // spring (reopened mid-close) reports finished=false and keeps it up.
@@ -134,7 +133,7 @@ export function BottomSheet({
         },
       );
       fling.current = 0;
-      scrim.value = withTiming(0, { duration: tokens.motion.duration.normal });
+      scrim.value = withSpring(0, SHEET_EXIT);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);

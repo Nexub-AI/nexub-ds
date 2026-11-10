@@ -2,10 +2,16 @@ import { describe, it, expect } from 'vitest';
 import { safeHref, safeSrc } from './safeHref.js';
 
 describe('safeHref', () => {
-  it.each(['/settings', '#main', '?q=1', 'docs/page', 'https://x.dev/a', 'http://x.dev', 'mailto:a@b.co', 'tel:+1', 'slack://open'])(
+  it.each(['/settings', '#main', '?q=1', 'docs/page', 'https://x.dev/a', 'http://x.dev', 'mailto:a@b.co', 'tel:+1'])(
     'allows %j',
     (url) => expect(safeHref(url)).toBe(url),
   );
+
+  it('is strict by default since 8.0; { strict: false } still allows custom schemes', () => {
+    expect(safeHref('slack://open')).toBeUndefined();
+    expect(safeHref('slack://open', { strict: false })).toBe('slack://open');
+    expect(safeHref('javascript:alert(1)', { strict: false })).toBeUndefined();
+  });
 
   it.each([
     'javascript:alert(1)',
