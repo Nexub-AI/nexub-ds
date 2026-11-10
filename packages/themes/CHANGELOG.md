@@ -1,5 +1,73 @@
 # @nexub/themes
 
+## 7.6.0
+
+### Minor Changes
+
+- 90b8f7d: 7.6: rich surfaces and navigation.
+
+  - `Dialog.Content`: `showClose` (+ `closeLabel`), `sheet` (`true` or `'auto'`: a bottom sheet below `md`); **new** `Dialog.Body` scrolls while Header and Footer stay put, with hairlines that appear as you scroll (CSS scroll timeline; always shown where unsupported); a nested Dialog steps its parent back.
+  - `Tabs.List`: overflowing lists fade at the scrollable edges and keep the active tab in view (without scrolling the page); `variant="pill"`.
+  - `Tooltip`: `label` accepts any node, plus `description`, `shortcut` (a Kbd) and `arrow`. A Tooltip now works without an app-level `TooltipProvider`.
+  - `IconButton`: `loading` and `tooltip` (`true` shows the `label`). The tooltip code loads only when used.
+  - `Badge`: `dot`, `count` + `max` ("99+", full number for screen readers) with a tick when the count changes.
+  - `CommandPalette`: pages (`CommandPalette.Page`, `Item page`, Backspace goes back), `loading`, and opt-in recents (`recentKey`).
+  - `EmptyState.Root`: `size` (`sm` / `md` / `lg`) and opt-in `animate`.
+  - New message: `recent`.
+
+### Patch Changes
+
+- @nexub/tokens@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+- @nexub/tokens@7.5.0
+
+## 7.4.0
+
+### Minor Changes
+
+- ad149cc: 7.4: feedback and loading.
+
+  - `Button`: the loading spinner waits 150ms before showing and then stays at least 400ms (no flicker); `successLabel` no longer changes the button's width; `type="submit"` inside a pending React 19 `<form action>` shows loading on its own (`useFormStatus`).
+  - **New** `useAsyncAction(fn)` → `{ run, pending, error, reset }`: latest call wins, errors are captured, nothing updates after unmount.
+  - `toast.promise(promise, { loading, success, error })` and `toast.update(id, partial)`; a `loading` tone; tone icons (`icon={false}` hides them); `showProgress` countdown bar that pauses with the timer; a quick flick dismisses even under the distance threshold.
+  - `Skeleton animation="shimmer"` and **new** `SkeletonText` (`lines`), one line-height per line so the swap to real text doesn't shift.
+  - `DataTable`: `loading` (skeleton rows, `aria-busy`) and `emptyState`.
+  - `Avatar`: images fade in once loaded (server-rendered and cached images show at once); `status` (`online` / `away` / `busy` / `offline`) with the label in the accessible name.
+  - `Progress`: `variant="circular"` and `segments` for step-style progress.
+
+### Patch Changes
+
+- @nexub/tokens@7.4.0
+
+## 7.3.0
+
+### Minor Changes
+
+- fe8c22b: 7.3: Motion 2, one motion source.
+
+  - `@nexub/tokens/tailwind.css` sets `--default-transition-duration` / `--default-transition-timing-function` to the effects spring, so a bare `transition` / `transition-colors` uses the spring tokens instead of Tailwind's 150ms ease. The last raw `duration-*` / `ease-*` classes are gone, and a `raw-motion` design-lint rule keeps them out.
+  - The legacy `--duration-*` / `--ease-*` tokens (`tokens/motion.json`) and the Motion `easing` prop are deprecated, removed in 8.0.
+  - `Collapse` animates grid rows (`0fr` → `1fr`) instead of measuring `scrollHeight` in JS; content that grows while open just grows. Same props.
+  - `NavigationMenu`'s viewport resizes between items on the spatial spring instead of snapping.
+  - `Tabs`: `orientation="vertical"` is styled (indicator on the inline-end edge), and the incoming panel crossfades (`@starting-style`).
+  - `startViewTransition` flushes React state inside the transition (`flushSync`), so the snapshot is never stale, and returns a promise that resolves when the transition finishes.
+  - Thick glass overlays fade in without scaling.
+
+### Patch Changes
+
+- Updated dependencies [fe8c22b]
+  - @nexub/tokens@7.3.0
+
+## 7.2.0
+
+### Patch Changes
+
+- @nexub/tokens@7.2.0
+
 ## 7.1.0
 
 ### Patch Changes
