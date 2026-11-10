@@ -17,6 +17,7 @@ import {
 } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Button } from '../Button/Button.js';
 import { IconButton } from '../IconButton/IconButton.js';
@@ -47,13 +48,21 @@ export function FilterBuilder({ fields, value: valueProp, defaultValue, onValueC
     defaultValue: defaultValue ?? emptyFilter(),
     onChange: onValueChange,
   });
+  // Edits apply to the latest value; the (possibly large) tree renders a deferred
+  // copy so typing in a rule's value stays responsive. onValueChange still fires per edit.
+  const latest = React.useRef(value);
+  useIsomorphicLayoutEffect(() => {
+    latest.current = value;
+  });
+  const update = React.useCallback((fn: Updater<FilterGroup>) => setValue(fn(latest.current)), [setValue]);
+  const deferred = React.useDeferredValue(value);
   return (
-    <GroupView
-      group={value}
+    <MemoGroupView
+      group={deferred}
       fields={fields}
       depth={0}
       maxDepth={maxDepth}
-      onChange={setValue}
+      onChange={update}
       className={className}
     />
   );
@@ -61,12 +70,15 @@ export function FilterBuilder({ fields, value: valueProp, defaultValue, onValueC
 
 FilterBuilder.displayName = 'FilterBuilder';
 
+type Updater<T> = (prev: T) => T;
+
 interface GroupViewProps {
   group: FilterGroup;
   fields: FilterField[];
   depth: number;
   maxDepth: number;
-  onChange: (g: FilterGroup) => void;
+  /** Takes an updater so edits made while the rendered tree lags never drop newer ones. */
+  onChange: (fn: Updater<FilterGroup>) => void;
   onRemove?: () => void;
   className?: string;
 }
@@ -74,7 +86,7 @@ interface GroupViewProps {
 function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, className }: GroupViewProps) {
   const t = useNexubMessages();
   const first = fields[0];
-  const setRules = (rules: FilterGroup['rules']) => onChange({ ...group, rules });
+  const setRules = (fn: Updater<FilterGroup['rules']>) => onChange((g) => ({ ...g, rules: fn(g.rules) }));
   const newRule = () => newFilterRule(first);
 
   return (
@@ -92,7 +104,7 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
           size="sm"
           aria-label={t.filterGroup(group.combinator)}
           value={group.combinator}
-          onValueChange={(v) => v && onChange({ ...group, combinator: v as 'and' | 'or' })}
+          onValueChange={(v) => v && onChange((g) => ({ ...g, combinator: v as 'and' | 'or' }))}
         >
           <SegmentedControl.Item value="and">{t.matchAll}</SegmentedControl.Item>
           <SegmentedControl.Item value="or">{t.matchAny}</SegmentedControl.Item>
@@ -104,9 +116,10 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
         )}
       </div>
 
-      {group.rules.map((r, i) => {
-        const replace = (next: FilterRule | FilterGroup) => setRules(group.rules.map((x, j) => (j === i ? next : x)));
-        const remove = () => setRules(group.rules.filter((_, j) => j !== i));
+      {group.rules.map((r) => {
+        const replace = <T extends FilterRule | FilterGroup>(fn: Updater<T>) =>
+          setRules((rules) => rules.map((x) => (x.id === r.id ? fn(x as T) : x)));
+        const remove = () => setRules((rules) => rules.filter((x) => x.id !== r.id));
         return isFilterGroup(r) ? (
           <GroupView key={r.id} group={r} fields={fields} depth={depth + 1} maxDepth={maxDepth} onChange={replace} onRemove={remove} />
         ) : (
@@ -115,7 +128,7 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
       })}
 
       <div className="flex flex-wrap gap-2">
-        <Button variant="ghost" size="sm" onClick={() => setRules([...group.rules, newRule()])} disabled={!first}>
+        <Button variant="ghost" size="sm" onClick={() => setRules((rules) => [...rules, newRule()])} disabled={!first}>
           <Plus size="sm" aria-hidden="true" />
           {t.addFilter}
         </Button>
@@ -123,7 +136,7 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setRules([...group.rules, { id: uid(), combinator: 'and', rules: [newRule()] }])}
+            onClick={() => setRules((rules) => [...rules, { id: uid(), combinator: 'and', rules: [newRule()] }])}
             disabled={!first}
           >
             <Plus size="sm" aria-hidden="true" />
@@ -135,6 +148,8 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
   );
 }
 
+const MemoGroupView = React.memo(GroupView);
+
 function RuleRow({
   rule,
   fields,
@@ -143,10 +158,17 @@ function RuleRow({
 }: {
   rule: FilterRule;
   fields: FilterField[];
-  onChange: (r: FilterRule) => void;
+  onChange: (fn: Updater<FilterRule>) => void;
   onRemove: () => void;
 }) {
   const t = useNexubMessages();
+  // The text shows what was typed right away; `rule` may be a deferred render behind it.
+  const [draft, setDraft] = React.useState(rule.value);
+  const [seen, setSeen] = React.useState(rule.value);
+  if (rule.value !== seen) {
+    setSeen(rule.value);
+    setDraft(rule.value);
+  }
   const field = fields.find((f) => f.id === rule.field) ?? fields[0];
   const ops = filterOperators[field?.type ?? 'text'];
 
@@ -158,7 +180,7 @@ function RuleRow({
           const f = fields.find((x) => x.id === id);
           const nextOps = filterOperators[f?.type ?? 'text'];
           // A new field type resets the operator (if unsupported) and the value.
-          onChange({ ...rule, field: id, operator: nextOps.includes(rule.operator) ? rule.operator : nextOps[0]!, value: '' });
+          onChange((r) => ({ ...r, field: id, operator: nextOps.includes(r.operator) ? r.operator : nextOps[0]!, value: '' }));
         }}
       >
         <Select.Trigger aria-label={t.filterField} className="w-auto min-w-36">
@@ -173,7 +195,7 @@ function RuleRow({
         </Select.Content>
       </Select.Root>
 
-      <Select.Root value={rule.operator} onValueChange={(op) => onChange({ ...rule, operator: op as FilterOperator })}>
+      <Select.Root value={rule.operator} onValueChange={(op) => onChange((r) => ({ ...r, operator: op as FilterOperator }))}>
         <Select.Trigger aria-label={t.filterOperator} className="w-auto min-w-32">
           <Select.Value />
         </Select.Trigger>
@@ -188,7 +210,7 @@ function RuleRow({
 
       {rule.operator !== 'isEmpty' &&
         (field?.type === 'select' ? (
-          <Select.Root value={rule.value || undefined} onValueChange={(v) => onChange({ ...rule, value: v })}>
+          <Select.Root value={rule.value || undefined} onValueChange={(v) => onChange((r) => ({ ...r, value: v }))}>
             <Select.Trigger aria-label={t.filterValue} className="w-auto min-w-36">
               <Select.Value />
             </Select.Trigger>
@@ -204,8 +226,12 @@ function RuleRow({
           <Input
             aria-label={t.filterValue}
             type={field?.type === 'number' ? 'number' : field?.type === 'date' ? 'date' : 'text'}
-            value={rule.value}
-            onChange={(e) => onChange({ ...rule, value: e.target.value })}
+            value={draft}
+            onChange={(e) => {
+              const v = e.target.value;
+              setDraft(v);
+              onChange((r) => ({ ...r, value: v }));
+            }}
             wrapperClassName="w-auto min-w-36 flex-1"
           />
         ))}

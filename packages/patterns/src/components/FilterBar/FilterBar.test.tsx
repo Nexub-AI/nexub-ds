@@ -112,5 +112,33 @@ describe('FilterBar', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Clear all' }));
     expect(onClearAll).toHaveBeenCalled();
   });
+
+  it('shows each keystroke at once while a deferred list filters behind it', async () => {
+    const items = Array.from({ length: 300 }, (_, i) => `Item ${i}`);
+    const List = React.memo(({ q }: { q: string }) => (
+      <ul>
+        {items.filter((x) => x.includes(q)).map((x) => (
+          <li key={x}>{x}</li>
+        ))}
+      </ul>
+    ));
+    function Harness() {
+      const [search, setSearch] = React.useState('');
+      const q = React.useDeferredValue(search);
+      return (
+        <>
+          <FilterBar searchValue={search} onSearch={setSearch} />
+          <List q={q} />
+        </>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByRole('searchbox') as HTMLInputElement;
+    for (const [i, ch] of [...'m 29'].entries()) {
+      await userEvent.type(input, ch);
+      expect(input.value).toBe('m 29'.slice(0, i + 1));
+    }
+    expect(await screen.findAllByRole('listitem')).toHaveLength(11); // Item 29, 290–299
+  });
 });
 

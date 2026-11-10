@@ -31,7 +31,10 @@ const useVirtualRows: DataTableRowWindowHook = (count, getScrollElement) => {
   };
 };
 
-export interface DataTableVirtualProps<TData> extends Omit<DataTableProps<TData>, 'pagination' | 'rowWindow'> {
+export interface DataTableVirtualProps<TData> extends Omit<
+  DataTableProps<TData>,
+  'pagination' | 'rowWindow' | 'page' | 'pageSize' | 'onPageChange' | 'manualPagination' | 'rowCount'
+> {
   /** Height of the scrolling area. Required: rows are windowed within it. */
   maxHeight: number | string;
   /** Row height before measuring, in px. Default 49, or 37 when compact. */
