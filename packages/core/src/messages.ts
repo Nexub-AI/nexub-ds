@@ -230,6 +230,8 @@ export interface NexubMessages {
   clear: string;
   /** Input `showCount`, read near the limit ("72 of 80 characters"). */
   characterCount: (count: number, max: number) => string;
+  /** CommandPalette `recentKey` group heading. */
+  recent: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -427,6 +429,7 @@ export const defaultMessages: NexubMessages = {
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
+  recent: 'Recent',
 };
 
 export type Direction = 'ltr' | 'rtl';
