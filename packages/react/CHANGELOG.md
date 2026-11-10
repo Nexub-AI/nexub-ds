@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 7.8.0
+
+### Patch Changes
+
+- @nexub/icons@7.8.0
+- @nexub/core@7.8.0
+
 ## 7.7.0
 
 ### Minor Changes
