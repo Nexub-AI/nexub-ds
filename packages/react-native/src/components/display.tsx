@@ -125,6 +125,10 @@ export interface BadgeProps extends ViewProps {
   size?: 'sm' | 'md';
   /** A status dot before the label (replaces web StatusPill). */
   dot?: boolean;
+  /** A number to show. Above `max` it reads "99+"; screen readers get the full number. */
+  count?: number;
+  /** @default 99 */
+  max?: number;
   leadingIcon?: React.ComponentType<NativeIconProps>;
 }
 
@@ -135,6 +139,8 @@ export function Badge({
   variant = 'soft',
   size = 'md',
   dot,
+  count,
+  max = 99,
   leadingIcon: Lead,
   style,
   ...rest
@@ -185,6 +191,17 @@ export function Badge({
           {String(children)}
         </Text>
       )}
+      {count != null && (
+        <Text
+          variant={size === 'sm' ? 'label-sm' : 'label-md'}
+          color={fgColor}
+          tabular
+          numberOfLines={1}
+          accessibilityLabel={String(count)}
+        >
+          {count > max ? `${max}+` : String(count)}
+        </Text>
+      )}
     </View>
   );
 }
@@ -202,7 +219,13 @@ export interface AvatarProps extends ViewProps {
   size?: AvatarSize;
   /** Online/status dot. */
   badge?: boolean;
+  /** Presence dot; its name is added to the accessible label ("Ada Lovelace, Away"). */
+  status?: AvatarStatus;
 }
+
+export type AvatarStatus = 'online' | 'away' | 'busy' | 'offline';
+
+const STATUS_ROLE = { online: 'success', away: 'warning', busy: 'error', offline: 'outline' } as const;
 
 const initials = (name = '') =>
   name
@@ -212,15 +235,16 @@ const initials = (name = '') =>
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-export function Avatar({ src, name, size = 'md', badge, style, ...rest }: AvatarProps) {
-  const { roles, tokens } = useTheme();
+export function Avatar({ src, name, size = 'md', badge, status, style, ...rest }: AvatarProps) {
+  const { roles, tokens, messages } = useTheme();
+  const label = [name, status && messages.presence[status]].filter(Boolean).join(', ') || undefined;
   const [broken, setBroken] = React.useState(false);
   const px = tokens.size.avatar[size];
   return (
     <View
-      accessible={!!name}
-      accessibilityRole={name ? 'image' : undefined}
-      accessibilityLabel={name}
+      accessible={!!label}
+      accessibilityRole={label ? 'image' : undefined}
+      accessibilityLabel={label}
       style={[{ width: px, height: px }, style]}
       {...rest}
     >
@@ -252,7 +276,7 @@ export function Avatar({ src, name, size = 'md', badge, style, ...rest }: Avatar
           </Text>
         )}
       </View>
-      {badge && (
+      {(badge || status) && (
         <View
           style={{
             position: 'absolute',
@@ -261,7 +285,7 @@ export function Avatar({ src, name, size = 'md', badge, style, ...rest }: Avatar
             width: px / 4,
             height: px / 4,
             borderRadius: px / 8,
-            backgroundColor: roles.success,
+            backgroundColor: roles[status ? STATUS_ROLE[status] : 'success'],
             borderWidth: 2,
             borderColor: roles.surface,
           }}
