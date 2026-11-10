@@ -348,3 +348,6 @@ export type { TableRootProps } from './components/Table/index.js';
 
 // 7.4 Toast
 export type { PromiseToastOptions } from './components/Toast/index.js';
+// 7.6
+export type { CommandPaletteItemProps, CommandPalettePageProps } from './components/CommandPalette/index.js';
+export type { EmptyStateRootProps } from './components/EmptyState/EmptyState.js';

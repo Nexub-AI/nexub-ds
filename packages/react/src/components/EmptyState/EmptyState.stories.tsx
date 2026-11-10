@@ -66,3 +66,13 @@ export const Presets: StoryObj = {
     </div>
   ),
 };
+
+export const Sizes: StoryObj = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16 }}>
+      <EmptyStatePreset kind="noData" size="sm" animate />
+      <EmptyStatePreset kind="noData" size="md" animate />
+      <EmptyStatePreset kind="noData" size="lg" animate />
+    </div>
+  ),
+};
