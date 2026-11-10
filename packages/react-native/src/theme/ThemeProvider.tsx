@@ -25,11 +25,14 @@ export type Scheme = 'light' | 'dark';
 export type Roles = { -readonly [K in keyof NativeRoles]: string };
 export type RoleName = keyof Roles;
 export type ElevationLevel = 0 | 1 | 2 | 3;
+/** 'signature' (7.9 opt-in, the default in 8.0) or the M3-derived 'classic' look. */
+export type DesignStyle = 'classic' | 'signature';
 
 export interface NexubTheme {
   scheme: Scheme;
   contrast: ContrastLevel;
   product: Product | undefined;
+  style: DesignStyle;
   /** Colour roles, already resolved for scheme, contrast, product and seed. */
   roles: Roles;
   /** Every native token (spacing, shape, size, type, state, motion). */
@@ -53,6 +56,12 @@ export interface NexubNativeProviderProps {
   contrast?: ContrastLevel | 'system';
   /** Product brand: remaps the tertiary role family. */
   product?: Product;
+  /**
+   * 'signature': neutral surfaces, brand-indigo primary, ~10px controls, tighter
+   * display tracking, crisper elevation (web: data-style="signature").
+   * @default 'classic'
+   */
+  style?: DesignStyle;
   /** White-label seed colour (#rgb / #rrggbb); regenerates the `seedTarget` family. */
   seed?: string;
   /** @default 'primary' */
@@ -73,6 +82,19 @@ export interface NexubNativeProviderProps {
 }
 
 const ThemeContext = React.createContext<NexubTheme | null>(null);
+
+// Signature dimensions over the classic tokens. Same keys, different numbers,
+// so it's typed as the classic (as-const) shape.
+const signatureTokens = {
+  ...native,
+  shape: { ...native.shape, ...native.signature.shape },
+  type: Object.fromEntries(
+    Object.entries(native.type).map(([role, v]) => [
+      role,
+      { ...v, ...(native.signature.type as Record<string, { letterSpacing: number }>)[role] },
+    ]),
+  ),
+} as unknown as typeof native;
 
 // AccessibilityInfo reads that fire no change event (contrast): re-read on foreground.
 function useForegroundSetting(
@@ -124,6 +146,7 @@ export function NexubNativeProvider({
   scheme: schemeProp = 'system',
   contrast: contrastProp = 'system',
   product,
+  style = 'classic',
   seed,
   seedTarget = 'primary',
   glass = 'balanced',
@@ -145,8 +168,11 @@ export function NexubNativeProvider({
   const resolvedDir = dir ?? directionOf(locale);
 
   const theme = React.useMemo<NexubTheme>(() => {
+    const sig = style === 'signature' ? native.signature : undefined;
+    // classic → signature → product → seed, so a product or seed still wins.
     const roles: Roles = {
       ...native.color.roles[contrast][scheme],
+      ...sig?.roles[contrast][scheme],
       ...(product ? native.color.products[product][contrast][scheme] : {}),
       ...(seed ? createSeedRoles(seed, { contrast, target: seedTarget })[scheme] : {}),
     };
@@ -154,9 +180,10 @@ export function NexubNativeProvider({
       scheme,
       contrast,
       product,
+      style,
       roles,
-      tokens: native,
-      elevation: (level) => (level ? native.elevation[level][scheme] : undefined),
+      tokens: sig ? signatureTokens : native,
+      elevation: (level) => (level ? (sig ?? native).elevation[level][scheme] : undefined),
       glass: reduceTransparency ? 'off' : glass,
       reducedMotion,
       haptics,
@@ -169,6 +196,7 @@ export function NexubNativeProvider({
     scheme,
     contrast,
     product,
+    style,
     seed,
     seedTarget,
     glass,

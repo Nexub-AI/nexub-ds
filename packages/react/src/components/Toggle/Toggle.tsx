@@ -8,7 +8,7 @@ import { cn } from '../../utils/cn.js';
 export const toggleVariants = cva(
   [
     // Pressable capsule; on = the secondary container (tonal selection).
-    'nx-state-layer nx-press relative inline-flex items-center justify-center gap-2 rounded-shape-control select-none',
+    'nx-state-layer nx-press relative inline-flex items-center justify-center gap-2 rounded-[var(--shape-pill,var(--shape-control))] select-none',
     'text-[var(--color-on-surface-variant)] transition-[background-color,color] duration-effects-fast ease-effects-fast',
     'data-[state=on]:bg-[var(--color-secondary-container)] data-[state=on]:text-[var(--color-on-secondary-container)]',
     'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
