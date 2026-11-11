@@ -308,6 +308,8 @@ export interface DialogProps {
   /** 1–2 Buttons; put the confirming action last. */
   actions: React.ReactNode;
   /** Tapping the scrim or Android back closes it. @default true */
+  dismissible?: boolean;
+  /** @deprecated 8.5: use `dismissible` (the web spelling). Removed in 9.0. */
   dismissable?: boolean;
 }
 
@@ -319,8 +321,10 @@ export function Dialog({
   description,
   children,
   actions,
-  dismissable = true,
+  dismissible,
+  dismissable: legacyDismissable,
 }: DialogProps) {
+  const dismissable = dismissible ?? legacyDismissable ?? true;
   const { roles, tokens } = useTheme();
   return (
     <Modal

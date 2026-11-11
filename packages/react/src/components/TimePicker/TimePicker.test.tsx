@@ -20,7 +20,7 @@ describe('TimePicker', () => {
 describe('DateTimePicker', () => {
   it('changing the time keeps the date', () => {
     const onChange = vi.fn();
-    render(<DateTimePicker aria-label="Starts" value={new Date(2026, 10, 9, 9, 0)} onChange={onChange} timeZone="Asia/Singapore" />);
+    render(<DateTimePicker aria-label="Starts" value={new Date(2026, 10, 9, 9, 0)} onValueChange={onChange} timeZone="Asia/Singapore" />);
     expect(screen.getByRole('group', { name: 'Starts' })).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Time'), { target: { value: '13:45' } });
     expect(onChange).toHaveBeenCalledWith(new Date(2026, 10, 9, 13, 45));
@@ -29,7 +29,7 @@ describe('DateTimePicker', () => {
 
   it('a picked date takes the default time', async () => {
     const onChange = vi.fn();
-    render(<DateTimePicker onChange={onChange} defaultTime="10:30" />);
+    render(<DateTimePicker onValueChange={onChange} defaultTime="10:30" />);
     await userEvent.click(screen.getByRole('button', { name: /Date/ }));
     const day = screen.getAllByRole('button').find((b) => /15/.test(b.textContent ?? ''));
     await userEvent.click(day!);

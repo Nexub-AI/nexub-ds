@@ -62,6 +62,9 @@ export function useCalendarLocale(localeProp?: Locale) {
 
 export interface DatePickerProps {
   value?: Date;
+  /** Called with the new value. */
+  onValueChange?: (date: Date | undefined) => void;
+  /** @deprecated 8.5: use `onValueChange` (the name every other Nexub input, and React Native, uses). Removed in 9.0. */
   onChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
@@ -133,6 +136,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   function DatePicker(
     {
       value,
+      onValueChange,
       onChange,
       placeholder: placeholderProp,
       disabled = false,
@@ -149,6 +153,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     ref,
   ) {
     const [open, setOpen] = React.useState(false);
+    const change = (v: Date | undefined) => { onValueChange?.(v); onChange?.(v); };
     const messages = useNexubMessages();
     const placeholder = placeholderProp ?? messages.pickDate;
     const calendar = useCalendarLocale(localeProp);
@@ -166,11 +171,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         (disabledDates !== undefined && dateMatchModifiers(typed, disabledDates)));
     const commit = () => {
       if (text === null || invalid) return;
-      onChange?.(typed);
+      change(typed);
       setText(null);
     };
     const pick = (date: Date | undefined) => {
-      onChange?.(date);
+      change(date);
       setText(null);
       setOpen(false);
     };

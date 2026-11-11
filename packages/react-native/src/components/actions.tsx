@@ -230,13 +230,16 @@ export function IconButton({
 
 export interface ButtonGroupProps {
   children: React.ReactNode;
-  /** 'stack' puts actions full-width in a column (bottom of forms). @default 'row' */
+  /** 'vertical' puts actions full-width in a column (bottom of forms). @default 'horizontal' */
+  orientation?: 'horizontal' | 'vertical';
+  /** @deprecated 8.5: use `orientation` (the web name): 'row' is 'horizontal', 'stack' is 'vertical'. Removed in 9.0. */
   direction?: 'row' | 'stack';
   style?: StyleProp<ViewStyle>;
 }
 
 /** Related actions together. In a stack, put the primary action first. */
-export function ButtonGroup({ children, direction = 'row', style }: ButtonGroupProps) {
+export function ButtonGroup({ children, orientation, direction: legacyDirection, style }: ButtonGroupProps) {
+  const direction = orientation ? (orientation === 'vertical' ? 'stack' : 'row') : (legacyDirection ?? 'row');
   const { tokens } = useTheme();
   return (
     <View

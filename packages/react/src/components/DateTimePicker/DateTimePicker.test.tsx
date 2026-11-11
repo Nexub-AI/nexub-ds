@@ -14,7 +14,7 @@ const pickDay = async (n: number) => {
 describe('DateTimePicker', () => {
   it('a time typed before any date is used when the date is picked', async () => {
     const onChange = vi.fn();
-    render(<DateTimePicker aria-label="Starts" onChange={onChange} />);
+    render(<DateTimePicker aria-label="Starts" onValueChange={onChange} />);
     fireEvent.change(screen.getByLabelText('Time'), { target: { value: '14:20' } });
     expect(onChange).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Time')).toHaveValue('14:20');
@@ -25,14 +25,14 @@ describe('DateTimePicker', () => {
 
   it('picking a new date keeps the current time', async () => {
     const onChange = vi.fn();
-    render(<DateTimePicker value={new Date(2026, 10, 9, 16, 5)} onChange={onChange} />);
+    render(<DateTimePicker value={new Date(2026, 10, 9, 16, 5)} onValueChange={onChange} />);
     await pickDay(20);
     expect(onChange).toHaveBeenCalledWith(new Date(2026, 10, 20, 16, 5));
   });
 
   it('a cleared time is ignored', () => {
     const onChange = vi.fn();
-    render(<DateTimePicker value={new Date(2026, 10, 9, 9, 0)} onChange={onChange} />);
+    render(<DateTimePicker value={new Date(2026, 10, 9, 9, 0)} onValueChange={onChange} />);
     fireEvent.change(screen.getByLabelText('Time'), { target: { value: '' } });
     expect(onChange).not.toHaveBeenCalled();
   });
