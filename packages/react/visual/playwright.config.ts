@@ -12,7 +12,12 @@ export default defineConfig({
   testDir: '.',
   snapshotPathTemplate: '{testDir}/__screenshots__/{arg}{ext}',
   fullyParallel: true,
-  reporter: process.env.CI ? [['list'], ['html', { open: 'never' }]] : 'list',
+  // One retry in CI only to tell flaky from broken; flake-report.mjs lists every test
+  // that needed it (step summary) so it gets fixed, and applies quarantine.json.
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI
+    ? [['list'], ['html', { open: 'never' }], ['./flake-report.mjs']]
+    : [['list'], ['./flake-report.mjs']],
   use: {
     baseURL: 'http://localhost:6007',
     viewport: { width: 1024, height: 768 },

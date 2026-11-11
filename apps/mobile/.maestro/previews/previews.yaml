@@ -12,6 +12,21 @@ appId: ai.nexub.mobile
     visible: "Components"
     timeout: 60000
 - waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - openLink: nexub://preview/text?ex=0
+      - extendedWaitUntil:
+          visible: "Open"
+          timeout: 10000
+          optional: true
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - waitForAnimationToEnd
 - retry:
     maxRetries: 1
     commands:
