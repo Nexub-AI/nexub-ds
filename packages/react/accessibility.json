@@ -1,5 +1,5 @@
 {
-  "version": "8.6.0",
+  "version": "8.7.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -79,6 +79,17 @@
       "screenReader": []
     },
     {
+      "slug": "app-shell",
+      "name": "App Shell",
+      "package": "@nexub/react",
+      "automated": "pass with documented exception",
+      "exceptions": [
+        "label-content-name-mismatch"
+      ],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "approval-card",
       "name": "Approval Card",
       "package": "@nexub/react",
@@ -88,6 +99,15 @@
       "screenReader": [
         "The outcome is announced in a polite live region and replaces the buttons."
       ]
+    },
+    {
+      "slug": "aspect-ratio",
+      "name": "Aspect Ratio",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
     },
     {
       "slug": "aurora",
@@ -250,6 +270,15 @@
       "screenReader": []
     },
     {
+      "slug": "check-list",
+      "name": "Check List",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "checkbox-card",
       "name": "Checkbox Card",
       "package": "@nexub/react",
@@ -318,6 +347,55 @@
     {
       "slug": "combobox",
       "name": "Combobox",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "command-palette",
+      "name": "Command Palette",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Cmd/Ctrl + shortcut: Toggles the palette when `shortcut` is set.",
+        "Arrow Up / Down: Moves through items (wraps).",
+        "Enter: Runs the highlighted item.",
+        "Backspace: On an empty query, goes back a page.",
+        "Escape: Closes the palette."
+      ],
+      "screenReader": [
+        "Focus moves to the input on open and returns to the previously focused element on close."
+      ]
+    },
+    {
+      "slug": "container",
+      "name": "Container",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "context-menu",
+      "name": "Context Menu",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Shift + F10 / Menu key: Opens the menu from the focused trigger.",
+        "Arrow Up / Down: Moves between items.",
+        "Enter / Space: Activates the item.",
+        "Escape: Closes the menu."
+      ],
+      "screenReader": []
+    },
+    {
+      "slug": "country-badge",
+      "name": "Country Badge",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -413,6 +491,20 @@
       "screenReader": []
     },
     {
+      "slug": "dropdown-menu",
+      "name": "Dropdown Menu",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space / Arrow Down: Opens the menu from the trigger.",
+        "Arrow Up / Down: Moves between items.",
+        "Arrow Right / Left: Opens or closes a submenu.",
+        "Escape: Closes the menu and returns focus to the trigger."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "empty-state",
       "name": "Empty State",
       "package": "@nexub/react",
@@ -458,6 +550,19 @@
       "screenReader": []
     },
     {
+      "slug": "file-upload",
+      "name": "File Upload",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space: Opens the file picker from the focused drop zone."
+      ],
+      "screenReader": [
+        "Rejected files are listed in a live region (`role=\"alert\"`) tied to the input with `aria-describedby`."
+      ]
+    },
+    {
       "slug": "filter-builder",
       "name": "Filter Builder",
       "package": "@nexub/react",
@@ -471,6 +576,15 @@
     {
       "slug": "filter-chip",
       "name": "Filter Chip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "flag",
+      "name": "Flag",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -495,6 +609,17 @@
       "keyboard": [],
       "screenReader": [
         "A real `<label>` tied to the input, so the name never disappears."
+      ]
+    },
+    {
+      "slug": "form-error",
+      "name": "Form Error",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Has `role=\"alert\"`, so it is announced when rendered. Render it only when there is an error."
       ]
     },
     {
@@ -655,6 +780,15 @@
       "screenReader": []
     },
     {
+      "slug": "keyboard-shortcut",
+      "name": "Keyboard Shortcut",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "kpi-tile",
       "name": "KPI Tile",
       "package": "@nexub/react",
@@ -696,6 +830,17 @@
       "screenReader": []
     },
     {
+      "slug": "logo",
+      "name": "Logo",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": [
+        "Read as \"Nexub\", or \"Nexub Command Hub\" with `product`."
+      ]
+    },
+    {
       "slug": "media-card",
       "name": "Media Card",
       "package": "@nexub/react",
@@ -709,6 +854,19 @@
         "With `href`, the link’s name is the title only, not the whole caption.",
         "Most card images repeat the title, so `alt=\"\"` is usually right."
       ]
+    },
+    {
+      "slug": "menubar",
+      "name": "Menubar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow Left / Right: Moves between menus in the bar, and between open menus.",
+        "Enter / Space / Arrow Down: Opens the focused menu.",
+        "Escape: Closes the menu."
+      ],
+      "screenReader": []
     },
     {
       "slug": "message-bubble",
@@ -816,6 +974,19 @@
       ]
     },
     {
+      "slug": "navigation-menu",
+      "name": "Navigation Menu",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves between top-level entries.",
+        "Enter / Space: Opens or closes a panel.",
+        "Escape: Closes the panel and returns focus to its trigger."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "navigation-rail",
       "name": "Navigation Rail",
       "package": "@nexub/react",
@@ -856,6 +1027,15 @@
         "Backspace: Clears the box, or the previous one when empty.",
         "ArrowLeft / ArrowRight: Moves between boxes."
       ],
+      "screenReader": []
+    },
+    {
+      "slug": "page-header",
+      "name": "Page Header",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
       "screenReader": []
     },
     {
@@ -1009,6 +1189,15 @@
       "screenReader": []
     },
     {
+      "slug": "section",
+      "name": "Section",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "segmented-control",
       "name": "Segmented Control",
       "package": "@nexub/react",
@@ -1049,6 +1238,15 @@
     {
       "slug": "sheet",
       "name": "Sheet",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "sidebar",
+      "name": "Sidebar",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -1261,11 +1459,35 @@
       ]
     },
     {
+      "slug": "toolbar",
+      "name": "Toolbar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves into and out of the toolbar (one tab stop).",
+        "Arrow Left / Right: Moves between controls.",
+        "Enter / Space: Activates a button or toggles an item."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "tooltip",
       "name": "Tooltip",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "top-nav",
+      "name": "Top Nav",
+      "package": "@nexub/react",
+      "automated": "pass with documented exception",
+      "exceptions": [
+        "label-content-name-mismatch"
+      ],
       "keyboard": [],
       "screenReader": []
     },
@@ -1286,6 +1508,15 @@
       "screenReader": [
         "The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item."
       ]
+    },
+    {
+      "slug": "visually-hidden",
+      "name": "Visually Hidden",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
     },
     {
       "slug": "activity-feed",

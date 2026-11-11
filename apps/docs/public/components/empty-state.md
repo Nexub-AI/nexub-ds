@@ -35,7 +35,7 @@ export default function Example() {
       <EmptyState.Title>No results found</EmptyState.Title>
       <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary" size="sm">Clear filters</Button>
+        <Button variant="filled" size="sm">Clear filters</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );
@@ -61,7 +61,7 @@ export default function Example() {
       <EmptyState.Title>No documents yet</EmptyState.Title>
       <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary">Upload document</Button>
+        <Button variant="filled">Upload document</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );
@@ -78,7 +78,7 @@ import { Button, EmptyStatePreset } from '@nexub/react';
 export default function Example() {
   return (
     <div className="grid w-full gap-4 sm:grid-cols-2">
-      <EmptyStatePreset kind="noResults" actions={<Button variant="outline" size="sm">Clear filters</Button>} />
+      <EmptyStatePreset kind="noResults" actions={<Button variant="outlined" size="sm">Clear filters</Button>} />
       <EmptyStatePreset kind="serverError" actions={<Button size="sm">Retry</Button>} />
     </div>
   );

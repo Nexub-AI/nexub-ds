@@ -16,8 +16,8 @@ Pricing plan card with feature checklist, badge, and CTA button.
 | `features` | `string[]` |  | List of included features. |
 | `highlighted` | `boolean` | `false` | Applies brand accent styling for recommended plans. |
 | `badge` | `string` |  | Label for the plan badge (e.g. "Most Popular"). |
-| `ctaLabel` | `string` | `'Get started'` | CTA button label. |
-| `onCta` | `() => void` |  | CTA button click handler. |
+| `cta` | `string` | `'Get started'` | CTA button label. |
+| `onSelect` | `() => void` |  | CTA button click handler. |
 
 ## Example: Default
 

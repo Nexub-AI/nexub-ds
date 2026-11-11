@@ -41,7 +41,7 @@ export default function Example() {
               This action cannot be undone. This will permanently delete your account and remove all your data.
             </AlertDialog.Description>
             <div className="flex gap-2 justify-end mt-6">
-              <AlertDialog.Cancel asChild><Button variant="outline">Cancel</Button></AlertDialog.Cancel>
+              <AlertDialog.Cancel asChild><Button variant="outlined">Cancel</Button></AlertDialog.Cancel>
               <AlertDialog.Action asChild><Button variant="destructive">Yes, delete</Button></AlertDialog.Action>
             </div>
           </AlertDialog.Content>
