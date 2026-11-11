@@ -25,6 +25,10 @@ for (const path of pages) {
       await page.evaluate(() => document.fonts.ready);
       // Client components (live previews, measured motion wrappers) settle after load.
       await page.waitForLoadState('networkidle');
+      // A full-page capture resizes the viewport and lays out every off-screen line,
+      // which can reflow the page once (late font fallback). Do that first, untimed,
+      // so the shots compared below are all taken after it.
+      await page.screenshot({ fullPage: true, animations: 'disabled' });
       // Wait until the page height holds for 3 polls: a full-page shot taken mid-settle
       // comes out a different height and fails (seen on /foundations/motion).
       await page.waitForFunction(
@@ -43,6 +47,10 @@ for (const path of pages) {
             }, 150);
           }),
       );
+      // Sticky in-page bars (the motion gallery's controls, ~105px: the size of the
+      // CI height flip) sit wherever the scroll position and the capture-time viewport
+      // put them. Pin them in normal flow: same pixels at scroll 0, no dependence.
+      await page.addStyleTag({ content: 'main .sticky { position: static !important; }' });
       await expect(page).toHaveScreenshot(`docs${path.replaceAll('/', '-')}--${theme}.png`, {
         fullPage: true,
         // Version badge and footer year change every release / year, not with the page.
