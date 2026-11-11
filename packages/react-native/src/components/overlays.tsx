@@ -21,6 +21,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronsUpDown } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
+import { useLatest } from '../hooks/useLatest';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { useHaptics, useTheme } from '../theme/ThemeProvider';
@@ -105,17 +106,16 @@ export function BottomSheet({
   const fling = React.useRef(0);
 
   // Sheet sits at translateY = tallest - height (0 = fully up).
-  const snapTo = React.useCallback(
-    (i: number) => {
-      setIndex(i);
-      translate.value = withSpring(tallest - heights[i]!, { ...spring, velocity: fling.current });
-      fling.current = 0;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tallest, heights.join(), spring],
-  );
+  const snapTo = (i: number) => {
+    setIndex(i);
+    translate.value = withSpring(tallest - heights[i]!, { ...spring, velocity: fling.current });
+    fling.current = 0;
+  };
 
-  React.useEffect(() => {
+  // The open/close and re-fit springs run only on their own trigger (`open`,
+  // the measured `content`), reading the latest layout through refs: a new
+  // `detents` array or onOpenChange on every parent render must not restart them.
+  const toggle = useLatest(() => {
     if (open) {
       setVisible(true);
       setIndex(0);
@@ -135,18 +135,36 @@ export function BottomSheet({
       fling.current = 0;
       scrim.value = withSpring(0, SHEET_EXIT);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  });
+  React.useEffect(() => {
+    toggle.current();
+  }, [open, toggle]);
 
   // Re-fit when 'content' is measured.
-  React.useEffect(() => {
+  const refit = useLatest(() => {
     if (open && content) translate.value = withSpring(tallest - height, spring);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content]);
+  });
+  React.useEffect(() => {
+    refit.current();
+  }, [content, refit]);
 
   // ponytail: PanResponder moves arrive on the JS thread and write the shared
   // value; a UI-thread drag needs react-native-gesture-handler as a peer.
   const start = React.useRef(0);
+  // One responder for the sheet's life (a new one mid-drag drops the gesture);
+  // the release reads the latest detents, index and onOpenChange.
+  const release = useLatest((dy: number, vy: number) => {
+    fling.current = vy * 1000; // PanResponder px/ms → Reanimated px/s
+    const best = sheetRelease(
+      start.current + dy,
+      fling.current,
+      heights.map((h) => tallest - h),
+      dismissable,
+    );
+    if (best < 0) return onOpenChange(false);
+    if (best !== index) play('snap');
+    snapTo(best);
+  });
   const responder = React.useMemo(
     () =>
       PanResponder.create({
@@ -157,21 +175,9 @@ export function BottomSheet({
         onPanResponderMove: (_, g) => {
           translate.value = Math.max(0, start.current + g.dy);
         },
-        onPanResponderRelease: (_, g) => {
-          fling.current = g.vy * 1000; // PanResponder px/ms → Reanimated px/s
-          const best = sheetRelease(
-            start.current + g.dy,
-            fling.current,
-            heights.map((h) => tallest - h),
-            dismissable,
-          );
-          if (best < 0) return onOpenChange(false);
-          if (best !== index) play('snap');
-          snapTo(best);
-        },
+        onPanResponderRelease: (_, g) => release.current(g.dy, g.vy),
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tallest, heights.join(), index, dismissable],
+    [translate, release],
   );
 
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translate.value }] }));
@@ -305,8 +311,10 @@ export interface ActionSheetProps {
  */
 export function ActionSheet({ open, onOpenChange, title, message, actions }: ActionSheetProps) {
   const { roles, messages, scheme } = useTheme();
-  React.useEffect(() => {
-    if (!open || Platform.OS !== 'ios') return;
+  // Shown once per opening: a new `actions` array or onOpenChange on a parent
+  // re-render must not re-present the system sheet. The pick calls the latest.
+  const latestClose = useLatest(onOpenChange);
+  const present = useLatest(() => {
     const enabled = actions.filter((a) => !a.disabled);
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -319,12 +327,14 @@ export function ActionSheet({ open, onOpenChange, title, message, actions }: Act
         userInterfaceStyle: scheme,
       },
       (i) => {
-        onOpenChange(false);
+        latestClose.current(false);
         enabled[i]?.onPress();
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  });
+  React.useEffect(() => {
+    if (open && Platform.OS === 'ios') present.current();
+  }, [open, present]);
   if (Platform.OS === 'ios') return null;
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange} title={title}>

@@ -41,7 +41,7 @@ export function SavedViews({ views, activeId, onSelect, onSave, onUpdate, onDele
     <>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <Button variant="outline" size="sm" className={className}>
+          <Button variant="outlined" size="sm" className={className}>
             <Bookmark size="sm" aria-hidden="true" />
             {active?.name ?? t.views}
             <ChevronDown size="sm" aria-hidden="true" />
@@ -96,7 +96,7 @@ export function SavedViews({ views, activeId, onSelect, onSave, onUpdate, onDele
               <Input aria-label={t.viewName} placeholder={t.viewName} value={name} onChange={(e) => setName(e.target.value)} autoFocus />
               <Dialog.Footer>
                 <Dialog.Close asChild>
-                  <Button type="button" variant="ghost">
+                  <Button type="button" variant="text">
                     {t.cancel}
                   </Button>
                 </Dialog.Close>

@@ -13,7 +13,7 @@ const entry: ComponentEntry = {
     related: ['icon-button', 'button-group', 'link'],
   },
   props: [
-    { name: 'variant', type: "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'hero' | 'subtle' | 'link' | 'destructive' | 'accent'", default: "'primary'", required: false, description: 'Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text.' },
+    { name: 'variant', type: "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'hero' | 'subtle' | 'link' | 'destructive' | 'accent'", default: "'primary'", required: false, description: 'Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Deprecated in 8.4, removed in 9.0: the legacy aliases primary (filled), secondary (tonal), outline (outlined) and ghost (text) still work and warn in development; `npx nexub-migrate --rules button-aliases --write` renames them.' },
     { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", required: false, description: 'Control height and padding.' },
     { name: 'status', type: "'idle' | 'loading' | 'success' | 'error'", default: "'idle'", required: false, description: 'Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds.' },
     { name: 'loading', type: 'boolean', default: 'false', required: false, description: 'Alias for `status="loading"`.' },
@@ -67,7 +67,7 @@ const entry: ComponentEntry = {
   },
   playground: {
     controls: [
-      { kind: 'select', name: 'variant', options: ['primary', 'secondary', 'outline', 'ghost', 'subtle', 'link', 'destructive'], default: 'primary' },
+      { kind: 'select', name: 'variant', options: ['filled', 'tonal', 'outlined', 'text', 'subtle', 'link', 'destructive'], default: 'filled' },
       { kind: 'select', name: 'size', options: ['xs', 'sm', 'md', 'lg', 'xl'], default: 'md' },
       { kind: 'select', name: 'tone', options: ['none', 'neutral', 'info', 'success', 'warning', 'danger'], default: 'none' },
       { kind: 'switch', name: 'loading', default: false },
@@ -79,7 +79,7 @@ const entry: ComponentEntry = {
   },
   matrix: {
     rowsProp: 'variant',
-    rows: ['primary', 'outline', 'ghost', 'subtle', 'link'],
+    rows: ['filled', 'outlined', 'text', 'subtle', 'link'],
     colsProp: 'size',
     cols: ['xs', 'sm', 'md', 'lg', 'xl'],
     childrenDefault: 'Button',

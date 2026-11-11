@@ -60,12 +60,12 @@ function MyAccount({ appHeader = false, navFooter }: { appHeader?: boolean; navF
       description={page.description}
     >
       <SettingsLayout.Section title="Personal details">
-        <SettingsRow label="Name" value="Sam Lee" action={<Button variant="outline" size="sm">Edit</Button>} />
+        <SettingsRow label="Name" value="Sam Lee" action={<Button variant="outlined" size="sm">Edit</Button>} />
         <SettingsRow
           label="Email"
           description="Used to sign in"
           value="sam.lee+a-very-long-address@example.com"
-          action={<Button variant="outline" size="sm">Change</Button>}
+          action={<Button variant="outlined" size="sm">Change</Button>}
         />
       </SettingsLayout.Section>
       <SettingsLayout.Section title="Preferences" description="Applies on every device.">

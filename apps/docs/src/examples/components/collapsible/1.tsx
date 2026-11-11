@@ -8,7 +8,7 @@ export default function Example() {
       <div className="flex items-center gap-2">
         <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
-          <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
+          <Button variant="text" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>

@@ -6,7 +6,7 @@ export default function Example() {
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>
       <Collapsible.Trigger asChild>
-        <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
+        <Button variant="outlined">{open ? 'Hide details' : 'Show details'}</Button>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">

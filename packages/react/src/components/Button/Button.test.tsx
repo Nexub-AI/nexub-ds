@@ -170,4 +170,23 @@ describe('Button', () => {
       expect(html).not.toContain('style="');
     });
   });
+
+  describe('legacy variant aliases (deprecated 8.4, removed 9.0)', () => {
+    it('defaults to filled', () => {
+      render(<Button>Go</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
+    });
+
+    it('still renders an alias with its canonical styles, and warns once per alias', () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const { rerender } = render(<Button variant="ghost">A</Button>);
+      const ghost = screen.getByRole('button').className;
+      rerender(<Button variant="ghost">B</Button>);
+      rerender(<Button variant="text">C</Button>);
+      expect(screen.getByRole('button').className).toBe(ghost);
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn.mock.calls[0]![0]).toMatch(/variant="ghost".*removed in 9\.0.*variant="text"/);
+      warn.mockRestore();
+    });
+  });
 });

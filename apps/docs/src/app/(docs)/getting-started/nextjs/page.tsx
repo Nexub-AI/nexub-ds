@@ -50,7 +50,7 @@ export default function NextjsPage() {
 const sans = Inter({ subsets: ['latin'], variable: '--font-family-sans' });
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-display' });
 
-<html className={\`\${sans.variable} \${display.variable}\`}>`} />
+<html className={\`\${sans.variable} \${display.variable}\`}>…</html>`} />
       </Section>
 
       <Section id="imports" title="Import per component">

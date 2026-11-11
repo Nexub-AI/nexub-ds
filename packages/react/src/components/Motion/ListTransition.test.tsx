@@ -92,6 +92,20 @@ describe('ListTransition', () => {
     }
   });
 
+  it('an unrelated re-render does not restart the exit fallback (8.4 hook deps)', () => {
+    vi.useFakeTimers();
+    try {
+      const { rerender } = render(<List items={['a', 'b']} />);
+      rerender(<List items={['a']} />);
+      act(() => { vi.advanceTimersByTime(200); });
+      rerender(<List items={['a']} />); // new children, same exiting set
+      act(() => { vi.advanceTimersByTime(200); });
+      expect(screen.queryByText('b')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('removes an exiting item on animationend', () => {
     const { rerender } = render(<List items={['a', 'b']} />);
     rerender(<List items={['a']} />);

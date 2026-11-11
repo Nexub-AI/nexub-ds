@@ -97,6 +97,17 @@ describe('reorder', () => {
     expect(order()).toEqual(['Alpha', 'Bravo', 'Charlie']);
   });
 
+  it('Sortable: unmounting mid-drag cancels it and removes the key listener (8.4 hook deps)', () => {
+    mockLayout();
+    const { unmount } = render(<List />);
+    const grip = screen.getByRole('button', { name: 'Move Charlie' });
+    press(grip, 10, 90);
+    drag(grip, 10, 10);
+    const remove = vi.spyOn(window, 'removeEventListener');
+    unmount();
+    expect(remove).toHaveBeenCalledWith('keydown', expect.any(Function), true);
+  });
+
   it('Kanban: pointer drag moves a card into an empty column', () => {
     mockLayout();
     function Board() {
@@ -152,5 +163,8 @@ describe('reorder', () => {
     const cells = screen.getAllByRole('cell').map((c) => c.textContent).filter(Boolean);
     expect(cells).toEqual(['Alpha', 'Charlie', 'Bravo']);
     expect(screen.getByRole('button', { name: 'Move Charlie' })).toHaveFocus();
+    // A second move reads the reordered data, not the first render's (8.4 hook deps).
+    await userEvent.keyboard('{Alt>}{ArrowUp}{/Alt}');
+    expect(screen.getAllByRole('cell').map((c) => c.textContent).filter(Boolean)).toEqual(['Charlie', 'Alpha', 'Bravo']);
   });
 });

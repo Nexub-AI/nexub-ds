@@ -6,14 +6,6 @@ Renders text with a brand gradient fill.
 - Import: `import { TextGradient } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/text-gradient
 
-## Props
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `from` | `string` |  | Starting color of the gradient (CSS color value or token). |
-| `to` | `string` |  | Ending color of the gradient (CSS color value or token). |
-| `direction` | `'to-r' \| 'to-br' \| 'to-b'` |  | Direction of the gradient. |
-
 ## Example: Default
 
 ```tsx

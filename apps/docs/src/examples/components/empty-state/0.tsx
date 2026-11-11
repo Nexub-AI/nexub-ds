@@ -12,7 +12,7 @@ export default function Example() {
       <EmptyState.Title>No results found</EmptyState.Title>
       <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary" size="sm">Clear filters</Button>
+        <Button variant="filled" size="sm">Clear filters</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );

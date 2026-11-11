@@ -72,9 +72,14 @@ jobs:
       - name: AI docs up to date
         run: pnpm ai-docs --check
 
-      # The docs' React Native props tables are generated from source.
+      # The docs' props tables (React Native and web) are generated from source.
       - name: Native props up to date
         run: node apps/docs/scripts/native-props.mjs --check
+      - name: Web props up to date
+        run: node apps/docs/scripts/web-props.mjs --check
+      # Every TSX/TS code sample in the docs typechecks against the built packages (8.4).
+      - name: Docs code samples typecheck
+        run: node apps/docs/scripts/check-samples.mjs
 
       - name: Typecheck all packages
         run: pnpm turbo typecheck

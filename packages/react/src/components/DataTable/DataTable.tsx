@@ -541,6 +541,11 @@ export function DataTable<TData>({
         : pinningIn,
     [withSelectColumn, pinningIn],
   );
+  // rowReorder is a new object every render. Cells call it while rendering, so the ref is
+  // set during render (not in an effect, which would leave them one render stale) and the
+  // columns stay stable.
+  const rowReorderRef = React.useRef(rowReorder);
+  rowReorderRef.current = rowReorder;
   const withRowHandles = React.useCallback(
     (cols: DataTableColumn<TData>[]): DataTableColumn<TData>[] =>
       reorderRows
@@ -550,14 +555,12 @@ export function DataTable<TData>({
               enableSorting: false,
               enableHiding: false,
               header: () => null,
-              cell: ({ row }) => (row.depth === 0 ? rowReorder.handle([0, row.index]) : null),
+              cell: ({ row }) => (row.depth === 0 ? rowReorderRef.current.handle([0, row.index]) : null),
             },
             ...cols,
           ]
         : cols,
-    // rowReorder changes every render; the handle reads fresh data through it.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [reorderRows, data],
+    [reorderRows],
   );
   const allColumns = React.useMemo<DataTableColumn<TData>[]>(
     () =>
@@ -683,7 +686,7 @@ export function DataTable<TData>({
   });
   const visibleColumns = table.getVisibleLeafColumns();
   const viewButton = (
-    <Button variant="outline" size="sm" className="ms-auto">
+    <Button variant="outlined" size="sm" className="ms-auto">
       <SlidersHorizontal size="sm" aria-hidden="true" />
       {messages.view}
     </Button>
@@ -985,7 +988,7 @@ export function DataTable<TData>({
             selectedRows.map((r) => r.original),
             clear,
           )}
-          <Button variant="ghost" size="sm" onClick={clear} aria-label={messages.clearSelection}>
+          <Button variant="text" size="sm" onClick={clear} aria-label={messages.clearSelection}>
             <X size="sm" aria-hidden="true" />
           </Button>
         </div>

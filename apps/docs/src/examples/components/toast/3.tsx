@@ -14,6 +14,6 @@ export default function Example() {
   return hidden ? (
     <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
   ) : (
-    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+    <Button variant="outlined" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }

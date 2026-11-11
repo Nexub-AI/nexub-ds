@@ -46,7 +46,7 @@ import { Button, toast } from '@nexub/react';
 // The docs root layout already renders <Toaster />; a second one doubles every toast.
 export default function Example() {
   return (
-    <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
+    <Button variant="outlined" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
       Show toast
     </Button>
   );
@@ -61,10 +61,10 @@ import { Button, toast } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="outline" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
     </div>
   );
 }
@@ -78,7 +78,7 @@ import { Button, toast } from '@nexub/react';
 export default function Example() {
   return (
     <Button
-      variant="outline"
+      variant="outlined"
       onClick={() =>
         toast.custom('File deleted', {
           description: 'The file was moved to trash.',
@@ -113,7 +113,7 @@ export default function Example() {
   return hidden ? (
     <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
   ) : (
-    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+    <Button variant="outlined" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 ```

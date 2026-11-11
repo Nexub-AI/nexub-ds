@@ -36,7 +36,7 @@ const renderers: Record<string, (p: Bag) => React.ReactElement> = {
     const tone = s(p.tone, 'none');
     return (
       <Button
-        variant={s(p.variant, 'primary') as 'primary'}
+        variant={s(p.variant, 'filled') as 'filled'}
         size={s(p.size, 'md') as 'md'}
         tone={(tone === 'none' ? undefined : tone) as 'neutral' | undefined}
         loading={b(p.loading)}

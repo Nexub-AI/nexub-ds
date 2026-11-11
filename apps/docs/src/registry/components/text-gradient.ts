@@ -11,9 +11,6 @@ const entry: ComponentEntry = {
     addedIn: '0.0.1',
   },
   props: [
-    { name: 'from', type: 'string', required: false, description: 'Starting color of the gradient (CSS color value or token).' },
-    { name: 'to', type: 'string', required: false, description: 'Ending color of the gradient (CSS color value or token).' },
-    { name: 'direction', type: "'to-r' | 'to-br' | 'to-b'", required: false, description: 'Direction of the gradient.' },
   ],
   examples: [
     {
