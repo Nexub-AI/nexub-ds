@@ -29,12 +29,12 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.(visual|nav)\.spec\.ts|perf\.spec\.ts/ },
+    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts/ },
     // Interaction-latency budgets (perf.spec.ts); serial so its tests don't compete for CPU.
     { name: 'perf', testMatch: /perf\.spec\.ts/, fullyParallel: false },
     {
       name: 'docs',
-      testMatch: /docs\.(visual|nav)\.spec\.ts/,
+      testMatch: /docs\.(visual|nav|a11y)\.spec\.ts/,
       use: { baseURL: 'http://localhost:6008', viewport: { width: 1280, height: 800 } },
     },
   ],

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Badge } from '@nexub/react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { CardGrid, DocTable, Guidance, Note, PageIntro, Prose, Section } from '@/components/kit';
-import { componentEntries } from '@/registry/index';
-import { mobileOnly, nativeTwins } from '@/registry/native';
+import { componentEntries, patternEntries } from '@/registry/index';
+import { mobileOnly, nativePatternTwins, nativeTwins } from '@/registry/native';
 import parity from '@/registry/parity.generated.json';
 import { PhoneFrame } from '@/components/platform/PhoneFrame';
 
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const names = (list: string[]) => (list.length ? <span className="font-mono text-body-sm">{list.join(', ')}</span> : '—');
-const titleOf = (slug: string) => componentEntries.find((e) => e.meta.slug === slug)?.meta.title ?? slug;
+const titleOf = (slug: string) => [...componentEntries, ...patternEntries].find((e) => e.meta.slug === slug)?.meta.title ?? slug;
 
 export default function ReactNativePage() {
   return (
@@ -116,7 +116,7 @@ export default function RootLayout() {
           caption="Web and native props per component"
           head={['Component', 'Same name', 'Web only', 'Native only']}
           rows={Object.entries(parity).map(([slug, p]) => [
-            <Link key="w" href={`/components/${slug}#mobile`} className="font-medium text-[var(--color-primary)] no-underline hover:underline">
+            <Link key="w" href={`/${slug in nativePatternTwins ? 'patterns' : 'components'}/${slug}#mobile`} className="font-medium text-[var(--color-primary)] no-underline hover:underline">
               {titleOf(slug)}
             </Link>,
             p.web ? names(p.shared) : 'Compound on web',

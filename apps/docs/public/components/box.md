@@ -10,9 +10,6 @@ Generic container primitive with style token props.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `padding` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Padding applied to all sides using design tokens. |
-| `background` | `string` |  | Background color CSS value or token. |
-| `radius` | `string` |  | Border radius CSS value or token. |
 | `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
 
 ## Example: Default
