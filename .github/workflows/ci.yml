@@ -69,6 +69,9 @@ jobs:
       # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
       - name: Build docs (static export)
         run: pnpm --filter @nexub/docs build
+      # Every same-site link and #fragment in the export resolves (8.8).
+      - name: Docs links
+        run: node apps/docs/scripts/check-links.mjs
 
       # Versioning policy: changesets may only be minor/patch (PUBLISHING.md).
       - name: Release policy

@@ -16,13 +16,13 @@ Slide-in panel from any edge of the screen.
 | `Drawer.Overlay` | `compound` |  | Dimmed backdrop rendered behind the drawer. |
 | `Drawer.Content` | `compound` |  | The drawer panel. Accepts a side prop. |
 | `scrollLock` | `'style' \| 'class'` |  | On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src 'self'). Default `style`. |
-| `side` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
+| `direction` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
 | `Drawer.Header` | `compound` |  | Header section of the drawer panel. Sticky on solid panels (5.1): long content scrolls under it. |
 | `Drawer.Footer` | `compound` |  | Footer section of the drawer panel. Sticky on solid panels (5.1): actions stay in view while content scrolls. |
 | `Drawer.Title` | `compound` |  | Accessible title for the drawer. |
 | `Drawer.Description` | `compound` |  | Supporting description text for the drawer. |
 | `Drawer.Close` | `compound` |  | Element that closes the drawer. |
-| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Drawer.Content — see Foundations → Materials. |
+| `Drawer.Content surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Drawer.Content — see Foundations → Materials. |
 
 ## Example: Default
 
@@ -34,7 +34,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Drawer</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Drawer</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -57,8 +57,8 @@ export default function Example() {
             </div>
             <Drawer.Footer>
               <div className="flex gap-2 justify-end">
-                <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
-                <Button variant="primary">Save changes</Button>
+                <Drawer.Close asChild><Button variant="outlined">Cancel</Button></Drawer.Close>
+                <Button variant="filled">Save changes</Button>
               </div>
             </Drawer.Footer>
           </Drawer.Content>
@@ -79,7 +79,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -89,7 +89,7 @@ export default function Example() {
             </Drawer.Header>
             <div className="p-4 flex gap-3 flex-wrap">
               {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
-                <Button key={s} variant="outline" size="sm">{s}</Button>
+                <Button key={s} variant="outlined" size="sm">{s}</Button>
               ))}
             </div>
           </Drawer.Content>

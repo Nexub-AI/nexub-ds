@@ -42,7 +42,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>
         {visible ? 'Collapse' : 'Expand'}
       </Button>
       <Collapse in={visible}>
