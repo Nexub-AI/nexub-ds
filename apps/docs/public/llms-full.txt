@@ -1659,7 +1659,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Deprecated in 8.4, removed in 9.0: the legacy aliases primary (filled), secondary (tonal), outline (outlined) and ghost (text) still work and warn in development; `npx nexub-migrate --rules button-aliases --write` renames them. |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Deprecated in 8.4, removed in 9.0: the legacy aliases primary (filled), secondary (tonal), outline (outlined) and ghost (text) still work; `npx nexub-migrate --rules button-aliases --write` renames them. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
 | `loading` | `boolean` | `false` | Alias for `status="loading"`. |
