@@ -237,7 +237,7 @@ export const EXAMPLES: Examples = {
   ],
   'button-group': [
     () => (
-      <ButtonGroup direction="stack">
+      <ButtonGroup orientation="vertical">
         <Button size="lg">Confirm transfer</Button>
         <Button size="lg" variant="text">
           Cancel
@@ -442,7 +442,7 @@ export const EXAMPLES: Examples = {
   'date-time-field': [
     function DateExample() {
       const [date, setDate] = useState<Date | null>(null);
-      return <DateTimeField label="Transfer date" value={date} onValueChange={setDate} minimumDate={new Date()} />;
+      return <DateTimeField label="Transfer date" value={date} onValueChange={setDate} minDate={new Date()} />;
     },
   ],
 

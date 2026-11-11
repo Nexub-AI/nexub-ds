@@ -10,7 +10,7 @@ A DatePicker and a TimePicker that edit one Date, with an optional time-zone lab
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value / onChange` | `Date \| undefined` |  | Date and time in the reader’s local time. |
+| `value / onValueChange` | `Date \| undefined` |  | Date and time in the reader’s local time. |
 | `defaultTime` | `string` | `'09:00'` | Time used when the date is picked first. |
 | `minuteStep` | `number` |  | Passed to the TimePicker. |
 | `minDate / maxDate` | `Date` |  | Limits the calendar. |
@@ -29,7 +29,7 @@ export default function Example() {
   const [starts, setStarts] = React.useState<Date | undefined>();
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
-      <DateTimePicker aria-label="Meeting starts" value={starts} onChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
+      <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
       <p className="text-body-sm text-[var(--color-on-surface-muted)]">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
     </div>
   );

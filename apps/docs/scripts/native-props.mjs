@@ -61,13 +61,16 @@ for (const dir of dirs) {
         props: st.members.filter(ts.isPropertySignature).map((m) => {
           const prop = m.name.getText(src);
           const doc = ts.getJSDocCommentsAndTags(m).map((d) => (typeof d.comment === 'string' ? d.comment : '')).join(' ').trim();
-          const def = defaults[prop]?.size === 1 ? [...defaults[prop]][0] : undefined;
+          const tag = (n) => ts.getJSDocTags(m).find((t) => t.tagName.text === n);
+          const tagText = (t) => (typeof t?.comment === 'string' ? t.comment.trim() : '');
+          const def = (defaults[prop]?.size === 1 ? [...defaults[prop]][0] : undefined) ?? (tagText(tag('default')) || undefined);
+          const deprecated = tag('deprecated');
           return {
             name: prop,
             type: m.type ? resolve(m.type.getText(src).replace(/\s+/g, ' ')) : 'unknown',
             required: !m.questionToken,
             ...(def ? { default: def } : {}),
-            description: doc,
+            description: deprecated ? `Deprecated. ${tagText(deprecated)}`.trim() : doc,
           };
         }),
       };

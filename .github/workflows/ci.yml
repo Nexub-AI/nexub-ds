@@ -77,6 +77,9 @@ jobs:
         run: node apps/docs/scripts/native-props.mjs --check
       - name: Web props up to date
         run: node apps/docs/scripts/web-props.mjs --check
+      # Web ↔ native prop parity matrix (8.5): drift on either platform shows up as a diff.
+      - name: Parity matrix up to date
+        run: node apps/docs/scripts/parity.mjs --check
       # Every TSX/TS code sample in the docs typechecks against the built packages (8.4).
       - name: Docs code samples typecheck
         run: node apps/docs/scripts/check-samples.mjs

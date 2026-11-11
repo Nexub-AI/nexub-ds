@@ -10,6 +10,9 @@ import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.
 export interface DateTimePickerProps {
   /** Date and time in the reader's local time. */
   value?: Date;
+  /** Called with the new value. */
+  onValueChange?: (value: Date | undefined) => void;
+  /** @deprecated 8.5: use `onValueChange` (the name every other Nexub input, and React Native, uses). Removed in 9.0. */
   onChange?: (value: Date | undefined) => void;
   /** Time used when a date is picked first. @default '09:00' */
   defaultTime?: string;
@@ -36,6 +39,7 @@ const withTime = (d: Date, time: string) => {
 /** A DatePicker and a TimePicker that edit one `Date` together. */
 export function DateTimePicker({
   value,
+  onValueChange,
   onChange,
   defaultTime = '09:00',
   minuteStep,
@@ -47,6 +51,7 @@ export function DateTimePicker({
   className,
   locale,
 }: DateTimePickerProps) {
+  const change = (v: Date | undefined) => { onValueChange?.(v); onChange?.(v); };
   const messages = useNexubMessages();
   const intlLocale = useIntlLocale();
   // The time typed before a date exists.
@@ -64,7 +69,7 @@ export function DateTimePicker({
         <DatePicker
           aria-label={messages.dateLabel}
           value={value}
-          onChange={(date) => onChange?.(date ? withTime(date, time) : undefined)}
+          onValueChange={(date) => change(date ? withTime(date, time) : undefined)}
           minDate={minDate}
           maxDate={maxDate}
           disabled={disabled}
@@ -79,7 +84,7 @@ export function DateTimePicker({
         disabled={disabled}
         onValueChange={(next) => {
           if (!next) return;
-          if (value) onChange?.(withTime(value, next));
+          if (value) change(withTime(value, next));
           else setPendingTime(next);
         }}
       />

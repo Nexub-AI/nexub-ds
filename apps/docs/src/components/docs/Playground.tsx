@@ -133,7 +133,7 @@ function ControlField({
           min={control.min}
           max={control.max}
           step={control.step ?? 1}
-          onChange={(v) => onChange(v)}
+          onValueChange={(v) => onChange(v)}
         />
       ) : (
         <Input

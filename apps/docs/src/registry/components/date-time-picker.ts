@@ -12,7 +12,7 @@ const entry: ComponentEntry = {
     related: ['date-picker', 'time-picker'],
   },
   props: [
-    { name: 'value / onChange', type: 'Date | undefined', required: false, description: 'Date and time in the reader’s local time.' },
+    { name: 'value / onValueChange', type: 'Date | undefined', required: false, description: 'Date and time in the reader’s local time.' },
     { name: 'defaultTime', type: 'string', default: "'09:00'", required: false, description: 'Time used when the date is picked first.' },
     { name: 'minuteStep', type: 'number', required: false, description: 'Passed to the TimePicker.' },
     { name: 'minDate / maxDate', type: 'Date', required: false, description: 'Limits the calendar.' },
