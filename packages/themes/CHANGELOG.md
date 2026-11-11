@@ -1,5 +1,11 @@
 # @nexub/themes
 
+## 8.8.0
+
+### Patch Changes
+
+- @nexub/tokens@8.8.0
+
 ## 8.7.0
 
 ### Patch Changes
