@@ -85,9 +85,6 @@ export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
  * (`npx nexub-migrate --rules button-aliases --write`).
  */
 export type ButtonLegacyVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
-const LEGACY: Record<ButtonLegacyVariant, string> = { primary: 'filled', secondary: 'tonal', outline: 'outlined', ghost: 'text' };
-const warned = new Set<string>();
-
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
@@ -167,10 +164,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    if (variant && variant in LEGACY && typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production' && !warned.has(variant)) {
-      warned.add(variant);
-      console.warn(`[nexub] <Button variant="${variant}"> is deprecated and removed in 9.0: use variant="${LEGACY[variant as ButtonLegacyVariant]}" (npx nexub-migrate --rules button-aliases --write).`);
-    }
     // Safe outside a form (pending is false). Only explicit type="submit" opts in.
     const formPending = useFormStatus().pending && props.type === 'submit';
     const status: ButtonStatus = statusProp ?? (loading || formPending ? 'loading' : 'idle');

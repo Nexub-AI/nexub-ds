@@ -177,16 +177,11 @@ describe('Button', () => {
       expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
     });
 
-    it('still renders an alias with its canonical styles, and warns once per alias', () => {
-      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    it('still renders an alias with its canonical styles', () => {
       const { rerender } = render(<Button variant="ghost">A</Button>);
       const ghost = screen.getByRole('button').className;
-      rerender(<Button variant="ghost">B</Button>);
-      rerender(<Button variant="text">C</Button>);
+      rerender(<Button variant="text">A</Button>);
       expect(screen.getByRole('button').className).toBe(ghost);
-      expect(warn).toHaveBeenCalledTimes(1);
-      expect(warn.mock.calls[0]![0]).toMatch(/variant="ghost".*removed in 9\.0.*variant="text"/);
-      warn.mockRestore();
     });
   });
 });
