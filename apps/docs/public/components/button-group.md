@@ -21,8 +21,8 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup>
-      <Button variant="primary">Save</Button>
-      <Button variant="outline">Cancel</Button>
+      <Button variant="filled">Save</Button>
+      <Button variant="outlined">Cancel</Button>
     </ButtonGroup>
   );
 }
@@ -36,9 +36,9 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup attached>
-      <Button variant="outline">Left</Button>
-      <Button variant="outline">Center</Button>
-      <Button variant="outline">Right</Button>
+      <Button variant="outlined">Left</Button>
+      <Button variant="outlined">Center</Button>
+      <Button variant="outlined">Right</Button>
     </ButtonGroup>
   );
 }
@@ -52,9 +52,9 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup orientation="vertical">
-      <Button variant="outline">Option A</Button>
-      <Button variant="outline">Option B</Button>
-      <Button variant="outline">Option C</Button>
+      <Button variant="outlined">Option A</Button>
+      <Button variant="outlined">Option B</Button>
+      <Button variant="outlined">Option C</Button>
     </ButtonGroup>
   );
 }

@@ -19,6 +19,7 @@ for (const dir of ['components', 'patterns']) {
 const COMPOUND = new Set([
   'accordion', 'alert-dialog', 'breadcrumb', 'collapsible', 'combobox', 'dialog', 'hover-card', 'popover',
   'radio-group', 'select', 'sheet', 'tabs', 'toast', 'toggle-group', 'tooltip', 'activity-feed',
+  'app-shell', 'context-menu', 'dropdown-menu', 'menubar', 'navigation-menu', 'visually-hidden',
 ]);
 // Inherited from the HTML element an entry renders; fine to document by hand.
 const DOM = new Set(['children', 'className', 'disabled', 'placeholder', 'type', 'href', 'htmlFor', 'required', 'checked', 'defaultChecked', 'value', 'defaultValue', 'onChange', 'name', 'aria-label', 'aria-labelledby', 'id', 'style', 'rows', 'min', 'max']);

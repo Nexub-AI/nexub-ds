@@ -198,6 +198,28 @@ import pricingTableEntry from './patterns/pricing-table';
 import faqEntry from './patterns/faq';
 import ctaBandEntry from './patterns/cta-band';
 import marketingFooterEntry from './patterns/marketing-footer';
+// ─── 8.8: components that had no page ────────────────────────────────────────
+import appShellEntry from './components/app-shell';
+import aspectRatioEntry from './components/aspect-ratio';
+import checkListEntry from './components/check-list';
+import commandPaletteEntry from './components/command-palette';
+import containerEntry from './components/container';
+import contextMenuEntry from './components/context-menu';
+import countryBadgeEntry from './components/country-badge';
+import dropdownMenuEntry from './components/dropdown-menu';
+import fileUploadEntry from './components/file-upload';
+import flagEntry from './components/flag';
+import formErrorEntry from './components/form-error';
+import keyboardShortcutEntry from './components/keyboard-shortcut';
+import logoEntry from './components/logo';
+import menubarEntry from './components/menubar';
+import navigationMenuEntry from './components/navigation-menu';
+import pageHeaderEntry from './components/page-header';
+import sectionEntry from './components/section';
+import sidebarEntry from './components/sidebar';
+import toolbarEntry from './components/toolbar';
+import topNavEntry from './components/top-nav';
+import visuallyHiddenEntry from './components/visually-hidden';
 import { mobileOnly } from './native';
 import { templateEntries } from './templates';
 
@@ -207,6 +229,7 @@ export const componentEntries: ComponentEntry[] = [
   buttonEntry,
   buttonGroupEntry,
   splitButtonEntry,
+  toolbarEntry,
   iconButtonEntry,
   navigationRailEntry,
   amountEntry,
@@ -219,6 +242,7 @@ export const componentEntries: ComponentEntry[] = [
   passwordInputEntry,
   labelEntry,
   helperTextEntry,
+  formErrorEntry,
   formFieldEntry,
   formEntry,
   fieldsetEntry,
@@ -233,6 +257,8 @@ export const componentEntries: ComponentEntry[] = [
   filterChipEntry,
   chipEntry,
   eyebrowChipEntry,
+  countryBadgeEntry,
+  flagEntry,
   // Avatar
   avatarEntry,
   avatarGroupEntry,
@@ -267,6 +293,7 @@ export const componentEntries: ComponentEntry[] = [
   filterBuilderEntry,
   savedViewsEntry,
   otpInputEntry,
+  fileUploadEntry,
   // Overlays
   dialogEntry,
   alertDialogEntry,
@@ -275,7 +302,14 @@ export const componentEntries: ComponentEntry[] = [
   hoverCardEntry,
   drawerEntry,
   sheetEntry,
+  dropdownMenuEntry,
+  contextMenuEntry,
   // Navigation
+  topNavEntry,
+  sidebarEntry,
+  navigationMenuEntry,
+  menubarEntry,
+  commandPaletteEntry,
   breadcrumbEntry,
   treeViewEntry,
   stepperEntry,
@@ -288,6 +322,7 @@ export const componentEntries: ComponentEntry[] = [
   kanbanEntry,
   emptyStateEntry,
   errorStateEntry,
+  checkListEntry,
   numberTickerEntry,
   barChartEntry,
   lineChartEntry,
@@ -321,12 +356,20 @@ export const componentEntries: ComponentEntry[] = [
   sharedElementEntry,
   celebrateEntry,
   auroraEntry,
+  keyboardShortcutEntry,
+  logoEntry,
+  visuallyHiddenEntry,
   // Layout
   stackEntry,
   flexEntry,
   gridEntry,
   resizablePanelsEntry,
   boxEntry,
+  containerEntry,
+  sectionEntry,
+  aspectRatioEntry,
+  pageHeaderEntry,
+  appShellEntry,
   // Motion
   motionFadeEntry,
   motionRevealEntry,

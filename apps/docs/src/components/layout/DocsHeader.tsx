@@ -39,7 +39,7 @@ export function DocsHeader() {
         <Menu size={20} />
       </IconButton>
 
-      <Link href="/" aria-label="Nexub Design System home" className="flex shrink-0 items-center no-underline">
+      <Link href="/" className="flex shrink-0 items-center no-underline">
         <Logo size="sm" product="Design System" />
       </Link>
       <div className="docs-only-desktop shrink-0">
@@ -59,7 +59,6 @@ export function DocsHeader() {
       <button
         type="button"
         onClick={openSearch}
-        aria-label="Search the docs"
         aria-keyshortcuts="Meta+K Control+K"
         className="docs-header-search nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-[var(--color-surface-container-highest)] ps-4 pe-2 text-body-md text-[var(--color-on-surface-variant)]"
       >
@@ -67,7 +66,8 @@ export function DocsHeader() {
           <Search size={14} aria-hidden="true" />
           Search
         </span>
-        <Kbd>⌘K</Kbd>
+        {/* The name is the visible "Search" (WCAG 2.5.3); aria-keyshortcuts carries ⌘K. */}
+        <Kbd aria-hidden="true">⌘K</Kbd>
       </button>
       <IconButton label="Search the docs" className="docs-header-search-icon" onClick={openSearch}>
         <Search size={18} />

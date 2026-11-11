@@ -83,7 +83,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
             <p className="font-semibold text-sm mb-0.5">{title}</p>
           )}
           {children && (
-            <div className="text-sm opacity-90">{children}</div>
+            <div className="text-sm">{children}</div>
           )}
           {action && <div className="mt-2">{action}</div>}
         </div>
