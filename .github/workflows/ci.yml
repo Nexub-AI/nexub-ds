@@ -53,10 +53,17 @@ jobs:
       - name: Build packages
         run: pnpm turbo build --filter='./packages/*'
 
-      # gzip budgets per entry point (size-budgets.json). New entry or intended growth:
-      # `pnpm check:size --update` and commit the reviewed diff.
+      # gzip budgets per entry point (size-budgets.json). They only go down: `pnpm check:size
+      # --update` ratchets them to current size. A raise is a hand edit, explained in the PR
+      # under "## Budget raises" (checked on feature PRs into development).
+      - name: Base budgets
+        if: github.event_name == 'pull_request' && github.base_ref == 'development'
+        run: git fetch --depth=1 origin development && git show FETCH_HEAD:size-budgets.json > "$RUNNER_TEMP/base-budgets.json"
       - name: Bundle size
         run: pnpm check:size
+        env:
+          SIZE_BASE_BUDGETS: ${{ runner.temp }}/base-budgets.json
+          PR_BODY: ${{ github.event.pull_request.body }}
 
       # Docs static export — verifies all pages pre-render without errors.
       # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
