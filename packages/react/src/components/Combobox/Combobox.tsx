@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { Spinner } from '../Spinner/Spinner.js';
 
 /**
  * cmdk calls scrollIntoView on the highlighted item (and its group heading) on
@@ -84,7 +83,7 @@ const List = React.forwardRef<HTMLDivElement, ComboboxListProps>(
           // Not Command.Loading: its role="progressbar" isn't allowed inside a listbox
           // (axe aria-required-children). The listbox's aria-busy carries the state.
           <div className="flex items-center gap-2 px-2.5 py-2 text-body-sm text-[var(--color-on-surface-muted)]">
-            <Spinner size="sm" aria-hidden="true" />
+            <span aria-hidden="true" className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-[var(--color-on-surface-variant)] border-t-transparent" />
             {messages.loading}
           </div>
         )}
