@@ -85,6 +85,8 @@
  *   title 28→44px · h2 22→32px · h3 18→22px · body = body-lg · code 13px */
 .docs-title, .docs-prose h1:not([class]) { font-size: clamp(1.75rem, 1.45rem + 1.4vw, 2.75rem); line-height: 1.15; letter-spacing: -0.015em; font-family: var(--font-family-display); }
 .docs-h2, .docs-prose h2:not([class]) { font-size: clamp(1.375rem, 1.2rem + 0.85vw, 2rem); line-height: 1.25; letter-spacing: -0.01em; font-family: var(--font-family-display); }
+/* Landing hero: fluid display size (the one place a clamp lives outside the type map). */
+.docs-hero-title { font-size: clamp(2.75rem, 7vw, 5rem); line-height: 1.05; letter-spacing: -0.035em; }
 .docs-h3, .docs-prose h3:not([class]) { font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem); line-height: 1.3; font-family: var(--font-family-display); }
 
 /* ── Docs-site layout vars ────────────────────────────────────────────────── */
@@ -209,7 +211,8 @@ body {
 .docs-prose a:not([class]):hover { text-decoration-thickness: 2px; opacity: 1; }
 /* Inline code: a faint tint + hairline. Never the block surface, and never
  * applied inside a block (:not(pre) >). */
-.docs-prose :not(pre) > code:not([class]) {
+.docs-prose :not(pre) > code:not([class]),
+.docs-code-inline {
   font-family: var(--font-family-mono);
   font-size: 0.875em;
   background: color-mix(in srgb, var(--color-on-surface) 5%, transparent);
@@ -437,9 +440,14 @@ html, body {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
+/* On-load reveal moves only: fading from 0 left first paint washed out (8.1). */
+@keyframes docs-reveal-in {
+  from { transform: translateY(8px); }
+  to   { transform: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
-    animation: docs-reveal-up 420ms var(--motion-spring-effects-default-easing, cubic-bezier(0.2, 0, 0, 1)) both;
+    animation: docs-reveal-in 420ms var(--motion-spring-effects-default-easing, cubic-bezier(0.2, 0, 0, 1)) both;
   }
 }
 

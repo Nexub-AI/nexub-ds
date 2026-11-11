@@ -88,7 +88,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       <Heading
         level={1}
         size="display"
-        className="hero-anim-2 relative z-[2] mb-5 max-w-[860px] text-[clamp(2.75rem,7vw,5rem)] leading-[1.05] tracking-[-0.035em]"
+        className="hero-anim-2 relative z-[2] mb-5 max-w-[860px] docs-hero-title"
       >
         Design system for<br />
         {/* Calm override of the brand rainbow: ink to primary. */}
@@ -140,7 +140,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       <div className="landing-stats hero-stats relative z-[2] mt-[4.5rem] flex flex-wrap justify-center gap-12">
         {stats.map((s) => (
           <div key={s.label} className="text-center">
-            <Text size="body" weight="bold" className="text-[2rem] leading-tight text-[var(--color-primary)]">{s.num}</Text>
+            <Text size="body" weight="bold" className="text-headline-lg leading-tight text-[var(--color-primary)]">{s.num}</Text>
             <Text size="caption" tone="muted" weight="medium" className="mt-0.5">{s.label}</Text>
           </div>
         ))}

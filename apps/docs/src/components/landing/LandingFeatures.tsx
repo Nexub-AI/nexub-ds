@@ -54,7 +54,7 @@ export function LandingFeatures() {
               >
                 <Icon size="md" />
               </span>
-              <Text weight="bold" className="text-[2rem] leading-none mb-1 text-[var(--color-primary)]">
+              <Text weight="bold" className="text-headline-lg leading-none mb-1 text-[var(--color-primary)]">
                 {stat}
               </Text>
               <Heading level={3} size="h6" className="mb-2">
