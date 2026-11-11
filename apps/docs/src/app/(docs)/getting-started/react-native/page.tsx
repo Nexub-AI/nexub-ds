@@ -5,6 +5,7 @@ import { CodeBlock } from '@/components/docs/CodeBlock';
 import { CardGrid, DocTable, Guidance, Note, PageIntro, Prose, Section } from '@/components/kit';
 import { componentEntries } from '@/registry/index';
 import { mobileOnly, nativeTwins } from '@/registry/native';
+import parity from '@/registry/parity.generated.json';
 import { PhoneFrame } from '@/components/platform/PhoneFrame';
 
 export const dynamic = 'force-static';
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
   description: '@nexub/react-native for Expo and React Native apps: setup, the web-to-native map, rules.',
 };
 
+const names = (list: string[]) => (list.length ? <span className="font-mono text-body-sm">{list.join(', ')}</span> : '—');
 const titleOf = (slug: string) => componentEntries.find((e) => e.meta.slug === slug)?.meta.title ?? slug;
 
 export default function ReactNativePage() {
@@ -103,6 +105,30 @@ export default function RootLayout() {
             t.differences.length ? `${t.differences.length} (${t.differences.map((d) => d.aspect.toLowerCase()).join(', ')})` : 'None',
           ])}
         />
+      </Section>
+
+      <Section
+        id="prop-parity"
+        title="Prop parity"
+        description="Which props have the same name on both platforms, and which exist on one side only. Generated from the TypeScript types, and CI fails when it goes stale, so a new prop on one platform shows up here in review. Props that differ on purpose are explained under each component's Mobile tab."
+      >
+        <DocTable
+          caption="Web and native props per component"
+          head={['Component', 'Same name', 'Web only', 'Native only']}
+          rows={Object.entries(parity).map(([slug, p]) => [
+            <Link key="w" href={`/components/${slug}#mobile`} className="font-medium text-[var(--color-primary)] no-underline hover:underline">
+              {titleOf(slug)}
+            </Link>,
+            p.web ? names(p.shared) : 'Compound on web',
+            names(p.webOnly),
+            names(p.nativeOnly),
+          ])}
+        />
+        <Note title="Same idea, same name">
+          Where the two platforms named the same thing differently for no reason, 8.5 added the matching name and deprecated the old one
+          (removed in 9.0): web <code>onValueChange</code> on DatePicker, DateTimePicker and NumberInput; native <code>dismissible</code>{' '}
+          on Dialog and BottomSheet, <code>minDate</code>/<code>maxDate</code> on DateTimeField and <code>orientation</code> on ButtonGroup.
+        </Note>
       </Section>
 
       <Section id="mobile-only" title="Mobile only" description="Components that only make sense on a phone.">

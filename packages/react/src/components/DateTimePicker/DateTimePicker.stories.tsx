@@ -12,7 +12,7 @@ type Story = StoryObj<typeof meta>;
 
 function Demo() {
   const [value, setValue] = React.useState<Date | undefined>(new Date(2026, 10, 16, 9, 30));
-  return <DateTimePicker aria-label="Starts" value={value} onChange={setValue} minuteStep={15} timeZone="Asia/Singapore" className="max-w-md" />;
+  return <DateTimePicker aria-label="Starts" value={value} onValueChange={setValue} minuteStep={15} timeZone="Asia/Singapore" className="max-w-md" />;
 }
 
 export const Default: Story = { render: () => <Demo /> };

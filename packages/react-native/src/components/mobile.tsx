@@ -789,7 +789,13 @@ export interface DateTimeFieldProps {
   onValueChange: (value: Date) => void;
   /** @default 'date' */
   mode?: 'date' | 'time';
+  /** Earliest date the picker allows. */
+  minDate?: Date;
+  /** Latest date the picker allows. */
+  maxDate?: Date;
+  /** @deprecated 8.5: use `minDate` (the web name). Removed in 9.0. */
   minimumDate?: Date;
+  /** @deprecated 8.5: use `maxDate` (the web name). Removed in 9.0. */
   maximumDate?: Date;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
@@ -804,11 +810,15 @@ export function DateTimeField({
   value,
   onValueChange,
   mode = 'date',
-  minimumDate,
-  maximumDate,
+  minDate,
+  maxDate,
+  minimumDate: legacyMin,
+  maximumDate: legacyMax,
   placeholder,
   style,
 }: DateTimeFieldProps) {
+  const minimumDate = minDate ?? legacyMin;
+  const maximumDate = maxDate ?? legacyMax;
   const theme = useTheme();
   const { roles, tokens, messages, locale } = theme;
   const [open, setOpen] = React.useState(false);

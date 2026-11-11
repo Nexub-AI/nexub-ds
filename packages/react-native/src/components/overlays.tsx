@@ -63,6 +63,8 @@ export interface BottomSheetProps {
   title?: string;
   children: React.ReactNode;
   /** Drag down, tap the scrim or Android back closes it. @default true */
+  dismissible?: boolean;
+  /** @deprecated 8.5: use `dismissible` (the web spelling). Removed in 9.0. */
   dismissable?: boolean;
   /** Let the content scroll (long lists). @default false */
   scroll?: boolean;
@@ -79,9 +81,11 @@ export function BottomSheet({
   detents = ['content'],
   title,
   children,
-  dismissable = true,
+  dismissible,
+  dismissable: legacyDismissable,
   scroll,
 }: BottomSheetProps) {
+  const dismissable = dismissible ?? legacyDismissable ?? true;
   const theme = useTheme();
   const { roles, tokens, messages } = theme;
   const play = useHaptics();

@@ -2934,7 +2934,7 @@ Calendar date picker with text input.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `value` | `Date \| undefined` |  | Controlled selected date value. |
-| `onChange` | `(date: Date \| undefined) => void` |  | Callback invoked when the selected date changes. |
+| `onValueChange` | `(date: Date \| undefined) => void` |  | Called with the picked date. `onChange` is a deprecated alias (8.5), removed in 9.0. |
 | `locale` | `Locale (date-fns)` |  | Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL. |
 | `placeholder` | `string` | `'Pick a date'` | Placeholder text displayed in the input when no date is selected. |
 | `disabled` | `boolean` | `false` | Disables the date picker input and calendar. |
@@ -2959,7 +2959,7 @@ export default function Example() {
 import { DatePicker } from '@nexub/react';
 
 export default function Example() {
-  return <DatePicker value={new Date('2026-01-15')} onChange={() => {}} />;
+  return <DatePicker value={new Date('2026-01-15')} onValueChange={() => {}} />;
 }
 ```
 
@@ -3073,7 +3073,7 @@ A DatePicker and a TimePicker that edit one Date, with an optional time-zone lab
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value / onChange` | `Date \| undefined` |  | Date and time in the reader’s local time. |
+| `value / onValueChange` | `Date \| undefined` |  | Date and time in the reader’s local time. |
 | `defaultTime` | `string` | `'09:00'` | Time used when the date is picked first. |
 | `minuteStep` | `number` |  | Passed to the TimePicker. |
 | `minDate / maxDate` | `Date` |  | Limits the calendar. |
@@ -3092,7 +3092,7 @@ export default function Example() {
   const [starts, setStarts] = React.useState<Date | undefined>();
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
-      <DateTimePicker aria-label="Meeting starts" value={starts} onChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
+      <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
       <p className="text-body-sm text-[var(--color-on-surface-muted)]">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
     </div>
   );
