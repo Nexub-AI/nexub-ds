@@ -1,0 +1,12 @@
+name: Docs feedback
+description: A docs page is wrong, unclear, out of date or missing.
+labels: [docs, triage]
+body:
+  - type: input
+    id: page
+    attributes: { label: Page URL }
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes: { label: What's wrong or missing }
+    validations: { required: true }

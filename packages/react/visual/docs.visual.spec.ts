@@ -52,3 +52,35 @@ for (const path of pages) {
     });
   }
 }
+
+// 8.1 type map guard: one computed size per heading level, and every code block
+// at the code size, on a spread of pages in both themes (D1–D3 regressions).
+const TYPE_PAGES = [
+  '/getting-started/nextjs',
+  '/getting-started/ai-tools',
+  '/components/button',
+  '/foundations/colors',
+  '/foundations/materials',
+  '/foundations/typography',
+];
+for (const path of TYPE_PAGES) {
+  for (const theme of ['light', 'dark'] as const) {
+    test(`type map ${path} ${theme}`, async ({ page }) => {
+      await page.addInitScript((t) => localStorage.setItem('nexub-theme', t), theme);
+      await page.emulateMedia({ colorScheme: theme });
+      await page.goto(path);
+      await page.evaluate(() => document.fonts.ready);
+      const sizes = await page.evaluate(() => {
+        const of = (sel: string) => [...new Set([...document.querySelectorAll(sel)].map((el) => getComputedStyle(el).fontSize))];
+        return {
+          h2: of('main .docs-h2, main .docs-prose h2:not([class])'),
+          h3: of('main .docs-h3, main .docs-prose h3:not([class])'),
+          code: of('main .docs-code pre'),
+        };
+      });
+      expect(sizes.h2.length, `h2 sizes ${sizes.h2}`).toBeLessThanOrEqual(1);
+      expect(sizes.h3.length, `h3 sizes ${sizes.h3}`).toBeLessThanOrEqual(1);
+      expect(sizes.code.every((s) => s === '13px'), `code sizes ${sizes.code}`).toBe(true);
+    });
+  }
+}

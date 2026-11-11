@@ -1,4 +1,22 @@
-# Contributing to Nexub Design System
+# How to give feedback
+
+Nexub is open source but not open contribution. The code is MIT and public: read it, use it, fork it. Only maintainers write it, which keeps the design coherent, keeps outside code out of CI, and keeps maintainer time on the library.
+
+**How you are heard:**
+
+- **Bug, glitch, feature request, docs or accessibility problem:** open an [issue](https://github.com/Nexub-AI/nexub-ds/issues/new/choose) with the matching form.
+- **Questions and ideas:** [GitHub Discussions](https://github.com/Nexub-AI/nexub-ds/discussions).
+- **Something wrong on a docs page:** the Feedback button on that page.
+
+Ideas with real demand become an RFC that a maintainer writes and builds ([GOVERNANCE.md](./GOVERNANCE.md#proposing-a-change)).
+
+**Pull requests from outside the maintainer team are closed automatically** with a pointer to the issue forms. Please don't take it personally; open an issue instead and we'll build it.
+
+**Glitches** (visual or interaction defects: flicker, layout shift, focus lost, wrong state) get the `glitch` label and are triaged within 14 days.
+
+---
+
+# For maintainers
 
 New components, new packages, breaking changes and new token categories need an RFC first. See [GOVERNANCE.md](./GOVERNANCE.md) for the RFC template, who decides, the component status lifecycle (alpha → beta → stable → deprecated) and the deprecation policy.
 
