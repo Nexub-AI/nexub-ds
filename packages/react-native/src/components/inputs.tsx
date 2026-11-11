@@ -109,7 +109,7 @@ export function TextField({
   const body = tokens.type['body-lg'];
   const border = error ? roles.error : focused ? roles.primary : roles.outline;
   return (
-    <View style={[{ gap: 6, opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       <Text
         variant="label-lg"
         color={error ? 'error' : 'on-surface-variant'}
@@ -122,8 +122,8 @@ export function TextField({
           minHeight: controlHeight(theme, size),
           flexDirection: 'row',
           alignItems: multiline ? 'flex-start' : 'center',
-          gap: 8,
-          paddingHorizontal: 14,
+          gap: tokens.spacing[2],
+          paddingHorizontal: tokens.spacing['3-5'],
           borderRadius: tokens.shape.field,
           borderWidth: focused || error ? 2 : 1,
           borderColor: border,
@@ -244,9 +244,9 @@ export function SearchField({
           height: controlHeight(theme, 'md'),
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
-          paddingStart: 14,
-          paddingEnd: 4,
+          gap: tokens.spacing[2],
+          paddingStart: tokens.spacing['3-5'],
+          paddingEnd: tokens.spacing[1],
           borderRadius: tokens.shape.control,
           backgroundColor: roles['surface-container-high'],
         },
@@ -463,10 +463,10 @@ export function Checkbox({
       style={[
         {
           flexDirection: 'row',
-          gap: 12,
+          gap: tokens.spacing[3],
           alignItems: 'flex-start',
           minHeight: 44,
-          paddingVertical: 10,
+          paddingVertical: tokens.spacing['2-5'],
           opacity: disabled ? disabledOpacity(theme) : 1,
         },
         style,
@@ -487,7 +487,7 @@ export function Checkbox({
       >
         {on && <Check size={16} strokeWidth={3} color={roles['on-primary']} />}
       </View>
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, gap: tokens.spacing['0-5'] }}>
         <Text variant="body-md">{label}</Text>
         {description && (
           <Text variant="body-sm" color="on-surface-variant">
@@ -917,12 +917,12 @@ export function Chip({
         stateLayer={fg}
         style={{
           height,
-          paddingStart: 12,
+          paddingStart: tokens.spacing[3],
           paddingEnd: onRemove ? 32 : 12,
           borderRadius: tokens.shape.control,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 6,
+          gap: tokens.spacing['1-5'],
           borderWidth: selected ? 0 : 1,
           borderColor: roles['outline-variant'],
           backgroundColor: selected ? roles['secondary-container'] : 'transparent',

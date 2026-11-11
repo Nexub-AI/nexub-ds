@@ -131,7 +131,7 @@ const Head = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLT
     <th
       ref={ref}
       className={cn(
-        'h-10 px-4 text-start align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'h-10 px-4 text-start align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}
@@ -145,7 +145,7 @@ const Cell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLT
     <td
       ref={ref}
       className={cn(
-        'p-4 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'p-4 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}
