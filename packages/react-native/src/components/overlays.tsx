@@ -462,7 +462,7 @@ export function Select<T extends string>({
   });
   const current = options.find((o) => o.value === v);
   return (
-    <View style={[{ gap: 6 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
       <Text
         variant="label-lg"
         color={error ? 'error' : 'on-surface-variant'}
@@ -478,7 +478,7 @@ export function Select<T extends string>({
         pressScale={false}
         style={{
           minHeight: tokens.size.control.lg,
-          paddingHorizontal: 14,
+          paddingHorizontal: tokens.spacing['3-5'],
           flexDirection: 'row',
           alignItems: 'center',
           borderRadius: tokens.shape.field,

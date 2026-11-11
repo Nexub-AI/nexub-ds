@@ -69,7 +69,7 @@ const Action = React.forwardRef<HTMLButtonElement, RadixToast.ToastActionProps>(
     <RadixToast.Action
       ref={ref}
       className={cn(
-        'nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]',
+        'nx-state-layer relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]',
         className,
       )}
       {...props}

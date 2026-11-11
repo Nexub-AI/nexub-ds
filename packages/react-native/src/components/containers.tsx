@@ -139,7 +139,7 @@ export function ListItem({
         <Check size="md" color={roles.primary} />
       ) : null
     ) : variant === 'navigation' ? (
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[1] }}>
         {value && (
           <Text variant="body-md" color="on-surface-variant" tabular numberOfLines={1}>
             {value}
@@ -173,7 +173,7 @@ export function ListItem({
       ]}
     >
       {leading}
-      <View style={{ flex: 1, gap: 2, alignItems: variant === 'button' ? 'center' : 'flex-start' }}>
+      <View style={{ flex: 1, gap: tokens.spacing['0-5'], alignItems: variant === 'button' ? 'center' : 'flex-start' }}>
         <Text
           variant="body-lg"
           color={variant === 'button' ? (destructive ? 'error' : 'primary') : 'on-surface'}

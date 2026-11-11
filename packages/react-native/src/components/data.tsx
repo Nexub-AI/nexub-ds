@@ -69,7 +69,7 @@ export function MultiSelect<T extends string>({
   const shown = q ? options.filter((o) => o.label.toLowerCase().includes(q)) : options;
 
   return (
-    <View style={[{ gap: 6 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
       <Text variant="label-lg" color={error ? 'error' : 'on-surface-variant'} importantForAccessibility="no">
         {label}
       </Text>
@@ -81,7 +81,7 @@ export function MultiSelect<T extends string>({
         pressScale={false}
         style={{
           minHeight: tokens.size.control.lg,
-          paddingHorizontal: 14,
+          paddingHorizontal: tokens.spacing['3-5'],
           flexDirection: 'row',
           alignItems: 'center',
           borderRadius: tokens.shape.field,
@@ -111,7 +111,7 @@ export function MultiSelect<T extends string>({
         detents={options.length > 6 ? [0.6, 0.92] : ['content']}
         scroll={options.length > 6}
       >
-        {search && <SearchField value={query} onChangeText={setQuery} style={{ marginBottom: 8 }} />}
+        {search && <SearchField value={query} onChangeText={setQuery} style={{ marginBottom: tokens.spacing[2] }} />}
         <ListSection>
           {shown.map((o) => (
             <ListItem
@@ -125,7 +125,7 @@ export function MultiSelect<T extends string>({
           ))}
         </ListSection>
         {shown.length === 0 && (
-          <Text variant="body-md" color="on-surface-muted" style={{ textAlign: 'center', paddingVertical: 24 }}>
+          <Text variant="body-md" color="on-surface-muted" style={{ textAlign: 'center', paddingVertical: tokens.spacing[6] }}>
             {messages.noResults}
           </Text>
         )}
@@ -212,7 +212,7 @@ export function DataList<T>({
   return (
     <View style={[{ flex: 1 }, style]}>
       {(sorts?.length || (selectable && selected.length > 0)) && (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8, minHeight: tokens.size.control.lg }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[2], paddingVertical: tokens.spacing[2], minHeight: tokens.size.control.lg }}>
           {selectable && selected.length > 0 ? (
             <>
               <Text variant="label-lg" accessibilityLiveRegion="polite" style={{ flex: 1 }}>
@@ -285,7 +285,7 @@ export function DataList<T>({
             ]}
             value={sort?.desc ? 'desc' : 'asc'}
             onValueChange={(d) => sort && setSort({ ...sort, desc: d === 'desc' })}
-            style={{ marginTop: 12 }}
+            style={{ marginTop: tokens.spacing[3] }}
           />
         </BottomSheet>
       )}
@@ -381,7 +381,7 @@ export function FilterSheet({ open, onOpenChange, fields, value, onValueChange, 
   const setRules = (rules: FilterGroup['rules']) => onValueChange({ ...value, rules });
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange} title={title} detents={[0.7, 0.95]} scroll>
-      <View style={{ gap: 12 }}>
+      <View style={{ gap: tokens.spacing[3] }}>
         <SegmentedControl
           label={messages.filterGroup(value.combinator)}
           options={[
@@ -400,8 +400,8 @@ export function FilterSheet({ open, onOpenChange, fields, value, onValueChange, 
             <View
               key={r.id}
               style={{
-                gap: 8,
-                padding: 12,
+                gap: tokens.spacing[2],
+                padding: tokens.spacing[3],
                 borderRadius: tokens.shape.container,
                 borderWidth: 1,
                 borderColor: roles['outline-variant'],

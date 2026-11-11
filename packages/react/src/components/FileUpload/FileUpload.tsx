@@ -173,7 +173,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         className={cn(
           // Hover/press = the state layer.
           'nx-state-layer rounded-shape-container border-2 border-dashed text-center text-[var(--color-on-surface)] transition-colors',
-          'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-[3px] has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-[var(--color-primary)]',
+          'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-[var(--color-primary)]',
           isDragging
             ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
             : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
