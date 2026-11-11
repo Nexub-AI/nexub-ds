@@ -1,6 +1,6 @@
 {
   "name": "@nexub/marketing",
-  "version": "8.5.0",
+  "version": "8.6.0",
   "description": "Marketing sections for the Nexub Design System: hero, stats, testimonials, products, pricing, FAQ, CTA, nav and footer, built on @nexub/react in marketing mode. Server components by default.",
   "type": "module",
   "license": "MIT",
