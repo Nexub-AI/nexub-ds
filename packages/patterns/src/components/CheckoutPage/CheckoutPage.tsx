@@ -199,7 +199,7 @@ export const CheckoutPage = React.forwardRef<HTMLElement, CheckoutPageProps>(fun
                   {confirmLabel}
                 </Button>
                 {confirmHint && <p className="text-center text-body-sm text-[var(--color-on-surface-muted)]">{confirmHint}</p>}
-                <Button variant="ghost" size="lg" fullWidth disabled={busy} onClick={() => setStep('amount')}>
+                <Button variant="text" size="lg" fullWidth disabled={busy} onClick={() => setStep('amount')}>
                   {m.edit}
                 </Button>
               </div>

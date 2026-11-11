@@ -42,7 +42,7 @@ export default function Example() {
         viewOptions
         bulkActions={(rows, clear) => (
           <>
-            <Button size="sm" variant="outline" onClick={clear}>
+            <Button size="sm" variant="outlined" onClick={clear}>
               Send reminders ({rows.length})
             </Button>
             <Button size="sm" variant="destructive" onClick={clear}>

@@ -6,7 +6,7 @@ export default function Example() {
       {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
         <Popover.Root key={s}>
           <Popover.Trigger asChild>
-            <Button variant="ghost" size="sm">{s}</Button>
+            <Button variant="text" size="sm">{s}</Button>
           </Popover.Trigger>
           <Popover.Content side={s}>
             <Text size="body-sm">Opens {s}</Text>

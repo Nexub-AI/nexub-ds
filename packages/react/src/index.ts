@@ -35,7 +35,7 @@ export type { NexubProviderProps, NexubMessages, Direction as TextDirection } fr
 
 // Components — Form & Input
 export { Button, buttonVariants } from './components/Button/index.js';
-export type { ButtonProps, ButtonStatus, ToneValue } from './components/Button/index.js';
+export type { ButtonProps, ButtonStatus, ButtonLegacyVariant, ToneValue } from './components/Button/index.js';
 
 export { ButtonGroup } from './components/ButtonGroup/index.js';
 export type { ButtonGroupProps } from './components/ButtonGroup/index.js';

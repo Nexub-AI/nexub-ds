@@ -64,11 +64,14 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
   const sign = dir === 'rtl' ? 1 : -1; // open = content moves toward the start edge
   const x = useSharedValue(0);
   const open = React.useRef(false);
-  const settle = (to: boolean) => {
-    if (to !== open.current) play('snap');
-    open.current = to;
-    x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
-  };
+  const settle = React.useCallback(
+    (to: boolean) => {
+      if (to !== open.current) play('snap');
+      open.current = to;
+      x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
+    },
+    [play, sign, width, x],
+  );
   const responder = React.useMemo(
     () =>
       PanResponder.create({
@@ -86,8 +89,7 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
           settle(Math.abs((open.current ? sign * width : 0) + g.dx) > width / 2),
         onPanResponderTerminate: () => settle(open.current),
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [width, sign],
+    [width, sign, x, settle],
   );
   const slide = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));
   const bg: Record<NonNullable<SwipeAction['tone']>, [RoleName, RoleName]> = {

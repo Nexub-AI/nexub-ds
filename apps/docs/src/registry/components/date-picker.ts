@@ -18,10 +18,8 @@ const entry: ComponentEntry = {
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the date picker input and calendar.' },
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },
     { name: 'maxDate', type: 'Date', required: false, description: 'Latest selectable date. Dates after this are greyed out.' },
-    { name: 'format', type: 'string', default: "'dd/MM/yyyy'", required: false, description: 'Date format string for the text input display.' },
     { name: 'aria-label', type: 'string', required: false, description: 'Field name for screen readers; the selected value is appended.' },
     { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
-    { name: 'error', type: 'string', required: false, description: 'Error message displayed below the input.' },
   ],
   examples: [
     {

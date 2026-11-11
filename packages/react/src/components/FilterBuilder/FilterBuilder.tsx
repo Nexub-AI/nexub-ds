@@ -128,13 +128,13 @@ function GroupView({ group, fields, depth, maxDepth, onChange, onRemove, classNa
       })}
 
       <div className="flex flex-wrap gap-2">
-        <Button variant="ghost" size="sm" onClick={() => setRules((rules) => [...rules, newRule()])} disabled={!first}>
+        <Button variant="text" size="sm" onClick={() => setRules((rules) => [...rules, newRule()])} disabled={!first}>
           <Plus size="sm" aria-hidden="true" />
           {t.addFilter}
         </Button>
         {depth < maxDepth && (
           <Button
-            variant="ghost"
+            variant="text"
             size="sm"
             onClick={() => setRules((rules) => [...rules, { id: uid(), combinator: 'and', rules: [newRule()] }])}
             disabled={!first}

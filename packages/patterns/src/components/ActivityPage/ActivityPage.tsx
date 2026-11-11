@@ -111,7 +111,7 @@ export const ActivityPage = React.forwardRef<HTMLElement, ActivityPageProps>(fun
           <>
             {actions}
             {onRefresh && (
-              <Button variant="outline" size="sm" onClick={onRefresh} loading={refreshing}>
+              <Button variant="outlined" size="sm" onClick={onRefresh} loading={refreshing}>
                 {m.refresh}
               </Button>
             )}
@@ -141,7 +141,7 @@ export const ActivityPage = React.forwardRef<HTMLElement, ActivityPageProps>(fun
             </section>
           ))}
           {onLoadMore && hasMore && (
-            <Button variant="secondary" className="self-center" onClick={onLoadMore} loading={loadingMore}>
+            <Button variant="tonal" className="self-center" onClick={onLoadMore} loading={loadingMore}>
               {m.loadMore}
             </Button>
           )}

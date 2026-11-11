@@ -312,10 +312,15 @@ export function MoneyInput({
     amount == null ? '' : formatForEditing(amount, currency, loc),
   );
   React.useEffect(() => {
-    // Follow outside changes without fighting the user's typing.
-    if (amount !== parseMoney(text, currency, loc))
-      setText(amount == null ? '' : formatForEditing(amount, currency, loc));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Follow outside changes without fighting the user's typing: runs when the
+    // amount changes, not on every keystroke (text is read via the updater).
+    setText((t) =>
+      amount === parseMoney(t, currency, loc)
+        ? t
+        : amount == null
+          ? ''
+          : formatForEditing(amount, currency, loc),
+    );
   }, [amount, currency, loc]);
   return (
     <TextField
@@ -791,27 +796,24 @@ export function Slider({
   const { roles } = theme;
   const [v, setV] = useControllableState({ value, defaultValue, onChange: onValueChange });
   const width = React.useRef(1);
-  const snap = (x: number) => {
-    const raw = min + Math.min(1, Math.max(0, x / width.current)) * (max - min);
-    return Math.min(max, Math.max(min, Math.round(raw / step) * step));
-  };
   const current = React.useRef(v);
   current.current = v;
-  const responder = React.useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => !disabled,
-        onMoveShouldSetPanResponder: () => !disabled,
-        onPanResponderTerminationRequest: () => false,
-        onPanResponderGrant: (e) => setV(snap(e.nativeEvent.locationX)),
-        onPanResponderMove: (e) => {
-          const next = snap(e.nativeEvent.locationX);
-          if (next !== current.current) setV(next);
-        },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [disabled, min, max, step],
-  );
+  const responder = React.useMemo(() => {
+    const snap = (x: number) => {
+      const raw = min + Math.min(1, Math.max(0, x / width.current)) * (max - min);
+      return Math.min(max, Math.max(min, Math.round(raw / step) * step));
+    };
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => !disabled,
+      onMoveShouldSetPanResponder: () => !disabled,
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: (e) => setV(snap(e.nativeEvent.locationX)),
+      onPanResponderMove: (e) => {
+        const next = snap(e.nativeEvent.locationX);
+        if (next !== current.current) setV(next);
+      },
+    });
+  }, [disabled, min, max, step, setV]);
   const pct = ((v - min) / (max - min)) * 100;
   return (
     <View

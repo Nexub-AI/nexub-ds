@@ -170,4 +170,18 @@ describe('Button', () => {
       expect(html).not.toContain('style="');
     });
   });
+
+  describe('legacy variant aliases (deprecated 8.4, removed 9.0)', () => {
+    it('defaults to filled', () => {
+      render(<Button>Go</Button>);
+      expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
+    });
+
+    it('still renders an alias with its canonical styles', () => {
+      const { rerender } = render(<Button variant="ghost">A</Button>);
+      const ghost = screen.getByRole('button').className;
+      rerender(<Button variant="text">A</Button>);
+      expect(screen.getByRole('button').className).toBe(ghost);
+    });
+  });
 });

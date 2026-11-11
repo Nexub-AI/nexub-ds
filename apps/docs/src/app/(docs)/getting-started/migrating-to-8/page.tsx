@@ -66,7 +66,7 @@ export default function MigratingTo8Page() {
       />
       <CodeBlock
         lang="tsx"
-        code={`<html data-style="signature">  {/* "classic" keeps the 7.x look */}
+        code={`<html data-style="signature">…</html>  {/* "classic" keeps the 7.x look */}
 
 <Dialog.Root scrollLock="class">…</Dialog.Root>
 

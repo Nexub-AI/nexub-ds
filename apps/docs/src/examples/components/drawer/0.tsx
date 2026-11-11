@@ -5,7 +5,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Drawer</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Drawer</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -28,8 +28,8 @@ export default function Example() {
             </div>
             <Drawer.Footer>
               <div className="flex gap-2 justify-end">
-                <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
-                <Button variant="primary">Save changes</Button>
+                <Drawer.Close asChild><Button variant="outlined">Cancel</Button></Drawer.Close>
+                <Button variant="filled">Save changes</Button>
               </div>
             </Drawer.Footer>
           </Drawer.Content>

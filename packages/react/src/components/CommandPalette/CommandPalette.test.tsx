@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import { CommandPalette } from './CommandPalette.js';
 
@@ -117,6 +117,45 @@ describe('CommandPalette', () => {
         </CommandPalette.Root>
       );
     }
+
+    it('does not clear a controlled query on mount, only on a page change (8.4 hook deps)', async () => {
+      const onValueChange = vi.fn();
+      render(
+        <CommandPalette.Root open>
+          <CommandPalette.Input value="proj" onValueChange={onValueChange} />
+          <CommandPalette.List>
+            <CommandPalette.Page>
+              <CommandPalette.Item page="projects">Projects</CommandPalette.Item>
+            </CommandPalette.Page>
+            <CommandPalette.Page id="projects" title="All projects">
+              <CommandPalette.Item>Nexub</CommandPalette.Item>
+            </CommandPalette.Page>
+          </CommandPalette.List>
+        </CommandPalette.Root>,
+      );
+      expect(onValueChange).not.toHaveBeenCalled();
+      await userEvent.setup().click(screen.getByText('Projects'));
+      expect(onValueChange).toHaveBeenLastCalledWith('');
+    });
+
+    it('the breadcrumb follows a page title change (8.4 hook deps)', async () => {
+      function Titled({ title }: { title: string }) {
+        return (
+          <CommandPalette.Root open defaultPages={['projects']}>
+            <CommandPalette.Input />
+            <CommandPalette.List>
+              <CommandPalette.Page id="projects" title={title}>
+                <CommandPalette.Item>Nexub</CommandPalette.Item>
+              </CommandPalette.Page>
+            </CommandPalette.List>
+          </CommandPalette.Root>
+        );
+      }
+      const { rerender } = render(<Titled title="All projects" />);
+      expect(screen.getByText('All projects')).toBeInTheDocument();
+      rerender(<Titled title="Starred projects" />);
+      expect(screen.getByText('Starred projects')).toBeInTheDocument();
+    });
 
     it('an item opens its page, with a breadcrumb; Backspace on empty goes back', async () => {
       const user = userEvent.setup();

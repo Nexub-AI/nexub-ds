@@ -11,7 +11,6 @@ A horizontal or vertical visual divider.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the separator line. |
-| `decorative` | `boolean` | `true` | When true, the separator is hidden from the accessibility tree. |
 
 ## Example: Default
 

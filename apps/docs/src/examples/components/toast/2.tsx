@@ -3,7 +3,7 @@ import { Button, toast } from '@nexub/react';
 export default function Example() {
   return (
     <Button
-      variant="outline"
+      variant="outlined"
       onClick={() =>
         toast.custom('File deleted', {
           description: 'The file was moved to trash.',
