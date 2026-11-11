@@ -75,7 +75,7 @@ export const StreamingText = React.forwardRef<HTMLElement, StreamingTextProps>(
           <span
             aria-hidden="true"
             data-caret=""
-            className="nx-caret ms-0.5 inline-block h-[1em] w-[2px] align-text-bottom rounded-full bg-[var(--color-primary)] motion-reduce:animate-none"
+            className="nx-caret ms-0.5 inline-block h-[1em] w-0-5 align-text-bottom rounded-full bg-[var(--color-primary)] motion-reduce:animate-none"
           />
         )}
       </Comp>

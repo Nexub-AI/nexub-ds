@@ -64,7 +64,7 @@ const alignJustify: Record<ColumnAlign, string> = {
 // Outlined capsules; hover/press = the state layer.
 const pagerButton = cn(
   pressable,
-  'border border-[var(--color-outline-variant)] bg-transparent px-4 py-2 min-h-[44px] text-label-lg text-[var(--color-on-surface)]',
+  'border border-[var(--color-outline-variant)] bg-transparent px-4 py-2 min-h-11 text-label-lg text-[var(--color-on-surface)]',
   disabledContainer,
 );
 

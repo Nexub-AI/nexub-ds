@@ -160,7 +160,7 @@ export function Badge({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 4,
+          gap: tokens.spacing[1],
           alignSelf: 'flex-start',
           backgroundColor: variant === 'outline' ? 'transparent' : roles[bg],
         },
