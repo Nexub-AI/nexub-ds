@@ -18,13 +18,13 @@ const ConfirmContext = React.createContext<{
 } | null>(null);
 
 export interface AlertDialogRootProps extends RadixAlertDialog.AlertDialogProps {
-  /** See Dialog.Root `scrollLock`. @default 'style' (becomes 'class' in 8.0) */
+  /** See Dialog.Root `scrollLock`. @default 'class' (since 8.0) */
   scrollLock?: ScrollLock;
 }
 
 const ALERT_LOCK = { style: { scrollLock: 'style', modal: true }, class: { scrollLock: 'class', modal: true } } as const;
 
-function Root({ scrollLock = 'style', ...props }: AlertDialogRootProps) {
+function Root({ scrollLock = 'class', ...props }: AlertDialogRootProps) {
   return (
     <ScrollLockContext.Provider value={ALERT_LOCK[scrollLock]}>
       <RadixAlertDialog.Root {...props} />

@@ -1026,51 +1026,6 @@ export const native = {
     }
   },
   "motion": {
-    "duration": {
-      "instant": 0,
-      "fast": 150,
-      "normal": 200,
-      "slow": 300,
-      "slower": 500
-    },
-    "easing": {
-      "linear": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "in": [
-        0.4,
-        0,
-        1,
-        1
-      ],
-      "out": [
-        0,
-        0,
-        0.2,
-        1
-      ],
-      "in-out": [
-        0.4,
-        0,
-        0.2,
-        1
-      ],
-      "out-expo": [
-        0.16,
-        1,
-        0.3,
-        1
-      ],
-      "spring": [
-        0.34,
-        1.56,
-        0.64,
-        1
-      ]
-    },
     "spring": {
       "spatial": {
         "fast": {

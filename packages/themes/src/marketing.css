@@ -19,7 +19,8 @@
   --type-headline-lg-weight: var(--font-weight-bold);
   --type-headline-md-weight: var(--font-weight-bold);
   --type-headline-sm-weight: var(--font-weight-bold);
-  --nx-mkt-ease: var(--ease-out-expo);
+  /* Decelerating, no overshoot (was the retired --ease-out-expo). */
+  --nx-mkt-ease: var(--motion-spring-effects-slow-easing);
   --nx-mkt-spring: var(--motion-spring-spatial-default-easing);
   --nx-mkt-spring-duration: var(--motion-spring-spatial-default-duration);
 }

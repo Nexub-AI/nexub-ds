@@ -57,10 +57,8 @@ test('@deprecated components in @nexub/react match the registry', () => {
 
 // 7.9 freeze list: every 7.x deprecation of a prop, message or token (not a whole
 // component, so not in the registry) with the major that removes it. Its JSDoc must
-// agree, and "Migrating to 8.0" lists the same removals.
+// agree, and "Migrating to 8.0" lists the same removals. Entries leave once removed (motion: 8.0).
 const FROZEN_7X = [
-  { what: 'Motion `easing` prop + `--duration-*` / `--ease-*` tokens', file: 'packages/react/src/components/Motion/motion.types.ts', since: '7.3', removeIn: '8.0' },
-  { what: 'Collapse `easing` prop', file: 'packages/react/src/components/Motion/Collapse.tsx', since: '7.3', removeIn: '8.0' },
   { what: 'messages.hidePassword', file: 'packages/core/src/messages.ts', since: '7.2', removeIn: '9.0' },
 ];
 

@@ -1,5 +1,4 @@
 export type MotionDuration = 'instant' | 'fast' | 'normal' | 'slow' | 'slower';
-export type MotionEasing = 'linear' | 'in' | 'out' | 'in-out' | 'out-expo' | 'spring';
 
 export interface MotionBaseProps {
   /** Whether the component is visible / mounted. */
@@ -10,13 +9,6 @@ export interface MotionBaseProps {
    * @default 'normal'
    */
   duration?: MotionDuration;
-  /**
-   * Legacy: set it to use the old `--duration-*` + `--ease-{value}` tokens
-   * instead of springs. Omit it to ride the spring tokens.
-   * @deprecated since 7.3: the `--duration-*` / `--ease-*` tokens (tokens/motion.json) are
-   * retired in favour of the spring tokens. Removed in 8.0.
-   */
-  easing?: MotionEasing;
   /**
    * Remove the element from the DOM when `in` becomes false
    * (after the exit transition completes).

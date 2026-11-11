@@ -28,7 +28,6 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
   {
     in: visible,
     duration = 'fast',
-    easing,
     unmountOnExit = false,
     initialScale = 0.95,
     children,
@@ -41,7 +40,6 @@ export const Scale = React.forwardRef<HTMLDivElement, ScaleProps>(function Scale
   const { phase, mounted, reduced, transitionStyle, handleTransitionEnd } = useMotion({
     visible,
     duration,
-    easing,
     unmountOnExit,
   });
 
