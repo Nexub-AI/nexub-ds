@@ -45,7 +45,7 @@
     "clean": "rm -rf lib",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "react-native-builder-bob": {
     "source": "src",
@@ -136,6 +136,23 @@
     "moduleNameMapper": {
       "^react$": "<rootDir>/node_modules/react",
       "^react/(.*)$": "<rootDir>/node_modules/react/$1"
+    },
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/__tests__/**",
+      "!src/**/*.stories.{ts,tsx}"
+    ],
+    "coverageReporters": [
+      "text-summary",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 85,
+        "branches": 78,
+        "functions": 80,
+        "lines": 88
+      }
     }
   }
 }

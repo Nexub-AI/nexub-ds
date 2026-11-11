@@ -11,9 +11,10 @@ permissions: {}
 
 jobs:
   close:
-    if: >-
-      !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) &&
-      github.event.pull_request.user.type != 'Bot'
+    # Outsiders can't push branches here, so their PRs always come from a fork.
+    # Not author_association: members with private org membership show up as
+    # CONTRIBUTOR in the event and got their own PRs closed (8.1, #508, #510).
+    if: github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:

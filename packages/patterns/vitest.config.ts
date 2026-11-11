@@ -10,5 +10,15 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
+    // On for `pnpm test` (vitest run --coverage); reports land in coverage/.
+    // Thresholds are a ratchet: raise them as tests land, never lower them.
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.tsx', 'src/test-setup.ts'],
+      reporter: ['text-summary', 'json-summary'],
+      // Measured 2026-11-11 (8.2), rounded down.
+      thresholds: { lines: 97, functions: 94, branches: 87, statements: 94 },
+    },
   },
 });
