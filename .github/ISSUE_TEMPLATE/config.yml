@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/Nexub-AI/nexub-ds/discussions
+    about: Ask how to do something or float an idea before it becomes a request.
+  - name: Security vulnerability
+    url: https://github.com/Nexub-AI/nexub-ds/security/advisories/new
+    about: Report privately. Never in a public issue (see SECURITY.md).
