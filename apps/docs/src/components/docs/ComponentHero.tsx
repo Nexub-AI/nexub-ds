@@ -25,7 +25,7 @@ export function ComponentHero({ entry, children }: { entry: ComponentEntry; chil
           {meta.status && <StatusBadge status={meta.status} />}
           {meta.addedIn && (
             <Badge tone="neutral" variant="outline">
-              {meta.updatedIn ? `v${meta.addedIn} → v${meta.updatedIn}` : `Since v${meta.addedIn}`}
+              {meta.updatedIn ? `Added v${meta.addedIn} · updated v${meta.updatedIn}` : `Added v${meta.addedIn}`}
             </Badge>
           )}
         </>

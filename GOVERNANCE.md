@@ -5,7 +5,7 @@ How changes to Nexub DS are proposed and decided, what a component's status prom
 ## Who decides
 
 - **Maintainers** own the system: the people listed in [`.github/CODEOWNERS`](./.github/CODEOWNERS). They review and merge PRs, accept or decline RFCs, and promote or deprecate components.
-- **Contributors** are anyone opening an issue or PR, including product teams (Leap, Bookub, Payub, Founderub) and AI agents working on their behalf.
+- **Contributors** are anyone giving feedback through issues, Discussions or the docs feedback button, including product teams (Leap, Bookub, Payub, Founderub) and AI agents working on their behalf. Code is written only by maintainers; outside pull requests are closed automatically (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
 - **Consuming products** are the evidence for promotion: a component reaches `beta` and `stable` by being used in real products, not by age.
 
 Decisions are made in the open, on the RFC issue or the PR. Maintainers aim for consensus with the people who raised concerns. If it can't be reached, the code owner of the affected area decides, and writes down why on the issue. An unresolved accessibility problem blocks a merge no matter who approves it.

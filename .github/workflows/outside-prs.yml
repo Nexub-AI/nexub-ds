@@ -1,0 +1,27 @@
+name: Outside PRs
+
+# Open source, not open contribution (CONTRIBUTING.md): close pull requests from
+# outside the maintainer team with a pointer to the issue forms.
+# pull_request_target runs in the base repo; it never checks out or runs PR code.
+on:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- no checkout, no PR code; only closes the PR
+    types: [opened, reopened]
+
+permissions: {}
+
+jobs:
+  close:
+    if: >-
+      !contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) &&
+      github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh pr close "$PR" --repo "$REPO" --comment "Thanks for taking the time! Nexub is open source but not open contribution: only maintainers write code (see CONTRIBUTING.md). Please open an issue with the matching form (https://github.com/$REPO/issues/new/choose) or start a Discussion, and we'll pick it up from there."

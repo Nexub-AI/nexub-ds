@@ -98,7 +98,7 @@ export function renderPlayground(slug: string, props: Bag): React.ReactElement {
   const fn = renderers[slug];
   if (!fn) {
     return (
-      <div className="text-[var(--color-on-surface-muted)] text-[0.85rem]">
+      <div className="text-[var(--color-on-surface-muted)] text-body-sm">
         Live preview not available for <code>{slug}</code>.
       </div>
     );
