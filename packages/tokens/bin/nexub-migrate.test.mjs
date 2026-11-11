@@ -345,3 +345,44 @@ test('button-aliases: rewrites legacy Button variants, leaves other components a
   ].join('\n'));
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[5, 'button-aliases']]);
 });
+
+// ─── changes-in-9 ───
+test('changes-in-9: renames the 8.5 aliases, reports classic and hidePassword', () => {
+  const web = [
+    "import { DatePicker, NumberInput as N, Input } from '@nexub/react';",
+    '<DatePicker value={d} onChange={setD} />',
+    '<N onChange={setN} />',
+    '<Input onChange={onInput} />',
+    '<html data-style="classic" />',
+  ].join('\n');
+  const w = migrateSource(web, { ext: '.tsx', rules: only('changes-in-9') });
+  assert.equal(w.output, [
+    "import { DatePicker, NumberInput as N, Input } from '@nexub/react';",
+    '<DatePicker value={d} onValueChange={setD} />',
+    '<N onValueChange={setN} />',
+    '<Input onChange={onInput} />',
+    '<html data-style="classic" />',
+  ].join('\n'));
+  assert.deepEqual(w.manual.map((m) => [m.line, m.rule]), [[5, 'changes-in-9']]);
+
+  const native = [
+    "import { Dialog, BottomSheet, DateTimeField, ButtonGroup, NexubNativeProvider } from '@nexub/react-native';",
+    '<Dialog dismissable={false} open />',
+    '<BottomSheet dismissable />',
+    '<DateTimeField minimumDate={a} maximumDate={b} />',
+    '<ButtonGroup direction="stack" />',
+    '<ButtonGroup direction={dir} />',
+    '<NexubNativeProvider style="classic" />',
+    'const messages = { hidePassword: "Hide" };',
+  ].join('\n');
+  const n = migrateSource(native, { ext: '.tsx', rules: only('changes-in-9') });
+  assert.equal(n.output.split('\n').slice(1, 5).join('\n'), [
+    '<Dialog dismissible={false} open />',
+    '<BottomSheet dismissible />',
+    '<DateTimeField minDate={a} maxDate={b} />',
+    '<ButtonGroup orientation="vertical" />',
+  ].join('\n'));
+  assert.deepEqual(n.manual.map((m) => m.line), [6, 7, 8]);
+  // The web DatePicker rule doesn't touch an @nexub/react-native import, and vice versa.
+  assert.equal(migrateSource("import { NumberInput } from '@nexub/react-native';\n<NumberInput onChange={f} />", { ext: '.tsx', rules: only('changes-in-9') }).output.includes('onChange'), true);
+});

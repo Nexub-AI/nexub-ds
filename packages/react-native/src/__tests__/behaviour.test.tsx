@@ -304,9 +304,13 @@ describe('PasswordInput', () => {
     expect(field().props.textContentType).toBe('password');
     await fireEvent.changeText(field(), 'hunter2');
     expect(onChangeText).toHaveBeenCalledWith('hunter2');
-    await fireEvent.press(screen.getByRole('button', { name: 'Show password' }));
+    const toggle = () => screen.getByRole('button', { name: 'Show password' });
+    expect(toggle().props.accessibilityState).toMatchObject({ selected: false });
+    await fireEvent.press(toggle());
     expect(field().props.secureTextEntry).toBe(false);
-    await fireEvent.press(screen.getByRole('button', { name: 'Hide password' }));
+    // One name; the state is announced as selected (no "Hide password" label).
+    expect(toggle().props.accessibilityState).toMatchObject({ selected: true });
+    await fireEvent.press(toggle());
     expect(field().props.secureTextEntry).toBe(true);
   });
 });

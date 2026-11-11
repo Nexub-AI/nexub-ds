@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -480,6 +480,63 @@ function buttonAliases(src) {
   return { output, items };
 }
 
+// ─── changes-in-9: what 9.0 removes (the 7.x and 8.x deprecations) ──────────
+// Prop renames are rewritten; the classic style and the hidePassword message are reported.
+const RENAMES_9 = [
+  { pkg: '@nexub/react', comps: ['DatePicker', 'DateTimePicker', 'NumberInput'], from: 'onChange', to: 'onValueChange', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['Dialog', 'BottomSheet'], from: 'dismissable', to: 'dismissible', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['DateTimeField'], from: 'minimumDate', to: 'minDate', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['DateTimeField'], from: 'maximumDate', to: 'maxDate', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['ButtonGroup'], from: 'direction', to: 'orientation', values: { row: 'horizontal', stack: 'vertical' }, since: '8.5' },
+];
+
+/** Local names of `names` imported from exactly `pkg` (or a subpath of it), aliases included. */
+function importedAs(src, pkg, names) {
+  const out = new Map();
+  for (const m of src.matchAll(/\bimport\s+(?:type\s+)?\{([^}]*)\}\s*from\s*(['"])([^'"]+)\2/g)) {
+    if (m[3] !== pkg && !m[3].startsWith(`${pkg}/`)) continue;
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (names.includes(name)) out.set(alias ?? name, name);
+  }
+  return out;
+}
+
+function changesIn9(src, report) {
+  const edits = [];
+  for (const r of RENAMES_9) {
+    for (const [local, name] of importedAs(src, r.pkg, r.comps)) {
+      for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+        const attr = readTag(src, m.index + m[0].length)?.attrs.find((a) => a.name === r.from);
+        if (!attr) continue;
+        const nameAt = src.indexOf(r.from, attr.start);
+        if (r.values) {
+          const lit = /^(?:\{\s*)?(["'])(\w+)\1(?:\s*\})?$/.exec(attr.value ?? '');
+          if (!lit || !r.values[lit[2]]) {
+            report(m.index, `<${name} ${r.from}={…}> is removed in 9.0 (deprecated in ${r.since}): use ${r.to} (${Object.entries(r.values).map(([a, b]) => `${a} -> ${b}`).join(', ')})`);
+            continue;
+          }
+          edits.push({ start: attr.end - attr.value.length, end: attr.end, text: `"${r.values[lit[2]]}"` });
+        }
+        edits.push({ start: nameAt, end: nameAt + r.from.length, text: r.to });
+      }
+    }
+  }
+  if (/@nexub\//.test(src) || /data-style/.test(src)) {
+    for (const m of src.matchAll(/data-style\s*=\s*\{?\s*["']classic["']|\[data-style=["']?classic["']?\]|setAttribute\(\s*["']data-style["']\s*,\s*["']classic["']/g))
+      report(m.index, 'The classic style (the 7.x Material 3 look) is removed in 9.0: Signature is the only style; drop data-style="classic"');
+  }
+  if (/['"]@nexub\/react-native['"/]/.test(src)) {
+    for (const m of src.matchAll(/\bstyle\s*[=:]\s*\{?\s*["']classic["']/g))
+      report(m.index, 'NexubNativeProvider style="classic" is removed in 9.0: Signature is the only style; drop the prop');
+  }
+  if (/['"]@nexub\/(core|react|react-native)['"/]/.test(src)) {
+    for (const m of src.matchAll(/\bhidePassword\b/g))
+      report(m.index, 'The hidePassword message is removed in 9.0 (deprecated in 7.2): PasswordInput keeps one name, showPassword, with aria-pressed; delete the key');
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.start - a.start)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return output;
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -536,6 +593,8 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
         items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete `mode` is removed in 7.0 (the popover is the only layout): remove it; for an always-open list use the Combobox parts' });
   }
   if (rules.has('changes-in-8')) changesIn8(src, ext, (at, message) => items.push({ at, rule: 'changes-in-8', message }));
+  if (rules.has('changes-in-9') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.html'))
+    text = changesIn9(text, (at, message) => items.push({ at, rule: 'changes-in-9', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -609,6 +668,11 @@ Rules:
   button-aliases     Button's legacy variants (deprecated 8.4, removed 9.0): primary -> filled,
                      secondary -> tonal, outline -> outlined, ghost -> text (JSX literals and
                      buttonVariants({ variant })); variant={expressions} reported
+  changes-in-9       what 9.0 removes: renames DatePicker/DateTimePicker/NumberInput onChange ->
+                     onValueChange (@nexub/react); Dialog/BottomSheet dismissable -> dismissible,
+                     DateTimeField minimumDate/maximumDate -> minDate/maxDate, ButtonGroup
+                     direction row/stack -> orientation horizontal/vertical (@nexub/react-native);
+                     reports the classic style and the hidePassword message
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
