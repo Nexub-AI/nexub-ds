@@ -56,7 +56,7 @@ function Row({ item }: { item: SettingsItem }) {
       )}
     </>
   );
-  const row = 'flex min-h-[56px] w-full items-center gap-3 px-4 py-3';
+  const row = 'flex min-h-14 w-full items-center gap-3 px-4 py-3';
   if (item.href)
     return (
       <a href={safeHref(item.href)} onClick={item.onSelect && ((e) => { e.preventDefault(); item.onSelect?.(); })} className={cn(row, 'nx-state-layer')}>

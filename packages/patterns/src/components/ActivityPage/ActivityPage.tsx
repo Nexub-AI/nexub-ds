@@ -63,7 +63,7 @@ export function TransactionRow({
   return (
     <li className="flex items-center border-t border-[var(--color-outline-variant)] first:border-t-0">
       {onSelect ? (
-        <button type="button" onClick={() => onSelect(t)} className={cn(row, 'nx-state-layer min-h-[56px]')}>
+        <button type="button" onClick={() => onSelect(t)} className={cn(row, 'nx-state-layer min-h-14')}>
           {body}
         </button>
       ) : (

@@ -281,7 +281,7 @@ export function TreeView({
               <span
                 aria-hidden="true"
                 className={cn(
-                  'inline-flex size-4 shrink-0 items-center justify-center rounded-[4px] border-2',
+                  'inline-flex size-4 shrink-0 items-center justify-center rounded-shape-min border-2',
                   isChecked || mixed
                     ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]'
                     : 'border-[var(--color-outline)]',

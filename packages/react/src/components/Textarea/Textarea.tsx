@@ -16,9 +16,9 @@ export const textareaVariants = cva(
   {
     variants: {
       size: {
-        sm: 'px-3 py-1.5 text-body-sm min-h-[64px]',
-        md: 'px-3.5 py-2 text-body-md min-h-[80px]',
-        lg: 'px-4 py-2.5 text-body-md min-h-[96px]',
+        sm: 'px-3 py-1.5 text-body-sm min-h-16',
+        md: 'px-3.5 py-2 text-body-md min-h-20',
+        lg: 'px-4 py-2.5 text-body-md min-h-24',
       },
       invalid: {
         true: fieldInvalid,

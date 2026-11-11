@@ -158,7 +158,7 @@ export function HomeScreen({
                 subtitle={t.subtitle}
                 leading={<Avatar name={t.title} src={t.image} />}
                 trailing={
-                  <View style={{ alignItems: 'flex-end', gap: 2 }}>
+                  <View style={{ alignItems: 'flex-end', gap: tokens.spacing['0-5'] }}>
                     <Amount
                       value={t.amount}
                       currency={t.currency}

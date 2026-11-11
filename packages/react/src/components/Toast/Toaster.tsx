@@ -260,7 +260,7 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
               <RadixToast.Action
                 altText={action.label}
                 onClick={action.onClick}
-                className="nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
+                className="nx-state-layer relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
               >
                 {action.label}
               </RadixToast.Action>

@@ -45,7 +45,7 @@ export const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
         className={cn(
           'group relative grid overflow-hidden rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-container-high)]',
           href &&
-            'shadow-elevation-1 transition-[box-shadow,transform] duration-effects-fast ease-effects-fast hover:shadow-elevation-2 hover:duration-spatial-default hover:ease-spatial-default motion-safe:hover:-translate-y-0.5 has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[var(--color-primary)]',
+            'shadow-elevation-1 transition-[box-shadow,transform] duration-effects-fast ease-effects-fast hover:shadow-elevation-2 hover:duration-spatial-default hover:ease-spatial-default motion-safe:hover:-translate-y-0.5 has-[a:focus-visible]:outline has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[var(--color-primary)]',
           className,
         )}
         {...props}

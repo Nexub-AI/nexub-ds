@@ -90,7 +90,7 @@ export function Banner({
       {...rest}
     >
       <Glyph size="md" color={roles[fg]} />
-      <View style={{ flex: 1, gap: 4 }}>
+      <View style={{ flex: 1, gap: tokens.spacing[1] }}>
         {title && (
           <Text variant="title-sm" color={fg}>
             {title}
@@ -103,7 +103,7 @@ export function Banner({
         ) : (
           children
         )}
-        {action && <View style={{ marginTop: 4 }}>{action}</View>}
+        {action && <View style={{ marginTop: tokens.spacing[1] }}>{action}</View>}
       </View>
       {onDismiss && (
         <IconButton
