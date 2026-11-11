@@ -17,7 +17,7 @@ function ControlledDatePicker() {
 
   return (
     <div style={{ maxWidth: '280px' }}>
-      <DatePicker value={date} onChange={setDate} placeholder="Pick a date" />
+      <DatePicker value={date} onValueChange={setDate} placeholder="Pick a date" />
       {date && (
         <p style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-on-surface-muted)' }}>
           Selected: {date.toLocaleDateString()}
@@ -36,7 +36,7 @@ export const WithPresetDate: Story = {
     const [date, setDate] = React.useState<Date | undefined>(new Date(2025, 5, 15));
     return (
       <div style={{ maxWidth: '280px' }}>
-        <DatePicker value={date} onChange={setDate} />
+        <DatePicker value={date} onValueChange={setDate} />
       </div>
     );
   },
@@ -60,7 +60,7 @@ export const French: Story = {
         }}
       >
         <div style={{ maxWidth: '280px' }}>
-          <DatePicker value={date} onChange={setDate} />
+          <DatePicker value={date} onValueChange={setDate} />
         </div>
       </NexubProvider>
     );
@@ -85,7 +85,7 @@ export const Arabic: Story = {
         }}
       >
         <div dir="rtl" style={{ maxWidth: '280px' }}>
-          <DatePicker value={date} onChange={setDate} />
+          <DatePicker value={date} onValueChange={setDate} />
         </div>
       </NexubProvider>
     );

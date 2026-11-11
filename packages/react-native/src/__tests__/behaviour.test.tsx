@@ -133,7 +133,7 @@ describe('Dialog', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it('dismissable={false} ignores back and the scrim', async () => {
+  it('the deprecated dismissable={false} alias still ignores back and the scrim', async () => {
     const onOpenChange = jest.fn();
     await wrap(dialog({ onOpenChange, dismissable: false }));
     await fireEvent(hostWith('onRequestClose'), 'requestClose');
@@ -158,14 +158,14 @@ describe('BottomSheet', () => {
     expect(screen.getByRole('button', { name: 'Resize' })).toBeEnabled();
   });
 
-  it('back and the scrim close it; not when dismissable={false}', async () => {
+  it('back and the scrim close it; not when dismissible={false}', async () => {
     const onOpenChange = jest.fn();
     await wrap(sheet({ onOpenChange }));
     await fireEvent(hostWith('onRequestClose'), 'requestClose');
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
     await fireEvent.press(scrim());
     expect(onOpenChange).toHaveBeenCalledTimes(2);
-    await screen.rerender(sheet({ onOpenChange, dismissable: false }));
+    await screen.rerender(sheet({ onOpenChange, dismissible: false }));
     await fireEvent(hostWith('onRequestClose'), 'requestClose');
     expect(onOpenChange).toHaveBeenCalledTimes(2);
   });
@@ -388,9 +388,9 @@ describe('actions', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('ButtonGroup direction="stack" makes its buttons full width', async () => {
+  it('ButtonGroup orientation="vertical" makes its buttons full width', async () => {
     await wrap(
-      <ButtonGroup direction="stack">
+      <ButtonGroup orientation="vertical">
         <Button onPress={() => {}}>Pay</Button>
         <Button onPress={() => {}}>Cancel</Button>
       </ButtonGroup>,
@@ -402,6 +402,15 @@ describe('actions', () => {
       </ButtonGroup>,
     );
     expect(style(screen.getByRole('button', { name: 'Pay' })).alignSelf).toBe('flex-start');
+  });
+
+  it('the deprecated direction="stack" alias still stacks', async () => {
+    await wrap(
+      <ButtonGroup direction="stack">
+        <Button onPress={() => {}}>Pay</Button>
+      </ButtonGroup>,
+    );
+    expect(style(screen.getByRole('button', { name: 'Pay' })).alignSelf).toBe('stretch');
   });
 });
 

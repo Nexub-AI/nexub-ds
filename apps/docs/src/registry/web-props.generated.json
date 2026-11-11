@@ -1489,7 +1489,14 @@
           "name": "onChange",
           "type": "((date: Date) => void)",
           "required": false,
+          "deprecated": true,
           "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((date: Date) => void)",
+          "required": false,
+          "description": "Called with the new value."
         },
         {
           "name": "placeholder",
@@ -1652,7 +1659,14 @@
           "name": "onChange",
           "type": "((value: Date) => void)",
           "required": false,
+          "deprecated": true,
           "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: Date) => void)",
+          "required": false,
+          "description": "Called with the new value."
         },
         {
           "name": "timeZone",
@@ -3611,7 +3625,14 @@
           "name": "onChange",
           "type": "((value: number) => void)",
           "required": false,
+          "deprecated": true,
           "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: number) => void)",
+          "required": false,
+          "description": "Called with the new value."
         },
         {
           "name": "precision",

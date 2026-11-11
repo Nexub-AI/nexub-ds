@@ -102,9 +102,9 @@ import { Send } from '@nexub/icons/native';
     name: 'ButtonGroup',
     preview: 'button-group',
     differences: [
-      { aspect: 'Layout', web: 'Connected segments in a row.', mobile: '`direction="row"` or `"stack"`: full-width buttons stacked, primary on top, as Apple and Material lay out sheet actions.' },
+      { aspect: 'Layout', web: 'Connected segments in a row.', mobile: '`orientation="horizontal"` or `"vertical"`: full-width buttons stacked, primary on top, as Apple and Material lay out sheet actions.' },
     ],
-    code: `<ButtonGroup direction="stack">
+    code: `<ButtonGroup orientation="vertical">
   <Button size="lg">Continue</Button>
   <Button variant="text">Not now</Button>
 </ButtonGroup>`,
@@ -362,8 +362,8 @@ toast({ message: 'Payment sent', action: { label: 'Undo', onPress: undo } });`,
   'alert-dialog': {
     name: 'Dialog',
     preview: 'dialog',
-    differences: [{ aspect: 'Dismiss', web: 'AlertDialog never closes on outside click.', mobile: '`dismissable={false}` gives the same.' }],
-    code: `<Dialog dismissable={false} open={open} onOpenChange={setOpen} title="Sign out?" actions={<Button onPress={signOut}>Sign out</Button>} />`,
+    differences: [{ aspect: 'Dismiss', web: 'AlertDialog never closes on outside click.', mobile: '`dismissible={false}` gives the same.' }],
+    code: `<Dialog dismissible={false} open={open} onOpenChange={setOpen} title="Sign out?" actions={<Button onPress={signOut}>Sign out</Button>} />`,
   },
   drawer: {
     name: 'BottomSheet',
