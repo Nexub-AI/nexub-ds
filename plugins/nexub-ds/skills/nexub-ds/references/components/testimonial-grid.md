@@ -10,13 +10,13 @@ Customer quotes in product-coloured cards, with an optional star rating. Server 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `header` | `React.ReactNode` |  | TestimonialGrid: a SectionHeader, usually. |
-| `quote` (required) | `React.ReactNode` |  | TestimonialCard: the quote. |
-| `name` (required) | `string` |  | TestimonialCard: who said it. |
-| `role` | `React.ReactNode` |  | TestimonialCard: job title and company. |
-| `avatarSrc` | `string` |  | TestimonialCard: photo; initials otherwise. |
-| `rating` | `number` |  | TestimonialCard: stars out of 5, announced as "Rated n out of 5". |
-| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | TestimonialCard: the product the customer uses. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+| `TestimonialCard quote` (required) | `React.ReactNode` |  | The quote. |
+| `TestimonialCard name` (required) | `string` |  | Who said it. |
+| `TestimonialCard role` | `React.ReactNode` |  | Job title and company. |
+| `TestimonialCard avatarSrc` | `string` |  | Photo; initials otherwise. |
+| `TestimonialCard rating` | `number` |  | Stars out of 5, announced as "Rated n out of 5". |
+| `TestimonialCard accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | The product the customer uses. |
 
 ## Example: Default
 

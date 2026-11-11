@@ -18,13 +18,13 @@ const entry: ComponentEntry = {
     { name: 'Drawer.Overlay', type: 'compound', required: false, description: 'Dimmed backdrop rendered behind the drawer.' },
     { name: 'Drawer.Content', type: 'compound', required: false, description: 'The drawer panel. Accepts a side prop.' },
     { name: 'scrollLock', type: "'style' | 'class'", required: false, description: 'On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src \'self\'). Default `style`.' },
-    { name: 'side', type: "'left' | 'right' | 'top' | 'bottom'", required: false, description: 'Edge of the screen from which the drawer slides in.' },
+    { name: 'direction', type: "'left' | 'right' | 'top' | 'bottom'", required: false, description: 'Edge of the screen from which the drawer slides in.' },
     { name: 'Drawer.Header', type: 'compound', required: false, description: 'Header section of the drawer panel. Sticky on solid panels (5.1): long content scrolls under it.' },
     { name: 'Drawer.Footer', type: 'compound', required: false, description: 'Footer section of the drawer panel. Sticky on solid panels (5.1): actions stay in view while content scrolls.' },
     { name: 'Drawer.Title', type: 'compound', required: false, description: 'Accessible title for the drawer.' },
     { name: 'Drawer.Description', type: 'compound', required: false, description: 'Supporting description text for the drawer.' },
     { name: 'Drawer.Close', type: 'compound', required: false, description: 'Element that closes the drawer.' },
-    { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material on Drawer.Content — see Foundations → Materials.' },
+    { name: 'Drawer.Content surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material on Drawer.Content — see Foundations → Materials.' },
   ],
   examples: [
     {

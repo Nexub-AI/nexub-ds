@@ -11,13 +11,13 @@ const entry: ComponentEntry = {
     addedIn: '3.1.0',
   },
   props: [
-    { name: "header", type: "React.ReactNode", required: false, description: "ProductGrid: a SectionHeader, usually." },
-    { name: "name", type: "string", required: true, description: "ProductCard: product name, the card's link text." },
-    { name: "description", type: "React.ReactNode", required: true, description: "ProductCard: one line on what it does." },
-    { name: "href", type: "string", required: true, description: "ProductCard: the product page." },
-    { name: "icon", type: "React.ReactNode", required: false, description: "ProductCard: the product mark." },
-    { name: "accent", type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: "ProductCard: coloured top edge and tint in marketing mode." },
-    { name: "linkLabel", type: "string", default: "'Learn more'", required: false, description: "ProductCard: the visual link cue." },
+    { name: "header", type: "React.ReactNode", required: false, description: "A SectionHeader, usually." },
+    { name: "ProductCard name", type: "string", required: true, description: "Product name, the card's link text." },
+    { name: "ProductCard description", type: "React.ReactNode", required: true, description: "One line on what it does." },
+    { name: "ProductCard href", type: "string", required: true, description: "The product page." },
+    { name: "ProductCard icon", type: "React.ReactNode", required: false, description: "The product mark." },
+    { name: "ProductCard accent", type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: "Coloured top edge and tint in marketing mode." },
+    { name: "ProductCard linkLabel", type: "string", default: "'Learn more'", required: false, description: "The visual link cue." },
   ],
   examples: [
     {

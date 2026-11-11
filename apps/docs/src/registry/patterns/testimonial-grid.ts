@@ -11,13 +11,13 @@ const entry: ComponentEntry = {
     addedIn: '3.1.0',
   },
   props: [
-    { name: "header", type: "React.ReactNode", required: false, description: "TestimonialGrid: a SectionHeader, usually." },
-    { name: "quote", type: "React.ReactNode", required: true, description: "TestimonialCard: the quote." },
-    { name: "name", type: "string", required: true, description: "TestimonialCard: who said it." },
-    { name: "role", type: "React.ReactNode", required: false, description: "TestimonialCard: job title and company." },
-    { name: "avatarSrc", type: "string", required: false, description: "TestimonialCard: photo; initials otherwise." },
-    { name: "rating", type: "number", required: false, description: "TestimonialCard: stars out of 5, announced as \"Rated n out of 5\"." },
-    { name: "accent", type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: "TestimonialCard: the product the customer uses." },
+    { name: "header", type: "React.ReactNode", required: false, description: "A SectionHeader, usually." },
+    { name: "TestimonialCard quote", type: "React.ReactNode", required: true, description: "The quote." },
+    { name: "TestimonialCard name", type: "string", required: true, description: "Who said it." },
+    { name: "TestimonialCard role", type: "React.ReactNode", required: false, description: "Job title and company." },
+    { name: "TestimonialCard avatarSrc", type: "string", required: false, description: "Photo; initials otherwise." },
+    { name: "TestimonialCard rating", type: "number", required: false, description: "Stars out of 5, announced as \"Rated n out of 5\"." },
+    { name: "TestimonialCard accent", type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: "The product the customer uses." },
   ],
   examples: [
     {

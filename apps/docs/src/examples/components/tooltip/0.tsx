@@ -4,7 +4,7 @@ export default function Example() {
   return (
     <TooltipProvider>
       <Tooltip label="This is a tooltip" side="top">
-        <Button variant="outline">Hover me</Button>
+        <Button variant="outlined">Hover me</Button>
       </Tooltip>
     </TooltipProvider>
   );

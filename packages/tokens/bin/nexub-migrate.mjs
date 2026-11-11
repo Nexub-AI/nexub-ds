@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -450,6 +450,36 @@ function changesIn8(src, ext, report) {
   if (themes && !/data-style/.test(src)) report(themes.index, SIGNATURE_NOTE);
 }
 
+// ─── button-aliases: Button's legacy variant names (deprecated 8.4, removed 9.0) ─
+export const BUTTON_ALIASES = { primary: 'filled', secondary: 'tonal', outline: 'outlined', ghost: 'text' };
+const ALIAS_RE = Object.keys(BUTTON_ALIASES).join('|');
+
+function buttonAliases(src) {
+  const edits = [];
+  const items = [];
+  const report = (at, message) => items.push({ line: src.slice(0, at).split('\n').length, rule: 'button-aliases', message });
+  const locals = [];
+  for (const m of src.matchAll(/\bimport\s+\{([^}]*)\}\s*from\s*(['"])@nexub\/react(?:\/\w+)?\2/g))
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (name === 'Button') locals.push(alias ?? name);
+  for (const local of locals) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const variant = readTag(src, m.index + m[0].length)?.attrs.find((a) => a.name === 'variant');
+      if (!variant?.value) continue;
+      const lit = /^(?:\{\s*)?(["'])(\w+)\1(?:\s*\})?$/.exec(variant.value);
+      if (lit && BUTTON_ALIASES[lit[2]]) edits.push({ start: variant.end - variant.value.length, end: variant.end, text: `"${BUTTON_ALIASES[lit[2]]}"` });
+      else if (!lit && new RegExp(`['"](${ALIAS_RE})['"]`).test(variant.value)) report(m.index, `<${local} variant={…}> may pass a legacy alias (removed in 9.0): use ${Object.entries(BUTTON_ALIASES).map(([a, b]) => `${a} -> ${b}`).join(', ')}`);
+    }
+  }
+  // buttonVariants({ variant: 'primary' }) for links styled as buttons.
+  for (const m of src.matchAll(new RegExp(`\\bbuttonVariants\\(\\{[^}]*?\\bvariant:\\s*(['"])(${ALIAS_RE})\\1`, 'g'))) {
+    const at = m.index + m[0].length - m[2].length - 1;
+    edits.push({ start: at, end: at + m[2].length, text: BUTTON_ALIASES[m[2]] });
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.start - a.start)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return { output, items };
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -478,6 +508,11 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
   }
   if (rules.has('deprecated-components') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"]/.test(text)) {
     const r = migrateComponents(text);
+    text = r.output;
+    items.push(...r.items);
+  }
+  if (rules.has('button-aliases') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(text)) {
+    const r = buttonAliases(text);
     text = r.output;
     items.push(...r.items);
   }
@@ -571,6 +606,9 @@ Rules:
   changes-in-8       report what 8.0 removes and flips: legacy --duration-*/--ease-* tokens,
                      the Motion easing prop, the default scrollLock (becomes "class"),
                      non-strict safeHref and custom-scheme links, and the Signature look
+  button-aliases     Button's legacy variants (deprecated 8.4, removed 9.0): primary -> filled,
+                     secondary -> tonal, outline -> outlined, ghost -> text (JSX literals and
+                     buttonVariants({ variant })); variant={expressions} reported
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

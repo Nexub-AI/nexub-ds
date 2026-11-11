@@ -1,4 +1,8 @@
 import type { ComponentEntry, NavGroup } from './types';
+import webProps from './web-props.generated.json';
+import { mergeProps, type GeneratedProps } from './props-merge';
+
+const typed = (e: ComponentEntry) => mergeProps(e, webProps as GeneratedProps);
 
 // ─── Component entries — original ─────────────────────────────────────────────
 import buttonEntry from './components/button';
@@ -337,7 +341,7 @@ export const componentEntries: ComponentEntry[] = [
   streamingTextEntry,
   thinkingIndicatorEntry,
   citationEntry,
-];
+].map(typed);
 
 // Marketing sections share the pattern pages (/patterns/<slug>) under their own nav group.
 export const marketingEntries: ComponentEntry[] = [
@@ -354,7 +358,7 @@ export const marketingEntries: ComponentEntry[] = [
   faqEntry,
   ctaBandEntry,
   marketingFooterEntry,
-];
+].map(typed);
 
 // ─── All pattern entries (flat) ───────────────────────────────────────────────
 export const patternEntries: ComponentEntry[] = [
@@ -372,8 +376,7 @@ export const patternEntries: ComponentEntry[] = [
   bentoGridEntry,
   errorSummaryEntry,
   conversationEntry,
-  ...marketingEntries,
-];
+].map(typed).concat(marketingEntries);
 
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────

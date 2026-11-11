@@ -10,7 +10,6 @@ Compact label chip, optionally dismissible.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'outline'` | `'filled'` | Visual style of the chip. |
 | `onRemove` | `() => void` |  | When provided, renders a dismiss button that calls this handler. |
 | `removeLabel` | `string` | `'Remove'` | Accessible name of the dismiss button (5.2), e.g. "Remove Bug". Use it when several chips sit together. |
 | `size` | `'sm' \| 'md'` |  | Controls chip size. |

@@ -12,7 +12,6 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", required: false, description: 'Direction of the separator line.' },
-    { name: 'decorative', type: 'boolean', default: 'true', required: false, description: 'When true, the separator is hidden from the accessibility tree.' },
   ],
   examples: [
     {

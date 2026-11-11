@@ -69,7 +69,7 @@ import { nxEnter, nxExit, nxLayout, nxSpring } from '@nexub/react-native';
 <Animated.View entering={nxEnter('up')} exiting={nxExit('down')} layout={nxLayout()} />
 
 // Lists: rows glide into place when others are added or removed.
-<Animated.FlatList itemLayoutAnimation={nxLayout()} … />
+<Animated.FlatList data={rows} renderItem={renderRow} itemLayoutAnimation={nxLayout()} />
 
 // Your own value, on a token spring.
 offset.value = withSpring(target, nxSpring('spatial', 'fast'));

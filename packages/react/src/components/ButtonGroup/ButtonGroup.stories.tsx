@@ -15,9 +15,9 @@ type Story = StoryObj<typeof ButtonGroup>;
 export const Default: Story = {
   render: (args) => (
     <ButtonGroup {...args}>
-      <Button variant="secondary">One</Button>
-      <Button variant="secondary">Two</Button>
-      <Button variant="secondary">Three</Button>
+      <Button variant="tonal">One</Button>
+      <Button variant="tonal">Two</Button>
+      <Button variant="tonal">Three</Button>
     </ButtonGroup>
   ),
   args: {

@@ -77,7 +77,7 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
       </ul>
 
       <Button
-        variant={highlighted ? 'primary' : 'outline'}
+        variant={highlighted ? 'filled' : 'outlined'}
         className="mt-auto w-full"
         onClick={onSelect}
         asChild={Boolean(ctaHref)}

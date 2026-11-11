@@ -215,8 +215,7 @@ function ToastSurface({
           if (finished) runOnJS(onGone)(id);
         })
       : withSpring(0, nxSpring('spatial', 'default'));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leaving]);
+  }, [leaving, y, id, onGone]);
   // ponytail: PanResponder writes the shared value from the JS thread; a
   // UI-thread swipe needs react-native-gesture-handler as a peer.
   const swipe = React.useMemo(
@@ -239,8 +238,7 @@ function ToastSurface({
           x.value = withSpring(0, nxSpring('spatial', 'default'));
         },
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [width, id, onGone],
+    [width, id, onGone, x],
   );
   const motion = useAnimatedStyle(() => ({
     opacity: Math.max(0, Math.min(1, 1 - Math.abs(x.value) / width - y.value / TOAST_RISE)),
