@@ -819,8 +819,10 @@ export function Slider({
       accessibilityRole="adjustable"
       accessibilityLabel={label}
       accessibilityValue={{ min, max, now: v, text: formatValue?.(v) }}
+      accessibilityState={{ disabled: !!disabled }}
       accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
       onAccessibilityAction={(e) =>
+        !disabled &&
         setV(
           Math.min(
             max,
