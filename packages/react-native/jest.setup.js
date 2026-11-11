@@ -46,3 +46,13 @@ jest.mock('react-native-reanimated', () => {
 
 // Safe-area insets without a native provider.
 jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);
+
+// react-native exposes Modal, KeyboardAvoidingView, PanResponder and ScrollView as
+// lazy getters: the first access requires (and, on a cold Jest cache, Babel-
+// transforms) the whole module graph, ~0.6s locally and several seconds on a busy
+// CI runner. That landed inside whichever test first opened a sheet ("Select: opens
+// a sheet" hit the 5s timeout). Load them here, outside any test's timeout.
+{
+  const RN = require('react-native');
+  void [RN.Modal, RN.KeyboardAvoidingView, RN.PanResponder, RN.ScrollView, RN.FlatList];
+}

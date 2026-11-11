@@ -91,7 +91,7 @@ describe('Table', () => {
     expect(screen.getByText('Total: 1')).toBeInTheDocument();
   });
 
-  describe('horizontal overflow', () => {
+  describe('overflow', () => {
     const proto = Element.prototype;
     const sw = Object.getOwnPropertyDescriptor(proto, 'scrollWidth')!;
     const cw = Object.getOwnPropertyDescriptor(proto, 'clientWidth')!;
@@ -125,6 +125,20 @@ describe('Table', () => {
       render(<Wide />);
       const region = screen.getByRole('region', { name: 'Invoices' });
       expect(region).toHaveAttribute('tabindex', '0');
+    });
+
+    it('becomes a focusable region when it only overflows vertically (maxHeight)', () => {
+      const sh = Object.getOwnPropertyDescriptor(proto, 'scrollHeight')!;
+      const ch = Object.getOwnPropertyDescriptor(proto, 'clientHeight')!;
+      Object.defineProperty(proto, 'scrollHeight', { configurable: true, get: () => 900 });
+      Object.defineProperty(proto, 'clientHeight', { configurable: true, get: () => 320 });
+      try {
+        render(<Wide />);
+        expect(screen.getByRole('region', { name: 'Invoices' })).toHaveAttribute('tabindex', '0');
+      } finally {
+        Object.defineProperty(proto, 'scrollHeight', sh);
+        Object.defineProperty(proto, 'clientHeight', ch);
+      }
     });
 
     it('prefers scrollLabel for the region name', () => {

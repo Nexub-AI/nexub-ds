@@ -95,6 +95,7 @@ const OPEN: { id: string; trigger?: string }[] = [
   { id: 'navigation-commandpalette--default' }, // story renders it open
   { id: 'overlays-alertdialog--type-to-confirm', trigger: 'button' },
   { id: 'data-display-datatable--selection', trigger: 'button[aria-haspopup=menu]' },
+  { id: 'components-splitbutton--default', trigger: 'button[aria-haspopup=menu]' },
 ];
 const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
 

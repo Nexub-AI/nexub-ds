@@ -27,7 +27,8 @@ const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
       if (!wrapper) return;
       const measure = () => {
         // Only an overflowing wrapper is a scroll region worth a tab stop (WCAG 2.1.1).
-        if (wrapper.scrollWidth > wrapper.clientWidth) {
+        // Either axis: a DataTable with maxHeight scrolls vertically (8.3).
+        if (wrapper.scrollWidth > wrapper.clientWidth || wrapper.scrollHeight > wrapper.clientHeight) {
           const id = tableRef.current?.caption?.id || null;
           setOverflow((prev) => (prev && prev.captionId === id ? prev : { captionId: id }));
         } else {
