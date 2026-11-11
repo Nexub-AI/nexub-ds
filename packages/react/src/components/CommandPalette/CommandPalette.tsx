@@ -92,13 +92,20 @@ const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
   const [pages = [], setPages] = useControllableState({ value: pagesProp, defaultValue: defaultPages, onChange: onPagesChange });
   const [open = false, setOpenState] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
   // Reopening starts on the root page.
-  const setOpen = (next: boolean) => {
-    setOpenState(next);
-    if (!next && pages.length) setPages([]);
-  };
+  const setOpen = React.useCallback(
+    (next: boolean) => {
+      setOpenState(next);
+      if (!next && pages.length) setPages([]);
+    },
+    [setOpenState, setPages, pages.length],
+  );
   const [titles, setTitles] = React.useState<Record<string, string>>({});
   const [recents, setRecents] = React.useState<Recent[]>([]);
   const handlers = React.useRef(new Map<string, (value: string) => void>()).current;
+  const setTitle = React.useCallback(
+    (page: string, title: string) => setTitles((t) => (t[page] === title ? t : { ...t, [page]: title })),
+    [],
+  );
   // Read after mount: localStorage isn't there during SSR.
   React.useEffect(() => setRecents(recentKey ? readRecents(recentKey) : []), [recentKey]);
   const ctx: PaletteContext = {
@@ -106,7 +113,7 @@ const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
     push: (page) => setPages([...pages, page]),
     pop: () => setPages(pages.slice(0, -1)),
     titles,
-    setTitle: (page, title) => setTitles((t) => (t[page] === title ? t : { ...t, [page]: title })),
+    setTitle,
     loading,
     recents,
     record: (recent) => {
@@ -181,11 +188,13 @@ const Input = React.forwardRef<
   // Controlled so a page change can clear the query.
   const [value = '', setValue] = useControllableState({ value: valueProp, defaultValue: '', onChange: onValueChange });
   const depth = pages.length;
-  const first = React.useRef(true);
+  // Clear the query when the page changes (not on mount).
+  const shownDepth = React.useRef(depth);
   React.useEffect(() => {
-    if (first.current) first.current = false;
-    else setValue('');
-  }, [depth]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (shownDepth.current === depth) return;
+    shownDepth.current = depth;
+    setValue('');
+  }, [depth, setValue]);
   return (
     <div className="flex items-center gap-1 border-b border-[var(--color-outline-variant)] px-3">
       <Search size="sm" className="me-1 shrink-0 opacity-50" aria-hidden="true" />
@@ -361,7 +370,7 @@ function Page({ id, title, children }: CommandPalettePageProps) {
   const setTitle = palette?.setTitle;
   useIsomorphicLayoutEffect(() => {
     if (id && title) setTitle?.(id, title);
-  }, [id, title]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id, title, setTitle]);
   const pages = palette?.pages ?? [];
   const active = id ? pages[pages.length - 1] === id : pages.length === 0;
   return active ? <>{children}</> : null;

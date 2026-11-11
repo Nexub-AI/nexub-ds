@@ -17,10 +17,8 @@ Calendar date picker with text input.
 | `disabled` | `boolean` | `false` | Disables the date picker input and calendar. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
 | `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
-| `format` | `string` | `'dd/MM/yyyy'` | Date format string for the text input display. |
 | `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
 | `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
-| `error` | `string` |  | Error message displayed below the input. |
 
 ## Example: Default
 

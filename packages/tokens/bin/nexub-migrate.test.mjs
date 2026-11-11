@@ -323,3 +323,25 @@ test('changes-in-8: Signature note where @nexub/themes is imported, unless data-
   // Files that don't import Nexub are left alone.
   assert.deepEqual(report(`<Dialog.Root /><Fade easing="out" />;\nconst x = { href: 'slack://a' };\n`, '.tsx'), []);
 });
+
+// ─── button-aliases ───
+test('button-aliases: rewrites legacy Button variants, leaves other components and expressions', () => {
+  const src = [
+    "import { Button as B, IconButton, buttonVariants } from '@nexub/react';",
+    '<B variant="primary" size="sm">Go</B>',
+    "<B variant={'ghost'} />",
+    '<IconButton variant="ghost" aria-label="x" />',
+    '<B variant={cond ? "outline" : "filled"} />',
+    "<a className={buttonVariants({ size: 'sm', variant: 'secondary' })} />",
+  ].join('\n');
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('button-aliases') });
+  assert.equal(output, [
+    "import { Button as B, IconButton, buttonVariants } from '@nexub/react';",
+    '<B variant="filled" size="sm">Go</B>',
+    '<B variant="text" />',
+    '<IconButton variant="ghost" aria-label="x" />',
+    '<B variant={cond ? "outline" : "filled"} />',
+    "<a className={buttonVariants({ size: 'sm', variant: 'tonal' })} />",
+  ].join('\n'));
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[5, 'button-aliases']]);
+});

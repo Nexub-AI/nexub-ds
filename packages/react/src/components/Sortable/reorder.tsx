@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { GripVertical } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -231,7 +232,12 @@ export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: Re
     setMark(null);
   };
 
-  React.useEffect(() => () => finish(false), []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Unmounting mid-drag cancels it; the ref holds this render's finish (fresh closures).
+  const finishRef = React.useRef(finish);
+  useIsomorphicLayoutEffect(() => {
+    finishRef.current = finish;
+  });
+  React.useEffect(() => () => finishRef.current(false), []);
 
   const begin = (d: Drag) => {
     d.active = true;

@@ -28,7 +28,7 @@ export const WithActions: Story = {
   args: {
     href: '#lisbon',
     children: (
-      <Button size="sm" variant="secondary">
+      <Button size="sm" variant="tonal">
         Save
       </Button>
     ),

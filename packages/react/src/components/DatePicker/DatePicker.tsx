@@ -267,7 +267,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             {presets && presets.length > 0 && (
               <div className="flex flex-wrap gap-1 border-t border-[var(--color-outline-variant)] p-2">
                 {presets.map((p) => (
-                  <Button key={p.label} variant="ghost" size="xs" onClick={() => pick(p.date)}>
+                  <Button key={p.label} variant="text" size="xs" onClick={() => pick(p.date)}>
                     {p.label}
                   </Button>
                 ))}

@@ -57,7 +57,7 @@ export const PaywallPage = React.forwardRef<HTMLElement, PaywallPageProps>(funct
           {m.continue}
         </Button>
         {onRestore && (
-          <Button variant="ghost" size="lg" fullWidth onClick={onRestore}>
+          <Button variant="text" size="lg" fullWidth onClick={onRestore}>
             {m.restorePurchases}
           </Button>
         )}

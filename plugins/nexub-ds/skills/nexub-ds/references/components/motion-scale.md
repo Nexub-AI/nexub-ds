@@ -36,7 +36,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Scale in={visible} unmountOnExit>
         <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
       </Scale>

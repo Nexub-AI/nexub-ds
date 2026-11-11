@@ -72,7 +72,7 @@ export const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'primary',
+      variant: 'filled',
       size: 'md',
     },
   },
@@ -80,9 +80,17 @@ export const buttonVariants = cva(
 
 export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 
+/**
+ * @deprecated 8.4: the 1.x variant names, removed in 9.0. Use filled, tonal, outlined, text
+ * (`npx nexub-migrate --rules button-aliases --write`).
+ */
+export type ButtonLegacyVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /** Visual style. primary, secondary, outline and ghost are deprecated aliases of
+   *  filled, tonal, outlined and text, removed in 9.0. @default 'filled' */
+  variant?: VariantProps<typeof buttonVariants>['variant'];
   tone?: ToneValue;
   /** Async feedback. `loading` blocks clicks (aria-disabled, focus kept),
    *  `success` draws a check, `error` shakes once. Not applied with `asChild`. */
@@ -172,7 +180,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       onPointerMove: handlePointerMove,
       'data-tone': tone,
       // Styling hook for opt-in layers (vivid, marketing); no styles depend on it by default.
-      'data-variant': variant ?? 'primary',
+      'data-variant': variant ?? 'filled',
       ...(variant === 'glass' && { 'data-material': 'glass', 'data-glass-thickness': 'thin' }),
       ...props,
     };

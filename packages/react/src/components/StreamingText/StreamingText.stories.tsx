@@ -35,7 +35,7 @@ function SimulatedStream() {
   return (
     <div className="flex max-w-prose flex-col items-start gap-4">
       <StreamingText as="p" text={ANSWER.slice(0, length)} streaming={streaming} className="text-body-lg text-[var(--color-on-surface)]" />
-      <Button variant="outline" size="sm" onClick={() => setRun((r) => r + 1)}>
+      <Button variant="outlined" size="sm" onClick={() => setRun((r) => r + 1)}>
         Restart
       </Button>
     </div>

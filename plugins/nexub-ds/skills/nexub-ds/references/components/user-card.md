@@ -13,7 +13,7 @@ User profile card displaying avatar, name, role, and optional actions.
 | `name` (required) | `string` |  | User display name. |
 | `email` | `string` |  | User email address. |
 | `role` | `string` |  | Job title or role label. |
-| `avatar` | `string` |  | URL for avatar image. |
+| `avatarSrc` | `string` |  | URL for avatar image. |
 | `actions` | `React.ReactNode` |  | Action buttons or menu. |
 
 ## Example: Default

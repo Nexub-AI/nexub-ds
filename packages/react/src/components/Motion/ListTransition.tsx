@@ -95,13 +95,13 @@ export const ListTransition = React.forwardRef<HTMLElement, ListTransitionProps>
   }, []);
 
   const exiting = rendered.filter((e) => e.state === 'exit').map((e) => e.key).join('|');
+  // Fallback for exits whose animationend never fires: a change in the exiting set
+  // restarts the timer, so whatever is still exiting when it fires has had its full time.
   React.useEffect(() => {
     if (!exiting) return;
-    const keys = rendered.filter((e) => e.state === 'exit').map((e) => e.key);
-    const t = setTimeout(() => keys.forEach(remove), EXIT_FALLBACK_MS);
+    const t = setTimeout(() => setEntries((list) => list.filter((e) => e.state !== 'exit')), EXIT_FALLBACK_MS);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exiting, remove]);
+  }, [exiting]);
 
   return (
     <Tag ref={ref} {...rest}>

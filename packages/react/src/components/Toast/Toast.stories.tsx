@@ -48,10 +48,10 @@ export const Stacked: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2 p-4">
       <Button onClick={() => samples[Math.floor(Math.random() * samples.length)]!()}>Fire one</Button>
-      <Button variant="outline" onClick={() => samples.forEach((fire, i) => setTimeout(fire, i * 250))}>
+      <Button variant="outlined" onClick={() => samples.forEach((fire, i) => setTimeout(fire, i * 250))}>
         Fire five
       </Button>
-      <Button variant="ghost" onClick={() => toast.dismiss()}>
+      <Button variant="text" onClick={() => toast.dismiss()}>
         Clear
       </Button>
       <Toaster />
@@ -92,13 +92,13 @@ function UndoDeleteDemo() {
         {rows.map((row) => (
           <li key={row} className="flex items-center justify-between gap-2 text-body-md">
             {row}
-            <Button size="sm" variant="ghost" onClick={() => remove(row)}>
+            <Button size="sm" variant="text" onClick={() => remove(row)}>
               Delete
             </Button>
           </li>
         ))}
       </ul>
-      <Button variant="outline" size="sm" onClick={() => setRows(initialRows)}>
+      <Button variant="outlined" size="sm" onClick={() => setRows(initialRows)}>
         Reset rows
       </Button>
       <p className="text-body-sm text-[var(--color-on-surface-muted)]">Committed: {log.join(', ') || 'none'}</p>

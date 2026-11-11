@@ -765,7 +765,7 @@ export default function Example() {
               This action cannot be undone. This will permanently delete your account and remove all your data.
             </AlertDialog.Description>
             <div className="flex gap-2 justify-end mt-6">
-              <AlertDialog.Cancel asChild><Button variant="outline">Cancel</Button></AlertDialog.Cancel>
+              <AlertDialog.Cancel asChild><Button variant="outlined">Cancel</Button></AlertDialog.Cancel>
               <AlertDialog.Action asChild><Button variant="destructive">Yes, delete</Button></AlertDialog.Action>
             </div>
           </AlertDialog.Content>
@@ -1444,9 +1444,6 @@ Generic container primitive with style token props.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `padding` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Padding applied to all sides using design tokens. |
-| `background` | `string` |  | Background color CSS value or token. |
-| `radius` | `string` |  | Border radius CSS value or token. |
 | `asChild` | `boolean` |  | Merges props onto the immediate child element (Radix Slot). |
 
 ## Example: Default
@@ -1594,8 +1591,8 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup>
-      <Button variant="primary">Save</Button>
-      <Button variant="outline">Cancel</Button>
+      <Button variant="filled">Save</Button>
+      <Button variant="outlined">Cancel</Button>
     </ButtonGroup>
   );
 }
@@ -1609,9 +1606,9 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup attached>
-      <Button variant="outline">Left</Button>
-      <Button variant="outline">Center</Button>
-      <Button variant="outline">Right</Button>
+      <Button variant="outlined">Left</Button>
+      <Button variant="outlined">Center</Button>
+      <Button variant="outlined">Right</Button>
     </ButtonGroup>
   );
 }
@@ -1625,9 +1622,9 @@ import { ButtonGroup, Button } from '@nexub/react';
 export default function Example() {
   return (
     <ButtonGroup orientation="vertical">
-      <Button variant="outline">Option A</Button>
-      <Button variant="outline">Option B</Button>
-      <Button variant="outline">Option C</Button>
+      <Button variant="outlined">Option A</Button>
+      <Button variant="outlined">Option B</Button>
+      <Button variant="outlined">Option C</Button>
     </ButtonGroup>
   );
 }
@@ -1662,7 +1659,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Deprecated in 8.4, removed in 9.0: the legacy aliases primary (filled), secondary (tonal), outline (outlined) and ghost (text) still work; `npx nexub-migrate --rules button-aliases --write` renames them. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
 | `loading` | `boolean` | `false` | Alias for `status="loading"`. |
@@ -1683,7 +1680,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 import { Button } from '@nexub/react';
 
 export default function Example() {
-  return <Button variant="primary">Click me</Button>;
+  return <Button variant="filled">Click me</Button>;
 }
 ```
 
@@ -1695,9 +1692,9 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="primary">Primary</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
+      <Button variant="filled">Primary</Button>
+      <Button variant="outlined">Outline</Button>
+      <Button variant="text">Ghost</Button>
       <Button variant="subtle">Subtle</Button>
       <Button variant="link">Link</Button>
     </div>
@@ -1713,10 +1710,10 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button size="xs" variant="primary">XSmall</Button>
-      <Button size="sm" variant="primary">Small</Button>
-      <Button size="md" variant="primary">Medium</Button>
-      <Button size="lg" variant="primary">Large</Button>
+      <Button size="xs" variant="filled">XSmall</Button>
+      <Button size="sm" variant="filled">Small</Button>
+      <Button size="md" variant="filled">Medium</Button>
+      <Button size="lg" variant="filled">Large</Button>
     </div>
   );
 }
@@ -1730,8 +1727,8 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="primary" loading>Loading</Button>
-      <Button variant="outline" disabled>Disabled</Button>
+      <Button variant="filled" loading>Loading</Button>
+      <Button variant="outlined" disabled>Disabled</Button>
     </div>
   );
 }
@@ -2277,7 +2274,6 @@ Compact label chip, optionally dismissible.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'outline'` | `'filled'` | Visual style of the chip. |
 | `onRemove` | `() => void` |  | When provided, renders a dismiss button that calls this handler. |
 | `removeLabel` | `string` | `'Remove'` | Accessible name of the dismiss button (5.2), e.g. "Remove Bug". Use it when several chips sit together. |
 | `size` | `'sm' \| 'md'` |  | Controls chip size. |
@@ -2467,7 +2463,7 @@ export default function Example() {
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>
       <Collapsible.Trigger asChild>
-        <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
+        <Button variant="outlined">{open ? 'Hide details' : 'Show details'}</Button>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
@@ -2492,7 +2488,7 @@ export default function Example() {
       <div className="flex items-center gap-2">
         <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
-          <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
+          <Button variant="text" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>
@@ -2703,7 +2699,7 @@ export default function Example() {
         viewOptions
         bulkActions={(rows, clear) => (
           <>
-            <Button size="sm" variant="outline" onClick={clear}>
+            <Button size="sm" variant="outlined" onClick={clear}>
               Send reminders ({rows.length})
             </Button>
             <Button size="sm" variant="destructive" onClick={clear}>
@@ -2944,10 +2940,8 @@ Calendar date picker with text input.
 | `disabled` | `boolean` | `false` | Disables the date picker input and calendar. |
 | `minDate` | `Date` |  | Earliest selectable date. Dates before this are greyed out. |
 | `maxDate` | `Date` |  | Latest selectable date. Dates after this are greyed out. |
-| `format` | `string` | `'dd/MM/yyyy'` | Date format string for the text input display. |
 | `aria-label` | `string` |  | Field name for screen readers; the selected value is appended. |
 | `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
-| `error` | `string` |  | Error message displayed below the input. |
 
 ## Example: Default
 
@@ -3155,7 +3149,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="primary" onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Button variant="filled" onClick={() => setOpen(true)}>Open Dialog</Button>
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
           <Dialog.Overlay />
@@ -3165,8 +3159,8 @@ export default function Example() {
               Are you sure you want to continue? This action cannot be undone.
             </Dialog.Description>
             <div className="flex gap-2 justify-end">
-              <Dialog.Close asChild><Button variant="outline">Cancel</Button></Dialog.Close>
-              <Button variant="primary" onClick={() => setOpen(false)}>Confirm</Button>
+              <Dialog.Close asChild><Button variant="outlined">Cancel</Button></Dialog.Close>
+              <Button variant="filled" onClick={() => setOpen(false)}>Confirm</Button>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
@@ -3295,13 +3289,13 @@ Slide-in panel from any edge of the screen.
 | `Drawer.Overlay` | `compound` |  | Dimmed backdrop rendered behind the drawer. |
 | `Drawer.Content` | `compound` |  | The drawer panel. Accepts a side prop. |
 | `scrollLock` | `'style' \| 'class'` |  | On Drawer.Root. How page scroll is locked while open. `class` adds a class from @nexub/themes/base instead of injecting a <style> tag, so it works under a strict CSP (style-src 'self'). Default `style`. |
-| `side` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
+| `direction` | `'left' \| 'right' \| 'top' \| 'bottom'` |  | Edge of the screen from which the drawer slides in. |
 | `Drawer.Header` | `compound` |  | Header section of the drawer panel. Sticky on solid panels (5.1): long content scrolls under it. |
 | `Drawer.Footer` | `compound` |  | Footer section of the drawer panel. Sticky on solid panels (5.1): actions stay in view while content scrolls. |
 | `Drawer.Title` | `compound` |  | Accessible title for the drawer. |
 | `Drawer.Description` | `compound` |  | Supporting description text for the drawer. |
 | `Drawer.Close` | `compound` |  | Element that closes the drawer. |
-| `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Drawer.Content — see Foundations → Materials. |
+| `Drawer.Content surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Drawer.Content — see Foundations → Materials. |
 
 ## Example: Default
 
@@ -3313,7 +3307,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Drawer</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Drawer</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -3336,8 +3330,8 @@ export default function Example() {
             </div>
             <Drawer.Footer>
               <div className="flex gap-2 justify-end">
-                <Drawer.Close asChild><Button variant="outline">Cancel</Button></Drawer.Close>
-                <Button variant="primary">Save changes</Button>
+                <Drawer.Close asChild><Button variant="outlined">Cancel</Button></Drawer.Close>
+                <Button variant="filled">Save changes</Button>
               </div>
             </Drawer.Footer>
           </Drawer.Content>
@@ -3358,7 +3352,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -3368,7 +3362,7 @@ export default function Example() {
             </Drawer.Header>
             <div className="p-4 flex gap-3 flex-wrap">
               {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
-                <Button key={s} variant="outline" size="sm">{s}</Button>
+                <Button key={s} variant="outlined" size="sm">{s}</Button>
               ))}
             </div>
           </Drawer.Content>
@@ -3419,7 +3413,7 @@ export default function Example() {
       <EmptyState.Title>No results found</EmptyState.Title>
       <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary" size="sm">Clear filters</Button>
+        <Button variant="filled" size="sm">Clear filters</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );
@@ -3445,7 +3439,7 @@ export default function Example() {
       <EmptyState.Title>No documents yet</EmptyState.Title>
       <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary">Upload document</Button>
+        <Button variant="filled">Upload document</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );
@@ -3462,7 +3456,7 @@ import { Button, EmptyStatePreset } from '@nexub/react';
 export default function Example() {
   return (
     <div className="grid w-full gap-4 sm:grid-cols-2">
-      <EmptyStatePreset kind="noResults" actions={<Button variant="outline" size="sm">Clear filters</Button>} />
+      <EmptyStatePreset kind="noResults" actions={<Button variant="outlined" size="sm">Clear filters</Button>} />
       <EmptyStatePreset kind="serverError" actions={<Button size="sm">Retry</Button>} />
     </div>
   );
@@ -3488,7 +3482,6 @@ Full-page or section error view with retry action.
 | `description` | `string` |  | Supporting text with more detail about the error or recovery steps. |
 | `tone` | `'error' \| 'warning' \| 'info'` | `'error'` | Controls the icon and colour scheme of the error state. |
 | `onRetry` | `() => void` |  | When provided, renders a "Try again" button that calls this function on click. |
-| `actions` | `React.ReactNode` |  | Custom action elements rendered below the description. Takes priority over the default retry button. |
 
 ## Example: Default
 
@@ -3787,9 +3780,7 @@ Interactive chip for filtering, supports selected/unselected state.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `selected` | `boolean` |  | Controlled selected state of the chip. |
-| `onSelectedChange` | `(selected: boolean) => void` |  | Called when the selected state changes. |
 | `disabled` | `boolean` |  | Disables the chip. |
-| `size` | `'sm' \| 'md'` |  | Controls chip size. |
 
 ## Example: Default
 
@@ -3837,8 +3828,8 @@ import { Flex, Button } from '@nexub/react';
 export default function Example() {
   return (
     <Flex gap="md" align="center">
-      <Button variant="primary">Action</Button>
-      <Button variant="outline">Cancel</Button>
+      <Button variant="filled">Action</Button>
+      <Button variant="outlined">Cancel</Button>
     </Flex>
   );
 }
@@ -3932,7 +3923,6 @@ Wraps Label, Input, HelperText and FormError into a single accessible group.
 | --- | --- | --- | --- |
 | `name` (required) | `string` |  | Name attribute forwarded to the underlying input. |
 | `id` | `string` |  | Explicit id for the input; defaults to the name value. |
-| `error` | `string` |  | Validation error message shown below the input. |
 | `required` | `boolean` |  | Marks the field as required and renders a required indicator on the label. |
 
 ## Example: Default
@@ -4140,7 +4130,6 @@ CSS Grid layout primitive.
 | --- | --- | --- | --- |
 | `cols` | `number \| string` |  | Number of columns or a custom grid-template-columns value. |
 | `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Gap between grid cells using design tokens. |
-| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Sets the align-items CSS property for all grid cells. |
 
 ## Example: 2-column
 
@@ -5209,7 +5198,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>
         {visible ? 'Collapse' : 'Expand'}
       </Button>
       <Collapse in={visible}>
@@ -5263,7 +5252,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>
         {visible ? 'Hide' : 'Show'}
       </Button>
       <Fade in={visible} unmountOnExit>
@@ -5284,7 +5273,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Fade in={visible} duration="slow">
         <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
@@ -5447,7 +5436,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Scale in={visible} unmountOnExit>
         <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
       </Scale>
@@ -5498,7 +5487,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Slide in={visible} direction="up" unmountOnExit>
         <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
       </Slide>
@@ -5825,7 +5814,6 @@ Page navigation control with prev/next and page number buttons.
 | `pageSize` | `number` | `10` | Number of items per page. Used to calculate total page count. |
 | `siblingCount` | `number` | `1` | Number of page buttons to show on each side of the current page. |
 | `onPageChange` (required) | `(page: number) => void` |  | Callback invoked with the new page number when the user navigates. |
-| `showFirstLast` | `boolean` | `true` | Whether to show First and Last page navigation buttons. |
 | `disabled` | `boolean` | `false` | Disables all pagination controls. |
 
 ## Example: Default
@@ -5971,7 +5959,7 @@ export default function Example() {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <Button variant="outline">Open popover</Button>
+        <Button variant="outlined">Open popover</Button>
       </Popover.Trigger>
       <Popover.Content>
         <Text size="body-sm">This is popover content. You can put anything here.</Text>
@@ -5992,7 +5980,7 @@ export default function Example() {
       {(['top', 'right', 'bottom', 'left'] as const).map((s) => (
         <Popover.Root key={s}>
           <Popover.Trigger asChild>
-            <Button variant="ghost" size="sm">{s}</Button>
+            <Button variant="text" size="sm">{s}</Button>
           </Popover.Trigger>
           <Popover.Content side={s}>
             <Text size="body-sm">Opens {s}</Text>
@@ -6780,7 +6768,6 @@ A horizontal or vertical visual divider.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the separator line. |
-| `decorative` | `boolean` | `true` | When true, the separator is hidden from the accessibility tree. |
 
 ## Example: Default
 
@@ -6903,7 +6890,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Sheet</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Sheet</Button>
       <Sheet.Root open={open} onOpenChange={setOpen}>
         <Sheet.Portal>
           <Sheet.Overlay />
@@ -7238,7 +7225,7 @@ Vertical stack layout with configurable gap.
 | --- | --- | --- | --- |
 | `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Spacing between child elements. |
 | `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Cross-axis alignment of children. |
-| `dividers` | `boolean` |  | Renders a divider line between each child element. |
+| `divider` | `boolean` |  | Element rendered between each pair of children, e.g. `<Separator />`. |
 
 ## Example: Default
 
@@ -7248,9 +7235,9 @@ import { Stack, Button } from '@nexub/react';
 export default function Example() {
   return (
     <Stack gap="md">
-      <Button variant="outline">Item 1</Button>
-      <Button variant="outline">Item 2</Button>
-      <Button variant="outline">Item 3</Button>
+      <Button variant="outlined">Item 1</Button>
+      <Button variant="outlined">Item 2</Button>
+      <Button variant="outlined">Item 3</Button>
     </Stack>
   );
 }
@@ -7392,7 +7379,7 @@ export default function Example() {
   return (
     <div className="flex flex-col gap-3 items-start max-w-[480px]">
       <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
-      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+      <Button variant="outlined" size="sm" onClick={() => setLength(0)}>Restart</Button>
     </div>
   );
 }
@@ -7651,14 +7638,6 @@ Renders text with a brand gradient fill.
 - Package: `@nexub/react` · Category: Inline Primitives · Status: stable
 - Import: `import { TextGradient } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/text-gradient
-
-## Props
-
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `from` | `string` |  | Starting color of the gradient (CSS color value or token). |
-| `to` | `string` |  | Ending color of the gradient (CSS color value or token). |
-| `direction` | `'to-r' \| 'to-br' \| 'to-b'` |  | Direction of the gradient. |
 
 ## Example: Default
 
@@ -7969,7 +7948,7 @@ import { Button, toast } from '@nexub/react';
 // The docs root layout already renders <Toaster />; a second one doubles every toast.
 export default function Example() {
   return (
-    <Button variant="outline" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
+    <Button variant="outlined" onClick={() => toast.custom('Changes saved', { description: 'Your profile has been updated.' })}>
       Show toast
     </Button>
   );
@@ -7984,10 +7963,10 @@ import { Button, toast } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="outline" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
-      <Button variant="outline" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.success('Saved successfully!')}>Success</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.error('Something went wrong.')}>Error</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.warning('Review required.')}>Warning</Button>
+      <Button variant="outlined" size="sm" onClick={() => toast.info('New update available.')}>Info</Button>
     </div>
   );
 }
@@ -8001,7 +7980,7 @@ import { Button, toast } from '@nexub/react';
 export default function Example() {
   return (
     <Button
-      variant="outline"
+      variant="outlined"
       onClick={() =>
         toast.custom('File deleted', {
           description: 'The file was moved to trash.',
@@ -8036,7 +8015,7 @@ export default function Example() {
   return hidden ? (
     <Button variant="text" onClick={() => setHidden(false)}>Restore demo</Button>
   ) : (
-    <Button variant="outline" tone="danger" onClick={remove}>Delete INV-2041</Button>
+    <Button variant="outlined" tone="danger" onClick={remove}>Delete INV-2041</Button>
   );
 }
 ```
@@ -8207,7 +8186,7 @@ export default function Example() {
   return (
     <TooltipProvider>
       <Tooltip label="This is a tooltip" side="top">
-        <Button variant="outline">Hover me</Button>
+        <Button variant="outlined">Hover me</Button>
       </Tooltip>
     </TooltipProvider>
   );
@@ -8223,7 +8202,7 @@ export default function Example() {
   return (
     <TooltipProvider>
       <Tooltip label="This is a tooltip" side="top">
-        <Button variant="outline">Hover me</Button>
+        <Button variant="outlined">Hover me</Button>
       </Tooltip>
     </TooltipProvider>
   );
@@ -8418,7 +8397,7 @@ export default function Example() {
             <Label htmlFor="auth-pass">Password</Label>
             <Input id="auth-pass" type="password" placeholder="••••••••" />
           </div>
-          <Button variant="primary" className="w-full">Sign in</Button>
+          <Button variant="filled" className="w-full">Sign in</Button>
         </div>
       </AuthCard>
     </div>
@@ -8451,7 +8430,7 @@ A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 4
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `BentoGrid children` (required) | `ReactNode` |  | `BentoTile`s. Dense packing back-fills gaps left by large tiles, so visual order can differ from source order. |
-| `size` | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | `'1x1'` | Tile span, columns × rows. Two-wide spans apply from 2 columns up. |
+| `BentoTile size` | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | `'1x1'` | Tile span, columns × rows. Two-wide spans apply from 2 columns up. |
 | `...Card props` | `CardProps` |  | A tile is a surface Card (`variant` is fixed); `tone`, `surface` and `effect` pass through. |
 
 ## Example: Dashboard
@@ -8961,7 +8940,7 @@ Key–value list for displaying structured metadata or details.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` (required) | `string` |  | The key label. |
+| `InfoListItem label` (required) | `string` |  | The key label. |
 | `value` (required) | `React.ReactNode` |  | The displayed value. |
 
 ## Example: Default
@@ -9303,8 +9282,8 @@ Pricing plan card with feature checklist, badge, and CTA button.
 | `features` | `string[]` |  | List of included features. |
 | `highlighted` | `boolean` | `false` | Applies brand accent styling for recommended plans. |
 | `badge` | `string` |  | Label for the plan badge (e.g. "Most Popular"). |
-| `ctaLabel` | `string` | `'Get started'` | CTA button label. |
-| `onCta` | `() => void` |  | CTA button click handler. |
+| `cta` | `string` | `'Get started'` | CTA button label. |
+| `onSelect` | `() => void` |  | CTA button click handler. |
 
 ## Example: Default
 
@@ -9389,13 +9368,13 @@ Product cards in a grid; each card is one link with the product's accent. Server
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `header` | `React.ReactNode` |  | ProductGrid: a SectionHeader, usually. |
-| `name` (required) | `string` |  | ProductCard: product name, the card's link text. |
-| `description` (required) | `React.ReactNode` |  | ProductCard: one line on what it does. |
-| `href` (required) | `string` |  | ProductCard: the product page. |
-| `icon` | `React.ReactNode` |  | ProductCard: the product mark. |
-| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | ProductCard: coloured top edge and tint in marketing mode. |
-| `linkLabel` | `string` | `'Learn more'` | ProductCard: the visual link cue. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+| `ProductCard name` (required) | `string` |  | Product name, the card's link text. |
+| `ProductCard description` (required) | `React.ReactNode` |  | One line on what it does. |
+| `ProductCard href` (required) | `string` |  | The product page. |
+| `ProductCard icon` | `React.ReactNode` |  | The product mark. |
+| `ProductCard accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | Coloured top edge and tint in marketing mode. |
+| `ProductCard linkLabel` | `string` | `'Learn more'` | The visual link cue. |
 
 ## Example: Default
 
@@ -9474,7 +9453,7 @@ Grouped settings panel with title, description, and action area.
 | `title` (required) | `string` |  | Section heading. |
 | `description` | `string` |  | Supporting description for the section. |
 | `children` (required) | `React.ReactNode` |  | Settings controls. |
-| `action` | `React.ReactNode` |  | Primary action (e.g. save button). |
+| `actions` | `React.ReactNode` |  | Primary action (e.g. save button). |
 
 ## Example: Default
 
@@ -9515,12 +9494,12 @@ A band of headline numbers that count up as they scroll into view. StatBandItem 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `React.ReactNode` |  | StatBand: a heading above the stats. |
-| `value` (required) | `number \| string` |  | StatBandItem: a number counts up from zeros when it scrolls into view; the server HTML keeps the real value. |
-| `label` (required) | `React.ReactNode` |  | StatBandItem: what the number counts. |
-| `prefix / suffix` | `string` |  | StatBandItem: e.g. "$" or "+". |
-| `tone` | `ToneValue` | `'info'` | StatBandItem: the number's colour (accent roles, AA as large text). |
-| `format` | `Intl.NumberFormatOptions` |  | StatBandItem: number formatting. |
+| `title` | `React.ReactNode` |  | A heading above the stats. |
+| `StatBandItem value` (required) | `number \| string` |  | A number counts up from zeros when it scrolls into view; the server HTML keeps the real value. |
+| `StatBandItem label` (required) | `React.ReactNode` |  | What the number counts. |
+| `StatBandItem prefix / suffix` | `string` |  | E.g. "$" or "+". |
+| `StatBandItem tone` | `ToneValue` | `'info'` | The number's colour (accent roles, AA as large text). |
+| `StatBandItem format` | `Intl.NumberFormatOptions` |  | Number formatting. |
 
 ## Example: Default
 
@@ -9629,13 +9608,13 @@ Customer quotes in product-coloured cards, with an optional star rating. Server 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `header` | `React.ReactNode` |  | TestimonialGrid: a SectionHeader, usually. |
-| `quote` (required) | `React.ReactNode` |  | TestimonialCard: the quote. |
-| `name` (required) | `string` |  | TestimonialCard: who said it. |
-| `role` | `React.ReactNode` |  | TestimonialCard: job title and company. |
-| `avatarSrc` | `string` |  | TestimonialCard: photo; initials otherwise. |
-| `rating` | `number` |  | TestimonialCard: stars out of 5, announced as "Rated n out of 5". |
-| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | TestimonialCard: the product the customer uses. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+| `TestimonialCard quote` (required) | `React.ReactNode` |  | The quote. |
+| `TestimonialCard name` (required) | `string` |  | Who said it. |
+| `TestimonialCard role` | `React.ReactNode` |  | Job title and company. |
+| `TestimonialCard avatarSrc` | `string` |  | Photo; initials otherwise. |
+| `TestimonialCard rating` | `number` |  | Stars out of 5, announced as "Rated n out of 5". |
+| `TestimonialCard accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | The product the customer uses. |
 
 ## Example: Default
 
@@ -9673,7 +9652,7 @@ User profile card displaying avatar, name, role, and optional actions.
 | `name` (required) | `string` |  | User display name. |
 | `email` | `string` |  | User email address. |
 | `role` | `string` |  | Job title or role label. |
-| `avatar` | `string` |  | URL for avatar image. |
+| `avatarSrc` | `string` |  | URL for avatar image. |
 | `actions` | `React.ReactNode` |  | Action buttons or menu. |
 
 ## Example: Default
