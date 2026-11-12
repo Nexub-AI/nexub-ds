@@ -1,5 +1,0 @@
----
-'@nexub/react': minor
----
-
-9.7 Security: the supply chain. Releases are now built, packed and attested in an isolated reusable workflow (SLSA Build Level 3 provenance), and the publish job uploads those exact tarballs instead of packing again; the tarballs, their checksums and the signed provenance bundle are attached to each GitHub release, and each release gets a Sigstore-signed tag `v<version>`. Builds are reproducible: two builds of one commit give byte-identical tarballs, checked on every PR (this found and fixed an unstable import order in `@nexub/patterns`' bundle and a key-order shuffle in packed `package.json` files). New dependency policy, checked in CI: every runtime dependency is listed with its reason, new releases wait 7 days before pnpm resolves them, and the lockfile may only hold registry packages with a sha512 integrity. Blocking gates: no open CodeQL alert of high or critical severity (the four that were open are fixed, including a slow regular expression in `FilterBar`'s default search label), and an OpenSSF Scorecard minimum that only goes up. `SECURITY.md` documents how to verify a release.
