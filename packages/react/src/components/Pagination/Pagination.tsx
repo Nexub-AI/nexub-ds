@@ -64,7 +64,8 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
         ref={ref}
         role="navigation"
         aria-label={messages.pagination}
-        className={cn('flex items-center gap-1 tabular-nums', className)}
+        // Wraps: a long run of pages reflows at 400% zoom instead of scrolling the page (9.4).
+        className={cn('flex flex-wrap items-center gap-1 tabular-nums', className)}
         {...props}
       >
         <button

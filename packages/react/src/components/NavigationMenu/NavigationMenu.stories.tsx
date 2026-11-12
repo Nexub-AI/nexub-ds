@@ -20,7 +20,7 @@ export const Default: Story = {
         <NavigationMenu.Item>
           <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
           <NavigationMenu.Content>
-            <ul className="grid w-[300px] gap-3 p-4">
+            <ul className="grid w-[300px] max-w-full gap-3 p-4">
               <li>
                 <NavigationMenu.Link href="#">
                   <p className="text-sm font-semibold leading-none">Analytics</p>

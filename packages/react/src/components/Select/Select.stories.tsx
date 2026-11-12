@@ -35,7 +35,7 @@ export const Default: Story = {
 
 export const ClearableSearchable: Story = {
   render: () => (
-    <div style={{ width: '260px' }}>
+    <div style={{ width: '260px', maxWidth: '100%' }}>
       <Select.Root clearable defaultValue="pro">
         <Select.Trigger aria-label="Plan">
           <Select.Value placeholder="Select a plan" />

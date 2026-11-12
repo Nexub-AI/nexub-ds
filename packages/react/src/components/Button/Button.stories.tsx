@@ -29,14 +29,14 @@ export const Gallery: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 16 }}>
       {variants.map((v) => (
-        <div key={v} style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div key={v} style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
           <Button variant={v}>{v}</Button>
           <Button variant={v} disabled>
             Disabled
           </Button>
         </div>
       ))}
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
         {sizes.map((s) => (
           <Button key={s} size={s}>
             Size {s}

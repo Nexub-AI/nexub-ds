@@ -22,7 +22,7 @@ export const Default: Story = {
   render: () => {
     const [value, setValue] = React.useState(['bug', 'a11y']);
     return (
-      <div style={{ width: '320px' }}>
+      <div style={{ width: '320px', maxWidth: '100%' }}>
         <MultiSelect aria-label="Labels" options={labels} value={value} onValueChange={setValue} placeholder="Add labels…" />
       </div>
     );
@@ -31,7 +31,7 @@ export const Default: Story = {
 
 export const MoreChips: Story = {
   render: () => (
-    <div style={{ width: '320px' }}>
+    <div style={{ width: '320px', maxWidth: '100%' }}>
       <MultiSelect aria-label="Labels" options={labels} defaultValue={['bug', 'design', 'docs', 'perf', 'a11y']} maxVisibleChips={2} />
     </div>
   ),

@@ -11,7 +11,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div style={{ width: '480px' }}>
+    <div style={{ width: '480px', maxWidth: '100%' }}>
       <Accordion.Root type="single" collapsible>
         <Accordion.Item value="item-1">
           <Accordion.Trigger>What is a design system?</Accordion.Trigger>

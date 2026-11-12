@@ -24,6 +24,13 @@ export const nexubFonts = {
 
 export type FontFamily = 'sans' | 'display' | 'mono';
 export type FontSource = 'nexub' | 'system';
+/**
+ * What the theme resolves `fonts` to. 'nexub-bold' is the Nexub faces with the OS Bold Text
+ * setting on (9.4): iOS only thickens system fonts by itself, so each weight steps up to the
+ * next heavier file here.
+ */
+export type ResolvedFontSource = FontSource | 'nexub-bold';
+const BOLDER: Record<number, number> = { 400: 600, 500: 700, 600: 700, 700: 800, 800: 800 };
 
 const SANS: Record<number, string> = {
   400: 'Inter_400Regular',
@@ -45,8 +52,9 @@ const DISPLAY: Record<number, string> = {
  * name, so `fontWeight` is only set for the system font (Android picks the
  * wrong file when both are set).
  */
-export function fontStyle(family: FontFamily, weight: number, source: FontSource) {
+export function fontStyle(family: FontFamily, weight: number, source: ResolvedFontSource) {
   if (source === 'system') return { fontWeight: String(weight) as '400' };
   if (family === 'mono') return { fontFamily: 'GeistMono_400Regular' };
-  return { fontFamily: (family === 'display' ? DISPLAY : SANS)[weight] ?? SANS[400] };
+  const w = source === 'nexub-bold' ? (BOLDER[weight] ?? weight) : weight;
+  return { fontFamily: (family === 'display' ? DISPLAY : SANS)[w] ?? SANS[400] };
 }

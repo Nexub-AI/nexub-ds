@@ -14,7 +14,7 @@ const meta: Meta<typeof MediaCard> = {
   title: 'Components/MediaCard',
   component: MediaCard,
   tags: ['autodocs'],
-  args: { className: 'w-80', src: IMG, alt: 'Abstract sunset', ratio: '16/9', eyebrow: 'Travel', title: 'Lisbon in three days', description: 'Trams, tiles and the best pastel de nata.' },
+  args: { className: 'w-80 max-w-full', src: IMG, alt: 'Abstract sunset', ratio: '16/9', eyebrow: 'Travel', title: 'Lisbon in three days', description: 'Trams, tiles and the best pastel de nata.' },
 };
 export default meta;
 
@@ -36,7 +36,7 @@ export const WithActions: Story = {
 };
 
 export const Ratios: Story = {
-  decorators: [(Story) => <div className="grid w-[720px] grid-cols-4 items-start gap-4">{Story()}</div>],
+  decorators: [(Story) => <div className="grid w-[720px] max-w-full grid-cols-4 items-start gap-4">{Story()}</div>],
   render: (args) => (
     <>
       {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
