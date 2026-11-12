@@ -95,6 +95,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
   /* never fake bold/italic; Inter's optical sizes follow font-size */
   font-synthesis: none;
@@ -408,6 +410,7 @@ code, kbd, pre, samp {
   );
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
 [data-material='glass'].nx-sheen { --nx-sheen-tint: #fff; }
@@ -853,6 +856,7 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   background: linear-gradient(135deg, light-dark(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.45)) 0%, transparent 38%, transparent 62%, light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.18)) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
 }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
@@ -950,7 +954,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   box-shadow: var(--elevation-2);
   cursor: grabbing;
 }
-body:has([data-nx-dragging]) { user-select: none; cursor: grabbing; }
+/* vaul’s copied CSS above sets user-select unprefixed; Safari needs the prefix. */
+@media (hover: hover) and (pointer: fine) { [data-vaul-drawer] { -webkit-user-select: none; } }
+body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cursor: grabbing; }
 [data-nx-drop] { position: relative; }
 [data-nx-drop]::after {
   content: '';
