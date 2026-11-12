@@ -129,6 +129,9 @@ export function ComponentPreview({
             >
               {children}
             </div>
+            {/* Parsed last: until it is, the pane is invisible (globals.css), so a paint that
+                lands mid-document can't show a half-parsed, re-centring preview. */}
+            <span hidden data-preview-end="" />
           </div>
           {!hideToolbar && <PreviewToolbar state={toolbar} onChange={setToolbar} />}
         </>
