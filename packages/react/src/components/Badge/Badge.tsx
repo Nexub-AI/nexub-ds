@@ -148,7 +148,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
           <span className="shrink-0 inline-flex items-center">{leadingIcon}</span>
         )}
         {/* A text label can shrink and end in an ellipsis instead of leaving its container (9.3). */}
-        {typeof children === 'string' ? <span className="min-w-0 truncate">{children}</span> : children}
+        {typeof children === 'string' ? <span className="-mx-px min-w-0 truncate px-px">{children}</span> : children}
         {count != null && (
           <span className="tabular-nums">
             {/* Keyed on the count so the CSS tick replays on each change (server-safe, no state). */}

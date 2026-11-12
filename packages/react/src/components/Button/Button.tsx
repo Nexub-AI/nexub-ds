@@ -217,7 +217,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <span className={cn('contents', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
             {leadingIcon}
             {/* A text label can shrink and end in an ellipsis, so a long one stays inside its container (9.3). */}
-            {typeof children === 'string' ? <span className="min-w-0 truncate">{children}</span> : children}
+            {typeof children === 'string' ? <span className="-mx-px min-w-0 truncate px-px">{children}</span> : children}
             {trailingIcon}
           </span>
         ) : (
