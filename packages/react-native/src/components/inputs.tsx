@@ -205,7 +205,9 @@ export function PasswordInput(props: PasswordInputProps) {
       trailing={
         <IconButton
           icon={visible ? EyeOff : Eye}
-          label={visible ? messages.hidePassword : messages.showPassword}
+          // One name, like the web toggle (7.2): the state is `selected`, not a second label.
+          label={messages.showPassword}
+          selected={visible}
           size="sm"
           onPress={() => setVisible((v) => !v)}
         />
