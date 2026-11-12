@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { RadioCardGroup, RadioCard } from '@nexub/react';
 import { User, Users, Building2 } from '@nexub/icons';

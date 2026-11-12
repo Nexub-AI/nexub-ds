@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Toolbar } from '@nexub/react';
 import { Copy, Pencil, Trash2 } from '@nexub/icons';
 

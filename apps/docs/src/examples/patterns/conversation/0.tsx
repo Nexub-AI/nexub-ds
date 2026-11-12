@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { type PromptInputStatus, PromptInput, MessageBubble, ThinkingIndicator, StreamingText, Citation, type CitationSource } from '@nexub/react';
 import { Conversation } from '@nexub/patterns';

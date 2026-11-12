@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Marquee } from '@nexub/react';
 
 const tools = ['Slack', 'Xero', 'Google Workspace', 'Stripe', 'QuickBooks', 'WhatsApp'];

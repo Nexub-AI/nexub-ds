@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { NavigationMenu } from '@nexub/react';
 
 const products = [

@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { SectionHeader, TestimonialCard, TestimonialGrid } from '@nexub/marketing';
 
 export default function Example() {

@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { AuthCard } from '@nexub/patterns';
 import { Label, Input, Button } from '@nexub/react';
 

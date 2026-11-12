@@ -8,10 +8,10 @@ function PreviewSkeleton() {
   return <Skeleton className="h-[120px] w-full rounded-shape-container" />;
 }
 
-// Each example (src/examples/<kind>/<slug>/<idx>.tsx) is its own chunk. Server-
-// rendered since 9.2: a client-only preview painted a 120px skeleton first and
-// shifted the page when the real example replaced it (CLS). Cached so a re-render
-// keeps the same component.
+// The mini cards on the index pages (MiniPreviewCard, a client component): each
+// example (src/examples/<kind>/<slug>/<idx>.tsx) is its own chunk, server-rendered.
+// Component and pattern pages use the server LivePreview instead (no Suspense swap).
+// Cached so a re-render keeps the same component.
 const cache = new Map<string, React.ComponentType>();
 
 function example(key: string) {
