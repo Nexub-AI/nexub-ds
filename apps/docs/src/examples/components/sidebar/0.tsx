@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Badge, Logo, Sidebar } from '@nexub/react';
 import { BarChart3, Folder, Home, Settings, Users } from '@nexub/icons';
 

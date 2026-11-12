@@ -5,7 +5,7 @@ import { nativeTwins } from '@/registry/native';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
-import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
+import { LivePreview } from '@/components/docs/LivePreview';
 import { ComponentHero } from '@/components/docs/ComponentHero';
 import { UsageGrid } from '@/components/docs/UsageGrid';
 import { Playground } from '@/components/docs/Playground';
@@ -90,7 +90,7 @@ export default async function ComponentPage({ params }: Props) {
                 return (
                   <Section key={ex.title} id={exampleId(ex.title, i)} title={ex.title} description={ex.description} level={3}>
                     <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} codeSlot={<CodeBlock code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} />} a11ySlot={a11ySlot}>
-                      <ComponentLivePreview slug={slug} idx={i} />
+                      <LivePreview slug={slug} idx={i} />
                     </ComponentPreview>
                   </Section>
                 );

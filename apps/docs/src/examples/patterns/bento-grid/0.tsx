@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { BentoGrid, BentoTile } from '@nexub/patterns';
 
 function BentoStat({ label, value }: { label: string; value: string }) {

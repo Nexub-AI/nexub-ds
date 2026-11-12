@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { AppShell, Logo, Sidebar, Text, TopNav } from '@nexub/react';
 import { BarChart3, Home, Settings } from '@nexub/icons';
 

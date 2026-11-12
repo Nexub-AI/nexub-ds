@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { SettingsSection } from '@nexub/patterns';
 import { Switch } from '@nexub/react';
 

@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Label, Input, HelperText } from '@nexub/react';
 
 export default function Example() {

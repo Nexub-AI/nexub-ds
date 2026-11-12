@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { DiffView } from '@nexub/react';
 
 const diff = `@@ -3,4 +3,4 @@

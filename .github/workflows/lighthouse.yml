@@ -62,7 +62,8 @@ jobs:
       # only skips copying it), which the audited pages don't need. The motion
       # page's /m preview iframe therefore 404s here (one console error).
       - name: Build docs (static export)
-        run: pnpm --filter @nexub/docs exec next build
+        # The preload step is part of the docs build script; Lighthouse measures CLS with it.
+        run: pnpm --filter @nexub/docs exec next build && pnpm --filter @nexub/docs exec node scripts/preload-fonts.mjs
 
       # Serves apps/docs/out with Cloudflare Pages-style clean URLs and
       # compression (apps/docs/scripts/serve-static.mjs), runs Lighthouse

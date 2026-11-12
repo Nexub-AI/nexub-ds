@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { StatCard } from '@nexub/patterns';
 import { Button } from '@nexub/react';

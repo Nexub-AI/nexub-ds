@@ -6,7 +6,7 @@ import { nativePatternTwins } from '@/registry/native';
 import { ComponentPreview } from '@/components/docs/ComponentPreview';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { PropsTable } from '@/components/docs/PropsTable';
-import { ComponentLivePreview } from '@/components/docs/LivePreviewWrapper';
+import { LivePreview } from '@/components/docs/LivePreview';
 import { UsageGrid } from '@/components/docs/UsageGrid';
 import { CopyButton } from '@/components/docs/CopyButton';
 import { MarkdownActions } from '@/components/docs/MarkdownActions';
@@ -71,7 +71,7 @@ export default async function PatternPage({ params }: Props) {
           {examples.map((ex, i) => (
             <Section key={ex.title} title={ex.title} description={ex.description} level={3}>
               <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} codeSlot={<CodeBlock code={exampleCode(EXAMPLES_DIR, 'patterns', slug, i)} />} minHeight="180px">
-                <ComponentLivePreview slug={slug} idx={i} isPattern />
+                <LivePreview slug={slug} idx={i} isPattern />
               </ComponentPreview>
             </Section>
           ))}
