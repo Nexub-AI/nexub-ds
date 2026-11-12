@@ -116,7 +116,7 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       if (e.defaultPrevented) return;
       if (e.key === 'Enter' && !e.shiftKey) {
         // Enter that confirms an IME composition (CJK input) must not send.
-        if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+        if ((e.nativeEvent.isComposing || e.keyCode === 229)) return;
         e.preventDefault();
         submit();
       } else if (e.key === 'Escape' && streaming) {

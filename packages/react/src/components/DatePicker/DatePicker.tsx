@@ -202,7 +202,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                 onChange={(e) => setText(e.target.value)}
                 onBlur={commit}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') commit();
+                  if (e.key === 'Enter' && !(e.nativeEvent.isComposing || e.keyCode === 229)) commit();
                 }}
                 className="min-w-0 flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed"
               />

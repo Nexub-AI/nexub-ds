@@ -5,7 +5,7 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const badgeVariants = cva(
   [
-    'inline-flex items-center gap-1 rounded-[var(--badge-radius,var(--shape-control))] whitespace-nowrap select-none',
+    'inline-flex max-w-full items-center gap-1 rounded-[var(--badge-radius,var(--shape-control))] whitespace-nowrap select-none',
   ],
   {
     variants: {
@@ -147,7 +147,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         {leadingIcon && (
           <span className="shrink-0 inline-flex items-center">{leadingIcon}</span>
         )}
-        {children}
+        {/* A text label can shrink and end in an ellipsis instead of leaving its container (9.3). */}
+        {typeof children === 'string' ? <span className="min-w-0 truncate">{children}</span> : children}
         {count != null && (
           <span className="tabular-nums">
             {/* Keyed on the count so the CSS tick replays on each change (server-safe, no state). */}

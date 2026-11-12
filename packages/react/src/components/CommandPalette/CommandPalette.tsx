@@ -210,7 +210,7 @@ const Input = React.forwardRef<
         onKeyDown={(e) => {
           onKeyDown?.(e);
           // Backspace on an empty query goes back a page.
-          if (!e.defaultPrevented && e.key === 'Backspace' && !e.currentTarget.value && depth) {
+          if (!e.defaultPrevented && !(e.nativeEvent.isComposing || e.keyCode === 229) && e.key === 'Backspace' && !e.currentTarget.value && depth) {
             e.preventDefault();
             palette?.pop();
           }
