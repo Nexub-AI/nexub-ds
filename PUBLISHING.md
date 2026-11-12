@@ -115,8 +115,10 @@ Check that only `dist/` (or `src/` for themes) is listed and that react stays un
 ### Supply chain (9.7)
 
 - The release build packs deterministically: `pnpm check:reproducible` builds twice and compares tarball hashes; CI compares its own build with the release build on every PR (job "Release rehearsal").
-- The publish job attaches the tarballs, `checksums.txt` and `nexub-provenance.intoto.jsonl` to the `@nexub/react@<version>` release, verifies each published tarball's attestation (`gh attestation verify`), and pushes a Sigstore-signed tag `v<version>`. In 9.7 those two verification steps warn instead of failing the run.
+- The publish job attaches the tarballs, `checksums.txt` and `nexub-provenance.intoto.jsonl` to the `@nexub/react@<version>` release, verifies each published tarball's attestation (`gh attestation verify`), and pushes a Sigstore-signed tag `v<version>`. Since 9.8 both steps fail the run (the packages are already on npm by then; see `INCIDENT_RUNBOOK.md`, "A release step failed after the publish").
 - If a publish stops halfway, re-run the workflow: versions already on npm are skipped.
+- The Version Packages PR runs the release build and the publish dry run against the new version numbers, so a publish problem shows there, before the merge that publishes.
+- A security or critical fix ships as a `patch` through the same path, without waiting for the next release: `INCIDENT_RUNBOOK.md`, "Hotfix".
 
 ### Break-glass: manual publish
 

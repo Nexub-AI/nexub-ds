@@ -2,7 +2,7 @@
 // doesn't route it.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { escapeHtml, isValidEmail, onRequestPost, sniffImageType } from '../functions/api/feedback.ts';
+import { escapeHtml, isAllowedTurnstileHost, isValidEmail, onRequestPost, pageUrlOrUndefined, sniffImageType } from '../functions/api/feedback.ts';
 import { onRequestGet } from '../functions/api/feedback/screenshot/[key].ts';
 
 // Minimal Pages context; the handlers only read request/env/params.
@@ -88,6 +88,9 @@ test('screenshot links expire after 30 days', async () => {
 // 9.6: the whole POST with Turnstile and the webhook stubbed: what is sent, what is logged.
 const SECRET = 'turnstile-secret-value';
 const WEBHOOK = 'https://chat.googleapis.com/v1/spaces/X/messages?key=webhook-key&token=webhook-token';
+const SITE = 'https://staging.nexub-ds-docs.pages.dev';
+// What the stubbed siteverify answers, and the bindings: tests change them and put them back.
+const stub = { hostname: 'staging.nexub-ds-docs.pages.dev', env: { TURNSTILE_SECRET_KEY: SECRET, GOOGLE_CHAT_WEBHOOK_URL: WEBHOOK } as Record<string, string> };
 async function submit(ip: string, fields: Record<string, string>, webhookStatus = 200) {
   const fd = new FormData();
   for (const [k, v] of Object.entries({ category: 'bug', 'cf-turnstile-response': 'tok', ...fields })) fd.set(k, v);
@@ -98,7 +101,8 @@ async function submit(ip: string, fields: Record<string, string>, webhookStatus 
   const realFetch = globalThis.fetch;
   const real = { error: console.error, warn: console.warn, log: console.log };
   globalThis.fetch = (async (url: string, init: RequestInit) => {
-    if (String(url).includes('siteverify')) return Response.json({ success: true });
+    assert.ok(init.signal, 'every outbound call has a timeout');
+    if (String(url).includes('siteverify')) return Response.json({ success: true, hostname: stub.hostname });
     sent.push({ url: String(url), body: String(init.body) });
     return new Response('', { status: webhookStatus });
   }) as typeof fetch;
@@ -116,7 +120,7 @@ async function submit(ip: string, fields: Record<string, string>, webhookStatus 
           },
           body: bytes,
         }),
-        env: { TURNSTILE_SECRET_KEY: SECRET, GOOGLE_CHAT_WEBHOOK_URL: WEBHOOK },
+        env: stub.env,
       }),
     );
     return { res, sent, logs: logs.join('\n') };
@@ -130,6 +134,8 @@ test('a submission reaches the webhook escaped, and nothing is logged', async ()
   const message = '<img src=x onerror=alert(1)> the table header overlaps';
   const { res, sent, logs } = await submit('10.0.0.1', { message, email: 'dev@nexub.ai', context: JSON.stringify({ url: 'javascript:alert(1)', ua: '<b>ua</b>' }) });
   assert.equal(res.status, 200);
+  assert.equal(res.headers.get('cache-control'), 'no-store');
+  assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
   assert.equal(sent.length, 1);
   assert.ok(sent[0]!.body.includes('&lt;img src=x onerror=alert(1)&gt;'));
   assert.ok(!sent[0]!.body.includes('<img'));
@@ -161,4 +167,57 @@ test('the fourth submission from one address inside a minute is rate limited', a
   const statuses = [];
   for (let i = 0; i < 4; i++) statuses.push((await submit('10.0.0.9', { message: 'a valid message here' })).res.status);
   assert.deepEqual(statuses, [200, 200, 200, 429]);
+});
+
+// 9.8 security review.
+test('the page URL shown in Chat must be a page of this site', async () => {
+  const req = `${SITE}/api/feedback`;
+  assert.equal(pageUrlOrUndefined(`${SITE}/components/button`, req), `${SITE}/components/button`);
+  assert.equal(pageUrlOrUndefined('https://nexub-ds-docs.pages.dev/x', req), 'https://nexub-ds-docs.pages.dev/x');
+  for (const bad of ['https://evil.example/login', `${SITE}.evil.example/`, `https://evil.example/${SITE}`, 'javascript:alert(1)', 'not a url']) {
+    assert.equal(pageUrlOrUndefined(bad, req), undefined, bad);
+  }
+  const { sent } = await submit('10.0.1.1', { message: 'a valid message here', context: JSON.stringify({ url: 'https://evil.example/login' }) });
+  assert.ok(!sent[0]!.body.includes('evil.example'));
+});
+
+test('a Turnstile token issued for another host is refused', async () => {
+  const req = `${SITE}/api/feedback`;
+  assert.ok(isAllowedTurnstileHost('staging.nexub-ds-docs.pages.dev', req));
+  assert.ok(isAllowedTurnstileHost('nexub-ds-docs.pages.dev', req));
+  assert.ok(!isAllowedTurnstileHost('evil.example', req));
+  assert.ok(!isAllowedTurnstileHost(undefined, req));
+  stub.hostname = 'evil.example';
+  try {
+    const { res, sent } = await submit('10.0.1.2', { message: 'a valid message here' });
+    assert.equal(res.status, 400);
+    assert.equal(sent.length, 0);
+  } finally {
+    stub.hostname = 'staging.nexub-ds-docs.pages.dev';
+  }
+});
+
+test('a missing webhook is an error, not a silent ok', async () => {
+  const env = stub.env;
+  stub.env = { TURNSTILE_SECRET_KEY: SECRET };
+  try {
+    assert.equal((await submit('10.0.1.3', { message: 'a valid message here' })).res.status, 503);
+  } finally {
+    stub.env = env;
+  }
+});
+
+test('a malformed body or Content-Length is a 4xx, never an exception', async () => {
+  const send = (headers: Record<string, string>, body: string) =>
+    onRequestPost(
+      ctx({
+        request: new Request(`${SITE}/api/feedback`, { method: 'POST', headers: { origin: SITE, ...headers }, body }),
+        env: stub.env,
+      }),
+    );
+  const multipart = { 'content-type': 'multipart/form-data; boundary=x', 'cf-connecting-ip': '10.0.1.4' };
+  assert.equal((await send({ ...multipart, 'content-length': '20' }, 'not multipart at all')).status, 400);
+  for (const [i, length] of ['-1', '1.5', 'abc', '0'].entries()) {
+    assert.equal((await send({ ...multipart, 'cf-connecting-ip': `10.0.2.${i}`, 'content-length': length }, 'x')).status, 411, length);
+  }
 });

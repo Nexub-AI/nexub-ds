@@ -68,9 +68,19 @@ const CSP = (nonce: string, frameAncestors: string, styleElem: string) =>
     'upgrade-insecure-requests',
   ].join('; ');
 
+const HSTS = 'max-age=63072000; includeSubDomains';
+
 export const onRequest: PagesFunction = async ({ request, next }) => {
   const res = await next();
-  if (!(res.headers.get('content-type') ?? '').includes('text/html')) return res;
+  if (!(res.headers.get('content-type') ?? '').includes('text/html')) {
+    // _headers only covers static assets, so Function answers (/api/*) get theirs here (9.8).
+    if (!new URL(request.url).pathname.startsWith('/api/')) return res;
+    const api = new Response(res.body, res);
+    api.headers.set('X-Content-Type-Options', 'nosniff');
+    api.headers.set('Strict-Transport-Security', HSTS);
+    if (!api.headers.has('Cache-Control')) api.headers.set('Cache-Control', 'no-store');
+    return api;
+  }
 
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   const nonce = btoa(String.fromCharCode(...bytes));
@@ -81,6 +91,8 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
   out.headers.set('Content-Security-Policy', contentSecurityPolicy(nonce, path));
   if (mobilePreview(path)) out.headers.set('Content-Security-Policy-Report-Only', TRUSTED_TYPES);
   out.headers.set('X-Frame-Options', preview ? 'SAMEORIGIN' : 'DENY');
+  // The nonce is per request, so this HTML must never sit in a shared cache (9.8).
+  out.headers.set('Cache-Control', 'private, max-age=60, stale-while-revalidate=600');
   const addNonce = {
     element(el: Element) {
       el.setAttribute('nonce', nonce);
