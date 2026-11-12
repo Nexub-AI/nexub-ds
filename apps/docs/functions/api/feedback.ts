@@ -47,6 +47,9 @@ const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 const MAX_BODY_BYTES = MAX_IMAGE_BYTES + 256 * 1024;
 const MIN_MESSAGE = 10;
 const MAX_MESSAGE = 2000;
+// Turnstile tokens are up to 2048 characters; the context blob is five short strings.
+const MAX_TOKEN = 2048;
+const MAX_CONTEXT = 4096;
 
 // Per-IP rate limit, per Worker isolate only — Cloudflare runs many isolates, so
 // this is a speed bump, not a guarantee. The real limit is the WAF rate-limiting
@@ -139,7 +142,7 @@ async function parseBody(request: Request): Promise<ParsedBody | null> {
   const website = String(fd.get('website') ?? '');
   const contextRaw = fd.get('context');
   let context: BrowserContext | null = null;
-  if (typeof contextRaw === 'string' && contextRaw) {
+  if (typeof contextRaw === 'string' && contextRaw && contextRaw.length <= MAX_CONTEXT) {
     try {
       context = pickContext(JSON.parse(contextRaw));
     } catch {
@@ -152,7 +155,7 @@ async function parseBody(request: Request): Promise<ParsedBody | null> {
 }
 
 async function verifyTurnstile(token: string, secret: string, ip: string): Promise<boolean> {
-  if (!token || !secret) return false;
+  if (!token || token.length > MAX_TOKEN || !secret) return false;
   const body = new FormData();
   body.set('secret', secret);
   body.set('response', token);
@@ -351,9 +354,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       body: JSON.stringify(card),
     });
   } catch {
+    // Logs never carry the webhook URL (it is the credential), the message or the email.
+    console.error('[feedback] webhook request failed');
     return jsonResponse(500, { error: 'webhook_failed' });
   }
-  if (!webhookRes.ok) return jsonResponse(500, { error: 'webhook_failed' });
+  if (!webhookRes.ok) {
+    console.error(`[feedback] webhook answered ${webhookRes.status}`);
+    return jsonResponse(500, { error: 'webhook_failed' });
+  }
 
   return jsonResponse(200, { ok: true });
 };

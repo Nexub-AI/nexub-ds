@@ -11,7 +11,7 @@ const storybookOut = fileURLToPath(new URL('../storybook-static/index.json', imp
 
 // 9.1: WebKit (the Safari stand-in) and Firefox run the render check, the interaction
 // states and the docs suites, each with its own baselines in __screenshots__/<engine>/.
-const DOCS = /docs\.(visual|nav|a11y)\.spec\.ts/;
+const DOCS = /docs\.(visual|nav|a11y|security)\.spec\.ts/;
 const docsUse = { baseURL: 'http://localhost:6008', viewport: { width: 1280, height: 800 } };
 const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
   const use = {
@@ -47,7 +47,7 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/ },
+    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y|security)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/ },
     // Interaction-latency budgets (perf.spec.ts); serial so its tests don't compete for CPU.
     { name: 'perf', testMatch: /perf\.spec\.ts/, fullyParallel: false },
     { name: 'docs', testMatch: DOCS, use: docsUse },

@@ -410,6 +410,11 @@ html, body {
   .docs-preview-pane { padding: 1rem !important; }
 }
 
+/* A browser can paint while the HTML is still arriving. A preview is centred, so the part
+   that arrives later would move the part already painted (a layout shift on whichever page
+   a network chunk happens to split). Show the pane only once its last element is parsed. */
+.docs-preview-pane:not(:has(> [data-preview-end])) { visibility: hidden; }
+
 
 /* ── Component page layout (content + right-rail TOC) ───────────────────── */
 .docs-layout-with-toc {
