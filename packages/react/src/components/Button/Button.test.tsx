@@ -77,7 +77,8 @@ describe('Button', () => {
 
     it('keeps the label in flow under the spinner (no layout shift)', () => {
       render(<Button status="loading" leadingIcon={<svg data-testid="lead" />}>Save</Button>);
-      const label = screen.getByText('Save');
+      // The text sits in its own shrinkable span (9.3); the flow wrapper is its parent.
+      const label = screen.getByText('Save').parentElement!;
       expect(label).toHaveClass('contents', 'text-transparent');
       expect(screen.getByRole('button').querySelector('.animate-spin')).not.toBeNull();
     });
@@ -174,5 +175,11 @@ describe('Button', () => {
   it('defaults to filled', () => {
     render(<Button>Go</Button>);
     expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
+  });
+
+  it('a text label can shrink and end in an ellipsis; the button is capped at its container (9.3)', () => {
+    render(<Button>{'A very long label '.repeat(12)}</Button>);
+    expect(screen.getByRole('button')).toHaveClass('max-w-full');
+    expect(screen.getByRole('button').querySelector('span.truncate')).toHaveClass('min-w-0');
   });
 });

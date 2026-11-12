@@ -85,6 +85,8 @@ export function InlineEdit({
           setFailed(false);
         }}
         onKeyDown={(e) => {
+          // Enter confirms and Escape cancels an IME composition first (9.3).
+          if ((e.nativeEvent.isComposing || e.keyCode === 229)) return;
           if (e.key === 'Enter') {
             e.preventDefault();
             void save(true);

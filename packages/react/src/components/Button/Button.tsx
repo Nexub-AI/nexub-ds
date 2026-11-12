@@ -36,7 +36,7 @@ const outlined = `bg-transparent border border-[var(--button-outlined-border,var
 const text = `bg-transparent text-[var(--button-text-fg,var(--color-on-surface))] ${disabledText}`;
 
 export const buttonVariants = cva(
-  [pressable, 'nx-hit relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
+  [pressable, 'nx-hit relative inline-flex max-w-full items-center justify-center gap-2 whitespace-nowrap'],
   {
     variants: {
       variant: {
@@ -216,7 +216,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {successLabel === undefined ? (
           <span className={cn('contents', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
             {leadingIcon}
-            {children}
+            {/* A text label can shrink and end in an ellipsis, so a long one stays inside its container (9.3). */}
+            {typeof children === 'string' ? <span className="-mx-px min-w-0 truncate px-px">{children}</span> : children}
             {trailingIcon}
           </span>
         ) : (

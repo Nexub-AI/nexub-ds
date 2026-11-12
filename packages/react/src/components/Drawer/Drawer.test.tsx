@@ -25,6 +25,27 @@ describe('Drawer', () => {
     expect(screen.getByText('Open Drawer')).toBeInTheDocument();
   });
 
+  it('moves focus to the panel on open, or to the first control with autoFocus (9.3)', async () => {
+    const drawer = (autoFocus: boolean) => (
+      <Drawer.Root autoFocus={autoFocus}>
+        <Drawer.Trigger>Open</Drawer.Trigger>
+        <Drawer.Portal>
+          <Drawer.Content>
+            <Drawer.Title>Filters</Drawer.Title>
+            <Drawer.Close>Close</Drawer.Close>
+          </Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+    );
+    const { unmount } = render(drawer(false));
+    fireEvent.click(screen.getByText('Open'));
+    await waitFor(() => expect(screen.getByRole('dialog')).toHaveFocus());
+    unmount();
+    render(drawer(true));
+    fireEvent.click(screen.getByText('Open'));
+    await waitFor(() => expect(screen.getByText('Close')).toHaveFocus());
+  });
+
   it('Drawer and Sheet are the same component', () => {
     expect(Sheet).toBe(Drawer);
   });

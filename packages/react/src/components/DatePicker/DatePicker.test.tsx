@@ -109,6 +109,16 @@ describe('DatePicker locale + RTL', () => {
 });
 
 describe('DatePicker 7.5', () => {
+  it('typeable: Enter that confirms an IME composition does not commit (9.3)', () => {
+    const onChange = vi.fn();
+    render(<DatePicker typeable aria-label="Due" onValueChange={onChange} />);
+    const input = screen.getByRole('textbox', { name: 'Due' });
+    fireEvent.change(input, { target: { value: '01/15/2024' } });
+    fireEvent.keyDown(input, { key: 'Enter', isComposing: true });
+    fireEvent.keyDown(input, { key: 'Enter', keyCode: 229 });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('typeable: Enter commits a valid typed date', () => {
     const onChange = vi.fn();
     render(<DatePicker typeable aria-label="Due" onValueChange={onChange} />);

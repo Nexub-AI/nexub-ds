@@ -20,7 +20,7 @@ const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
   };
   const snapshotPathTemplate = `{testDir}/__screenshots__/${engine}/{arg}{ext}`;
   return [
-    { name: engine, testMatch: /(engines|states\.visual)\.spec\.ts/, use, snapshotPathTemplate },
+    { name: engine, testMatch: /(engines|states\.visual|interactions)\.spec\.ts/, use, snapshotPathTemplate },
     { name: `docs-${engine}`, testMatch: DOCS, use: { ...use, ...docsUse }, snapshotPathTemplate },
   ];
 });
