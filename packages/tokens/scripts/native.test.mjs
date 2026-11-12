@@ -44,9 +44,9 @@ test('dimensions are numbers and shadows have no CSS-only syntax', () => {
     for (const s of [light, dark]) assert.doesNotMatch(s, /light-dark|var\(|\//);
 });
 
-test('signature roles match the [data-style=signature] palette tones in roles.css', () => {
+test('signature roles match the Signature palette tones in roles.css', () => {
   const css = readFileSync(new URL('roles.css', dist), 'utf8');
-  const block = css.slice(css.indexOf(":root, [data-style='signature'] {"));
+  const block = css.slice(css.indexOf('/* Signature style'));
   const sig = Object.fromEntries([...block.split('\n}')[0].matchAll(/--color-palette-([\w-]+?-\d+): (#[0-9a-f]{6});/g)].map((m) => [m[1], m[2]]));
   const { light, dark } = native.color.roles.standard;
   const s = native.signature.roles.standard;
@@ -58,7 +58,7 @@ test('signature roles match the [data-style=signature] palette tones in roles.cs
   assert.equal(s.light.tertiary, s.light.primary, 'tertiary follows primary without a product');
   assert.notEqual(s.light.surface, light.surface);
   assert.notEqual(s.dark.primary, dark.primary);
-  for (const k of Object.keys(s.light)) assert.ok(k in light, `${k} is a classic role`);
+  for (const k of Object.keys(s.light)) assert.ok(k in light, `${k} is a base role`);
   assert.equal(native.signature.shape.control, 10);
   for (const { light: l, dark: d } of Object.values(native.signature.elevation))
     for (const v of [l, d]) assert.doesNotMatch(v, /light-dark|var\(|\//);

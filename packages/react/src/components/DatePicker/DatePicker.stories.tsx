@@ -103,7 +103,7 @@ export const TypeablePresetsWeekdays: Story = {
           typeable
           aria-label="Due date"
           value={date}
-          onChange={setDate}
+          onValueChange={setDate}
           disabledDates={{ dayOfWeek: [0, 6] }}
           presets={[
             { label: 'Today', date: today },

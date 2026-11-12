@@ -17,11 +17,11 @@ export const Default: Story = {
   },
 };
 
-/** 7.9: classic beside Signature (`data-style="signature"`). Click to see the spring check-draw. */
+/** The Signature controls (the only style since 9.0): every state side by side. */
 export const Signature: Story = {
   render: () => (
     <div className="flex gap-8">
-      {(['classic', 'signature'] as const).map((style) => (
+      {(['signature'] as const).map((style) => (
         <div key={style} data-style={style} className="flex items-center gap-3">
           <span className="text-label-md">{style}</span>
           <Checkbox aria-label={`${style} off`} />

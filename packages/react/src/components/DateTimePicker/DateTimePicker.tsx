@@ -12,8 +12,6 @@ export interface DateTimePickerProps {
   value?: Date;
   /** Called with the new value. */
   onValueChange?: (value: Date | undefined) => void;
-  /** @deprecated 8.5: use `onValueChange` (the name every other Nexub input, and React Native, uses). Removed in 9.0. */
-  onChange?: (value: Date | undefined) => void;
   /** Time used when a date is picked first. @default '09:00' */
   defaultTime?: string;
   minuteStep?: number;
@@ -40,7 +38,6 @@ const withTime = (d: Date, time: string) => {
 export function DateTimePicker({
   value,
   onValueChange,
-  onChange,
   defaultTime = '09:00',
   minuteStep,
   minDate,
@@ -51,7 +48,7 @@ export function DateTimePicker({
   className,
   locale,
 }: DateTimePickerProps) {
-  const change = (v: Date | undefined) => { onValueChange?.(v); onChange?.(v); };
+  const change = (v: Date | undefined) => onValueChange?.(v);
   const messages = useNexubMessages();
   const intlLocale = useIntlLocale();
   // The time typed before a date exists.

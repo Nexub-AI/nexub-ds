@@ -44,8 +44,8 @@ const GRABBER = 24;
  * `offsets` are each detent's translateY (0 = tallest), `y` the release
  * position and `vy` the release velocity in px/s (down is positive).
  */
-export function sheetRelease(y: number, vy: number, offsets: number[], dismissable: boolean) {
-  if (dismissable && (y > Math.max(...offsets) + 80 || vy > 1200)) return -1;
+export function sheetRelease(y: number, vy: number, offsets: number[], dismissible: boolean) {
+  if (dismissible && (y > Math.max(...offsets) + 80 || vy > 1200)) return -1;
   // Nearest detent to where the fling would carry it.
   const target = y + vy * 0.12;
   let best = 0;
@@ -64,8 +64,6 @@ export interface BottomSheetProps {
   children: React.ReactNode;
   /** Drag down, tap the scrim or Android back closes it. @default true */
   dismissible?: boolean;
-  /** @deprecated 8.5: use `dismissible` (the web spelling). Removed in 9.0. */
-  dismissable?: boolean;
   /** Let the content scroll (long lists). @default false */
   scroll?: boolean;
 }
@@ -81,11 +79,9 @@ export function BottomSheet({
   detents = ['content'],
   title,
   children,
-  dismissible,
-  dismissable: legacyDismissable,
+  dismissible = true,
   scroll,
 }: BottomSheetProps) {
-  const dismissable = dismissible ?? legacyDismissable ?? true;
   const theme = useTheme();
   const { roles, tokens, messages } = theme;
   const play = useHaptics();
@@ -163,7 +159,7 @@ export function BottomSheet({
       start.current + dy,
       fling.current,
       heights.map((h) => tallest - h),
-      dismissable,
+      dismissible,
     );
     if (best < 0) return onOpenChange(false);
     if (best !== index) play('snap');
@@ -187,7 +183,7 @@ export function BottomSheet({
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translate.value }] }));
   const scrimStyle = useAnimatedStyle(() => ({ opacity: scrim.value * 0.32 }));
   const close = () => {
-    if (dismissable) onOpenChange(false);
+    if (dismissible) onOpenChange(false);
   };
 
   const body = (

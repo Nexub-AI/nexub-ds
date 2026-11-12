@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SIGNATURE_SELECTOR, CLASSIC_SELECTOR, classicValues, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, signaturePalettes, spring, tertiary, tonesAt } from './generate.mjs';
+import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, signaturePalettes, spring, tertiary, tonesAt } from './generate.mjs';
 
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -66,35 +66,22 @@ test('signature: neutrals are near-zero chroma (no lavender cast)', () => {
   };
   const { neutral } = signaturePalettes();
   for (const t of [4, 6, 10, 12, 17, 22, 87, 90, 92, 94, 96, 98, 100]) assert.ok(spread(neutral[t]) <= 1, `neutral-${t} ${neutral[t]}`);
-  assert.ok(spread(palettes().neutral[98]) > spread(neutral[98]), 'classic neutral is the tinted one');
+  assert.ok(spread(palettes().neutral[98]) > spread(neutral[98]), 'the token-source neutral is the tinted one');
 });
 
-test('styles: Signature on :root re-points every palette tone the roles read; classic restores them all', () => {
+test('styles: Signature on :root re-points every palette tone the roles read (the only style since 9.0)', () => {
   const css = rolesCss();
   const sig = signaturePalettes();
-  const pal = palettes();
   const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => [sel.replace(/\/\*[\s\S]*?\*\//g, '').trim(), body]);
-  const vars = (sel) => {
-    const own = blocks.filter(([s]) => s === sel);
-    assert.equal(own.length, 1, sel);
-    return Object.fromEntries([...own[0][1].matchAll(/(--[\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
-  };
-  const signature = vars(`:root, ${SIGNATURE_SELECTOR}`);
-  const classic = vars(CLASSIC_SELECTOR);
-  assert.deepEqual(Object.keys(classic).sort(), Object.keys(signature).sort(), 'classic restores exactly what Signature sets');
+  const own = blocks.filter(([, body]) => /--(color-palette|shape|elevation|type)-[\w-]+:/.test(body));
+  // Exactly one block declares palette, shape, elevation or tracking values, on :root.
+  assert.deepEqual(own.map(([sel]) => sel), [':root']);
+  const signature = Object.fromEntries([...own[0][1].matchAll(/(--[\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
   for (const [, name] of css.matchAll(/var\((--color-palette-[\w-]+)\)/g)) {
     const [, p, t] = name.match(/^--color-palette-(.+)-(\d+)$/);
-    if (!(p in sig)) continue;
-    assert.equal(signature[name], sig[p][t], `${name} signature`);
-    assert.equal(classic[name], pal[p][t], `${name} classic`);
+    if (p in sig) assert.equal(signature[name], sig[p][t], `${name} signature`);
   }
-  const cv = classicValues();
-  assert.equal(classic['--shape-control'], '9999px');
-  assert.equal(classic['--elevation-1'], cv.elevation[1]);
-  assert.equal(classic['--type-display-xl-letterSpacing'], `${cv.tracking['display-xl']}em`);
-  // Nothing else declares palette, shape, elevation or tracking values.
-  for (const [sel, body] of blocks)
-    if (/--(color-palette|shape|elevation|type)-[\w-]+:/.test(body)) assert.match(sel, /\[data-style='(signature|classic)'\]/, sel);
+  assert.doesNotMatch(css, /data-style/);
 });
 
 test('every role tone exists in the generated palettes', () => {

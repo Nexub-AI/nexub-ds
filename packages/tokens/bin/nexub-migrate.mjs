@@ -525,8 +525,8 @@ function changesIn9(src, report) {
       report(m.index, 'The classic style (the 7.x Material 3 look) is removed in 9.0: Signature is the only style; drop data-style="classic"');
   }
   if (/['"]@nexub\/react-native['"/]/.test(src)) {
-    for (const m of src.matchAll(/\bstyle\s*[=:]\s*\{?\s*["']classic["']/g))
-      report(m.index, 'NexubNativeProvider style="classic" is removed in 9.0: Signature is the only style; drop the prop');
+    for (const m of src.matchAll(/\bstyle\s*[=:]\s*\{?\s*["'](?:classic|signature)["']/g))
+      report(m.index, 'NexubNativeProvider\'s style prop is removed in 9.0: Signature is the only style; drop the prop');
   }
   if (/['"]@nexub\/(core|react|react-native)['"/]/.test(src)) {
     for (const m of src.matchAll(/\bhidePassword\b/g))
