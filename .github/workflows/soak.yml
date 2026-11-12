@@ -1,0 +1,66 @@
+name: Soak
+
+# 9.5: one docs session for 30 minutes (packages/react/visual/soak.spec.ts): navigation,
+# overlays and theme switches with no error, no reload and flat heap, DOM and listener counts.
+# Nightly, not per PR (CI runs the same spec for 1 minute). The mobile soak is in mobile.yml.
+on:
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: 'Length of the soak in minutes'
+        default: '30'
+  schedule:
+    - cron: '30 19 * * *' # 03:30 SGT
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soak-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    name: Docs soak
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
+      options: --ipc=host
+    env:
+      HOME: /root
+      SOAK_MINUTES: ${{ inputs.minutes || '30' }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      - name: Soak
+        run: pnpm --filter @nexub/react test:visual --project=soak
+
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: soak-report
+          path: |
+            packages/react/playwright-report
+            packages/react/test-results
+          retention-days: 7

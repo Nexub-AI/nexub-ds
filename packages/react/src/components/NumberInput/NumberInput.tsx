@@ -66,7 +66,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const parsed = parseFloat(e.target.value);
-      if (!isNaN(parsed)) commit(parsed);
+      if (Number.isFinite(parsed)) commit(parsed);
     };
 
     const increment = () => commit(currentValue + step);

@@ -160,6 +160,47 @@ jobs:
             packages/react/test-results
           retention-days: 7
 
+  # 9.5: leaks and a short soak. Every story is mounted and unmounted 1,000 times (listeners,
+  # timers, DOM nodes and heap must not grow), then one docs session runs for a minute
+  # (soak.spec.ts; the 30-minute run is nightly, soak.yml).
+  resilience:
+    name: Resilience (leaks & soak)
+    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
+      options: --ipc=host
+    env:
+      HOME: /root
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      - name: Leak test (1,000 mounts per story)
+        run: pnpm --filter @nexub/react test:leaks
+
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      - name: Soak (docs, 1 min)
+        run: pnpm --filter @nexub/react test:visual --project=soak
+
   # 9.1: the same Storybook and docs export in WebKit (Safari stand-in) and Firefox:
   # every story renders, the interaction states and docs pages match per-engine baselines.
   browsers:

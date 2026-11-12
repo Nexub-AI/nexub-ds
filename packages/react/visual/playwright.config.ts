@@ -7,6 +7,7 @@ import { defineConfig, devices } from '@playwright/test';
 // Baselines are rendered in the pinned Playwright Linux image so they match CI:
 //   pnpm --filter @nexub/react test:visual:docker [--update-snapshots] [--project=docs]
 const docsOut = fileURLToPath(new URL('../../../apps/docs/out/', import.meta.url));
+const storybookOut = fileURLToPath(new URL('../storybook-static/index.json', import.meta.url));
 
 // 9.1: WebKit (the Safari stand-in) and Firefox run the render check, the interaction
 // states and the docs suites, each with its own baselines in __screenshots__/<engine>/.
@@ -46,19 +47,26 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts/ },
+    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/ },
     // Interaction-latency budgets (perf.spec.ts); serial so its tests don't compete for CPU.
     { name: 'perf', testMatch: /perf\.spec\.ts/, fullyParallel: false },
     { name: 'docs', testMatch: DOCS, use: docsUse },
+    // 9.5: one long docs session (soak.spec.ts); SOAK_MINUTES sets its length.
+    { name: 'soak', testMatch: /soak\.spec\.ts/, use: docsUse, retries: 0 },
     ...engines,
   ],
   webServer: [
-    {
-      command: 'node visual/serve.mjs',
-      cwd: '..',
-      url: 'http://localhost:6007/index.json',
-      reuseExistingServer: !process.env.CI,
-    },
+    // Only when Storybook is built, so docs-only runs (the soak job) don't need it.
+    ...(existsSync(storybookOut)
+      ? [
+          {
+            command: 'node visual/serve.mjs',
+            cwd: '..',
+            url: 'http://localhost:6007/index.json',
+            reuseExistingServer: !process.env.CI,
+          },
+        ]
+      : []),
     // Only when the docs export exists, so Storybook-only runs don't need a docs build.
     ...(existsSync(docsOut)
       ? [
