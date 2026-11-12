@@ -23,13 +23,19 @@ export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
   onClearAll?: () => void;
 }
 
+/** "Search invoices…" → "Search invoices". Plain string work: no regex over caller input. */
+function stripEllipsis(text: string): string {
+  const t = text.trimEnd();
+  return (t.endsWith('…') ? t.slice(0, -1) : t.endsWith('...') ? t.slice(0, -3) : t).trimEnd();
+}
+
 export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
   ({ searchPlaceholder, searchLabel, onSearch, searchValue, filters, actions, activeCount = 0, onClearAll, className, ...props }, ref) => {
     const t = useNexubMessages();
     return (
       <div ref={ref} className={cn('flex flex-wrap items-center gap-3', className)} {...props}>
         <SearchInput
-          aria-label={searchLabel ?? searchPlaceholder?.replace(/\s*(…|\.\.\.)$/, '') ?? t.search}
+          aria-label={searchLabel ?? (searchPlaceholder && stripEllipsis(searchPlaceholder)) ?? t.search}
           placeholder={searchPlaceholder ?? t.searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearch?.(e.target.value)}

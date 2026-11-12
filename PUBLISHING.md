@@ -96,7 +96,7 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
    Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
-4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`changeset publish` on the dist built by the `build` job, authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance), attaches an SPDX SBOM to the `@nexub/react` GitHub release, and deploys the docs to production. The `publish` job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (the tarballs packed and attested by the reusable `build-release.yml` build, uploaded byte for byte by `scripts/publish-tarballs.mjs`, then tagged with `changeset tag`; authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance), attaches an SPDX SBOM to the `@nexub/react` GitHub release, and deploys the docs to production. The `publish` job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
 5. **Add a row** to the [Release History](#release-history) table.
 
 > `release.yml` holds one credential per job (since 7.1). `build` has no secrets and builds packages and docs; `version` (Version PR) and `back-merge` use `RELEASE_PAT`; `publish` uses only npm OIDC and the job's own token; `deploy-docs` uses only the Cloudflare token, with wrangler pinned in the lockfile. Jobs that hold a credential install with `--ignore-scripts` and build nothing.
@@ -111,6 +111,12 @@ for pkg in tokens themes icons react patterns; do (cd packages/$pkg && npm pack 
 ```
 
 Check that only `dist/` (or `src/` for themes) is listed and that react stays under ~150 KB packed.
+
+### Supply chain (9.7)
+
+- The release build packs deterministically: `pnpm check:reproducible` builds twice and compares tarball hashes; CI compares its own build with the release build on every PR (job "Release rehearsal").
+- The publish job attaches the tarballs, `checksums.txt` and `nexub-provenance.intoto.jsonl` to the `@nexub/react@<version>` release, verifies each published tarball's attestation (`gh attestation verify`), and pushes a Sigstore-signed tag `v<version>`. In 9.7 those two verification steps warn instead of failing the run.
+- If a publish stops halfway, re-run the workflow: versions already on npm are skipped.
 
 ### Break-glass: manual publish
 

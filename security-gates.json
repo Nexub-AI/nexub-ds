@@ -1,0 +1,6 @@
+{
+  "//": "9.7 blocking gates (scripts/security-gates.mjs). codeqlMaxHigh: open CodeQL alerts of high or critical severity allowed. scorecardMin: lowest OpenSSF Scorecard score allowed; it only goes up (ratchet), toward scorecardTarget.",
+  "codeqlMaxHigh": 0,
+  "scorecardMin": 0,
+  "scorecardTarget": 8
+}

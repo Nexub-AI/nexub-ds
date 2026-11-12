@@ -14,9 +14,9 @@ name: Release
 # dependency, Next, turbo), so it happens in `build`, which holds no secrets.
 # The jobs that hold a credential install with scripts off and run only the
 # tool they need:
-#   build        no secrets         build packages + docs, upload them
+#   build        no secrets         build packages + docs, pack and attest the tarballs (build-release.yml)
 #   version      RELEASE_PAT        Version Packages PR (phase A)
-#   publish      npm OIDC + token   publish the built dist, tags, releases, SBOM (phase B)
+#   publish      npm OIDC           publish those exact tarballs, tags, releases, SBOM (phase B)
 #   back-merge   RELEASE_PAT        production → development PR (after a publish)
 #   deploy-docs  Cloudflare token   deploy the built docs
 # RELEASE_PAT and the Cloudflare secrets live in the `release` environment
@@ -32,65 +32,17 @@ permissions:
   contents: read
 
 jobs:
+  # The build lives in a reusable workflow (build-release.yml): isolated from this file's
+  # other jobs, it packs the tarballs and signs their SLSA build provenance (9.7).
   build:
     name: Build packages and docs
-    runs-on: ubuntu-latest
-    outputs:
-      has_changesets: ${{ steps.phase.outputs.has_changesets }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
-        # version is read from packageManager field in package.json
-
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: 24
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
-      - name: Build packages
-        run: pnpm turbo build --filter='./packages/*'
-
-      # NEXT_PUBLIC_* values are baked into the JS bundle at build time, so they
-      # must be set here, not in the Cloudflare dashboard. The Turnstile *site*
-      # key is public by design, so it's a repo Variable, not a Secret.
-      - name: Build docs (static export)
-        env:
-          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
-        run: pnpm --filter @nexub/docs build
-
-      # Same rule changesets/action uses: any .changeset/*.md except README.md.
-      - name: Detect release phase
-        id: phase
-        run: |
-          n=$(find .changeset -maxdepth 1 -name '*.md' ! -name README.md | wc -l)
-          if [ "$n" -gt 0 ]; then echo "has_changesets=true"; else echo "has_changesets=false"; fi >> "$GITHUB_OUTPUT"
-
-      # Everything the packages publish that isn't committed: */dist and the
-      # React Native lib/. Stored relative to packages/.
-      - name: Upload built packages
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: packages
-          path: |
-            packages/*/dist
-            packages/react-native/lib
-          if-no-files-found: error
-          retention-days: 1
-
-      - name: Upload built docs
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: docs-out
-          path: apps/docs/out
-          if-no-files-found: error
-          retention-days: 1
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    uses: ./.github/workflows/build-release.yml
+    with:
+      attest: true
 
   version:
     name: Version Packages PR
@@ -159,18 +111,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # Publish exactly what `build` produced; nothing is built in this job.
-      - name: Download built packages
+      # Publish exactly what `build` produced and attested; nothing is built or packed here.
+      - name: Download tarballs
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
-          name: packages
-          path: packages
+          name: tarballs
+          path: tarballs
 
+      # publish-tarballs.mjs checks every tarball against checksums.txt, uploads the ones
+      # not yet on npm with `npm publish <file>`, then runs `changeset tag`, whose
+      # "New tag:" lines this action turns into GitHub releases.
       - name: Publish unpublished packages
         id: changesets
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
-          publish: pnpm changeset publish
+          publish: node scripts/publish-tarballs.mjs tarballs
         env:
           # Tags and GitHub releases only; npm auth is OIDC (every @nexub
           # package trusts Nexub-AI/nexub-ds release.yml on npmjs.com).
@@ -191,6 +146,50 @@ jobs:
         run: |
           gh api "repos/${GITHUB_REPOSITORY}/dependency-graph/sbom" --jq .sbom > "nexub-${VERSION}.spdx.json"
           gh release upload "@nexub/react@${VERSION}" "nexub-${VERSION}.spdx.json" --clobber
+
+      # The tarballs, their checksums and the signed provenance bundle, on the release.
+      - name: Attach tarballs and provenance to the release
+        if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: gh release upload "@nexub/react@${VERSION}" tarballs/*.tgz tarballs/checksums.txt tarballs/*.intoto.jsonl --clobber
+
+      # What npm serves must be the attested artifact: download each published tarball
+      # and verify its provenance against this repository and build-release.yml.
+      # Not blocking in 9.7 (first release on this path); a failure is a warning to act on.
+      - name: Verify provenance of the published tarballs
+        if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
+        run: |
+          mkdir -p from-npm && cd from-npm
+          sleep 90  # registry lag
+          for spec in $(node -e 'for (const p of JSON.parse(process.env.PUBLISHED_PACKAGES)) console.log(`${p.name}@${p.version}`)'); do
+            file=$(npm pack "$spec" --silent)
+            gh attestation verify "$file" --repo "$GITHUB_REPOSITORY" --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/build-release.yml"
+          done
+
+      # A signed tag for the release as a whole (vX.Y.Z), next to the per-package tags
+      # changesets makes. Signed with Sigstore (gitsign): no key to keep, the signature is
+      # tied to this workflow run and logged in Rekor. Verify with:
+      #   gitsign verify-tag --certificate-identity-regexp '.*/release.yml@refs/heads/production' \
+      #     --certificate-oidc-issuer https://token.actions.githubusercontent.com vX.Y.Z
+      # Not blocking: the packages are already published when this runs.
+      - name: Set up gitsign
+        if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
+        continue-on-error: true
+        uses: chainguard-dev/actions/setup-gitsign@a25ce483d875a46f4c837e85e32e0fda602693f5 # v1.8.1
+
+      - name: Signed release tag
+        if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: sh scripts/signed-tag.sh "v${VERSION}" --push
 
       # Every version changesets published must be on the registry with an npm
       # provenance attestation. The registry lags 1–2 minutes, so the script
