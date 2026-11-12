@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Dialog } from './Dialog.js';
+import { Popover } from '../Popover/Popover.js';
 
 function TestDialog({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   return (
@@ -237,5 +238,40 @@ describe('Dialog 7.6 surfaces', () => {
     expect(screen.getByTestId('child')).not.toHaveAttribute('data-nested');
     await user.click(screen.getByText('Done'));
     await waitFor(() => expect(screen.getByTestId('parent')).not.toHaveAttribute('data-nested'));
+  });
+});
+
+describe('stacked overlays (9.3)', () => {
+  it('Escape closes the top layer only, then the one under it, and focus walks back', async () => {
+    render(
+      <Dialog.Root>
+        <Dialog.Trigger>Open Dialog</Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay />
+          <Dialog.Content>
+            <Dialog.Title>Settings</Dialog.Title>
+            <Dialog.Description>Stacked.</Dialog.Description>
+            <Popover.Root>
+              <Popover.Trigger>More</Popover.Trigger>
+              <Popover.Content aria-label="More options">
+                <button type="button">Inner</button>
+              </Popover.Content>
+            </Popover.Root>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>,
+    );
+    await userEvent.click(screen.getByText('Open Dialog'));
+    await userEvent.click(screen.getByText('More'));
+    expect(screen.getByText('Inner')).toBeInTheDocument();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Inner')).not.toBeInTheDocument());
+    expect(screen.getByText('Settings')).toBeInTheDocument(); // the dialog stays
+    expect(screen.getByText('More')).toHaveFocus();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Settings')).not.toBeInTheDocument());
+    expect(screen.getByText('Open Dialog')).toHaveFocus();
   });
 });

@@ -125,7 +125,7 @@ export function MultiSelect({
             setOpen(true);
           },
           onKeyDown: (e) => {
-            if (e.key === 'Backspace' && search === '' && value.length) remove(value[value.length - 1]!);
+            if (e.key === 'Backspace' && !(e.nativeEvent.isComposing || e.keyCode === 229) && search === '' && value.length) remove(value[value.length - 1]!);
           },
         }}
       >

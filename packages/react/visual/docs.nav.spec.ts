@@ -108,6 +108,12 @@ test('CLS_KNOWN only lists docs pages', () => {
 for (const path of docsPages) {
   test(`CLS 0: ${path}`, async ({ page, browserName }) => {
     test.skip(browserName !== 'chromium', 'layout-shift entries are Chromium-only');
+    // Web fonts are blocked here, so the page stays in its metric-matched fallback. A font
+    // that lands after first paint is the runner's timing, not the page's structure: on a
+    // slow CI core it made random pages fail. Everything structural (placeholder swaps, late
+    // content, images, components resizing after hydration) is still measured, the same on
+    // any machine. The real-font case is the Lighthouse budget, with the fonts preloaded.
+    await page.route(/\.woff2(\?|$)/, (r) => r.abort());
     await page.addInitScript(() => {
       (window as unknown as { __cls: number }).__cls = 0;
       new PerformanceObserver((list) => {
@@ -118,7 +124,6 @@ for (const path of docsPages) {
     });
     await page.goto(path);
     await page.waitForLoadState('networkidle');
-    await page.evaluate(() => document.fonts.ready);
     await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
     const cls = await page.evaluate(() => (window as unknown as { __cls: number }).__cls);
     if (path in CLS_KNOWN) {

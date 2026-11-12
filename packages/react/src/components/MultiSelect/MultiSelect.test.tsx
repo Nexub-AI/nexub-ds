@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { MultiSelect } from './MultiSelect.js';
@@ -51,5 +51,13 @@ describe('MultiSelect', () => {
     const { rerender } = render(<MultiSelect options={options} value={['pink']} aria-label="Colours" />);
     rerender(<MultiSelect options={[]} value={['pink']} aria-label="Colours" />);
     expect(screen.getByText('Pink')).toBeInTheDocument();
+  });
+
+  it('Backspace during IME composition does not remove a chip (9.3)', () => {
+    const onValueChange = vi.fn();
+    render(<MultiSelect options={options} defaultValue={['red', 'blue']} onValueChange={onValueChange} aria-label="Colours" />);
+    fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Backspace', isComposing: true });
+    fireEvent.keyDown(screen.getByRole('combobox'), { key: 'Backspace', keyCode: 229 });
+    expect(onValueChange).not.toHaveBeenCalled();
   });
 });
