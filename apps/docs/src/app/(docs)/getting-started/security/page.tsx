@@ -137,6 +137,32 @@ safeSrc('data:image/png;base64,…'); // allowed: an <img> can't run script`}
         />
       </Section>
 
+      <Section id="supply-chain" title="Supply chain">
+        <Prose>
+          Since 9.7 every release can be traced to the commit and workflow that built it. The tarballs are built,
+          packed and attested in an isolated workflow (SLSA Build Level 3), and the publish job uploads those exact
+          files. Two builds of one commit give byte-identical tarballs, which CI checks on every pull request.
+        </Prose>
+        <CodeBlock
+          lang="bash"
+          code={`# Is this tarball the one Nexub's release workflow built?
+npm pack @nexub/react@9.7.0
+gh attestation verify nexub-react-9.7.0.tgz --repo Nexub-AI/nexub-ds \\
+  --signer-workflow Nexub-AI/nexub-ds/.github/workflows/build-release.yml`}
+        />
+        <DocTable
+          head={['Control', 'What it means']}
+          rows={[
+            ['Trusted publishing', 'npm accepts a release only from the release workflow. No npm token exists to steal.'],
+            ['Build provenance', 'A signed statement of which commit and workflow produced each tarball, on npm and on the GitHub release.'],
+            ['Signed release tag', 'Each release has a tag v<version> signed with Sigstore by the release workflow.'],
+            ['SBOM', 'An SPDX list of every dependency, attached to each GitHub release.'],
+            ['Dependency policy', 'Every runtime dependency is listed with its reason. New releases of a dependency wait 7 days before they can be installed.'],
+            ['Gates', 'No open CodeQL alert of high or critical severity. An OpenSSF Scorecard minimum that only goes up.'],
+          ]}
+        />
+      </Section>
+
       <Section id="reporting" title="Reporting a vulnerability">
         <Prose>
           Report privately through GitHub Security Advisories on{' '}

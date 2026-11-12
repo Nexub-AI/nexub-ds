@@ -6,3 +6,8 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - sharp
+
+# 9.7 supply chain: a release must be this old (minutes; 7 days) before pnpm will resolve it,
+# so a hijacked version has time to be caught and unpublished. Dependabot waits the same
+# (cooldown in .github/dependabot.yml). scripts/check-supply-chain.mjs checks both.
+minimumReleaseAge: 10080
