@@ -7,7 +7,7 @@ export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: 'Migrating to 9.0',
-  description: 'What 9.0 removes (the classic style, Button’s legacy variants, the 8.5 parity aliases, hidePassword) and how to move off it on 8.9.',
+  description: 'What 9.0 removed (the classic style, Button’s legacy variants, the 8.5 parity aliases, hidePassword) and how to move off it.',
 };
 
 export default function MigratingTo9Page() {
@@ -17,8 +17,8 @@ export default function MigratingTo9Page() {
         <MigrationPicker />
       </PageIntro>
       <p>
-        9.0 removes, and adds nothing. Everything on this page is deprecated in 8.x and still works on 8.9 (the release
-        candidate: no new APIs). Move off each item on 8.9, with the codemod doing most of it, and 9.0 is a version bump.
+        9.0 removes, and adds nothing. Everything on this page was deprecated in 8.x and still works on 8.9. Move off
+        each item on 8.9, with the codemod doing most of it, and 9.0 is a version bump.
       </p>
 
       <h2>Removed in 9.0</h2>
@@ -28,7 +28,7 @@ export default function MigratingTo9Page() {
           [
             <>
               The <code>classic</code> style (the 7.x Material 3 look): <code>data-style=&quot;classic&quot;</code> on the
-              web, <code>style=&quot;classic&quot;</code> on <code>NexubNativeProvider</code>. Deprecated in 8.0.
+              web, and the <code>style</code> prop on <code>NexubNativeProvider</code> (both values). Deprecated in 8.0.
             </>,
             <>Signature, the only style. Remove the attribute or prop, then check your screens.</>,
             <><code>changes-in-9</code> reports it</>,

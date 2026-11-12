@@ -1,36 +1,19 @@
-/* @nexub/themes — signature.css: the Signature style (the default since 8.0).
-   data-style="classic" on <html> or any wrapper keeps the 7.x look (until 9.0);
-   data-style="signature" inside a classic wrapper switches back.
+/* @nexub/themes — signature.css: the Signature style (the only style since 9.0).
    The colour, shape, display tracking and elevation tokens are generated into
-   @nexub/tokens/css/roles (same HCT engine for both styles; contrast tests
-   cover both). This file adds what isn't a generated token.
-   Imported by core.css (and so base.css).
-
-   Descendant rules apply "unless the nearest style is classic" as:
-     X:not([data-style='classic'] *), [data-style='classic'] [data-style='signature'] X
-   ponytail: covers one level of nesting each way (classic > signature); a
-   classic inside that again would need :has() or style queries. */
+   @nexub/tokens/css/roles. This file adds what isn't a generated token.
+   Imported by core.css (and so base.css). */
 
 :root {
   /* Full pills only where meaning calls for them (chips, tags, segmented,
      toggles): --shape-control is ~10px under Signature, so those components
-     use var(--shape-pill, var(--shape-control)). Classic controls are capsules
-     already, so it's safe to declare everywhere. */
+     use var(--shape-pill, var(--shape-control)). */
   --shape-pill: 9999px;
   /* The Nexub mark's gradient, for moments (primary CTA sheen, focus glow,
      progress, celebrate). Decorative: never put text on it. */
   --gradient-signature: linear-gradient(135deg, var(--color-brand-mark-1) 0%, var(--color-brand-mark-2) 50%, var(--color-brand-mark-6) 100%);
 }
 
-/* On <html> the fills follow the re-pointed palette by themselves; a subtree
-   inherits them already computed, so restate the primary fills there. */
-:not(:root):is([data-style='signature'], [data-style='classic']) {
-  --color-fill-primary: var(--color-palette-primary-40);
-  --color-fill-primary-hover: var(--color-palette-primary-30);
-}
-
 /* Data reads in columns: tabular numerals for tables and machine-readable values. */
-:is(table, data, time, output, meter):not([data-style='classic'] *),
-[data-style='classic'] [data-style='signature'] :is(table, data, time, output, meter) {
+:is(table, data, time, output, meter) {
   font-variant-numeric: tabular-nums;
 }

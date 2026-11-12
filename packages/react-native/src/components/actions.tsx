@@ -232,25 +232,22 @@ export interface ButtonGroupProps {
   children: React.ReactNode;
   /** 'vertical' puts actions full-width in a column (bottom of forms). @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
-  /** @deprecated 8.5: use `orientation` (the web name): 'row' is 'horizontal', 'stack' is 'vertical'. Removed in 9.0. */
-  direction?: 'row' | 'stack';
   style?: StyleProp<ViewStyle>;
 }
 
 /** Related actions together. In a stack, put the primary action first. */
-export function ButtonGroup({ children, orientation, direction: legacyDirection, style }: ButtonGroupProps) {
-  const direction = orientation ? (orientation === 'vertical' ? 'stack' : 'row') : (legacyDirection ?? 'row');
+export function ButtonGroup({ children, orientation = 'horizontal', style }: ButtonGroupProps) {
   const { tokens } = useTheme();
   return (
     <View
       style={[
-        direction === 'row'
+        orientation === 'horizontal'
           ? { flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing[2] }
           : { gap: tokens.spacing[3], alignItems: 'stretch' },
         style,
       ]}
     >
-      {direction === 'stack'
+      {orientation === 'vertical'
         ? React.Children.map(children, (c) =>
             React.isValidElement<ButtonProps>(c) ? React.cloneElement(c, { fullWidth: true }) : c,
           )

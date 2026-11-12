@@ -49,12 +49,7 @@ export const buttonVariants = cva(
         // Marketing mode (@nexub/themes/marketing): gradient, glow and a spring
         // lift. Without [data-mode="marketing"] it is a filled button.
         hero: `${filled} nx-mkt-hero-button`,
-        // Legacy names (kept as aliases).
-        primary: filled,
-        secondary: tonal,
         subtle: `bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)] ${disabledContainer}`,
-        outline: outlined,
-        ghost: text,
         destructive: `bg-[var(--color-error)] text-[var(--color-on-error)] ${disabledContainer}`,
         accent: `bg-[var(--color-tertiary)] text-[var(--color-on-tertiary)] ${disabledContainer}`,
         link: `bg-transparent text-[var(--color-primary)] underline underline-offset-[0.3em] ${disabledText}`,
@@ -80,16 +75,10 @@ export const buttonVariants = cva(
 
 export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/**
- * @deprecated 8.4: the 1.x variant names, removed in 9.0. Use filled, tonal, outlined, text
- * (`npx nexub-migrate --rules button-aliases --write`).
- */
-export type ButtonLegacyVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  /** Visual style. primary, secondary, outline and ghost are deprecated aliases of
-   *  filled, tonal, outlined and text, removed in 9.0. @default 'filled' */
+  /** Visual style. @default 'filled' */
   variant?: VariantProps<typeof buttonVariants>['variant'];
   tone?: ToneValue;
   /** Async feedback. `loading` blocks clicks (aria-disabled, focus kept),

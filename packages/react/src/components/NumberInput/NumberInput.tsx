@@ -18,8 +18,6 @@ export interface NumberInputProps
   defaultValue?: number;
   /** Called with the new value. */
   onValueChange?: (value: number) => void;
-  /** @deprecated 8.5: use `onValueChange` (the name every other Nexub input, and React Native, uses). Removed in 9.0. */
-  onChange?: (value: number) => void;
   invalid?: boolean;
 }
 
@@ -48,7 +46,6 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       value,
       defaultValue = 0,
       onValueChange,
-      onChange,
       invalid,
       disabled,
       ...props
@@ -56,7 +53,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     ref,
   ) => {
     const [internalValue, setInternalValue] = React.useState<number>(defaultValue);
-    const change = (v: number) => { onValueChange?.(v); onChange?.(v); };
+    const change = (v: number) => onValueChange?.(v);
     const messages = useNexubMessages();
     const controlled = value !== undefined;
     const currentValue = controlled ? value : internalValue;

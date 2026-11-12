@@ -309,8 +309,6 @@ export interface DialogProps {
   actions: React.ReactNode;
   /** Tapping the scrim or Android back closes it. @default true */
   dismissible?: boolean;
-  /** @deprecated 8.5: use `dismissible` (the web spelling). Removed in 9.0. */
-  dismissable?: boolean;
 }
 
 /** Modal alert for decisions that block the flow. Prefer a sheet for anything longer. */
@@ -321,10 +319,8 @@ export function Dialog({
   description,
   children,
   actions,
-  dismissible,
-  dismissable: legacyDismissable,
+  dismissible = true,
 }: DialogProps) {
-  const dismissable = dismissible ?? legacyDismissable ?? true;
   const { roles, tokens } = useTheme();
   return (
     <Modal
@@ -334,7 +330,7 @@ export function Dialog({
       statusBarTranslucent
       navigationBarTranslucent
       onRequestClose={() => {
-        if (dismissable) onOpenChange(false);
+        if (dismissible) onOpenChange(false);
       }}
     >
       <View
@@ -348,7 +344,7 @@ export function Dialog({
         <RNPressable
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          onPress={() => dismissable && onOpenChange(false)}
+          onPress={() => dismissible && onOpenChange(false)}
           style={{
             position: 'absolute',
             top: 0,

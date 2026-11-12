@@ -15,7 +15,6 @@ export type {
   RoleName,
   Scheme,
   ElevationLevel,
-  DesignStyle,
 } from './theme/ThemeProvider';
 export { nexubFonts, fontStyle } from './theme/fonts';
 export type { FontFamily, FontSource } from './theme/fonts';

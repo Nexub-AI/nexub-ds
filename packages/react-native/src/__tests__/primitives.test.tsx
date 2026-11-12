@@ -25,8 +25,7 @@ jest.mock('expo-haptics', () => ({
 
 const wrap = (ui: React.ReactElement, props: Partial<NexubNativeProviderProps> = {}) =>
   render(
-    // Pinned to classic: these assertions read native.color.roles (classic). Signature is tested below.
-    <NexubNativeProvider scheme="light" contrast="standard" style="classic" {...props}>
+    <NexubNativeProvider scheme="light" contrast="standard" {...props}>
       {ui}
     </NexubNativeProvider>,
   );
@@ -40,34 +39,22 @@ describe('NexubNativeProvider', () => {
   it('resolves roles for scheme and contrast from @nexub/tokens/native', async () => {
     let theme!: ReturnType<typeof useTheme>;
     await wrap(<Roles onTheme={(t) => (theme = t)} />, { scheme: 'dark', contrast: 'high' });
-    expect(theme.roles.primary).toBe(native.color.roles.high.dark.primary);
+    expect(theme.roles.primary).toBe(native.signature.roles.high.dark.primary);
     expect(theme.elevation(0)).toBeUndefined();
-    expect(theme.elevation(2)).toBe(native.elevation[2].dark);
+    expect(theme.elevation(2)).toBe(native.signature.elevation[2].dark);
   });
 
   it('a product remaps tertiary; a seed regenerates primary', async () => {
     let theme!: ReturnType<typeof useTheme>;
     await wrap(<Roles onTheme={(t) => (theme = t)} />, { product: 'payub', seed: '#ff0000' });
     expect(theme.roles.tertiary).toBe(native.color.products.payub.standard.light.tertiary);
-    expect(theme.roles.primary).not.toBe(native.color.roles.standard.light.primary);
+    expect(theme.roles.primary).not.toBe(native.signature.roles.standard.light.primary);
   });
 
-  it('defaults to style="signature" (8.0)', async () => {
+  it('Signature (the only style) sets roles, shape, display tracking and elevation; a product still wins', async () => {
     let theme!: ReturnType<typeof useTheme>;
-    await render(
-      <NexubNativeProvider scheme="light" contrast="standard">
-        <Roles onTheme={(t) => (theme = t)} />
-      </NexubNativeProvider>,
-    );
-    expect(theme.style).toBe('signature');
-    expect(theme.roles.primary).toBe(native.signature.roles.standard.light.primary);
-  });
-
-  it('style="signature" swaps roles, shape, display tracking and elevation; a product still wins', async () => {
-    let theme!: ReturnType<typeof useTheme>;
-    await wrap(<Roles onTheme={(t) => (theme = t)} />, { style: 'signature', scheme: 'dark', product: 'leap' });
+    await wrap(<Roles onTheme={(t) => (theme = t)} />, { scheme: 'dark', product: 'leap' });
     const sig = native.signature;
-    expect(theme.style).toBe('signature');
     expect(theme.roles.surface).toBe(sig.roles.standard.dark.surface);
     expect(theme.roles.primary).toBe(sig.roles.standard.dark.primary);
     expect(theme.roles.error).toBe(native.color.roles.standard.dark.error);
@@ -103,7 +90,7 @@ describe('Text', () => {
       fontFamily: 'Inter_600SemiBold',
       fontSize: native.type['title-md'].size,
       lineHeight: native.type['title-md'].lineHeight,
-      color: native.color.roles.standard.light.primary,
+      color: native.signature.roles.standard.light.primary,
       fontVariant: ['tabular-nums'],
     });
   });
@@ -161,9 +148,9 @@ describe('Surface', () => {
     await wrap(<Surface testID="s" material="glass" radius="container" />, { glass: 'off' });
     const style = StyleSheet.flatten(screen.getByTestId('s').props.style);
     expect(style).toMatchObject({
-      backgroundColor: native.color.roles.standard.light['surface-elevated'],
+      backgroundColor: { ...native.color.roles.standard.light, ...native.signature.roles.standard.light }['surface-elevated'],
       borderRadius: native.shape.container,
-      borderColor: native.color.roles.standard.light['outline-variant'],
+      borderColor: native.signature.roles.standard.light['outline-variant'],
     });
   });
 });

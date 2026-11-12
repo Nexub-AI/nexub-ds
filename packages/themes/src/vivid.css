@@ -43,17 +43,17 @@
 }
 
 /* Filled (primary) buttons: gradient fill, a soft accent glow, a small lift on hover. */
-[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled) {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled) {
   background-image: var(--vivid-gradient);
   box-shadow: 0 1px 0 0 color-mix(in oklab, white 25%, transparent) inset, 0 6px 18px -6px var(--vivid-glow);
   transition: box-shadow var(--motion-spring-effects-default-duration, 200ms) ease, translate var(--motion-spring-spatial-fast-duration, 200ms) var(--motion-spring-spatial-fast-easing, ease-out);
 }
-[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):hover {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):hover {
   background-image: var(--vivid-gradient-hover);
   box-shadow: 0 1px 0 0 color-mix(in oklab, white 30%, transparent) inset, 0 10px 26px -6px var(--vivid-glow);
   translate: 0 -1px;
 }
-[data-expression='vivid'] :is([data-variant='primary'], [data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):active {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):active {
   translate: 0 0;
   box-shadow: 0 2px 8px -4px var(--vivid-glow);
 }

@@ -16,10 +16,10 @@ export const Default = () => (
   </RadioGroup.Root>
 );
 
-/** 7.9: classic beside Signature (`data-style="signature"`). Select to see the dot spring in. */
+/** The Signature controls (the only style since 9.0): every state side by side. */
 export const Signature = () => (
   <div className="flex gap-8">
-    {(['classic', 'signature'] as const).map((style) => (
+    {(['signature'] as const).map((style) => (
       <div key={style} data-style={style} className="flex flex-col gap-2">
         <span className="text-label-md">{style}</span>
         <RadioGroup.Root aria-label={`${style} options`} defaultValue="a">

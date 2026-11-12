@@ -34,14 +34,6 @@ describe('NumberInput', () => {
     await user.click(screen.getByRole('button', { name: /increment/i }));
     expect(onChange).toHaveBeenCalledWith(6);
   });
-
-  it('still calls the deprecated onChange alias (removed in 9.0)', async () => {
-    const user = userEvent.setup();
-    const onChange = vi.fn();
-    render(<NumberInput showSteppers defaultValue={5} step={1} onChange={onChange} />);
-    await user.click(screen.getByRole('button', { name: /increment/i }));
-    expect(onChange).toHaveBeenCalledWith(6);
-  });
 });
 
 describe('NumberInput bounds', () => {
