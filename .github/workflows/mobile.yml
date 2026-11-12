@@ -9,8 +9,19 @@ name: Mobile
 # restarting on each push to it. The release script waits for this run to pass
 # on the exact development commit before it merges staging -> production, so
 # nothing reaches npm without it. workflow_dispatch runs it on any branch early.
+#
+# 9.5 soak: nightly (and on demand with the `soak` input) the iOS job builds the same app and,
+# instead of the catalogue and preview flows, runs apps/mobile/scripts/soak.sh for 30 minutes:
+# one session, no crash, flat memory. It does not gate releases.
 on:
   workflow_dispatch:
+    inputs:
+      soak:
+        description: 'Run the 30-minute iOS soak instead of the catalogue flows'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 19 * * *' # 03:00 SGT
   push:
     branches: [development]
     paths:
@@ -37,6 +48,7 @@ env:
   # The iOS XCTest driver can take minutes to start on shared macOS runners.
   MAESTRO_DRIVER_STARTUP_TIMEOUT: 300000
   MAESTRO_CLI_NO_ANALYTICS: 1
+  SOAK: ${{ github.event_name == 'schedule' || inputs.soak == true }}
 
 jobs:
   ios:
@@ -149,22 +161,29 @@ jobs:
             --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
 
       - name: Maestro flows
+        if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; exit 1; }
 
       # One screenshot per docs preview example (<slug>--<example>--ios.png),
       # generated from apps/mobile/preview-manifest.json.
       - name: Maestro preview screenshots
+        if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
       # Compare the preview screenshots with apps/mobile/.maestro/baselines/ios
       # (or record them on a PR that has none; see screenshot-gate.sh).
       - name: Screenshot baselines
+        if: env.SOAK != 'true'
         env:
           # PR branch, or the branch a manual run targets (to record new baselines before merge).
           HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
           PUSH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: sh apps/mobile/scripts/screenshot-gate.sh ios
+
+      - name: Soak (30 min, one session)
+        if: env.SOAK == 'true'
+        run: sh apps/mobile/scripts/soak.sh || { sh apps/mobile/scripts/maestro-failure.sh maestro-soak-out; exit 1; }
 
       - name: Upload screenshots
         if: always()
@@ -173,6 +192,7 @@ jobs:
           name: maestro-ios
           path: |
             maestro-out
+            maestro-soak-out
             maestro-previews-out
             screenshot-diffs
             *.png
@@ -181,7 +201,8 @@ jobs:
   android:
     name: Android emulator (Maestro)
     # Skip the back-merge (head: production); it's already-tested code.
-    if: github.head_ref != 'production'
+    # Not on soak runs: the soak is iOS only.
+    if: github.head_ref != 'production' && github.event_name != 'schedule' && inputs.soak != true
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # See the iOS job: baselines are pushed with GITHUB_TOKEN, never a PAT.
