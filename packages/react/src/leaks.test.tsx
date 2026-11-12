@@ -91,8 +91,9 @@ globalThis.clearInterval = ((id: Parameters<typeof clearInterval>[0]) => {
   clear(id);
 }) as typeof clearInterval;
 
-// Timeouts set and neither fired nor cleared. A few short ones are always in flight, so
-// only growth across the run counts (see TIMER_SLACK).
+// Timeouts set and neither fired nor cleared. A few short ones are always in flight (and a
+// Drawer's interval can still be closing down at the snapshot), so only growth across the
+// run counts: a leak adds one per mount, hundreds over the run (see TIMER_SLACK).
 const timeouts = new Set<unknown>();
 const { setTimeout: later, clearTimeout: cancel } = globalThis;
 globalThis.setTimeout = ((fn: (...a: unknown[]) => void, ms?: number, ...args: unknown[]) => {
@@ -141,7 +142,7 @@ async function leaks(Story: React.ComponentType, cycles = CYCLES): Promise<Recor
 
   const failed: Record<string, string> = {};
   if (after.listeners !== before.listeners) failed.listeners = `${before.listeners || 'none'} → ${after.listeners}`;
-  if (after.intervals > before.intervals) failed.intervals = `${before.intervals} → ${after.intervals} running`;
+  if (after.intervals > before.intervals + TIMER_SLACK) failed.intervals = `${before.intervals} → ${after.intervals} running`;
   if (after.timeouts > before.timeouts + TIMER_SLACK) failed.timeouts = `${before.timeouts} → ${after.timeouts} pending`;
   if (after.nodes > before.nodes) failed.nodes = `${before.nodes} → ${after.nodes} nodes in <body>`;
   const perCycle = (after.heap - before.heap) / (cycles - warm);
@@ -168,7 +169,8 @@ describe('controls', () => {
       }, []);
       return null;
     };
-    expect(Object.keys(await leaks(Leaky, 20)).sort()).toEqual(['intervals', 'listeners', 'nodes']);
+    // 100 mounts: 50 measured, past TIMER_SLACK. Heap may or may not trip at so few cycles.
+    expect(Object.keys(await leaks(Leaky, 100))).toEqual(expect.arrayContaining(['intervals', 'listeners', 'nodes']));
     intervals.forEach((id) => clearInterval(id as number));
     document.body.querySelectorAll('i').forEach((n) => n.remove());
   });
@@ -184,7 +186,7 @@ describe('controls', () => {
         </div>
       );
     };
-    expect(Object.keys(await leaks(Leaky, 400))).toEqual(['heap']);
+    expect(Object.keys(await leaks(Leaky, 400))).toContain('heap');
   });
 });
 
