@@ -99,6 +99,7 @@
   background: linear-gradient(135deg, light-dark(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.45)) 0%, transparent 38%, transparent 62%, light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.18)) 100%);
   -webkit-mask: linear-gradient(rgb(0 0 0) 0 0) content-box, linear-gradient(rgb(0 0 0) 0 0);
   -webkit-mask-composite: xor;
+  mask: linear-gradient(rgb(0 0 0) 0 0) content-box, linear-gradient(rgb(0 0 0) 0 0);
   mask-composite: exclude;
 }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
