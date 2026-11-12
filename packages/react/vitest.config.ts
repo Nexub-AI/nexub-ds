@@ -11,7 +11,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     // visual/ is the Playwright suite (pnpm test:visual), not vitest.
-    exclude: ['**/node_modules/**', '**/dist/**', 'visual/**'],
+    // src/leaks.test.tsx takes minutes (1,000 mounts per story): `pnpm test:leaks`, CI job "Resilience".
+    exclude: ['**/node_modules/**', '**/dist/**', 'visual/**', ...(process.env.LEAKS ? [] : ['src/leaks.test.tsx'])],
     // On for `pnpm test` (vitest run --coverage). Reports land in coverage/
     // (turbo's test output). Thresholds are a ratchet: raise them as tests
     // land, never lower them.

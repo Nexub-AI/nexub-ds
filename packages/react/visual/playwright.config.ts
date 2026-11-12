@@ -46,10 +46,12 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts/ },
+    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/ },
     // Interaction-latency budgets (perf.spec.ts); serial so its tests don't compete for CPU.
     { name: 'perf', testMatch: /perf\.spec\.ts/, fullyParallel: false },
     { name: 'docs', testMatch: DOCS, use: docsUse },
+    // 9.5: one long docs session (soak.spec.ts); SOAK_MINUTES sets its length.
+    { name: 'soak', testMatch: /soak\.spec\.ts/, use: docsUse, retries: 0 },
     ...engines,
   ],
   webServer: [

@@ -666,4 +666,34 @@ describe('layout primitives', () => {
     );
     expect(screen.queryByTestId('sc')?.type).not.toBe('RCTScrollView');
   });
+
+  // 9.5: a render error in a screen's content shows a fallback instead of closing the app.
+  it('ScreenContainer catches a render error, reports it, and Retry renders the content again', async () => {
+    const quiet = jest.spyOn(console, 'error').mockImplementation(() => {});
+    let broken = true;
+    const Flaky = () => {
+      if (broken) throw new Error('boom');
+      return <RNText>Loaded</RNText>;
+    };
+    const onError = jest.fn();
+    await wrap(
+      <ScreenContainer onError={onError}>
+        <Flaky />
+      </ScreenContainer>,
+    );
+    expect(screen.getByText('Something went wrong')).toBeTruthy();
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'boom' }), expect.anything());
+    broken = false;
+    fireEvent.press(screen.getByText('Retry'));
+    expect(await screen.findByText('Loaded')).toBeTruthy();
+
+    broken = true;
+    await screen.rerender(
+      <ScreenContainer key="custom" errorFallback={({ error }) => <RNText>{(error as Error).message}</RNText>}>
+        <Flaky />
+      </ScreenContainer>,
+    );
+    expect(screen.getByText('boom')).toBeTruthy();
+    quiet.mockRestore();
+  });
 });
