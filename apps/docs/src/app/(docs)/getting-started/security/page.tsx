@@ -163,11 +163,45 @@ gh attestation verify nexub-react-9.7.0.tgz --repo Nexub-AI/nexub-ds \\
         />
       </Section>
 
+      <Section id="review" title="Security review">
+        <Prose>
+          Before 9.8 we reviewed everything Nexub ships or runs (the packages, this site, its feedback endpoint, the
+          MCP server and the release pipeline) against a written checklist: OWASP ASVS Level 2, where a chapter
+          applies. It was an internal review, not an outside audit. It found nothing critical or high. Every finding
+          and what was done about it is in{' '}
+          <a href="https://github.com/Nexub-AI/nexub-ds/blob/production/SECURITY_REVIEW.md">SECURITY_REVIEW.md</a>.
+        </Prose>
+        <DocTable
+          head={['Checked', 'Result']}
+          rows={[
+            ['Critical or high findings', 'None'],
+            ['Medium and low findings', '13 found: 12 fixed in 9.8.0, 1 closed as not a defect'],
+            ['Advisories in dependencies', 'No high or critical advisory in any dependency, dev tools included. Blocking on every pull request'],
+            ['Next review', 'Before every major version, and after any change to the feedback endpoint, the middleware or the release workflows'],
+          ]}
+        />
+      </Section>
+
       <Section id="reporting" title="Reporting a vulnerability">
         <Prose>
-          Report privately through GitHub Security Advisories on{' '}
-          <a href="https://github.com/Nexub-AI/nexub-ds/security/advisories/new">Nexub-AI/nexub-ds</a>, not in a
-          public issue. Fixes ship as a patch on the latest version.
+          Report privately:{' '}
+          <a href="https://github.com/Nexub-AI/nexub-ds/security/advisories/new">open a private advisory on GitHub</a>,
+          or email security_report@nexub.com. Please don&apos;t use a public issue.
+        </Prose>
+        <DocTable
+          head={['Severity', 'We acknowledge within', 'Fix on npm within']}
+          rows={[
+            ['Critical', '1 working day', '24 hours of confirming it'],
+            ['High', '3 working days', '7 days'],
+            ['Medium, low', '3 working days', '30 days'],
+          ]}
+        />
+        <Prose>
+          Fixes ship on the latest version only, as a patch, and don&apos;t wait for the next scheduled release. There
+          are no maintenance branches, so stay on the latest version. Each fix comes with a GitHub Security Advisory
+          that names the affected and fixed versions, and a CVE for high and critical issues. The steps we follow are in
+          the{' '}
+          <a href="https://github.com/Nexub-AI/nexub-ds/blob/production/INCIDENT_RUNBOOK.md">incident runbook</a>.
         </Prose>
       </Section>
     </div>

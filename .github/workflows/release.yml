@@ -157,10 +157,9 @@ jobs:
 
       # What npm serves must be the attested artifact: download each published tarball
       # and verify its provenance against this repository and build-release.yml.
-      # Not blocking in 9.7 (first release on this path); a failure is a warning to act on.
+      # Blocking since 9.8 (it passed on 9.7.0): a red release run is the alarm.
       - name: Verify provenance of the published tarballs
         if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           PUBLISHED_PACKAGES: ${{ steps.changesets.outputs.publishedPackages }}
@@ -177,15 +176,15 @@ jobs:
       # tied to this workflow run and logged in Rekor. Verify with:
       #   gitsign verify-tag --certificate-identity-regexp '.*/release.yml@refs/heads/production' \
       #     --certificate-oidc-issuer https://token.actions.githubusercontent.com vX.Y.Z
-      # Not blocking: the packages are already published when this runs.
+      # Blocking since 9.8. The packages are already on npm when this runs, so a failure
+      # doesn't undo the release: it turns the run red, and the tag is then signed by hand
+      # (INCIDENT_RUNBOOK.md, "A release step failed").
       - name: Set up gitsign
         if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
-        continue-on-error: true
         uses: chainguard-dev/actions/setup-gitsign@a25ce483d875a46f4c837e85e32e0fda602693f5 # v1.8.1
 
       - name: Signed release tag
         if: ${{ !cancelled() && steps.changesets.outputs.published == 'true' }}
-        continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.version.outputs.version }}
