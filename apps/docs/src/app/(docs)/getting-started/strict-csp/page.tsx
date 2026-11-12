@@ -145,6 +145,36 @@ export default defineConfig({
         Radix sets a few internal styles of its own (Slider thumb position, the hidden form input behind
         Switch and Checkbox, the Popover anchor, Toast&apos;s screen-reader announcer).
       </p>
+
+      <h2>Trusted Types</h2>
+      <p>
+        Nexub works with <code>require-trusted-types-for &apos;script&apos;</code> enforced. The library never
+        passes markup to <code>innerHTML</code>, never sets a script URL and never evaluates a string. One thing
+        needs a rule: React writes the text of the <code>&lt;style&gt;</code> elements Radix injects (Select,
+        ScrollArea) through <code>innerHTML</code>. That text is CSS with no tags in it, so a{' '}
+        <code>default</code> policy that only lets tag-free strings through covers it without opening the sink:
+      </p>
+      <CodeBlock
+        lang="javascript"
+        code={`// Before any other script. Header: trusted-types default; require-trusted-types-for 'script'
+trustedTypes.createPolicy('default', {
+  // Text with no "<" can't create an element. Markup is refused.
+  createHTML: (s) => {
+    if (!s.includes('<')) return s;
+    throw new TypeError('markup refused');
+  },
+  // Your bundler's chunk loader, if it sets script.src (Turbopack does).
+  createScriptURL: (u) => {
+    const url = new URL(u, location.href);
+    if (url.origin === location.origin && url.pathname.startsWith('/_next/static/')) return u;
+    throw new TypeError('script URL refused');
+  },
+});`}
+      />
+      <p>
+        This site uses that policy, plus one allowed third-party script URL for its feedback form. With{' '}
+        <code>scrollLock=&quot;class&quot;</code> the overlays inject no style element at all.
+      </p>
     </div>
   );
 }

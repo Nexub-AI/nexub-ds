@@ -21,6 +21,10 @@ export function loadCatalog() {
   return catalog;
 }
 
+// Input limits (9.6): every argument has a maximum, so a client (or a prompt-injected model)
+// can't make the server echo or scan megabytes. Lookups go through the catalog, never a path.
+const short = () => z.string().max(200);
+
 const normalize = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 export function createServer() {
@@ -42,7 +46,7 @@ export function createServer() {
     {
       title: 'List Nexub components and patterns',
       description: 'Lists components (@nexub/react) and patterns (@nexub/patterns) with one-line descriptions. Optional query filters by name, category or description.',
-      inputSchema: { query: z.string().optional().describe('e.g. "table", "pricing", "Overlays"') },
+      inputSchema: { query: short().optional().describe('e.g. "table", "pricing", "Overlays"') },
     },
     async ({ query }) => {
       const q = query?.toLowerCase();
@@ -61,7 +65,7 @@ export function createServer() {
     {
       title: 'Get a Nexub component reference',
       description: 'Props, import, examples, when to use and accessibility notes for one component or pattern. Accepts a slug ("date-picker") or name ("DatePicker").',
-      inputSchema: { name: z.string().describe('Component slug or name') },
+      inputSchema: { name: short().describe('Component slug or name') },
     },
     async ({ name }) => {
       const hit = catalog.find((c) => normalize(c.slug) === normalize(name) || normalize(c.title) === normalize(name));
@@ -80,7 +84,7 @@ export function createServer() {
       title: 'Get Nexub design tokens',
       description: 'Color roles, chart colors, typography roles, spacing, sizes, shape, elevation, motion, z-index and breakpoints, with Tailwind utilities and CSS variables. Optional section narrows the output.',
       inputSchema: {
-        section: z.string().optional().describe('e.g. "Color roles", "Spacing", "Motion", "Typography roles"'),
+        section: short().optional().describe('e.g. "Color roles", "Spacing", "Motion", "Typography roles"'),
       },
     },
     async ({ section }) => {
@@ -114,8 +118,8 @@ export function createServer() {
       title: 'Build a screen with Nexub',
       description: 'Build a page or screen from a short description, using only Nexub components, patterns and tokens.',
       argsSchema: {
-        screen: z.string().describe('What to build, e.g. "billing settings with plan, payment method and invoices"'),
-        platform: z.string().optional().describe('"web" (default) or "mobile"'),
+        screen: z.string().max(4000).describe('What to build, e.g. "billing settings with plan, payment method and invoices"'),
+        platform: z.enum(['web', 'mobile']).optional().describe('"web" (default) or "mobile"'),
       },
     },
     ({ screen, platform }) =>
@@ -131,7 +135,7 @@ export function createServer() {
     {
       title: 'Review UI against Nexub',
       description: 'Review UI code against the Nexub checklist and fix what is not a Nexub component or token.',
-      argsSchema: { code: z.string().optional().describe('The code to review. Leave empty to review the open file.') },
+      argsSchema: { code: z.string().max(200_000).optional().describe('The code to review. Leave empty to review the open file.') },
     },
     ({ code }) =>
       user(

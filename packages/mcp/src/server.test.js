@@ -43,3 +43,26 @@ test('tools answer from the skill files', async () => {
   assert.match(await call('get_guidelines'), /Calm Depth principles/);
   assert.match(await call('get_react_native'), /^# @nexub\/react-native/);
 });
+
+// 9.6: input limits, and lookups that can't leave the skill folder.
+test('over-long or path-like input is refused, not read or echoed', async () => {
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  const client = new Client({ name: 'test', version: '0' });
+  await Promise.all([createServer().connect(a), client.connect(b)]);
+  const long = 'a'.repeat(201);
+  for (const [name, args] of [
+    ['get_component', { name: long }],
+    ['list_components', { query: long }],
+    ['get_tokens', { section: long }],
+  ]) {
+    const res = await client.callTool({ name, arguments: args }).catch((e) => ({ isError: true, content: [{ text: String(e) }] }));
+    assert.equal(res.isError, true, name);
+    assert.ok(!res.content[0].text.includes(long), `${name} echoed the input`);
+  }
+  await assert.rejects(client.getPrompt({ name: 'build_screen', arguments: { screen: 'x', platform: 'desktop' } }));
+  await assert.rejects(client.getPrompt({ name: 'review_screen', arguments: { code: 'x'.repeat(200_001) } }));
+  await client.close();
+  for (const name of ['../../package.json', '..%2f..%2fpackage.json', '/etc/passwd', 'components/button.md\0']) {
+    assert.match(await call('get_component', { name }), /^No reference page for/, name);
+  }
+});
