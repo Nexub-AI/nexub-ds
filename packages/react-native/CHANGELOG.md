@@ -1,5 +1,13 @@
 # @nexub/react-native
 
+## 8.8.0
+
+### Patch Changes
+
+- @nexub/tokens@8.8.0
+- @nexub/icons@8.8.0
+- @nexub/core@8.8.0
+
 ## 8.7.0
 
 ### Patch Changes
