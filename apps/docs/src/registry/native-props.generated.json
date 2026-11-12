@@ -133,12 +133,6 @@
         "description": "'vertical' puts actions full-width in a column (bottom of forms)."
       },
       {
-        "name": "direction",
-        "type": "'row' | 'stack'",
-        "required": false,
-        "description": "Deprecated. 8.5: use `orientation` (the web name): 'row' is 'horizontal', 'stack' is 'vertical'. Removed in 9.0."
-      },
-      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -910,12 +904,6 @@
         "required": false,
         "default": "true",
         "description": "Tapping the scrim or Android back closes it."
-      },
-      {
-        "name": "dismissable",
-        "type": "boolean",
-        "required": false,
-        "description": "Deprecated. 8.5: use `dismissible` (the web spelling). Removed in 9.0."
       }
     ]
   },
@@ -2112,18 +2100,6 @@
         "description": "Latest date the picker allows."
       },
       {
-        "name": "minimumDate",
-        "type": "Date",
-        "required": false,
-        "description": "Deprecated. 8.5: use `minDate` (the web name). Removed in 9.0."
-      },
-      {
-        "name": "maximumDate",
-        "type": "Date",
-        "required": false,
-        "description": "Deprecated. 8.5: use `maxDate` (the web name). Removed in 9.0."
-      },
-      {
         "name": "placeholder",
         "type": "string",
         "required": false,
@@ -2178,12 +2154,6 @@
         "required": false,
         "default": "true",
         "description": "Drag down, tap the scrim or Android back closes it."
-      },
-      {
-        "name": "dismissable",
-        "type": "boolean",
-        "required": false,
-        "description": "Deprecated. 8.5: use `dismissible` (the web spelling). Removed in 9.0."
       },
       {
         "name": "scroll",

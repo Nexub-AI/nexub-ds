@@ -461,7 +461,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
-  { id: 'migrating-to-9', label: 'Migrating to 9.0', description: 'Removes the classic style, Button legacy variants, the 8.5 parity aliases and hidePassword: move off them on 8.9', href: '/getting-started/migrating-to-9', category: 'Docs' },
+  { id: 'migrating-to-9', label: 'Migrating to 9.0', description: 'Removed in 9.0: the classic style, Button legacy variants, the 8.5 parity aliases and hidePassword, and how to move off them', href: '/getting-started/migrating-to-9', category: 'Docs' },
   { id: 'migrating-to-8', label: 'Migrating to 8.0', description: 'Signature by default, class scroll lock, strict safeHref, legacy motion tokens removed: try it on 7.9', href: '/getting-started/migrating-to-8', category: 'Docs' },
   { id: 'migrating-to-7', label: 'Migrating to 7.0', description: 'StepIndicator and inline Autocomplete removed: and how to upgrade', href: '/getting-started/migrating-to-7', category: 'Docs' },
   { id: 'migrating-to-6', label: 'Migrating to 6.0', description: 'Enterprise defaults for Autocomplete, DataTable and FilterBar: and how to upgrade', href: '/getting-started/migrating-to-6', category: 'Docs' },

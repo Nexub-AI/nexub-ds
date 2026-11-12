@@ -1,5 +1,20 @@
 # @nexub/react
 
+## 8.9.0
+
+### Minor Changes
+
+- a8eeb7d: 8.9: the 9.0 release candidate. API freeze: no new components, props or variants until 9.0.
+
+  - Docs: Migrating to 9.0 lists everything 9.0 removes, each with its replacement: the `classic` style, Button's legacy variants (`primary`, `secondary`, `outline`, `ghost`), `onChange` on DatePicker, DateTimePicker and NumberInput, the React Native `dismissable`, `minimumDate`/`maximumDate` and ButtonGroup `direction` names, and the `hidePassword` message.
+  - `nexub-migrate`: a `changes-in-9` rule (on by default) rewrites the 8.5 renames and reports the classic style and `hidePassword`. Together with `button-aliases` it covers every item on the list.
+  - Fix (React Native): PasswordInput's reveal toggle keeps one name, "Show password", and reports its state as selected, like the web toggle since 7.2. It no longer switches to the deprecated `hidePassword` label.
+
+### Patch Changes
+
+- @nexub/icons@8.9.0
+- @nexub/core@8.9.0
+
 ## 8.8.0
 
 ### Minor Changes

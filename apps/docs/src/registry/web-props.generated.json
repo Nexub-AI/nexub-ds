@@ -564,10 +564,10 @@
         },
         {
           "name": "variant",
-          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'primary' | 'secondary' | 'subtle' | 'outline' | 'ghost' | 'destructive' | 'accent' | 'link'",
+          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'subtle' | 'destructive' | 'accent' | 'link'",
           "required": false,
           "default": "'filled'",
-          "description": "Visual style. primary, secondary, outline and ghost are deprecated aliases of filled, tonal, outlined and text, removed in 9.0."
+          "description": "Visual style."
         }
       ]
     },
@@ -1486,13 +1486,6 @@
           "description": ""
         },
         {
-          "name": "onChange",
-          "type": "((date: Date) => void)",
-          "required": false,
-          "deprecated": true,
-          "description": ""
-        },
-        {
           "name": "onValueChange",
           "type": "((date: Date) => void)",
           "required": false,
@@ -1653,13 +1646,6 @@
           "name": "minuteStep",
           "type": "number",
           "required": false,
-          "description": ""
-        },
-        {
-          "name": "onChange",
-          "type": "((value: Date) => void)",
-          "required": false,
-          "deprecated": true,
           "description": ""
         },
         {
@@ -2726,7 +2712,7 @@
         },
         {
           "name": "variant",
-          "type": "'solid' | 'subtle' | 'outline' | 'ghost'",
+          "type": "'solid' | 'subtle' | 'ghost' | 'outline'",
           "required": false,
           "default": "'ghost'",
           "description": ""
@@ -3619,13 +3605,6 @@
           "name": "min",
           "type": "number",
           "required": false,
-          "description": ""
-        },
-        {
-          "name": "onChange",
-          "type": "((value: number) => void)",
-          "required": false,
-          "deprecated": true,
           "description": ""
         },
         {
@@ -4960,10 +4939,10 @@
         },
         {
           "name": "variant",
-          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'primary' | 'secondary' | 'subtle' | 'outline' | 'ghost' | 'destructive' | 'accent' | 'link'",
+          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'subtle' | 'destructive' | 'accent' | 'link'",
           "required": false,
           "default": "'filled'",
-          "description": "Visual style. primary, secondary, outline and ghost are deprecated aliases of filled, tonal, outlined and text, removed in 9.0."
+          "description": "Visual style."
         }
       ]
     },
@@ -5164,7 +5143,7 @@
         },
         {
           "name": "tone",
-          "type": "'secondary' | 'subtle' | 'default' | 'muted' | 'inverse'",
+          "type": "'subtle' | 'default' | 'muted' | 'inverse' | 'secondary'",
           "required": false,
           "default": "'default'",
           "description": ""

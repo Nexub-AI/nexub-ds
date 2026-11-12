@@ -793,10 +793,6 @@ export interface DateTimeFieldProps {
   minDate?: Date;
   /** Latest date the picker allows. */
   maxDate?: Date;
-  /** @deprecated 8.5: use `minDate` (the web name). Removed in 9.0. */
-  minimumDate?: Date;
-  /** @deprecated 8.5: use `maxDate` (the web name). Removed in 9.0. */
-  maximumDate?: Date;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -812,13 +808,9 @@ export function DateTimeField({
   mode = 'date',
   minDate,
   maxDate,
-  minimumDate: legacyMin,
-  maximumDate: legacyMax,
   placeholder,
   style,
 }: DateTimeFieldProps) {
-  const minimumDate = minDate ?? legacyMin;
-  const maximumDate = maxDate ?? legacyMax;
   const theme = useTheme();
   const { roles, tokens, messages, locale } = theme;
   const [open, setOpen] = React.useState(false);
@@ -838,8 +830,8 @@ export function DateTimeField({
       DateTimePickerAndroid.open({
         value: value ?? new Date(),
         mode,
-        minimumDate,
-        maximumDate,
+        minimumDate: minDate,
+        maximumDate: maxDate,
         onChange: (e, d) => e.type === 'set' && d && onValueChange(d),
       });
     } else setOpen(true);
@@ -877,8 +869,8 @@ export function DateTimeField({
               value={value ?? new Date()}
               mode={mode}
               display={mode === 'date' ? 'inline' : 'spinner'}
-              minimumDate={minimumDate}
-              maximumDate={maximumDate}
+              minimumDate={minDate}
+              maximumDate={maxDate}
               accentColor={roles.primary}
               themeVariant={theme.scheme}
               locale={locale}

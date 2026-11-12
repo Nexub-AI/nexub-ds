@@ -374,6 +374,7 @@ test('changes-in-9: renames the 8.5 aliases, reports classic and hidePassword', 
     '<ButtonGroup direction={dir} />',
     '<NexubNativeProvider style="classic" />',
     'const messages = { hidePassword: "Hide" };',
+    '<NexubNativeProvider style="signature" />',
   ].join('\n');
   const n = migrateSource(native, { ext: '.tsx', rules: only('changes-in-9') });
   assert.equal(n.output.split('\n').slice(1, 5).join('\n'), [
@@ -382,7 +383,7 @@ test('changes-in-9: renames the 8.5 aliases, reports classic and hidePassword', 
     '<DateTimeField minDate={a} maxDate={b} />',
     '<ButtonGroup orientation="vertical" />',
   ].join('\n'));
-  assert.deepEqual(n.manual.map((m) => m.line), [6, 7, 8]);
+  assert.deepEqual(n.manual.map((m) => m.line), [6, 7, 8, 9]);
   // The web DatePicker rule doesn't touch an @nexub/react-native import, and vice versa.
   assert.equal(migrateSource("import { NumberInput } from '@nexub/react-native';\n<NumberInput onChange={f} />", { ext: '.tsx', rules: only('changes-in-9') }).output.includes('onChange'), true);
 });

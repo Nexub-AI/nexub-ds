@@ -123,7 +123,7 @@ describe('Dialog', () => {
     expect(screen.queryByText('Delete card?')).toBeNull();
   });
 
-  it('Android back and the scrim close it when dismissable', async () => {
+  it('Android back and the scrim close it when dismissible', async () => {
     const onOpenChange = jest.fn();
     await wrap(dialog({ onOpenChange }));
     await fireEvent(hostWith('onRequestClose'), 'requestClose');
@@ -133,9 +133,9 @@ describe('Dialog', () => {
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it('the deprecated dismissable={false} alias still ignores back and the scrim', async () => {
+  it('dismissible={false} ignores back and the scrim', async () => {
     const onOpenChange = jest.fn();
-    await wrap(dialog({ onOpenChange, dismissable: false }));
+    await wrap(dialog({ onOpenChange, dismissible: false }));
     await fireEvent(hostWith('onRequestClose'), 'requestClose');
     await fireEvent.press(scrim());
     expect(onOpenChange).not.toHaveBeenCalled();
@@ -406,15 +406,6 @@ describe('actions', () => {
       </ButtonGroup>,
     );
     expect(style(screen.getByRole('button', { name: 'Pay' })).alignSelf).toBe('flex-start');
-  });
-
-  it('the deprecated direction="stack" alias still stacks', async () => {
-    await wrap(
-      <ButtonGroup direction="stack">
-        <Button onPress={() => {}}>Pay</Button>
-      </ButtonGroup>,
-    );
-    expect(style(screen.getByRole('button', { name: 'Pay' })).alignSelf).toBe('stretch');
   });
 });
 
