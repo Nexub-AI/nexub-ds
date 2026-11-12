@@ -200,6 +200,9 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: ${{ matrix.engine }}
+        # Firefox refuses to start when $HOME isn't owned by the container user.
+        env:
+          HOME: /root
         run: pnpm --filter @nexub/react test:visual --project=${{ matrix.engine }} --project=docs-${{ matrix.engine }}
 
       - name: Upload diff report
