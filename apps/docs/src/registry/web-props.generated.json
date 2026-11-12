@@ -5711,6 +5711,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -5733,6 +5739,12 @@
           "type": "Partial<PageTemplateMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "onLoadMore",
@@ -6152,6 +6164,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -6180,6 +6198,12 @@
           "type": "() => void",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "quote",
@@ -6287,6 +6311,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -6304,6 +6334,12 @@
           "type": "Partial<PageTemplateMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "onSeeAllActivity",
@@ -6641,10 +6677,22 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
           "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "title",
@@ -6690,6 +6738,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -6706,6 +6760,12 @@
           "type": "Partial<PageTemplateMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "onRestore",
@@ -6918,6 +6978,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -6940,6 +7006,12 @@
           "type": "Partial<PageTemplateMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "title",
@@ -7178,6 +7250,12 @@
           "description": ""
         },
         {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
           "name": "eyebrow",
           "type": "React.ReactNode",
           "required": false,
@@ -7200,6 +7278,12 @@
           "type": "(() => void)",
           "required": false,
           "description": "Shows a back button above the hero."
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
         },
         {
           "name": "rows",

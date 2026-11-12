@@ -69,6 +69,38 @@ safeSrc('data:image/png;base64,…'); // allowed: an <img> can't run script`}
         </Prose>
       </Section>
 
+      <Section id="resilience" title="Resilience">
+        <Prose>
+          Since 9.5, the code that reads what a person or a model hands it is tested with generated input, not only
+          examples. Property-based tests (fast-check) cover <code>parseMoney</code> in eight locales, <code>safeHref</code>{' '}
+          and <code>safeSrc</code> against schemes hidden with tabs, newlines, control characters and mixed case, seed
+          colours, CSV export, and typed entry in NumberInput, OTPInput, MoneyInput and DatePicker.
+        </Prose>
+        <DocTable
+          head={['Check', 'What it does', 'When']}
+          rows={[
+            ['Property tests', 'Random input for every parser and typed field. A counterexample fails the build with the seed to replay it.', 'Every PR'],
+            ['Leak test', 'Mounts and unmounts every story 1,000 times. Listeners, timers, DOM nodes and heap must not grow.', 'Every PR'],
+            ['Docs soak', 'One browser session of navigation, search and theme switches: no error, no reload, flat memory.', '1 minute per PR, 30 minutes nightly'],
+            ['Mobile soak', 'One iOS app session of screens, toasts, dialogs and sheets: no crash, flat memory.', '30 minutes nightly'],
+          ]}
+        />
+        <Prose>
+          The page templates (<code>PageFrame</code> and every page built on it) and React Native&apos;s{' '}
+          <code>ScreenContainer</code> catch a render error in their content. The header and navigation stay up and the
+          content shows &ldquo;Something went wrong&rdquo; with Retry. Pass <code>onError</code> to report it and{' '}
+          <code>errorFallback</code> to draw your own.
+        </Prose>
+        <CodeBlock
+          code={`<DashboardPage
+  title="Home"
+  onError={(error, info) => Sentry.captureException(error, { extra: info })}
+  errorFallback={({ reset }) => <MyError onRetry={reset} />}
+  {...data}
+/>`}
+        />
+      </Section>
+
       <Section id="reporting" title="Reporting a vulnerability">
         <Prose>
           Report privately through GitHub Security Advisories on{' '}

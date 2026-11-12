@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Badge, cn, useLocale, useNexubMessages } from '@nexub/react';
+import { Badge, Button, EmptyStatePreset, cn, useLocale, useNexubMessages } from '@nexub/react';
 
 // Shared pieces of the page templates (ActivityPage, DashboardPage, …).
 // Data types mirror @nexub/react-native/patterns so one data layer feeds the
@@ -195,9 +195,56 @@ export function StatusBadge({ status, m, dot }: { status?: Transaction['status']
   );
 }
 
+// ─── Error boundary ──────────────────────────────────────────────────────────
+
+export interface ContentBoundaryProps {
+  /** Shown in place of content that threw while rendering. Default: the "Something went wrong" state with Retry. */
+  errorFallback?: React.ReactNode | ((state: { error: unknown; reset: () => void }) => React.ReactNode);
+  /** Called with the error, for reporting (Sentry, Datadog). */
+  onError?: (error: unknown, info: React.ErrorInfo) => void;
+}
+
+function DefaultFallback({ reset }: { reset: () => void }) {
+  const m = useNexubMessages();
+  return (
+    <EmptyStatePreset
+      kind="serverError"
+      actions={
+        <Button variant="tonal" onClick={reset}>
+          {m.retry}
+        </Button>
+      }
+    />
+  );
+}
+
+/**
+ * Catches a render error in a pattern's content (9.5): the frame around it (header, list,
+ * navigation) stays up and the content shows a fallback with Retry, which renders it again.
+ */
+class ContentBoundary extends React.Component<
+  ContentBoundaryProps & { children?: React.ReactNode },
+  { failed: boolean; error: unknown }
+> {
+  override state = { failed: false, error: undefined as unknown };
+  static getDerivedStateFromError(error: unknown) {
+    return { failed: true, error };
+  }
+  override componentDidCatch(error: unknown, info: React.ErrorInfo) {
+    this.props.onError?.(error, info);
+  }
+  reset = () => this.setState({ failed: false, error: undefined });
+  override render() {
+    if (!this.state.failed) return this.props.children;
+    const { errorFallback } = this.props;
+    if (typeof errorFallback === 'function') return errorFallback({ error: this.state.error, reset: this.reset });
+    return errorFallback ?? <DefaultFallback reset={this.reset} />;
+  }
+}
+
 // ─── Frame ───────────────────────────────────────────────────────────────────
 
-export interface PageFrameProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+export interface PageFrameProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'onError'>, ContentBoundaryProps {
   /** Landmark element. Use `div` inside an app shell that already renders `<main>`. @default 'main' */
   as?: 'main' | 'div' | 'section';
   title?: React.ReactNode;
@@ -214,7 +261,7 @@ const widths = { sm: 'max-w-[480px]', md: 'max-w-3xl', lg: 'max-w-6xl' };
 
 /** Page frame shared by the templates: centred column, h1 header, responsive padding. */
 export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function PageFrame(
-  { as: Tag = 'main', title, description, actions, eyebrow, width = 'md', className, children, ...props },
+  { as: Tag = 'main', title, description, actions, eyebrow, width = 'md', className, children, errorFallback, onError, ...props },
   ref,
 ) {
   const headingId = React.useId();
@@ -239,7 +286,9 @@ export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function 
           {description && <p className="text-body-md text-[var(--color-on-surface-muted)]">{description}</p>}
         </header>
       )}
-      {children}
+      <ContentBoundary errorFallback={errorFallback} onError={onError}>
+        {children}
+      </ContentBoundary>
     </Tag>
   );
 });

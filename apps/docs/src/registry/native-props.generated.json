@@ -3486,6 +3486,18 @@
         "type": "ViewStyle",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "errorFallback",
+        "type": "React.ReactNode | ((state: { error: unknown; reset: () => void }) => React.ReactNode)",
+        "required": false,
+        "description": "Shown in place of content that threw while rendering. Default: ErrorState with Retry."
+      },
+      {
+        "name": "onError",
+        "type": "(error: unknown, info: React.ErrorInfo) => void",
+        "required": false,
+        "description": "Called with the error, for reporting (Sentry, Crashlytics)."
       }
     ]
   },
