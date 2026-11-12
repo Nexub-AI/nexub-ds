@@ -13,7 +13,7 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REGISTRY = 'https://registry.npmjs.org';
@@ -74,7 +74,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       continue;
     }
     console.log(`${dryRun ? 'dry run: ' : ''}publishing ${name}@${version} (${file}, sha256 ${actual[file].slice(0, 16)}…)`);
-    execFileSync('npm', ['publish', join(dir, file), '--access', 'public', ...(dryRun ? ['--dry-run'] : [])], { stdio: 'inherit' });
+    // Absolute path: npm reads a bare `tarballs/x.tgz` as the GitHub repository tarballs/x.tgz.
+    execFileSync('npm', ['publish', resolve(dir, file), '--access', 'public', ...(dryRun ? ['--dry-run'] : [])], { stdio: 'inherit' });
   }
   if (!dryRun) execFileSync('pnpm', ['changeset', 'tag'], { stdio: 'inherit' });
 }
