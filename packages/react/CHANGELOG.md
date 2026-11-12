@@ -1,5 +1,16 @@
 # @nexub/react
 
+## 9.5.0
+
+### Minor Changes
+
+- d58390d: 9.5 Resilience. Property-based tests (fast-check, dev-only) now cover everything that parses what a person or a model hands it: `parseMoney` in eight locales, `safeHref` and `safeSrc` against schemes hidden with tabs, newlines, control characters and mixed case, seed colours, CSV export, and typed entry in `NumberInput`, `OTPInput`, `MoneyInput` and `DatePicker`. Two bugs they found are fixed: `parseMoney` could not read a locale's own digits, so editing an `ar-EG` `MoneyInput` (web or React Native) cleared its amount, and `NumberInput` could report `Infinity`. A leak test mounts and unmounts every story 1,000 times and fails on a listener, timer, DOM node or heap that grows; a soak test keeps one docs session (and, nightly, one iOS app session) busy for 30 minutes and fails on an error, a reload or memory that keeps growing. Error boundaries: the page templates (`PageFrame` and every page built on it) and React Native's `ScreenContainer` now catch a render error in their content, keep the header up and show "Something went wrong" with Retry; `onError` reports it and `errorFallback` replaces the default.
+
+### Patch Changes
+
+- @nexub/icons@9.5.0
+- @nexub/core@9.5.0
+
 ## 9.4.0
 
 ### Minor Changes
