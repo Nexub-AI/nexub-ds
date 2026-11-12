@@ -28,12 +28,32 @@ const idsOf = (file) => {
   return ids.get(file);
 };
 
+// Live previews are server-rendered since 9.2; their demo links (#pricing, /components/
+// navigation in a Breadcrumb) are placeholders, like the /examples templates below.
+// Cut each preview pane, and the streamed Suspense segments (<div hidden id="S:n">) React
+// moves into it before first paint, out by matching <div> depth.
+const PREVIEW = /class="docs-preview-pane"|<div hidden="" id="S:\d+">|<div hidden id="S:\d+">/;
+const stripPreviews = (html) => {
+  let found;
+  while ((found = PREVIEW.exec(html))) {
+    const i = found.index;
+    const start = html.lastIndexOf('<div', i + 4);
+    const tag = /<(\/?)div\b/g;
+    tag.lastIndex = start;
+    let depth = 0, m;
+    while ((m = tag.exec(html))) if ((depth += m[1] ? -1 : 1) === 0) break;
+    const end = m ? html.indexOf('>', m.index) + 1 : html.length;
+    html = html.slice(0, start) + html.slice(end);
+  }
+  return html;
+};
+
 const broken = new Set();
 for (const page of pages) {
   // 404, and the full-page template demos under /examples, whose nav links are placeholders.
   if (page.endsWith('404.html') || relative(out, page).startsWith('examples/')) continue;
   const self = '/' + relative(out, page).replace(/(\/?index)?\.html$/, '');
-  for (const [, raw] of readFileSync(page, 'utf8').matchAll(/<a\b[^>]*?\shref="([^"]+)"/g)) {
+  for (const [, raw] of stripPreviews(readFileSync(page, 'utf8')).matchAll(/<a\b[^>]*?\shref="([^"]+)"/g)) {
     const href = raw.replace(/&amp;/g, '&');
     if (!/^\/(?!\/)|^#/.test(href)) continue; // external, mailto:, protocol-relative
     const [beforeHash, hash] = href.split('#');

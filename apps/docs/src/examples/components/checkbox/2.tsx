@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Checkbox, Label } from '@nexub/react';
 
 export default function Example() {

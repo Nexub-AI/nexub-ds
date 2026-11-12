@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Container, Section, Text } from '@nexub/react';
 
 const tones = ['default', 'subtle', 'muted', 'inverse'] as const;

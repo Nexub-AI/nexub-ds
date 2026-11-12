@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { FormField, TimePicker } from '@nexub/react';
 
 export default function Example() {

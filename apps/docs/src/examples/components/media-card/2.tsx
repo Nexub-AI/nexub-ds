@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { MediaCard } from '@nexub/react';
 
 // Gradient placeholder image: a data: URI keeps it inside the docs CSP (img-src 'self' data:).

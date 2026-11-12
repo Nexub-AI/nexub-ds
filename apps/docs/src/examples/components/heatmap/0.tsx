@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Heatmap } from '@nexub/react';
 
 const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];

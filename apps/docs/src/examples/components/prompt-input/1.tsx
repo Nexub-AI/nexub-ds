@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { PromptInput, Chip, IconButton } from '@nexub/react';
 import { Paperclip, Globe } from '@nexub/icons';
