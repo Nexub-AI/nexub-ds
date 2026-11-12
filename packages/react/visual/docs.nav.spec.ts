@@ -1,3 +1,4 @@
+import { existsSync, readdirSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 // Docs navigation over the static export (project "docs"): sidebar links must
@@ -45,3 +46,84 @@ test('sidebar links navigate client-side', async ({ page }) => {
     expect(await page.evaluate(() => (window as unknown as { __nav?: number }).__nav)).toBe(1);
   }
 });
+
+// 9.2: no theme flash. With every script bundle blocked, only the inline ThemeScript
+// runs, so the stored choice must already be on <html> and painted before React loads.
+// (Density is markup, not a stored choice, so it can't flash.)
+const STORED = [
+  { name: 'light', storage: { 'nexub-theme': 'light' }, attrs: { 'data-theme': 'light' }, scheme: 'dark' },
+  { name: 'dark', storage: { 'nexub-theme': 'dark' }, attrs: { 'data-theme': 'dark' }, scheme: 'light' },
+  { name: 'high contrast', storage: { 'nexub-theme': 'dark', 'nexub-contrast': 'high' }, attrs: { 'data-theme': 'dark', 'data-contrast': 'high' }, scheme: 'light' },
+  { name: 'brand', storage: { 'nexub-theme': 'light', 'nexub-brand': 'payub' }, attrs: { 'data-theme': 'light', 'data-product': 'payub' }, scheme: 'light' },
+] as const;
+
+for (const s of STORED) {
+  test(`no theme flash: ${s.name} applies before any bundle runs`, async ({ page }) => {
+    // The OS asks for the other scheme, so a late theme would show the wrong one first.
+    await page.emulateMedia({ colorScheme: s.scheme });
+    await page.addInitScript((st) => {
+      for (const [k, v] of Object.entries(st)) localStorage.setItem(k, v);
+    }, s.storage);
+    await page.route(/\/_next\/static\/.*\.js(\?|$)/, (r) => r.abort());
+    await page.goto('/components/button');
+    for (const [attr, value] of Object.entries(s.attrs)) {
+      await expect(page.locator('html')).toHaveAttribute(attr, value);
+    }
+    // The page colour: the first opaque background of body or html.
+    const bg = await page.evaluate(() =>
+      [document.body, document.documentElement]
+        .map((el) => getComputedStyle(el).backgroundColor)
+        .find((c) => !/^rgba\(.*, 0\)$|transparent/.test(c)),
+    );
+    expect(bg, 'an opaque page background').toBeTruthy();
+    const [r, g, b] = bg!.match(/[\d.]+/g)!.map(Number);
+    expect((r + g + b) / 3 < 128, `page ${bg}`).toBe(s.attrs['data-theme'] === 'dark');
+  });
+}
+
+// 9.2: CLS 0 on every docs page. Layout shifts (not caused by input) from load until
+// fonts, images and client components settle. Pages come from the static export; /m (the
+// Expo web showcase) and /frame are iframe documents, like the previews docs.a11y skips.
+const out = new URL('../../../apps/docs/out/', import.meta.url);
+const docsPages = existsSync(out)
+  ? readdirSync(out, { recursive: true, encoding: 'utf8' })
+      .filter((f) => f.endsWith('.html') && !/^(examples|_next|m|frame)\//.test(f) && !/404/.test(f))
+      .map((f) => '/' + f.replace(/(^|\/)index\.html$/, '').replace(/\.html$/, ''))
+  : [];
+
+// `path` → highest CLS still allowed, and why. Shrink-only: a page that reaches 0 must
+// leave the list. Each is a live preview whose component lays itself out after hydration.
+const CLS_KNOWN: Record<string, number> = {
+  '/components/resizable-panels': 0.005, // panel sizes come from the client layout pass
+  '/components/combobox': 0.003, // cmdk renders its options only after mount
+  '/components/tree-view': 0.001, // row indents measured on mount
+  '/components/filter-builder': 0.0005, // field widths settle after hydration
+  '/components/slider': 0.0005, // Radix positions the thumb on mount
+};
+
+test('CLS_KNOWN only lists docs pages', () => {
+  expect(Object.keys(CLS_KNOWN).filter((p) => !docsPages.includes(p))).toEqual([]);
+});
+
+for (const path of docsPages) {
+  test(`CLS 0: ${path}`, async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'layout-shift entries are Chromium-only');
+    await page.addInitScript(() => {
+      (window as unknown as { __cls: number }).__cls = 0;
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+          if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+        }
+      }).observe({ type: 'layout-shift', buffered: true });
+    });
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+    const cls = await page.evaluate(() => (window as unknown as { __cls: number }).__cls);
+    if (path in CLS_KNOWN) {
+      expect(cls, 'fixed: remove it from CLS_KNOWN').toBeGreaterThan(0);
+      expect(cls).toBeLessThanOrEqual(CLS_KNOWN[path]);
+    } else expect(cls).toBe(0);
+  });
+}

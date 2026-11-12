@@ -8,15 +8,16 @@ function PreviewSkeleton() {
   return <Skeleton className="h-[120px] w-full rounded-shape-container" />;
 }
 
-// Each example (src/examples/<kind>/<slug>/<idx>.tsx) is its own chunk, loaded
-// only when its preview mounts on the client. ssr:false: Radix and event
-// handlers need the browser. Cached so a re-render keeps the same component.
+// Each example (src/examples/<kind>/<slug>/<idx>.tsx) is its own chunk. Server-
+// rendered since 9.2: a client-only preview painted a 120px skeleton first and
+// shifted the page when the real example replaced it (CLS). Cached so a re-render
+// keeps the same component.
 const cache = new Map<string, React.ComponentType>();
 
 function example(key: string) {
   let Example = cache.get(key);
   if (!Example) {
-    Example = dynamic(() => import(`../../examples/${key}.tsx`), { ssr: false, loading: PreviewSkeleton });
+    Example = dynamic(() => import(`../../examples/${key}.tsx`), { loading: PreviewSkeleton });
     cache.set(key, Example);
   }
   return Example;
