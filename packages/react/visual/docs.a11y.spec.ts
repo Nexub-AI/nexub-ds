@@ -30,8 +30,12 @@ for (const path of PAGES) {
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       await page.waitForLoadState('networkidle');
       await page.evaluate(() => document.fonts.ready);
-      // Scroll regions get their tab stop from a ResizeObserver, which fires a frame after
-      // layout; slower engines (WebKit in CI) ran axe in between.
+      // Scroll regions get their tab stop from an effect and a ResizeObserver. On a slow
+      // runner (WebKit, 2 cores) axe ran before React had hydrated: wait for hydration
+      // (React tags hydrated nodes with a __reactFiber key), then for the observer's frame.
+      await page.waitForFunction(() =>
+        Object.keys(document.querySelector('main') ?? {}).some((k) => k.startsWith('__reactFiber')),
+      );
       await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
