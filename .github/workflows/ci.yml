@@ -167,7 +167,9 @@ jobs:
   # and that a tag can be signed and verified with Sigstore.
   release-build:
     name: Release build
-    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
+    # Also on the Version Packages PR: its versions are not on npm yet, so that is the one
+    # place the publish dry run really calls `npm publish` (elsewhere it skips them all).
+    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production') || github.head_ref == 'changeset-release/production'
     permissions:
       contents: read
       id-token: write
