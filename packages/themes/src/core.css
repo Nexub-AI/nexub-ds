@@ -133,6 +133,68 @@ body {
   :focus-visible { outline-color: Highlight; }
 }
 
+/* 9.4 Forced colors (Windows contrast themes). The mode replaces every background colour
+   with the system canvas, and on/selected/filled states were drawn with backgrounds only:
+   a switch looked the same on and off, a radio lost its dot, a slider its track. Redraw
+   those parts with system colours (forced-color-adjust: none lets the colour through).
+   Selectors are the ARIA roles and Radix data-state the components already render;
+   !important because these must beat the components' own colour utilities. */
+@media (forced-colors: active) {
+  /* Parts that are a filled shape: switch thumb, radio dot, slider thumb, progress fill. */
+  [role='switch'].nx-switch > .nx-switch-thumb[data-state], /* beats Signature's thumb colour */
+  [role='radio'] > [data-state='checked'] > span,
+  [role='slider'],
+  [role='progressbar'] > div:not([data-part='segment']),
+  [data-part='segment'][data-filled] {
+    forced-color-adjust: none;
+    background-color: ButtonText !important;
+  }
+  /* Slider: a track you can see, and the selected range filled. */
+  span[data-orientation]:has([role='slider']) > span[data-orientation] {
+    forced-color-adjust: none;
+    background-color: Canvas !important;
+    outline: 1px solid ButtonText;
+  }
+  span[data-orientation]:has([role='slider']) > span[data-orientation] > span[data-orientation] {
+    background-color: Highlight !important;
+  }
+  /* On, pressed, selected and highlighted: the system highlight pair. */
+  [role='switch'][data-state='checked'],
+  [aria-pressed='true'],
+  [role='tab'][aria-selected='true'],
+  [role='radio'][aria-checked='true']:not(:has(> [data-state])),
+  [role='option'][aria-selected='true'],
+  [role^='menuitem'][data-highlighted],
+  [role='option'][data-highlighted] {
+    forced-color-adjust: none;
+    background-color: Highlight !important;
+    border-color: Highlight !important;
+    color: HighlightText !important;
+  }
+  :is([aria-pressed='true'], [role='tab'][aria-selected='true'], [role='radio'][aria-checked='true']:not(:has(> [data-state])), [role='option'][aria-selected='true'], [role^='menuitem'][data-highlighted], [role='option'][data-highlighted]) * {
+    color: HighlightText !important;
+  }
+  [role='switch'][data-state='checked'].nx-switch > .nx-switch-thumb[data-state] { background-color: HighlightText !important; }
+  [role='switch']:disabled.nx-switch > .nx-switch-thumb[data-state],
+  [role='slider'][data-disabled] { background-color: GrayText !important; }
+  /* Shapes that were only a background: buttons, floating panels and separators get an edge.
+     Outline, not border, so nothing changes size; the focus ring still replaces it. */
+  button.nx-hit:not([role='switch']):not(:focus-visible) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+  button.nx-hit:disabled:not(:focus-visible),
+  button.nx-hit[aria-disabled='true']:not(:focus-visible) { outline-color: GrayText; }
+  /* Panels take focus while open and hide their own focus ring, so the edge is unconditional. */
+  :is([role='menu'], [role='listbox'], [role='dialog'], [role='alertdialog'], [role='tooltip']) {
+    outline: 1px solid CanvasText !important;
+  }
+  [role='separator'] {
+    forced-color-adjust: none;
+    background-color: CanvasText !important;
+  }
+}
+
 /* Headings: brand display face, balanced wrapping */
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
@@ -255,12 +317,17 @@ code, kbd, pre, samp {
   animation:
     nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing),
     nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+  /* The move adds to the element's own translate/scale. A centred dialog is centred with
+     the translate property (-50% -50%); replacing it made the dialog fly in from the corner
+     by half its size, reduced motion included (9.4). The fade still replaces. */
+  animation-composition: replace, add;
 }
 /* Exit is quicker than enter and never overshoots. */
 .nx-motion:is([data-state='closed'], [data-motion^='to-']) {
   animation:
     nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards,
     nx-move-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+  animation-composition: replace, add;
 }
 
 /* Floating layers grow from their trigger: a small scale plus a 4px nudge

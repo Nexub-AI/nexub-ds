@@ -2,11 +2,18 @@
 // noise, and its interactive element has an accessible name. A new export
 // with no entry in CASES (or SKIP) fails the "covers every export" test.
 import * as React from 'react';
-import { Text as RNText } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
+import { AccessibilityInfo, StyleSheet, Text as RNText } from 'react-native';
+import { act, render, screen, waitFor } from '@testing-library/react-native';
 import { Plus } from '@nexub/icons/native';
 import * as Lib from '../index';
 import * as Patterns from '../patterns';
+
+// The OS colour scheme, driven by the test at the bottom of this file.
+const mockColorScheme = jest.fn(() => 'light');
+jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
+  __esModule: true,
+  default: () => mockColorScheme(),
+}));
 
 jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
@@ -32,6 +39,18 @@ type Case = {
 
 // Kept short: each entry needs a reason.
 const SKIP: Record<string, string> = {};
+
+// 9.4: text that does not grow with the OS font size, and why. Shrink-only.
+// The Avatar monogram is sized to its circle (the full name is the accessibility label);
+// the others contain an Avatar.
+const MONOGRAM = ['Text cap=1'];
+const FIXED_TEXT: Record<string, string[]> = {
+  Avatar: MONOGRAM,
+  AvatarGroup: MONOGRAM,
+  ActivityList: MONOGRAM,
+  ProfileHeader: MONOGRAM,
+  TransactionDetail: MONOGRAM,
+};
 
 const CASES: Record<string, Case> = {
   // Theme + primitives
@@ -193,4 +212,75 @@ describe.each(exported.filter(([n]) => n in CASES))('%s', (name, Component) => {
     expect(errors).not.toHaveBeenCalled();
     expect(warns).not.toHaveBeenCalled();
   });
+
+  // 9.4: every environment. Text grows with the OS font size (to 200% and beyond), and
+  // nothing is laid out in reverse, so the screen-reader order is the visual order.
+  it('lets text scale with the OS setting and keeps reading order', async () => {
+    await render(
+      <Lib.NexubNativeProvider scheme="light" contrast="standard" locale="en-US">
+        <Lib.ToastProvider>{within(<Component {...props} />)}</Lib.ToastProvider>
+      </Lib.NexubNativeProvider>,
+    );
+    type Node = { type: string; props: Record<string, unknown>; children: (Node | string)[] | null };
+    const capped: string[] = [];
+    const reversed: string[] = [];
+    const walk = (n: Node | string | null) => {
+      if (!n || typeof n === 'string') return;
+      const style = (StyleSheet.flatten(n.props.style as never) ?? {}) as { flexDirection?: string };
+      if (/reverse/.test(style.flexDirection ?? '')) reversed.push(`${n.type} ${style.flexDirection}`);
+      if (n.type === 'Text' || n.type === 'TextInput') {
+        const cap = n.props.maxFontSizeMultiplier as number | undefined;
+        // display and headline roles are capped at 1.3 and 1.6 on purpose (they are already large).
+        if (n.props.allowFontScaling === false || (cap !== undefined && cap !== 0 && cap < 1.3)) {
+          capped.push(`${n.type} cap=${String(n.props.allowFontScaling === false ? 'off' : cap)}`);
+        }
+      }
+      (n.children ?? []).forEach(walk);
+    };
+    const tree = screen.toJSON() as Node | Node[] | null;
+    (Array.isArray(tree) ? tree : [tree]).forEach(walk);
+    expect(capped).toEqual(FIXED_TEXT[name] ?? []);
+    expect(reversed).toEqual([]);
+  });
+});
+
+it('Bold Text (iOS) steps the Nexub faces up a weight, live', async () => {
+  (AccessibilityInfo.isBoldTextEnabled as jest.Mock).mockResolvedValueOnce(true);
+  const listen = AccessibilityInfo.addEventListener as jest.Mock;
+  listen.mockClear();
+  await render(
+    <Lib.NexubNativeProvider scheme="light" contrast="standard">
+      <Lib.Text>Body</Lib.Text>
+    </Lib.NexubNativeProvider>,
+  );
+  const family = () => (StyleSheet.flatten(screen.getByText('Body').props.style) as { fontFamily: string }).fontFamily;
+  await waitFor(() => expect(family()).toBe('Inter_600SemiBold'));
+  // The setting changes while the app is open.
+  const emit = listen.mock.calls.find(([event]) => event === 'boldTextChanged')![1] as (on: boolean) => void;
+  await act(async () => emit(false));
+  expect(family()).toBe('Inter_400Regular');
+});
+
+it('light and dark switch while mounted, without remounting the tree', async () => {
+  const scheme = mockColorScheme;
+  scheme.mockReturnValue('light');
+  const mounts = jest.fn();
+  function Probe() {
+    React.useEffect(mounts, []);
+    return <Lib.Text>Body</Lib.Text>;
+  }
+  // A fresh element each time: React skips a re-render of the identical element.
+  const ui = () => (
+    <Lib.NexubNativeProvider scheme="system" contrast="standard">
+      <Probe />
+    </Lib.NexubNativeProvider>
+  );
+  const view = await render(ui());
+  const color = () => (StyleSheet.flatten(screen.getByText('Body').props.style) as { color: string }).color;
+  const light = color();
+  scheme.mockReturnValue('dark');
+  await view.rerender(ui());
+  expect(color()).not.toBe(light);
+  expect(mounts).toHaveBeenCalledTimes(1);
+  scheme.mockReturnValue('light');
 });

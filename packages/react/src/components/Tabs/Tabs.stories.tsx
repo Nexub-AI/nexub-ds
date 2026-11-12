@@ -11,7 +11,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div style={{ width: '480px' }}>
+    <div style={{ width: '480px', maxWidth: '100%' }}>
       <Tabs.Root defaultValue="overview">
         <Tabs.List>
           <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
@@ -55,7 +55,7 @@ export const Default: Story = {
  */
 export const ContentWithDisplayClass: Story = {
   render: () => (
-    <Tabs.Root defaultValue="list" className="w-[420px]">
+    <Tabs.Root defaultValue="list" className="w-[420px] max-w-full">
       <Tabs.List>
         <Tabs.Trigger value="list">List</Tabs.Trigger>
         <Tabs.Trigger value="grid">Grid</Tabs.Trigger>
@@ -91,7 +91,7 @@ export const Pill: Story = {
 
 export const Overflow: Story = {
   render: () => (
-    <div style={{ width: '320px' }}>
+    <div style={{ width: '320px', maxWidth: '100%' }}>
       <Tabs.Root defaultValue="t0">
         <Tabs.List>
           {Array.from({ length: 10 }, (_, i) => (

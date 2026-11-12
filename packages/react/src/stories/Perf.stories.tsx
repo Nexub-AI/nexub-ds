@@ -57,7 +57,7 @@ export const DataTableFilter: Story = {
 export const ComboboxOptions: Story = {
   args: { size: 12 },
   render: ({ size }) => (
-    <div style={{ width: 280 }}>
+    <div style={{ width: 280, maxWidth: '100%' }}>
       <Combobox.Root>
         <Combobox.Input placeholder="Search options…" aria-label="Search options" />
         <Combobox.List>

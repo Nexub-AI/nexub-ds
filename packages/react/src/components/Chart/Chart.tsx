@@ -124,7 +124,15 @@ function Frame<T>({
                 <div key={i} className="group/col relative rounded-shape-tooltip transition-colors hover:bg-[color-mix(in_oklab,var(--color-on-surface)_6%,transparent)]">
                   {/* Crosshair (4.5): a guide through the hovered category. */}
                   <span className="absolute inset-y-0 start-1/2 w-px bg-[var(--color-outline)] opacity-0 transition-opacity group-hover/col:opacity-100" />
-                  <div className="pointer-events-none absolute top-1 start-1/2 z-10 min-w-max -translate-x-1/2 rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-3 py-2 text-label-md text-[var(--color-inverse-on-surface)] opacity-0 shadow-elevation-2 transition-opacity group-hover/col:opacity-100 rtl:translate-x-1/2">
+                  {/* Anchored to the column's start edge in the first third of the plot, its end edge
+                      in the last third and centred between, so it stays inside the chart: centred
+                      everywhere, the edge tooltips ran past it and widened the page at 400% zoom (9.4). */}
+                  <div
+                    className={cn(
+                      'pointer-events-none absolute top-1 z-10 min-w-max rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-3 py-2 text-label-md text-[var(--color-inverse-on-surface)] opacity-0 shadow-elevation-2 transition-opacity group-hover/col:opacity-100',
+                      i < data.length / 3 ? 'start-0' : i >= (data.length * 2) / 3 ? 'end-0' : 'start-1/2 -translate-x-1/2 rtl:translate-x-1/2',
+                    )}
+                  >
                     <div className="mb-1 font-semibold">{String(row[index])}</div>
                     {series.map((s, j) => (
                       <div key={s.key} className="flex items-center gap-2 tabular-nums">

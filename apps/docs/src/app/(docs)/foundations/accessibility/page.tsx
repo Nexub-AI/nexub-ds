@@ -219,6 +219,58 @@ export default function AccessibilityPage() {
         </Prose>
       </Section>
 
+      <Section
+        id="environments"
+        title="Every environment"
+        description="Since 9.4 every Storybook story, and every React Native component, is also checked in the settings people change on their own device."
+      >
+        <DocTable
+          head={['Environment', 'What is checked, for every story', 'Result']}
+          rows={[
+            [
+              'Forced colors (Windows contrast themes)',
+              'A baseline per story. On, selected and filled states are redrawn with system colours (switch, radio, slider, progress, pressed toggle, selected tab, highlighted menu item), and buttons, floating panels and separators keep an edge.',
+              RESULT.pass,
+            ],
+            ['Right-to-left', 'A baseline per story with dir="rtl".', RESULT.pass],
+            [
+              '200% zoom',
+              'WCAG 1.4.10 reflow at the equivalent 640px width: the page does not scroll sideways.',
+              <>{RESULT.pass} One story pins a fixed desktop frame (List detail, wide).</>,
+            ],
+            [
+              '400% zoom',
+              'The same at 320px.',
+              <>
+                {RESULT.pass} Listed exceptions: two fixed device frames (List detail), three multi-column showcase grids,
+                one two-column demo grid (Stat card), and data tables, which the criterion exempts.
+              </>,
+            ],
+            ['Reduced motion', 'After load nothing moves or resizes. Overlays keep an opacity fade only.', RESULT.pass],
+            ['Reduced transparency', 'No backdrop-filter is left; glass surfaces fall back to solid, with a baseline each.', RESULT.pass],
+          ]}
+        />
+        <DocTable
+          head={['React Native', 'What is checked, for every exported component', 'Result']}
+          rows={[
+            [
+              'Font size to 200% and beyond',
+              'Body, title and label text grows with the OS setting without a cap. Display and headline sizes stop at 1.3x and 1.6x.',
+              <>{RESULT.pass} The Avatar monogram stays the size of its circle; the full name is its accessible label.</>,
+            ],
+            ['Bold Text (iOS)', 'The Nexub font files step up a weight while the setting is on, and follow it live.', RESULT.pass],
+            ['Screen-reader order', 'Nothing is laid out in reverse, so reading order is the visual order.', RESULT.pass],
+            ['Light and dark', 'The scheme switches while the app is open, without remounting the tree.', RESULT.pass],
+          ]}
+        />
+        <Prose>
+          Two fixes came out of this pass and are worth knowing about. In forced-colors mode a switch looked the same on
+          and off, a radio lost its dot and a slider its track. And a centred dialog flew in from the corner by half its
+          own size, in normal and reduced motion alike: its entrance now grows and rises in place, and does not move at
+          all under reduced motion.
+        </Prose>
+      </Section>
+
       <Section id="components" title="By component">
         <DocTable
           head={['Component', 'Automated (axe, light and dark)', 'Keyboard', 'Screen reader']}
