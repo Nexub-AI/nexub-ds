@@ -13,7 +13,7 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -33,7 +33,8 @@ const DEP_FIELDS = ['dependencies', 'peerDependencies', 'peerDependenciesMeta', 
  * same twice. So: take its tarball, sort those keys, and let `npm pack` write the final
  * one (sorted entries, fixed mtime). Scripts are off in both steps.
  */
-export function pack(dest) {
+export function pack(destination) {
+  const dest = resolve(destination); // npm pack runs in a temp directory
   mkdirSync(dest, { recursive: true });
   for (const { dir } of published()) {
     const tmp = mkdtempSync(join(tmpdir(), 'nexub-pack-'));
@@ -46,7 +47,7 @@ export function pack(dest) {
       if (manifest[field]) manifest[field] = Object.fromEntries(Object.entries(manifest[field]).sort(([a], [b]) => (a < b ? -1 : 1)));
     }
     writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-    run('npm', ['pack', '--ignore-scripts', '--pack-destination', dest], join(tmp, 'package'));
+    run('npm', ['pack', '--ignore-scripts', '--loglevel=error', '--pack-destination', dest], join(tmp, 'package'));
     rmSync(tmp, { recursive: true, force: true });
   }
   return Object.fromEntries(

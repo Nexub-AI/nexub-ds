@@ -40,7 +40,7 @@ jobs:
       contents: read
       id-token: write
       attestations: write
-    uses: ./.github/workflows/build-release.yml
+    uses: $/.github/workflows/build-release.yml
     with:
       attest: true
 
