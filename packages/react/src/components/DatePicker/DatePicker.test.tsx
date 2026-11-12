@@ -109,15 +109,6 @@ describe('DatePicker locale + RTL', () => {
 });
 
 describe('DatePicker 7.5', () => {
-  it('still calls the deprecated onChange alias (removed in 9.0)', () => {
-    const onChange = vi.fn();
-    render(<DatePicker typeable aria-label="Due" onChange={onChange} />);
-    const input = screen.getByRole('textbox', { name: 'Due' });
-    fireEvent.change(input, { target: { value: '01/15/2024' } });
-    fireEvent.keyDown(input, { key: 'Enter' });
-    expect(onChange).toHaveBeenCalledWith(new Date(2024, 0, 15));
-  });
-
   it('typeable: Enter commits a valid typed date', () => {
     const onChange = vi.fn();
     render(<DatePicker typeable aria-label="Due" onValueChange={onChange} />);

@@ -2,7 +2,6 @@
 // tonal palettes + color roles (via HCT, so tone gaps guarantee contrast) and
 // spring easings (CSS linear()). Pure functions; build.mjs turns them into
 // tokens and dist/css/roles.css.
-import { readFileSync } from 'node:fs';
 import { Hct, TonalPalette, hexFromArgb } from '@material/material-color-utilities';
 import { LEVELS, ROLES, TONES, tertiary, tonalPalette, toneHex, tonesAt } from '../src/roles.js';
 
@@ -187,60 +186,26 @@ function contrastBlocks(p3) {
   ].join('\n\n');
 }
 
-// Signature is the default style since 8.0; data-style="classic" (on <html> or
-// any subtree) keeps the 7.x Material-derived look until 9.0. Each style
-// re-points the palette tones the roles read, so on <html> every role, contrast
-// level, product, P3 boost and dark scheme follows with no restated role table.
-// A subtree inherits roles already computed above it, so there the roles are
-// restated at each level too. Tertiary isn't restated (it would hide a
-// data-product set on an ancestor).
-// Order: after variables.css (classic values on :root, same specificity), so
-// the Signature block wins on :root and the classic block wins over both.
-export const SIGNATURE_SELECTOR = "[data-style='signature']";
-export const CLASSIC_SELECTOR = "[data-style='classic']";
-const SUBTREE = `:not(:root)${SIGNATURE_SELECTOR}`;
-const CLASSIC_SUBTREE = `:not(:root)${CLASSIC_SELECTOR}`;
-
-const token = (f) => JSON.parse(readFileSync(new URL(`../tokens/${f}.json`, import.meta.url), 'utf8'));
-/** The classic (7.x) values of everything Signature changes, from the token sources (same shape as SIGNATURE). */
-export function classicValues() {
-  const { shape } = token('shape');
-  const { type } = token('typography');
-  const { elevation } = token('elevation');
-  const pick = (keys, f) => Object.fromEntries(Object.keys(keys).map((k) => [k, f(k)]));
-  return {
-    shape: pick(SIGNATURE.shape, (k) => parseFloat(shape[k].$value)),
-    tracking: pick(SIGNATURE.tracking, (k) => parseFloat(type[k].letterSpacing.$value)),
-    elevation: pick(SIGNATURE.elevation, (k) => elevation[k].$value),
-  };
-}
-
+// Signature is the only style (default since 8.0; classic removed in 9.0). It
+// re-points the palette tones the roles read, so every role, contrast level,
+// product, P3 boost and dark scheme follows with no restated role table.
+// Order: after variables.css (the token-source values on :root, same
+// specificity), so this block wins.
 function styleCss() {
   // Only the tones the generated roles and charts read (about half), to keep
-  // roles.css small. Direct --color-palette-* use outside the roles stays classic.
+  // roles.css small. Direct --color-palette-* use outside the roles keeps variables.css.
   const used = new Set(contrastBlocks(false).concat(chartCss()).match(/--color-palette-[\w-]+?-\d+\b/g));
-  const classicPal = palettes();
-  const block = (pals, v) =>
-    [
-      ...Object.entries(pals).flatMap(([name, tones]) =>
-        Object.entries(tones)
-          .filter(([t]) => used.has(`--color-palette-${name}-${t}`))
-          .map(([t, hex]) => `  --color-palette-${name}-${t}: ${hex};`),
-      ),
-      // 9999px (the classic capsule) stays px, like variables.css.
-      ...Object.entries(v.shape).map(([k, px]) => `  --shape-${k}: ${px >= 9999 ? `${px}px` : rem(px)};`),
-      ...Object.entries(v.tracking).map(([role, em]) => `  --type-${role}-letterSpacing: ${em}em;`),
-      ...Object.entries(v.elevation).map(([lvl, s]) => `  --elevation-${lvl}: ${s};`),
-    ].join('\n');
-  const sig = signaturePalettes();
-  return [
-    `/* Signature style (the default since 8.0): neutral palettes, brand-indigo primary, ~10px controls, crisp elevation. */`,
-    `:root, ${SIGNATURE_SELECTOR} {\n${block(sig, SIGNATURE)}\n}`,
-    `/* Classic style (data-style="classic", the 7.x look; removed in 9.0). */`,
-    `${CLASSIC_SELECTOR} {\n${block(Object.fromEntries(Object.keys(sig).map((n) => [n, classicPal[n]])), classicValues())}\n}`,
-    levelBlocks(SUBTREE, signatureRoles(), false),
-    levelBlocks(CLASSIC_SUBTREE, signatureRoles(), false),
-  ].join('\n\n');
+  const lines = [
+    ...Object.entries(signaturePalettes()).flatMap(([name, tones]) =>
+      Object.entries(tones)
+        .filter(([t]) => used.has(`--color-palette-${name}-${t}`))
+        .map(([t, hex]) => `  --color-palette-${name}-${t}: ${hex};`),
+    ),
+    ...Object.entries(SIGNATURE.shape).map(([k, px]) => `  --shape-${k}: ${px >= 9999 ? `${px}px` : rem(px)};`),
+    ...Object.entries(SIGNATURE.tracking).map(([role, em]) => `  --type-${role}-letterSpacing: ${em}em;`),
+    ...Object.entries(SIGNATURE.elevation).map(([lvl, s]) => `  --elevation-${lvl}: ${s};`),
+  ];
+  return `/* Signature style: neutral palettes, brand-indigo primary, ~10px controls, crisp elevation. */\n:root {\n${lines.join('\n')}\n}`;
 }
 
 export function rolesCss() {
@@ -268,10 +233,6 @@ ${styleCss()}
 @media (color-gamut: p3) {
 @supports (color: oklch(from red l c h)) {
 ${contrastBlocks(true)}
-
-${levelBlocks(SUBTREE, signatureRoles(), true)}
-
-${levelBlocks(CLASSIC_SUBTREE, signatureRoles(), true)}
 }
 }
 `;

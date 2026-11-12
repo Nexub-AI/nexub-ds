@@ -26,11 +26,11 @@ export const ThumbIcons: Story = {
   args: { 'aria-label': 'Toggle setting', checkedIcon: <Check />, uncheckedIcon: <X /> },
 };
 
-/** 7.9: classic beside the opt-in Signature full thumb (`data-style="signature"` on any ancestor). */
+/** The Signature controls (the only style since 9.0): every state side by side. */
 export const Signature: Story = {
   render: () => (
     <div className="flex gap-8">
-      {(['classic', 'signature'] as const).map((style) => (
+      {(['signature'] as const).map((style) => (
         <div key={style} data-style={style} className="flex flex-col gap-3">
           <span className="text-label-md">{style}</span>
           {(['sm', 'md', 'lg'] as const).map((size) => (
