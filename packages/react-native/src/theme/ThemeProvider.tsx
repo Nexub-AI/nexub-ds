@@ -19,7 +19,7 @@ import {
   type Product,
 } from '@nexub/core';
 import { playHaptic, type HapticToken } from './haptics';
-import type { FontSource } from './fonts';
+import type { FontSource, ResolvedFontSource } from './fonts';
 
 export type Scheme = 'light' | 'dark';
 export type Roles = { -readonly [K in keyof NativeRoles]: string };
@@ -40,7 +40,8 @@ export interface NexubTheme {
   glass: GlassMode;
   reducedMotion: boolean;
   haptics: boolean;
-  fonts: FontSource;
+  /** `fonts`, or 'nexub-bold' while the OS Bold Text setting is on (iOS). */
+  fonts: ResolvedFontSource;
   locale: string;
   dir: Direction;
   messages: NexubMessages;
@@ -105,7 +106,7 @@ function useForegroundSetting(
 
 function useSetting(
   read: () => Promise<boolean>,
-  event: 'reduceMotionChanged' | 'reduceTransparencyChanged',
+  event: 'reduceMotionChanged' | 'reduceTransparencyChanged' | 'boldTextChanged',
 ): boolean {
   const [on, setOn] = React.useState(false);
   React.useEffect(() => {
@@ -128,6 +129,9 @@ const readHighContrast =
 const readReduceMotion = () => AccessibilityInfo.isReduceMotionEnabled();
 const readReduceTransparency = () =>
   Platform.OS === 'ios' ? AccessibilityInfo.isReduceTransparencyEnabled() : Promise.resolve(false);
+// Bold Text is an iOS setting; Android's bold-text adjustment has no React Native API.
+const readBoldText = () =>
+  Platform.OS === 'ios' ? AccessibilityInfo.isBoldTextEnabled() : Promise.resolve(false);
 
 /**
  * Theme, accessibility preferences, locale and strings for every
@@ -155,6 +159,9 @@ export function NexubNativeProvider({
     contrastProp === 'system' ? (systemHigh ? 'high' : 'standard') : contrastProp;
   const reducedMotion = useSetting(readReduceMotion, 'reduceMotionChanged');
   const reduceTransparency = useSetting(readReduceTransparency, 'reduceTransparencyChanged');
+  const boldText = useSetting(readBoldText, 'boldTextChanged');
+  // The system font follows Bold Text by itself; the Nexub files need the heavier weight chosen.
+  const resolvedFonts = fonts === 'nexub' && boldText ? 'nexub-bold' : fonts;
   const resolvedDir = dir ?? directionOf(locale);
 
   const theme = React.useMemo<NexubTheme>(() => {
@@ -176,7 +183,7 @@ export function NexubNativeProvider({
       glass: reduceTransparency ? 'off' : glass,
       reducedMotion,
       haptics,
-      fonts,
+      fonts: resolvedFonts,
       locale,
       dir: resolvedDir,
       messages: { ...defaultMessages, ...messages },
@@ -191,7 +198,7 @@ export function NexubNativeProvider({
     reduceTransparency,
     reducedMotion,
     haptics,
-    fonts,
+    resolvedFonts,
     locale,
     resolvedDir,
     messages,

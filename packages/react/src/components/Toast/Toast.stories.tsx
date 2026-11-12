@@ -87,7 +87,7 @@ function UndoDeleteDemo() {
   };
 
   return (
-    <div className="flex w-[360px] flex-col gap-3 p-4">
+    <div className="flex w-[360px] max-w-full flex-col gap-3 p-4">
       <ul className="flex flex-col gap-1">
         {rows.map((row) => (
           <li key={row} className="flex items-center justify-between gap-2 text-body-md">
