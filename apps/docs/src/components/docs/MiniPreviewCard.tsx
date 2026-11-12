@@ -1,11 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { Skeleton } from '@nexub/react';
-import { ComponentLivePreview } from './LivePreviewWrapper';
 
 interface MiniPreviewCardProps {
-  slug: string;
+  /** The preview, resolved on the server (`<LivePreview />`), so no placeholder swap (9.3). */
+  children: React.ReactNode;
 }
 
 class PreviewErrorBoundary extends React.Component<
@@ -32,7 +31,6 @@ const PreviewFallback = () => (
   />
 );
 
-const PreviewSkeleton = () => <Skeleton shape="rect" className="h-[22px] w-[80px] rounded-shape-field" />;
 
 const MAX_SCALE = 0.8;
 // Below this a preview is unreadable; crop it from the top with a fade instead.
@@ -90,14 +88,10 @@ function FitToBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function MiniPreviewCard({ slug }: MiniPreviewCardProps) {
+export function MiniPreviewCard({ children }: MiniPreviewCardProps) {
   return (
     <FitToBox>
-      <PreviewErrorBoundary fallback={<PreviewFallback />}>
-        <React.Suspense fallback={<PreviewSkeleton />}>
-          <ComponentLivePreview slug={slug} idx={0} />
-        </React.Suspense>
-      </PreviewErrorBoundary>
+      <PreviewErrorBoundary fallback={<PreviewFallback />}>{children}</PreviewErrorBoundary>
     </FitToBox>
   );
 }

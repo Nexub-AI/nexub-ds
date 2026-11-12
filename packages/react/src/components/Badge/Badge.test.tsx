@@ -11,7 +11,7 @@ describe('Badge', () => {
 
   it('forwards className', () => {
     render(<Badge className="custom-class">Badge</Badge>);
-    expect(screen.getByText('Badge')).toHaveClass('custom-class');
+    expect(screen.getByText('Badge').parentElement).toHaveClass('custom-class');
   });
 
   it('forwards ref', () => {
@@ -27,12 +27,12 @@ describe('Badge', () => {
 
   it('applies size variant', () => {
     render(<Badge size="lg">Badge</Badge>);
-    expect(screen.getByText('Badge')).toHaveClass('px-3');
+    expect(screen.getByText('Badge').parentElement).toHaveClass('px-3');
   });
 
   it('applies tone', () => {
     render(<Badge tone="success" variant="solid">Badge</Badge>);
-    const el = screen.getByText('Badge');
+    const el = screen.getByText('Badge').parentElement!; // the label is its own span (9.3)
     expect(el.className).toMatch(/color-success/);
   });
 
@@ -45,7 +45,7 @@ describe('Badge', () => {
 
   it('dot sits before the label', () => {
     render(<Badge dot variant="soft">Live</Badge>);
-    expect(screen.getByText('Live').querySelector('[aria-hidden="true"]')).toBeInTheDocument();
+    expect(screen.getByText('Live').parentElement!.querySelector('[aria-hidden="true"]')).toBeInTheDocument();
   });
 
   it('count caps at max but reads the full number', () => {
