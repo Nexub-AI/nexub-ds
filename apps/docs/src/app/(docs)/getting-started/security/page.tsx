@@ -31,8 +31,28 @@ const threats: React.ReactNode[][] = [
   ],
   [
     'FileUpload',
-    'accept, maxSize and validate run in the browser and can be bypassed.',
-    'Use them for feedback only. Check type (magic bytes), size and content again on the server.',
+    'accept, maxSize and validate run in the browser and can be bypassed. A file name is attacker text.',
+    'Use them for feedback only. Check type (magic bytes), size and content again on the server. Names render as text; only images get a preview, from a blob: URL.',
+  ],
+  [
+    'MessageBubble, StreamingText, ChatPage, Code',
+    'Model output or user messages that contain markup, a script or a markdown javascript: link.',
+    'Everything is rendered as text. No component parses HTML or markdown, and none uses dangerouslySetInnerHTML.',
+  ],
+  [
+    'DataTable CSV export (toCSV)',
+    'A cell that starts with =, +, - or @ runs as a formula when the file is opened in a spreadsheet.',
+    'Such cells get a leading apostrophe; quotes, commas and line breaks are escaped (RFC 4180).',
+  ],
+  [
+    'Chart, StatCard, Amount, MoneyInput, NumberInput',
+    'Numbers and labels from an API: NaN, Infinity, huge or non-Latin-digit values.',
+    'Labels render as text. The inputs only report finite numbers inside their bounds (property-tested).',
+  ],
+  [
+    'Link, Button asChild, Breadcrumb.Link, NavigationMenu.Link',
+    'These are primitives: your href goes to the DOM as you wrote it.',
+    'Pass safeHref(url) when the value is not yours. React itself blocks javascript: URLs. The data-driven APIs (Breadcrumb.Trail, navs, cards) guard for you.',
   ],
 ];
 
@@ -57,7 +77,14 @@ safeSrc('data:image/png;base64,…'); // allowed: an <img> can't run script`}
         />
       </Section>
 
-      <Section id="threats" title="Risky components">
+      <Section id="threats" title="Threat model by component">
+        <Prose>
+          Every component that renders a URL, a file, or text from a user, a CMS or a model. Since 9.6 an XSS corpus
+          (15 hostile URLs, 10 markup and template payloads) runs against each of these props in{' '}
+          <code>@nexub/react</code>, <code>@nexub/patterns</code> and <code>@nexub/marketing</code>, with menus
+          opened first. After each render the DOM is audited: no injected element, no event-handler attribute, no
+          link outside http(s), mailto, tel and sms, and no source outside http(s), blob and <code>data:image/</code>.
+        </Prose>
         <DocTable head={['Component', 'Risk', 'What Nexub does']} rows={threats} />
       </Section>
 
@@ -66,6 +93,15 @@ safeSrc('data:image/png;base64,…'); // allowed: an <img> can't run script`}
           Nexub works without <code>&apos;unsafe-inline&apos;</code> scripts and, with a nonce or{' '}
           <code>scrollLock=&quot;class&quot;</code>, without inline style elements.{' '}
           <Link href="/getting-started/strict-csp">Strict CSP</Link> has the per-component details.
+        </Prose>
+        <Prose>
+          This site runs that way. Its script policy is a per-request nonce with <code>&apos;strict-dynamic&apos;</code>{' '}
+          and nothing else, and Trusted Types is enforced: a string can&apos;t reach <code>innerHTML</code>,{' '}
+          <code>script.src</code> or <code>eval</code>. A test loads every page of the site under the production
+          policy and fails on any violation, which is also the proof that the library needs no inline script and
+          makes no Trusted Types violation. Two exceptions remain, and neither can run script:{' '}
+          <code>style-src-attr &apos;unsafe-inline&apos;</code> for server-rendered <code>style</code> attributes, and
+          the React Native web preview under <code>/m</code>, whose runtime injects its own style elements.
         </Prose>
       </Section>
 
