@@ -1,6 +1,6 @@
 {
   "name": "@nexub/themes",
-  "version": "8.9.0",
+  "version": "9.0.0",
   "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (Leap, Bookub, Payub, Founderub) as importable CSS.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -44,11 +44,20 @@
     "build:fonts": "node scripts/build-fonts.mjs",
     "test": "node --test scripts/*.test.mjs"
   },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Edge versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "iOS >= 17.5"
+  ],
   "dependencies": {
     "@nexub/tokens": "workspace:*"
   },
   "devDependencies": {
     "@fontsource-variable/inter": "5.3.0",
-    "@fontsource-variable/plus-jakarta-sans": "^5.3.0"
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "browserslist": "4.29.4",
+    "lightningcss": "1.33.0"
   }
 }

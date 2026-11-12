@@ -30,6 +30,9 @@ for (const path of PAGES) {
       await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
       await page.waitForLoadState('networkidle');
       await page.evaluate(() => document.fonts.ready);
+      // Scroll regions get their tab stop from a ResizeObserver, which fires a frame after
+      // layout; slower engines (WebKit in CI) ran axe in between.
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
         // Live previews are separate documents (iframes) with their own checks in Storybook.

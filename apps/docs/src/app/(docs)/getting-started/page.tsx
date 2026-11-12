@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PageIntro } from '@/components/kit';
+import { DocTable, PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const metadata: Metadata = { title: 'Getting Started' };
@@ -20,6 +20,27 @@ export default function GettingStartedPage() {
 
       <p>Or with pnpm:</p>
       <CodeBlock lang="bash" code={`pnpm add @nexub/react @nexub/themes @nexub/tokens @nexub/icons`} />
+
+      <h2>Browser support</h2>
+      <p>
+        The last two versions of each desktop browser, and iOS Safari 17.5 or later (the first with{' '}
+        <code>light-dark()</code> and <code>@starting-style</code>). The same list is the <code>browserslist</code> in{' '}
+        <code>@nexub/themes</code>, and CI checks the theme CSS against it. Every story and the docs run in Chromium, WebKit
+        (standing in for Safari) and Firefox, with screenshots per engine.
+      </p>
+      <DocTable
+        head={['Browser', 'Versions', 'Tested in CI as']}
+        rows={[
+          ['Chrome, Edge', 'Last 2', 'Chromium'],
+          ['Safari (macOS)', 'Last 2', 'WebKit'],
+          ['Safari (iOS, iPadOS)', '17.5 and later', 'WebKit'],
+          ['Firefox', 'Last 2', 'Firefox'],
+        ]}
+      />
+      <p>
+        Features that are newer than that list (scroll-driven animations, view transitions) sit behind{' '}
+        <code>@supports</code> or a script check, so those browsers get the static version, never a broken one.
+      </p>
 
       <h2>Setup</h2>
       <p>
