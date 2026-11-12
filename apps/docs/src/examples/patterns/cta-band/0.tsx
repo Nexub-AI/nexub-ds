@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Button } from '@nexub/react';
 import { CTABand } from '@nexub/marketing';
 

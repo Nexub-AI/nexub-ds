@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/copy-ai-md.mjs && next dev --turbopack",
-    "build": "pnpm run build:mobile-web && node scripts/copy-device-shots.mjs && node scripts/copy-ai-md.mjs && next build",
+    "build": "pnpm run build:mobile-web && node scripts/copy-device-shots.mjs && node scripts/copy-ai-md.mjs && next build && node scripts/preload-fonts.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",

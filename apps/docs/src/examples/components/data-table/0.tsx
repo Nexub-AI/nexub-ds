@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { DataTable } from '@nexub/react';
 
 export default function Example() {

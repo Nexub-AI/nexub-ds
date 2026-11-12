@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Logo } from '@nexub/react';
 import { MarketingFooter } from '@nexub/marketing';
 

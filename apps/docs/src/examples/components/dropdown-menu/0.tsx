@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { DropdownMenu, IconButton } from '@nexub/react';
 import { MoreHorizontal } from '@nexub/icons';
 

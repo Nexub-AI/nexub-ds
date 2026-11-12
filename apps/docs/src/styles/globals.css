@@ -624,8 +624,11 @@ html, body {
 }
 
 /* ── Motion gallery (foundations/motion) ─────────────────────────────────── */
-@keyframes docs-spring-dot { from { inset-inline-start: 4px; } to { inset-inline-start: calc(100% - 36px); } }
-.docs-spring-dot { animation-name: docs-spring-dot; animation-fill-mode: both; }
+/* The dot travels by translate (100cqi = the track), not inset, so a run is not a layout shift (9.2). */
+@keyframes docs-spring-dot { from { translate: 0; } to { translate: var(--docs-dot-end); } }
+:has(> .docs-spring-dot) { container-type: inline-size; }
+.docs-spring-dot { --docs-dot-end: calc(100cqi - 40px); animation-name: docs-spring-dot; animation-fill-mode: both; }
+.docs-spring-dot:dir(rtl) { --docs-dot-end: calc(40px - 100cqi); }
 
 /* Reduced-motion preview: the same fallbacks @nexub/themes applies under
    prefers-reduced-motion, scoped to the gallery. */
@@ -634,5 +637,5 @@ html, body {
 .docs-reduce-motion .nx-lift:hover,
 .docs-reduce-motion .nx-lift:active,
 .docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
-.docs-reduce-motion .docs-spring-dot { animation: none; inset-inline-start: calc(100% - 36px); }
+.docs-reduce-motion .docs-spring-dot { animation: none; translate: var(--docs-dot-end); }
 } /* @layer utilities */

@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Avatar, IconButton, Logo, TopNav } from '@nexub/react';
 import { Bell } from '@nexub/icons';
 

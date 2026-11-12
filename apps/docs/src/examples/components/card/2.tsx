@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { Card, Heading, CardLink, Text, Button } from '@nexub/react';
 

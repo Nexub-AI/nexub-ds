@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Link, VisuallyHidden } from '@nexub/react';
 
 export default function Example() {
