@@ -1,0 +1,41 @@
+{
+  "//": "9.7: every runtime dependency of a published package, and why it is there. scripts/check-supply-chain.mjs fails when a package.json has one that is not listed here (or lists one that is gone). Adding a runtime dependency means adding its reason in the same PR.",
+  "minimumReleaseAgeDays": 7,
+  "packages": {
+    "@nexub/icons": {
+      "lucide-react": "the icon set; every icon is re-exported with Nexub sizing"
+    },
+    "@nexub/mcp": {
+      "@modelcontextprotocol/sdk": "the MCP protocol implementation (pinned exactly: it runs with the user's permissions)",
+      "zod": "argument schemas the SDK requires"
+    },
+    "@nexub/react": {
+      "@nexub/core": "shared types, messages and money helpers",
+      "@nexub/icons": "icons used inside components",
+      "@radix-ui/react-*": "accessible behaviour (focus, dismissal, roving tabindex, typeahead) for the component of the same name",
+      "@tanstack/react-table": "DataTable's row model: sorting, filtering, grouping, pinning",
+      "class-variance-authority": "variant → class maps",
+      "clsx": "conditional class strings (inside cn)",
+      "tailwind-merge": "lets a consumer's className override ours (inside cn)",
+      "cmdk": "CommandPalette and Combobox filtering and keyboard model",
+      "date-fns": "locale-aware date parsing and formatting for the date components",
+      "react-day-picker": "the calendar grid and its keyboard model",
+      "get-nonce": "shares the CSP nonce with Radix's scroll lock"
+    },
+    "@nexub/react-native": {
+      "@expo-google-fonts/geist-mono": "the mono font files",
+      "@expo-google-fonts/inter": "the body font files",
+      "@expo-google-fonts/plus-jakarta-sans": "the display font files",
+      "@nexub/core": "shared types, messages and money helpers",
+      "@nexub/icons": "icons used inside components",
+      "@nexub/tokens": "the design tokens the theme is built from",
+      "lucide-react-native": "the icon set for React Native"
+    },
+    "@nexub/themes": {
+      "@nexub/tokens": "the CSS variables the themes are written against"
+    },
+    "@nexub/tokens": {
+      "@material/material-color-utilities": "HCT tonal palettes for seeded brand themes (pinned exactly: its output is the contrast guarantee)"
+    }
+  }
+}

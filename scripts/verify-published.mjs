@@ -30,7 +30,7 @@ export function parsePublished(json) {
 }
 
 export const versionUrl = ({ name, version }) =>
-  `${REGISTRY}/${name.replace('/', '%2F')}/${encodeURIComponent(version)}`;
+  `${REGISTRY}/${name.replaceAll('/', '%2F')}/${encodeURIComponent(version)}`;
 
 /**
  * One registry lookup.

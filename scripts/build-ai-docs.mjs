@@ -47,7 +47,7 @@ const undocumented = Object.fromEntries(
 const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
 // llms.txt points at the Markdown version of each page (apps/docs/scripts/copy-ai-md.mjs).
 const mdUrl = (e) => `${docsUrl(e)}.md`;
-const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+const cell = (s = '') => String(s).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
 // ─── Accessibility conformance report (@nexub/react/accessibility.json) ─────
 // Evidence per component from what CI runs: axe-core WCAG 2.2 A/AA over every

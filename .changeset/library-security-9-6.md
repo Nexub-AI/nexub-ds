@@ -1,5 +1,0 @@
----
-'@nexub/react': minor
----
-
-9.6 Security: the library. An XSS corpus (15 hostile URLs, 10 markup and template payloads) now runs against every prop in `@nexub/react`, `@nexub/patterns` and `@nexub/marketing` that renders a URL, a file name or user, CMS or model text, with menus opened first; nothing in it produces an element, an event handler or a script-capable link or source. The docs Security page has the threat model per component. The docs site now enforces Trusted Types and its script policy is a per-request nonce with `'strict-dynamic'` and no fallback; a test loads every page under the production policy and fails on any violation, which is also the proof that the library needs no inline script and makes no Trusted Types violation. Strict CSP documents the small `default` policy an app needs (React writes Radix's `<style>` text through `innerHTML`). `@nexub/mcp`: every tool and prompt argument has a maximum length, and `platform` is `web` or `mobile` only. Docs feedback endpoint: the Turnstile token and context blob are capped, and a failed webhook is logged by status only.

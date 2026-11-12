@@ -160,6 +160,70 @@ jobs:
             packages/react/test-results
           retention-days: 7
 
+  # 9.7: every PR rehearses the release. `release-build` is the same reusable workflow
+  # release.yml publishes from (attestation and docs off). `release-rehearsal` then checks
+  # what a release depends on: the dependency policy, the tarballs against their checksums
+  # (publish dry run), that a second build on this machine gives byte-identical tarballs,
+  # and that a tag can be signed and verified with Sigstore.
+  release-build:
+    name: Release build
+    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    uses: $/.github/workflows/build-release.yml
+    with:
+      attest: false
+      docs: false
+
+  release-rehearsal:
+    name: Release rehearsal
+    needs: release-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write  # Sigstore identity for the rehearsal tag (never pushed)
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Dependency policy (lockfile, runtime dependencies, package age)
+        run: node scripts/check-supply-chain.mjs
+
+      - name: Download the release build's tarballs
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: tarballs
+          path: tarballs
+
+      - name: Publish (dry run)
+        run: node scripts/publish-tarballs.mjs tarballs --dry-run
+
+      - name: Reproducible build (second build, other machine)
+        run: node scripts/reproducible-build.mjs --against tarballs/checksums.txt
+
+      # Needs an OIDC token, which fork and Dependabot PRs don't get.
+      - name: Set up gitsign
+        if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+        uses: chainguard-dev/actions/setup-gitsign@a25ce483d875a46f4c837e85e32e0fda602693f5 # v1.8.1
+
+      - name: Sign and verify a tag (not pushed)
+        if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+        run: sh scripts/signed-tag.sh "rehearsal-${GITHUB_SHA}"
+
   # 9.5: leaks and a short soak. Every story is mounted and unmounted 1,000 times (listeners,
   # timers, DOM nodes and heap must not grow), then one docs session runs for a minute
   # (soak.spec.ts; the 30-minute run is nightly, soak.yml).
