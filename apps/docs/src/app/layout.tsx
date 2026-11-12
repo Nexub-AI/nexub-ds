@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { ThemeScript } from '@nexub/react';
 import { ClientProviders } from '@/components/ClientProviders';
 import { searchIndex } from '@/registry/index';
+import { TRUSTED_TYPES_POLICY } from '@/lib/trusted';
 import { SITE_URL } from './site';
 import '@/styles/globals.css';
 
@@ -31,6 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-expression="vivid" suppressHydrationWarning>
       <head>
+        {/* First: the Trusted Types default policy must exist before any other script runs. */}
+        <script dangerouslySetInnerHTML={{ __html: TRUSTED_TYPES_POLICY }} />
         {/* Keys must match ClientProviders' storageKey, BrandSwitcher and ContrastSwitcher. */}
         <ThemeScript productStorageKey="nexub-brand" contrastStorageKey="nexub-contrast" />
       </head>

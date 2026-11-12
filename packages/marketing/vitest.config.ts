@@ -3,6 +3,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   // Per-package cache: under vite 8 both packages otherwise share one dir and race under turbo.
   cacheDir: 'node_modules/.vite',
+  // 9.6: the XSS corpus shared with @nexub/react (src/xss.test.tsx).
+  resolve: { alias: { 'xss-corpus': new URL('../react/src/utils/xss-corpus.ts', import.meta.url).pathname } },
   test: {
     // Vitest 5's module cache defaults to the workspace root; per package, or
     // parallel runs under turbo delete each other's cache (ENOTEMPTY).

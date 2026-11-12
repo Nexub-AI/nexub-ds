@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { createHighlighter, type Highlighter } from 'shiki';
 import { CodeFrame } from './CodeFrame';
 
@@ -39,9 +40,30 @@ function getHighlighter(): Promise<Highlighter> {
   return globalThis.__shikiHighlighter;
 }
 
+type HastNode = Awaited<ReturnType<Highlighter['codeToHast']>>['children'][number];
+
+// Shiki's tree as React elements, not an HTML string: under Trusted Types (9.6) a string
+// can't go into innerHTML, and client-side navigation renders this in the browser.
+function toReact(node: HastNode, key: number): React.ReactNode {
+  if (node.type === 'text') return node.value;
+  if (node.type !== 'element') return null;
+  const { class: className, style, ...rest } = node.properties as Record<string, unknown>;
+  return React.createElement(
+    node.tagName,
+    {
+      ...rest,
+      key,
+      className: Array.isArray(className) ? className.join(' ') : (className as string | undefined),
+      // "--shiki-light:#0550ae;--shiki-dark:#79c0ff" → an object; token colours come from the theme.
+      style: typeof style === 'string' ? Object.fromEntries(style.split(';').filter(Boolean).map((d) => [d.slice(0, d.indexOf(':')), d.slice(d.indexOf(':') + 1)])) : undefined,
+    },
+    ...node.children.map(toReact),
+  );
+}
+
 export async function CodeBlock({ code, lang = 'tsx', title, lineNumbers, highlight }: CodeBlockProps) {
   const highlighter = await getHighlighter();
-  const html = highlighter.codeToHtml(code, {
+  const hast = highlighter.codeToHast(code, {
     lang,
     // Dual theme: tokens carry --shiki-light/--shiki-dark, picked in globals.css
     // by color-scheme.
@@ -60,7 +82,7 @@ export async function CodeBlock({ code, lang = 'tsx', title, lineNumbers, highli
 
   return (
     <CodeFrame code={code} lang={lang} title={title} lineNumbers={lineNumbers}>
-      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <div>{hast.children.map(toReact)}</div>
     </CodeFrame>
   );
 }
