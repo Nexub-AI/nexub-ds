@@ -22,7 +22,16 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
       }
     };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    const root = document.documentElement.dataset;
+    root.searchReady = 'true';
+    if (root.searchPending) {
+      delete root.searchPending;
+      setOpen(true);
+    }
+    return () => {
+      window.removeEventListener('keydown', handler);
+      delete root.searchReady;
+    };
   }, []);
 
   const groups = React.useMemo(() => {

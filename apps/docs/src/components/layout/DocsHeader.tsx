@@ -25,8 +25,12 @@ function activeSection(pathname: string): string | undefined {
   return '/getting-started';
 }
 
-const openSearch = () =>
-  window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+// SearchModal is a lazy chunk: until it mounts nobody hears the keydown, so leave a
+// flag it reads on mount (a click before the chunk loaded used to do nothing).
+const openSearch = () => {
+  if (document.documentElement.dataset.searchReady !== 'true') document.documentElement.dataset.searchPending = 'true';
+  else window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+};
 
 /** The site header, shared by the landing page and every docs page. */
 export function DocsHeader() {

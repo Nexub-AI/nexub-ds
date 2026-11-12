@@ -148,13 +148,68 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: Visual regression & contrast
-        run: pnpm --filter @nexub/react test:visual
+        run: pnpm --filter @nexub/react test:visual --project=storybook --project=perf --project=docs
 
       - name: Upload diff report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: visual-report
+          path: |
+            packages/react/playwright-report
+            packages/react/test-results
+          retention-days: 7
+
+  # 9.1: the same Storybook and docs export in WebKit (Safari stand-in) and Firefox:
+  # every story renders, the interaction states and docs pages match per-engine baselines.
+  browsers:
+    name: Browsers (${{ matrix.engine }})
+    if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [webkit, firefox]
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble@sha256:06a9939e57531807f8d5fd76ce44b53165ffb7d7501d87ab10e285c20b1e971f
+      options: --ipc=host
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      - name: Build Storybook
+        run: pnpm --filter @nexub/react build-storybook --quiet
+
+      - name: Build docs (static export)
+        run: pnpm --filter @nexub/docs build
+
+      - name: ${{ matrix.engine }}
+        # Firefox refuses to start when $HOME isn't owned by the container user.
+        env:
+          HOME: /root
+        run: pnpm --filter @nexub/react test:visual --project=${{ matrix.engine }} --project=docs-${{ matrix.engine }}
+
+      - name: Upload diff report
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: browsers-report-${{ matrix.engine }}
           path: |
             packages/react/playwright-report
             packages/react/test-results
