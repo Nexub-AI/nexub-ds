@@ -1,0 +1,112 @@
+name: Release build
+
+# The release build, as a reusable workflow (9.7). It runs in its own job, holds no secret,
+# and is the only place the published tarballs are made:
+#   build packages → pack them deterministically → attest (SLSA build provenance) → upload.
+# release.yml publishes those exact files (scripts/publish-tarballs.mjs), so what reaches
+# npm is the artifact the provenance describes. A reusable workflow is what makes the
+# provenance SLSA Build Level 3: the caller can't change these steps or reach this job.
+# ci.yml calls it too, with attest and docs off, so every PR rehearses the release build.
+on:
+  workflow_call:
+    inputs:
+      attest:
+        description: Sign SLSA build provenance for the tarballs (publish phase only)
+        type: boolean
+        default: false
+      docs:
+        description: Build and upload the docs export too
+        type: boolean
+        default: true
+    outputs:
+      has_changesets:
+        description: "'true' while changesets are pending (Version Packages phase)"
+        value: ${{ jobs.build.outputs.has_changesets }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and pack
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write       # Sigstore signing identity for the attestation
+      attestations: write   # store the attestation with the repository
+    outputs:
+      has_changesets: ${{ steps.phase.outputs.has_changesets }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        # version is read from packageManager field in package.json
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # turbo orders builds by the workspace dependency graph (tokens → icons → react → patterns).
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      # NEXT_PUBLIC_* values are baked into the JS bundle at build time, so they
+      # must be set here, not in the Cloudflare dashboard. The Turnstile *site*
+      # key is public by design, so it's a repo Variable, not a Secret.
+      - name: Build docs (static export)
+        if: inputs.docs
+        env:
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+        run: pnpm --filter @nexub/docs build
+
+      # Same rule changesets/action uses: any .changeset/*.md except README.md.
+      - name: Detect release phase
+        id: phase
+        run: |
+          n=$(find .changeset -maxdepth 1 -name '*.md' ! -name README.md | wc -l)
+          if [ "$n" -gt 0 ]; then echo "has_changesets=true"; else echo "has_changesets=false"; fi >> "$GITHUB_OUTPUT"
+
+      # One tarball per published package, byte-identical for the same commit
+      # (scripts/reproducible-build.mjs), with their sha256 in checksums.txt.
+      - name: Pack
+        run: |
+          node scripts/reproducible-build.mjs --pack tarballs > checksums.txt
+          mv checksums.txt tarballs/checksums.txt
+          cat tarballs/checksums.txt
+
+      - name: Attest build provenance
+        id: attest
+        if: inputs.attest && steps.phase.outputs.has_changesets == 'false'
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: tarballs/*.tgz
+
+      # The signed bundle next to the tarballs, for the GitHub release (verifiable offline).
+      - name: Keep the attestation bundle
+        if: steps.attest.outputs.bundle-path
+        env:
+          BUNDLE: ${{ steps.attest.outputs.bundle-path }}
+        run: cp "$BUNDLE" tarballs/nexub-provenance.intoto.jsonl
+
+      - name: Upload tarballs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: tarballs
+          path: tarballs
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Upload built docs
+        if: inputs.docs
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: docs-out
+          path: apps/docs/out
+          if-no-files-found: error
+          retention-days: 1

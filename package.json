@@ -20,8 +20,10 @@
     "check:size": "node scripts/check-size.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs",
     "ai-docs": "node --experimental-strip-types --no-warnings scripts/build-ai-docs.mjs",
-    "ci:local": "pnpm audit --prod --audit-level=high && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
-    "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker"
+    "ci:local": "pnpm audit --prod --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
+    "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker",
+    "check:supply-chain": "node scripts/check-supply-chain.mjs",
+    "check:reproducible": "node scripts/reproducible-build.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
@@ -45,7 +47,9 @@
       "esbuild": "^0.28.2",
       "sharp": "^0.35.5",
       "body-parser@2": "^2.4.0",
-      "@expo/cli>zod": "^4.6.6"
+      "@expo/cli>zod": "^4.6.6",
+      "ws@8": "^8.21.0",
+      "node-forge@1": "^1.4.3"
     }
   }
 }

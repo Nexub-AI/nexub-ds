@@ -49,6 +49,32 @@ jobs:
         with:
           category: /language:${{ matrix.language }}
 
+  # 9.7 blocking gate: no open CodeQL alert of high or critical severity on this ref
+  # (limit in security-gates.json). Runs after both analyses have uploaded.
+  codeql-gate:
+    name: CodeQL gate (0 high)
+    needs: codeql
+    # Fork and Dependabot PRs get a token that can't read alerts; the push run covers them.
+    if: github.event_name != 'pull_request' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      # GitHub processes the uploaded results for a moment before the alerts change.
+      - name: No open high or critical CodeQL alert
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: sleep 45 && node scripts/security-gates.mjs codeql
+
   scorecard:
     name: OpenSSF Scorecard
     # Scorecard reads branch protection and repo settings of the default
@@ -73,3 +99,19 @@ jobs:
         with:
           sarif_file: scorecard.sarif
           category: scorecard
+
+      # 9.7 blocking gate: the aggregate score (JSON run of the same checks) must be at
+      # least scorecardMin in security-gates.json, a ratchet toward 8. The step summary
+      # lists every check below 10 with its reason.
+      - uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
+        with:
+          results_file: scorecard.json
+          results_format: json
+          publish_results: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Scorecard gate
+        run: node scripts/security-gates.mjs scorecard scorecard.json

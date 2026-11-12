@@ -71,7 +71,7 @@ test('theme.css is @theme inline only (no base/utilities)', () => {
 test('Tailwind v4 generates nexub utilities with runtime var(--…) values', async () => {
   const css = await build(Object.keys(EXPECT));
   for (const [cls, decls] of Object.entries(EXPECT)) {
-    const rule = css.match(new RegExp(`\\.${cls.replace(/-/g, '\\-')} \\{([^}]*)\\}`))?.[1];
+    const rule = css.match(new RegExp(`\\.${cls.replace(/[\\^$.*+?()[\]{}|-]/g, '\\$&')} \\{([^}]*)\\}`))?.[1];
     assert.ok(rule, `${cls} not generated`);
     for (const d of decls) assert.ok(rule.includes(d), `${cls}: expected "${d}" in:${rule}`);
   }
