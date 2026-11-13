@@ -115,10 +115,17 @@ for (const path of docsPages) {
     // any machine. The real-font case is the Lighthouse budget, with the fonts preloaded.
     await page.route(/\.woff2(\?|$)/, (r) => r.abort());
     await page.addInitScript(() => {
-      (window as unknown as { __cls: number }).__cls = 0;
+      const w = window as unknown as { __cls: number; __moved: string[] };
+      w.__cls = 0;
+      w.__moved = []; // what moved, for the failure message: a random-page failure is a shared element
       new PerformanceObserver((list) => {
-        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
-          if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean; sources: { node: Node | null }[] }[]) {
+          if (e.hadRecentInput) continue;
+          w.__cls += e.value;
+          for (const { node } of e.sources) {
+            const el = node instanceof Element ? node : node?.parentElement;
+            w.__moved.push(el ? `<${el.tagName.toLowerCase()} class="${el.className}">`.slice(0, 120) : 'removed node');
+          }
         }
       }).observe({ type: 'layout-shift', buffered: true });
     });
@@ -129,6 +136,6 @@ for (const path of docsPages) {
     if (path in CLS_KNOWN) {
       expect(cls, 'fixed: remove it from CLS_KNOWN').toBeGreaterThan(0);
       expect(cls).toBeLessThanOrEqual(CLS_KNOWN[path]);
-    } else expect(cls).toBe(0);
+    } else expect(cls, `moved: ${(await page.evaluate(() => (window as unknown as { __moved: string[] }).__moved)).join(', ')}`).toBe(0);
   });
 }
