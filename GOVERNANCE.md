@@ -115,7 +115,7 @@ Deprecate in a minor; remove only in the next major.
    - A **docs badge and notice**: `status: 'deprecated'` and `deprecation` in the registry entry. The page then shows the Deprecated badge and "Deprecated — removal planned in N.0" with the replacement and migration.
    - A **migration note**: the changeset line starts with `**Deprecated:**` and gives the one-line migration; longer migrations go in the Upgrading guide (`apps/docs/src/app/(docs)/getting-started/upgrading`). Add a `nexub-migrate` rule when the change is mechanical.
 2. **Keep it working.** A deprecated API keeps its behaviour and tests until it is removed. Bug fixes are fine; new features go to the replacement.
-3. **Remove only in the next major,** which is the rollover release after `x.9` (see [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy)), with at least one minor release between the deprecation and the removal. If the deprecation lands in the last minor before a rollover, removal waits for the major after. The removal changeset starts with `**Breaking:**`.
+3. **Remove only in the next major.** Up to 10.0 that was the rollover release after `x.9`; from 10.0 a major happens only by RFC (see [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy)), with at least one minor release between the deprecation and the removal. If the deprecation lands in the last minor before a major, removal waits for the major after. The removal changeset starts with `**Breaking:**`.
 
 Banner, Callout, Tag and StatusPill were deprecated in 1.1.0, before this policy. They have the JSDoc and the docs notice; their removal is planned in **3.0**, and their development warning must land in a 2.x minor before then.
 

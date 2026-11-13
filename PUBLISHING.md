@@ -50,25 +50,37 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 
 ## Versioning Policy
 
-Nexub DS uses **one rolling version** for all seven packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
+Nexub DS uses **one version** for every `@nexub/*` package. **Every release bumps the minor.**
+
+**From 10.0: semver, no rollover.** After 10.9 comes 10.10. A major happens only when something has to break.
 
 ```
-1.0.0 → 1.1.0 → 1.2.0 → … → 1.9.0 → 2.0.0 → 2.1.0 → … → 2.9.0 → 3.0.0
+9.8.0 → 9.9.0 (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0
 ```
 
 | Situation | Changeset bump | Example |
 |---|---|---|
-| Normal release (features, fixes, breaking changes, anything) | `minor` | `1.3.0` → `1.4.0` |
-| Hotfix to the current release only | `patch` | `1.4.0` → `1.4.1` |
-| Next release after any `x.9.y` | `minor` (rolls over automatically) | `1.9.1` → `2.0.0` |
-| `major` | **never**. CI rejects it | — |
+| Scheduled release (additive, opt-in) | `minor` | `10.3.0` → `10.4.0` |
+| Security or critical fix on the latest version | `patch` | `10.4.0` → `10.4.1` |
+| Breaking change | `major`, by RFC only. CI rejects it until the RFC is accepted | `10.x` → `11.0.0` |
+
+**Up to 10.0: rolling minor.** The minor rolled over into the major after 9 (`1.9.0` → `2.0.0`, …, `9.9.0` → `10.0.0`), so a major was not a breaking-change signal and breaking changes shipped in minors. 9.9 → 10.0 is the last rollover (`LAST_ROLLOVER_MAJOR` in `scripts/release-version.mjs`).
 
 Rules:
 1. **Write changesets with `minor` or `patch` only.** `pnpm check:release-policy` (in CI) fails on `major`.
-2. **Multiple changesets in one release still produce one bump.** All packages share a version (changesets `fixed` group) and the highest bump wins, so a day's worth of `minor` changesets ships as a single `1.x+1.0`.
-3. **Rollover is automatic.** The release job runs `pnpm version-packages` = `changeset version` + `scripts/release-version.mjs`, which turns `x.10.0` into `x+1.0.0` in every `package.json` and CHANGELOG.
-4. **Breaking changes ship in a minor, so say so.** Consumers on `^1.0.0` receive every 1.x automatically. Start the changeset line with `**Breaking:**` and give the one-line migration. Removals go through a deprecation first (`@deprecated` JSDoc for at least one release) wherever practical.
+2. **Multiple changesets in one release still produce one bump.** All packages share a version (changesets `fixed` group) and the highest bump wins.
+3. **A major needs an RFC and a migration guide.** The PR that ships it changes the guards in `scripts/check-changesets.mjs` and `scripts/release-version.mjs`. It removes only what a 10.x minor deprecated at least one release earlier (`@deprecated` JSDoc, dev warning, docs notice: see GOVERNANCE.md).
+4. **Minors don't break.** From 10.0 a consumer on `^10.0.0` gets every 10.x, so a minor may add and deprecate, never remove or change a default.
 5. **After every publish, merge the back-merge PR.** The release job opens `chore(release): back-merge vX into development` (production → development). Merge it before the next promotion, or the version lines will conflict.
+
+### Release candidates and the `next` tag
+
+`scripts/publish-tarballs.mjs` picks the npm dist-tag from the version (`distTag`). 9.9.x is the 10.0 release candidate: it publishes to `next`, and `latest` stays on 9.8 until 10.0. Consumers try it with `npm install @nexub/react@next`.
+
+- **Freeze.** From 9.9 to 10.0 only fixes that block 10.0 are merged: no new component, prop, token or default.
+- **Soak.** The RC stays on `next` for 4 weeks in the Payub and Matchub pilots. A regression is fixed as 9.9.x (still `next`) and the 4 weeks start again.
+- **10.0 ships when every exit criterion is met** (ROADMAP_8.x.md; the public list is the docs page `/getting-started/release-status`, updated by hand with its date).
+- **A fix `latest` users need during the soak** can't ship as 9.8.x (production is already on 9.9). Remove the 9.9 rule from `distTag` in the fix PR: 9.9.x then publishes to `latest` and the soak continues there.
 
 The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
 
