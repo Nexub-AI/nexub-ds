@@ -37,7 +37,7 @@ Every change that affects a published package must include a changeset:
 pnpm changeset
 ```
 
-Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it, and the major rolls over automatically after `x.9`. All seven `@nexub/*` packages share one version. See [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy).
+Use **`minor`** (or **`patch`** for a hotfix). **Never `major`**: CI rejects it. 9.9 → 10.0 is the last automatic rollover; from 10.0 a major needs an RFC. All seven `@nexub/*` packages share one version. See [PUBLISHING.md → Versioning Policy](./PUBLISHING.md#versioning-policy).
 
 ### Semver guide
 

@@ -1,12 +1,13 @@
 // Release versioning policy (see PUBLISHING.md → "Versioning policy").
 //
 // All @nexub/* packages share one version. Every release bumps the MINOR:
-//   1.0.0 → 1.1.0 → … → 1.9.0 → 2.0.0 → 2.1.0 …   (patch: 1.4.0 → 1.4.1)
-// i.e. the minor "rolls over" into the major after 9. Major bumps are never
-// requested directly — scripts/check-changesets.mjs rejects them in CI.
+//   9.8.0 → 9.9.0 → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0   (patch: 10.4.0 → 10.4.1)
+// Up to 10.0 the minor "rolled over" into the major after 9 (1.9 → 2.0 … 9.9 → 10.0).
+// 10.0 is the last rollover: from 10.x on the minor just keeps counting, and a major
+// happens only by RFC (scripts/check-changesets.mjs rejects `major` in CI until then).
 //
 // Runs after `changeset version` (root script `version-packages`), which has
-// already written e.g. 1.10.0; this rewrites that to 2.0.0 everywhere.
+// already written e.g. 9.10.0; this rewrites that to 10.0.0 everywhere.
 
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -18,6 +19,9 @@ const parse = (v) => {
   return m.slice(1).map(Number);
 };
 
+/** 9.9 → 10.0 is the last automatic rollover; 10.9 → 10.10. */
+const LAST_ROLLOVER_MAJOR = 10;
+
 /** Version to publish, given the previous release and what changesets proposed. */
 export function nextVersion(previous, proposed) {
   const [pMaj] = parse(previous);
@@ -25,10 +29,10 @@ export function nextVersion(previous, proposed) {
   if (maj !== pMaj) {
     throw new Error(
       `changesets proposed a major bump (${previous} → ${proposed}). ` +
-        'Majors only happen by minor rollover; use "minor" or "patch" in changesets.',
+        'A major needs an RFC and a migration guide (PUBLISHING.md); use "minor" or "patch" in changesets.',
     );
   }
-  if (min >= 10) return `${maj + 1}.0.0`;
+  if (min >= 10 && maj < LAST_ROLLOVER_MAJOR) return `${maj + 1}.0.0`;
   return `${maj}.${min}.${pat}`;
 }
 

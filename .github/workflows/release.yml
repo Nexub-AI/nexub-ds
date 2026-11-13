@@ -167,8 +167,15 @@ jobs:
           mkdir -p from-npm && cd from-npm
           sleep 90  # registry lag
           for spec in $(node -e 'for (const p of JSON.parse(process.env.PUBLISHED_PACKAGES)) console.log(`${p.name}@${p.version}`)'); do
-            file=$(npm pack "$spec" --silent)
-            gh attestation verify "$file" --repo "$GITHUB_REPOSITORY" --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/build-release.yml"
+            # The registry can lag a publish by minutes (9.8.0 failed here and verified by hand
+            # afterwards): retry each package for up to 10 minutes, and name the one that fails.
+            for try in $(seq 1 20); do
+              if file=$(npm pack "$spec" --silent) && gh attestation verify "$file" --repo "$GITHUB_REPOSITORY" --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/build-release.yml"; then
+                echo "verified $spec"; continue 2
+              fi
+              echo "$spec not verifiable yet (try $try)"; sleep 30
+            done
+            echo "::error::$spec on npm does not verify against the release build provenance"; exit 1
           done
 
       # A signed tag for the release as a whole (vX.Y.Z), next to the per-package tags
