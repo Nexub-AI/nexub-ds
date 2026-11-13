@@ -43,6 +43,13 @@ export function verify(expected, actual) {
   return problems;
 }
 
+/**
+ * npm dist-tag for a version. 9.9.x is the 10.0 release candidate: it publishes to `next`
+ * and `latest` stays on 9.8 until 10.0. To end the soak early (a fix `latest` users need),
+ * drop the 9.9 rule in the same PR (INCIDENT_RUNBOOK.md).
+ */
+export const distTag = (version) => (version.startsWith('9.9.') ? 'next' : 'latest');
+
 const manifestOf = (tgz) => JSON.parse(execFileSync('tar', ['-xzOf', tgz, 'package/package.json'], { encoding: 'utf8' }));
 
 async function onRegistry({ name, version }) {
@@ -73,9 +80,9 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       console.log(`${name}@${version} is already on the registry, skipping (${file} matches checksums.txt)`);
       continue;
     }
-    console.log(`${dryRun ? 'dry run: ' : ''}publishing ${name}@${version} (${file}, sha256 ${actual[file].slice(0, 16)}…)`);
+    console.log(`${dryRun ? 'dry run: ' : ''}publishing ${name}@${version} to "${distTag(version)}" (${file}, sha256 ${actual[file].slice(0, 16)}…)`);
     // Absolute path: npm reads a bare `tarballs/x.tgz` as the GitHub repository tarballs/x.tgz.
-    execFileSync('npm', ['publish', resolve(dir, file), '--access', 'public', ...(dryRun ? ['--dry-run'] : [])], { stdio: 'inherit' });
+    execFileSync('npm', ['publish', resolve(dir, file), '--access', 'public', '--tag', distTag(version), ...(dryRun ? ['--dry-run'] : [])], { stdio: 'inherit' });
   }
   if (!dryRun) execFileSync('pnpm', ['changeset', 'tag'], { stdio: 'inherit' });
 }
