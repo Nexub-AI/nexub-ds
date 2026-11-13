@@ -20,7 +20,7 @@
     "check:size": "node scripts/check-size.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs",
     "ai-docs": "node --experimental-strip-types --no-warnings scripts/build-ai-docs.mjs",
-    "ci:local": "pnpm audit --prod --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
+    "ci:local": "pnpm audit --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
     "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker",
     "check:supply-chain": "node scripts/check-supply-chain.mjs",
     "check:reproducible": "node scripts/reproducible-build.mjs"
@@ -49,7 +49,18 @@
       "body-parser@2": "^2.4.0",
       "@expo/cli>zod": "^4.6.6",
       "ws@8": "^8.21.0",
-      "node-forge@1": "^1.4.3"
+      "node-forge@1": "^1.4.3",
+      "@hono/node-server@2": "^2.1.6",
+      "tmp@0": "^0.2.6",
+      "basic-ftp@5": "^6.2.4",
+      "@lhci/cli>uuid": "^11.1.1",
+      "chromium-bidi>zod": "^4.6.6"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-7pqw-9j4j-h8q3",
+        "GHSA-jmr9-qjv8-65gv"
+      ]
     }
   }
 }

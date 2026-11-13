@@ -37,6 +37,6 @@
     "postcss": "^8.5.31",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
-    "wrangler": "3.114.17"
+    "wrangler": "4.158.0"
   }
 }
