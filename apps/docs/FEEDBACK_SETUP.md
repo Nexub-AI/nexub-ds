@@ -12,8 +12,8 @@ The webhook URL and Turnstile secret never reach the browser — they are bound
 to the Pages Function via the Cloudflare dashboard, not committed to source.
 
 This file is the operator runbook. **The feature is dark until every item
-below is configured.** The form will still render but submissions will return
-a `warning: webhook_not_configured` and silently drop.
+below is configured.** The form will still render but submissions are refused
+with a 503 (`not_configured`) and nothing is stored.
 
 ---
 
