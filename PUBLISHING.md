@@ -55,7 +55,7 @@ Nexub DS uses **one version** for every `@nexub/*` package. **Every release bump
 **From 10.0: semver, no rollover.** After 10.9 comes 10.10. A major happens only when something has to break.
 
 ```
-9.8.0 → 9.9.0 (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0
+9.8.0 → 9.9.x (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0
 ```
 
 | Situation | Changeset bump | Example |
@@ -77,10 +77,13 @@ Rules:
 
 `scripts/publish-tarballs.mjs` picks the npm dist-tag from the version (`distTag`). 9.9.x is the 10.0 release candidate: it publishes to `next`, and `latest` stays on 9.8 until 10.0. Consumers try it with `npm install @nexub/react@next`.
 
-- **Freeze.** From 9.9 to 10.0 only fixes that block 10.0 are merged: no new component, prop, token or default.
-- **Soak.** The RC stays on `next` for 4 weeks in the Payub and Matchub pilots. A regression is fixed as 9.9.x (still `next`) and the 4 weeks start again.
-- **10.0 ships when every exit criterion is met** (ROADMAP_8.x.md; the public list is the docs page `/getting-started/release-status`, updated by hand with its date).
-- **A fix `latest` users need during the soak** can't ship as 9.8.x (production is already on 9.9). Remove the 9.9 rule from `distTag` in the fix PR: 9.9.x then publishes to `latest` and the soak continues there.
+**10.0.0 shipped on 2026-11-14, one day into the planned 4-week soak.** The owner waived three exit criteria (flake rate, Scorecard 8, the soak) so apps could move to 10 at once; 9.9 changed no component since 9.8. The docs page `/getting-started/release-status` records where each criterion stood. Flakes and Scorecard are still tracked.
+
+For a future release candidate, add its version rule to `distTag`:
+
+- **Freeze.** While an RC is on `next`, only fixes that block the release are merged: no new component, prop, token or default.
+- **Soak.** The RC stays on `next` in the Payub and Matchub pilots. A regression is fixed as a patch (still `next`).
+- **A fix `latest` users need during a soak** can't ship on the previous version (production is already on the RC). Remove the RC rule from `distTag` in the fix PR: the RC then publishes to `latest` and the soak continues there.
 
 The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
 
