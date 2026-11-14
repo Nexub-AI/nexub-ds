@@ -1,4 +1,5 @@
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -15,18 +16,42 @@ export default defineConfig({
   // esbuild strips module-level directives when bundling; re-add on every
   // output file so Next.js RSC consumers can import from server components.
   banner: { js: "'use client';" },
-  // esbuild writes the chunk imports of dist/index.js in a different order from build to
-  // build. They are side-effect-free definitions, so sort them by path: two builds of one
-  // commit are then byte-identical (scripts/reproducible-build.mjs).
+  // esbuild writes the chunk imports of a file in a different order from build to build, and a
+  // chunk's name is a hash of its text, so the name changes with that order. The imports are
+  // side-effect-free definitions, so: sort them, and name each chunk by a hash of its text with
+  // the chunk names masked. Two builds of one commit are then byte-identical
+  // (scripts/reproducible-build.mjs).
   async onSuccess() {
-    const file = 'dist/index.js';
-    const source = readFileSync(file, 'utf8');
-    const IMPORT = /import (?:\{[^}]*\} from )?"([^"]+)";\n/g;
-    const imports = [...source.matchAll(IMPORT)];
-    const start = imports[0]!.index;
-    const end = imports.at(-1)!.index + imports.at(-1)![0].length;
-    if (source.slice(start, end) !== imports.map((m) => m[0]).join('')) throw new Error(`${file}: expected one block of imports`);
-    const sorted = imports.sort((a, b) => (a[1]! < b[1]! ? -1 : 1)).map((m) => m[0]).join('');
-    writeFileSync(file, source.slice(0, start) + sorted + source.slice(end));
+    const CHUNK = /chunk-[A-Z0-9]{8}(?=\.js)/g;
+    const IMPORT = /import (?:\{[^}]*\} from )?"(?:\.\.?\/)+chunk-[A-Z0-9]{8}\.js";\n/g;
+    const mask = (text: string) => text.replace(CHUNK, 'chunk');
+    const sortImports = (file: string, text: string, key: (statement: string) => string) => {
+      const imports = [...text.matchAll(IMPORT)];
+      if (!imports.length) return text;
+      const start = imports[0]!.index;
+      const end = imports.at(-1)!.index + imports.at(-1)![0].length;
+      const block = imports.map((m) => m[0]);
+      if (text.slice(start, end) !== block.join('')) throw new Error(`${file}: expected one block of chunk imports`);
+      return text.slice(0, start) + block.sort((a, b) => (key(a) < key(b) ? -1 : 1)).join('') + text.slice(end);
+    };
+    const files = (readdirSync('dist', { recursive: true }) as string[]).filter((f) => f.endsWith('.js')).map((f) => `dist/${f}`);
+    const names = new Map<string, string>();
+    const taken = new Map<string, string>();
+    for (const file of files) {
+      const old = file.match(/^dist\/(chunk-[A-Z0-9]{8})\.js$/)?.[1];
+      if (!old) continue;
+      const text = readFileSync(file, 'utf8');
+      const canonical = sortImports(file, mask(text), mask);
+      const name = `chunk-${createHash('sha256').update(canonical).digest('hex').slice(0, 8).toUpperCase()}`;
+      // Chunks with the same text and no chunk import are the same module (the empty chunks of
+      // type-only files): they share one file. Anything else with the same name is a real clash.
+      if (taken.has(name) && (taken.get(name) !== text || mask(text) !== text)) throw new Error(`${file}: chunk name ${name} is taken`);
+      taken.set(name, text);
+      names.set(old, name);
+    }
+    const rename = (text: string) => text.replace(CHUNK, (old) => names.get(old) ?? old);
+    const output = files.map((file) => [rename(file), sortImports(file, rename(readFileSync(file, 'utf8')), (statement) => statement)] as const);
+    for (const file of files) rmSync(file);
+    for (const [file, text] of output) writeFileSync(file, text);
   },
 });

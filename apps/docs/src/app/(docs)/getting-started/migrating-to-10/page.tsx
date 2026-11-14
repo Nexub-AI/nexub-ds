@@ -22,15 +22,13 @@ export default function MigratingTo10Page() {
         run. If your app builds on 9.9, it builds on 10.0.
       </p>
 
-      <h2>Before 10.0 is out</h2>
-      <p>
-        9.9 is the release candidate, on the <code>next</code> tag. Installing it now is the whole migration:
-      </p>
-      <CodeBlock lang="bash" code={`npm install @nexub/react@next @nexub/themes@next @nexub/tokens@next @nexub/icons@next`} />
+      <h2>Upgrade</h2>
+      <p>Installing it is the whole migration. Move every <code>@nexub</code> package you use together:</p>
+      <CodeBlock lang="bash" code={`npm install @nexub/react@latest @nexub/themes@latest @nexub/tokens@latest @nexub/icons@latest`} />
       <p>
         Coming from 8.x? Do <Link href="/getting-started/migrating-to-9">Migrating to 9.0</Link> first; that is where
-        the removals are. <Link href="/getting-started/release-status">10.0 release status</Link> shows what 10.0 is
-        still waiting for.
+        the removals are. <Link href="/getting-started/release-status">10.0 release status</Link> shows where each
+        exit criterion stood on release day.
       </p>
 
       <h2>What changes: versioning</h2>

@@ -1,5 +1,11 @@
 # @nexub/brand
 
+## 9.9.1
+
+### Patch Changes
+
+- 852e6a7: Brand: app icon for Forms. `app-icon-forms.svg`, `-light.svg`, `-192.png`, `-512.png` and the `mobile/forms-*` iOS and Android set.
+
 ## 9.9.0
 
 ## 9.8.0
