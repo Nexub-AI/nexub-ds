@@ -86,6 +86,8 @@ export function DocsHeader() {
       <div className="docs-only-desktop">
         <ThemeSwitcher />
       </div>
+      {/* Last in the header: globals.css keeps the header hidden until this is parsed. */}
+      <span data-header-end hidden />
     </TopNav.Root>
   );
 }

@@ -13,7 +13,7 @@ pnpm add @nexub/brand
 | `app-icon.svg` | App icon: dark glass rounded tile with the Nexub mark in violet. |
 | `app-icon-192.png`, `app-icon-512.png` | The same tile for web manifests. |
 | `app-icon-account.svg`, `app-icon-account-192.png`, `app-icon-account-512.png` | The Account tile: same tile, person glyph. |
-| `app-icon-<product>.svg`, `-192.png`, `-512.png` | Each Nexub app's tile, same tile with its own glyph: `command-hub` (a hub of agents), `admin` (a shield), `people` (two people), `payhub` (a banknote), `commerce` (a shopping bag), `contracts` (a signed page), `leap` (a leap forward), `founder-hub` (a rocket), `mind` (an idea), `go` (a chat bubble), `verify` (a check in a ring). Every glyph is a violet line drawing; apps differ by shape, not colour. |
+| `app-icon-<product>.svg`, `-192.png`, `-512.png` | Each Nexub app's tile, same tile with its own glyph: `command-hub` (a hub of agents), `admin` (a shield), `people` (two people), `payhub` (a banknote), `commerce` (a shopping bag), `contracts` (a signed page), `leap` (a leap forward), `founder-hub` (a rocket), `mind` (an idea), `go` (a chat bubble), `verify` (a check in a ring), `forms` (a form with a field). Every glyph is a violet line drawing; apps differ by shape, not colour. |
 | `app-icon[-<product>]-light.svg` | Every tile again on plain white with a deeper violet, for light themes. The dark glass tiles are for dark themes. |
 | `favicon.ico` | 16, 32 and 48 px, from `app-icon.svg`. |
 | `mobile/<product>-ios.png` | iOS app icon: 1024 px, full bleed, opaque (iOS draws the corners). `<product>` is `nexub` for the hub or a product id. |

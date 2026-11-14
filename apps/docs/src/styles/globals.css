@@ -414,6 +414,10 @@ html, body {
    that arrives later would move the part already painted (a layout shift on whichever page
    a network chunk happens to split). Show the pane only once its last element is parsed. */
 .docs-preview-pane:not(:has(> [data-preview-end])) { visibility: hidden; }
+/* Same for the header: its right-hand controls sit after a flex spacer, so each one that
+   arrives pushes the ones already painted to the left (seen as a 0.001 shift on random pages
+   in CI). The header shows once its last control ([data-header-end]) is parsed. */
+.docs-header:not(:has([data-header-end])) { visibility: hidden; }
 
 
 /* ── Component page layout (content + right-rail TOC) ───────────────────── */
