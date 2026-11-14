@@ -27,7 +27,7 @@ const master = read('assets/nexub-mark.svg');
 // Per-product tiles: same tile, same violet, different glyph. Glyphs are line
 // art on a 24-unit grid (glyphs/<id>.svg, no colours); the hub tile carries the
 // Nexub mark. A glyph is a function of its ink colour.
-const PRODUCTS = ['', 'account', 'command-hub', 'admin', 'people', 'payhub', 'commerce', 'contracts', 'leap', 'founder-hub', 'mind', 'go', 'verify'];
+const PRODUCTS = ['', 'account', 'command-hub', 'admin', 'people', 'payhub', 'commerce', 'contracts', 'leap', 'founder-hub', 'mind', 'go', 'verify', 'forms'];
 const VIOLET = '#8b6cff'; // ink on dark glass, and the halo
 const VIOLET_DEEP = '#6d4ae8'; // ink on white (≥ 4.5:1)
 // Glyph files put their description comment on its own line; drop those lines.

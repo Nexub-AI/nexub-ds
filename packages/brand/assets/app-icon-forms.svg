@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26282e"/><stop offset="1" stop-color="#050506"/></linearGradient>
+    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="#8b6cff" stop-opacity=".24"/><stop offset="1" stop-color="#8b6cff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#tile)"/>
+  <rect width="512" height="512" rx="115" fill="url(#halo)"/>
+  <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
+  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="6"/>
+  <svg x="106" y="106" width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="#8b6cff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 7.5h4M8.5 16.5h7"/><rect x="8.5" y="10" width="7" height="3.5" rx="1"/></svg>
+</svg>
