@@ -53,9 +53,9 @@ Fixes ship on the latest version only, as a patch, and don't wait for the next s
 
 When CI is the thing that is broken, fix CI first. A release that skipped its gates is a second incident.
 
-### During the 10.0 release-candidate soak
+### While a release candidate is on `next`
 
-Production is on 9.9.x, which publishes to the `next` tag; `latest` is 9.8.0 and can't get a 9.8.1. If `latest` users need the fix, remove the 9.9 rule from `distTag` in `scripts/publish-tarballs.mjs` in the fix PR. 9.9.x then publishes to `latest`, and the advisory names 9.9.x as the patched version.
+Production is on the RC, which publishes to the `next` tag; `latest` is the previous version and can't get a patch. If `latest` users need the fix, remove the RC rule from `distTag` in `scripts/publish-tarballs.mjs` in the fix PR. The RC then publishes to `latest`, and the advisory names it as the patched version. (This was the case for 9.9.x before 10.0.0; no RC is out now.)
 
 ## 3. A bad version is on npm
 
