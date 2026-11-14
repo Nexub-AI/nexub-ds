@@ -1,6 +1,6 @@
 {
   "name": "@nexub/tokens",
-  "version": "9.9.1",
+  "version": "10.0.0",
   "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, a Tailwind 4 theme, Figma variables and native (React Native, SwiftUI, Compose) tokens.",
   "type": "module",
   "license": "MIT",
