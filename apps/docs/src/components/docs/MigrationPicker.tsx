@@ -6,8 +6,8 @@ import { VersionSelect } from './VersionSelect';
 // Newest first. Add a guide here and it appears in every guide's picker; the
 // sidebar has one entry for all of them (see "Migrating to the latest version").
 const GUIDES = [
-  { value: '/getting-started/migrating-to-10', label: '10.0 (RC)' },
-  { value: '/getting-started/migrating-to-9', label: '9.0 (latest)' },
+  { value: '/getting-started/migrating-to-10', label: '10.0 (latest)' },
+  { value: '/getting-started/migrating-to-9', label: '9.0' },
   { value: '/getting-started/migrating-to-8', label: '8.0' },
   { value: '/getting-started/migrating-to-7', label: '7.0' },
   { value: '/getting-started/migrating-to-6', label: '6.0' },
