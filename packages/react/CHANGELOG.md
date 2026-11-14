@@ -1,5 +1,16 @@
 # @nexub/react
 
+## 10.0.0
+
+### Minor Changes
+
+- 7e3de06: 10.0.0: 9.9 declared stable and published to `latest`. No component, prop, token or default changed, and nothing was removed. From 10.0 versions follow semver: minors are additive, and a breaking change needs a new major by RFC.
+
+### Patch Changes
+
+- @nexub/icons@10.0.0
+- @nexub/core@10.0.0
+
 ## 9.9.1
 
 ### Patch Changes
