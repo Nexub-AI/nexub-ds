@@ -1,7 +1,7 @@
 name: Outside PRs
 
 # Open source, not open contribution (CONTRIBUTING.md): close pull requests from
-# outside the maintainer team with a pointer to the issue forms.
+# anyone but the maintainer with a pointer to the issue forms.
 # pull_request_target runs in the base repo; it never checks out or runs PR code.
 on:
   pull_request_target: # zizmor: ignore[dangerous-triggers] -- no checkout, no PR code; only closes the PR
@@ -11,10 +11,15 @@ permissions: {}
 
 jobs:
   close:
-    # Outsiders can't push branches here, so their PRs always come from a fork.
+    # One maintainer (2026-11-15): close any PR that comes from a fork, or that is not
+    # opened by the owner or Dependabot. A repository ruleset ("Only the design-system
+    # owner pushes") already stops anyone else pushing a branch here, so in practice
+    # their PRs come from a fork; the author check also holds if that ruleset is off.
     # Not author_association: members with private org membership show up as
     # CONTRIBUTOR in the event and got their own PRs closed (8.1, #508, #510).
-    if: github.event.pull_request.head.repo.full_name != github.repository
+    if: >-
+      github.event.pull_request.head.repo.full_name != github.repository ||
+      !contains(fromJSON('["sasinex", "dependabot[bot]"]'), github.event.pull_request.user.login)
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
