@@ -52,13 +52,13 @@ for (const path of pages) {
       // put them. Pin them in normal flow: same pixels at scroll 0, no dependence.
       await page.addStyleTag({ content: 'main .sticky { position: static !important; }' });
       // The version badge is masked, but its width still moves the header: "v10.0.0" is one
-      // character wider than "v9.9.1" and every baseline shifted. Give it a text of fixed length.
+      // character wider than "v9.9.1" and every baseline shifted. Give it the text the baselines were recorded with (the font is not strictly fixed-width).
       const versionBadge = page.locator('header').getByText(/^v\d+\.\d+\.\d+/);
       await versionBadge.evaluate((el) => {
         // Rewrite the text nodes only: replacing the children drops the label's inner span.
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
         for (let node = walker.nextNode(), first = true; node; node = walker.nextNode(), first = false) {
-          node.textContent = first ? 'v0.0.0' : '';
+          node.textContent = first ? 'v9.9.1' : '';
         }
       });
       await expect(page).toHaveScreenshot(`docs${path.replaceAll('/', '-')}--${theme}.png`, {
