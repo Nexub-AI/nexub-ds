@@ -17,9 +17,11 @@ declare global {
 }
 
 const CYCLES = Number(process.env.LEAK_CYCLES ?? 1000);
-// Heap kept per mount in the second half. A real leak keeps a fiber tree, a closure or a DOM
-// subtree per mount: 10 KB and up in jsdom (see the control tests). Up to ~1.4 KB is the
-// environment itself (jsdom caches a compiled selector per generated id), so the limit is 2 KB.
+// Heap kept per mount in the second half, measured after a forced GC. A real leak keeps a
+// fiber tree, a closure or a DOM subtree per mount. Under jsdom 31 an element costs about
+// 1.2 KB (jsdom 30: about 5 KB), so the control test below leaks a small component's worth
+// of elements. Stories that leak nothing measure under 0.5 KB alone and up to ~1.4 KB in a
+// full run (GC timing on the heaviest overlay story), so the limit stays at 2 KB.
 const HEAP_PER_CYCLE = 2048;
 
 v8.setFlagsFromString('--expose-gc');
@@ -182,7 +184,9 @@ describe('controls', () => {
       React.useEffect(() => void kept.push(ref.current), []); // the unmounted DOM subtree stays reachable
       return (
         <div ref={ref}>
-          <button>Kept</button>
+          {Array.from({ length: 12 }, (_, i) => (
+            <button key={i}>Kept</button>
+          ))}
         </div>
       );
     };
