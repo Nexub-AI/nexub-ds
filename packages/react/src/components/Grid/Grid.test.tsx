@@ -35,7 +35,7 @@ describe('Grid', () => {
   it('falls back to inline style for off-scale values', () => {
     const { container } = render(<Grid cols={13} gap="13px">x</Grid>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.gridTemplateColumns).toBe('repeat(13, minmax(0, 1fr))');
+    expect(el.style.gridTemplateColumns).toMatch(/^repeat\(13, minmax\(0(px)?, 1fr\)\)$/);
     expect(el.style.gap).toBe('13px');
   });
 });

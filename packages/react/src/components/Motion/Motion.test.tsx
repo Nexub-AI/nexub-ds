@@ -117,7 +117,7 @@ describe('Scale', () => {
   it('has transformOrigin set to top center', () => {
     const { container } = render(<Scale in={true}><span>x</span></Scale>);
     const el = container.firstChild as HTMLElement;
-    expect(el.style.transformOrigin).toBe('top center');
+    expect(el.style.transformOrigin.split(' ').sort()).toEqual(['center', 'top']);
   });
 });
 
