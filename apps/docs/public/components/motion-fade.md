@@ -12,7 +12,6 @@ Animates opacity between 0 and 1 based on the `in` prop.
 | --- | --- | --- | --- |
 | `in` (required) | `boolean` |  | When true, fades content in. When false, fades it out. |
 | `duration` | `'instant' \| 'fast' \| 'normal' \| 'slow' \| 'slower'` | `'normal'` | Controls the animation speed using the design token scale. |
-| `easing` | `'linear' \| 'in' \| 'out' \| 'in-out' \| 'out-expo' \| 'spring'` | `'out'` | Easing curve applied to the animation. |
 | `unmountOnExit` | `boolean` | `false` | Removes the element from the DOM after the exit animation completes. |
 | `as` | `React.ElementType` | `'div'` | The HTML element or component to render as the wrapper. |
 | `children` (required) | `React.ReactNode` |  | Content to animate. |
@@ -37,7 +36,7 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>
         {visible ? 'Hide' : 'Show'}
       </Button>
       <Fade in={visible} unmountOnExit>
@@ -48,7 +47,7 @@ export default function Example() {
 }
 ```
 
-## Example: Slow with spring easing
+## Example: Slow spring
 
 ```tsx
 import * as React from 'react';
@@ -58,8 +57,8 @@ export default function Example() {
   const [visible, setVisible] = React.useState(true);
   return (
     <div className="flex flex-col gap-3 items-start">
-      <Button variant="outline" onClick={() => setVisible((v) => !v)}>Toggle</Button>
-      <Fade in={visible} duration="slow" easing="spring">
+      <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
+      <Fade in={visible} duration="slow">
         <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>

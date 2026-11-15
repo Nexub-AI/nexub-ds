@@ -11,6 +11,159 @@ export const metadata: Metadata = {
   description: 'The WCAG 2.2 AA conformance report for every Nexub component: what is tested automatically, what is documented, and what is not covered yet.',
 };
 
+// Manual screen-reader scripts for the complex components. Run each in VoiceOver
+// (macOS Safari) and NVDA (Windows Firefox or Chrome) against the docs examples;
+// "Hear" is the essential content, not the exact wording, which varies by reader.
+const SCRIPTS: { component: string; slug: string; page?: false; steps: [string, string][] }[] = [
+  {
+    component: 'DataTable (grid)',
+    slug: 'data-table',
+    steps: [
+      ['Tab into the table', 'Grid, its name, the first header (and "sorted ascending/descending" if sorted)'],
+      ['Arrow Down, then Arrow Right', 'Each cell’s content with its column header; a checkbox cell reads "Select row, checkbox"'],
+      ['Space on a row checkbox', '"Checked", then the selection count from the live region'],
+      ['Home, End, Ctrl+Home, Ctrl+End', 'Focus lands on the row’s first or last cell, then the grid’s corners'],
+      ['Tab', 'Focus leaves the table in one press; Shift+Tab returns to the last cell'],
+    ],
+  },
+  {
+    component: 'Autocomplete / Combobox (popover)',
+    slug: 'autocomplete',
+    steps: [
+      ['Tab to the field', 'Its label, "combobox", "collapsed"'],
+      ['Type two letters', '"Expanded" and the number of results; no focus jump'],
+      ['Arrow Down', 'Each option and its position ("2 of 5")'],
+      ['Enter', 'The chosen value in the field; the list collapses'],
+      ['Type text that matches nothing, with onCreate', '"Create …" as the last option'],
+    ],
+  },
+  {
+    component: 'MultiSelect',
+    slug: 'multi-select',
+    steps: [
+      ['Tab to the field', 'Its label, "combobox", and the selected values'],
+      ['Arrow Down, Enter on an option', '"Selected"; the chip appears and the list stays open'],
+      ['Backspace in the empty input', 'The last chip is removed and announced'],
+      ['Tab to a chip’s remove button', '"Remove <value>, button"'],
+    ],
+  },
+  {
+    component: 'DateRangePicker',
+    slug: 'date-range-picker',
+    steps: [
+      ['Enter on the trigger', 'Dialog opens; focus on a preset or today’s date'],
+      ['Arrow keys in the calendar', 'Full dates ("Monday, November 2, 2026"), with "today" and "selected"'],
+      ['Enter on two dates', 'The range in the trigger; the dialog closes and focus returns to it'],
+      ['Read the footer (time zone set)', 'The time zone name the range is in'],
+    ],
+  },
+  {
+    component: 'FilterBuilder',
+    slug: 'filter-builder',
+    steps: [
+      ['Tab through a rule', 'Field, Operator and Value, each with its label'],
+      ['Activate "Add filter"', 'A new rule; focus stays on the button'],
+      ['Read the group', '"Filter group, match all/any" for each nested group'],
+      ['Activate "Remove filter"', 'The rule is gone; focus moves to the next control'],
+    ],
+  },
+  {
+    component: 'SavedViews',
+    slug: 'saved-views',
+    steps: [
+      ['Enter on the trigger', 'Menu; the current view marked "checked"'],
+      ['Choose "Save view"', 'Dialog with the "View name" field focused'],
+      ['Save', 'Dialog closes; the new view name in the trigger'],
+    ],
+  },
+  {
+    component: 'AlertDialog with Confirm',
+    slug: 'alert-dialog',
+    steps: [
+      ['Open the dialog', '"Alert dialog", its title and description; focus on Cancel'],
+      ['Tab to the action', '"Dimmed"/"unavailable" until the text is typed'],
+      ['Type the confirm text, then Tab', 'The action is now available'],
+      ['Escape', 'Dialog closes; focus returns to the trigger'],
+    ],
+  },
+  {
+    component: 'FileUpload',
+    slug: 'file-upload',
+    page: false,
+    steps: [
+      ['Tab to the dropzone', 'Its label and accepted types'],
+      ['Add a file that is too large', 'The error from the live region ("… is larger than …")'],
+      ['Read an uploading item', 'File name and "40% uploaded"; "Cancel upload of <name>, button"'],
+    ],
+  },
+  {
+    component: 'CommandPalette',
+    slug: 'command-palette',
+    page: false,
+    steps: [
+      ['Press the shortcut', 'Dialog opens; focus in the search field'],
+      ['Type, then Arrow Down', 'Results by group, each "option" with its position'],
+      ['Enter', 'The command runs; the palette closes and focus returns'],
+    ],
+  },
+  {
+    component: 'OTPInput',
+    slug: 'otp-input',
+    steps: [
+      ['Tab into the code', '"Verification code", digit 1 of 6'],
+      ['Type the digits', 'Focus moves on after each digit without re-announcing the label'],
+      ['Paste a full code', 'All digits fill; focus on the last'],
+    ],
+  },
+  {
+    component: 'Form',
+    slug: 'form',
+    steps: [
+      ['Leave a required field empty and press Enter', 'Focus moves to that field: its label, "invalid entry", then the message'],
+      ['Type in the field', 'The error is gone when you tab away; the field no longer reads "invalid"'],
+      ['Submit a long form with onInvalidSubmit + ErrorSummary', '"There is a problem" and the list of errors; each link moves to its field'],
+    ],
+  },
+  {
+    component: 'TreeView',
+    slug: 'tree-view',
+    steps: [
+      ['Tab into the tree', 'Tree, its name, the first item, "collapsed", "1 of 3", "level 1"'],
+      ['Arrow Right, then Arrow Down', '"Expanded", then the first child with "level 2"'],
+      ['Arrow Left twice', '"Collapsed" on the parent after moving back to it'],
+      ['Type a letter', 'Focus jumps to the next item starting with it'],
+      ['Enter (or Space with checkboxes)', '"Selected", or "checked" / "partially checked" on the parent'],
+    ],
+  },
+  {
+    component: 'Sortable / Kanban',
+    slug: 'sortable',
+    steps: [
+      ['Tab to a handle', '"Move Alpha, button", then the hint "Alt+Arrow keys move it"'],
+      ['Alt+Arrow Down', '"Alpha moved to position 2 of 5"; focus stays on the handle'],
+      ['On a Kanban card, Alt+Arrow Right', '"Bravo moved to Done, position 1 of 3"'],
+    ],
+  },
+  {
+    component: 'ResizablePanels',
+    slug: 'resizable-panels',
+    steps: [
+      ['Tab to the separator', '"Resize panels, separator" and its value, e.g. "30"'],
+      ['Arrow Right (Arrow Left in RTL)', 'The new value, 5 higher'],
+      ['Home, End, Enter', 'The smallest and largest values, then back to the default split'],
+    ],
+  },
+  {
+    component: 'EventCalendar',
+    slug: 'event-calendar',
+    steps: [
+      ['Move into the table (VO: Control+Option+Arrow; NVDA: T)', 'Table, the month as its caption, 7 columns'],
+      ['Read a day cell', 'The weekday header, the full date ("Today, …" on today), then each event with its time'],
+      ['Activate the next-month button', 'The new month from the heading’s live region'],
+    ],
+  },
+];
+
 const RESULT = {
   pass: <Badge tone="success" variant="soft" size="sm">Pass</Badge>,
   'pass with documented exception': <Badge tone="warning" variant="soft" size="sm">Pass, with exception</Badge>,
@@ -66,6 +219,58 @@ export default function AccessibilityPage() {
         </Prose>
       </Section>
 
+      <Section
+        id="environments"
+        title="Every environment"
+        description="Since 9.4 every Storybook story, and every React Native component, is also checked in the settings people change on their own device."
+      >
+        <DocTable
+          head={['Environment', 'What is checked, for every story', 'Result']}
+          rows={[
+            [
+              'Forced colors (Windows contrast themes)',
+              'A baseline per story. On, selected and filled states are redrawn with system colours (switch, radio, slider, progress, pressed toggle, selected tab, highlighted menu item), and buttons, floating panels and separators keep an edge.',
+              RESULT.pass,
+            ],
+            ['Right-to-left', 'A baseline per story with dir="rtl".', RESULT.pass],
+            [
+              '200% zoom',
+              'WCAG 1.4.10 reflow at the equivalent 640px width: the page does not scroll sideways.',
+              <>{RESULT.pass} One story pins a fixed desktop frame (List detail, wide).</>,
+            ],
+            [
+              '400% zoom',
+              'The same at 320px.',
+              <>
+                {RESULT.pass} Listed exceptions: two fixed device frames (List detail), three multi-column showcase grids,
+                one two-column demo grid (Stat card), and data tables, which the criterion exempts.
+              </>,
+            ],
+            ['Reduced motion', 'After load nothing moves or resizes. Overlays keep an opacity fade only.', RESULT.pass],
+            ['Reduced transparency', 'No backdrop-filter is left; glass surfaces fall back to solid, with a baseline each.', RESULT.pass],
+          ]}
+        />
+        <DocTable
+          head={['React Native', 'What is checked, for every exported component', 'Result']}
+          rows={[
+            [
+              'Font size to 200% and beyond',
+              'Body, title and label text grows with the OS setting without a cap. Display and headline sizes stop at 1.3x and 1.6x.',
+              <>{RESULT.pass} The Avatar monogram stays the size of its circle; the full name is its accessible label.</>,
+            ],
+            ['Bold Text (iOS)', 'The Nexub font files step up a weight while the setting is on, and follow it live.', RESULT.pass],
+            ['Screen-reader order', 'Nothing is laid out in reverse, so reading order is the visual order.', RESULT.pass],
+            ['Light and dark', 'The scheme switches while the app is open, without remounting the tree.', RESULT.pass],
+          ]}
+        />
+        <Prose>
+          Two fixes came out of this pass and are worth knowing about. In forced-colors mode a switch looked the same on
+          and off, a radio lost its dot and a slider its track. And a centred dialog flew in from the corner by half its
+          own size, in normal and reduced motion alike: its entrance now grows and rises in place, and does not move at
+          all under reduced motion.
+        </Prose>
+      </Section>
+
       <Section id="components" title="By component">
         <DocTable
           head={['Component', 'Automated (axe, light and dark)', 'Keyboard', 'Screen reader']}
@@ -77,6 +282,18 @@ export default function AccessibilityPage() {
           ])}
         />
         <Prose>Each component page has the details under Accessibility.</Prose>
+      </Section>
+
+      <Section
+        id="screen-reader-scripts"
+        title="Screen-reader test scripts"
+        description="Manual checks for the complex components. Run each in VoiceOver (macOS Safari) and NVDA (Windows Firefox or Chrome) on the component's docs examples."
+      >
+        {SCRIPTS.map((s) => (
+          <Section key={s.slug} level={3} id={`sr-${s.slug}`} title={s.page === false ? s.component : <DocsLink href={`/components/${s.slug}`}>{s.component}</DocsLink>}>
+            <DocTable head={['Do', 'Hear']} rows={s.steps.map(([d, h]) => [d, h])} />
+          </Section>
+        ))}
       </Section>
     </div>
   );

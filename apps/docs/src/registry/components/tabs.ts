@@ -20,6 +20,10 @@ const entry: ComponentEntry = {
     {
       title: 'Default',
     },
+    {
+      title: 'Vertical',
+      description: 'orientation="vertical": the indicator slides on the inline-end edge, and arrow up/down move between tabs.',
+    },
   ],
   usage: {
     whenToUse: [
@@ -30,7 +34,7 @@ const entry: ComponentEntry = {
     ],
     whenNotToUse: [
     "Global site navigation — use the sidebar or top nav",
-    "Sequential steps in order — use StepIndicator",
+    "Sequential steps in order — use Stepper",
     "Comparing content side-by-side — keep both views visible",
     "More than 5–7 tabs — consider a Select or sub-navigation",
     ],

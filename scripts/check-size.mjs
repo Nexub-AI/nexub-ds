@@ -1,6 +1,10 @@
 // Bundle-size budgets for the published packages (gzip; brotli shown for reference).
 //   node scripts/check-size.mjs           check against size-budgets.json (exit 1 on any overrun)
-//   node scripts/check-size.mjs --update  rewrite budgets to current size +10%, rounded up to 100 B
+//   node scripts/check-size.mjs --update  ratchet: lower each budget to current size (rounded up to
+//                                         100 B); never raises one. New entries start at that size.
+// Budgets only go down (8.7). To raise one, edit size-budgets.json by hand and explain it in the
+// PR under a `## Budget raises` heading that names each raised entry: CI (SIZE_BASE_BUDGETS +
+// PR_BODY) fails a raise without one.
 // Run after `pnpm turbo build --filter='./packages/*'`. Each JS entry is measured with every
 // local file it imports (followed recursively, each file counted once); bare imports are
 // peer/third-party and not counted. Each CSS entry includes its local @import graph.
@@ -96,8 +100,12 @@ const results = Object.entries(entries).map(([name, file]) => ({ name, ...measur
 const kb = (n) => `${(n / 1024).toFixed(1)} kB`;
 
 if (process.argv.includes('--update')) {
+  const old = existsSync(budgetFile) ? JSON.parse(readFileSync(budgetFile, 'utf8')) : {};
   const budgets = Object.fromEntries(
-    results.map((r) => [r.name, Math.ceil((r.gzip * 1.1) / 100) * 100]),
+    results.map((r) => {
+      const now = Math.ceil(r.gzip / 100) * 100;
+      return [r.name, old[r.name] === undefined ? now : Math.min(old[r.name], now)];
+    }),
   );
   writeFileSync(budgetFile, `${JSON.stringify(budgets, null, 2)}\n`);
   console.log(`Wrote ${results.length} budgets to ${relative(root, budgetFile)}`);
@@ -111,6 +119,19 @@ const rows = results.map((r) => {
   return { ...r, budget, status };
 });
 const failed = rows.filter((r) => r.status !== 'ok');
+
+// A raise against the base branch needs a written reason in the PR (8.7).
+if (process.env.SIZE_BASE_BUDGETS && existsSync(process.env.SIZE_BASE_BUDGETS)) {
+  const base = JSON.parse(readFileSync(process.env.SIZE_BASE_BUDGETS, 'utf8'));
+  const reasons = (process.env.PR_BODY ?? '').split(/^##\s*Budget raises\s*$/im)[1] ?? '';
+  const unexplained = Object.keys(budgets).filter(
+    (k) => base[k] !== undefined && budgets[k] > base[k] && !reasons.includes(k),
+  );
+  for (const k of unexplained) {
+    console.error(`✗ ${k}: budget raised ${kb(base[k])} → ${kb(budgets[k])} without a reason under "## Budget raises" in the PR description`);
+  }
+  if (unexplained.length) process.exit(1);
+}
 
 console.table(
   Object.fromEntries(

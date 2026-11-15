@@ -1,10 +1,12 @@
+'use client'; // docs preview: server pages import every example
+
 import { TooltipProvider, Tooltip, Button } from '@nexub/react';
 
 export default function Example() {
   return (
     <TooltipProvider>
       <Tooltip label="This is a tooltip" side="top">
-        <Button variant="outline">Hover me</Button>
+        <Button variant="outlined">Hover me</Button>
       </Tooltip>
     </TooltipProvider>
   );

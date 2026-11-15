@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { type FormErrorMap, useFormErrors, ErrorSummary } from '@nexub/patterns';
 import { Label, Input, FormError, Button } from '@nexub/react';

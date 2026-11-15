@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+    <radialGradient id="sheen" cx=".3" cy=".16" r=".8"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="halo" cx=".5" cy=".52" r=".42"><stop offset="0" stop-color="#8b6cff" stop-opacity="0"/><stop offset="1" stop-color="#8b6cff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="115" fill="url(#tile)"/>
+  <rect width="512" height="512" rx="115" fill="url(#halo)"/>
+  <rect width="512" height="512" rx="115" fill="url(#sheen)"/>
+  <rect x="3" y="3" width="506" height="506" rx="112" fill="none" stroke="#0b0c10" stroke-opacity=".1" stroke-width="6"/>
+  <svg x="106" y="106" width="300" height="300" viewBox="0 0 24 24" fill="none" stroke="#6d4ae8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5c4.4 0 8 3 8 7s-3.6 7-8 7c-1 0-2-.2-2.9-.5L5 19.5l1.2-3.4C5 14.8 4 13.2 4 11.5c0-4 3.6-7 8-7z"/></svg>
+</svg>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { Button } from './Button.js';
@@ -77,7 +77,8 @@ describe('Button', () => {
 
     it('keeps the label in flow under the spinner (no layout shift)', () => {
       render(<Button status="loading" leadingIcon={<svg data-testid="lead" />}>Save</Button>);
-      const label = screen.getByText('Save');
+      // The text sits in its own shrinkable span (9.3); the flow wrapper is its parent.
+      const label = screen.getByText('Save').parentElement!;
       expect(label).toHaveClass('contents', 'text-transparent');
       expect(screen.getByRole('button').querySelector('.animate-spin')).not.toBeNull();
     });
@@ -114,9 +115,71 @@ describe('Button', () => {
       expect(screen.queryByRole('status')).toBeNull();
     });
 
+    it('delays the spinner 150ms, then keeps it at least 400ms', () => {
+      vi.useFakeTimers();
+      try {
+        const { rerender } = render(<Button loading={false}>Save</Button>);
+        const spin = () => screen.getByRole('button').querySelector('.animate-spin');
+        rerender(<Button loading>Save</Button>);
+        expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true');
+        expect(spin()).toBeNull();
+        act(() => vi.advanceTimersByTime(150));
+        expect(spin()).not.toBeNull();
+        rerender(<Button loading={false}>Save</Button>);
+        act(() => vi.advanceTimersByTime(300));
+        expect(spin()).not.toBeNull();
+        act(() => vi.advanceTimersByTime(100));
+        expect(spin()).toBeNull();
+        // A fast load never shows it.
+        rerender(<Button loading>Save</Button>);
+        act(() => vi.advanceTimersByTime(100));
+        rerender(<Button loading={false}>Save</Button>);
+        act(() => vi.advanceTimersByTime(500));
+        expect(spin()).toBeNull();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('keeps both labels in one grid cell when successLabel is set (stable width)', () => {
+      const { rerender } = render(<Button status="idle" successLabel="Saved">Save</Button>);
+      expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+      expect(screen.getByText('Saved')).toHaveClass('invisible');
+      rerender(<Button status="success" successLabel="Saved">Save</Button>);
+      expect(screen.getByText('Save')).toHaveClass('invisible');
+      expect(screen.getByRole('button').querySelector('.nx-check-draw')?.closest('span')).not.toHaveClass('invisible');
+    });
+
+    it('a submit button shows loading while its form action is pending', async () => {
+      let resolve!: () => void;
+      const action = () => new Promise<void>((r) => (resolve = r));
+      render(
+        <form action={action}>
+          <Button type="submit">Send</Button>
+          <Button type="button">Other</Button>
+        </form>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+      expect(await screen.findByRole('button', { name: 'Send' })).toHaveAttribute('aria-busy', 'true');
+      expect(screen.getByRole('button', { name: 'Other' })).not.toHaveAttribute('aria-busy');
+      await act(async () => resolve());
+      expect(screen.getByRole('button', { name: 'Send' })).not.toHaveAttribute('aria-busy');
+    });
+
     it('renders no inline style (strict CSP)', () => {
       const html = renderToString(<Button status="success">Save</Button>);
       expect(html).not.toContain('style="');
     });
+  });
+
+  it('defaults to filled', () => {
+    render(<Button>Go</Button>);
+    expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
+  });
+
+  it('a text label can shrink and end in an ellipsis; the button is capped at its container (9.3)', () => {
+    render(<Button>{'A very long label '.repeat(12)}</Button>);
+    expect(screen.getByRole('button')).toHaveClass('max-w-full');
+    expect(screen.getByRole('button').querySelector('span.truncate')).toHaveClass('min-w-0');
   });
 });

@@ -40,6 +40,7 @@ import {
   Chip,
   Coachmark,
   ContextMenu,
+  DataList,
   DateTimeField,
   Dialog,
   Divider,
@@ -47,7 +48,15 @@ import {
   ErrorState,
   ExpressiveMoneyInput,
   FAB,
+  FileList,
+  InlineEdit,
+  SortableList,
+  StepProgress,
+  TreeList,
   FilterChip,
+  FilterSheet,
+  countFilters,
+  type FilterGroup,
   Heading,
   Icon,
   IconButton,
@@ -57,6 +66,7 @@ import {
   ListSection,
   LoadingIndicator,
   MoneyInput,
+  MultiSelect,
   NumericKeypad,
   OTPInput,
   OfflineBanner,
@@ -227,7 +237,7 @@ export const EXAMPLES: Examples = {
   ],
   'button-group': [
     () => (
-      <ButtonGroup direction="stack">
+      <ButtonGroup orientation="vertical">
         <Button size="lg">Confirm transfer</Button>
         <Button size="lg" variant="text">
           Cancel
@@ -371,10 +381,68 @@ export const EXAMPLES: Examples = {
       />
     ),
   ],
+  'multi-select': [
+    function LabelsExample() {
+      const [labels, setLabels] = useState(['bug', 'a11y']);
+      return (
+        <MultiSelect
+          label="Labels"
+          placeholder="Add labels"
+          options={[
+            { value: 'bug', label: 'Bug' },
+            { value: 'design', label: 'Design' },
+            { value: 'docs', label: 'Docs' },
+            { value: 'perf', label: 'Performance' },
+            { value: 'a11y', label: 'Accessibility' },
+          ]}
+          value={labels}
+          onValueChange={setLabels}
+        />
+      );
+    },
+  ],
+  'filter-sheet': [
+    function FilterExample() {
+      const [open, setOpen] = useState(false);
+      const [query, setQuery] = useState<FilterGroup>({
+        id: 'root',
+        combinator: 'and',
+        rules: [{ id: 'r1', field: 'stage', operator: 'equals', value: 'proposal' }],
+      });
+      return (
+        <View>
+          <Button variant="outlined" onPress={() => setOpen(true)}>
+            {`Filters (${countFilters(query)})`}
+          </Button>
+          <FilterSheet
+            open={open}
+            onOpenChange={setOpen}
+            title="Filters"
+            value={query}
+            onValueChange={setQuery}
+            fields={[
+              { id: 'name', label: 'Deal name', type: 'text' },
+              { id: 'amount', label: 'Amount', type: 'number' },
+              {
+                id: 'stage',
+                label: 'Stage',
+                type: 'select',
+                options: [
+                  { value: 'lead', label: 'Lead' },
+                  { value: 'proposal', label: 'Proposal' },
+                  { value: 'won', label: 'Won' },
+                ],
+              },
+            ]}
+          />
+        </View>
+      );
+    },
+  ],
   'date-time-field': [
     function DateExample() {
       const [date, setDate] = useState<Date | null>(null);
-      return <DateTimeField label="Transfer date" value={date} onValueChange={setDate} minimumDate={new Date()} />;
+      return <DateTimeField label="Transfer date" value={date} onValueChange={setDate} minDate={new Date()} />;
     },
   ],
 
@@ -417,6 +485,96 @@ export const EXAMPLES: Examples = {
           <ListItem variant="radio" title="Instant" subtitle="Seconds · $1.50" checked={speed === 'instant'} onCheckedChange={() => setSpeed('instant')} />
         </ListSection>
       );
+    },
+  ],
+  'data-list': [
+    function DataListExample() {
+      const [selected, setSelected] = useState<string[]>([]);
+      return (
+        <View style={{ height: 320 }}>
+          <DataList
+            data={[
+              { id: '2041', customer: 'Acme', status: 'Overdue', amount: 1200 },
+              { id: '2042', customer: 'Globex', status: 'Paid', amount: 860 },
+              { id: '2043', customer: 'Initech', status: 'Draft', amount: 430 },
+              { id: '2044', customer: 'Umbrella', status: 'Overdue', amount: 2150 },
+            ]}
+            keyExtractor={(i) => i.id}
+            title={(i) => i.customer}
+            subtitle={(i) => `INV-${i.id} · ${i.status}`}
+            value={(i) => `${i.amount.toLocaleString('en-US')} USD`}
+            sorts={[
+              { id: 'amount', label: 'Amount', compare: (a, b) => a.amount - b.amount },
+              { id: 'customer', label: 'Customer', compare: (a, b) => a.customer.localeCompare(b.customer) },
+            ]}
+            defaultSort={{ id: 'amount', desc: true }}
+            selectable
+            selected={selected}
+            onSelectedChange={setSelected}
+            bulkActions={(_, clear) => (
+              <Button size="sm" variant="tonal" onPress={clear}>
+                Remind
+              </Button>
+            )}
+          />
+        </View>
+      );
+    },
+  ],
+  'file-list': [
+    () => (
+      <FileList
+        files={[
+          { id: '1', name: 'passport.pdf', size: 482_000, progress: 100 },
+          { id: '2', name: 'payslip-october.pdf', size: 1_240_000, progress: 45 },
+          { id: '3', name: 'photo.heic', size: 3_100_000, error: 'Use PDF, PNG or JPG.' },
+        ]}
+        onAdd={() => {}}
+        onRemove={() => {}}
+        onCancel={() => {}}
+      />
+    ),
+  ],
+  'tree-list': [
+    function TeamsExample() {
+      const [picked, setPicked] = useState<string | null>('ada');
+      return (
+        <TreeList
+          rootTitle="Teams"
+          selected={picked}
+          onSelect={setPicked}
+          nodes={[
+            { id: 'eng', title: 'Engineering', children: [{ id: 'ada', title: 'Ada Lovelace' }, { id: 'alan', title: 'Alan Turing' }] },
+            { id: 'design', title: 'Design', children: [{ id: 'grace', title: 'Grace Hopper' }] },
+            { id: 'ops', title: 'Operations' },
+          ]}
+        />
+      );
+    },
+  ],
+  'sortable-list': [
+    function WidgetsExample() {
+      const [items, setItems] = useState(['Revenue', 'Active users', 'Churn']);
+      return <SortableList items={items} keyExtractor={(i) => i} title={(i) => i} onReorder={setItems} />;
+    },
+  ],
+  'step-progress': [
+    () => (
+      <StepProgress
+        current={1}
+        steps={[
+          { id: 'account', label: 'Account' },
+          { id: 'billing', label: 'Billing' },
+          { id: 'team', label: 'Team' },
+          { id: 'review', label: 'Review' },
+        ]}
+      />
+    ),
+  ],
+  'inline-edit': [
+    function RenameExample() {
+      const [name, setName] = useState('Q4 launch plan');
+      return <InlineEdit label="Project name" value={name} onSave={setName} />;
     },
   ],
   'list-section': [

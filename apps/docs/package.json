@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/copy-ai-md.mjs && next dev --turbopack",
-    "build": "pnpm run build:mobile-web && node scripts/copy-device-shots.mjs && node scripts/copy-ai-md.mjs && next build",
+    "build": "pnpm run build:mobile-web && node scripts/copy-device-shots.mjs && node scripts/copy-ai-md.mjs && next build && node scripts/preload-fonts.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -36,6 +36,7 @@
     "eslint-config-next": "^15.5.28",
     "postcss": "^8.5.31",
     "tailwindcss": "^4.3.3",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "wrangler": "4.158.0"
   }
 }

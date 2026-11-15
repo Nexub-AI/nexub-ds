@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { MessageBubble, Avatar, MessageActions, toast } from '@nexub/react';
 import { Sparkles } from '@nexub/icons';
 

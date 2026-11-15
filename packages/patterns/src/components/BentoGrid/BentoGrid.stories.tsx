@@ -50,17 +50,17 @@ function Dashboard() {
 }
 
 export const Wide = () => (
-  <div className="w-[960px]">
+  <div className="w-[960px] max-w-full">
     <Dashboard />
   </div>
 );
 export const Medium = () => (
-  <div className="w-[600px]">
+  <div className="w-[600px] max-w-full">
     <Dashboard />
   </div>
 );
 export const Narrow = () => (
-  <div className="w-[360px]">
+  <div className="w-[360px] max-w-full">
     <Dashboard />
   </div>
 );

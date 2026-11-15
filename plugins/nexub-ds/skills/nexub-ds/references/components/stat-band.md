@@ -10,12 +10,12 @@ A band of headline numbers that count up as they scroll into view. StatBandItem 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` | `React.ReactNode` |  | StatBand: a heading above the stats. |
-| `value` (required) | `number \| string` |  | StatBandItem: a number counts up from zeros when it scrolls into view; the server HTML keeps the real value. |
-| `label` (required) | `React.ReactNode` |  | StatBandItem: what the number counts. |
-| `prefix / suffix` | `string` |  | StatBandItem: e.g. "$" or "+". |
-| `tone` | `ToneValue` | `'info'` | StatBandItem: the number's colour (accent roles, AA as large text). |
-| `format` | `Intl.NumberFormatOptions` |  | StatBandItem: number formatting. |
+| `title` | `React.ReactNode` |  | A heading above the stats. |
+| `StatBandItem value` (required) | `number \| string` |  | A number counts up from zeros when it scrolls into view; the server HTML keeps the real value. |
+| `StatBandItem label` (required) | `React.ReactNode` |  | What the number counts. |
+| `StatBandItem prefix / suffix` | `string` |  | E.g. "$" or "+". |
+| `StatBandItem tone` | `ToneValue` | `'info'` | The number's colour (accent roles, AA as large text). |
+| `StatBandItem format` | `Intl.NumberFormatOptions` |  | Number formatting. |
 
 ## Example: Default
 

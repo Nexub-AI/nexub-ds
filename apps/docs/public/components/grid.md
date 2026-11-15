@@ -12,7 +12,6 @@ CSS Grid layout primitive.
 | --- | --- | --- | --- |
 | `cols` | `number \| string` |  | Number of columns or a custom grid-template-columns value. |
 | `gap` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` |  | Gap between grid cells using design tokens. |
-| `align` | `'start' \| 'center' \| 'end' \| 'stretch'` |  | Sets the align-items CSS property for all grid cells. |
 
 ## Example: 2-column
 

@@ -29,7 +29,7 @@ export const Cards = () => (
 export const Floating = () => (
   <TooltipProvider>
     <Toast.Provider>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 180px)', gap: 24, height: 340, alignItems: 'start', justifyItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, 180px)', gap: 24, height: 340, alignItems: 'start', justifyItems: 'start' }}>
         <DropdownMenu.Root open modal={false}>
           <DropdownMenu.Trigger asChild>
             <Button variant="outlined">Menu</Button>

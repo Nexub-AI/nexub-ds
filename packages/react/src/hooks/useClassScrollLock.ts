@@ -22,3 +22,23 @@ export function useClassScrollLock() {
     };
   }, []);
 }
+
+export type ScrollLock = 'style' | 'class';
+
+/**
+ * Which scroll lock a modal Root asked for. `'style'` (7.x default) is Radix's
+ * react-remove-scroll, which injects a <style> (needs a CSP nonce, see
+ * NexubProvider `nonce`); `'class'` is the class lock above, no <style> at all.
+ */
+export const ScrollLockContext = React.createContext<{ scrollLock: ScrollLock; modal: boolean }>({
+  scrollLock: 'style',
+  modal: true,
+});
+
+/** Plain overlay for scrollLock="class": Radix's RemoveScroll lives in its Overlay. */
+export const ClassLockOverlay = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  function ClassLockOverlay(props, ref) {
+    useClassScrollLock();
+    return React.createElement('div', { ref, 'data-state': 'open', ...props });
+  },
+);

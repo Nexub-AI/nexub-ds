@@ -8,7 +8,7 @@ export function InlineCode({ text }: { text: string }) {
     <>
       {text.split(/(`[^`]+`)/g).map((part, i) =>
         part.startsWith('`') && part.endsWith('`') ? (
-          <code key={i} className="rounded-shape-tooltip bg-[var(--color-surface-container)] px-1 py-px font-mono text-[0.85em]">
+          <code key={i} className="docs-code-inline">
             {part.slice(1, -1)}
           </code>
         ) : (

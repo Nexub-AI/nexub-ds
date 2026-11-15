@@ -18,3 +18,11 @@ export const Default: Story = {
     </Provider>
   ),
 };
+
+export const Rich: Story = {
+  render: () => (
+    <Tooltip label="Save" description="Writes the draft to your workspace." shortcut="⌘S" arrow>
+      <button>Save</button>
+    </Tooltip>
+  ),
+};

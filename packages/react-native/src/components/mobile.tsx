@@ -64,11 +64,14 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
   const sign = dir === 'rtl' ? 1 : -1; // open = content moves toward the start edge
   const x = useSharedValue(0);
   const open = React.useRef(false);
-  const settle = (to: boolean) => {
-    if (to !== open.current) play('snap');
-    open.current = to;
-    x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
-  };
+  const settle = React.useCallback(
+    (to: boolean) => {
+      if (to !== open.current) play('snap');
+      open.current = to;
+      x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
+    },
+    [play, sign, width, x],
+  );
   const responder = React.useMemo(
     () =>
       PanResponder.create({
@@ -86,8 +89,7 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
           settle(Math.abs((open.current ? sign * width : 0) + g.dx) > width / 2),
         onPanResponderTerminate: () => settle(open.current),
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [width, sign],
+    [width, sign, x, settle],
   );
   const slide = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));
   const bg: Record<NonNullable<SwipeAction['tone']>, [RoleName, RoleName]> = {
@@ -679,7 +681,7 @@ export function Coachmark({
       style={{
         width: 14,
         height: 14,
-        marginStart: 24,
+        marginStart: tokens.spacing[6],
         transform: [{ rotate: '45deg' }],
         backgroundColor: roles['inverse-surface'],
         marginVertical: -7,
@@ -756,7 +758,7 @@ export function FAB({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 12,
+        gap: tokens.spacing[3],
         backgroundColor: roles['primary-container'],
         boxShadow: tokens.elevation[3].light,
       }}
@@ -787,8 +789,10 @@ export interface DateTimeFieldProps {
   onValueChange: (value: Date) => void;
   /** @default 'date' */
   mode?: 'date' | 'time';
-  minimumDate?: Date;
-  maximumDate?: Date;
+  /** Earliest date the picker allows. */
+  minDate?: Date;
+  /** Latest date the picker allows. */
+  maxDate?: Date;
   placeholder?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -802,8 +806,8 @@ export function DateTimeField({
   value,
   onValueChange,
   mode = 'date',
-  minimumDate,
-  maximumDate,
+  minDate,
+  maxDate,
   placeholder,
   style,
 }: DateTimeFieldProps) {
@@ -826,14 +830,14 @@ export function DateTimeField({
       DateTimePickerAndroid.open({
         value: value ?? new Date(),
         mode,
-        minimumDate,
-        maximumDate,
+        minimumDate: minDate,
+        maximumDate: maxDate,
         onChange: (e, d) => e.type === 'set' && d && onValueChange(d),
       });
     } else setOpen(true);
   };
   return (
-    <View style={[{ gap: 6 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
       <Text variant="label-lg" color="on-surface-variant" importantForAccessibility="no">
         {label}
       </Text>
@@ -843,10 +847,10 @@ export function DateTimeField({
         pressScale={false}
         style={{
           minHeight: tokens.size.control.lg,
-          paddingHorizontal: 14,
+          paddingHorizontal: tokens.spacing['3-5'],
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
+          gap: tokens.spacing[2],
           borderRadius: tokens.shape.field,
           borderWidth: 1,
           borderColor: roles.outline,
@@ -865,8 +869,8 @@ export function DateTimeField({
               value={value ?? new Date()}
               mode={mode}
               display={mode === 'date' ? 'inline' : 'spinner'}
-              minimumDate={minimumDate}
-              maximumDate={maximumDate}
+              minimumDate={minDate}
+              maximumDate={maxDate}
               accentColor={roles.primary}
               themeVariant={theme.scheme}
               locale={locale}

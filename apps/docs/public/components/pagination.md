@@ -15,7 +15,6 @@ Page navigation control with prev/next and page number buttons.
 | `pageSize` | `number` | `10` | Number of items per page. Used to calculate total page count. |
 | `siblingCount` | `number` | `1` | Number of page buttons to show on each side of the current page. |
 | `onPageChange` (required) | `(page: number) => void` |  | Callback invoked with the new page number when the user navigates. |
-| `showFirstLast` | `boolean` | `true` | Whether to show First and Last page navigation buttons. |
 | `disabled` | `boolean` | `false` | Disables all pagination controls. |
 
 ## Example: Default

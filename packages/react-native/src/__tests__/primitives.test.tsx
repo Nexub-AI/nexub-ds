@@ -39,16 +39,31 @@ describe('NexubNativeProvider', () => {
   it('resolves roles for scheme and contrast from @nexub/tokens/native', async () => {
     let theme!: ReturnType<typeof useTheme>;
     await wrap(<Roles onTheme={(t) => (theme = t)} />, { scheme: 'dark', contrast: 'high' });
-    expect(theme.roles.primary).toBe(native.color.roles.high.dark.primary);
+    expect(theme.roles.primary).toBe(native.signature.roles.high.dark.primary);
     expect(theme.elevation(0)).toBeUndefined();
-    expect(theme.elevation(2)).toBe(native.elevation[2].dark);
+    expect(theme.elevation(2)).toBe(native.signature.elevation[2].dark);
   });
 
   it('a product remaps tertiary; a seed regenerates primary', async () => {
     let theme!: ReturnType<typeof useTheme>;
     await wrap(<Roles onTheme={(t) => (theme = t)} />, { product: 'payub', seed: '#ff0000' });
     expect(theme.roles.tertiary).toBe(native.color.products.payub.standard.light.tertiary);
-    expect(theme.roles.primary).not.toBe(native.color.roles.standard.light.primary);
+    expect(theme.roles.primary).not.toBe(native.signature.roles.standard.light.primary);
+  });
+
+  it('Signature (the only style) sets roles, shape, display tracking and elevation; a product still wins', async () => {
+    let theme!: ReturnType<typeof useTheme>;
+    await wrap(<Roles onTheme={(t) => (theme = t)} />, { scheme: 'dark', product: 'leap' });
+    const sig = native.signature;
+    expect(theme.roles.surface).toBe(sig.roles.standard.dark.surface);
+    expect(theme.roles.primary).toBe(sig.roles.standard.dark.primary);
+    expect(theme.roles.error).toBe(native.color.roles.standard.dark.error);
+    expect(theme.roles.tertiary).toBe(native.color.products.leap.standard.dark.tertiary);
+    expect(theme.tokens.shape.control).toBe(10);
+    expect(theme.tokens.shape.overlay).toBe(native.shape.overlay);
+    expect(theme.tokens.type['display-lg'].letterSpacing).toBe(sig.type['display-lg'].letterSpacing);
+    expect(theme.tokens.type['body-md']).toEqual(native.type['body-md']);
+    expect(theme.elevation(2)).toBe(sig.elevation[2].dark);
   });
 
   it('derives RTL from the locale and merges message overrides', async () => {
@@ -75,7 +90,7 @@ describe('Text', () => {
       fontFamily: 'Inter_600SemiBold',
       fontSize: native.type['title-md'].size,
       lineHeight: native.type['title-md'].lineHeight,
-      color: native.color.roles.standard.light.primary,
+      color: native.signature.roles.standard.light.primary,
       fontVariant: ['tabular-nums'],
     });
   });
@@ -133,9 +148,9 @@ describe('Surface', () => {
     await wrap(<Surface testID="s" material="glass" radius="container" />, { glass: 'off' });
     const style = StyleSheet.flatten(screen.getByTestId('s').props.style);
     expect(style).toMatchObject({
-      backgroundColor: native.color.roles.standard.light['surface-elevated'],
+      backgroundColor: { ...native.color.roles.standard.light, ...native.signature.roles.standard.light }['surface-elevated'],
       borderRadius: native.shape.container,
-      borderColor: native.color.roles.standard.light['outline-variant'],
+      borderColor: native.signature.roles.standard.light['outline-variant'],
     });
   });
 });

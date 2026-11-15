@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '5.6.0',
   },
   props: [
     { name: 'AlertDialog.Root', type: 'compound', required: false, description: 'Root provider component that manages open state.' },
@@ -20,10 +21,15 @@ const entry: ComponentEntry = {
     { name: 'AlertDialog.Description', type: 'compound', required: false, description: 'Supporting description text for the dialog.' },
     { name: 'AlertDialog.Action', type: 'compound', required: false, description: 'Confirms the destructive or affirmative action and closes the dialog.' },
     { name: 'AlertDialog.Cancel', type: 'compound', required: false, description: 'Cancels the action and closes the dialog.' },
+    { name: 'AlertDialog.Confirm text', type: 'string', required: false, description: 'Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources.' },
   ],
   examples: [
     {
       title: 'Default',
+    },
+    {
+      title: 'Type to confirm',
+      description: 'Deleting a workspace asks for its name first.',
     },
   ],
 };

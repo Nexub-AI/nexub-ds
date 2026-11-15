@@ -54,7 +54,7 @@ export default function RootLayout() {
 |---|---|---|
 | `scheme` | `'system'` | `'light'`, `'dark'` or follow the OS |
 | `contrast` | `'system'` | follows iOS Increase Contrast / Android high-contrast text (re-read on foreground) |
-| `product` | none | `'leap' \| 'bookub' \| 'payub' \| 'founderub'`: remaps the tertiary family |
+| `product` | none | `'leap' \| 'bookub' \| 'payub' \| 'founderub' \| 'matchub'`: remaps the tertiary family |
 | `seed`, `seedTarget` | none | white-label colour: regenerates the primary (or tertiary) family with contrast-safe tones |
 | `glass` | `'balanced'` | the user's glass dial; forced `'off'` under Reduce Transparency |
 | `haptics` | `true` | the user's haptics setting |

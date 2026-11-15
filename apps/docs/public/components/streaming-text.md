@@ -46,7 +46,7 @@ export default function Example() {
   return (
     <div className="flex flex-col gap-3 items-start max-w-[480px]">
       <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
-      <Button variant="outline" size="sm" onClick={() => setLength(0)}>Restart</Button>
+      <Button variant="outlined" size="sm" onClick={() => setLength(0)}>Restart</Button>
     </div>
   );
 }

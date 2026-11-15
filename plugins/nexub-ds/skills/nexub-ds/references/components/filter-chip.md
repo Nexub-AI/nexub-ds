@@ -11,9 +11,7 @@ Interactive chip for filtering, supports selected/unselected state.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `selected` | `boolean` |  | Controlled selected state of the chip. |
-| `onSelectedChange` | `(selected: boolean) => void` |  | Called when the selected state changes. |
 | `disabled` | `boolean` |  | Disables the chip. |
-| `size` | `'sm' \| 'md'` |  | Controls chip size. |
 
 ## Example: Default
 

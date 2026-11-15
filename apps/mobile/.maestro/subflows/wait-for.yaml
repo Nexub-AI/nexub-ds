@@ -1,11 +1,24 @@
-# Wait for ${TEXT} after opening a screen, and wait once more if it times out.
-# On iOS a hierarchy query right after a back swipe can stall past the timeout
-# while the screen is already right: CI 2026-11-04 failed "You send" is visible
-# with "You send" on screen in the failure screenshot and hierarchy. A fresh
-# wait gets a fresh query. No re-tap: the screen did open, and a tap at the old
-# row's position would land on a control of the new screen.
+# Wait for ${TEXT} after tapping ${ROW} to open a screen.
+# Two iOS failure modes, both seen in CI:
+# - The screen opened but a hierarchy query stalled past the timeout
+#   (2026-11-04: "You send" was on screen in the failure screenshot). A fresh
+#   wait gets a fresh query.
+# - The tap was swallowed while a back swipe or scroll was still settling, so
+#   the screen never opened (2026-11-07: still on the home list 10 s later,
+#   twice in a row). Re-tap ${ROW} only while it is still on screen: then we
+#   never left, and the tap can't land on a control of the new screen.
 appId: ai.nexub.mobile
 ---
+- extendedWaitUntil:
+    visible: ${TEXT}
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      notVisible: ${TEXT}
+      visible: ${ROW}
+    commands:
+      - tapOn: ${ROW}
 - retry:
     maxRetries: 1
     commands:

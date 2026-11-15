@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v4.5.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -9,14 +9,19 @@ Never use a component marked deprecated.
 - [Button Group](components/button-group.md) `@nexub/react`: Groups related buttons together with optional attachment and orientation.
 - [Icon Button](components/icon-button.md) `@nexub/react`: A square button designed to hold a single icon, with an accessible label.
 - [Split Button](components/split-button.md) `@nexub/react`: A primary action with related secondary actions behind a chevron, as one connected control.
+- [Toolbar](components/toolbar.md) `@nexub/react`: A row of buttons and toggles with one tab stop and arrow-key movement, built on Radix.
 
 ## Components — AI
 
+- [Approval Card](components/approval-card.md) `@nexub/react`: The agent asks before it acts: what will happen, then Approve or Deny.
 - [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
+- [Diff View](components/diff-view.md) `@nexub/react`: A unified diff with added and removed lines, for agent changes.
 - [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Plan Tracker](components/plan-tracker.md) `@nexub/react`: An agent plan: ordered steps with done, active, pending or failed status.
 - [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 - [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
 - [Thinking Indicator](components/thinking-indicator.md) `@nexub/react`: Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
+- [Tool Call](components/tool-call.md) `@nexub/react`: One tool call: its name and status, expandable to input and output.
 
 ## Components — Avatar
 
@@ -28,16 +33,21 @@ Never use a component marked deprecated.
 - [Amount](components/amount.md) `@nexub/react`: Honest money: Intl formatting, tabular numerals, the currency’s minor unit and a true minus sign.
 - [Bar Chart](components/bar-chart.md) `@nexub/react`: Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 - [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
+- [Chart Zoom](components/chart-zoom.md) `@nexub/react`: Zoom any chart to part of its range with a two-thumb slider.
+- [Check List](components/check-list.md) `@nexub/react`: A list with a success tick before each item, for features, plan inclusions and requirements met.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
+- [Event Calendar](components/event-calendar.md) `@nexub/react`: A month or week grid of events. Display only: your app owns the events and what a click does.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
 
@@ -61,10 +71,16 @@ Never use a component marked deprecated.
 
 ## Components — Form & Input
 
+- [Action Bar](components/action-bar.md) `@nexub/react`: Save and cancel that stay in view at the bottom of a long form.
 - [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
+- [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
+- [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
+- [Form](components/form.md) `@nexub/react`: Validates on submit with the browser’s own checks plus yours, shows each message on its FormField and focuses the first invalid field.
+- [Form Error](components/form-error.md) `@nexub/react`: An error message with an alert icon, announced when it appears.
 - [Form Field](components/form-field.md) `@nexub/react`: Wraps Label, Input, HelperText and FormError into a single accessible group.
 - [Helper Text](components/helper-text.md) `@nexub/react`: Small supporting text placed beneath a form field to provide hints or validation feedback.
+- [Inline Edit](components/inline-edit.md) `@nexub/react`: Text that becomes an input on click, for renaming things in place.
 - [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
@@ -72,6 +88,7 @@ Never use a component marked deprecated.
 - [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
 - [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
 - [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
+- [Time Picker](components/time-picker.md) `@nexub/react`: A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 
 ## Components — Form Controls
 
@@ -79,6 +96,10 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [File Upload](components/file-upload.md) `@nexub/react`: A drop zone and file list: pick, drop or paste files, with type, size and count checks and per-file progress.
+- [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
+- [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
+- [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
@@ -93,8 +114,11 @@ Never use a component marked deprecated.
 - [Aurora](components/aurora.md) `@nexub/react`: A decorative background of slow-drifting colour fields from the accent roles. Subtle by default, richer under data-expression="vivid".
 - [Code](components/code-inline.md) `@nexub/react`: Inline code span for technical terms and short code snippets.
 - [Kbd](components/kbd.md) `@nexub/react`: Keyboard key display — renders a styled <kbd> element.
+- [Keyboard Shortcut](components/keyboard-shortcut.md) `@nexub/react`: A key combination as `Kbd` keys joined by plus signs, read as one label.
 - [Link](components/link.md) `@nexub/react`: Styled anchor link with variant and external support.
+- [Logo](components/logo.md) `@nexub/react`: The Nexub mark and wordmark, with an optional product name.
 - [Text Gradient](components/text-gradient.md) `@nexub/react`: Renders text with a brand gradient fill.
+- [Visually Hidden](components/visually-hidden.md) `@nexub/react`: Content for screen readers only: hidden on screen but still read out (Radix).
 
 ## Components — Interactive
 
@@ -108,16 +132,24 @@ Never use a component marked deprecated.
 
 - [Badge](components/badge.md) `@nexub/react`: Small status indicator or label. Communicates state, category, or count.
 - [Chip](components/chip.md) `@nexub/react`: Compact label chip, optionally dismissible.
+- [Country Badge](components/country-badge.md) `@nexub/react`: A pill with a country flag and its name or code.
 - [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
 - [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
+- [Flag](components/flag.md) `@nexub/react`: A country flag from its ISO code, drawn with the system emoji font.
 
 ## Components — Layout
 
+- [App Shell](components/app-shell.md) `@nexub/react`: Full-height application frame: a header row over a body with a sidebar slot and a scrolling main region.
+- [Aspect Ratio](components/aspect-ratio.md) `@nexub/react`: Keeps its content at a fixed width-to-height ratio, for images, video and embeds.
 - [Box](components/box.md) `@nexub/react`: Generic container primitive with style token props.
 - [Card](components/card.md) `@nexub/react`: Surface container for grouping related content. Supports flat, surface, and interactive variants.
+- [Container](components/container.md) `@nexub/react`: Centres content at a maximum width with responsive side padding.
 - [Flex](components/flex.md) `@nexub/react`: Flexbox layout primitive.
 - [Grid](components/grid.md) `@nexub/react`: CSS Grid layout primitive.
 - [Media Card](components/media-card.md) `@nexub/react`: An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
+- [Page Header](components/page-header.md) `@nexub/react`: The top of a page: title, description, breadcrumb and actions.
+- [Resizable Panels](components/resizable-panels.md) `@nexub/react`: Panels with draggable separators, for list–detail and editor layouts.
+- [Section](components/section.md) `@nexub/react`: A full-width page band with vertical padding and a background tone; put a `Container` inside.
 - [Stack](components/stack.md) `@nexub/react`: Vertical stack layout with configurable gap.
 
 ## Components — Loading States
@@ -140,15 +172,25 @@ Never use a component marked deprecated.
 ## Components — Navigation
 
 - [Breadcrumb](components/breadcrumb.md) `@nexub/react`: Hierarchical navigation trail showing page location.
+- [Command Palette](components/command-palette.md) `@nexub/react`: A searchable command menu in a modal dialog (cmdk), with nested pages, recents and an optional Cmd+K shortcut.
+- [Menubar](components/menubar.md) `@nexub/react`: A horizontal bar of menus, like a desktop app’s File / Edit / View, built on Radix.
+- [Navigation Menu](components/navigation-menu.md) `@nexub/react`: Site navigation links with flyout panels, built on Radix.
 - [Navigation Rail](components/navigation-rail.md) `@nexub/react`: Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Pagination](components/pagination.md) `@nexub/react`: Page navigation control with prev/next and page number buttons.
+- [Saved Views](components/saved-views.md) `@nexub/react`: A menu to switch, save, update and delete saved filter views. Your app stores them.
+- [Sidebar](components/sidebar.md) `@nexub/react`: Vertical app navigation: a header, grouped items with icons, and a pinned footer. Collapses to icons.
+- [Stepper](components/stepper.md) `@nexub/react`: Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Tabs](components/tabs.md) `@nexub/react`: Layered content panels switched by tab triggers. Built on Radix UI Tabs.
+- [Top Nav](components/top-nav.md) `@nexub/react`: A sticky app header: logo, main navigation links and trailing actions.
+- [Tree View](components/tree-view.md) `@nexub/react`: A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
 ## Components — Overlays
 
 - [Alert Dialog](components/alert-dialog.md) `@nexub/react`: Confirmation dialog that requires an explicit user action before proceeding.
+- [Context Menu](components/context-menu.md) `@nexub/react`: A menu that opens at the pointer on right-click (or long-press), built on Radix.
 - [Dialog](components/dialog.md) `@nexub/react`: Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
 - [Drawer](components/drawer.md) `@nexub/react`: Slide-in panel from any edge of the screen.
+- [Dropdown Menu](components/dropdown-menu.md) `@nexub/react`: A menu of actions opened from a button, built on Radix.
 - [Hover Card](components/hover-card.md) `@nexub/react`: Rich tooltip card revealed on hover.
 - [Popover](components/popover.md) `@nexub/react`: Floating content panel anchored to a trigger element.
 - [Sheet](components/sheet.md) `@nexub/react`: Alias for Drawer — slide-in sheet panel.
@@ -192,6 +234,7 @@ Never use a component marked deprecated.
 
 ## Patterns — Feedback
 
+- [NotificationCenter](components/notification-center.md) `@nexub/patterns`: A bell with an unread count that opens the notification list.
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
 
 ## Patterns — Forms
@@ -208,10 +251,6 @@ Never use a component marked deprecated.
 
 - [PlanCard](components/plan-card.md) `@nexub/patterns`: Pricing plan card with feature checklist, badge, and CTA button.
 
-## Patterns — Navigation
-
-- [StepIndicator](components/step-indicator.md) `@nexub/patterns`: Visual progress indicator for multi-step flows like onboarding or checkout.
-
 ## Patterns — People
 
 - [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.
@@ -220,5 +259,5 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AppShell, AspectRatio, Chart, CheckList, Code, CommandPalette, Container, ContextMenu, CountryBadge, DropdownMenu, FileUpload, Flag, FormError, KeyboardShortcut, Logo, Menubar, Motion, NavigationMenu, NexubProvider, PageHeader, Section, Sidebar, ThemeProvider, Toolbar, TopNav, VisuallyHidden
+- `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Motion, NexubProvider, OTPInput, ThemeProvider
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage

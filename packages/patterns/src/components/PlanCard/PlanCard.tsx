@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn, Badge, Button } from '@nexub/react';
+import { cn, Badge, Button, safeHref } from '@nexub/react';
 import { Check } from '@nexub/icons';
 
 export interface PlanCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -77,12 +77,12 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
       </ul>
 
       <Button
-        variant={highlighted ? 'primary' : 'outline'}
+        variant={highlighted ? 'filled' : 'outlined'}
         className="mt-auto w-full"
         onClick={onSelect}
         asChild={Boolean(ctaHref)}
       >
-        {ctaHref ? <a href={ctaHref}>{cta}</a> : cta}
+        {ctaHref ? <a href={safeHref(ctaHref)}>{cta}</a> : cta}
       </Button>
     </div>
   ),

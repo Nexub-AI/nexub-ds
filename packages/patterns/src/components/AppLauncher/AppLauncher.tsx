@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Avatar, IconButton, Popover, cn } from '@nexub/react';
+import { Avatar, IconButton, Popover, cn, safeHref, safeSrc } from '@nexub/react';
 import { Apps } from '@nexub/icons';
 
 export interface AppLauncherApp {
@@ -47,7 +47,7 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
   if (app.icon && !failed) {
     return (
       <img
-        src={app.icon}
+        src={safeSrc(app.icon)}
         alt=""
         width={40}
         height={40}
@@ -133,7 +133,7 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
                     {items.map((app, n) => (
                       <li key={app.id}>
                         <a
-                          href={app.href}
+                          href={safeHref(app.href)}
                           aria-current={app.current ? 'page' : undefined}
                           data-row={firstRow + Math.floor(n / COLUMNS)}
                           data-col={n % COLUMNS}

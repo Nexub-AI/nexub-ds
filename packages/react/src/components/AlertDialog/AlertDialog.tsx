@@ -5,13 +5,40 @@ import * as RadixAlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '../../utils/cn.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { buttonVariants } from '../Button/Button.js';
+import { Input } from '../Input/Input.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { ClassLockOverlay, ScrollLockContext, type ScrollLock } from '../../hooks/useClassScrollLock.js';
 
-const Root = RadixAlertDialog.Root;
+// Type-to-confirm: Confirm registers the text, Action stays disabled until it's typed.
+const ConfirmContext = React.createContext<{
+  required: string | null;
+  setRequired: (t: string | null) => void;
+  typed: string;
+  setTyped: (t: string) => void;
+} | null>(null);
+
+export interface AlertDialogRootProps extends RadixAlertDialog.AlertDialogProps {
+  /** See Dialog.Root `scrollLock`. @default 'class' (since 8.0) */
+  scrollLock?: ScrollLock;
+}
+
+const ALERT_LOCK = { style: { scrollLock: 'style', modal: true }, class: { scrollLock: 'class', modal: true } } as const;
+
+function Root({ scrollLock = 'class', ...props }: AlertDialogRootProps) {
+  return (
+    <ScrollLockContext.Provider value={ALERT_LOCK[scrollLock]}>
+      <RadixAlertDialog.Root {...props} />
+    </ScrollLockContext.Provider>
+  );
+}
 const Trigger = RadixAlertDialog.Trigger;
 const Portal = RadixAlertDialog.Portal;
 
 const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOverlayProps>(
   function AlertDialogOverlay({ className, ...props }, ref) {
+    const { scrollLock } = React.useContext(ScrollLockContext);
+    if (scrollLock === 'class')
+      return <ClassLockOverlay ref={ref} className={cn('fixed inset-0 z-[var(--z-modal)] nx-motion', scrim, className)} />;
     return (
       <RadixAlertDialog.Overlay
         ref={ref}
@@ -28,7 +55,11 @@ Overlay.displayName = 'AlertDialog.Overlay';
 
 const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogContentProps>(
   function AlertDialogContent({ className, children, ...props }, ref) {
+    const [required, setRequired] = React.useState<string | null>(null);
+    const [typed, setTyped] = React.useState('');
+    const confirm = React.useMemo(() => ({ required, setRequired, typed, setTyped }), [required, typed]);
     return (
+      <ConfirmContext.Provider value={confirm}>
       <RadixAlertDialog.Content
         ref={ref}
         className={cn(
@@ -41,6 +72,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogCon
       >
         {children}
       </RadixAlertDialog.Content>
+      </ConfirmContext.Provider>
     );
   },
 );
@@ -92,10 +124,13 @@ const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElem
 Footer.displayName = 'AlertDialog.Footer';
 
 const Action = React.forwardRef<HTMLButtonElement, RadixAlertDialog.AlertDialogActionProps>(
-  function AlertDialogAction({ className, ...props }, ref) {
+  function AlertDialogAction({ className, disabled, ...props }, ref) {
+    const confirm = React.useContext(ConfirmContext);
+    const blocked = !!confirm?.required && confirm.typed.trim() !== confirm.required;
     return (
       <RadixAlertDialog.Action
         ref={ref}
+        disabled={disabled || blocked}
         className={cn(
           // The destructive confirm: same as <Button variant="destructive">.
           buttonVariants({ variant: 'destructive' }),
@@ -124,6 +159,45 @@ const Cancel = React.forwardRef<HTMLButtonElement, RadixAlertDialog.AlertDialogC
 );
 Cancel.displayName = 'AlertDialog.Cancel';
 
+export interface AlertDialogConfirmProps {
+  /** What the user must type, e.g. the resource name. Matching ignores outer spaces. */
+  text: string;
+  /** The label; defaults to "Type ‹text› to confirm". */
+  label?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * For critical, irreversible actions: the Action button stays disabled until
+ * `text` is typed. Place it inside AlertDialog.Content.
+ */
+function Confirm({ text, label, className }: AlertDialogConfirmProps) {
+  const confirm = React.useContext(ConfirmContext);
+  const t = useNexubMessages();
+  const id = React.useId();
+  const setRequired = confirm?.setRequired;
+  React.useEffect(() => {
+    setRequired?.(text);
+    return () => setRequired?.(null);
+  }, [text, setRequired]);
+  return (
+    <div className={cn('flex flex-col gap-2', className)}>
+      <label htmlFor={id} className="text-body-sm text-[var(--color-on-surface)]">
+        {label ?? t.typeToConfirm(text)}
+      </label>
+      <Input
+        id={id}
+        value={confirm?.typed ?? ''}
+        onChange={(e) => confirm?.setTyped(e.target.value)}
+        autoComplete="off"
+        autoCapitalize="off"
+        spellCheck={false}
+      />
+    </div>
+  );
+}
+Confirm.displayName = 'AlertDialog.Confirm';
+
 export const AlertDialog = {
   Root,
   Trigger,
@@ -136,4 +210,5 @@ export const AlertDialog = {
   Footer,
   Action,
   Cancel,
+  Confirm,
 };

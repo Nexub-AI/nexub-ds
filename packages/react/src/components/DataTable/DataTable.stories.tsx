@@ -101,3 +101,146 @@ export const NumericColumns: Story = {
     />
   ),
 };
+
+export const Selection: Story = {
+  render: () => (
+    <DataTable
+      caption="Users"
+      captionHidden
+      columns={columns}
+      data={data}
+      enableRowSelection
+      selectionColumn
+      viewOptions
+      rowSelection={{ 0: true, 2: true }}
+      bulkActions={() => <button type="button">Archive</button>}
+    />
+  ),
+};
+
+export const Compact: Story = {
+  render: () => <DataTable caption="Users" captionHidden columns={columns} data={data} density="compact" />,
+};
+
+export const ResizePinSticky: Story = {
+  render: () => (
+    <DataTable
+      caption="Users"
+      captionHidden
+      columns={columns}
+      data={data}
+      enableColumnResizing
+      enableColumnReordering
+      columnPinning={{ left: ['name'] }}
+      maxHeight={200}
+    />
+  ),
+};
+
+// Cells with actions: the table is one tab stop; Arrow keys move between cells.
+export const Grid: Story = {
+  render: () => (
+    <DataTable
+      grid
+      caption="Users"
+      captionHidden
+      enableSorting
+      enableRowSelection
+      selectionColumn
+      columns={[
+        ...columns,
+        {
+          id: 'actions',
+          header: 'Actions',
+          cell: ({ row }) => (
+            <button type="button" aria-label={`Edit ${row.original.name}`}>
+              Edit
+            </button>
+          ),
+        },
+      ]}
+      data={data}
+    />
+  ),
+};
+
+type OrgRow = { name: string; owner: string; children?: OrgRow[] };
+const orgRows: OrgRow[] = [
+  {
+    name: 'Acme Group',
+    owner: 'Ada',
+    children: [
+      { name: 'Acme EU', owner: 'Grace', children: [{ name: 'Acme Berlin', owner: 'Grace' }] },
+      { name: 'Acme US', owner: 'Alan' },
+    ],
+  },
+  { name: 'Globex', owner: 'Linus' },
+];
+
+export const TreeRows: Story = {
+  render: () => (
+    <DataTable<OrgRow>
+      caption="Accounts"
+      captionHidden
+      columns={[
+        { accessorKey: 'name', header: 'Account' },
+        { accessorKey: 'owner', header: 'Owner' },
+      ]}
+      data={orgRows}
+      getSubRows={(r) => r.children}
+      defaultExpanded={true}
+    />
+  ),
+};
+
+export const Loading: Story = {
+  render: () => <DataTable caption="Users" captionHidden columns={columns} data={[]} loading />,
+};
+
+export const CustomEmpty: Story = {
+  render: () => (
+    <DataTable caption="Users" captionHidden columns={columns} data={[]} emptyState="No users yet. Invite someone to get started." />
+  ),
+};
+
+/** Server-side sort and pages: the server sorts and slices; the table shows the controls. */
+export const ServerSide: Story = {
+  render: function ServerSide() {
+    const all = React.useMemo(
+      () => Array.from({ length: 23 }, (_, i) => ({ ...data[i % data.length]!, id: String(i), name: `User ${i + 1}` })),
+      [],
+    );
+    const [sort, setSort] = React.useState<{ id: string; desc: boolean }[]>([]);
+    const [page, setPage] = React.useState(0);
+    const pageSize = 5;
+    // Stand-in for a fetch: sort and slice as a server would.
+    const rows = React.useMemo(() => {
+      const s = sort[0];
+      const sorted = s
+        ? [...all].sort((a, b) => String(a[s.id as keyof User]).localeCompare(String(b[s.id as keyof User])) * (s.desc ? -1 : 1))
+        : all;
+      return sorted.slice(page * pageSize, (page + 1) * pageSize);
+    }, [all, sort, page]);
+    return (
+      <DataTable
+        caption="Users"
+        captionHidden
+        columns={columns}
+        data={rows}
+        getRowId={(r) => r.id}
+        enableSorting
+        manualSort
+        sort={sort}
+        onSortChange={(s) => {
+          setSort(s);
+          setPage(0);
+        }}
+        manualPagination
+        rowCount={all.length}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={setPage}
+      />
+    );
+  },
+};

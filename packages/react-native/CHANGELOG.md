@@ -1,5 +1,554 @@
 # @nexub/react-native
 
+## 10.0.0
+
+### Patch Changes
+
+- @nexub/tokens@10.0.0
+- @nexub/icons@10.0.0
+- @nexub/core@10.0.0
+
+## 9.9.1
+
+### Patch Changes
+
+- @nexub/tokens@9.9.1
+- @nexub/icons@9.9.1
+- @nexub/core@9.9.1
+
+## 9.9.0
+
+### Patch Changes
+
+- @nexub/tokens@9.9.0
+- @nexub/icons@9.9.0
+- @nexub/core@9.9.0
+
+## 9.8.0
+
+### Patch Changes
+
+- @nexub/tokens@9.8.0
+- @nexub/icons@9.8.0
+- @nexub/core@9.8.0
+
+## 9.7.0
+
+### Patch Changes
+
+- @nexub/tokens@9.7.0
+- @nexub/icons@9.7.0
+- @nexub/core@9.7.0
+
+## 9.6.0
+
+### Patch Changes
+
+- @nexub/tokens@9.6.0
+- @nexub/icons@9.6.0
+- @nexub/core@9.6.0
+
+## 9.5.0
+
+### Patch Changes
+
+- @nexub/tokens@9.5.0
+- @nexub/icons@9.5.0
+- @nexub/core@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- @nexub/tokens@9.4.0
+- @nexub/icons@9.4.0
+- @nexub/core@9.4.0
+
+## 9.3.0
+
+### Patch Changes
+
+- @nexub/tokens@9.3.0
+- @nexub/icons@9.3.0
+- @nexub/core@9.3.0
+
+## 9.2.0
+
+### Patch Changes
+
+- @nexub/tokens@9.2.0
+- @nexub/icons@9.2.0
+- @nexub/core@9.2.0
+
+## 9.1.0
+
+### Patch Changes
+
+- @nexub/tokens@9.1.0
+- @nexub/icons@9.1.0
+- @nexub/core@9.1.0
+
+## 9.0.0
+
+### Patch Changes
+
+- @nexub/tokens@9.0.0
+- @nexub/icons@9.0.0
+- @nexub/core@9.0.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @nexub/tokens@8.9.0
+- @nexub/icons@8.9.0
+- @nexub/core@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @nexub/tokens@8.8.0
+- @nexub/icons@8.8.0
+- @nexub/core@8.8.0
+
+## 8.7.0
+
+### Patch Changes
+
+- @nexub/tokens@8.7.0
+- @nexub/icons@8.7.0
+- @nexub/core@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- @nexub/tokens@8.6.0
+- @nexub/icons@8.6.0
+- @nexub/core@8.6.0
+
+## 8.5.0
+
+### Patch Changes
+
+- @nexub/tokens@8.5.0
+- @nexub/icons@8.5.0
+- @nexub/core@8.5.0
+
+## 8.4.0
+
+### Patch Changes
+
+- @nexub/tokens@8.4.0
+- @nexub/icons@8.4.0
+- @nexub/core@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- @nexub/tokens@8.3.0
+- @nexub/icons@8.3.0
+- @nexub/core@8.3.0
+
+## 8.2.0
+
+### Minor Changes
+
+- 6658b36: 8.2: test floor. No new API.
+
+  - A smoke test renders every exported web (157) and React Native (93) component with no console errors and checks accessible names. A new export without a test fails CI.
+  - Behaviour tests for every component that had none: the 8 web gaps (ActionBar, Amount, DateTimePicker, Fieldset, FloatingInput, Kanban, ResizablePanels, ScrollProgress) and 41 React Native components, overlays and inputs first.
+  - Coverage is reported and gated in `@nexub/react`, `@nexub/patterns`, `@nexub/marketing` and `@nexub/react-native`, with thresholds at today's numbers. They only go up.
+  - Fix: the outside-PR auto-close (8.1) closed maintainers' own PRs when their org membership is private. It now closes only PRs from forks.
+  - Fix (React Native): a disabled `Slider` now reports `disabled` to screen readers, and VoiceOver/TalkBack increment/decrement no longer change it.
+
+### Patch Changes
+
+- @nexub/tokens@8.2.0
+- @nexub/icons@8.2.0
+- @nexub/core@8.2.0
+
+## 8.1.0
+
+### Patch Changes
+
+- @nexub/tokens@8.1.0
+- @nexub/icons@8.1.0
+- @nexub/core@8.1.0
+
+## 8.0.0
+
+### Minor Changes
+
+- 70e0436: 8.0: new defaults. No new features. Every change below shipped as an opt-in in 7.x, and `npx nexub-migrate --rules changes-in-8` reports where your code is affected. See "Migrating to 8.0" in the docs.
+
+  - **Signature is the default look.** Set `data-style="classic"` on `<html>` or any wrapper to keep the 7.x Material-derived look until 9.0; `data-style="signature"` inside a classic wrapper switches back. React Native: `NexubNativeProvider` defaults to `style="signature"` (`style="classic"` keeps 7.x).
+  - **`scrollLock` defaults to `"class"`** on `Dialog.Root`, `AlertDialog.Root`, `Drawer.Root` / `Sheet.Root` and `CommandPalette`: no injected `<style>`, so it works under a strict CSP. It needs `@nexub/themes/base` (the `html.nexub-scroll-lock` rule). `scrollLock="style"` keeps Radix's lock.
+  - **`safeHref` is strict by default,** and so is every Nexub link that uses it: only relative URLs, `#…`, http(s), `mailto:`, `tel:` and `sms:` render. `safeHref(url, { strict: false })` allows custom schemes again (script-capable schemes stay blocked).
+  - **Removed: the legacy motion tokens** `--duration-{instant,fast,normal,slow,slower}` and `--ease-{linear,in,out,in-out,out-expo,spring}` (deprecated in 7.3). Use the spring tokens, e.g. `var(--motion-spring-effects-default-duration)` and `var(--motion-spring-effects-default-easing)`.
+  - **Removed: the `easing` prop** on `Fade`, `Scale`, `Slide` and `Collapse` (deprecated in 7.3). `duration` rides the spring tokens.
+
+### Patch Changes
+
+- Updated dependencies [70e0436]
+  - @nexub/tokens@8.0.0
+  - @nexub/icons@8.0.0
+  - @nexub/core@8.0.0
+
+## 7.9.0
+
+### Minor Changes
+
+- f36913e: 7.9: the Signature look (opt-in) and the 8.0 release candidate.
+
+  - **New** `data-style="signature"` on `<html>` (or any subtree): the same contrast-guaranteed role engine with Nexub's own face. Neutral grey surfaces with a faint warm outline instead of lavender tints, 10px controls and fields with 16px cards, a primary seeded from the Nexub brand indigo, neutral-tinted tonal containers instead of pastels, tighter display tracking, tabular numerals in tables, and crisper hairline elevation. Chips, toggles, segmented controls and pill tabs stay full pills (`--shape-pill`). Every role pair is tested for WCAG AA in both styles.
+  - Under Signature, `Switch` is a full-thumb switch; radio dots and checkbox ticks animate in on the springs.
+  - React Native: `<NexubNativeProvider style="signature">`.
+  - 8.0 RC: every 7.x deprecation is frozen with its removal version; `nexub-migrate --rules changes-in-8` reports what 8.0 changes in your code; **new** docs page "Migrating to 8.0". In 8.0 Signature becomes the default (`data-style="classic"` keeps today's look), `scrollLock="class"` and strict `safeHref` become the defaults, and the legacy motion tokens and `easing` prop are removed.
+
+### Patch Changes
+
+- Updated dependencies [f36913e]
+  - @nexub/tokens@7.9.0
+  - @nexub/icons@7.9.0
+  - @nexub/core@7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+- 6ed4283: 7.8: native smoothness.
+
+  - `BottomSheet`: the drag feeds Reanimated shared values and carries the release velocity into the snap or close spring; a quick downward flick closes it. Closing is a spring whose completion unmounts the sheet (no timers). A fling now snaps toward the detent it was heading for.
+  - `Toast` enters and leaves on the nx springs and can be swiped away sideways (velocity-aware).
+  - Ported from web 7.4–7.6: `Button` spinner delay (150ms show / 400ms minimum), `Skeleton animation="shimmer"` and **new** `SkeletonText`, `Avatar status`, `Progress segments`, `TextField clearable` / `showCount` / `loading`, `Switch loading`, `Badge count` + `max`, `EmptyState size`.
+  - Drags still read touches on the JS thread (PanResponder) because `react-native-gesture-handler` isn't a dependency; the animation itself runs on the UI thread.
+
+### Patch Changes
+
+- @nexub/tokens@7.8.0
+- @nexub/icons@7.8.0
+- @nexub/core@7.8.0
+
+## 7.7.0
+
+### Patch Changes
+
+- @nexub/tokens@7.7.0
+- @nexub/icons@7.7.0
+- @nexub/core@7.7.0
+
+## 7.6.0
+
+### Patch Changes
+
+- Updated dependencies [90b8f7d]
+  - @nexub/core@7.6.0
+  - @nexub/tokens@7.6.0
+  - @nexub/icons@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+- Updated dependencies [c5738fa]
+  - @nexub/core@7.5.0
+  - @nexub/tokens@7.5.0
+  - @nexub/icons@7.5.0
+
+## 7.4.0
+
+### Patch Changes
+
+- Updated dependencies [ad149cc]
+  - @nexub/core@7.4.0
+  - @nexub/tokens@7.4.0
+  - @nexub/icons@7.4.0
+
+## 7.3.0
+
+### Patch Changes
+
+- Updated dependencies [fe8c22b]
+  - @nexub/tokens@7.3.0
+  - @nexub/icons@7.3.0
+  - @nexub/core@7.3.0
+
+## 7.2.0
+
+### Patch Changes
+
+- Updated dependencies [1bfe041]
+  - @nexub/core@7.2.0
+  - @nexub/tokens@7.2.0
+  - @nexub/icons@7.2.0
+
+## 7.1.0
+
+### Patch Changes
+
+- @nexub/tokens@7.1.0
+- @nexub/icons@7.1.0
+- @nexub/core@7.1.0
+
+## 7.0.1
+
+### Patch Changes
+
+- @nexub/tokens@7.0.1
+- @nexub/icons@7.0.1
+- @nexub/core@7.0.1
+
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [d13580c]
+  - @nexub/tokens@7.0.0
+  - @nexub/icons@7.0.0
+  - @nexub/core@7.0.0
+
+## 6.9.0
+
+### Patch Changes
+
+- Updated dependencies [88329d9]
+  - @nexub/tokens@6.9.0
+  - @nexub/icons@6.9.0
+  - @nexub/core@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+- @nexub/tokens@6.8.0
+- @nexub/icons@6.8.0
+- @nexub/core@6.8.0
+
+## 6.7.0
+
+### Minor Changes
+
+- 4d94b73: React Native parity for 6.x.
+
+  - **`TreeList`** (new): the web TreeView on mobile, as drill-down lists with a back row; leaves are picked like radio rows.
+  - **`StepProgress`** (new): the web Stepper on mobile: segments and "Step 2 of 4: Billing", read as a progress bar. (The existing `Stepper` stays the − value + control.)
+  - **`SortableList`** (new): the web Sortable on mobile: Move up / Move down buttons while `editing`, and the same moves as VoiceOver and TalkBack actions on every row.
+  - **`InlineEdit`** (new): text that turns into a field when tapped; Return or leaving the field saves.
+  - Docs: native twins for TimePicker and DateTimePicker (`DateTimeField` with `mode="time"`), TreeView, Sortable, Stepper and InlineEdit, with live mobile previews.
+  - New messages: `moveUp`, `moveDown`, `backTo`.
+
+### Patch Changes
+
+- Updated dependencies [4d94b73]
+  - @nexub/core@6.7.0
+  - @nexub/tokens@6.7.0
+  - @nexub/icons@6.7.0
+
+## 6.6.0
+
+### Patch Changes
+
+- Updated dependencies [46bd41c]
+  - @nexub/core@6.6.0
+  - @nexub/tokens@6.6.0
+  - @nexub/icons@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+- Updated dependencies [efe17f9]
+  - @nexub/core@6.5.0
+  - @nexub/icons@6.5.0
+  - @nexub/tokens@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+- Updated dependencies [5839e96]
+  - @nexub/core@6.4.0
+  - @nexub/tokens@6.4.0
+  - @nexub/icons@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+- Updated dependencies [0290a12]
+  - @nexub/core@6.3.0
+  - @nexub/tokens@6.3.0
+  - @nexub/icons@6.3.0
+
+## 6.2.0
+
+### Patch Changes
+
+- Updated dependencies [653ee48]
+  - @nexub/core@6.2.0
+  - @nexub/tokens@6.2.0
+  - @nexub/icons@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+- Updated dependencies [67643af]
+  - @nexub/core@6.1.0
+  - @nexub/tokens@6.1.0
+  - @nexub/icons@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- @nexub/tokens@6.0.0
+- @nexub/icons@6.0.0
+- @nexub/core@6.0.0
+
+## 5.9.0
+
+### Patch Changes
+
+- Updated dependencies [c11f400]
+  - @nexub/tokens@5.9.0
+  - @nexub/icons@5.9.0
+  - @nexub/core@5.9.0
+
+## 5.8.0
+
+### Patch Changes
+
+- @nexub/tokens@5.8.0
+- @nexub/icons@5.8.0
+- @nexub/core@5.8.0
+
+## 5.7.0
+
+### Minor Changes
+
+- 18bbb2e: React Native parity for the 5.x data components.
+
+  - **`DataList`** (React Native): the mobile form of DataTable. One row per record with its key fields (no sideways grid), a Sort sheet (one sort plus direction), and a selection mode with a count and `bulkActions`. Built on FlatList.
+  - **`MultiSelect`** (React Native): a field that opens a sheet of checkbox rows, with search above 8 options. The field summarises the picks ("Bug, Design, +3 more").
+  - **`FileList`** (React Native): files picked for upload with size, progress, errors, and remove or cancel. Bring your own picker (for example, expo-document-picker).
+  - **`FilterSheet`** (React Native): the web FilterBuilder in a sheet. It edits one flat AND/OR list and keeps nested web groups untouched.
+  - **Shared filter model**: `FilterGroup`, `FilterRule`, `FilterField`, `filterOperators`, `countFilters`, `emptyFilter`, `newFilterRule` and `isFilterGroup` now live in `@nexub/core`. Both `@nexub/react` and `@nexub/react-native` re-export them, so saved queries move between platforms. No API change for web.
+  - New messages: `sortBy`, `sortDirection`, `ascending`, `descending`.
+  - Docs: web DataTable, MultiSelect, FilterBuilder and OTP Input pages now show their mobile twins with live previews.
+
+### Patch Changes
+
+- Updated dependencies [18bbb2e]
+  - @nexub/core@5.7.0
+  - @nexub/tokens@5.7.0
+  - @nexub/icons@5.7.0
+
+## 5.6.0
+
+### Patch Changes
+
+- Updated dependencies [b71b56f]
+  - @nexub/icons@5.6.0
+  - @nexub/core@5.6.0
+  - @nexub/tokens@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+- Updated dependencies [04ff65b]
+  - @nexub/core@5.5.0
+  - @nexub/tokens@5.5.0
+  - @nexub/icons@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- Updated dependencies [253949f]
+  - @nexub/core@5.4.0
+  - @nexub/tokens@5.4.0
+  - @nexub/icons@5.4.0
+
+## 5.3.0
+
+### Patch Changes
+
+- Updated dependencies [8988b87]
+  - @nexub/core@5.3.0
+  - @nexub/tokens@5.3.0
+  - @nexub/icons@5.3.0
+
+## 5.2.0
+
+### Patch Changes
+
+- Updated dependencies [5f2ef4d]
+  - @nexub/core@5.2.0
+  - @nexub/tokens@5.2.0
+  - @nexub/icons@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- Updated dependencies [60fed18]
+  - @nexub/core@5.1.0
+  - @nexub/tokens@5.1.0
+  - @nexub/icons@5.1.0
+
+## 5.0.1
+
+### Patch Changes
+
+- @nexub/tokens@5.0.1
+- @nexub/icons@5.0.1
+- @nexub/core@5.0.1
+
+## 5.0.0
+
+### Patch Changes
+
+- @nexub/tokens@5.0.0
+- @nexub/icons@5.0.0
+- @nexub/core@5.0.0
+
+## 4.9.0
+
+### Patch Changes
+
+- @nexub/tokens@4.9.0
+- @nexub/icons@4.9.0
+- @nexub/core@4.9.0
+
+## 4.8.0
+
+### Patch Changes
+
+- @nexub/tokens@4.8.0
+- @nexub/icons@4.8.0
+- @nexub/core@4.8.0
+
+## 4.7.0
+
+### Patch Changes
+
+- @nexub/tokens@4.7.0
+- @nexub/icons@4.7.0
+- @nexub/core@4.7.0
+
+## 4.6.0
+
+### Patch Changes
+
+- @nexub/tokens@4.6.0
+- @nexub/icons@4.6.0
+- @nexub/core@4.6.0
+
 ## 4.5.0
 
 ### Patch Changes

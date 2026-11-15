@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mergeChangelogs } from '../src/lib/changelog.ts';
+import { exportName, mergeChangelogs, pageForCode } from '../src/lib/changelog.ts';
 
 const react = `# @nexub/react
 
@@ -50,4 +50,20 @@ test('merges, drops noise, dedupes and sorts newest first', () => {
     },
     { version: '1.9.0', packages: [] },
   ]);
+});
+
+test('pageForCode links code spans that name a docs page', () => {
+  assert.equal(exportName('data-table'), 'DataTable');
+  assert.equal(exportName('kpi-tile'), 'KpiTile');
+  const pages = new Map([
+    ['Button', '/components/button'],
+    ['BarChart', '/components/bar-chart'],
+  ]);
+  assert.equal(pageForCode('BarChart', pages), '/components/bar-chart');
+  assert.equal(pageForCode('<Button variant="hero">', pages), '/components/button');
+  assert.equal(pageForCode('Button magnetic', pages), '/components/button');
+  assert.equal(pageForCode('ButtonGroup', pages), undefined); // no prefix matches
+  assert.equal(pageForCode('Button.Root', pages), undefined); // a member, not the component
+  assert.equal(pageForCode('ThemeProvider', pages), undefined); // no page
+  assert.equal(pageForCode('@nexub/react', pages), undefined);
 });

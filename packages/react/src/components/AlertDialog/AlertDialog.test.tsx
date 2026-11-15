@@ -106,3 +106,31 @@ describe('AlertDialog', () => {
     });
   });
 });
+
+describe('AlertDialog.Confirm', () => {
+  it('keeps the action disabled until the text is typed', async () => {
+    const onAction = vi.fn();
+    render(
+      <AlertDialog.Root defaultOpen>
+        <AlertDialog.Content>
+          <AlertDialog.Title>Delete workspace?</AlertDialog.Title>
+          <AlertDialog.Description>This can't be undone.</AlertDialog.Description>
+          <AlertDialog.Confirm text="acme-prod" />
+          <AlertDialog.Footer>
+            <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+            <AlertDialog.Action onClick={onAction}>Delete</AlertDialog.Action>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog.Root>,
+    );
+    const del = screen.getByRole('button', { name: 'Delete' });
+    expect(del).toBeDisabled();
+    const input = screen.getByLabelText('Type acme-prod to confirm');
+    await userEvent.type(input, 'acme-pro');
+    expect(del).toBeDisabled();
+    await userEvent.type(input, 'd ');
+    expect(del).toBeEnabled();
+    await userEvent.click(del);
+    expect(onAction).toHaveBeenCalled();
+  });
+});

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ActivityIndicator,
   PanResponder,
   Switch as RNSwitch,
   TextInput,
@@ -49,8 +50,17 @@ export interface TextFieldProps extends Omit<TextInputProps, 'style' | 'editable
   size?: Extract<ControlSize, 'md' | 'lg' | 'xl'>;
   leading?: React.ReactNode;
   trailing?: React.ReactNode;
+  /** Shows a clear button while there is a value. Clearing fires `onChangeText` with "". */
+  clearable?: boolean;
+  /** Shows a "12/80" counter; needs `maxLength`. Announced politely near the limit. */
+  showCount?: boolean;
+  /** Spinner in the trailing slot and busy for screen readers. */
+  loading?: boolean;
   style?: StyleProp<ViewStyle>;
 }
+
+// Near the limit = the last 10% (at least 1 character).
+const nearLimit = (length: number, max: number) => length >= max - Math.max(1, Math.ceil(max * 0.1));
 
 /** Labelled text input (web Input + Label + HelperText + FormError in one). */
 export function TextField({
@@ -62,19 +72,44 @@ export function TextField({
   size = 'lg',
   leading,
   trailing,
+  clearable,
+  showCount,
+  loading,
   style,
   multiline,
   onFocus,
   onBlur,
+  onChangeText,
   ...rest
 }: TextFieldProps) {
   const theme = useTheme();
-  const { roles, tokens, fonts } = theme;
+  const { roles, tokens, fonts, messages } = theme;
   const [focused, setFocused] = React.useState(false);
+  // Track the length for uncontrolled use; controlled reads `value`.
+  const [uncontrolledLength, setLength] = React.useState((rest.defaultValue ?? '').length);
+  const length = rest.value != null ? rest.value.length : uncontrolledLength;
+  const max = rest.maxLength;
+  const counting = !!showCount && max !== undefined && max >= 0;
+  const inner = React.useRef<React.ComponentRef<typeof TextInput>>(null);
+  const setRefs = (node: React.ComponentRef<typeof TextInput> | null) => {
+    inner.current = node;
+    if (typeof ref === 'function') ref(node);
+    else if (ref) (ref as React.RefObject<typeof node>).current = node;
+  };
+  const changeText = (text: string) => {
+    setLength(text.length);
+    onChangeText?.(text);
+  };
+  const clear = () => {
+    inner.current?.clear();
+    changeText('');
+    inner.current?.focus();
+  };
+  const showClear = clearable && length > 0 && !disabled && rest.readOnly !== true;
   const body = tokens.type['body-lg'];
   const border = error ? roles.error : focused ? roles.primary : roles.outline;
   return (
-    <View style={[{ gap: 6, opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       <Text
         variant="label-lg"
         color={error ? 'error' : 'on-surface-variant'}
@@ -87,8 +122,8 @@ export function TextField({
           minHeight: controlHeight(theme, size),
           flexDirection: 'row',
           alignItems: multiline ? 'flex-start' : 'center',
-          gap: 8,
-          paddingHorizontal: 14,
+          gap: tokens.spacing[2],
+          paddingHorizontal: tokens.spacing['3-5'],
           borderRadius: tokens.shape.field,
           borderWidth: focused || error ? 2 : 1,
           borderColor: border,
@@ -97,8 +132,9 @@ export function TextField({
       >
         {leading}
         <TextInput
-          ref={ref}
+          ref={setRefs}
           accessibilityLabel={label}
+          accessibilityState={loading ? { busy: true } : undefined}
           accessibilityHint={error ?? helperText}
           aria-invalid={!!error}
           editable={!disabled}
@@ -123,7 +159,21 @@ export function TextField({
             textAlignVertical: multiline ? 'top' : 'center',
           }}
           {...rest}
+          onChangeText={changeText}
         />
+        {counting && (
+          <Text
+            variant="label-sm"
+            color="on-surface-muted"
+            tabular
+            accessibilityLabel={messages.characterCount(length, max)}
+            accessibilityLiveRegion={nearLimit(length, max) ? 'polite' : 'none'}
+          >
+            {`${length}/${max}`}
+          </Text>
+        )}
+        {loading && <ActivityIndicator size="small" color={roles['on-surface-variant']} />}
+        {showClear && <IconButton icon={X} label={messages.clear} size="xs" variant="text" onPress={clear} />}
         {trailing}
       </View>
       {(error || helperText) && (
@@ -155,7 +205,9 @@ export function PasswordInput(props: PasswordInputProps) {
       trailing={
         <IconButton
           icon={visible ? EyeOff : Eye}
-          label={visible ? messages.hidePassword : messages.showPassword}
+          // One name, like the web toggle (7.2): the state is `selected`, not a second label.
+          label={messages.showPassword}
+          selected={visible}
           size="sm"
           onPress={() => setVisible((v) => !v)}
         />
@@ -194,9 +246,9 @@ export function SearchField({
           height: controlHeight(theme, 'md'),
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
-          paddingStart: 14,
-          paddingEnd: 4,
+          gap: tokens.spacing[2],
+          paddingStart: tokens.spacing['3-5'],
+          paddingEnd: tokens.spacing[1],
           borderRadius: tokens.shape.control,
           backgroundColor: roles['surface-container-high'],
         },
@@ -262,10 +314,15 @@ export function MoneyInput({
     amount == null ? '' : formatForEditing(amount, currency, loc),
   );
   React.useEffect(() => {
-    // Follow outside changes without fighting the user's typing.
-    if (amount !== parseMoney(text, currency, loc))
-      setText(amount == null ? '' : formatForEditing(amount, currency, loc));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Follow outside changes without fighting the user's typing: runs when the
+    // amount changes, not on every keystroke (text is read via the updater).
+    setText((t) =>
+      amount === parseMoney(t, currency, loc)
+        ? t
+        : amount == null
+          ? ''
+          : formatForEditing(amount, currency, loc),
+    );
   }, [amount, currency, loc]);
   return (
     <TextField
@@ -408,10 +465,10 @@ export function Checkbox({
       style={[
         {
           flexDirection: 'row',
-          gap: 12,
+          gap: tokens.spacing[3],
           alignItems: 'flex-start',
           minHeight: 44,
-          paddingVertical: 10,
+          paddingVertical: tokens.spacing['2-5'],
           opacity: disabled ? disabledOpacity(theme) : 1,
         },
         style,
@@ -432,7 +489,7 @@ export function Checkbox({
       >
         {on && <Check size={16} strokeWidth={3} color={roles['on-primary']} />}
       </View>
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, gap: tokens.spacing['0-5'] }}>
         <Text variant="body-md">{label}</Text>
         {description && (
           <Text variant="body-sm" color="on-surface-variant">
@@ -557,6 +614,8 @@ export interface SwitchProps {
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  /** Spinner beside the switch and busy for screen readers; it can't toggle while loading. */
+  loading?: boolean;
 }
 
 /** The platform switch (UISwitch / Material), coloured with Nexub roles. The OS plays its haptic. */
@@ -566,6 +625,7 @@ export function Switch({
   defaultChecked = false,
   onCheckedChange,
   disabled,
+  loading,
 }: SwitchProps) {
   const { roles } = useTheme();
   const [on, setOn] = useControllableState({
@@ -574,15 +634,19 @@ export function Switch({
     onChange: onCheckedChange,
   });
   return (
-    <RNSwitch
-      accessibilityLabel={label}
-      value={on}
-      onValueChange={setOn}
-      disabled={disabled}
-      trackColor={{ false: roles['surface-container-highest'], true: roles.primary }}
-      ios_backgroundColor={roles['surface-container-highest']}
-      thumbColor={roles['surface-container-lowest']}
-    />
+    <>
+      {loading && <ActivityIndicator size="small" color={roles.primary} />}
+      <RNSwitch
+        accessibilityLabel={label}
+        accessibilityState={loading ? { busy: true, disabled: true, checked: on } : undefined}
+        value={on}
+        onValueChange={setOn}
+        disabled={disabled || loading}
+        trackColor={{ false: roles['surface-container-highest'], true: roles.primary }}
+        ios_backgroundColor={roles['surface-container-highest']}
+        thumbColor={roles['surface-container-lowest']}
+      />
+    </>
   );
 }
 
@@ -734,27 +798,24 @@ export function Slider({
   const { roles } = theme;
   const [v, setV] = useControllableState({ value, defaultValue, onChange: onValueChange });
   const width = React.useRef(1);
-  const snap = (x: number) => {
-    const raw = min + Math.min(1, Math.max(0, x / width.current)) * (max - min);
-    return Math.min(max, Math.max(min, Math.round(raw / step) * step));
-  };
   const current = React.useRef(v);
   current.current = v;
-  const responder = React.useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => !disabled,
-        onMoveShouldSetPanResponder: () => !disabled,
-        onPanResponderTerminationRequest: () => false,
-        onPanResponderGrant: (e) => setV(snap(e.nativeEvent.locationX)),
-        onPanResponderMove: (e) => {
-          const next = snap(e.nativeEvent.locationX);
-          if (next !== current.current) setV(next);
-        },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [disabled, min, max, step],
-  );
+  const responder = React.useMemo(() => {
+    const snap = (x: number) => {
+      const raw = min + Math.min(1, Math.max(0, x / width.current)) * (max - min);
+      return Math.min(max, Math.max(min, Math.round(raw / step) * step));
+    };
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => !disabled,
+      onMoveShouldSetPanResponder: () => !disabled,
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderGrant: (e) => setV(snap(e.nativeEvent.locationX)),
+      onPanResponderMove: (e) => {
+        const next = snap(e.nativeEvent.locationX);
+        if (next !== current.current) setV(next);
+      },
+    });
+  }, [disabled, min, max, step, setV]);
   const pct = ((v - min) / (max - min)) * 100;
   return (
     <View
@@ -762,8 +823,10 @@ export function Slider({
       accessibilityRole="adjustable"
       accessibilityLabel={label}
       accessibilityValue={{ min, max, now: v, text: formatValue?.(v) }}
+      accessibilityState={{ disabled: !!disabled }}
       accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
       onAccessibilityAction={(e) =>
+        !disabled &&
         setV(
           Math.min(
             max,
@@ -856,12 +919,12 @@ export function Chip({
         stateLayer={fg}
         style={{
           height,
-          paddingStart: 12,
+          paddingStart: tokens.spacing[3],
           paddingEnd: onRemove ? 32 : 12,
           borderRadius: tokens.shape.control,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 6,
+          gap: tokens.spacing['1-5'],
           borderWidth: selected ? 0 : 1,
           borderColor: roles['outline-variant'],
           backgroundColor: selected ? roles['secondary-container'] : 'transparent',

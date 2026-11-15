@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Citation, SourceList, type CitationSource } from '@nexub/react';
 
 const CITATION_SOURCES: CitationSource[] = [

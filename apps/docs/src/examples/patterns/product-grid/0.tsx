@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { BookubMark, FounderubMark, LeapMark, PayubMark } from '@nexub/icons';
 import { ProductCard, ProductGrid, SectionHeader } from '@nexub/marketing';
 

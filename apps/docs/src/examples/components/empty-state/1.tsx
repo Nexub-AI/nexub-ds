@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { EmptyState, Button } from '@nexub/react';
 
 export default function Example() {
@@ -14,7 +16,7 @@ export default function Example() {
       <EmptyState.Title>No documents yet</EmptyState.Title>
       <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary">Upload document</Button>
+        <Button variant="filled">Upload document</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );

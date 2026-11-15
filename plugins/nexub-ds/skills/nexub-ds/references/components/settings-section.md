@@ -13,7 +13,7 @@ Grouped settings panel with title, description, and action area.
 | `title` (required) | `string` |  | Section heading. |
 | `description` | `string` |  | Supporting description for the section. |
 | `children` (required) | `React.ReactNode` |  | Settings controls. |
-| `action` | `React.ReactNode` |  | Primary action (e.g. save button). |
+| `actions` | `React.ReactNode` |  | Primary action (e.g. save button). |
 
 ## Example: Default
 

@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react",
-  "version": "4.5.0",
+  "version": "10.0.0",
   "description": "React component library for Nexub Design System — 90+ accessible, themeable UI components built on Radix UI primitives.",
   "type": "module",
   "license": "MIT",
@@ -39,6 +39,10 @@
       "types": "./dist/utils/cn.d.ts",
       "default": "./dist/utils/cn.js"
     },
+    "./safeHref": {
+      "types": "./dist/utils/safeHref.d.ts",
+      "default": "./dist/utils/safeHref.js"
+    },
     "./*": {
       "types": "./dist/components/*/index.d.ts",
       "default": "./dist/components/*/index.js"
@@ -53,12 +57,14 @@
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
+    "test:leaks": "LEAKS=1 vitest run src/leaks.test.tsx --coverage=false --testTimeout=600000",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test:visual": "playwright test -c visual",
     "test:visual:docker": "docker run --rm --ipc=host -e CI -v \"$PWD/../..\":/work -w /work/packages/react mcr.microsoft.com/playwright:v1.64.0-noble npx playwright test -c visual",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test:perf": "playwright test -c visual --project=perf"
   },
   "dependencies": {
     "@nexub/core": "workspace:*",
@@ -93,13 +99,20 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.4.0",
+    "get-nonce": "^1.0.1",
     "react-day-picker": "^10.0.2",
     "tailwind-merge": "^3.7.0"
   },
   "peerDependencies": {
     "@nexub/tokens": "workspace:^",
-    "react": ">=18 <20",
-    "react-dom": ">=18 <20"
+    "@tanstack/react-virtual": "^3.14.22",
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/react-virtual": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@nexub/themes": "workspace:*",
@@ -109,13 +122,16 @@
     "@storybook/react-vite": "10.6.3",
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
+    "@tanstack/react-virtual": "3.14.22",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "5.0.5",
     "axe-core": "^4.14.0",
+    "fast-check": "^4.10.2",
     "jsdom": "^30.1.3",
     "postcss": "^8.5.31",
     "react": "^19.3.1",

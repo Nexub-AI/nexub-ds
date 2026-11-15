@@ -12,6 +12,13 @@ test('minor rolls over into the major after 9', () => {
   assert.equal(nextVersion('1.9.0', '1.10.0'), '2.0.0');
   assert.equal(nextVersion('1.9.1', '1.10.0'), '2.0.0');
   assert.equal(nextVersion('2.9.3', '2.10.0'), '3.0.0');
+  assert.equal(nextVersion('9.9.0', '9.10.0'), '10.0.0');
+});
+
+test('no rollover from 10.0 on', () => {
+  assert.equal(nextVersion('10.9.0', '10.10.0'), '10.10.0');
+  assert.equal(nextVersion('10.10.0', '10.11.0'), '10.11.0');
+  assert.throws(() => nextVersion('10.9.0', '11.0.0'), /major bump/);
 });
 
 test('patches stay patches', () => {

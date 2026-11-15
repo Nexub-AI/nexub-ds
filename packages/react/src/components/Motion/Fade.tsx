@@ -22,7 +22,6 @@ export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
   {
     in: visible,
     duration = 'normal',
-    easing,
     unmountOnExit = false,
     children,
     style,
@@ -34,7 +33,6 @@ export const Fade = React.forwardRef<HTMLDivElement, FadeProps>(function Fade(
   const { phase, mounted, transitionStyle, handleTransitionEnd } = useMotion({
     visible,
     duration,
-    easing,
     unmountOnExit,
   });
 

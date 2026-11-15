@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Tabs } from './Tabs.js';
 
 function TestTabs() {
@@ -94,5 +94,30 @@ describe('Tabs.Content display', () => {
     expect(inactive).toHaveAttribute('data-state', 'inactive');
     expect(inactive.className).toContain('data-[state=inactive]:!hidden');
     expect(inactive.className).toContain('flex');
+  });
+
+  it('variant="pill" marks the list and keeps the triggers above the thumb', () => {
+    render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List variant="pill">
+          <Tabs.Trigger value="a">A</Tabs.Trigger>
+        </Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(screen.getByRole('tablist')).toHaveAttribute('data-variant', 'pill');
+    expect(screen.getByRole('tab')).toHaveClass('z-10');
+  });
+
+  it('scrolls a newly active tab into view inside the list', async () => {
+    const user = userEvent.setup();
+    render(<TestTabs />);
+    const list = screen.getByRole('tablist');
+    const scrollBy = vi.fn();
+    list.scrollBy = scrollBy as never;
+    list.getBoundingClientRect = () => ({ left: 0, right: 100, top: 0, bottom: 40 }) as DOMRect;
+    screen.getByRole('tab', { name: 'Tab Three' }).getBoundingClientRect = () =>
+      ({ left: 120, right: 180, top: 0, bottom: 40 }) as DOMRect;
+    await user.click(screen.getByRole('tab', { name: 'Tab Three' }));
+    expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ left: 80, top: 0 }));
   });
 });

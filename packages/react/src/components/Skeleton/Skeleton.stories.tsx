@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Skeleton } from './Skeleton.js';
+import { Skeleton, SkeletonText } from './Skeleton.js';
 
 const meta: Meta<typeof Skeleton> = {
   title: 'Components/Skeleton',
@@ -18,4 +18,12 @@ export const Default: Story = {
     height: 16,
     animated: true,
   },
+};
+
+export const Shimmer: Story = {
+  args: { shape: 'line', width: 200, height: 16, animation: 'shimmer' },
+};
+
+export const Text: Story = {
+  render: () => <SkeletonText lines={3} animation="shimmer" />,
 };

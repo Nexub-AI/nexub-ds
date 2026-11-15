@@ -7,18 +7,35 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getExpandedRowModel,
   flexRender,
   type ColumnDef,
   type SortingState,
   type RowSelectionState,
   type PaginationState,
   type RowData,
+  type Updater,
+  type VisibilityState,
+  type ColumnSizingState,
+  type ColumnOrderState,
+  type ColumnPinningState,
+  type Column,
+  type ExpandedState,
+  type Row,
 } from '@tanstack/react-table';
-import { ArrowUp, ArrowDown, ChevronsUpDown } from '@nexub/icons';
+import { ArrowUp, ArrowDown, ChevronDown, ChevronRight, ChevronsUpDown, SlidersHorizontal, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, pressable } from '../../utils/control.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { floatingSurface } from '../../utils/surface.js';
+import { useControllableState } from '../../hooks/useControllableState.js';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Table } from '../Table/Table.js';
+import { Checkbox } from '../Checkbox/Checkbox.js';
+import { Button } from '../Button/Button.js';
+import { createGridNavigation } from './gridNavigation.js';
+import { useReorder } from '../Sortable/reorder.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
 
 type ColumnAlign = 'start' | 'end' | 'center';
 
@@ -47,7 +64,7 @@ const alignJustify: Record<ColumnAlign, string> = {
 // Outlined capsules; hover/press = the state layer.
 const pagerButton = cn(
   pressable,
-  'border border-[var(--color-outline-variant)] bg-transparent px-4 py-2 min-h-[44px] text-label-lg text-[var(--color-on-surface)]',
+  'border border-[var(--color-outline-variant)] bg-transparent px-4 py-2 min-h-11 text-label-lg text-[var(--color-on-surface)]',
   disabledContainer,
 );
 
@@ -83,7 +100,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[var(--color-surface-container-low)]',
+        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]',
         className,
       )}
       {...props}
@@ -122,9 +139,190 @@ const TableCell = React.forwardRef<
 ));
 TableCell.displayName = 'DataTable.TableCell';
 
+/** Empty space standing in for rows that aren't rendered (virtual scrolling). */
+function Spacer({ height }: { height: number }) {
+  return (
+    <tr aria-hidden="true" className="border-0">
+      <td
+        ref={(el) => {
+          if (el) el.style.height = px(height);
+        }}
+        className="p-0"
+      />
+    </tr>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // DataTable
 // ---------------------------------------------------------------------------
+
+export type DataTableDensity = 'comfortable' | 'compact';
+
+/** Which rows to render, and the space to leave above and below them. */
+export interface DataTableRowWindow {
+  indexes: number[];
+  before: number;
+  after: number;
+  /** Ref for each rendered row, to measure its real height. */
+  measure?: (el: HTMLElement | null) => void;
+  /** True when rows are windowed: rows get aria-rowindex, the table aria-rowcount. */
+  virtual?: boolean;
+}
+
+/** A hook choosing the rendered rows. DataTableVirtual passes one; the default renders all. */
+export type DataTableRowWindowHook = (count: number, getScrollElement: () => HTMLElement | null) => DataTableRowWindow;
+
+const useAllRows: DataTableRowWindowHook = (count) => ({
+  indexes: Array.from({ length: count }, (_, i) => i),
+  before: 0,
+  after: 0,
+});
+
+/** First cell of a tree-table row: indent per level and the expand toggle. */
+function TreeCell({
+  row,
+  expandLabel,
+  collapseLabel,
+  children,
+}: {
+  row: { depth: number; getCanExpand: () => boolean; getIsExpanded: () => boolean; toggleExpanded: () => void };
+  expandLabel: string;
+  collapseLabel: string;
+  children: React.ReactNode;
+}) {
+  const open = row.getIsExpanded();
+  const ref = React.useCallback(
+    (el: HTMLDivElement | null) => {
+      // CSSOM so strict-CSP pages still get the indent.
+      if (el) el.style.paddingInlineStart = `${row.depth * 1.5}rem`;
+    },
+    [row.depth],
+  );
+  return (
+    <div ref={ref} className="flex items-center gap-1">
+      {row.getCanExpand() ? (
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-label={open ? collapseLabel : expandLabel}
+          onClick={row.toggleExpanded}
+          className="-ms-1 inline-flex size-6 shrink-0 items-center justify-center rounded-shape-min text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
+        >
+          {open ? <ChevronDown size="xs" aria-hidden="true" /> : <ChevronRight size="xs" aria-hidden="true" className="rtl:-scale-x-100" />}
+        </button>
+      ) : (
+        <span className="-ms-1 size-6 shrink-0" aria-hidden="true" />
+      )}
+      {children}
+    </div>
+  );
+}
+
+/** CSSOM, not a style attribute: strict CSP pages block inline styles. */
+const px = (n: number | string) => (typeof n === 'number' ? `${n}px` : n);
+
+// Loaded only with `viewOptions`, so tables without the menu don't pull in Radix DropdownMenu.
+const ViewOptions = React.lazy(() => import('./ViewOptions.js').then((m) => ({ default: m.ViewOptions })));
+
+const placeCell = <TData,>(column: Column<TData, unknown>, resizable: boolean) => (el: HTMLTableCellElement | null) => {
+  if (!el) return;
+  el.style.width = resizable ? px(column.getSize()) : '';
+  const side = column.getIsPinned();
+  el.style.insetInlineStart = side === 'left' ? px(column.getStart('left')) : '';
+  el.style.insetInlineEnd = side === 'right' ? px(column.getAfter('right')) : '';
+};
+
+const pinClass = <TData,>(column: Column<TData, unknown>) => {
+  const side = column.getIsPinned();
+  if (!side) return undefined;
+  return cn(
+    'sticky z-[1] bg-[var(--color-surface)]',
+    '[tr:hover>&]:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,var(--color-surface))]',
+    '[tr[data-state=selected]>&]:bg-[color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))]',
+    side === 'left' && column.getIsLastColumn('left') && 'border-e border-[var(--color-outline-variant)]',
+    side === 'right' && column.getIsFirstColumn('right') && 'border-s border-[var(--color-outline-variant)]',
+  );
+};
+
+interface RowViewProps<TData> {
+  row: Row<TData>;
+  index: number;
+  selected: boolean;
+  expanded: boolean;
+  /** Changes whenever columns, their order, visibility or pinning change. */
+  columns: Column<TData, unknown>[];
+  columnSizing: ColumnSizingState;
+  compact: boolean;
+  pinned: boolean;
+  resizable: boolean;
+  selectable: boolean;
+  tree: boolean;
+  virtual: boolean | undefined;
+  measure: ((el: HTMLElement | null) => void) | undefined;
+  expandLabel: string;
+  collapseLabel: string;
+  /** Row-reorder drag props: new every render, so reorderable rows always re-render. */
+  dragProps: Record<string, unknown> | undefined;
+}
+
+function RowViewImpl<TData>({
+  row,
+  index,
+  selected,
+  compact,
+  pinned,
+  resizable,
+  selectable,
+  tree,
+  virtual,
+  measure,
+  expandLabel,
+  collapseLabel,
+  dragProps,
+}: RowViewProps<TData>) {
+  return (
+    <TableRow
+      ref={measure}
+      data-index={index}
+      aria-rowindex={virtual ? index + 2 : undefined}
+      data-state={selectable && selected ? 'selected' : undefined}
+      {...dragProps}
+    >
+      {row.getVisibleCells().map((cell, _i, cells) => (
+        <TableCell
+          key={cell.id}
+          ref={pinned || resizable ? placeCell(cell.column, resizable) : undefined}
+          className={cn(
+            alignText[cell.column.columnDef.meta?.align ?? 'start'],
+            compact && 'py-1.5',
+            pinClass(cell.column),
+            resizable && 'truncate',
+          )}
+        >
+          {tree && cell === cells.find((c) => c.column.id !== '__select') ? (
+            <TreeCell row={row} expandLabel={expandLabel} collapseLabel={collapseLabel}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </TreeCell>
+          ) : (
+            flexRender(cell.column.columnDef.cell, cell.getContext())
+          )}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
+}
+
+// Skip rows whose own props didn't change: a new row object (e.g. the parent
+// filtered `data`) for the same original at the same place renders the same.
+const sameRow = <TData,>(a: RowViewProps<TData>, b: RowViewProps<TData>) =>
+  (Object.keys(a) as (keyof RowViewProps<TData>)[]).every((k) => k === 'row' || a[k] === b[k]) &&
+  a.row.id === b.row.id &&
+  a.row.original === b.row.original &&
+  a.row.index === b.row.index &&
+  a.row.depth === b.row.depth;
+
+const RowView = React.memo(RowViewImpl, sameRow) as typeof RowViewImpl;
 
 export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivElement> {
   columns: DataTableColumn<TData>[];
@@ -135,15 +333,136 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   data: TData[];
   enableSorting?: boolean;
   enableRowSelection?: boolean;
+  /**
+   * With `enableRowSelection`: a checkbox column with select-page in its
+   * header, and "Select all N" across pages. Default true; false keeps selection
+   * without the column (you render your own checkboxes).
+   */
+  selectionColumn?: boolean;
+  /** Controlled selection, keyed by row id (see `getRowId`). */
+  rowSelection?: RowSelectionState;
+  onRowSelectionChange?: (selection: RowSelectionState) => void;
+  /** Stable row ids for selection; defaults to the row index. */
+  getRowId?: (row: TData, index: number) => string;
+  /** A floating bar while rows are selected: render your actions for the selected rows. */
+  bulkActions?: (rows: TData[], clear: () => void) => React.ReactNode;
+  density?: DataTableDensity;
+  defaultDensity?: DataTableDensity;
+  onDensityChange?: (density: DataTableDensity) => void;
+  columnVisibility?: VisibilityState;
+  onColumnVisibilityChange?: (visibility: VisibilityState) => void;
+  /** A "View" menu above the table: density and which columns show. */
+  viewOptions?: boolean;
+  /** Content at the start of the row above the table (filters, a title). */
+  toolbar?: React.ReactNode;
+  /** Drag a header's edge, or focus it and press Arrow keys, to resize columns. */
+  enableColumnResizing?: boolean;
+  columnSizing?: ColumnSizingState;
+  onColumnSizingChange?: (sizing: ColumnSizingState) => void;
+  /** Drag headers to reorder columns, or press Alt+Arrow on a focused header. */
+  enableColumnReordering?: boolean;
+  columnOrder?: ColumnOrderState;
+  onColumnOrderChange?: (order: ColumnOrderState) => void;
+  /** Columns that stay in view while the rest scroll sideways: `{ left: ['name'], right: ['actions'] }`. */
+  columnPinning?: ColumnPinningState;
+  onColumnPinningChange?: (pinning: ColumnPinningState) => void;
+  /** Cap the table's height. Rows scroll and the header stays in view. */
+  maxHeight?: number | string;
+  /**
+   * ARIA grid keyboard model for tables whose cells hold actions: the table is
+   * one tab stop, and Arrow keys, Home/End and Ctrl+Home/End move between cells.
+   */
+  grid?: boolean;
+  /** Rows to render; set by DataTableVirtual. */
+  rowWindow?: DataTableRowWindowHook;
   pagination?: { pageSize?: number };
+  /** Controlled sort (with `enableSorting`): `[{ id: 'name', desc: false }]`. */
+  sort?: SortingState;
+  onSortChange?: (sort: SortingState) => void;
+  /** Rows arrive sorted (server-side): headers still toggle `sort`, but rows aren't reordered. */
+  manualSort?: boolean;
+  /** Controlled page, zero-based. Turns pagination on. */
+  page?: number;
+  /** Rows per page; overrides `pagination.pageSize`. Turns pagination on. @default 20 */
+  pageSize?: number;
+  onPageChange?: (page: number) => void;
+  /** `data` is the current page only (server-side); set `rowCount` for the page count. Turns pagination on. */
+  manualPagination?: boolean;
+  /** Total rows across all pages, with `manualPagination`. */
+  rowCount?: number;
+  /**
+   * Nested rows (a tree table): return a row's children. The first column gets
+   * an expand toggle and indents each level. Sorting sorts within each level.
+   */
+  getSubRows?: (row: TData, index: number) => TData[] | undefined;
+  /** Expanded rows by id, or `true` for all. */
+  expanded?: ExpandedState;
+  defaultExpanded?: ExpandedState;
+  onExpandedChange?: (expanded: ExpandedState) => void;
+  /**
+   * Lets people reorder rows: a handle column (drag, or Alt+ArrowUp/Down on the
+   * handle). Called with the reordered data. Hidden while a column is sorted.
+   */
+  onRowOrderChange?: (data: TData[]) => void;
+  /** Names a row in "Move ‹label›" and the move announcements. @default its position */
+  getRowLabel?: (row: TData) => string;
+  /** Shows skeleton rows (one page's worth) and sets aria-busy on the table. */
+  loading?: boolean;
+  /** Shown in a full-width row when there are no rows. @default messages.noResults */
+  emptyState?: React.ReactNode;
 }
+
+/** TanStack hands back updaters; apply one to the current value. */
+const apply = <T,>(u: Updater<T>, prev: T): T => (typeof u === 'function' ? (u as (p: T) => T)(prev) : u);
+
+const columnLabel = <TData,>(c: { id: string; columnDef: DataTableColumn<TData> }) =>
+  typeof c.columnDef.header === 'string' ? c.columnDef.header : c.id;
 
 export function DataTable<TData>({
   columns,
   data,
   enableSorting = false,
   enableRowSelection = false,
-  pagination,
+  selectionColumn = true,
+  rowSelection: rowSelectionProp,
+  onRowSelectionChange,
+  getRowId,
+  bulkActions,
+  density: densityProp,
+  defaultDensity = 'comfortable',
+  onDensityChange,
+  columnVisibility: columnVisibilityProp,
+  onColumnVisibilityChange,
+  viewOptions = false,
+  toolbar,
+  enableColumnResizing = false,
+  columnSizing: columnSizingProp,
+  onColumnSizingChange,
+  enableColumnReordering = false,
+  columnOrder: columnOrderProp,
+  onColumnOrderChange,
+  columnPinning: columnPinningProp,
+  onColumnPinningChange,
+  maxHeight,
+  grid = false,
+  rowWindow,
+  pagination: paginationProp,
+  sort,
+  onSortChange,
+  manualSort = false,
+  page,
+  pageSize: pageSizeProp,
+  onPageChange,
+  manualPagination = false,
+  rowCount,
+  getSubRows,
+  expanded: expandedProp,
+  defaultExpanded,
+  onExpandedChange,
+  onRowOrderChange,
+  getRowLabel,
+  loading = false,
+  emptyState,
   caption,
   captionHidden = false,
   className,
@@ -152,12 +471,128 @@ export function DataTable<TData>({
   ...props
 }: DataTableProps<TData>) {
   const messages = useNexubMessages();
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [paginationState, setPaginationState] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: pagination?.pageSize ?? 20,
+  const { locale, dir } = useLocale();
+  const [sorting = [], setSorting] = useControllableState<SortingState>({
+    value: sort,
+    defaultValue: [],
+    onChange: onSortChange,
   });
+  const [rowSelection = {}, setRowSelection] = useControllableState<RowSelectionState>({
+    value: rowSelectionProp,
+    defaultValue: {},
+    onChange: onRowSelectionChange,
+  });
+  const [density = 'comfortable', setDensity] = useControllableState<DataTableDensity>({
+    value: densityProp,
+    defaultValue: defaultDensity,
+    onChange: onDensityChange,
+  });
+  const [columnVisibility = {}, setColumnVisibility] = useControllableState<VisibilityState>({
+    value: columnVisibilityProp,
+    defaultValue: {},
+    onChange: onColumnVisibilityChange,
+  });
+  const [columnSizing = {}, setColumnSizing] = useControllableState<ColumnSizingState>({
+    value: columnSizingProp,
+    defaultValue: {},
+    onChange: onColumnSizingChange,
+  });
+  const [columnOrder = [], setColumnOrder] = useControllableState<ColumnOrderState>({
+    value: columnOrderProp,
+    defaultValue: [],
+    onChange: onColumnOrderChange,
+  });
+  const [pinningIn = {}, setColumnPinning] = useControllableState<ColumnPinningState>({
+    value: columnPinningProp,
+    defaultValue: {},
+    onChange: onColumnPinningChange,
+  });
+  const [expanded = {}, setExpanded] = useControllableState<ExpandedState>({
+    value: expandedProp,
+    defaultValue: defaultExpanded ?? {},
+    onChange: onExpandedChange,
+  });
+  const [announcement, setAnnouncement] = React.useState('');
+  const tableRef = React.useRef<HTMLTableElement>(null);
+  const gridNav = React.useMemo(() => createGridNavigation(dir), [dir]);
+  const dragged = React.useRef<string | null>(null);
+  const pagination = !!paginationProp || page !== undefined || pageSizeProp !== undefined || manualPagination;
+  const [pageIndex = 0, setPageIndex] = useControllableState<number>({
+    value: page,
+    defaultValue: 0,
+    onChange: onPageChange,
+  });
+  const pageSize = pageSizeProp ?? paginationProp?.pageSize ?? 20;
+  const paginationState = React.useMemo<PaginationState>(() => ({ pageIndex, pageSize }), [pageIndex, pageSize]);
+
+  const withSelectColumn = enableRowSelection && selectionColumn;
+  const reorderRows = Boolean(onRowOrderChange) && sorting.length === 0;
+  const rowReorder = useReorder({
+    lists: [data],
+    getId: (r: TData) => (getRowId ? getRowId(r, data.indexOf(r)) : String(data.indexOf(r))),
+    getLabel: (r: TData) => getRowLabel?.(r) ?? String(data.indexOf(r) + 1),
+    onMove: (next) => onRowOrderChange?.(next[0]!),
+  });
+  // The checkbox column stays first: pinned along with any left-pinned column.
+  const columnPinning = React.useMemo<ColumnPinningState>(
+    () =>
+      withSelectColumn && pinningIn.left?.length && !pinningIn.left.includes('__select')
+        ? { ...pinningIn, left: ['__select', ...pinningIn.left] }
+        : pinningIn,
+    [withSelectColumn, pinningIn],
+  );
+  // rowReorder is a new object every render. Cells call it while rendering, so the ref is
+  // set during render (not in an effect, which would leave them one render stale) and the
+  // columns stay stable.
+  const rowReorderRef = React.useRef(rowReorder);
+  rowReorderRef.current = rowReorder;
+  const withRowHandles = React.useCallback(
+    (cols: DataTableColumn<TData>[]): DataTableColumn<TData>[] =>
+      reorderRows
+        ? [
+            {
+              id: '__drag',
+              enableSorting: false,
+              enableHiding: false,
+              header: () => null,
+              cell: ({ row }) => (row.depth === 0 ? rowReorderRef.current.handle([0, row.index]) : null),
+            },
+            ...cols,
+          ]
+        : cols,
+    [reorderRows],
+  );
+  const allColumns = React.useMemo<DataTableColumn<TData>[]>(
+    () =>
+      withRowHandles(withSelectColumn
+        ? [
+            {
+              id: '__select',
+              enableSorting: false,
+              enableHiding: false,
+              header: ({ table }) => (
+                <Checkbox
+                  aria-label={messages.selectAllOnPage}
+                  checked={
+                    table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? 'indeterminate' : false
+                  }
+                  onCheckedChange={(v) => table.toggleAllPageRowsSelected(v === true)}
+                />
+              ),
+              cell: ({ row }) => (
+                <Checkbox
+                  aria-label={messages.selectRow}
+                  checked={row.getIsSelected()}
+                  disabled={!row.getCanSelect()}
+                  onCheckedChange={(v) => row.toggleSelected(v === true)}
+                />
+              ),
+            },
+            ...columns,
+          ]
+        : columns),
+    [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow, withRowHandles],
+  );
 
   // Memoize the state bag so a parent re-render with stable sort/selection/pagination
   // values doesn't hand a new object reference to TanStack on every render.
@@ -166,29 +601,174 @@ export function DataTable<TData>({
       sorting: enableSorting ? sorting : undefined,
       rowSelection: enableRowSelection ? rowSelection : undefined,
       pagination: pagination ? paginationState : undefined,
+      columnVisibility,
+      columnSizing,
+      columnOrder,
+      columnPinning,
+      expanded: getSubRows ? expanded : undefined,
     }),
 
-    [enableSorting, sorting, enableRowSelection, rowSelection, pagination, paginationState],
+    [
+      getSubRows,
+      expanded,
+      enableSorting,
+      sorting,
+      enableRowSelection,
+      rowSelection,
+      pagination,
+      paginationState,
+      columnVisibility,
+      columnSizing,
+      columnOrder,
+      columnPinning,
+    ],
   );
 
   const table = useReactTable({
     data,
-    columns,
+    columns: allColumns,
     state: tableState,
-    onSortingChange: enableSorting ? setSorting : undefined,
-    onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
-    onPaginationChange: pagination ? setPaginationState : undefined,
+    getRowId,
+    onSortingChange: enableSorting ? (u) => setSorting(apply(u, sorting)) : undefined,
+    manualSorting: manualSort,
+    onRowSelectionChange: enableRowSelection ? (u) => setRowSelection(apply(u, rowSelection)) : undefined,
+    onColumnVisibilityChange: (u) => setColumnVisibility(apply(u, columnVisibility)),
+    onColumnSizingChange: (u) => setColumnSizing(apply(u, columnSizing)),
+    onColumnOrderChange: (u) => setColumnOrder(apply(u, columnOrder)),
+    onColumnPinningChange: (u) => setColumnPinning(apply(u, columnPinning)),
+    enableColumnResizing,
+    columnResizeMode: 'onChange',
+    columnResizeDirection: dir,
+    onPaginationChange: pagination
+      ? (u) => {
+          const next = apply(u, paginationState).pageIndex;
+          if (next !== pageIndex) setPageIndex(next);
+        }
+      : undefined,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
+    getSortedRowModel: enableSorting && !manualSort ? getSortedRowModel() : undefined,
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: pagination ? getPaginationRowModel() : undefined,
+    getPaginationRowModel: pagination && !manualPagination ? getPaginationRowModel() : undefined,
+    rowCount,
+    getSubRows,
+    getExpandedRowModel: getSubRows ? getExpandedRowModel() : undefined,
+    onExpandedChange: getSubRows ? (u) => setExpanded(apply(u, expanded)) : undefined,
+    // With pages, count top-level rows so a parent and its children stay together
+    // (TanStack then expands inside the page model; without pages it must not).
+    paginateExpandedRows: !pagination,
     enableRowSelection,
-    manualPagination: false,
+    manualPagination,
   });
 
+  const compact = density === 'compact';
+  const selectedRows = enableRowSelection ? table.getSelectedRowModel().rows : [];
+  const totalRows = table.getCoreRowModel().rows.length;
+  const fmt = (n: number) => new Intl.NumberFormat(locale).format(n);
+  const multiSort = sorting.length > 1;
+  // Whole page selected but more rows exist on other pages: offer the rest.
+  const offerAll =
+    withSelectColumn && !!pagination && table.getIsAllPageRowsSelected() && totalRows > table.getRowModel().rows.length;
+  const clear = () => table.resetRowSelection(true);
+
+  const rows = table.getRowModel().rows;
+  const useRowWindow = rowWindow ?? useAllRows;
+  const rowWin = useRowWindow(rows.length, () => tableRef.current?.parentElement ?? null);
+  const pinned = (columnPinning.left?.length ?? 0) + (columnPinning.right?.length ?? 0) > 0;
+
+  // Sizes and offsets through the CSSOM (strict CSP: no style attributes).
+  useIsomorphicLayoutEffect(() => {
+    const t = tableRef.current;
+    if (!t) return;
+    t.style.width = enableColumnResizing ? px(table.getTotalSize()) : '';
+    const scroller = t.parentElement;
+    if (scroller) scroller.style.maxHeight = maxHeight == null ? '' : px(maxHeight);
+    if (grid) gridNav.sync(t);
+  });
+  const visibleColumns = table.getVisibleLeafColumns();
+  const viewButton = (
+    <Button variant="outlined" size="sm" className="ms-auto">
+      <SlidersHorizontal size="sm" aria-hidden="true" />
+      {messages.view}
+    </Button>
+  );
+
+  // Move a column one step (keyboard) or onto another's place (drag).
+  const moveColumn = (id: string, to: number | string) => {
+    const ids = table.getAllLeafColumns().map((c) => c.id);
+    const order = (columnOrder.length ? columnOrder : ids).filter((c) => c !== '__select' && ids.includes(c));
+    for (const c of ids) if (c !== '__select' && !order.includes(c)) order.push(c);
+    const from = order.indexOf(id);
+    const target = typeof to === 'number' ? from + to : order.indexOf(to);
+    if (from < 0 || target < 0 || target >= order.length || target === from) return;
+    order.splice(from, 1);
+    order.splice(target, 0, id);
+    setColumnOrder(withSelectColumn ? ['__select', ...order] : order);
+    if (typeof to === 'number') {
+      const col = table.getColumn(id);
+      setAnnouncement(messages.columnMoved(col ? columnLabel(col) : id, target + 1, order.length));
+    }
+  };
+
   return (
-    <div className={cn('space-y-4', className)} {...props}>
-      <TableRoot aria-label={ariaLabel} aria-labelledby={ariaLabelledBy}>
+    <div className={cn('space-y-4', className)} data-density={density} {...props}>
+      {(toolbar != null || viewOptions) && (
+        <div className="flex flex-wrap items-center gap-2">
+          {toolbar}
+          {viewOptions && (
+            // The plain button stands in (same size, no layout shift) until the menu loads.
+            <React.Suspense fallback={viewButton}>
+              <ViewOptions
+                trigger={viewButton}
+                density={density}
+                onDensityChange={setDensity}
+                columns={table
+                  .getAllLeafColumns()
+                  .filter((c) => c.getCanHide())
+                  .map((c) => ({
+                    id: c.id,
+                    label: columnLabel(c),
+                    visible: c.getIsVisible(),
+                    toggle: (v: boolean) => c.toggleVisibility(v),
+                  }))}
+              />
+            </React.Suspense>
+          )}
+        </div>
+      )}
+      {offerAll && (
+        <div className="flex flex-wrap items-center gap-2 rounded-shape-container bg-[var(--color-surface-container-low)] px-4 py-2 text-body-sm">
+          {table.getIsAllRowsSelected() ? (
+            <>
+              <span>{messages.selectedCount(fmt(totalRows))}</span>
+              <Button variant="link" size="sm" onClick={clear}>
+                {messages.clearSelection}
+              </Button>
+            </>
+          ) : (
+            <>
+              <span>{messages.selectedCount(fmt(selectedRows.length))}</span>
+              <Button variant="link" size="sm" onClick={() => table.toggleAllRowsSelected(true)}>
+                {messages.selectAllRows(fmt(totalRows))}
+              </Button>
+            </>
+          )}
+        </div>
+      )}
+      <span aria-live="polite" className="sr-only">
+        {announcement}
+      </span>
+      {reorderRows && rowReorder.live}
+      <TableRoot
+        ref={tableRef}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        aria-rowcount={rowWin.virtual ? rows.length + 1 : undefined}
+        aria-busy={loading || undefined}
+        role={grid ? 'grid' : undefined}
+        onKeyDown={grid ? gridNav.onKeyDown : undefined}
+        onFocus={grid ? gridNav.onFocus : undefined}
+        className={cn(enableColumnResizing && 'table-fixed')}
+      >
         {caption != null && (
           <Table.Caption className={cn(captionHidden && 'sr-only')}>{caption}</Table.Caption>
         )}
@@ -197,10 +777,47 @@ export function DataTable<TData>({
             <TableRow key={headerGroup.id} className="hover:bg-transparent">
               {headerGroup.headers.map((header) => {
                 const align = header.column.columnDef.meta?.align ?? 'start';
+                const col = header.column;
+                const reorderable = enableColumnReordering && col.id !== '__select' && !col.getIsPinned();
+                const sortable = enableSorting && col.getCanSort();
                 return (
                   <TableHead
                     key={header.id}
-                    className={alignText[align]}
+                    ref={placeCell(col, enableColumnResizing)}
+                    className={cn(
+                      alignText[align],
+                      compact && 'h-8',
+                      (col.id === '__select' || col.id === '__drag') && 'w-10',
+                      // Anchors the resize handle; sticky (below) wins when set and anchors it too.
+                      (enableColumnResizing || reorderable) && 'relative',
+                      maxHeight != null && 'sticky top-0 z-[2] bg-[var(--color-surface)]',
+                      pinClass(col),
+                      maxHeight != null && col.getIsPinned() && 'z-[3] [tr:hover>&]:bg-[var(--color-surface)]',
+                      reorderable && 'cursor-grab',
+                    )}
+                    tabIndex={reorderable && !sortable ? 0 : undefined}
+                    draggable={reorderable || undefined}
+                    onDragStart={reorderable ? () => (dragged.current = col.id) : undefined}
+                    onDragOver={reorderable ? (e) => e.preventDefault() : undefined}
+                    onDrop={
+                      reorderable
+                        ? (e) => {
+                            e.preventDefault();
+                            if (dragged.current) moveColumn(dragged.current, col.id);
+                            dragged.current = null;
+                          }
+                        : undefined
+                    }
+                    onKeyDown={
+                      reorderable
+                        ? (e) => {
+                            if (!e.altKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+                            e.preventDefault();
+                            const forward = (e.key === 'ArrowRight') === (dir !== 'rtl');
+                            moveColumn(col.id, forward ? 1 : -1);
+                          }
+                        : undefined
+                    }
                     aria-sort={
                       enableSorting && header.column.getCanSort()
                         ? header.column.getIsSorted() === 'asc'
@@ -221,6 +838,12 @@ export function DataTable<TData>({
                         )}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
+                        {multiSort && header.column.getIsSorted() && (
+                          <span className="text-[10px] tabular-nums leading-none">
+                            <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
+                            <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
+                          </span>
+                        )}
                         {header.column.getIsSorted() === 'asc' ? (
                           <ArrowUp size="xs" aria-hidden="true" />
                         ) : header.column.getIsSorted() === 'desc' ? (
@@ -232,6 +855,37 @@ export function DataTable<TData>({
                     ) : (
                       flexRender(header.column.columnDef.header, header.getContext())
                     )}
+                    {enableColumnResizing && col.getCanResize() && (
+                      <div
+                        role="separator"
+                        aria-orientation="vertical"
+                        aria-label={messages.resizeColumn(columnLabel(col))}
+                        aria-valuenow={header.getSize()}
+                        aria-valuemin={col.columnDef.minSize ?? 20}
+                        aria-valuemax={col.columnDef.maxSize ?? 1000}
+                        tabIndex={0}
+                        draggable={false}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        onDoubleClick={() => col.resetSize()}
+                        onKeyDown={(e) => {
+                          if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+                          e.preventDefault();
+                          e.stopPropagation();
+                          const grow = (e.key === 'ArrowRight') === (dir !== 'rtl');
+                          const min = col.columnDef.minSize ?? 20;
+                          const max = col.columnDef.maxSize ?? 1000;
+                          const size = Math.min(max, Math.max(min, header.getSize() + (grow ? 16 : -16)));
+                          table.setColumnSizing((s) => ({ ...s, [col.id]: size }));
+                        }}
+                        className={cn(
+                          'absolute inset-y-0 end-0 z-[1] w-2 cursor-col-resize touch-none select-none outline-none',
+                          'after:absolute after:inset-y-2 after:end-0 after:w-px after:bg-[var(--color-outline-variant)]',
+                          'hover:after:w-0.5 hover:after:bg-[var(--color-primary)] focus-visible:after:w-0.5 focus-visible:after:bg-[var(--color-primary)]',
+                          col.getIsResizing() && 'after:w-0.5 after:bg-[var(--color-primary)]',
+                        )}
+                      />
+                    )}
                   </TableHead>
                 );
               })}
@@ -239,29 +893,52 @@ export function DataTable<TData>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={enableRowSelection && row.getIsSelected() ? 'selected' : undefined}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    className={alignText[cell.column.columnDef.meta?.align ?? 'start']}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          {loading ? (
+            Array.from({ length: pagination ? pageSize : 5 }, (_, i) => (
+              <TableRow key={i} data-loading="" className="hover:bg-transparent">
+                {table.getVisibleLeafColumns().map((c) => (
+                  <TableCell key={c.id} className={cn(compact && 'py-1.5')}>
+                    <Skeleton />
                   </TableCell>
                 ))}
               </TableRow>
             ))
+          ) : rows.length ? (
+            <>
+              {rowWin.before > 0 && <Spacer height={rowWin.before} />}
+              {rowWin.indexes.map((i) => {
+                const row = rows[i]!;
+                return (
+                  <RowView
+                    key={row.id}
+                    row={row}
+                    index={i}
+                    selected={enableRowSelection && row.getIsSelected()}
+                    expanded={!!getSubRows && row.getIsExpanded()}
+                    columns={visibleColumns}
+                    columnSizing={columnSizing}
+                    compact={compact}
+                    pinned={pinned}
+                    resizable={enableColumnResizing}
+                    selectable={enableRowSelection}
+                    tree={!!getSubRows}
+                    virtual={rowWin.virtual}
+                    measure={rowWin.measure}
+                    expandLabel={messages.expandRow}
+                    collapseLabel={messages.collapseRow}
+                    dragProps={reorderRows && row.depth === 0 ? rowReorder.itemProps([0, row.index]) : undefined}
+                  />
+                );
+              })}
+              {rowWin.after > 0 && <Spacer height={rowWin.after} />}
+            </>
           ) : (
             <TableRow>
               <TableCell
-                colSpan={columns.length}
+                colSpan={table.getVisibleLeafColumns().length}
                 className="h-24 text-center text-[var(--color-on-surface-muted)]"
               >
-                {messages.noResults}
+                {emptyState ?? messages.noResults}
               </TableCell>
             </TableRow>
           )}
@@ -291,6 +968,29 @@ export function DataTable<TData>({
               {messages.next}
             </button>
           </div>
+        </div>
+      )}
+
+      {bulkActions && selectedRows.length > 0 && (
+        <div
+          role="region"
+          aria-label={messages.selectedCount(fmt(selectedRows.length))}
+          className={cn(
+            floatingSurface,
+            'nx-motion sticky bottom-4 z-10 mx-auto flex w-fit max-w-full flex-wrap items-center gap-3 px-4 py-2',
+          )}
+          data-state="open"
+        >
+          <span aria-live="polite" className="text-label-lg tabular-nums">
+            {messages.selectedCount(fmt(selectedRows.length))}
+          </span>
+          {bulkActions(
+            selectedRows.map((r) => r.original),
+            clear,
+          )}
+          <Button variant="text" size="sm" onClick={clear} aria-label={messages.clearSelection}>
+            <X size="sm" aria-hidden="true" />
+          </Button>
         </div>
       )}
     </div>

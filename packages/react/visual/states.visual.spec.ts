@@ -29,6 +29,7 @@ async function open(page: Page, id: string, globals = 'theme:light') {
   await page.evaluate(() => document.fonts.ready);
 }
 
+// Soft: one run reports hover, focus and pressed together (re-baselines in one pass).
 for (const { id, target } of STATES) {
   test(`${id} states`, async ({ page }) => {
     await open(page, id);
@@ -36,17 +37,17 @@ for (const { id, target } of STATES) {
     const root = page.locator('#storybook-root');
 
     await el.hover();
-    await expect(root).toHaveScreenshot(`${id}--hover.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--hover.png`);
 
     await page.mouse.move(0, 0);
     // Keyboard focus, so :focus-visible matches.
     await el.evaluate((node: HTMLElement) => node.blur());
     await el.focus();
-    await expect(root).toHaveScreenshot(`${id}--focus.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--focus.png`);
 
     await el.hover();
     await page.mouse.down();
-    await expect(root).toHaveScreenshot(`${id}--pressed.png`);
+    await expect.soft(root).toHaveScreenshot(`${id}--pressed.png`);
     await page.mouse.up();
   });
 }
@@ -69,4 +70,57 @@ for (const id of OVERVIEWS) {
       await expect(page).toHaveScreenshot(`${id}--${m.name}.png`, { fullPage: true });
     });
   }
+}
+
+// 9.2: images and skeleton swaps reserve their space. Each story loads, its images decode
+// and its skeletons resolve; nothing may move (CLS, excluding input) along the way.
+const NO_SHIFT = [
+  'components-avatar--default',
+  'components-avatar--with-status',
+  'components-avatargroup--default',
+  'components-mediacard--default',
+  'components-mediacard--linked',
+  'components-mediacard--with-actions',
+  'components-mediacard--ratios',
+  'components-mediacard--image-only',
+  'components-motion--skeleton-to-content',
+  'components-skeleton--default',
+  'components-skeleton--text',
+];
+
+for (const id of NO_SHIFT) {
+  test(`${id} has no layout shift`, async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'layout-shift entries are Chromium-only');
+    // Images arrive late on purpose, after measuring starts (the Storybook preview's own
+    // font swap is excluded: counting begins once fonts are ready).
+    await page.route(/\.(png|jpe?g|webp|avif|gif|svg)(\?|$)/, async (r) => {
+      await new Promise((res) => setTimeout(res, 300));
+      await r.continue();
+    });
+    await page.addInitScript(() => {
+      const w = window as unknown as { __cls: number; __on: boolean };
+      w.__cls = 0;
+      w.__on = false;
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+          if (w.__on && !e.hadRecentInput) w.__cls += e.value;
+        }
+      }).observe({ type: 'layout-shift', buffered: true });
+    });
+    await open(page, id);
+    // Load every font face now, so text that appears later (bold, after the swap) can't
+    // trigger a font swap inside the measured window.
+    await page.evaluate(() => Promise.all([...document.fonts].map((f) => f.load().catch(() => {}))));
+    await page.evaluate(() => ((window as unknown as { __on: boolean }).__on = true));
+    // The swap story finishes loading on a button; a script click isn't user input,
+    // so a shift it causes still counts.
+    if (/skeleton-to-content/.test(id)) {
+      await page.locator('#storybook-root button').first().waitFor();
+      await page.evaluate(() => (document.querySelector('#storybook-root button') as HTMLElement).click());
+    }
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => Promise.all([...document.images].map((i) => i.decode().catch(() => {}))));
+    await page.waitForTimeout(1000);
+    expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBe(0);
+  });
 }

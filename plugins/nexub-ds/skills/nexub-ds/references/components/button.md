@@ -24,7 +24,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Legacy aliases still work: primary = filled, secondary = tonal, outline = outlined, ghost = text. |
+| `variant` | `'filled' \| 'tonal' \| 'outlined' \| 'text' \| 'glass' \| 'hero' \| 'subtle' \| 'link' \| 'destructive' \| 'accent'` | `'primary'` | Visual style of the button. `hero` is the marketing-mode main button (gradient, glow, spring lift): a filled button outside `data-mode="marketing"`; one per screen. Deprecated in 8.4, removed in 9.0: the legacy aliases primary (filled), secondary (tonal), outline (outlined) and ghost (text) still work; `npx nexub-migrate --rules button-aliases --write` renames them. |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Control height and padding. |
 | `status` | `'idle' \| 'loading' \| 'success' \| 'error'` | `'idle'` | Async feedback (beta, 1.7.0). `loading` shows a spinner and blocks clicks but keeps focus; `success` draws a check; `error` shakes once. The label stays in flow, so the width holds. |
 | `loading` | `boolean` | `false` | Alias for `status="loading"`. |
@@ -45,7 +45,7 @@ Triggers an action or event. Supports multiple variants, sizes, and semantic ton
 import { Button } from '@nexub/react';
 
 export default function Example() {
-  return <Button variant="primary">Click me</Button>;
+  return <Button variant="filled">Click me</Button>;
 }
 ```
 
@@ -57,9 +57,9 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="primary">Primary</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="ghost">Ghost</Button>
+      <Button variant="filled">Primary</Button>
+      <Button variant="outlined">Outline</Button>
+      <Button variant="text">Ghost</Button>
       <Button variant="subtle">Subtle</Button>
       <Button variant="link">Link</Button>
     </div>
@@ -75,10 +75,10 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button size="xs" variant="primary">XSmall</Button>
-      <Button size="sm" variant="primary">Small</Button>
-      <Button size="md" variant="primary">Medium</Button>
-      <Button size="lg" variant="primary">Large</Button>
+      <Button size="xs" variant="filled">XSmall</Button>
+      <Button size="sm" variant="filled">Small</Button>
+      <Button size="md" variant="filled">Medium</Button>
+      <Button size="lg" variant="filled">Large</Button>
     </div>
   );
 }
@@ -92,8 +92,8 @@ import { Button } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
-      <Button variant="primary" loading>Loading</Button>
-      <Button variant="outline" disabled>Disabled</Button>
+      <Button variant="filled" loading>Loading</Button>
+      <Button variant="outlined" disabled>Disabled</Button>
     </div>
   );
 }

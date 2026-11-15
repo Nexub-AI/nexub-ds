@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { safeHref, safeSrc } from '../../utils/safeHref.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
 
 export type MediaCardRatio = '16/9' | '4/3' | '1/1' | '3/4';
@@ -34,7 +35,9 @@ export interface MediaCardProps extends Omit<React.HTMLAttributes<HTMLDivElement
  * the stretched link's ::after, shrinking the hit area to the caption.
  */
 export const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
-  ({ src, alt, ratio = '16/9', title, description, eyebrow, href, className, children, ...props }, ref) => {
+  ({ src: srcProp, alt, ratio = '16/9', title, description, eyebrow, href: hrefProp, className, children, ...props }, ref) => {
+    const src = safeSrc(srcProp);
+    const href = safeHref(hrefProp);
     const hasCaption = title != null || description != null || eyebrow != null || children != null;
     return (
       <div
@@ -42,7 +45,7 @@ export const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(
         className={cn(
           'group relative grid overflow-hidden rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-container-high)]',
           href &&
-            'shadow-elevation-1 transition-[box-shadow,transform] duration-effects-fast ease-effects-fast hover:shadow-elevation-2 hover:duration-spatial-default hover:ease-spatial-default motion-safe:hover:-translate-y-0.5 has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[var(--color-primary)]',
+            'shadow-elevation-1 transition-[box-shadow,transform] duration-effects-fast ease-effects-fast hover:shadow-elevation-2 hover:duration-spatial-default hover:ease-spatial-default motion-safe:hover:-translate-y-0.5 has-[a:focus-visible]:outline has-[a:focus-visible]:outline-3 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-[var(--color-primary)]',
           className,
         )}
         {...props}

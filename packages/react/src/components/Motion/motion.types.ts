@@ -1,5 +1,4 @@
 export type MotionDuration = 'instant' | 'fast' | 'normal' | 'slow' | 'slower';
-export type MotionEasing = 'linear' | 'in' | 'out' | 'in-out' | 'out-expo' | 'spring';
 
 export interface MotionBaseProps {
   /** Whether the component is visible / mounted. */
@@ -10,11 +9,6 @@ export interface MotionBaseProps {
    * @default 'normal'
    */
   duration?: MotionDuration;
-  /**
-   * Legacy: set it to use the old `--duration-*` + `--ease-{value}` tokens
-   * instead of springs. Omit it to ride the spring tokens.
-   */
-  easing?: MotionEasing;
   /**
    * Remove the element from the DOM when `in` becomes false
    * (after the exit transition completes).

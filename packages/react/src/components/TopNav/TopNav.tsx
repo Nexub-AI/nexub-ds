@@ -26,7 +26,9 @@ const Root = React.forwardRef<HTMLElement, TopNavRootProps>(
       data-scroll-edge={scrollEdge}
       {...props}
     >
-      <div className="flex w-full items-center gap-4">{children}</div>
+      {/* Full height: the row doesn't grow (and re-centre what is already painted) as later,
+          taller children are parsed. */}
+      <div className="flex h-full w-full items-center gap-4">{children}</div>
     </header>
   ),
 );

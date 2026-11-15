@@ -12,7 +12,7 @@ import { CheckoutPage } from '../CheckoutPage/index.js';
 import { ChatPage } from '../ChatPage/index.js';
 import { PaywallPage } from '../PaywallPage/index.js';
 import { DashboardPage } from '../DashboardPage/index.js';
-import { groupByDay, usePageMessages, type Transaction } from './PageFrame.js';
+import { PageFrame, groupByDay, usePageMessages, type Transaction } from './PageFrame.js';
 
 const tx: Transaction[] = [
   { id: '1', title: 'Coffee Lab', amount: -4.5, currency: 'SGD', date: new Date('2026-10-30T09:00:00Z') },
@@ -245,5 +245,65 @@ describe('DashboardPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'See all' }));
     expect(seeAll).toHaveBeenCalled();
     expect(screen.getByRole('heading', { level: 3, name: 'Spending is down' })).toBeInTheDocument();
+  });
+});
+
+// 9.5: a render error in a page's content shows a fallback; the frame stays up.
+describe('error boundary', () => {
+  let broken = true;
+  function Flaky() {
+    if (broken) throw new Error('boom');
+    return <p>Loaded</p>;
+  }
+  const quiet = () => vi.spyOn(console, 'error').mockImplementation(() => {});
+
+  it('keeps the header, shows the fallback and reports the error; Retry renders the content again', async () => {
+    const spy = quiet();
+    broken = true;
+    const onError = vi.fn();
+    render(
+      <PageFrame title="Reports" onError={onError}>
+        <Flaky />
+      </PageFrame>,
+    );
+    expect(screen.getByRole('heading', { level: 1, name: 'Reports' })).toBeInTheDocument();
+    expect(within(screen.getByRole('alert')).getByText('Something went wrong')).toBeInTheDocument();
+    expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'boom' }), expect.objectContaining({ componentStack: expect.any(String) }));
+
+    broken = false;
+    await userEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(screen.getByText('Loaded')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    spy.mockRestore();
+  });
+
+  it('renders a custom fallback, as a node or a function of the error', async () => {
+    const spy = quiet();
+    broken = true;
+    const { unmount } = render(
+      <PageFrame errorFallback={<p>Custom</p>}>
+        <Flaky />
+      </PageFrame>,
+    );
+    expect(screen.getByText('Custom')).toBeInTheDocument();
+    unmount();
+    render(
+      <PageFrame errorFallback={({ error, reset }) => <button onClick={reset}>{(error as Error).message}</button>}>
+        <Flaky />
+      </PageFrame>,
+    );
+    broken = false;
+    await userEvent.click(screen.getByRole('button', { name: 'boom' }));
+    expect(screen.getByText('Loaded')).toBeInTheDocument();
+    spy.mockRestore();
+  });
+
+  it('covers the page templates: a throwing slot does not take the page down', () => {
+    const spy = quiet();
+    broken = true;
+    render(<SettingsPage title="Settings" groups={[]} header={<Flaky />} />);
+    expect(screen.getByRole('heading', { level: 1, name: 'Settings' })).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    spy.mockRestore();
   });
 });

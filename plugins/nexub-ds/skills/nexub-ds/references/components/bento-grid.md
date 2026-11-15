@@ -20,7 +20,7 @@ A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 4
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `BentoGrid children` (required) | `ReactNode` |  | `BentoTile`s. Dense packing back-fills gaps left by large tiles, so visual order can differ from source order. |
-| `size` | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | `'1x1'` | Tile span, columns × rows. Two-wide spans apply from 2 columns up. |
+| `BentoTile size` | `'1x1' \| '2x1' \| '1x2' \| '2x2'` | `'1x1'` | Tile span, columns × rows. Two-wide spans apply from 2 columns up. |
 | `...Card props` | `CardProps` |  | A tile is a surface Card (`variant` is fixed); `tone`, `surface` and `effect` pass through. |
 
 ## Example: Dashboard

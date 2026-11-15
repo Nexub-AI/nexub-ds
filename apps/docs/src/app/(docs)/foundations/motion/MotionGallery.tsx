@@ -266,7 +266,7 @@ export function WebDemos() {
         <div className="flex flex-col items-center gap-4">
           <Button>Press me</Button>
           <Card variant="interactive" className="w-48 p-4">
-            <CardLink href="#press-and-lift">
+            <CardLink href="/foundations/motion">
               <Text weight="semibold">Hover this card</Text>
             </CardLink>
           </Card>

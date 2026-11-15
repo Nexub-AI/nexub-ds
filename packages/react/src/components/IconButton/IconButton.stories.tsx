@@ -18,3 +18,11 @@ export const Default: Story = {
     size: 'md',
   },
 };
+
+export const Loading: Story = {
+  args: { label: 'Saving', variant: 'solid', loading: true, children: '★' },
+};
+
+export const WithTooltip: Story = {
+  args: { label: 'Favourite', variant: 'outline', tooltip: true, children: '★' },
+};

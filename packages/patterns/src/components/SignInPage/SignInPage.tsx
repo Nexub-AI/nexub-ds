@@ -113,7 +113,7 @@ export const SignInPage = React.forwardRef<HTMLElement, SignInPageProps>(functio
           {onBiometric && biometricLabel && (
             <Button
               type="button"
-              variant="secondary"
+              variant="tonal"
               size="lg"
               fullWidth
               leadingIcon={<ShieldCheck size="sm" aria-hidden="true" />}

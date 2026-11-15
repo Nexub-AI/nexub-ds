@@ -47,6 +47,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Continue"
+      ROW: "Actions.*"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -64,6 +65,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "You send"
+      ROW: "Inputs.*"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -85,6 +87,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Total balance"
+      ROW: "Lists & cards.*"
 - takeScreenshot: 04-lists
 - runFlow: subflows/back.yaml
 
@@ -99,6 +102,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Banners"
+      ROW: "Feedback.*"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -133,6 +137,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Sheets and menus"
+      ROW: "Mobile patterns.*"
 - tapOn:
     text: "Open sheet"
     retryTapIfNoChange: true
@@ -168,6 +173,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Payub flows"
+      ROW: "Screens.*"
 - runFlow:
     file: subflows/scroll-to.yaml
     env:
@@ -179,6 +185,7 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "How much?"
+      ROW: "Send money.*"
 - tapOn:
     text: "2"
     retryTapIfNoChange: true
@@ -209,4 +216,5 @@ appId: ai.nexub.mobile
     file: subflows/wait-for.yaml
     env:
       TEXT: "Amazon.*"
+      ROW: "Activity.*"
 - takeScreenshot: 09-activity

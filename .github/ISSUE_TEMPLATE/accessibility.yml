@@ -1,0 +1,16 @@
+name: Accessibility problem
+description: A component or docs page can't be used with a keyboard, screen reader, zoom, high contrast or reduced motion.
+labels: [accessibility, triage]
+body:
+  - type: input
+    id: where
+    attributes: { label: Component or page, placeholder: "Combobox, or a docs URL" }
+    validations: { required: true }
+  - type: input
+    id: at
+    attributes: { label: Assistive technology and browser, placeholder: "VoiceOver + Safari 18, NVDA + Firefox, 200% zoom…" }
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes: { label: What happens, description: "What you did, what you expected, what you got." }
+    validations: { required: true }

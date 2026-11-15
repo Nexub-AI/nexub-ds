@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { AuthCard } from '@nexub/patterns';
 import { Label, Input, Button } from '@nexub/react';
 
@@ -14,7 +16,7 @@ export default function Example() {
             <Label htmlFor="auth-pass">Password</Label>
             <Input id="auth-pass" type="password" placeholder="••••••••" />
           </div>
-          <Button variant="primary" className="w-full">Sign in</Button>
+          <Button variant="filled" className="w-full">Sign in</Button>
         </div>
       </AuthCard>
     </div>

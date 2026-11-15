@@ -22,7 +22,7 @@ export const Default: Story = {
   render: () => {
     const [selected, setSelected] = React.useState('');
     return (
-      <div style={{ width: '280px' }}>
+      <div style={{ width: '280px', maxWidth: '100%' }}>
         <Autocomplete
           options={countryOptions}
           placeholder="Search countries..."
@@ -38,3 +38,5 @@ export const Default: Story = {
     );
   },
 };
+
+// The 5.x default: the list always shows under the input.

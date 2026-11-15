@@ -102,9 +102,9 @@ import { Send } from '@nexub/icons/native';
     name: 'ButtonGroup',
     preview: 'button-group',
     differences: [
-      { aspect: 'Layout', web: 'Connected segments in a row.', mobile: '`direction="row"` or `"stack"`: full-width buttons stacked, primary on top, as Apple and Material lay out sheet actions.' },
+      { aspect: 'Layout', web: 'Connected segments in a row.', mobile: '`orientation="horizontal"` or `"vertical"`: full-width buttons stacked, primary on top, as Apple and Material lay out sheet actions.' },
     ],
-    code: `<ButtonGroup direction="stack">
+    code: `<ButtonGroup orientation="vertical">
   <Button size="lg">Continue</Button>
   <Button variant="text">Not now</Button>
 </ButtonGroup>`,
@@ -144,7 +144,6 @@ import { Send } from '@nexub/icons/native';
     name: 'Badge',
     preview: 'badge',
     differences: [
-      { aspect: 'Dot', web: 'Use `leadingIcon` for a dot.', mobile: '`dot` renders a status dot.' },
       { aspect: 'Sizes', web: 'sm, md, lg.', mobile: 'sm, md.' },
     ],
     code: `<Badge tone="success" variant="soft" dot>Paid</Badge>`,
@@ -152,8 +151,8 @@ import { Send } from '@nexub/icons/native';
   avatar: {
     name: 'Avatar',
     preview: 'avatar',
-    differences: [{ aspect: 'Status', web: 'Compose a Badge.', mobile: '`badge` adds the presence dot.' }],
-    code: `<Avatar src={user.photo} name={user.name} size="lg" badge />`,
+    differences: [],
+    code: `<Avatar src={user.photo} name={user.name} size="lg" status="online" />`,
   },
   'avatar-group': {
     name: 'AvatarGroup',
@@ -248,6 +247,43 @@ import { Send } from '@nexub/icons/native';
   slider: { name: 'Slider', preview: 'slider', differences: [label], code: `<Slider label="Volume" defaultValue={40} formatValue={(v) => \`\${v}%\`} />` },
   chip: { name: 'Chip', preview: 'chip', differences: [touch], code: `<Chip label="Food" selected={on} onPress={toggle} />` },
   'filter-chip': { name: 'FilterChip', preview: 'chip', differences: [touch], code: `<FilterChip label="This month" selected onPress={toggle} />` },
+  'multi-select': {
+    name: 'MultiSelect',
+    preview: 'multi-select',
+    differences: [
+      { aspect: 'Menu', web: 'A popover list with chips in the field.', mobile: 'A sheet of checkbox rows (search above 8 options); the field summarises the picks.' },
+      label,
+    ],
+    code: `<MultiSelect label="Labels" options={labels} value={picked} onValueChange={setPicked} />`,
+  },
+  'data-table': {
+    name: 'DataList',
+    preview: 'data-list',
+    differences: [
+      { aspect: 'Layout', web: 'Columns: resize, reorder, pin, virtualize.', mobile: 'One row per record with its key fields: no horizontal scrolling.' },
+      { aspect: 'Sort', web: 'Click headers; Shift+click for more.', mobile: 'A Sort button opens a sheet: one sort and a direction.' },
+      { aspect: 'Selection', web: 'Checkbox column and a floating bulk bar.', mobile: 'Checkbox rows; the bar above the list shows the count and your actions.' },
+    ],
+    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />`,
+  },
+  'filter-builder': {
+    name: 'FilterSheet',
+    preview: 'filter-sheet',
+    differences: [
+      { aspect: 'Groups', web: 'Nested AND/OR groups.', mobile: 'One flat AND/OR list; nested groups from the web are kept, not edited.' },
+      { aspect: 'Query', web: 'FilterGroup JSON.', mobile: 'The same FilterGroup JSON (from @nexub/core), so views move between platforms.' },
+    ],
+    code: `<FilterSheet open={open} onOpenChange={setOpen} fields={fields} value={query} onValueChange={setQuery} />`,
+  },
+  'otp-input': {
+    name: 'OTPInput',
+    preview: 'otp-input',
+    differences: [
+      { aspect: 'Fields', web: 'One input per digit; the first takes one-time-code autofill.', mobile: 'One field drawn as cells, so SMS autofill works on iOS and Android.' },
+      label,
+    ],
+    code: `<OTPInput label="Verification code" length={6} onComplete={verify} />`,
+  },
   select: {
     name: 'Select',
     preview: 'select',
@@ -259,6 +295,42 @@ import { Send } from '@nexub/icons/native';
     preview: 'date-time-field',
     differences: [{ aspect: 'Picker', web: 'Nexub calendar popover.', mobile: 'The platform date/time picker (needs @react-native-community/datetimepicker).' }],
     code: `<DateTimeField label="Date of birth" value={dob} onValueChange={setDob} mode="date" />`,
+  },
+  'time-picker': {
+    name: 'DateTimeField',
+    preview: 'date-time-field',
+    differences: [{ aspect: 'Picker', web: 'Native time input.', mobile: 'The platform time picker: `mode="time"`.' }],
+    code: `<DateTimeField label="Remind me at" mode="time" value={at} onValueChange={setAt} />`,
+  },
+  'date-time-picker': {
+    name: 'DateTimeField',
+    preview: 'date-time-field',
+    differences: [{ aspect: 'Fields', web: 'One group: date button and time input.', mobile: 'Two DateTimeFields, `mode="date"` and `mode="time"`, on the same Date.' }],
+    code: `<DateTimeField label="Date" mode="date" value={start} onValueChange={setStart} />\n<DateTimeField label="Time" mode="time" value={start} onValueChange={setStart} />`,
+  },
+  'tree-view': {
+    name: 'TreeList',
+    preview: 'tree-list',
+    differences: [{ aspect: 'Layout', web: 'An indented tree; Arrow keys open and close.', mobile: 'Drill-down lists with a back row: one level at a time.' }],
+    code: `<TreeList rootTitle="Teams" nodes={teams} selected={picked} onSelect={setPicked} />`,
+  },
+  sortable: {
+    name: 'SortableList',
+    preview: 'sortable-list',
+    differences: [{ aspect: 'Moving', web: 'Drag, or Alt+Arrow on a handle.', mobile: 'Move up / down buttons, and the same moves as VoiceOver and TalkBack actions.' }],
+    code: `<SortableList items={widgets} keyExtractor={(w) => w.id} title={(w) => w.name} onReorder={setWidgets} />`,
+  },
+  stepper: {
+    name: 'StepProgress',
+    preview: 'step-progress',
+    differences: [{ aspect: 'Steps', web: 'Every step with its label; reachable steps are buttons.', mobile: 'Segments and "Step 2 of 4: Billing"; move with your screen’s Back and Continue.' }],
+    code: `<StepProgress steps={steps} current={1} />`,
+  },
+  'inline-edit': {
+    name: 'InlineEdit',
+    preview: 'inline-edit',
+    differences: [{ aspect: 'Saving', web: 'Enter or blur saves; Escape reverts.', mobile: 'Return or leaving the field saves.' }],
+    code: `<InlineEdit label="Project name" value={name} onSave={setName} />`,
   },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {
@@ -290,8 +362,8 @@ toast({ message: 'Payment sent', action: { label: 'Undo', onPress: undo } });`,
   'alert-dialog': {
     name: 'Dialog',
     preview: 'dialog',
-    differences: [{ aspect: 'Dismiss', web: 'AlertDialog never closes on outside click.', mobile: '`dismissable={false}` gives the same.' }],
-    code: `<Dialog dismissable={false} open={open} onOpenChange={setOpen} title="Sign out?" actions={<Button onPress={signOut}>Sign out</Button>} />`,
+    differences: [{ aspect: 'Dismiss', web: 'AlertDialog never closes on outside click.', mobile: '`dismissible={false}` gives the same.' }],
+    code: `<Dialog dismissible={false} open={open} onOpenChange={setOpen} title="Sign out?" actions={<Button onPress={signOut}>Sign out</Button>} />`,
   },
   drawer: {
     name: 'BottomSheet',
@@ -346,7 +418,7 @@ export const mobileOnly: MobileOnlyEntry[] = [
   { slug: 'context-menu', name: 'ContextMenu', title: 'Context Menu', category: 'Overlays', preview: 'context-menu', description: 'Long-press menu with the actions also exposed as accessibility actions.', code: `<ContextMenu actions={actions}><ListItem title="Amazon" value="−S$42.50" /></ContextMenu>`, webAlternative: 'ContextMenu' },
   { slug: 'swipeable-row', name: 'SwipeableRow', title: 'Swipeable Row', category: 'Lists', preview: 'swipeable-row', description: 'Swipe a row to reveal actions; every swipe action is also an accessibility action.', code: `<SwipeableRow label="Amazon" actions={[{ label: 'Archive', onPress: archive }, { label: 'Delete', tone: 'danger', onPress: del }]}>…</SwipeableRow>` },
   { slug: 'refresh-control', name: 'RefreshControl', title: 'Refresh Control', category: 'Lists', preview: 'pattern/activity', description: 'Pull to refresh in Nexub colours.', code: `<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}>…</ScrollView>` },
-  { slug: 'otp-input', name: 'OTPInput', title: 'OTP Input', category: 'Inputs', preview: 'otp-input', description: 'One field drawn as cells, so SMS one-time-code autofill works on iOS and Android.', code: `<OTPInput label="Verification code" length={6} onComplete={verify} />` },
+  { slug: 'file-list', name: 'FileList', title: 'File List', category: 'Inputs', preview: 'file-list', description: 'Files picked for upload with progress, errors and remove or cancel. Bring your own picker (expo-document-picker).', code: `<FileList files={files} onAdd={pick} onRemove={remove} onCancel={cancel} />`, webAlternative: 'FileUpload' },
   { slug: 'numeric-keypad', name: 'NumericKeypad', title: 'Numeric Keypad', category: 'Inputs', preview: 'numeric-keypad', description: 'An on-screen keypad for amounts and PINs, with the locale’s decimal key.', code: `<NumericKeypad decimal onKey={press} />` },
   { slug: 'expressive-money-input', name: 'ExpressiveMoneyInput', title: 'Expressive Money Input', category: 'Inputs', preview: 'expressive-money-input', description: 'The big amount on a send-money screen; pair with NumericKeypad.', code: `<ExpressiveMoneyInput label="Amount" currency="SGD" value={v} onValueChange={setV} caption="Balance S$2,400" />`, webAlternative: 'MoneyInput' },
   { slug: 'date-time-field', name: 'DateTimeField', title: 'Date Time Field', category: 'Inputs', preview: 'date-time-field', description: 'Opens the platform date or time picker.', code: `<DateTimeField label="Date" mode="date" value={d} onValueChange={setD} />`, webAlternative: 'DatePicker' },
@@ -435,13 +507,5 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
     code: `import { ProfileHeader } from '@nexub/react-native/patterns';
 
 <ProfileHeader name="Sasi" detail="sasi@nexub.ai" onPress={editProfile} />`,
-  },
-  'step-indicator': {
-    name: 'FlowStep',
-    preview: 'pattern/send',
-    differences: [{ aspect: 'Progress', web: 'Numbered steps you can see at once.', mobile: 'One step per screen with "Step 2 of 3" and the action in the footer.' }],
-    code: `import { FlowStep } from '@nexub/react-native/patterns';
-
-<FlowStep step={2} total={3} title="Review" footer={<Button size="lg">Send</Button>}>…</FlowStep>`,
   },
 };

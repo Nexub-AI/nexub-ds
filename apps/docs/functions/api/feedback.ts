@@ -47,6 +47,9 @@ const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 const MAX_BODY_BYTES = MAX_IMAGE_BYTES + 256 * 1024;
 const MIN_MESSAGE = 10;
 const MAX_MESSAGE = 2000;
+// Turnstile tokens are up to 2048 characters; the context blob is five short strings.
+const MAX_TOKEN = 2048;
+const MAX_CONTEXT = 4096;
 
 // Per-IP rate limit, per Worker isolate only — Cloudflare runs many isolates, so
 // this is a speed bump, not a guarantee. The real limit is the WAF rate-limiting
@@ -58,23 +61,38 @@ const RATE_LIMIT_MAX_IPS = 1000;
 
 function rateLimit(ip: string): { ok: boolean; retryAfter: number } {
   const now = Date.now();
-  // Bound memory: drop the map when it grows past the cap (all entries are at
-  // most one window old anyway).
-  if (recentByIp.size > RATE_LIMIT_MAX_IPS) recentByIp.clear();
+  // Bound memory: past the cap, forget the address seen longest ago (a Map keeps
+  // insertion order). Clearing the whole map would let a flood of addresses reset
+  // everyone's count.
+  if (recentByIp.size > RATE_LIMIT_MAX_IPS && !recentByIp.has(ip)) recentByIp.delete(recentByIp.keys().next().value!);
   const bucket = (recentByIp.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
   if (bucket.length >= RATE_LIMIT_MAX) {
     const oldest = bucket[0]!;
     return { ok: false, retryAfter: Math.ceil((RATE_LIMIT_WINDOW_MS - (now - oldest)) / 1000) };
   }
   bucket.push(now);
+  recentByIp.delete(ip); // re-insert, so the order is by last use
   recentByIp.set(ip, bucket);
   return { ok: true, retryAfter: 0 };
+}
+
+// Browsers always send Origin on a POST fetch. Same-origin covers the custom
+// domain; the pages.dev host and its branch previews are listed explicitly.
+const PAGES_ORIGIN = /^https:\/\/([a-z0-9-]+\.)?nexub-ds-docs\.pages\.dev$/;
+export function isAllowedOrigin(origin: string | null, requestUrl: string): boolean {
+  if (!origin) return false;
+  return origin === new URL(requestUrl).origin || PAGES_ORIGIN.test(origin);
 }
 
 function jsonResponse(status: number, body: unknown, extraHeaders?: HeadersInit): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8', ...(extraHeaders ?? {}) },
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
+      ...(extraHeaders ?? {}),
+    },
   });
 }
 
@@ -88,10 +106,11 @@ export function isValidEmail(s: string): boolean {
   return s.length <= 254 && EMAIL_RE.test(s);
 }
 
-function httpUrlOrUndefined(s: string): string | undefined {
+/** The page the feedback is about. Chat shows it as a link, so only a URL on this site passes (9.8). */
+export function pageUrlOrUndefined(s: string, requestUrl: string): string | undefined {
   try {
     const u = new URL(s);
-    return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : undefined;
+    return isAllowedOrigin(u.origin, requestUrl) ? u.href : undefined;
   } catch {
     return undefined;
   }
@@ -108,11 +127,11 @@ export function sniffImageType(b: Uint8Array): string | null {
   return null;
 }
 
-function pickContext(raw: unknown): BrowserContext | null {
+function pickContext(raw: unknown, requestUrl: string): BrowserContext | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Record<string, unknown>;
   const out: BrowserContext = {};
-  if (typeof r.url === 'string') out.url = httpUrlOrUndefined(r.url.slice(0, 500));
+  if (typeof r.url === 'string') out.url = pageUrlOrUndefined(r.url.slice(0, 500), requestUrl);
   if (typeof r.ua === 'string') out.ua = r.ua.slice(0, 300);
   if (typeof r.viewport === 'string') out.viewport = r.viewport.slice(0, 50);
   if (typeof r.theme === 'string') out.theme = r.theme.slice(0, 30);
@@ -123,7 +142,12 @@ function pickContext(raw: unknown): BrowserContext | null {
 async function parseBody(request: Request): Promise<ParsedBody | null> {
   const contentType = request.headers.get('content-type') ?? '';
   if (!contentType.includes('multipart/form-data')) return null;
-  const fd = await request.formData();
+  let fd: FormData;
+  try {
+    fd = await request.formData();
+  } catch {
+    return null; // bad boundary or truncated body: a 400, not an unhandled exception
+  }
   const category = String(fd.get('category') ?? '');
   const message = String(fd.get('message') ?? '');
   const email = String(fd.get('email') ?? '');
@@ -131,9 +155,9 @@ async function parseBody(request: Request): Promise<ParsedBody | null> {
   const website = String(fd.get('website') ?? '');
   const contextRaw = fd.get('context');
   let context: BrowserContext | null = null;
-  if (typeof contextRaw === 'string' && contextRaw) {
+  if (typeof contextRaw === 'string' && contextRaw && contextRaw.length <= MAX_CONTEXT) {
     try {
-      context = pickContext(JSON.parse(contextRaw));
+      context = pickContext(JSON.parse(contextRaw), request.url);
     } catch {
       // ignore — bad JSON, drop context silently
     }
@@ -143,8 +167,16 @@ async function parseBody(request: Request): Promise<ParsedBody | null> {
   return { category, message, email, screenshot, turnstileToken, website, context };
 }
 
-async function verifyTurnstile(token: string, secret: string, ip: string): Promise<boolean> {
-  if (!token || !secret) return false;
+// Outbound calls give up after this long, so a slow upstream can't hold the invocation open.
+const UPSTREAM_TIMEOUT_MS = 5000;
+
+/** A token is only good for this site: one solved on another host that uses the same site key is refused. */
+export function isAllowedTurnstileHost(hostname: unknown, requestUrl: string): boolean {
+  return typeof hostname === 'string' && isAllowedOrigin(`https://${hostname}`, requestUrl.replace(/^http:/, 'https:'));
+}
+
+async function verifyTurnstile(token: string, secret: string, ip: string, requestUrl: string): Promise<boolean> {
+  if (!token || token.length > MAX_TOKEN || !secret) return false;
   const body = new FormData();
   body.set('secret', secret);
   body.set('response', token);
@@ -153,10 +185,16 @@ async function verifyTurnstile(token: string, secret: string, ip: string): Promi
     const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
       body,
+      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
     if (!res.ok) return false;
-    const data = (await res.json()) as { success?: boolean };
-    return data.success === true;
+    const data = (await res.json()) as { success?: boolean; hostname?: string };
+    if (data.success !== true) return false;
+    if (!isAllowedTurnstileHost(data.hostname, requestUrl)) {
+      console.error('[feedback] Turnstile token was issued for another host');
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }
@@ -247,6 +285,9 @@ function buildChatCard(input: ChatCardInput): unknown {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  if (!isAllowedOrigin(request.headers.get('origin'), request.url)) {
+    return jsonResponse(403, { error: 'forbidden' });
+  }
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown';
 
   const limit = rateLimit(ip);
@@ -256,7 +297,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Reject oversized bodies before buffering them in formData().
   const contentLength = Number(request.headers.get('content-length'));
-  if (!contentLength) return jsonResponse(411, { error: 'length_required' });
+  if (!Number.isInteger(contentLength) || contentLength <= 0) return jsonResponse(411, { error: 'length_required' });
   if (contentLength > MAX_BODY_BYTES) return jsonResponse(413, { error: 'too_large' });
 
   const parsed = await parseBody(request);
@@ -293,7 +334,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     console.error('[feedback] TURNSTILE_SECRET_KEY not set — rejecting submission');
     return jsonResponse(503, { error: 'not_configured' });
   }
-  const ok = await verifyTurnstile(parsed.turnstileToken, env.TURNSTILE_SECRET_KEY, ip);
+  if (!env.GOOGLE_CHAT_WEBHOOK_URL) {
+    // Fail closed (9.8): answering ok here would tell the sender their feedback
+    // arrived while it was thrown away. Checked before the
+    // Turnstile round-trip and the R2 upload, so nothing is stored either.
+    console.error('[feedback] GOOGLE_CHAT_WEBHOOK_URL not set — rejecting submission');
+    return jsonResponse(503, { error: 'not_configured' });
+  }
+
+  const ok = await verifyTurnstile(parsed.turnstileToken, env.TURNSTILE_SECRET_KEY, ip, request.url);
   if (!ok) return jsonResponse(400, { error: 'turnstile_failed' });
 
   // Optional screenshot → R2
@@ -316,13 +365,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  if (!env.GOOGLE_CHAT_WEBHOOK_URL) {
-    // Webhook not configured yet — return ok so the form looks healthy in
-    // staging, but log to the Pages tail. Production must always have this.
-    console.warn('[feedback] GOOGLE_CHAT_WEBHOOK_URL not set — submission discarded');
-    return jsonResponse(200, { ok: true, warning: 'webhook_not_configured' });
-  }
-
   const card = buildChatCard({
     category: parsed.category,
     message: trimmed,
@@ -338,11 +380,17 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       method: 'POST',
       headers: { 'content-type': 'application/json; charset=utf-8' },
       body: JSON.stringify(card),
+      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
     });
   } catch {
+    // Logs never carry the webhook URL (it is the credential), the message or the email.
+    console.error('[feedback] webhook request failed');
     return jsonResponse(500, { error: 'webhook_failed' });
   }
-  if (!webhookRes.ok) return jsonResponse(500, { error: 'webhook_failed' });
+  if (!webhookRes.ok) {
+    console.error(`[feedback] webhook answered ${webhookRes.status}`);
+    return jsonResponse(500, { error: 'webhook_failed' });
+  }
 
   return jsonResponse(200, { ok: true });
 };

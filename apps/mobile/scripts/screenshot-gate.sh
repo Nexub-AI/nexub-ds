@@ -12,7 +12,8 @@
 # push compares against what was recorded. To re-record a platform after an
 # intended visual change, delete its baseline folder in the PR.
 #
-# Env: HEAD_REF (PR branch), PUSH_TOKEN (can push to it), REPO (owner/name).
+# Env: HEAD_REF (PR branch), PUSH_TOKEN (the job's GITHUB_TOKEN, never a PAT:
+# this runs PR-branch code), REPO (owner/name).
 set -eu
 platform="$1"
 dir="apps/mobile/.maestro/baselines/$platform"

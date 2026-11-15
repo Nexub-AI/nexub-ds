@@ -13,14 +13,15 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronsUpDown } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
+import { useLatest } from '../hooks/useLatest';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { useHaptics, useTheme } from '../theme/ThemeProvider';
@@ -28,6 +29,8 @@ import { nxSpring } from '../theme/motion';
 import { ListItem, ListSection } from './containers';
 
 const SHEET_SPRING = nxSpring('spatial', 'default');
+// Exit rides the quicker, non-overshooting effects spring (as nxExit does).
+const SHEET_EXIT = nxSpring('effects', 'default');
 
 // ─── BottomSheet ─────────────────────────────────────────────────────────────
 
@@ -35,6 +38,22 @@ export type SheetDetent = 'content' | number;
 
 /** Height of the grabber row above the sheet body. */
 const GRABBER = 24;
+
+/**
+ * Where a released sheet goes: a detent index, or -1 to close.
+ * `offsets` are each detent's translateY (0 = tallest), `y` the release
+ * position and `vy` the release velocity in px/s (down is positive).
+ */
+export function sheetRelease(y: number, vy: number, offsets: number[], dismissible: boolean) {
+  if (dismissible && (y > Math.max(...offsets) + 80 || vy > 1200)) return -1;
+  // Nearest detent to where the fling would carry it.
+  const target = y + vy * 0.12;
+  let best = 0;
+  offsets.forEach((o, i) => {
+    if (Math.abs(o - target) < Math.abs(offsets[best]! - target)) best = i;
+  });
+  return best;
+}
 
 export interface BottomSheetProps {
   open: boolean;
@@ -44,7 +63,7 @@ export interface BottomSheetProps {
   title?: string;
   children: React.ReactNode;
   /** Drag down, tap the scrim or Android back closes it. @default true */
-  dismissable?: boolean;
+  dismissible?: boolean;
   /** Let the content scroll (long lists). @default false */
   scroll?: boolean;
 }
@@ -60,7 +79,7 @@ export function BottomSheet({
   detents = ['content'],
   title,
   children,
-  dismissable = true,
+  dismissible = true,
   scroll,
 }: BottomSheetProps) {
   const theme = useTheme();
@@ -83,39 +102,69 @@ export function BottomSheet({
   const height = heights[Math.min(index, heights.length - 1)]!;
   const tallest = heights[heights.length - 1]!;
 
-  // Sheet sits at translateY = tallest - height (0 = fully up).
-  const snapTo = React.useCallback(
-    (i: number) => {
-      setIndex(i);
-      translate.value = withSpring(tallest - heights[i]!, spring);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tallest, heights.join(), spring],
-  );
+  // Release velocity (px/s) handed from a drag to the next spring.
+  const fling = React.useRef(0);
 
-  React.useEffect(() => {
+  // Sheet sits at translateY = tallest - height (0 = fully up).
+  const snapTo = (i: number) => {
+    setIndex(i);
+    translate.value = withSpring(tallest - heights[i]!, { ...spring, velocity: fling.current });
+    fling.current = 0;
+  };
+
+  // The open/close and re-fit springs run only on their own trigger (`open`,
+  // the measured `content`), reading the latest layout through refs: a new
+  // `detents` array or onOpenChange on every parent render must not restart them.
+  const toggle = useLatest(() => {
     if (open) {
       setVisible(true);
       setIndex(0);
       translate.value = screen;
       translate.value = withSpring(tallest - heights[0]!, spring);
-      scrim.value = withTiming(1, { duration: tokens.motion.duration.normal });
+      scrim.value = withSpring(1, SHEET_EXIT);
     } else if (visible) {
-      translate.value = withTiming(screen, { duration: tokens.motion.duration.normal });
-      scrim.value = withTiming(0, { duration: tokens.motion.duration.normal });
-      const t = setTimeout(() => setVisible(false), tokens.motion.duration.normal);
-      return () => clearTimeout(t);
+      // Unmount when the spring lands, not on a guessed timer. An interrupted
+      // spring (reopened mid-close) reports finished=false and keeps it up.
+      translate.value = withSpring(
+        screen,
+        { ...SHEET_EXIT, velocity: fling.current },
+        (finished) => {
+          if (finished) runOnJS(setVisible)(false);
+        },
+      );
+      fling.current = 0;
+      scrim.value = withSpring(0, SHEET_EXIT);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  });
+  React.useEffect(() => {
+    toggle.current();
+  }, [open, toggle]);
 
   // Re-fit when 'content' is measured.
-  React.useEffect(() => {
+  const refit = useLatest(() => {
     if (open && content) translate.value = withSpring(tallest - height, spring);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [content]);
+  });
+  React.useEffect(() => {
+    refit.current();
+  }, [content, refit]);
 
+  // ponytail: PanResponder moves arrive on the JS thread and write the shared
+  // value; a UI-thread drag needs react-native-gesture-handler as a peer.
   const start = React.useRef(0);
+  // One responder for the sheet's life (a new one mid-drag drops the gesture);
+  // the release reads the latest detents, index and onOpenChange.
+  const release = useLatest((dy: number, vy: number) => {
+    fling.current = vy * 1000; // PanResponder px/ms → Reanimated px/s
+    const best = sheetRelease(
+      start.current + dy,
+      fling.current,
+      heights.map((h) => tallest - h),
+      dismissible,
+    );
+    if (best < 0) return onOpenChange(false);
+    if (best !== index) play('snap');
+    snapTo(best);
+  });
   const responder = React.useMemo(
     () =>
       PanResponder.create({
@@ -126,29 +175,15 @@ export function BottomSheet({
         onPanResponderMove: (_, g) => {
           translate.value = Math.max(0, start.current + g.dy);
         },
-        onPanResponderRelease: (_, g) => {
-          const y = start.current + g.dy;
-          const lowest = tallest - heights[0]!;
-          if (dismissable && (y > lowest + 80 || g.vy > 1.2)) return onOpenChange(false);
-          // Nearest detent, biased by fling direction.
-          const target = y - g.vy * 120;
-          let best = 0;
-          heights.forEach((h, i) => {
-            if (Math.abs(tallest - h - target) < Math.abs(tallest - heights[best]! - target))
-              best = i;
-          });
-          if (best !== index) play('snap');
-          snapTo(best);
-        },
+        onPanResponderRelease: (_, g) => release.current(g.dy, g.vy),
       }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tallest, heights.join(), index, dismissable],
+    [translate, release],
   );
 
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translate.value }] }));
   const scrimStyle = useAnimatedStyle(() => ({ opacity: scrim.value * 0.32 }));
   const close = () => {
-    if (dismissable) onOpenChange(false);
+    if (dismissible) onOpenChange(false);
   };
 
   const body = (
@@ -276,8 +311,10 @@ export interface ActionSheetProps {
  */
 export function ActionSheet({ open, onOpenChange, title, message, actions }: ActionSheetProps) {
   const { roles, messages, scheme } = useTheme();
-  React.useEffect(() => {
-    if (!open || Platform.OS !== 'ios') return;
+  // Shown once per opening: a new `actions` array or onOpenChange on a parent
+  // re-render must not re-present the system sheet. The pick calls the latest.
+  const latestClose = useLatest(onOpenChange);
+  const present = useLatest(() => {
     const enabled = actions.filter((a) => !a.disabled);
     ActionSheetIOS.showActionSheetWithOptions(
       {
@@ -290,12 +327,14 @@ export function ActionSheet({ open, onOpenChange, title, message, actions }: Act
         userInterfaceStyle: scheme,
       },
       (i) => {
-        onOpenChange(false);
+        latestClose.current(false);
         enabled[i]?.onPress();
       },
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  });
+  React.useEffect(() => {
+    if (open && Platform.OS === 'ios') present.current();
+  }, [open, present]);
   if (Platform.OS === 'ios') return null;
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange} title={title}>
@@ -419,7 +458,7 @@ export function Select<T extends string>({
   });
   const current = options.find((o) => o.value === v);
   return (
-    <View style={[{ gap: 6 }, style]}>
+    <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
       <Text
         variant="label-lg"
         color={error ? 'error' : 'on-surface-variant'}
@@ -435,7 +474,7 @@ export function Select<T extends string>({
         pressScale={false}
         style={{
           minHeight: tokens.size.control.lg,
-          paddingHorizontal: 14,
+          paddingHorizontal: tokens.spacing['3-5'],
           flexDirection: 'row',
           alignItems: 'center',
           borderRadius: tokens.shape.field,

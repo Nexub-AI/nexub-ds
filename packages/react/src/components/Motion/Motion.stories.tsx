@@ -51,11 +51,11 @@ export const Stagger: Story = {
   render: function Render() {
     const [run, setRun] = React.useState(0);
     return (
-      <div style={{ display: 'grid', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: '1rem' }}>
         <Button variant="tonal" onClick={() => setRun((n) => n + 1)} style={{ width: 'fit-content' }}>
           Replay
         </Button>
-        <div key={run} className="nx-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 160px)', gap: '0.75rem' }}>
+        <div key={run} className="nx-stagger" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, 160px)', width: 504, maxWidth: '100%', gap: '0.75rem' }}>
           {['Balance', 'Income', 'Spend', 'Savings', 'Cards', 'Goals'].map((t) => (
             <Card key={t} style={{ padding: '1rem' }}>{t}</Card>
           ))}
@@ -71,7 +71,7 @@ export const List: Story = {
     const [items, setItems] = React.useState(['Coffee · S$5.40', 'Grab · S$12.10', 'NTUC · S$48.75']);
     const [n, setN] = React.useState(1);
     return (
-      <div style={{ display: 'grid', gap: '1rem', width: 320 }}>
+      <div style={{ display: 'grid', gap: '1rem', width: 320, maxWidth: '100%' }}>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <Button variant="tonal" onClick={() => { setItems((l) => [`Transfer #${n} · S$${(n * 7.5).toFixed(2)}`, ...l]); setN((x) => x + 1); }}>
             Add
@@ -97,7 +97,7 @@ export const SkeletonToContent: Story = {
   render: function Render() {
     const [loading, setLoading] = React.useState(true);
     return (
-      <div style={{ display: 'grid', gap: '1rem', width: 320 }}>
+      <div style={{ display: 'grid', gap: '1rem', width: 320, maxWidth: '100%' }}>
         <Button variant="tonal" onClick={() => setLoading((v) => !v)} style={{ width: 'fit-content' }}>
           {loading ? 'Finish loading' : 'Load again'}
         </Button>

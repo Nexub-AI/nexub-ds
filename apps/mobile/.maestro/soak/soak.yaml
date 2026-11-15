@@ -1,0 +1,73 @@
+# 9.5 soak: one app session, used over and over. Each lap opens two screens, shows a toast,
+# opens and closes a dialog and a sheet, and goes back. No relaunch between laps, so memory
+# the app keeps per lap adds up; apps/mobile/scripts/soak.sh samples it and fails on growth.
+# A crash fails the flow: the next element never appears.
+# Not in the catalogue run (Maestro only runs this folder when asked): nightly, see mobile.yml.
+appId: ai.nexub.mobile
+env:
+  LAPS: 40
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Components"
+    timeout: 60000
+- waitForAnimationToEnd
+- repeat:
+    times: ${LAPS}
+    commands:
+      - scrollUntilVisible:
+          element: "Feedback.*"
+          direction: UP
+      - tapOn:
+          text: "Feedback.*"
+          retryTapIfNoChange: true
+      - runFlow:
+          file: ../subflows/wait-for.yaml
+          env:
+            TEXT: "Banners"
+            ROW: "Feedback.*"
+      - runFlow:
+          file: ../subflows/scroll-to.yaml
+          env:
+            TARGET: "Show toast"
+      - tapOn:
+          text: "Show toast"
+          retryTapIfNoChange: true
+      - extendedWaitUntil:
+          visible: "Recipient saved"
+          timeout: 5000
+      - tapOn:
+          text: "Open dialog"
+          retryTapIfNoChange: true
+      - extendedWaitUntil:
+          visible: "Cancel this transfer?"
+          timeout: 5000
+      - tapOn:
+          text: "Keep it"
+          retryTapIfNoChange: true
+      - assertNotVisible: "Cancel this transfer?"
+      - runFlow: ../subflows/back.yaml
+
+      - runFlow:
+          file: ../subflows/scroll-to.yaml
+          env:
+            TARGET: "Mobile patterns.*"
+      - tapOn:
+          text: "Mobile patterns.*"
+          retryTapIfNoChange: true
+      - runFlow:
+          file: ../subflows/wait-for.yaml
+          env:
+            TEXT: "Sheets and menus"
+            ROW: "Mobile patterns.*"
+      - tapOn:
+          text: "Open sheet"
+          retryTapIfNoChange: true
+      - extendedWaitUntil:
+          visible: "Transfer details"
+          timeout: 5000
+      - tapOn:
+          text: "Confirm and send"
+          retryTapIfNoChange: true
+      - assertNotVisible: "Transfer details"
+      - runFlow: ../subflows/back.yaml

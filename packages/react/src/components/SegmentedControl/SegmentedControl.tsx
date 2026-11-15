@@ -32,7 +32,7 @@ const Root = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
           ref={useMergedRefs(ref, forwardedRef)}
           type="single"
           className={cn(
-            'relative inline-flex items-stretch rounded-shape-control bg-[var(--color-surface-container-high)] p-0.5',
+            'relative inline-flex items-stretch rounded-[var(--shape-pill,var(--shape-control))] bg-[var(--color-surface-container-high)] p-0.5',
             sizeMap[size],
             className,
           )}
@@ -42,7 +42,7 @@ const Root = React.forwardRef<HTMLDivElement, SegmentedControlProps>(
           <span
             aria-hidden="true"
             className={cn(
-              'pointer-events-none absolute inset-y-0.5 left-0 rounded-shape-control',
+              'pointer-events-none absolute inset-y-0.5 left-0 rounded-[var(--shape-pill,var(--shape-control))]',
               'bg-[var(--color-surface-container-lowest)] shadow-elevation-1',
               'w-[var(--nx-ind-w,0px)] translate-x-[var(--nx-ind-x,0px)] opacity-[var(--nx-ind-o,0)]',
               '[[data-nx-indicator=ready]>&]:transition-[transform,width] [[data-nx-indicator=ready]>&]:duration-spatial-default [[data-nx-indicator=ready]>&]:ease-spatial-default',
@@ -63,7 +63,7 @@ const Item = React.forwardRef<HTMLButtonElement, SegmentedControlItemProps>(
       <RadixToggleGroup.Item
         ref={ref}
         className={cn(
-          'relative z-10 inline-flex items-center justify-center rounded-shape-control select-none',
+          'relative z-10 inline-flex items-center justify-center rounded-[var(--shape-pill,var(--shape-control))] select-none',
           size === 'sm' ? 'px-3' : size === 'lg' ? 'px-5' : 'px-4',
           'text-[var(--color-on-surface-variant)] transition-colors duration-effects-fast ease-effects-fast',
           'hover:text-[var(--color-on-surface)] data-[state=on]:text-[var(--color-on-surface)]',

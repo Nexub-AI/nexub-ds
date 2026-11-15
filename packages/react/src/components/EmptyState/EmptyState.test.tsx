@@ -56,4 +56,21 @@ describe('EmptyState', () => {
     render(<EmptyState.Root ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
+
+  it('size scales the parts; md is the default look', () => {
+    const { container, rerender } = render(
+      <EmptyState.Root>
+        <EmptyState.Title>Empty</EmptyState.Title>
+      </EmptyState.Root>,
+    );
+    expect(container.firstChild).toHaveAttribute('data-size', 'md');
+    expect(container.firstChild).toHaveClass('gap-4', 'py-16');
+    rerender(
+      <EmptyState.Root size="sm" animate>
+        <EmptyState.Title>Empty</EmptyState.Title>
+      </EmptyState.Root>,
+    );
+    expect(container.firstChild).toHaveClass('py-8', 'nx-reveal');
+    expect(screen.getByRole('heading')).toHaveClass('group-data-[size=sm]/empty-state:text-base');
+  });
 });

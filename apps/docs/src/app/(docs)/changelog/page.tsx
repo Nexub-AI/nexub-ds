@@ -4,7 +4,9 @@ import type { Metadata } from 'next';
 import type * as React from 'react';
 import { Heading, Text } from '@nexub/react';
 import { PageIntro, Section } from '@/components/kit';
-import { mergeChangelogs } from '@/lib/changelog';
+import { exportName, mergeChangelogs, pageForCode } from '@/lib/changelog';
+import { componentEntries, patternEntries } from '@/registry/index';
+import { ChangelogBrowser } from '@/components/docs/ChangelogBrowser';
 
 export const dynamic = 'force-static';
 
@@ -30,6 +32,12 @@ function loadReleases() {
   );
 }
 
+// `BarChart` in a release note links to /components/bar-chart.
+const PAGES = new Map([
+  ...patternEntries.map((e) => [exportName(e.meta.slug), `/patterns/${e.meta.slug}`] as const),
+  ...componentEntries.map((e) => [exportName(e.meta.slug), `/components/${e.meta.slug}`] as const),
+]);
+
 /* ── Minimal Markdown: paragraphs, nested "- " lists, `code`, **bold**, [links](url) ── */
 
 const INLINE = /``\s?(.+?)\s?``|`([^`]+)`|\*\*(.+?)\*\*|\[([^\]]+)\]\(([^)\s]+)\)/g;
@@ -41,7 +49,11 @@ function inline(text: string): React.ReactNode[] {
     out.push(text.slice(last, m.index));
     const [, dbl, code, bold, label, href] = m;
     const k = m.index;
-    if (dbl ?? code) out.push(<code key={k}>{dbl ?? code}</code>);
+    if (dbl ?? code) {
+      const c = (dbl ?? code)!;
+      const page = pageForCode(c, PAGES);
+      out.push(page ? <a key={k} href={page}><code>{c}</code></a> : <code key={k}>{c}</code>);
+    }
     else if (bold) out.push(<strong key={k}>{inline(bold)}</strong>);
     else if (label && href && /^(https?:\/\/|\/)/.test(href)) out.push(<a key={k} href={href}>{inline(label)}</a>);
     else out.push(m[0]);
@@ -117,37 +129,34 @@ export default function ChangelogPage() {
       <PageIntro
         eyebrow="Releases"
         title="Changelog"
-        lead="Every Nexub DS release, newest first. All packages publish at the same version; each one's changes are listed under it."
-      >
-        <nav aria-label="Versions" className="flex flex-wrap gap-x-3 gap-y-1 text-label-md">
-          {releases.map((r) => (
-            <a key={r.version} href={`#v${r.version}`} className="font-mono text-[var(--color-primary)] no-underline hover:underline">
-              {r.version}
-            </a>
-          ))}
-        </nav>
-      </PageIntro>
+        lead="Every Nexub DS release. Pick a series, then a version. All packages publish at the same version; each one's changes are listed under it."
+      />
 
-      {releases.map((r) => (
-        <Section key={r.version} id={`v${r.version}`} title={<a href={`#v${r.version}`} className="text-inherit no-underline hover:underline">v{r.version}</a>}>
-          {r.packages.length === 0 ? (
-            <Text tone="muted">No user-facing changes; packages were republished at this version.</Text>
-          ) : (
-            r.packages.map((p) => (
-              <div key={p.name} className="flex flex-col gap-2">
-                <Heading level={3} className="font-mono text-title-md">
-                  {p.name}
-                </Heading>
-                {p.entries.map((e, i) => (
-                  <div key={i}>
-                    <Markdown md={e.body} />
+      <ChangelogBrowser
+        releases={releases.map((r) => ({
+          version: r.version,
+          node: (
+            <Section id={`v${r.version}`} title={<a href={`#v${r.version}`} className="text-inherit no-underline hover:underline">v{r.version}</a>}>
+              {r.packages.length === 0 ? (
+                <Text tone="muted">No user-facing changes; packages were republished at this version.</Text>
+              ) : (
+                r.packages.map((p) => (
+                  <div key={p.name} className="flex flex-col gap-2">
+                    <Heading level={3} className="font-mono text-title-md">
+                      {p.name}
+                    </Heading>
+                    {p.entries.map((e, i) => (
+                      <div key={i}>
+                        <Markdown md={e.body} />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ))
-          )}
-        </Section>
-      ))}
+                ))
+              )}
+            </Section>
+          ),
+        }))}
+      />
     </div>
   );
 }

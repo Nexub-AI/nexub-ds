@@ -19,7 +19,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
       <span
         className={cn(
           // Matches Chip; hover/press come from the state layer.
-          'nx-state-layer inline-flex items-center gap-1 rounded-shape-control border h-8 px-3 text-label-lg select-none',
+          'nx-state-layer inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] border h-8 px-3 text-label-lg select-none',
           selected
             ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] border-transparent'
             : 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] border-[var(--color-outline-variant)]',
@@ -29,7 +29,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           ref={ref}
           type="button"
           className={cn(
-            'inline-flex items-center gap-1 bg-transparent border-0 p-0 m-0 cursor-pointer rounded-shape-control text-current',
+            'inline-flex items-center gap-1 bg-transparent border-0 p-0 m-0 cursor-pointer rounded-[var(--shape-pill,var(--shape-control))] text-current',
             disabledText,
             className,
           )}

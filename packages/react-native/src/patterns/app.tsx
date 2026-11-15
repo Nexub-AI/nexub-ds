@@ -241,7 +241,7 @@ export function ProfileHeader({ name, detail, image, onPress }: ProfileHeaderPro
       style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[4] }}
     >
       <Avatar name={name} src={image} size="lg" />
-      <View style={{ flex: 1, gap: 2 }}>
+      <View style={{ flex: 1, gap: tokens.spacing['0-5'] }}>
         <Text variant="title-lg">{name}</Text>
         {detail && (
           <Text variant="body-sm" color="on-surface-variant">
@@ -491,8 +491,8 @@ export function ChatScreen({
             minHeight: 44,
             maxHeight: 140,
             paddingHorizontal: tokens.spacing[4],
-            paddingTop: 12,
-            paddingBottom: 12,
+            paddingTop: tokens.spacing[3],
+            paddingBottom: tokens.spacing[3],
             borderRadius: 22,
             backgroundColor: roles['surface-container-high'],
             color: roles['on-surface'],
@@ -682,7 +682,7 @@ export function AppSwitcherSheet({
                 onOpenApp(a);
               }}
               stateLayer={false}
-              style={{ width: '25%', alignItems: 'center', gap: 6 }}
+              style={{ width: '25%', alignItems: 'center', gap: tokens.spacing['1-5'] }}
             >
               <View
                 style={{

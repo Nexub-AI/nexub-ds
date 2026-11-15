@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { Button, Sheet, Text } from '@nexub/react';
 
@@ -5,7 +7,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Sheet</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Sheet</Button>
       <Sheet.Root open={open} onOpenChange={setOpen}>
         <Sheet.Portal>
           <Sheet.Overlay />

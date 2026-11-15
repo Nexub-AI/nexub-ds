@@ -13,7 +13,7 @@ const entry: ComponentEntry = {
   props: [
     { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", required: false, description: 'Spacing between child elements.' },
     { name: 'align', type: "'start' | 'center' | 'end' | 'stretch'", required: false, description: 'Cross-axis alignment of children.' },
-    { name: 'dividers', type: 'boolean', required: false, description: 'Renders a divider line between each child element.' },
+    { name: 'divider', type: 'boolean', required: false, description: 'Element rendered between each pair of children, e.g. `<Separator />`.' },
   ],
   examples: [
     {

@@ -1,4 +1,8 @@
 import type { ComponentEntry, NavGroup } from './types';
+import webProps from './web-props.generated.json';
+import { mergeProps, type GeneratedProps } from './props-merge';
+
+const typed = (e: ComponentEntry) => mergeProps(e, webProps as GeneratedProps);
 
 // ─── Component entries — original ─────────────────────────────────────────────
 import buttonEntry from './components/button';
@@ -61,6 +65,22 @@ import checkboxEntry from './components/checkbox';
 import radioGroupEntry from './components/radio-group';
 import comboboxEntry from './components/combobox';
 import autocompleteEntry from './components/autocomplete';
+import multiSelectEntry from './components/multi-select';
+import filterBuilderEntry from './components/filter-builder';
+import savedViewsEntry from './components/saved-views';
+import otpInputEntry from './components/otp-input';
+import formEntry from './components/form';
+import fieldsetEntry from './components/fieldset';
+import inlineEditEntry from './components/inline-edit';
+import timePickerEntry from './components/time-picker';
+import dateTimePickerEntry from './components/date-time-picker';
+import eventCalendarEntry from './components/event-calendar';
+import treeViewEntry from './components/tree-view';
+import stepperEntry from './components/stepper';
+import resizablePanelsEntry from './components/resizable-panels';
+import actionBarEntry from './components/action-bar';
+import sortableEntry from './components/sortable';
+import kanbanEntry from './components/kanban';
 
 // ─── Component entries — Overlays ─────────────────────────────────────────────
 import alertDialogEntry from './components/alert-dialog';
@@ -122,8 +142,8 @@ import planCardEntry from './patterns/plan-card';
 import activityFeedEntry from './patterns/activity-feed';
 import settingsSectionEntry from './patterns/settings-section';
 import infoListEntry from './patterns/info-list';
-import stepIndicatorEntry from './patterns/step-indicator';
 import notificationItemEntry from './patterns/notification-item';
+import notificationCenterEntry from './patterns/notification-center';
 import listDetailEntry from './patterns/list-detail';
 
 // ─── Design refresh Phase 5 ───────────────────────────────────────────────────
@@ -141,7 +161,12 @@ import barChartEntry from './components/bar-chart';
 import lineChartEntry from './components/line-chart';
 import donutChartEntry from './components/donut-chart';
 import sparklineEntry from './components/sparkline';
+import diffViewEntry from './components/diff-view';
+import approvalCardEntry from './components/approval-card';
+import toolCallEntry from './components/tool-call';
+import planTrackerEntry from './components/plan-tracker';
 import chartToggleEntry from './components/chart-toggle';
+import chartZoomEntry from './components/chart-zoom';
 import kpiTileEntry from './components/kpi-tile';
 import funnelEntry from './components/funnel';
 import heatmapEntry from './components/heatmap';
@@ -173,6 +198,28 @@ import pricingTableEntry from './patterns/pricing-table';
 import faqEntry from './patterns/faq';
 import ctaBandEntry from './patterns/cta-band';
 import marketingFooterEntry from './patterns/marketing-footer';
+// ─── 8.8: components that had no page ────────────────────────────────────────
+import appShellEntry from './components/app-shell';
+import aspectRatioEntry from './components/aspect-ratio';
+import checkListEntry from './components/check-list';
+import commandPaletteEntry from './components/command-palette';
+import containerEntry from './components/container';
+import contextMenuEntry from './components/context-menu';
+import countryBadgeEntry from './components/country-badge';
+import dropdownMenuEntry from './components/dropdown-menu';
+import fileUploadEntry from './components/file-upload';
+import flagEntry from './components/flag';
+import formErrorEntry from './components/form-error';
+import keyboardShortcutEntry from './components/keyboard-shortcut';
+import logoEntry from './components/logo';
+import menubarEntry from './components/menubar';
+import navigationMenuEntry from './components/navigation-menu';
+import pageHeaderEntry from './components/page-header';
+import sectionEntry from './components/section';
+import sidebarEntry from './components/sidebar';
+import toolbarEntry from './components/toolbar';
+import topNavEntry from './components/top-nav';
+import visuallyHiddenEntry from './components/visually-hidden';
 import { mobileOnly } from './native';
 import { templateEntries } from './templates';
 
@@ -182,6 +229,7 @@ export const componentEntries: ComponentEntry[] = [
   buttonEntry,
   buttonGroupEntry,
   splitButtonEntry,
+  toolbarEntry,
   iconButtonEntry,
   navigationRailEntry,
   amountEntry,
@@ -194,14 +242,23 @@ export const componentEntries: ComponentEntry[] = [
   passwordInputEntry,
   labelEntry,
   helperTextEntry,
+  formErrorEntry,
   formFieldEntry,
+  formEntry,
+  fieldsetEntry,
+  inlineEditEntry,
+  actionBarEntry,
   datePickerEntry,
   dateRangePickerEntry,
+  timePickerEntry,
+  dateTimePickerEntry,
   // Labels & Badges
   badgeEntry,
   filterChipEntry,
   chipEntry,
   eyebrowChipEntry,
+  countryBadgeEntry,
+  flagEntry,
   // Avatar
   avatarEntry,
   avatarGroupEntry,
@@ -232,6 +289,11 @@ export const componentEntries: ComponentEntry[] = [
   switchEntry,
   comboboxEntry,
   autocompleteEntry,
+  multiSelectEntry,
+  filterBuilderEntry,
+  savedViewsEntry,
+  otpInputEntry,
+  fileUploadEntry,
   // Overlays
   dialogEntry,
   alertDialogEntry,
@@ -240,20 +302,38 @@ export const componentEntries: ComponentEntry[] = [
   hoverCardEntry,
   drawerEntry,
   sheetEntry,
+  dropdownMenuEntry,
+  contextMenuEntry,
   // Navigation
+  topNavEntry,
+  sidebarEntry,
+  navigationMenuEntry,
+  menubarEntry,
+  commandPaletteEntry,
   breadcrumbEntry,
+  treeViewEntry,
+  stepperEntry,
   paginationEntry,
   // Data Display
   tableEntry,
   dataTableEntry,
+  eventCalendarEntry,
+  sortableEntry,
+  kanbanEntry,
   emptyStateEntry,
   errorStateEntry,
+  checkListEntry,
   numberTickerEntry,
   barChartEntry,
   lineChartEntry,
   donutChartEntry,
   sparklineEntry,
+  diffViewEntry,
+  approvalCardEntry,
+  toolCallEntry,
+  planTrackerEntry,
   chartToggleEntry,
+  chartZoomEntry,
   kpiTileEntry,
   funnelEntry,
   heatmapEntry,
@@ -276,11 +356,20 @@ export const componentEntries: ComponentEntry[] = [
   sharedElementEntry,
   celebrateEntry,
   auroraEntry,
+  keyboardShortcutEntry,
+  logoEntry,
+  visuallyHiddenEntry,
   // Layout
   stackEntry,
   flexEntry,
   gridEntry,
+  resizablePanelsEntry,
   boxEntry,
+  containerEntry,
+  sectionEntry,
+  aspectRatioEntry,
+  pageHeaderEntry,
+  appShellEntry,
   // Motion
   motionFadeEntry,
   motionRevealEntry,
@@ -295,7 +384,7 @@ export const componentEntries: ComponentEntry[] = [
   streamingTextEntry,
   thinkingIndicatorEntry,
   citationEntry,
-];
+].map(typed);
 
 // Marketing sections share the pattern pages (/patterns/<slug>) under their own nav group.
 export const marketingEntries: ComponentEntry[] = [
@@ -312,7 +401,7 @@ export const marketingEntries: ComponentEntry[] = [
   faqEntry,
   ctaBandEntry,
   marketingFooterEntry,
-];
+].map(typed);
 
 // ─── All pattern entries (flat) ───────────────────────────────────────────────
 export const patternEntries: ComponentEntry[] = [
@@ -324,14 +413,13 @@ export const patternEntries: ComponentEntry[] = [
   activityFeedEntry,
   settingsSectionEntry,
   infoListEntry,
-  stepIndicatorEntry,
   notificationItemEntry,
+  notificationCenterEntry,
   listDetailEntry,
   bentoGridEntry,
   errorSummaryEntry,
   conversationEntry,
-  ...marketingEntries,
-];
+].map(typed).concat(marketingEntries);
 
 
 // ─── Lookup by slug ───────────────────────────────────────────────────────────
@@ -365,6 +453,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'brand-assets', label: 'Using the brand assets', description: 'Favicons, app icons and the web manifest from @nexub/brand', href: '/getting-started/brand-assets', category: 'Docs' },
   { id: 'without-tailwind', label: 'Use without Tailwind', description: 'Prebuilt @nexub/react/styles.css; rem sizing', href: '/getting-started/without-tailwind', category: 'Docs' },
   { id: 'strict-csp', label: 'Strict CSP', description: 'Which components are CSP-safe, scroll lock, fonts', href: '/getting-started/strict-csp', category: 'Docs' },
+  { id: 'security', label: 'Security', description: 'safeHref, safeSrc, risky components, CSP and reporting a vulnerability', href: '/getting-started/security', category: 'Docs' },
   { id: 'internationalization', label: 'Internationalization', description: 'NexubProvider: locale, RTL direction and translated strings', href: '/getting-started/internationalization', category: 'Docs' },
   { id: 'react-native', label: 'React Native', description: '@nexub/react-native for Expo and React Native apps: setup, components, screens', href: '/getting-started/react-native', category: 'Docs' },
   { id: 'ai-tools', label: 'AI tools and MCP', description: 'Connect @nexub/mcp, the Claude Code plugin, llms.txt and Markdown pages to your AI tool', href: '/getting-started/ai-tools', category: 'Docs' },
@@ -372,6 +461,13 @@ export const searchIndex: SearchEntry[] = [
   { id: 'ai-surfaces', label: 'Building AI surfaces', description: 'The AI kit: motion, accessibility, security and strings for chat UIs', href: '/getting-started/ai-surfaces', category: 'Docs' },
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
+  { id: 'release-status', label: '10.0 release status', description: 'Where each 10.0 exit criterion stood on release day', href: '/getting-started/release-status', category: 'Docs' },
+  { id: 'migrating-to-10', label: 'Migrating to 10.0', description: '10.0 removes nothing; versions follow semver from 10.0', href: '/getting-started/migrating-to-10', category: 'Docs' },
+  { id: 'migrating-to-9', label: 'Migrating to 9.0', description: 'Removed in 9.0: the classic style, Button legacy variants, the 8.5 parity aliases and hidePassword, and how to move off them', href: '/getting-started/migrating-to-9', category: 'Docs' },
+  { id: 'migrating-to-8', label: 'Migrating to 8.0', description: 'Signature by default, class scroll lock, strict safeHref, legacy motion tokens removed: try it on 7.9', href: '/getting-started/migrating-to-8', category: 'Docs' },
+  { id: 'migrating-to-7', label: 'Migrating to 7.0', description: 'StepIndicator and inline Autocomplete removed: and how to upgrade', href: '/getting-started/migrating-to-7', category: 'Docs' },
+  { id: 'migrating-to-6', label: 'Migrating to 6.0', description: 'Enterprise defaults for Autocomplete, DataTable and FilterBar: and how to upgrade', href: '/getting-started/migrating-to-6', category: 'Docs' },
+  { id: 'migrating-to-5', label: 'Migrating to 5.0', description: 'Vivid by default and React 19: how to prepare on 4.9', href: '/getting-started/migrating-to-5', category: 'Docs' },
   { id: 'migrating-to-4', label: 'Migrating to 4.0', description: 'What 4.0 removes (Tailwind 3 preset, Expo SDK 57) and how to clear it on 3.9', href: '/getting-started/migrating-to-4', category: 'Docs' },
   { id: 'migrating-to-3', label: 'Migrating to 3.0', description: 'What 3.0 removes (Banner, Callout, Tag, StatusPill, legacy colour names) and the codemod that moves you off it', href: '/getting-started/migrating-to-3', category: 'Docs' },
   { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
@@ -382,6 +478,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
   { id: 'foundations-motion', label: 'Motion & interaction', description: 'Spring tokens, state layers, focus ring', href: '/foundations/motion', category: 'Foundations' },
   { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },
+  { id: 'foundations-icons', label: 'Icons', description: 'Every icon in @nexub/icons, searchable, click to copy the import', href: '/foundations/icons', category: 'Foundations' },
   { id: 'foundations-materials', label: 'Materials', description: 'Glass 2.0 and the intensity dial', href: '/foundations/materials', category: 'Foundations' },
   { id: 'foundations-accessibility', label: 'Accessibility conformance', description: 'WCAG 2.2 AA report per component: automated, documented and not yet covered', href: '/foundations/accessibility', category: 'Foundations' },
   { id: 'foundations-expression', label: 'Expression: Calm and Vivid', description: 'The opt-in Vivid layer: accent gradients, glow, tinted depth and aurora', href: '/foundations/expression', category: 'Foundations' },
@@ -442,6 +539,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Using the brand assets', href: '/getting-started/brand-assets' },
       { title: 'Use without Tailwind', href: '/getting-started/without-tailwind' },
       { title: 'Strict CSP', href: '/getting-started/strict-csp' },
+      { title: 'Security', href: '/getting-started/security' },
       { title: 'Internationalization', href: '/getting-started/internationalization' },
       { title: 'React Native', href: '/getting-started/react-native' },
       { title: 'AI tools and MCP', href: '/getting-started/ai-tools' },
@@ -449,8 +547,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Figma', href: '/getting-started/figma' },
       { title: 'Upgrading', href: '/getting-started/upgrading' },
       { title: 'Next.js and server components', href: '/getting-started/nextjs' },
-      { title: 'Migrating to 4.0', href: '/getting-started/migrating-to-4' },
-      { title: 'Migrating to 3.0', href: '/getting-started/migrating-to-3' },
+      { title: 'Migrating to the latest version', href: '/getting-started/migrating-to-10', match: '/getting-started/migrating-to-' },
       { title: 'Changelog', href: '/changelog' },
     ],
   },
@@ -462,6 +559,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Typography', href: '/foundations/typography' },
       { title: 'Spacing', href: '/foundations/spacing' },
       { title: 'Elevation & shape', href: '/foundations/shadows' },
+      { title: 'Icons', href: '/foundations/icons' },
       { title: 'Motion & interaction', href: '/foundations/motion' },
       { title: 'Materials', href: '/foundations/materials' },
       { title: 'Expression', href: '/foundations/expression' },

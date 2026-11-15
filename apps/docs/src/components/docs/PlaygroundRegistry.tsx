@@ -36,7 +36,7 @@ const renderers: Record<string, (p: Bag) => React.ReactElement> = {
     const tone = s(p.tone, 'none');
     return (
       <Button
-        variant={s(p.variant, 'primary') as 'primary'}
+        variant={s(p.variant, 'filled') as 'filled'}
         size={s(p.size, 'md') as 'md'}
         tone={(tone === 'none' ? undefined : tone) as 'neutral' | undefined}
         loading={b(p.loading)}
@@ -98,7 +98,7 @@ export function renderPlayground(slug: string, props: Bag): React.ReactElement {
   const fn = renderers[slug];
   if (!fn) {
     return (
-      <div className="text-[var(--color-on-surface-muted)] text-[0.85rem]">
+      <div className="text-[var(--color-on-surface-muted)] text-body-sm">
         Live preview not available for <code>{slug}</code>.
       </div>
     );

@@ -26,7 +26,7 @@ const Item = React.forwardRef<HTMLButtonElement, RadixRadioGroup.RadioGroupItemP
       {...props}
     >
       <RadixRadioGroup.Indicator className="flex items-center justify-center">
-        <span className="block h-2 w-2 rounded-full bg-[var(--color-primary)] [[data-disabled]_&]:bg-[var(--color-text-disabled)]" />
+        <span className="nx-dot-in block h-2 w-2 rounded-full bg-[var(--color-primary)] [[data-disabled]_&]:bg-[var(--color-text-disabled)]" />
       </RadixRadioGroup.Indicator>
     </RadixRadioGroup.Item>
   ),

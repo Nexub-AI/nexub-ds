@@ -9,10 +9,11 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
-    updatedIn: '1.7.0',
+    updatedIn: '5.1.0',
   },
   props: [
     { name: 'Toaster expand', type: 'boolean', default: 'false', required: false, description: 'Always show toasts as a list. By default they collapse into a stack that fans out on hover or focus, which also pauses their timers.' },
+    { name: 'Toaster position', type: "'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end'", default: "'top-end'", required: false, description: 'Where the stack sits (5.1). Start and end follow the reading direction; bottom positions stack upward.' },
     { name: 'Toaster visibleToasts', type: 'number', default: '3', required: false, description: 'How many toasts show at once. Older ones are hidden visually but stay in the live region.' },
     { name: 'toast.success(title, opts?)', type: 'string', required: true, description: 'Show a success toast with an optional options object.' },
     { name: 'toast.error(title, opts?)', type: 'string', required: true, description: 'Show an error toast.' },

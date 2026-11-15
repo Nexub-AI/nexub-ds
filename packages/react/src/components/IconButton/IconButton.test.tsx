@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { IconButton } from './IconButton.js';
 
 describe('IconButton', () => {
@@ -32,5 +33,28 @@ describe('IconButton', () => {
       </IconButton>,
     );
     expect(screen.getByTestId('icon')).toBeInTheDocument();
+  });
+
+  it('loading: spinner replaces the icon, aria-busy, clicks blocked', async () => {
+    const onClick = vi.fn();
+    render(
+      <IconButton label="Save" loading onClick={onClick}>
+        <svg data-testid="icon" />
+      </IconButton>,
+    );
+    const button = screen.getByRole('button', { name: 'Save' });
+    expect(button).toHaveAttribute('aria-busy', 'true');
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
+    await userEvent.click(button);
+    expect(onClick).not.toHaveBeenCalled();
+  });
+
+  it('tooltip={true} shows the label without a Provider', async () => {
+    render(<IconButton label="Delete" tooltip />);
+    // The tooltip is a lazy chunk: wait until the trigger is wired (Radix sets data-state).
+    await waitFor(() => expect(screen.getByRole('button')).toHaveAttribute('data-state'));
+    act(() => screen.getByRole('button').focus());
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Delete');
   });
 });

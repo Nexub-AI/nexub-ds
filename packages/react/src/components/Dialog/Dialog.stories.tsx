@@ -66,3 +66,45 @@ export const Glass: Story = {
     </Dialog.Root>
   ),
 };
+
+/** 7.6: close button, scrolling Body with scroll-edge hairlines, nested step-back, and a bottom sheet on small screens. */
+export const RichSurfaces: Story = {
+  render: () => (
+    <Dialog.Root>
+      <Dialog.Trigger asChild>
+        <button>Open terms</button>
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay />
+        <Dialog.Content showClose sheet="auto">
+          <Dialog.Header>
+            <Dialog.Title>Terms of service</Dialog.Title>
+            <Dialog.Description>Scroll to read; the header and footer stay put.</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
+            {Array.from({ length: 20 }, (_, i) => (
+              <p key={i} className="mb-3 text-sm">Section {i + 1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            ))}
+          </Dialog.Body>
+          <Dialog.Footer>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <button>Open nested</button>
+              </Dialog.Trigger>
+              <Dialog.Portal>
+                <Dialog.Overlay />
+                <Dialog.Content size="sm" showClose>
+                  <Dialog.Title>Nested dialog</Dialog.Title>
+                  <Dialog.Description>The dialog behind steps back.</Dialog.Description>
+                </Dialog.Content>
+              </Dialog.Portal>
+            </Dialog.Root>
+            <Dialog.Close asChild>
+              <button>Accept</button>
+            </Dialog.Close>
+          </Dialog.Footer>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  ),
+};

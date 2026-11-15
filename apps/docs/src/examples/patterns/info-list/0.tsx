@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { InfoList } from '@nexub/patterns';
 import { Badge } from '@nexub/react';
 

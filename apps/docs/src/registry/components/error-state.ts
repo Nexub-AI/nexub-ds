@@ -15,7 +15,6 @@ const entry: ComponentEntry = {
     { name: 'description', type: 'string', required: false, description: 'Supporting text with more detail about the error or recovery steps.' },
     { name: 'tone', type: "'error' | 'warning' | 'info'", default: "'error'", required: false, description: 'Controls the icon and colour scheme of the error state.' },
     { name: 'onRetry', type: '() => void', required: false, description: 'When provided, renders a "Try again" button that calls this function on click.' },
-    { name: 'actions', type: 'React.ReactNode', required: false, description: 'Custom action elements rendered below the description. Takes priority over the default retry button.' },
   ],
   examples: [
     {

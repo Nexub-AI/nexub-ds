@@ -5,7 +5,7 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const badgeVariants = cva(
   [
-    'inline-flex items-center gap-1 rounded-[var(--badge-radius,var(--shape-control))] whitespace-nowrap select-none',
+    'inline-flex max-w-full items-center gap-1 rounded-[var(--badge-radius,var(--shape-control))] whitespace-nowrap select-none',
   ],
   {
     variants: {
@@ -86,17 +86,57 @@ const toneClasses: Record<
   },
 };
 
+// The tone's role colour, for the status dot (neutral reads as outline, as on native).
+const dotClasses: Record<ToneValue, string> = {
+  neutral: 'bg-[var(--color-outline)]',
+  info: 'bg-[var(--color-info)]',
+  success: 'bg-[var(--color-success)]',
+  warning: 'bg-[var(--color-warning)]',
+  danger: 'bg-[var(--color-error)]',
+  leap: 'bg-[var(--color-leap)]',
+  bookub: 'bg-[var(--color-bookub)]',
+  payub: 'bg-[var(--color-payub)]',
+  founderub: 'bg-[var(--color-founderub)]',
+  matchub: 'bg-[var(--color-matchub)]',
+};
+const dotSizes = { sm: 'size-1.5', md: 'size-2', lg: 'size-2.5' } as const;
+
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {
   tone?: ToneValue;
   leadingIcon?: React.ReactNode;
+  /**
+   * A status dot. Before the label when there is one; on its own (no children
+   * or count) it is just the dot: give it an `aria-label`, or it's decorative.
+   */
+  dot?: boolean;
+  /** A number to show. Above `max` it reads "99+"; screen readers get the full number. */
+  count?: number;
+  /** @default 99 */
+  max?: number;
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, size, variant = 'solid', tone = 'neutral', leadingIcon, children, ...props }, ref) => {
+  ({ className, size, variant = 'solid', tone = 'neutral', leadingIcon, dot, count, max = 99, children, ...props }, ref) => {
     const resolvedVariant: 'solid' | 'soft' | 'outline' = variant ?? 'solid';
     const toneStyle = toneClasses[tone][resolvedVariant];
+    const dotSize = dotSizes[size ?? 'md'];
+
+    if (dot && children == null && count == null) {
+      const labelled = props['aria-label'] != null || props['aria-labelledby'] != null;
+      return (
+        <span
+          ref={ref}
+          role={labelled ? 'img' : undefined}
+          aria-hidden={labelled ? undefined : true}
+          className={cn('inline-block shrink-0 rounded-full', dotSize, dotClasses[tone], className)}
+          {...props}
+        />
+      );
+    }
+
+    const capped = count != null && count > max;
 
     return (
       <span
@@ -104,10 +144,26 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         className={cn(badgeVariants({ size, variant: resolvedVariant }), toneStyle, className)}
         {...props}
       >
+        {dot && (
+          <span
+            aria-hidden="true"
+            className={cn('shrink-0 rounded-full', dotSize, resolvedVariant === 'solid' ? 'bg-current' : dotClasses[tone])}
+          />
+        )}
         {leadingIcon && (
           <span className="shrink-0 inline-flex items-center">{leadingIcon}</span>
         )}
-        {children}
+        {/* A text label can shrink and end in an ellipsis instead of leaving its container (9.3). */}
+        {typeof children === 'string' ? <span className="-mx-px min-w-0 truncate px-px">{children}</span> : children}
+        {count != null && (
+          <span className="tabular-nums">
+            {/* Keyed on the count so the CSS tick replays on each change (server-safe, no state). */}
+            <span key={count} aria-hidden={capped || undefined} className="nx-tick">
+              {capped ? `${max}+` : count}
+            </span>
+            {capped && <span className="sr-only">{count}</span>}
+          </span>
+        )}
       </span>
     );
   },

@@ -28,7 +28,7 @@ export default function Example() {
   return (
     <Collapsible.Root open={open} onOpenChange={setOpen}>
       <Collapsible.Trigger asChild>
-        <Button variant="outline">{open ? 'Hide details' : 'Show details'}</Button>
+        <Button variant="outlined">{open ? 'Hide details' : 'Show details'}</Button>
       </Collapsible.Trigger>
       <Collapsible.Content>
         <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
@@ -53,7 +53,7 @@ export default function Example() {
       <div className="flex items-center gap-2">
         <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
-          <Button variant="ghost" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
+          <Button variant="text" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
       </div>
       <Collapsible.Content>

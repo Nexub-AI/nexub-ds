@@ -4,23 +4,24 @@ name: Mobile
 # Maestro on an iOS simulator and an Android emulator. Runs only when the
 # native packages, their inputs, or the app change.
 #
-# Only PRs into development: staging and production promotions, the Version
-# Packages PR and the production -> development back-merge carry code that
-# already passed here, so re-running the ~1 h simulators on them only slowed
-# releases down.
+# After merge to development only (not on PRs): the ~1 h simulators run while
+# the release is promoted to staging, instead of blocking every feature PR and
+# restarting on each push to it. The release script waits for this run to pass
+# on the exact development commit before it merges staging -> production, so
+# nothing reaches npm without it. workflow_dispatch runs it on any branch early.
+#
+# 9.5 soak: nightly (and on demand with the `soak` input) the iOS job builds the same app and,
+# instead of the catalogue and preview flows, runs apps/mobile/scripts/soak.sh for 30 minutes:
+# one session, no crash, flat memory. It does not gate releases.
 on:
-  pull_request:
-    branches: [development]
-    paths:
-      - 'packages/react-native/**'
-      - 'packages/tokens/**'
-      - 'packages/icons/**'
-      - 'packages/core/**'
-      - 'apps/mobile/**'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/mobile.yml'
-  # Also on development itself, so its iOS compiler cache (ccache below) is
-  # saved under the base branch, where every new PR can restore it.
+  workflow_dispatch:
+    inputs:
+      soak:
+        description: 'Run the 30-minute iOS soak instead of the catalogue flows'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 19 * * *' # 03:00 SGT
   push:
     branches: [development]
     paths:
@@ -47,6 +48,7 @@ env:
   # The iOS XCTest driver can take minutes to start on shared macOS runners.
   MAESTRO_DRIVER_STARTUP_TIMEOUT: 300000
   MAESTRO_CLI_NO_ANALYTICS: 1
+  SOAK: ${{ github.event_name == 'schedule' || inputs.soak == true }}
 
 jobs:
   ios:
@@ -54,6 +56,10 @@ jobs:
     # Skip the back-merge (head: production); it's already-tested code.
     if: github.head_ref != 'production'
     runs-on: macos-26
+    # screenshot-gate.sh pushes recorded baselines to the PR branch with this
+    # job's GITHUB_TOKEN. Never a PAT here: this job runs PR-branch scripts.
+    permissions:
+      contents: write
     # A passing run takes ~58 min (Release build 23–34, previews ~19), so 60
     # cancelled any slow runner.
     timeout-minutes: 90
@@ -71,7 +77,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -93,7 +99,7 @@ jobs:
         run: brew install ccache
 
       - name: Restore the compiler cache
-        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-ios-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.run_id }}
@@ -116,9 +122,19 @@ jobs:
             -derivedDataPath build CODE_SIGNING_ALLOWED=NO | tail -n 40
           ccache --show-stats
 
+      # Cached per version: the GitHub release download returned 504 on some runs.
+      # A miss downloads with curl's retry (exponential backoff, covers 5xx); the
+      # checksum is verified either way.
+      - name: Cache Maestro
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: maestro.zip
+          key: maestro-${{ runner.os }}-${{ env.MAESTRO_VERSION }}-${{ env.MAESTRO_SHA256 }}
+
       - name: Install Maestro
         run: |
-          curl -fsSL -o maestro.zip "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          [ -f maestro.zip ] || curl -fsSL --retry 6 --retry-all-errors --retry-max-time 600 -o maestro.zip \
+            "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
           echo "${MAESTRO_SHA256}  maestro.zip" | shasum -a 256 -c -
           unzip -q maestro.zip -d "$HOME"
           echo "$HOME/maestro/bin" >> "$GITHUB_PATH"
@@ -129,26 +145,45 @@ jobs:
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl install "$UDID" apps/mobile/ios/build/Build/Products/Release-iphonesimulator/NexubMobile.app
+          # bootstatus -b covers the OS, not the app's first cold launch (dyld closure,
+          # JS bundle), which raced Maestro's launchApp and its XCTest driver start and
+          # crashed or timed out the first flow. Take that cold launch here, then quit.
+          xcrun simctl launch "$UDID" ai.nexub.mobile
+          i=0
+          until xcrun simctl spawn "$UDID" launchctl list | grep -q 'UIKitApplication:ai.nexub.mobile'; do
+            i=$((i + 1)); [ "$i" -ge 60 ] && { echo 'App did not start in 120 s'; exit 1; }
+            sleep 2
+          done
+          sleep 10
+          xcrun simctl terminate "$UDID" ai.nexub.mobile
           # Same status bar in every screenshot, so baselines don't drift on the clock.
           xcrun simctl status_bar "$UDID" override --time 9:41 --dataNetwork wifi --wifiMode active --wifiBars 3 \
             --cellularMode active --cellularBars 4 --batteryState charged --batteryLevel 100
 
       - name: Maestro flows
+        if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; exit 1; }
 
       # One screenshot per docs preview example (<slug>--<example>--ios.png),
       # generated from apps/mobile/preview-manifest.json.
       - name: Maestro preview screenshots
+        if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
       # Compare the preview screenshots with apps/mobile/.maestro/baselines/ios
       # (or record them on a PR that has none; see screenshot-gate.sh).
       - name: Screenshot baselines
+        if: env.SOAK != 'true'
         env:
-          HEAD_REF: ${{ github.head_ref }}
-          PUSH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          # PR branch, or the branch a manual run targets (to record new baselines before merge).
+          HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
+          PUSH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         run: sh apps/mobile/scripts/screenshot-gate.sh ios
+
+      - name: Soak (30 min, one session)
+        if: env.SOAK == 'true'
+        run: sh apps/mobile/scripts/soak.sh || { sh apps/mobile/scripts/maestro-failure.sh maestro-soak-out; exit 1; }
 
       - name: Upload screenshots
         if: always()
@@ -157,6 +192,7 @@ jobs:
           name: maestro-ios
           path: |
             maestro-out
+            maestro-soak-out
             maestro-previews-out
             screenshot-diffs
             *.png
@@ -165,22 +201,26 @@ jobs:
   android:
     name: Android emulator (Maestro)
     # Skip the back-merge (head: production); it's already-tested code.
-    if: github.head_ref != 'production'
+    # Not on soak runs: the soak is iOS only.
+    if: github.head_ref != 'production' && github.event_name != 'schedule' && inputs.soak != true
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    # See the iOS job: baselines are pushed with GITHUB_TOKEN, never a PAT.
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
 
-      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: temurin
           java-version: '17'
@@ -199,9 +239,19 @@ jobs:
         working-directory: apps/mobile/android
         run: ./gradlew assembleRelease -PreactNativeArchitectures=x86_64 --no-daemon
 
+      # Cached per version: the GitHub release download returned 504 on some runs.
+      # A miss downloads with curl's retry (exponential backoff, covers 5xx); the
+      # checksum is verified either way.
+      - name: Cache Maestro
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: maestro.zip
+          key: maestro-${{ runner.os }}-${{ env.MAESTRO_VERSION }}-${{ env.MAESTRO_SHA256 }}
+
       - name: Install Maestro
         run: |
-          curl -fsSL -o maestro.zip "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          [ -f maestro.zip ] || curl -fsSL --retry 6 --retry-all-errors --retry-max-time 600 -o maestro.zip \
+            "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
           echo "${MAESTRO_SHA256}  maestro.zip" | sha256sum -c -
           unzip -q maestro.zip -d "$HOME"
           echo "$HOME/maestro/bin" >> "$GITHUB_PATH"
@@ -213,12 +263,13 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Maestro flows
-        uses: reactivecircus/android-emulator-runner@c9c93e6ba9c4194322e114c40970d5983d9a07cc # v2.38.0
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         # For screenshot-gate.sh (last line of the script): compare with
         # apps/mobile/.maestro/baselines/android, or record them on a PR.
         env:
-          HEAD_REF: ${{ github.head_ref }}
-          PUSH_TOKEN: ${{ secrets.RELEASE_PAT }}
+          # PR branch, or the branch a manual run targets (to record new baselines before merge).
+          HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
+          PUSH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         with:
           api-level: 35
@@ -235,10 +286,12 @@ jobs:
           # can leave open. Both flows run in one Maestro invocation: adb also
           # drops when a run tears its driver down, which broke a second run.
           # android-demo-mode.sh pins the status bar for the screenshots.
+          # android-settle.sh finishes the post-boot compile work up front.
           script: |
             sh apps/mobile/scripts/android-ready.sh
             sh apps/mobile/scripts/android-demo-mode.sh
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+            sh apps/mobile/scripts/android-settle.sh
             sh apps/mobile/scripts/android-ready.sh
             maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
             sh apps/mobile/scripts/screenshot-gate.sh android

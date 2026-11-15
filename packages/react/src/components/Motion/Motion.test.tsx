@@ -182,3 +182,24 @@ describe('Motion exit fallback', () => {
     vi.useRealTimers();
   });
 });
+
+describe('Collapse (grid rows)', () => {
+  it('opens to 1fr a frame after mounting and clips only while moving', () => {
+    vi.useFakeTimers();
+    const { rerender, container } = render(<Collapse in={false}><p>x</p></Collapse>);
+    const el = container.firstChild as HTMLElement;
+    expect(el.style.gridTemplateRows).toBe('0fr');
+    rerender(<Collapse in><p>x</p></Collapse>);
+    act(() => { vi.advanceTimersByTime(20); });
+    expect(el.style.gridTemplateRows).toBe('1fr');
+    expect(el.style.overflow).toBe('hidden');
+    act(() => { vi.advanceTimersByTime(2000); });
+    expect(el.style.overflow).toBe('visible');
+    vi.useRealTimers();
+  });
+
+  it('peeks at collapsedHeight', () => {
+    const { container } = render(<Collapse in={false} collapsedHeight={40}><p>x</p></Collapse>);
+    expect((container.firstChild!.firstChild as HTMLElement).style.minHeight).toBe('40px');
+  });
+});

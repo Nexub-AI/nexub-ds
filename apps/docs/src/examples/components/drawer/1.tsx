@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import * as React from 'react';
 import { Button, Drawer } from '@nexub/react';
 
@@ -5,7 +7,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="outline" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
+      <Button variant="outlined" onClick={() => setOpen(true)}>Open Bottom Sheet</Button>
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay />
@@ -15,7 +17,7 @@ export default function Example() {
             </Drawer.Header>
             <div className="p-4 flex gap-3 flex-wrap">
               {['Twitter', 'LinkedIn', 'Slack', 'Email'].map((s) => (
-                <Button key={s} variant="outline" size="sm">{s}</Button>
+                <Button key={s} variant="outlined" size="sm">{s}</Button>
               ))}
             </div>
           </Drawer.Content>

@@ -1,6 +1,6 @@
 # Tokens
 
-Nexub DS v4.5.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v10.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -49,6 +49,10 @@ Roles are `light-dark()` values: they follow `data-theme` and `data-contrast` au
 | `on-founderub` | `bg-on-founderub` / `text-on-founderub` / `border-on-founderub` | `--color-on-founderub` |  |
 | `founderub-container` | `bg-founderub-container` / `text-founderub-container` / `border-founderub-container` | `--color-founderub-container` |  |
 | `on-founderub-container` | `bg-on-founderub-container` / `text-on-founderub-container` / `border-on-founderub-container` | `--color-on-founderub-container` |  |
+| `matchub` | `bg-matchub` / `text-matchub` / `border-matchub` | `--color-matchub` |  |
+| `on-matchub` | `bg-on-matchub` / `text-on-matchub` / `border-on-matchub` | `--color-on-matchub` |  |
+| `matchub-container` | `bg-matchub-container` / `text-matchub-container` / `border-matchub-container` | `--color-matchub-container` |  |
+| `on-matchub-container` | `bg-on-matchub-container` / `text-on-matchub-container` / `border-on-matchub-container` | `--color-on-matchub-container` |  |
 | `surface` | `bg-surface` / `text-surface` / `border-surface` | `--color-surface` | Page background |
 | `surface-dim` | `bg-surface-dim` / `text-surface-dim` / `border-surface-dim` | `--color-surface-dim` |  |
 | `surface-bright` | `bg-surface-bright` / `text-surface-bright` / `border-surface-bright` | `--color-surface-bright` |  |

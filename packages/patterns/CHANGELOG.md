@@ -1,5 +1,222 @@
 # @nexub/patterns
 
+## 10.0.0
+
+## 9.9.1
+
+## 9.9.0
+
+## 9.8.0
+
+## 9.7.0
+
+## 9.6.0
+
+## 9.5.0
+
+## 9.4.0
+
+## 9.3.0
+
+## 9.2.0
+
+## 9.1.0
+
+## 9.0.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.0
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.0
+
+## 8.0.0
+
+## 7.9.0
+
+## 7.8.0
+
+## 7.7.0
+
+### Minor Changes
+
+- fc7b955: 7.7: reorder and data at scale.
+
+  - `Sortable` and `Kanban` drag with Pointer Events (mouse, pen and touch) instead of native drag-and-drop: a drop line, items settle on the spatial spring, edge auto-scroll, and Escape or a cancelled pointer puts the item back. Alt+Arrow keyboard moves are unchanged. `DataTable` row reorder now drags from the grip only.
+  - `DataTable` rows are memoised, so selecting a row or re-rendering with equal data no longer redraws every row. Cell renderers should depend only on their row and `columns`; if a renderer reads other state, include it in the `columns` memo.
+  - `DataTable`: controlled and server-side sort and pagination: `sort` / `onSortChange` / `manualSort`, `page` / `pageSize` / `onPageChange` / `manualPagination` / `rowCount`.
+  - The DataTable "View" menu loads only when `viewOptions` is used.
+  - `FilterBuilder` renders its rule tree from a deferred value and keeps every keystroke; `FilterBar` documents the `useDeferredValue` recipe for big lists.
+  - New perf tripwire (`pnpm --filter @nexub/react test:perf`, also part of the visual CI job): filtering 1,000 DataTable rows, typing in a 1,000-option Combobox and moving a Kanban card must stay under 200 ms per interaction with no long task over 100 ms.
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+## 7.2.0
+
+### Minor Changes
+
+- 1bfe041: 7.2: secure by default.
+
+  - **New** `safeHref` and `safeSrc` (also `@nexub/react/safeHref`). Every consumer-supplied link and image URL now goes through them: `Breadcrumb`, `MediaCard`, `CardLink`, `Avatar`, and the navs/links in `AppHeader`, `NotificationItem`, `NotificationCenter`, `SettingsPage`, `SettingsLayout`, `PlanCard`, `AppLauncher`, `MarketingNav`, `MarketingFooter`. `javascript:`, `vbscript:`, `data:` and `file:` links are dropped; images allow relative, http(s), `blob:` and `data:image/*`. `safeHref(url, { strict: true })` allows only web, mailto, tel and sms; it becomes the default in 8.0.
+  - **New** `NexubProvider` `nonce`: hands your CSP nonce to the `<style>` tags Radix overlays inject, so every overlay works under `style-src-elem 'nonce-…'`.
+  - **New** `scrollLock="class"` on `Dialog.Root` and `AlertDialog.Root` (already on Sheet/Drawer and CommandPalette): no `<style>` at all. It becomes the default in 8.0.
+  - **New** `FileUpload.Root` `validate(file)`: return a message to reject a file (reason `'custom'`).
+  - `PasswordInput`: the reveal button keeps one name ("Show password") and reports its state with `aria-pressed` and `aria-controls`. The `hidePassword` message is deprecated (removed in 9.0).
+  - `ThemeScript`: a stored product brand is applied only when it's a known product.
+
+## 7.1.0
+
+## 7.0.1
+
+## 7.0.0
+
+### Minor Changes
+
+- d13580c: 7.0: consolidate.
+
+  - **Breaking:** `StepIndicator` is removed from @nexub/patterns. Use `<Stepper orientation="vertical" current={…}>` from @nexub/react (`currentStep` becomes `current`; `steps` works as is).
+  - **Breaking:** Autocomplete's `mode` prop and its inline layout are removed. The popover (the default since 6.0) is the only layout; for an always-open list, use the Combobox parts.
+  - **`nexub-migrate`**: `removed-in-7` now reports any Autocomplete `mode`; `keep-5-defaults` no longer pins `mode="inline"`.
+  - See Getting Started → Migrating to 7.0.
+
+## 6.9.0
+
+### Minor Changes
+
+- 88329d9: 7.0 release candidate.
+
+  - **Deprecated, removed in 7.0**: `StepIndicator` (@nexub/patterns), use `<Stepper orientation="vertical" current={…}>` from @nexub/react; and Autocomplete's `mode="inline"` (and so `mode`), the popover stays.
+  - **`Stepper`**: a step's `id` is optional (the label is the key), so a StepIndicator `steps` array works as is.
+  - **`nexub-migrate`**: new default rule `removed-in-7` reports `<StepIndicator>` and `<Autocomplete mode="inline">`.
+  - Docs: Migrating to 7.0.
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.0
+
+### Minor Changes
+
+- 46bd41c: Inbox, export and zoom.
+
+  - **`NotificationCenter`** (new, beta, patterns): a bell with an unread count ("Notifications, 3 unread") that opens the notification list in a popover, with "Mark all as read", dismiss and an empty state. Your app owns the notifications.
+  - **`NotificationItem`**: `href` or `onSelect` makes the whole item a link or a button (the dismiss button stays separate).
+  - **`toCSV(rows, columns)`** (new): CSV text per RFC 4180 with CRLF line ends. Cells that start like a spreadsheet formula (`=`, `+`, `-`, `@`) get a leading `'`, so exports can't run formulas.
+  - **`ChartZoom`** (new, beta): zoom any chart to part of its range with a two-thumb slider and a reset button. Only the wrapper is a client component; charts stay server-rendered.
+  - New messages: `notificationCenter`, `unreadNotifications`, `markAllRead`, `noNotifications`, `zoomStart`, `zoomEnd`, `resetZoom`.
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.0
+
+## 6.1.0
+
+## 6.0.0
+
+### Minor Changes
+
+- 5e4fa46: 6.0: enterprise defaults. Three opt-ins from 5.x are now on by default. No component is removed and no prop is renamed. See Migrating to 6.0, and run `npx nexub-migrate src --rules keep-5-defaults --write` to keep 5.x behaviour.
+
+  - **Autocomplete** opens its list in a popover anchored to the field (`mode` defaults to `'popover'`). Set `mode="inline"` for the 5.x inline list.
+  - **DataTable / DataTableVirtual** with `enableRowSelection` show the checkbox column, with select-page and "Select all N" (`selectionColumn` defaults to `true`). Set `selectionColumn={false}` if you render your own checkboxes.
+  - **FilterBar** names its search field from `searchPlaceholder` (without a trailing "…") when `searchLabel` isn't set, instead of the generic "Search".
+
+## 5.9.0
+
+### Minor Changes
+
+- c11f400: 6.0 release candidate. Feature freeze: 5.9 adds no components; it prepares the three default changes in 6.0.
+
+  - **Migrating to 6.0** (docs): what changes and what to do. Autocomplete opens in a popover by default, DataTable with `enableRowSelection` shows the checkbox column by default, and FilterBar names its search field from `searchPlaceholder` when `searchLabel` isn't set.
+  - **`nexub-migrate --rules keep-5-defaults`**: an opt-in rule that keeps 5.x behaviour by adding `mode="inline"` and `selectionColumn={false}` where 6.0 would change it. Tags with a prop spread are reported, not changed. It is not part of the default run.
+  - Prop docs for `Autocomplete mode` and `FilterBar searchLabel` now state their 6.0 defaults.
+
+## 5.8.0
+
+## 5.7.0
+
+## 5.6.0
+
+## 5.5.0
+
+### Minor Changes
+
+- 04ff65b: Filters and views.
+
+  - **`FilterBuilder`** (new, beta): builds AND/OR filter queries with nested groups (`maxDepth`, default 1). The output is plain JSON (`FilterGroup` / `FilterRule`), which your app runs. Field types `text`, `number`, `select` and `date` each get their own operators and value input. Helpers: `emptyFilter`, `countFilters`, `isFilterGroup`, `filterOperators`.
+  - **`SavedViews`** (new, beta): a menu to switch, save (asks for a name), update and delete views. UI only: your app stores them.
+  - **`DateRangePicker`**: `presets` (`true` gives Today, Last 7 days, Last 30 days, Month to date and Last month, or pass your own) and `timeZone`, shown under the calendar and used to count "today". `todayIn(zone)` is exported.
+  - **`FilterBar`** (patterns): `activeCount` shows "N filters", and `onClearAll` adds a Clear all button.
+  - Docs: removed DateRangePicker props that never existed (`numberOfMonths`, `error`).
+  - New messages for presets, the filter builder, saved views and the filter bar. `filterOperators` is one object: overriding it replaces all its labels.
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
+## 5.1.0
+
+### Minor Changes
+
+- 60fed18: Audit fixes and quick wins.
+
+  Bug fixes:
+  - **`FileUpload`**: dropped files now go through the same `accept` check as the file picker. Before, a drop let any file type in. The check covers MIME types, wildcards (`image/*`) and extensions (`.pdf`), and is exported as `fileAccepted`. It's a UX filter, so keep validating on the server.
+  - **`Autocomplete`**: new `inputValue` and `onInputChange` props, so apps can fetch options as the user types. With `onInputChange` set, the options are shown as given, without built-in filtering.
+  - **`FilterBar`**: the search field now has an accessible name (`searchLabel`, defaulting to the localised "Search"). It's now a `SearchInput` with a clear button and a localised placeholder.
+
+  New:
+  - **`FileUpload.Root`**: `maxSize` (bytes) and `onReject`. Files rejected for type, size or `maxFiles` get a message under the drop zone that screen readers announce. New messages: `fileTypeRejected`, `fileTooLarge`, `tooManyFiles`.
+  - **`Toaster`**: `position` prop with six positions (`top-start` … `bottom-end`). Start and end follow the reading direction. Default is still `top-end`.
+  - **`Drawer.Header` and `Drawer.Footer`** are sticky on solid panels, so long content scrolls under them. Glass panels are unchanged.
+  - **`CommandPalette.Root`**: `shortcut` prop. For example, `shortcut="k"` toggles the palette with Cmd+K or Ctrl+K. Off by default.
+  - **`Breadcrumb.Trail`**: builds a breadcrumb from `items` and moves the middle of long paths into a "More" menu (`maxItems`, default 4).
+
+## 5.0.1
+
+## 5.0.0
+
+### Minor Changes
+
+- 539443c: 5.0: Vivid by default, React 19.
+
+  - **Vivid is the default expression.** `ThemeProvider` sets `data-expression="vivid"` on `<html>` when the app has not set one. Import `@nexub/themes/vivid` to see it. Keep the 4.x look with `data-expression="calm"` on `<html>` or `<ThemeProvider defaultExpression="calm">`. Calm stays fully supported.
+  - **React 19 required.** `react` and `react-dom` peers are now `>=19 <20` in `@nexub/react`, `@nexub/patterns` and `@nexub/marketing`.
+  - The 4.9 development warnings are removed. No component API changes. See /getting-started/migrating-to-5.
+
+## 4.9.0
+
+## 4.8.0
+
+## 4.7.0
+
+## 4.6.0
+
 ## 4.5.0
 
 ## 4.4.0

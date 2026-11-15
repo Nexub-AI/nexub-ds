@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@nexub/react/cn';
+import { safeHref } from '@nexub/react/safeHref';
 import { Container } from '@nexub/react/Container';
 import { Drawer } from '@nexub/react/Drawer';
 import { DropdownMenu } from '@nexub/react/DropdownMenu';
@@ -78,7 +79,7 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
         <Container size="marketing" className="flex items-center gap-6">
           {/* Without logoLabel the link takes the logo's own name ("Nexub"), so the visible
               wordmark is the accessible name (WCAG 2.5.3 Label in Name). */}
-          <a href={logoHref} aria-label={logoLabel} className="flex shrink-0 items-center no-underline">
+          <a href={safeHref(logoHref)} aria-label={logoLabel} className="flex shrink-0 items-center no-underline">
             {logo}
           </a>
 
@@ -92,7 +93,7 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
                       <ul className="m-0 grid w-[min(36rem,90vw)] list-none grid-cols-2 gap-1 p-2">
                         {item.items.map((link) => (
                           <li key={link.href}>
-                            <NavigationMenu.Link href={link.href} className={linkClass}>
+                            <NavigationMenu.Link href={safeHref(link.href)} className={linkClass}>
                               <span className="flex items-center gap-2 text-title-sm">
                                 {link.icon && <span aria-hidden="true">{link.icon}</span>}
                                 {link.label}
@@ -108,7 +109,7 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
                   </NavigationMenu.Item>
                 ) : (
                   <NavigationMenu.Item key={item.href}>
-                    <NavigationMenu.Link href={item.href}>{item.label}</NavigationMenu.Link>
+                    <NavigationMenu.Link href={safeHref(item.href)}>{item.label}</NavigationMenu.Link>
                   </NavigationMenu.Item>
                 ),
               )}
@@ -131,7 +132,7 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
               <DropdownMenu.Content align="end">
                 {countries.map((c) => (
                   <DropdownMenu.Item key={c.code} asChild>
-                    <a href={c.href} aria-current={c.code === current.code ? 'true' : undefined}>
+                    <a href={safeHref(c.href)} aria-current={c.code === current.code ? 'true' : undefined}>
                       <Flag code={c.code} size="sm" aria-hidden="true" />
                       {c.label}
                     </a>
@@ -159,13 +160,13 @@ export const MarketingNav = React.forwardRef<HTMLElement, MarketingNavProps>(
                       <div key={item.label} className="flex flex-col gap-1">
                         <p className="m-0 px-3 text-label-md text-[var(--color-on-surface-muted)]">{item.label}</p>
                         {item.items.map((link) => (
-                          <a key={link.href} href={link.href} className={linkClass}>
+                          <a key={link.href} href={safeHref(link.href)} className={linkClass}>
                             <span className="text-title-sm">{link.label}</span>
                           </a>
                         ))}
                       </div>
                     ) : (
-                      <a key={item.href} href={item.href} className={cn(linkClass, 'text-title-sm')}>
+                      <a key={item.href} href={safeHref(item.href)} className={cn(linkClass, 'text-title-sm')}>
                         {item.label}
                       </a>
                     ),

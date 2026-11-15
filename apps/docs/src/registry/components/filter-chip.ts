@@ -12,9 +12,7 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'selected', type: 'boolean', required: false, description: 'Controlled selected state of the chip.' },
-    { name: 'onSelectedChange', type: '(selected: boolean) => void', required: false, description: 'Called when the selected state changes.' },
     { name: 'disabled', type: 'boolean', required: false, description: 'Disables the chip.' },
-    { name: 'size', type: "'sm' | 'md'", required: false, description: 'Controls chip size.' },
   ],
   examples: [
     {

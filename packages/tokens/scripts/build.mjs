@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compose, swift } from './platforms.mjs';
 import { writeFigma } from './figma.mjs';
-import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SPRINGS, applyRem, palettes, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -157,6 +157,10 @@ StyleDictionary.registerFormat({
     add('ease', t.transitionTimingFunction);
     add('transition-duration', t.transitionDuration); // v4's duration-* reads --transition-duration-*
     add('animate', t.animation);
+    // Bare `transition` / `transition-colors` use these: the effects spring, not
+    // Tailwind's 150ms ease, so every transition comes from the one motion source.
+    lines.push('  --default-transition-duration: var(--motion-spring-effects-default-duration);');
+    lines.push('  --default-transition-timing-function: var(--motion-spring-effects-default-easing);');
     // Tailwind v4's max-w-sm … max-w-2xl read var(--container-*), and the Nexub layout
     // tokens use the same names (--container-sm: 640px …), so v4 would widen them.
     // Pin Tailwind's own scale (v3's maxWidth) inline; max-w-container-* stay the tokens.
@@ -234,16 +238,16 @@ function pickScheme(css, dark) {
 
 export function nativeTokens(t) {
   const pal = palettes();
-  const resolve = (roles, level, dark) =>
+  const resolve = (roles, level, dark, from = pal) =>
     Object.fromEntries(
       Object.entries(roles).map(([role, entry]) => {
         const [p, l, d] = tonesAt(entry, level);
-        return [role, pal[p][dark ? d : l]];
+        return [role, from[p][dark ? d : l]];
       }),
     );
-  const schemes = (roles) =>
+  const schemes = (roles, from = pal) =>
     Object.fromEntries(
-      LEVELS.map((lvl) => [lvl, { light: resolve(roles, lvl, false), dark: resolve(roles, lvl, true) }]),
+      LEVELS.map((lvl) => [lvl, { light: resolve(roles, lvl, false, from), dark: resolve(roles, lvl, true, from) }]),
     );
   const type = Object.fromEntries(
     Object.entries(t.type)
@@ -262,7 +266,6 @@ export function nativeTokens(t) {
         ];
       }),
   );
-  const bezier = (v) => v.match(/[\d.]+/g).map(Number);
   return {
     color: {
       roles: schemes({ ...ROLES, ...tertiary('primary') }),
@@ -277,9 +280,21 @@ export function nativeTokens(t) {
     elevation: Object.fromEntries(
       Object.entries(t.elevation).map(([lvl, v]) => [lvl, { light: pickScheme(v, false), dark: pickScheme(v, true) }]),
     ),
+    // Signature style (7.9 opt-in, the same values as [data-style='signature'] in
+    // roles.css): only what differs from classic. NexubNativeProvider
+    // style="signature" merges it over the roles / shape / type / elevation above.
+    // Tertiary is included: the provider merges a product over it afterwards.
+    signature: {
+      roles: schemes({ ...signatureRoles(), ...tertiary('primary') }, { ...pal, ...signaturePalettes() }),
+      shape: SIGNATURE.shape,
+      type: Object.fromEntries(
+        Object.entries(SIGNATURE.tracking).map(([role, em]) => [role, { letterSpacing: +(em * type[role].size).toFixed(2) }]),
+      ),
+      elevation: Object.fromEntries(
+        Object.entries(SIGNATURE.elevation).map(([lvl, v]) => [lvl, { light: pickScheme(v, false), dark: pickScheme(v, true) }]),
+      ),
+    },
     motion: {
-      duration: numbers(t.duration),
-      easing: Object.fromEntries(Object.entries(t.ease).map(([k, v]) => [k, bezier(v)])),
       // Reanimated withSpring: damping is the absolute coefficient c = 2ζ√(k·m), m = 1.
       spring: Object.fromEntries(
         Object.entries(SPRINGS).map(([kind, speeds]) => [

@@ -27,7 +27,8 @@ const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
       if (!wrapper) return;
       const measure = () => {
         // Only an overflowing wrapper is a scroll region worth a tab stop (WCAG 2.1.1).
-        if (wrapper.scrollWidth > wrapper.clientWidth) {
+        // Either axis: a DataTable with maxHeight scrolls vertically (8.3).
+        if (wrapper.scrollWidth > wrapper.clientWidth || wrapper.scrollHeight > wrapper.clientHeight) {
           const id = tableRef.current?.caption?.id || null;
           setOverflow((prev) => (prev && prev.captionId === id ? prev : { captionId: id }));
         } else {
@@ -130,7 +131,7 @@ const Head = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLT
     <th
       ref={ref}
       className={cn(
-        'h-10 px-4 text-start align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'h-10 px-4 text-start align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}
@@ -144,7 +145,7 @@ const Cell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLT
     <td
       ref={ref}
       className={cn(
-        'p-4 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-[2px]',
+        'p-4 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}

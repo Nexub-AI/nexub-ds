@@ -19,7 +19,7 @@ import {
   type Product,
 } from '@nexub/core';
 import { playHaptic, type HapticToken } from './haptics';
-import type { FontSource } from './fonts';
+import type { FontSource, ResolvedFontSource } from './fonts';
 
 export type Scheme = 'light' | 'dark';
 export type Roles = { -readonly [K in keyof NativeRoles]: string };
@@ -40,7 +40,8 @@ export interface NexubTheme {
   glass: GlassMode;
   reducedMotion: boolean;
   haptics: boolean;
-  fonts: FontSource;
+  /** `fonts`, or 'nexub-bold' while the OS Bold Text setting is on (iOS). */
+  fonts: ResolvedFontSource;
   locale: string;
   dir: Direction;
   messages: NexubMessages;
@@ -74,6 +75,19 @@ export interface NexubNativeProviderProps {
 
 const ThemeContext = React.createContext<NexubTheme | null>(null);
 
+// Signature (the only style since 9.0) over the base tokens. Same keys, different
+// numbers, so it's typed as the base (as-const) shape.
+const signatureTokens = {
+  ...native,
+  shape: { ...native.shape, ...native.signature.shape },
+  type: Object.fromEntries(
+    Object.entries(native.type).map(([role, v]) => [
+      role,
+      { ...v, ...(native.signature.type as Record<string, { letterSpacing: number }>)[role] },
+    ]),
+  ),
+} as unknown as typeof native;
+
 // AccessibilityInfo reads that fire no change event (contrast): re-read on foreground.
 function useForegroundSetting(
   read: (() => Promise<boolean>) | undefined,
@@ -92,7 +106,7 @@ function useForegroundSetting(
 
 function useSetting(
   read: () => Promise<boolean>,
-  event: 'reduceMotionChanged' | 'reduceTransparencyChanged',
+  event: 'reduceMotionChanged' | 'reduceTransparencyChanged' | 'boldTextChanged',
 ): boolean {
   const [on, setOn] = React.useState(false);
   React.useEffect(() => {
@@ -115,6 +129,9 @@ const readHighContrast =
 const readReduceMotion = () => AccessibilityInfo.isReduceMotionEnabled();
 const readReduceTransparency = () =>
   Platform.OS === 'ios' ? AccessibilityInfo.isReduceTransparencyEnabled() : Promise.resolve(false);
+// Bold Text is an iOS setting; Android's bold-text adjustment has no React Native API.
+const readBoldText = () =>
+  Platform.OS === 'ios' ? AccessibilityInfo.isBoldTextEnabled() : Promise.resolve(false);
 
 /**
  * Theme, accessibility preferences, locale and strings for every
@@ -142,11 +159,17 @@ export function NexubNativeProvider({
     contrastProp === 'system' ? (systemHigh ? 'high' : 'standard') : contrastProp;
   const reducedMotion = useSetting(readReduceMotion, 'reduceMotionChanged');
   const reduceTransparency = useSetting(readReduceTransparency, 'reduceTransparencyChanged');
+  const boldText = useSetting(readBoldText, 'boldTextChanged');
+  // The system font follows Bold Text by itself; the Nexub files need the heavier weight chosen.
+  const resolvedFonts = fonts === 'nexub' && boldText ? 'nexub-bold' : fonts;
   const resolvedDir = dir ?? directionOf(locale);
 
   const theme = React.useMemo<NexubTheme>(() => {
+    const sig = native.signature;
+    // base → signature → product → seed, so a product or seed still wins.
     const roles: Roles = {
       ...native.color.roles[contrast][scheme],
+      ...sig.roles[contrast][scheme],
       ...(product ? native.color.products[product][contrast][scheme] : {}),
       ...(seed ? createSeedRoles(seed, { contrast, target: seedTarget })[scheme] : {}),
     };
@@ -155,12 +178,12 @@ export function NexubNativeProvider({
       contrast,
       product,
       roles,
-      tokens: native,
-      elevation: (level) => (level ? native.elevation[level][scheme] : undefined),
+      tokens: signatureTokens,
+      elevation: (level) => (level ? sig.elevation[level][scheme] : undefined),
       glass: reduceTransparency ? 'off' : glass,
       reducedMotion,
       haptics,
-      fonts,
+      fonts: resolvedFonts,
       locale,
       dir: resolvedDir,
       messages: { ...defaultMessages, ...messages },
@@ -175,7 +198,7 @@ export function NexubNativeProvider({
     reduceTransparency,
     reducedMotion,
     haptics,
-    fonts,
+    resolvedFonts,
     locale,
     resolvedDir,
     messages,

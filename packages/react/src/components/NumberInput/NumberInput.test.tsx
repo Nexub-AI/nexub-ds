@@ -27,10 +27,10 @@ describe('NumberInput', () => {
     expect(screen.getByRole('button', { name: /decrement/i })).toBeInTheDocument();
   });
 
-  it('calls onChange when increment is clicked', async () => {
+  it('calls onValueChange when increment is clicked', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(<NumberInput showSteppers defaultValue={5} step={1} onChange={onChange} />);
+    render(<NumberInput showSteppers defaultValue={5} step={1} onValueChange={onChange} />);
     await user.click(screen.getByRole('button', { name: /increment/i }));
     expect(onChange).toHaveBeenCalledWith(6);
   });

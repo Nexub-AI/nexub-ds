@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import * as RadixToast from '@radix-ui/react-toast';
-import { X } from '@nexub/icons';
+import { AlertTriangle, CheckCircle2, Info, Loader2, X, XCircle } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { fireToastClose, toast, useToastStore } from './useToast.js';
+import { fireToastClose, toast, useToastStore, type ToastItem } from './useToast.js';
 
 const toneMap: Record<string, string> = {
   success: 'border-s-4 border-[var(--color-success)]',
@@ -14,12 +14,41 @@ const toneMap: Record<string, string> = {
   warning: 'border-s-4 border-[var(--color-warning)]',
   info: 'border-s-4 border-[var(--color-info)]',
   neutral: '',
+  loading: '',
 };
+
+// Toasts sit on the inverse surface, where the plain status colours fall to ~2:1.
+// The *-container roles invert with it and clear 7:1+ in both schemes.
+const toneIcon: Record<string, React.ReactNode> = {
+  success: <CheckCircle2 size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-success-container)]" />,
+  error: <XCircle size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-error-container)]" />,
+  warning: <AlertTriangle size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-warning-container)]" />,
+  info: <Info size="sm" aria-hidden="true" className="shrink-0 text-[var(--color-info-container)]" />,
+  loading: <Loader2 size="sm" aria-hidden="true" className="shrink-0 animate-spin motion-reduce:animate-none" />,
+};
+
+/** A swipe shorter than Radix's threshold still dismisses when flicked faster than this (px/ms). */
+const FLICK_VELOCITY = 0.11;
 
 /** Gap between toasts when the stack fans out into a list. */
 const GAP = 8;
 
+export type ToasterPosition = 'top-start' | 'top-center' | 'top-end' | 'bottom-start' | 'bottom-center' | 'bottom-end';
+
+// Full class strings so Tailwind sees them. --nx-dir flips the stack for bottom positions.
+const vertical = {
+  top: { viewport: 'top-0', toast: 'top-4 origin-bottom', enter: '[--nx-y:calc(-100%-1rem)]' },
+  bottom: { viewport: 'bottom-0 [--nx-dir:-1]', toast: 'bottom-4 origin-top', enter: '[--nx-y:calc(100%+1rem)]' },
+};
+const horizontal = {
+  start: { viewport: 'start-0', enter: '[--nx-x:calc(-100%-1rem)] rtl:[--nx-x:calc(100%+1rem)]' },
+  center: { viewport: 'inset-x-0 mx-auto', enter: '' },
+  end: { viewport: 'end-0', enter: '[--nx-x:calc(100%+1rem)] rtl:[--nx-x:calc(-100%-1rem)]' },
+};
+
 export interface ToasterProps {
+  /** Where the stack sits. Default `top-end`; start/end follow the reading direction. */
+  position?: ToasterPosition;
   /** Always show the toasts as a list instead of a collapsed stack. */
   expand?: boolean;
   /** How many toasts are visible at once; older ones are visually hidden. Default 3. */
@@ -36,7 +65,10 @@ export interface ToasterProps {
  * (--nx-toast-index / --nx-toast-offset per toast, --nx-front-height and
  * --nx-stack-height on the viewport), never a style attribute (strict CSP).
  */
-export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
+export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end' }: ToasterProps) {
+  const [side, align] = position.split('-') as ['top' | 'bottom', 'start' | 'center' | 'end'];
+  const v = vertical[side];
+  const h = horizontal[align];
   const toasts = useToastStore();
   const messages = useNexubMessages();
   const { dir } = useLocale();
@@ -55,6 +87,9 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
   state.current = { order, expanded, visibleToasts };
   // Pending "drop from the store" timers, cleared on unmount so none fires on a dead tree.
   const timers = React.useRef(new Set<ReturnType<typeof setTimeout>>());
+  // Each toast as first rendered: Radix announces only that, so later updates go to the toast's own live region.
+  const firstSeen = React.useRef(new Map<string, ToastItem>());
+  const swipeStart = React.useRef(0);
   React.useEffect(() => {
     const pending = timers.current;
     return () => pending.forEach(clearTimeout);
@@ -132,42 +167,69 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
     }
   }, [order.length]);
 
+  const el = (id: string) => viewportRef.current?.querySelector<HTMLElement>(`[data-toast-id="${id}"]`);
+  const close = (t: ToastItem) => {
+    if (closed.has(t.id)) return;
+    fireToastClose(t);
+    setClosed((s) => new Set(s).add(t.id));
+    // Drop it from the store once the exit animation has played, so a
+    // long session doesn't keep every toast it ever showed.
+    // ponytail: fixed 1s > the effects-fast exit; read the computed duration if exits get longer.
+    const timer = setTimeout(() => {
+      timers.current.delete(timer);
+      firstSeen.current.delete(t.id);
+      toast.dismiss(t.id);
+      setClosed((s) => {
+        const next = new Set(s);
+        next.delete(t.id);
+        return next;
+      });
+    }, 1000);
+    timers.current.add(timer);
+  };
+
   return (
-    <RadixToast.Provider swipeDirection={dir === 'rtl' ? 'left' : 'right'}>
+    <RadixToast.Provider swipeDirection={(align === 'start') === (dir === 'rtl') ? 'right' : 'left'}>
       {toasts.map((t) => {
         const i = order.indexOf(t.id);
         const action = t.action ?? (t.undo && { label: t.undo.label ?? messages.undo, onClick: t.undo.onUndo });
+        if (!firstSeen.current.has(t.id)) firstSeen.current.set(t.id, t);
+        // Announce an update once it settles; a loading step is never re-announced.
+        const announce = firstSeen.current.get(t.id) !== t && t.tone !== 'loading' ? [t.title, t.description].filter(Boolean).join('. ') : '';
+        const icon = t.icon === false ? null : (t.icon ?? toneIcon[t.tone ?? 'neutral']);
+        const duration = t.tone === 'loading' ? Infinity : (t.duration ?? 5000);
         return (
           <RadixToast.Root
             key={t.id}
             data-toast-id={t.id}
             data-front={i === -1 ? undefined : i === 0}
             data-hidden={i === -1 ? undefined : i >= visibleToasts}
+            open={!closed.has(t.id)}
             onOpenChange={(open) => {
-              if (open) return;
-              fireToastClose(t);
-              setClosed((s) => new Set(s).add(t.id));
-              // Drop it from the store once the exit animation has played, so a
-              // long session doesn't keep every toast it ever showed.
-              // ponytail: fixed 1s > the effects-fast exit; read the computed duration if exits get longer.
-              const timer = setTimeout(() => {
-                timers.current.delete(timer);
-                toast.dismiss(t.id);
-                setClosed((s) => {
-                  const next = new Set(s);
-                  next.delete(t.id);
-                  return next;
-                });
-              }, 1000);
-              timers.current.add(timer);
+              if (!open) close(t);
+            }}
+            onPause={() => el(t.id)?.setAttribute('data-paused', '')}
+            onResume={() => el(t.id)?.removeAttribute('data-paused')}
+            onSwipeStart={() => {
+              swipeStart.current = performance.now();
+            }}
+            onSwipeCancel={(e) => {
+              // Radix only measures distance; a fast flick toward the edge dismisses too.
+              const { x, y } = e.detail.delta;
+              if (Math.hypot(x, y) / Math.max(1, performance.now() - swipeStart.current) < FLICK_VELOCITY) return;
+              e.preventDefault(); // skip Radix's snap-back; leave from where it was let go, like a swipe end
+              e.currentTarget.setAttribute('data-swipe', 'end');
+              e.currentTarget.style.setProperty('--radix-toast-swipe-end-x', `${x}px`);
+              close(t);
             }}
             className={cn(
-              'group pointer-events-auto absolute inset-x-4 top-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+              'group pointer-events-auto absolute inset-x-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
               // Stack: older toasts sit behind, scaled from their bottom edge so it peeks out.
               // Transition-only timing: duration-*/ease-* utilities would also retime nx-motion's enter/exit keyframes.
-              'origin-bottom transition-[transform,opacity] [transition-duration:var(--motion-spring-spatial-default-duration)] [transition-timing-function:var(--motion-spring-spatial-default-easing)]',
-              'translate-y-[calc(var(--nx-toast-index,0)*var(--nx-toast-step))] scale-[calc(1_-_var(--nx-toast-index,0)*var(--nx-toast-shrink))]',
-              'group-data-[expanded=true]/toaster:translate-y-[var(--nx-toast-offset,0px)] group-data-[expanded=true]/toaster:scale-100',
+              v.toast,
+              'transition-[transform,opacity] [transition-duration:var(--motion-spring-spatial-default-duration)] [transition-timing-function:var(--motion-spring-spatial-default-easing)]',
+              'translate-y-[calc(var(--nx-toast-index,0)*var(--nx-toast-step)*var(--nx-dir,1))] scale-[calc(1_-_var(--nx-toast-index,0)*var(--nx-toast-shrink))]',
+              'group-data-[expanded=true]/toaster:translate-y-[calc(var(--nx-toast-offset,0px)*var(--nx-dir,1))] group-data-[expanded=true]/toaster:scale-100',
               // Collapsing settles faster than expanding.
               'group-data-[expanded=false]/toaster:[transition-duration:var(--motion-spring-effects-fast-duration)] group-data-[expanded=false]/toaster:[transition-timing-function:var(--motion-spring-effects-fast-easing)]',
               'group-data-[expanded=false]/toaster:data-[front=false]:h-[var(--nx-front-height)]',
@@ -179,12 +241,14 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               'motion-reduce:[transition-property:opacity] motion-reduce:group-data-[expanded=false]/toaster:data-[front=false]:pointer-events-none motion-reduce:group-data-[expanded=false]/toaster:data-[front=false]:opacity-0',
               'data-[state=closed]:duration-effects-fast',
               'data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none',
-              'nx-motion [--nx-x:calc(100%+1rem)] rtl:[--nx-x:calc(-100%-1rem)]',
+              'nx-motion',
+              align === 'center' ? v.enter : h.enter,
               toneMap[t.tone ?? 'neutral'],
             )}
-            duration={t.duration ?? 5000}
+            duration={duration}
           >
-            <div className="grid gap-1">
+            {icon}
+            <div className="grid flex-1 gap-1">
               <RadixToast.Title className="text-title-sm">{t.title}</RadixToast.Title>
               {t.description && (
                 <RadixToast.Description className="text-body-sm text-[color-mix(in_srgb,var(--color-inverse-on-surface)_80%,transparent)]">
@@ -196,7 +260,7 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               <RadixToast.Action
                 altText={action.label}
                 onClick={action.onClick}
-                className="nx-state-layer relative inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
+                className="nx-state-layer relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-shape-control px-3 text-label-lg text-[var(--color-inverse-primary)]"
               >
                 {action.label}
               </RadixToast.Action>
@@ -206,6 +270,16 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
               <X size="sm" aria-hidden="true" />
               <span className="sr-only">{messages.close}</span>
             </RadixToast.Close>
+            <span role="status" className="sr-only">{announce}</span>
+            {t.showProgress && duration !== Infinity && (
+              <span
+                key={duration}
+                aria-hidden="true"
+                // Countdown: the theme's scroll-progress scaleX keyframes, reversed; duration via the CSSOM (strict CSP).
+                ref={(bar) => bar?.style.setProperty('animation-duration', `${duration}ms`)}
+                className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-current opacity-40 rtl:origin-right [animation:nx-scroll-progress_1s_linear_reverse_forwards] group-data-[paused]:[animation-play-state:paused] motion-reduce:hidden"
+              />
+            )}
           </RadixToast.Root>
         );
       })}
@@ -213,8 +287,11 @@ export function Toaster({ expand = false, visibleToasts = 3 }: ToasterProps) {
         ref={viewportRef}
         label={messages.notifications}
         data-expanded={expanded}
+        data-position={position}
         className={cn(
-          'group/toaster fixed top-0 end-0 z-[var(--z-toast,2000)] max-h-screen w-full p-4 sm:max-w-sm',
+          v.viewport,
+          h.viewport,
+          'group/toaster fixed z-[var(--z-toast,2000)] max-h-screen w-full p-4 sm:max-w-sm',
           // Collapsed: the front toast's height (older edges peek below); expanded: the whole list.
           'h-[calc(var(--nx-stack-height,0px)+2rem)]',
           '[--nx-toast-step:10px] [--nx-toast-shrink:0.05] motion-reduce:[--nx-toast-step:0px] motion-reduce:[--nx-toast-shrink:0]',

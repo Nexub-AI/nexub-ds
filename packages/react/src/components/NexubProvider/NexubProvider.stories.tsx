@@ -64,7 +64,7 @@ function Panel({ title }: { title: string }) {
 export const EnglishAndArabic: Story = {
   name: 'English and Arabic',
   render: () => (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <NexubProvider locale="en-US">
         <div dir="ltr" lang="en-US">
           <Panel title="English (ltr)" />

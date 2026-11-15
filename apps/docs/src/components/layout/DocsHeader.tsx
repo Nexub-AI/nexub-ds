@@ -25,8 +25,12 @@ function activeSection(pathname: string): string | undefined {
   return '/getting-started';
 }
 
-const openSearch = () =>
-  window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+// SearchModal is a lazy chunk: until it mounts nobody hears the keydown, so leave a
+// flag it reads on mount (a click before the chunk loaded used to do nothing).
+const openSearch = () => {
+  if (document.documentElement.dataset.searchReady !== 'true') document.documentElement.dataset.searchPending = 'true';
+  else window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true }));
+};
 
 /** The site header, shared by the landing page and every docs page. */
 export function DocsHeader() {
@@ -39,7 +43,7 @@ export function DocsHeader() {
         <Menu size={20} />
       </IconButton>
 
-      <Link href="/" aria-label="Nexub Design System home" className="flex shrink-0 items-center no-underline">
+      <Link href="/" className="flex shrink-0 items-center no-underline">
         <Logo size="sm" product="Design System" />
       </Link>
       <div className="docs-only-desktop shrink-0">
@@ -59,7 +63,6 @@ export function DocsHeader() {
       <button
         type="button"
         onClick={openSearch}
-        aria-label="Search the docs"
         aria-keyshortcuts="Meta+K Control+K"
         className="docs-header-search nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-[var(--color-surface-container-highest)] ps-4 pe-2 text-body-md text-[var(--color-on-surface-variant)]"
       >
@@ -67,7 +70,8 @@ export function DocsHeader() {
           <Search size={14} aria-hidden="true" />
           Search
         </span>
-        <Kbd>⌘K</Kbd>
+        {/* The name is the visible "Search" (WCAG 2.5.3); aria-keyshortcuts carries ⌘K. */}
+        <Kbd aria-hidden="true">⌘K</Kbd>
       </button>
       <IconButton label="Search the docs" className="docs-header-search-icon" onClick={openSearch}>
         <Search size={18} />
@@ -82,6 +86,8 @@ export function DocsHeader() {
       <div className="docs-only-desktop">
         <ThemeSwitcher />
       </div>
+      {/* Last in the header: globals.css keeps the header hidden until this is parsed. */}
+      <span data-header-end hidden />
     </TopNav.Root>
   );
 }

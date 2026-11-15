@@ -2,7 +2,7 @@ import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { fr } from 'date-fns/locale/fr';
-import { DateRangePicker } from './DateRangePicker.js';
+import { DateRangePicker, todayIn } from './DateRangePicker.js';
 import { NexubProvider } from '../NexubProvider/NexubProvider.js';
 
 describe('DateRangePicker', () => {
@@ -63,3 +63,32 @@ describe('DateRangePicker locale + RTL', () => {
     expect(screen.getByText(/janvier 2024/i)).toBeInTheDocument();
   });
 });
+
+describe('DateRangePicker presets and time zone', () => {
+  it('todayIn reads the calendar date in a time zone', () => {
+    const now = new Date('2026-11-07T02:00:00Z'); // still Nov 6 in Los Angeles, Nov 7 in Tokyo
+    expect(todayIn('America/Los_Angeles', now).getDate()).toBe(6);
+    expect(todayIn('Asia/Tokyo', now).getDate()).toBe(7);
+  });
+
+  it('presets pick a range and close; the time zone is labelled', () => {
+    const onChange = vi.fn();
+    render(<DateRangePicker onChange={onChange} presets timeZone="Asia/Tokyo" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByText(/Time zone: .*\(Asia\/Tokyo\)/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Last 7 days' }));
+    const range = onChange.mock.calls[0]![0];
+    expect((range.to - range.from) / 86_400_000).toBe(6);
+    expect(range.to.getTime()).toBe(todayIn('Asia/Tokyo').getTime());
+  });
+
+  it('accepts custom presets', () => {
+    const onChange = vi.fn();
+    const q = { from: new Date(2026, 6, 1), to: new Date(2026, 8, 30) };
+    render(<DateRangePicker onChange={onChange} presets={[{ label: 'Q3', range: () => q }]} />);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button', { name: 'Q3' }));
+    expect(onChange).toHaveBeenCalledWith(q);
+  });
+});
+

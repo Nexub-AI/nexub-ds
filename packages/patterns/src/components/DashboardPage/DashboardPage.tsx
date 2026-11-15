@@ -81,7 +81,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
               <ul aria-label={m.quickActions} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {quickActions.map((a) => (
                   <li key={a.id}>
-                    <Button variant="secondary" fullWidth onClick={a.onSelect} leadingIcon={a.icon}>
+                    <Button variant="tonal" fullWidth onClick={a.onSelect} leadingIcon={a.icon}>
                       {a.label}
                     </Button>
                   </li>
@@ -103,7 +103,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
               title={m.recentActivity}
               action={
                 onSeeAllActivity && (
-                  <Button variant="ghost" size="sm" onClick={onSeeAllActivity}>
+                  <Button variant="text" size="sm" onClick={onSeeAllActivity}>
                     {m.seeAll}
                   </Button>
                 )

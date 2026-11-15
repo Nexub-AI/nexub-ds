@@ -1,0 +1,19 @@
+/* @nexub/themes — signature.css: the Signature style (the only style since 9.0).
+   The colour, shape, display tracking and elevation tokens are generated into
+   @nexub/tokens/css/roles. This file adds what isn't a generated token.
+   Imported by core.css (and so base.css). */
+
+:root {
+  /* Full pills only where meaning calls for them (chips, tags, segmented,
+     toggles): --shape-control is ~10px under Signature, so those components
+     use var(--shape-pill, var(--shape-control)). */
+  --shape-pill: 9999px;
+  /* The Nexub mark's gradient, for moments (primary CTA sheen, focus glow,
+     progress, celebrate). Decorative: never put text on it. */
+  --gradient-signature: linear-gradient(135deg, var(--color-brand-mark-1) 0%, var(--color-brand-mark-2) 50%, var(--color-brand-mark-6) 100%);
+}
+
+/* Data reads in columns: tabular numerals for tables and machine-readable values. */
+:is(table, data, time, output, meter) {
+  font-variant-numeric: tabular-nums;
+}

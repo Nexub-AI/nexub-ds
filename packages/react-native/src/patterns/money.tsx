@@ -225,15 +225,14 @@ export function ActivityList({
   empty,
 }: ActivityListProps) {
   const { roles, tokens, locale } = useTheme();
-  const day = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
   const sections = React.useMemo(() => {
+    const day = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
     const map = new Map<string, Transaction[]>();
     for (const t of [...transactions].sort((a, b) => +b.date - +a.date)) {
       const key = day.format(t.date);
       map.set(key, [...(map.get(key) ?? []), t]);
     }
     return [...map].map(([title, data]) => ({ title, data }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactions, locale]);
 
   const row = (t: Transaction) => {
@@ -244,7 +243,7 @@ export function ActivityList({
         subtitle={t.subtitle}
         leading={<Avatar name={t.title} src={t.image} />}
         trailing={
-          <View style={{ alignItems: 'flex-end', gap: 2 }}>
+          <View style={{ alignItems: 'flex-end', gap: tokens.spacing['0-5'] }}>
             <Amount
               value={t.amount}
               currency={t.currency}

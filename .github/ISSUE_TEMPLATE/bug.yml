@@ -1,0 +1,25 @@
+name: Bug or glitch
+description: Something is broken, or looks or behaves wrong (flicker, layout shift, lost focus, wrong state).
+labels: [bug, triage]
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options: [Bug (wrong result or crash), Glitch (visual or interaction defect)]
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes: { label: Version, placeholder: "@nexub/react 8.0.0" }
+    validations: { required: true }
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      multiple: true
+      options: [Chrome / Edge, Firefox, Safari, iOS Safari, React Native iOS, React Native Android, SSR / Next.js]
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: "Steps to reproduce, what you expected, what you saw. A CodeSandbox, StackBlitz or screen recording helps most." }
+    validations: { required: true }

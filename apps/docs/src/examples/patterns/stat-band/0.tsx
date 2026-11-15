@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { StatBand, StatBandItem } from '@nexub/marketing';
 
 export default function Example() {

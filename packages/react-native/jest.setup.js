@@ -31,7 +31,8 @@ jest.mock('react-native-reanimated', () => {
     __esModule: true,
     default: { View: AnimatedView, createAnimatedComponent: id },
     createAnimatedComponent: id,
-    useSharedValue: (value) => ({ value }),
+    // Stable across renders, like the real hook (effects list shared values as deps).
+    useSharedValue: (value) => React.useState(() => ({ value }))[0],
     useAnimatedStyle: (fn) => fn(),
     useDerivedValue: (fn) => ({ value: fn() }),
     withSpring: id,
@@ -46,3 +47,13 @@ jest.mock('react-native-reanimated', () => {
 
 // Safe-area insets without a native provider.
 jest.mock('react-native-safe-area-context', () => require('react-native-safe-area-context/jest/mock').default);
+
+// react-native exposes Modal, KeyboardAvoidingView, PanResponder and ScrollView as
+// lazy getters: the first access requires (and, on a cold Jest cache, Babel-
+// transforms) the whole module graph, ~0.6s locally and several seconds on a busy
+// CI runner. That landed inside whichever test first opened a sheet ("Select: opens
+// a sheet" hit the 5s timeout). Load them here, outside any test's timeout.
+{
+  const RN = require('react-native');
+  void [RN.Modal, RN.KeyboardAvoidingView, RN.PanResponder, RN.ScrollView, RN.FlatList];
+}

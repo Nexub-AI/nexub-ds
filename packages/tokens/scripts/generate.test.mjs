@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, spring, tertiary, tonesAt } from './generate.mjs';
+import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, signaturePalettes, spring, tertiary, tonesAt } from './generate.mjs';
 
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -28,8 +28,8 @@ const PAIRS = [
   ['inverse-primary', 'inverse-surface', 3],
 ];
 
-test('every role pair meets WCAG AA in light/dark × standard/medium/high × every brand', () => {
-  const pal = palettes();
+// Every role pair at every level × scheme × brand, over a palette set.
+function aaFailures(pal) {
   const failures = [];
   for (const brand of ['primary', ...PRODUCTS]) {
     const roles = { ...ROLES, ...tertiary(brand) };
@@ -46,7 +46,42 @@ test('every role pair meets WCAG AA in light/dark × standard/medium/high × eve
       }
     }
   }
-  assert.deepEqual(failures, []);
+  return failures;
+}
+
+test('every role pair meets WCAG AA in light/dark × standard/medium/high × every brand', () => {
+  assert.deepEqual(aaFailures(palettes()), []);
+});
+
+// ─── Signature style (data-style="signature") ───────────────────────────────
+
+test('signature: every role pair meets WCAG AA in light/dark × standard/medium/high × every brand', () => {
+  assert.deepEqual(aaFailures({ ...palettes(), ...signaturePalettes() }), []);
+});
+
+test('signature: neutrals are near-zero chroma (no lavender cast)', () => {
+  const spread = (hex) => {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return Math.max(...c) - Math.min(...c);
+  };
+  const { neutral } = signaturePalettes();
+  for (const t of [4, 6, 10, 12, 17, 22, 87, 90, 92, 94, 96, 98, 100]) assert.ok(spread(neutral[t]) <= 1, `neutral-${t} ${neutral[t]}`);
+  assert.ok(spread(palettes().neutral[98]) > spread(neutral[98]), 'the token-source neutral is the tinted one');
+});
+
+test('styles: Signature on :root re-points every palette tone the roles read (the only style since 9.0)', () => {
+  const css = rolesCss();
+  const sig = signaturePalettes();
+  const blocks = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map(([, sel, body]) => [sel.replace(/\/\*[\s\S]*?\*\//g, '').trim(), body]);
+  const own = blocks.filter(([, body]) => /--(color-palette|shape|elevation|type)-[\w-]+:/.test(body));
+  // Exactly one block declares palette, shape, elevation or tracking values, on :root.
+  assert.deepEqual(own.map(([sel]) => sel), [':root']);
+  const signature = Object.fromEntries([...own[0][1].matchAll(/(--[\w-]+): ([^;]+);/g)].map((m) => [m[1], m[2]]));
+  for (const [, name] of css.matchAll(/var\((--color-palette-[\w-]+)\)/g)) {
+    const [, p, t] = name.match(/^--color-palette-(.+)-(\d+)$/);
+    if (p in sig) assert.equal(signature[name], sig[p][t], `${name} signature`);
+  }
+  assert.doesNotMatch(css, /data-style/);
 });
 
 test('every role tone exists in the generated palettes', () => {

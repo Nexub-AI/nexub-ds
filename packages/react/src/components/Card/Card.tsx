@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import { safeHref } from '../../utils/safeHref.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
 import type { ToneValue } from '../Button/Button.js';
 import { usePointerSheen } from '../../hooks/usePointerSheen.js';
@@ -11,7 +12,7 @@ import { usePointerSheen } from '../../hooks/usePointerSheen.js';
 export const cardVariants = cva(
   // In-flow content: tone + a soft alpha hairline, no shadow (shadows are for floating layers).
   // A CardLink inside stretches over the card; the card then carries its focus ring.
-  'rounded-[var(--card-radius,var(--shape-container))] bg-[var(--card-bg,var(--color-surface-elevated))] border border-[color:var(--card-border,color-mix(in_srgb,var(--color-outline-variant)_60%,transparent))] text-[var(--card-fg,var(--color-on-surface))] has-[[data-card-link]]:relative has-[[data-card-link]:focus-visible]:outline has-[[data-card-link]:focus-visible]:outline-[3px] has-[[data-card-link]:focus-visible]:outline-offset-2 has-[[data-card-link]:focus-visible]:outline-[var(--color-primary)]',
+  'rounded-[var(--card-radius,var(--shape-container))] bg-[var(--card-bg,var(--color-surface-elevated))] border border-[color:var(--card-border,color-mix(in_srgb,var(--color-outline-variant)_60%,transparent))] text-[var(--card-fg,var(--color-on-surface))] has-[[data-card-link]]:relative has-[[data-card-link]:focus-visible]:outline has-[[data-card-link]:focus-visible]:outline-3 has-[[data-card-link]:focus-visible]:outline-offset-2 has-[[data-card-link]:focus-visible]:outline-[var(--color-primary)]',
   {
     variants: {
       variant: {
@@ -107,7 +108,7 @@ export interface CardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElem
  * interactive elements inside the card `relative z-[1]` to keep them clickable.
  */
 export const CardLink = React.forwardRef<HTMLAnchorElement, CardLinkProps>(
-  ({ className, asChild = false, ...props }, ref) => {
+  ({ className, asChild = false, href, ...props }, ref) => {
     const Comp = asChild ? Slot : 'a';
     return (
       <Comp
@@ -117,6 +118,7 @@ export const CardLink = React.forwardRef<HTMLAnchorElement, CardLinkProps>(
           'text-inherit no-underline outline-none after:absolute after:inset-0 after:rounded-[inherit] after:content-[\'\']',
           className,
         )}
+        href={safeHref(href)}
         {...props}
       />
     );

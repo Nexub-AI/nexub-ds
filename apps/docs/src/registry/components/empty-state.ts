@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '5.6.0',
   },
   props: [
     { name: 'EmptyState.Root layout', type: "'centered' | 'inline'", default: "'centered'", required: false, description: '"centered" stacks content vertically in the middle of its container; "inline" aligns content to the start.' },
@@ -16,6 +17,8 @@ const entry: ComponentEntry = {
     { name: 'EmptyState.Title children', type: 'React.ReactNode', required: true, description: 'Primary heading text for the empty state.' },
     { name: 'EmptyState.Description children', type: 'React.ReactNode', required: false, description: 'Supporting text providing more context or guidance.' },
     { name: 'EmptyState.Actions children', type: 'React.ReactNode', required: false, description: 'One or more action buttons rendered below the description.' },
+    { name: 'EmptyStatePreset kind', type: "'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline'", required: true, description: 'Ready-made icon, title and description (5.6). serverError and offline are announced as alerts.' },
+    { name: 'EmptyStatePreset title / description / actions', type: 'ReactNode', required: false, description: 'Override the localised text; add buttons such as Retry.' },
   ],
   examples: [
     {
@@ -23,6 +26,10 @@ const entry: ComponentEntry = {
     },
     {
       title: 'Custom illustration',
+    },
+    {
+      title: 'Presets',
+      description: '`EmptyStatePreset` for no data, no results, no access (403), server error (500) and offline.',
     },
   ],
 };

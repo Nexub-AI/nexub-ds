@@ -16,7 +16,8 @@ export interface NumberInputProps
   showSteppers?: boolean;
   value?: number;
   defaultValue?: number;
-  onChange?: (value: number) => void;
+  /** Called with the new value. */
+  onValueChange?: (value: number) => void;
   invalid?: boolean;
 }
 
@@ -44,7 +45,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       showSteppers = false,
       value,
       defaultValue = 0,
-      onChange,
+      onValueChange,
       invalid,
       disabled,
       ...props
@@ -52,6 +53,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     ref,
   ) => {
     const [internalValue, setInternalValue] = React.useState<number>(defaultValue);
+    const change = (v: number) => onValueChange?.(v);
     const messages = useNexubMessages();
     const controlled = value !== undefined;
     const currentValue = controlled ? value : internalValue;
@@ -59,12 +61,12 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     const commit = (next: number) => {
       const clamped = clampValue(next, min, max);
       if (!controlled) setInternalValue(clamped);
-      onChange?.(clamped);
+      change(clamped);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const parsed = parseFloat(e.target.value);
-      if (!isNaN(parsed)) commit(parsed);
+      if (Number.isFinite(parsed)) commit(parsed);
     };
 
     const increment = () => commit(currentValue + step);

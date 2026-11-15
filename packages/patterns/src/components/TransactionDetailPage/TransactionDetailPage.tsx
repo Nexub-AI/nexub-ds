@@ -33,7 +33,7 @@ export const TransactionDetailPage = React.forwardRef<HTMLElement, TransactionDe
     return (
       <PageFrame ref={ref} width="sm" aria-labelledby={headingId} {...props}>
         {onBack && (
-          <Button variant="ghost" size="sm" className="self-start" onClick={onBack} leadingIcon={<ArrowLeft size="sm" className="rtl:-scale-x-100" aria-hidden="true" />}>
+          <Button variant="text" size="sm" className="self-start" onClick={onBack} leadingIcon={<ArrowLeft size="sm" className="rtl:-scale-x-100" aria-hidden="true" />}>
             {m.back}
           </Button>
         )}

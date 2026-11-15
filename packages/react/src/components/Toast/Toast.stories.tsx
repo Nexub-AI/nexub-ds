@@ -48,10 +48,10 @@ export const Stacked: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2 p-4">
       <Button onClick={() => samples[Math.floor(Math.random() * samples.length)]!()}>Fire one</Button>
-      <Button variant="outline" onClick={() => samples.forEach((fire, i) => setTimeout(fire, i * 250))}>
+      <Button variant="outlined" onClick={() => samples.forEach((fire, i) => setTimeout(fire, i * 250))}>
         Fire five
       </Button>
-      <Button variant="ghost" onClick={() => toast.dismiss()}>
+      <Button variant="text" onClick={() => toast.dismiss()}>
         Clear
       </Button>
       <Toaster />
@@ -87,18 +87,18 @@ function UndoDeleteDemo() {
   };
 
   return (
-    <div className="flex w-[360px] flex-col gap-3 p-4">
+    <div className="flex w-[360px] max-w-full flex-col gap-3 p-4">
       <ul className="flex flex-col gap-1">
         {rows.map((row) => (
           <li key={row} className="flex items-center justify-between gap-2 text-body-md">
             {row}
-            <Button size="sm" variant="ghost" onClick={() => remove(row)}>
+            <Button size="sm" variant="text" onClick={() => remove(row)}>
               Delete
             </Button>
           </li>
         ))}
       </ul>
-      <Button variant="outline" size="sm" onClick={() => setRows(initialRows)}>
+      <Button variant="outlined" size="sm" onClick={() => setRows(initialRows)}>
         Reset rows
       </Button>
       <p className="text-body-sm text-[var(--color-on-surface-muted)]">Committed: {log.join(', ') || 'none'}</p>
@@ -111,4 +111,34 @@ function UndoDeleteDemo() {
 export const UndoDelete: Story = {
   name: 'Undo delete',
   render: () => <UndoDeleteDemo />,
+};
+
+/** `toast.promise`: one toast goes loading → success/error in place. `showProgress` adds a countdown bar. */
+export const Promise_: Story = {
+  name: 'Promise & countdown',
+  render: () => (
+    <div className="flex flex-wrap gap-2 p-4">
+      <Button
+        onClick={() =>
+          toast.promise(new Promise((r) => setTimeout(r, 1500)), { loading: 'Saving…', success: 'Saved', error: 'Save failed' })
+        }
+      >
+        Save (resolves)
+      </Button>
+      <Button
+        tone="danger"
+        onClick={() =>
+          toast
+            .promise(new Promise((_, j) => setTimeout(j, 1500)), { loading: 'Uploading…', success: 'Uploaded', error: 'Upload failed' })
+            .catch(() => {})
+        }
+      >
+        Upload (rejects)
+      </Button>
+      <Button variant="tonal" onClick={() => toast.info('Auto-dismissing', { showProgress: true })}>
+        With countdown
+      </Button>
+      <Toaster />
+    </div>
+  ),
 };

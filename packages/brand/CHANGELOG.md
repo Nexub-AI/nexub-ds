@@ -1,5 +1,129 @@
 # @nexub/brand
 
+## 10.0.0
+
+## 9.9.1
+
+### Patch Changes
+
+- 852e6a7: Brand: app icon for Forms. `app-icon-forms.svg`, `-light.svg`, `-192.png`, `-512.png` and the `mobile/forms-*` iOS and Android set.
+
+## 9.9.0
+
+## 9.8.0
+
+## 9.7.0
+
+## 9.6.0
+
+## 9.5.0
+
+## 9.4.0
+
+## 9.3.0
+
+## 9.2.0
+
+## 9.1.0
+
+## 9.0.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.0
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.0
+
+## 8.0.0
+
+## 7.9.0
+
+## 7.8.0
+
+### Minor Changes
+
+- f33db7a: App icons: redrawn as one family of violet line glyphs on the same tile. Dark tiles are dark glass, and `-light.svg` tiles are now plain white (previously white glass). The per-app colours are gone, and the hub tile carries the Nexub mark in violet. New tiles for **Mind** (`app-icon-mind*`), **Go** (`app-icon-go*`) and **Verify** (`app-icon-verify*`), with iOS and Android icons. File names are unchanged, so apps pick up the new look on upgrade. The docs add an Icons gallery under Foundations and an app icon grid on "Using the brand assets".
+
+## 7.7.0
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+## 7.2.0
+
+## 7.1.0
+
+## 7.0.1
+
+## 7.0.0
+
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.0
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.0
+
+## 6.1.0
+
+## 6.0.0
+
+## 5.9.0
+
+## 5.8.0
+
+## 5.7.0
+
+## 5.6.0
+
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
+## 5.1.0
+
+## 5.0.1
+
+## 5.0.0
+
+## 4.9.0
+
+## 4.8.0
+
+## 4.7.0
+
+## 4.6.0
+
 ## 4.5.0
 
 ## 4.4.0

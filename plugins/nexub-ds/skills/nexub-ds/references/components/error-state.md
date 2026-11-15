@@ -14,7 +14,6 @@ Full-page or section error view with retry action.
 | `description` | `string` |  | Supporting text with more detail about the error or recovery steps. |
 | `tone` | `'error' \| 'warning' \| 'info'` | `'error'` | Controls the icon and colour scheme of the error state. |
 | `onRetry` | `() => void` |  | When provided, renders a "Try again" button that calls this function on click. |
-| `actions` | `React.ReactNode` |  | Custom action elements rendered below the description. Takes priority over the default retry button. |
 
 ## Example: Default
 

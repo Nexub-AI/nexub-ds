@@ -10,13 +10,13 @@ Product cards in a grid; each card is one link with the product's accent. Server
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `header` | `React.ReactNode` |  | ProductGrid: a SectionHeader, usually. |
-| `name` (required) | `string` |  | ProductCard: product name, the card's link text. |
-| `description` (required) | `React.ReactNode` |  | ProductCard: one line on what it does. |
-| `href` (required) | `string` |  | ProductCard: the product page. |
-| `icon` | `React.ReactNode` |  | ProductCard: the product mark. |
-| `accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | ProductCard: coloured top edge and tint in marketing mode. |
-| `linkLabel` | `string` | `'Learn more'` | ProductCard: the visual link cue. |
+| `header` | `React.ReactNode` |  | A SectionHeader, usually. |
+| `ProductCard name` (required) | `string` |  | Product name, the card's link text. |
+| `ProductCard description` (required) | `React.ReactNode` |  | One line on what it does. |
+| `ProductCard href` (required) | `string` |  | The product page. |
+| `ProductCard icon` | `React.ReactNode` |  | The product mark. |
+| `ProductCard accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | Coloured top edge and tint in marketing mode. |
+| `ProductCard linkLabel` | `string` | `'Learn more'` | The visual link cue. |
 
 ## Example: Default
 

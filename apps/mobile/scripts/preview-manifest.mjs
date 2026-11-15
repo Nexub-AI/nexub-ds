@@ -68,6 +68,25 @@ const flow = [
   '    visible: "Components"',
   '    timeout: 60000',
   '- waitForAnimationToEnd',
+  // The prompt shows up asynchronously after the first link, so the instant
+  // `when: visible` check below could run before it and skip the tap; the first
+  // preview then failed ("preview-ready-text-0 is visible"). Accept it once here,
+  // waiting for it to appear, so every link below opens straight into the app.
+  '- runFlow:',
+  '    when:',
+  '      platform: iOS',
+  '    commands:',
+  '      - openLink: nexub://preview/text?ex=0',
+  '      - extendedWaitUntil:',
+  '          visible: "Open"',
+  '          timeout: 10000',
+  '          optional: true',
+  '      - runFlow:',
+  '          when:',
+  '            visible: "Open"',
+  '          commands:',
+  '            - tapOn: "Open"',
+  '      - waitForAnimationToEnd',
 ];
 // Screens that open a native modal on mount: the modal is its own window on
 // Android, so Maestro can't see the screen's preview-ready marker underneath.

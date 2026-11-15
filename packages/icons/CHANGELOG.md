@@ -1,5 +1,143 @@
 # @nexub/icons
 
+## 10.0.0
+
+## 9.9.1
+
+## 9.9.0
+
+## 9.8.0
+
+## 9.7.0
+
+## 9.6.0
+
+## 9.5.0
+
+## 9.4.0
+
+## 9.3.0
+
+## 9.2.0
+
+## 9.1.0
+
+## 9.0.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.0
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.0
+
+## 8.0.0
+
+## 7.9.0
+
+## 7.8.0
+
+## 7.7.0
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+## 7.2.0
+
+## 7.1.0
+
+## 7.0.1
+
+## 7.0.0
+
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.0
+
+## 6.5.0
+
+### Minor Changes
+
+- efe17f9: Reorder.
+
+  - **`Sortable`** (new, beta): a list people reorder by dragging an item or with Alt+ArrowUp/Down on its handle. Focus stays on the moved item's handle and every move is announced ("Alpha moved to position 3 of 5").
+  - **`Kanban`** (new, beta): columns of cards. Drag cards, or Alt+ArrowUp/Down within a column and Alt+ArrowLeft/Right across columns (mirrored in RTL). Columns are regions named by their headings.
+  - **`DataTable`**: `onRowOrderChange` adds a row handle column for the same drag and Alt+Arrow moves; `getRowLabel` names rows. Handles hide while a column is sorted.
+  - Built on the native drag-and-drop API, the same model as DataTable column reordering: no new dependency.
+  - **Icons**: `GripVertical`.
+  - New messages: `moveItem`, `reorderHint`, `itemMoved`, `itemMovedToColumn`.
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.0
+
+## 6.1.0
+
+## 6.0.0
+
+## 5.9.0
+
+## 5.8.0
+
+## 5.7.0
+
+## 5.6.0
+
+### Minor Changes
+
+- b71b56f: States and safety.
+
+  - **`EmptyStatePreset`** (new): ready-made empty states (`noData`, `noResults`, `noAccess` for 403, `serverError` for 500, `offline`), with an icon, localised title and description, and optional `actions`. Errors are announced. `EmptyState` itself stays a server component.
+  - **`AlertDialog.Confirm`**: type-to-confirm for irreversible actions. The Action button stays disabled until the given `text` (for example, the resource name) is typed.
+  - **`OTPInput`** (new, beta): one box per digit with `autocomplete="one-time-code"`, so codes from SMS fill every box. Supports paste-to-fill, Backspace and arrow keys, `onComplete`, `mode="alphanumeric"`, `invalid` and `name` for forms.
+  - **`FileUpload.Item`**: `progress` (0–100) shows a bar, `onCancel` swaps the remove button for "Cancel upload" while uploading, and `error` shows why a file failed. Your app does the upload.
+  - **Icons**: `Inbox`, `ServerCrash`, `WifiOff`.
+  - New messages: `emptyStates`, `typeToConfirm`, `verificationCode`, `uploadProgress`, `cancelUpload`.
+
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
+## 5.1.0
+
+## 5.0.1
+
+## 5.0.0
+
+## 4.9.0
+
+## 4.8.0
+
+## 4.7.0
+
+## 4.6.0
+
 ## 4.5.0
 
 ## 4.4.0

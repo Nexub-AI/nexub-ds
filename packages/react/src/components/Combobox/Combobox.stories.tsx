@@ -20,7 +20,7 @@ const fruits = [
 
 export const Default: Story = {
   render: () => (
-    <div style={{ width: '280px', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
+    <div style={{ width: '280px', maxWidth: '100%', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
       <Combobox.Root>
         <Combobox.Input placeholder="Search fruits..." />
         <Combobox.List>
@@ -32,6 +32,19 @@ export const Default: Story = {
               </Combobox.Item>
             ))}
           </Combobox.Group>
+        </Combobox.List>
+      </Combobox.Root>
+    </div>
+  ),
+};
+
+export const Loading: Story = {
+  render: () => (
+    <div style={{ width: '280px', maxWidth: '100%', border: '1px solid var(--color-outline-variant, #e2e8f0)', borderRadius: '8px', overflow: 'hidden' }}>
+      <Combobox.Root>
+        <Combobox.Input placeholder="Search fruits..." />
+        <Combobox.List loading>
+          <Combobox.Empty>No fruit found.</Combobox.Empty>
         </Combobox.List>
       </Combobox.Root>
     </div>

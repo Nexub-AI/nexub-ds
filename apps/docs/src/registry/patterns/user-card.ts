@@ -14,7 +14,7 @@ const entry: ComponentEntry = {
     { name: 'name', type: 'string', required: true, description: 'User display name.' },
     { name: 'email', type: 'string', required: false, description: 'User email address.' },
     { name: 'role', type: 'string', required: false, description: 'Job title or role label.' },
-    { name: 'avatar', type: 'string', required: false, description: 'URL for avatar image.' },
+    { name: 'avatarSrc', type: 'string', required: false, description: 'URL for avatar image.' },
     { name: 'actions', type: 'React.ReactNode', required: false, description: 'Action buttons or menu.' },
   ],
   examples: [

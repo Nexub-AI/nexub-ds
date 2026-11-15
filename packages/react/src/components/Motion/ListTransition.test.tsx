@@ -34,13 +34,6 @@ describe('Motion springs', () => {
     expect(t).toContain('transform var(--motion-spring-effects-fast-duration)');
   });
 
-  it('keeps the legacy tokens when easing is passed', () => {
-    const { container } = render(<Fade in easing="out"><span>x</span></Fade>);
-    const el = container.firstChild as HTMLElement;
-    expect(el.style.transitionTimingFunction).toBe('var(--ease-out)');
-    expect(el.style.transitionDuration).toBe('var(--duration-normal)');
-  });
-
   it('drops travel under reduced motion', () => {
     const original = window.matchMedia;
     window.matchMedia = ((q: string) => ({
@@ -93,6 +86,20 @@ describe('ListTransition', () => {
       expect(item('b')).toHaveAttribute('data-state', 'exit');
       expect(item('b')).toHaveAttribute('aria-hidden', 'true');
       act(() => { vi.advanceTimersByTime(400); });
+      expect(screen.queryByText('b')).not.toBeInTheDocument();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('an unrelated re-render does not restart the exit fallback (8.4 hook deps)', () => {
+    vi.useFakeTimers();
+    try {
+      const { rerender } = render(<List items={['a', 'b']} />);
+      rerender(<List items={['a']} />);
+      act(() => { vi.advanceTimersByTime(200); });
+      rerender(<List items={['a']} />); // new children, same exiting set
+      act(() => { vi.advanceTimersByTime(200); });
       expect(screen.queryByText('b')).not.toBeInTheDocument();
     } finally {
       vi.useRealTimers();

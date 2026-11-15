@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { LogoStrip } from '@nexub/marketing';
 
 const customers = ['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Vandelay'];

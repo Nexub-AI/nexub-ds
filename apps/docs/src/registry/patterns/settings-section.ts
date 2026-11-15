@@ -14,7 +14,7 @@ const entry: ComponentEntry = {
     { name: 'title', type: 'string', required: true, description: 'Section heading.' },
     { name: 'description', type: 'string', required: false, description: 'Supporting description for the section.' },
     { name: 'children', type: 'React.ReactNode', required: true, description: 'Settings controls.' },
-    { name: 'action', type: 'React.ReactNode', required: false, description: 'Primary action (e.g. save button).' },
+    { name: 'actions', type: 'React.ReactNode', required: false, description: 'Primary action (e.g. save button).' },
   ],
   examples: [
     {

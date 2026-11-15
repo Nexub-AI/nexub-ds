@@ -1,5 +1,454 @@
 # @nexub/themes
 
+## 10.0.0
+
+### Patch Changes
+
+- @nexub/tokens@10.0.0
+
+## 9.9.1
+
+### Patch Changes
+
+- @nexub/tokens@9.9.1
+
+## 9.9.0
+
+### Patch Changes
+
+- @nexub/tokens@9.9.0
+
+## 9.8.0
+
+### Patch Changes
+
+- @nexub/tokens@9.8.0
+
+## 9.7.0
+
+### Patch Changes
+
+- @nexub/tokens@9.7.0
+
+## 9.6.0
+
+### Patch Changes
+
+- @nexub/tokens@9.6.0
+
+## 9.5.0
+
+### Patch Changes
+
+- @nexub/tokens@9.5.0
+
+## 9.4.0
+
+### Patch Changes
+
+- @nexub/tokens@9.4.0
+
+## 9.3.0
+
+### Patch Changes
+
+- @nexub/tokens@9.3.0
+
+## 9.2.0
+
+### Patch Changes
+
+- @nexub/tokens@9.2.0
+
+## 9.1.0
+
+### Patch Changes
+
+- @nexub/tokens@9.1.0
+
+## 9.0.0
+
+### Patch Changes
+
+- @nexub/tokens@9.0.0
+
+## 8.9.0
+
+### Patch Changes
+
+- @nexub/tokens@8.9.0
+
+## 8.8.0
+
+### Patch Changes
+
+- @nexub/tokens@8.8.0
+
+## 8.7.0
+
+### Patch Changes
+
+- @nexub/tokens@8.7.0
+
+## 8.6.0
+
+### Patch Changes
+
+- @nexub/tokens@8.6.0
+
+## 8.5.0
+
+### Patch Changes
+
+- @nexub/tokens@8.5.0
+
+## 8.4.0
+
+### Patch Changes
+
+- @nexub/tokens@8.4.0
+
+## 8.3.0
+
+### Patch Changes
+
+- @nexub/tokens@8.3.0
+
+## 8.2.0
+
+### Patch Changes
+
+- @nexub/tokens@8.2.0
+
+## 8.1.0
+
+### Patch Changes
+
+- @nexub/tokens@8.1.0
+
+## 8.0.0
+
+### Minor Changes
+
+- 70e0436: 8.0: new defaults. No new features. Every change below shipped as an opt-in in 7.x, and `npx nexub-migrate --rules changes-in-8` reports where your code is affected. See "Migrating to 8.0" in the docs.
+
+  - **Signature is the default look.** Set `data-style="classic"` on `<html>` or any wrapper to keep the 7.x Material-derived look until 9.0; `data-style="signature"` inside a classic wrapper switches back. React Native: `NexubNativeProvider` defaults to `style="signature"` (`style="classic"` keeps 7.x).
+  - **`scrollLock` defaults to `"class"`** on `Dialog.Root`, `AlertDialog.Root`, `Drawer.Root` / `Sheet.Root` and `CommandPalette`: no injected `<style>`, so it works under a strict CSP. It needs `@nexub/themes/base` (the `html.nexub-scroll-lock` rule). `scrollLock="style"` keeps Radix's lock.
+  - **`safeHref` is strict by default,** and so is every Nexub link that uses it: only relative URLs, `#…`, http(s), `mailto:`, `tel:` and `sms:` render. `safeHref(url, { strict: false })` allows custom schemes again (script-capable schemes stay blocked).
+  - **Removed: the legacy motion tokens** `--duration-{instant,fast,normal,slow,slower}` and `--ease-{linear,in,out,in-out,out-expo,spring}` (deprecated in 7.3). Use the spring tokens, e.g. `var(--motion-spring-effects-default-duration)` and `var(--motion-spring-effects-default-easing)`.
+  - **Removed: the `easing` prop** on `Fade`, `Scale`, `Slide` and `Collapse` (deprecated in 7.3). `duration` rides the spring tokens.
+
+### Patch Changes
+
+- Updated dependencies [70e0436]
+  - @nexub/tokens@8.0.0
+
+## 7.9.0
+
+### Minor Changes
+
+- f36913e: 7.9: the Signature look (opt-in) and the 8.0 release candidate.
+
+  - **New** `data-style="signature"` on `<html>` (or any subtree): the same contrast-guaranteed role engine with Nexub's own face. Neutral grey surfaces with a faint warm outline instead of lavender tints, 10px controls and fields with 16px cards, a primary seeded from the Nexub brand indigo, neutral-tinted tonal containers instead of pastels, tighter display tracking, tabular numerals in tables, and crisper hairline elevation. Chips, toggles, segmented controls and pill tabs stay full pills (`--shape-pill`). Every role pair is tested for WCAG AA in both styles.
+  - Under Signature, `Switch` is a full-thumb switch; radio dots and checkbox ticks animate in on the springs.
+  - React Native: `<NexubNativeProvider style="signature">`.
+  - 8.0 RC: every 7.x deprecation is frozen with its removal version; `nexub-migrate --rules changes-in-8` reports what 8.0 changes in your code; **new** docs page "Migrating to 8.0". In 8.0 Signature becomes the default (`data-style="classic"` keeps today's look), `scrollLock="class"` and strict `safeHref` become the defaults, and the legacy motion tokens and `easing` prop are removed.
+
+### Patch Changes
+
+- Updated dependencies [f36913e]
+  - @nexub/tokens@7.9.0
+
+## 7.8.0
+
+### Patch Changes
+
+- @nexub/tokens@7.8.0
+
+## 7.7.0
+
+### Minor Changes
+
+- fc7b955: 7.7: reorder and data at scale.
+
+  - `Sortable` and `Kanban` drag with Pointer Events (mouse, pen and touch) instead of native drag-and-drop: a drop line, items settle on the spatial spring, edge auto-scroll, and Escape or a cancelled pointer puts the item back. Alt+Arrow keyboard moves are unchanged. `DataTable` row reorder now drags from the grip only.
+  - `DataTable` rows are memoised, so selecting a row or re-rendering with equal data no longer redraws every row. Cell renderers should depend only on their row and `columns`; if a renderer reads other state, include it in the `columns` memo.
+  - `DataTable`: controlled and server-side sort and pagination: `sort` / `onSortChange` / `manualSort`, `page` / `pageSize` / `onPageChange` / `manualPagination` / `rowCount`.
+  - The DataTable "View" menu loads only when `viewOptions` is used.
+  - `FilterBuilder` renders its rule tree from a deferred value and keeps every keystroke; `FilterBar` documents the `useDeferredValue` recipe for big lists.
+  - New perf tripwire (`pnpm --filter @nexub/react test:perf`, also part of the visual CI job): filtering 1,000 DataTable rows, typing in a 1,000-option Combobox and moving a Kanban card must stay under 200 ms per interaction with no long task over 100 ms.
+
+### Patch Changes
+
+- @nexub/tokens@7.7.0
+
+## 7.6.0
+
+### Minor Changes
+
+- 90b8f7d: 7.6: rich surfaces and navigation.
+
+  - `Dialog.Content`: `showClose` (+ `closeLabel`), `sheet` (`true` or `'auto'`: a bottom sheet below `md`); **new** `Dialog.Body` scrolls while Header and Footer stay put, with hairlines that appear as you scroll (CSS scroll timeline; always shown where unsupported); a nested Dialog steps its parent back.
+  - `Tabs.List`: overflowing lists fade at the scrollable edges and keep the active tab in view (without scrolling the page); `variant="pill"`.
+  - `Tooltip`: `label` accepts any node, plus `description`, `shortcut` (a Kbd) and `arrow`. A Tooltip now works without an app-level `TooltipProvider`.
+  - `IconButton`: `loading` and `tooltip` (`true` shows the `label`). The tooltip code loads only when used.
+  - `Badge`: `dot`, `count` + `max` ("99+", full number for screen readers) with a tick when the count changes.
+  - `CommandPalette`: pages (`CommandPalette.Page`, `Item page`, Backspace goes back), `loading`, and opt-in recents (`recentKey`).
+  - `EmptyState.Root`: `size` (`sm` / `md` / `lg`) and opt-in `animate`.
+  - New message: `recent`.
+
+### Patch Changes
+
+- @nexub/tokens@7.6.0
+
+## 7.5.0
+
+### Patch Changes
+
+- @nexub/tokens@7.5.0
+
+## 7.4.0
+
+### Minor Changes
+
+- ad149cc: 7.4: feedback and loading.
+
+  - `Button`: the loading spinner waits 150ms before showing and then stays at least 400ms (no flicker); `successLabel` no longer changes the button's width; `type="submit"` inside a pending React 19 `<form action>` shows loading on its own (`useFormStatus`).
+  - **New** `useAsyncAction(fn)` → `{ run, pending, error, reset }`: latest call wins, errors are captured, nothing updates after unmount.
+  - `toast.promise(promise, { loading, success, error })` and `toast.update(id, partial)`; a `loading` tone; tone icons (`icon={false}` hides them); `showProgress` countdown bar that pauses with the timer; a quick flick dismisses even under the distance threshold.
+  - `Skeleton animation="shimmer"` and **new** `SkeletonText` (`lines`), one line-height per line so the swap to real text doesn't shift.
+  - `DataTable`: `loading` (skeleton rows, `aria-busy`) and `emptyState`.
+  - `Avatar`: images fade in once loaded (server-rendered and cached images show at once); `status` (`online` / `away` / `busy` / `offline`) with the label in the accessible name.
+  - `Progress`: `variant="circular"` and `segments` for step-style progress.
+
+### Patch Changes
+
+- @nexub/tokens@7.4.0
+
+## 7.3.0
+
+### Minor Changes
+
+- fe8c22b: 7.3: Motion 2, one motion source.
+
+  - `@nexub/tokens/tailwind.css` sets `--default-transition-duration` / `--default-transition-timing-function` to the effects spring, so a bare `transition` / `transition-colors` uses the spring tokens instead of Tailwind's 150ms ease. The last raw `duration-*` / `ease-*` classes are gone, and a `raw-motion` design-lint rule keeps them out.
+  - The legacy `--duration-*` / `--ease-*` tokens (`tokens/motion.json`) and the Motion `easing` prop are deprecated, removed in 8.0.
+  - `Collapse` animates grid rows (`0fr` → `1fr`) instead of measuring `scrollHeight` in JS; content that grows while open just grows. Same props.
+  - `NavigationMenu`'s viewport resizes between items on the spatial spring instead of snapping.
+  - `Tabs`: `orientation="vertical"` is styled (indicator on the inline-end edge), and the incoming panel crossfades (`@starting-style`).
+  - `startViewTransition` flushes React state inside the transition (`flushSync`), so the snapshot is never stale, and returns a promise that resolves when the transition finishes.
+  - Thick glass overlays fade in without scaling.
+
+### Patch Changes
+
+- Updated dependencies [fe8c22b]
+  - @nexub/tokens@7.3.0
+
+## 7.2.0
+
+### Patch Changes
+
+- @nexub/tokens@7.2.0
+
+## 7.1.0
+
+### Patch Changes
+
+- @nexub/tokens@7.1.0
+
+## 7.0.1
+
+### Patch Changes
+
+- 3e959a7: Security and bug fixes.
+
+  - `PasswordInput`: revealed text no longer reaches browser spellcheck, autocorrect or autocapitalize (`spellCheck={false}`, `autoCorrect="off"`, `autoCapitalize="off"`, which can't be overridden). `autoComplete` now defaults to `current-password`; pass `autoComplete="new-password"` on sign-up forms.
+  - `Progress`: leaving out `value` now renders the indeterminate state as intended (no `aria-valuenow`, a sliding segment). Previously `value` defaulted to 0, so indeterminate never showed. `value={0}` is unchanged.
+  - @nexub/tokens@7.0.1
+
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies [d13580c]
+  - @nexub/tokens@7.0.0
+
+## 6.9.0
+
+### Patch Changes
+
+- Updated dependencies [88329d9]
+  - @nexub/tokens@6.9.0
+
+## 6.8.0
+
+### Patch Changes
+
+- @nexub/tokens@6.8.0
+
+## 6.7.0
+
+### Patch Changes
+
+- @nexub/tokens@6.7.0
+
+## 6.6.0
+
+### Patch Changes
+
+- @nexub/tokens@6.6.0
+
+## 6.5.0
+
+### Patch Changes
+
+- @nexub/tokens@6.5.0
+
+## 6.4.0
+
+### Patch Changes
+
+- @nexub/tokens@6.4.0
+
+## 6.3.0
+
+### Patch Changes
+
+- @nexub/tokens@6.3.0
+
+## 6.2.0
+
+### Patch Changes
+
+- @nexub/tokens@6.2.0
+
+## 6.1.0
+
+### Patch Changes
+
+- @nexub/tokens@6.1.0
+
+## 6.0.0
+
+### Patch Changes
+
+- @nexub/tokens@6.0.0
+
+## 5.9.0
+
+### Patch Changes
+
+- Updated dependencies [c11f400]
+  - @nexub/tokens@5.9.0
+
+## 5.8.0
+
+### Patch Changes
+
+- @nexub/tokens@5.8.0
+
+## 5.7.0
+
+### Patch Changes
+
+- @nexub/tokens@5.7.0
+
+## 5.6.0
+
+### Patch Changes
+
+- @nexub/tokens@5.6.0
+
+## 5.5.0
+
+### Patch Changes
+
+- @nexub/tokens@5.5.0
+
+## 5.4.0
+
+### Patch Changes
+
+- @nexub/tokens@5.4.0
+
+## 5.3.0
+
+### Patch Changes
+
+- @nexub/tokens@5.3.0
+
+## 5.2.0
+
+### Patch Changes
+
+- @nexub/tokens@5.2.0
+
+## 5.1.0
+
+### Patch Changes
+
+- @nexub/tokens@5.1.0
+
+## 5.0.1
+
+### Patch Changes
+
+- @nexub/tokens@5.0.1
+
+## 5.0.0
+
+### Minor Changes
+
+- 539443c: 5.0: Vivid by default, React 19.
+
+  - **Vivid is the default expression.** `ThemeProvider` sets `data-expression="vivid"` on `<html>` when the app has not set one. Import `@nexub/themes/vivid` to see it. Keep the 4.x look with `data-expression="calm"` on `<html>` or `<ThemeProvider defaultExpression="calm">`. Calm stays fully supported.
+  - **React 19 required.** `react` and `react-dom` peers are now `>=19 <20` in `@nexub/react`, `@nexub/patterns` and `@nexub/marketing`.
+  - The 4.9 development warnings are removed. No component API changes. See /getting-started/migrating-to-5.
+
+### Patch Changes
+
+- @nexub/tokens@5.0.0
+
+## 4.9.0
+
+### Minor Changes
+
+- 36e3ece: 5.0 release candidate. The API is frozen until 5.0, which changes only what this release warns about.
+
+  - **Vivid becomes the default in 5.0** for apps that do not set `data-expression`. `data-expression="calm"` is now an explicit value: set it on `<html>` to keep today's look after 5.0. `ThemeProvider` warns once in development when no `data-expression` is set.
+  - **React 18 support is deprecated;** 5.0 requires React 19. `ThemeProvider` warns once in development on React 18.
+  - New guide: Getting started → Migrating to 5.0.
+
+### Patch Changes
+
+- @nexub/tokens@4.9.0
+
+## 4.8.0
+
+### Patch Changes
+
+- @nexub/tokens@4.8.0
+
+## 4.7.0
+
+### Patch Changes
+
+- @nexub/tokens@4.7.0
+
+## 4.6.0
+
+### Minor Changes
+
+- be4e1b5: Shape, Glass 3.0 and interactive legends.
+
+  - **Squircle corners:** `data-shape="squircle"` on any area gives its rounded corners the continuous, Apple-style curve where CSS `corner-shape` is supported; other browsers keep normal round corners.
+  - **Glass 3.0 edge:** a specular rim that catches light like a lens. On by default for glass surfaces under `data-expression="vivid"`; anywhere else add `nx-glass-edge`. Off for reduced transparency and forced colours.
+  - **`ChartToggle`:** wraps any chart with a legend whose entries are toggle buttons (`aria-pressed`). Colours stay stable as series hide, and the last series always stays on.
+
+### Patch Changes
+
+- @nexub/tokens@4.6.0
+
 ## 4.5.0
 
 ### Patch Changes

@@ -11,12 +11,12 @@ const entry: ComponentEntry = {
     addedIn: '3.1.0',
   },
   props: [
-    { name: "title", type: "React.ReactNode", required: false, description: "StatBand: a heading above the stats." },
-    { name: "value", type: "number | string", required: true, description: "StatBandItem: a number counts up from zeros when it scrolls into view; the server HTML keeps the real value." },
-    { name: "label", type: "React.ReactNode", required: true, description: "StatBandItem: what the number counts." },
-    { name: "prefix / suffix", type: "string", required: false, description: "StatBandItem: e.g. \"$\" or \"+\"." },
-    { name: "tone", type: "ToneValue", default: "'info'", required: false, description: "StatBandItem: the number's colour (accent roles, AA as large text)." },
-    { name: "format", type: "Intl.NumberFormatOptions", required: false, description: "StatBandItem: number formatting." },
+    { name: "title", type: "React.ReactNode", required: false, description: "A heading above the stats." },
+    { name: "StatBandItem value", type: "number | string", required: true, description: "A number counts up from zeros when it scrolls into view; the server HTML keeps the real value." },
+    { name: "StatBandItem label", type: "React.ReactNode", required: true, description: "What the number counts." },
+    { name: "StatBandItem prefix / suffix", type: "string", required: false, description: "E.g. \"$\" or \"+\"." },
+    { name: "StatBandItem tone", type: "ToneValue", default: "'info'", required: false, description: "The number's colour (accent roles, AA as large text)." },
+    { name: "StatBandItem format", type: "Intl.NumberFormatOptions", required: false, description: "Number formatting." },
   ],
   examples: [
     {

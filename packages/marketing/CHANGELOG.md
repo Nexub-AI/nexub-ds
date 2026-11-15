@@ -1,5 +1,140 @@
 # @nexub/marketing
 
+## 10.0.0
+
+## 9.9.1
+
+## 9.9.0
+
+## 9.8.0
+
+## 9.7.0
+
+## 9.6.0
+
+## 9.5.0
+
+## 9.4.0
+
+## 9.3.0
+
+## 9.2.0
+
+## 9.1.0
+
+## 9.0.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.0
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.0
+
+## 8.0.0
+
+## 7.9.0
+
+## 7.8.0
+
+## 7.7.0
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+## 7.2.0
+
+### Minor Changes
+
+- 1bfe041: 7.2: secure by default.
+
+  - **New** `safeHref` and `safeSrc` (also `@nexub/react/safeHref`). Every consumer-supplied link and image URL now goes through them: `Breadcrumb`, `MediaCard`, `CardLink`, `Avatar`, and the navs/links in `AppHeader`, `NotificationItem`, `NotificationCenter`, `SettingsPage`, `SettingsLayout`, `PlanCard`, `AppLauncher`, `MarketingNav`, `MarketingFooter`. `javascript:`, `vbscript:`, `data:` and `file:` links are dropped; images allow relative, http(s), `blob:` and `data:image/*`. `safeHref(url, { strict: true })` allows only web, mailto, tel and sms; it becomes the default in 8.0.
+  - **New** `NexubProvider` `nonce`: hands your CSP nonce to the `<style>` tags Radix overlays inject, so every overlay works under `style-src-elem 'nonce-…'`.
+  - **New** `scrollLock="class"` on `Dialog.Root` and `AlertDialog.Root` (already on Sheet/Drawer and CommandPalette): no `<style>` at all. It becomes the default in 8.0.
+  - **New** `FileUpload.Root` `validate(file)`: return a message to reject a file (reason `'custom'`).
+  - `PasswordInput`: the reveal button keeps one name ("Show password") and reports its state with `aria-pressed` and `aria-controls`. The `hidePassword` message is deprecated (removed in 9.0).
+  - `ThemeScript`: a stored product brand is applied only when it's a known product.
+
+## 7.1.0
+
+## 7.0.1
+
+## 7.0.0
+
+## 6.9.0
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.0
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.0
+
+## 6.1.0
+
+## 6.0.0
+
+## 5.9.0
+
+## 5.8.0
+
+## 5.7.0
+
+## 5.6.0
+
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
+## 5.1.0
+
+## 5.0.1
+
+## 5.0.0
+
+### Minor Changes
+
+- 539443c: 5.0: Vivid by default, React 19.
+
+  - **Vivid is the default expression.** `ThemeProvider` sets `data-expression="vivid"` on `<html>` when the app has not set one. Import `@nexub/themes/vivid` to see it. Keep the 4.x look with `data-expression="calm"` on `<html>` or `<ThemeProvider defaultExpression="calm">`. Calm stays fully supported.
+  - **React 19 required.** `react` and `react-dom` peers are now `>=19 <20` in `@nexub/react`, `@nexub/patterns` and `@nexub/marketing`.
+  - The 4.9 development warnings are removed. No component API changes. See /getting-started/migrating-to-5.
+
+## 4.9.0
+
+## 4.8.0
+
+## 4.7.0
+
+## 4.6.0
+
 ## 4.5.0
 
 ## 4.4.0

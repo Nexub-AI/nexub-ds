@@ -17,8 +17,8 @@ const entry: ComponentEntry = {
     { name: 'features', type: 'string[]', required: false, description: 'List of included features.' },
     { name: 'highlighted', type: 'boolean', default: 'false', required: false, description: 'Applies brand accent styling for recommended plans.' },
     { name: 'badge', type: 'string', required: false, description: 'Label for the plan badge (e.g. "Most Popular").' },
-    { name: 'ctaLabel', type: 'string', default: "'Get started'", required: false, description: 'CTA button label.' },
-    { name: 'onCta', type: '() => void', required: false, description: 'CTA button click handler.' },
+    { name: 'cta', type: 'string', default: "'Get started'", required: false, description: 'CTA button label.' },
+    { name: 'onSelect', type: '() => void', required: false, description: 'CTA button click handler.' },
   ],
   examples: [
     {

@@ -10,7 +10,7 @@ Key–value list for displaying structured metadata or details.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` (required) | `string` |  | The key label. |
+| `InfoListItem label` (required) | `string` |  | The key label. |
 | `value` (required) | `React.ReactNode` |  | The displayed value. |
 
 ## Example: Default

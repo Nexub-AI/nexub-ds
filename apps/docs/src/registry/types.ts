@@ -106,6 +106,8 @@ export interface NavItem {
   href: string;
   description?: string;
   category?: string;
+  /** Path prefix that also marks this item active (one entry for several pages). */
+  match?: string;
 }
 
 export interface NavGroup {

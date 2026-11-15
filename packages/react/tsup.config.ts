@@ -54,6 +54,9 @@ export default defineConfig([
     clean: false,
     external: ['react', 'react-dom'],
     noExternal: ['vaul'],
+    // Third-party code nobody reads in dist: ship it minified (8.7, B1). Our own
+    // modules stay readable, one file per source file.
+    minify: true,
     esbuildPlugins: [vaulWithoutStyleInjection],
     banner: { js: "'use client';" },
   },

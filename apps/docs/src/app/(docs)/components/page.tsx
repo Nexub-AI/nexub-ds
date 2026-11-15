@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Card, CardLink, Text } from '@nexub/react';
 import { DocsLink } from '@/components/layout/DocsLink';
 import { componentEntries } from '@/registry/index';
+import { LivePreview } from '@/components/docs/LivePreview';
 import { MiniPreviewCard } from '@/components/docs/MiniPreviewCard';
 import { StatusBadge } from '@/components/docs/StatusBadge';
 import { CardGrid, PageIntro, Section } from '@/components/kit';
@@ -38,9 +39,11 @@ export default function ComponentsPage() {
                   {/* Live preview: decorative, never interactive inside the link card. */}
                   <div
                     aria-hidden="true"
-                    className="docs-dot-grid pointer-events-none relative flex h-[100px] items-center justify-center overflow-hidden border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+                    className="docs-dot-grid pointer-events-none relative flex h-[120px] items-center justify-center overflow-hidden border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
                   >
-                    <MiniPreviewCard slug={e.meta.slug} />
+                    <MiniPreviewCard>
+                      <LivePreview slug={e.meta.slug} idx={0} />
+                    </MiniPreviewCard>
                   </div>
                   <div className="flex flex-1 flex-col gap-1 px-3.5 py-3">
                     <CardLink asChild>

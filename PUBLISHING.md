@@ -50,25 +50,40 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 
 ## Versioning Policy
 
-Nexub DS uses **one rolling version** for all seven packages. It is not strict semver. **Every release bumps the minor**, and the minor **rolls over into the major after 9**:
+Nexub DS uses **one version** for every `@nexub/*` package. **Every release bumps the minor.**
+
+**From 10.0: semver, no rollover.** After 10.9 comes 10.10. A major happens only when something has to break.
 
 ```
-1.0.0 → 1.1.0 → 1.2.0 → … → 1.9.0 → 2.0.0 → 2.1.0 → … → 2.9.0 → 3.0.0
+9.8.0 → 9.9.x (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0
 ```
 
 | Situation | Changeset bump | Example |
 |---|---|---|
-| Normal release (features, fixes, breaking changes, anything) | `minor` | `1.3.0` → `1.4.0` |
-| Hotfix to the current release only | `patch` | `1.4.0` → `1.4.1` |
-| Next release after any `x.9.y` | `minor` (rolls over automatically) | `1.9.1` → `2.0.0` |
-| `major` | **never**. CI rejects it | — |
+| Scheduled release (additive, opt-in) | `minor` | `10.3.0` → `10.4.0` |
+| Security or critical fix on the latest version | `patch` | `10.4.0` → `10.4.1` |
+| Breaking change | `major`, by RFC only. CI rejects it until the RFC is accepted | `10.x` → `11.0.0` |
+
+**Up to 10.0: rolling minor.** The minor rolled over into the major after 9 (`1.9.0` → `2.0.0`, …, `9.9.0` → `10.0.0`), so a major was not a breaking-change signal and breaking changes shipped in minors. 9.9 → 10.0 is the last rollover (`LAST_ROLLOVER_MAJOR` in `scripts/release-version.mjs`).
 
 Rules:
 1. **Write changesets with `minor` or `patch` only.** `pnpm check:release-policy` (in CI) fails on `major`.
-2. **Multiple changesets in one release still produce one bump.** All packages share a version (changesets `fixed` group) and the highest bump wins, so a day's worth of `minor` changesets ships as a single `1.x+1.0`.
-3. **Rollover is automatic.** The release job runs `pnpm version-packages` = `changeset version` + `scripts/release-version.mjs`, which turns `x.10.0` into `x+1.0.0` in every `package.json` and CHANGELOG.
-4. **Breaking changes ship in a minor, so say so.** Consumers on `^1.0.0` receive every 1.x automatically. Start the changeset line with `**Breaking:**` and give the one-line migration. Removals go through a deprecation first (`@deprecated` JSDoc for at least one release) wherever practical.
+2. **Multiple changesets in one release still produce one bump.** All packages share a version (changesets `fixed` group) and the highest bump wins.
+3. **A major needs an RFC and a migration guide.** The PR that ships it changes the guards in `scripts/check-changesets.mjs` and `scripts/release-version.mjs`. It removes only what a 10.x minor deprecated at least one release earlier (`@deprecated` JSDoc, dev warning, docs notice: see GOVERNANCE.md).
+4. **Minors don't break.** From 10.0 a consumer on `^10.0.0` gets every 10.x, so a minor may add and deprecate, never remove or change a default.
 5. **After every publish, merge the back-merge PR.** The release job opens `chore(release): back-merge vX into development` (production → development). Merge it before the next promotion, or the version lines will conflict.
+
+### Release candidates and the `next` tag
+
+`scripts/publish-tarballs.mjs` picks the npm dist-tag from the version (`distTag`). 9.9.x is the 10.0 release candidate: it publishes to `next`, and `latest` stays on 9.8 until 10.0. Consumers try it with `npm install @nexub/react@next`.
+
+**10.0.0 shipped on 2026-11-14, one day into the planned 4-week soak.** The owner waived three exit criteria (flake rate, Scorecard 8, the soak) so apps could move to 10 at once; 9.9 changed no component since 9.8. The docs page `/getting-started/release-status` records where each criterion stood. Flakes and Scorecard are still tracked.
+
+For a future release candidate, add its version rule to `distTag`:
+
+- **Freeze.** While an RC is on `next`, only fixes that block the release are merged: no new component, prop, token or default.
+- **Soak.** The RC stays on `next` in the Payub and Matchub pilots. A regression is fixed as a patch (still `next`).
+- **A fix `latest` users need during a soak** can't ship on the previous version (production is already on the RC). Remove the RC rule from `distTag` in the fix PR: the RC then publishes to `latest` and the soak continues there.
 
 The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
 
@@ -96,10 +111,12 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
    Use one changeset per logical change. All of a release's changesets combine into one version bump.
 2. **Merge through the branches:** feature → `development` (CI) → `staging` (deploys the staging docs) → `production`.
 3. **The first push to `production`** with pending changesets makes changesets/action open or update a **"chore(release): version packages"** PR. That PR bumps versions and writes the CHANGELOGs.
-4. **Merging the version PR** publishes all `@nexub/*` packages to npm (`pnpm release`, authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance) and deploys the docs to production. The job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
+4. **Merging the version PR** publishes all `@nexub/*` packages to npm (the tarballs packed and attested by the reusable `build-release.yml` build, uploaded byte for byte by `scripts/publish-tarballs.mjs`, then tagged with `changeset tag`; authenticated by npm trusted publishing: each package on npmjs.com trusts `Nexub-AI/nexub-ds` → `release.yml`, so no npm token is stored; versions carry provenance), attaches an SPDX SBOM to the `@nexub/react` GitHub release, and deploys the docs to production. The `publish` job's last step, `scripts/verify-published.mjs`, then checks that every published version is on the registry with a provenance attestation (retrying for up to 5 minutes while the registry catches up) and fails the run, naming the packages, if any is missing or unattested.
 5. **Add a row** to the [Release History](#release-history) table.
 
-> The release job authenticates with the `RELEASE_PAT` repo secret (a fine-grained PAT with Contents + Pull requests write), because the org blocks the Actions bot from creating PRs. Since the version PR is opened by a real user, CI runs on it like any other PR.
+> `release.yml` holds one credential per job (since 7.1). `build` has no secrets and builds packages and docs; `version` (Version PR) and `back-merge` use `RELEASE_PAT`; `publish` uses only npm OIDC and the job's own token; `deploy-docs` uses only the Cloudflare token, with wrangler pinned in the lockfile. Jobs that hold a credential install with `--ignore-scripts` and build nothing.
+>
+> `RELEASE_PAT` (a fine-grained PAT with Contents + Pull requests write; the org blocks the Actions bot from creating PRs) and the Cloudflare secrets belong in the **`release` environment** (Settings → Environments, deployment branch `production` only), not in repo secrets, so no PR-triggered workflow can read them. Since the version PR is opened by a real user, CI runs on it like any other PR.
 
 ### Pre-flight check (optional)
 
@@ -109,6 +126,14 @@ for pkg in tokens themes icons react patterns; do (cd packages/$pkg && npm pack 
 ```
 
 Check that only `dist/` (or `src/` for themes) is listed and that react stays under ~150 KB packed.
+
+### Supply chain (9.7)
+
+- The release build packs deterministically: `pnpm check:reproducible` builds twice and compares tarball hashes; CI compares its own build with the release build on every PR (job "Release rehearsal").
+- The publish job attaches the tarballs, `checksums.txt` and `nexub-provenance.intoto.jsonl` to the `@nexub/react@<version>` release, verifies each published tarball's attestation (`gh attestation verify`), and pushes a Sigstore-signed tag `v<version>`. Since 9.8 both steps fail the run (the packages are already on npm by then; see `INCIDENT_RUNBOOK.md`, "A release step failed after the publish").
+- If a publish stops halfway, re-run the workflow: versions already on npm are skipped.
+- The Version Packages PR runs the release build and the publish dry run against the new version numbers, so a publish problem shows there, before the merge that publishes.
+- A security or critical fix ships as a `patch` through the same path, without waiting for the next release: `INCIDENT_RUNBOOK.md`, "Hotfix".
 
 ### Break-glass: manual publish
 

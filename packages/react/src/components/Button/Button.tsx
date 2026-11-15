@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useFormStatus } from 'react-dom';
 import { Slot } from '@radix-ui/react-slot';
 import { Loader2 } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
@@ -36,7 +37,7 @@ const outlined = `bg-transparent border border-[var(--button-outlined-border,var
 const text = `bg-transparent text-[var(--button-text-fg,var(--color-on-surface))] ${disabledText}`;
 
 export const buttonVariants = cva(
-  [pressable, 'nx-hit relative inline-flex items-center justify-center gap-2 whitespace-nowrap'],
+  [pressable, 'nx-hit relative inline-flex max-w-full items-center justify-center gap-2 whitespace-nowrap'],
   {
     variants: {
       variant: {
@@ -49,12 +50,7 @@ export const buttonVariants = cva(
         // Marketing mode (@nexub/themes/marketing): gradient, glow and a spring
         // lift. Without [data-mode="marketing"] it is a filled button.
         hero: `${filled} nx-mkt-hero-button`,
-        // Legacy names (kept as aliases).
-        primary: filled,
-        secondary: tonal,
         subtle: `bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)] ${disabledContainer}`,
-        outline: outlined,
-        ghost: text,
         destructive: `bg-[var(--color-error)] text-[var(--color-on-error)] ${disabledContainer}`,
         accent: `bg-[var(--color-tertiary)] text-[var(--color-on-tertiary)] ${disabledContainer}`,
         link: `bg-transparent text-[var(--color-primary)] underline underline-offset-[0.3em] ${disabledText}`,
@@ -72,7 +68,7 @@ export const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'primary',
+      variant: 'filled',
       size: 'md',
     },
   },
@@ -83,11 +79,14 @@ export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
+  /** Visual style. @default 'filled' */
+  variant?: VariantProps<typeof buttonVariants>['variant'];
   tone?: ToneValue;
   /** Async feedback. `loading` blocks clicks (aria-disabled, focus kept),
    *  `success` draws a check, `error` shakes once. Not applied with `asChild`. */
   status?: ButtonStatus;
-  /** Alias for `status="loading"`. */
+  /** Alias for `status="loading"`. A `type="submit"` button also shows loading
+   *  while its parent `<form action>` is pending (React 19 `useFormStatus`). */
   loading?: boolean;
   /** Announced while loading. @default 'Loading' */
   loadingLabel?: string;
@@ -109,6 +108,26 @@ const CheckIcon = () => (
     <path className="nx-check-draw" pathLength={1} d="M20 6 9 17l-5-5" />
   </svg>
 );
+
+// Spinner timing: hidden for loads under 150ms, then shown for at least 400ms (no flicker).
+const SPINNER_DELAY = 150;
+const SPINNER_MIN = 400;
+
+function useSpinner(busy: boolean): boolean {
+  // Mounting already busy shows it at once (nothing to flicker from; SSR-correct).
+  const [shown, setShown] = React.useState(busy);
+  const shownAt = React.useRef(0);
+  React.useEffect(() => {
+    if (shown) shownAt.current = Date.now();
+  }, [shown]);
+  React.useEffect(() => {
+    if (busy === shown) return;
+    const wait = busy ? SPINNER_DELAY : Math.max(0, SPINNER_MIN - (Date.now() - shownAt.current));
+    const t = setTimeout(() => setShown(busy), wait);
+    return () => clearTimeout(t);
+  }, [busy, shown]);
+  return shown;
+}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -135,7 +154,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const status: ButtonStatus = statusProp ?? (loading ? 'loading' : 'idle');
+    // Safe outside a form (pending is false). Only explicit type="submit" opts in.
+    const formPending = useFormStatus().pending && props.type === 'submit';
+    const status: ButtonStatus = statusProp ?? (loading || formPending ? 'loading' : 'idle');
+    const spinner = useSpinner(status === 'loading');
     const handlePointerMove = usePointerSheen<HTMLButtonElement>(magnetic, onPointerMove);
     const sharedProps = {
       className: cn(
@@ -148,7 +170,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       onPointerMove: handlePointerMove,
       'data-tone': tone,
       // Styling hook for opt-in layers (vivid, marketing); no styles depend on it by default.
-      'data-variant': variant ?? 'primary',
+      'data-variant': variant ?? 'filled',
       ...(variant === 'glass' && { 'data-material': 'glass', 'data-glass-thickness': 'thin' }),
       ...props,
     };
@@ -164,7 +186,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const busy = status === 'loading';
     const swapLabel = status === 'success' && successLabel !== undefined;
     // Spinner/check overlay the label, which stays in flow (transparent) so the width holds.
-    const overlay = busy ? (
+    const overlay = spinner ? (
       <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
     ) : status === 'success' && !swapLabel ? (
       <CheckIcon />
@@ -192,20 +214,29 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-status={status === 'idle' ? undefined : status}
         {...sharedProps}
       >
-        <span className={cn('contents', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
-          {swapLabel ? (
-            <>
-              <CheckIcon />
-              {successLabel}
-            </>
-          ) : (
-            <>
+        {successLabel === undefined ? (
+          <span className={cn('contents', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
+            {leadingIcon}
+            {/* A text label can shrink and end in an ellipsis, so a long one stays inside its container (9.3). */}
+            {typeof children === 'string' ? <span className="-mx-px min-w-0 truncate px-px">{children}</span> : children}
+            {trailingIcon}
+          </span>
+        ) : (
+          // Both labels share one grid cell, so the button is as wide as the wider one
+          // whichever shows; the hidden one keeps its space.
+          <span className={cn('inline-grid', overlay && 'text-transparent [&_img]:invisible [&_svg]:invisible')}>
+            <span className={cn('col-start-1 row-start-1 inline-flex items-center justify-center gap-2', swapLabel && 'invisible')} aria-hidden={swapLabel || undefined}>
               {leadingIcon}
               {children}
               {trailingIcon}
-            </>
-          )}
-        </span>
+            </span>
+            <span className={cn('col-start-1 row-start-1 inline-flex items-center justify-center gap-2', !swapLabel && 'invisible')} aria-hidden={!swapLabel || undefined}>
+              {/* Mounted only when shown so the check draws in; a same-size box holds the width. */}
+              {swapLabel ? <CheckIcon /> : <span className="h-4 w-4" />}
+              {successLabel}
+            </span>
+          </span>
+        )}
         {overlay && (
           <span className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
             {overlay}

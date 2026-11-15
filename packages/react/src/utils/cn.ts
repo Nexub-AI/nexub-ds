@@ -15,7 +15,7 @@ const springs = ['spatial', 'effects', 'expressive'].flatMap((k) =>
 
 // Tailwind 3 reads a bare `outline` as outline-style: solid; tailwind-merge 3
 // files it under width (the Tailwind 4 meaning). Components pair it with
-// `outline-[3px]` for focus rings, so keep it a style or Tailwind 3 apps lose
+// `outline-3` for focus rings, so keep it a style or Tailwind 3 apps lose
 // the ring. This is how tailwind-merge 2 grouped it.
 const outlineWidths = (getDefaultConfig().classGroups['outline-w'][0] as { readonly outline: readonly unknown[] }).outline.filter(
   (v) => v !== '',

@@ -11,9 +11,6 @@ const entry: ComponentEntry = {
     addedIn: '0.0.1',
   },
   props: [
-    { name: 'padding', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", required: false, description: 'Padding applied to all sides using design tokens.' },
-    { name: 'background', type: 'string', required: false, description: 'Background color CSS value or token.' },
-    { name: 'radius', type: 'string', required: false, description: 'Border radius CSS value or token.' },
     { name: 'asChild', type: 'boolean', required: false, description: 'Merges props onto the immediate child element (Radix Slot).' },
   ],
   examples: [

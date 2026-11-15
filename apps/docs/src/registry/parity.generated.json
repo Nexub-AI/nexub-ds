@@ -1,0 +1,902 @@
+{
+  "button": {
+    "web": "Button",
+    "native": "Button",
+    "shared": [
+      "children",
+      "fullWidth",
+      "leadingIcon",
+      "loading",
+      "loadingLabel",
+      "size",
+      "tone",
+      "trailingIcon",
+      "variant"
+    ],
+    "webOnly": [
+      "asChild",
+      "errorLabel",
+      "magnetic",
+      "status",
+      "successLabel"
+    ],
+    "nativeOnly": []
+  },
+  "icon-button": {
+    "web": "IconButton",
+    "native": "IconButton",
+    "shared": [
+      "label",
+      "size",
+      "variant"
+    ],
+    "webOnly": [
+      "asChild",
+      "loading",
+      "tooltip"
+    ],
+    "nativeOnly": [
+      "haptic",
+      "icon",
+      "selected",
+      "tone"
+    ]
+  },
+  "button-group": {
+    "web": "ButtonGroup",
+    "native": "ButtonGroup",
+    "shared": [
+      "children",
+      "orientation"
+    ],
+    "webOnly": [
+      "attached"
+    ],
+    "nativeOnly": []
+  },
+  "link": {
+    "web": "Link",
+    "native": "Link",
+    "shared": [
+      "children"
+    ],
+    "webOnly": [
+      "asChild",
+      "external",
+      "variant"
+    ],
+    "nativeOnly": []
+  },
+  "amount": {
+    "web": "Amount",
+    "native": "Amount",
+    "shared": [
+      "animate",
+      "currency",
+      "locale",
+      "signDisplay",
+      "size",
+      "tone",
+      "value"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "badge": {
+    "web": "Badge",
+    "native": "Badge",
+    "shared": [
+      "children",
+      "count",
+      "dot",
+      "leadingIcon",
+      "max",
+      "size",
+      "tone",
+      "variant"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "avatar": {
+    "web": "Avatar",
+    "native": "Avatar",
+    "shared": [
+      "badge",
+      "name",
+      "size",
+      "src",
+      "status"
+    ],
+    "webOnly": [
+      "badgeColor",
+      "fallback"
+    ],
+    "nativeOnly": []
+  },
+  "avatar-group": {
+    "web": "AvatarGroup",
+    "native": "AvatarGroup",
+    "shared": [
+      "children",
+      "max",
+      "size"
+    ],
+    "webOnly": [
+      "spacing"
+    ],
+    "nativeOnly": []
+  },
+  "separator": {
+    "web": "Separator",
+    "native": "Divider",
+    "shared": [
+      "orientation"
+    ],
+    "webOnly": [
+      "tone"
+    ],
+    "nativeOnly": [
+      "inset"
+    ]
+  },
+  "card": {
+    "web": "Card",
+    "native": "Card",
+    "shared": [],
+    "webOnly": [
+      "accent",
+      "asChild",
+      "effect",
+      "surface",
+      "tone",
+      "variant"
+    ],
+    "nativeOnly": [
+      "onPress"
+    ]
+  },
+  "accordion": {
+    "web": null,
+    "native": "Accordion",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "children",
+      "defaultExpanded",
+      "expanded",
+      "onExpandedChange",
+      "title"
+    ]
+  },
+  "input": {
+    "web": "Input",
+    "native": "TextField",
+    "shared": [
+      "clearable",
+      "disabled",
+      "loading",
+      "showCount",
+      "size"
+    ],
+    "webOnly": [
+      "invalid",
+      "leadingAddon",
+      "leadingIcon",
+      "trailingAddon",
+      "trailingIcon"
+    ],
+    "nativeOnly": [
+      "error",
+      "helperText",
+      "label",
+      "leading",
+      "trailing"
+    ]
+  },
+  "form-field": {
+    "web": "FormFieldRoot",
+    "native": "TextField",
+    "shared": [
+      "disabled"
+    ],
+    "webOnly": [
+      "invalid",
+      "name",
+      "required"
+    ],
+    "nativeOnly": [
+      "clearable",
+      "error",
+      "helperText",
+      "label",
+      "leading",
+      "loading",
+      "showCount",
+      "size",
+      "trailing"
+    ]
+  },
+  "password-input": {
+    "web": "PasswordInput",
+    "native": "PasswordInput",
+    "shared": [],
+    "webOnly": [
+      "clearable",
+      "defaultVisible",
+      "invalid",
+      "leadingAddon",
+      "leadingIcon",
+      "loading",
+      "onVisibleChange",
+      "showCount",
+      "size",
+      "trailingAddon",
+      "visible"
+    ],
+    "nativeOnly": []
+  },
+  "search-input": {
+    "web": "SearchInput",
+    "native": "SearchField",
+    "shared": [],
+    "webOnly": [
+      "clearable",
+      "invalid",
+      "leadingAddon",
+      "loading",
+      "onClear",
+      "showCount",
+      "size",
+      "trailingAddon"
+    ],
+    "nativeOnly": [
+      "label"
+    ]
+  },
+  "money-input": {
+    "web": "MoneyInput",
+    "native": "MoneyInput",
+    "shared": [
+      "currency",
+      "defaultValue",
+      "locale",
+      "onValueChange",
+      "value"
+    ],
+    "webOnly": [
+      "clearable",
+      "invalid",
+      "loading",
+      "showCount",
+      "size",
+      "trailingAddon",
+      "trailingIcon"
+    ],
+    "nativeOnly": []
+  },
+  "number-input": {
+    "web": "NumberInput",
+    "native": "Stepper",
+    "shared": [
+      "defaultValue",
+      "disabled",
+      "max",
+      "min",
+      "onValueChange",
+      "step",
+      "value"
+    ],
+    "webOnly": [
+      "invalid",
+      "precision",
+      "showSteppers",
+      "size"
+    ],
+    "nativeOnly": [
+      "label"
+    ]
+  },
+  "checkbox": {
+    "web": "Checkbox",
+    "native": "Checkbox",
+    "shared": [
+      "checked",
+      "defaultChecked",
+      "disabled",
+      "onCheckedChange"
+    ],
+    "webOnly": [],
+    "nativeOnly": [
+      "description",
+      "label"
+    ]
+  },
+  "radio-group": {
+    "web": null,
+    "native": "RadioGroup",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "children",
+      "defaultValue",
+      "disabled",
+      "label",
+      "onValueChange",
+      "value"
+    ]
+  },
+  "switch": {
+    "web": "Switch",
+    "native": "Switch",
+    "shared": [
+      "checked",
+      "defaultChecked",
+      "disabled",
+      "loading",
+      "onCheckedChange"
+    ],
+    "webOnly": [
+      "checkedIcon",
+      "size",
+      "uncheckedIcon"
+    ],
+    "nativeOnly": [
+      "label"
+    ]
+  },
+  "segmented-control": {
+    "web": "SegmentedControl",
+    "native": "SegmentedControl",
+    "shared": [
+      "defaultValue",
+      "onValueChange",
+      "value"
+    ],
+    "webOnly": [
+      "size"
+    ],
+    "nativeOnly": [
+      "label",
+      "options"
+    ]
+  },
+  "multi-select": {
+    "web": "MultiSelect",
+    "native": "MultiSelect",
+    "shared": [
+      "defaultValue",
+      "disabled",
+      "onValueChange",
+      "options",
+      "placeholder",
+      "value"
+    ],
+    "webOnly": [
+      "emptyText",
+      "inputValue",
+      "loading",
+      "maxVisibleChips",
+      "onCreate",
+      "onInputChange"
+    ],
+    "nativeOnly": [
+      "error",
+      "helperText",
+      "label",
+      "searchable"
+    ]
+  },
+  "data-table": {
+    "web": "DataTable",
+    "native": "DataList",
+    "shared": [
+      "bulkActions",
+      "data",
+      "onSortChange",
+      "sort",
+      "value"
+    ],
+    "webOnly": [
+      "caption",
+      "captionHidden",
+      "columnOrder",
+      "columnPinning",
+      "columnSizing",
+      "columnVisibility",
+      "columns",
+      "defaultDensity",
+      "defaultExpanded",
+      "density",
+      "emptyState",
+      "enableColumnReordering",
+      "enableColumnResizing",
+      "enableRowSelection",
+      "enableSorting",
+      "expanded",
+      "getRowId",
+      "getRowLabel",
+      "getSubRows",
+      "grid",
+      "loading",
+      "manualPagination",
+      "manualSort",
+      "maxHeight",
+      "onColumnOrderChange",
+      "onColumnPinningChange",
+      "onColumnSizingChange",
+      "onColumnVisibilityChange",
+      "onDensityChange",
+      "onExpandedChange",
+      "onPageChange",
+      "onRowOrderChange",
+      "onRowSelectionChange",
+      "page",
+      "pageSize",
+      "pagination",
+      "rowCount",
+      "rowSelection",
+      "rowWindow",
+      "selectionColumn",
+      "toolbar",
+      "viewOptions"
+    ],
+    "nativeOnly": [
+      "defaultSort",
+      "empty",
+      "keyExtractor",
+      "leading",
+      "onPressItem",
+      "onSelectedChange",
+      "selectable",
+      "selected",
+      "sorts",
+      "subtitle",
+      "title"
+    ]
+  },
+  "filter-builder": {
+    "web": "FilterBuilder",
+    "native": "FilterSheet",
+    "shared": [
+      "fields",
+      "onValueChange",
+      "value"
+    ],
+    "webOnly": [
+      "defaultValue",
+      "maxDepth"
+    ],
+    "nativeOnly": [
+      "onOpenChange",
+      "open",
+      "title"
+    ]
+  },
+  "otp-input": {
+    "web": "OTPInput",
+    "native": "OTPInput",
+    "shared": [
+      "autoFocus",
+      "length",
+      "onComplete",
+      "onValueChange",
+      "value"
+    ],
+    "webOnly": [
+      "defaultValue",
+      "disabled",
+      "invalid",
+      "mode",
+      "name"
+    ],
+    "nativeOnly": [
+      "error",
+      "label",
+      "secure"
+    ]
+  },
+  "select": {
+    "web": null,
+    "native": "Select",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "defaultValue",
+      "disabled",
+      "error",
+      "helperText",
+      "label",
+      "onValueChange",
+      "options",
+      "placeholder",
+      "value"
+    ]
+  },
+  "date-picker": {
+    "web": "DatePicker",
+    "native": "DateTimeField",
+    "shared": [
+      "maxDate",
+      "minDate",
+      "onValueChange",
+      "placeholder",
+      "value"
+    ],
+    "webOnly": [
+      "disabled",
+      "disabledDates",
+      "locale",
+      "presets",
+      "typeable"
+    ],
+    "nativeOnly": [
+      "label",
+      "mode"
+    ]
+  },
+  "time-picker": {
+    "web": "TimePicker",
+    "native": "DateTimeField",
+    "shared": [
+      "onValueChange",
+      "placeholder",
+      "value"
+    ],
+    "webOnly": [
+      "clearable",
+      "defaultValue",
+      "invalid",
+      "leadingAddon",
+      "leadingIcon",
+      "loading",
+      "minuteStep",
+      "showCount",
+      "size",
+      "trailingAddon",
+      "trailingIcon"
+    ],
+    "nativeOnly": [
+      "label",
+      "maxDate",
+      "minDate",
+      "mode"
+    ]
+  },
+  "date-time-picker": {
+    "web": "DateTimePicker",
+    "native": "DateTimeField",
+    "shared": [
+      "maxDate",
+      "minDate",
+      "onValueChange",
+      "placeholder",
+      "value"
+    ],
+    "webOnly": [
+      "defaultTime",
+      "disabled",
+      "locale",
+      "minuteStep",
+      "timeZone"
+    ],
+    "nativeOnly": [
+      "label",
+      "mode"
+    ]
+  },
+  "tree-view": {
+    "web": "TreeView",
+    "native": "TreeList",
+    "shared": [
+      "nodes",
+      "selected"
+    ],
+    "webOnly": [
+      "checkable",
+      "checked",
+      "defaultChecked",
+      "defaultExpanded",
+      "defaultSelected",
+      "expanded",
+      "onCheckedChange",
+      "onExpandedChange",
+      "onLoadChildren",
+      "onSelectedChange"
+    ],
+    "nativeOnly": [
+      "onSelect",
+      "rootTitle"
+    ]
+  },
+  "sortable": {
+    "web": "Sortable",
+    "native": "SortableList",
+    "shared": [
+      "items",
+      "onReorder"
+    ],
+    "webOnly": [
+      "children",
+      "getId",
+      "getLabel"
+    ],
+    "nativeOnly": [
+      "editing",
+      "keyExtractor",
+      "subtitle",
+      "title"
+    ]
+  },
+  "stepper": {
+    "web": "Stepper",
+    "native": "StepProgress",
+    "shared": [
+      "current",
+      "steps"
+    ],
+    "webOnly": [
+      "completed",
+      "nonLinear",
+      "onStepChange",
+      "orientation"
+    ],
+    "nativeOnly": []
+  },
+  "inline-edit": {
+    "web": "InlineEdit",
+    "native": "InlineEdit",
+    "shared": [
+      "label",
+      "onSave",
+      "placeholder",
+      "value"
+    ],
+    "webOnly": [
+      "disabled"
+    ],
+    "nativeOnly": []
+  },
+  "dialog": {
+    "web": null,
+    "native": "Dialog",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "actions",
+      "children",
+      "description",
+      "dismissible",
+      "onOpenChange",
+      "open",
+      "title"
+    ]
+  },
+  "alert-dialog": {
+    "web": null,
+    "native": "Dialog",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "actions",
+      "children",
+      "description",
+      "dismissible",
+      "onOpenChange",
+      "open",
+      "title"
+    ]
+  },
+  "drawer": {
+    "web": "DrawerRoot",
+    "native": "BottomSheet",
+    "shared": [
+      "children",
+      "dismissible",
+      "onOpenChange",
+      "open"
+    ],
+    "webOnly": [
+      "activeSnapPoint",
+      "autoFocus",
+      "closeThreshold",
+      "container",
+      "defaultOpen",
+      "direction",
+      "disablePreventScroll",
+      "fadeFromIndex",
+      "fixed",
+      "handleOnly",
+      "modal",
+      "nested",
+      "noBodyStyles",
+      "onAnimationEnd",
+      "onClose",
+      "onDrag",
+      "onRelease",
+      "preventScrollRestoration",
+      "repositionInputs",
+      "scrollLock",
+      "scrollLockTimeout",
+      "setActiveSnapPoint",
+      "setBackgroundColorOnScale",
+      "shouldScaleBackground",
+      "snapPoints",
+      "snapToSequentialPoint"
+    ],
+    "nativeOnly": [
+      "detents",
+      "scroll",
+      "title"
+    ]
+  },
+  "sheet": {
+    "web": null,
+    "native": "BottomSheet",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "children",
+      "detents",
+      "dismissible",
+      "onOpenChange",
+      "open",
+      "scroll",
+      "title"
+    ]
+  },
+  "skeleton": {
+    "web": "Skeleton",
+    "native": "Skeleton",
+    "shared": [
+      "animation",
+      "height",
+      "width"
+    ],
+    "webOnly": [
+      "animated",
+      "shape"
+    ],
+    "nativeOnly": [
+      "radius"
+    ]
+  },
+  "activity-feed": {
+    "web": null,
+    "native": "ActivityList",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "actions",
+      "empty",
+      "header",
+      "onEndReached",
+      "onPress",
+      "onRefresh",
+      "refreshing",
+      "transactions"
+    ]
+  },
+  "auth-card": {
+    "web": "AuthCard",
+    "native": "SignInScreen",
+    "shared": [
+      "logo",
+      "title"
+    ],
+    "webOnly": [
+      "children",
+      "description",
+      "footer"
+    ],
+    "nativeOnly": [
+      "biometricLabel",
+      "error",
+      "loading",
+      "onBiometric",
+      "onCreateAccount",
+      "onForgotPassword",
+      "onSubmit",
+      "submitLabel"
+    ]
+  },
+  "conversation": {
+    "web": "Conversation",
+    "native": "ChatScreen",
+    "shared": [
+      "messages",
+      "placeholder"
+    ],
+    "webOnly": [
+      "announce",
+      "autoScroll",
+      "children",
+      "composer"
+    ],
+    "nativeOnly": [
+      "empty",
+      "onSend",
+      "thinking"
+    ]
+  },
+  "plan-card": {
+    "web": "PlanCard",
+    "native": "PaywallScreen",
+    "shared": [],
+    "webOnly": [
+      "badge",
+      "cta",
+      "ctaHref",
+      "description",
+      "features",
+      "highlighted",
+      "name",
+      "onSelect",
+      "period",
+      "price"
+    ],
+    "nativeOnly": [
+      "defaultPlan",
+      "onRestore",
+      "onSubscribe",
+      "plans",
+      "terms",
+      "title"
+    ]
+  },
+  "settings-section": {
+    "web": "SettingsSection",
+    "native": "SettingsScreen",
+    "shared": [],
+    "webOnly": [
+      "actions",
+      "children",
+      "description",
+      "title"
+    ],
+    "nativeOnly": [
+      "groups",
+      "header"
+    ]
+  },
+  "notification-item": {
+    "web": "NotificationItem",
+    "native": "NotificationsInbox",
+    "shared": [],
+    "webOnly": [
+      "description",
+      "href",
+      "icon",
+      "onDismiss",
+      "onSelect",
+      "read",
+      "timestamp",
+      "title"
+    ],
+    "nativeOnly": [
+      "notifications",
+      "onMarkAllRead",
+      "onPress"
+    ]
+  },
+  "user-card": {
+    "web": "UserCard",
+    "native": "ProfileHeader",
+    "shared": [
+      "name"
+    ],
+    "webOnly": [
+      "actions",
+      "avatarFallback",
+      "avatarSrc",
+      "email",
+      "role",
+      "size"
+    ],
+    "nativeOnly": [
+      "detail",
+      "image",
+      "onPress"
+    ]
+  }
+}

@@ -16,6 +16,14 @@ describe('FilterBar', () => {
     expect(input.getAttribute('placeholder')).toBe('Find something…');
   });
 
+  it('names the search field from the placeholder, else "Search"', () => {
+    const { unmount } = render(<FilterBar searchPlaceholder="Search invoices…" />);
+    expect(screen.getByRole('searchbox', { name: 'Search invoices' })).toBeDefined();
+    unmount();
+    render(<FilterBar searchPlaceholder="e.g. INV-2041" searchLabel="Invoice number" />);
+    expect(screen.getByRole('searchbox', { name: 'Invoice number' })).toBeDefined();
+  });
+
   it('uses default placeholder when not provided', () => {
     render(<FilterBar />);
     const input = screen.getByRole('searchbox');
@@ -89,4 +97,48 @@ describe('FilterBar', () => {
     expect(screen.getByTestId('chip')).toBeDefined();
     expect(screen.getByTestId('btn')).toBeDefined();
   });
+
+  it('names the search field (default and custom)', () => {
+    const { rerender } = render(<FilterBar />);
+    expect(screen.getByRole('searchbox', { name: 'Search' })).toBeDefined();
+    rerender(<FilterBar searchLabel="Search invoices" />);
+    expect(screen.getByRole('searchbox', { name: 'Search invoices' })).toBeDefined();
+  });
+
+  it('shows the applied count and clears all', async () => {
+    const onClearAll = vi.fn();
+    render(<FilterBar activeCount={3} onClearAll={onClearAll} />);
+    expect(screen.getByText('3 filters')).toBeDefined();
+    await userEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+    expect(onClearAll).toHaveBeenCalled();
+  });
+
+  it('shows each keystroke at once while a deferred list filters behind it', async () => {
+    const items = Array.from({ length: 300 }, (_, i) => `Item ${i}`);
+    const List = React.memo(({ q }: { q: string }) => (
+      <ul>
+        {items.filter((x) => x.includes(q)).map((x) => (
+          <li key={x}>{x}</li>
+        ))}
+      </ul>
+    ));
+    function Harness() {
+      const [search, setSearch] = React.useState('');
+      const q = React.useDeferredValue(search);
+      return (
+        <>
+          <FilterBar searchValue={search} onSearch={setSearch} />
+          <List q={q} />
+        </>
+      );
+    }
+    render(<Harness />);
+    const input = screen.getByRole('searchbox') as HTMLInputElement;
+    for (const [i, ch] of [...'m 29'].entries()) {
+      await userEvent.type(input, ch);
+      expect(input.value).toBe('m 29'.slice(0, i + 1));
+    }
+    expect(await screen.findAllByRole('listitem')).toHaveLength(11); // Item 29, 290–299
+  });
 });
+

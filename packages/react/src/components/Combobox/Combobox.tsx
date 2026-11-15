@@ -3,6 +3,30 @@
 import * as React from 'react';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+
+/**
+ * cmdk calls scrollIntoView on the highlighted item (and its group heading) on
+ * mount and on every keyboard move. The native call also scrolls the page, so
+ * an inline Combobox below the fold yanked the window down to itself on load.
+ * Scroll only the list's own scroll box instead.
+ */
+function scrollWithinList(el: HTMLElement | null | undefined) {
+  if (!el) return;
+  el.scrollIntoView = () => {
+    const list = el.closest<HTMLElement>('[cmdk-list]');
+    if (!list) return;
+    const l = list.getBoundingClientRect();
+    const r = el.getBoundingClientRect();
+    if (r.top < l.top) list.scrollTop -= l.top - r.top;
+    else if (r.bottom > l.bottom) list.scrollTop += r.bottom - l.bottom;
+  };
+}
+
+function setRef<T>(ref: React.ForwardedRef<T>, value: T | null) {
+  if (typeof ref === 'function') ref(value);
+  else if (ref) ref.current = value;
+}
 
 const Root = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Command>>(
   ({ className, ...props }, ref) => (
@@ -34,14 +58,39 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Com
 );
 Input.displayName = 'Combobox.Input';
 
-const List = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Command.List>>(
-  ({ className, ...props }, ref) => (
-    <Command.List
-      ref={ref}
-      className={cn('max-h-64 overflow-y-auto overflow-x-hidden p-1', className)}
-      {...props}
-    />
-  ),
+export interface ComboboxListProps extends React.ComponentProps<typeof Command.List> {
+  /** Options are loading: shows a loading row, sets aria-busy and hides Empty. */
+  loading?: boolean;
+}
+
+const List = React.forwardRef<HTMLDivElement, ComboboxListProps>(
+  ({ className, loading, children, ...props }, ref) => {
+    const messages = useNexubMessages();
+    return (
+      <Command.List
+        ref={ref}
+        aria-busy={loading || undefined}
+        className={cn(
+          // cmdk measures its content into --cmdk-list-height; box-content keeps the padding outside it.
+          'box-content h-[var(--cmdk-list-height)] max-h-64 overflow-y-auto overflow-x-hidden p-1',
+          'transition-[height] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
+          loading && '[&_[cmdk-empty]]:hidden',
+          className,
+        )}
+        {...props}
+      >
+        {loading && (
+          // Not Command.Loading: its role="progressbar" isn't allowed inside a listbox
+          // (axe aria-required-children). The listbox's aria-busy carries the state.
+          <div className="flex items-center gap-2 px-2.5 py-2 text-body-sm text-[var(--color-on-surface-muted)]">
+            <span aria-hidden="true" className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-[var(--color-on-surface-variant)] border-t-transparent" />
+            {messages.loading}
+          </div>
+        )}
+        {children}
+      </Command.List>
+    );
+  },
 );
 List.displayName = 'Combobox.List';
 
@@ -59,7 +108,10 @@ Empty.displayName = 'Combobox.Empty';
 const Group = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Command.Group>>(
   ({ className, ...props }, ref) => (
     <Command.Group
-      ref={ref}
+      ref={(el) => {
+        scrollWithinList(el?.querySelector<HTMLElement>('[cmdk-group-heading]'));
+        setRef(ref, el);
+      }}
       className={cn(
         'overflow-hidden p-1 text-[var(--color-on-surface)] [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-on-surface-muted)]',
         className,
@@ -73,7 +125,10 @@ Group.displayName = 'Combobox.Group';
 const Item = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Command.Item>>(
   ({ className, ...props }, ref) => (
     <Command.Item
-      ref={ref}
+      ref={(el) => {
+        scrollWithinList(el);
+        setRef(ref, el);
+      }}
       className={cn(
         'relative flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-body-sm outline-none',
         // Highlight = the on-surface state layer at hover opacity.

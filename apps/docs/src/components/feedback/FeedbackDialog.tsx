@@ -217,7 +217,7 @@ export function FeedbackDialog({ open, onOpenChange }: Props) {
 
             <Dialog.Footer>
               <Dialog.Close asChild>
-                <Button variant="ghost" type="button">Cancel</Button>
+                <Button variant="text" type="button">Cancel</Button>
               </Dialog.Close>
               <Button type="submit" loading={submitting}>
                 Send feedback

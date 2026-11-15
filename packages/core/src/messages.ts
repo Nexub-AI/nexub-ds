@@ -10,11 +10,16 @@ export interface NexubMessages {
   removeFilter: string;
   removeFile: (fileName: string) => string;
   uploadFiles: string;
+  /** FileUpload: a file outside `accept`. */
+  fileTypeRejected: (fileName: string) => string;
+  /** FileUpload: a file over `maxSize`; `maxSize` is already formatted ("5 MB"). */
+  fileTooLarge: (fileName: string, maxSize: string) => string;
+  /** FileUpload: files past `maxFiles`. */
+  tooManyFiles: (maxFiles: number) => string;
   clickToUpload: string;
   orDragAndDrop: string;
   clearSearch: string;
   showPassword: string;
-  hidePassword: string;
   increment: string;
   decrement: string;
   loading: string;
@@ -25,6 +30,10 @@ export interface NexubMessages {
   breadcrumb: string;
   breadcrumbMore: string;
   moreCount: (count: number) => string;
+  /** Combobox "create" option for text that matches nothing. */
+  createOption: (text: string) => string;
+  /** MultiSelect chip remove button. */
+  removeOption: (label: string) => string;
   rating: string;
   ratingStars: (stars: number) => string;
   mainNavigation: string;
@@ -66,6 +75,107 @@ export interface NexubMessages {
   conversation: string;
   // DataTable pager
   pageOf: (page: number, total: number) => string;
+  /** DataTable selection column. */
+  selectRow: string;
+  selectAllOnPage: string;
+  /** DataTable bulk-action bar, e.g. "3 selected"; `count` is already formatted. */
+  selectedCount: (count: string) => string;
+  /** Offered when a whole page is selected, e.g. "Select all 1,240". */
+  selectAllRows: (count: string) => string;
+  clearSelection: string;
+  /** DataTable view menu. */
+  view: string;
+  density: string;
+  comfortable: string;
+  compact: string;
+  columns: string;
+  /** Read after a sorted column's name when several columns are sorted, e.g. "sort 2". */
+  sortOrder: (index: number) => string;
+  /** DataTable column resize handle. */
+  resizeColumn: (column: string) => string;
+  /** Announced after a keyboard column move, e.g. "Email moved to position 2 of 4". */
+  columnMoved: (column: string, position: number, total: number) => string;
+  /** DateRangePicker presets. */
+  today: string;
+  last7Days: string;
+  last30Days: string;
+  monthToDate: string;
+  lastMonth: string;
+  /** DateRangePicker footer, e.g. "Time zone: GMT+1". */
+  timeZoneLabel: (zone: string) => string;
+  /** FilterBuilder. */
+  addFilter: string;
+  addGroup: string;
+  removeGroup: string;
+  matchAll: string;
+  matchAny: string;
+  /** Names a filter group for screen readers. */
+  filterGroup: (combinator: 'and' | 'or') => string;
+  filterField: string;
+  filterOperator: string;
+  filterValue: string;
+  filterOperators: Record<'contains' | 'equals' | 'notEquals' | 'startsWith' | 'isEmpty' | 'greaterThan' | 'lessThan' | 'before' | 'after', string>;
+  /** SavedViews. */
+  views: string;
+  saveView: string;
+  updateView: (name: string) => string;
+  deleteView: (name: string) => string;
+  viewName: string;
+  save: string;
+  /** FilterBar, e.g. "3 filters". */
+  filtersApplied: (count: number) => string;
+  clearAll: string;
+  /** EmptyState presets. */
+  emptyStates: Record<'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline', { title: string; description: string }>;
+  /** AlertDialog type-to-confirm, e.g. "Type acme-prod to confirm". */
+  typeToConfirm: (text: string) => string;
+  /** OTPInput group name when no aria-label is given. */
+  verificationCode: string;
+  /** FileUpload per-file progress and cancel. */
+  uploadProgress: (fileName: string, percent: number) => string;
+  cancelUpload: (fileName: string) => string;
+  /** InlineEdit display button, e.g. "Edit Company name". */
+  editField: (label: string) => string;
+  /** DateTimePicker part labels. */
+  dateLabel: string;
+  timeLabel: string;
+  /** EventCalendar navigation and view switch. */
+  previousWeek: string;
+  nextWeek: string;
+  calendarView: string;
+  monthView: string;
+  weekView: string;
+  /** DataTable sub-row toggle. */
+  expandRow: string;
+  collapseRow: string;
+  /** Stepper, e.g. "Step 2 of 4". */
+  stepOf: (step: number, total: number) => string;
+  stepCompleted: string;
+  /** ResizablePanels separator. */
+  resizePanels: string;
+  /** Sortable, Kanban and DataTable row handles. */
+  moveItem: (label: string) => string;
+  reorderHint: string;
+  itemMoved: (label: string, position: number, total: number) => string;
+  itemMovedToColumn: (label: string, column: string, position: number, total: number) => string;
+  /** NotificationCenter (@nexub/patterns). */
+  notificationCenter: string;
+  unreadNotifications: (count: number) => string;
+  markAllRead: string;
+  noNotifications: string;
+  /** ChartZoom range thumbs and reset. */
+  zoomStart: string;
+  zoomEnd: string;
+  resetZoom: string;
+  /** React Native SortableList and TreeList. */
+  moveUp: string;
+  moveDown: string;
+  backTo: (label: string) => string;
+  /** Mobile DataList sort sheet. */
+  sortBy: string;
+  sortDirection: string;
+  ascending: string;
+  descending: string;
   previous: string;
   next: string;
   // AppHeader (@nexub/patterns)
@@ -112,6 +222,14 @@ export interface NexubMessages {
   offline: string;
   page: (index: number, total: number) => string;
   moreActions: string;
+  /** Avatar `status` dot, read after the name ("Ada Lovelace, Away"). */
+  presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
+  /** Input `clearable` button. */
+  clear: string;
+  /** Input `showCount`, read near the limit ("72 of 80 characters"). */
+  characterCount: (count: number, max: number) => string;
+  /** CommandPalette `recentKey` group heading. */
+  recent: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -122,11 +240,13 @@ export const defaultMessages: NexubMessages = {
   removeFilter: 'Remove filter',
   removeFile: (fileName) => `Remove ${fileName}`,
   uploadFiles: 'Upload files',
+  fileTypeRejected: (fileName) => `${fileName} isn’t an accepted file type`,
+  fileTooLarge: (fileName, maxSize) => `${fileName} is larger than ${maxSize}`,
+  tooManyFiles: (maxFiles) => `You can add up to ${maxFiles} file${maxFiles !== 1 ? 's' : ''}`,
   clickToUpload: 'Click to upload',
   orDragAndDrop: 'or drag and drop',
   clearSearch: 'Clear search',
   showPassword: 'Show password',
-  hidePassword: 'Hide password',
   increment: 'Increment',
   decrement: 'Decrement',
   loading: 'Loading…',
@@ -137,6 +257,8 @@ export const defaultMessages: NexubMessages = {
   breadcrumb: 'breadcrumb',
   breadcrumbMore: 'More',
   moreCount: (count) => `${count} more`,
+  createOption: (text) => `Create “${text}”`,
+  removeOption: (label) => `Remove ${label}`,
   rating: 'Rating',
   ratingStars: (stars) => `${stars} star${stars !== 1 ? 's' : ''}`,
   mainNavigation: 'Main',
@@ -172,6 +294,95 @@ export const defaultMessages: NexubMessages = {
   jumpToLatest: 'Jump to latest',
   conversation: 'Conversation',
   pageOf: (page, total) => `Page ${page} of ${total}`,
+  selectRow: 'Select row',
+  selectAllOnPage: 'Select all rows on this page',
+  selectedCount: (count) => `${count} selected`,
+  selectAllRows: (count) => `Select all ${count}`,
+  clearSelection: 'Clear selection',
+  view: 'View',
+  density: 'Density',
+  comfortable: 'Comfortable',
+  compact: 'Compact',
+  columns: 'Columns',
+  sortOrder: (index) => `sort ${index}`,
+  resizeColumn: (column) => `Resize ${column}`,
+  columnMoved: (column, position, total) => `${column} moved to position ${position} of ${total}`,
+  today: 'Today',
+  last7Days: 'Last 7 days',
+  last30Days: 'Last 30 days',
+  monthToDate: 'Month to date',
+  lastMonth: 'Last month',
+  timeZoneLabel: (zone) => `Time zone: ${zone}`,
+  addFilter: 'Add filter',
+  addGroup: 'Add group',
+  removeGroup: 'Remove group',
+  matchAll: 'All',
+  matchAny: 'Any',
+  filterGroup: (combinator) => (combinator === 'and' ? 'Filters, match all' : 'Filters, match any'),
+  filterField: 'Field',
+  filterOperator: 'Condition',
+  filterValue: 'Value',
+  filterOperators: {
+    contains: 'contains',
+    equals: 'is',
+    notEquals: 'is not',
+    startsWith: 'starts with',
+    isEmpty: 'is empty',
+    greaterThan: 'greater than',
+    lessThan: 'less than',
+    before: 'before',
+    after: 'after',
+  },
+  views: 'Views',
+  saveView: 'Save as new view…',
+  updateView: (name) => `Update “${name}”`,
+  deleteView: (name) => `Delete “${name}”`,
+  viewName: 'View name',
+  save: 'Save',
+  filtersApplied: (count) => `${count} filter${count !== 1 ? 's' : ''}`,
+  clearAll: 'Clear all',
+  emptyStates: {
+    noData: { title: 'Nothing here yet', description: 'When there’s something to show, it’ll appear here.' },
+    noResults: { title: 'No results', description: 'Try other words or remove some filters.' },
+    noAccess: { title: 'You don’t have access', description: 'Ask an admin of this workspace to give you access.' },
+    serverError: { title: 'Something went wrong', description: 'We couldn’t load this. Try again in a moment.' },
+    offline: { title: 'You’re offline', description: 'Check your connection, then try again.' },
+  },
+  typeToConfirm: (text) => `Type ${text} to confirm`,
+  verificationCode: 'Verification code',
+  uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
+  cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
+  editField: (label) => `Edit ${label}`,
+  dateLabel: 'Date',
+  timeLabel: 'Time',
+  previousWeek: 'Go to previous week',
+  nextWeek: 'Go to next week',
+  calendarView: 'Calendar view',
+  monthView: 'Month',
+  weekView: 'Week',
+  expandRow: 'Expand row',
+  collapseRow: 'Collapse row',
+  stepOf: (step, total) => `Step ${step} of ${total}`,
+  stepCompleted: 'completed',
+  resizePanels: 'Resize panels',
+  moveItem: (label) => `Move ${label}`,
+  reorderHint: 'Alt+Arrow keys move it',
+  itemMoved: (label, position, total) => `${label} moved to position ${position} of ${total}`,
+  itemMovedToColumn: (label, column, position, total) => `${label} moved to ${column}, position ${position} of ${total}`,
+  notificationCenter: 'Notifications',
+  unreadNotifications: (count) => `${count} unread`,
+  markAllRead: 'Mark all as read',
+  noNotifications: 'You’re all caught up',
+  zoomStart: 'Zoom start',
+  zoomEnd: 'Zoom end',
+  resetZoom: 'Reset zoom',
+  moveUp: 'Move up',
+  moveDown: 'Move down',
+  backTo: (label) => `Back to ${label}`,
+  sortBy: 'Sort',
+  sortDirection: 'Direction',
+  ascending: 'Ascending',
+  descending: 'Descending',
   previous: 'Previous',
   next: 'Next',
   search: 'Search',
@@ -212,6 +423,10 @@ export const defaultMessages: NexubMessages = {
   offline: 'You’re offline. Some things may not be up to date.',
   page: (index, total) => `Page ${index} of ${total}`,
   moreActions: 'More actions',
+  presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
+  clear: 'Clear',
+  characterCount: (count, max) => `${count} of ${max} characters`,
+  recent: 'Recent',
 };
 
 export type Direction = 'ltr' | 'rtl';

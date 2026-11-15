@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { Card } from '@nexub/react';
 
 const products = [

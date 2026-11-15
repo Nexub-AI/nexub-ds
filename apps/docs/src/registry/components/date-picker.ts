@@ -12,16 +12,14 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'value', type: 'Date | undefined', required: false, description: 'Controlled selected date value.' },
-    { name: 'onChange', type: '(date: Date | undefined) => void', required: false, description: 'Callback invoked when the selected date changes.' },
+    { name: 'onValueChange', type: '(date: Date | undefined) => void', required: false, description: 'Called with the picked date.' },
     { name: 'locale', type: 'Locale (date-fns)', required: false, description: 'Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL.' },
     { name: 'placeholder', type: 'string', default: "'Pick a date'", required: false, description: 'Placeholder text displayed in the input when no date is selected.' },
     { name: 'disabled', type: 'boolean', default: 'false', required: false, description: 'Disables the date picker input and calendar.' },
     { name: 'minDate', type: 'Date', required: false, description: 'Earliest selectable date. Dates before this are greyed out.' },
     { name: 'maxDate', type: 'Date', required: false, description: 'Latest selectable date. Dates after this are greyed out.' },
-    { name: 'format', type: 'string', default: "'dd/MM/yyyy'", required: false, description: 'Date format string for the text input display.' },
     { name: 'aria-label', type: 'string', required: false, description: 'Field name for screen readers; the selected value is appended.' },
     { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
-    { name: 'error', type: 'string', required: false, description: 'Error message displayed below the input.' },
   ],
   examples: [
     {

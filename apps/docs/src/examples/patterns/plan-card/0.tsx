@@ -1,3 +1,5 @@
+'use client'; // docs preview: server pages import every example
+
 import { PlanCard } from '@nexub/patterns';
 
 export default function Example() {

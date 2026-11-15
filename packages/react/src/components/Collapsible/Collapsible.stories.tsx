@@ -13,7 +13,7 @@ export const Default: Story = {
   render: () => {
     const [open, setOpen] = React.useState(false);
     return (
-      <div style={{ width: '360px' }}>
+      <div style={{ width: '360px', maxWidth: '100%' }}>
         <Collapsible.Root open={open} onOpenChange={setOpen}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
             <span style={{ fontSize: '14px', fontWeight: 500 }}>Release notes</span>

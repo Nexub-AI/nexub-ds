@@ -1,18 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import type { MotionDuration, MotionEasing } from './motion.types.js';
+import type { MotionDuration } from './motion.types.js';
 import { useMediaQuery } from '../../hooks/useMediaQuery.js';
-
-// Mirrors the legacy --duration-* tokens. Used only when a caller passes
-// `easing` explicitly (the pre-spring behaviour).
-export const DURATION_MS: Record<MotionDuration, number> = {
-  instant: 0,
-  fast: 150,
-  normal: 200,
-  slow: 300,
-  slower: 500,
-};
 
 export type SpringSpeed = 'fast' | 'default' | 'slow';
 export type SpringFamily = 'spatial' | 'effects' | 'expressive';
@@ -67,17 +57,14 @@ export interface UseMotionReturn {
  *
  * Enter rides the springs (opacity on `effects`, transform on `spatial`).
  * Exit is quicker and never overshoots (`effects` fast for both).
- * Passing `easing` opts back into the legacy duration + easing tokens.
  */
 export function useMotion({
   visible,
   duration = 'normal',
-  easing,
   unmountOnExit = false,
 }: {
   visible: boolean;
   duration?: MotionDuration;
-  easing?: MotionEasing;
   unmountOnExit?: boolean;
 }): UseMotionReturn {
   // Start in the correct stable state without running any effect
@@ -116,9 +103,7 @@ export function useMotion({
     }
   }, [visible]);
 
-  const legacy = easing !== undefined;
-  const exitMs =
-    duration === 'instant' ? 0 : legacy ? DURATION_MS[duration] : SPRING_MS.effects.fast;
+  const exitMs = duration === 'instant' ? 0 : SPRING_MS.effects.fast;
 
   // Fallback so an exit always completes even if transitionend never fires.
   React.useEffect(() => {
@@ -140,12 +125,6 @@ export function useMotion({
   let transitionStyle: React.CSSProperties;
   if (duration === 'instant') {
     transitionStyle = { transition: 'none' };
-  } else if (legacy) {
-    transitionStyle = {
-      transitionDuration: `var(--duration-${duration})`,
-      transitionTimingFunction: `var(--ease-${easing})`,
-      transitionProperty: 'opacity, transform',
-    };
   } else if (phase === 'exiting' || phase === 'exited') {
     transitionStyle = {
       transition: [spring('opacity', 'effects', 'fast'), spring('transform', 'effects', 'fast')].join(', '),

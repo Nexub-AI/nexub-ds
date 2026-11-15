@@ -170,6 +170,21 @@ export type {
   DateTimeFieldProps,
 } from './components/mobile';
 
+export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
+export { TreeList, StepProgress, SortableList, InlineEdit } from './components/workflow';
+export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps } from './components/workflow';
+export type {
+  MultiSelectOption,
+  MultiSelectProps,
+  DataListProps,
+  DataListSort,
+  FileListItem,
+  FileListProps,
+  FilterSheetProps,
+} from './components/data';
+export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
+export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
+
 // Navigation (native chrome, Nexub colours)
 export {
   nexubStackOptions,
@@ -177,3 +192,6 @@ export {
   nexubTabsOptions,
   useNexubNavigation,
 } from './theme/navigation';
+export { SkeletonText } from './components/feedback';
+export type { SkeletonTextProps } from './components/feedback';
+export type { AvatarStatus } from './components/display';

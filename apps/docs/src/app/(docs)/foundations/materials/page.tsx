@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { GlassDemo } from './GlassDemo';
 import { List, PageIntro, Prose, Section } from '@/components/kit';
+import { CodeBlock } from '@/components/docs/CodeBlock';
 
 export const dynamic = 'force-static';
 
@@ -43,12 +44,12 @@ export default function MaterialsPage() {
             </>,
           ]}
         />
-        <pre><code>{`import '@nexub/themes/glass';   // once, after base/light
+        <CodeBlock lang="tsx" code={`import '@nexub/themes/glass';   // once, after base/light
 
 <TopNav.Root surface="glass" scrollEdge="soft">…</TopNav.Root>
 <Toolbar.Root floating>…</Toolbar.Root>
 <Dialog.Content surface="glass">…</Dialog.Content>
-<Button variant="glass">Play</Button>`}</code></pre>
+<Button variant="glass">Play</Button>`} />
       </Section>
 
       <Section id="thickness" title="Thickness">

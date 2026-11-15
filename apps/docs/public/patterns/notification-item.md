@@ -13,9 +13,10 @@ Single notification row for notification panels or dropdowns.
 | `title` (required) | `string` |  | Notification title. |
 | `description` | `string` |  | Supporting text. |
 | `timestamp` | `string` |  | Relative time string. |
-| `unread` | `boolean` | `false` | Applies unread indicator styling. |
-| `avatar` | `React.ReactNode` |  | Avatar for the notification actor. |
-| `onClick` | `() => void` |  | Click handler for the item. |
+| `read` | `boolean` | `false` | Unread items get a tinted background and an "Unread" dot. |
+| `icon` | `ReactNode` |  | Icon or avatar before the text. |
+| `href / onSelect` | `string / () => void` |  | Makes the whole item a link or a button (6.6). |
+| `onDismiss` | `() => void` |  | Shows a dismiss button. |
 
 ## Example: Default
 

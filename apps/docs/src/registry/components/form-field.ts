@@ -13,7 +13,6 @@ const entry: ComponentEntry = {
   props: [
     { name: 'name', type: 'string', required: true, description: 'Name attribute forwarded to the underlying input.' },
     { name: 'id', type: 'string', required: false, description: 'Explicit id for the input; defaults to the name value.' },
-    { name: 'error', type: 'string', required: false, description: 'Validation error message shown below the input.' },
     { name: 'required', type: 'boolean', required: false, description: 'Marks the field as required and renders a required indicator on the label.' },
   ],
   examples: [

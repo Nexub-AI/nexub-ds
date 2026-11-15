@@ -17,3 +17,7 @@ export const Default: Story = {
     size: 'md',
   },
 };
+
+export const WithStatus: Story = {
+  args: { name: 'Ada Lovelace', status: 'away' },
+};

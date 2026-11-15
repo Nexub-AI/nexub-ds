@@ -1,5 +1,178 @@
 # @nexub/tokens
 
+## 10.0.0
+
+## 9.9.1
+
+## 9.9.0
+
+## 9.8.0
+
+## 9.7.0
+
+## 9.6.0
+
+## 9.5.0
+
+## 9.4.0
+
+## 9.3.0
+
+## 9.2.0
+
+## 9.1.0
+
+## 9.0.0
+
+## 8.9.0
+
+## 8.8.0
+
+## 8.7.0
+
+## 8.6.0
+
+## 8.5.0
+
+## 8.4.0
+
+## 8.3.0
+
+## 8.2.0
+
+## 8.1.0
+
+## 8.0.0
+
+### Minor Changes
+
+- 70e0436: 8.0: new defaults. No new features. Every change below shipped as an opt-in in 7.x, and `npx nexub-migrate --rules changes-in-8` reports where your code is affected. See "Migrating to 8.0" in the docs.
+
+  - **Signature is the default look.** Set `data-style="classic"` on `<html>` or any wrapper to keep the 7.x Material-derived look until 9.0; `data-style="signature"` inside a classic wrapper switches back. React Native: `NexubNativeProvider` defaults to `style="signature"` (`style="classic"` keeps 7.x).
+  - **`scrollLock` defaults to `"class"`** on `Dialog.Root`, `AlertDialog.Root`, `Drawer.Root` / `Sheet.Root` and `CommandPalette`: no injected `<style>`, so it works under a strict CSP. It needs `@nexub/themes/base` (the `html.nexub-scroll-lock` rule). `scrollLock="style"` keeps Radix's lock.
+  - **`safeHref` is strict by default,** and so is every Nexub link that uses it: only relative URLs, `#…`, http(s), `mailto:`, `tel:` and `sms:` render. `safeHref(url, { strict: false })` allows custom schemes again (script-capable schemes stay blocked).
+  - **Removed: the legacy motion tokens** `--duration-{instant,fast,normal,slow,slower}` and `--ease-{linear,in,out,in-out,out-expo,spring}` (deprecated in 7.3). Use the spring tokens, e.g. `var(--motion-spring-effects-default-duration)` and `var(--motion-spring-effects-default-easing)`.
+  - **Removed: the `easing` prop** on `Fade`, `Scale`, `Slide` and `Collapse` (deprecated in 7.3). `duration` rides the spring tokens.
+
+## 7.9.0
+
+### Minor Changes
+
+- f36913e: 7.9: the Signature look (opt-in) and the 8.0 release candidate.
+
+  - **New** `data-style="signature"` on `<html>` (or any subtree): the same contrast-guaranteed role engine with Nexub's own face. Neutral grey surfaces with a faint warm outline instead of lavender tints, 10px controls and fields with 16px cards, a primary seeded from the Nexub brand indigo, neutral-tinted tonal containers instead of pastels, tighter display tracking, tabular numerals in tables, and crisper hairline elevation. Chips, toggles, segmented controls and pill tabs stay full pills (`--shape-pill`). Every role pair is tested for WCAG AA in both styles.
+  - Under Signature, `Switch` is a full-thumb switch; radio dots and checkbox ticks animate in on the springs.
+  - React Native: `<NexubNativeProvider style="signature">`.
+  - 8.0 RC: every 7.x deprecation is frozen with its removal version; `nexub-migrate --rules changes-in-8` reports what 8.0 changes in your code; **new** docs page "Migrating to 8.0". In 8.0 Signature becomes the default (`data-style="classic"` keeps today's look), `scrollLock="class"` and strict `safeHref` become the defaults, and the legacy motion tokens and `easing` prop are removed.
+
+## 7.8.0
+
+## 7.7.0
+
+## 7.6.0
+
+## 7.5.0
+
+## 7.4.0
+
+## 7.3.0
+
+### Minor Changes
+
+- fe8c22b: 7.3: Motion 2, one motion source.
+
+  - `@nexub/tokens/tailwind.css` sets `--default-transition-duration` / `--default-transition-timing-function` to the effects spring, so a bare `transition` / `transition-colors` uses the spring tokens instead of Tailwind's 150ms ease. The last raw `duration-*` / `ease-*` classes are gone, and a `raw-motion` design-lint rule keeps them out.
+  - The legacy `--duration-*` / `--ease-*` tokens (`tokens/motion.json`) and the Motion `easing` prop are deprecated, removed in 8.0.
+  - `Collapse` animates grid rows (`0fr` → `1fr`) instead of measuring `scrollHeight` in JS; content that grows while open just grows. Same props.
+  - `NavigationMenu`'s viewport resizes between items on the spatial spring instead of snapping.
+  - `Tabs`: `orientation="vertical"` is styled (indicator on the inline-end edge), and the incoming panel crossfades (`@starting-style`).
+  - `startViewTransition` flushes React state inside the transition (`flushSync`), so the snapshot is never stale, and returns a promise that resolves when the transition finishes.
+  - Thick glass overlays fade in without scaling.
+
+## 7.2.0
+
+## 7.1.0
+
+## 7.0.1
+
+## 7.0.0
+
+### Minor Changes
+
+- d13580c: 7.0: consolidate.
+
+  - **Breaking:** `StepIndicator` is removed from @nexub/patterns. Use `<Stepper orientation="vertical" current={…}>` from @nexub/react (`currentStep` becomes `current`; `steps` works as is).
+  - **Breaking:** Autocomplete's `mode` prop and its inline layout are removed. The popover (the default since 6.0) is the only layout; for an always-open list, use the Combobox parts.
+  - **`nexub-migrate`**: `removed-in-7` now reports any Autocomplete `mode`; `keep-5-defaults` no longer pins `mode="inline"`.
+  - See Getting Started → Migrating to 7.0.
+
+## 6.9.0
+
+### Minor Changes
+
+- 88329d9: 7.0 release candidate.
+
+  - **Deprecated, removed in 7.0**: `StepIndicator` (@nexub/patterns), use `<Stepper orientation="vertical" current={…}>` from @nexub/react; and Autocomplete's `mode="inline"` (and so `mode`), the popover stays.
+  - **`Stepper`**: a step's `id` is optional (the label is the key), so a StepIndicator `steps` array works as is.
+  - **`nexub-migrate`**: new default rule `removed-in-7` reports `<StepIndicator>` and `<Autocomplete mode="inline">`.
+  - Docs: Migrating to 7.0.
+
+## 6.8.0
+
+## 6.7.0
+
+## 6.6.0
+
+## 6.5.0
+
+## 6.4.0
+
+## 6.3.0
+
+## 6.2.0
+
+## 6.1.0
+
+## 6.0.0
+
+## 5.9.0
+
+### Minor Changes
+
+- c11f400: 6.0 release candidate. Feature freeze: 5.9 adds no components; it prepares the three default changes in 6.0.
+
+  - **Migrating to 6.0** (docs): what changes and what to do. Autocomplete opens in a popover by default, DataTable with `enableRowSelection` shows the checkbox column by default, and FilterBar names its search field from `searchPlaceholder` when `searchLabel` isn't set.
+  - **`nexub-migrate --rules keep-5-defaults`**: an opt-in rule that keeps 5.x behaviour by adding `mode="inline"` and `selectionColumn={false}` where 6.0 would change it. Tags with a prop spread are reported, not changed. It is not part of the default run.
+  - Prop docs for `Autocomplete mode` and `FilterBar searchLabel` now state their 6.0 defaults.
+
+## 5.8.0
+
+## 5.7.0
+
+## 5.6.0
+
+## 5.5.0
+
+## 5.4.0
+
+## 5.3.0
+
+## 5.2.0
+
+## 5.1.0
+
+## 5.0.1
+
+## 5.0.0
+
+## 4.9.0
+
+## 4.8.0
+
+## 4.7.0
+
+## 4.6.0
+
 ## 4.5.0
 
 ## 4.4.0

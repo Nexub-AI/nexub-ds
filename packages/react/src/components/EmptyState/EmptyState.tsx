@@ -1,12 +1,25 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 
-const Root = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
+export interface EmptyStateRootProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Scales spacing, icon and text. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
+  /** Fades in on mount (nx-reveal; reduced motion keeps the crossfade). */
+  animate?: boolean;
+}
+
+// The parts read the size from the Root's data-size (no context: this stays a server component).
+const rootSizes = { sm: 'gap-3 py-8', md: 'gap-4 py-16', lg: 'gap-6 py-24' };
+
+const Root = React.forwardRef<HTMLDivElement, EmptyStateRootProps>(
+  ({ className, size = 'md', animate, ...props }, ref) => (
     <div
       ref={ref}
+      data-size={size}
       className={cn(
-        'flex flex-col items-center justify-center gap-4 py-16 text-center',
+        'group/empty-state flex flex-col items-center justify-center text-center',
+        rootSizes[size],
+        animate && 'nx-reveal',
         className,
       )}
       {...props}
@@ -19,7 +32,11 @@ const Illustration = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('text-[var(--color-on-surface-muted)]', className)}
+      className={cn(
+        'text-[var(--color-on-surface-muted)]',
+        'group-data-[size=sm]/empty-state:[&_svg]:size-8 group-data-[size=lg]/empty-state:[&_svg]:size-16',
+        className,
+      )}
       {...props}
     />
   ),
@@ -30,7 +47,11 @@ const Title = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHead
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-lg font-semibold text-[var(--color-on-surface)]', className)}
+      className={cn(
+        'text-lg font-semibold text-[var(--color-on-surface)]',
+        'group-data-[size=sm]/empty-state:text-base group-data-[size=lg]/empty-state:text-xl',
+        className,
+      )}
       {...props}
     />
   ),
@@ -43,7 +64,11 @@ const Description = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('max-w-sm text-sm text-[var(--color-on-surface-muted)]', className)}
+    className={cn(
+      'max-w-sm text-sm text-[var(--color-on-surface-muted)]',
+      'group-data-[size=sm]/empty-state:text-xs group-data-[size=lg]/empty-state:text-base',
+      className,
+    )}
     {...props}
   />
 ));

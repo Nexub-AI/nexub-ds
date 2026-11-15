@@ -22,16 +22,47 @@ const RULES: Record<string, RegExp> = {
   'hex-color': /#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![0-9a-fA-F])/g,
   // Enter/exit is nx-motion (themes/base.css), not tailwindcss-animate.
   'tw-animate': /\b(?:animate-in|animate-out|fade-in-\d|fade-out-\d|zoom-in-\d|zoom-out-\d|slide-in-from-|slide-out-to-)/g,
+  // One motion source: the spring tokens (duration-spatial-default …). Bare
+  // `transition` is fine, it defaults to the effects spring.
+  'raw-motion': /(?<![\w_[-])(?:duration-\d+|ease-(?:in|out|in-out|linear)(?![\w-]))/g,
   // RTL: logical spacing, borders, radii and alignment (ms/me, ps/pe, border-s/e,
   // rounded-s/e, text-start/end). left/right positions aren't linted: centring
   // (left-1/2) and explicit sides (Drawer side="left") are physical on purpose.
   'physical-direction': /(?<=^|[\s'"`:])-?(?:ml|mr|pl|pr)-|(?<=^|[\s'"`:])(?:border-[lr]|rounded-(?:[lr]|tl|tr|bl|br))(?=[-\s'"`]|$)|(?<=^|[\s'"`:])text-(?:left|right)(?=[\s'"`]|$)/gm,
   // Tailwind 3 emits nothing for an opacity modifier on a var() colour.
   'dead-opacity-modifier': /\[var\(--[a-z0-9-]+\)\]\/\d+/g,
+  // 8.6 (K1): sizes come from the spacing, size and shape tokens (min-h-11,
+  // rounded-shape-field), not arbitrary px. Hairlines (1px) and a px fallback
+  // inside var(--token, 64px) are fine.
+  'raw-px': /-\[[^\]\s]*?(?<![\d.])(?!0px|1px)\d+(?:\.\d+)?px[^\]\s]*\]/g,
 };
 
 // file (relative to packages/) → rule → allowed count. Shrink-only.
-const KNOWN: Record<string, Record<string, number>> = {};
+// raw-px (8.6): sizes with no token yet: 18px controls and their Switch thumb
+// travel, 10px badge text, 2–10px concentric inner radii, 3px indicators and
+// 400/480px panel widths. Each needs a token (or a calc on one) before it can go.
+const KNOWN: Record<string, Record<string, number>> = {
+  'patterns/src/components/AppLauncher/AppLauncher.tsx': { 'raw-px': 3 },
+  'patterns/src/components/AuthCard/AuthCard.tsx': { 'raw-px': 1 },
+  'patterns/src/components/ListDetail/ListDetail.tsx': { 'raw-px': 1 },
+  'patterns/src/components/NotificationCenter/NotificationCenter.tsx': { 'raw-px': 1 },
+  'patterns/src/components/PageFrame/PageFrame.tsx': { 'raw-px': 1 },
+  'react/src/components/Avatar/Avatar.tsx': { 'raw-px': 1 },
+  'react/src/components/ButtonGroup/ButtonGroup.tsx': { 'raw-px': 5 },
+  'react/src/components/Checkbox/Checkbox.tsx': { 'raw-px': 3 },
+  'react/src/components/Combobox/Combobox.tsx': { 'raw-px': 1 },
+  'react/src/components/CommandPalette/CommandPalette.tsx': { 'raw-px': 1 },
+  'react/src/components/DataTable/DataTable.tsx': { 'raw-px': 1 },
+  'react/src/components/GradientDivider/GradientDivider.tsx': { 'raw-px': 2 },
+  'react/src/components/MessageBubble/MessageBubble.tsx': { 'raw-px': 1 },
+  'react/src/components/NavigationMenu/NavigationMenu.tsx': { 'raw-px': 2 },
+  'react/src/components/RadioGroup/RadioGroup.tsx': { 'raw-px': 2 },
+  'react/src/components/Select/Select.tsx': { 'raw-px': 1 },
+  'react/src/components/Spinner/Spinner.tsx': { 'raw-px': 1 },
+  'react/src/components/Switch/Switch.tsx': { 'raw-px': 6 },
+  'react/src/components/Tabs/Tabs.tsx': { 'raw-px': 2 },
+  'react/src/utils/surface.ts': { 'raw-px': 1 },
+};
 
 const PACKAGES = path.resolve(__dirname, '../..');
 const ROOTS = ['react/src/components', 'react/src/utils', 'react/src/hooks', 'patterns/src/components'];
@@ -55,7 +86,8 @@ function violations(): Record<string, Record<string, number>> {
     // Comments may mention old names; only code counts.
     const src = fs.readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm, '');
     for (const [rule, re] of Object.entries(RULES)) {
-      const n = src.match(re)?.length ?? 0;
+      const text = rule === 'raw-px' ? src.replace(/var\(--[\w-]+,\s*\d+px\)/g, 'var()') : src;
+      const n = text.match(re)?.length ?? 0;
       if (n) (found[path.relative(PACKAGES, file)] ??= {})[rule] = n;
     }
   }

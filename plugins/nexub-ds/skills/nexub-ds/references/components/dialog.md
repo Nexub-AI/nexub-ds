@@ -39,7 +39,7 @@ export default function Example() {
   const [open, setOpen] = React.useState(false);
   return (
     <>
-      <Button variant="primary" onClick={() => setOpen(true)}>Open Dialog</Button>
+      <Button variant="filled" onClick={() => setOpen(true)}>Open Dialog</Button>
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>
           <Dialog.Overlay />
@@ -49,8 +49,8 @@ export default function Example() {
               Are you sure you want to continue? This action cannot be undone.
             </Dialog.Description>
             <div className="flex gap-2 justify-end">
-              <Dialog.Close asChild><Button variant="outline">Cancel</Button></Dialog.Close>
-              <Button variant="primary" onClick={() => setOpen(false)}>Confirm</Button>
+              <Dialog.Close asChild><Button variant="outlined">Cancel</Button></Dialog.Close>
+              <Button variant="filled" onClick={() => setOpen(false)}>Confirm</Button>
             </div>
           </Dialog.Content>
         </Dialog.Portal>

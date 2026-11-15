@@ -15,6 +15,8 @@ Placeholder UI shown when a list or page has no content.
 | `EmptyState.Title children` (required) | `React.ReactNode` |  | Primary heading text for the empty state. |
 | `EmptyState.Description children` | `React.ReactNode` |  | Supporting text providing more context or guidance. |
 | `EmptyState.Actions children` | `React.ReactNode` |  | One or more action buttons rendered below the description. |
+| `EmptyStatePreset kind` (required) | `'noData' \| 'noResults' \| 'noAccess' \| 'serverError' \| 'offline'` |  | Ready-made icon, title and description (5.6). serverError and offline are announced as alerts. |
+| `EmptyStatePreset title / description / actions` | `ReactNode` |  | Override the localised text; add buttons such as Retry. |
 
 ## Example: Default
 
@@ -33,7 +35,7 @@ export default function Example() {
       <EmptyState.Title>No results found</EmptyState.Title>
       <EmptyState.Description>Try adjusting your search or filters to find what you&apos;re looking for.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary" size="sm">Clear filters</Button>
+        <Button variant="filled" size="sm">Clear filters</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
   );
@@ -59,9 +61,26 @@ export default function Example() {
       <EmptyState.Title>No documents yet</EmptyState.Title>
       <EmptyState.Description>Upload your first document to get started.</EmptyState.Description>
       <EmptyState.Actions>
-        <Button variant="primary">Upload document</Button>
+        <Button variant="filled">Upload document</Button>
       </EmptyState.Actions>
     </EmptyState.Root>
+  );
+}
+```
+
+## Example: Presets
+
+`EmptyStatePreset` for no data, no results, no access (403), server error (500) and offline.
+
+```tsx
+import { Button, EmptyStatePreset } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full gap-4 sm:grid-cols-2">
+      <EmptyStatePreset kind="noResults" actions={<Button variant="outlined" size="sm">Clear filters</Button>} />
+      <EmptyStatePreset kind="serverError" actions={<Button size="sm">Retry</Button>} />
+    </div>
   );
 }
 ```

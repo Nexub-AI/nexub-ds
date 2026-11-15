@@ -43,9 +43,14 @@ export default function StrictCspPage() {
             <td>Pass <code>modal={'{false}'}</code> on <code>Root</code>.</td>
           </tr>
           <tr>
-            <td><code>Dialog</code>, <code>AlertDialog</code>, <code>CommandPalette</code>, <code>Select</code></td>
-            <td>The scroll-lock <code>&lt;style&gt;</code> is blocked: a console error, and the page behind can scroll while it&apos;s open. Focus, keyboard and dismissal still work.</td>
-            <td>Fine for most uses. For panels and menus, use a <code>Sheet</code> with <code>scrollLock=&quot;class&quot;</code>.</td>
+            <td><code>Dialog</code>, <code>AlertDialog</code>, <code>CommandPalette</code></td>
+            <td>The default scroll lock injects a <code>&lt;style&gt;</code>.</td>
+            <td>Pass <code>scrollLock=&quot;class&quot;</code> on <code>Root</code> (7.2+). It becomes the default in 8.0.</td>
+          </tr>
+          <tr>
+            <td><code>Select</code></td>
+            <td>Radix always adds a scroll-lock <code>&lt;style&gt;</code>; without a nonce it&apos;s blocked (a console error, and the page behind can scroll).</td>
+            <td>Pass your nonce to <code>NexubProvider</code> (below), or accept the console error.</td>
           </tr>
           <tr>
             <td><code>ScrollArea</code>, <code>Select</code></td>
@@ -65,6 +70,18 @@ export default function StrictCspPage() {
         <code>@nexub/themes/base</code>) to <code>&lt;html&gt;</code> while the overlay is shown. The sheet
         is still modal: focus stays inside, the rest of the page is hidden from screen readers, and Escape
         or a click outside closes it.
+      </p>
+
+      <h2>With a nonce</h2>
+      <p>
+        If your server sends a per-request nonce, give it to <code>NexubProvider</code>. Every
+        <code>&lt;style&gt;</code> a Radix overlay injects then carries it, so all overlays work in their
+        default modes under <code>style-src-elem &apos;nonce-…&apos;</code> without <code>&apos;unsafe-inline&apos;</code>:
+      </p>
+      <CodeBlock code={`<NexubProvider nonce={nonce}>{children}</NexubProvider>`} />
+      <p>
+        React <code>style</code> attributes are separate: allow them with{' '}
+        <code>style-src-attr &apos;unsafe-inline&apos;</code>, which can&apos;t load or run anything.
       </p>
 
       <h2>Fonts</h2>
@@ -127,6 +144,36 @@ export default defineConfig({
       <p>
         Radix sets a few internal styles of its own (Slider thumb position, the hidden form input behind
         Switch and Checkbox, the Popover anchor, Toast&apos;s screen-reader announcer).
+      </p>
+
+      <h2>Trusted Types</h2>
+      <p>
+        Nexub works with <code>require-trusted-types-for &apos;script&apos;</code> enforced. The library never
+        passes markup to <code>innerHTML</code>, never sets a script URL and never evaluates a string. One thing
+        needs a rule: React writes the text of the <code>&lt;style&gt;</code> elements Radix injects (Select,
+        ScrollArea) through <code>innerHTML</code>. That text is CSS with no tags in it, so a{' '}
+        <code>default</code> policy that only lets tag-free strings through covers it without opening the sink:
+      </p>
+      <CodeBlock
+        lang="javascript"
+        code={`// Before any other script. Header: trusted-types default; require-trusted-types-for 'script'
+trustedTypes.createPolicy('default', {
+  // Text with no "<" can't create an element. Markup is refused.
+  createHTML: (s) => {
+    if (!s.includes('<')) return s;
+    throw new TypeError('markup refused');
+  },
+  // Your bundler's chunk loader, if it sets script.src (Turbopack does).
+  createScriptURL: (u) => {
+    const url = new URL(u, location.href);
+    if (url.origin === location.origin && url.pathname.startsWith('/_next/static/')) return u;
+    throw new TypeError('script URL refused');
+  },
+});`}
+      />
+      <p>
+        This site uses that policy, plus one allowed third-party script URL for its feedback form. With{' '}
+        <code>scrollLock=&quot;class&quot;</code> the overlays inject no style element at all.
       </p>
     </div>
   );

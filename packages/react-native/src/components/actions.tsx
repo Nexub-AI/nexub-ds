@@ -44,12 +44,32 @@ export interface ButtonProps extends Omit<PressableProps, 'children'> {
   tone?: ToneValue;
   /** The control ladder. Primary actions on mobile use 'lg' (48). @default 'md' */
   size?: ControlSize;
-  /** Shows a spinner, blocks presses and announces `loadingLabel`. */
+  /** Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`. */
   loading?: boolean;
   loadingLabel?: string;
   fullWidth?: boolean;
   leadingIcon?: React.ComponentType<NativeIconProps>;
   trailingIcon?: React.ComponentType<NativeIconProps>;
+}
+
+// Spinner timing (web twin): hidden for loads under 150ms, then shown for at least 400ms (no flicker).
+const SPINNER_DELAY = 150;
+const SPINNER_MIN = 400;
+
+function useSpinner(busy: boolean): boolean {
+  // Mounting already busy shows it at once (nothing to flicker from).
+  const [shown, setShown] = React.useState(busy);
+  const shownAt = React.useRef(0);
+  React.useEffect(() => {
+    if (shown) shownAt.current = Date.now();
+  }, [shown]);
+  React.useEffect(() => {
+    if (busy === shown) return;
+    const wait = busy ? SPINNER_DELAY : Math.max(0, SPINNER_MIN - (Date.now() - shownAt.current));
+    const t = setTimeout(() => setShown(busy), wait);
+    return () => clearTimeout(t);
+  }, [busy, shown]);
+  return shown;
 }
 
 /** Capsule button. One `filled` (or toned) action per screen; the rest tonal/outlined/text. */
@@ -74,6 +94,7 @@ export function Button({
   const height = controlHeight(theme, size);
   const fg = roles[fgRole];
   const inactive = disabled || loading;
+  const spinner = useSpinner(!!loading);
   const label = typeof children === 'string' ? children : undefined;
 
   const body = (
@@ -86,7 +107,7 @@ export function Button({
         opacity: disabled ? disabledOpacity(theme) : 1,
       }}
     >
-      {loading ? (
+      {spinner ? (
         <ActivityIndicator size="small" color={fg} />
       ) : (
         Leading && <Leading size={ICON[size]} color={fg} />
@@ -98,7 +119,7 @@ export function Button({
       ) : (
         children
       )}
-      {!loading && Trailing && <Trailing size={ICON[size]} color={fg} />}
+      {!spinner && Trailing && <Trailing size={ICON[size]} color={fg} />}
     </View>
   );
 
@@ -209,24 +230,24 @@ export function IconButton({
 
 export interface ButtonGroupProps {
   children: React.ReactNode;
-  /** 'stack' puts actions full-width in a column (bottom of forms). @default 'row' */
-  direction?: 'row' | 'stack';
+  /** 'vertical' puts actions full-width in a column (bottom of forms). @default 'horizontal' */
+  orientation?: 'horizontal' | 'vertical';
   style?: StyleProp<ViewStyle>;
 }
 
 /** Related actions together. In a stack, put the primary action first. */
-export function ButtonGroup({ children, direction = 'row', style }: ButtonGroupProps) {
+export function ButtonGroup({ children, orientation = 'horizontal', style }: ButtonGroupProps) {
   const { tokens } = useTheme();
   return (
     <View
       style={[
-        direction === 'row'
+        orientation === 'horizontal'
           ? { flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing[2] }
           : { gap: tokens.spacing[3], alignItems: 'stretch' },
         style,
       ]}
     >
-      {direction === 'stack'
+      {orientation === 'vertical'
         ? React.Children.map(children, (c) =>
             React.isValidElement<ButtonProps>(c) ? React.cloneElement(c, { fullWidth: true }) : c,
           )

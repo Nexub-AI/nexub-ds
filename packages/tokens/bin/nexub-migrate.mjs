@@ -6,7 +6,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9'];
+// Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
+const OPT_IN = new Set(['keep-5-defaults']);
+export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
 const MAX_BYTES = 1024 * 1024;
@@ -373,12 +376,173 @@ function migrateComponents(src) {
   return { output, items };
 }
 
+// ─── keep-5-defaults (opt-in): pin the defaults 6.0 changes ──────────────────
+// Adds the 5.x value as an explicit prop, so upgrading to 6.0 changes nothing.
+const selection = (a) => (a.enableRowSelection && !a.selectionColumn ? ' selectionColumn={false}' : null);
+const PINS = {
+  DataTable: selection,
+  DataTableVirtual: selection,
+};
+
+function pinDefaults(src) {
+  const edits = [];
+  const items = [];
+  const locals = new Map(); // local JSX name -> exported name
+  for (const m of src.matchAll(/\bimport\s+\{([^}]*)\}\s*from\s*(['"])@nexub\/react(?:\/\w+)?\2/g)) {
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (PINS[name]) locals.set(alias ?? name, name);
+  }
+  for (const [local, name] of locals) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const at = m.index + m[0].length;
+      const tag = readTag(src, at);
+      const report = (message) => items.push({ line: src.slice(0, m.index).split('\n').length, rule: 'keep-5-defaults', message });
+      if (!tag) { report(`<${local}>: could not parse the tag; check its 6.0 defaults by hand`); continue; }
+      const pin = PINS[name](Object.fromEntries(tag.attrs.map((a) => [a.name, a])));
+      if (!pin) continue;
+      if (src.slice(at, tag.end).includes('{...')) { report(`<${local} {...spread}>: add${pin} unless the spread sets it`); continue; }
+      edits.push({ at, text: pin });
+    }
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.at - a.at)) output = output.slice(0, e.at) + e.text + output.slice(e.at);
+  return { output, items };
+}
+
+// ─── changes-in-8: report what 8.0 removes and which defaults it flips ───────
+// Report only: each needs a choice (adopt the new default now, or pin the old one).
+// The 7.x legacy motion tokens (tokens/motion.json); the spring tokens (--ease-spatial-* …) stay.
+const LEGACY_MOTION = /(?<![\w-])--(?:duration-(?:instant|fast|normal|slow|slower)|ease-(?:linear|in|out|in-out|out-expo|spring))(?![\w-])(?!['"]?\s*:)/g;
+const EASING_COMPONENTS = /<(Fade|Scale|Slide|Collapse)\b[^>]*\beasing=/g;
+const SCROLL_LOCKED = /<((?:Dialog|AlertDialog|Drawer|Sheet)\.Root|CommandPalette)(?![\w.$-])/g;
+const STRICT_SCHEMES = new Set(['http', 'https', 'mailto', 'tel', 'sms']);
+const SCRIPT_SCHEMES = new Set(['javascript', 'vbscript', 'data', 'file']); // already dropped in 7.x
+const SIGNATURE_NOTE = 'Signature becomes the default look in 8.0: try it now with data-style="signature" on <html>, or set data-style="classic" to keep the 7.x (Material 3) look';
+const HREF_LITERAL = /\b\w*href\s*[=:]\s*\{?\s*(['"`])\s*([a-z][a-z0-9+.-]*):/gi;
+
+function changesIn8(src, ext, report) {
+  for (const m of src.matchAll(LEGACY_MOTION))
+    report(m.index, `${m[0]} is removed in 8.0 (deprecated in 7.3): use the spring tokens, e.g. var(--motion-spring-effects-default-duration) and var(--motion-spring-effects-default-easing)`);
+  if (!COMPONENT_EXTS.has(ext)) {
+    if (ext === '.css' && /@nexub\/themes/.test(src) && !/data-style/.test(src))
+      for (const m of src.matchAll(/@import\s+(?:url\()?['"]@nexub\/themes/g)) { report(m.index, SIGNATURE_NOTE); break; }
+    return;
+  }
+  if (/@nexub\/react['"/]/.test(src)) {
+    for (const m of src.matchAll(EASING_COMPONENTS))
+      report(m.index, `<${m[1]} easing> is removed in 8.0 (deprecated in 7.3): drop easing and use duration, which rides the spring tokens`);
+    for (const m of src.matchAll(SCROLL_LOCKED)) {
+      const tag = readTag(src, m.index + m[0].length);
+      if (tag && tag.attrs.some((a) => a.name === 'scrollLock')) continue;
+      const spread = tag && src.slice(m.index, tag.end).includes('{...') ? ' (unless the spread sets scrollLock)' : '';
+      report(m.index, `<${m[1]}> uses the default scrollLock${spread}, which becomes "class" in 8.0: load @nexub/themes/base CSS (it styles html.nexub-scroll-lock) and try scrollLock="class" now, or pin scrollLock="style" to keep 7.x`);
+    }
+    for (const m of src.matchAll(/\bsafeHref\(([^()]*)\)/g))
+      if (!/\bstrict\b/.test(m[1])) report(m.index, 'safeHref() turns strict in 8.0 (only relative, http(s), mailto, tel, sms): pass { strict: true } now, or { strict: false } to keep custom schemes');
+  }
+  if (/@nexub\/(react|patterns|marketing)['"/]/.test(src)) {
+    for (const m of src.matchAll(HREF_LITERAL)) {
+      const s = m[2].toLowerCase();
+      if (!STRICT_SCHEMES.has(s) && !SCRIPT_SCHEMES.has(s))
+        report(m.index, `"${m[2]}:" link: 8.0 Nexub links use strict safeHref and drop it (only relative, http(s), mailto, tel, sms); render your own <a> for custom schemes`);
+    }
+  }
+  const themes = /\bimport\s+['"]@nexub\/themes/.exec(src);
+  if (themes && !/data-style/.test(src)) report(themes.index, SIGNATURE_NOTE);
+}
+
+// ─── button-aliases: Button's legacy variant names (deprecated 8.4, removed 9.0) ─
+export const BUTTON_ALIASES = { primary: 'filled', secondary: 'tonal', outline: 'outlined', ghost: 'text' };
+const ALIAS_RE = Object.keys(BUTTON_ALIASES).join('|');
+
+function buttonAliases(src) {
+  const edits = [];
+  const items = [];
+  const report = (at, message) => items.push({ line: src.slice(0, at).split('\n').length, rule: 'button-aliases', message });
+  const locals = [];
+  for (const m of src.matchAll(/\bimport\s+\{([^}]*)\}\s*from\s*(['"])@nexub\/react(?:\/\w+)?\2/g))
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (name === 'Button') locals.push(alias ?? name);
+  for (const local of locals) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const variant = readTag(src, m.index + m[0].length)?.attrs.find((a) => a.name === 'variant');
+      if (!variant?.value) continue;
+      const lit = /^(?:\{\s*)?(["'])(\w+)\1(?:\s*\})?$/.exec(variant.value);
+      if (lit && BUTTON_ALIASES[lit[2]]) edits.push({ start: variant.end - variant.value.length, end: variant.end, text: `"${BUTTON_ALIASES[lit[2]]}"` });
+      else if (!lit && new RegExp(`['"](${ALIAS_RE})['"]`).test(variant.value)) report(m.index, `<${local} variant={…}> may pass a legacy alias (removed in 9.0): use ${Object.entries(BUTTON_ALIASES).map(([a, b]) => `${a} -> ${b}`).join(', ')}`);
+    }
+  }
+  // buttonVariants({ variant: 'primary' }) for links styled as buttons.
+  for (const m of src.matchAll(new RegExp(`\\bbuttonVariants\\(\\{[^}]*?\\bvariant:\\s*(['"])(${ALIAS_RE})\\1`, 'g'))) {
+    const at = m.index + m[0].length - m[2].length - 1;
+    edits.push({ start: at, end: at + m[2].length, text: BUTTON_ALIASES[m[2]] });
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.start - a.start)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return { output, items };
+}
+
+// ─── changes-in-9: what 9.0 removes (the 7.x and 8.x deprecations) ──────────
+// Prop renames are rewritten; the classic style and the hidePassword message are reported.
+const RENAMES_9 = [
+  { pkg: '@nexub/react', comps: ['DatePicker', 'DateTimePicker', 'NumberInput'], from: 'onChange', to: 'onValueChange', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['Dialog', 'BottomSheet'], from: 'dismissable', to: 'dismissible', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['DateTimeField'], from: 'minimumDate', to: 'minDate', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['DateTimeField'], from: 'maximumDate', to: 'maxDate', since: '8.5' },
+  { pkg: '@nexub/react-native', comps: ['ButtonGroup'], from: 'direction', to: 'orientation', values: { row: 'horizontal', stack: 'vertical' }, since: '8.5' },
+];
+
+/** Local names of `names` imported from exactly `pkg` (or a subpath of it), aliases included. */
+function importedAs(src, pkg, names) {
+  const out = new Map();
+  for (const m of src.matchAll(/\bimport\s+(?:type\s+)?\{([^}]*)\}\s*from\s*(['"])([^'"]+)\2/g)) {
+    if (m[3] !== pkg && !m[3].startsWith(`${pkg}/`)) continue;
+    for (const [, name, alias] of m[1].matchAll(/\b(\w+)(?:\s+as\s+(\w+))?/g)) if (names.includes(name)) out.set(alias ?? name, name);
+  }
+  return out;
+}
+
+function changesIn9(src, report) {
+  const edits = [];
+  for (const r of RENAMES_9) {
+    for (const [local, name] of importedAs(src, r.pkg, r.comps)) {
+      for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+        const attr = readTag(src, m.index + m[0].length)?.attrs.find((a) => a.name === r.from);
+        if (!attr) continue;
+        const nameAt = src.indexOf(r.from, attr.start);
+        if (r.values) {
+          const lit = /^(?:\{\s*)?(["'])(\w+)\1(?:\s*\})?$/.exec(attr.value ?? '');
+          if (!lit || !r.values[lit[2]]) {
+            report(m.index, `<${name} ${r.from}={…}> is removed in 9.0 (deprecated in ${r.since}): use ${r.to} (${Object.entries(r.values).map(([a, b]) => `${a} -> ${b}`).join(', ')})`);
+            continue;
+          }
+          edits.push({ start: attr.end - attr.value.length, end: attr.end, text: `"${r.values[lit[2]]}"` });
+        }
+        edits.push({ start: nameAt, end: nameAt + r.from.length, text: r.to });
+      }
+    }
+  }
+  if (/@nexub\//.test(src) || /data-style/.test(src)) {
+    for (const m of src.matchAll(/data-style\s*=\s*\{?\s*["']classic["']|\[data-style=["']?classic["']?\]|setAttribute\(\s*["']data-style["']\s*,\s*["']classic["']/g))
+      report(m.index, 'The classic style (the 7.x Material 3 look) is removed in 9.0: Signature is the only style; drop data-style="classic"');
+  }
+  if (/['"]@nexub\/react-native['"/]/.test(src)) {
+    for (const m of src.matchAll(/\bstyle\s*[=:]\s*\{?\s*["'](?:classic|signature)["']/g))
+      report(m.index, 'NexubNativeProvider\'s style prop is removed in 9.0: Signature is the only style; drop the prop');
+  }
+  if (/['"]@nexub\/(core|react|react-native)['"/]/.test(src)) {
+    for (const m of src.matchAll(/\bhidePassword\b/g))
+      report(m.index, 'The hidePassword message is removed in 9.0 (deprecated in 7.2): PasswordInput keeps one name, showPassword, with aria-pressed; delete the key');
+  }
+  let output = src;
+  for (const e of edits.sort((a, b) => b.start - a.start)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return output;
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
  * opts: { ext, rules: Set, fix: boolean, aliasMap: { aliases, mix } }
  */
-export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, aliasMap = SNAPSHOT }) {
+export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = false, aliasMap = SNAPSHOT }) {
   const items = [];
   let text = src;
   if (['logical-classes', 'tw-animate', 'opacity-modifier', 'legacy-tokens'].some((r) => rules.has(r))) {
@@ -404,11 +568,33 @@ export function migrateSource(src, { ext, rules = new Set(RULES), fix = false, a
     text = r.output;
     items.push(...r.items);
   }
+  if (rules.has('button-aliases') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(text)) {
+    const r = buttonAliases(text);
+    text = r.output;
+    items.push(...r.items);
+  }
+  if (rules.has('keep-5-defaults') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(text)) {
+    const r = pinDefaults(text);
+    text = r.output;
+    items.push(...r.items);
+  }
   if (rules.has('tailwind-3-preset')) {
     // Report only: moving a tailwind.config preset to CSS-first Tailwind 4 is a config change, not a rewrite.
     for (const m of src.matchAll(/['"]@nexub\/tokens\/tailwind['"]/g))
       items.push({ at: m.index, rule: 'tailwind-3-preset', message: '@nexub/tokens/tailwind (the Tailwind 3 preset) is removed in 4.0: move to Tailwind 4 and @import "@nexub/tokens/tailwind.css" in your CSS' });
   }
+  if (rules.has('removed-in-7') && COMPONENT_EXTS.has(ext)) {
+    // Report only: both need a human choice (Stepper's import and props, or a Combobox layout).
+    if (/@nexub\/patterns['"]/.test(src))
+      for (const m of src.matchAll(/<StepIndicator\b/g))
+        items.push({ at: m.index, rule: 'removed-in-7', message: 'StepIndicator (@nexub/patterns) is removed in 7.0: use <Stepper orientation="vertical" current={…}> from @nexub/react (currentStep -> current)' });
+    if (/@nexub\/react['"/]/.test(src))
+      for (const m of src.matchAll(/<Autocomplete\b[^>]*\bmode=/g))
+        items.push({ at: m.index, rule: 'removed-in-7', message: 'Autocomplete `mode` is removed in 7.0 (the popover is the only layout): remove it; for an always-open list use the Combobox parts' });
+  }
+  if (rules.has('changes-in-8')) changesIn8(src, ext, (at, message) => items.push({ at, rule: 'changes-in-8', message }));
+  if (rules.has('changes-in-9') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.html'))
+    text = changesIn9(text, (at, message) => items.push({ at, rule: 'changes-in-9', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -452,7 +638,7 @@ Options:
   --check            exit 1 if anything fixable or reportable is found (CI)
   --json             print machine-readable results
   --fix              also rewrite opacity-modifier hits (preview, or apply with --write)
-  --rules <a,b>      run only these rules (default: all)
+  --rules <a,b>      run only these rules (default: all except keep-5-defaults)
   --ignore <glob>    skip paths matching glob (repeatable; supports * and **)
   -h, --help         show this help
 
@@ -471,6 +657,22 @@ Rules:
                      (dot and non-JSX uses reported); *Props types renamed
   tailwind-3-preset  report the Tailwind 3 preset (@nexub/tokens/tailwind), removed in 4.0;
                      use Tailwind 4 with @import "@nexub/tokens/tailwind.css"
+  keep-5-defaults    opt-in: keep 5.x behaviour by pinning the defaults 6.0 changed:
+                     <DataTable enableRowSelection> gets selectionColumn={false}
+                     (Autocomplete's inline layout is gone in 7.0, so it is not pinned)
+  removed-in-7       report what 7.0 removes: <StepIndicator> (use Stepper) and
+                     Autocomplete's mode prop
+  changes-in-8       report what 8.0 removes and flips: legacy --duration-*/--ease-* tokens,
+                     the Motion easing prop, the default scrollLock (becomes "class"),
+                     non-strict safeHref and custom-scheme links, and the Signature look
+  button-aliases     Button's legacy variants (deprecated 8.4, removed 9.0): primary -> filled,
+                     secondary -> tonal, outline -> outlined, ghost -> text (JSX literals and
+                     buttonVariants({ variant })); variant={expressions} reported
+  changes-in-9       what 9.0 removes: renames DatePicker/DateTimePicker/NumberInput onChange ->
+                     onValueChange (@nexub/react); Dialog/BottomSheet dismissable -> dismissible,
+                     DateTimeField minimumDate/maximumDate -> minDate/maxDate, ButtonGroup
+                     direction row/stack -> orientation horizontal/vertical (@nexub/react-native);
+                     reports the classic style and the hidePassword message
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
@@ -492,7 +694,7 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   }
   const { values: o, positionals } = args;
   if (o.help) { stdout(`${USAGE}\n`); return 0; }
-  const rules = new Set(o.rules ? o.rules.split(',').map((r) => r.trim()).filter(Boolean) : RULES);
+  const rules = new Set(o.rules ? o.rules.split(',').map((r) => r.trim()).filter(Boolean) : DEFAULT_RULES);
   const unknown = [...rules].filter((r) => !RULES.includes(r));
   if (unknown.length) { stderr(`Unknown rule(s): ${unknown.join(', ')}. Known: ${RULES.join(', ')}\n`); return 2; }
 

@@ -33,7 +33,7 @@ export interface DrawerRootProps {
    * - `'class'`: adds the `nexub-scroll-lock` class from `@nexub/themes/base` to `<html>`.
    *   Injects nothing, so it works under `style-src 'self'`. Focus trap, Escape and
    *   outside-click dismissal are unchanged.
-   * @default 'style'
+   * @default 'class' (since 8.0)
    */
   scrollLock?: 'style' | 'class';
   /** When `false`, dragging, outside clicks and Escape don't close the drawer. @default true */
@@ -72,14 +72,14 @@ export interface DrawerRootProps {
 
 type VaulRootProps = React.ComponentProps<typeof VaulDrawer.Root>;
 
-const DrawerContext = React.createContext({ scrollLock: 'style' as 'style' | 'class', open: false, modal: true });
+const DrawerContext = React.createContext({ scrollLock: 'style' as 'style' | 'class', open: false, modal: true, autoFocus: false });
 
-function Root({ scrollLock = 'style', onOpenChange, ...props }: DrawerRootProps) {
+function Root({ scrollLock = 'class', onOpenChange, ...props }: DrawerRootProps) {
   // Mirror the open state (controlled or not) for the class-lock overlay's data-state.
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(props.defaultOpen ?? false);
   const open = props.open ?? uncontrolledOpen;
   return (
-    <DrawerContext.Provider value={{ scrollLock, open, modal: props.modal ?? true }}>
+    <DrawerContext.Provider value={{ scrollLock, open, modal: props.modal ?? true, autoFocus: props.autoFocus ?? false }}>
       <VaulDrawer.Root
         {...(props as VaulRootProps)}
         onOpenChange={(next) => {
@@ -140,7 +140,8 @@ const Content = React.forwardRef<
     side?: 'left' | 'right' | 'top' | 'bottom';
     surface?: SurfaceValue;
   }
->(({ className, children, side = 'right', surface = 'solid', ...props }, ref) => {
+>(({ className, children, side = 'right', surface = 'solid', onOpenAutoFocus, ...props }, ref) => {
+  const { autoFocus } = React.useContext(DrawerContext);
   // Side panels clip x: vaul's ::after (a 200%-wide strip past the edge, for
   // over-drag) otherwise makes the panel scroll sideways. Hidden x also makes
   // y scroll, so long content works without extra classes.
@@ -161,6 +162,13 @@ const Content = React.forwardRef<
       )}
       data-material={surface === 'glass' ? 'glass' : undefined}
       data-glass-thickness={surface === 'glass' ? 'thick' : undefined}
+      // vaul skips focus on open (a focused input would raise the phone keyboard), which
+      // left keyboard and screen-reader users on the trigger behind the drawer. Focus the
+      // panel itself instead; `autoFocus` on Root still focuses the first control (9.3).
+      onOpenAutoFocus={(e) => {
+        onOpenAutoFocus?.(e);
+        if (!autoFocus && !e.defaultPrevented) (e.target as HTMLElement | null)?.focus({ preventScroll: true });
+      }}
       {...props}
     >
       {side === 'bottom' && (
@@ -196,14 +204,17 @@ Description.displayName = 'Drawer.Description';
 
 const Header = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col gap-1.5 p-6', className)} {...props} />
+    // Sticky on solid panels: long content scrolls under the header and footer,
+    // which inherit the panel background. Glass panels keep one frosted layer
+    // (a second translucent layer reads as an opaque band), so they don't stick.
+    <div ref={ref} className={cn('sticky top-0 z-10 flex flex-col gap-1.5 bg-inherit p-6 [[data-material=glass]_&]:static [[data-material=glass]_&]:bg-transparent', className)} {...props} />
   ),
 );
 Header.displayName = 'Drawer.Header';
 
 const Footer = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('mt-auto flex flex-col gap-2 p-6', className)} {...props} />
+    <div ref={ref} className={cn('sticky bottom-0 z-10 mt-auto flex flex-col gap-2 bg-inherit p-6 [[data-material=glass]_&]:static [[data-material=glass]_&]:bg-transparent', className)} {...props} />
   ),
 );
 Footer.displayName = 'Drawer.Footer';

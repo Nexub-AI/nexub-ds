@@ -19,3 +19,11 @@ export const Default: Story = {
     size: 'md',
   },
 };
+
+export const Dot: Story = {
+  args: { dot: true, tone: 'success', 'aria-label': 'Online' },
+};
+
+export const Count: Story = {
+  args: { count: 120, max: 99, tone: 'danger' },
+};

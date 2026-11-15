@@ -4,15 +4,17 @@ import * as React from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from '@nexub/icons';
 import { Collapsible, Drawer, Sidebar } from '@nexub/react';
-import type { NavGroup } from '@/registry/types';
+import type { NavGroup, NavItem } from '@/registry/types';
 import { useSidebar } from './SidebarContext';
 import { DocsLink } from './DocsLink';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
 import { ContrastSwitcher } from '../docs/ContrastSwitcher';
 
+const isActive = (i: NavItem, path: string) => i.href === path || (i.match != null && path.startsWith(i.match));
+
 const containsPath = (g: NavGroup, path: string): boolean =>
-  g.items.some((i) => i.href === path) || (g.children ?? []).some((c) => containsPath(c, path));
+  g.items.some((i) => isActive(i, path)) || (g.children ?? []).some((c) => containsPath(c, path));
 
 /** A collapsible nav section. Opens itself when it holds the current page. */
 function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: string; depth: 0 | 1 }) {
@@ -55,7 +57,7 @@ function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: str
       >
         <div className={depth === 0 ? 'flex flex-col gap-px pb-2' : 'flex flex-col gap-px ps-2'}>
           {group.items.map((item) => (
-            <Sidebar.Item key={item.href} asChild active={pathname === item.href} className="h-control-sm text-label-md">
+            <Sidebar.Item key={item.href} asChild active={isActive(item, pathname)} className="h-control-sm text-label-md">
               <DocsLink href={item.href}>{item.title}</DocsLink>
             </Sidebar.Item>
           ))}

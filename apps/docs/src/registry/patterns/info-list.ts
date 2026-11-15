@@ -11,7 +11,7 @@ const entry: ComponentEntry = {
     addedIn: '0.0.1',
   },
   props: [
-    { name: 'label', type: 'string', required: true, description: 'The key label.' },
+    { name: 'InfoListItem label', type: 'string', required: true, description: 'The key label.' },
     { name: 'value', type: 'React.ReactNode', required: true, description: 'The displayed value.' },
   ],
   examples: [

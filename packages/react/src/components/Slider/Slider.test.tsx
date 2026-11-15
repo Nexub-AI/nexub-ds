@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Slider } from './Slider.js';
 
@@ -47,5 +47,31 @@ describe('Slider stability & a11y', () => {
   it('uses aria-label as the thumb name', () => {
     render(<Slider defaultValue={[50]} aria-label="Volume" />);
     expect(screen.getByRole('slider', { name: 'Volume' })).toBeInTheDocument();
+  });
+});
+
+describe('Slider marks and value', () => {
+  it('renders a tick per mark, with labels', () => {
+    const { container } = render(
+      <Slider defaultValue={[50]} aria-label="Volume" marks={[0, { value: 50, label: 'Half' }, 100]} />,
+    );
+    expect(container.querySelectorAll('[data-mark]')).toHaveLength(3);
+    expect(screen.getByText('Half')).toBeInTheDocument();
+    expect((container.querySelector('[data-mark="0"]') as HTMLElement).style.insetInlineStart).toContain('0%');
+  });
+
+  it('shows the formatted value and keeps aria-valuetext in sync', () => {
+    render(<Slider defaultValue={[40]} aria-label="Volume" showValue formatValue={(v) => `${v}%`} />);
+    const thumb = screen.getByRole('slider');
+    expect(thumb).toHaveAttribute('aria-valuetext', '40%');
+    expect(thumb).toHaveTextContent('40%');
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    expect(thumb).toHaveAttribute('aria-valuetext', '41%');
+    expect(thumb).toHaveTextContent('41%');
+  });
+
+  it('hides the value until hover/focus with showValue="hover"', () => {
+    render(<Slider defaultValue={[40]} aria-label="Volume" showValue="hover" />);
+    expect(screen.getByText('40')).toHaveClass('opacity-0');
   });
 });

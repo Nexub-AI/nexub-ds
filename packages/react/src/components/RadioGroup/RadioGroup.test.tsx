@@ -53,4 +53,13 @@ describe('RadioGroup', () => {
     fireEvent.click(screen.getByRole('radio', { name: 'Option A' }));
     expect(onValueChange).toHaveBeenCalledWith('a');
   });
+
+  it('the selected dot carries the spring scale-in hook', () => {
+    render(
+      <RadioGroup.Root aria-label="Options" defaultValue="a">
+        <RadioGroup.Item value="a" aria-label="Option A" />
+      </RadioGroup.Root>,
+    );
+    expect(screen.getByRole('radio').querySelector('.nx-dot-in')).not.toBeNull();
+  });
 });

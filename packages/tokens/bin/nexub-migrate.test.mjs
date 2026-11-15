@@ -231,3 +231,159 @@ test('tailwind-3-preset: reports the deprecated preset import, never rewrites it
   assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[1, 'tailwind-3-preset']]);
   assert.equal(migrateSource('@import "@nexub/tokens/tailwind.css";', { ext: '.css', rules: new Set(['tailwind-3-preset']) }).manual.length, 0);
 });
+
+// ─── keep-5-defaults ───
+const pin = (src) => migrateSource(src, { ext: '.tsx', rules: only('keep-5-defaults') });
+
+test('keep-5-defaults: pins the DataTable 6.0 default, leaves explicit props alone', () => {
+  const src = `import { Autocomplete, DataTable as Table } from '@nexub/react';
+import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
+<Autocomplete options={o} />
+<Autocomplete mode="popover" options={o} />
+<Table enableRowSelection columns={c} data={d} />
+<Table enableRowSelection selectionColumn columns={c} data={d} />
+<Table columns={c} data={d} />
+<DataTableVirtual
+  enableRowSelection
+  maxHeight={400}
+/>
+<Autocomplete {...rest} />`;
+  const { output, manual } = pin(src);
+  assert.equal(
+    output,
+    `import { Autocomplete, DataTable as Table } from '@nexub/react';
+import { DataTableVirtual } from '@nexub/react/DataTableVirtual';
+<Autocomplete options={o} />
+<Autocomplete mode="popover" options={o} />
+<Table selectionColumn={false} enableRowSelection columns={c} data={d} />
+<Table enableRowSelection selectionColumn columns={c} data={d} />
+<Table columns={c} data={d} />
+<DataTableVirtual selectionColumn={false}
+  enableRowSelection
+  maxHeight={400}
+/>
+<Autocomplete {...rest} />`,
+  );
+  assert.deepEqual(manual, []);
+});
+
+test('keep-5-defaults is opt-in', () => {
+  const src = `import { Autocomplete } from '@nexub/react';\n<Autocomplete options={o} />`;
+  assert.equal(migrateSource(src, { ext: '.tsx' }).output, src);
+});
+
+// ─── removed-in-7 ───
+test('removed-in-7: reports StepIndicator and Autocomplete mode, never rewrites', () => {
+  const src = `import { StepIndicator } from '@nexub/patterns';
+import { Autocomplete } from '@nexub/react';
+<StepIndicator steps={steps} currentStep={1} />;
+<Autocomplete options={o} mode="inline" />;
+<Autocomplete options={o} mode={'inline'} />;
+<Autocomplete options={o} mode="popover" />;
+`;
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('removed-in-7') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[3, 'removed-in-7'], [4, 'removed-in-7'], [5, 'removed-in-7'], [6, 'removed-in-7']]);
+});
+
+// ─── changes-in-8 ───
+test('changes-in-8: reports legacy motion tokens, never the spring ones or definitions', () => {
+  const src = `.a { transition: opacity var(--duration-normal) var(--ease-out); }
+.b { transition: transform var(--motion-spring-effects-default-duration) var(--ease-spatial-default); }
+.c { --duration-fast: 1ms; animation-timing-function: var(--ease-in-out); }
+`;
+  const { output, manual } = migrateSource(src, { ext: '.css', rules: only('changes-in-8') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => [m.line, m.message.split(' ')[0]]), [[1, '--duration-normal'], [1, '--ease-out'], [3, '--ease-in-out']]);
+});
+
+test('changes-in-8: Motion easing, default scrollLock, safeHref and custom-scheme links', () => {
+  const src = `import { Fade, Dialog, Drawer, CommandPalette, safeHref } from '@nexub/react';
+<Fade in easing="out">x</Fade>;
+<Fade in duration="fast">x</Fade>;
+<Dialog.Root open={o}>x</Dialog.Root>;
+<Drawer.Root scrollLock="class">x</Drawer.Root>;
+<CommandPalette {...p} />;
+const a = safeHref(u);
+const b = safeHref(u, { strict: true });
+<AppHeader homeHref="slack://open" logoHref="https://x.dev" />;
+const items = [{ href: 'tel:123' }, { href: 'zoommtg://join' }];
+`;
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('changes-in-8') });
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => m.line), [2, 4, 6, 7, 9, 10]);
+  assert.match(manual[2].message, /unless the spread sets scrollLock/);
+});
+
+test('changes-in-8: Signature note where @nexub/themes is imported, unless data-style is set', () => {
+  const report = (src, ext) => migrateSource(src, { ext, rules: only('changes-in-8') }).manual.map((m) => m.line);
+  assert.deepEqual(report(`@import "tailwindcss";\n@import "@nexub/themes/base";\n@import "@nexub/themes/light";\n`, '.css'), [2]);
+  assert.deepEqual(report(`import '@nexub/themes/base.css';\n`, '.tsx'), [1]);
+  assert.deepEqual(report(`import '@nexub/themes/base.css';\n<html data-style="classic" />;\n`, '.tsx'), []);
+  // Files that don't import Nexub are left alone.
+  assert.deepEqual(report(`<Dialog.Root /><Fade easing="out" />;\nconst x = { href: 'slack://a' };\n`, '.tsx'), []);
+});
+
+// ─── button-aliases ───
+test('button-aliases: rewrites legacy Button variants, leaves other components and expressions', () => {
+  const src = [
+    "import { Button as B, IconButton, buttonVariants } from '@nexub/react';",
+    '<B variant="primary" size="sm">Go</B>',
+    "<B variant={'ghost'} />",
+    '<IconButton variant="ghost" aria-label="x" />',
+    '<B variant={cond ? "outline" : "filled"} />',
+    "<a className={buttonVariants({ size: 'sm', variant: 'secondary' })} />",
+  ].join('\n');
+  const { output, manual } = migrateSource(src, { ext: '.tsx', rules: only('button-aliases') });
+  assert.equal(output, [
+    "import { Button as B, IconButton, buttonVariants } from '@nexub/react';",
+    '<B variant="filled" size="sm">Go</B>',
+    '<B variant="text" />',
+    '<IconButton variant="ghost" aria-label="x" />',
+    '<B variant={cond ? "outline" : "filled"} />',
+    "<a className={buttonVariants({ size: 'sm', variant: 'tonal' })} />",
+  ].join('\n'));
+  assert.deepEqual(manual.map((m) => [m.line, m.rule]), [[5, 'button-aliases']]);
+});
+
+// ─── changes-in-9 ───
+test('changes-in-9: renames the 8.5 aliases, reports classic and hidePassword', () => {
+  const web = [
+    "import { DatePicker, NumberInput as N, Input } from '@nexub/react';",
+    '<DatePicker value={d} onChange={setD} />',
+    '<N onChange={setN} />',
+    '<Input onChange={onInput} />',
+    '<html data-style="classic" />',
+  ].join('\n');
+  const w = migrateSource(web, { ext: '.tsx', rules: only('changes-in-9') });
+  assert.equal(w.output, [
+    "import { DatePicker, NumberInput as N, Input } from '@nexub/react';",
+    '<DatePicker value={d} onValueChange={setD} />',
+    '<N onValueChange={setN} />',
+    '<Input onChange={onInput} />',
+    '<html data-style="classic" />',
+  ].join('\n'));
+  assert.deepEqual(w.manual.map((m) => [m.line, m.rule]), [[5, 'changes-in-9']]);
+
+  const native = [
+    "import { Dialog, BottomSheet, DateTimeField, ButtonGroup, NexubNativeProvider } from '@nexub/react-native';",
+    '<Dialog dismissable={false} open />',
+    '<BottomSheet dismissable />',
+    '<DateTimeField minimumDate={a} maximumDate={b} />',
+    '<ButtonGroup direction="stack" />',
+    '<ButtonGroup direction={dir} />',
+    '<NexubNativeProvider style="classic" />',
+    'const messages = { hidePassword: "Hide" };',
+    '<NexubNativeProvider style="signature" />',
+  ].join('\n');
+  const n = migrateSource(native, { ext: '.tsx', rules: only('changes-in-9') });
+  assert.equal(n.output.split('\n').slice(1, 5).join('\n'), [
+    '<Dialog dismissible={false} open />',
+    '<BottomSheet dismissible />',
+    '<DateTimeField minDate={a} maxDate={b} />',
+    '<ButtonGroup orientation="vertical" />',
+  ].join('\n'));
+  assert.deepEqual(n.manual.map((m) => m.line), [6, 7, 8, 9]);
+  // The web DatePicker rule doesn't touch an @nexub/react-native import, and vice versa.
+  assert.equal(migrateSource("import { NumberInput } from '@nexub/react-native';\n<NumberInput onChange={f} />", { ext: '.tsx', rules: only('changes-in-9') }).output.includes('onChange'), true);
+});

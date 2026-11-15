@@ -47,7 +47,7 @@ const undocumented = Object.fromEntries(
 const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
 // llms.txt points at the Markdown version of each page (apps/docs/scripts/copy-ai-md.mjs).
 const mdUrl = (e) => `${docsUrl(e)}.md`;
-const cell = (s = '') => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
+const cell = (s = '') => String(s).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
 // ─── Accessibility conformance report (@nexub/react/accessibility.json) ─────
 // Evidence per component from what CI runs: axe-core WCAG 2.2 A/AA over every
@@ -80,9 +80,9 @@ function a11yReport() {
     version,
     standard: 'WCAG 2.2 Level AA',
     method: {
-      automated: 'axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark on every pull request; a new violation fails the build.',
+      automated: 'axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.',
       contrast: 'Every colour role pair is tested for 4.5:1 (text) and 3:1 (non-text) at standard, medium and high contrast in light and dark.',
-      manual: 'Keyboard behaviour and screen-reader output are documented per component; recorded VoiceOver, NVDA and TalkBack sessions are not published yet.',
+      manual: 'Keyboard behaviour and screen-reader output are documented per component, with step-by-step VoiceOver and NVDA scripts for the complex ones (/foundations/accessibility#screen-reader-scripts); recorded sessions are not published yet.',
     },
     // Every accepted axe exception, by story (from KNOWN in a11y.visual.spec.ts; each has a reason there).
     exceptions: Object.entries(known).map(([component, rules]) => ({ component, rules })),

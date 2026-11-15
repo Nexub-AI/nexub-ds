@@ -25,11 +25,11 @@ export type { ListDetailProps } from './components/ListDetail/index.js';
 export { PlanCard } from './components/PlanCard/index.js';
 export type { PlanCardProps } from './components/PlanCard/index.js';
 
-export { StepIndicator } from './components/StepIndicator/index.js';
-export type { StepIndicatorProps, StepIndicatorStep } from './components/StepIndicator/index.js';
 
 export { NotificationItem } from './components/NotificationItem/index.js';
 export type { NotificationItemProps } from './components/NotificationItem/index.js';
+export { NotificationCenter } from './components/NotificationCenter/index.js';
+export type { NotificationCenterProps, NotificationCenterItem } from './components/NotificationCenter/index.js';
 
 export { AppLauncher } from './components/AppLauncher/index.js';
 export type { AppLauncherProps, AppLauncherApp } from './components/AppLauncher/index.js';

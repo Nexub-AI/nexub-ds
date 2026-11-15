@@ -42,6 +42,8 @@ const EXPECT = {
   'max-w-container-sm': ['max-width: var(--container-sm)'],
   'z-modal': ['z-index: var(--z-modal)'],
   'animate-accordion-down': ['animation: accordion-down var(--motion-spring-spatial-default-duration)'],
+  // Bare transitions use the effects spring (one motion source), not 150ms ease.
+  'transition-colors': ['transition-duration: var(--tw-duration, var(--motion-spring-effects-default-duration))'],
 };
 
 async function build(candidates) {
@@ -69,7 +71,7 @@ test('theme.css is @theme inline only (no base/utilities)', () => {
 test('Tailwind v4 generates nexub utilities with runtime var(--…) values', async () => {
   const css = await build(Object.keys(EXPECT));
   for (const [cls, decls] of Object.entries(EXPECT)) {
-    const rule = css.match(new RegExp(`\\.${cls.replace(/-/g, '\\-')} \\{([^}]*)\\}`))?.[1];
+    const rule = css.match(new RegExp(`\\.${cls.replace(/[\\^$.*+?()[\]{}|-]/g, '\\$&')} \\{([^}]*)\\}`))?.[1];
     assert.ok(rule, `${cls} not generated`);
     for (const d of decls) assert.ok(rule.includes(d), `${cls}: expected "${d}" in:${rule}`);
   }

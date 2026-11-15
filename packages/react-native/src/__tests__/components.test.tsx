@@ -30,6 +30,13 @@ jest.mock('expo-haptics', () => ({
   AndroidHaptics: {},
 }));
 
+// Exits unmount from the spring's completion callback, which the setup stub
+// drops; land springs at once and report them finished, as Reanimated does.
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- patching the jest.setup stub
+const Reanimated = require('react-native-reanimated');
+Reanimated.withSpring = (to: number, _c: unknown, done?: (f: boolean) => void) => (done?.(true), to);
+Reanimated.runOnJS = (fn: (...a: unknown[]) => void) => fn;
+
 const roles = native.color.roles.standard.light;
 const wrap = (ui: React.ReactElement) =>
   render(

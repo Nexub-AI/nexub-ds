@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { DirectionProvider } from '@radix-ui/react-direction';
+import { setNonce } from 'get-nonce';
 import type { Locale } from 'date-fns';
 import { defaultMessages, directionOf, type Direction, type NexubMessages } from '@nexub/core';
 
@@ -35,6 +36,12 @@ export interface NexubProviderProps {
   dateLocale?: Locale;
   /** Overrides for the default English strings. */
   messages?: Partial<NexubMessages>;
+  /**
+   * CSP nonce for the `<style>` tags Radix overlays inject at runtime (scroll
+   * lock, scrollbar gap). Pass the same per-request nonce as your
+   * `style-src-elem` so they work without `'unsafe-inline'`.
+   */
+  nonce?: string;
   children?: React.ReactNode;
 }
 
@@ -43,7 +50,10 @@ export interface NexubProviderProps {
  * It does not set `dir`/`lang` on <html> — the app does that (as it renders
  * <html>), so the page and CSS `rtl:` variants agree with this provider.
  */
-export function NexubProvider({ locale = 'en', dir, dateLocale, messages, children }: NexubProviderProps) {
+export function NexubProvider({ locale = 'en', dir, dateLocale, messages, nonce, children }: NexubProviderProps) {
+  // get-nonce is a module singleton read by react-style-singleton when it
+  // creates a <style>; setting it during render runs before any overlay mounts.
+  if (nonce) setNonce(nonce);
   const resolvedDir = dir ?? directionOf(locale);
   const value = React.useMemo(
     () => ({ locale, dir: resolvedDir, dateLocale, messages: { ...defaultMessages, ...messages } }),

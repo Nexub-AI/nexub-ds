@@ -19,7 +19,6 @@ const messageKeys: [key: string, value: string][] = [
   ['orDragAndDrop', "'or drag and drop'"],
   ['clearSearch', "'Clear search'"],
   ['showPassword', "'Show password'"],
-  ['hidePassword', "'Hide password'"],
   ['increment', "'Increment'"],
   ['decrement', "'Decrement'"],
   ['loading', "'Loading…'"],

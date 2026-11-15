@@ -15,6 +15,7 @@
         "name": "variant",
         "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
         "required": false,
+        "default": "'filled'",
         "description": ""
       },
       {
@@ -34,7 +35,7 @@
         "name": "loading",
         "type": "boolean",
         "required": false,
-        "description": "Shows a spinner, blocks presses and announces `loadingLabel`."
+        "description": "Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`."
       },
       {
         "name": "loadingLabel",
@@ -84,6 +85,7 @@
         "name": "variant",
         "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
         "required": false,
+        "default": "'text'",
         "description": ""
       },
       {
@@ -124,11 +126,11 @@
         "description": ""
       },
       {
-        "name": "direction",
-        "type": "'row' | 'stack'",
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
         "required": false,
-        "default": "'row'",
-        "description": "'stack' puts actions full-width in a column (bottom of forms)."
+        "default": "'horizontal'",
+        "description": "'vertical' puts actions full-width in a column (bottom of forms)."
       },
       {
         "name": "style",
@@ -210,6 +212,7 @@
         "name": "variant",
         "type": "'static' | 'navigation' | 'switch' | 'checkbox' | 'radio' | 'button' | 'value'",
         "required": false,
+        "default": "'navigation' when onPress is set, else 'static'",
         "description": ""
       },
       {
@@ -326,6 +329,271 @@
       }
     ]
   },
+  "MultiSelect": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "options",
+        "type": "readonly MultiSelectOption<T>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "T[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "T[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: T[]) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "searchable",
+        "type": "boolean",
+        "required": false,
+        "default": "more than 8 options",
+        "description": "A search field above the options."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "DataList": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "data",
+        "type": "readonly T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "keyExtractor",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "subtitle",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": "Trailing key value, e.g. an amount or status."
+      },
+      {
+        "name": "leading",
+        "type": "(item: T) => React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onPressItem",
+        "type": "(item: T) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "sorts",
+        "type": "DataListSort<T>[]",
+        "required": false,
+        "description": "Sort choices; a Sort button opens them in a sheet."
+      },
+      {
+        "name": "sort",
+        "type": "{ id: string; desc: boolean }",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultSort",
+        "type": "{ id: string; desc: boolean }",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSortChange",
+        "type": "(sort: { id: string; desc: boolean }) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "selectable",
+        "type": "boolean",
+        "required": false,
+        "description": "Checkbox rows; the selection bar shows `bulkActions` while rows are selected."
+      },
+      {
+        "name": "selected",
+        "type": "string[]",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onSelectedChange",
+        "type": "(keys: string[]) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "bulkActions",
+        "type": "(keys: string[], clear: () => void) => React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "empty",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when `data` is empty."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "FileList": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "files",
+        "type": "FileListItem[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onAdd",
+        "type": "() => void",
+        "required": false,
+        "description": "Opens your picker (expo-document-picker, image picker…); add what it returns to `files`."
+      },
+      {
+        "name": "onRemove",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onCancel",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": "Stops an upload in progress."
+      },
+      {
+        "name": "addLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "FilterSheet": {
+    "file": "components/data.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "fields",
+        "type": "FilterField[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "FilterGroup",
+        "required": true,
+        "description": "The same JSON as the web FilterBuilder. Mobile edits one flat AND/OR list; nested groups are kept as they are."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: FilterGroup) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "Amount": {
     "file": "components/display.tsx",
     "extends": [],
@@ -353,12 +621,14 @@
         "name": "locale",
         "type": "string",
         "required": false,
+        "default": "the provider's",
         "description": "BCP 47 locale."
       },
       {
         "name": "size",
         "type": "'sm' | 'md' | 'lg' | 'display'",
         "required": false,
+        "default": "'md'",
         "description": "`display`: a hero figure in the brand face with a quieter symbol and minor units."
       },
       {
@@ -412,6 +682,7 @@
         "name": "size",
         "type": "'sm' | 'md'",
         "required": false,
+        "default": "'md'",
         "description": ""
       },
       {
@@ -419,6 +690,19 @@
         "type": "boolean",
         "required": false,
         "description": "A status dot before the label (replaces web StatusPill)."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "required": false,
+        "description": "A number to show. Above `max` it reads \"99+\"; screen readers get the full number."
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "default": "99",
+        "description": ""
       },
       {
         "name": "leadingIcon",
@@ -450,6 +734,7 @@
         "name": "size",
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "required": false,
+        "default": "'md'",
         "description": ""
       },
       {
@@ -457,6 +742,12 @@
         "type": "boolean",
         "required": false,
         "description": "Online/status dot."
+      },
+      {
+        "name": "status",
+        "type": "'online' | 'away' | 'busy' | 'offline'",
+        "required": false,
+        "description": "Presence dot; its name is added to the accessible label (\"Ada Lovelace, Away\")."
       }
     ]
   },
@@ -531,6 +822,7 @@
         "name": "tone",
         "type": "ToneValue",
         "required": false,
+        "default": "'info'",
         "description": ""
       },
       {
@@ -607,7 +899,7 @@
         "description": "1–2 Buttons; put the confirming action last."
       },
       {
-        "name": "dismissable",
+        "name": "dismissible",
         "type": "boolean",
         "required": false,
         "default": "true",
@@ -642,7 +934,14 @@
         "name": "size",
         "type": "number",
         "required": false,
+        "default": "40",
         "description": "Circular diameter."
+      },
+      {
+        "name": "segments",
+        "type": "number",
+        "required": false,
+        "description": "Linear only: splits the bar into N equal steps, filled up to the value."
       },
       {
         "name": "style",
@@ -676,6 +975,34 @@
         "required": false,
         "default": "'field'",
         "description": ""
+      },
+      {
+        "name": "animation",
+        "type": "'pulse' | 'shimmer'",
+        "required": false,
+        "default": "'pulse'",
+        "description": "`pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SkeletonText": {
+    "file": "components/feedback.tsx",
+    "extends": [
+      "Pick<SkeletonProps, 'animation'>"
+    ],
+    "props": [
+      {
+        "name": "lines",
+        "type": "number",
+        "required": false,
+        "default": "3",
+        "description": "Number of lines; the last is shorter."
       },
       {
         "name": "style",
@@ -740,6 +1067,7 @@
         "name": "tone",
         "type": "ToneValue",
         "required": false,
+        "default": "'neutral'",
         "description": ""
       },
       {
@@ -747,6 +1075,13 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "Primary next step, e.g. <Button>Add money</Button>."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Scales spacing, icon and title."
       }
     ]
   },
@@ -820,6 +1155,24 @@
         "description": ""
       },
       {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\"."
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -844,6 +1197,7 @@
         "name": "label",
         "type": "string",
         "required": false,
+        "default": "messages.search",
         "description": "Accessible name."
       },
       {
@@ -1114,6 +1468,12 @@
         "type": "boolean",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner beside the switch and busy for screen readers; it can't toggle while loading."
       }
     ]
   },
@@ -1354,6 +1714,7 @@
         "name": "width",
         "type": "number",
         "required": false,
+        "default": "the window width",
         "description": "Page width."
       },
       {
@@ -1469,6 +1830,7 @@
         "name": "decimal",
         "type": "boolean",
         "required": false,
+        "default": "false",
         "description": "Show the decimal key (money)."
       },
       {
@@ -1603,6 +1965,7 @@
         "name": "preventCapture",
         "type": "boolean",
         "required": false,
+        "default": "false",
         "description": "Block screenshots and recording (Android FLAG_SECURE; iOS hides the content in captures). Needs expo-screen-capture."
       }
     ]
@@ -1640,6 +2003,7 @@
         "name": "dismissLabel",
         "type": "string",
         "required": false,
+        "default": "messages.close",
         "description": "Dismiss label."
       },
       {
@@ -1724,16 +2088,16 @@
         "description": ""
       },
       {
-        "name": "minimumDate",
+        "name": "minDate",
         "type": "Date",
         "required": false,
-        "description": ""
+        "description": "Earliest date the picker allows."
       },
       {
-        "name": "maximumDate",
+        "name": "maxDate",
         "type": "Date",
         "required": false,
-        "description": ""
+        "description": "Latest date the picker allows."
       },
       {
         "name": "placeholder",
@@ -1785,7 +2149,7 @@
         "description": ""
       },
       {
-        "name": "dismissable",
+        "name": "dismissible",
         "type": "boolean",
         "required": false,
         "default": "true",
@@ -1795,6 +2159,7 @@
         "name": "scroll",
         "type": "boolean",
         "required": false,
+        "default": "false",
         "description": "Let the content scroll (long lists)."
       }
     ]
@@ -1932,6 +2297,151 @@
       {
         "name": "disabled",
         "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "TreeList": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "nodes",
+        "type": "TreeListNode[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "rootTitle",
+        "type": "string",
+        "required": true,
+        "description": "Title of the top level, shown on the back row from the first level down."
+      },
+      {
+        "name": "selected",
+        "type": "string | null",
+        "required": false,
+        "description": "The picked leaf."
+      },
+      {
+        "name": "onSelect",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "StepProgress": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "steps",
+        "type": "{ id: string; label: string }[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "current",
+        "type": "number",
+        "required": true,
+        "description": "Index of the step being shown."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "SortableList": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "items",
+        "type": "T[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "keyExtractor",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "subtitle",
+        "type": "(item: T) => string | undefined",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onReorder",
+        "type": "(items: T[]) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "editing",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Shows the move buttons. Screen readers always get Move up / Move down actions."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "InlineEdit": {
+    "file": "components/workflow.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "onSave",
+        "type": "(value: string) => void",
+        "required": true,
+        "description": "Called on Return or when the field loses focus, if the text changed."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
         "required": false,
         "description": ""
       },
@@ -2976,6 +3486,18 @@
         "type": "ViewStyle",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "errorFallback",
+        "type": "React.ReactNode | ((state: { error: unknown; reset: () => void }) => React.ReactNode)",
+        "required": false,
+        "description": "Shown in place of content that threw while rendering. Default: ErrorState with Retry."
+      },
+      {
+        "name": "onError",
+        "type": "(error: unknown, info: React.ErrorInfo) => void",
+        "required": false,
+        "description": "Called with the error, for reporting (Sentry, Crashlytics)."
       }
     ]
   },
@@ -3024,6 +3546,7 @@
         "name": "variant",
         "type": "NativeTypeRole",
         "required": false,
+        "default": "'body-md'",
         "description": "Type role."
       },
       {

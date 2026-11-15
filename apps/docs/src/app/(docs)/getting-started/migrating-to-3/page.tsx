@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { PageIntro } from '@/components/kit';
 import { CodeBlock } from '@/components/docs/CodeBlock';
+import { MigrationPicker } from '@/components/docs/MigrationPicker';
 
 export const dynamic = 'force-static';
 
@@ -21,7 +22,9 @@ const removals: { what: string; replacement: string; codemod: string }[] = [
 export default function MigratingTo3Page() {
   return (
     <div className="docs-prose">
-      <PageIntro eyebrow="Getting Started" title="Migrating to 3.0" />
+      <PageIntro eyebrow="Getting Started" title="Migrating to 3.0">
+        <MigrationPicker />
+      </PageIntro>
       <p>
         3.0 is the only release that removes anything. Everything it removes has been deprecated since 1.1, and
         the components warn in development. 2.9 is the release candidate: update to it, clear the warnings and the

@@ -57,7 +57,10 @@ export function parseMoney(text: string, currency: string, locale?: string): num
   const plain = new Intl.NumberFormat(locale);
   const decimal = part(plain, 1.1, 'decimal') ?? '.';
   const group = part(plain, 10000, 'group');
+  // The locale's own digits (ar-EG "١٢٣", fa, bn …) read as 0-9: the field shows them, so it must parse them.
+  const digits = [...new Intl.NumberFormat(locale, { useGrouping: false }).format(9876543210)].reverse();
   let s = text.trim().replace(/[\s\u00a0\u202f]/g, '');
+  if (digits[0] !== '0') s = s.replace(/\p{Nd}/gu, (d) => (digits.indexOf(d) < 0 ? d : String(digits.indexOf(d))));
   if (group && group !== decimal) s = s.split(group).join('');
   s = s.replace(decimal, '.').replace(/[−–]/g, '-').replace(/[^0-9.-]/g, '');
   const negative = s.startsWith('-');

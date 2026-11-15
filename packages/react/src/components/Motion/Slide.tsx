@@ -36,7 +36,6 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
   {
     in: visible,
     duration = 'normal',
-    easing,
     unmountOnExit = false,
     direction = 'up',
     distance,
@@ -50,7 +49,6 @@ export const Slide = React.forwardRef<HTMLDivElement, SlideProps>(function Slide
   const { phase, mounted, reduced, transitionStyle, handleTransitionEnd } = useMotion({
     visible,
     duration,
-    easing,
     unmountOnExit,
   });
 

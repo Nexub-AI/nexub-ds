@@ -49,7 +49,7 @@ const KNOWN = new Set<string>([]);
 
 const contexts = ['light', 'dark'].flatMap((theme) =>
   ['standard', 'high'].flatMap((contrast) =>
-    ['none', 'leap', 'bookub', 'payub', 'founderub'].map((brand) => ({ theme, contrast, brand })),
+    ['none', 'leap', 'bookub', 'payub', 'founderub', 'matchub'].map((brand) => ({ theme, contrast, brand })),
   ),
 );
 

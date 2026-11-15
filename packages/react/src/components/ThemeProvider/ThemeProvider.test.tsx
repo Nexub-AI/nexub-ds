@@ -25,6 +25,7 @@ function Consumer() {
 beforeEach(() => {
   // Reset <html> attribute and localStorage before each test
   document.documentElement.removeAttribute('data-theme');
+  document.documentElement.removeAttribute('data-expression');
   localStorage.clear();
 
   // Default matchMedia mock: light system preference
@@ -44,6 +45,21 @@ beforeEach(() => {
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('ThemeProvider', () => {
+  it('5.0: defaults <html> to Vivid but keeps an expression the app set', () => {
+    const html = document.documentElement;
+    const { unmount } = render(<ThemeProvider>x</ThemeProvider>);
+    expect(html.getAttribute('data-expression')).toBe('vivid');
+    unmount();
+    html.setAttribute('data-expression', 'calm');
+    render(<ThemeProvider>x</ThemeProvider>);
+    expect(html.getAttribute('data-expression')).toBe('calm');
+  });
+
+  it('5.0: defaultExpression="calm" keeps Calm', () => {
+    render(<ThemeProvider defaultExpression="calm">x</ThemeProvider>);
+    expect(document.documentElement.getAttribute('data-expression')).toBe('calm');
+  });
+
   it('renders children', () => {
     render(
       <ThemeProvider>
@@ -191,6 +207,15 @@ describe('ThemeScript', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
     expect(document.documentElement.getAttribute('data-product')).toBe('bookub');
     document.documentElement.removeAttribute('data-product');
+  });
+
+  it('ignores a stored product that has no theme (user-controlled storage)', () => {
+    localStorage.setItem('p', '" onload=alert(1) x="');
+    new Function(themeScriptSource('k', 'p'))();
+    expect(document.documentElement.hasAttribute('data-product')).toBe(false);
+    localStorage.setItem('p', 'base');
+    new Function(themeScriptSource('k', 'p'))();
+    expect(document.documentElement.hasAttribute('data-product')).toBe(false);
   });
 
   it('applies the stored glass intensity and ignores unknown values', () => {
