@@ -32,3 +32,7 @@ updates:
       # (tokens build fails). Skip just that release; a fixed 0.4.x will still be proposed.
       - dependency-name: "@material/material-color-utilities"
         versions: ["0.4.0"]
+      # DataTable's public props are react-table 8 types (ColumnDef and the ColumnMeta
+      # augmentation), so v9 is a breaking change for consumers: it goes with a Nexub major, by RFC.
+      - dependency-name: "@tanstack/react-table"
+        update-types: ["version-update:semver-major"]

@@ -26,14 +26,13 @@
     "shiki": "^4.6.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.7",
-    "@next/bundle-analyzer": "^15.5.28",
+    "@next/bundle-analyzer": "^16.4.4",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^15.5.28",
+    "eslint-config-next": "^16.4.4",
     "postcss": "^8.5.32",
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.3",
