@@ -51,11 +51,21 @@ for (const path of pages) {
       // CI height flip) sit wherever the scroll position and the capture-time viewport
       // put them. Pin them in normal flow: same pixels at scroll 0, no dependence.
       await page.addStyleTag({ content: 'main .sticky { position: static !important; }' });
+      // The version badge is masked, but its width still moves the header: "v10.0.0" is one
+      // character wider than "v9.9.1" and every baseline shifted. Give it the text the baselines were recorded with (the font is not strictly fixed-width).
+      const versionBadge = page.locator('header').getByText(/^v\d+\.\d+\.\d+/);
+      await versionBadge.evaluate((el) => {
+        // Rewrite the text nodes only: replacing the children drops the label's inner span.
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(), first = true; node; node = walker.nextNode(), first = false) {
+          node.textContent = first ? 'v9.9.1' : '';
+        }
+      });
       await expect(page).toHaveScreenshot(`docs${path.replaceAll('/', '-')}--${theme}.png`, {
         fullPage: true,
         // Version badge and footer year change every release / year, not with the page.
         // Live previews (phone frames) load on their own schedule.
-        mask: [page.locator('header').getByText(/^v\d+\.\d+\.\d+/), page.locator('footer'), page.locator('[data-live-preview]')],
+        mask: [versionBadge, page.locator('footer'), page.locator('[data-live-preview]')],
       });
     });
   }
