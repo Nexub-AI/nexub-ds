@@ -60,9 +60,16 @@
   color: var(--marketing-button-fg);
 }
 
+/* Inside a division (data-division, @nexub/themes/divisions) the band takes the
+   division's fill: white text on it is >= 4.5:1, fill and hover alike. */
+[data-mode='marketing'] [data-division] .nx-mkt-cta-band {
+  background-color: var(--color-fill-accent);
+  background-image: linear-gradient(135deg, var(--color-fill-accent), var(--color-fill-accent-hover));
+}
+
 /* ─── Card variant="showcase" ─────────────────────────────────────────────
-   accent="leap|bookub|payub|founderub" sets data-product on the card, so
-   --color-tertiary is that product's colour: a top edge and a light tint. */
+   accent sets data-product (an app) or data-division on the card, so
+   --color-tertiary is that app's or division's colour: a top edge and a light tint. */
 [data-mode='marketing'] .nx-mkt-showcase {
   --card-radius: var(--marketing-card-radius);
   --card-border: transparent;
@@ -71,7 +78,7 @@
     translate var(--nx-mkt-spring-duration) var(--nx-mkt-spring),
     box-shadow var(--nx-mkt-spring-duration) var(--nx-mkt-ease);
 }
-[data-mode='marketing'] .nx-mkt-showcase[data-product] {
+[data-mode='marketing'] .nx-mkt-showcase:is([data-product], [data-division]) {
   --card-bg: color-mix(in srgb, var(--color-tertiary) 5%, var(--color-surface-container-lowest));
   border-top: 3px solid var(--color-tertiary);
 }
@@ -103,6 +110,13 @@
   border-radius: inherit;
   background: inherit;
   animation: nx-mkt-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Inside a division the chip is tinted with the division's colour (Hero and
+   SectionHeader also set its text to --color-tertiary). */
+[data-mode='marketing'] [data-division] .nx-mkt-eyebrow {
+  background-image: linear-gradient(180deg, color-mix(in srgb, var(--color-tertiary) 4%, var(--color-surface-container-lowest)) 0%, color-mix(in srgb, var(--color-tertiary) 10%, var(--color-surface-container-lowest)) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-tertiary) 14%, transparent);
 }
 
 /* ─── Motion helpers: Reveal, Float, Marquee, rise, drift, bar fill ──────── */

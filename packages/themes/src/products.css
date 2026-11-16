@@ -1,0 +1,334 @@
+/* @nexub/themes — products.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent under [data-product] for every app: leap, people, payub, contracts, bookub, forms, founderub, commerce, money, capital, mind, go, command-hub, runner, book-hub, payhub, founder-hub. */
+
+:is([data-product='people'], [data-product='contracts'], [data-product='forms']) {
+  --color-accent-50: var(--color-accent-os-50);
+  --color-accent-100: var(--color-accent-os-100);
+  --color-accent-200: var(--color-accent-os-200);
+  --color-accent-300: var(--color-accent-os-300);
+  --color-accent-400: var(--color-accent-os-400);
+  --color-accent-500: var(--color-accent-os-500);
+  --color-accent-600: var(--color-accent-os-600);
+  --color-accent-700: var(--color-accent-os-700);
+  --color-accent-800: var(--color-accent-os-800);
+  --color-accent-900: var(--color-accent-os-900);
+  --color-accent-950: var(--color-accent-os-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-os-fill);
+  --color-fill-accent-hover: var(--color-accent-os-fill-hover);
+  --color-tertiary: light-dark(#0061a6, #a0c9ff);
+  --color-on-tertiary: light-dark(#ffffff, #00325a);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001c37, #d2e4ff);
+}
+[data-contrast='medium']:is([data-product='people'], [data-product='contracts'], [data-product='forms']), [data-contrast='medium'] :is([data-product='people'], [data-product='contracts'], [data-product='forms']) {
+  --color-tertiary: light-dark(#005493, #bad7ff);
+  --color-on-tertiary: light-dark(#ffffff, #002748);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001225, #eaf1ff);
+}
+[data-contrast='high']:is([data-product='people'], [data-product='contracts'], [data-product='forms']), [data-contrast='high'] :is([data-product='people'], [data-product='contracts'], [data-product='forms']) {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast]):is([data-product='people'], [data-product='contracts'], [data-product='forms']), :root:not([data-contrast]) :is([data-product='people'], [data-product='contracts'], [data-product='forms']) {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+[data-product='leap'] {
+  --color-accent-50: var(--color-accent-leap-50);
+  --color-accent-100: var(--color-accent-leap-100);
+  --color-accent-200: var(--color-accent-leap-200);
+  --color-accent-300: var(--color-accent-leap-300);
+  --color-accent-400: var(--color-accent-leap-400);
+  --color-accent-500: var(--color-accent-leap-500);
+  --color-accent-600: var(--color-accent-leap-600);
+  --color-accent-700: var(--color-accent-leap-700);
+  --color-accent-800: var(--color-accent-leap-800);
+  --color-accent-900: var(--color-accent-leap-900);
+  --color-accent-950: var(--color-accent-leap-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-fill-leap);
+  --color-fill-accent-hover: var(--color-fill-leap-hover);
+}
+
+[data-product='payub'], [data-product='payhub'] {
+  --color-accent-50: var(--color-accent-payub-50);
+  --color-accent-100: var(--color-accent-payub-100);
+  --color-accent-200: var(--color-accent-payub-200);
+  --color-accent-300: var(--color-accent-payub-300);
+  --color-accent-400: var(--color-accent-payub-400);
+  --color-accent-500: var(--color-accent-payub-500);
+  --color-accent-600: var(--color-accent-payub-600);
+  --color-accent-700: var(--color-accent-payub-700);
+  --color-accent-800: var(--color-accent-payub-800);
+  --color-accent-900: var(--color-accent-payub-900);
+  --color-accent-950: var(--color-accent-payub-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-fill-payub);
+  --color-fill-accent-hover: var(--color-fill-payub-hover);
+}
+
+[data-product='payhub'] {
+  --color-tertiary: light-dark(var(--color-palette-payub-40), var(--color-palette-payub-80));
+  --color-on-tertiary: light-dark(var(--color-palette-payub-100), var(--color-palette-payub-20));
+  --color-tertiary-container: light-dark(var(--color-palette-payub-90), var(--color-palette-payub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-payub-10), var(--color-palette-payub-90));
+}
+[data-contrast='medium'][data-product='payhub'], [data-contrast='medium'] [data-product='payhub'] {
+  --color-tertiary: light-dark(var(--color-palette-payub-35), var(--color-palette-payub-85));
+  --color-on-tertiary: light-dark(var(--color-palette-payub-100), var(--color-palette-payub-15));
+  --color-tertiary-container: light-dark(var(--color-palette-payub-90), var(--color-palette-payub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-payub-5), var(--color-palette-payub-95));
+}
+[data-contrast='high'][data-product='payhub'], [data-contrast='high'] [data-product='payhub'] {
+  --color-tertiary: light-dark(var(--color-palette-payub-30), var(--color-palette-payub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-payub-100), var(--color-palette-payub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-payub-90), var(--color-palette-payub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-payub-0), var(--color-palette-payub-100));
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-product='payhub'], :root:not([data-contrast]) [data-product='payhub'] {
+  --color-tertiary: light-dark(var(--color-palette-payub-30), var(--color-palette-payub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-payub-100), var(--color-palette-payub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-payub-90), var(--color-palette-payub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-payub-0), var(--color-palette-payub-100));
+}
+}
+
+[data-product='bookub'], [data-product='book-hub'] {
+  --color-accent-50: var(--color-accent-bookub-50);
+  --color-accent-100: var(--color-accent-bookub-100);
+  --color-accent-200: var(--color-accent-bookub-200);
+  --color-accent-300: var(--color-accent-bookub-300);
+  --color-accent-400: var(--color-accent-bookub-400);
+  --color-accent-500: var(--color-accent-bookub-500);
+  --color-accent-600: var(--color-accent-bookub-600);
+  --color-accent-700: var(--color-accent-bookub-700);
+  --color-accent-800: var(--color-accent-bookub-800);
+  --color-accent-900: var(--color-accent-bookub-900);
+  --color-accent-950: var(--color-accent-bookub-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-fill-bookub);
+  --color-fill-accent-hover: var(--color-fill-bookub-hover);
+}
+
+[data-product='book-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-bookub-40), var(--color-palette-bookub-80));
+  --color-on-tertiary: light-dark(var(--color-palette-bookub-100), var(--color-palette-bookub-20));
+  --color-tertiary-container: light-dark(var(--color-palette-bookub-90), var(--color-palette-bookub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-bookub-10), var(--color-palette-bookub-90));
+}
+[data-contrast='medium'][data-product='book-hub'], [data-contrast='medium'] [data-product='book-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-bookub-35), var(--color-palette-bookub-85));
+  --color-on-tertiary: light-dark(var(--color-palette-bookub-100), var(--color-palette-bookub-15));
+  --color-tertiary-container: light-dark(var(--color-palette-bookub-90), var(--color-palette-bookub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-bookub-5), var(--color-palette-bookub-95));
+}
+[data-contrast='high'][data-product='book-hub'], [data-contrast='high'] [data-product='book-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-bookub-30), var(--color-palette-bookub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-bookub-100), var(--color-palette-bookub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-bookub-90), var(--color-palette-bookub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-bookub-0), var(--color-palette-bookub-100));
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-product='book-hub'], :root:not([data-contrast]) [data-product='book-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-bookub-30), var(--color-palette-bookub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-bookub-100), var(--color-palette-bookub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-bookub-90), var(--color-palette-bookub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-bookub-0), var(--color-palette-bookub-100));
+}
+}
+
+[data-product='founderub'], [data-product='founder-hub'] {
+  --color-accent-50: var(--color-accent-founderub-50);
+  --color-accent-100: var(--color-accent-founderub-100);
+  --color-accent-200: var(--color-accent-founderub-200);
+  --color-accent-300: var(--color-accent-founderub-300);
+  --color-accent-400: var(--color-accent-founderub-400);
+  --color-accent-500: var(--color-accent-founderub-500);
+  --color-accent-600: var(--color-accent-founderub-600);
+  --color-accent-700: var(--color-accent-founderub-700);
+  --color-accent-800: var(--color-accent-founderub-800);
+  --color-accent-900: var(--color-accent-founderub-900);
+  --color-accent-950: var(--color-accent-founderub-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-fill-founderub);
+  --color-fill-accent-hover: var(--color-fill-founderub-hover);
+}
+
+[data-product='founder-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-founderub-40), var(--color-palette-founderub-80));
+  --color-on-tertiary: light-dark(var(--color-palette-founderub-100), var(--color-palette-founderub-20));
+  --color-tertiary-container: light-dark(var(--color-palette-founderub-90), var(--color-palette-founderub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-founderub-10), var(--color-palette-founderub-90));
+}
+[data-contrast='medium'][data-product='founder-hub'], [data-contrast='medium'] [data-product='founder-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-founderub-35), var(--color-palette-founderub-85));
+  --color-on-tertiary: light-dark(var(--color-palette-founderub-100), var(--color-palette-founderub-15));
+  --color-tertiary-container: light-dark(var(--color-palette-founderub-90), var(--color-palette-founderub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-founderub-5), var(--color-palette-founderub-95));
+}
+[data-contrast='high'][data-product='founder-hub'], [data-contrast='high'] [data-product='founder-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-founderub-30), var(--color-palette-founderub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-founderub-100), var(--color-palette-founderub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-founderub-90), var(--color-palette-founderub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-founderub-0), var(--color-palette-founderub-100));
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-product='founder-hub'], :root:not([data-contrast]) [data-product='founder-hub'] {
+  --color-tertiary: light-dark(var(--color-palette-founderub-30), var(--color-palette-founderub-90));
+  --color-on-tertiary: light-dark(var(--color-palette-founderub-100), var(--color-palette-founderub-10));
+  --color-tertiary-container: light-dark(var(--color-palette-founderub-90), var(--color-palette-founderub-30));
+  --color-on-tertiary-container: light-dark(var(--color-palette-founderub-0), var(--color-palette-founderub-100));
+}
+}
+
+[data-product='commerce'] {
+  --color-accent-50: var(--color-accent-commerce-50);
+  --color-accent-100: var(--color-accent-commerce-100);
+  --color-accent-200: var(--color-accent-commerce-200);
+  --color-accent-300: var(--color-accent-commerce-300);
+  --color-accent-400: var(--color-accent-commerce-400);
+  --color-accent-500: var(--color-accent-commerce-500);
+  --color-accent-600: var(--color-accent-commerce-600);
+  --color-accent-700: var(--color-accent-commerce-700);
+  --color-accent-800: var(--color-accent-commerce-800);
+  --color-accent-900: var(--color-accent-commerce-900);
+  --color-accent-950: var(--color-accent-commerce-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-commerce-fill);
+  --color-fill-accent-hover: var(--color-accent-commerce-fill-hover);
+}
+
+:is([data-product='money'], [data-product='capital']) {
+  --color-accent-50: var(--color-accent-fintech-50);
+  --color-accent-100: var(--color-accent-fintech-100);
+  --color-accent-200: var(--color-accent-fintech-200);
+  --color-accent-300: var(--color-accent-fintech-300);
+  --color-accent-400: var(--color-accent-fintech-400);
+  --color-accent-500: var(--color-accent-fintech-500);
+  --color-accent-600: var(--color-accent-fintech-600);
+  --color-accent-700: var(--color-accent-fintech-700);
+  --color-accent-800: var(--color-accent-fintech-800);
+  --color-accent-900: var(--color-accent-fintech-900);
+  --color-accent-950: var(--color-accent-fintech-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-fintech-fill);
+  --color-fill-accent-hover: var(--color-accent-fintech-fill-hover);
+  --color-tertiary: light-dark(#006e2f, #4ae176);
+  --color-on-tertiary: light-dark(#ffffff, #003915);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#002109, #6bff8f);
+}
+[data-contrast='medium']:is([data-product='money'], [data-product='capital']), [data-contrast='medium'] :is([data-product='money'], [data-product='capital']) {
+  --color-tertiary: light-dark(#006028, #5bf083);
+  --color-on-tertiary: light-dark(#ffffff, #002d0f);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#001505, #c5ffc9);
+}
+[data-contrast='high']:is([data-product='money'], [data-product='capital']), [data-contrast='high'] :is([data-product='money'], [data-product='capital']) {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast]):is([data-product='money'], [data-product='capital']), :root:not([data-contrast]) :is([data-product='money'], [data-product='capital']) {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+:is([data-product='mind'], [data-product='go']) {
+  --color-accent-50: var(--color-accent-intelligence-50);
+  --color-accent-100: var(--color-accent-intelligence-100);
+  --color-accent-200: var(--color-accent-intelligence-200);
+  --color-accent-300: var(--color-accent-intelligence-300);
+  --color-accent-400: var(--color-accent-intelligence-400);
+  --color-accent-500: var(--color-accent-intelligence-500);
+  --color-accent-600: var(--color-accent-intelligence-600);
+  --color-accent-700: var(--color-accent-intelligence-700);
+  --color-accent-800: var(--color-accent-intelligence-800);
+  --color-accent-900: var(--color-accent-intelligence-900);
+  --color-accent-950: var(--color-accent-intelligence-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-intelligence-fill);
+  --color-fill-accent-hover: var(--color-accent-intelligence-fill-hover);
+  --color-tertiary: light-dark(#a200ba, #fbabff);
+  --color-on-tertiary: light-dark(#ffffff, #580065);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#36003e, #ffd6fd);
+}
+[data-contrast='medium']:is([data-product='mind'], [data-product='go']), [data-contrast='medium'] :is([data-product='mind'], [data-product='go']) {
+  --color-tertiary: light-dark(#8f00a4, #fec0ff);
+  --color-on-tertiary: light-dark(#ffffff, #460051);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#24002b, #ffebfb);
+}
+[data-contrast='high']:is([data-product='mind'], [data-product='go']), [data-contrast='high'] :is([data-product='mind'], [data-product='go']) {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast]):is([data-product='mind'], [data-product='go']), :root:not([data-contrast]) :is([data-product='mind'], [data-product='go']) {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+:is([data-product='command-hub'], [data-product='runner']) {
+  --color-accent-50: var(--color-accent-autonomous-50);
+  --color-accent-100: var(--color-accent-autonomous-100);
+  --color-accent-200: var(--color-accent-autonomous-200);
+  --color-accent-300: var(--color-accent-autonomous-300);
+  --color-accent-400: var(--color-accent-autonomous-400);
+  --color-accent-500: var(--color-accent-autonomous-500);
+  --color-accent-600: var(--color-accent-autonomous-600);
+  --color-accent-700: var(--color-accent-autonomous-700);
+  --color-accent-800: var(--color-accent-autonomous-800);
+  --color-accent-900: var(--color-accent-autonomous-900);
+  --color-accent-950: var(--color-accent-autonomous-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-autonomous-fill);
+  --color-fill-accent-hover: var(--color-accent-autonomous-fill-hover);
+  --color-tertiary: light-dark(#00687a, #4cd7f6);
+  --color-on-tertiary: light-dark(#ffffff, #003640);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001f26, #acedff);
+}
+[data-contrast='medium']:is([data-product='command-hub'], [data-product='runner']), [data-contrast='medium'] :is([data-product='command-hub'], [data-product='runner']) {
+  --color-tertiary: light-dark(#005b6b, #74e3ff);
+  --color-on-tertiary: light-dark(#ffffff, #002a33);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001419, #d8f6ff);
+}
+[data-contrast='high']:is([data-product='command-hub'], [data-product='runner']), [data-contrast='high'] :is([data-product='command-hub'], [data-product='runner']) {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast]):is([data-product='command-hub'], [data-product='runner']), :root:not([data-contrast]) :is([data-product='command-hub'], [data-product='runner']) {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}

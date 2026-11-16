@@ -24,6 +24,9 @@ export function figmaFiles(native) {
         product: Object.fromEntries(
           Object.entries(native.color.products).map(([p, levels]) => [p, tree(levels[level][scheme], color)]),
         ),
+        division: Object.fromEntries(
+          Object.entries(native.color.divisions).map(([d, levels]) => [d, tree(levels[level][scheme], color)]),
+        ),
       };
     }
   }

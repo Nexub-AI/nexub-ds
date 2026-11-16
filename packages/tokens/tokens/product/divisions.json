@@ -1,0 +1,15 @@
+{
+  "$description": "Nexub divisions and their apps. An app with its own accent scale in color.json (leap, bookub, payub, founderub) keeps it; every other app inherits its division's scale. Adding an app is one entry here, then `pnpm --filter @nexub/themes build:products`.",
+  "divisions": {
+    "os": ["leap", "people", "payub", "contracts", "bookub", "forms", "founderub"],
+    "commerce": ["commerce"],
+    "fintech": ["money", "capital"],
+    "intelligence": ["mind", "go"],
+    "autonomous": ["command-hub", "runner"]
+  },
+  "aliases": {
+    "book-hub": "bookub",
+    "payhub": "payub",
+    "founder-hub": "founderub"
+  }
+}

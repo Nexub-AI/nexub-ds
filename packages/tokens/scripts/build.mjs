@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { compose, swift } from './platforms.mjs';
 import { writeFigma } from './figma.mjs';
-import { CHART_KEYS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
+import { CHART_KEYS, DIVISIONS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -270,6 +270,8 @@ export function nativeTokens(t) {
     color: {
       roles: schemes({ ...ROLES, ...tertiary('primary') }),
       products: Object.fromEntries(PRODUCTS.map((p) => [p, schemes(tertiary(p))])),
+      // 10.1: the five divisions, same shape as products (apps inherit: see tokens/product/divisions.json).
+      divisions: Object.fromEntries(DIVISIONS.map((d) => [d, schemes(tertiary(d), divisionPalettes())])),
     },
     spacing: numbers(t.spacing),
     radius: numbers(t.radius),
@@ -455,6 +457,9 @@ writeFileSync(
   }),
 );
 writeFileSync(`${root}/dist/css/rem.css`, REM_COMPAT_CSS);
+
+// Division → apps map (10.1), the source @nexub/themes generates divisions.css / products.css from.
+writeFileSync(`${root}/dist/json/divisions.json`, readFileSync(`${root}/tokens/product/divisions.json`));
 
 // Component tier (DTCG, documentation + tooling only: components read these
 // with var() fallbacks, so nothing is declared on :root).

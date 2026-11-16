@@ -595,9 +595,9 @@
       "props": [
         {
           "name": "accent",
-          "type": "'leap' | 'bookub' | 'payub' | 'founderub'",
+          "type": "'leap' | 'bookub' | 'payub' | 'founderub' | 'people' | 'contracts' | 'forms' | 'commerce' | 'money' | 'capital' | 'mind' | 'go' | 'command-hub' | 'runner' | 'book-hub' | 'payhub' | 'founder-hub' | 'os' | 'fintech' | 'intelligence' | 'autonomous'",
           "required": false,
-          "description": "Product accent for `variant=\"showcase\"`: a coloured top edge and tint in marketing mode. Sets `data-product`."
+          "description": "App or division accent for `variant=\"showcase\"`: a coloured top edge and tint in marketing mode. An app key sets `data-product`, a division key `data-division`. Keys beyond leap, bookub, payub and founderub need `@nexub/themes/products` or `@nexub/themes/divisions` loaded."
         },
         {
           "name": "asChild",
@@ -7373,6 +7373,12 @@
           "description": ""
         },
         {
+          "name": "division",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "Sets `data-division`: the band takes the division's fill (needs `@nexub/themes/divisions`)."
+        },
+        {
           "name": "title",
           "type": "React.ReactNode",
           "required": true,
@@ -7466,6 +7472,12 @@
           "type": "React.ReactNode",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "division",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "Sets `data-division`: the eyebrow takes the division's colour (needs `@nexub/themes/divisions`)."
         },
         {
           "name": "eyebrow",
@@ -7596,7 +7608,7 @@
           "name": "items",
           "type": "MarketingNavItem[]",
           "required": true,
-          "description": "Top-level links; an item with `items` opens a mega-menu."
+          "description": "Top-level links; an item with `items` opens a mega-menu, one with `columns` a grouped mega-menu."
         },
         {
           "name": "logo",
@@ -7688,15 +7700,21 @@
       "props": [
         {
           "name": "accent",
-          "type": "'leap' | 'bookub' | 'payub' | 'founderub'",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous' | 'leap' | 'bookub' | 'payub' | 'founderub' | 'people' | 'contracts' | 'forms' | 'money' | 'capital' | 'mind' | 'go' | 'command-hub' | 'runner' | 'book-hub' | 'payhub' | 'founder-hub'",
           "required": false,
-          "description": ""
+          "description": "App or division accent for the card."
         },
         {
           "name": "description",
           "type": "React.ReactNode",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "division",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "The card's division: sets `data-division` and, without `accent`, tints the card."
         },
         {
           "name": "href",
@@ -7729,6 +7747,12 @@
       "file": "components/Products/Products.tsx",
       "props": [
         {
+          "name": "division",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "Sets `data-division`: everything inside takes the division's accent (needs `@nexub/themes/divisions`)."
+        },
+        {
           "name": "header",
           "type": "React.ReactNode",
           "required": false,
@@ -7751,6 +7775,12 @@
           "type": "React.ReactNode",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "division",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "Sets `data-division`: the eyebrow takes the division's colour (needs `@nexub/themes/divisions`)."
         },
         {
           "name": "eyebrow",
@@ -7831,7 +7861,7 @@
       "props": [
         {
           "name": "accent",
-          "type": "'leap' | 'bookub' | 'payub' | 'founderub'",
+          "type": "'os' | 'commerce' | 'fintech' | 'intelligence' | 'autonomous' | 'leap' | 'bookub' | 'payub' | 'founderub' | 'people' | 'contracts' | 'forms' | 'money' | 'capital' | 'mind' | 'go' | 'command-hub' | 'runner' | 'book-hub' | 'payhub' | 'founder-hub'",
           "required": false,
           "description": "The product the customer uses: a coloured top edge and tint."
         },
