@@ -1,0 +1,45 @@
+/* @nexub/themes — divisions/fintech.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent to the fintech division scale under [data-division='fintech']. */
+
+[data-division='fintech'] {
+  --color-accent-50: var(--color-accent-fintech-50);
+  --color-accent-100: var(--color-accent-fintech-100);
+  --color-accent-200: var(--color-accent-fintech-200);
+  --color-accent-300: var(--color-accent-fintech-300);
+  --color-accent-400: var(--color-accent-fintech-400);
+  --color-accent-500: var(--color-accent-fintech-500);
+  --color-accent-600: var(--color-accent-fintech-600);
+  --color-accent-700: var(--color-accent-fintech-700);
+  --color-accent-800: var(--color-accent-fintech-800);
+  --color-accent-900: var(--color-accent-fintech-900);
+  --color-accent-950: var(--color-accent-fintech-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-fintech-fill);
+  --color-fill-accent-hover: var(--color-accent-fintech-fill-hover);
+  --color-tertiary: light-dark(#006e2f, #4ae176);
+  --color-on-tertiary: light-dark(#ffffff, #003915);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#002109, #6bff8f);
+}
+[data-contrast='medium'][data-division='fintech'], [data-contrast='medium'] [data-division='fintech'] {
+  --color-tertiary: light-dark(#006028, #5bf083);
+  --color-on-tertiary: light-dark(#ffffff, #002d0f);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#001505, #c5ffc9);
+}
+[data-contrast='high'][data-division='fintech'], [data-contrast='high'] [data-division='fintech'] {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='fintech'], :root:not([data-contrast]) [data-division='fintech'] {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}

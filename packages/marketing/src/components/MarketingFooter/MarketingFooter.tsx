@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '@nexub/react/cn';
 import { safeHref } from '@nexub/react/safeHref';
 import { Container } from '@nexub/react/Container';
-import { Marquee } from '@nexub/react/Motion';
+import { Marquee } from '@nexub/react/Marquee';
 
 export interface MarketingFooterColumn {
   title: string;

@@ -24,8 +24,7 @@
     },
     "@nexub/react-native": {
       "@expo-google-fonts/geist-mono": "the mono font files",
-      "@expo-google-fonts/inter": "the body font files",
-      "@expo-google-fonts/plus-jakarta-sans": "the display font files",
+      "@expo-google-fonts/plus-jakarta-sans": "the font files (interface and display)",
       "@nexub/core": "shared types, messages and money helpers",
       "@nexub/icons": "icons used inside components",
       "@nexub/tokens": "the design tokens the theme is built from",

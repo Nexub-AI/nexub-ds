@@ -254,11 +254,11 @@ it('Bold Text (iOS) steps the Nexub faces up a weight, live', async () => {
     </Lib.NexubNativeProvider>,
   );
   const family = () => (StyleSheet.flatten(screen.getByText('Body').props.style) as { fontFamily: string }).fontFamily;
-  await waitFor(() => expect(family()).toBe('Inter_600SemiBold'));
+  await waitFor(() => expect(family()).toBe('PlusJakartaSans_600SemiBold'));
   // The setting changes while the app is open.
   const emit = listen.mock.calls.find(([event]) => event === 'boldTextChanged')![1] as (on: boolean) => void;
   await act(async () => emit(false));
-  expect(family()).toBe('Inter_400Regular');
+  expect(family()).toBe('PlusJakartaSans_400Regular');
 });
 
 it('light and dark switch while mounted, without remounting the tree', async () => {

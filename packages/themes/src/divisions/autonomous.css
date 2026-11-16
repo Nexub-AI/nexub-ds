@@ -1,0 +1,45 @@
+/* @nexub/themes — divisions/autonomous.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent to the autonomous division scale under [data-division='autonomous']. */
+
+[data-division='autonomous'] {
+  --color-accent-50: var(--color-accent-autonomous-50);
+  --color-accent-100: var(--color-accent-autonomous-100);
+  --color-accent-200: var(--color-accent-autonomous-200);
+  --color-accent-300: var(--color-accent-autonomous-300);
+  --color-accent-400: var(--color-accent-autonomous-400);
+  --color-accent-500: var(--color-accent-autonomous-500);
+  --color-accent-600: var(--color-accent-autonomous-600);
+  --color-accent-700: var(--color-accent-autonomous-700);
+  --color-accent-800: var(--color-accent-autonomous-800);
+  --color-accent-900: var(--color-accent-autonomous-900);
+  --color-accent-950: var(--color-accent-autonomous-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-autonomous-fill);
+  --color-fill-accent-hover: var(--color-accent-autonomous-fill-hover);
+  --color-tertiary: light-dark(#00687a, #4cd7f6);
+  --color-on-tertiary: light-dark(#ffffff, #003640);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001f26, #acedff);
+}
+[data-contrast='medium'][data-division='autonomous'], [data-contrast='medium'] [data-division='autonomous'] {
+  --color-tertiary: light-dark(#005b6b, #74e3ff);
+  --color-on-tertiary: light-dark(#ffffff, #002a33);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001419, #d8f6ff);
+}
+[data-contrast='high'][data-division='autonomous'], [data-contrast='high'] [data-division='autonomous'] {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='autonomous'], :root:not([data-contrast]) [data-division='autonomous'] {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}

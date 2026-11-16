@@ -21,7 +21,7 @@ Optional peers. Add only what you use; without them the feature is a no-op or th
 | `expo-screen-capture` | `PrivacyShield preventCapture` |
 | `@react-native-community/datetimepicker` | `DateTimeField` |
 
-`@nexub/tokens`, `@nexub/core`, `@nexub/icons` and the fonts (Inter, Plus Jakarta Sans, Geist Mono; OFL) come with the package.
+`@nexub/tokens`, `@nexub/core`, `@nexub/icons` and the fonts (Plus Jakarta Sans, Geist Mono; OFL) come with the package.
 
 ## Set up
 

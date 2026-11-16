@@ -1,7 +1,7 @@
 // Sections (server components unless noted). Use them inside [data-mode="marketing"]
 // with @nexub/themes/marketing loaded.
 export { MarketingNav } from './components/MarketingNav/MarketingNav.js';
-export type { MarketingNavLink, MarketingNavItem, MarketingCountry, MarketingNavProps } from './components/MarketingNav/MarketingNav.js';
+export type { MarketingNavLink, MarketingNavColumn, MarketingNavGroup, MarketingNavItem, MarketingCountry, MarketingNavProps } from './components/MarketingNav/MarketingNav.js';
 export { Hero } from './components/Hero/Hero.js';
 export type { HeroProps } from './components/Hero/Hero.js';
 export { LogoStrip } from './components/LogoStrip/LogoStrip.js';

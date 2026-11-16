@@ -1,6 +1,6 @@
 {
   "name": "@nexub/patterns",
-  "version": "9.9.1",
+  "version": "10.0.0",
   "description": "Composite UI patterns for Nexub Design System — pre-built, production-ready layouts and widgets built on @nexub/react.",
   "type": "module",
   "license": "MIT",
@@ -63,18 +63,18 @@
     "@nexub/icons": "workspace:*",
     "@nexub/react": "workspace:*",
     "@nexub/tokens": "workspace:*",
-    "@tailwindcss/cli": "^4.3.3",
-    "@testing-library/jest-dom": "^6.9.1",
+    "@tailwindcss/cli": "^4.3.5",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitest/coverage-v8": "5.0.5",
-    "jsdom": "^30.1.3",
-    "tailwindcss": "^4.3.3",
+    "@vitest/coverage-v8": "5.1.0",
+    "jsdom": "^31.0.0",
+    "tailwindcss": "^4.3.5",
     "tsup": "^9.0.0",
     "typescript": "~6.0.3",
-    "vite": "^8.3.5",
-    "vitest": "^5.0.5"
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
   }
 }

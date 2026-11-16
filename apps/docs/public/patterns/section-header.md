@@ -15,6 +15,7 @@ Eyebrow, headline and lead that open a section. Server component.
 | `description` | `React.ReactNode` |  | The lead paragraph. |
 | `align` | `'center' \| 'start'` | `'center'` | Alignment. |
 | `level` | `2 \| 3` | `2` | Heading level. |
+| `division` | `DivisionKey` |  | Sets `data-division` on the section: a string eyebrow takes the division colour. Load `@nexub/themes/divisions`. |
 
 ## Example: Default
 

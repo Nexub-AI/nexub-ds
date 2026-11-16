@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Avatar } from '@nexub/react/Avatar';
-import { Card } from '@nexub/react/Card';
+import { Card, type DivisionKey, type ProductKey } from '@nexub/react/Card';
 import { cn } from '@nexub/react/cn';
 import { Container } from '@nexub/react/Container';
 import { Star } from '@nexub/icons';
@@ -29,7 +29,7 @@ export interface TestimonialCardProps extends Omit<React.HTMLAttributes<HTMLLIEl
   /** Stars out of 5. */
   rating?: number;
   /** The product the customer uses: a coloured top edge and tint. */
-  accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
+  accent?: ProductKey | DivisionKey;
 }
 
 /** A customer quote. Renders as a list item: put it in a TestimonialGrid. */

@@ -7,7 +7,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = { title: 'Typography' };
 
 // The 15 type roles (--type-<role>-*, Tailwind text-<role>). Display and
-// headline use the brand face; the rest use Inter. Literal class names so
+// headline read --font-family-display, the rest --font-family-sans (the same typeface). Literal class names so
 // Tailwind generates them.
 const typeScale: { name: string; className: string }[] = [
   { name: 'display-lg', className: 'text-display-lg font-display' },
@@ -28,7 +28,7 @@ const typeScale: { name: string; className: string }[] = [
 ];
 
 const families = [
-  { name: '--font-family-sans', sample: 'Inter: the interface typeface', className: 'font-sans' },
+  { name: '--font-family-sans', sample: 'Plus Jakarta Sans: the interface typeface', className: 'font-sans' },
   { name: '--font-family-display', sample: 'Plus Jakarta Sans: display and headlines', className: 'font-display' },
   { name: '--font-family-mono', sample: 'Monospace: for code and data', className: 'font-mono' },
 ];
@@ -49,12 +49,12 @@ export default function TypographyPage() {
         title="Typography"
         lead={
           <>
-            Nexub uses <strong>Inter</strong> for interface text and <strong>Plus Jakarta Sans</strong> for display and
-            headline text (<code>--font-family-display</code>; headings use it by default). Both ship with{' '}
-            <code>@nexub/themes</code>: importing <code>@nexub/themes/base</code> self-hosts the variable fonts (Inter with
-            its optical-size axis; both normal and italic), so every app gets them with no extra setup. Code uses the
+            Nexub uses one typeface, <strong>Plus Jakarta Sans</strong>, for interface, display and headline text (since
+            10.1; <code>--font-family-sans</code> and <code>--font-family-display</code> both name it). It ships with{' '}
+            <code>@nexub/themes</code>: importing <code>@nexub/themes/base</code> self-hosts the variable font (normal
+            and italic), so every app gets it with no extra setup. Code uses the
             monospace stack in <code>--font-family-mono</code>. On React Native, <code>nexubFonts</code> loads the same
-            families as static weights.
+            family as static weights.
           </>
         }
       />

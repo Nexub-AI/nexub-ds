@@ -18,7 +18,7 @@ export default function WithoutTailwindPage() {
 import '@nexub/react/styles.css';`} />
       <p>
         It has everything the components need: the light and dark themes, glass, the product brands
-        (<code>data-product=&quot;payub&quot;</code> and the rest), the Inter and Plus Jakarta Sans fonts, and the
+        (<code>data-product=&quot;payub&quot;</code> and the rest), the Plus Jakarta Sans font, and the
         utility classes the components use. It&apos;s about 31 kB gzipped, and browsers download only the font
         subsets a page uses.
       </p>

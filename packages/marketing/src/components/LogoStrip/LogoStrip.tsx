@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@nexub/react/cn';
 import { Container } from '@nexub/react/Container';
-import { Marquee } from '@nexub/react/Motion';
+import { Marquee } from '@nexub/react/Marquee';
 
 export interface LogoStripProps extends React.HTMLAttributes<HTMLElement> {
   /** e.g. "Trusted by 2,000+ teams". */

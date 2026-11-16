@@ -16,7 +16,7 @@ Customer quotes in product-coloured cards, with an optional star rating. Server 
 | `TestimonialCard role` | `React.ReactNode` |  | Job title and company. |
 | `TestimonialCard avatarSrc` | `string` |  | Photo; initials otherwise. |
 | `TestimonialCard rating` | `number` |  | Stars out of 5, announced as "Rated n out of 5". |
-| `TestimonialCard accent` | `'leap' \| 'bookub' \| 'payub' \| 'founderub'` |  | The product the customer uses. |
+| `TestimonialCard accent` | `ProductKey \| DivisionKey` |  | The product the customer uses. |
 
 ## Example: Default
 

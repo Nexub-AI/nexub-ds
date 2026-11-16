@@ -87,7 +87,7 @@ describe('Text', () => {
     );
     const style = StyleSheet.flatten(screen.getByText('42').props.style);
     expect(style).toMatchObject({
-      fontFamily: 'Inter_600SemiBold',
+      fontFamily: 'PlusJakartaSans_600SemiBold',
       fontSize: native.type['title-md'].size,
       lineHeight: native.type['title-md'].lineHeight,
       color: native.signature.roles.standard.light.primary,
