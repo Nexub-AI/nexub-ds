@@ -67,8 +67,10 @@
   box-shadow: var(--elevation-2), 0 0 0 4px color-mix(in oklab, var(--color-primary) 8%, transparent);
 }
 
-/* Selection controls and progress pick up the gradient. */
-[data-expression='vivid'] :is(button[role='switch'], button[role='checkbox'], button[role='radio'])[data-state='checked']:not(:disabled) {
+/* Selection controls (Switch, Checkbox, Radio) and progress pick up the gradient.
+   RadioCard and CheckboxCard share those roles but are cards with text: they keep
+   their own selected state. */
+[data-expression='vivid'] :is(button[role='switch'], button[role='checkbox'], button[role='radio'])[data-state='checked']:not(:disabled, [data-selectable-card]) {
   background-image: var(--vivid-gradient);
   border-color: transparent;
 }
