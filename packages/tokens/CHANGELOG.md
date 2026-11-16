@@ -1,5 +1,26 @@
 # @nexub/tokens
 
+## 10.1.0
+
+### Minor Changes
+
+- 4e7fbf9: Division mega-menu and division/app themes, for the nexub.com rebuild. Nothing is removed and apps that set neither `data-division` nor a new `data-product` key look the same.
+
+  - **MarketingNav**: an item with `columns` opens a grouped mega-menu as wide as the container: up to 5 columns (3 + 2 below `xl`), each a labelled list whose title can link to the division page and take a division tint (`accent`), with an optional `footer` strip and `feature` card. In the mobile sheet each column is an accordion section. Links take a `badge` ("Coming soon") that is part of the link's name, on flat `items` menus too. Menu links now show the focus ring. New types `MarketingNavColumn` and `MarketingNavGroup`.
+  - **Fix**: with `@nexub/themes/glass` loaded, the header's soft scroll edge was a mask that also hid the open mega-menu. MarketingNav no longer sets it.
+  - **Tokens**: accent scales for the five divisions (`--color-accent-os-50` … `-950`, `-fill`, `-fill-hover`; also commerce, fintech, intelligence, autonomous) in CSS, Tailwind, JSON and JS; `native.color.divisions` and Figma `division` variables; the division → apps map at `@nexub/tokens/json/divisions`.
+  - **Themes**: `@nexub/themes/divisions` (and `@nexub/themes/divisions/os` etc.) for `data-division`; `@nexub/themes/products` for every app under `data-product` (people, contracts, forms, commerce, money, capital, mind, go, command-hub, runner, plus the aliases book-hub, payhub, founder-hub). Generated from the token map; the per-product files stay.
+  - **Components**: Card `accent` accepts `ProductKey | DivisionKey` (exported from `@nexub/react/Card` and `@nexub/core`). `division` on Hero, SectionHeader, ProductGrid, ProductCard and CTABand sets `data-division`; in marketing mode the eyebrow and the CTA band take the division's colour.
+  - **Server components**: `@nexub/react/Marquee` is a new server-safe entry. LogoStrip and MarketingFooter use it, so they no longer bring the client-side Motion components onto a server-rendered page.
+
+- ca95534: One typeface: Plus Jakarta Sans everywhere. Inter is no longer part of the design system.
+
+  - `--font-family-sans` is now Plus Jakarta Sans, the same as `--font-family-display` (both tokens stay). Interface text, controls and body copy change face; sizes, weights and line heights are unchanged. Plus Jakarta Sans runs a little wider than Inter, so check tight layouts.
+  - `@nexub/themes/base` (and `/fonts`) ships only the Plus Jakarta Sans files (latin, latin-ext, vietnamese; normal and italic). Other scripts fall back to the system font.
+  - React Native: `nexubFonts` loads Plus Jakarta Sans 400–800 and no Inter files (`Inter_*` keys are gone; `useFonts(nexubFonts)` needs no change).
+  - With `next/font`, load `Plus_Jakarta_Sans` for both `--font-family-sans` and `--font-family-display`.
+  - Body roles (`body-lg`, `body-md`, `body-sm`) have no letter-spacing now: the small negative tracking was tuned for Inter and made Plus Jakarta Sans too tight.
+
 ## 10.0.0
 
 ## 9.9.1
