@@ -41,3 +41,17 @@ export const DisabledGroup = () => (
     <RadioCard value="yearly" title="Yearly" description="Two months free" />
   </RadioCardGroup>
 );
+
+/**
+ * Under the vivid expression a selected card keeps its own selected state
+ * (primary edge and a light tint); the gradient is for the small controls only.
+ */
+export const Vivid = () => (
+  <div data-expression="vivid">
+    <RadioCardGroup aria-label="Plan" columns={3} defaultValue="team">
+      <RadioCard value="solo" icon={<User />} title="Solo" description="One seat, core features." />
+      <RadioCard value="team" icon={<Users />} title="Team" description="Up to 20 seats, shared workspaces." />
+      <RadioCard value="enterprise" icon={<Building2 />} title="Enterprise" description="SSO, audit logs, priority support." />
+    </RadioCardGroup>
+  </div>
+);

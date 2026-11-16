@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { Apps, Calendar, Users } from '@nexub/icons';
 import { Tabs } from './Tabs.js';
 
 const meta: Meta = {
@@ -106,6 +107,26 @@ export const Overflow: Story = {
           </Tabs.Content>
         ))}
       </Tabs.Root>
+    </div>
+  ),
+};
+
+/** An icon before the label, in both variants: the trigger spaces them, no className needed. */
+export const WithIcons: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 24 }}>
+      {(['line', 'pill'] as const).map((variant) => (
+        <Tabs.Root key={variant} defaultValue="board">
+          <Tabs.List variant={variant} aria-label={`View (${variant})`}>
+            <Tabs.Trigger value="board"><Apps size={14} />Board</Tabs.Trigger>
+            <Tabs.Trigger value="calendar"><Calendar size={14} />Calendar</Tabs.Trigger>
+            <Tabs.Trigger value="team"><Users size={14} />Team</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="board">Board view</Tabs.Content>
+          <Tabs.Content value="calendar">Calendar view</Tabs.Content>
+          <Tabs.Content value="team">Team view</Tabs.Content>
+        </Tabs.Root>
+      ))}
     </div>
   ),
 };

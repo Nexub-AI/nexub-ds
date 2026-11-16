@@ -26,6 +26,7 @@ export const CheckboxCard = React.forwardRef<HTMLButtonElement, CheckboxCardProp
         ref={ref}
         aria-labelledby={ids.titleId}
         aria-describedby={ids.describedBy}
+        data-selectable-card=""
         className={cn(selectableCardClass, className)}
         onCheckedChange={onCheckedChange ? (c) => onCheckedChange(c === true) : undefined}
         {...props}

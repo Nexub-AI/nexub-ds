@@ -71,7 +71,7 @@ const Item = React.forwardRef<HTMLAnchorElement, TopNavItemProps>(
       ref={ref}
       aria-current={active ? 'page' : undefined}
       className={cn(
-        'nx-state-layer relative inline-flex h-control-sm shrink-0 items-center rounded-shape-control px-3.5 text-label-lg',
+        'nx-state-layer relative inline-flex h-control-sm shrink-0 items-center gap-1.5 rounded-shape-control px-3.5 text-label-lg',
         active
           ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)]'
           : 'text-[var(--color-on-surface-variant)]',
