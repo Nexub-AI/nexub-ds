@@ -45,6 +45,8 @@ export const RadioCard = React.forwardRef<HTMLButtonElement, RadioCardProps>(
         ref={ref}
         aria-labelledby={ids.titleId}
         aria-describedby={ids.describedBy}
+        // A card, not a small control: opt-in layers (vivid) must not paint it as one.
+        data-selectable-card=""
         className={cn(selectableCardClass, className)}
         {...props}
       >

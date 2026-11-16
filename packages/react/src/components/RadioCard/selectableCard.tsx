@@ -18,15 +18,16 @@ export interface SelectableCardContentProps {
   children?: React.ReactNode;
 }
 
-/** Card surface + selected state (2px primary edge: 1px border + 1px inset, no layout shift). */
+/** Card surface + selected state (2px primary edge: 1px border + 1px inset, no layout shift; a 6% primary tint). */
 export const selectableCardClass = [
   'group nx-state-layer flex w-full items-start gap-3 p-4 text-start',
   'rounded-shape-container bg-[var(--color-surface-elevated)] text-[var(--color-on-surface)]',
   'border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)]',
   'cursor-pointer transition-[border-color,box-shadow] duration-effects-fast ease-effects-fast',
   'data-[state=checked]:border-[var(--color-primary)] data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
+  'data-[state=checked]:bg-[color-mix(in_srgb,var(--color-primary)_6%,var(--color-surface-elevated))]',
   'data-[disabled]:cursor-not-allowed data-[disabled]:text-[var(--color-text-disabled)]',
-  'data-[disabled]:data-[state=checked]:border-[var(--color-text-disabled)] data-[disabled]:data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-text-disabled)]',
+  'data-[disabled]:data-[state=checked]:border-[var(--color-text-disabled)] data-[disabled]:data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-text-disabled)] data-[disabled]:data-[state=checked]:bg-[var(--color-surface-elevated)]',
 ].join(' ');
 
 const slotShape = {
