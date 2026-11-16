@@ -1,5 +1,19 @@
 # @nexub/react
 
+## 10.2.0
+
+### Minor Changes
+
+- 1f80251: Two fixes.
+
+  - **Icon and label spacing.** `SegmentedControl.Item`, `Tabs.Trigger` and `TopNav.Item` now put a 6px gap (`gap-1.5`) between an icon and its label, so apps no longer need `className="gap-1.5"`. Button, Badge, Chip, Toggle and FilterChip already had a gap.
+  - **Vivid no longer paints RadioCard and CheckboxCard with its gradient.** The gradient rule for checked selection controls now skips the cards (`data-selectable-card`). A selected card shows a primary edge and a 6% primary tint, with readable text in Vivid, Glass and the default theme, light and dark.
+
+### Patch Changes
+
+- @nexub/icons@10.2.0
+- @nexub/core@10.2.0
+
 ## 10.1.0
 
 ### Minor Changes
