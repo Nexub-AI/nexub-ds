@@ -3,7 +3,7 @@ import * as React from 'react';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { renderToString } from 'react-dom/server';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import {
   CTABand,
@@ -73,6 +73,69 @@ describe('@nexub/marketing', () => {
     render(page);
     expect(screen.getByRole('button', { name: 'SG, Choose country: Singapore' })).toBeInTheDocument();
     expect(screen.getByRole('img', { name: 'Rated 5 out of 5' })).toBeInTheDocument();
+  });
+
+  it('renders a grouped mega-menu on the server and as accordion sections in the drawer', () => {
+    const nav = (
+      <MarketingNav
+        logo="Nexub"
+        items={[
+          {
+            label: 'Products',
+            columns: [
+              { title: 'Nexub OS', href: '/sg/os', description: 'Run the company', accent: 'os', links: [{ label: 'Forms', href: '/sg/forms', badge: 'Early access' }] },
+              { title: 'By stage', links: [{ label: 'Growing', href: '/sg/growing', description: 'Hire and pay' }] },
+            ],
+            feature: <a href="/sg/story">Customer story</a>,
+            footer: [{ label: 'All products', href: '/sg/products' }],
+          },
+          { label: 'More', items: [{ label: 'Money', href: '/sg/money', badge: 'Coming soon' }] },
+        ]}
+      />
+    );
+    expect(renderToString(nav)).toContain('Products');
+    render(nav);
+    // Desktop panel: each column is a list labelled by its title.
+    fireEvent.click(screen.getByRole('button', { name: 'Products' }));
+    expect(within(screen.getByRole('list', { name: /Nexub OS/ })).getByRole('link', { name: 'Forms Early access' })).toBeInTheDocument();
+    expect(within(screen.getByRole('list', { name: 'By stage' })).getByRole('link', { name: /Growing/ })).toBeInTheDocument();
+    expect(screen.getAllByRole('link', { name: 'Customer story' }).length).toBeGreaterThan(0);
+    fireEvent.click(screen.getByRole('button', { name: 'Products' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
+    // The heading stays a link; the button beside it opens the list.
+    expect(screen.getByRole('link', { name: 'Nexub OS' })).toHaveAttribute('href', '/sg/os');
+    expect(screen.getByRole('link', { name: 'Nexub OS' }).closest('[data-division]')).toHaveAttribute('data-division', 'os');
+    expect(screen.getByRole('button', { name: 'By stage' })).toHaveAttribute('aria-expanded', 'false'); // a title without a link
+    const toggle = screen.getByRole('button', { name: 'Nexub OS' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('link', { name: 'Forms Early access' })).toBeNull();
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    // Badges are part of the link name, on grouped and flat items alike.
+    expect(screen.getByRole('link', { name: 'Forms Early access' })).toHaveAttribute('href', '/sg/forms');
+    expect(screen.getByRole('link', { name: 'Money Coming soon' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'All products' })).toBeInTheDocument();
+  });
+
+  it('sets data-division / data-product from division and accent', () => {
+    const { container } = render(
+      <div>
+        <Hero division="os" title="OS" />
+        <CTABand division="fintech" title="Go" />
+        <ProductGrid division="intelligence">
+          <ProductCard name="Runner" description="Agents" href="/runner" division="autonomous" />
+          <ProductCard name="Mind" description="AI" href="/mind" accent="mind" />
+          <ProductCard name="Commerce" description="Sell" href="/commerce" accent="commerce" />
+        </ProductGrid>
+        <SectionHeader division="commerce" title="Sell" level={3} />
+      </div>,
+    );
+    const attr = (sel: string) => [...container.querySelectorAll(sel)].map((el) => el.getAttribute(sel.slice(sel.indexOf('[') + 1, -1)));
+    expect(attr('section[data-division]')).toEqual(['os', 'fintech', 'intelligence']);
+    expect(attr('header[data-division]')).toEqual(['commerce']);
+    // The card itself carries the attribute the showcase tint reads.
+    expect(attr('.nx-mkt-showcase[data-division]')).toEqual(['autonomous', 'commerce']);
+    expect(attr('.nx-mkt-showcase[data-product]')).toEqual(['mind', 'commerce']); // commerce is an app and a division
   });
 
   // Server components can't hold state or handlers, or dot into a client

@@ -51,6 +51,7 @@
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
+    "./json/divisions": "./dist/json/divisions.json",
     "./figma/*": "./dist/figma/*",
     "./swift/*": "./dist/swift/*",
     "./compose/*": "./dist/compose/*",

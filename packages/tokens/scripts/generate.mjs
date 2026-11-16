@@ -2,6 +2,7 @@
 // tonal palettes + color roles (via HCT, so tone gaps guarantee contrast) and
 // spring easings (CSS linear()). Pure functions; build.mjs turns them into
 // tokens and dist/css/roles.css.
+import { readFileSync } from 'node:fs';
 import { Hct, TonalPalette, hexFromArgb } from '@material/material-color-utilities';
 import { LEVELS, ROLES, TONES, tertiary, tonalPalette, toneHex, tonesAt } from '../src/roles.js';
 
@@ -236,6 +237,86 @@ ${contrastBlocks(true)}
 }
 }
 `;
+}
+
+// ─── Divisions and apps (10.1) ───────────────────────────────────────────────
+// The five Nexub divisions and their apps (tokens/product/divisions.json). A
+// division's accent scale is hand-picked in tokens/color.json; its tertiary
+// roles come from an HCT palette seeded with the scale's 500, so they hold the
+// same WCAG pairs as the built-in brands. These palettes are not on :root:
+// the theme CSS below (shipped by @nexub/themes) carries the hex, so an app
+// that never loads a division theme pays nothing for them.
+const source = (f) => JSON.parse(readFileSync(new URL(`../tokens/${f}`, import.meta.url), 'utf8'));
+const MAP = source('product/divisions.json');
+const SCALES = source('color.json').color.accent;
+export const DIVISIONS = Object.keys(MAP.divisions);
+export const DIVISION_APPS = MAP.divisions;
+export const APP_ALIASES = MAP.aliases;
+/** Every data-product key: apps, then aliases. */
+export const PRODUCT_KEYS = [...Object.values(MAP.divisions).flat(), ...Object.keys(MAP.aliases)];
+export const divisionPalettes = () =>
+  toneMap(Object.fromEntries(DIVISIONS.map((d) => [d, tonalPalette(SCALES[d]['500'].$value)])));
+
+const STEPS = ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950'];
+// Tertiary roles for `scale`: hex for a division, palette vars for a built-in product.
+function tertiaryDecls(scale, level) {
+  const hex = divisionPalettes()[scale];
+  return Object.entries(tertiary(scale))
+    .map(([role, entry]) => {
+      const [pal, l, d] = tonesAt(entry, level);
+      const [a, b] = hex ? [hex[l], hex[d]] : [tone(pal, l), tone(pal, d)];
+      return `  --color-${role}: light-dark(${a}, ${b});`;
+    })
+    .join('\n');
+}
+const accentDecls = (scale) =>
+  [
+    ...STEPS.map((s) => `  --color-accent-${s}: var(--color-accent-${scale}-${s});`),
+    '  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */',
+    ...(DIVISIONS.includes(scale)
+      ? [`  --color-fill-accent: var(--color-accent-${scale}-fill);`, `  --color-fill-accent-hover: var(--color-accent-${scale}-fill-hover);`]
+      : [`  --color-fill-accent: var(--color-fill-${scale});`, `  --color-fill-accent-hover: var(--color-fill-${scale}-hover);`]),
+  ].join('\n');
+const group = (sels) => (sels.length > 1 ? `:is(${sels.join(', ')})` : sels[0]);
+// Tertiary at the medium / high contrast levels (standard is in the main block).
+const contrastOnly = (sel, scale) =>
+  [
+    `${at('medium', sel)} {\n${tertiaryDecls(scale, 'medium')}\n}`,
+    `${at('high', sel)} {\n${tertiaryDecls(scale, 'high')}\n}`,
+    `@media (prefers-contrast: more) {\n${auto(sel)} {\n${tertiaryDecls(scale, 'high')}\n}\n}`,
+  ].join('\n');
+const themeBlock = (sels, scale) =>
+  `${group(sels)} {\n${accentDecls(scale)}\n${tertiaryDecls(scale, 'standard')}\n}\n${contrastOnly(group(sels), scale)}`;
+const header = (name, what) =>
+  `/* @nexub/themes — ${name}\n   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)\n   by scripts/build-products.mjs. Do not edit.\n   ${what} */\n\n`;
+
+/** One division: [data-division='os'] remaps --color-accent-*, the tertiary roles, the ring and the accent fill. */
+export const divisionCss = (d) =>
+  header(`divisions/${d}.css`, `Overrides the accent to the ${d} division scale under [data-division='${d}'].`) +
+  themeBlock([`[data-division='${d}']`], d) + '\n';
+
+/** All five divisions in one file. */
+export const divisionsCss = () =>
+  header('divisions.css', 'Overrides the accent under [data-division]: ' + DIVISIONS.join(', ') + '.') +
+  DIVISIONS.map((d) => themeBlock([`[data-division='${d}']`], d)).join('\n\n') + '\n';
+
+/** Every app key under [data-product]. An app with its own scale keeps it (and
+ * its tertiary roles from roles.css); the rest inherit their division's. */
+export function productsCss() {
+  const sel = (p) => `[data-product='${p}']`;
+  const blocks = [];
+  for (const [d, apps] of Object.entries(DIVISION_APPS)) {
+    const inherit = apps.filter((a) => !SCALES[a]);
+    if (inherit.length) blocks.push(themeBlock(inherit.map(sel), d));
+    for (const app of apps.filter((a) => SCALES[a])) {
+      const aliases = Object.keys(APP_ALIASES).filter((a) => APP_ALIASES[a] === app).map(sel);
+      blocks.push(`${[sel(app), ...aliases].join(', ')} {\n${accentDecls(app)}\n}`);
+      // roles.css only knows the canonical key: restate the tertiary roles for an alias.
+      if (aliases.length)
+        blocks.push(`${group(aliases)} {\n${tertiaryDecls(app, 'standard')}\n}\n${contrastOnly(group(aliases), app)}`);
+    }
+  }
+  return header('products.css', 'Overrides the accent under [data-product] for every app: ' + PRODUCT_KEYS.join(', ') + '.') + blocks.join('\n\n') + '\n';
 }
 
 // ─── Motion ──────────────────────────────────────────────────────────────────

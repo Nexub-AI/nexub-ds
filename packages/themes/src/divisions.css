@@ -1,0 +1,209 @@
+/* @nexub/themes — divisions.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent under [data-division]: os, commerce, fintech, intelligence, autonomous. */
+
+[data-division='os'] {
+  --color-accent-50: var(--color-accent-os-50);
+  --color-accent-100: var(--color-accent-os-100);
+  --color-accent-200: var(--color-accent-os-200);
+  --color-accent-300: var(--color-accent-os-300);
+  --color-accent-400: var(--color-accent-os-400);
+  --color-accent-500: var(--color-accent-os-500);
+  --color-accent-600: var(--color-accent-os-600);
+  --color-accent-700: var(--color-accent-os-700);
+  --color-accent-800: var(--color-accent-os-800);
+  --color-accent-900: var(--color-accent-os-900);
+  --color-accent-950: var(--color-accent-os-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-os-fill);
+  --color-fill-accent-hover: var(--color-accent-os-fill-hover);
+  --color-tertiary: light-dark(#0061a6, #a0c9ff);
+  --color-on-tertiary: light-dark(#ffffff, #00325a);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001c37, #d2e4ff);
+}
+[data-contrast='medium'][data-division='os'], [data-contrast='medium'] [data-division='os'] {
+  --color-tertiary: light-dark(#005493, #bad7ff);
+  --color-on-tertiary: light-dark(#ffffff, #002748);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001225, #eaf1ff);
+}
+[data-contrast='high'][data-division='os'], [data-contrast='high'] [data-division='os'] {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='os'], :root:not([data-contrast]) [data-division='os'] {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+[data-division='commerce'] {
+  --color-accent-50: var(--color-accent-commerce-50);
+  --color-accent-100: var(--color-accent-commerce-100);
+  --color-accent-200: var(--color-accent-commerce-200);
+  --color-accent-300: var(--color-accent-commerce-300);
+  --color-accent-400: var(--color-accent-commerce-400);
+  --color-accent-500: var(--color-accent-commerce-500);
+  --color-accent-600: var(--color-accent-commerce-600);
+  --color-accent-700: var(--color-accent-commerce-700);
+  --color-accent-800: var(--color-accent-commerce-800);
+  --color-accent-900: var(--color-accent-commerce-900);
+  --color-accent-950: var(--color-accent-commerce-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-commerce-fill);
+  --color-fill-accent-hover: var(--color-accent-commerce-fill-hover);
+  --color-tertiary: light-dark(#9d4300, #ffb690);
+  --color-on-tertiary: light-dark(#ffffff, #552100);
+  --color-tertiary-container: light-dark(#ffdbca, #783200);
+  --color-on-tertiary-container: light-dark(#341100, #ffdbca);
+}
+[data-contrast='medium'][data-division='commerce'], [data-contrast='medium'] [data-division='commerce'] {
+  --color-tertiary: light-dark(#8a3a00, #ffc9ae);
+  --color-on-tertiary: light-dark(#ffffff, #441900);
+  --color-tertiary-container: light-dark(#ffdbca, #783200);
+  --color-on-tertiary-container: light-dark(#230900, #ffede6);
+}
+[data-contrast='high'][data-division='commerce'], [data-contrast='high'] [data-division='commerce'] {
+  --color-tertiary: light-dark(#783200, #ffdbca);
+  --color-on-tertiary: light-dark(#ffffff, #341100);
+  --color-tertiary-container: light-dark(#ffdbca, #783200);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='commerce'], :root:not([data-contrast]) [data-division='commerce'] {
+  --color-tertiary: light-dark(#783200, #ffdbca);
+  --color-on-tertiary: light-dark(#ffffff, #341100);
+  --color-tertiary-container: light-dark(#ffdbca, #783200);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+[data-division='fintech'] {
+  --color-accent-50: var(--color-accent-fintech-50);
+  --color-accent-100: var(--color-accent-fintech-100);
+  --color-accent-200: var(--color-accent-fintech-200);
+  --color-accent-300: var(--color-accent-fintech-300);
+  --color-accent-400: var(--color-accent-fintech-400);
+  --color-accent-500: var(--color-accent-fintech-500);
+  --color-accent-600: var(--color-accent-fintech-600);
+  --color-accent-700: var(--color-accent-fintech-700);
+  --color-accent-800: var(--color-accent-fintech-800);
+  --color-accent-900: var(--color-accent-fintech-900);
+  --color-accent-950: var(--color-accent-fintech-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-fintech-fill);
+  --color-fill-accent-hover: var(--color-accent-fintech-fill-hover);
+  --color-tertiary: light-dark(#006e2f, #4ae176);
+  --color-on-tertiary: light-dark(#ffffff, #003915);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#002109, #6bff8f);
+}
+[data-contrast='medium'][data-division='fintech'], [data-contrast='medium'] [data-division='fintech'] {
+  --color-tertiary: light-dark(#006028, #5bf083);
+  --color-on-tertiary: light-dark(#ffffff, #002d0f);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#001505, #c5ffc9);
+}
+[data-contrast='high'][data-division='fintech'], [data-contrast='high'] [data-division='fintech'] {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='fintech'], :root:not([data-contrast]) [data-division='fintech'] {
+  --color-tertiary: light-dark(#005321, #6bff8f);
+  --color-on-tertiary: light-dark(#ffffff, #002109);
+  --color-tertiary-container: light-dark(#6bff8f, #005321);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+[data-division='intelligence'] {
+  --color-accent-50: var(--color-accent-intelligence-50);
+  --color-accent-100: var(--color-accent-intelligence-100);
+  --color-accent-200: var(--color-accent-intelligence-200);
+  --color-accent-300: var(--color-accent-intelligence-300);
+  --color-accent-400: var(--color-accent-intelligence-400);
+  --color-accent-500: var(--color-accent-intelligence-500);
+  --color-accent-600: var(--color-accent-intelligence-600);
+  --color-accent-700: var(--color-accent-intelligence-700);
+  --color-accent-800: var(--color-accent-intelligence-800);
+  --color-accent-900: var(--color-accent-intelligence-900);
+  --color-accent-950: var(--color-accent-intelligence-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-intelligence-fill);
+  --color-fill-accent-hover: var(--color-accent-intelligence-fill-hover);
+  --color-tertiary: light-dark(#a200ba, #fbabff);
+  --color-on-tertiary: light-dark(#ffffff, #580065);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#36003e, #ffd6fd);
+}
+[data-contrast='medium'][data-division='intelligence'], [data-contrast='medium'] [data-division='intelligence'] {
+  --color-tertiary: light-dark(#8f00a4, #fec0ff);
+  --color-on-tertiary: light-dark(#ffffff, #460051);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#24002b, #ffebfb);
+}
+[data-contrast='high'][data-division='intelligence'], [data-contrast='high'] [data-division='intelligence'] {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='intelligence'], :root:not([data-contrast]) [data-division='intelligence'] {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
+
+[data-division='autonomous'] {
+  --color-accent-50: var(--color-accent-autonomous-50);
+  --color-accent-100: var(--color-accent-autonomous-100);
+  --color-accent-200: var(--color-accent-autonomous-200);
+  --color-accent-300: var(--color-accent-autonomous-300);
+  --color-accent-400: var(--color-accent-autonomous-400);
+  --color-accent-500: var(--color-accent-autonomous-500);
+  --color-accent-600: var(--color-accent-autonomous-600);
+  --color-accent-700: var(--color-accent-autonomous-700);
+  --color-accent-800: var(--color-accent-autonomous-800);
+  --color-accent-900: var(--color-accent-autonomous-900);
+  --color-accent-950: var(--color-accent-autonomous-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-autonomous-fill);
+  --color-fill-accent-hover: var(--color-accent-autonomous-fill-hover);
+  --color-tertiary: light-dark(#00687a, #4cd7f6);
+  --color-on-tertiary: light-dark(#ffffff, #003640);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001f26, #acedff);
+}
+[data-contrast='medium'][data-division='autonomous'], [data-contrast='medium'] [data-division='autonomous'] {
+  --color-tertiary: light-dark(#005b6b, #74e3ff);
+  --color-on-tertiary: light-dark(#ffffff, #002a33);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#001419, #d8f6ff);
+}
+[data-contrast='high'][data-division='autonomous'], [data-contrast='high'] [data-division='autonomous'] {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='autonomous'], :root:not([data-contrast]) [data-division='autonomous'] {
+  --color-tertiary: light-dark(#004e5c, #acedff);
+  --color-on-tertiary: light-dark(#ffffff, #001f26);
+  --color-tertiary-container: light-dark(#acedff, #004e5c);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}

@@ -1,0 +1,45 @@
+/* @nexub/themes — divisions/os.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent to the os division scale under [data-division='os']. */
+
+[data-division='os'] {
+  --color-accent-50: var(--color-accent-os-50);
+  --color-accent-100: var(--color-accent-os-100);
+  --color-accent-200: var(--color-accent-os-200);
+  --color-accent-300: var(--color-accent-os-300);
+  --color-accent-400: var(--color-accent-os-400);
+  --color-accent-500: var(--color-accent-os-500);
+  --color-accent-600: var(--color-accent-os-600);
+  --color-accent-700: var(--color-accent-os-700);
+  --color-accent-800: var(--color-accent-os-800);
+  --color-accent-900: var(--color-accent-os-900);
+  --color-accent-950: var(--color-accent-os-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-os-fill);
+  --color-fill-accent-hover: var(--color-accent-os-fill-hover);
+  --color-tertiary: light-dark(#0061a6, #a0c9ff);
+  --color-on-tertiary: light-dark(#ffffff, #00325a);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001c37, #d2e4ff);
+}
+[data-contrast='medium'][data-division='os'], [data-contrast='medium'] [data-division='os'] {
+  --color-tertiary: light-dark(#005493, #bad7ff);
+  --color-on-tertiary: light-dark(#ffffff, #002748);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#001225, #eaf1ff);
+}
+[data-contrast='high'][data-division='os'], [data-contrast='high'] [data-division='os'] {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='os'], :root:not([data-contrast]) [data-division='os'] {
+  --color-tertiary: light-dark(#00497f, #d2e4ff);
+  --color-on-tertiary: light-dark(#ffffff, #001c37);
+  --color-tertiary-container: light-dark(#d2e4ff, #00497f);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}

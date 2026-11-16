@@ -571,6 +571,228 @@ export const native = {
           }
         }
       }
+    },
+    "divisions": {
+      "os": {
+        "standard": {
+          "light": {
+            "tertiary": "#0061a6",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#d2e4ff",
+            "on-tertiary-container": "#001c37"
+          },
+          "dark": {
+            "tertiary": "#a0c9ff",
+            "on-tertiary": "#00325a",
+            "tertiary-container": "#00497f",
+            "on-tertiary-container": "#d2e4ff"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#005493",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#d2e4ff",
+            "on-tertiary-container": "#001225"
+          },
+          "dark": {
+            "tertiary": "#bad7ff",
+            "on-tertiary": "#002748",
+            "tertiary-container": "#00497f",
+            "on-tertiary-container": "#eaf1ff"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#00497f",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#d2e4ff",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#d2e4ff",
+            "on-tertiary": "#001c37",
+            "tertiary-container": "#00497f",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      },
+      "commerce": {
+        "standard": {
+          "light": {
+            "tertiary": "#9d4300",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffdbca",
+            "on-tertiary-container": "#341100"
+          },
+          "dark": {
+            "tertiary": "#ffb690",
+            "on-tertiary": "#552100",
+            "tertiary-container": "#783200",
+            "on-tertiary-container": "#ffdbca"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#8a3a00",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffdbca",
+            "on-tertiary-container": "#230900"
+          },
+          "dark": {
+            "tertiary": "#ffc9ae",
+            "on-tertiary": "#441900",
+            "tertiary-container": "#783200",
+            "on-tertiary-container": "#ffede6"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#783200",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffdbca",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#ffdbca",
+            "on-tertiary": "#341100",
+            "tertiary-container": "#783200",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      },
+      "fintech": {
+        "standard": {
+          "light": {
+            "tertiary": "#006e2f",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#6bff8f",
+            "on-tertiary-container": "#002109"
+          },
+          "dark": {
+            "tertiary": "#4ae176",
+            "on-tertiary": "#003915",
+            "tertiary-container": "#005321",
+            "on-tertiary-container": "#6bff8f"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#006028",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#6bff8f",
+            "on-tertiary-container": "#001505"
+          },
+          "dark": {
+            "tertiary": "#5bf083",
+            "on-tertiary": "#002d0f",
+            "tertiary-container": "#005321",
+            "on-tertiary-container": "#c5ffc9"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#005321",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#6bff8f",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#6bff8f",
+            "on-tertiary": "#002109",
+            "tertiary-container": "#005321",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      },
+      "intelligence": {
+        "standard": {
+          "light": {
+            "tertiary": "#a200ba",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffd6fd",
+            "on-tertiary-container": "#36003e"
+          },
+          "dark": {
+            "tertiary": "#fbabff",
+            "on-tertiary": "#580065",
+            "tertiary-container": "#7c008e",
+            "on-tertiary-container": "#ffd6fd"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#8f00a4",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffd6fd",
+            "on-tertiary-container": "#24002b"
+          },
+          "dark": {
+            "tertiary": "#fec0ff",
+            "on-tertiary": "#460051",
+            "tertiary-container": "#7c008e",
+            "on-tertiary-container": "#ffebfb"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#7c008e",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#ffd6fd",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#ffd6fd",
+            "on-tertiary": "#36003e",
+            "tertiary-container": "#7c008e",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      },
+      "autonomous": {
+        "standard": {
+          "light": {
+            "tertiary": "#00687a",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#acedff",
+            "on-tertiary-container": "#001f26"
+          },
+          "dark": {
+            "tertiary": "#4cd7f6",
+            "on-tertiary": "#003640",
+            "tertiary-container": "#004e5c",
+            "on-tertiary-container": "#acedff"
+          }
+        },
+        "medium": {
+          "light": {
+            "tertiary": "#005b6b",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#acedff",
+            "on-tertiary-container": "#001419"
+          },
+          "dark": {
+            "tertiary": "#74e3ff",
+            "on-tertiary": "#002a33",
+            "tertiary-container": "#004e5c",
+            "on-tertiary-container": "#d8f6ff"
+          }
+        },
+        "high": {
+          "light": {
+            "tertiary": "#004e5c",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#acedff",
+            "on-tertiary-container": "#000000"
+          },
+          "dark": {
+            "tertiary": "#acedff",
+            "on-tertiary": "#001f26",
+            "tertiary-container": "#004e5c",
+            "on-tertiary-container": "#ffffff"
+          }
+        }
+      }
     }
   },
   "spacing": {

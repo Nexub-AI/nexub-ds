@@ -17,7 +17,7 @@ const entry: ComponentEntry = {
     { name: "TestimonialCard role", type: "React.ReactNode", required: false, description: "Job title and company." },
     { name: "TestimonialCard avatarSrc", type: "string", required: false, description: "Photo; initials otherwise." },
     { name: "TestimonialCard rating", type: "number", required: false, description: "Stars out of 5, announced as \"Rated n out of 5\"." },
-    { name: "TestimonialCard accent", type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: "The product the customer uses." },
+    { name: "TestimonialCard accent", type: "ProductKey | DivisionKey", required: false, description: "The product the customer uses." },
   ],
   examples: [
     {

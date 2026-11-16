@@ -1,0 +1,45 @@
+/* @nexub/themes — divisions/intelligence.css
+   Auto-generated from @nexub/tokens (tokens/product/divisions.json + color.json)
+   by scripts/build-products.mjs. Do not edit.
+   Overrides the accent to the intelligence division scale under [data-division='intelligence']. */
+
+[data-division='intelligence'] {
+  --color-accent-50: var(--color-accent-intelligence-50);
+  --color-accent-100: var(--color-accent-intelligence-100);
+  --color-accent-200: var(--color-accent-intelligence-200);
+  --color-accent-300: var(--color-accent-intelligence-300);
+  --color-accent-400: var(--color-accent-intelligence-400);
+  --color-accent-500: var(--color-accent-intelligence-500);
+  --color-accent-600: var(--color-accent-intelligence-600);
+  --color-accent-700: var(--color-accent-intelligence-700);
+  --color-accent-800: var(--color-accent-intelligence-800);
+  --color-accent-900: var(--color-accent-intelligence-900);
+  --color-accent-950: var(--color-accent-intelligence-950);
+  --color-ring-default: var(--color-tertiary); /* >= 3:1 on every surface */
+  --color-fill-accent: var(--color-accent-intelligence-fill);
+  --color-fill-accent-hover: var(--color-accent-intelligence-fill-hover);
+  --color-tertiary: light-dark(#a200ba, #fbabff);
+  --color-on-tertiary: light-dark(#ffffff, #580065);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#36003e, #ffd6fd);
+}
+[data-contrast='medium'][data-division='intelligence'], [data-contrast='medium'] [data-division='intelligence'] {
+  --color-tertiary: light-dark(#8f00a4, #fec0ff);
+  --color-on-tertiary: light-dark(#ffffff, #460051);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#24002b, #ffebfb);
+}
+[data-contrast='high'][data-division='intelligence'], [data-contrast='high'] [data-division='intelligence'] {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+@media (prefers-contrast: more) {
+:root:not([data-contrast])[data-division='intelligence'], :root:not([data-contrast]) [data-division='intelligence'] {
+  --color-tertiary: light-dark(#7c008e, #ffd6fd);
+  --color-on-tertiary: light-dark(#ffffff, #36003e);
+  --color-tertiary-container: light-dark(#ffd6fd, #7c008e);
+  --color-on-tertiary-container: light-dark(#000000, #ffffff);
+}
+}
