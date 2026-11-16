@@ -27,8 +27,24 @@ updates:
     groups:
       minor-and-patch:
         update-types: [minor, patch]
+        # Playwright ships new browser builds: it needs the CI image digest bumped with it
+        # (ci.yml, soak.yml, test:visual:docker) and usually new baselines. Proposed on its own.
+        exclude-patterns: ["@playwright/test"]
     ignore:
       # 0.4.0 ships ESM with extensionless relative imports, so Node can't load it
       # (tokens build fails). Skip just that release; a fixed 0.4.x will still be proposed.
       - dependency-name: "@material/material-color-utilities"
         versions: ["0.4.0"]
+      # DataTable's public props are react-table 8 types (ColumnDef and the ColumnMeta
+      # augmentation), so v9 is a breaking change for consumers: it goes with a Nexub major, by RFC.
+      - dependency-name: "@tanstack/react-table"
+        update-types: ["version-update:semver-major"]
+      # v3 renames `changeset tag` to `changeset git-tag` (scripts/publish-tarballs.mjs runs it
+      # right after the npm publish) and makes `changeset version` exit 1 with no changesets.
+      # Migrate with changesets/action v2 (see the actions block above), then remove this.
+      - dependency-name: "@changesets/cli"
+        update-types: ["version-update:semver-major"]
+      # eslint-config-next 16 bundles plugins (import, jsx-a11y, react) whose peer range stops
+      # at ESLint 9. Remove this when they declare ESLint 10.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]

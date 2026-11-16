@@ -540,6 +540,81 @@ export const tokens = {
         "800": "#92400e",
         "900": "#78350f",
         "950": "#451a03"
+      },
+      "os": {
+        "50": "#eff6ff",
+        "100": "#dbeafe",
+        "200": "#bfdbfe",
+        "300": "#93c5fd",
+        "400": "#60a5fa",
+        "500": "#4099f1",
+        "600": "#2563eb",
+        "700": "#1d4ed8",
+        "800": "#1e40af",
+        "900": "#1e3a8a",
+        "950": "#1b3b6f",
+        "fill": "#2563eb",
+        "fill-hover": "#1d4ed8"
+      },
+      "commerce": {
+        "50": "#fff7ed",
+        "100": "#ffedd5",
+        "200": "#fed7aa",
+        "300": "#fdba74",
+        "400": "#fb923c",
+        "500": "#f97316",
+        "600": "#ea580c",
+        "700": "#c2410c",
+        "800": "#9a3412",
+        "900": "#7c2d12",
+        "950": "#431407",
+        "fill": "#c2410c",
+        "fill-hover": "#9a3412"
+      },
+      "fintech": {
+        "50": "#f0fdf4",
+        "100": "#dcfce7",
+        "200": "#bbf7d0",
+        "300": "#86efac",
+        "400": "#4ade80",
+        "500": "#22c55e",
+        "600": "#16a34a",
+        "700": "#15803d",
+        "800": "#166534",
+        "900": "#14532d",
+        "950": "#052e16",
+        "fill": "#15803d",
+        "fill-hover": "#166534"
+      },
+      "intelligence": {
+        "50": "#fdf4ff",
+        "100": "#fae8ff",
+        "200": "#f5d0fe",
+        "300": "#f0abfc",
+        "400": "#e879f9",
+        "500": "#d946ef",
+        "600": "#c026d3",
+        "700": "#a21caf",
+        "800": "#86198f",
+        "900": "#701a75",
+        "950": "#4a044e",
+        "fill": "#a21caf",
+        "fill-hover": "#86198f"
+      },
+      "autonomous": {
+        "50": "#ecfeff",
+        "100": "#cffafe",
+        "200": "#a5f3fc",
+        "300": "#67e8f9",
+        "400": "#22d3ee",
+        "500": "#06b6d4",
+        "600": "#0891b2",
+        "700": "#0e7490",
+        "800": "#155e75",
+        "900": "#164e63",
+        "950": "#083344",
+        "fill": "#0e7490",
+        "fill-hover": "#155e75"
       }
     },
     "neutral": {
@@ -776,11 +851,11 @@ export const tokens = {
   },
   "font": {
     "family": {
-      "sans": "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
-      "display": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable', ui-sans-serif, system-ui, sans-serif",
+      "sans": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
+      "display": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       "mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
-      "devanagari": "'Noto Sans Devanagari', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif",
-      "tamil": "'Noto Sans Tamil', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif"
+      "devanagari": "'Noto Sans Devanagari', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif",
+      "tamil": "'Noto Sans Tamil', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif"
     },
     "weight": {
       "regular": "400",
@@ -934,19 +1009,19 @@ export const tokens = {
     "body-lg": {
       "size": "18px",
       "lineHeight": "28px",
-      "letterSpacing": "-0.011em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "body-md": {
       "size": "16px",
       "lineHeight": "24px",
-      "letterSpacing": "-0.011em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "body-sm": {
       "size": "14px",
       "lineHeight": "20px",
-      "letterSpacing": "-0.006em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "label-lg": {

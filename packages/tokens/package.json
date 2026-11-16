@@ -51,6 +51,7 @@
     "./tailwind.css": "./dist/tailwind/theme.css",
     "./json": "./dist/json/tokens.json",
     "./json/component": "./dist/json/component.json",
+    "./json/divisions": "./dist/json/divisions.json",
     "./figma/*": "./dist/figma/*",
     "./swift/*": "./dist/swift/*",
     "./compose/*": "./dist/compose/*",
@@ -65,8 +66,8 @@
     "test": "node --test scripts/*.test.mjs bin/*.test.mjs"
   },
   "devDependencies": {
-    "style-dictionary": "^5.7.0",
-    "tailwindcss": "^4.3.3",
+    "style-dictionary": "^5.8.0",
+    "tailwindcss": "^4.3.5",
     "typescript": "~6.0.3"
   },
   "dependencies": {

@@ -16,6 +16,25 @@ export type ToneValue =
 /** Nexub product brands; each remaps the tertiary role family. */
 export type Product = 'leap' | 'bookub' | 'payub' | 'founderub';
 
+/** The five Nexub divisions (`data-division`, @nexub/themes/divisions). */
+export const DIVISIONS = ['os', 'commerce', 'fintech', 'intelligence', 'autonomous'] as const;
+export type DivisionKey = (typeof DIVISIONS)[number];
+
+/** Every app key `data-product` accepts (@nexub/themes/products), aliases included:
+ * book-hub = bookub, payhub = payub, founder-hub = founderub. */
+export const PRODUCT_KEYS = ['leap', 'people', 'payub', 'contracts', 'bookub', 'forms', 'founderub', 'commerce', 'money', 'capital', 'mind', 'go', 'command-hub', 'runner', 'book-hub', 'payhub', 'founder-hub'] as const;
+export type ProductKey = (typeof PRODUCT_KEYS)[number];
+
+/** The attributes for an accent key: a division sets `data-division`, an app
+ * `data-product`. 'commerce' is both a division and an app, so it sets both. */
+export function accentAttrs(accent: ProductKey | DivisionKey | undefined): { 'data-product'?: ProductKey; 'data-division'?: DivisionKey } {
+  const has = <T extends string>(list: readonly T[], key: string | undefined): key is T => list.includes(key as T);
+  return {
+    'data-product': has(PRODUCT_KEYS, accent) ? accent : undefined,
+    'data-division': has(DIVISIONS, accent) ? accent : undefined,
+  };
+}
+
 /** Glass intensity dial (user preference). 'off' makes every glass surface solid. */
 export type GlassMode = 'clear' | 'balanced' | 'tinted' | 'off';
 

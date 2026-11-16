@@ -6,6 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
 import { safeHref } from '../../utils/safeHref.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
+import { accentAttrs, type DivisionKey, type ProductKey } from '@nexub/core';
 import type { ToneValue } from '../Button/Button.js';
 import { usePointerSheen } from '../../hooks/usePointerSheen.js';
 
@@ -62,8 +63,10 @@ export interface CardProps
   /** `sheen`: a soft light follows the pointer. `tilt` (4.3): the card also leans toward the pointer in 3D.
    *  Opt-in; off for touch and reduced motion. */
   effect?: 'none' | 'sheen' | 'tilt';
-  /** Product accent for `variant="showcase"`: a coloured top edge and tint in marketing mode. Sets `data-product`. */
-  accent?: 'leap' | 'bookub' | 'payub' | 'founderub';
+  /** App or division accent for `variant="showcase"`: a coloured top edge and tint in marketing mode.
+   *  An app key sets `data-product`, a division key `data-division`. Keys beyond leap, bookub, payub and
+   *  founderub need `@nexub/themes/products` or `@nexub/themes/divisions` loaded. */
+  accent?: ProductKey | DivisionKey;
   asChild?: boolean;
 }
 
@@ -84,7 +87,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
         onPointerMove={handlePointerMove}
         data-tone={tone}
         data-variant={variant ?? 'flat'}
-        data-product={accent}
+        {...accentAttrs(accent)}
         data-material={surface === 'glass' ? 'glass' : undefined}
         {...props}
       >
@@ -95,6 +98,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = 'Card';
+
+export type { DivisionKey, ProductKey };
 
 export interface CardLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   asChild?: boolean;

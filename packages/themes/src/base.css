@@ -3,7 +3,7 @@
    the Nexub fonts and the ambient page backdrop.
    Import this once at the root of your app before light.css or dark.css. */
 
-/* Plus Jakarta Sans and Inter — the Nexub DS typefaces. Self-hosted (OFL-1.1,
+/* Plus Jakarta Sans — the Nexub DS typeface. Self-hosted (OFL-1.1,
    from Fontsource); variable weights, normal + italic. Subsets load on demand
    via unicode-range, so only the glyphs a page uses are fetched. Every file is
    big enough that bundlers emit it rather than inline a data: URL, so

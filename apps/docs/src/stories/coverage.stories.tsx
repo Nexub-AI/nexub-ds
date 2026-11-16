@@ -41,6 +41,9 @@ import PricingTable from '../examples/patterns/pricing-table/0';
 import FAQ from '../examples/patterns/faq/0';
 import CTABand from '../examples/patterns/cta-band/0';
 import MarketingNav from '../examples/patterns/marketing-nav/0';
+import MarketingNavGrouped from '../examples/patterns/marketing-nav/1';
+import ProductGridDivisions from '../examples/patterns/product-grid/1';
+import CTABandDivisions from '../examples/patterns/cta-band/1';
 import MarketingFooter from '../examples/patterns/marketing-footer/0';
 
 export default { title: 'Coverage/Docs examples', parameters: { layout: 'padded' } };
@@ -71,6 +74,12 @@ export const PricingTableStory = { name: 'PricingTable', render: () => createEle
 export const FAQStory = { name: 'FAQ', render: () => createElement(FAQ) };
 export const CTABandStory = { name: 'CTABand', render: () => createElement(CTABand) };
 export const MarketingNavStory = { name: 'MarketingNav', render: () => createElement(MarketingNav) };
+// 10.1: the grouped mega-menu (nexub.com's Products, Solutions and Resources menus) and the
+// five division themes. visual/marketing-nav.spec.ts opens each menu and the mobile drawer
+// for the screenshots, keyboard checks and axe; here the menus are closed.
+export const MarketingNavGroupedStory = { name: 'MarketingNav grouped', render: () => createElement(MarketingNavGrouped) };
+export const ProductGridDivisionsStory = { name: 'ProductGrid divisions', render: () => createElement(ProductGridDivisions) };
+export const CTABandDivisionsStory = { name: 'CTABand divisions', render: () => createElement(CTABandDivisions) };
 export const MarketingFooterStory = { name: 'MarketingFooter', render: () => createElement(MarketingFooter) };
 export const GaugeStory = { name: 'Gauge', render: () => createElement(Gauge) };
 export const HeatmapStory = { name: 'Heatmap', render: () => createElement(Heatmap) };

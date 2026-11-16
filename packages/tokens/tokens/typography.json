@@ -1,11 +1,11 @@
 {
   "font": {
     "family": {
-      "sans":       { "$value": "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily", "$description": "UI face (body, title, label roles)" },
-      "display":    { "$value": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily", "$description": "Brand face (display, headline roles)" },
+      "sans":       { "$value": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily", "$description": "UI face (body, title, label roles). Plus Jakarta Sans since 10.1: one typeface for the whole system" },
+      "display":    { "$value": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif", "$type": "fontFamily", "$description": "Brand face (display, headline roles)" },
       "mono":       { "$value": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace", "$type": "fontFamily" },
-      "devanagari": { "$value": "'Noto Sans Devanagari', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif", "$type": "fontFamily" },
-      "tamil":      { "$value": "'Noto Sans Tamil', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif", "$type": "fontFamily" }
+      "devanagari": { "$value": "'Noto Sans Devanagari', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif", "$type": "fontFamily" },
+      "tamil":      { "$value": "'Noto Sans Tamil', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif", "$type": "fontFamily" }
     },
     "weight": {
       "regular":   { "$value": "400", "$type": "fontWeight" },
@@ -107,9 +107,9 @@
     "title-lg":    { "size": { "$value": "20px", "$type": "dimension" }, "lineHeight": { "$value": "28px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.01em",   "$type": "dimension" }, "weight": { "$value": "600", "$type": "fontWeight" } },
     "title-md":    { "size": { "$value": "16px", "$type": "dimension" }, "lineHeight": { "$value": "24px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.005em",  "$type": "dimension" }, "weight": { "$value": "600", "$type": "fontWeight" } },
     "title-sm":    { "size": { "$value": "14px", "$type": "dimension" }, "lineHeight": { "$value": "20px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "600", "$type": "fontWeight" } },
-    "body-lg":     { "size": { "$value": "18px", "$type": "dimension" }, "lineHeight": { "$value": "28px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.011em",  "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
-    "body-md":     { "size": { "$value": "16px", "$type": "dimension" }, "lineHeight": { "$value": "24px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.011em",  "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
-    "body-sm":     { "size": { "$value": "14px", "$type": "dimension" }, "lineHeight": { "$value": "20px", "$type": "dimension" }, "letterSpacing": { "$value": "-0.006em",  "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
+    "body-lg":     { "size": { "$value": "18px", "$type": "dimension" }, "lineHeight": { "$value": "28px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
+    "body-md":     { "size": { "$value": "16px", "$type": "dimension" }, "lineHeight": { "$value": "24px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
+    "body-sm":     { "size": { "$value": "14px", "$type": "dimension" }, "lineHeight": { "$value": "20px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "400", "$type": "fontWeight" } },
     "label-lg":    { "size": { "$value": "14px", "$type": "dimension" }, "lineHeight": { "$value": "20px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "500", "$type": "fontWeight" } },
     "label-md":    { "size": { "$value": "13px", "$type": "dimension" }, "lineHeight": { "$value": "18px", "$type": "dimension" }, "letterSpacing": { "$value": "0em",       "$type": "dimension" }, "weight": { "$value": "500", "$type": "fontWeight" } },
     "label-sm":    { "size": { "$value": "12px", "$type": "dimension" }, "lineHeight": { "$value": "16px", "$type": "dimension" }, "letterSpacing": { "$value": "0.01em",    "$type": "dimension" }, "weight": { "$value": "500", "$type": "fontWeight" } }

@@ -18,9 +18,10 @@
     "release": "turbo build --filter='./packages/*' && changeset publish",
     "format": "prettier --write \"**/*.{ts,tsx,json,css,md}\"",
     "check:size": "node scripts/check-size.mjs",
+    "check:rsc": "node scripts/check-rsc.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs",
     "ai-docs": "node --experimental-strip-types --no-warnings scripts/build-ai-docs.mjs",
-    "ci:local": "pnpm audit --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
+    "ci:local": "pnpm audit --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm check:rsc && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
     "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker",
     "check:supply-chain": "node scripts/check-supply-chain.mjs",
     "check:reproducible": "node scripts/reproducible-build.mjs"
@@ -28,13 +29,13 @@
   "devDependencies": {
     "@changesets/cli": "^2.31.1",
     "@eslint/js": "^9.39.5",
-    "@lhci/cli": "0.15.1",
+    "@lhci/cli": "0.16.0",
     "eslint": "^9.39.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.9.10",
-    "turbo": "^2.11.9",
+    "turbo": "^2.11.10",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.72.0"
+    "typescript-eslint": "^8.72.1"
   },
   "pnpm": {
     "overrides": {

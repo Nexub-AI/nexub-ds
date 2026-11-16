@@ -17,6 +17,7 @@ const entry: ComponentEntry = {
     { name: "actions", type: "React.ReactNode", required: false, description: "One `Button variant=\"hero\"` and one outlined button, usually." },
     { name: "visual", type: "React.ReactNode", required: false, description: "Product shot or illustration. Beside the text on wide screens with `align=\"start\"`." },
     { name: "align", type: "'center' | 'start'", default: "'center'", required: false, description: "Text alignment and layout." },
+    { name: "division", type: "DivisionKey", required: false, description: "Sets `data-division` on the section: a string eyebrow takes the division colour. Load `@nexub/themes/divisions`." },
   ],
   examples: [
     {

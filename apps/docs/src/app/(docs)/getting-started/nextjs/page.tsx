@@ -43,11 +43,12 @@ export default function NextjsPage() {
 
       <Section id="fonts" title="Fonts from next/font">
         <Prose>
-          <code>@nexub/themes/base</code> self-hosts Inter and Plus Jakarta Sans; <code>@nexub/themes/core</code> leaves
+          <code>@nexub/themes/base</code> self-hosts Plus Jakarta Sans, the one Nexub typeface; <code>@nexub/themes/core</code> leaves
           fonts to you. With <code>next/font</code>, name its variables after the tokens:
         </Prose>
-        <CodeBlock lang="tsx" code={`import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
-const sans = Inter({ subsets: ['latin'], variable: '--font-family-sans' });
+        <CodeBlock lang="tsx" code={`import { Plus_Jakarta_Sans } from 'next/font/google';
+// One typeface; the two calls only name the two token variables (the files are shared).
+const sans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-sans' });
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-display' });
 
 <html className={\`\${sans.variable} \${display.variable}\`}>…</html>`} />

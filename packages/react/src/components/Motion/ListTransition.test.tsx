@@ -45,7 +45,7 @@ describe('Motion springs', () => {
       const { container } = render(<Slide in={false} direction="up"><span>x</span></Slide>);
       const el = container.firstChild as HTMLElement;
       expect(el.style.opacity).toBe('0');
-      expect(el.style.transform).toBe('translateY(0)');
+      expect(el.style.transform).toMatch(/^translateY\(0(px)?\)$/);
     } finally {
       window.matchMedia = original;
     }

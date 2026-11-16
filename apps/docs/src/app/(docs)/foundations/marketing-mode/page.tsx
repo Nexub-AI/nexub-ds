@@ -58,6 +58,34 @@ export default function MarketingModePage() {
         </Prose>
       </Section>
 
+      <Section id="divisions" title="Divisions and apps">
+        <Prose>
+          Since 10.1 each of the five Nexub divisions has an accent scale (<code>--color-accent-os-50</code> …{' '}
+          <code>-950</code>, plus <code>-fill</code> and <code>-fill-hover</code>). <code>@nexub/themes/divisions</code>{' '}
+          applies one under <code>data-division</code>, and <code>@nexub/themes/products</code> applies an app&apos;s under{' '}
+          <code>data-product</code>: Leap, Book Hub, PayHub and Founder Hub keep their own scale, every other app takes
+          its division&apos;s. Both files are generated from one map in <code>@nexub/tokens</code>{' '}
+          (<code>tokens/product/divisions.json</code>), so a new app is one line there. The colours below are proposals:
+          change a scale in <code>tokens/color.json</code> and everything follows.
+        </Prose>
+        <DocTable
+          head={['Division', 'Apps', 'Accent (500)', 'Fill, white text', 'Hover fill, white text', 'Ring on surfaces, light / dark']}
+          rows={[
+            ['os', 'people, contracts, forms (leap, payub, bookub, founderub keep their own)', '#4099f1 blue', '#2563eb 5.17:1', '#1d4ed8 6.70:1', '4.61:1 / 6.76:1'],
+            ['commerce', 'commerce', '#f97316 orange', '#c2410c 5.18:1', '#9a3412 7.31:1', '4.64:1 / 6.79:1'],
+            ['fintech', 'money, capital', '#22c55e green', '#15803d 5.02:1', '#166534 7.13:1', '4.59:1 / 6.78:1'],
+            ['intelligence', 'mind, go', '#d946ef fuchsia', '#a21caf 6.32:1', '#86198f 8.24:1', '4.63:1 / 6.80:1'],
+            ['autonomous', 'command-hub, runner', '#06b6d4 cyan', '#0e7490 5.36:1', '#155e75 7.27:1', '4.61:1 / 6.80:1'],
+          ]}
+        />
+        <Prose>
+          Fills need 4.5:1 under white text (WCAG AA) and the focus ring 3:1 on every surface; the ring figure is the
+          lowest across all surface roles. The token tests check both at every contrast level. Aliases{' '}
+          <code>book-hub</code>, <code>payhub</code> and <code>founder-hub</code> work as <code>data-product</code> values.
+          On a division page, set <code>division</code> on Hero, SectionHeader, ProductGrid, ProductCard and CTABand.
+        </Prose>
+      </Section>
+
       <Section id="guidelines" title="Guidelines">
         <List
           items={[

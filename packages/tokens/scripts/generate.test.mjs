@@ -227,3 +227,29 @@ test('applyRem rewrites only covered declarations, keeping comments and other to
   const css = ':root {\n  --type-body-md-size: 16px; /** Body */\n  --type-body-md-lineHeight: 24px;\n  --border-width-1: 1px;\n}\n';
   assert.equal(applyRem(css, groups), ':root {\n  --type-body-md-size: 1rem; /** Body */\n  --type-body-md-lineHeight: 1.5rem;\n  --border-width-1: 1px;\n}\n');
 });
+
+// ─── Divisions (10.1) ────────────────────────────────────────────────────────
+test('division fills reach AA under white text, and the ring 3:1 on every surface', async () => {
+  const { DIVISIONS, divisionPalettes } = await import('./generate.mjs');
+  const { contrastRatio } = await import('../src/seed.js');
+  const { readFileSync } = await import('node:fs');
+  const scales = JSON.parse(readFileSync(new URL('../tokens/color.json', import.meta.url), 'utf8')).color.accent;
+  const value = (d, key) => {
+    const v = scales[d][key].$value;
+    return v.startsWith('{') ? scales[d][v.slice(1, -1).split('.').pop()].$value : v;
+  };
+  const neutral = signaturePalettes().neutral;
+  const surfaces = Object.entries(ROLES).filter(([role]) => role.startsWith('surface'));
+  assert.deepEqual(DIVISIONS, ['os', 'commerce', 'fintech', 'intelligence', 'autonomous']);
+  for (const d of DIVISIONS) {
+    for (const key of ['fill', 'fill-hover']) assert.ok(contrastRatio(value(d, key), '#ffffff') >= 4.5, `${d} ${key}`);
+    for (const level of LEVELS) {
+      const [, l, dk] = tonesAt(tertiary(d).tertiary, level);
+      for (const [role, entry] of surfaces) {
+        const [, sl, sd] = tonesAt(entry, level);
+        assert.ok(contrastRatio(divisionPalettes()[d][l], neutral[sl]) >= 3, `${d} ring on ${role} (light, ${level})`);
+        assert.ok(contrastRatio(divisionPalettes()[d][dk], neutral[sd]) >= 3, `${d} ring on ${role} (dark, ${level})`);
+      }
+    }
+  }
+});

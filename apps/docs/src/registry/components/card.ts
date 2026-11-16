@@ -14,7 +14,7 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'variant', type: "'flat' | 'surface' | 'interactive' | 'showcase'", default: "'flat'", required: false, description: '`interactive` lifts 2px on hover (spatial spring, elevation 1 → 2), sinks to 0.99 on press and adds a state layer. Use it for cards that are links or buttons. `showcase` is the marketing-mode card (24px corners, soft shadow, hover lift); a flat card outside `data-mode="marketing"`.' },
-    { name: 'accent', type: "'leap' | 'bookub' | 'payub' | 'founderub'", required: false, description: 'With `variant="showcase"`: a product-coloured top edge and tint in marketing mode. Sets `data-product` on the card. Only for product-specific content.' },
+    { name: 'accent', type: "ProductKey | DivisionKey", required: false, description: 'With `variant="showcase"`: an app- or division-coloured top edge and tint in marketing mode. An app key sets `data-product`, a division key `data-division`. Keys beyond leap, bookub, payub and founderub need `@nexub/themes/products` or `@nexub/themes/divisions`. Only for product-specific content.' },
     { name: 'effect', type: "'none' | 'sheen' | 'tilt'", default: "'none'", required: false, description: 'Opt-in. `sheen` is a soft light that follows the pointer, with a brighter rim near the edge. `tilt` (4.3) also leans the card toward the pointer in 3D. Off for touch, reduced motion and reduced transparency.' },
     { name: 'tone', type: "ToneValue", default: 'undefined', required: false, description: 'Applies a semantic left-border accent.' },
     { name: 'asChild', type: 'boolean', default: 'false', required: false, description: 'Merges props onto the immediate child element.' },
