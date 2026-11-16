@@ -89,7 +89,7 @@ Legacy aliases (`--color-bg-*`, `--color-text-*`, `--color-border-*`, `--color-s
 
 ## Typography roles
 
-Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `font-mono` (Geist Mono, code and figures).
+Fonts: `font-sans` and `font-display` (both Plus Jakarta Sans, the one Nexub typeface), `font-mono` (Geist Mono, code and figures).
 
 | Tailwind | Size / line height | Weight |
 | --- | --- | --- |

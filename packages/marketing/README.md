@@ -51,8 +51,9 @@ Fonts come from `next/font`; point the design tokens at them:
 
 ```tsx
 // app/layout.tsx
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
-const sans = Inter({ subsets: ['latin'], variable: '--font-family-sans' });
+import { Plus_Jakarta_Sans } from 'next/font/google';
+// One typeface; the two calls only name the two token variables (the files are shared).
+const sans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-sans' });
 const display = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-family-display' });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

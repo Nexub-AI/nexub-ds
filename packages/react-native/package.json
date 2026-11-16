@@ -67,7 +67,6 @@
   },
   "dependencies": {
     "@expo-google-fonts/geist-mono": "^0.4.3",
-    "@expo-google-fonts/inter": "^0.4.2",
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@nexub/core": "workspace:*",
     "@nexub/icons": "workspace:*",
