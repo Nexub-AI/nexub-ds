@@ -413,7 +413,7 @@ It builds on the shipped v1 (a material layer, `surface="glass"`, `data-material
 
 **Visual regression** (`packages/react/visual/`, CI job `visual`)
 - Every story × light/dark/payub: 449 baselines, plus 4 skips for stories that pin their own theme.
-- Runs with Playwright 1.64.0 in a digest-pinned Linux image. Time and randomness are frozen, so reruns are pixel-identical.
+- Runs with Playwright 1.65.0 in a digest-pinned Linux image. Time and randomness are frozen, so reruns are pixel-identical.
 - Glass has no separate dimension. It's a prop, not a global, so its own stories cover it.
 
 **Contrast test**
