@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cn } from '@nexub/react/cn';
 import { Container } from '@nexub/react/Container';
 import { EyebrowChip } from '@nexub/react/EyebrowChip';
+import type { DivisionKey } from '@nexub/react/Card';
 
 export interface HeroProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   /** A string becomes a gradient EyebrowChip; pass a node for your own. */
@@ -14,19 +15,21 @@ export interface HeroProps extends Omit<React.HTMLAttributes<HTMLElement>, 'titl
   /** Product shot or illustration. With `align="start"` it sits beside the text on wide screens. */
   visual?: React.ReactNode;
   align?: 'center' | 'start';
+  /** Sets `data-division`: the eyebrow takes the division's colour (needs `@nexub/themes/divisions`). */
+  division?: DivisionKey;
 }
 
 /** The page hero: ambient backdrop, eyebrow, display headline, lead, actions and a visual. Server component. */
 export const Hero = React.forwardRef<HTMLElement, HeroProps>(
-  ({ eyebrow, title, description, actions, visual, align = 'center', className, children, ...props }, ref) => {
+  ({ eyebrow, title, description, actions, visual, align = 'center', division, className, children, ...props }, ref) => {
     const centered = align === 'center';
     return (
-      <section ref={ref} className={cn('nx-mkt-hero-backdrop relative overflow-hidden py-20 sm:py-28', className)} {...props}>
+      <section ref={ref} data-division={division} className={cn('nx-mkt-hero-backdrop relative overflow-hidden py-20 sm:py-28', className)} {...props}>
         <Container size="marketing" className={cn('flex flex-col gap-14', !centered && visual && 'lg:grid lg:grid-cols-2 lg:items-center')}>
           <div className={cn('flex flex-col gap-6', centered ? 'mx-auto max-w-3xl items-center text-center' : 'items-start')}>
             {eyebrow && (
               <div className="nx-mkt-rise">
-                {typeof eyebrow === 'string' ? <EyebrowChip variant="gradient" tone="info">{eyebrow}</EyebrowChip> : eyebrow}
+                {typeof eyebrow === 'string' ? <EyebrowChip variant="gradient" tone="info" className={division && 'text-[var(--color-tertiary)]'}>{eyebrow}</EyebrowChip> : eyebrow}
               </div>
             )}
             <h1 className="nx-mkt-rise nx-mkt-delay-1 m-0 text-balance font-display text-display-md text-[var(--color-on-surface)] sm:text-display-lg lg:text-display-xl">

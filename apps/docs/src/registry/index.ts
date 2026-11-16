@@ -474,7 +474,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'components-status', label: 'Component status', description: 'Lifecycle status of every component and pattern on web and native', href: '/components/status', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
-  { id: 'foundations-typography', label: 'Typography', description: 'Inter and Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
+  { id: 'foundations-typography', label: 'Typography', description: 'Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
   { id: 'foundations-motion', label: 'Motion & interaction', description: 'Spring tokens, state layers, focus ring', href: '/foundations/motion', category: 'Foundations' },
   { id: 'foundations-shadows', label: 'Elevation & shape', description: 'Tonal elevation, shadow levels, semantic shapes', href: '/foundations/shadows', category: 'Foundations' },

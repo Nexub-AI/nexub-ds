@@ -1,6 +1,6 @@
 # Tokens
 
-Nexub DS v10.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v10.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -89,7 +89,7 @@ Legacy aliases (`--color-bg-*`, `--color-text-*`, `--color-border-*`, `--color-s
 
 ## Typography roles
 
-Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `font-mono` (Geist Mono, code and figures).
+Fonts: `font-sans` and `font-display` (both Plus Jakarta Sans, the one Nexub typeface), `font-mono` (Geist Mono, code and figures).
 
 | Tailwind | Size / line height | Weight |
 | --- | --- | --- |

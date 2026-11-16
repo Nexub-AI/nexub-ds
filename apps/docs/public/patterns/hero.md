@@ -16,6 +16,7 @@ The page hero: ambient backdrop, eyebrow, display headline (the page's one h1), 
 | `actions` | `React.ReactNode` |  | One `Button variant="hero"` and one outlined button, usually. |
 | `visual` | `React.ReactNode` |  | Product shot or illustration. Beside the text on wide screens with `align="start"`. |
 | `align` | `'center' \| 'start'` | `'center'` | Text alignment and layout. |
+| `division` | `DivisionKey` |  | Sets `data-division` on the section: a string eyebrow takes the division colour. Load `@nexub/themes/divisions`. |
 
 ## Example: Default
 

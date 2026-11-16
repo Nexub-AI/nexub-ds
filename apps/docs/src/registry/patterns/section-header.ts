@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: "description", type: "React.ReactNode", required: false, description: "The lead paragraph." },
     { name: "align", type: "'center' | 'start'", default: "'center'", required: false, description: "Alignment." },
     { name: "level", type: "2 | 3", default: "2", required: false, description: "Heading level." },
+    { name: "division", type: "DivisionKey", required: false, description: "Sets `data-division` on the section: a string eyebrow takes the division colour. Load `@nexub/themes/divisions`." },
   ],
   examples: [
     {

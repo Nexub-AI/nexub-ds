@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v10.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -259,5 +259,5 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Motion, NexubProvider, OTPInput, ThemeProvider
+- `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, ThemeProvider
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage

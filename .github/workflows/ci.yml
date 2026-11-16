@@ -66,6 +66,11 @@ jobs:
           SIZE_BASE_BUDGETS: ${{ runner.temp }}/base-budgets.json
           PR_BODY: ${{ github.event.pull_request.body }}
 
+      # 10.1: a fresh Next 15 app renders the marketing sections as server components
+      # and hands the browser no @nexub client module except the NumberTicker island.
+      - name: Server components (Next 15)
+        run: pnpm check:rsc
+
       # Docs static export — verifies all pages pre-render without errors.
       # Output goes to apps/docs/out/ (deployed by Cloudflare Pages jobs).
       - name: Build docs (static export)
