@@ -2,20 +2,16 @@
 // Load them once at startup:  const [ready] = useFonts(nexubFonts)  (expo-font).
 // Per-weight subpaths don't import expo-font, so bare RN apps can load the same
 // files with their own loader.
-import { Inter_400Regular } from '@expo-google-fonts/inter/400Regular';
-import { Inter_500Medium } from '@expo-google-fonts/inter/500Medium';
-import { Inter_600SemiBold } from '@expo-google-fonts/inter/600SemiBold';
-import { Inter_700Bold } from '@expo-google-fonts/inter/700Bold';
+import { PlusJakartaSans_400Regular } from '@expo-google-fonts/plus-jakarta-sans/400Regular';
+import { PlusJakartaSans_500Medium } from '@expo-google-fonts/plus-jakarta-sans/500Medium';
 import { PlusJakartaSans_600SemiBold } from '@expo-google-fonts/plus-jakarta-sans/600SemiBold';
 import { PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans/700Bold';
 import { PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans/800ExtraBold';
 import { GeistMono_400Regular } from '@expo-google-fonts/geist-mono/400Regular';
 
 export const nexubFonts = {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
   PlusJakartaSans_600SemiBold,
   PlusJakartaSans_700Bold,
   PlusJakartaSans_800ExtraBold,
@@ -32,12 +28,13 @@ export type FontSource = 'nexub' | 'system';
 export type ResolvedFontSource = FontSource | 'nexub-bold';
 const BOLDER: Record<number, number> = { 400: 600, 500: 700, 600: 700, 700: 800, 800: 800 };
 
+// One typeface since 10.1: the interface text is Plus Jakarta Sans too.
 const SANS: Record<number, string> = {
-  400: 'Inter_400Regular',
-  500: 'Inter_500Medium',
-  600: 'Inter_600SemiBold',
-  700: 'Inter_700Bold',
-  800: 'Inter_700Bold',
+  400: 'PlusJakartaSans_400Regular',
+  500: 'PlusJakartaSans_500Medium',
+  600: 'PlusJakartaSans_600SemiBold',
+  700: 'PlusJakartaSans_700Bold',
+  800: 'PlusJakartaSans_800ExtraBold',
 };
 const DISPLAY: Record<number, string> = {
   400: 'PlusJakartaSans_600SemiBold',

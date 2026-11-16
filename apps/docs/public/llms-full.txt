@@ -200,7 +200,7 @@ Legacy aliases (`--color-bg-*`, `--color-text-*`, `--color-border-*`, `--color-s
 
 ## Typography roles
 
-Fonts: `font-sans` (Inter, UI), `font-display` (Plus Jakarta Sans, headlines), `font-mono` (Geist Mono, code and figures).
+Fonts: `font-sans` and `font-display` (both Plus Jakarta Sans, the one Nexub typeface), `font-mono` (Geist Mono, code and figures).
 
 | Tailwind | Size / line height | Weight |
 | --- | --- | --- |
@@ -11350,7 +11350,7 @@ Optional peers. Add only what you use; without them the feature is a no-op or th
 | `expo-screen-capture` | `PrivacyShield preventCapture` |
 | `@react-native-community/datetimepicker` | `DateTimeField` |
 
-`@nexub/tokens`, `@nexub/core`, `@nexub/icons` and the fonts (Inter, Plus Jakarta Sans, Geist Mono; OFL) come with the package.
+`@nexub/tokens`, `@nexub/core`, `@nexub/icons` and the fonts (Plus Jakarta Sans, Geist Mono; OFL) come with the package.
 
 ## Set up
 

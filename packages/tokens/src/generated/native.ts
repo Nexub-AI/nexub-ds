@@ -948,21 +948,21 @@ export const native = {
       "weight": 400,
       "size": 18,
       "lineHeight": 28,
-      "letterSpacing": -0.2
+      "letterSpacing": 0
     },
     "body-md": {
       "family": "sans",
       "weight": 400,
       "size": 16,
       "lineHeight": 24,
-      "letterSpacing": -0.18
+      "letterSpacing": 0
     },
     "body-sm": {
       "family": "sans",
       "weight": 400,
       "size": 14,
       "lineHeight": 20,
-      "letterSpacing": -0.08
+      "letterSpacing": 0
     },
     "label-lg": {
       "family": "sans",

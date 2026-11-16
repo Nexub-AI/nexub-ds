@@ -851,11 +851,11 @@ export const tokens = {
   },
   "font": {
     "family": {
-      "sans": "'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif",
-      "display": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', 'Inter Variable', ui-sans-serif, system-ui, sans-serif",
+      "sans": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
+      "display": "'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif",
       "mono": "'Geist Mono', ui-monospace, 'SFMono-Regular', monospace",
-      "devanagari": "'Noto Sans Devanagari', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif",
-      "tamil": "'Noto Sans Tamil', 'Inter Variable', 'Inter', ui-sans-serif, sans-serif"
+      "devanagari": "'Noto Sans Devanagari', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif",
+      "tamil": "'Noto Sans Tamil', 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', ui-sans-serif, sans-serif"
     },
     "weight": {
       "regular": "400",
@@ -1009,19 +1009,19 @@ export const tokens = {
     "body-lg": {
       "size": "18px",
       "lineHeight": "28px",
-      "letterSpacing": "-0.011em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "body-md": {
       "size": "16px",
       "lineHeight": "24px",
-      "letterSpacing": "-0.011em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "body-sm": {
       "size": "14px",
       "lineHeight": "20px",
-      "letterSpacing": "-0.006em",
+      "letterSpacing": "0em",
       "weight": "400"
     },
     "label-lg": {

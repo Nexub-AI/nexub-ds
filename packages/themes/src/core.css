@@ -98,14 +98,14 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  /* never fake bold/italic; Inter's optical sizes follow font-size */
+  /* never fake bold/italic */
   font-synthesis: none;
   font-optical-sizing: auto;
 }
 
 /* Form controls don't inherit fonts by default — without this, apps that
    don't use Tailwind's preflight would render buttons/inputs in the system UI
-   font instead of Inter. */
+   font instead of the Nexub typeface. */
 button, input, select, textarea, optgroup {
   font-family: inherit;
 }
