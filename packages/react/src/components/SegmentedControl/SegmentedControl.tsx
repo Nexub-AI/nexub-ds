@@ -63,7 +63,8 @@ const Item = React.forwardRef<HTMLButtonElement, SegmentedControlItemProps>(
       <RadixToggleGroup.Item
         ref={ref}
         className={cn(
-          'relative z-10 inline-flex items-center justify-center rounded-[var(--shape-pill,var(--shape-control))] select-none',
+          // gap: an icon next to the label needs no className.
+          'relative z-10 inline-flex items-center justify-center gap-1.5 rounded-[var(--shape-pill,var(--shape-control))] select-none',
           size === 'sm' ? 'px-3' : size === 'lg' ? 'px-5' : 'px-4',
           'text-[var(--color-on-surface-variant)] transition-colors duration-effects-fast ease-effects-fast',
           'hover:text-[var(--color-on-surface)] data-[state=on]:text-[var(--color-on-surface)]',
