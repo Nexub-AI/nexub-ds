@@ -1,5 +1,7 @@
 # @nexub/core
 
+## 10.4.0
+
 ## 10.3.0
 
 ### Minor Changes
