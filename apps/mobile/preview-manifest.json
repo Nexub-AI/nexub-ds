@@ -6,7 +6,8 @@
     "ex": "'all' (default) or an example index",
     "scheme": "light | dark | system",
     "brand": "nexub | payub | bookub | leap | founderub",
-    "contrast": "standard | medium | high | system"
+    "contrast": "standard | medium | high | system",
+    "dir": "auto (default) | ltr | rtl"
   },
   "messages": {
     "toPreview": "{ type: 'nexub-theme', scheme?, brand?, contrast? } (same origin only)",
@@ -91,6 +92,15 @@
       ],
       "path": "/m/preview/icon-button"
     },
+    "tooltip": {
+      "title": "Tooltip",
+      "kind": "component",
+      "web": "tooltip",
+      "examples": [
+        "Long-press"
+      ],
+      "path": "/m/preview/tooltip"
+    },
     "link": {
       "title": "Link",
       "kind": "component",
@@ -145,6 +155,35 @@
         "Overflow"
       ],
       "path": "/m/preview/avatar-group"
+    },
+    "icon-chip": {
+      "title": "IconChip",
+      "kind": "component",
+      "web": "icon-chip",
+      "examples": [
+        "Categories",
+        "Sizes and shapes"
+      ],
+      "path": "/m/preview/icon-chip"
+    },
+    "number-ticker": {
+      "title": "NumberTicker",
+      "kind": "component",
+      "web": "number-ticker",
+      "examples": [
+        "Rolling total"
+      ],
+      "path": "/m/preview/number-ticker"
+    },
+    "stat-card": {
+      "title": "StatCard",
+      "kind": "component",
+      "web": "stat-card",
+      "examples": [
+        "With trend",
+        "Pressable"
+      ],
+      "path": "/m/preview/stat-card"
     },
     "text-field": {
       "title": "TextField",
@@ -228,6 +267,26 @@
       ],
       "path": "/m/preview/segmented-control"
     },
+    "tabs": {
+      "title": "Tabs",
+      "kind": "component",
+      "web": "tabs",
+      "examples": [
+        "Line",
+        "Pill, scrolling"
+      ],
+      "path": "/m/preview/tabs"
+    },
+    "rating": {
+      "title": "Rating",
+      "kind": "component",
+      "web": "rating",
+      "examples": [
+        "Tap to rate",
+        "Read only"
+      ],
+      "path": "/m/preview/rating"
+    },
     "slider": {
       "title": "Slider",
       "kind": "component",
@@ -301,6 +360,16 @@
       ],
       "path": "/m/preview/list-section"
     },
+    "table": {
+      "title": "Table",
+      "kind": "component",
+      "web": "table",
+      "examples": [
+        "Sticky first column",
+        "Compact and striped"
+      ],
+      "path": "/m/preview/table"
+    },
     "data-list": {
       "title": "DataList",
       "kind": "component",
@@ -354,6 +423,62 @@
         "Rename"
       ],
       "path": "/m/preview/inline-edit"
+    },
+    "description-list": {
+      "title": "DescriptionList",
+      "kind": "component",
+      "web": "description-list",
+      "examples": [
+        "Fee breakdown",
+        "Stacked"
+      ],
+      "path": "/m/preview/description-list"
+    },
+    "comparison-bar": {
+      "title": "ComparisonBar",
+      "kind": "component",
+      "web": "comparison-bar",
+      "examples": [
+        "This week and last"
+      ],
+      "path": "/m/preview/comparison-bar"
+    },
+    "qr-code": {
+      "title": "QRCode",
+      "kind": "component",
+      "web": "qr-code",
+      "examples": [
+        "With its value",
+        "With a logo"
+      ],
+      "path": "/m/preview/qr-code"
+    },
+    "qr-scanner": {
+      "title": "QRScanner",
+      "kind": "mobile",
+      "web": null,
+      "examples": [
+        "Manual entry"
+      ],
+      "path": "/m/preview/qr-scanner"
+    },
+    "phone-input": {
+      "title": "PhoneInput",
+      "kind": "component",
+      "web": "phone-input",
+      "examples": [
+        "Country and number"
+      ],
+      "path": "/m/preview/phone-input"
+    },
+    "countdown": {
+      "title": "Countdown",
+      "kind": "component",
+      "web": "countdown",
+      "examples": [
+        "Chip and inline"
+      ],
+      "path": "/m/preview/countdown"
     },
     "accordion": {
       "title": "Accordion",
@@ -683,6 +808,11 @@
       "title": "App switcher",
       "subtitle": "Nexub apps sheet",
       "path": "/m/preview/pattern/apps"
+    },
+    "status": {
+      "title": "Status steps",
+      "subtitle": "Where an application stands",
+      "path": "/m/preview/pattern/status"
     }
   },
   "byWeb": {
@@ -701,6 +831,9 @@
     "icon-button": [
       "icon-button"
     ],
+    "tooltip": [
+      "tooltip"
+    ],
     "link": [
       "link"
     ],
@@ -718,6 +851,15 @@
     ],
     "avatar-group": [
       "avatar-group"
+    ],
+    "icon-chip": [
+      "icon-chip"
+    ],
+    "number-ticker": [
+      "number-ticker"
+    ],
+    "stat-card": [
+      "stat-card"
     ],
     "input": [
       "text-field"
@@ -746,6 +888,12 @@
     "segmented-control": [
       "segmented-control"
     ],
+    "tabs": [
+      "tabs"
+    ],
+    "rating": [
+      "rating"
+    ],
     "slider": [
       "slider"
     ],
@@ -764,6 +912,9 @@
     "card": [
       "card"
     ],
+    "table": [
+      "table"
+    ],
     "data-table": [
       "data-list"
     ],
@@ -778,6 +929,21 @@
     ],
     "inline-edit": [
       "inline-edit"
+    ],
+    "description-list": [
+      "description-list"
+    ],
+    "comparison-bar": [
+      "comparison-bar"
+    ],
+    "qr-code": [
+      "qr-code"
+    ],
+    "phone-input": [
+      "phone-input"
+    ],
+    "countdown": [
+      "countdown"
     ],
     "accordion": [
       "accordion"

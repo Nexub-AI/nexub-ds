@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -537,6 +537,41 @@ function changesIn9(src, report) {
   return output;
 }
 
+// ─── changes-in-11: what 11.0 removes and flips ─────────────────────────────
+// Removed: the four hand-written product theme files (deprecated in 10.3). They set the same
+// [data-product] accent the generated map sets, so the import is rewritten to it.
+// Flipped: overlays' `sheet` default, false -> 'auto'. Reported, never rewritten.
+const PRODUCT_THEME = /(['"(]@nexub\/themes\/(?:src\/)?)(leap|bookub|payub|founderub)(?=(?:\.css)?['")])/g;
+const HAS_PRODUCTS = /['"(]@nexub\/themes\/(?:src\/)?products(?:\.css)?['")]/;
+const SHEET_11 = [
+  { pkg: '@nexub/react', comps: ['MultiSelect', 'Autocomplete', 'DatePicker', 'DateRangePicker', 'DateTimePicker', 'SplitButton', 'SavedViews', 'CommandPalette'] },
+  { pkg: '@nexub/react', comps: ['Select', 'DropdownMenu', 'ContextMenu', 'Menubar', 'Popover', 'AlertDialog'], part: 'Content' },
+  { pkg: '@nexub/react', comps: ['Breadcrumb'], part: 'Trail' },
+  { pkg: '@nexub/patterns', comps: ['NotificationCenter', 'AppLauncher', 'AppHeader'] },
+];
+
+function changesIn11(src, ext, report) {
+  let seen = HAS_PRODUCTS.test(src);
+  const output = src.replace(PRODUCT_THEME, (_, head, name, at) => {
+    if (seen) report(at, `@nexub/themes/${name} is removed in 11.0 and this file already imports @nexub/themes/products, which covers it: delete this line`);
+    seen = true;
+    return `${head}products`;
+  });
+  if (!COMPONENT_EXTS.has(ext)) return output;
+  for (const { pkg, comps, part } of SHEET_11) {
+    for (const [local, name] of importedAs(src, pkg, comps)) {
+      const tagName = part ? `${local}.${part}` : local;
+      for (const m of src.matchAll(new RegExp(`<${tagName.replace('.', '\\.')}(?![\\w.$-])`, 'g'))) {
+        const tag = readTag(src, m.index + m[0].length);
+        if (!tag || tag.attrs.some((a) => a.name === 'sheet')) continue;
+        const spread = src.slice(m.index, tag.end).includes('{...') ? ' (a {...spread} here may already pass it)' : '';
+        report(m.index, `<${part ? `${name}.${part}` : name}> has no sheet prop${spread}: in 11.0 the default changes from false to "auto" (a bottom sheet below 768px). Pass sheet={false} to keep the popover on small screens, or sheet="auto" to opt in now`);
+      }
+    }
+  }
+  return output;
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -595,6 +630,8 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
   if (rules.has('changes-in-8')) changesIn8(src, ext, (at, message) => items.push({ at, rule: 'changes-in-8', message }));
   if (rules.has('changes-in-9') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.html'))
     text = changesIn9(text, (at, message) => items.push({ at, rule: 'changes-in-9', message }));
+  if (rules.has('changes-in-11') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.scss' || ext === '.html'))
+    text = changesIn11(text, ext, (at, message) => items.push({ at, rule: 'changes-in-11', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -673,6 +710,10 @@ Rules:
                      DateTimeField minimumDate/maximumDate -> minDate/maxDate, ButtonGroup
                      direction row/stack -> orientation horizontal/vertical (@nexub/react-native);
                      reports the classic style and the hidePassword message
+  changes-in-11      what 11.0 removes and flips: rewrites @nexub/themes/{leap,bookub,payub,founderub}
+                     (import and CSS @import) to @nexub/themes/products; reports every overlay
+                     without a sheet prop (the default becomes "auto": a bottom sheet below
+                     768px; sheet={false} keeps the popover)
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

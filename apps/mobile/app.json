@@ -3,15 +3,17 @@
     "name": "Nexub Mobile",
     "slug": "nexub-mobile",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "../../packages/brand/assets/mobile/nexub-ios.png",
     "scheme": "nexub",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "ai.nexub.mobile"
+      "bundleIdentifier": "ai.nexub.mobile",
+      "supportsTablet": true
     },
     "android": {
       "package": "ai.nexub.mobile",
+      "predictiveBackGestureEnabled": true,
       "adaptiveIcon": {
         "backgroundImage": "../../packages/brand/assets/mobile/nexub-android-background.png",
         "foregroundImage": "../../packages/brand/assets/mobile/nexub-android-foreground.png",

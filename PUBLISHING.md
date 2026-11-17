@@ -55,7 +55,7 @@ Nexub DS uses **one version** for every `@nexub/*` package. **Every release bump
 **From 10.0: semver, no rollover.** After 10.9 comes 10.10. A major happens only when something has to break.
 
 ```
-9.8.0 → 9.9.x (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.9.0 → 10.10.0
+9.8.0 → 9.9.x (10.0 RC, on `next`) → 10.0.0 → 10.1.0 → … → 10.8.0 → 10.9.x (11.0 RC, on `next`) → 11.0.0
 ```
 
 | Situation | Changeset bump | Example |
@@ -75,15 +75,34 @@ Rules:
 
 ### Release candidates and the `next` tag
 
-`scripts/publish-tarballs.mjs` picks the npm dist-tag from the version (`distTag`). 9.9.x is the 10.0 release candidate: it publishes to `next`, and `latest` stays on 9.8 until 10.0. Consumers try it with `npm install @nexub/react@next`.
+`scripts/publish-tarballs.mjs` picks the npm dist-tag from the version (`distTag`, from the `RC_LINES` list). Every version on a release-candidate line publishes to `next`; everything else publishes to `latest`.
+
+| RC line | Candidate for | `latest` meanwhile |
+|---|---|---|
+| 9.9.x | 10.0 (shipped 2026-11-14) | 9.8.x |
+| **10.9.x** | **11.0** (RFC: `RFC_11.0.md`) | 10.8.x, until 11.0.0 |
+
+**An RC is out now: 10.9.x on `next`.** Consumers try it with `npm install @nexub/react@next` (same tag for every `@nexub/*` package), run `npx nexub-migrate --rules changes-in-11`, and read `/getting-started/migrating-to-11`. A plain `npm install @nexub/react` keeps giving 10.8.x. 10.9.0 itself breaks nothing: it is a normal 10.x minor that carries the 11.0 warnings and migration tooling.
 
 **10.0.0 shipped on 2026-11-14, one day into the planned 4-week soak.** The owner waived three exit criteria (flake rate, Scorecard 8, the soak) so apps could move to 10 at once; 9.9 changed no component since 9.8. The docs page `/getting-started/release-status` records where each criterion stood. Flakes and Scorecard are still tracked.
 
-For a future release candidate, add its version rule to `distTag`:
+For a future release candidate, add its line to `RC_LINES` (and a case to the test in `scripts/supply-chain.test.mjs`). While one is out:
 
 - **Freeze.** While an RC is on `next`, only fixes that block the release are merged: no new component, prop, token or default.
 - **Soak.** The RC stays on `next` in the Payub and Matchub pilots. A regression is fixed as a patch (still `next`).
-- **A fix `latest` users need during a soak** can't ship on the previous version (production is already on the RC). Remove the RC rule from `distTag` in the fix PR: the RC then publishes to `latest` and the soak continues there.
+- **A fix `latest` users need during a soak** can't ship on the previous version (production is already on the RC). Remove the RC line from `RC_LINES` in the fix PR: the RC then publishes to `latest` and the soak continues there.
+
+### What the 11.0 PR must change
+
+10.9 leaves the version guards alone, so until this PR a `major` changeset still fails CI. The 11.0 PR, opened after the RFC is accepted (3 working days of comments at least):
+
+1. `scripts/check-changesets.mjs`: `invalidBumps` accepts `major` (today it accepts `minor` and `patch` only).
+2. `scripts/release-version.mjs`: `nextVersion` lets `10.x → 11.0.0` through. Today it throws on any change of major ("changesets proposed a major bump").
+3. `scripts/release-version.test.mjs`: the case `nextVersion('10.9.0', '11.0.0')` expects a throw; make it expect `11.0.0`.
+4. One changeset with `major` for the fixed group, each breaking line starting with `**Breaking:**`.
+5. The two changes of the RFC and nothing else: delete `packages/themes/src/{leap,bookub,payub,founderub}.css`, their `exports` in `packages/themes/package.json` and their imports in `packages/react/src/styles.css`, `packages/react/.storybook/preview.css` and `apps/docs/src/styles/globals.css`; set the `sheet` default to `'auto'` (`SheetProp` in `packages/react/src/utils/popper.ts`) and update the `@default` JSDoc. The first test in `packages/tokens/bin/nexub-migrate.test.mjs` reads the four files: drop them from its list. In the docs, point "Migrating to the latest version" (`apps/docs/src/registry/index.ts`) at `migrating-to-11` and move the "(latest)" label in `MigrationPicker.tsx`.
+6. `scripts/publish-tarballs.mjs` needs no change: 11.0.0 is not on an RC line, so it publishes to `latest`. Keep `10.9` in `RC_LINES` as history.
+7. In the first PR after 11.0.0 is on npm, put both guards back so the next `major` needs its own RFC.
 
 The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
 

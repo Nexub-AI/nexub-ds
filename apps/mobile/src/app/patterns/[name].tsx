@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Stack as Screen, router, useLocalSearchParams } from 'expo-router';
 import { ArrowDown, Bell, Copy, CreditCard, Globe, Lock, Plus, Send as SendIcon, Trash2, User, Wallet } from '@nexub/icons/native';
-import { Avatar, Button, Icon, ListItem, Text, useToast, type GlassMode } from '@nexub/react-native';
+import { Avatar, Button, Icon, ListItem, ScreenContainer, Text, useToast, type GlassMode } from '@nexub/react-native';
+import { StatusSteps } from '@nexub/react-native/patterns';
 import {
   ActivityList,
   AmountStep,
@@ -247,6 +248,22 @@ function Apps() {
   );
 }
 
+function Status() {
+  return (
+    <ScreenContainer>
+      <StatusSteps
+        accessibilityLabel="Application status"
+        steps={[
+          { title: 'Application sent', status: 'done', timestamp: 'Mon, 10:30' },
+          { title: 'Documents', status: 'error', description: 'The photo is too dark.' },
+          { title: 'In review', status: 'current' },
+          { title: 'Decision', status: 'upcoming' },
+        ]}
+      />
+    </ScreenContainer>
+  );
+}
+
 export const PATTERNS: Record<string, { title: string; subtitle: string; Component: () => React.JSX.Element; headerShown?: boolean }> = {
   onboarding: { title: 'Onboarding', subtitle: 'Slides → permission primer', Component: Onboarding, headerShown: false },
   permission: { title: 'Permission primer', subtitle: 'Before the OS prompt', Component: Permission },
@@ -266,6 +283,7 @@ export const PATTERNS: Record<string, { title: string; subtitle: string; Compone
   chat: { title: 'Assistant', subtitle: 'Chat with composer', Component: Chat },
   paywall: { title: 'Paywall', subtitle: 'Plans and subscribe', Component: Paywall },
   apps: { title: 'App switcher', subtitle: 'Nexub apps sheet', Component: Apps },
+  status: { title: 'Status steps', subtitle: 'Where an application stands', Component: Status },
 };
 
 export default function PatternScreen() {

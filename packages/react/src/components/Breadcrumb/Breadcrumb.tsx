@@ -106,7 +106,7 @@ export interface BreadcrumbTrailProps extends React.HTMLAttributes<HTMLElement> 
    * `maxItems - 1`, and put the rest in a "More" menu. Default 4.
    */
   maxItems?: number;
-  /** The "More" menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false */
+  /** The "More" menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
 }
 

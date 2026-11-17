@@ -1,10 +1,11 @@
 import StyleDictionary from 'style-dictionary';
 import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { Hct, argbFromHex, hexFromArgb } from '@material/material-color-utilities';
 import { fileURLToPath } from 'node:url';
 import { compose, swift } from './platforms.mjs';
 import { writeFigma } from './figma.mjs';
-import { CHART_KEYS, DIVISIONS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
+import { APP_ALIASES, CHART_KEYS, DIVISIONS, DIVISION_APPS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, categoryColors, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -266,12 +267,60 @@ export function nativeTokens(t) {
         ];
       }),
   );
+  const products = Object.fromEntries(PRODUCTS.map((p) => [p, schemes(tertiary(p))]));
+  // 10.1: the five divisions, same shape as products (apps inherit: see tokens/product/divisions.json).
+  const divisions = Object.fromEntries(DIVISIONS.map((d) => [d, schemes(tertiary(d), divisionPalettes())]));
+  const sigRoles = schemes({ ...signatureRoles(), ...tertiary('primary') }, { ...pal, ...signaturePalettes() });
+  // 10.9 spot accent (core.css "10.3"): the family a product owns. `from` is
+  // 'primary' or 'tertiary'; the four roles are renamed, values untouched.
+  const spotOf = (levels, from) =>
+    Object.fromEntries(
+      Object.entries(levels).map(([lvl, s]) => [
+        lvl,
+        Object.fromEntries(
+          Object.entries(s).map(([scheme, r]) => [
+            scheme,
+            { spot: r[from], onSpot: r[`on-${from}`], spotContainer: r[`${from}-container`], onSpotContainer: r[`on-${from}-container`] },
+          ]),
+        ),
+      ]),
+    );
+  const spot = { default: spotOf(sigRoles, 'primary') };
+  for (const d of DIVISIONS) spot[d] = spotOf(divisions[d], 'tertiary');
+  // An app with its own scale keeps it; the rest inherit their division's (as productsCss()).
+  for (const [d, apps] of Object.entries(DIVISION_APPS))
+    for (const app of apps) spot[app] = products[app] ? spotOf(products[app], 'tertiary') : spot[d];
+  for (const [alias, app] of Object.entries(APP_ALIASES)) spot[alias] = spot[app];
+  // 10.9 category colours: the same values as --color-category-* in roles.css (not contrast-dependent).
+  const categories = Object.fromEntries(
+    ['light', 'dark'].map((scheme, i) => [
+      scheme,
+      Object.fromEntries(
+        categoryColors().map((c) => [c.name, { color: c.text[i], container: c.container[i], onContainer: c.onContainer[i] }]),
+      ),
+    ]),
+  );
+  // 10.9 vivid: the far stop of the main-action gradient (vivid.css --vivid-accent-2:
+  // the primary, hue + 50). Same tone as the primary, so on-primary keeps its contrast.
+  const vivid = Object.fromEntries(
+    Object.entries(sigRoles).map(([lvl, s]) => [
+      lvl,
+      Object.fromEntries(
+        Object.entries(s).map(([scheme, r]) => {
+          const p = Hct.fromInt(argbFromHex(r.primary));
+          return [scheme, { accent2: hexFromArgb(Hct.from((p.hue + 50) % 360, p.chroma, p.tone).toInt()) }];
+        }),
+      ),
+    ]),
+  );
   return {
     color: {
       roles: schemes({ ...ROLES, ...tertiary('primary') }),
-      products: Object.fromEntries(PRODUCTS.map((p) => [p, schemes(tertiary(p))])),
-      // 10.1: the five divisions, same shape as products (apps inherit: see tokens/product/divisions.json).
-      divisions: Object.fromEntries(DIVISIONS.map((d) => [d, schemes(tertiary(d), divisionPalettes())])),
+      products,
+      divisions,
+      categories,
+      spot,
+      vivid,
     },
     spacing: numbers(t.spacing),
     radius: numbers(t.radius),
@@ -287,7 +336,7 @@ export function nativeTokens(t) {
     // style="signature" merges it over the roles / shape / type / elevation above.
     // Tertiary is included: the provider merges a product over it afterwards.
     signature: {
-      roles: schemes({ ...signatureRoles(), ...tertiary('primary') }, { ...pal, ...signaturePalettes() }),
+      roles: sigRoles,
       shape: SIGNATURE.shape,
       type: Object.fromEntries(
         Object.entries(SIGNATURE.tracking).map(([role, em]) => [role, { letterSpacing: +(em * type[role].size).toFixed(2) }]),

@@ -13,7 +13,7 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
+        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'hero'",
         "required": false,
         "default": "'filled'",
         "description": ""
@@ -83,7 +83,7 @@
       },
       {
         "name": "variant",
-        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass'",
+        "type": "'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'hero'",
         "required": false,
         "default": "'text'",
         "description": ""
@@ -324,6 +324,68 @@
       {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Countdown": {
+    "file": "components/countdown.tsx",
+    "extends": [
+      "UseCountdownOptions"
+    ],
+    "props": [
+      {
+        "name": "to",
+        "type": "number | Date",
+        "required": true,
+        "description": "The deadline: a Date or ms since the epoch."
+      },
+      {
+        "name": "format",
+        "type": "'m:ss' | 'h:mm:ss' | 'auto'",
+        "required": false,
+        "default": "'auto'",
+        "description": "`auto` shows hours only from one hour up."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "'md'",
+        "description": "Chip size."
+      },
+      {
+        "name": "variant",
+        "type": "'chip' | 'inline'",
+        "required": false,
+        "default": "'chip'",
+        "description": "`chip` is a small badge; `inline` is plain text."
+      },
+      {
+        "name": "tone",
+        "type": "'auto' | CountdownTone",
+        "required": false,
+        "default": "'auto'",
+        "description": "`auto`: neutral, warning under `warnAt`, danger under `dangerAt`."
+      },
+      {
+        "name": "warnAt",
+        "type": "number",
+        "required": false,
+        "default": "60",
+        "description": "Seconds."
+      },
+      {
+        "name": "dangerAt",
+        "type": "number",
+        "required": false,
+        "default": "10",
+        "description": "Seconds."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle & TextStyle>",
         "required": false,
         "description": ""
       }
@@ -594,6 +656,147 @@
       }
     ]
   },
+  "DescriptionList": {
+    "file": "components/datadisplay.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "layout",
+        "type": "'inline' | 'stacked'",
+        "required": false,
+        "default": "'inline'",
+        "description": "`inline`: label at the start, value at the end of one row. `stacked`: label above the value."
+      },
+      {
+        "name": "columns",
+        "type": "1 | 2 | 3",
+        "required": false,
+        "default": "1",
+        "description": "Pairs per row. Phones always show one; from 600pt of window width, up to two."
+      },
+      {
+        "name": "divided",
+        "type": "boolean",
+        "required": false,
+        "description": "A hairline between rows."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      }
+    ]
+  },
+  "DescriptionListItem": {
+    "file": "components/datadisplay.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The value."
+      },
+      {
+        "name": "emphasis",
+        "type": "boolean",
+        "required": false,
+        "description": "A total: stronger label and value, and a rule above."
+      },
+      {
+        "name": "align",
+        "type": "'start' | 'end'",
+        "required": false,
+        "default": "'end' in the inline layout, 'start' when stacked",
+        "description": "Where the value sits."
+      },
+      {
+        "name": "helpText",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A small muted line under the label."
+      }
+    ]
+  },
+  "ComparisonBar": {
+    "file": "components/datadisplay.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "What is compared, e.g. \"Orders\"."
+      },
+      {
+        "name": "left",
+        "type": "ComparisonBarSide",
+        "required": true,
+        "description": "The side at the inline start (the left in left-to-right text)."
+      },
+      {
+        "name": "right",
+        "type": "ComparisonBarSide",
+        "required": true,
+        "description": "The side at the inline end."
+      },
+      {
+        "name": "valueFormat",
+        "type": "(value: number) => string",
+        "required": false,
+        "default": "String",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "showValues",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "The two values and the label above the bar."
+      },
+      {
+        "name": "showLabels",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "The two side labels under the bar. Turn off for every bar but one in a group."
+      },
+      {
+        "name": "highlight",
+        "type": "'higher' | 'none'",
+        "required": false,
+        "default": "'higher'",
+        "description": "`higher`: the larger side takes the accent and the other is muted; equal values look the same."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "description": "Replaces the text alternative built from the props (\"Orders: Team A 3, Team B 1\")."
+      }
+    ]
+  },
   "Amount": {
     "file": "components/display.tsx",
     "extends": [],
@@ -649,6 +852,40 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      }
+    ]
+  },
+  "IconChip": {
+    "file": "components/display.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "category",
+        "type": "CategoryColor",
+        "required": false,
+        "description": "Colour of the chip. `'accent'` is the product's spot accent. Without it the chip is neutral."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "shape",
+        "type": "'square' | 'circle'",
+        "required": false,
+        "default": "'square'",
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "One icon element, e.g. `<Wallet />`. It takes the chip's colour and size unless it sets its own."
       }
     ]
   },
@@ -709,6 +946,12 @@
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "category",
+        "type": "CategoryColor",
+        "required": false,
+        "description": "A category colour for tags and labels (one per project or team). Wins over `tone`."
       }
     ]
   },
@@ -748,6 +991,12 @@
         "type": "'online' | 'away' | 'busy' | 'offline'",
         "required": false,
         "description": "Presence dot; its name is added to the accessible label (\"Ada Lovelace, Away\")."
+      },
+      {
+        "name": "category",
+        "type": "CategoryColor | 'auto'",
+        "required": false,
+        "description": "Colour of the initials fallback. `'auto'` picks a stable colour from `name`,\nthe same one the web Avatar picks. Without it the avatar is neutral."
       }
     ]
   },
@@ -2308,6 +2557,580 @@
       }
     ]
   },
+  "PhoneInput": {
+    "file": "components/phone.tsx",
+    "extends": [
+      "Omit<TextFieldProps, 'value' | 'defaultValue' | 'onChangeText' | 'leading' | 'keyboardType' | 'multiline'>"
+    ],
+    "props": [
+      {
+        "name": "defaultCountry",
+        "type": "CountryCode",
+        "required": false,
+        "description": "Country to start on. Defaults to the region of the provider's locale, else `US`."
+      },
+      {
+        "name": "country",
+        "type": "CountryCode",
+        "required": false,
+        "description": "Controlled country (ISO 3166-1 alpha-2)."
+      },
+      {
+        "name": "onCountryChange",
+        "type": "(country: CountryCode) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": "Controlled E.164 value (\"+919847012345\"), '' when empty."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(e164: string, details: { country: CountryCode; national: string; valid: boolean }) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "countries",
+        "type": "CountryCode[]",
+        "required": false,
+        "description": "Limits the picker to these countries, in this order. One entry shows it as text."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Marks the field invalid for screen readers. For the red outline and a message, give `error`."
+      }
+    ]
+  },
+  "QRCode": {
+    "file": "components/qr.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": "The text to encode, usually a URL. Up to 2,953 bytes of UTF-8 (1,273 with a logo)."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "required": false,
+        "default": "160",
+        "description": "Width of the code in points."
+      },
+      {
+        "name": "ecc",
+        "type": "QRErrorCorrection",
+        "required": false,
+        "default": "'M', or 'H' with a `logo`",
+        "description": "Error correction: how much of the code may be damaged or covered."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A mark in the centre, on a light tile a fifth of the width. Raises the default `ecc` to 'H'."
+      },
+      {
+        "name": "quietZone",
+        "type": "number",
+        "required": false,
+        "default": "4",
+        "description": "Light margin around the code, in modules. Readers need 4."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "\"QR code for <value>\"",
+        "description": "Text alternative of the image."
+      },
+      {
+        "name": "caption",
+        "type": "React.ReactNode | false",
+        "required": false,
+        "description": "The text under the code. Defaults to the value, so it can be read and typed without a camera. `false` hides it."
+      }
+    ]
+  },
+  "QRScanner": {
+    "file": "components/qr.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "onScan",
+        "type": "(value: string) => void",
+        "required": true,
+        "description": "Called with the text of each code found. The same code is not repeated within two seconds."
+      },
+      {
+        "name": "fallback",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Manual entry, e.g. a TextField and a button. Shown when there is no camera or no permission, and one tap away while scanning."
+      },
+      {
+        "name": "paused",
+        "type": "boolean",
+        "required": false,
+        "description": "Stops the camera and ignores codes, e.g. while the last one is checked."
+      },
+      {
+        "name": "torch",
+        "type": "boolean",
+        "required": false,
+        "description": "Controlled torch."
+      },
+      {
+        "name": "defaultTorch",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "onTorchChange",
+        "type": "(on: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "instructions",
+        "type": "string",
+        "required": false,
+        "default": "messages.scanInstructions",
+        "description": "Hint over the camera."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Rating": {
+    "file": "components/rating.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "value",
+        "type": "number",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "default": "5",
+        "description": ""
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false,
+        "default": "messages.rating",
+        "description": "Accessible name."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "NumberTicker": {
+    "file": "components/stats.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "number | string",
+        "required": true,
+        "description": "A number (formatted with `format` / `locale`) or an already-formatted string."
+      },
+      {
+        "name": "format",
+        "type": "Intl.NumberFormatOptions",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "default": "the provider's",
+        "description": "BCP 47 locale."
+      },
+      {
+        "name": "animate",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Roll digits when the value changes. Off, or under Reduce Motion, the new value just appears."
+      },
+      {
+        "name": "live",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Announce changes to screen readers (web `aria-live=\"polite\"`)."
+      },
+      {
+        "name": "variant",
+        "type": "NativeTypeRole",
+        "required": false,
+        "default": "'body-md'",
+        "description": "Type role."
+      },
+      {
+        "name": "color",
+        "type": "RoleName",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "Colour role."
+      }
+    ]
+  },
+  "StatCard": {
+    "file": "components/stats.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": "A number or string (rolls with `animate`), or any node."
+      },
+      {
+        "name": "delta",
+        "type": "string",
+        "required": false,
+        "description": "The change, already formatted: \"+12.5%\"."
+      },
+      {
+        "name": "deltaType",
+        "type": "'increase' | 'decrease' | 'neutral'",
+        "required": false,
+        "default": "'neutral'",
+        "description": "Direction of the change: sets the arrow (and, by default, the colour)."
+      },
+      {
+        "name": "sentiment",
+        "type": "'positive' | 'negative' | 'neutral'",
+        "required": false,
+        "default": "derived from `deltaType`",
+        "description": "Whether the change is good or bad, independent of its direction: churn going\ndown is `deltaType=\"decrease\"` + `sentiment=\"positive\"`."
+      },
+      {
+        "name": "icon",
+        "type": "React.ReactElement<NativeIconProps>",
+        "required": false,
+        "description": "One icon element, e.g. `<Wallet />`."
+      },
+      {
+        "name": "category",
+        "type": "CategoryColor",
+        "required": false,
+        "description": "Puts the icon on a tinted chip of this colour, and colours the trend line to match."
+      },
+      {
+        "name": "trend",
+        "type": "number[]",
+        "required": false,
+        "description": "Recent values, drawn as a small trend line beside the delta."
+      },
+      {
+        "name": "trendLabel",
+        "type": "string",
+        "required": false,
+        "description": "Accessible summary of the trend, e.g. \"Last 12 weeks, rising\". Without it the line is decorative."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "animate",
+        "type": "boolean",
+        "required": false,
+        "description": "Roll digits when a number/string `value` changes (NumberTicker); announced politely."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Skeletons in place of the value and the line under it; the card keeps its size."
+      },
+      {
+        "name": "onPress",
+        "type": "() => void",
+        "required": false,
+        "description": "Makes the whole card one pressable target (opens the detail)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "TableRoot": {
+    "file": "components/table.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "columns",
+        "type": "readonly (number | undefined)[]",
+        "required": false,
+        "default": "[]",
+        "description": "Column widths in points, by column index. Unset columns are 128 wide; the\nlast column also grows to fill the table. Head has no `width` prop: the\ncells below it could not follow it without measuring."
+      },
+      {
+        "name": "stickyFirstColumn",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Keeps the first column in place while the others scroll sideways. Rows become one line high."
+      },
+      {
+        "name": "density",
+        "type": "'comfortable' | 'compact'",
+        "required": false,
+        "default": "'comfortable'",
+        "description": "Row height and cell padding."
+      },
+      {
+        "name": "striped",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Tints every other body row."
+      },
+      {
+        "name": "dividerAfter",
+        "type": "number",
+        "required": false,
+        "description": "Draws a heavier line under the body row at this index (the cut in a ranked list)."
+      }
+    ]
+  },
+  "TableCell": {
+    "file": "components/table.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "numeric",
+        "type": "boolean",
+        "required": false,
+        "description": "End-aligned, for numbers (figures are tabular in every cell)."
+      }
+    ]
+  },
+  "TabsRoot": {
+    "file": "components/tabs.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: string) => void",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "TabsList": {
+    "file": "components/tabs.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "variant",
+        "type": "'line' | 'pill'",
+        "required": false,
+        "default": "'line'",
+        "description": "`line` (default): underline. `pill`: a raised thumb slides behind the active tab."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Trigger height on the shared control scale."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "description": "Accessible name of the tab list."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "TabsTrigger": {
+    "file": "components/tabs.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A string is set in the tab's type and colour; anything else renders as given."
+      }
+    ]
+  },
+  "TabsContent": {
+    "file": "components/tabs.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "forceMount",
+        "type": "boolean",
+        "required": false,
+        "description": "Keep the panel mounted (hidden) while another tab is active."
+      }
+    ]
+  },
+  "Tooltip": {
+    "file": "components/tooltip.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The tip. Screen readers get it as the child's hint, without the popover."
+      },
+      {
+        "name": "side",
+        "type": "'top' | 'right' | 'bottom' | 'left'",
+        "required": false,
+        "default": "'top'",
+        "description": ""
+      },
+      {
+        "name": "delayDuration",
+        "type": "number",
+        "required": false,
+        "default": "400",
+        "description": "How long to hold before the tip shows, in ms."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "required": false,
+        "default": "2500",
+        "description": "How long the tip stays, in ms. A tap anywhere hides it sooner."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactElement<TriggerProps>",
+        "required": true,
+        "description": "One pressable element (Button, IconButton, Pressable): it gets `onLongPress` and the hint."
+      }
+    ]
+  },
   "TreeList": {
     "file": "components/workflow.tsx",
     "extends": [],
@@ -3313,6 +4136,33 @@
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "description": ""
+      }
+    ]
+  },
+  "StatusSteps": {
+    "file": "patterns/status.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "steps",
+        "type": "StatusStep[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md'",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": true,
+        "description": "Names the list for screen readers, e.g. \"Application status\"."
       }
     ]
   },

@@ -54,3 +54,12 @@ test('animated examples get the looser limit', () => {
   assert.equal(limitFor('button--1--android.png', 'android'), ANIMATED_TOLERANCE);
   assert.equal(limitFor('button--0--ios.png', 'ios'), TOLERANCE.ios);
 });
+
+test('scheme variants use the limit of the screen they show', () => {
+  for (const v of ['dark', 'hc', 'rtl', 'lg']) {
+    assert.equal(limitFor(`pattern-search--${v}--ios.png`, 'ios'), ANIMATED_TOLERANCE);
+    assert.equal(limitFor(`pattern-home--${v}--android.png`, 'android'), TOLERANCE.android);
+  }
+  // Only a known variant right before the platform is stripped.
+  assert.equal(limitFor('pattern-search--dark--extra--ios.png', 'ios'), TOLERANCE.ios);
+});

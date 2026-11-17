@@ -44,11 +44,15 @@ export function verify(expected, actual) {
 }
 
 /**
- * npm dist-tag for a version. 9.9.x is the 10.0 release candidate: it publishes to `next`
- * and `latest` stays on 9.8 until 10.0. To end the soak early (a fix `latest` users need),
- * drop the 9.9 rule in the same PR (INCIDENT_RUNBOOK.md).
+ * Release-candidate lines: every patch of these minors publishes to `next`, and `latest`
+ * stays on the minor before it. 9.9.x was the 10.0 RC (kept for history); 10.9.x is the 11.0 RC,
+ * so `latest` stays on 10.8.x until 11.0.0. To end a soak early (a fix `latest` users need),
+ * drop the line here in the same PR (INCIDENT_RUNBOOK.md).
  */
-export const distTag = (version) => (version.startsWith('9.9.') ? 'next' : 'latest');
+export const RC_LINES = ['9.9', '10.9'];
+
+/** npm dist-tag for a version: `next` on a release-candidate line, `latest` otherwise. */
+export const distTag = (version) => (RC_LINES.some((line) => version.startsWith(`${line}.`)) ? 'next' : 'latest');
 
 const manifestOf = (tgz) => JSON.parse(execFileSync('tar', ['-xzOf', tgz, 'package/package.json'], { encoding: 'utf8' }));
 

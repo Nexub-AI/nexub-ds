@@ -7,6 +7,8 @@ export const COLLISION_PADDING = 8;
  * `true`: always a bottom sheet. `'auto'`: a bottom sheet below the `md`
  * breakpoint, the normal popover above. Rendered as `data-nx-sheet`; the CSS
  * lives in @nexub/themes core.css.
+ *
+ * @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)
  */
 export type SheetProp = boolean | 'auto';
 

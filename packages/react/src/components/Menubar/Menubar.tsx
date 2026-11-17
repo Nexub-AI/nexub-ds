@@ -56,7 +56,7 @@ const contentBaseClasses = cn(
 );
 
 export interface MenubarContentProps extends RadixMenubar.MenubarContentProps {
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 

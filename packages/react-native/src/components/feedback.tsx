@@ -3,7 +3,6 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Modal,
-  PanResponder,
   Pressable as RNPressable,
   View,
   useWindowDimensions,
@@ -21,6 +20,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { GestureDetector, GestureHandlerRootView, usePanGesture } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
 import type { ToneValue } from '@nexub/core';
@@ -144,6 +144,7 @@ export interface ToastProviderProps {
  * springs it back. `dx` in px, `vx` in px/s; a quick flick wins over distance.
  */
 export function toastRelease(dx: number, vx: number): -1 | 0 | 1 {
+  'worklet';
   if (Math.abs(vx) > 500) return vx < 0 ? -1 : 1;
   if (Math.abs(dx) > 96) return dx < 0 ? -1 : 1;
   return 0;
@@ -152,10 +153,16 @@ export function toastRelease(dx: number, vx: number): -1 | 0 | 1 {
 /** How far the toast rises into place (and sinks on its way out). */
 const TOAST_RISE = 24;
 const TOAST_EXIT = nxSpring('effects', 'fast');
+// Captured by the swipe worklets (nxSpring itself is not a worklet).
+const TOAST_SETTLE = nxSpring('spatial', 'default');
 
 type LiveToast = ToastOptions & { id: number; leaving?: boolean };
 
-/** Hosts one toast at a time above the bottom safe area. Put it inside NexubNativeProvider. */
+/**
+ * Hosts one toast at a time above the bottom safe area. Put it inside
+ * NexubNativeProvider, under the app's `GestureHandlerRootView` (swipe to
+ * dismiss runs on react-native-gesture-handler).
+ */
 export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps) {
   const insets = useSafeAreaInsets();
   const [toast, setToast] = React.useState<LiveToast | null>(null);
@@ -218,29 +225,34 @@ function ToastSurface({
         })
       : withSpring(0, nxSpring('spatial', 'default'));
   }, [leaving, y, id, onGone]);
-  // ponytail: PanResponder writes the shared value from the JS thread; a
-  // UI-thread swipe needs react-native-gesture-handler as a peer.
-  const swipe = React.useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy),
-        onPanResponderMove: (_, g) => {
-          x.value = g.dx;
+  // Swipe to dismiss, on the UI thread; JS hears only that the toast is gone.
+  const swipe = usePanGesture(
+    React.useMemo(
+      () => ({
+        testID: 'nx-toast-swipe',
+        activeOffsetX: [-8, 8] as [number, number],
+        failOffsetY: [-8, 8] as [number, number],
+        onUpdate: (e: { translationX: number }) => {
+          'worklet';
+          x.value = e.translationX;
         },
-        onPanResponderRelease: (_, g) => {
-          const velocity = g.vx * 1000; // px/ms → px/s
-          const side = toastRelease(g.dx, velocity);
+        onDeactivate: (e: { translationX: number; velocityX: number; canceled: boolean }) => {
+          'worklet';
+          if (e.canceled) {
+            x.value = withSpring(0, TOAST_SETTLE);
+            return;
+          }
+          const velocity = e.velocityX;
+          const side = toastRelease(e.translationX, velocity);
           x.value = side
             ? withSpring(side * width, { ...TOAST_EXIT, velocity }, (finished) => {
                 if (finished) runOnJS(onGone)(id);
               })
-            : withSpring(0, { ...nxSpring('spatial', 'default'), velocity });
-        },
-        onPanResponderTerminate: () => {
-          x.value = withSpring(0, nxSpring('spatial', 'default'));
+            : withSpring(0, { ...TOAST_SETTLE, velocity });
         },
       }),
-    [width, id, onGone, x],
+      [width, id, onGone, x],
+    ),
   );
   const motion = useAnimatedStyle(() => ({
     opacity: Math.max(0, Math.min(1, 1 - Math.abs(x.value) / width - y.value / TOAST_RISE)),
@@ -252,45 +264,46 @@ function ToastSurface({
       pointerEvents="box-none"
       style={[{ position: 'absolute', start: tokens.spacing[4], end: tokens.spacing[4], bottom }, motion]}
     >
-      <View
-        {...swipe.panHandlers}
-        accessibilityLiveRegion="polite"
-        style={{
-          minHeight: tokens.size.control.lg,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: tokens.spacing[3],
-          paddingStart: tokens.spacing[4],
-          paddingEnd: toast.action ? tokens.spacing[1] : tokens.spacing[4],
-          paddingVertical: tokens.spacing[2],
-          borderRadius: tokens.shape.container,
-          backgroundColor: roles['inverse-surface'],
-          boxShadow: tokens.elevation[3].light,
-        }}
-      >
-        {Glyph && toast.tone && (
-          <Glyph
-            size="md"
-            color={roles[toast.tone === 'neutral' ? 'inverse-on-surface' : 'inverse-primary']}
-          />
-        )}
-        <Text variant="body-md" color="inverse-on-surface" style={{ flex: 1 }}>
-          {toast.message}
-        </Text>
-        {toast.action && (
-          <Button
-            variant="text"
-            size="sm"
-            onPress={() => {
-              toast.action!.onPress();
-              onLeave();
-            }}
-            style={{ backgroundColor: 'transparent' }}
-          >
-            {toast.action.label}
-          </Button>
-        )}
-      </View>
+      <GestureDetector gesture={swipe}>
+        <View
+          accessibilityLiveRegion="polite"
+          style={{
+            minHeight: tokens.size.control.lg,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: tokens.spacing[3],
+            paddingStart: tokens.spacing[4],
+            paddingEnd: toast.action ? tokens.spacing[1] : tokens.spacing[4],
+            paddingVertical: tokens.spacing[2],
+            borderRadius: tokens.shape.container,
+            backgroundColor: roles['inverse-surface'],
+            boxShadow: tokens.elevation[3].light,
+          }}
+        >
+          {Glyph && toast.tone && (
+            <Glyph
+              size="md"
+              color={roles[toast.tone === 'neutral' ? 'inverse-on-surface' : 'inverse-primary']}
+            />
+          )}
+          <Text variant="body-md" color="inverse-on-surface" style={{ flex: 1 }}>
+            {toast.message}
+          </Text>
+          {toast.action && (
+            <Button
+              variant="text"
+              size="sm"
+              onPress={() => {
+                toast.action!.onPress();
+                onLeave();
+              }}
+              style={{ backgroundColor: 'transparent' }}
+            >
+              {toast.action.label}
+            </Button>
+          )}
+        </View>
+      </GestureDetector>
     </Animated.View>
   );
 }
@@ -362,7 +375,8 @@ export function Dialog({
         if (dismissible) onOpenChange(false);
       }}
     >
-      <View
+      {/* The root view lets gestures in the dialog's content (a Slider, a swipe row) work inside the Modal on Android. */}
+      <GestureHandlerRootView
         style={{
           flex: 1,
           alignItems: 'center',
@@ -422,7 +436,7 @@ export function Dialog({
             </View>
           </Surface>
         </Animated.View>
-      </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

@@ -3,9 +3,12 @@ import {
   AccessibilityInfo,
   AppState,
   Platform,
+  PlatformColor,
   StyleSheet,
   View,
   useColorScheme,
+  useWindowDimensions,
+  type ColorValue,
 } from 'react-native';
 import { native, type NativeRoles } from '@nexub/tokens/native';
 import { createSeedRoles } from '@nexub/tokens/seed';
@@ -14,9 +17,10 @@ import {
   directionOf,
   type ContrastLevel,
   type Direction,
+  type DivisionKey,
   type GlassMode,
   type NexubMessages,
-  type Product,
+  type ProductKey,
 } from '@nexub/core';
 import { playHaptic, type HapticToken } from './haptics';
 import type { FontSource, ResolvedFontSource } from './fonts';
@@ -25,13 +29,59 @@ export type Scheme = 'light' | 'dark';
 export type Roles = { -readonly [K in keyof NativeRoles]: string };
 export type RoleName = keyof Roles;
 export type ElevationLevel = 0 | 1 | 2 | 3;
+/** 'calm' is the default look; 'vivid' adds the gradient main action and livelier surfaces (web `data-expression`). */
+export type Expression = 'calm' | 'vivid';
+
+/** 10.9: colours that are not plain roles. */
+export interface ThemeColors {
+  /** The product's spot accent (its tertiary family); the primary family without a product. */
+  spot: string;
+  onSpot: string;
+  spotContainer: string;
+  onSpotContainer: string;
+  /**
+   * Primary fills for use straight in a style. Equal to `roles.primary` /
+   * `roles['primary-container']`, except under `dynamicColor` on Android 12+,
+   * where they are opaque system colours: never concatenate or compute with them.
+   */
+  primary: ColorValue;
+  primaryContainer: ColorValue;
+}
+
+/** Text in fixed-height controls (buttons, chips) stops growing here, so it is not clipped. */
+export const DENSE_MAX_FONT_SCALE = 1.5;
+
+/**
+ * Material You (Android 12+, API 31): the system accent at the tones the
+ * primary role uses (40 / 80, containers 90 / 30). Null elsewhere.
+ * The on-colours stay Nexub's: they sit at tones 100 / 20 and 10 / 90, and a
+ * tone gap that wide clears 4.5:1 whatever the hue. Beyond that, the exact
+ * contrast in this mode is the system palette's guarantee, not ours.
+ */
+export function dynamicPrimary(
+  scheme: Scheme,
+): Pick<ThemeColors, 'primary' | 'primaryContainer'> | null {
+  if (Platform.OS !== 'android' || Number(Platform.Version) < 31) return null;
+  const tone = (n: number) => PlatformColor(`@android:color/system_accent1_${n}`);
+  return scheme === 'dark'
+    ? { primary: tone(200), primaryContainer: tone(700) }
+    : { primary: tone(600), primaryContainer: tone(100) };
+}
 
 export interface NexubTheme {
   scheme: Scheme;
   contrast: ContrastLevel;
-  product: Product | undefined;
+  product: ProductKey | DivisionKey | undefined;
+  /** @default 'calm' */
+  expression: Expression;
   /** Colour roles, already resolved for scheme, contrast, product and seed. */
   roles: Roles;
+  /** The spot accent and the (possibly system-provided) primary fills. */
+  colors: ThemeColors;
+  /** The OS text-size multiplier (1 = default). Layouts can stack or wrap when it is large. */
+  fontScale: number;
+  /** `maxFontSizeMultiplier` for text in fixed-height controls. */
+  denseMaxFontScale: number;
   /** Every native token (spacing, shape, size, type, state, motion). */
   tokens: typeof native;
   /** `boxShadow` for an elevation level, undefined for 0. */
@@ -52,8 +102,18 @@ export interface NexubNativeProviderProps {
   scheme?: Scheme | 'system';
   /** 'system' = iOS Increase Contrast / Android high-contrast text → 'high'. @default 'system' */
   contrast?: ContrastLevel | 'system';
-  /** Product brand: remaps the tertiary role family. */
-  product?: Product;
+  /**
+   * Product (any app key) or division: remaps the tertiary role family and the
+   * spot accent. An app without its own scale takes its division's.
+   */
+  product?: ProductKey | DivisionKey;
+  /** 'vivid' turns on the gradient main action and the livelier surfaces. @default 'calm' */
+  expression?: Expression;
+  /**
+   * Android 12+ only: take the primary fills from the system accent (Material You).
+   * Ignored on iOS and older Android. @default false
+   */
+  dynamicColor?: boolean;
   /** White-label seed colour (#rgb / #rrggbb); regenerates the `seedTarget` family. */
   seed?: string;
   /** @default 'primary' */
@@ -87,6 +147,15 @@ const signatureTokens = {
     ]),
   ),
 } as unknown as typeof native;
+
+type Spot = { spot: string; onSpot: string; spotContainer: string; onSpotContainer: string };
+// A product's spot accent is its tertiary family (core.css "10.3").
+const tertiaryOf = (s: Spot) => ({
+  tertiary: s.spot,
+  'on-tertiary': s.onSpot,
+  'tertiary-container': s.spotContainer,
+  'on-tertiary-container': s.onSpotContainer,
+});
 
 // AccessibilityInfo reads that fire no change event (contrast): re-read on foreground.
 function useForegroundSetting(
@@ -141,6 +210,8 @@ export function NexubNativeProvider({
   scheme: schemeProp = 'system',
   contrast: contrastProp = 'system',
   product,
+  expression = 'calm',
+  dynamicColor = false,
   seed,
   seedTarget = 'primary',
   glass = 'balanced',
@@ -163,6 +234,7 @@ export function NexubNativeProvider({
   // The system font follows Bold Text by itself; the Nexub files need the heavier weight chosen.
   const resolvedFonts = fonts === 'nexub' && boldText ? 'nexub-bold' : fonts;
   const resolvedDir = dir ?? directionOf(locale);
+  const { fontScale } = useWindowDimensions();
 
   const theme = React.useMemo<NexubTheme>(() => {
     const sig = native.signature;
@@ -170,14 +242,28 @@ export function NexubNativeProvider({
     const roles: Roles = {
       ...native.color.roles[contrast][scheme],
       ...sig.roles[contrast][scheme],
-      ...(product ? native.color.products[product][contrast][scheme] : {}),
+      ...(product ? tertiaryOf(native.color.spot[product][contrast][scheme]) : {}),
       ...(seed ? createSeedRoles(seed, { contrast, target: seedTarget })[scheme] : {}),
+    };
+    const family = product ? 'tertiary' : 'primary';
+    const colors: ThemeColors = {
+      spot: roles[family],
+      onSpot: roles[`on-${family}`],
+      spotContainer: roles[`${family}-container`],
+      onSpotContainer: roles[`on-${family}-container`],
+      primary: roles.primary,
+      primaryContainer: roles['primary-container'],
+      ...(dynamicColor ? dynamicPrimary(scheme) : null),
     };
     return {
       scheme,
       contrast,
       product,
+      expression,
       roles,
+      colors,
+      fontScale,
+      denseMaxFontScale: DENSE_MAX_FONT_SCALE,
       tokens: signatureTokens,
       elevation: (level) => (level ? sig.elevation[level][scheme] : undefined),
       glass: reduceTransparency ? 'off' : glass,
@@ -192,6 +278,9 @@ export function NexubNativeProvider({
     scheme,
     contrast,
     product,
+    expression,
+    dynamicColor,
+    fontScale,
     seed,
     seedTarget,
     glass,
