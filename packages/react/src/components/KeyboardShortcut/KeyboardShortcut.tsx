@@ -19,7 +19,7 @@ export const KeyboardShortcut = React.forwardRef<HTMLSpanElement, KeyboardShortc
           <React.Fragment key={`${key}-${index}`}>
             {index > 0 && (
               <span
-                className="text-[var(--color-on-surface-muted)] text-xs select-none"
+                className="text-[var(--color-on-surface-muted)] text-label-sm font-normal select-none"
                 aria-hidden="true"
               >
                 +

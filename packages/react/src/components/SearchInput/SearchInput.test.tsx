@@ -37,3 +37,11 @@ describe('SearchInput', () => {
     expect(onClear).toHaveBeenCalledOnce();
   });
 });
+
+describe('SearchInput 10.4', () => {
+  it('readOnly: no clear button', () => {
+    render(<SearchInput readOnly defaultValue="query" />);
+    expect(screen.getByRole('searchbox')).toHaveAttribute('readonly');
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+});

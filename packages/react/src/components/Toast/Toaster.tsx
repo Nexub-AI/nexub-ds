@@ -223,7 +223,7 @@ export function Toaster({ expand = false, visibleToasts = 3, position = 'top-end
               close(t);
             }}
             className={cn(
-              'group pointer-events-auto absolute inset-x-4 flex items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+              'group pointer-events-auto absolute inset-x-4 flex items-center justify-between gap-3 overflow-hidden rounded-[var(--toast-radius,var(--shape-container))] bg-[var(--toast-bg,var(--color-inverse-surface))] py-3 ps-4 pe-2 text-[var(--toast-fg,var(--color-inverse-on-surface))] shadow-elevation-2',
               // Stack: older toasts sit behind, scaled from their bottom edge so it peeks out.
               // Transition-only timing: duration-*/ease-* utilities would also retime nx-motion's enter/exit keyframes.
               v.toast,

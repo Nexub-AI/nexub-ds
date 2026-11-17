@@ -6,11 +6,12 @@ import { cn } from '../../utils/cn.js';
 export const textVariants = cva('', {
   variants: {
     size: {
-      'body-lg': 'text-lg leading-relaxed',
-      body: 'text-base leading-relaxed',
-      'body-sm': 'text-sm leading-relaxed',
-      caption: 'text-xs leading-normal',
-      label: 'text-sm leading-none font-medium',
+      // Size from the type role, weight inherited: Text is used inside bold parents.
+      'body-lg': 'text-[length:var(--type-body-lg-size)] leading-relaxed',
+      body: 'text-[length:var(--type-body-md-size)] leading-relaxed',
+      'body-sm': 'text-[length:var(--type-body-sm-size)] leading-relaxed',
+      caption: 'text-[length:var(--type-label-sm-size)] leading-normal',
+      label: 'text-[length:var(--type-label-lg-size)] leading-none',
     },
     tone: {
       default: 'text-[var(--color-on-surface)]',

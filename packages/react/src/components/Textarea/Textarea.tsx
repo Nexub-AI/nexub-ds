@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
-import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
+import { field, fieldFocusVisible, fieldInvalid, fieldReadOnly } from '../../utils/control.js';
 
 export const textareaVariants = cva(
   [
@@ -11,6 +11,7 @@ export const textareaVariants = cva(
     field,
     'placeholder:text-[var(--color-on-surface-muted)]',
     fieldFocusVisible,
+    fieldReadOnly,
     'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
   ],
   {

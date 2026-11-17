@@ -49,3 +49,47 @@ export const ClearableSearchable: Story = {
     </div>
   ),
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <Select.Root defaultValue="ca">
+        <Select.Trigger aria-label="Small" size="sm">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="ca">Canada</Select.Item>
+          <Select.Item value="mx">Mexico</Select.Item>
+        </Select.Content>
+      </Select.Root>
+      <Select.Root defaultValue="ca">
+        <Select.Trigger aria-label="Medium">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="ca">Canada</Select.Item>
+          <Select.Item value="mx">Mexico</Select.Item>
+        </Select.Content>
+      </Select.Root>
+      <Select.Root defaultValue="ca">
+        <Select.Trigger aria-label="Large" size="lg">
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="ca">Canada</Select.Item>
+          <Select.Item value="mx">Mexico</Select.Item>
+        </Select.Content>
+      </Select.Root>
+      <Select.Root defaultValue="ca">
+        <Select.Trigger aria-label="Read-only" readOnly>
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="ca">Canada</Select.Item>
+          <Select.Item value="mx">Mexico</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </div>
+  ),
+};

@@ -49,6 +49,8 @@ interface FileUploadContextValue {
   removeFile: (index: number) => void;
   isDragging: boolean;
   setIsDragging: (v: boolean) => void;
+  invalid?: boolean;
+  readOnly?: boolean;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextValue | null>(null);
@@ -72,10 +74,14 @@ export interface FileUploadRootProps extends React.HTMLAttributes<HTMLDivElement
    * the file. Client-side checks are a convenience; validate again on the server.
    */
   validate?: (file: File) => string | null | undefined;
+  /** Error border on the drop zone and `aria-invalid` on its file input. */
+  invalid?: boolean;
+  /** Files stay listed; nothing can be picked, dropped, pasted or removed. */
+  readOnly?: boolean;
 }
 
 const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
-  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, onPaste, children, ...props }, ref) => {
+  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, invalid, readOnly, onPaste, children, ...props }, ref) => {
     const [files, setFiles] = React.useState<File[]>([]);
     const [rejections, setRejections] = React.useState<FileRejection[]>([]);
     const [isDragging, setIsDragging] = React.useState(false);
@@ -83,6 +89,7 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
     // Picker and drop both come through here, so both are filtered.
     const addFiles = React.useCallback(
       (newFiles: File[]) => {
+        if (readOnly) return;
         const rejected: FileRejection[] = [];
         let custom: string | null;
         const next = [...files];
@@ -100,24 +107,25 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
         }
         if (rejected.length) onReject?.(rejected);
       },
-      [files, accept, maxFiles, maxSize, onFilesChange, onReject, validate],
+      [files, accept, maxFiles, maxSize, onFilesChange, onReject, validate, readOnly],
     );
 
     const removeFile = React.useCallback(
       (index: number) => {
+        if (readOnly) return;
         const next = files.filter((_, i) => i !== index);
         setFiles(next);
         setRejections([]);
         onFilesChange?.(next);
       },
-      [files, onFilesChange],
+      [files, onFilesChange, readOnly],
     );
 
     // Memoize the context value so that consumers only re-render when one of
     // the tracked values actually changes — not on every parent render cycle.
     const contextValue = React.useMemo(
-      () => ({ accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging }),
-      [accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging],
+      () => ({ accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly }),
+      [accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly],
     );
 
     return (
@@ -145,7 +153,7 @@ Root.displayName = 'FileUpload.Root';
 
 const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => {
-    const { accept, maxFiles, maxSize, rejections, addFiles, isDragging, setIsDragging } = useFileUpload();
+    const { accept, maxFiles, maxSize, rejections, addFiles, isDragging, setIsDragging, invalid, readOnly } = useFileUpload();
     const messages = useNexubMessages();
     const { locale } = useLocale();
     const errorId = React.useId();
@@ -166,25 +174,30 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         ref={ref}
         onDragOver={(e) => {
           e.preventDefault();
-          setIsDragging(true);
+          if (!readOnly) setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
           // Hover/press = the state layer.
-          'nx-state-layer rounded-shape-container border-2 border-dashed text-center text-[var(--color-on-surface)] transition-colors',
+          'rounded-shape-container border-2 border-dashed text-center text-[var(--color-on-surface)] transition-colors',
           'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-[var(--color-primary)]',
-          isDragging
-            ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
-            : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
+          !readOnly && 'nx-state-layer',
+          readOnly
+            ? 'border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]'
+            : isDragging
+              ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
+              : invalid
+                ? 'border-[var(--color-error)]'
+                : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
           className,
         )}
         {...props}
       >
-        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 p-8">
+        <label className={cn('flex flex-col items-center justify-center gap-2 p-8', readOnly ? 'cursor-default' : 'cursor-pointer')}>
           <Upload size="lg" className="text-[var(--color-on-surface-muted)]" aria-hidden="true" />
           {children ?? (
-            <span className="text-sm text-[var(--color-on-surface-muted)]">
+            <span className="text-body-sm text-[var(--color-on-surface-muted)]">
               <span className="font-semibold text-[var(--color-primary)]">{messages.clickToUpload}</span>{' '}
               {messages.orDragAndDrop}
             </span>
@@ -195,6 +208,11 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
             className="sr-only"
             multiple
             accept={accept?.join(',')}
+            aria-invalid={invalid || undefined}
+            // Read-only: stays focusable, the picker never opens.
+            onClick={(e) => {
+              if (readOnly) e.preventDefault();
+            }}
             onChange={(e) => {
               if (e.target.files) addFiles(Array.from(e.target.files));
               e.target.value = '';
@@ -203,7 +221,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
           />
         </label>
         {/* Always mounted so screen readers announce new errors. */}
-        <div id={errorId} role="alert" className="empty:hidden px-4 pb-3 text-start text-sm text-[var(--color-error)]">
+        <div id={errorId} role="alert" className="empty:hidden px-4 pb-3 text-start text-body-sm text-[var(--color-error)]">
           {rejections.length > 0 && (
             <ul>
               {rejections.map(({ file, reason, message }, i) => (
@@ -247,7 +265,7 @@ export interface FileUploadItemProps extends React.HTMLAttributes<HTMLLIElement>
 }
 
 const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, index, progress, onCancel, error, ...props }, ref) => {
-  const { files, removeFile } = useFileUpload();
+  const { files, removeFile, readOnly } = useFileUpload();
   const messages = useNexubMessages();
   const { locale } = useLocale();
   const file = files[index];
@@ -297,10 +315,10 @@ const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, 
           >
             {thumb && <img src={thumb} alt="" className="h-10 w-10 shrink-0 rounded-shape-min object-cover" />}
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-[var(--color-on-surface)]">
+              <p className="truncate text-body-sm font-medium text-[var(--color-on-surface)]">
                 {file.name}
               </p>
-              <p className="text-xs text-[var(--color-on-surface-muted)]">
+              <p className="text-label-sm font-normal text-[var(--color-on-surface-muted)]">
                 {formatFileSize(file.size, locale)}
                 {uploading && ` · ${percent}%`}
               </p>
@@ -308,12 +326,12 @@ const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, 
                 <Progress value={percent} size="sm" className="mt-1.5" aria-label={messages.uploadProgress(file.name, percent)} />
               )}
               {error && (
-                <p role="alert" className="mt-1 text-xs text-[var(--color-error)]">
+                <p role="alert" className="mt-1 text-label-sm font-normal text-[var(--color-error)]">
                   {error}
                 </p>
               )}
             </div>
-            <button
+            {!readOnly && <button
               type="button"
               onClick={() => {
                 if (uploading && onCancel) return onCancel();
@@ -324,7 +342,7 @@ const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, 
               className="nx-state-layer shrink-0 rounded-full p-1 text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)] transition-colors"
             >
               <X size="sm" aria-hidden="true" />
-            </button>
+            </button>}
           </div>
         </div>
       </div>

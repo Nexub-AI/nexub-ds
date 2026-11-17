@@ -8,13 +8,13 @@ import { toneTextClasses } from '../../utils/control.js';
 export const headingVariants = cva('', {
   variants: {
     size: {
-      display: 'text-6xl font-extrabold tracking-tight leading-none',
-      h1: 'text-5xl font-bold tracking-tight leading-tight',
-      h2: 'text-4xl font-bold tracking-tight leading-tight',
-      h3: 'text-3xl font-semibold leading-snug',
-      h4: 'text-2xl font-semibold leading-snug',
-      h5: 'text-xl font-semibold leading-snug',
-      h6: 'text-base font-semibold leading-normal',
+      display: 'text-[3.75rem] font-extrabold tracking-tight leading-none',
+      h1: 'text-[3rem] font-bold tracking-tight leading-tight',
+      h2: 'text-display-sm font-bold tracking-tight leading-tight',
+      h3: 'text-[1.875rem] font-semibold leading-snug',
+      h4: 'text-headline-sm font-semibold tracking-normal leading-snug',
+      h5: 'text-title-lg font-semibold tracking-normal leading-snug',
+      h6: 'text-body-md font-semibold leading-normal',
     },
     weight: {
       regular: 'font-normal',

@@ -71,7 +71,7 @@ const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
         >
           <table
             ref={setRefs}
-            className={cn('w-full caption-bottom text-sm tabular-nums', className)}
+            className={cn('w-full caption-bottom text-body-sm tabular-nums', className)}
             {...props}
           />
         </div>
@@ -117,7 +117,7 @@ const Row = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTMLTable
     <tr
       ref={ref}
       className={cn(
-        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[var(--row-hover,color-mix(in_srgb,var(--color-surface-container-low)_50%,transparent))] data-[state=selected]:bg-[var(--color-surface-container-low)]',
+        'border-b border-[var(--table-border,var(--color-outline-variant))] transition-colors hover:bg-[var(--row-hover,color-mix(in_srgb,var(--color-surface-container-low)_50%,transparent))] data-[state=selected]:bg-[var(--color-surface-container-low)]',
         className,
       )}
       {...props}
@@ -131,7 +131,7 @@ const Head = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLT
     <th
       ref={ref}
       className={cn(
-        'h-10 px-4 text-start align-middle font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
+        'h-[var(--table-head-h,2.5rem)] px-[var(--table-cell-p,1rem)] bg-[var(--table-head-bg,transparent)] text-start align-middle font-medium text-[var(--table-head-fg,var(--color-on-surface-muted))] [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}
@@ -145,7 +145,7 @@ const Cell = React.forwardRef<HTMLTableCellElement, React.TdHTMLAttributes<HTMLT
     <td
       ref={ref}
       className={cn(
-        'p-4 align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
+        'p-[var(--table-cell-p,1rem)] align-middle [&:has([role=checkbox])]:pe-0 [&>[role=checkbox]]:translate-y-0-5',
         className,
       )}
       {...props}
@@ -163,7 +163,7 @@ const Caption = React.forwardRef<
     <caption
       ref={ref}
       id={id ?? contextId}
-      className={cn('mt-4 text-sm text-[var(--color-on-surface-muted)]', className)}
+      className={cn('mt-4 text-body-sm text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   );

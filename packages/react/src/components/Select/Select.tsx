@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
+import { field, fieldFocusVisible, fieldInvalid, fieldReadOnly, type Size } from '../../utils/control.js';
 import { floatingSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
@@ -17,6 +17,8 @@ interface SelectContextValue {
   clear: () => void;
   query: string;
   setQuery: (query: string) => void;
+  /** The Trigger reports its `readOnly` here so the Root can keep the list shut. */
+  setReadOnly: (readOnly: boolean) => void;
 }
 const SelectContext = React.createContext<SelectContextValue>({
   clearable: false,
@@ -24,6 +26,7 @@ const SelectContext = React.createContext<SelectContextValue>({
   clear: () => {},
   query: '',
   setQuery: () => {},
+  setReadOnly: () => {},
 });
 
 export interface SelectRootProps extends RadixSelect.SelectProps {
@@ -34,8 +37,9 @@ export interface SelectRootProps extends RadixSelect.SelectProps {
 const Root = ({ clearable = false, value, defaultValue, onValueChange, onOpenChange, ...props }: SelectRootProps) => {
   const [current, setCurrent] = useControllableState<string>({ value, defaultValue, onChange: onValueChange });
   const [query, setQuery] = React.useState('');
+  const [readOnly, setReadOnly] = React.useState(false);
   const ctx = React.useMemo(
-    () => ({ clearable, hasValue: Boolean(current), clear: () => setCurrent(''), query, setQuery }),
+    () => ({ clearable, hasValue: Boolean(current), clear: () => setCurrent(''), query, setQuery, setReadOnly }),
     [clearable, current, setCurrent, query],
   );
   return (
@@ -44,6 +48,8 @@ const Root = ({ clearable = false, value, defaultValue, onValueChange, onOpenCha
         {...props}
         // Clearing needs the value in our hands; otherwise Radix keeps its own state as before.
         {...(clearable ? { value: current ?? '', onValueChange: setCurrent } : { value, defaultValue, onValueChange })}
+        // Read-only (set on the Trigger): the list stays shut and the value can't change.
+        {...(readOnly ? { open: false, onValueChange: undefined } : null)}
         onOpenChange={(open) => {
           if (!open) setQuery('');
           onOpenChange?.(open);
@@ -56,20 +62,41 @@ Root.displayName = 'Select.Root';
 const Group = RadixSelect.Group;
 const Value = RadixSelect.Value;
 
-const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerProps & { invalid?: boolean }>(
-  ({ className, children, invalid, ...props }, ref) => {
+const triggerSizes: Record<Size, string> = {
+  sm: 'h-control-sm px-3 gap-1.5 text-body-sm',
+  md: 'h-control-md px-3.5 gap-2 text-body-md',
+  lg: 'h-control-lg px-4 gap-2 text-body-md',
+};
+
+export interface SelectTriggerProps extends RadixSelect.SelectTriggerProps {
+  invalid?: boolean;
+  /** @default 'md' */
+  size?: Size;
+  /** Shows the value but can't be opened or changed; stays focusable. */
+  readOnly?: boolean;
+}
+
+const Trigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
+  ({ className, children, invalid, size = 'md', readOnly = false, onKeyDown, ...props }, ref) => {
     const ctx = React.useContext(SelectContext);
     const messages = useNexubMessages();
     const innerRef = React.useRef<HTMLButtonElement>(null);
     const mergedRef = useMergedRefs(ref, innerRef);
-    const showClear = ctx.clearable && ctx.hasValue && !props.disabled;
+    const showClear = ctx.clearable && ctx.hasValue && !props.disabled && !readOnly;
+    const { setReadOnly } = ctx;
+    React.useEffect(() => {
+      setReadOnly(readOnly);
+      return () => setReadOnly(false);
+    }, [readOnly, setReadOnly]);
     const trigger = (
       <RadixSelect.Trigger
         ref={mergedRef}
         className={cn(
-          'flex h-control-md w-full items-center justify-between gap-2 px-3.5 text-body-md',
+          'flex w-full items-center justify-between',
+          triggerSizes[size],
           field,
           fieldFocusVisible,
+          fieldReadOnly,
           // Open reads like focus: the 2px primary border.
           'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
           'data-[placeholder]:text-[var(--color-on-surface-muted)]',
@@ -78,6 +105,12 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixSelect.SelectTriggerPro
           '[&>span]:line-clamp-1',
           className,
         )}
+        aria-readonly={readOnly || undefined}
+        onKeyDown={(e) => {
+          onKeyDown?.(e);
+          // Read-only: no typeahead on the closed trigger (it would change the value).
+          if (readOnly && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) e.preventDefault();
+        }}
         {...props}
       >
         {children}
@@ -238,7 +271,7 @@ const Item = React.forwardRef<HTMLDivElement, SelectItemProps>(
         ref={ref}
         aria-describedby={description ? descriptionId : undefined}
         className={cn(
-          'relative flex w-full cursor-default select-none items-center rounded-[10px] py-2 ps-8 pe-2 text-body-sm text-[var(--color-on-surface)] outline-none',
+          'relative flex w-full cursor-default select-none items-center rounded-[0.625rem] py-2 ps-8 pe-2 text-body-sm text-[var(--color-on-surface)] outline-none',
           // Highlight = the on-surface state layer at hover opacity.
           'focus:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
           'data-[disabled]:pointer-events-none data-[disabled]:text-[var(--color-text-disabled)]',

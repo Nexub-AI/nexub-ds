@@ -88,3 +88,13 @@ describe('Input', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 });
+
+describe('Input 10.4', () => {
+  it('readOnly: the wrapper carries the read-only look and clear is hidden', () => {
+    render(<Input readOnly clearable defaultValue="hello" />);
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('readonly');
+    expect(input.parentElement!.className).toContain('has-[[readonly]]:bg-');
+    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+  });
+});

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { X } from '@nexub/icons';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
-import { field, fieldDisabledWithin, fieldFocusWithin, fieldInvalid } from '../../utils/control.js';
+import { field, fieldDisabledWithin, fieldFocusWithin, fieldInvalid, fieldReadOnlyWithin } from '../../utils/control.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { IconButton } from '../IconButton/IconButton.js';
@@ -44,6 +44,7 @@ export const inputWrapperVariants = cva(
     field,
     fieldFocusWithin,
     fieldDisabledWithin,
+    fieldReadOnlyWithin,
   ],
   {
     variants: {
@@ -181,7 +182,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (hasAddon) {
       return (
-        <div className={cn('flex w-full overflow-hidden', field, fieldFocusWithin, invalid && fieldInvalid)}>
+        <div className={cn('flex w-full overflow-hidden', field, fieldFocusWithin, fieldReadOnlyWithin, invalid && fieldInvalid)}>
           {leadingAddon && (
             <span className={cn(addonVariants({ side: 'leading' }))}>
               {leadingAddon}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Slider } from './Slider.js';
 
 describe('Slider', () => {
@@ -73,5 +73,41 @@ describe('Slider marks and value', () => {
   it('hides the value until hover/focus with showValue="hover"', () => {
     render(<Slider defaultValue={[40]} aria-label="Volume" showValue="hover" />);
     expect(screen.getByText('40')).toHaveClass('opacity-0');
+  });
+});
+
+describe('Slider 10.4 consistent controls', () => {
+  it('sizes change the track and the thumb; md is the default', () => {
+    const { rerender } = render(<Slider defaultValue={[50]} aria-label="Volume" />);
+    const thumb = screen.getByRole('slider');
+    expect(thumb).toHaveClass('h-5', 'w-5');
+    rerender(<Slider defaultValue={[50]} aria-label="Volume" size="sm" />);
+    expect(thumb).toHaveClass('h-4', 'w-4');
+    rerender(<Slider defaultValue={[50]} aria-label="Volume" size="lg" />);
+    expect(thumb).toHaveClass('h-6', 'w-6');
+  });
+
+  it('invalid sets aria-invalid on the root', () => {
+    const { container } = render(<Slider defaultValue={[50]} aria-label="Volume" invalid className="root" />);
+    const root = container.querySelector('.root')!;
+    expect(root).toHaveAttribute('aria-invalid', 'true');
+    expect(root).not.toHaveAttribute('invalid');
+  });
+
+  it('readOnly: aria-readonly, focusable, keys do not change the value', () => {
+    const onValueChange = vi.fn();
+    render(<Slider defaultValue={[40]} aria-label="Volume" readOnly onValueChange={onValueChange} />);
+    const thumb = screen.getByRole('slider');
+    expect(thumb).toHaveAttribute('aria-readonly', 'true');
+    expect(thumb).toHaveAttribute('tabindex', '0');
+    fireEvent.keyDown(thumb, { key: 'ArrowRight' });
+    fireEvent.keyDown(thumb, { key: 'Home' });
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(thumb).toHaveAttribute('aria-valuenow', '40');
+  });
+
+  it('the value bubble uses tabular numbers', () => {
+    render(<Slider defaultValue={[40]} aria-label="Volume" showValue />);
+    expect(screen.getByText('40')).toHaveClass('tabular-nums');
   });
 });

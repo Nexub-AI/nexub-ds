@@ -75,7 +75,7 @@ const Link = React.forwardRef<HTMLAnchorElement, RadixNav.NavigationMenuLinkProp
     <RadixNav.Link
       ref={ref}
       className={cn(
-        'nx-state-layer relative block select-none rounded-[10px] p-3 leading-none text-[var(--color-on-surface)] no-underline outline-none',
+        'nx-state-layer relative block select-none rounded-[0.625rem] p-3 leading-none text-[var(--color-on-surface)] no-underline outline-none',
         className,
       )}
       {...props}
@@ -113,7 +113,7 @@ const Indicator = React.forwardRef<HTMLDivElement, RadixNav.NavigationMenuIndica
       )}
       {...props}
     >
-      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-ss-[2px] bg-[var(--color-outline-variant)] shadow-elevation-1" />
+      <div className="relative top-[60%] h-2 w-2 rotate-45 rounded-ss-[0.125rem] bg-[var(--color-outline-variant)] shadow-elevation-1" />
     </RadixNav.Indicator>
   ),
 );

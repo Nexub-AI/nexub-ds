@@ -20,3 +20,15 @@ export const Default: Story = {
     size: 'md',
   },
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <NumberInput size="sm" aria-label="Small" defaultValue={12} showSteppers />
+      <NumberInput size="md" aria-label="Medium" defaultValue={12} showSteppers />
+      <NumberInput size="lg" aria-label="Large" defaultValue={12} showSteppers />
+      <NumberInput readOnly aria-label="Read-only" defaultValue={12} showSteppers />
+    </div>
+  ),
+};

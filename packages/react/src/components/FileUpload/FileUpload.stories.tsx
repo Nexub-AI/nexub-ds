@@ -33,3 +33,17 @@ export const Default: Story = {
     </div>
   ),
 };
+
+/** 10.4: invalid and read-only drop zones. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-4">
+      <FileUpload.Root invalid className="min-w-0 flex-1 basis-56">
+        <FileUpload.Dropzone />
+      </FileUpload.Root>
+      <FileUpload.Root readOnly className="min-w-0 flex-1 basis-56">
+        <FileUpload.Dropzone />
+      </FileUpload.Root>
+    </div>
+  ),
+};

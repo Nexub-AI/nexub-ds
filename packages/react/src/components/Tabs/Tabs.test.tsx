@@ -120,4 +120,25 @@ describe('Tabs.Content display', () => {
     await user.click(screen.getByRole('tab', { name: 'Tab Three' }));
     expect(scrollBy).toHaveBeenCalledWith(expect.objectContaining({ left: 80, top: 0 }));
   });
+
+  it('size sets the trigger height; md is the default', () => {
+    const { rerender } = render(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List><Tabs.Trigger value="a">A</Tabs.Trigger></Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(screen.getByRole('tab')).toHaveClass('h-control-md', 'px-4', 'text-label-lg');
+    rerender(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List size="sm"><Tabs.Trigger value="a">A</Tabs.Trigger></Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(screen.getByRole('tab')).toHaveClass('h-control-sm', 'px-3', 'text-label-md');
+    rerender(
+      <Tabs.Root defaultValue="a">
+        <Tabs.List size="lg"><Tabs.Trigger value="a">A</Tabs.Trigger></Tabs.List>
+      </Tabs.Root>,
+    );
+    expect(screen.getByRole('tab')).toHaveClass('h-control-lg', 'px-5', 'text-label-lg');
+  });
 });

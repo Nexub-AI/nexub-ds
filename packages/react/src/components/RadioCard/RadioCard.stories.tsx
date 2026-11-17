@@ -55,3 +55,17 @@ export const Vivid = () => (
     </RadioCardGroup>
   </div>
 );
+
+/** 10.4: invalid and read-only groups. */
+export const ConsistentControls = () => (
+  <div className="flex flex-wrap gap-4">
+    <RadioCardGroup aria-label="Invalid plan" invalid defaultValue="solo" className="min-w-0 flex-1 basis-56">
+      <RadioCard value="solo" title="Solo" description="Invalid, selected" />
+      <RadioCard value="team" title="Team" description="Invalid" />
+    </RadioCardGroup>
+    <RadioCardGroup aria-label="Read-only plan" readOnly defaultValue="solo" className="min-w-0 flex-1 basis-56">
+      <RadioCard value="solo" title="Solo" description="Read-only, selected" />
+      <RadioCard value="team" title="Team" description="Read-only" />
+    </RadioCardGroup>
+  </div>
+);

@@ -10,9 +10,9 @@ export interface CountryBadgeProps extends React.HTMLAttributes<HTMLSpanElement>
 }
 
 const sizeClass: Record<Size, string> = {
-  sm: 'px-2 py-0.5 text-xs gap-1',
-  md: 'px-2.5 py-1 text-sm gap-1.5',
-  lg: 'px-3 py-1.5 text-base gap-2',
+  sm: 'px-2 py-0.5 text-label-sm tracking-normal gap-1',
+  md: 'px-2.5 py-1 text-body-sm gap-1.5',
+  lg: 'px-3 py-1.5 text-body-md gap-2',
 };
 
 export const CountryBadge = React.forwardRef<HTMLSpanElement, CountryBadgeProps>(

@@ -32,7 +32,7 @@ const Root = React.forwardRef<HTMLLIElement, RadixToast.ToastProps>(
       ref={ref}
       className={cn(
         // Snackbar: the inverse surface stands out from any page, light or dark.
-        'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-shape-container bg-[var(--color-inverse-surface)] py-3 ps-4 pe-2 text-[var(--color-inverse-on-surface)] shadow-elevation-2',
+        'group pointer-events-auto relative flex w-full items-center justify-between gap-3 overflow-hidden rounded-[var(--toast-radius,var(--shape-container))] bg-[var(--toast-bg,var(--color-inverse-surface))] py-3 ps-4 pe-2 text-[var(--toast-fg,var(--color-inverse-on-surface))] shadow-elevation-2',
         'duration-spatial-default ease-spatial-default data-[state=closed]:duration-effects-fast',
         // Follow the finger (Radix's signed swipe offsets), snap back on cancel, leave from where it was let go.
         'data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none',

@@ -61,3 +61,27 @@ describe('MultiSelect', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
+
+describe('MultiSelect 10.4', () => {
+  it('size sets the field min-height (md by default)', () => {
+    const { rerender } = render(<MultiSelect options={options} aria-label="Colours" />);
+    const field = () => screen.getByRole('combobox').parentElement!;
+    expect(field()).toHaveClass('min-h-control-md');
+    rerender(<MultiSelect options={options} aria-label="Colours" size="lg" />);
+    expect(field()).toHaveClass('min-h-control-lg');
+  });
+
+  it('readOnly: cannot open, chips are not removable, Backspace keeps them', async () => {
+    const onValueChange = vi.fn();
+    render(<MultiSelect readOnly options={options} defaultValue={['red']} onValueChange={onValueChange} aria-label="Colours" />);
+    const input = screen.getByRole('combobox', { name: 'Colours' });
+    expect(input).toHaveAttribute('aria-readonly', 'true');
+    expect(screen.queryByRole('button', { name: 'Remove Red' })).not.toBeInTheDocument();
+    await userEvent.click(input);
+    await userEvent.keyboard('{ArrowDown}{Backspace}');
+    expect(input).toHaveFocus();
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});

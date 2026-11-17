@@ -226,7 +226,9 @@ color: var(--color-on-surface);
         so the default resolves where the component sits, and nested <code>data-theme</code>,{' '}
         <code>data-contrast</code> and <code>data-product</code> keep working. Button (filled, tonal, outlined and
         text colours), fields (Input, Textarea and Select: background, text, border, radius), Card (background, text,
-        border, radius) and Badge (radius) have them. The full list, in DTCG format, is{' '}
+        border, radius) and Badge (radius) have them. Since 10.4 so do Dialog, Popover, menus, Tooltip, Toast and Avatar
+        (background, text, radius), Tabs (text, active text, indicator), Table (header and border), Checkbox, Switch,
+        Alert (radius) and the active navigation item. The full list, in DTCG format, is{' '}
         <code>@nexub/tokens/json/component</code>. Pick colours from the roles to keep the contrast guarantees.
       </p>
 

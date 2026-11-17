@@ -20,6 +20,10 @@ const entry: ComponentEntry = {
     {
       title: 'Default',
     },
+    {
+      title: 'Sizes and read-only',
+      description: 'size on Select.Trigger matches Input. A readOnly trigger keeps its value readable and does not open.',
+    },
   ],
   usage: {
     whenToUse: [

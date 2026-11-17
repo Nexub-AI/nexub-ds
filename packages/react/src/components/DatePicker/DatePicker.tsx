@@ -7,7 +7,7 @@ import { format, isValid, parse, type Locale } from 'date-fns';
 import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid } from '../../utils/control.js';
+import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid, fieldReadOnly, fieldReadOnlyWithin, type Size } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 import { Button } from '../Button/Button.js';
 
@@ -66,6 +66,11 @@ export interface DatePickerProps {
   onValueChange?: (date: Date | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
+  /** Shows the date but the calendar can't open and nothing can be typed; stays focusable. */
+  readOnly?: boolean;
+  invalid?: boolean;
+  /** @default 'md' */
+  size?: Size;
   minDate?: Date;
   maxDate?: Date;
   className?: string;
@@ -89,13 +94,26 @@ export interface DatePickerProps {
   typeable?: boolean;
 }
 
+/** Internal: trigger button sizes shared with DateRangePicker (the Input size map). */
+export const dateTriggerSizes: Record<Size, string> = {
+  sm: 'h-control-sm px-3 gap-1.5 text-body-sm',
+  md: 'h-control-md px-3.5 gap-2 text-body-md',
+  lg: 'h-control-lg px-4 gap-2 text-body-md',
+};
+// Typeable: the calendar button sits in the end padding.
+const typeableSizes: Record<Size, string> = {
+  sm: 'h-control-sm ps-3 pe-0.5',
+  md: 'h-control-md ps-3.5 pe-1',
+  lg: 'h-control-lg ps-4 pe-1.5',
+};
+
 const calendarClassNames = {
   months: 'flex flex-col sm:flex-row gap-4',
   month: 'flex flex-col gap-4',
-  month_caption: 'flex h-8 items-center justify-center',
+  month_caption: 'flex h-[var(--day-cell,2rem)] items-center justify-center',
   caption_label: 'text-label-lg text-[var(--color-on-surface)]',
   // v9 renders nav beside the months, not in the caption: pin it to the caption row.
-  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-8 items-center justify-between',
+  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-[var(--day-cell,2rem)] items-center justify-between',
   button_previous:
     'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   button_next:
@@ -103,13 +121,13 @@ const calendarClassNames = {
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
   weekday:
-    'text-[var(--color-on-surface-muted)] w-8 text-label-sm flex-1 text-center',
+    'text-[var(--color-on-surface-muted)] w-[var(--day-cell,2rem)] text-label-sm flex-1 text-center',
   week: 'flex w-full mt-2',
   day: 'relative flex flex-1 justify-center p-0 text-center focus-within:z-20',
   day_button: cn(
     // Capsule day with a state layer; focus = the global ring. The transparent
     // border carries today's primary outline.
-    'nx-state-layer inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-body-sm text-[var(--color-on-surface)]',
+    'nx-state-layer inline-flex h-[var(--day-cell,2rem)] w-[var(--day-cell,2rem)] items-center justify-center rounded-full border border-transparent text-body-sm tabular-nums text-[var(--color-on-surface)]',
     'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   ),
   selected: '[&>button]:bg-[var(--color-primary)] [&>button]:text-[var(--color-on-primary)]',
@@ -137,6 +155,9 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       onValueChange,
       placeholder: placeholderProp,
       disabled = false,
+      readOnly = false,
+      invalid: invalidProp,
+      size = 'md',
       minDate,
       maxDate,
       className,
@@ -160,14 +181,15 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     const [text, setText] = React.useState<string | null>(null);
     const dateLocale = calendar.dayPickerProps.locale;
     const typed = text?.trim() ? parse(text.trim(), 'P', new Date(), { locale: dateLocale }) : undefined;
-    const invalid =
+    const typedInvalid =
       typed !== undefined &&
       (!isValid(typed) ||
         (minDate !== undefined && typed < minDate) ||
         (maxDate !== undefined && typed > maxDate) ||
         (disabledDates !== undefined && dateMatchModifiers(typed, disabledDates)));
+    const invalid = typedInvalid || Boolean(invalidProp);
     const commit = () => {
-      if (text === null || invalid) return;
+      if (text === null || typedInvalid) return;
       change(typed);
       setText(null);
     };
@@ -178,14 +200,16 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     };
 
     return (
-      <RadixPopover.Root open={open} onOpenChange={setOpen}>
+      <RadixPopover.Root open={open && !readOnly} onOpenChange={setOpen}>
         {typeable ? (
           <RadixPopover.Anchor asChild>
             <div
               className={cn(
-                'flex h-control-md w-full items-center gap-1 ps-3.5 pe-1',
+                'flex w-full items-center gap-1',
+                typeableSizes[size],
                 field,
                 fieldFocusWithin,
+                fieldReadOnlyWithin,
                 invalid && fieldInvalid,
                 disabled && fieldDisabled,
                 className,
@@ -195,6 +219,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                 id={id}
                 type="text"
                 disabled={disabled}
+                readOnly={readOnly}
                 aria-label={ariaLabel}
                 aria-invalid={invalid || undefined}
                 placeholder={placeholder}
@@ -204,15 +229,21 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !(e.nativeEvent.isComposing || e.keyCode === 229)) commit();
                 }}
-                className="min-w-0 flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed"
+                className={cn(
+                  'min-w-0 flex-1 bg-transparent outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed',
+                  size === 'sm' ? 'text-body-sm' : 'text-body-md',
+                )}
               />
               <RadixPopover.Trigger asChild>
                 <button
                   ref={ref}
                   type="button"
-                  disabled={disabled}
+                  disabled={disabled || readOnly}
                   aria-label={messages.pickDate}
-                  className="nx-state-layer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full disabled:pointer-events-none"
+                  className={cn(
+                    'nx-state-layer inline-flex shrink-0 items-center justify-center rounded-full disabled:pointer-events-none',
+                    size === 'sm' ? 'h-7 w-7' : 'h-8 w-8',
+                  )}
                 >
                   <CalendarDays size="sm" aria-hidden="true" />
                 </button>
@@ -225,14 +256,19 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             ref={ref}
             id={id}
             disabled={disabled}
+            data-readonly={readOnly ? '' : undefined}
+            aria-invalid={invalid || undefined}
             aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
             className={cn(
-              'inline-flex h-control-md w-full items-center justify-start gap-2 px-3.5 text-body-md',
+              'inline-flex w-full items-center justify-start',
+              dateTriggerSizes[size],
               field,
               fieldFocusVisible,
+              fieldReadOnly,
               // Open reads like focus: the 2px primary border (as Select).
               'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
               'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
+              invalid && fieldInvalid,
               !value && 'text-[var(--color-on-surface-muted)]',
               className,
             )}

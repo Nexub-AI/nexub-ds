@@ -46,3 +46,23 @@ describe('CheckboxCard', () => {
     expect(html).not.toMatch(/\sstyle=/);
   });
 });
+
+describe('CheckboxCard 10.4 consistent controls', () => {
+  it('invalid sets aria-invalid and does not leak to the DOM', () => {
+    render(<CheckboxCard title="Analytics" invalid />);
+    const card = screen.getByRole('checkbox');
+    expect(card).toHaveAttribute('aria-invalid', 'true');
+    expect(card).not.toHaveAttribute('invalid');
+  });
+
+  it('readOnly: aria-readonly, focusable, click does not toggle', async () => {
+    const onCheckedChange = vi.fn();
+    render(<CheckboxCard title="Analytics" readOnly onCheckedChange={onCheckedChange} />);
+    const card = screen.getByRole('checkbox');
+    expect(card).toHaveAttribute('aria-readonly', 'true');
+    expect(card).not.toBeDisabled();
+    await userEvent.click(card);
+    expect(onCheckedChange).not.toHaveBeenCalled();
+    expect(card).toHaveAttribute('data-state', 'unchecked');
+  });
+});

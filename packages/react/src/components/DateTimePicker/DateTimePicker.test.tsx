@@ -51,3 +51,20 @@ describe('DateTimePicker', () => {
     expect(screen.getByText(/Time zone: .*\(UTC\)/)).toBeInTheDocument();
   });
 });
+
+describe('DateTimePicker 10.4', () => {
+  it('size, readOnly, invalid and disabled reach both fields', () => {
+    const { rerender } = render(<DateTimePicker aria-label="Starts" size="sm" readOnly invalid value={new Date(2026, 10, 16, 9, 30)} />);
+    const date = () => screen.getByRole('button', { name: /Date/ });
+    const time = () => screen.getByLabelText('Time');
+    expect(date()).toHaveClass('h-control-sm');
+    expect(date()).toHaveAttribute('data-readonly');
+    expect(date()).toHaveAttribute('aria-invalid', 'true');
+    expect(time().parentElement).toHaveClass('h-control-sm');
+    expect(time()).toHaveAttribute('readonly');
+    expect(time()).toHaveAttribute('aria-invalid', 'true');
+    rerender(<DateTimePicker aria-label="Starts" disabled />);
+    expect(date()).toBeDisabled();
+    expect(time()).toBeDisabled();
+  });
+});
