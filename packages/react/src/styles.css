@@ -9,10 +9,7 @@
 @import '@nexub/themes/light' layer(base);
 @import '@nexub/themes/dark' layer(base);
 @import '@nexub/themes/glass' layer(base);
-@import '@nexub/themes/leap' layer(base);
-@import '@nexub/themes/bookub' layer(base);
-@import '@nexub/themes/payub' layer(base);
-@import '@nexub/themes/founderub' layer(base);
+@import '@nexub/themes/products' layer(base);
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 @import '@nexub/tokens/tailwind.css';

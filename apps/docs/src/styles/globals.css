@@ -10,10 +10,6 @@
 @import '@nexub/themes/light' layer(base);
 @import '@nexub/themes/dark' layer(base);
 @import '@nexub/themes/glass' layer(base);
-@import '@nexub/themes/leap' layer(base);
-@import '@nexub/themes/bookub' layer(base);
-@import '@nexub/themes/payub' layer(base);
-@import '@nexub/themes/founderub' layer(base);
 @import '@nexub/themes/divisions' layer(base);
 @import '@nexub/themes/products' layer(base);
 @import '@nexub/themes/marketing' layer(base);
@@ -630,3 +626,63 @@ html, body {
 .docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
 .docs-reduce-motion .docs-spring-dot { animation: none; translate: var(--docs-dot-end); }
 } /* @layer utilities */
+
+/* 11.0 playground + states */
+.docs-states-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--color-outline-variant);
+}
+
+/* 11.0 navigation + tokens + landing */
+/* Breadcrumbs (and, below 1024px, the "On this page" button) above every docs page title.
+   The row's height is fixed, so the page title sits in the same place at every width. */
+.docs-page-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2rem;
+  margin-bottom: 1.25rem;
+}
+/* The desktop rail (.docs-toc) takes over from 1024px. */
+@media (min-width: 1024px) {
+  .docs-toc-mobile { display: none; }
+}
+@media (max-width: 479px) {
+  .docs-page-top { flex-wrap: wrap; }
+}
+
+/* Previous / next at the end of every docs page. */
+.docs-pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-outline-variant);
+}
+@media (min-width: 640px) {
+  .docs-pager { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Landing template previews: a fixed 16:10 box; the page inside renders at four
+   times the box's width (a desktop viewport) and is scaled back down. */
+.docs-template-thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  pointer-events: none;
+  border-bottom: 1px solid var(--color-outline-variant);
+}
+.docs-template-thumb iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400%;
+  height: 400%;
+  border: 0;
+  transform: scale(0.25);
+  transform-origin: top left;
+}

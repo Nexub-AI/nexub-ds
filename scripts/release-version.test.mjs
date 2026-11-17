@@ -18,7 +18,17 @@ test('minor rolls over into the major after 9', () => {
 test('no rollover from 10.0 on', () => {
   assert.equal(nextVersion('10.9.0', '10.10.0'), '10.10.0');
   assert.equal(nextVersion('10.10.0', '10.11.0'), '10.11.0');
-  assert.throws(() => nextVersion('10.9.0', '11.0.0'), /major bump/);
+});
+
+test('11.0: the approved major passes from 10.x, and only that one', () => {
+  assert.equal(nextVersion('10.9.0', '11.0.0'), '11.0.0');
+  assert.equal(nextVersion('10.9.3', '11.0.0'), '11.0.0');
+  assert.equal(nextVersion('11.0.0', '11.1.0'), '11.1.0');
+  assert.equal(nextVersion('11.0.0', '11.0.1'), '11.0.1');
+  assert.throws(() => nextVersion('11.0.0', '12.0.0'), /major bump/);
+  assert.throws(() => nextVersion('11.4.0', '12.0.0'), /major bump/);
+  assert.throws(() => nextVersion('10.9.0', '12.0.0'), /major bump/);
+  assert.throws(() => nextVersion('9.9.0', '11.0.0'), /major bump/);
 });
 
 test('patches stay patches', () => {
@@ -35,6 +45,9 @@ test('changeset guard flags anything but minor/patch', () => {
   assert.deepEqual(invalidBumps(md('minor')), []);
   assert.deepEqual(invalidBumps(md('patch')), []);
   assert.deepEqual(invalidBumps(md('major')), ['@nexub/react: major']);
+  // 11.0: `major` passes while the approved major is unreleased; anything else still fails.
+  assert.deepEqual(invalidBumps(md('major'), true), []);
+  assert.deepEqual(invalidBumps(md('premajor'), true), ['@nexub/react: premajor']);
 });
 
 test('rollover renames the newest CHANGELOG section, including dependency lines', () => {

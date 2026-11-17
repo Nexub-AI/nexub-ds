@@ -10,9 +10,10 @@ interface LandingHeroProps {
   version: string;
   componentCount: number;
   patternCount: number;
+  templateCount: number;
 }
 
-export function LandingHero({ version, componentCount, patternCount }: LandingHeroProps) {
+export function LandingHero({ version, componentCount, patternCount, templateCount }: LandingHeroProps) {
   const heroRef = React.useRef<HTMLElement>(null);
   const [cursor, setCursor] = React.useState({ x: 0, y: 0, active: false });
   // 4.7 remix: a brand seed recolours the hero live (CSSOM, so CSP-safe), and
@@ -46,7 +47,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
   const stats = [
     { num: `${componentCount}`, label: 'Components' },
     { num: `${patternCount}`, label: 'Patterns' },
-    { num: '5', label: 'Brand themes' },
+    { num: `${templateCount}`, label: 'Page templates' },
     { num: '3', label: 'Platforms: web, iOS, Android' },
   ];
 
@@ -81,7 +82,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
 
       {/* ── Eyebrow — CSS animation, SSR-safe ─────────────────────────────── */}
       <EyebrowChip tone="info" className="hero-anim-1 relative z-[2] mb-7">
-        v{version} · {componentCount} components · {patternCount} patterns
+        v{version} · {componentCount} components · {patternCount} patterns · {templateCount} page templates
       </EyebrowChip>
 
       {/* ── Headline — CSS animation ───────────────────────────────────────── */}
@@ -99,8 +100,8 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
 
       {/* ── Subheading — CSS animation ────────────────────────────────────── */}
       <Text size="body-lg" tone="secondary" className="hero-anim-3 relative z-[2] mb-10 max-w-[540px]">
-        Accessible, token-driven components and patterns for React on the web and React Native on iOS and Android.
-        One set of tokens, two platforms, every product brand.
+        Accessible, token-driven components, patterns and page templates for React on the web and React Native on
+        iOS and Android. One set of tokens, light and dark, every product brand.
       </Text>
 
       {/* ── CTAs — CSS animation ──────────────────────────────────────────── */}

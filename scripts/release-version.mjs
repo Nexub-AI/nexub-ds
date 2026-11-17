@@ -5,6 +5,7 @@
 // Up to 10.0 the minor "rolled over" into the major after 9 (1.9 → 2.0 … 9.9 → 10.0).
 // 10.0 is the last rollover: from 10.x on the minor just keeps counting, and a major
 // happens only by RFC (scripts/check-changesets.mjs rejects `major` in CI until then).
+// 11.0 is the accepted one (RFC_11.0.md): APPROVED_MAJOR below lets 10.x → 11.0.0 through.
 //
 // Runs after `changeset version` (root script `version-packages`), which has
 // already written e.g. 9.10.0; this rewrites that to 10.0.0 everywhere.
@@ -22,10 +23,17 @@ const parse = (v) => {
 /** 9.9 → 10.0 is the last automatic rollover; 10.9 → 10.10. */
 const LAST_ROLLOVER_MAJOR = 10;
 
+/**
+ * The one major an accepted RFC allows (RFC_11.0.md). Only `(APPROVED_MAJOR - 1).x → APPROVED_MAJOR.0.0`
+ * passes, so once 11.0.0 is out every other major is rejected again until this number changes with the next RFC.
+ */
+export const APPROVED_MAJOR = 11;
+
 /** Version to publish, given the previous release and what changesets proposed. */
 export function nextVersion(previous, proposed) {
   const [pMaj] = parse(previous);
   const [maj, min, pat] = parse(proposed);
+  if (maj === APPROVED_MAJOR && pMaj === APPROVED_MAJOR - 1 && min === 0 && pat === 0) return proposed;
   if (maj !== pMaj) {
     throw new Error(
       `changesets proposed a major bump (${previous} → ${proposed}). ` +

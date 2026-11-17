@@ -15,12 +15,12 @@ const RadioGroup = RadixContextMenu.RadioGroup;
 const Sub = RadixContextMenu.Sub;
 
 export interface ContextMenuContentProps extends RadixContextMenu.ContextMenuContentProps {
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 
 const Content = React.forwardRef<HTMLDivElement, ContextMenuContentProps>(
-  function ContextMenuContent({ className, collisionPadding = COLLISION_PADDING, sheet = false, ...props }, ref) {
+  function ContextMenuContent({ className, collisionPadding = COLLISION_PADDING, sheet = 'auto', ...props }, ref) {
     return (
       <RadixContextMenu.Content
         ref={ref}

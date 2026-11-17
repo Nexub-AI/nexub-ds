@@ -138,8 +138,7 @@ export default function ExpressionPage() {
         <Prose>
           <code>ThemeProvider</code> now accepts every app key in the product map, not only the first four. The four
           hand-written files (<code>@nexub/themes/leap</code>, <code>/bookub</code>, <code>/payub</code>,{' '}
-          <code>/founderub</code>) are deprecated: <code>@nexub/themes/products</code> covers the same keys and they are
-          removed in 11.0.
+          <code>/founderub</code>) were removed in 11.0: <code>@nexub/themes/products</code> covers the same keys.
         </Prose>
       </Section>
 

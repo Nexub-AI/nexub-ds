@@ -355,7 +355,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -652,7 +652,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "The \"More\" menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         }
       ]
@@ -1312,7 +1312,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above."
         },
         {
@@ -1953,7 +1953,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -2053,7 +2053,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -2151,7 +2151,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "The calendar as a bottom sheet: see DatePicker `sheet`."
         },
         {
@@ -4372,7 +4372,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -4884,6 +4884,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "The country list as a bottom sheet: `true`, or `'auto'` for phones only."
         },
         {
@@ -5329,7 +5330,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {
@@ -6083,7 +6084,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {
@@ -7347,6 +7348,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "10.6: on phones the organisation, account and app menus open as bottom sheets (`true`, or `'auto'`)."
         },
         {
@@ -7409,6 +7411,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide)."
         },
         {
@@ -8830,6 +8833,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
           "description": "10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide)."
         }
       ]

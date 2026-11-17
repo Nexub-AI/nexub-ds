@@ -1,0 +1,6667 @@
+{
+  "accordion": {
+    "tag": "Accordion.Root",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "type",
+        "options": [
+          "single",
+          "multiple"
+        ],
+        "default": "single"
+      },
+      {
+        "kind": "switch",
+        "name": "collapsible",
+        "default": false,
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "action-bar": {
+    "skip": "no controllable props and no states"
+  },
+  "alert-dialog": {
+    "skip": "no controllable props and no states"
+  },
+  "alert": {
+    "tag": "Alert",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral",
+        "initial": "info"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Heads up"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Your trial expires in 3 days."
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "amount": {
+    "tag": "Amount",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "auto"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg",
+          "display"
+        ],
+        "default": "md",
+        "initial": "display"
+      },
+      {
+        "kind": "select",
+        "name": "signDisplay",
+        "options": [
+          "auto",
+          "never",
+          "always",
+          "exceptZero"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "animate",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "currency",
+        "initial": "USD"
+      },
+      {
+        "kind": "number",
+        "name": "value",
+        "initial": 128450.75
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "display"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "auto"
+      }
+    ]
+  },
+  "app-shell": {
+    "skip": "no controllable props and no states"
+  },
+  "approval-card": {
+    "tag": "ApprovalCard",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "approveLabel",
+        "default": "Approve",
+        "initial": "Send reminders"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Send 3 payment reminders to Acme"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Invoices INV-1042, INV-1051 and INV-1063, $4,120 in total, to ap@acme.example."
+      }
+    ],
+    "states": []
+  },
+  "aspect-ratio": {
+    "skip": "no controllable props and no states"
+  },
+  "aurora": {
+    "skip": "no controllable props and no states"
+  },
+  "autocomplete": {
+    "tag": "Autocomplete",
+    "children": "none",
+    "fixed": [
+      "options={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "loading",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Search framework…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "avatar-group": {
+    "tag": "AvatarGroup",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "spacing",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "initial": 3
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      }
+    ]
+  },
+  "avatar": {
+    "tag": "Avatar",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "category",
+        "options": [
+          "accent",
+          "auto",
+          "blue",
+          "amber",
+          "emerald",
+          "pink",
+          "violet",
+          "cyan",
+          "red",
+          "lime"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "online",
+          "away",
+          "busy",
+          "offline"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "badge"
+      },
+      {
+        "kind": "text",
+        "name": "name",
+        "initial": "Alex Johnson"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      }
+    ]
+  },
+  "badge": {
+    "tag": "Badge",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "solid",
+          "outline",
+          "soft"
+        ],
+        "default": "solid"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral",
+        "initial": "success"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "category",
+        "options": [
+          "accent",
+          "blue",
+          "amber",
+          "emerald",
+          "pink",
+          "violet",
+          "cyan",
+          "red",
+          "lime"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "dot"
+      },
+      {
+        "kind": "number",
+        "name": "count"
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "default": 99
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Active"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "solid"
+      },
+      {
+        "prop": "variant",
+        "value": "outline"
+      },
+      {
+        "prop": "variant",
+        "value": "soft"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "bar-chart": {
+    "tag": "BarChart",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "data={data}",
+      "index=\"month\"",
+      "series={…}",
+      "valueFormat={(v) => `$${v}k`}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "legend",
+        "options": [
+          false,
+          true,
+          "toggle"
+        ],
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "stacked",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Revenue by month"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "box": {
+    "skip": "no controllable props and no states"
+  },
+  "breadcrumb": {
+    "skip": "no controllable props and no states"
+  },
+  "button-group": {
+    "tag": "ButtonGroup",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      },
+      {
+        "kind": "switch",
+        "name": "attached",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "button": {
+    "tag": "Button",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "glass",
+          "filled",
+          "tonal",
+          "outlined",
+          "text",
+          "hero",
+          "subtle",
+          "destructive",
+          "accent",
+          "link"
+        ],
+        "default": "filled"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "idle",
+          "error",
+          "success",
+          "loading"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "fullWidth"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "magnetic",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Click me"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      },
+      {
+        "prop": "variant",
+        "value": "glass"
+      },
+      {
+        "prop": "variant",
+        "value": "filled"
+      },
+      {
+        "prop": "variant",
+        "value": "tonal"
+      },
+      {
+        "prop": "variant",
+        "value": "outlined"
+      },
+      {
+        "prop": "variant",
+        "value": "text"
+      },
+      {
+        "prop": "variant",
+        "value": "hero"
+      },
+      {
+        "prop": "variant",
+        "value": "subtle"
+      },
+      {
+        "prop": "variant",
+        "value": "destructive"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "card": {
+    "tag": "Card",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "flat",
+          "surface",
+          "interactive",
+          "showcase"
+        ],
+        "default": "flat"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "accent",
+        "options": [
+          "leap",
+          "bookub",
+          "payub",
+          "founderub",
+          "people",
+          "contracts",
+          "forms",
+          "commerce",
+          "money",
+          "capital",
+          "mind",
+          "go",
+          "command-hub",
+          "runner",
+          "book-hub",
+          "payhub",
+          "founder-hub",
+          "os",
+          "fintech",
+          "intelligence",
+          "autonomous"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "effect",
+        "options": [
+          "none",
+          "sheen",
+          "tilt"
+        ],
+        "default": "none"
+      },
+      {
+        "kind": "select",
+        "name": "surface",
+        "options": [
+          "solid",
+          "glass"
+        ],
+        "default": "solid"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "variant",
+        "value": "flat"
+      },
+      {
+        "prop": "variant",
+        "value": "surface"
+      },
+      {
+        "prop": "variant",
+        "value": "interactive"
+      },
+      {
+        "prop": "variant",
+        "value": "showcase"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "celebrate": {
+    "tag": "Celebrate",
+    "children": "none",
+    "fixed": [
+      "active={paid}"
+    ],
+    "controls": [
+      {
+        "kind": "number",
+        "name": "count",
+        "default": 28
+      }
+    ],
+    "states": []
+  },
+  "chart-toggle": {
+    "tag": "ChartToggle",
+    "children": "nodes",
+    "fixed": [
+      "series={series}",
+      "className=\"w-full\""
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "label",
+        "default": "Series"
+      }
+    ],
+    "states": []
+  },
+  "chart-zoom": {
+    "tag": "ChartZoom",
+    "children": "nodes",
+    "fixed": [
+      "data={data}",
+      "index=\"month\"",
+      "defaultRange={[3, 8]}",
+      "className=\"w-full\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "number",
+        "name": "minSpan",
+        "default": 2
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "check-list": {
+    "skip": "no controllable props and no states"
+  },
+  "checkbox-card": {
+    "tag": "CheckboxCard",
+    "children": "none",
+    "fixed": [
+      "icon={<Bell />}",
+      "title=\"Alerts\"",
+      "description=\"Email and push notifications.\"",
+      "defaultChecked"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "checked"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "checked",
+        "value": true
+      }
+    ]
+  },
+  "checkbox": {
+    "tag": "Checkbox",
+    "children": "none",
+    "fixed": [
+      "defaultChecked"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "checked"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "checked",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "chip": {
+    "tag": "Chip",
+    "children": "nodes",
+    "fixed": [
+      "key={c}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md"
+        ],
+        "default": "md"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "citation": {
+    "tag": "Citation",
+    "children": "none",
+    "fixed": [
+      "source={CITATION_SOURCES[0]!}"
+    ],
+    "controls": [
+      {
+        "kind": "number",
+        "name": "index",
+        "initial": 1
+      }
+    ],
+    "states": []
+  },
+  "code-inline": {
+    "tag": "Code",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "inline",
+        "default": true
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "npm install"
+      }
+    ],
+    "states": []
+  },
+  "collapsible": {
+    "tag": "Collapsible.Root",
+    "children": "nodes",
+    "fixed": [
+      "open={open}",
+      "onOpenChange={setOpen}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "combobox": {
+    "skip": "no controllable props and no states"
+  },
+  "command-palette": {
+    "tag": "CommandPalette.Root",
+    "children": "nodes",
+    "fixed": [
+      "open={open}",
+      "onOpenChange={setOpen}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "scrollLock",
+        "options": [
+          "style",
+          "class"
+        ],
+        "default": "class"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "shouldFilter",
+        "default": true
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "default": "Command palette"
+      },
+      {
+        "kind": "number",
+        "name": "recentLimit",
+        "default": 5
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "comparison-bar": {
+    "tag": "ComparisonBar",
+    "children": "none",
+    "fixed": [
+      "left={{ label: 'Team A', value: 3 }}",
+      "right={{ label: 'Team B', value: 1 }}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "highlight",
+        "options": [
+          "none",
+          "higher"
+        ],
+        "default": "higher"
+      },
+      {
+        "kind": "switch",
+        "name": "showLabels",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "showValues",
+        "default": true
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Goals"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      }
+    ]
+  },
+  "container": {
+    "tag": "Container",
+    "children": "nodes",
+    "fixed": [
+      "className={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg",
+          "xl",
+          "2xl",
+          "nexub",
+          "marketing",
+          "prose"
+        ],
+        "default": "xl",
+        "initial": "sm"
+      },
+      {
+        "kind": "switch",
+        "name": "paddingX",
+        "default": true
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      },
+      {
+        "prop": "size",
+        "value": "2xl"
+      },
+      {
+        "prop": "size",
+        "value": "nexub"
+      },
+      {
+        "prop": "size",
+        "value": "marketing"
+      },
+      {
+        "prop": "size",
+        "value": "prose"
+      }
+    ]
+  },
+  "context-menu": {
+    "skip": "no controllable props and no states"
+  },
+  "countdown": {
+    "tag": "Countdown",
+    "children": "none",
+    "fixed": [
+      "to={deadline}",
+      "onExpire={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "inline",
+          "chip"
+        ],
+        "default": "chip"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "warning",
+          "danger",
+          "auto"
+        ],
+        "default": "auto"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "format",
+        "options": [
+          "auto",
+          "m:ss",
+          "h:mm:ss"
+        ],
+        "default": "auto"
+      },
+      {
+        "kind": "number",
+        "name": "dangerAt",
+        "default": 10
+      },
+      {
+        "kind": "number",
+        "name": "warnAt",
+        "default": 60
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "inline"
+      },
+      {
+        "prop": "variant",
+        "value": "chip"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "auto"
+      }
+    ]
+  },
+  "country-badge": {
+    "tag": "CountryBadge",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "text",
+        "name": "code",
+        "initial": "SG"
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Singapore"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "data-table": {
+    "tag": "DataTable",
+    "children": "none",
+    "fixed": [
+      "columns={columns}",
+      "data={data}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "density",
+        "options": [
+          "comfortable",
+          "compact"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "captionHidden",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "enableColumnReordering",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "enableColumnResizing",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "enableRowSelection",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "enableSorting",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "grid",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "loading",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "manualFiltering",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "manualPagination",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "manualSort",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "selectionColumn",
+        "default": true
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "date-picker": {
+    "tag": "DatePicker",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "typeable",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Select a date…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "date-range-picker": {
+    "tag": "DateRangePicker",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Select date range…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "date-time-picker": {
+    "tag": "DateTimePicker",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Meeting starts\"",
+      "value={starts}",
+      "onValueChange={setStarts}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "text",
+        "name": "timeZone",
+        "initial": "Asia/Singapore"
+      },
+      {
+        "kind": "number",
+        "name": "minuteStep",
+        "initial": 15
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "description-list": {
+    "tag": "DescriptionList.Root",
+    "children": "nodes",
+    "fixed": [
+      "aria-label=\"Order summary\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "columns",
+        "options": [
+          1,
+          2,
+          3
+        ],
+        "default": 1
+      },
+      {
+        "kind": "select",
+        "name": "layout",
+        "options": [
+          "inline",
+          "stacked"
+        ],
+        "default": "inline"
+      },
+      {
+        "kind": "switch",
+        "name": "divided",
+        "initial": true
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      }
+    ]
+  },
+  "dialog": {
+    "tag": "Dialog.Root",
+    "children": "nodes",
+    "fixed": [
+      "open={open}",
+      "onOpenChange={setOpen}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "surface",
+        "options": [
+          "solid",
+          "glass"
+        ],
+        "default": "solid"
+      }
+    ],
+    "states": []
+  },
+  "diff-view": {
+    "tag": "DiffView",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "diff={diff}"
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "file",
+        "initial": "templates/reminder.ts"
+      }
+    ],
+    "states": []
+  },
+  "donut-chart": {
+    "tag": "DonutChart",
+    "children": "none",
+    "fixed": [
+      "data={plans}",
+      "center={…}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "legend",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Customers by plan"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "drawer": {
+    "tag": "Drawer.Root",
+    "children": "nodes",
+    "fixed": [
+      "open={open}",
+      "onOpenChange={setOpen}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "direction",
+        "options": [
+          "top",
+          "bottom",
+          "left",
+          "right"
+        ],
+        "default": "bottom"
+      },
+      {
+        "kind": "select",
+        "name": "scrollLock",
+        "options": [
+          "style",
+          "class"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "autoFocus"
+      },
+      {
+        "kind": "switch",
+        "name": "disablePreventScroll"
+      },
+      {
+        "kind": "switch",
+        "name": "dismissible",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "fixed"
+      },
+      {
+        "kind": "switch",
+        "name": "handleOnly",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "modal",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "nested"
+      },
+      {
+        "kind": "switch",
+        "name": "noBodyStyles"
+      },
+      {
+        "kind": "switch",
+        "name": "preventScrollRestoration"
+      },
+      {
+        "kind": "switch",
+        "name": "repositionInputs"
+      }
+    ],
+    "states": []
+  },
+  "dropdown-menu": {
+    "skip": "no controllable props and no states"
+  },
+  "empty-state": {
+    "tag": "EmptyState.Root",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "layout",
+        "options": [
+          "centered",
+          "inline"
+        ],
+        "default": "centered"
+      },
+      {
+        "kind": "switch",
+        "name": "animate"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "error-state": {
+    "tag": "ErrorState",
+    "children": "none",
+    "fixed": [
+      "onRetry={() => {}}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "error",
+          "info",
+          "warning"
+        ],
+        "default": "error"
+      },
+      {
+        "kind": "text",
+        "name": "description",
+        "initial": "We could not load the data. Please try again."
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Something went wrong"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "error"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      }
+    ]
+  },
+  "event-calendar": {
+    "tag": "EventCalendar",
+    "children": "none",
+    "fixed": [
+      "events={events}",
+      "onEventClick={(e) => setPicked(e.title)}",
+      "onDayClick={(d) => setPicked(d.toDateString())}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "view",
+        "options": [
+          "month",
+          "week",
+          "day",
+          "agenda"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "weekStartsOn",
+        "options": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "number",
+        "name": "maxEventsPerDay",
+        "default": 3
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "eyebrow-chip": {
+    "tag": "EyebrowChip",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "soft",
+          "gradient"
+        ],
+        "default": "soft"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "switch",
+        "name": "live",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "New release"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "variant",
+        "value": "soft"
+      },
+      {
+        "prop": "variant",
+        "value": "gradient"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "fieldset": {
+    "tag": "Fieldset",
+    "children": "nodes",
+    "fixed": [
+      "legend=\"Billing address\"",
+      "description=\"Printed on every invoice.\"",
+      "className=\"w-full max-w-sm\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "disabled"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "file-upload": {
+    "tag": "FileUpload.Root",
+    "children": "nodes",
+    "fixed": [
+      "accept={['image/*', '.pdf']}",
+      "className=\"w-full max-w-[480px]\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "number",
+        "name": "maxFiles",
+        "initial": 3
+      },
+      {
+        "kind": "number",
+        "name": "maxSize"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      }
+    ]
+  },
+  "filter-builder": {
+    "skip": "the first example has a raw <pre> or an inline style"
+  },
+  "filter-chip": {
+    "tag": "FilterChip",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "selected",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "count"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "All"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "selected",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "flag": {
+    "tag": "Flag",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Japan\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "initial": "sm"
+      },
+      {
+        "kind": "text",
+        "name": "code",
+        "initial": "JP"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "flex": {
+    "tag": "Flex",
+    "children": "nodes",
+    "fixed": [
+      "gap=\"md\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "direction",
+        "options": [
+          "row",
+          "column",
+          "row-reverse",
+          "column-reverse"
+        ],
+        "default": "row"
+      },
+      {
+        "kind": "switch",
+        "name": "wrap",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "align",
+        "initial": "center"
+      }
+    ],
+    "states": []
+  },
+  "floating-input": {
+    "tag": "FloatingInput",
+    "children": "none",
+    "fixed": [
+      "type=\"email\"",
+      "autoComplete=\"email\""
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Email"
+      }
+    ],
+    "states": []
+  },
+  "form-error": {
+    "tag": "FormError",
+    "children": "text",
+    "fixed": [
+      "id=\"fe-email-error\""
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Enter an email address like name@example.com."
+      }
+    ],
+    "states": []
+  },
+  "form-field": {
+    "skip": "the first example does not render <FormField> directly"
+  },
+  "form": {
+    "skip": "no controllable props and no states"
+  },
+  "funnel": {
+    "tag": "Funnel",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "data={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "color",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "default": 1
+      },
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Signup funnel, October"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "gauge": {
+    "tag": "Gauge",
+    "children": "none",
+    "fixed": [
+      "label=\"68 GB\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "color",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "default": 1,
+        "initial": 2
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Storage used"
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "default": 100
+      },
+      {
+        "kind": "number",
+        "name": "value",
+        "initial": 68
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "gradient-divider": {
+    "tag": "GradientDivider",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      },
+      {
+        "kind": "number",
+        "name": "height",
+        "default": 3
+      }
+    ],
+    "states": []
+  },
+  "grid": {
+    "tag": "Grid",
+    "children": "nodes",
+    "fixed": [
+      "cols={2}",
+      "gap=\"md\"",
+      "className=\"w-full max-w-[400px]\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "flow",
+        "options": [
+          "row",
+          "column",
+          "dense"
+        ]
+      }
+    ],
+    "states": []
+  },
+  "heading": {
+    "tag": "Heading",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub",
+          "default"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "display",
+          "h2",
+          "h3",
+          "h1",
+          "h4",
+          "h5",
+          "h6"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "level",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "default": 2
+      },
+      {
+        "kind": "select",
+        "name": "weight",
+        "options": [
+          "bold",
+          "regular",
+          "medium",
+          "semibold",
+          "extrabold"
+        ]
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "The quick brown fox"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "display"
+      },
+      {
+        "prop": "size",
+        "value": "h2"
+      },
+      {
+        "prop": "size",
+        "value": "h3"
+      },
+      {
+        "prop": "size",
+        "value": "h1"
+      },
+      {
+        "prop": "size",
+        "value": "h4"
+      },
+      {
+        "prop": "size",
+        "value": "h5"
+      },
+      {
+        "prop": "size",
+        "value": "h6"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "heatmap": {
+    "tag": "Heatmap",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "rowLabels={days}",
+      "data={data}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Payments sent per day, last 16 weeks"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "helper-text": {
+    "tag": "HelperText",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "We will never share your email with anyone else."
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "hover-card": {
+    "tag": "HoverCard.Root",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "number",
+        "name": "closeDelay"
+      },
+      {
+        "kind": "number",
+        "name": "openDelay"
+      }
+    ],
+    "states": []
+  },
+  "icon-button": {
+    "tag": "IconButton",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "solid",
+          "subtle",
+          "ghost",
+          "outline"
+        ],
+        "default": "ghost"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Add item"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      },
+      {
+        "prop": "variant",
+        "value": "solid"
+      },
+      {
+        "prop": "variant",
+        "value": "subtle"
+      },
+      {
+        "prop": "variant",
+        "value": "ghost"
+      },
+      {
+        "prop": "variant",
+        "value": "outline"
+      }
+    ]
+  },
+  "icon-chip": {
+    "tag": "IconChip",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "category",
+        "options": [
+          "accent",
+          "blue",
+          "amber",
+          "emerald",
+          "pink",
+          "violet",
+          "cyan",
+          "red",
+          "lime"
+        ],
+        "initial": "violet"
+      },
+      {
+        "kind": "select",
+        "name": "shape",
+        "options": [
+          "circle",
+          "square"
+        ],
+        "default": "square"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "illustration": {
+    "tag": "Illustration",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "kind",
+        "options": [
+          "offline",
+          "noData",
+          "noResults",
+          "noAccess",
+          "serverError",
+          "notFound",
+          "maintenance"
+        ],
+        "initial": "noData"
+      },
+      {
+        "kind": "text",
+        "name": "title"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "inline-edit": {
+    "tag": "InlineEdit",
+    "children": "none",
+    "fixed": [
+      "value={name}",
+      "onSave={…}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Project name"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Add a name"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "input": {
+    "tag": "Input",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "showCount"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Enter value…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "kanban": {
+    "tag": "Kanban",
+    "children": "none",
+    "fixed": [
+      "columns={columns}",
+      "getId={(t) => t.id}",
+      "getLabel={(t) => t.title}",
+      "onChange={setColumns}",
+      "renderCard={…}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "loading"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "kbd": {
+    "tag": "Kbd",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "⌘"
+      }
+    ],
+    "states": []
+  },
+  "keyboard-shortcut": {
+    "skip": "no controllable props and no states"
+  },
+  "kpi-tile": {
+    "tag": "KpiTile",
+    "children": "none",
+    "fixed": [
+      "value=\"$68,420\"",
+      "trend={[42, 48, 45, 56, 61, 68]}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "invert",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Monthly revenue"
+      },
+      {
+        "kind": "number",
+        "name": "change",
+        "initial": 0.114
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "label": {
+    "tag": "Label",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "htmlFor",
+        "initial": "demo"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Full name"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "line-chart": {
+    "tag": "LineChart",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "data={data}",
+      "index=\"week\"",
+      "series={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "legend",
+        "options": [
+          false,
+          true,
+          "toggle"
+        ],
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "area",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "title",
+        "initial": "Weekly users"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "link": {
+    "tag": "Link",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "default",
+          "muted",
+          "underlined"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "switch",
+        "name": "external",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "href",
+        "initial": "#"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "View documentation"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "variant",
+        "value": "default"
+      },
+      {
+        "prop": "variant",
+        "value": "muted"
+      },
+      {
+        "prop": "variant",
+        "value": "underlined"
+      }
+    ]
+  },
+  "logo": {
+    "tag": "Logo",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "mark",
+          "full",
+          "icon"
+        ],
+        "default": "full"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "default",
+          "inverse"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "mark",
+        "options": [
+          "color",
+          "mono"
+        ],
+        "default": "color"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "mark"
+      },
+      {
+        "prop": "variant",
+        "value": "full"
+      },
+      {
+        "prop": "variant",
+        "value": "icon"
+      },
+      {
+        "prop": "tone",
+        "value": "default"
+      },
+      {
+        "prop": "tone",
+        "value": "inverse"
+      }
+    ]
+  },
+  "media-card": {
+    "tag": "MediaCard",
+    "children": "none",
+    "fixed": [
+      "src={COVER}",
+      "eyebrow=\"Guide\"",
+      "title=\"A weekend in Lisbon\"",
+      "description=\"Where to eat, walk and stay.\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "ratio",
+        "options": [
+          "16/9",
+          "4/3",
+          "1/1",
+          "3/4"
+        ],
+        "default": "16/9"
+      },
+      {
+        "kind": "text",
+        "name": "alt",
+        "initial": ""
+      },
+      {
+        "kind": "text",
+        "name": "href",
+        "initial": "#"
+      }
+    ],
+    "states": []
+  },
+  "menubar": {
+    "skip": "no controllable props and no states"
+  },
+  "message-bubble": {
+    "tag": "MessageBubble",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "from",
+        "options": [
+          "user",
+          "assistant",
+          "system"
+        ],
+        "initial": "user"
+      },
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "sending",
+          "error"
+        ]
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "How do I cancel my subscription?"
+      }
+    ],
+    "states": []
+  },
+  "money-input": {
+    "tag": "MoneyInput",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Amount to send\"",
+      "defaultValue={1250}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "showCount"
+      },
+      {
+        "kind": "text",
+        "name": "currency",
+        "initial": "USD"
+      },
+      {
+        "kind": "number",
+        "name": "value"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "motion-collapse": {
+    "tag": "Collapse",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "duration",
+        "options": [
+          "instant",
+          "fast",
+          "normal",
+          "slow",
+          "slower"
+        ],
+        "default": "normal"
+      },
+      {
+        "kind": "switch",
+        "name": "in",
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "unmountOnExit",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "motion-fade": {
+    "tag": "Fade",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "duration",
+        "options": [
+          "instant",
+          "fast",
+          "normal",
+          "slow",
+          "slower"
+        ],
+        "default": "normal"
+      },
+      {
+        "kind": "switch",
+        "name": "in",
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "unmountOnExit",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "motion-float": {
+    "tag": "Float",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "speed",
+        "options": [
+          "normal",
+          "slow"
+        ],
+        "default": "normal"
+      }
+    ],
+    "states": []
+  },
+  "motion-marquee": {
+    "tag": "Marquee",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "speed",
+        "options": [
+          "fast",
+          "normal",
+          "slow"
+        ],
+        "default": "normal"
+      }
+    ],
+    "states": []
+  },
+  "motion-reveal": {
+    "skip": "no controllable props and no states"
+  },
+  "motion-scale": {
+    "tag": "Scale",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "duration",
+        "options": [
+          "instant",
+          "fast",
+          "normal",
+          "slow",
+          "slower"
+        ],
+        "default": "normal"
+      },
+      {
+        "kind": "switch",
+        "name": "in",
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "unmountOnExit",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "initialScale",
+        "default": 0.95
+      }
+    ],
+    "states": []
+  },
+  "motion-slide": {
+    "tag": "Slide",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "direction",
+        "options": [
+          "up",
+          "down",
+          "left",
+          "right"
+        ],
+        "default": "up"
+      },
+      {
+        "kind": "select",
+        "name": "duration",
+        "options": [
+          "instant",
+          "fast",
+          "normal",
+          "slow",
+          "slower"
+        ],
+        "default": "normal"
+      },
+      {
+        "kind": "switch",
+        "name": "in",
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "unmountOnExit",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "multi-select": {
+    "tag": "MultiSelect",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Labels\"",
+      "options={options}",
+      "value={value}",
+      "onValueChange={setValue}",
+      "onCreate={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "loading",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Add labels…"
+      },
+      {
+        "kind": "number",
+        "name": "maxVisibleChips",
+        "default": 3
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "navigation-menu": {
+    "skip": "no controllable props and no states"
+  },
+  "navigation-rail": {
+    "skip": "no controllable props and no states"
+  },
+  "number-input": {
+    "tag": "NumberInput",
+    "children": "none",
+    "fixed": [
+      "defaultValue={0}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "showSteppers",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "max"
+      },
+      {
+        "kind": "number",
+        "name": "min"
+      },
+      {
+        "kind": "number",
+        "name": "precision"
+      },
+      {
+        "kind": "number",
+        "name": "step",
+        "default": 1
+      },
+      {
+        "kind": "number",
+        "name": "value"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "number-ticker": {
+    "tag": "NumberTicker",
+    "children": "none",
+    "fixed": [
+      "value={n}",
+      "format={{ maximumFractionDigits: 0 }}",
+      "className=\"text-title-lg\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "countOnView",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "otp-input": {
+    "tag": "OTPInput",
+    "children": "none",
+    "fixed": [
+      "onComplete={…}",
+      "onValueChange={() => setStatus('')}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "mode",
+        "options": [
+          "numeric",
+          "alphanumeric"
+        ],
+        "default": "numeric"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "number",
+        "name": "length",
+        "default": 6
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "page-header": {
+    "tag": "PageHeader",
+    "children": "none",
+    "fixed": [
+      "className=\"w-full\"",
+      "title=\"Projects\"",
+      "description={…}",
+      "actions={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "level",
+        "options": [
+          1,
+          2,
+          3
+        ],
+        "default": 1,
+        "initial": 2
+      },
+      {
+        "kind": "switch",
+        "name": "wash",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "pagination": {
+    "tag": "Pagination",
+    "children": "none",
+    "fixed": [
+      "page={page}",
+      "onPageChange={setPage}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "pageSize",
+        "default": 20,
+        "initial": 10
+      },
+      {
+        "kind": "number",
+        "name": "siblingCount",
+        "default": 1
+      },
+      {
+        "kind": "number",
+        "name": "totalItems",
+        "initial": 100
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "password-input": {
+    "tag": "PasswordInput",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "showCount"
+      },
+      {
+        "kind": "switch",
+        "name": "visible"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Enter password…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "phone-input": {
+    "tag": "PhoneInput",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Phone number\"",
+      "defaultCountry=\"IN\"",
+      "value={value}",
+      "onValueChange={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "plan-tracker": {
+    "skip": "no controllable props and no states"
+  },
+  "popover": {
+    "tag": "Popover.Root",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "align",
+        "options": [
+          "start",
+          "center",
+          "end"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "side",
+        "options": [
+          "top",
+          "right",
+          "bottom",
+          "left"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "surface",
+        "options": [
+          "solid",
+          "glass"
+        ],
+        "default": "solid"
+      },
+      {
+        "kind": "number",
+        "name": "sideOffset"
+      }
+    ],
+    "states": []
+  },
+  "progress": {
+    "tag": "Progress",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "linear",
+          "circular"
+        ],
+        "default": "linear"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "animated",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "default": 100
+      },
+      {
+        "kind": "number",
+        "name": "segments"
+      },
+      {
+        "kind": "number",
+        "name": "value",
+        "initial": 65
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "linear"
+      },
+      {
+        "prop": "variant",
+        "value": "circular"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "prompt-input": {
+    "tag": "PromptInput",
+    "children": "none",
+    "fixed": [
+      "placeholder=\"Ask anything\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "idle",
+          "submitting",
+          "streaming"
+        ],
+        "default": "idle"
+      },
+      {
+        "kind": "select",
+        "name": "surface",
+        "options": [
+          "solid",
+          "glass"
+        ],
+        "default": "solid"
+      },
+      {
+        "kind": "text",
+        "name": "label"
+      },
+      {
+        "kind": "number",
+        "name": "maxRows",
+        "default": 8
+      }
+    ],
+    "states": []
+  },
+  "qr-code": {
+    "tag": "QRCode",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "ecc",
+        "options": [
+          "L",
+          "M",
+          "Q",
+          "H"
+        ]
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "default": "QR code for <value>"
+      },
+      {
+        "kind": "text",
+        "name": "value",
+        "initial": "https://example.com/h/4729"
+      },
+      {
+        "kind": "number",
+        "name": "quietZone",
+        "default": 4
+      }
+    ],
+    "states": []
+  },
+  "radio-card": {
+    "tag": "RadioCard",
+    "children": "nodes",
+    "fixed": [
+      "icon={<User />}",
+      "title=\"Solo\"",
+      "description=\"One seat, core features.\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "checked"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "text",
+        "name": "value",
+        "initial": "solo"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "checked",
+        "value": true
+      }
+    ]
+  },
+  "radio-group": {
+    "tag": "RadioGroup.Root",
+    "children": "nodes",
+    "fixed": [
+      "defaultValue=\"monthly\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "rating": {
+    "tag": "Rating",
+    "children": "none",
+    "fixed": [
+      "value={val}",
+      "onValueChange={setVal}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "default": 5
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "resizable-panels": {
+    "tag": "ResizablePanels",
+    "children": "nodes",
+    "fixed": [
+      "defaultSizes={[35, 65]}",
+      "minSizes={[20, 30]}",
+      "className={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "direction",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      }
+    ],
+    "states": []
+  },
+  "saved-views": {
+    "tag": "SavedViews",
+    "children": "none",
+    "fixed": [
+      "views={views}",
+      "activeId={active}",
+      "onSelect={setActive}",
+      "onSave={…}",
+      "onUpdate={() => {}}",
+      "onDelete={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      }
+    ],
+    "states": []
+  },
+  "scroll-area": {
+    "tag": "ScrollArea",
+    "children": "nodes",
+    "fixed": [
+      "className={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical",
+          "both"
+        ],
+        "default": "vertical"
+      },
+      {
+        "kind": "select",
+        "name": "type",
+        "options": [
+          "auto",
+          "always",
+          "scroll",
+          "hover"
+        ],
+        "default": "hover"
+      },
+      {
+        "kind": "number",
+        "name": "scrollHideDelay",
+        "default": 600
+      }
+    ],
+    "states": []
+  },
+  "scroll-progress": {
+    "skip": "no controllable props and no states"
+  },
+  "search-input": {
+    "tag": "SearchInput",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "showCount"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Search…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "section": {
+    "tag": "Section",
+    "children": "nodes",
+    "fixed": [
+      "key={tone}",
+      "tone={tone}",
+      "aria-label={`${tone} tone`}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "paddingY",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "initial": "sm"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "subtle"
+      },
+      {
+        "prop": "tone",
+        "value": "default"
+      },
+      {
+        "prop": "tone",
+        "value": "muted"
+      },
+      {
+        "prop": "tone",
+        "value": "inverse"
+      }
+    ]
+  },
+  "segmented-control": {
+    "tag": "SegmentedControl.Root",
+    "children": "nodes",
+    "fixed": [
+      "defaultValue=\"month\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "select": {
+    "tag": "Select.Root",
+    "children": "nodes",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "text",
+        "name": "placeholder"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      }
+    ]
+  },
+  "separator": {
+    "tag": "Separator",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "shared-element": {
+    "skip": "no controllable props and no states"
+  },
+  "sheet": {
+    "tag": "Sheet.Root",
+    "children": "nodes",
+    "fixed": [
+      "open={open}",
+      "onOpenChange={setOpen}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "scrollLock",
+        "options": [
+          "style",
+          "class"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "side",
+        "options": [
+          "left",
+          "right",
+          "top",
+          "bottom"
+        ]
+      }
+    ],
+    "states": []
+  },
+  "sidebar": {
+    "tag": "Sidebar.Root",
+    "children": "nodes",
+    "fixed": [
+      "aria-label=\"Workspace\"",
+      "className=\"rounded-shape-container\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "accent",
+        "options": [
+          "leap",
+          "bookub",
+          "payub",
+          "founderub",
+          "people",
+          "contracts",
+          "forms",
+          "commerce",
+          "money",
+          "capital",
+          "mind",
+          "go",
+          "command-hub",
+          "runner",
+          "book-hub",
+          "payhub",
+          "founder-hub",
+          "os",
+          "fintech",
+          "intelligence",
+          "autonomous"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "collapseBelow",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "collapsed"
+      }
+    ],
+    "states": []
+  },
+  "skeleton": {
+    "tag": "Skeleton",
+    "children": "none",
+    "fixed": [
+      "width=\"60%\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "animation",
+        "options": [
+          "pulse",
+          "shimmer"
+        ],
+        "default": "pulse"
+      },
+      {
+        "kind": "select",
+        "name": "shape",
+        "options": [
+          "circle",
+          "line",
+          "rect"
+        ],
+        "default": "line"
+      },
+      {
+        "kind": "switch",
+        "name": "animated",
+        "default": true
+      }
+    ],
+    "states": []
+  },
+  "slider": {
+    "tag": "Slider",
+    "children": "none",
+    "fixed": [
+      "defaultValue={[50]}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "showValue",
+        "options": [
+          false,
+          true,
+          "hover"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "number",
+        "name": "max",
+        "initial": 100
+      },
+      {
+        "kind": "number",
+        "name": "min",
+        "initial": 0
+      },
+      {
+        "kind": "number",
+        "name": "step"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "sortable": {
+    "skip": "no controllable props and no states"
+  },
+  "sparkline": {
+    "tag": "Sparkline",
+    "children": "none",
+    "fixed": [
+      "values={[42, 48, 45, 56, 61, 68]}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "color",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "default": 1,
+        "initial": 2
+      },
+      {
+        "kind": "switch",
+        "name": "area",
+        "default": false,
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Up 62% over six months"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "spinner": {
+    "tag": "Spinner",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ],
+        "default": "neutral"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ],
+        "default": "md",
+        "initial": "sm"
+      },
+      {
+        "kind": "text",
+        "name": "label"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "split-button": {
+    "tag": "SplitButton",
+    "children": "text",
+    "fixed": [
+      "menu={…}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "glass",
+          "filled",
+          "tonal",
+          "outlined",
+          "text",
+          "hero",
+          "subtle",
+          "destructive",
+          "accent",
+          "link"
+        ],
+        "default": "filled"
+      },
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "neutral",
+          "info",
+          "success",
+          "warning",
+          "danger",
+          "leap",
+          "bookub",
+          "payub",
+          "founderub"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "xs",
+          "lg",
+          "xl"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "align",
+        "options": [
+          "start",
+          "end"
+        ],
+        "default": "end"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "idle",
+          "error",
+          "success",
+          "loading"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "magnetic"
+      },
+      {
+        "kind": "text",
+        "name": "menuLabel",
+        "initial": "More save options"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Save"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "xs"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "size",
+        "value": "xl"
+      },
+      {
+        "prop": "variant",
+        "value": "glass"
+      },
+      {
+        "prop": "variant",
+        "value": "filled"
+      },
+      {
+        "prop": "variant",
+        "value": "tonal"
+      },
+      {
+        "prop": "variant",
+        "value": "outlined"
+      },
+      {
+        "prop": "variant",
+        "value": "text"
+      },
+      {
+        "prop": "variant",
+        "value": "hero"
+      },
+      {
+        "prop": "variant",
+        "value": "subtle"
+      },
+      {
+        "prop": "variant",
+        "value": "destructive"
+      },
+      {
+        "prop": "tone",
+        "value": "neutral"
+      },
+      {
+        "prop": "tone",
+        "value": "info"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "leap"
+      },
+      {
+        "prop": "tone",
+        "value": "bookub"
+      },
+      {
+        "prop": "tone",
+        "value": "payub"
+      }
+    ]
+  },
+  "stack": {
+    "tag": "Stack",
+    "children": "nodes",
+    "fixed": [
+      "gap=\"md\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "direction",
+        "options": [
+          "row",
+          "column"
+        ],
+        "default": "column"
+      },
+      {
+        "kind": "switch",
+        "name": "wrap",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "stepper": {
+    "tag": "Stepper",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Sign-up steps\"",
+      "steps={steps}",
+      "current={current}",
+      "onStepChange={setCurrent}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      },
+      {
+        "kind": "switch",
+        "name": "nonLinear",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "streaming-text": {
+    "skip": "no controllable props and no states"
+  },
+  "success-check": {
+    "tag": "SuccessCheck",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md",
+        "initial": "lg"
+      },
+      {
+        "kind": "text",
+        "name": "label"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "switch": {
+    "tag": "Switch",
+    "children": "none",
+    "fixed": [
+      "defaultChecked"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "checked"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "checked",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "table": {
+    "tag": "Table.Root",
+    "children": "nodes",
+    "fixed": [
+      "className=\"w-full max-w-[480px]\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "density",
+        "options": [
+          "comfortable",
+          "compact"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "bordered",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "hoverable",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "stickyHeader"
+      },
+      {
+        "kind": "switch",
+        "name": "striped"
+      }
+    ],
+    "states": []
+  },
+  "tabs": {
+    "tag": "Tabs.Root",
+    "children": "nodes",
+    "fixed": [
+      "defaultValue=\"tab1\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ],
+        "default": "horizontal"
+      }
+    ],
+    "states": []
+  },
+  "text-gradient": {
+    "tag": "TextGradient",
+    "children": "text",
+    "fixed": [
+      "className=\"text-headline-sm font-bold\""
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Design system for ambitious teams"
+      }
+    ],
+    "states": []
+  },
+  "text": {
+    "tag": "Text",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "subtle",
+          "default",
+          "muted",
+          "inverse",
+          "secondary"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "label",
+          "body",
+          "caption",
+          "body-lg",
+          "body-sm"
+        ],
+        "default": "body"
+      },
+      {
+        "kind": "select",
+        "name": "weight",
+        "options": [
+          "bold",
+          "regular",
+          "medium",
+          "semibold"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "truncate",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "lineClamp"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "The Nexub design system provides accessible, token-driven components."
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "label"
+      },
+      {
+        "prop": "size",
+        "value": "body"
+      },
+      {
+        "prop": "size",
+        "value": "caption"
+      },
+      {
+        "prop": "size",
+        "value": "body-lg"
+      },
+      {
+        "prop": "size",
+        "value": "body-sm"
+      },
+      {
+        "prop": "tone",
+        "value": "subtle"
+      },
+      {
+        "prop": "tone",
+        "value": "default"
+      },
+      {
+        "prop": "tone",
+        "value": "muted"
+      },
+      {
+        "prop": "tone",
+        "value": "inverse"
+      },
+      {
+        "prop": "tone",
+        "value": "secondary"
+      }
+    ]
+  },
+  "textarea": {
+    "tag": "Textarea",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "resize",
+        "options": [
+          "horizontal",
+          "vertical",
+          "none",
+          "both"
+        ],
+        "default": "vertical"
+      },
+      {
+        "kind": "switch",
+        "name": "autoGrow",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "Enter your message…"
+      },
+      {
+        "kind": "number",
+        "name": "rows"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "thinking-indicator": {
+    "tag": "ThinkingIndicator",
+    "children": "none",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md"
+        ],
+        "default": "md"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      }
+    ]
+  },
+  "time-picker": {
+    "tag": "TimePicker",
+    "children": "none",
+    "fixed": [
+      "defaultValue=\"09:00\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "showCount"
+      },
+      {
+        "kind": "number",
+        "name": "minuteStep",
+        "default": 1,
+        "initial": 15
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "time-slot-picker": {
+    "tag": "TimeSlotPicker",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Start time\"",
+      "slots={slots}",
+      "value={time}",
+      "onValueChange={setTime}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "columns",
+        "options": [
+          "auto",
+          2,
+          3,
+          4
+        ],
+        "default": "auto"
+      },
+      {
+        "kind": "select",
+        "name": "groupBy",
+        "options": [
+          "none",
+          "period"
+        ],
+        "default": "none"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "toast": {
+    "skip": "the first example does not render <Toast> directly"
+  },
+  "toggle-group": {
+    "tag": "ToggleGroup.Root",
+    "children": "nodes",
+    "fixed": [
+      "defaultValue=\"left\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "default",
+          "outline"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "type",
+        "options": [
+          "single",
+          "multiple"
+        ],
+        "initial": "single"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "variant",
+        "value": "default"
+      },
+      {
+        "prop": "variant",
+        "value": "outline"
+      }
+    ]
+  },
+  "toggle": {
+    "tag": "Toggle",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "outline",
+          "default"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "pressed"
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Bold"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "outline"
+      },
+      {
+        "prop": "variant",
+        "value": "default"
+      }
+    ]
+  },
+  "tool-call": {
+    "tag": "ToolCall",
+    "children": "none",
+    "fixed": [
+      "input={{ customer: 'Acme', status: 'unpaid' }}",
+      "output={{ found: 3, total: '$4,120' }}",
+      "open"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "status",
+        "options": [
+          "running",
+          "done",
+          "failed"
+        ],
+        "initial": "done"
+      },
+      {
+        "kind": "text",
+        "name": "name",
+        "initial": "search_invoices"
+      }
+    ],
+    "states": []
+  },
+  "toolbar": {
+    "tag": "Toolbar.Root",
+    "children": "nodes",
+    "fixed": [
+      "aria-label=\"Text formatting\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "floating",
+        "default": false
+      }
+    ],
+    "states": []
+  },
+  "tooltip": {
+    "tag": "Tooltip",
+    "children": "nodes",
+    "fixed": [
+      "label=\"This is a tooltip\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "side",
+        "options": [
+          "top",
+          "right",
+          "bottom",
+          "left"
+        ],
+        "default": "top"
+      },
+      {
+        "kind": "number",
+        "name": "delayDuration",
+        "default": 700
+      }
+    ],
+    "states": []
+  },
+  "top-nav": {
+    "tag": "TopNav.Root",
+    "children": "nodes",
+    "fixed": [
+      "className=\"static w-full\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "scrollEdge",
+        "options": [
+          "soft",
+          "hard"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "surface",
+        "options": [
+          "solid",
+          "glass"
+        ],
+        "default": "solid"
+      }
+    ],
+    "states": []
+  },
+  "tree-view": {
+    "tag": "TreeView",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Teams\"",
+      "nodes={nodes}",
+      "defaultExpanded={['eng', 'web']}",
+      "selected={selected}",
+      "onSelectedChange={setSelected}",
+      "onLoadChildren={load}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "checkable",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
+  },
+  "truncate": {
+    "tag": "Truncate",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "tooltip",
+        "default": true
+      },
+      {
+        "kind": "number",
+        "name": "lines",
+        "default": 1
+      },
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "Quarterly infrastructure invoice for the Singapore and Frankfurt regions"
+      }
+    ],
+    "states": []
+  },
+  "visually-hidden": {
+    "tag": "VisuallyHidden",
+    "children": "text",
+    "fixed": [],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "children",
+        "initial": "(opens in a new tab)"
+      }
+    ],
+    "states": []
+  }
+}

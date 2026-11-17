@@ -41,6 +41,16 @@ describe('SavedViews', () => {
 });
 
 describe('SavedViews sheet (10.6)', () => {
+  it('the menu is sheet="auto" by default (11.0); sheet={false} turns it off', async () => {
+    const { unmount } = render(<SavedViews views={[{ id: 'a', name: 'Alpha' }]} onSelect={() => {}} />);
+    await userEvent.click(screen.getByRole('button'));
+    expect(await screen.findByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+    unmount();
+    render(<SavedViews views={[{ id: 'a', name: 'Alpha' }]} onSelect={() => {}} sheet={false} />);
+    await userEvent.click(screen.getByRole('button'));
+    expect(await screen.findByRole('menu')).not.toHaveAttribute('data-nx-sheet');
+  });
+
   it('passes sheet to the menu', async () => {
     render(<SavedViews views={[{ id: 'a', name: 'Alpha' }]} onSelect={() => {}} sheet="auto" />);
     await userEvent.click(screen.getByRole('button'));

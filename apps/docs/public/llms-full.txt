@@ -7525,7 +7525,7 @@ A phone field with a country picker. Groups the number as you type and reports i
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the field. |
 | `invalid / disabled` | `boolean` |  | Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field. |
 | `name` | `string` |  | Submits the E.164 value with a form. |
-| `sheet` | `boolean \| 'auto'` | `false` | Shows the country list as a bottom sheet; `'auto'` only on phones. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | Shows the country list as a bottom sheet; `'auto'` only on phones. |
 
 ## Example: Default
 

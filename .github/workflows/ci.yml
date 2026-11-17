@@ -93,6 +93,7 @@ jobs:
         run: node apps/docs/scripts/native-props.mjs --check
       - name: Web props up to date
         run: node apps/docs/scripts/web-props.mjs --check
+      - run: node apps/docs/scripts/playground.mjs --check # 11.0: generated playground and states
       # Web ↔ native prop parity matrix (8.5): drift on either platform shows up as a diff.
       - name: Parity matrix up to date
         run: node apps/docs/scripts/parity.mjs --check

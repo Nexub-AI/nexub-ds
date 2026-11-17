@@ -8,6 +8,7 @@ Version 10.3.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 
 - [Getting started](https://nexub-ds-docs.pages.dev/getting-started): install, Tailwind preset, ThemeProvider
 - [Principles](https://nexub-ds-docs.pages.dev/foundations/principles): the six Calm Depth rules
+- [Tokens](https://nexub-ds-docs.pages.dev/foundations/tokens): every design token in one searchable table (roles, component tokens, reference scales)
 - [Colors](https://nexub-ds-docs.pages.dev/foundations/colors): color roles and contrast
 - [Materials](https://nexub-ds-docs.pages.dev/foundations/materials): Liquid Glass rules
 - [Theme builder](https://nexub-ds-docs.pages.dev/foundations/theme-builder): one brand colour to a contrast-checked theme

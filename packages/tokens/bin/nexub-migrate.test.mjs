@@ -12,7 +12,7 @@ const tsx = (src, opts = {}) => migrateSource(src, { ext: '.tsx', ...opts });
 
 // ─── legacy-tokens ───
 test('legacy-tokens: 3.0 themes declare no alias in the table; brand-overridden tokens are not in it', () => {
-  const css = ['base', 'light', 'leap', 'bookub', 'payub', 'founderub'].map((f) => readFileSync(path.join(here, `../../themes/src/${f}.css`), 'utf8')).join('\n');
+  const css = ['base', 'light', 'products'].map((f) => readFileSync(path.join(here, `../../themes/src/${f}.css`), 'utf8')).join('\n');
   for (const name of [...Object.keys(SNAPSHOT.aliases), ...Object.keys(SNAPSHOT.mix)]) {
     assert.ok(!new RegExp(`${name}\\s*:`).test(css), `${name} is still declared in @nexub/themes`);
   }
@@ -433,7 +433,7 @@ test('changes-in-11: reports overlays without a sheet prop, rewrites none', () =
   const r = migrateSource(src, { ext: '.tsx', rules: only('changes-in-11') });
   assert.equal(r.output, src);
   assert.deepEqual(r.manual.map((m) => [m.line, m.rule]), [3, 5, 7, 9, 10, 11].map((l) => [l, 'changes-in-11']));
-  assert.match(r.manual[0].message, /^<Select\.Content> has no sheet prop: in 11\.0 the default changes from false to "auto".*sheet=\{false\}/);
+  assert.match(r.manual[0].message, /^<Select\.Content> has no sheet prop: in 11\.0 the default changed from false to "auto".*sheet=\{false\}/);
   assert.match(r.manual[1].message, /^<DropdownMenu\.Content>/);
   assert.match(r.manual[3].message, /spread/);
   // Same names from another package are not ours.

@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Text } from '@nexub/react';
+import NextLink from 'next/link';
+import { IconButton, Link, Text } from '@nexub/react';
 import { DS_VERSION } from '../docs/VersionBadge';
 
 // Formatted in Asia/Singapore (not the visitor's zone) so server and client
@@ -17,7 +17,8 @@ const updated = new Intl.DateTimeFormat('en-GB', {
 
 const year = built.getFullYear();
 const REPO = 'https://github.com/Nexub-AI/nexub-ds';
-const linkClass = 'font-medium text-[var(--color-primary)] no-underline hover:underline';
+// DS Link (primary, underline on hover); it adds rel="noopener noreferrer" to new-tab links itself.
+const linkClass = 'font-medium';
 
 // Brand marks inline: @nexub/icons (Lucide) ships no brand logos.
 const SOCIALS = [
@@ -60,45 +61,46 @@ export function DocsFooter() {
     <footer className="border-t border-[var(--color-outline-variant)] px-6 py-6 text-center">
       <Text size="caption" tone="muted">
         Open source under the{' '}
-        <a href={`${REPO}/blob/development/LICENSE`} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <Link href={`${REPO}/blob/development/LICENSE`} target="_blank" className={linkClass}>
           MIT license
-        </a>{' '}
+        </Link>{' '}
         ·{' '}
-        <a href={REPO} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <Link href={REPO} target="_blank" className={linkClass}>
           <span aria-hidden="true">★ </span>Star on GitHub
-        </a>{' '}
+        </Link>{' '}
         ·{' '}
-        <a href={`${REPO}/blob/development/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <Link href={`${REPO}/blob/development/CONTRIBUTING.md`} target="_blank" className={linkClass}>
           Contribute
-        </a>
+        </Link>
       </Text>
       <Text size="caption" tone="muted" className="mt-1">
         v{DS_VERSION} · Updated {updated} SGT ·{' '}
-        <Link href="/changelog" target="_blank" rel="noopener noreferrer" className={linkClass}>
-          Changelog
+        <Link asChild target="_blank" className={linkClass}>
+          <NextLink href="/changelog">Changelog</NextLink>
         </Link>
       </Text>
       <Text size="caption" tone="muted" className="mt-1">
         Built with the Nexub Design System · © {year} Nexub Pte. Ltd., Singapore · Crafted by{' '}
-        <a href="https://www.linkedin.com/in/startupwithsasi/" target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <Link href="https://www.linkedin.com/in/startupwithsasi/" target="_blank" className={linkClass}>
           Sasidharan
-        </a>
+        </Link>
       </Text>
       <nav aria-label="Nexub on social media" className="mt-3 flex justify-center gap-1">
         {SOCIALS.map((s) => (
-          <a
+          <IconButton
             key={s.href}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.label}
+            asChild
+            size="sm"
+            label={s.label}
             title={s.label}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-on-surface-muted)] transition-colors hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-on-surface)]"
+            className="text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]"
           >
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-              {s.icon}
-            </svg>
-          </a>
+            <a href={s.href} target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                {s.icon}
+              </svg>
+            </a>
+          </IconButton>
         ))}
       </nav>
     </footer>
