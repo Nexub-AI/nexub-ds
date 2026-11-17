@@ -237,7 +237,7 @@ const List = React.forwardRef<
   return (
     <Command.List
       ref={ref}
-      className={cn('max-h-[400px] overflow-y-auto overflow-x-hidden p-2', className)}
+      className={cn('max-h-[25rem] overflow-y-auto overflow-x-hidden p-2', className)}
       {...props}
     >
       {palette?.loading && (

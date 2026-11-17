@@ -100,3 +100,42 @@ describe('Select', () => {
     expect(search).toHaveFocus();
   });
 });
+
+describe('Select 10.4', () => {
+  const renderSelect = (trigger: React.ComponentProps<typeof Select.Trigger>, onValueChange = vi.fn()) =>
+    render(
+      <Select.Root defaultValue="a" onValueChange={onValueChange}>
+        <Select.Trigger {...trigger}>
+          <Select.Value />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Item value="a">Option A</Select.Item>
+          <Select.Item value="b">Option B</Select.Item>
+        </Select.Content>
+      </Select.Root>,
+    );
+
+  it('size: md is the default; sm and lg use the Input heights', () => {
+    const { unmount } = renderSelect({});
+    expect(screen.getByRole('combobox')).toHaveClass('h-control-md', 'px-3.5', 'text-body-md');
+    unmount();
+    renderSelect({ size: 'sm' });
+    expect(screen.getByRole('combobox')).toHaveClass('h-control-sm', 'text-body-sm');
+  });
+
+  it('readOnly: aria-readonly, focusable, and the list cannot open or change', () => {
+    const onValueChange = vi.fn();
+    renderSelect({ readOnly: true }, onValueChange);
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toHaveAttribute('aria-readonly', 'true');
+    expect(trigger).not.toBeDisabled();
+    trigger.focus();
+    expect(trigger).toHaveFocus();
+    fireEvent.keyDown(trigger, { key: 'Enter' });
+    fireEvent.keyDown(trigger, { key: 'o' });
+    expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(trigger).toHaveTextContent('Option A');
+  });
+});

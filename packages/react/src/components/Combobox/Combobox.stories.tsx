@@ -50,3 +50,21 @@ export const Loading: Story = {
     </div>
   ),
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      {(["sm", "md", "lg"] as const).map((size) => (
+        <Combobox.Root key={size} label={size} className="h-auto border border-[var(--color-outline-variant)]">
+          <Combobox.Input size={size} placeholder={`Search (${size})`} />
+          <Combobox.List><Combobox.Item value={size}>{size}</Combobox.Item></Combobox.List>
+        </Combobox.Root>
+      ))}
+      <Combobox.Root label="Read-only" className="h-auto border border-[var(--color-outline-variant)]">
+        <Combobox.Input readOnly value="Read-only" />
+        <Combobox.List><Combobox.Item value="Read-only">Read-only</Combobox.Item></Combobox.List>
+      </Combobox.Root>
+    </div>
+  ),
+};

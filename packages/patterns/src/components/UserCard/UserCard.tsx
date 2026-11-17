@@ -43,14 +43,14 @@ export const UserCard = React.forwardRef<HTMLDivElement, UserCardProps>(
         />
 
         <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-          <span className="text-sm font-semibold text-[var(--color-on-surface)] truncate">
+          <span className="text-body-sm font-semibold text-[var(--color-on-surface)] truncate">
             {name}
           </span>
           {role && (
-            <span className="text-xs text-[var(--color-on-surface-muted)] truncate">{role}</span>
+            <span className="text-label-sm font-normal text-[var(--color-on-surface-muted)] truncate">{role}</span>
           )}
           {email && (
-            <span className="text-xs text-[var(--color-on-surface-variant)] truncate">{email}</span>
+            <span className="text-label-sm font-normal text-[var(--color-on-surface-variant)] truncate">{email}</span>
           )}
         </div>
 

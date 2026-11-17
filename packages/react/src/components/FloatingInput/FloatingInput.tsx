@@ -3,6 +3,7 @@
 // JavaScript and as a server component; the label stays a real <label>.
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { fieldReadOnly } from '../../utils/controlState.js';
 
 export interface FloatingInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
   /** Always visible: inside the field when empty, above the value otherwise. */
@@ -20,9 +21,10 @@ export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputPro
           id={inputId}
           placeholder=" "
           className={cn(
-            'h-14 w-full rounded-shape-field border border-[var(--color-outline)] bg-[var(--color-surface)] px-4 pt-5 text-body-md text-[var(--color-on-surface)]',
+            'h-[var(--float-field-h,3.5rem)] w-full rounded-shape-field border border-[var(--color-outline)] bg-[var(--color-surface)] px-4 pt-5 text-body-md text-[var(--color-on-surface)]',
             'outline-none transition-[border-color,box-shadow] focus-visible:border-[var(--color-primary)] focus-visible:shadow-[0_0_0_1px_var(--color-primary)]',
             'aria-[invalid=true]:border-[var(--color-error)] disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:text-[var(--color-text-disabled)]',
+            fieldReadOnly,
           )}
           {...props}
         />

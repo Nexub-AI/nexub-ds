@@ -29,7 +29,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixTooltip.TooltipContentProp
         ref={ref}
         sideOffset={sideOffset}
         className={cn(
-          'z-[var(--z-tooltip,1800)] rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-2.5 py-1.5 text-label-md text-[var(--color-inverse-on-surface)] shadow-elevation-1',
+          'z-[var(--z-tooltip,1800)] rounded-[var(--tooltip-radius,var(--shape-tooltip))] bg-[var(--tooltip-bg,var(--color-inverse-surface))] px-2.5 py-1.5 text-label-md text-[var(--tooltip-fg,var(--color-inverse-on-surface))] shadow-elevation-1',
           'nx-motion nx-pop origin-[var(--radix-tooltip-content-transform-origin)]',
           className,
         )}

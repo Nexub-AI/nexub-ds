@@ -56,7 +56,7 @@ export function NotificationCenter({
           {unread > 0 && (
             <span
               aria-hidden="true"
-              className="absolute -end-0.5 -top-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-error)] px-1 text-[10px] font-semibold tabular-nums leading-none text-[var(--color-on-error)]"
+              className="absolute -end-0.5 -top-0.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-error)] px-1 text-[0.625rem] font-semibold tabular-nums leading-none text-[var(--color-on-error)]"
             >
               {shown}
             </span>

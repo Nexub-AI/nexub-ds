@@ -22,7 +22,7 @@ describe('GradientDivider', () => {
 
   it('applies default 3px thickness via a class, no style attribute', () => {
     render(<GradientDivider />);
-    expect(screen.getByRole('separator')).toHaveClass('h-[3px]');
+    expect(screen.getByRole('separator')).toHaveClass('h-[0.1875rem]');
     expect(screen.getByRole('separator')).not.toHaveAttribute('style');
   });
 

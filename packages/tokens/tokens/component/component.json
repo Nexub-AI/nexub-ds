@@ -24,5 +24,65 @@
   },
   "badge": {
     "radius": { "$type": "dimension", "$value": "{shape.control}", "$extensions": { "dev.nexub": { "css": "var(--shape-control)" } } }
+  },
+  "dialog": {
+    "$description": "Dialog and AlertDialog.",
+    "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
+    "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.overlay}", "$extensions": { "dev.nexub": { "css": "var(--shape-overlay)" } } }
+  },
+  "popover": {
+    "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
+    "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
+  },
+  "menu": {
+    "$description": "DropdownMenu, ContextMenu and Menubar content (and submenus). fg colours the items.",
+    "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
+    "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
+  },
+  "tooltip": {
+    "bg": { "$type": "color", "$value": "{color.inverse-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-surface)" } } },
+    "fg": { "$type": "color", "$value": "{color.inverse-on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-on-surface)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.tooltip}", "$extensions": { "dev.nexub": { "css": "var(--shape-tooltip)" } } }
+  },
+  "toast": {
+    "bg": { "$type": "color", "$value": "{color.inverse-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-surface)" } } },
+    "fg": { "$type": "color", "$value": "{color.inverse-on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-on-surface)" } } },
+    "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
+  },
+  "tabs": {
+    "fg": { "$type": "color", "$value": "{color.on-surface-variant}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-variant)" } } },
+    "active-fg": { "$type": "color", "$value": "{color.primary}", "$description": "Line variant; the pill variant keeps on-surface.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
+    "indicator": { "$type": "color", "$value": "{color.primary}", "$description": "The sliding bar of the line variant.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } }
+  },
+  "table": {
+    "head-bg": { "$type": "color", "$value": "transparent", "$extensions": { "dev.nexub": { "css": "transparent" } } },
+    "head-fg": { "$type": "color", "$value": "{color.on-surface-muted}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-muted)" } } },
+    "border": { "$type": "color", "$value": "{color.outline-variant}", "$description": "Row rules.", "$extensions": { "dev.nexub": { "css": "var(--color-outline-variant)" } } }
+  },
+  "switch": {
+    "track-on": { "$type": "color", "$value": "{color.primary}", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } }
+  },
+  "checkbox": {
+    "checked-bg": { "$type": "color", "$value": "{color.primary}", "$description": "Also the indeterminate fill.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
+    "checked-fg": { "$type": "color", "$value": "{color.on-primary}", "$extensions": { "dev.nexub": { "css": "var(--color-on-primary)" } } },
+    "border": { "$type": "color", "$value": "{color.outline}", "$extensions": { "dev.nexub": { "css": "var(--color-outline)" } } },
+    "radius": { "$type": "dimension", "$value": "5px", "$extensions": { "dev.nexub": { "css": "0.3125rem" } } }
+  },
+  "avatar": {
+    "bg": { "$type": "color", "$value": "{color.surface-container-high}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-container-high)" } } },
+    "fg": { "$type": "color", "$value": "{color.on-surface-muted}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-muted)" } } },
+    "radius": { "$type": "dimension", "$value": "9999px", "$description": "A circle.", "$extensions": { "dev.nexub": { "css": "9999px" } } }
+  },
+  "alert": {
+    "$description": "Colours follow the variant, so only the radius is a token.",
+    "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
+  },
+  "nav": {
+    "$description": "The active item of Sidebar and NavigationRail.",
+    "active-bg": { "$type": "color", "$value": "{color.secondary-container}", "$extensions": { "dev.nexub": { "css": "var(--color-secondary-container)" } } },
+    "active-fg": { "$type": "color", "$value": "{color.on-secondary-container}", "$extensions": { "dev.nexub": { "css": "var(--color-on-secondary-container)" } } }
   }
 }

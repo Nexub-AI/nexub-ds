@@ -193,7 +193,7 @@ function HeaderSearch({
       <button
         type="button"
         {...triggerProps}
-        className="nx-state-layer hidden h-9 w-full max-w-xl items-center gap-2 rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 text-sm text-[var(--color-on-surface-muted)] md:flex"
+        className="nx-state-layer hidden h-9 w-full max-w-xl items-center gap-2 rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 text-body-sm text-[var(--color-on-surface-muted)] md:flex"
       >
         <Search size="sm" aria-hidden="true" className="shrink-0" />
         <span className="min-w-0 flex-1 truncate text-start">{placeholder}</span>
@@ -215,7 +215,7 @@ function HeaderSearch({
         <CommandPalette.Input placeholder={placeholder} value={query} onValueChange={setQuery} />
         <CommandPalette.List>
           {loading && (
-            <div role="status" className="px-3 py-2 text-sm text-[var(--color-on-surface-muted)]">
+            <div role="status" className="px-3 py-2 text-body-sm text-[var(--color-on-surface-muted)]">
               {t.searching}
             </div>
           )}
@@ -243,7 +243,7 @@ function HeaderSearch({
                   )}
                   <span className="min-w-0 truncate">{item.label}</span>
                   {item.hint && (
-                    <span className="ms-auto shrink-0 ps-3 text-xs text-[var(--color-on-surface-muted)]">{item.hint}</span>
+                    <span className="ms-auto shrink-0 ps-3 text-label-sm font-normal text-[var(--color-on-surface-muted)]">{item.hint}</span>
                   )}
                 </CommandPalette.Item>
               ))}
@@ -267,7 +267,7 @@ function OrgSwitcher({
   if (!current) return null;
   if (orgs.length === 1) {
     return (
-      <span title={current.name} className={cn('px-2 text-sm font-medium text-[var(--color-on-surface-variant)]', orgLabelClass)}>
+      <span title={current.name} className={cn('px-2 text-body-sm font-medium text-[var(--color-on-surface-variant)]', orgLabelClass)}>
         {current.name}
       </span>
     );
@@ -280,7 +280,7 @@ function OrgSwitcher({
           type="button"
           aria-label={t.switchOrganization(current.name)}
           title={current.name}
-          className="nx-state-layer inline-flex h-9 min-w-0 shrink-0 items-center gap-1 rounded-shape-control px-2 text-sm sm:shrink font-medium text-[var(--color-on-surface)]"
+          className="nx-state-layer inline-flex h-9 min-w-0 shrink-0 items-center gap-1 rounded-shape-control px-2 text-body-sm sm:shrink font-medium text-[var(--color-on-surface)]"
         >
           {/* Phones: an icon; the name is in the accessible name and the menu. */}
           <Building2 size="md" aria-hidden="true" className="shrink-0 sm:hidden" />

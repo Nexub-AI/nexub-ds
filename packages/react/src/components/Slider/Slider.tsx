@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as RadixSlider from '@radix-ui/react-slider';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 
 export type SliderMark = number | { value: number; label?: string };
 
@@ -15,11 +16,25 @@ export interface SliderProps extends RadixSlider.SliderProps {
   showValue?: boolean | 'hover';
   /** Formats the bubble and each thumb's `aria-valuetext`. */
   formatValue?: (value: number) => string;
+  /** Track thickness and thumb size; `md` is the default. */
+  size?: Size;
+  /** Error-coloured range and thumb, `aria-invalid` on the root. */
+  invalid?: boolean;
+  /** Focusable but pointer and keys do not change the value; `aria-readonly` on each thumb. */
+  readOnly?: boolean;
 }
+
+// thumbRem feeds the tick offset below; keep it equal to the thumb class.
+const sizes: Record<Size, { track: string; thumb: string; thumbRem: number }> = {
+  sm: { track: 'h-1', thumb: 'h-4 w-4', thumbRem: 1 },
+  md: { track: 'h-1.5', thumb: 'h-5 w-5', thumbRem: 1.25 },
+  lg: { track: 'h-2', thumb: 'h-6 w-6', thumbRem: 1.5 },
+};
+const STEP_KEYS = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'];
 
 export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
   (
-    { className, thumbLabels, marks, showValue, formatValue, 'aria-label': ariaLabel, onValueChange, ...props },
+    { className, thumbLabels, marks, showValue, formatValue, size = 'md', invalid, readOnly, 'aria-label': ariaLabel, onValueChange, onKeyDownCapture, onPointerDownCapture, ...props },
     ref,
   ) => {
     const { min = 0, max = 100, inverted } = props;
@@ -29,11 +44,12 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
     // Thumb count only — keyed by index so a thumb never remounts while dragging.
     const count = (props.value ?? props.defaultValue ?? [0]).length;
     const format = formatValue ?? String;
-    // Matches Radix's in-bounds thumb offset (half the 1.25rem thumb at the ends), so ticks line up.
+    const s = sizes[size];
+    // Matches Radix's in-bounds thumb offset (half the thumb at the ends), so ticks line up.
     const at = (v: number) => {
       const p = ((v - min) / (max - min)) * 100;
       const pct = inverted ? 100 - p : p;
-      return { insetInlineStart: `calc(${pct}% + ${(0.5 - pct / 100) * 1.25}rem)` };
+      return { insetInlineStart: `calc(${pct}% + ${(0.5 - pct / 100) * s.thumbRem}rem)` };
     };
     const list = marks?.map((m) => (typeof m === 'number' ? { value: m } : m));
     const labelled = list?.some((m) => m.label);
@@ -49,10 +65,20 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
           setOwn(v);
           onValueChange?.(v);
         }}
+        // Read-only: Radix never sees the pointer or the step keys; Tab and focus still work.
+        onPointerDownCapture={(e) => {
+          onPointerDownCapture?.(e);
+          if (readOnly) e.stopPropagation();
+        }}
+        onKeyDownCapture={(e) => {
+          onKeyDownCapture?.(e);
+          if (readOnly && STEP_KEYS.includes(e.key)) e.stopPropagation();
+        }}
         {...props}
+        aria-invalid={invalid || props['aria-invalid']}
       >
-        <RadixSlider.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-[var(--color-surface-container-highest)]">
-          <RadixSlider.Range className="absolute h-full bg-[var(--color-primary)] group-data-[disabled]:bg-[var(--color-text-disabled)]" />
+        <RadixSlider.Track className={cn('relative w-full grow overflow-hidden rounded-full bg-[var(--color-surface-container-highest)]', s.track)}>
+          <RadixSlider.Range className="absolute h-full bg-[var(--color-primary)] group-aria-invalid:bg-[var(--color-error)] group-data-[disabled]:bg-[var(--color-text-disabled)]" />
         </RadixSlider.Track>
         {/* Zero-width anchors centre each tick on its value in either direction. */}
         {list?.map((m) => (
@@ -76,10 +102,13 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
             key={i}
             aria-label={thumbLabels?.[i] ?? ariaLabel}
             aria-valuetext={formatValue && values[i] !== undefined ? formatValue(values[i]) : undefined}
+            aria-readonly={readOnly || undefined}
             // Solid primary knob with a surface ring; the state-layer halo is wider than the knob.
             className={cn(
-              'nx-state-layer group/thumb relative block h-5 w-5 rounded-full border-2 border-[var(--color-surface-container-lowest)] bg-[var(--color-primary)] text-[var(--color-primary)] shadow-elevation-1',
-              'before:-inset-2.5 cursor-grab active:cursor-grabbing',
+              'nx-state-layer group/thumb relative block rounded-full border-2 border-[var(--color-surface-container-lowest)] bg-[var(--color-primary)] text-[var(--color-primary)] shadow-elevation-1',
+              s.thumb,
+              'group-aria-invalid:bg-[var(--color-error)] group-aria-invalid:text-[var(--color-error)]',
+              readOnly ? 'before:-inset-2.5 cursor-default' : 'before:-inset-2.5 cursor-grab active:cursor-grabbing',
               // Opaque disabled knob (text-disabled is translucent and would show the range through it).
               'group-data-[disabled]:pointer-events-none group-data-[disabled]:bg-[color-mix(in_srgb,var(--color-on-surface)_38%,var(--color-surface))]',
             )}
@@ -88,7 +117,7 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
               <span
                 aria-hidden="true"
                 className={cn(
-                  'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-2 py-1 text-label-md text-[var(--color-inverse-on-surface)] shadow-elevation-1 transition-opacity',
+                  'pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-shape-tooltip bg-[var(--color-inverse-surface)] px-2 py-1 text-label-md tabular-nums text-[var(--color-inverse-on-surface)] shadow-elevation-1 transition-opacity',
                   showValue === 'hover' &&
                     'opacity-0 group-hover/thumb:opacity-100 group-focus/thumb:opacity-100',
                 )}

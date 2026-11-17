@@ -52,15 +52,15 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
       )}
 
       <div className="flex flex-col gap-1">
-        <p className="text-base font-semibold text-[var(--color-on-surface)]">{name}</p>
+        <p className="text-body-md font-semibold text-[var(--color-on-surface)]">{name}</p>
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold text-[var(--color-on-surface)]">{price}</span>
+          <span className="text-[1.875rem] leading-9 font-bold text-[var(--color-on-surface)]">{price}</span>
           {period && (
-            <span className="text-sm text-[var(--color-on-surface-muted)]">{period}</span>
+            <span className="text-body-sm text-[var(--color-on-surface-muted)]">{period}</span>
           )}
         </div>
         {description && (
-          <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>
+          <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>
         )}
       </div>
 
@@ -68,7 +68,7 @@ export const PlanCard = React.forwardRef<HTMLDivElement, PlanCardProps>(
         {features.map((feature) => (
           <li
             key={feature}
-            className="flex items-center gap-2 text-sm text-[var(--color-on-surface-variant)]"
+            className="flex items-center gap-2 text-body-sm text-[var(--color-on-surface-variant)]"
           >
             <Check size="xs" className="text-[var(--color-success)] shrink-0" aria-hidden="true" />
             {feature}

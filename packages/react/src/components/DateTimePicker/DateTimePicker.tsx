@@ -3,6 +3,7 @@
 import * as React from 'react';
 import type { Locale } from 'date-fns';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { DatePicker } from '../DatePicker/DatePicker.js';
 import { TimePicker } from '../TimePicker/TimePicker.js';
 import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -18,6 +19,11 @@ export interface DateTimePickerProps {
   minDate?: Date;
   maxDate?: Date;
   disabled?: boolean;
+  /** Both fields show the value but can't be changed. */
+  readOnly?: boolean;
+  invalid?: boolean;
+  /** @default 'md' */
+  size?: Size;
   /** IANA zone to name next to the fields (label only; the value stays local). */
   timeZone?: string;
   'aria-label'?: string;
@@ -43,6 +49,9 @@ export function DateTimePicker({
   minDate,
   maxDate,
   disabled,
+  readOnly,
+  invalid,
+  size,
   timeZone,
   'aria-label': ariaLabel,
   className,
@@ -70,6 +79,9 @@ export function DateTimePicker({
           minDate={minDate}
           maxDate={maxDate}
           disabled={disabled}
+          readOnly={readOnly}
+          invalid={invalid}
+          size={size}
           locale={locale}
         />
       </div>
@@ -79,6 +91,9 @@ export function DateTimePicker({
         value={time}
         minuteStep={minuteStep}
         disabled={disabled}
+        readOnly={readOnly}
+        invalid={invalid}
+        size={size}
         onValueChange={(next) => {
           if (!next) return;
           if (value) change(withTime(value, next));

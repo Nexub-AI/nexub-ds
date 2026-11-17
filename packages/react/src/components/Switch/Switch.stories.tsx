@@ -49,3 +49,15 @@ export const Signature: Story = {
     </div>
   ),
 };
+
+/** 10.4: invalid and read-only, off and on. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-4">
+      <Switch aria-label="invalid off" invalid />
+      <Switch aria-label="invalid on" invalid defaultChecked />
+      <Switch aria-label="read-only off" readOnly />
+      <Switch aria-label="read-only on" readOnly defaultChecked />
+    </div>
+  ),
+};

@@ -30,13 +30,13 @@ const Item = ({ avatar, title, description, timestamp, className }: ActivityItem
   <li className={cn('flex items-start gap-3 py-3', className)}>
     {avatar && <div className="shrink-0 mt-0.5">{avatar}</div>}
     <div className="flex-1 min-w-0">
-      <p className="text-sm font-medium text-[var(--color-on-surface)]">{title}</p>
+      <p className="text-body-sm font-medium text-[var(--color-on-surface)]">{title}</p>
       {description && (
-        <p className="text-sm text-[var(--color-on-surface-muted)] mt-0.5">{description}</p>
+        <p className="text-body-sm text-[var(--color-on-surface-muted)] mt-0.5">{description}</p>
       )}
     </div>
     {timestamp && (
-      <time className="shrink-0 text-xs text-[var(--color-on-surface-muted)]">{timestamp}</time>
+      <time className="shrink-0 text-label-sm font-normal text-[var(--color-on-surface-muted)]">{timestamp}</time>
     )}
   </li>
 );

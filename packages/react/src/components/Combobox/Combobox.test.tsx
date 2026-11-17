@@ -84,3 +84,17 @@ describe('Combobox', () => {
     expect(screen.getByText('No results.').closest('[cmdk-list]')).toHaveClass('[&_[cmdk-empty]]:hidden');
   });
 });
+
+describe('Combobox 10.4', () => {
+  it('Input size: md by default, sm on request; readOnly passes through', () => {
+    render(
+      <Combobox.Root label="Fruit">
+        <Combobox.Input placeholder="md" />
+        <Combobox.Input placeholder="sm" size="sm" readOnly />
+      </Combobox.Root>,
+    );
+    expect(screen.getByPlaceholderText('md')).toHaveClass('h-control-md', 'text-body-md');
+    expect(screen.getByPlaceholderText('sm')).toHaveClass('h-control-sm', 'text-body-sm');
+    expect(screen.getByPlaceholderText('sm')).toHaveAttribute('readonly');
+  });
+});

@@ -9,15 +9,15 @@ import { safeSrc } from '../../utils/safeHref.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export const avatarVariants = cva(
-  'relative inline-flex items-center justify-center shrink-0 rounded-full overflow-hidden bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-muted)] font-medium select-none',
+  'relative inline-flex items-center justify-center shrink-0 rounded-[var(--avatar-radius,9999px)] overflow-hidden bg-[var(--avatar-bg,var(--color-surface-container-high))] text-[var(--avatar-fg,var(--color-on-surface-muted))] font-medium select-none',
   {
     variants: {
       size: {
-        xs: 'h-6 w-6 text-[10px]',
-        sm: 'h-8 w-8 text-xs',
-        md: 'h-10 w-10 text-sm',
-        lg: 'h-12 w-12 text-base',
-        xl: 'h-16 w-16 text-xl',
+        xs: 'h-6 w-6 text-[0.625rem]',
+        sm: 'h-8 w-8 text-label-sm tracking-normal',
+        md: 'h-10 w-10 text-body-sm',
+        lg: 'h-12 w-12 text-body-md',
+        xl: 'h-16 w-16 text-title-lg tracking-normal',
       },
     },
     defaultVariants: {

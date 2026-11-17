@@ -55,7 +55,28 @@ describe('Switch', () => {
   it('exposes the Signature hooks: classes and the per-size thumb travel', () => {
     render(<Switch aria-label="Toggle setting" size="lg" />);
     const root = screen.getByRole('switch');
-    expect(root).toHaveClass('nx-switch', '[--nx-switch-travel:24px]');
+    expect(root).toHaveClass('nx-switch', '[--nx-switch-travel:1.5rem]');
     expect(root.firstElementChild).toHaveClass('nx-switch-thumb');
+  });
+});
+
+describe('Switch 10.4 consistent controls', () => {
+  it('invalid sets aria-invalid and does not leak to the DOM', () => {
+    render(<Switch aria-label="Toggle setting" invalid />);
+    const el = screen.getByRole('switch');
+    expect(el).toHaveAttribute('aria-invalid', 'true');
+    expect(el).not.toHaveAttribute('invalid');
+    expect(el).toHaveClass('aria-invalid:data-[state=unchecked]:border-[var(--color-error)]');
+  });
+
+  it('readOnly: aria-readonly, focusable, click does not toggle', () => {
+    const onCheckedChange = vi.fn();
+    render(<Switch aria-label="Toggle setting" readOnly onCheckedChange={onCheckedChange} />);
+    const el = screen.getByRole('switch');
+    expect(el).toHaveAttribute('aria-readonly', 'true');
+    expect(el).not.toBeDisabled();
+    fireEvent.click(el);
+    expect(onCheckedChange).not.toHaveBeenCalled();
+    expect(el).toHaveAttribute('data-state', 'unchecked');
   });
 });

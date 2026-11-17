@@ -27,6 +27,10 @@ const entry: ComponentEntry = {
     {
       title: 'States',
     },
+    {
+      title: 'Sizes, invalid and read-only',
+      description: 'size follows the shared sm / md / lg scale. invalid draws the error border and sets aria-invalid. readOnly stays focusable but cannot change.',
+    },
   ],
 };
 

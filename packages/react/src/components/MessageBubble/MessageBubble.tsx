@@ -85,7 +85,7 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
       >
         {from === 'user' ? (
           <>
-            <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-shape-container rounded-ee-[6px] bg-[var(--color-primary-container)] px-4 py-2.5 text-body-md text-[var(--color-on-primary-container)]">
+            <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-shape-container rounded-ee-[0.375rem] bg-[var(--color-primary-container)] px-4 py-2.5 text-body-md text-[var(--color-on-primary-container)]">
               {children}
             </div>
             {error}

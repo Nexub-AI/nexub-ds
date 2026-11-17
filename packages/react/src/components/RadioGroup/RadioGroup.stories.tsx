@@ -31,3 +31,23 @@ export const Signature = () => (
     ))}
   </div>
 );
+
+/** 10.4: sizes, invalid and read-only side by side. */
+export const ConsistentControls = () => (
+  <div className="flex flex-wrap items-start gap-6">
+    {(['sm', 'md', 'lg'] as const).map((size) => (
+      <RadioGroup.Root key={size} size={size} aria-label={`${size} options`} defaultValue="a">
+        <RadioGroup.Item value="a" aria-label="Option A" />
+        <RadioGroup.Item value="b" aria-label="Option B" />
+      </RadioGroup.Root>
+    ))}
+    <RadioGroup.Root invalid aria-label="invalid options">
+      <RadioGroup.Item value="a" aria-label="Option A" />
+      <RadioGroup.Item value="b" aria-label="Option B" />
+    </RadioGroup.Root>
+    <RadioGroup.Root readOnly aria-label="read-only options" defaultValue="a">
+      <RadioGroup.Item value="a" aria-label="Option A" />
+      <RadioGroup.Item value="b" aria-label="Option B" />
+    </RadioGroup.Root>
+  </div>
+);

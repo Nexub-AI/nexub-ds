@@ -68,7 +68,7 @@ function SectionNav({
         ))}
       </Sidebar.Group>
       {footer && (
-        <Sidebar.Footer className="px-5 py-3 text-xs text-[var(--color-on-surface-muted)]">{footer}</Sidebar.Footer>
+        <Sidebar.Footer className="px-5 py-3 text-label-sm font-normal text-[var(--color-on-surface-muted)]">{footer}</Sidebar.Footer>
       )}
     </Sidebar.Root>
   );
@@ -121,8 +121,8 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
               {(title || description) && (
                 <header className="flex flex-col gap-1">
-                  {title && <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-on-surface)]">{title}</h1>}
-                  {description && <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>}
+                  {title && <h1 className="text-headline-sm leading-8 font-semibold tracking-tight text-[var(--color-on-surface)]">{title}</h1>}
+                  {description && <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>}
                 </header>
               )}
               {children}
@@ -135,7 +135,7 @@ const Root = React.forwardRef<HTMLDivElement, SettingsLayoutProps>(
           <Sheet.Portal>
             <Sheet.Overlay className="md:hidden" />
             <Sheet.Content side="left" aria-describedby={undefined} className="md:hidden">
-              <Sheet.Title className="px-5 pb-2 pt-5 text-base">{navLabel}</Sheet.Title>
+              <Sheet.Title className="px-5 pb-2 pt-5 text-body-md">{navLabel}</Sheet.Title>
               <SectionNav items={items} activeId={activeId} onChoose={onChoose} label={navLabel} footer={navFooter} className="min-h-0 w-full flex-1 border-e-0" />
             </Sheet.Content>
           </Sheet.Portal>
@@ -158,8 +158,8 @@ const Section = React.forwardRef<HTMLElement, SettingsLayoutSectionProps>(
       <section ref={ref} {...props}>
         {(title || description) && (
           <div className="flex flex-col gap-1 border-b border-[var(--color-outline-variant)] pb-4 pt-4">
-            {title && <h2 className="text-base font-semibold text-[var(--color-on-surface)]">{title}</h2>}
-            {description && <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>}
+            {title && <h2 className="text-body-md font-semibold text-[var(--color-on-surface)]">{title}</h2>}
+            {description && <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>}
           </div>
         )}
         {children}
@@ -191,10 +191,10 @@ export const SettingsRow = React.forwardRef<HTMLDivElement, SettingsRowProps>(
       {...props}
     >
       <div className="flex flex-col gap-0.5 sm:w-1/3 sm:shrink-0">
-        <span className="text-sm font-medium text-[var(--color-on-surface)]">{label}</span>
-        {description && <span className="text-xs text-[var(--color-on-surface-muted)]">{description}</span>}
+        <span className="text-body-sm font-medium text-[var(--color-on-surface)]">{label}</span>
+        {description && <span className="text-label-sm font-normal text-[var(--color-on-surface-muted)]">{description}</span>}
       </div>
-      <div className="min-w-0 flex-1 break-words text-sm text-[var(--color-on-surface-variant)]">{value}</div>
+      <div className="min-w-0 flex-1 break-words text-body-sm text-[var(--color-on-surface-variant)]">{value}</div>
       {action && <div className="flex shrink-0 items-center gap-2">{action}</div>}
     </div>
   ),

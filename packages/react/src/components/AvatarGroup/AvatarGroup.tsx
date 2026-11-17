@@ -62,7 +62,7 @@ export const AvatarGroup = React.forwardRef<HTMLDivElement, AvatarGroupProps>(
         {overflowCount > 0 && (
           <span className="ring-2 ring-[var(--color-surface)] rounded-full inline-flex">
             <span
-              className={cn(avatarVariants({ size }), 'font-medium')}
+              className={cn(avatarVariants({ size }), 'font-medium tabular-nums')}
               role="img"
               aria-label={messages.moreCount(overflowCount)}
             >

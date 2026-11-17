@@ -65,3 +65,23 @@ describe('RadioCard', () => {
     expect(html).not.toMatch(/\sstyle=/);
   });
 });
+
+describe('RadioCard 10.4 consistent controls', () => {
+  it('invalid on the group marks the group and each card', () => {
+    render(<Plans invalid />);
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('radiogroup')).not.toHaveAttribute('invalid');
+    expect(screen.getByRole('radio', { name: 'Pro' })).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('readOnly keeps the selection', async () => {
+    const onValueChange = vi.fn();
+    render(<Plans defaultValue="free" readOnly onValueChange={onValueChange} />);
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-readonly', 'true');
+    const pro = screen.getByRole('radio', { name: 'Pro' });
+    expect(pro).not.toBeDisabled();
+    await userEvent.click(pro);
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(pro).toHaveAttribute('data-state', 'unchecked');
+  });
+});

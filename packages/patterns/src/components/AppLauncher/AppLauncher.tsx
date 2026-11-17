@@ -56,12 +56,12 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
         alt=""
         width={40}
         height={40}
-        className="h-10 w-10 rounded-[12px] object-cover"
+        className="h-10 w-10 rounded-[0.75rem] object-cover"
         onError={() => setFailed(true)}
       />
     );
   }
-  return <Avatar name={app.name} size="md" category={app.accent ? 'accent' : undefined} className="rounded-[12px]" aria-hidden="true" />;
+  return <Avatar name={app.name} size="md" category={app.accent ? 'accent' : undefined} className="rounded-[0.75rem]" aria-hidden="true" />;
 }
 
 export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>(
@@ -144,7 +144,7 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
                           data-col={n % COLUMNS}
                           onClick={(e) => onClick(e, app)}
                           className={cn(
-                            'flex flex-col items-center gap-1.5 rounded-[8px] px-1 py-3 text-center text-xs text-[var(--color-on-surface)] transition-colors',
+                            'flex flex-col items-center gap-1.5 rounded-[0.5rem] px-1 py-3 text-center text-label-sm font-normal text-[var(--color-on-surface)] transition-colors',
                             'hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
                             app.current &&
                               (app.accent

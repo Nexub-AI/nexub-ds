@@ -38,3 +38,13 @@ describe('FloatingInput', () => {
     expect(ref.current!.parentElement).toHaveClass('nx-float-field', 'x');
   });
 });
+
+describe('FloatingInput 10.4', () => {
+  it('height follows the density variable; readOnly gets the read-only look', () => {
+    render(<FloatingInput readOnly label="Account" defaultValue="NX-1" />);
+    const input = screen.getByLabelText('Account');
+    expect(input).toHaveClass('h-[var(--float-field-h,3.5rem)]');
+    expect(input).toHaveAttribute('readonly');
+    expect(input.className).toContain('[&[readonly]]:bg-');
+  });
+});

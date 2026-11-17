@@ -21,7 +21,7 @@ export function AuthCard({
   return (
     <div
       className={cn(
-        'mx-auto w-full max-w-[400px] flex flex-col gap-6',
+        'mx-auto w-full max-w-[25rem] flex flex-col gap-6',
         className,
       )}
     >
@@ -30,11 +30,11 @@ export function AuthCard({
       )}
 
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-[var(--color-on-surface)]">
+        <h1 className="text-headline-sm leading-8 font-bold tracking-tight text-[var(--color-on-surface)]">
           {title}
         </h1>
         {description && (
-          <p className="text-sm text-[var(--color-on-surface-muted)]">{description}</p>
+          <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>
         )}
       </div>
 
@@ -43,7 +43,7 @@ export function AuthCard({
       </div>
 
       {footer && (
-        <div className="flex flex-col items-center gap-2 text-sm text-[var(--color-on-surface-muted)]">
+        <div className="flex flex-col items-center gap-2 text-body-sm text-[var(--color-on-surface-muted)]">
           {footer}
         </div>
       )}

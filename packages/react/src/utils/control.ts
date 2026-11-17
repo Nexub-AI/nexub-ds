@@ -21,7 +21,7 @@ export const toneTextClasses: Record<ToneValue, string> = {
 };
 
 /** Text field chrome: Input wrapper, Textarea, Select trigger. */
-export const field = [
+export const field = /* @__PURE__ */ [
   'rounded-[var(--field-radius,var(--shape-field))] border border-[var(--field-border,var(--color-outline))]',
   'bg-[var(--field-bg,var(--color-surface-container-lowest))] text-[var(--field-fg,var(--color-on-surface))]',
   'transition-[border-color,box-shadow] duration-effects-fast ease-effects-fast',
@@ -34,7 +34,7 @@ export const fieldFocusWithin =
 export const fieldFocusVisible =
   'focus-visible:outline-none focus-visible:border-[var(--color-primary)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-primary)]';
 
-export const fieldInvalid = [
+export const fieldInvalid = /* @__PURE__ */ [
   'border-[var(--color-error)] hover:border-[var(--color-error)]',
   'focus-within:border-[var(--color-error)] focus-within:shadow-[inset_0_0_0_1px_var(--color-error)] focus-within:hover:border-[var(--color-error)]',
   'focus-visible:border-[var(--color-error)] focus-visible:shadow-[inset_0_0_0_1px_var(--color-error)]',
@@ -56,3 +56,7 @@ export const disabledContainer =
 /** Disabled for text-only controls (ghost, link). */
 export const disabledText =
   'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)] aria-disabled:pointer-events-none';
+
+// 10.4 state looks live in a small file of their own, so controls that need only
+// them (Checkbox, Switch) do not pull this whole module into their bundle.
+export { controlInvalid, fieldReadOnly, fieldReadOnlyWithin } from './controlState.js';

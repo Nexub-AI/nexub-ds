@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 /**
@@ -42,13 +43,25 @@ const Root = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comman
 );
 Root.displayName = 'Combobox.Root';
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<typeof Command.Input>>(
-  ({ className, ...props }, ref) => (
+export interface ComboboxInputProps extends Omit<React.ComponentProps<typeof Command.Input>, 'size'> {
+  /** @default 'md' */
+  size?: Size;
+}
+
+const inputSizes: Record<Size, string> = {
+  sm: 'h-control-sm text-body-sm',
+  md: 'h-control-md text-body-md',
+  lg: 'h-control-lg text-body-md',
+};
+
+const Input = React.forwardRef<HTMLInputElement, ComboboxInputProps>(
+  ({ className, size = 'md', ...props }, ref) => (
     <div className="flex items-center border-b border-[var(--color-outline-variant)] px-3.5">
       <Command.Input
         ref={ref}
         className={cn(
-          'flex h-control-md w-full bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
+          'flex w-full bg-transparent outline-none placeholder:text-[var(--color-on-surface-muted)] disabled:cursor-not-allowed disabled:text-[var(--color-text-disabled)]',
+          inputSizes[size],
           className,
         )}
         {...props}
@@ -113,7 +126,7 @@ const Group = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comma
         setRef(ref, el);
       }}
       className={cn(
-        'overflow-hidden p-1 text-[var(--color-on-surface)] [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-on-surface-muted)]',
+        'overflow-hidden p-1 text-[var(--color-on-surface)] [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-label-sm [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-[var(--color-on-surface-muted)]',
         className,
       )}
       {...props}
@@ -130,7 +143,7 @@ const Item = React.forwardRef<HTMLDivElement, React.ComponentProps<typeof Comman
         setRef(ref, el);
       }}
       className={cn(
-        'relative flex cursor-default select-none items-center rounded-[10px] px-2.5 py-2 text-body-sm outline-none',
+        'relative flex cursor-default select-none items-center rounded-[0.625rem] px-2.5 py-2 text-body-sm outline-none',
         // Highlight = the on-surface state layer at hover opacity.
         'aria-selected:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
         'data-[disabled=true]:pointer-events-none data-[disabled=true]:text-[var(--color-text-disabled)]',
