@@ -71,7 +71,7 @@
     "@nexub/core": "workspace:*",
     "@nexub/icons": "workspace:*",
     "@nexub/tokens": "workspace:*",
-    "lucide-react-native": "^1.70.0"
+    "lucide-react-native": "^1.71.0"
   },
   "peerDependencies": {
     "expo-glass-effect": ">=58.0.0",
