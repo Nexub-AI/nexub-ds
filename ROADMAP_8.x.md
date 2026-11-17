@@ -23,7 +23,7 @@ Drafted 2026-11-09. Follows [ROADMAP_7.x.md](ROADMAP_7.x.md). 20 releases: 8.1�
 | Performance | CLS 0 on docs pages, INP under 200 ms, frame-time budgets green, size budgets under 95% |
 | Resilience | Mount/unmount leak test flat, 30-minute soak with no errors or heap growth |
 | Security | CodeQL 0 high/critical, OpenSSF Scorecard ≥ 8, SBOM and provenance on every release, Trusted Types enforced on docs, internal security review findings all closed |
-| Soak | The RC lives on the `next` dist-tag for 4 weeks in real apps (Payub/Matchub pilots) with no regression |
+| Soak | The RC lives on the `next` dist-tag for 4 weeks in real apps (the Payub pilot) with no regression |
 
 ## Where 7.x stands (2026-11-09)
 
@@ -126,7 +126,7 @@ Already solid (not re-planned): 0 TODO/FIXME, 0 raw hex, deprecation tracking te
 | 9.6 | Security: the library | A short threat model per risky component (anything that renders URLs, HTML, files, user or LLM content). An XSS corpus run against every such prop. Trusted Types **enforced** on docs, with a test proving the library makes no TT violations (G6). A strict docs CSP with no `unsafe-inline` anywhere. MCP server and feedback endpoint review: input limits, rate limits as code, logging without secrets |
 | 9.7 | Security: the supply chain | Signed release tags and SLSA L3 build provenance. A reproducible-build check that builds twice and compares hashes. A dependency policy: fewer runtime deps (audit each one), a minimum package age before an upgrade, lockfile lint, and Dependabot grouped with a review SLA. Trusted publishing on every `@nexub` package (E5, owner action). CodeQL 0 high and Scorecard ≥ 8 as blocking gates (G8) |
 | 9.8 | Security review and response | A structured internal security review (no paid vendor) of the packages, docs site, feedback endpoint and MCP server against a written checklist (OWASP ASVS L2 where it applies), with every finding fixed in this release. Incident runbook, GitHub Security Advisories, a CVE process and a tested "hotfix in 24 h" drill. `SECURITY.md` states that fixes ship on the latest version only, as a patch, without waiting for the next scheduled release (G7) |
-| 9.9 | 10.0 RC | Feature and API freeze. RC on the `next` dist-tag for a 4-week soak in Payub/Matchub pilots. Every exit criterion checked on a public status page in the docs. Only release-blocking fixes land. Migrating to 10.0. Change the release policy for after 10.0: turn off the automatic x.9 → major rollover in `release-version.mjs` and `check:release-policy`, and update `PUBLISHING.md` |
+| 9.9 | 10.0 RC | Feature and API freeze. RC on the `next` dist-tag for a 4-week soak in the Payub pilot. Every exit criterion checked on a public status page in the docs. Only release-blocking fixes land. Migrating to 10.0. Change the release policy for after 10.0: turn off the automatic x.9 → major rollover in `release-version.mjs` and `check:release-policy`, and update `PUBLISHING.md` |
 
 ### 10.0 — Stable
 
@@ -142,7 +142,7 @@ Until 10.0, 8.x and 9.x keep today's pace: each version ships as soon as it's re
 - **No automatic rollover.** After 10.9 comes 10.10. A new major happens only when something has to break, and it needs an RFC and a migration guide.
 - **Patches don't wait.** Security and critical bug fixes ship as a patch (10.1.1) whenever needed. Fixes go only on the latest version, so consumers are expected to stay current.
 - **Each cycle is mostly use, not build:**
-  - Weeks 1–2: use the current release in real apps (Payub, Matchub, Leap, Bookub), and collect gaps and bugs from them and from issue forms, Discussions and docs feedback.
+  - Weeks 1–2: use the current release in real apps (Payub, Leap, Bookub), and collect gaps and bugs from them and from issue forms, Discussions and docs feedback.
   - Week 3: plan and build the fixes and the few additions that held up.
   - Week 4: RC on the `next` dist-tag, a soak in one app, then release.
 - **Same gates as 10.0.** A minor that turns any exit criterion red doesn't ship.
@@ -176,8 +176,7 @@ All settled 2026-11-09. Nothing is open.
 - **Button legacy aliases** are deprecated in 8.4 and removed in 9.0.
 - **`classic` style** is deprecated through 8.x and removed in 9.0 (7.x decision 3).
 - **No paid work.** 9.8 is a structured internal security review, not an outside audit, and 9.1 accepts Playwright WebKit as the Safari stand-in. Either can be added later without changing the plan.
-- **RFCs #302–#307** (PhoneInput, QRCode/QRScanner, Countdown, React Native twins, description list/status steps, Malayalam typeface) are parked until after 10.0, as candidates for the scheduled minors. The **Matchub brand** (PR #301) is a theme, not a feature, so it may ship whenever it's ready.
-
+- **RFCs #302–#307** (PhoneInput, QRCode/QRScanner, Countdown, React Native twins, description list/status steps, Malayalam typeface) are parked until after 10.0, as candidates for the scheduled minors.
 ## Out of scope
 
 New components, new props or variants, Tailwind v4 prebuilt CSS (R4), the parked RFCs (#302–#307), paid audits or device clouds, and everything already planned in 7.x.

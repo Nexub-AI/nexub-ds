@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { accentAttrs } from '@nexub/react';
+import type { DivisionKey, ProductKey } from '@nexub/react';
 import { Avatar, IconButton, Popover, cn, safeHref, safeSrc } from '@nexub/react';
 import { Apps } from '@nexub/icons';
 
@@ -10,6 +12,9 @@ export interface AppLauncherApp {
   icon?: string;
   /** Section heading, e.g. "People & HR". Apps with the same group sit together, in order of first appearance. */
   group?: string;
+  /** 10.3: the app's key in the product map (or its division). Tints the tile's initials
+   *  fallback and its current marker with that accent (needs `@nexub/themes/products`). */
+  accent?: ProductKey | DivisionKey;
   /** The app the user is in now. */
   current?: boolean;
 }
@@ -56,7 +61,7 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
       />
     );
   }
-  return <Avatar name={app.name} size="md" className="rounded-[12px]" aria-hidden="true" />;
+  return <Avatar name={app.name} size="md" category={app.accent ? 'accent' : undefined} className="rounded-[12px]" aria-hidden="true" />;
 }
 
 export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>(
@@ -131,7 +136,7 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
                   )}
                   <ul className="grid grid-cols-3 gap-1" aria-label={group}>
                     {items.map((app, n) => (
-                      <li key={app.id}>
+                      <li key={app.id} {...accentAttrs(app.accent)}>
                         <a
                           href={safeHref(app.href)}
                           aria-current={app.current ? 'page' : undefined}
@@ -141,7 +146,10 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
                           className={cn(
                             'flex flex-col items-center gap-1.5 rounded-[8px] px-1 py-3 text-center text-xs text-[var(--color-on-surface)] transition-colors',
                             'hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)]',
-                            app.current && 'bg-[var(--color-surface-container-low)] font-semibold',
+                            app.current &&
+                              (app.accent
+                                ? 'bg-[var(--color-spot-container)] font-semibold text-[var(--color-on-spot-container)]'
+                                : 'bg-[var(--color-surface-container-low)] font-semibold'),
                           )}
                         >
                           <AppIcon app={app} />

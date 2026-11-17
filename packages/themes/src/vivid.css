@@ -107,3 +107,61 @@
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
   [data-expression='vivid'] [data-material='glass']::after { display: none; }
 }
+
+/* ── 10.3: Vivid reaches the app ──────────────────────────────────────────────
+   Colour and motion go on landmarks (page header, navigation, stat cards,
+   charts); working surfaces (tables, forms) get a hover tint and nothing else. */
+
+/* Page header and welcome banner: a soft colour wash (PageHeader needs its
+   wash prop). The heavier title comes from --page-title-* below. */
+[data-expression='vivid'] :is([data-nx='page-header'][data-wash], [data-nx='welcome-banner']) {
+  background-image: linear-gradient(120deg, color-mix(in oklab, var(--color-spot, var(--color-primary)) 14%, transparent) 0%, color-mix(in oklab, var(--vivid-accent-2) 8%, transparent) 55%, transparent 100%);
+}
+
+/* Stat cards lift a little on hover. */
+[data-expression='vivid'] [data-nx='stat-card'] {
+  transition: translate var(--motion-spring-spatial-fast-duration, 200ms) var(--motion-spring-spatial-fast-easing, ease-out), box-shadow var(--motion-spring-effects-default-duration, 200ms) ease;
+}
+[data-expression='vivid'] [data-nx='stat-card']:hover {
+  translate: 0 -2px;
+  box-shadow: var(--elevation-2);
+}
+
+/* Navigation: the active item is tinted with the spot accent (--nav-active-*
+   below) and, in the Sidebar, marked by a bar that slides between items. */
+[data-expression='vivid'] .nx-nav-marker {
+  display: block;
+}
+
+/* One hover language for rows and list items: a faint accent tint. */
+[data-expression='vivid'] [data-nx='row'] {
+  transition: background-color var(--motion-spring-effects-fast-duration, 150ms) ease;
+}
+[data-expression='vivid'] [data-nx='row']:hover {
+  background-color: var(--row-hover);
+}
+
+/* Component tokens the layer sets. Components read them with their calm value
+   as the fallback (utilities sit in a later cascade layer than this file, so a
+   plain declaration here could not override them):
+   --page-title-*  PageHeader, PageFrame and WelcomeBanner titles
+   --nav-active-*  the active Sidebar item and NavigationRail pill (spot accent)
+   --row-hover     Table, DataTable and list rows
+   --nx-chart-fade bars fade toward the baseline (.nx-chart-grad in core.css) */
+[data-expression='vivid'] {
+  --page-title-weight: 700;
+  --page-title-tracking: -0.02em;
+  --nav-active-bg: color-mix(in oklab, var(--color-spot, var(--color-primary)) 12%, transparent);
+  --nav-active-fg: var(--color-spot, var(--color-primary));
+  --row-hover: color-mix(in oklab, var(--color-primary) 6%, transparent);
+  --nx-chart-fade: 0.45;
+}
+[data-expression='vivid'][data-contrast='high'],
+[data-contrast='high'] [data-expression='vivid'] {
+  --nx-chart-fade: 1;
+}
+@media (prefers-contrast: more), (forced-colors: active) {
+  [data-expression='vivid'] {
+    --nx-chart-fade: 1;
+  }
+}

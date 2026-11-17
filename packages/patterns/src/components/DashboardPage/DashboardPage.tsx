@@ -13,12 +13,16 @@ import {
   type Transaction,
 } from '../PageFrame/PageFrame.js';
 
-export type DashboardStat = Pick<StatCardProps, 'label' | 'value' | 'delta' | 'deltaType' | 'sentiment' | 'icon' | 'description'>;
+export type DashboardStat = Pick<StatCardProps, 'label' | 'value' | 'delta' | 'deltaType' | 'sentiment' | 'icon' | 'description' | 'category' | 'trend' | 'trendLabel' | 'animate'>;
 
 export interface DashboardPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
   /** Page title, e.g. "Good morning, Mei". */
   title: React.ReactNode;
   balance: { value: number; currency: string; label?: string };
+  /** 10.3: a greeting above the balance, usually a `WelcomeBanner`. */
+  banner?: React.ReactNode;
+  /** 10.3: a chart panel under the key figures, e.g. spending by month. Give it a `title`. */
+  chart?: { title: string; content: React.ReactNode; action?: React.ReactNode };
   /** Send, Add money, Request… Keep to four. */
   quickActions?: QuickAction[];
   /** Key figures under the balance. */
@@ -55,6 +59,8 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
   {
     title,
     balance,
+    banner,
+    chart,
     quickActions = [],
     stats = [],
     recent = [],
@@ -70,6 +76,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
   const locale = useTemplateLocale();
   return (
     <PageFrame ref={ref} width="lg" title={title} {...props}>
+      {banner}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
           <Card className="flex flex-col gap-5 p-6">
@@ -79,9 +86,10 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
             </div>
             {quickActions.length > 0 && (
               <ul aria-label={m.quickActions} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {quickActions.map((a) => (
+                {quickActions.map((a, i) => (
                   <li key={a.id}>
-                    <Button variant="tonal" fullWidth onClick={a.onSelect} leadingIcon={a.icon}>
+                    {/* The first action is the screen's one main (gradient under vivid) action. */}
+                    <Button variant={i === 0 ? 'filled' : 'tonal'} fullWidth onClick={a.onSelect} leadingIcon={a.icon}>
                       {a.label}
                     </Button>
                   </li>
@@ -96,6 +104,12 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
                 <StatCard key={s.label} {...s} />
               ))}
             </div>
+          )}
+
+          {chart && (
+            <Panel title={chart.title} action={chart.action}>
+              <Card className="p-6">{chart.content}</Card>
+            </Panel>
           )}
 
           {recent.length > 0 && (

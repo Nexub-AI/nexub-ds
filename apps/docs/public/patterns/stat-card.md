@@ -16,6 +16,9 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
 | `sentiment` | `'positive' \| 'negative' \| 'neutral'` |  | Colour of the delta, independent of the arrow. Defaults from `deltaType`; use it when a decrease is good news (e.g. churn down). |
 | `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
+| `category` | `'accent' \| 'blue' \| 'amber' \| 'emerald' \| 'pink' \| 'violet' \| 'cyan' \| 'red' \| 'lime'` |  | Puts the icon on a tinted chip of this colour and colours the trend line to match. |
+| `trend` | `number[]` |  | Recent values, drawn as a small trend line beside the delta. |
+| `trendLabel` | `string` |  | Accessible summary of the trend. Without it the line is decorative. |
 | `description` | `string` |  | Additional context below the value. |
 | `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
 
@@ -63,6 +66,30 @@ export default function Example() {
       <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
         New orders
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Category and trend
+
+```tsx
+import { StatCard } from '@nexub/patterns';
+import { Wallet } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="w-[260px]">
+      <StatCard
+        label="Saved"
+        value="S$2,400"
+        delta="12%"
+        deltaType="increase"
+        icon={<Wallet size={16} />}
+        category="emerald"
+        trend={[10, 12, 13, 15, 16, 19, 22]}
+        trendLabel="Last 7 weeks, rising"
+      />
     </div>
   );
 }

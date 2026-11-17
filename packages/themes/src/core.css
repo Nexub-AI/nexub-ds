@@ -1081,3 +1081,59 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
 .nx-dot-in {
   animation: nx-dot-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
 }
+
+/* ── 10.3: lively app surfaces ────────────────────────────────────────────────
+   Spot accent: the one colour a product owns inside an app. Under data-product
+   or data-division it is the product's tertiary family; components read it as
+   var(--color-spot, var(--color-primary)), so without a product it is the
+   primary. Used in fixed places only: the product icon chip, the active
+   navigation item, chart series 1 and illustrations. */
+[data-product], [data-division] {
+  --color-spot: var(--color-tertiary);
+  --color-on-spot: var(--color-on-tertiary);
+  --color-spot-container: var(--color-tertiary-container);
+  --color-on-spot-container: var(--color-on-tertiary-container);
+}
+
+/* Category colours: data-category picks one of the eight generated hues
+   (@nexub/tokens roles.css), or "accent" for the spot accent. IconChip, Badge
+   and Avatar read the three --nx-cat-* values. */
+[data-category='accent'] {
+  --nx-cat: var(--color-spot, var(--color-primary));
+  --nx-cat-container: var(--color-spot-container, var(--color-primary-container));
+  --nx-on-cat-container: var(--color-on-spot-container, var(--color-on-primary-container));
+}
+[data-category='blue'] { --nx-cat: var(--color-category-blue); --nx-cat-container: var(--color-category-blue-container); --nx-on-cat-container: var(--color-on-category-blue-container); }
+[data-category='amber'] { --nx-cat: var(--color-category-amber); --nx-cat-container: var(--color-category-amber-container); --nx-on-cat-container: var(--color-on-category-amber-container); }
+[data-category='emerald'] { --nx-cat: var(--color-category-emerald); --nx-cat-container: var(--color-category-emerald-container); --nx-on-cat-container: var(--color-on-category-emerald-container); }
+[data-category='pink'] { --nx-cat: var(--color-category-pink); --nx-cat-container: var(--color-category-pink-container); --nx-on-cat-container: var(--color-on-category-pink-container); }
+[data-category='violet'] { --nx-cat: var(--color-category-violet); --nx-cat-container: var(--color-category-violet-container); --nx-on-cat-container: var(--color-on-category-violet-container); }
+[data-category='cyan'] { --nx-cat: var(--color-category-cyan); --nx-cat-container: var(--color-category-cyan-container); --nx-on-cat-container: var(--color-on-category-cyan-container); }
+[data-category='red'] { --nx-cat: var(--color-category-red); --nx-cat-container: var(--color-category-red-container); --nx-on-cat-container: var(--color-on-category-red-container); }
+[data-category='lime'] { --nx-cat: var(--color-category-lime); --nx-cat-container: var(--color-category-lime-container); --nx-on-cat-container: var(--color-on-category-lime-container); }
+
+/* Bar gradients: every bar is filled through a two-stop gradient of its own
+   colour. The lower stop stays opaque unless an expression layer sets
+   --nx-chart-fade (vivid does), so the default look is a flat fill. */
+.nx-chart-grad > stop:last-child { stop-opacity: var(--nx-chart-fade, 1); }
+.nx-chart-grad-1 > stop { stop-color: var(--color-chart-1); }
+.nx-chart-grad-2 > stop { stop-color: var(--color-chart-2); }
+.nx-chart-grad-3 > stop { stop-color: var(--color-chart-3); }
+.nx-chart-grad-4 > stop { stop-color: var(--color-chart-4); }
+.nx-chart-grad-5 > stop { stop-color: var(--color-chart-5); }
+.nx-chart-grad-6 > stop { stop-color: var(--color-chart-6); }
+.nx-chart-grad-7 > stop { stop-color: var(--color-chart-7); }
+.nx-chart-grad-8 > stop { stop-color: var(--color-chart-8); }
+
+/* The sliding marker beside the active Sidebar item. Hidden unless an
+   expression layer shows it (vivid does). */
+.nx-nav-marker { display: none; }
+
+/* SuccessCheck: the ring pops in on the expressive spring, then the tick draws
+   (.nx-check-draw). Reduced motion shows the finished mark. */
+@keyframes nx-pop { from { scale: 0.6; opacity: 0; } }
+.nx-success-check { animation: nx-pop var(--motion-spring-expressive-default-duration, 400ms) var(--motion-spring-expressive-default-easing, ease-out) both; }
+.nx-success-check .nx-check-draw { animation-delay: 120ms; animation-fill-mode: both; }
+@media (prefers-reduced-motion: reduce) {
+  .nx-success-check { animation: none; }
+}

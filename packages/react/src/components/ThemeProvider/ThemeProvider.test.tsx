@@ -209,6 +209,15 @@ describe('ThemeScript', () => {
     document.documentElement.removeAttribute('data-product');
   });
 
+  it('accepts every app key in the product map, aliases included (10.3)', () => {
+    for (const key of ['people', 'command-hub', 'payhub']) {
+      localStorage.setItem('p', key);
+      new Function(themeScriptSource('k', 'p'))();
+      expect(document.documentElement.getAttribute('data-product')).toBe(key);
+      document.documentElement.removeAttribute('data-product');
+    }
+  });
+
   it('ignores a stored product that has no theme (user-controlled storage)', () => {
     localStorage.setItem('p', '" onload=alert(1) x="');
     new Function(themeScriptSource('k', 'p'))();

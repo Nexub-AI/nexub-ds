@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, palettes, applyRem, remValues, rolesCss, signaturePalettes, spring, tertiary, tonesAt } from './generate.mjs';
+import { LEVELS, P3_ROLES, PRODUCTS, ROLES, SPRINGS, chartCategorical, categoryColors, palettes, applyRem, remValues, rolesCss, signaturePalettes, spring, tertiary, tonesAt } from './generate.mjs';
 
 const lum = (hex) => {
   const [r, g, b] = [1, 3, 5].map((i) => {
@@ -111,6 +111,25 @@ test('P3 block boosts chroma of accent fills only, at every level and brand', ()
   for (const [, role, value] of decls)
     assert.match(value, /^light-dark\(oklch\(from var\(--color-palette-[\w-]+\) l calc\(c \* 1\.18\) h\), oklch\(from .* h\)\)$/, role);
   for (const sel of ["[data-contrast='medium']", "[data-contrast='high']", "[data-product='leap']"]) assert.ok(p3.includes(sel), sel);
+});
+
+// ─── Category colours (10.3) ─────────────────────────────────────────────────
+
+test('category colours clear 4.5:1 as text on surfaces and inside their container (light & dark)', () => {
+  const pal = palettes();
+  const failures = [];
+  for (const c of categoryColors())
+    for (const col of [0, 1]) {
+      const scheme = col ? 'dark' : 'light';
+      const inside = ratio(c.onContainer[col], c.container[col]);
+      if (inside < 4.5) failures.push(`${c.name} ${scheme} on-container: ${inside.toFixed(2)}`);
+      for (const s of ['surface', 'surface-container', 'surface-container-high']) {
+        const [p, ...t] = ROLES[s];
+        const r = ratio(c.text[col], pal[p][t[col]]);
+        if (r < 4.5) failures.push(`${c.name} ${scheme} text on ${s}: ${r.toFixed(2)}`);
+      }
+    }
+  assert.deepEqual(failures, []);
 });
 
 // ─── Chart palettes ──────────────────────────────────────────────────────────

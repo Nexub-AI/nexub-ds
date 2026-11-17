@@ -95,3 +95,23 @@ describe('Avatar', () => {
     expect(screen.getByRole('img', { name: 'Ada' })).toBeInTheDocument();
   });
 });
+
+describe('Avatar category (10.3)', () => {
+  it('colours the fallback with a category', () => {
+    render(<Avatar name="Ada Lovelace" category="violet" />);
+    const avatar = screen.getByRole('img', { name: 'Ada Lovelace' });
+    expect(avatar.getAttribute('data-category')).toBe('violet');
+    expect(avatar.className).toContain('bg-[var(--nx-cat-container)]');
+  });
+
+  it('"auto" gives the same name the same colour, never the accent, and nothing without a name', () => {
+    const { rerender, container } = render(<Avatar name="Ada Lovelace" category="auto" />);
+    const first = screen.getByRole('img').getAttribute('data-category');
+    expect(first).toBeTruthy();
+    expect(first).not.toBe('accent');
+    rerender(<Avatar name="Ada Lovelace" category="auto" />);
+    expect(screen.getByRole('img').getAttribute('data-category')).toBe(first);
+    rerender(<Avatar category="auto" />);
+    expect(container.firstElementChild!.hasAttribute('data-category')).toBe(false);
+  });
+});

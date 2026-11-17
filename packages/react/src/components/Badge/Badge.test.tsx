@@ -58,3 +58,18 @@ describe('Badge', () => {
     expect(screen.getByText('9+')).toBeInTheDocument();
   });
 });
+
+describe('Badge category (10.3)', () => {
+  it('a category wins over tone and sets data-category', () => {
+    render(<Badge category="pink" tone="success" variant="soft">Design</Badge>);
+    const badge = screen.getByText('Design').closest('[data-category]')!;
+    expect(badge.getAttribute('data-category')).toBe('pink');
+    expect(badge.className).toContain('bg-[var(--nx-cat-container)]');
+    expect(badge.className).not.toContain('success');
+  });
+
+  it('outline uses the category text colour', () => {
+    render(<Badge category="cyan" variant="outline">Ops</Badge>);
+    expect(screen.getByText('Ops').closest('[data-category]')!.className).toContain('text-[var(--nx-cat)]');
+  });
+});

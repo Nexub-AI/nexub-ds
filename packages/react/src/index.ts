@@ -209,6 +209,13 @@ export type { LogoProps } from './components/Logo/index.js';
 export { Flag } from './components/Flag/index.js';
 export type { FlagProps } from './components/Flag/index.js';
 
+// Shared vocabulary from @nexub/core, re-exported so apps and @nexub/patterns need one import.
+export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS, accentAttrs } from '@nexub/core';
+export type { CategoryColor, DivisionKey, ProductKey } from '@nexub/core';
+export { IconChip } from './components/IconChip/index.js';
+export type { IconChipProps } from './components/IconChip/index.js';
+export { SuccessCheck } from './components/SuccessCheck/index.js';
+export type { SuccessCheckProps } from './components/SuccessCheck/index.js';
 export { CountryBadge } from './components/CountryBadge/index.js';
 export type { CountryBadgeProps } from './components/CountryBadge/index.js';
 

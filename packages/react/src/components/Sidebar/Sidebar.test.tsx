@@ -108,3 +108,30 @@ describe('Sidebar.Header', () => {
     expect(screen.getByText('Live').parentElement).toHaveClass('group-data-[collapsed=true]/sidebar:sr-only');
   });
 });
+
+describe('Sidebar 10.3', () => {
+  it('accent scopes the sidebar to an app or division; items carry the styling hook', () => {
+    const { rerender } = render(
+      <Sidebar.Root accent="payub">
+        <Sidebar.Item active href="/a">Home</Sidebar.Item>
+      </Sidebar.Root>,
+    );
+    expect(screen.getByRole('navigation')).toHaveAttribute('data-product', 'payub');
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('data-nx', 'nav-item');
+    rerender(<Sidebar.Root accent="fintech" />);
+    expect(screen.getByRole('navigation')).toHaveAttribute('data-division', 'fintech');
+  });
+
+  it('positions the (decorative) marker on the active item', () => {
+    render(
+      <Sidebar.Root>
+        <Sidebar.Item href="/a">Home</Sidebar.Item>
+        <Sidebar.Item active href="/b">Reports</Sidebar.Item>
+      </Sidebar.Root>,
+    );
+    const nav = screen.getByRole('navigation');
+    expect(nav.style.getPropertyValue('--nx-ind-o')).toBe('1');
+    const marker = nav.querySelector('.nx-nav-marker')!;
+    expect(marker).toHaveAttribute('aria-hidden', 'true');
+  });
+});

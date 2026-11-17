@@ -116,6 +116,8 @@ const cases: Record<string, () => React.ReactElement> = {
   AvatarGroup: () => <N.AvatarGroup max={1}><N.Avatar name="A B" /><N.Avatar name="C D" /></N.AvatarGroup>,
   Flag: () => <N.Flag code="SG" />,
   CountryBadge: () => <N.CountryBadge code="SG" label="Singapore" />,
+  IconChip: () => <N.IconChip category="violet" aria-label="Payments"><svg /></N.IconChip>,
+  SuccessCheck: () => <N.SuccessCheck label="Payment sent" />,
   KeyboardShortcut: () => <N.KeyboardShortcut keys={['Ctrl', 'K']} />,
   Kbd: () => <N.Kbd>K</N.Kbd>,
   Code: () => <N.Code>x</N.Code>,

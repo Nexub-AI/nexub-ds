@@ -13,6 +13,11 @@ export type ToneValue =
   | 'payub'
   | 'founderub';
 
+/** Category colours (10.3) for icon chips, tags and avatars: eight generated
+ * hues (one per chart series) plus 'accent', the product's spot accent. */
+export const CATEGORY_COLORS = ['accent', 'blue', 'amber', 'emerald', 'pink', 'violet', 'cyan', 'red', 'lime'] as const;
+export type CategoryColor = (typeof CATEGORY_COLORS)[number];
+
 /** Nexub product brands; each remaps the tertiary role family. */
 export type Product = 'leap' | 'bookub' | 'payub' | 'founderub';
 

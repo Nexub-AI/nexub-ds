@@ -183,3 +183,12 @@ describe('Button', () => {
     expect(screen.getByRole('button').querySelector('span.truncate')).toHaveClass('min-w-0');
   });
 });
+
+describe('Button tonal tones (10.3)', () => {
+  it('variant="tonal" with a tone uses the container pair, other variants the solid role', () => {
+    const { rerender } = render(<Button variant="tonal" tone="success">Save</Button>);
+    expect(screen.getByRole('button').className).toContain('bg-[var(--color-success-container)]');
+    rerender(<Button tone="success">Save</Button>);
+    expect(screen.getByRole('button').className).toContain('bg-[var(--color-success)]');
+  });
+});

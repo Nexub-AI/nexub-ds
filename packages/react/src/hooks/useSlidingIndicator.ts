@@ -26,9 +26,9 @@ export function useSlidingIndicator(ref: React.RefObject<HTMLElement | null>, ac
     };
     update();
     const frame = requestAnimationFrame(() => (root.dataset.nxIndicator = 'ready'));
-    // Selection changes (Radix flips data-state), item resizes, and web fonts.
+    // Selection changes (Radix flips data-state, links flip aria-current), item resizes, and web fonts.
     const mo = new MutationObserver(update);
-    mo.observe(root, { subtree: true, attributes: true, attributeFilter: ['data-state'] });
+    mo.observe(root, { subtree: true, attributes: true, attributeFilter: ['data-state', 'aria-current'] });
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
     ro?.observe(root);
     for (const child of Array.from(root.children)) ro?.observe(child);

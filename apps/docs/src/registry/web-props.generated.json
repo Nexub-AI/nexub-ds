@@ -280,6 +280,12 @@
           "description": ""
         },
         {
+          "name": "category",
+          "type": "'accent' | 'auto' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "10.3: colour of the initials fallback. `'auto'` picks a stable colour from `name`, so a list of people is easier to scan. Images are not affected."
+        },
+        {
           "name": "fallback",
           "type": "React.ReactNode",
           "required": false,
@@ -346,6 +352,12 @@
     "Badge": {
       "file": "components/Badge/Badge.tsx",
       "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "10.3: a category colour for tags and labels (e.g. one per project or team). Wins over `tone`. It carries no meaning by itself: status still uses `tone`."
+        },
         {
           "name": "count",
           "type": "number",
@@ -2719,6 +2731,31 @@
         }
       ]
     },
+    "IconChip": {
+      "file": "components/IconChip/IconChip.tsx",
+      "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "Colour of the chip. `'accent'` is the product's spot accent. Without it the chip is neutral."
+        },
+        {
+          "name": "shape",
+          "type": "'circle' | 'square'",
+          "required": false,
+          "default": "'square'",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        }
+      ]
+    },
     "InlineEdit": {
       "file": "components/InlineEdit/InlineEdit.tsx",
       "props": [
@@ -3790,6 +3827,13 @@
           "type": "React.ReactNode",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "wash",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "10.3: sit the header on a padded, rounded panel. Under `data-expression=\"vivid\"` the panel carries a soft wash of the accent; otherwise it is a plain tonal surface. One per page."
         }
       ]
     },
@@ -4533,6 +4577,12 @@
       "file": "components/Sidebar/Sidebar.tsx",
       "props": [
         {
+          "name": "accent",
+          "type": "'leap' | 'bookub' | 'payub' | 'founderub' | 'people' | 'contracts' | 'forms' | 'commerce' | 'money' | 'capital' | 'mind' | 'go' | 'command-hub' | 'runner' | 'book-hub' | 'payhub' | 'founder-hub' | 'os' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "10.3: the app or division this sidebar belongs to. Sets `data-product` / `data-division`, so the active item takes that accent (needs `@nexub/themes/products` or `/divisions`)."
+        },
+        {
           "name": "collapsed",
           "type": "boolean",
           "required": false,
@@ -5067,6 +5117,24 @@
           "type": "string",
           "required": true,
           "description": "The full text received so far; grows as tokens arrive."
+        }
+      ]
+    },
+    "SuccessCheck": {
+      "file": "components/SuccessCheck/SuccessCheck.tsx",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "description": "Accessible name, e.g. \"Payment sent\". Without it the mark is decorative: say the result in text."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
         }
       ]
     },
@@ -5808,6 +5876,12 @@
       "file": "components/AppHeader/AppHeader.tsx",
       "props": [
         {
+          "name": "accent",
+          "type": "'leap' | 'people' | 'payub' | 'contracts' | 'bookub' | 'forms' | 'founderub' | 'commerce' | 'money' | 'capital' | 'mind' | 'go' | 'command-hub' | 'runner' | 'book-hub' | 'payhub' | 'founder-hub' | 'os' | 'fintech' | 'intelligence' | 'autonomous'",
+          "required": false,
+          "description": "10.3: this app's key in the product map (or its division). Sets `data-product` / `data-division` on the header, so its focus ring and accents follow the app (needs `@nexub/themes/products` or `/divisions`)."
+        },
+        {
           "name": "accountHref",
           "type": "string",
           "required": false,
@@ -6303,6 +6377,18 @@
           "type": "{ value: number; currency: string; label?: string; }",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "banner",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "10.3: a greeting above the balance, usually a `WelcomeBanner`."
+        },
+        {
+          "name": "chart",
+          "type": "{ title: string; content: React.ReactNode; action?: React.ReactNode; }",
+          "required": false,
+          "description": "10.3: a chart panel under the key figures, e.g. spending by month. Give it a `title`."
         },
         {
           "name": "description",
@@ -7182,6 +7268,12 @@
           "description": "Roll digits when a number/string `value` changes (NumberTicker); announced politely."
         },
         {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "10.3: puts the icon on a tinted chip of this colour, and colours the trend line to match."
+        },
+        {
           "name": "delta",
           "type": "string",
           "required": false,
@@ -7218,6 +7310,18 @@
           "required": false,
           "default": "derived from `deltaType` (increase → positive, decrease → negative)",
           "description": "Whether the change is good or bad, independent of its direction — e.g. churn going down is `deltaType=\"decrease\"` + `sentiment=\"positive\"`."
+        },
+        {
+          "name": "trend",
+          "type": "number[]",
+          "required": false,
+          "description": "10.3: recent values, drawn as a small trend line beside the delta."
+        },
+        {
+          "name": "trendLabel",
+          "type": "string",
+          "required": false,
+          "description": "Accessible summary of the trend, e.g. \"Last 12 weeks, rising\". Without it the line is decorative."
         },
         {
           "name": "value",
@@ -7352,6 +7456,48 @@
           "required": false,
           "default": "'md'",
           "description": ""
+        }
+      ]
+    },
+    "WelcomeBanner": {
+      "file": "components/WelcomeBanner/WelcomeBanner.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "One or two buttons. Keep the main one `filled`."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "level",
+          "type": "2 | 3",
+          "required": false,
+          "default": "2",
+          "description": "Heading level of the title."
+        },
+        {
+          "name": "media",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Decorative art on the trailing side (an illustration or icon). Hidden on phones."
+        },
+        {
+          "name": "onDismiss",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Shows a close button. Keep the dismissed state in your app."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "e.g. \"Welcome back, Mei\"."
         }
       ]
     }

@@ -122,3 +122,35 @@ export const HeaderWithStatus: Story = {
     </div>
   ),
 };
+
+/** 10.3: under the vivid expression the active item is tinted and marked by a bar that slides between items. */
+export const Vivid: Story = {
+  render: () => {
+    const Demo = () => {
+      const [active, setActive] = React.useState('Dashboard');
+      return (
+        <div data-expression="vivid" style={{ height: 360, display: 'flex' }}>
+          <Sidebar.Root>
+            <Sidebar.Group label="Workspace">
+              {['Dashboard', 'Analytics', 'Invoices', 'Settings'].map((name) => (
+                <Sidebar.Item
+                  key={name}
+                  href="#"
+                  icon={name === 'Analytics' ? <BarChartIcon /> : <DashboardIcon />}
+                  active={active === name}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActive(name);
+                  }}
+                >
+                  {name}
+                </Sidebar.Item>
+              ))}
+            </Sidebar.Group>
+          </Sidebar.Root>
+        </div>
+      );
+    };
+    return <Demo />;
+  },
+};

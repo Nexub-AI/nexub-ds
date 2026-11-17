@@ -273,11 +273,11 @@ export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function 
       {...props}
     >
       {(title || actions || eyebrow) && (
-        <header className="flex flex-col gap-2">
+        <header data-nx="page-header" className="flex flex-col gap-2">
           {eyebrow}
           <div className="flex flex-wrap items-center justify-between gap-3">
             {title && (
-              <h1 id={headingId} className="text-headline-sm text-[var(--color-on-surface)]">
+              <h1 id={headingId} className="text-headline-sm ![font-weight:var(--page-title-weight,var(--type-headline-sm-weight))] text-[var(--color-on-surface)]">
                 {title}
               </h1>
             )}

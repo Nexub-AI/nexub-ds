@@ -417,6 +417,7 @@ Never use a component marked deprecated.
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
 - [Celebrate](components/celebrate.md) `@nexub/react`: A short confetti burst for a real win, such as a first payment or finishing onboarding.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
+- [Success Check](components/success-check.md) `@nexub/react`: A small success moment: a ring that pops in and a tick that draws.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 
 ## Components — Form & Input
@@ -486,6 +487,7 @@ Never use a component marked deprecated.
 - [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
 - [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
 - [Flag](components/flag.md) `@nexub/react`: A country flag from its ISO code, drawn with the system emoji font.
+- [Icon Chip](components/icon-chip.md) `@nexub/react`: An icon on a tinted tile, in one of the category colours or the product accent.
 
 ## Components — Layout
 
@@ -581,6 +583,7 @@ Never use a component marked deprecated.
 - [FilterBar](components/filter-bar.md) `@nexub/patterns`: Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](components/info-list.md) `@nexub/patterns`: Key–value list for displaying structured metadata or details.
 - [StatCard](components/stat-card.md) `@nexub/patterns`: Metric display card showing a KPI value, label, optional delta, and icon.
+- [WelcomeBanner](components/welcome-banner.md) `@nexub/patterns`: A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 
 ## Patterns — Feedback
 
@@ -5178,6 +5181,96 @@ export default function Example() {
 
 ---
 
+# Icon Chip
+
+An icon on a tinted tile, in one of the category colours or the product accent.
+
+- Package: `@nexub/react` · Category: Labels & Badges · Status: alpha
+- Import: `import { IconChip } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/icon-chip
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `category` | `'accent' \| 'blue' \| 'amber' \| 'emerald' \| 'pink' \| 'violet' \| 'cyan' \| 'red' \| 'lime'` |  | Colour of the chip. `accent` is the product accent. Without it the chip is neutral. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the tile and its icon. |
+| `shape` | `'square' \| 'circle'` | `'square'` | Rounded square or circle. |
+
+## Example: Default
+
+```tsx
+import { IconChip } from '@nexub/react';
+import { CreditCard } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <IconChip category="violet">
+      <CreditCard />
+    </IconChip>
+  );
+}
+```
+
+## Example: Category colours
+
+```tsx
+import { Avatar, Badge, CATEGORY_COLORS, IconChip } from '@nexub/react';
+import { CreditCard } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3">
+      {CATEGORY_COLORS.map((c) => (
+        <div key={c} className="flex items-center gap-4">
+          <IconChip category={c}>
+            <CreditCard />
+          </IconChip>
+          <Badge category={c} variant="soft">
+            {c}
+          </Badge>
+          <Avatar category={c} name="Ada Lovelace" />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Example: Sizes and shapes
+
+```tsx
+import { IconChip } from '@nexub/react';
+import { Wallet } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex items-center gap-3">
+      <IconChip size="sm" category="emerald">
+        <Wallet />
+      </IconChip>
+      <IconChip size="md" category="emerald">
+        <Wallet />
+      </IconChip>
+      <IconChip size="lg" category="emerald">
+        <Wallet />
+      </IconChip>
+      <IconChip size="lg" category="emerald" shape="circle">
+        <Wallet />
+      </IconChip>
+      <IconChip>
+        <Wallet />
+      </IconChip>
+    </div>
+  );
+}
+```
+
+Related: [badge](badge.md), [avatar](avatar.md)
+
+
+---
+
 # Inline Edit
 
 Text that becomes an input on click, for renaming things in place.
@@ -8650,6 +8743,57 @@ Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indi
 
 ---
 
+# Success Check
+
+A small success moment: a ring that pops in and a tick that draws.
+
+- Package: `@nexub/react` · Category: Feedback · Status: alpha
+- Import: `import { SuccessCheck } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/success-check
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` |  | Accessible name, e.g. "Payment sent". Without it the mark is decorative: say the result in text. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the mark. |
+
+## Example: Default
+
+```tsx
+import { SuccessCheck } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <SuccessCheck size="lg" />
+      <p className="m-0 text-title-md text-[var(--color-on-surface)]">Payment sent</p>
+    </div>
+  );
+}
+```
+
+## Example: Sizes
+
+```tsx
+import { SuccessCheck } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex items-center gap-4">
+      <SuccessCheck size="sm" label="Saved" />
+      <SuccessCheck size="md" label="Saved" />
+      <SuccessCheck size="lg" label="Saved" />
+    </div>
+  );
+}
+```
+
+Related: [celebrate](celebrate.md), [toast](toast.md)
+
+
+---
+
 # Switch
 
 Toggle control for binary on/off settings. Built on Radix UI Switch.
@@ -11196,6 +11340,9 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `deltaType` | `'increase' \| 'decrease' \| 'neutral'` |  | Semantic direction of the delta. |
 | `sentiment` | `'positive' \| 'negative' \| 'neutral'` |  | Colour of the delta, independent of the arrow. Defaults from `deltaType`; use it when a decrease is good news (e.g. churn down). |
 | `icon` | `React.ReactNode` |  | Icon displayed in the card header. |
+| `category` | `'accent' \| 'blue' \| 'amber' \| 'emerald' \| 'pink' \| 'violet' \| 'cyan' \| 'red' \| 'lime'` |  | Puts the icon on a tinted chip of this colour and colours the trend line to match. |
+| `trend` | `number[]` |  | Recent values, drawn as a small trend line beside the delta. |
+| `trendLabel` | `string` |  | Accessible summary of the trend. Without it the line is decorative. |
 | `description` | `string` |  | Additional context below the value. |
 | `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
 
@@ -11243,6 +11390,30 @@ export default function Example() {
       <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
         New orders
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Category and trend
+
+```tsx
+import { StatCard } from '@nexub/patterns';
+import { Wallet } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="w-[260px]">
+      <StatCard
+        label="Saved"
+        value="S$2,400"
+        delta="12%"
+        deltaType="increase"
+        icon={<Wallet size={16} />}
+        category="emerald"
+        trend={[10, 12, 13, 15, 16, 19, 22]}
+        trendLabel="Last 7 weeks, rising"
+      />
     </div>
   );
 }
@@ -11319,6 +11490,81 @@ export default function Example() {
   return (
     <div className="w-[300px]">
       <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
+    </div>
+  );
+}
+```
+
+
+---
+
+# WelcomeBanner
+
+A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
+
+- Package: `@nexub/patterns` · Category: Data · Status: alpha
+- Import: `import { WelcomeBanner } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/welcome-banner
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` (required) | `React.ReactNode` |  | The greeting, e.g. "Welcome back, Mei". |
+| `description` | `React.ReactNode` |  | One or two lines under the title. |
+| `actions` | `React.ReactNode` |  | One or two buttons. |
+| `media` | `React.ReactNode` |  | Decorative art on the trailing side. Hidden on phones. |
+| `onDismiss` | `() => void` |  | Shows a close button. Keep the dismissed state in your app. |
+| `level` | `2 \| 3` | `2` | Heading level of the title. |
+
+## Example: Default
+
+```tsx
+import { WelcomeBanner } from '@nexub/patterns';
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-2xl">
+      <WelcomeBanner
+        title="Welcome back, Mei"
+        description="Two bills are due this week."
+        actions={<Button>Review bills</Button>}
+      />
+    </div>
+  );
+}
+```
+
+## Example: With art and dismiss
+
+```tsx
+import * as React from 'react';
+import { WelcomeBanner } from '@nexub/patterns';
+import { Button, IconChip } from '@nexub/react';
+import { Wallet } from '@nexub/icons';
+
+export default function Example() {
+  const [open, setOpen] = React.useState(true);
+  if (!open) return <Button variant="tonal" onClick={() => setOpen(true)}>Show the banner again</Button>;
+  return (
+    <div className="w-full max-w-2xl">
+      <WelcomeBanner
+        title="Finish setting up your account"
+        description="Add a bank account to send and receive money."
+        actions={
+          <>
+            <Button>Add account</Button>
+            <Button variant="text">Later</Button>
+          </>
+        }
+        media={
+          <IconChip category="accent" size="lg" shape="circle">
+            <Wallet />
+          </IconChip>
+        }
+        onDismiss={() => setOpen(false)}
+      />
     </div>
   );
 }

@@ -8,17 +8,31 @@ export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   breadcrumb?: React.ReactNode;
   /** Heading level of the title. Use 2 or 3 when the page already has an h1. @default 1 */
   level?: 1 | 2 | 3;
+  /** 10.3: sit the header on a padded, rounded panel. Under `data-expression="vivid"` the panel
+   *  carries a soft wash of the accent; otherwise it is a plain tonal surface. One per page. */
+  wash?: boolean;
 }
 
 export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
-  ({ className, title, description, actions, breadcrumb, level = 1, ...props }, ref) => {
+  ({ className, title, description, actions, breadcrumb, level = 1, wash = false, ...props }, ref) => {
     const Heading = `h${level}` as const;
     return (
-      <div ref={ref} className={cn('flex flex-col gap-4', className)} {...props}>
+      <div
+        ref={ref}
+        // Styling hooks for the expression layers (@nexub/themes/vivid).
+        data-nx="page-header"
+        data-wash={wash ? '' : undefined}
+        className={cn(
+          'flex flex-col gap-4',
+          wash && 'rounded-shape-container bg-[var(--color-surface-container-low)] p-6',
+          className,
+        )}
+        {...props}
+      >
         {breadcrumb && <div>{breadcrumb}</div>}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
-            <Heading className="text-2xl font-semibold tracking-tight text-[var(--color-on-surface)] truncate">
+            <Heading className="text-2xl ![font-weight:var(--page-title-weight,600)] ![letter-spacing:var(--page-title-tracking,-0.025em)] text-[var(--color-on-surface)] truncate">
               {title}
             </Heading>
             {description && (
