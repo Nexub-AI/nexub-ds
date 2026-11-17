@@ -93,13 +93,7 @@ const docsPages = existsSync(out)
 
 // `path` → highest CLS still allowed, and why. Shrink-only: a page that reaches 0 must
 // leave the list. Each is a live preview whose component lays itself out after hydration.
-const CLS_KNOWN: Record<string, number> = {
-  '/components/resizable-panels': 0.005, // panel sizes come from the client layout pass
-  '/components/combobox': 0.003, // cmdk renders its options only after mount
-  '/components/tree-view': 0.001, // row indents measured on mount
-  '/components/filter-builder': 0.0005, // field widths settle after hydration
-  '/components/slider': 0.0005, // Radix positions the thumb on mount
-};
+const CLS_KNOWN: Record<string, number> = {}; // empty since 10.5
 
 test('CLS_KNOWN only lists docs pages', () => {
   expect(Object.keys(CLS_KNOWN).filter((p) => !docsPages.includes(p))).toEqual([]);

@@ -133,8 +133,8 @@ export { Alert, alertVariants } from './components/Alert/index.js';
 export type { AlertProps } from './components/Alert/index.js';
 
 // Components — Loading States
-export { Skeleton, SkeletonText, skeletonVariants } from './components/Skeleton/index.js';
-export type { SkeletonProps, SkeletonTextProps } from './components/Skeleton/index.js';
+export { Skeleton, SkeletonText, SkeletonPreset, skeletonVariants } from './components/Skeleton/index.js';
+export type { SkeletonProps, SkeletonTextProps, SkeletonPresetProps } from './components/Skeleton/index.js';
 
 export { Spinner, spinnerVariants } from './components/Spinner/index.js';
 export type { SpinnerProps } from './components/Spinner/index.js';
@@ -216,6 +216,9 @@ export { IconChip } from './components/IconChip/index.js';
 export type { IconChipProps } from './components/IconChip/index.js';
 export { SuccessCheck } from './components/SuccessCheck/index.js';
 export type { SuccessCheckProps } from './components/SuccessCheck/index.js';
+export { Illustration } from './components/Illustration/index.js';
+export type { IllustrationProps, IllustrationKind } from './components/Illustration/index.js';
+export type { DataStateProps } from './utils/dataState.js';
 export { CountryBadge } from './components/CountryBadge/index.js';
 export type { CountryBadgeProps } from './components/CountryBadge/index.js';
 
@@ -351,7 +354,7 @@ export type { ThemeMode, GlassMode, ThemeContextValue, ThemeProviderProps, Theme
 export { Fade, Slide, Scale, Collapse, ListTransition, SkeletonSwap, usePrefersReducedMotion, Reveal, Float, Marquee } from './components/Motion/index.js';
 export type { FadeProps, SlideProps, SlideDirection, ScaleProps, CollapseProps, ListTransitionProps, SkeletonSwapProps, MotionDuration, MotionBaseProps, RevealProps, FloatProps, MarqueeProps } from './components/Motion/index.js';
 export type { DataTableColumn } from './components/DataTable/index.js';
-export type { TableRootProps } from './components/Table/index.js';
+export type { TableRootProps, TableBodyProps } from './components/Table/index.js';
 
 // 7.4 Toast
 export type { PromiseToastOptions } from './components/Toast/index.js';

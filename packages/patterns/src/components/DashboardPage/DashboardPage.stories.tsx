@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { BarChart, Button } from '@nexub/react';
+import { BarChart, Button, EmptyStatePreset } from '@nexub/react';
 import { ArrowDown, CreditCard, Plus, Receipt, Send, TrendingUp, Wallet } from '@nexub/icons';
 import { WelcomeBanner } from '../WelcomeBanner/index.js';
 import { DashboardPage } from './DashboardPage.js';
@@ -71,3 +71,36 @@ export const Default: Story = { render: () => page };
 
 /** The same page under `data-expression="vivid"`, the default expression in apps. */
 export const Vivid: Story = { render: () => <div data-expression="vivid">{page}</div> };
+
+const stateNames = ['Loading', 'Empty', 'Error'] as const;
+
+function DataStatesDemo() {
+  const [state, setState] = React.useState<(typeof stateNames)[number]>('Loading');
+  return (
+    <div>
+      <div role="group" aria-label="State" className="flex flex-wrap gap-2 px-4 pt-4">
+        {stateNames.map((s) => (
+          <Button key={s} size="sm" variant={s === state ? 'tonal' : 'outlined'} aria-pressed={s === state} onClick={() => setState(s)}>
+            {s}
+          </Button>
+        ))}
+      </div>
+      <DashboardPage
+        as="div"
+        title="Good morning, Mei"
+        balance={{ value: 12480.32, currency: 'SGD', label: 'Total balance' }}
+        quickActions={[
+          { id: 'send', label: 'Send', icon: <Send size={18} />, onSelect: noop },
+          { id: 'add', label: 'Add money', icon: <Plus size={18} />, onSelect: noop },
+        ]}
+        chart={state === 'Loading' ? { title: 'Spending', content: null } : undefined}
+        loading={state === 'Loading'}
+        emptyState={<EmptyStatePreset kind="noData" size="sm" title="No activity yet" />}
+        errorState={state === 'Error' ? <EmptyStatePreset kind="serverError" actions={<Button variant="tonal">Retry</Button>} /> : undefined}
+      />
+    </div>
+  );
+}
+
+/** 10.5: `loading` draws skeletons for the balance, figures, chart and activity; `errorState` replaces the content. */
+export const DataStates: Story = { render: () => <DataStatesDemo /> };

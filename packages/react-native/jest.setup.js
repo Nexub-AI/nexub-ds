@@ -34,6 +34,7 @@ jest.mock('react-native-reanimated', () => {
     // Stable across renders, like the real hook (effects list shared values as deps).
     useSharedValue: (value) => React.useState(() => ({ value }))[0],
     useAnimatedStyle: (fn) => fn(),
+    useAnimatedProps: (fn) => fn(),
     useDerivedValue: (fn) => ({ value: fn() }),
     withSpring: id,
     withTiming: id,

@@ -38,7 +38,7 @@ export default async function TemplatePage({ params }: Props) {
         badges={
           <>
             <Badge tone="info" variant="soft">{t.web}</Badge>
-            <Badge variant="outline">{t.native.name}</Badge>
+            {t.native && <Badge variant="outline">{t.native.name}</Badge>}
           </>
         }
       >
@@ -55,16 +55,22 @@ export default async function TemplatePage({ params }: Props) {
       </PlatformPanel>
 
       <PlatformPanel platform="mobile">
-        <Section id="mobile-heading" title={`On iOS & Android: ${t.native.name}`}>
-          <MobilePanel
-            name={t.native.name}
-            title={t.title}
-            preview={`preview/${t.native.preview}`}
-            code={t.native.code}
-            differences={t.native.differences}
-            pkg="@nexub/react-native/patterns"
-          />
-        </Section>
+        {t.native ? (
+          <Section id="mobile-heading" title={`On iOS & Android: ${t.native.name}`}>
+            <MobilePanel
+              name={t.native.name}
+              title={t.title}
+              preview={`preview/${t.native.preview}`}
+              code={t.native.code}
+              differences={t.native.differences}
+              pkg="@nexub/react-native/patterns"
+            />
+          </Section>
+        ) : (
+          <Section id="mobile-heading" title="On iOS & Android">
+            <p>This template has no native twin yet. On mobile, build it from EmptyState or ErrorState in @nexub/react-native.</p>
+          </Section>
+        )}
       </PlatformPanel>
     </div>
   );

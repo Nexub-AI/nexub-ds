@@ -1,3 +1,6 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ErrorState } from '../ErrorState/ErrorState.js';
+import { Sparkline as StateSparkline, BarChart as StateBar, DonutChart as StateDonut } from './Chart.js';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
@@ -84,5 +87,43 @@ describe('charts', () => {
   it('renders on the server with no style attributes (strict CSP)', () => {
     const html = renderToString(<><BarChart title="R" data={data} index="month" series={series} /><DonutChart title="D" data={[{ label: 'x', value: 1 }]} /></>);
     expect(html).not.toContain('style=');
+  });
+});
+
+describe('Charts 10.5: data states', () => {
+  const rows = [{ month: 'Jan', a: 1 }];
+  const s = [{ key: 'a' }];
+
+  it('loading keeps the named figure, sets aria-busy and hides the data', () => {
+    const { container } = renderState(<StateBar title="Revenue" data={rows} index="month" series={s} loading />);
+    const figure = stateScreen.getByRole('figure', { name: 'Revenue' });
+    expect(figure.getAttribute('aria-busy')).toBe('true');
+    expect(container.querySelector('svg, table')).toBeNull();
+    expect(container.querySelector('[data-chart-state] [aria-hidden="true"]')).not.toBeNull();
+  });
+
+  it('empty data shows the default message, or emptyState', () => {
+    const { rerender } = renderState(<StateBar title="Revenue" data={[]} index="month" series={s} />);
+    expect(stateScreen.getByText('Nothing here yet')).toBeTruthy();
+    expect(stateScreen.getByRole('figure', { name: 'Revenue' }).hasAttribute('aria-busy')).toBe(false);
+    rerender(<StateDonut title="Plans" data={[]} emptyState="No plans" />);
+    expect(stateScreen.getByText('No plans')).toBeTruthy();
+  });
+
+  it('errorState wins over loading and empty', () => {
+    renderState(<StateBar title="Revenue" data={[]} index="month" series={s} loading errorState={<ErrorState title="Failed" />} />);
+    expect(stateScreen.getByRole('heading', { name: 'Failed' })).toBeTruthy();
+    expect(stateScreen.getByRole('figure', { name: 'Revenue' }).hasAttribute('aria-busy')).toBe(false);
+    expect(stateScreen.queryByText('Nothing here yet')).toBeNull();
+  });
+
+  it('Sparkline: a skeleton while loading; empty stays an empty drawing unless emptyState is given', () => {
+    const { container, rerender } = renderState(<StateSparkline values={[1, 2]} loading />);
+    expect(container.querySelector('svg')).toBeNull();
+    expect(container.querySelector('span[aria-hidden="true"]')).not.toBeNull();
+    rerender(<StateSparkline values={[]} />);
+    expect(container.querySelector('svg')).not.toBeNull();
+    rerender(<StateSparkline values={[]} emptyState="n/a" />);
+    expect(stateScreen.getByText('n/a')).toBeTruthy();
   });
 });

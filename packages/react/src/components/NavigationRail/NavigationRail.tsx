@@ -4,6 +4,8 @@ import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useMergedRefs } from '../../hooks/useMergedRefs.js';
+import { useSlidingIndicator } from '../../hooks/useSlidingIndicator.js';
 
 export interface NavigationRailRootProps extends React.HTMLAttributes<HTMLElement> {
   /** Accessible name for the landmark. @default 'Main' */
@@ -17,15 +19,28 @@ export interface NavigationRailRootProps extends React.HTMLAttributes<HTMLElemen
  * (compact) and Sidebar (expanded). Icons over labels, an active pill behind the icon.
  */
 const Root = React.forwardRef<HTMLElement, NavigationRailRootProps>(
-  ({ className, header, children, 'aria-label': ariaLabel, ...props }, ref) => {
+  ({ className, header, children, 'aria-label': ariaLabel, ...props }, forwardedRef) => {
     const messages = useNexubMessages();
+    const ref = React.useRef<HTMLElement>(null);
+    // 10.5: one pill slides to the active item's pill.
+    useSlidingIndicator(ref, '[aria-current="page"] [data-nx="rail-pill"]');
     return (
     <nav
-      ref={ref}
+      ref={useMergedRefs(ref, forwardedRef)}
       aria-label={ariaLabel ?? messages.mainNavigation}
-      className={cn('flex h-full w-20 shrink-0 flex-col items-center gap-3 py-4', className)}
+      className={cn('group/rail relative flex h-full w-20 shrink-0 flex-col items-center gap-3 py-4', className)}
       {...props}
     >
+      {/* Hidden until the hook has measured (server HTML, no JS): until then the active pill paints its own fill. */}
+      <span
+        aria-hidden="true"
+        data-nx="rail-indicator"
+        className={cn(
+          'pointer-events-none absolute left-0 top-0 hidden rounded-full bg-[var(--nav-active-bg,var(--color-secondary-container))]',
+          'h-[var(--nx-ind-h,0px)] w-[var(--nx-ind-w,0px)] translate-x-[var(--nx-ind-x,0px)] translate-y-[var(--nx-ind-y,0px)] opacity-[var(--nx-ind-o,0)]',
+          '[[data-nx-indicator=ready]>&]:block [[data-nx-indicator=ready]>&]:transition-transform [[data-nx-indicator=ready]>&]:duration-spatial-default [[data-nx-indicator=ready]>&]:ease-spatial-default',
+        )}
+      />
       {header && <div className="mb-3 flex flex-col items-center">{header}</div>}
       <ul className="flex w-full flex-col items-center gap-1" role="list">
         {children}
@@ -55,11 +70,12 @@ const Item = React.forwardRef<HTMLAnchorElement, NavigationRailItemProps>(
           data-active={active ? '' : undefined}
           className={cn(
             'relative grid h-8 w-14 place-items-center rounded-full [&>svg]:h-5 [&>svg]:w-5',
+            'transition-[color] duration-effects-fast ease-effects-fast',
             'before:absolute before:inset-0 before:rounded-full before:bg-current before:opacity-0',
             'before:transition-opacity before:duration-effects-fast before:ease-effects-fast',
             'group-hover:before:opacity-[var(--state-hover)] group-active:before:opacity-[var(--state-pressed)]',
             active
-              ? 'bg-[var(--nav-active-bg,var(--color-secondary-container))] text-[var(--nav-active-fg,var(--color-on-secondary-container))]'
+              ? 'bg-[var(--nav-active-bg,var(--color-secondary-container))] text-[var(--nav-active-fg,var(--color-on-secondary-container))] group-data-[nx-indicator=ready]/rail:bg-transparent'
               : 'text-[var(--color-on-surface-variant)]',
           )}
         >
@@ -67,7 +83,7 @@ const Item = React.forwardRef<HTMLAnchorElement, NavigationRailItemProps>(
         </span>
         <span
           className={cn(
-            'text-label-md',
+            'text-label-md transition-[color] duration-effects-fast ease-effects-fast',
             active ? 'text-[var(--color-on-surface)]' : 'text-[var(--color-on-surface-variant)]',
           )}
         >

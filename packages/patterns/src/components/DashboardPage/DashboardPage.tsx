@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Amount, Button, Card } from '@nexub/react';
+import { Amount, Button, Card, Skeleton } from '@nexub/react';
 import { StatCard, type StatCardProps } from '../StatCard/index.js';
-import { TransactionRow } from '../ActivityPage/ActivityPage.js';
+import { TransactionRow, TransactionRowSkeleton } from '../ActivityPage/ActivityPage.js';
 import {
   PageFrame,
   usePageMessages,
@@ -33,6 +33,12 @@ export interface DashboardPageProps extends Omit<PageFrameProps, 'title' | 'chil
   /** Shows "See all" beside Recent activity. */
   onSeeAllActivity?: () => void;
   insights?: Insight[];
+  /** 10.5: skeletons for the balance, key figures, chart and recent activity; sets aria-busy on the page. */
+  loading?: boolean;
+  /** Shown in the Recent activity panel when `recent` is empty. Without it the panel is left out. */
+  emptyState?: React.ReactNode;
+  /** Shown in place of the page content; wins over `loading` and `emptyState`. */
+  errorState?: React.ReactNode;
   messages?: Partial<PageTemplateMessages>;
 }
 
@@ -67,6 +73,9 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
     onSelectTransaction,
     onSeeAllActivity,
     insights = [],
+    loading: isLoading,
+    emptyState,
+    errorState,
     messages,
     ...props
   },
@@ -74,15 +83,26 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
 ) {
   const m = usePageMessages(messages);
   const locale = useTemplateLocale();
+  const failed = errorState != null;
+  const loading = !!isLoading && !failed;
+  // While loading, placeholders stand in for figures that are not known yet.
+  const statList: DashboardStat[] = loading && !stats.length ? [{ label: '\u00a0', value: '' }, { label: '\u00a0', value: '' }, { label: '\u00a0', value: '' }] : stats;
   return (
-    <PageFrame ref={ref} width="lg" title={title} {...props}>
+    <PageFrame ref={ref} width="lg" title={title} aria-busy={loading || undefined} {...props}>
       {banner}
+      {failed ? (
+        errorState
+      ) : (
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
           <Card className="flex flex-col gap-5 p-6">
             <div className="flex flex-col gap-1">
               <p className="text-label-lg text-[var(--color-on-surface-variant)]">{balance.label ?? m.totalBalance}</p>
-              <Amount value={balance.value} currency={balance.currency} locale={locale} size="display" />
+              {loading ? (
+                <Skeleton className="my-1 h-9 w-48 max-w-full" />
+              ) : (
+                <Amount value={balance.value} currency={balance.currency} locale={locale} size="display" />
+              )}
             </div>
             {quickActions.length > 0 && (
               <ul aria-label={m.quickActions} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -98,21 +118,21 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
             )}
           </Card>
 
-          {stats.length > 0 && (
+          {statList.length > 0 && (
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {stats.map((s) => (
-                <StatCard key={s.label} {...s} />
+              {statList.map((s, i) => (
+                <StatCard key={loading ? i : s.label} {...s} loading={loading} />
               ))}
             </div>
           )}
 
           {chart && (
             <Panel title={chart.title} action={chart.action}>
-              <Card className="p-6">{chart.content}</Card>
+              <Card className="p-6">{loading ? <Skeleton shape="rect" className="h-48" /> : chart.content}</Card>
             </Panel>
           )}
 
-          {recent.length > 0 && (
+          {(loading || recent.length > 0 || emptyState != null) && (
             <Panel
               title={m.recentActivity}
               action={
@@ -123,16 +143,20 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
                 )
               }
             >
-              <ul className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)]">
-                {recent.map((t) => (
-                  <TransactionRow key={t.id} t={t} onSelect={onSelectTransaction} m={m} locale={locale} />
-                ))}
-              </ul>
+              {!loading && recent.length === 0 ? (
+                emptyState
+              ) : (
+                <ul className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)]">
+                  {loading
+                    ? [0, 1, 2, 3].map((i) => <TransactionRowSkeleton key={i} />)
+                    : recent.map((t) => <TransactionRow key={t.id} t={t} onSelect={onSelectTransaction} m={m} locale={locale} />)}
+                </ul>
+              )}
             </Panel>
           )}
         </div>
 
-        {insights.length > 0 && (
+        {!loading && insights.length > 0 && (
           <Panel title={m.insights}>
             <ul className="flex flex-col gap-3">
               {insights.map((i) => (
@@ -152,6 +176,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
           </Panel>
         )}
       </div>
+      )}
     </PageFrame>
   );
 });

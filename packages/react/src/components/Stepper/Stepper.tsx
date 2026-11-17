@@ -54,6 +54,8 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
               aria-hidden="true"
               className={cn(
                 'inline-flex size-8 shrink-0 items-center justify-center rounded-full text-label-md font-semibold',
+                // 10.5: pending → current → done changes colour on the effects spring.
+                'transition-colors duration-effects-fast ease-effects-fast',
                 done && !isCurrent
                   ? 'bg-[var(--color-primary)] text-[var(--color-on-primary)]'
                   : isCurrent
@@ -61,13 +63,13 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
                     : 'border-2 border-[var(--color-outline-variant)] bg-[var(--color-surface)] text-[var(--color-on-surface-muted)]',
               )}
             >
-              {done && !isCurrent ? <Check size="xs" /> : i + 1}
+              {done && !isCurrent ? <Check size="xs" className="nx-tick" /> : i + 1}
             </span>
           );
           const text = (
             <span className={cn('flex min-w-0 flex-col gap-0.5', vertical ? 'items-start text-start' : 'items-center text-center')}>
               <span className="sr-only">{t.stepOf(i + 1, steps.length)}:</span>{' '}
-              <span className={cn('text-label-lg font-medium', isCurrent || done ? 'text-[var(--color-on-surface)]' : 'text-[var(--color-on-surface-muted)]')}>
+              <span className={cn('text-label-lg font-medium transition-colors duration-effects-fast ease-effects-fast', isCurrent || done ? 'text-[var(--color-on-surface)]' : 'text-[var(--color-on-surface-muted)]')}>
                 {step.label}
               </span>
               {done && <span className="sr-only">, {t.stepCompleted}</span>}
@@ -92,12 +94,19 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
               className={cn(
                 'relative flex',
                 vertical ? 'pb-6 last:pb-0' : 'flex-1 justify-center',
-                // Connector to the next step.
+                // Connector to the next step: a track (::before) and, painted over it, the progress (::after).
                 i < steps.length - 1 &&
                   (vertical
-                    ? 'after:absolute after:start-4 after:top-9 after:bottom-1 after:w-px'
-                    : 'after:absolute after:top-4 after:start-[calc(50%+1.25rem)] after:end-[calc(-50%+1.25rem)] after:h-px'),
-                i < steps.length - 1 && (done ? 'after:bg-[var(--color-primary)]' : 'after:bg-[var(--color-outline-variant)]'),
+                    ? 'before:absolute before:start-4 before:top-9 before:bottom-1 before:w-px after:absolute after:start-4 after:top-9 after:w-px'
+                    : 'before:absolute before:top-4 before:start-[calc(50%+1.25rem)] before:end-[calc(-50%+1.25rem)] before:h-px after:absolute after:top-4 after:start-[calc(50%+1.25rem)] after:h-px'),
+                i < steps.length - 1 && 'before:bg-[var(--color-outline-variant)] after:bg-[var(--color-primary)]',
+                // 10.5: the progress grows toward the next step when this one is done and then
+                // covers the track exactly (the settled look is unchanged). Not done = zero length.
+                i < steps.length - 1 && 'after:transition-[inset] after:duration-effects-default after:ease-effects-default',
+                i < steps.length - 1 &&
+                  (vertical
+                    ? done ? 'after:bottom-1' : 'after:bottom-[calc(100%-2.25rem)]'
+                    : done ? 'after:end-[calc(-50%+1.25rem)]' : 'after:end-[calc(50%-1.25rem)]'),
               )}
             >
               {reachable ? (

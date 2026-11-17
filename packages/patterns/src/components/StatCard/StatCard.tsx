@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn, IconChip, NumberTicker, Sparkline } from '@nexub/react';
+import { cn, IconChip, NumberTicker, Skeleton, Sparkline } from '@nexub/react';
 import type { CategoryColor } from '@nexub/react';
 import { TrendingUp, TrendingDown, Minus } from '@nexub/icons';
 
@@ -30,6 +30,8 @@ export interface StatCardProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   /** Roll digits when a number/string `value` changes (NumberTicker); announced politely. */
   animate?: boolean;
+  /** 10.5: skeletons in place of the value and the line under it; the card keeps its size. */
+  loading?: boolean;
 }
 
 export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
@@ -46,6 +48,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       trendLabel,
       description,
       animate = false,
+      loading = false,
       className,
       ...props
     },
@@ -73,6 +76,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         ref={ref}
         // Styling hook for the expression layers (@nexub/themes/vivid lifts it on hover).
         data-nx="stat-card"
+        aria-busy={loading || undefined}
         className={cn(
           'rounded-shape-container border border-[color-mix(in_srgb,var(--color-outline-variant)_60%,transparent)] bg-[var(--color-surface-elevated)] p-6 flex flex-col gap-3',
           className,
@@ -92,7 +96,9 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         </div>
 
         <div className="text-[1.875rem] leading-9 font-bold tracking-tight tabular-nums text-[var(--color-on-surface)]">
-          {animate && (typeof value === 'number' || typeof value === 'string') ? (
+          {loading ? (
+            <Skeleton className="inline-block h-7 w-24 align-middle" />
+          ) : animate && (typeof value === 'number' || typeof value === 'string') ? (
             <NumberTicker value={value} aria-live="polite" />
           ) : (
             value
@@ -100,7 +106,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         </div>
 
         {(delta || description || trend) && (
-          <div className="flex items-center gap-2">
+          <div className={cn('flex items-center gap-2', loading && 'invisible')}>
             {delta && (
               <span
                 className={cn('inline-flex items-center gap-1 text-label-sm font-medium', deltaColor)}

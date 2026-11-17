@@ -324,15 +324,15 @@ const formatSize = (bytes: number, locale: string) => {
 
 /** Files picked for upload, with progress, errors and remove/cancel. Bring your own picker. */
 export function FileList({ files, onAdd, onRemove, onCancel, addLabel, style }: FileListProps) {
-  const { messages, locale } = useTheme();
+  const { messages, locale, tokens } = useTheme();
   return (
-    <View style={[{ gap: 12 }, style]}>
+    <View style={[{ gap: tokens.spacing[3] }, style]}>
       {files.map((f) => {
         const uploading = f.progress !== undefined && f.progress < 100;
         const percent = Math.round(Math.max(0, Math.min(100, f.progress ?? 0)));
         return (
-          <View key={f.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ flex: 1, gap: 4 }}>
+          <View key={f.id} style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[2] }}>
+            <View style={{ flex: 1, gap: tokens.spacing[1] }}>
               <Text variant="label-lg" numberOfLines={1}>
                 {f.name}
               </Text>

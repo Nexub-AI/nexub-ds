@@ -1,3 +1,5 @@
+import { render as renderState } from '@testing-library/react';
+import { SkeletonPreset } from './Skeleton.js';
 import * as React from 'react';
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
@@ -74,5 +76,15 @@ describe('SkeletonText', () => {
   it('a single line is full width', () => {
     const { container } = render(<SkeletonText lines={1} />);
     expect(container.querySelector('.h-\\[1lh\\] > span')).toHaveClass('w-full');
+  });
+});
+
+describe('SkeletonPreset', () => {
+  it.each(['card', 'tableRow', 'listRow', 'chart', 'form'] as const)('%s is decorative and repeats `count` times', (preset) => {
+    const one = renderState(<SkeletonPreset preset={preset} />).container.firstElementChild!;
+    const three = renderState(<SkeletonPreset preset={preset} count={3} />).container.firstElementChild!;
+    expect(one.getAttribute('aria-hidden')).toBe('true');
+    expect(one.children).toHaveLength(1);
+    expect(three.children).toHaveLength(3);
   });
 });

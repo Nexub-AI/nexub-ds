@@ -50,3 +50,18 @@ describe('NavigationRail 10.3', () => {
     expect(pills[1]!.hasAttribute('data-active')).toBe(false);
   });
 });
+
+describe('NavigationRail sliding pill (10.5)', () => {
+  it('measures the active pill; the pill keeps its own fill until the indicator is ready', () => {
+    const { container } = render(
+      <NavigationRail.Root>
+        <NavigationRail.Item href="/a" icon={<svg />} label="Home" active />
+        <NavigationRail.Item href="/b" icon={<svg />} label="Pay" />
+      </NavigationRail.Root>,
+    );
+    expect(container.querySelectorAll('[data-nx="rail-indicator"]')).toHaveLength(1);
+    expect(screen.getByRole('navigation').style.getPropertyValue('--nx-ind-o')).toBe('1');
+    const pill = container.querySelector('[data-nx="rail-pill"][data-active]')!;
+    expect(pill).toHaveClass('bg-[var(--nav-active-bg,var(--color-secondary-container))]', 'group-data-[nx-indicator=ready]/rail:bg-transparent');
+  });
+});

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { Table } from './Table.js';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 
 const meta: Meta = {
   title: 'Components/Table',
@@ -88,5 +89,34 @@ export const WithFooter: StoryObj = {
         </Table.Row>
       </Table.Footer>
     </Table.Root>
+  ),
+};
+
+const stateHead = (
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Name</Table.Head>
+      <Table.Head>Role</Table.Head>
+    </Table.Row>
+  </Table.Header>
+);
+
+/** `columns` on the body turns the states on: each one spans the table. */
+export const DataStates: StoryObj = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <Table.Root aria-label="Users, loading">
+        {stateHead}
+        <Table.Body columns={2} loadingRows={3} loading />
+      </Table.Root>
+      <Table.Root aria-label="Users, empty">
+        {stateHead}
+        <Table.Body columns={2} />
+      </Table.Root>
+      <Table.Root aria-label="Users, failed">
+        {stateHead}
+        <Table.Body columns={2} errorState={<ErrorState className="py-4" title="Could not load users" onRetry={() => {}} />} />
+      </Table.Root>
+    </div>
   ),
 };

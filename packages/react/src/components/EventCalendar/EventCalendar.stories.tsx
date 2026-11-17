@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EventCalendar, type CalendarEvent } from './EventCalendar.js';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 
 const meta: Meta = {
   title: 'Components/EventCalendar',
@@ -24,4 +25,21 @@ export const Month: Story = {
 };
 export const Week: Story = {
   render: () => <EventCalendar events={events} defaultDate={new Date(2026, 10, 16)} defaultView="week" weekStartsOn={1} />,
+};
+
+/** Loading keeps the grid; the empty state sits under it; an error replaces it. */
+export const DataStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <EventCalendar events={[]} defaultDate={new Date(2026, 10, 16)} defaultView="week" weekStartsOn={1} loading />
+      <EventCalendar events={[]} defaultDate={new Date(2026, 10, 16)} defaultView="week" weekStartsOn={1} emptyState="No events this week." />
+      <EventCalendar
+        events={[]}
+        defaultDate={new Date(2026, 10, 16)}
+        defaultView="week"
+        weekStartsOn={1}
+        errorState={<ErrorState title="Could not load events" onRetry={() => {}} />}
+      />
+    </div>
+  ),
 };

@@ -429,6 +429,18 @@
           "description": "One row per category, in order."
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "index",
           "type": "keyof T & string",
           "required": true,
@@ -440,6 +452,12 @@
           "required": false,
           "default": "true",
           "description": "Show the legend above the chart. Defaults to on for more than one series."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "series",
@@ -742,9 +760,9 @@
       "props": [
         {
           "name": "children",
-          "type": "(slice: T[]) => React.ReactNode",
+          "type": "(slice: T[], state: DataStateProps) => React.ReactNode",
           "required": true,
-          "description": "Render the chart for the visible slice (charts stay server-friendly; only this wrapper is client)."
+          "description": "The second argument carries `loading`, `emptyState` and `errorState`: spread it on the chart (`{(slice, state) => <LineChart data={slice} {...state} />}`). The zoom controls are disabled meanwhile."
         },
         {
           "name": "className",
@@ -766,10 +784,28 @@
           "description": "Start and end indexes."
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "index",
           "type": "keyof T",
           "required": true,
           "description": "The category key, shown as the range's ends."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "minSpan",
@@ -1194,6 +1230,29 @@
         }
       ]
     },
+    "DataState": {
+      "file": "utils/dataState.tsx",
+      "props": [
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
+        }
+      ]
+    },
     "DataTable": {
       "file": "components/DataTable/DataTable.tsx",
       "props": [
@@ -1305,6 +1364,12 @@
           "required": false,
           "default": "false",
           "description": ""
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in a full-width row when a load failed, e.g. `<ErrorState title=\"…\" onRetry={…} />`. Wins over loading and empty."
         },
         {
           "name": "expanded",
@@ -1811,11 +1876,29 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "legend",
           "type": "boolean",
           "required": false,
           "default": "true",
           "description": "Show the legend beside the donut. Default on."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "title",
@@ -2048,10 +2131,17 @@
           "description": ""
         },
         {
+          "name": "illustrated",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "10.5: a spot illustration in place of the icon."
+        },
+        {
           "name": "kind",
-          "type": "'offline' | 'noData' | 'noResults' | 'noAccess' | 'serverError'",
+          "type": "'offline' | 'noData' | 'noResults' | 'noAccess' | 'serverError' | 'notFound' | 'maintenance'",
           "required": true,
-          "description": "noData, noResults, noAccess (403), serverError (500) or offline."
+          "description": "noData, noResults, noAccess (403), serverError (500), offline, notFound (404) or maintenance."
         },
         {
           "name": "size",
@@ -2102,6 +2192,13 @@
           "description": ""
         },
         {
+          "name": "retryLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'Try again'",
+          "description": "Text of the retry button."
+        },
+        {
           "name": "title",
           "type": "string",
           "required": true,
@@ -2145,10 +2242,28 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown under the grid when no event falls in the visible month or week. The grid stays, and an empty range is normal, so there is no default."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "events",
           "type": "CalendarEvent[]",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "maxEventsPerDay",
@@ -2614,6 +2729,24 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
           "name": "title",
           "type": "string",
           "required": true,
@@ -2639,10 +2772,28 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "label",
           "type": "React.ReactNode",
           "required": false,
           "description": "Shown in the middle; defaults to the percentage."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "max",
@@ -2773,6 +2924,24 @@
           "description": "Rows of values, e.g. one row per weekday, one column per week."
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
           "name": "rowLabels",
           "type": "string[]",
           "required": true,
@@ -2870,6 +3039,30 @@
           "required": false,
           "default": "'md'",
           "description": ""
+        }
+      ]
+    },
+    "Illustration": {
+      "file": "components/Illustration/Illustration.tsx",
+      "props": [
+        {
+          "name": "kind",
+          "type": "'offline' | 'noData' | 'noResults' | 'noAccess' | 'serverError' | 'notFound' | 'maintenance'",
+          "required": true,
+          "description": "Which drawing: one per EmptyState preset, plus notFound and maintenance for full pages."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "80, 120 or 160 CSS px wide (5:4)."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "Names the drawing (`role=\"img\"`). Without it the drawing is decorative."
         }
       ]
     },
@@ -2990,10 +3183,28 @@
           "description": ""
         },
         {
+          "name": "columnEmptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown inside a column that has no cards (while other columns have some)."
+        },
+        {
           "name": "columns",
           "type": "KanbanColumn<T>[]",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
           "name": "getId",
@@ -3006,6 +3217,12 @@
           "type": "(item: T) => string",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "onChange",
@@ -3046,6 +3263,18 @@
           "description": "Change versus the previous period, e.g. 0.114 for +11.4%."
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the value when `value` is null or undefined. No default."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "invert",
           "type": "boolean",
           "required": false,
@@ -3057,6 +3286,12 @@
           "type": "string",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "trend",
@@ -3119,6 +3354,18 @@
           "description": "One row per category, in order."
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "index",
           "type": "keyof T & string",
           "required": true,
@@ -3130,6 +3377,12 @@
           "required": false,
           "default": "true",
           "description": "Show the legend above the chart. Defaults to on for more than one series."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "series",
@@ -4796,6 +5049,38 @@
         }
       ]
     },
+    "SkeletonPreset": {
+      "file": "components/Skeleton/Skeleton.tsx",
+      "props": [
+        {
+          "name": "animated",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": ""
+        },
+        {
+          "name": "animation",
+          "type": "'pulse' | 'shimmer'",
+          "required": false,
+          "default": "'pulse'",
+          "description": "Effect when `animated`: `pulse` fades, `shimmer` sweeps a highlight across. Both stop under reduced motion."
+        },
+        {
+          "name": "count",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "How many to stack: rows, cards or fields."
+        },
+        {
+          "name": "preset",
+          "type": "'form' | 'card' | 'tableRow' | 'listRow' | 'chart'",
+          "required": true,
+          "description": "The layout to stand in for."
+        }
+      ]
+    },
     "SkeletonSwap": {
       "file": "components/Motion/ListTransition.tsx",
       "props": [
@@ -5056,10 +5341,28 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when `values` is empty. No default: an empty sparkline stays an empty box."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "label",
           "type": "string",
           "required": false,
           "description": "Accessible summary, e.g. \"Revenue, last 12 weeks, up 8%\". Without it the sparkline is decorative."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "values",
@@ -5371,6 +5674,42 @@
         "defaultChecked",
         "onCheckedChange",
         "required"
+      ]
+    },
+    "TableBody": {
+      "file": "components/Table/Table.tsx",
+      "props": [
+        {
+          "name": "columns",
+          "type": "number",
+          "required": false,
+          "description": "Number of columns, so a state can span the table. Setting it turns the states on: skeleton rows while `loading`, `errorState`, and `emptyState` (default: the \"no results\" message) when the body has no rows."
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "loadingRows",
+          "type": "number",
+          "required": false,
+          "default": "5",
+          "description": "Skeleton rows shown while loading."
+        }
       ]
     },
     "TableRoot": {
@@ -5868,10 +6207,28 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
           "name": "expanded",
           "type": "string[]",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
           "name": "nodes",
@@ -5913,6 +6270,36 @@
     }
   },
   "@nexub/patterns": {
+    "ActivityFeedRoot": {
+      "file": "components/ActivityFeed/ActivityFeed.tsx",
+      "props": [
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there are no items."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the items; wins over `loading` and `emptyState`."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton rows in place of the items and sets aria-busy."
+        },
+        {
+          "name": "loadingRows",
+          "type": "number",
+          "required": false,
+          "default": "3",
+          "description": "Skeleton rows while `loading`."
+        }
+      ]
+    },
     "ActivityItem": {
       "file": "components/ActivityFeed/ActivityFeed.tsx",
       "props": [
@@ -5977,10 +6364,22 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there are no transactions. Same as `empty`, under the name the other patterns use."
+        },
+        {
           "name": "errorFallback",
           "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
           "required": false,
           "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the list; wins over `loading` and the empty state."
         },
         {
           "name": "eyebrow",
@@ -5993,6 +6392,12 @@
           "type": "boolean",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton rows in place of the list (the first load) and sets aria-busy."
         },
         {
           "name": "loadingMore",
@@ -6595,10 +7000,22 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in the Recent activity panel when `recent` is empty. Without it the panel is left out."
+        },
+        {
           "name": "errorFallback",
           "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
           "required": false,
           "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the page content; wins over `loading` and `emptyState`."
         },
         {
           "name": "eyebrow",
@@ -6612,6 +7029,12 @@
           "required": false,
           "default": "[]",
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: skeletons for the balance, key figures, chart and recent activity; sets aria-busy on the page."
         },
         {
           "name": "messages",
@@ -6780,8 +7203,33 @@
         {
           "name": "children",
           "type": "React.ReactNode",
-          "required": true,
+          "required": false,
           "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there are no items."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the list; wins over `loading` and `emptyState`."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton rows in place of the items and sets aria-busy."
+        },
+        {
+          "name": "loadingRows",
+          "type": "number",
+          "required": false,
+          "default": "3",
+          "description": "Skeleton rows while `loading`."
         }
       ]
     },
@@ -6809,6 +7257,18 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in the list pane in place of `list`. Pass it when the list has no items."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in the list pane in place of `list`; wins over `loading` and `emptyState`."
+        },
+        {
           "name": "list",
           "type": "React.ReactNode",
           "required": true,
@@ -6827,6 +7287,12 @@
           "required": false,
           "default": "'md' (320px)",
           "description": "Fixed list width when both panes show."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton rows in the list pane and sets aria-busy on it."
         },
         {
           "name": "onBack",
@@ -6853,10 +7319,28 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there are no notifications, in place of `emptyText`."
+        },
+        {
           "name": "emptyText",
           "type": "React.ReactNode",
           "required": false,
           "description": "Shown when there are no notifications."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the list; wins over `loading` and `emptyState`."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton rows in place of the list and sets aria-busy on the panel."
         },
         {
           "name": "notifications",
@@ -7262,10 +7746,22 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when `groups` is empty."
+        },
+        {
           "name": "errorFallback",
           "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
           "required": false,
           "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the groups; wins over `loading` and `emptyState`."
         },
         {
           "name": "eyebrow",
@@ -7284,6 +7780,12 @@
           "type": "React.ReactNode",
           "required": false,
           "description": "Above the groups: a profile card."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeleton groups in place of `groups` and sets aria-busy on the page."
         },
         {
           "name": "messages",
@@ -7503,6 +8005,13 @@
           "description": ""
         },
         {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "10.5: skeletons in place of the value and the line under it; the card keeps its size."
+        },
+        {
           "name": "sentiment",
           "type": "'neutral' | 'positive' | 'negative'",
           "required": false,
@@ -7529,6 +8038,72 @@
         }
       ]
     },
+    "StatusPage": {
+      "file": "components/StatusPage/StatusPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Buttons under the text. Replaces the default Retry or Back to home."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "required": false,
+          "description": "A small line above the title, e.g. \"404\"."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "fullScreen",
+          "type": "boolean",
+          "required": false,
+          "description": "At least as tall as the viewport, for a page with nothing else on it."
+        },
+        {
+          "name": "homeHref",
+          "type": "string",
+          "required": false,
+          "description": "notFound and noAccess: shows a \"Back to home\" link (when no `actions` are given)."
+        },
+        {
+          "name": "illustration",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Art above the text. Defaults to the `Illustration` for the kind; `null` hides it."
+        },
+        {
+          "name": "kind",
+          "type": "'notFound' | 'serverError' | 'maintenance' | 'offline' | 'noAccess'",
+          "required": true,
+          "description": "notFound (404), serverError (500), maintenance, offline or noAccess (403)."
+        },
+        {
+          "name": "onRetry",
+          "type": "(() => void)",
+          "required": false,
+          "description": "serverError and offline: shows a Retry button (when no `actions` are given)."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Overrides the localised title; the description too."
+        }
+      ]
+    },
     "TransactionDetailPage": {
       "file": "components/TransactionDetailPage/TransactionDetailPage.tsx",
       "props": [
@@ -7552,10 +8127,23 @@
           "description": ""
         },
         {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "the 'Nothing here yet' preset",
+          "description": "Shown when there is no `transaction`."
+        },
+        {
           "name": "errorFallback",
           "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
           "required": false,
           "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the content; wins over `loading` and `emptyState`."
         },
         {
           "name": "eyebrow",
@@ -7568,6 +8156,12 @@
           "type": "React.ReactNode",
           "required": false,
           "description": "Under the details: \"Download receipt\", \"Report a problem\"."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "10.5: shows skeletons in place of the hero and the rows, and sets aria-busy on the page."
         },
         {
           "name": "messages",
@@ -7597,8 +8191,8 @@
         {
           "name": "transaction",
           "type": "Transaction",
-          "required": true,
-          "description": ""
+          "required": false,
+          "description": "Optional since 10.5: leave it out while `loading`, or when there is nothing to show."
         },
         {
           "name": "width",
@@ -7635,6 +8229,13 @@
           "type": "string",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "10.5: skeletons in place of the avatar and text; the card keeps its size."
         },
         {
           "name": "name",

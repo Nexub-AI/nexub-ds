@@ -2,6 +2,7 @@ import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Kanban, type KanbanColumn } from './Kanban.js';
 import { Sortable } from '../Sortable/Sortable.js';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 
 const meta: Meta = {
   title: 'Components/Kanban',
@@ -32,3 +33,19 @@ function List() {
 
 export const Board_: Story = { name: 'Board', render: () => <Board /> };
 export const SortableList: Story = { render: () => <List /> };
+
+const noCards: KanbanColumn<Card>[] = [
+  { id: 'todo', title: 'To do', items: [] },
+  { id: 'done', title: 'Done', items: [] },
+];
+const board = { getId: (c: Card) => c.id, getLabel: (c: Card) => c.title, onChange: () => {}, renderCard: (c: Card) => c.title };
+
+export const DataStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <Kanban {...board} columns={noCards} loading />
+      <Kanban {...board} columns={noCards} />
+      <Kanban {...board} columns={noCards} errorState={<ErrorState className="py-4" title="Could not load the board" onRetry={() => {}} />} />
+    </div>
+  ),
+};

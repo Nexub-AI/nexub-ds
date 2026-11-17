@@ -410,6 +410,8 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   loading?: boolean;
   /** Shown in a full-width row when there are no rows. @default messages.noResults */
   emptyState?: React.ReactNode;
+  /** Shown in a full-width row when a load failed, e.g. `<ErrorState title="…" onRetry={…} />`. Wins over loading and empty. */
+  errorState?: React.ReactNode;
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
@@ -463,6 +465,7 @@ export function DataTable<TData>({
   getRowLabel,
   loading = false,
   emptyState,
+  errorState,
   caption,
   captionHidden = false,
   className,
@@ -471,6 +474,7 @@ export function DataTable<TData>({
   ...props
 }: DataTableProps<TData>) {
   const messages = useNexubMessages();
+  const hasError = errorState != null && errorState !== false;
   const { locale, dir } = useLocale();
   const [sorting = [], setSorting] = useControllableState<SortingState>({
     value: sort,
@@ -763,7 +767,7 @@ export function DataTable<TData>({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-rowcount={rowWin.virtual ? rows.length + 1 : undefined}
-        aria-busy={loading || undefined}
+        aria-busy={(loading && !hasError) || undefined}
         role={grid ? 'grid' : undefined}
         onKeyDown={grid ? gridNav.onKeyDown : undefined}
         onFocus={grid ? gridNav.onFocus : undefined}
@@ -893,7 +897,11 @@ export function DataTable<TData>({
           ))}
         </TableHeader>
         <TableBody>
-          {loading ? (
+          {hasError ? (
+            <TableRow data-error="" className="hover:bg-transparent">
+              <TableCell colSpan={table.getVisibleLeafColumns().length}>{errorState}</TableCell>
+            </TableRow>
+          ) : loading ? (
             Array.from({ length: pagination ? pageSize : 5 }, (_, i) => (
               <TableRow key={i} data-loading="" className="hover:bg-transparent">
                 {table.getVisibleLeafColumns().map((c) => (

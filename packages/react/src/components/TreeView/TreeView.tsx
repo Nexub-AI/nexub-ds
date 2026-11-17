@@ -5,6 +5,9 @@ import { Check, ChevronRight, Minus } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { Spinner } from '../Spinner/Spinner.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
 
 export interface TreeNode {
   id: string;
@@ -18,7 +21,7 @@ export interface TreeNode {
   disabled?: boolean;
 }
 
-export interface TreeViewProps {
+export interface TreeViewProps extends DataStateProps {
   nodes: TreeNode[];
   'aria-label'?: string;
   'aria-labelledby'?: string;
@@ -45,6 +48,13 @@ interface Flat {
   parent: string | null;
 }
 
+// Row indent per level (0.25rem + 1.25rem a level) as classes, so the server
+// HTML is already indented (no shift on mount) and strict CSP needs no style
+// attribute. Deeper levels fall back to setting it through the CSSOM.
+const INDENT = [
+  'ps-[0.25rem]', 'ps-[1.5rem]', 'ps-[2.75rem]', 'ps-[4rem]', 'ps-[5.25rem]', 'ps-[6.5rem]', 'ps-[7.75rem]', 'ps-[9rem]',
+];
+
 const hasKids = (n: TreeNode) => Boolean(n.children?.length || (n.hasChildren && !n.children));
 const text = (n: TreeNode) => n.textValue ?? (typeof n.label === 'string' ? n.label : '');
 const descendants = (n: TreeNode): string[] =>
@@ -69,8 +79,12 @@ export function TreeView({
   onCheckedChange,
   onLoadChildren,
   className,
+  loading: rootLoading,
+  emptyState,
+  errorState,
   ...aria
 }: TreeViewProps) {
+  const messages = useNexubMessages();
   const [expanded = [], setExpanded] = useControllableState<string[]>({
     value: expandedProp,
     defaultValue: defaultExpanded ?? [],
@@ -88,6 +102,14 @@ export function TreeView({
   });
   const [loading, setLoading] = React.useState<string | null>(null);
   const [focused, setFocused] = React.useState<string | null>(null);
+  // Groups kept mounted while their collapse transition runs.
+  const [closing, setClosing] = React.useState<ReadonlySet<string>>(() => new Set());
+  const groups = React.useRef(new Map<string, HTMLDivElement>());
+  // Groups open on first paint must not slide open (that would be a layout shift); later ones do.
+  const mounted = React.useRef(false);
+  React.useEffect(() => {
+    mounted.current = true;
+  }, []);
   const refs = React.useRef(new Map<string, HTMLLIElement>());
   const typed = React.useRef({ text: '', at: 0 });
 
@@ -123,6 +145,11 @@ export function TreeView({
 
   const toggle = async (node: TreeNode, to = !open.has(node.id)) => {
     if (!hasKids(node) || to === open.has(node.id)) return;
+    if (!to) {
+      // Only when a transition will run (not under reduced motion), or its end would never unmount the group.
+      const group = groups.current.get(node.id);
+      if (group && parseFloat(getComputedStyle(group).transitionDuration) > 0) setClosing((s) => new Set(s).add(node.id));
+    }
     setExpanded(to ? [...expanded, node.id] : expanded.filter((id) => id !== node.id));
     if (to && node.hasChildren && !node.children && onLoadChildren) {
       setLoading(node.id);
@@ -237,13 +264,17 @@ export function TreeView({
           onFocus={(e) => {
             if (e.target === e.currentTarget) setFocused(node.id);
           }}
-          className="outline-none [&:focus-visible>div]:outline [&:focus-visible>div]:outline-2 [&:focus-visible>div]:-outline-offset-2 [&:focus-visible>div]:outline-[var(--color-primary)]"
+          className="outline-none [&:focus-visible>div:first-child]:outline [&:focus-visible>div:first-child]:outline-2 [&:focus-visible>div:first-child]:-outline-offset-2 [&:focus-visible>div:first-child]:outline-[var(--color-primary)]"
         >
           <div
-            ref={(el) => {
-              // CSSOM so strict-CSP pages still get the indent.
-              if (el) el.style.paddingInlineStart = `${(level - 1) * 1.25 + 0.25}rem`;
-            }}
+            ref={
+              INDENT[level - 1]
+                ? undefined
+                : (el) => {
+                    // CSSOM so strict-CSP pages still get the indent.
+                    if (el) el.style.paddingInlineStart = `${(level - 1) * 1.25 + 0.25}rem`;
+                  }
+            }
             onClick={() => {
               focus(node.id);
               if (kids && !checkable) void toggle(node);
@@ -251,6 +282,7 @@ export function TreeView({
             }}
             className={cn(
               'flex min-h-control-sm cursor-default items-center gap-1.5 rounded-shape-control pe-2 text-body-md text-[var(--color-on-surface)]',
+              INDENT[level - 1],
               'hover:bg-[var(--color-surface-container-high)]',
               !checkable &&
                 selected === node.id &&
@@ -297,14 +329,57 @@ export function TreeView({
             )}
             <span className="truncate">{node.label}</span>
           </div>
-          {kids && isOpen && node.children && (
-            <ul role="group" className="m-0 list-none p-0">
-              {render(node.children, level + 1, node.id)}
-            </ul>
+          {kids && node.children && (isOpen || closing.has(node.id)) && (
+            // Rows 0fr → 1fr: the group slides open on mount (@starting-style) and shut before it unmounts.
+            <div
+              ref={(el) => {
+                if (el) groups.current.set(node.id, el);
+                else groups.current.delete(node.id);
+              }}
+              aria-hidden={isOpen ? undefined : true}
+              onTransitionEnd={(e) => {
+                if (e.target !== e.currentTarget || isOpen) return;
+                setClosing((s) => {
+                  const next = new Set(s);
+                  // Its descendants too: theirs never end once this one unmounts.
+                  for (const id of [node.id, ...descendants(node)]) next.delete(id);
+                  return next;
+                });
+              }}
+              className={cn(
+                'grid transition-[grid-template-rows] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
+                isOpen ? 'grid-rows-[1fr]' : 'pointer-events-none grid-rows-[0fr]',
+                isOpen && mounted.current && '[@starting-style]:grid-rows-[0fr]',
+              )}
+            >
+              <ul role="group" className="m-0 min-h-0 list-none overflow-hidden p-0">
+                {render(node.children, level + 1, node.id)}
+              </ul>
+            </div>
           )}
         </li>
       );
     });
+
+  const states = { loading: rootLoading, emptyState, errorState };
+  const state = dataState(
+    states,
+    nodes.length === 0,
+    [0, 1, 2, 3].map((i) => (
+      <span key={i} className="flex min-h-control-sm items-center ps-[0.25rem] pe-2 text-body-md">
+        <Skeleton className={i % 2 ? 'w-1/2' : 'w-3/4'} />
+      </span>
+    )),
+    messages.emptyStates.noData.title,
+  );
+  if (state != null) {
+    // Not a tree while there are no items: a tree must own treeitems.
+    return (
+      <div role="group" aria-busy={dataBusy(states)} className={cn('flex flex-col', className)} {...aria}>
+        {state}
+      </div>
+    );
+  }
 
   return (
     <ul

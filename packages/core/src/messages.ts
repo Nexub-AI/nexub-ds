@@ -126,7 +126,9 @@ export interface NexubMessages {
   filtersApplied: (count: number) => string;
   clearAll: string;
   /** EmptyState presets. */
-  emptyStates: Record<'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline', { title: string; description: string }>;
+  emptyStates: Record<'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline' | 'notFound' | 'maintenance', { title: string; description: string }>;
+  /** StatusPage link for notFound and noAccess. */
+  backToHome: string;
   /** AlertDialog type-to-confirm, e.g. "Type acme-prod to confirm". */
   typeToConfirm: (text: string) => string;
   /** OTPInput group name when no aria-label is given. */
@@ -347,7 +349,10 @@ export const defaultMessages: NexubMessages = {
     noAccess: { title: 'You don’t have access', description: 'Ask an admin of this workspace to give you access.' },
     serverError: { title: 'Something went wrong', description: 'We couldn’t load this. Try again in a moment.' },
     offline: { title: 'You’re offline', description: 'Check your connection, then try again.' },
+    notFound: { title: 'Page not found', description: 'The page may have moved, or the link may be wrong.' },
+    maintenance: { title: 'Down for maintenance', description: 'We’re making some improvements. Check back soon.' },
   },
+  backToHome: 'Back to home',
   typeToConfirm: (text) => `Type ${text} to confirm`,
   verificationCode: 'Verification code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,

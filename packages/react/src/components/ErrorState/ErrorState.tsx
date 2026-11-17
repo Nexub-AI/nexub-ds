@@ -27,10 +27,12 @@ export interface ErrorStateProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
   tone?: ErrorTone;
   onRetry?: () => void;
+  /** Text of the retry button. @default 'Try again' */
+  retryLabel?: React.ReactNode;
 }
 
 export const ErrorState = React.forwardRef<HTMLDivElement, ErrorStateProps>(
-  ({ className, title, description, tone = 'error', onRetry, ...props }, ref) => {
+  ({ className, title, description, tone = 'error', onRetry, retryLabel = 'Try again', ...props }, ref) => {
     const { icon, color } = toneConfig[tone];
     return (
       <div
@@ -54,7 +56,7 @@ export const ErrorState = React.forwardRef<HTMLDivElement, ErrorStateProps>(
             onClick={onRetry}
             className={cn(pressable, 'inline-flex h-9 items-center justify-center bg-[var(--color-primary)] px-4 text-label-lg text-[var(--color-on-primary)]')}
           >
-            Try again
+            {retryLabel}
           </button>
         )}
       </div>

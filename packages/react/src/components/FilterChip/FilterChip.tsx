@@ -28,6 +28,8 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
         className={cn(
           // Matches Chip; hover/press come from the state layer.
           'nx-state-layer inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] border select-none',
+          // 10.5: selecting crossfades the fill, text and border.
+          'transition-colors duration-effects-fast ease-effects-fast',
           chipSize[size],
           selected
             ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] border-transparent'
@@ -49,7 +51,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           {count !== undefined && (
             <span
               className={cn(
-                'inline-flex items-center justify-center rounded-full text-label-sm tabular-nums px-1.5 min-w-[1.25rem] h-5',
+                'inline-flex items-center justify-center rounded-full text-label-sm tabular-nums px-1.5 min-w-[1.25rem] h-5 transition-colors duration-effects-fast ease-effects-fast',
                 selected
                   ? 'bg-[var(--color-on-secondary-container)] text-[var(--color-secondary-container)]'
                   : 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)]',
