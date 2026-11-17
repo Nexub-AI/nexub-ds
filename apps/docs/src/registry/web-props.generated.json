@@ -170,6 +170,95 @@
         }
       ]
     },
+    "AppShellNavTrigger": {
+      "file": "components/AppShell/AppShellNav.tsx",
+      "props": [
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Replaces the menu icon."
+        },
+        {
+          "name": "drawerBelow",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Match the sidebar slot's `drawerBelow`: the button is hidden from that breakpoint up."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Spinner replaces the icon (size kept); clicks are blocked, focus stays."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'xs' | 'lg' | 'xl'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "tooltip",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Built-in tooltip: content, or `true` to show `label`. No Provider needed."
+        },
+        {
+          "name": "variant",
+          "type": "'solid' | 'subtle' | 'ghost' | 'outline'",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
+    "AppShellRoot": {
+      "file": "components/AppShell/AppShell.tsx",
+      "props": [
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "description": "10.6: the mobile navigation drawer (see `AppShell.Sidebar`'s `drawerBelow`), controlled."
+        }
+      ]
+    },
+    "AppShellSidebar": {
+      "file": "components/AppShell/AppShell.tsx",
+      "props": [
+        {
+          "name": "drawerBelow",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "10.6: below this breakpoint the slot leaves the layout and its children open in a left Sheet instead, from `AppShell.NavTrigger`. A link clicked inside closes it."
+        },
+        {
+          "name": "drawerLabel",
+          "type": "string",
+          "required": false,
+          "default": "messages.mainNavigation",
+          "description": "Accessible name of that drawer."
+        }
+      ]
+    },
     "AspectRatio": {
       "file": "components/AspectRatio/AspectRatio.tsx",
       "props": [
@@ -261,6 +350,13 @@
           "type": "boolean",
           "required": false,
           "description": "Shows the value but it can't be changed; stays focusable."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
           "name": "size",
@@ -521,6 +617,13 @@
           "required": false,
           "default": "4",
           "description": "Most items shown. Longer trails keep the first item and the last `maxItems - 1`, and put the rest in a \"More\" menu. Default 4."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "The \"More\" menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         }
       ]
     },
@@ -1159,6 +1262,13 @@
           "description": "How page scroll is locked while open. - `'class'` (default since 8.0): the `nexub-scroll-lock` class from `@nexub/themes/base`. Strict-CSP safe. - `'style'`: Radix's lock, which injects a `<style>` tag (blocked by `style-src 'self'`)."
         },
         {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above."
+        },
+        {
           "name": "shortcut",
           "type": "string",
           "required": false,
@@ -1639,6 +1749,13 @@
           "description": "Shows the date but the calendar can't open and nothing can be typed; stays focusable."
         },
         {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
+        },
+        {
           "name": "size",
           "type": "'sm' | 'md' | 'lg'",
           "required": false,
@@ -1732,6 +1849,13 @@
           "description": "Shows the range but the calendar can't open; stays focusable."
         },
         {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
+        },
+        {
           "name": "size",
           "type": "'sm' | 'md' | 'lg'",
           "required": false,
@@ -1821,6 +1945,13 @@
           "type": "boolean",
           "required": false,
           "description": "Both fields show the value but can't be changed."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "The calendar as a bottom sheet: see DatePicker `sheet`."
         },
         {
           "name": "size",
@@ -3889,6 +4020,13 @@
           "description": "Shows the chips but nothing can be added or removed; stays focusable."
         },
         {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
+        },
+        {
           "name": "size",
           "type": "'sm' | 'md' | 'lg'",
           "required": false,
@@ -4554,7 +4692,7 @@
           "type": "1 | 2 | 3 | 4",
           "required": false,
           "default": "1",
-          "description": "Grid columns (collapses to one column on narrow screens)."
+          "description": "Grid columns (collapses to one column where the group itself is narrow)."
         },
         {
           "name": "invalid",
@@ -4720,6 +4858,13 @@
           "type": "((id: string) => void)",
           "required": false,
           "description": "\"Update ‹view›\": overwrite the active view with the current filters."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {
           "name": "views",
@@ -5003,11 +5148,16 @@
           "description": "10.3: the app or division this sidebar belongs to. Sets `data-product` / `data-division`, so the active item takes that accent (needs `@nexub/themes/products` or `/divisions`)."
         },
         {
+          "name": "collapseBelow",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "10.6: collapse to the icon rail below this breakpoint (when `collapsed` is not passed)."
+        },
+        {
           "name": "collapsed",
           "type": "boolean",
           "required": false,
-          "default": "false",
-          "description": ""
+          "description": "Icon rail. Controlled: when passed it always wins over `collapseBelow`."
         }
       ]
     },
@@ -5450,6 +5600,13 @@
           "type": "string",
           "required": true,
           "description": "Accessible name of the menu toggle, e.g. \"More save options\"."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "false",
+          "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {
           "name": "size",
@@ -6598,6 +6755,12 @@
           "description": ""
         },
         {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "description": "10.6: on phones the organisation, account and app menus open as bottom sheets (`true`, or `'auto'`)."
+        },
+        {
           "name": "showThemeSwitch",
           "type": "boolean",
           "required": false,
@@ -6652,6 +6815,12 @@
           "type": "((app: AppLauncherApp) => void)",
           "required": false,
           "description": "Client-side routing. When set, plain clicks call this instead of following `href`."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "description": "10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide)."
         },
         {
           "name": "surface",
@@ -7365,6 +7534,12 @@
           "type": "((id: string) => void)",
           "required": false,
           "description": "Called when a notification is opened (clicked or Enter)."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "description": "10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide)."
         }
       ]
     },

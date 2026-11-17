@@ -389,6 +389,7 @@
       "onCreate",
       "onInputChange",
       "readOnly",
+      "sheet",
       "size"
     ],
     "nativeOnly": [
@@ -544,6 +545,7 @@
       "locale",
       "presets",
       "readOnly",
+      "sheet",
       "size",
       "typeable"
     ],
@@ -597,6 +599,7 @@
       "locale",
       "minuteStep",
       "readOnly",
+      "sheet",
       "size",
       "timeZone"
     ],
