@@ -124,7 +124,11 @@ const open = (link, shot, marker, to = flow) => {
 for (const [slug, e] of Object.entries(CATALOG)) {
   e.examples.forEach((_, i) => open(`preview/${slug}?ex=${i}`, `${slug}--${i}`, `preview-ready-${slug}-${i}`));
 }
-for (const name of Object.keys(patterns)) open(`preview/pattern/${name}`, `pattern-${name}`, `preview-ready-pattern-${name}`);
+// A pattern that leaves a sheet open (the app switcher) blocks the next deep link on iOS, so it
+// is captured once, at the very end of the flow, and has no themed or large-text shots.
+const MODAL_LAST = ['apps'];
+const flowing = Object.keys(patterns).filter((name) => !MODAL_LAST.includes(name));
+for (const name of flowing) open(`preview/pattern/${name}`, `pattern-${name}`, `preview-ready-pattern-${name}`);
 
 // Extra schemes (10.9), for the screen patterns only: every component in every scheme would
 // multiply a ~20-minute step by five. They come last and each link sets all three values,
@@ -136,7 +140,11 @@ const VARIANTS = {
   rtl: 'scheme=light&contrast=standard&dir=rtl',
 };
 for (const [id, query] of Object.entries(VARIANTS)) {
-  for (const name of Object.keys(patterns)) open(`preview/pattern/${name}?${query}&v=${id}`, `pattern-${name}--${id}`, `preview-ready-pattern-${name}-${id}`);
+  for (const name of flowing) open(`preview/pattern/${name}?${query}&v=${id}`, `pattern-${name}--${id}`, `preview-ready-pattern-${name}-${id}`);
+}
+// Back to light explicitly (the layout keeps the last themed values), then the sheet patterns.
+for (const name of MODAL_LAST.filter((n) => n in patterns)) {
+  open(`preview/pattern/${name}?scheme=light&contrast=standard&dir=ltr`, `pattern-${name}`, `preview-ready-pattern-${name}`);
 }
 
 // Large text has no query: the components read the OS text size (theme.fontScale and React
@@ -148,7 +156,7 @@ const large = [
   '# The flow does not change the setting; the Mobile workflow does, before it runs this.',
   ...header.slice(header.indexOf('appId: ai.nexub.mobile')),
 ];
-for (const name of Object.keys(patterns)) open(`preview/pattern/${name}`, `pattern-${name}--lg`, `preview-ready-pattern-${name}`, large);
+for (const name of flowing) open(`preview/pattern/${name}`, `pattern-${name}--lg`, `preview-ready-pattern-${name}`, large);
 
 const outputs = [
   [join(root, 'preview-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`],

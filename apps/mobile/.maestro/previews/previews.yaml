@@ -1711,20 +1711,6 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
-      - openLink: nexub://preview/pattern/apps
-      - runFlow:
-          when:
-            visible: "Open"
-          commands:
-            - tapOn: "Open"
-      - extendedWaitUntil:
-          visible: "Nexub apps"
-          timeout: 15000
-- waitForAnimationToEnd
-- takeScreenshot: pattern-apps--${maestro.platform}
-- retry:
-    maxRetries: 1
-    commands:
       - openLink: nexub://preview/pattern/status
       - runFlow:
           when:
@@ -1992,20 +1978,6 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-paywall--dark--${maestro.platform}
-- retry:
-    maxRetries: 1
-    commands:
-      - openLink: nexub://preview/pattern/apps?scheme=dark&contrast=standard&dir=ltr&v=dark
-      - runFlow:
-          when:
-            visible: "Open"
-          commands:
-            - tapOn: "Open"
-      - extendedWaitUntil:
-          visible: "Nexub apps"
-          timeout: 15000
-- waitForAnimationToEnd
-- takeScreenshot: pattern-apps--dark--${maestro.platform}
 - retry:
     maxRetries: 1
     commands:
@@ -2279,20 +2251,6 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
-      - openLink: nexub://preview/pattern/apps?scheme=light&contrast=high&dir=ltr&v=hc
-      - runFlow:
-          when:
-            visible: "Open"
-          commands:
-            - tapOn: "Open"
-      - extendedWaitUntil:
-          visible: "Nexub apps"
-          timeout: 15000
-- waitForAnimationToEnd
-- takeScreenshot: pattern-apps--hc--${maestro.platform}
-- retry:
-    maxRetries: 1
-    commands:
       - openLink: nexub://preview/pattern/status?scheme=light&contrast=high&dir=ltr&v=hc
       - runFlow:
           when:
@@ -2563,20 +2521,6 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
-      - openLink: nexub://preview/pattern/apps?scheme=light&contrast=standard&dir=rtl&v=rtl
-      - runFlow:
-          when:
-            visible: "Open"
-          commands:
-            - tapOn: "Open"
-      - extendedWaitUntil:
-          visible: "Nexub apps"
-          timeout: 15000
-- waitForAnimationToEnd
-- takeScreenshot: pattern-apps--rtl--${maestro.platform}
-- retry:
-    maxRetries: 1
-    commands:
       - openLink: nexub://preview/pattern/status?scheme=light&contrast=standard&dir=rtl&v=rtl
       - runFlow:
           when:
@@ -2589,3 +2533,17 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-status--rtl--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/pattern/apps?scheme=light&contrast=standard&dir=ltr
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible: "Nexub apps"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: pattern-apps--${maestro.platform}

@@ -13,7 +13,6 @@
     },
     "android": {
       "package": "ai.nexub.mobile",
-      "predictiveBackGestureEnabled": true,
       "adaptiveIcon": {
         "backgroundImage": "../../packages/brand/assets/mobile/nexub-android-background.png",
         "foregroundImage": "../../packages/brand/assets/mobile/nexub-android-foreground.png",
