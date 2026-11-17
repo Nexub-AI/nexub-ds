@@ -203,6 +203,13 @@ export function EventCalendar({
       ? fmt({ month: 'long', year: 'numeric' }).format(date)
       : fmt({ month: 'short', day: 'numeric', year: 'numeric' }).formatRange(days[0]!, days[6]!);
   const today = now ?? new Date();
+  // The now line needs the minute, which the server cannot know: without a fixed `now`
+  // it appears after mount, so server HTML and the first client render match.
+  const [mountedNow, setMountedNow] = React.useState<Date>();
+  React.useEffect(() => {
+    if (!now) setMountedNow(new Date());
+  }, [now]);
+  const lineNow = now ?? mountedNow;
   const step = (n: number) => setDate(oneDay ? addDays(date, n) : month || agenda ? addMonths(date, n) : addWeeks(date, n));
   const [previous, next] = oneDay ? [t.previousDay, t.nextDay] : month || agenda ? [t.previousMonth, t.nextMonth] : [t.previousWeek, t.nextWeek];
   const viewLabels: Record<EventCalendarView, string> = { month: t.monthView, week: t.weekView, day: t.dayView, agenda: t.agendaView };
@@ -267,7 +274,7 @@ export function EventCalendar({
           <DayGrid
             day={first}
             events={busy ? [] : eventsOn(first)}
-            now={isSameDay(first, today) ? today : undefined}
+            now={lineNow && isSameDay(first, lineNow) ? lineNow : undefined}
             busy={busy}
             allDayLabel={t.allDay}
             hourFmt={fmt({ hour: 'numeric' })}
@@ -429,7 +436,9 @@ function DayGrid({
     else {
       const end = e.end && new Date(Math.min(e.end.getTime(), dayStart + 1440 * MINUTE));
       const start = new Date(Math.max(e.start.getTime(), dayStart));
-      spans.push({ e, from: Math.min(from, 1440 - MIN_EVENT), to: Math.min(to, 1440), time: end ? timeFmt.formatRange(start, end) : timeFmt.format(start) });
+      // Two formats joined here, not formatRange: Node and browsers space a range differently,
+      // which breaks hydration.
+      spans.push({ e, from: Math.min(from, 1440 - MIN_EVENT), to: Math.min(to, 1440), time: end ? `${timeFmt.format(start)} – ${timeFmt.format(end)}` : timeFmt.format(start) });
     }
   }
   const nowAt = now ? minutes(now) : undefined;

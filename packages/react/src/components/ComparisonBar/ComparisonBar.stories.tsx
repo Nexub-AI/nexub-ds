@@ -8,7 +8,7 @@ type Story = StoryObj<typeof ComparisonBar>;
 
 export const Default: Story = {
   args: { label: 'Goals', left: { label: 'Team A', value: 3 }, right: { label: 'Team B', value: 1 } },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [(Story) => <div className="w-80 max-w-full"><Story /></div>],
 };
 
 const stats: [string, number, number, ((n: number) => string)?][] = [
@@ -22,7 +22,7 @@ const stats: [string, number, number, ((n: number) => string)?][] = [
 /** Several stats stacked, like a comparison table. The side labels show once. */
 export const Group: Story = {
   render: () => (
-    <div className="flex w-80 flex-col gap-4">
+    <div className="flex w-80 max-w-full flex-col gap-4">
       {stats.map(([label, a, b, format], i) => (
         <ComparisonBar
           key={label}
@@ -39,5 +39,5 @@ export const Group: Story = {
 
 export const Equal: Story = {
   args: { label: 'Monthly price', left: { label: 'Plan A', value: 20 }, right: { label: 'Plan B', value: 20 }, valueFormat: (n) => `$${n}` },
-  decorators: [(Story) => <div className="w-80"><Story /></div>],
+  decorators: [(Story) => <div className="w-80 max-w-full"><Story /></div>],
 };

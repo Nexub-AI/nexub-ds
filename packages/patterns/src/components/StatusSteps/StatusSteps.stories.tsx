@@ -10,7 +10,7 @@ type Story = StoryObj<typeof StatusSteps>;
 /** An application review. */
 export const Default: Story = {
   render: () => (
-    <div className="w-96">
+    <div className="w-96 max-w-full">
       <StatusSteps
         aria-label="Application progress"
         steps={[
@@ -25,7 +25,7 @@ export const Default: Story = {
 
 export const WithError: Story = {
   render: () => (
-    <div className="w-96">
+    <div className="w-96 max-w-full">
       <StatusSteps
         aria-label="Application progress"
         steps={[

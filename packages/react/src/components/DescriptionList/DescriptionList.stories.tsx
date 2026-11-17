@@ -9,7 +9,7 @@ type Story = StoryObj<typeof meta>;
 /** An order receipt with a total. */
 export const Default: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="w-80 max-w-full">
       <DescriptionList.Root divided aria-label="Order summary">
         <DescriptionList.Item label="Subtotal" helpText="2 items">$40.00</DescriptionList.Item>
         <DescriptionList.Item label="Shipping">$5.00</DescriptionList.Item>
@@ -22,7 +22,7 @@ export const Default: Story = {
 
 export const Stacked: Story = {
   render: () => (
-    <div className="w-80">
+    <div className="w-80 max-w-full">
       <DescriptionList.Root layout="stacked" size="sm">
         <DescriptionList.Item label="Order number">A-10293</DescriptionList.Item>
         <DescriptionList.Item label="Delivery address">12 Example Street, Level 4, Springfield</DescriptionList.Item>
