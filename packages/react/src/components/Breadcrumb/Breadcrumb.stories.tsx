@@ -52,3 +52,14 @@ export const WithEllipsis: StoryObj = {
     </Breadcrumb.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual "More" menu above. */
+export const SheetAuto: StoryObj = {
+  render: () => (
+    <Breadcrumb.Trail
+      sheet="auto"
+      maxItems={2}
+      items={[{ label: 'Home', href: '/' }, { label: 'Library', href: '/library' }, { label: 'Data', href: '/library/data' }, { label: 'Report' }]}
+    />
+  ),
+};

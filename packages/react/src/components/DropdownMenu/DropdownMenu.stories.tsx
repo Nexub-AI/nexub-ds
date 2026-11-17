@@ -31,3 +31,21 @@ export const Default: Story = {
     </DropdownMenu.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual menu above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <button>Account</button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content sheet="auto">
+          <DropdownMenu.Item>Profile</DropdownMenu.Item>
+          <DropdownMenu.Item>Settings</DropdownMenu.Item>
+          <DropdownMenu.Item>Log out</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  ),
+};

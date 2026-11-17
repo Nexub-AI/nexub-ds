@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, describe, it, expect } from 'vitest';
 import { Sidebar } from './Sidebar.js';
 
 describe('Sidebar', () => {
@@ -33,14 +33,75 @@ describe('Sidebar', () => {
     expect(el.querySelector('svg')).toBeInTheDocument();
   });
 
-  it('keeps an accessible name and tooltip when collapsed', () => {
+  it('expanded items keep the native title and no tooltip', () => {
     render(
-      <Sidebar.Root collapsed>
+      <Sidebar.Root>
         <Sidebar.Item href="#" icon={<svg />}>Settings</Sidebar.Item>
       </Sidebar.Root>,
     );
-    const link = screen.getByRole('link', { name: 'Settings' });
-    expect(link).toHaveAttribute('title', 'Settings');
+    expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute('title', 'Settings');
+  });
+
+  it('collapsed items keep their accessible name and show the label in a tooltip, not a title (10.6)', async () => {
+    render(
+      <Sidebar.Root collapsed>
+        <Sidebar.Item href="#" icon={<svg />}>Settings</Sidebar.Item>
+        <Sidebar.Item href="#" icon={<svg />}><b>Rich</b></Sidebar.Item>
+      </Sidebar.Root>,
+    );
+    // The tooltip module loads lazily; the native title is the fallback until then.
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Settings' })).not.toHaveAttribute('title'));
+    act(() => screen.getByRole('link', { name: 'Settings' }).focus());
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Settings');
+    // A label that is not a string gets neither.
+    expect(screen.getByRole('link', { name: 'Rich' })).not.toHaveAttribute('title');
+  });
+
+  describe('collapseBelow (10.6)', () => {
+    const original = window.matchMedia;
+    afterEach(() => {
+      window.matchMedia = original;
+    });
+    // jsdom has no layout: answer the media query by hand.
+    const mockViewport = (narrow: boolean) => {
+      const queries: string[] = [];
+      window.matchMedia = ((query: string) => {
+        queries.push(query);
+        return { matches: narrow, media: query, addEventListener() {}, removeEventListener() {} };
+      }) as unknown as typeof window.matchMedia;
+      return queries;
+    };
+
+    it('collapses below the breakpoint and marks the breakpoint for the CSS width', () => {
+      const queries = mockViewport(true);
+      render(<Sidebar.Root collapseBelow="lg" />);
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-collapsed', 'true');
+      expect(nav).toHaveAttribute('data-collapse-below', 'lg');
+      expect(queries).toContain('(max-width: 63.99rem)');
+    });
+
+    it('stays expanded above the breakpoint', () => {
+      mockViewport(false);
+      render(<Sidebar.Root collapseBelow="md" />);
+      expect(screen.getByRole('navigation')).toHaveAttribute('data-collapsed', 'false');
+    });
+
+    it('controlled collapsed always wins', () => {
+      mockViewport(true);
+      render(<Sidebar.Root collapseBelow="md" collapsed={false} />);
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-collapsed', 'false');
+      expect(nav).not.toHaveAttribute('data-collapse-below');
+    });
+
+    it('without the prop nothing changes', () => {
+      mockViewport(true);
+      render(<Sidebar.Root />);
+      const nav = screen.getByRole('navigation');
+      expect(nav).toHaveAttribute('data-collapsed', 'false');
+      expect(nav).not.toHaveAttribute('data-collapse-below');
+    });
   });
 
   it('renders group with label', () => {

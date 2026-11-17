@@ -46,7 +46,9 @@ export const DataTableFilter: Story = {
     const [search, setSearch] = React.useState('');
     const query = React.useDeferredValue(search);
     return (
-      <div style={{ display: 'grid', gap: 12 }}>
+      // minmax(0, 1fr): the column may be narrower than the table, so the table's own scroll
+      // region (focusable and named by its caption when it overflows) scrolls, not the page.
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 12 }}>
         <SearchInput aria-label="Filter people" value={search} onChange={(e) => setSearch(e.target.value)} onClear={() => setSearch('')} />
         <Table rows={rows} query={query} />
       </div>

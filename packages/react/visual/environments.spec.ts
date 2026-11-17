@@ -15,20 +15,7 @@ const stories = Object.values(index.entries).filter((e) => e.type === 'story');
 
 // `story id` → `check` → why it is still listed. Shrink-only: a listed check that passes fails.
 // Checks: reflow-200, reflow-400, motion, transparency.
-const FRAME = 'the story pins a fixed device frame to show the pattern at that width';
-const SHOWCASE = 'a multi-column showcase grid; each component in it reflows in its own story';
-const KNOWN: Record<string, Record<string, string>> = {
-  'patterns-listdetail--wide': { 'reflow-200': FRAME, 'reflow-400': FRAME },
-  'patterns-listdetail--narrow': { 'reflow-400': FRAME },
-  'foundations-glass--material': { 'reflow-400': SHOWCASE },
-  'foundations-new-components--gallery': { 'reflow-400': SHOWCASE },
-  'foundations-surfaces--cards': { 'reflow-400': SHOWCASE },
-  'patterns-statcard--default': { 'reflow-400': 'a two-column demo grid; one card per row reflows (see patterns-statcard--neutral)' },
-  'navigation-navigationmenu--default': {
-    'reflow-400': 'four top-level items do not fit 320px (2px over); a nav menu collapses to a drawer there, and wrapping changed MarketingNav',
-  },
-  'perf-large-data--data-table-filter': { 'reflow-400': 'a data table: two-dimensional content is exempt from WCAG 1.4.10' },
-};
+const KNOWN: Record<string, Record<string, string>> = {};
 
 async function open(page: Page, id: string, globals = 'theme:light') {
   await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=${globals}`);

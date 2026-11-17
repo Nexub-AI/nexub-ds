@@ -266,10 +266,13 @@ export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function 
 ) {
   const headingId = React.useId();
   return (
+    // 10.6: the frame and the templates inside it follow the room the page is given (this
+    // full-width block is their query container), not the viewport.
+    <div className="@container w-full">
     <Tag
       ref={ref as React.Ref<HTMLElement & HTMLDivElement>}
       aria-labelledby={title ? headingId : undefined}
-      className={cn('mx-auto flex w-full flex-col gap-6 px-4 py-6 sm:px-6 lg:py-10', widths[width], className)}
+      className={cn('mx-auto flex w-full flex-col gap-6 px-4 py-6 @xl:px-6 @[60rem]:py-10', widths[width], className)}
       {...props}
     >
       {(title || actions || eyebrow) && (
@@ -290,5 +293,6 @@ export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function 
         {children}
       </ContentBoundary>
     </Tag>
+    </div>
   );
 });

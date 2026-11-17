@@ -24,6 +24,8 @@ export interface SavedViewsProps {
   onUpdate?: (id: string) => void;
   /** "Delete ‹view›": remove the active view. */
   onDelete?: (id: string) => void;
+  /** The menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false */
+  sheet?: boolean | 'auto';
   className?: string;
 }
 
@@ -31,7 +33,7 @@ export interface SavedViewsProps {
  * A menu of saved filter views. UI only: your app keeps the views and what
  * each one restores (filters, sort, columns).
  */
-export function SavedViews({ views, activeId, onSelect, onSave, onUpdate, onDelete, className }: SavedViewsProps) {
+export function SavedViews({ views, activeId, onSelect, onSave, onUpdate, onDelete, sheet, className }: SavedViewsProps) {
   const t = useNexubMessages();
   const [naming, setNaming] = React.useState(false);
   const [name, setName] = React.useState('');
@@ -47,7 +49,7 @@ export function SavedViews({ views, activeId, onSelect, onSave, onUpdate, onDele
             <ChevronDown size="sm" aria-hidden="true" />
           </Button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Content align="start">
+        <DropdownMenu.Content align="start" sheet={sheet}>
           {views.length > 0 && (
             <DropdownMenu.RadioGroup value={activeId ?? ''} onValueChange={onSelect}>
               {views.map((v) => (

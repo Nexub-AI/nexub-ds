@@ -8,6 +8,7 @@ import { CalendarDays, ChevronLeft, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid, fieldReadOnly, fieldReadOnlyWithin, type Size } from '../../utils/control.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
 import { Button } from '../Button/Button.js';
 
@@ -92,6 +93,8 @@ export interface DatePickerProps {
    * calendar button.
    */
   typeable?: boolean;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
 }
 
 /** Internal: trigger button sizes shared with DateRangePicker (the Input size map). */
@@ -167,6 +170,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       disabledDates,
       presets,
       typeable = false,
+      sheet = false,
     },
     ref,
   ) {
@@ -281,8 +285,11 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         <RadixPopover.Portal>
           <RadixPopover.Content
             align="start"
+            collisionPadding={COLLISION_PADDING}
+            data-nx-sheet={sheet || undefined}
             className={cn(
               'z-[var(--z-popover)] outline-none',
+              'max-h-[var(--radix-popover-content-available-height)] overflow-y-auto',
               floatingSurface,
               'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
             )}

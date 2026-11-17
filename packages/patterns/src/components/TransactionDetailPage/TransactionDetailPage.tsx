@@ -91,7 +91,7 @@ export const TransactionDetailPage = React.forwardRef<HTMLElement, TransactionDe
             ))}
           </InfoList.Root>
         </div>
-        {footer && <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">{footer}</div>}
+        {footer && <div className="flex flex-col gap-2 @xl:flex-row @xl:justify-center">{footer}</div>}
       </PageFrame>
     );
   },

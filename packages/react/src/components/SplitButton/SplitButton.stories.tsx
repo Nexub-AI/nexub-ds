@@ -30,3 +30,8 @@ export const Default: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual menu above. */
+export const SheetAuto: Story = {
+  render: () => <SplitButton menuLabel="More save options" menu={menu} sheet="auto">Save</SplitButton>,
+};

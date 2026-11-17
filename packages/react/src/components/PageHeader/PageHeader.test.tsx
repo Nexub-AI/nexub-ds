@@ -74,3 +74,13 @@ describe('PageHeader wash (10.3)', () => {
     expect(el().className).toContain('p-6');
   });
 });
+
+describe('PageHeader container query (10.6)', () => {
+  it('is a query container, and the title row turns into a row by the header width', () => {
+    const { container } = render(<PageHeader title="Home" actions={<button type="button">New</button>} />);
+    const root = container.firstElementChild!;
+    expect(root).toHaveClass('@container');
+    expect(root.lastElementChild).toHaveClass('flex-col', '@xl:flex-row');
+    expect(root.innerHTML).not.toContain('sm:flex-row');
+  });
+});
