@@ -4,7 +4,9 @@
 // readers with the drawing aria-hidden.
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
-import { Sparkline, type ChartColor } from './Chart.js';
+import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
+import { Sparkline, chartState, type ChartColor } from './Chart.js';
 
 const FILL = ['fill-chart-1', 'fill-chart-2', 'fill-chart-3', 'fill-chart-4', 'fill-chart-5', 'fill-chart-6', 'fill-chart-7', 'fill-chart-8'];
 const STROKE = ['stroke-chart-1', 'stroke-chart-2', 'stroke-chart-3', 'stroke-chart-4', 'stroke-chart-5', 'stroke-chart-6', 'stroke-chart-7', 'stroke-chart-8'];
@@ -15,7 +17,7 @@ const fmt = (n: number) => n.toLocaleString();
 
 /* ── Gauge ─────────────────────────────────────────────────────────────────── */
 
-export interface GaugeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'> {
+export interface GaugeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'>, DataStateProps {
   value: number;
   /** @default 100 */
   max?: number;
@@ -27,7 +29,17 @@ export interface GaugeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
 }
 
 /** Progress toward a target on a 270° arc. */
-export function Gauge({ value, max = 100, title, label, color = 1, className, ...props }: GaugeProps) {
+export function Gauge({ value, max = 100, title, label, color = 1, className, loading, emptyState, errorState, ...props }: GaugeProps) {
+  const states = { loading, emptyState, errorState };
+  // Empty is a value that is not a number yet (undefined, NaN).
+  const state = chartState(states, !Number.isFinite(value), 'min-h-36 min-w-36', <Skeleton shape="circle" className="size-36" />);
+  if (state) {
+    return (
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 inline-flex flex-col items-center', className)} {...props}>
+        {state}
+      </figure>
+    );
+  }
   const pct = Math.max(0, Math.min(1, value / max));
   // r = 100 / 2π → circumference 100; the arc uses 75 of it (270°).
   const r = 15.9155;
@@ -49,7 +61,7 @@ export function Gauge({ value, max = 100, title, label, color = 1, className, ..
 
 /* ── Heatmap ───────────────────────────────────────────────────────────────── */
 
-export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
   /** Rows of values, e.g. one row per weekday, one column per week. */
   data: number[][];
   rowLabels: string[];
@@ -59,8 +71,19 @@ export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 't
 }
 
 /** Intensity over a grid (activity by day and week, load by hour). Seven steps of the sequential palette. */
-export function Heatmap({ data, rowLabels, columnLabels, title, valueFormat = fmt, className, ...props }: HeatmapProps) {
+export function Heatmap({
+  data, rowLabels, columnLabels, title, valueFormat = fmt, className, loading, emptyState, errorState, ...props
+}: HeatmapProps) {
   const flat = data.flat();
+  const states = { loading, emptyState, errorState };
+  const state = chartState(states, flat.length === 0, 'min-h-32 min-w-0 flex-1');
+  if (state) {
+    return (
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex gap-2', className)} {...props}>
+        {state}
+      </figure>
+    );
+  }
   const lo = Math.min(...flat);
   const span = Math.max(...flat) - lo || 1;
   const step = (v: number) => Math.min(SEQ.length - 1, Math.floor(((v - lo) / span) * SEQ.length));
@@ -96,7 +119,7 @@ export function Heatmap({ data, rowLabels, columnLabels, title, valueFormat = fm
 
 /* ── Funnel ────────────────────────────────────────────────────────────────── */
 
-export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'> {
+export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'>, DataStateProps {
   data: { label: string; value: number }[];
   title: string;
   valueFormat?: (value: number) => string;
@@ -104,7 +127,17 @@ export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'ti
 }
 
 /** Drop-off through ordered steps, with the conversion from the first step. */
-export function Funnel({ data, title, valueFormat = fmt, color = 1, className, ...props }: FunnelProps) {
+export function Funnel({ data, title, valueFormat = fmt, color = 1, className, loading, emptyState, errorState, ...props }: FunnelProps) {
+  const states = { loading, emptyState, errorState };
+  // Three bars, each as tall as a step's row.
+  const state = chartState(states, data.length === 0, 'min-h-24 gap-2', [0, 1, 2].map((i) => <Skeleton key={i} shape="rect" className="h-7" />));
+  if (state) {
+    return (
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex flex-col gap-2', className)} {...props}>
+        {state}
+      </figure>
+    );
+  }
   const top = Math.max(1, data[0]?.value ?? 1);
   return (
     <figure aria-label={title} className={cn('m-0 flex flex-col gap-2', className)} {...props}>
@@ -138,7 +171,9 @@ export function Funnel({ data, title, valueFormat = fmt, color = 1, className, .
 
 /* ── KpiTile ───────────────────────────────────────────────────────────────── */
 
-export interface KpiTileProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface KpiTileProps extends React.HTMLAttributes<HTMLDivElement>, DataStateProps {
+  /** Shown in place of the value when `value` is null or undefined. No default. */
+  emptyState?: React.ReactNode;
   label: string;
   value: React.ReactNode;
   /** Change versus the previous period, e.g. 0.114 for +11.4%. */
@@ -150,21 +185,29 @@ export interface KpiTileProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /** A headline number with its change and a trend line. The change text carries good/bad colour; the trend stays the accent. */
-export function KpiTile({ label, value, change, invert = false, trend, className, ...props }: KpiTileProps) {
+export function KpiTile({ label, value, change, invert = false, trend, className, loading, emptyState, errorState, ...props }: KpiTileProps) {
+  const states = { loading, emptyState, errorState };
+  // The label stays; a skeleton one value-line tall stands in for the number.
+  const state = dataState(
+    states,
+    value == null,
+    <span className="flex h-[1lh] items-center text-headline-sm"><Skeleton className="w-20" /></span>,
+    null,
+  );
   const good = change === undefined ? undefined : invert ? change < 0 : change > 0;
   const pct = change === undefined ? '' : `${change > 0 ? '+' : change < 0 ? '−' : ''}${Math.abs(change * 100).toFixed(1)}%`;
   return (
-    <div className={cn('flex items-end justify-between gap-4 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] p-4', className)} {...props}>
+    <div aria-busy={dataBusy(states)} className={cn('flex items-end justify-between gap-4 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] p-4', className)} {...props}>
       <div className="flex min-w-0 flex-col gap-1">
         <span className="text-label-md text-[var(--color-on-surface-variant)]">{label}</span>
-        <span className="text-headline-sm tabular-nums text-[var(--color-on-surface)]">{value}</span>
-        {change !== undefined && (
+        {state ?? <span className="text-headline-sm tabular-nums text-[var(--color-on-surface)]">{value}</span>}
+        {state == null && change !== undefined && (
           <span className={cn('text-label-md tabular-nums', good ? 'text-[var(--color-success)]' : change === 0 ? 'text-[var(--color-on-surface-variant)]' : 'text-[var(--color-error)]')}>
             {pct} <span className="sr-only">versus last period</span>
           </span>
         )}
       </div>
-      {trend && trend.length > 1 && <Sparkline values={trend} area color={1} className="h-10 w-28 shrink-0" />}
+      {state == null && trend && trend.length > 1 && <Sparkline values={trend} area color={1} className="h-10 w-28 shrink-0" />}
     </div>
   );
 }

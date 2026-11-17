@@ -5,13 +5,25 @@
 import type { NativeTwin } from './native';
 
 export interface TemplateEntry {
-  slug: 'dashboard' | 'activity' | 'transaction-detail' | 'settings' | 'sign-in' | 'checkout' | 'chat' | 'paywall';
+  slug:
+    | 'dashboard'
+    | 'activity'
+    | 'transaction-detail'
+    | 'settings'
+    | 'sign-in'
+    | 'checkout'
+    | 'chat'
+    | 'paywall'
+    | 'not-found'
+    | 'server-error'
+    | 'maintenance';
   title: string;
   /** Export from @nexub/patterns. */
   web: string;
   description: string;
   code: string;
-  native: NativeTwin;
+  /** Left out when @nexub/react-native has no screen for this page (the 10.5 status pages). */
+  native?: NativeTwin;
 }
 
 export const templateEntries: TemplateEntry[] = [
@@ -156,6 +168,33 @@ export const templateEntries: TemplateEntry[] = [
 
 <PaywallScreen title="Payub Plus" plans={plans} onSubscribe={buy} onRestore={restore} />`,
     },
+  },
+  // 10.5: full-page states, built on StatusPage. Web only: there is no native screen yet.
+  {
+    slug: 'not-found',
+    title: 'Not found (404)',
+    web: 'StatusPage',
+    description: 'The page for a wrong or old link: what happened, and a way back home.',
+    code: `<StatusPage kind="notFound" code="404" homeHref="/" fullScreen />`,
+  },
+  {
+    slug: 'server-error',
+    title: 'Server error (500)',
+    web: 'StatusPage',
+    description: 'The page for a failed load, announced to assistive technology, with Retry.',
+    code: `<StatusPage kind="serverError" code="500" onRetry={() => router.refresh()} fullScreen />`,
+  },
+  {
+    slug: 'maintenance',
+    title: 'Maintenance',
+    web: 'StatusPage',
+    description: 'The page shown while the product is down for planned work. Say when it will be back.',
+    code: `<StatusPage
+  kind="maintenance"
+  description="We’re making some improvements. We expect to be back by 6:00 pm."
+  actions={<Button variant="tonal" asChild><a href="https://status.example.com">Status page</a></Button>}
+  fullScreen
+/>`,
   },
 ];
 

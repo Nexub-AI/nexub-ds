@@ -33,7 +33,7 @@ export function FlowStep({ step, total, title, children, footer }: FlowStepProps
   const { tokens, messages } = useTheme();
   return (
     <StickyFooter footer={footer}>
-      <ScreenContainer gap="5">
+      <ScreenContainer gap="5" keyboardAvoiding={false}>
         <View style={{ gap: tokens.spacing[2] }}>
           <Progress value={step / total} label={messages.pageOf(step, total)} />
           <Text variant="label-md" color="on-surface-variant">
@@ -401,6 +401,8 @@ export function ResultScreen({
   icon,
 }: ResultScreenProps) {
   const { roles, tokens, locale } = useTheme();
+  // The largest avatar plus a ring of breathing room.
+  const disc = tokens.size.avatar.xl + tokens.spacing[6];
   const tone = kind === 'success' ? 'success' : kind === 'error' ? 'error' : 'primary';
   const Glyph = icon ?? CheckCircle2;
   return (
@@ -430,9 +432,9 @@ export function ResultScreen({
       >
         <View
           style={{
-            width: 88,
-            height: 88,
-            borderRadius: 44,
+            width: disc,
+            height: disc,
+            borderRadius: disc / 2,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: roles[`${tone}-container`],

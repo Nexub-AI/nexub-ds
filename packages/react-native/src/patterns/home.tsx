@@ -111,9 +111,9 @@ export function HomeScreen({
                 >
                   <View
                     style={{
-                      width: 48,
-                      height: 48,
-                      borderRadius: 24,
+                      width: tokens.size.avatar.lg,
+                      height: tokens.size.avatar.lg,
+                      borderRadius: tokens.size.avatar.lg / 2,
                       alignItems: 'center',
                       justifyContent: 'center',
                       backgroundColor: roles['primary-container'],

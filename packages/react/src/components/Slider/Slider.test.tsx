@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { Slider } from './Slider.js';
 
@@ -109,5 +110,23 @@ describe('Slider 10.4 consistent controls', () => {
   it('the value bubble uses tabular numbers', () => {
     render(<Slider defaultValue={[40]} aria-label="Volume" showValue />);
     expect(screen.getByText('40')).toHaveClass('tabular-nums');
+  });
+});
+
+describe('Slider server HTML (10.5)', () => {
+  it('thumbs are visible and placed from their value before hydration', () => {
+    const html = renderToString(<Slider defaultValue={[20, 80]} aria-label="Range" />);
+    const thumbs = html.match(/<span[^>]*role="slider"[^>]*>/g)!;
+    expect(thumbs).toHaveLength(2);
+    expect(thumbs[0]).toContain('inset-inline-start:calc(20% + 0.375rem)');
+    expect(thumbs[1]).toMatch(/inset-inline-start:calc\(80% \+ -0\.375\d*rem\)/);
+    for (const t of thumbs) expect(t).not.toContain('display:none');
+  });
+
+  it('a mounted thumb keeps that position; vertical is left to Radix', () => {
+    const { rerender } = render(<Slider defaultValue={[25]} aria-label="Volume" />);
+    expect(screen.getByRole('slider').style.insetInlineStart).toBe('calc(25% + 0.3125rem)');
+    rerender(<Slider defaultValue={[25]} aria-label="Volume" orientation="vertical" />);
+    expect(screen.getByRole('slider').style.insetInlineStart).toBe('');
   });
 });

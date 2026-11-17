@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button, IconButton, Popover, cn, safeHref, useNexubMessages } from '@nexub/react';
+import { Button, IconButton, Popover, Skeleton, cn, safeHref, useNexubMessages } from '@nexub/react';
 import { Bell } from '@nexub/icons';
 import { NotificationItem } from '../NotificationItem/NotificationItem.js';
 
@@ -24,6 +24,12 @@ export interface NotificationCenterProps {
   onMarkAllRead?: () => void;
   /** Shown when there are no notifications. */
   emptyText?: React.ReactNode;
+  /** 10.5: shows skeleton rows in place of the list and sets aria-busy on the panel. */
+  loading?: boolean;
+  /** Shown when there are no notifications, in place of `emptyText`. */
+  emptyState?: React.ReactNode;
+  /** Shown in place of the list; wins over `loading` and `emptyState`. */
+  errorState?: React.ReactNode;
   className?: string;
 }
 
@@ -37,6 +43,9 @@ export function NotificationCenter({
   onDismiss,
   onMarkAllRead,
   emptyText,
+  loading,
+  emptyState,
+  errorState,
   className,
 }: NotificationCenterProps) {
   const t = useNexubMessages();
@@ -63,7 +72,7 @@ export function NotificationCenter({
           )}
         </IconButton>
       </Popover.Trigger>
-      <Popover.Content align="end" aria-labelledby={headingId} className="flex w-96 max-w-[calc(100vw-2rem)] flex-col gap-1 p-2">
+      <Popover.Content align="end" aria-labelledby={headingId} aria-busy={(loading && errorState == null) || undefined} className="flex w-96 max-w-[calc(100vw-2rem)] flex-col gap-1 p-2">
         <div className="flex items-center justify-between gap-2 px-2 py-1">
           <h2 id={headingId} className="text-title-sm font-semibold text-[var(--color-on-surface)]">
             {t.notificationCenter}
@@ -74,7 +83,21 @@ export function NotificationCenter({
             </Button>
           )}
         </div>
-        {notifications.length ? (
+        {errorState != null ? (
+          errorState
+        ) : loading ? (
+          <div aria-hidden="true" className="flex flex-col gap-1">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex items-start gap-3 px-2 py-3">
+                <Skeleton shape="circle" className="size-8" />
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <Skeleton className="my-0.5 h-4 w-1/2" />
+                  <Skeleton className="my-0.5 h-4 w-4/5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : notifications.length ? (
           <ul className="m-0 flex max-h-[min(28rem,70vh)] list-none flex-col gap-1 overflow-y-auto p-0">
             {notifications.map((n) => (
               <li key={n.id}>
@@ -92,9 +115,11 @@ export function NotificationCenter({
             ))}
           </ul>
         ) : (
-          <p className="px-2 py-6 text-center text-body-md text-[var(--color-on-surface-muted)]">
-            {emptyText ?? t.noNotifications}
-          </p>
+          emptyState ?? (
+            <p className="px-2 py-6 text-center text-body-md text-[var(--color-on-surface-muted)]">
+              {emptyText ?? t.noNotifications}
+            </p>
+          )
         )}
       </Popover.Content>
     </Popover.Root>

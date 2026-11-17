@@ -50,3 +50,13 @@ export const WithActions: Story = {
     </div>
   ),
 };
+
+/** 10.5: `loading` swaps the avatar and text for skeletons; the card keeps its size. */
+export const DataStates: Story = {
+  render: () => (
+    <div className="grid w-full max-w-2xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
+      <UserCard name="Alice Smith" role="Product designer" email="alice@example.com" loading />
+      <UserCard name="Alice Smith" role="Product designer" email="alice@example.com" />
+    </div>
+  ),
+};

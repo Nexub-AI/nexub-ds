@@ -82,6 +82,7 @@ Version 10.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Hover Card](https://nexub-ds-docs.pages.dev/components/hover-card.md): Rich tooltip card revealed on hover.
 - [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button.md): A square button designed to hold a single icon, with an accessible label.
 - [Icon Chip](https://nexub-ds-docs.pages.dev/components/icon-chip.md): An icon on a tinted tile, in one of the category colours or the product accent.
+- [Illustration](https://nexub-ds-docs.pages.dev/components/illustration.md): A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Inline Edit](https://nexub-ds-docs.pages.dev/components/inline-edit.md): Text that becomes an input on click, for renaming things in place.
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Kanban](https://nexub-ds-docs.pages.dev/components/kanban.md): Columns of cards people move by dragging or with Alt+Arrow keys.
@@ -174,6 +175,7 @@ Version 10.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [PlanCard](https://nexub-ds-docs.pages.dev/patterns/plan-card.md): Pricing plan card with feature checklist, badge, and CTA button.
 - [SettingsSection](https://nexub-ds-docs.pages.dev/patterns/settings-section.md): Grouped settings panel with title, description, and action area.
 - [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card.md): Metric display card showing a KPI value, label, optional delta, and icon.
+- [StatusPage](https://nexub-ds-docs.pages.dev/patterns/status-page.md): A whole page for one state: not found, server error, maintenance, offline or no access.
 - [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card.md): User profile card displaying avatar, name, role, and optional actions.
 - [WelcomeBanner](https://nexub-ds-docs.pages.dev/patterns/welcome-banner.md): A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 

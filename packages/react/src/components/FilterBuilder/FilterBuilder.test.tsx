@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
 import { describe, it, expect, vi } from 'vitest';
 import { FilterBuilder, countFilters, type FilterField, type FilterGroup } from './FilterBuilder.js';
 
@@ -86,5 +87,14 @@ describe('FilterBuilder', () => {
       ],
     };
     expect(countFilters(g)).toBe(3);
+  });
+});
+
+describe('FilterBuilder server HTML (10.5)', () => {
+  it('select triggers already show their labels, so they keep their width on hydration', () => {
+    const value: FilterGroup = { id: 'root', combinator: 'and', rules: [{ id: 'r1', field: 'amount', operator: 'greaterThan', value: '5' }] };
+    const html = renderToString(<FilterBuilder fields={fields} value={value} onValueChange={() => {}} />);
+    expect(html).toMatch(/aria-label="Field"[^>]*>(<[^>]+>)*Amount/);
+    expect(html).toMatch(/<span style="pointer-events:none">(is )?greater than<\/span>/i);
   });
 });

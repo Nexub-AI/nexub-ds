@@ -10,6 +10,7 @@ import {
   PaywallPage,
   SettingsPage,
   SignInPage,
+  StatusPage,
   TransactionDetailPage,
   type ChatMessage,
   type Transaction,
@@ -192,6 +193,31 @@ function Paywall() {
   );
 }
 
+// 10.5: full-page states. `min-h-dvh` fills the preview frame.
+function NotFound() {
+  return <StatusPage as="div" kind="notFound" code="404" homeHref="#" fullScreen />;
+}
+
+function ServerError() {
+  return <StatusPage as="div" kind="serverError" code="500" onRetry={noop} fullScreen />;
+}
+
+function Maintenance() {
+  return (
+    <StatusPage
+      as="div"
+      kind="maintenance"
+      description="We’re making some improvements. We expect to be back by 6:00 pm."
+      actions={
+        <Button variant="tonal" asChild>
+          <a href="#">Status page</a>
+        </Button>
+      }
+      fullScreen
+    />
+  );
+}
+
 export const templatePreviews = {
   dashboard: Dashboard,
   activity: Activity,
@@ -201,6 +227,9 @@ export const templatePreviews = {
   checkout: Checkout,
   chat: Chat,
   paywall: Paywall,
+  'not-found': NotFound,
+  'server-error': ServerError,
+  maintenance: Maintenance,
 } as const;
 
 export type TemplateSlug = keyof typeof templatePreviews;

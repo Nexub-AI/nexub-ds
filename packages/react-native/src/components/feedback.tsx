@@ -14,6 +14,7 @@ import {
 import Animated, {
   ReduceMotion,
   runOnJS,
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -33,8 +34,9 @@ import {
 } from '@nexub/icons/native';
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
+import { useLatest } from '../hooks/useLatest';
 import { useTheme } from '../theme/ThemeProvider';
-import { nxEnter, nxExit, nxLayout, nxSpring } from '../theme/motion';
+import { nxEnter, nxExit, nxLayout, nxSpring, useSpringValue } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { TONE_CONTAINERS, TONE_TEXT } from './shared';
 
@@ -111,7 +113,7 @@ export function Banner({
           label={messages.dismissBanner}
           size="xs"
           onPress={onDismiss}
-          style={{ marginTop: -8, marginEnd: -8 }}
+          style={{ marginTop: -tokens.spacing[2], marginEnd: -tokens.spacing[2] }}
         />
       )}
     </Animated.View>
@@ -248,13 +250,13 @@ function ToastSurface({
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={[{ position: 'absolute', start: 16, end: 16, bottom }, motion]}
+      style={[{ position: 'absolute', start: tokens.spacing[4], end: tokens.spacing[4], bottom }, motion]}
     >
       <View
         {...swipe.panHandlers}
         accessibilityLiveRegion="polite"
         style={{
-          minHeight: 48,
+          minHeight: tokens.size.control.lg,
           flexDirection: 'row',
           alignItems: 'center',
           gap: tokens.spacing[3],
@@ -311,6 +313,10 @@ export interface DialogProps {
   dismissible?: boolean;
 }
 
+const DIALOG_EXIT = nxSpring('effects', 'fast');
+/** The panel grows from this scale as it fades in. */
+const DIALOG_SCALE = 0.94;
+
 /** Modal alert for decisions that block the flow. Prefer a sheet for anything longer. */
 export function Dialog({
   open,
@@ -322,11 +328,34 @@ export function Dialog({
   dismissible = true,
 }: DialogProps) {
   const { roles, tokens } = useTheme();
+  // Like BottomSheet: the Modal stays up until the exit spring lands. The panel
+  // scales and fades in on the spatial spring and leaves on effects-fast.
+  const [visible, setVisible] = React.useState(open);
+  const shown = useSharedValue(0);
+  const toggle = useLatest(() => {
+    if (open) {
+      setVisible(true);
+      shown.value = withSpring(1, nxSpring('spatial', 'default'));
+    } else if (visible) {
+      // An interrupted spring (reopened mid-close) reports finished=false and keeps it up.
+      shown.value = withSpring(0, DIALOG_EXIT, (finished) => {
+        if (finished) runOnJS(setVisible)(false);
+      });
+    }
+  });
+  React.useEffect(() => {
+    toggle.current();
+  }, [open, toggle]);
+  const scrimStyle = useAnimatedStyle(() => ({ opacity: Math.min(1, shown.value) * 0.32 }));
+  const panelStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(1, shown.value),
+    transform: [{ scale: DIALOG_SCALE + (1 - DIALOG_SCALE) * shown.value }],
+  }));
   return (
     <Modal
       transparent
-      visible={open}
-      animationType="fade"
+      visible={visible}
+      animationType="none"
       statusBarTranslucent
       navigationBarTranslucent
       onRequestClose={() => {
@@ -341,55 +370,58 @@ export function Dialog({
           padding: tokens.spacing[6],
         }}
       >
-        <RNPressable
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          onPress={() => dismissible && onOpenChange(false)}
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            start: 0,
-            end: 0,
-            backgroundColor: roles.scrim,
-            opacity: 0.32,
-          }}
-        />
-        <Surface
-          accessibilityViewIsModal
-          accessibilityRole="alert"
-          tone="surface-elevated"
-          elevation={3}
-          radius="overlay"
-          style={{
-            width: '100%',
-            maxWidth: 400,
-            padding: tokens.spacing[6],
-            gap: tokens.spacing[4],
-          }}
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              start: 0,
+              end: 0,
+              backgroundColor: roles.scrim,
+            },
+            scrimStyle,
+          ]}
         >
-          <View style={{ gap: tokens.spacing[2] }}>
-            <Text variant="headline-sm" accessibilityRole="header">
-              {title}
-            </Text>
-            {description && (
-              <Text variant="body-md" color="on-surface-variant">
-                {description}
-              </Text>
-            )}
-          </View>
-          {children}
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              flexWrap: 'wrap',
-              gap: tokens.spacing[2],
-            }}
+          <RNPressable
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            onPress={() => dismissible && onOpenChange(false)}
+            style={{ flex: 1 }}
+          />
+        </Animated.View>
+        <Animated.View style={[{ width: '100%', maxWidth: 400 }, panelStyle]}>
+          <Surface
+            accessibilityViewIsModal
+            accessibilityRole="alert"
+            tone="surface-elevated"
+            elevation={3}
+            radius="overlay"
+            style={{ padding: tokens.spacing[6], gap: tokens.spacing[4] }}
           >
-            {actions}
-          </View>
-        </Surface>
+            <View style={{ gap: tokens.spacing[2] }}>
+              <Text variant="headline-sm" accessibilityRole="header">
+                {title}
+              </Text>
+              {description && (
+                <Text variant="body-md" color="on-surface-variant">
+                  {description}
+                </Text>
+              )}
+            </View>
+            {children}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                flexWrap: 'wrap',
+                gap: tokens.spacing[2],
+              }}
+            >
+              {actions}
+            </View>
+          </Surface>
+        </Animated.View>
       </View>
     </Modal>
   );
@@ -410,10 +442,20 @@ export interface ProgressProps {
   style?: StyleProp<ViewStyle>;
 }
 
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
 /** Determinate progress. For unknown waits use LoadingIndicator. */
 export function Progress({ value, label, variant = 'linear', size = 40, segments, style }: ProgressProps) {
-  const { roles } = useTheme();
+  const { roles, tokens } = useTheme();
   const v = Math.min(1, Math.max(0, value));
+  // Value changes glide on the spatial spring (first render is already at `v`).
+  const shown = useSpringValue(v, 'spatial', 'default');
+  const stroke = 4;
+  const c = Math.PI * (size - stroke);
+  const arc = useAnimatedProps(() => ({ strokeDashoffset: c * (1 - Math.min(1, Math.max(0, shown.value))) }));
+  const fill = useAnimatedStyle(() => ({ width: `${Math.max(0, shown.value) * 100}%` }));
+  // Track thickness; ends are fully round.
+  const bar = tokens.spacing['1-5'];
   const a11y = {
     accessible: true,
     accessibilityRole: 'progressbar' as const,
@@ -421,9 +463,7 @@ export function Progress({ value, label, variant = 'linear', size = 40, segments
     accessibilityValue: { min: 0, max: 100, now: Math.round(v * 100) },
   };
   if (variant === 'circular') {
-    const stroke = 4;
     const r = (size - stroke) / 2;
-    const c = 2 * Math.PI * r;
     return (
       <View {...a11y} style={[{ width: size, height: size }, style]}>
         <Svg width={size} height={size} style={{ transform: [{ rotate: '-90deg' }] }}>
@@ -435,7 +475,7 @@ export function Progress({ value, label, variant = 'linear', size = 40, segments
             strokeWidth={stroke}
             fill="none"
           />
-          <Circle
+          <AnimatedCircle
             cx={size / 2}
             cy={size / 2}
             r={r}
@@ -443,7 +483,8 @@ export function Progress({ value, label, variant = 'linear', size = 40, segments
             strokeWidth={stroke}
             fill="none"
             strokeLinecap="round"
-            strokeDasharray={`${c * v} ${c}`}
+            strokeDasharray={`${c} ${c}`}
+            animatedProps={arc}
           />
         </Svg>
       </View>
@@ -452,14 +493,14 @@ export function Progress({ value, label, variant = 'linear', size = 40, segments
   if (segments && segments > 0) {
     const filled = Math.round(v * segments);
     return (
-      <View {...a11y} style={[{ height: 6, flexDirection: 'row', gap: 4 }, style]}>
+      <View {...a11y} style={[{ height: bar, flexDirection: 'row', gap: tokens.spacing[1] }, style]}>
         {Array.from({ length: segments }, (_, i) => (
           <View
             key={i}
             testID={i < filled ? 'progress-segment-filled' : 'progress-segment'}
             style={{
               flex: 1,
-              borderRadius: 3,
+              borderRadius: bar / 2,
               backgroundColor: roles[i < filled ? 'primary' : 'surface-container-highest'],
             }}
           />
@@ -472,16 +513,16 @@ export function Progress({ value, label, variant = 'linear', size = 40, segments
       {...a11y}
       style={[
         {
-          height: 6,
-          borderRadius: 3,
+          height: bar,
+          borderRadius: bar / 2,
           overflow: 'hidden',
           backgroundColor: roles['surface-container-highest'],
         },
         style,
       ]}
     >
-      <View
-        style={{ width: `${v * 100}%`, height: 6, borderRadius: 3, backgroundColor: roles.primary }}
+      <Animated.View
+        style={[{ height: bar, borderRadius: bar / 2, backgroundColor: roles.primary }, fill]}
       />
     </View>
   );
@@ -670,10 +711,11 @@ export interface EmptyStateProps extends ViewProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+// `pad` and `gap` are spacing token keys, not points.
 const EMPTY_SIZE = {
-  sm: { pad: 6, gap: 2, disc: 48, icon: 'md', title: 'title-md' },
-  md: { pad: 10, gap: 3, disc: 64, icon: 'lg', title: 'title-lg' },
-  lg: { pad: 16, gap: 4, disc: 80, icon: 'xl', title: 'headline-sm' },
+  sm: { pad: '6', gap: '2', disc: 48, icon: 'md', title: 'title-md' },
+  md: { pad: '10', gap: '3', disc: 64, icon: 'lg', title: 'title-lg' },
+  lg: { pad: '16', gap: '4', disc: 80, icon: 'xl', title: 'headline-sm' },
 } as const;
 
 /** Nothing here yet: say why and offer the next step. */

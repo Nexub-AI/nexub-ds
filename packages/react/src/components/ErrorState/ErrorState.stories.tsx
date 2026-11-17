@@ -48,3 +48,7 @@ export const Info: Story = {
     tone: 'info',
   },
 };
+
+export const CustomRetryLabel: Story = {
+  args: { title: 'Failed to load data', onRetry: () => {}, retryLabel: 'Reload' },
+};

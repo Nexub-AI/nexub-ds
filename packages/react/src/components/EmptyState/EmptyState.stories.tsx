@@ -76,3 +76,14 @@ export const Sizes: StoryObj = {
     </div>
   ),
 };
+
+/** 10.5: `illustrated` swaps the icon for a spot illustration that follows the theme and accent. */
+export const Illustrated: StoryObj = {
+  render: () => (
+    <div className="flex w-full flex-wrap gap-4">
+      {(['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'] as const).map((kind) => (
+        <div key={kind} className="w-60 max-w-full"><EmptyStatePreset kind={kind} size="sm" illustrated /></div>
+      ))}
+    </div>
+  ),
+};

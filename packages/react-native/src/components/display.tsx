@@ -172,9 +172,9 @@ export function Badge({
       {dot && (
         <View
           style={{
-            width: 6,
-            height: 6,
-            borderRadius: 3,
+            width: tokens.spacing['1-5'],
+            height: tokens.spacing['1-5'],
+            borderRadius: tokens.spacing['1-5'] / 2,
             backgroundColor:
               roles[TONE_TEXT[tone] === 'on-surface-variant' ? 'outline' : TONE_TEXT[tone]],
           }}

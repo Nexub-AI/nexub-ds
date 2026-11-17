@@ -103,7 +103,7 @@ export function Button({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 8,
+        gap: theme.tokens.spacing[2],
         opacity: disabled ? disabledOpacity(theme) : 1,
       }}
     >

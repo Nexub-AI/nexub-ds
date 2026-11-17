@@ -27,6 +27,7 @@ export function AuthScreen({ logo, title, description, children, footer, error }
   return (
     <StickyFooter footer={footer}>
       <ScreenContainer
+        keyboardAvoiding={false}
         edges={['top', 'left', 'right']}
         gap="6"
         contentStyle={{ paddingTop: tokens.spacing[10] }}
@@ -219,6 +220,8 @@ export function LockScreen({
   appName,
 }: LockScreenProps) {
   const { roles, tokens } = useTheme();
+  // The xl lock icon with spacing[5] around it.
+  const disc = tokens.size.icon.xl + 2 * tokens.spacing[5];
   return (
     <StickyFooter
       footer={
@@ -246,9 +249,9 @@ export function LockScreen({
         {logo ?? (
           <View
             style={{
-              width: 72,
-              height: 72,
-              borderRadius: 36,
+              width: disc,
+              height: disc,
+              borderRadius: disc / 2,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: roles['primary-container'],

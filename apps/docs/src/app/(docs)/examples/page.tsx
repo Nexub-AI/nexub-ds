@@ -27,7 +27,7 @@ export default function ExamplesPage() {
       <Section id="pages" title="Page references" description="Each page template, live on the web and as its native screen.">
         <CardGrid min={240}>
           {templateEntries.map((t) => (
-            <ExampleCard key={t.slug} href={`/patterns/pages/${t.slug}`} title={t.title} badge={`${t.web} · ${t.native.name.split(' ')[0]}`} body={t.description} />
+            <ExampleCard key={t.slug} href={`/patterns/pages/${t.slug}`} title={t.title} badge={t.native ? `${t.web} · ${t.native.name.split(' ')[0]}` : t.web} body={t.description} />
           ))}
         </CardGrid>
       </Section>

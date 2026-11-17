@@ -1,2 +1,2 @@
-export { Skeleton, SkeletonText, skeletonVariants } from './Skeleton.js';
-export type { SkeletonProps, SkeletonTextProps } from './Skeleton.js';
+export { Skeleton, SkeletonText, SkeletonPreset, skeletonVariants } from './Skeleton.js';
+export type { SkeletonProps, SkeletonTextProps, SkeletonPresetProps } from './Skeleton.js';

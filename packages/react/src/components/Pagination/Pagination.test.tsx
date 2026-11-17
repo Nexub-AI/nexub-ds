@@ -62,3 +62,19 @@ describe('Pagination', () => {
     expect(container.firstChild).toBeNull();
   });
 });
+
+describe('Pagination sliding indicator (10.5)', () => {
+  it('follows the current page, also when its button is newly mounted', () => {
+    const props = { totalItems: 400, pageSize: 10, onPageChange: vi.fn() };
+    const { container, rerender } = render(<Pagination {...props} page={1} />);
+    const nav = screen.getByRole('navigation', { name: 'Pagination' });
+    expect(container.querySelectorAll('[data-nx="page-indicator"]')).toHaveLength(1);
+    expect(nav.style.getPropertyValue('--nx-ind-o')).toBe('1');
+    expect(nav.querySelector('[aria-current="page"]')).toHaveClass('bg-[var(--color-primary)]', 'group-data-[nx-indicator=ready]/pg:bg-transparent');
+    // Page 20 was behind an ellipsis: its button is new, and it is still the one measured.
+    const set = vi.spyOn(nav.style, 'setProperty');
+    rerender(<Pagination {...props} page={20} />);
+    expect(set).toHaveBeenCalledWith('--nx-ind-o', '1');
+    expect(nav.querySelector('[aria-current="page"]')).toHaveTextContent('20');
+  });
+});

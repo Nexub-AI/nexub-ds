@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { cn, safeHref } from '@nexub/react';
+import { Skeleton, cn, safeHref } from '@nexub/react';
 import { ChevronRight } from '@nexub/icons';
 import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 
@@ -32,6 +32,12 @@ export interface SettingsPageProps extends Omit<PageFrameProps, 'title' | 'child
   header?: React.ReactNode;
   /** @default messages.settings */
   title?: React.ReactNode;
+  /** 10.5: shows skeleton groups in place of `groups` and sets aria-busy on the page. */
+  loading?: boolean;
+  /** Shown when `groups` is empty. */
+  emptyState?: React.ReactNode;
+  /** Shown in place of the groups; wins over `loading` and `emptyState`. */
+  errorState?: React.ReactNode;
   messages?: Partial<PageTemplateMessages>;
 }
 
@@ -83,10 +89,32 @@ function Row({ item }: { item: SettingsItem }) {
  * sidebar, wrap pages in `SettingsLayout`.
  */
 export const SettingsPage = React.forwardRef<HTMLElement, SettingsPageProps>(function SettingsPage(
-  { groups, header, title, messages, ...props },
+  { groups, header, title, loading, emptyState, errorState, messages, ...props },
   ref,
 ) {
   const m = usePageMessages(messages);
+  const state = errorState ?? (loading ? undefined : groups.length === 0 ? emptyState : undefined);
+  const list = 'overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)]';
+  if (state != null || loading)
+    return (
+      <PageFrame ref={ref} title={title ?? m.settings} aria-busy={(loading && state == null) || undefined} {...props}>
+        {header}
+        {state ??
+          [3, 2].map((rows, i) => (
+            <div key={i} aria-hidden="true" className="flex flex-col gap-2">
+              <Skeleton className="mx-4 h-4 w-24" />
+              <div className={list}>
+                {Array.from({ length: rows }, (_, r) => (
+                  <div key={r} className="flex min-h-14 items-center gap-3 border-t border-[var(--color-outline-variant)] px-4 py-3 first:border-t-0">
+                    <Skeleton className="h-4 w-2/5" />
+                    <Skeleton className="ms-auto h-4 w-12" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+      </PageFrame>
+    );
   return (
     <PageFrame ref={ref} title={title ?? m.settings} {...props}>
       {header}

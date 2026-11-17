@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, cn } from '@nexub/react';
+import { IconButton, Skeleton, cn } from '@nexub/react';
 import { ArrowLeft } from '@nexub/icons';
 
 export interface ListDetailProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -19,6 +19,12 @@ export interface ListDetailProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   /** Accessible names for the two regions. */
   listLabel?: string;
   detailLabel?: string;
+  /** 10.5: shows skeleton rows in the list pane and sets aria-busy on it. */
+  loading?: boolean;
+  /** Shown in the list pane in place of `list`. Pass it when the list has no items. */
+  emptyState?: React.ReactNode;
+  /** Shown in the list pane in place of `list`; wins over `loading` and `emptyState`. */
+  errorState?: React.ReactNode;
 }
 
 const widths = {
@@ -43,6 +49,9 @@ export const ListDetail = React.forwardRef<HTMLDivElement, ListDetailProps>(
       listWidth = 'md',
       listLabel = 'List',
       detailLabel = 'Detail',
+      loading,
+      emptyState,
+      errorState,
       className,
       ...props
     },
@@ -52,6 +61,7 @@ export const ListDetail = React.forwardRef<HTMLDivElement, ListDetailProps>(
       <div className="flex h-full">
         <section
           aria-label={listLabel}
+          aria-busy={(loading && errorState == null) || undefined}
           className={cn(
             'min-h-0 w-full shrink-0 flex-col overflow-y-auto',
             '[@container(min-width:720px)]:flex [@container(min-width:720px)]:border-e [@container(min-width:720px)]:border-[var(--color-outline-variant)]',
@@ -59,7 +69,18 @@ export const ListDetail = React.forwardRef<HTMLDivElement, ListDetailProps>(
             showDetail ? 'hidden' : 'flex',
           )}
         >
-          {list}
+          {errorState ??
+            (loading
+              ? [0, 1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} aria-hidden="true" className="flex items-center gap-3 px-4 py-3">
+                    <Skeleton shape="circle" />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <Skeleton className="my-0.5 h-4 w-1/2" />
+                      <Skeleton className="my-0.5 h-4 w-4/5" />
+                    </div>
+                  </div>
+                ))
+              : (emptyState ?? list))}
         </section>
         <section
           aria-label={detailLabel}

@@ -739,6 +739,15 @@
       "screenReader": []
     },
     {
+      "slug": "illustration",
+      "name": "Illustration",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "inline-edit",
       "name": "Inline Edit",
       "package": "@nexub/react",
@@ -1765,6 +1774,15 @@
     {
       "slug": "stat-card",
       "name": "StatCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "status-page",
+      "name": "StatusPage",
       "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],

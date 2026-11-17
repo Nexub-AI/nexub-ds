@@ -1,3 +1,4 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -50,5 +51,14 @@ describe('ErrorState', () => {
     const ref = React.createRef<HTMLDivElement>();
     render(<ErrorState title="Error" ref={ref} />);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
+  });
+});
+
+describe('ErrorState 10.5: retryLabel', () => {
+  it('keeps "Try again" by default and takes a custom label', () => {
+    const { rerender } = renderState(<ErrorState title="Failed" onRetry={() => {}} />);
+    expect(stateScreen.getByRole('button', { name: 'Try again' })).toBeTruthy();
+    rerender(<ErrorState title="Failed" onRetry={() => {}} retryLabel="Reload" />);
+    expect(stateScreen.getByRole('button', { name: 'Reload' })).toBeTruthy();
   });
 });

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { EmptyStatePreset } from '@nexub/react';
 import { InfoList } from './InfoList.js';
 
 const meta: Meta = {
@@ -45,6 +46,28 @@ export const Default: Story = {
         <InfoList.Item label="Next billing" value="May 1, 2026" />
         <InfoList.Item label="Team size" value="12 members" />
       </InfoList.Root>
+    </div>
+  ),
+};
+
+const stateLabel = 'm-0 text-label-md text-[var(--color-on-surface-variant)]';
+
+/** 10.5: `loading`, `emptyState` and `errorState` (the error wins). */
+export const DataStates: Story = {
+  render: () => (
+    <div className="grid w-full max-w-4xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] items-start gap-6">
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Loading</p>
+        <InfoList.Root loading />
+      </div>
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Empty</p>
+        <InfoList.Root emptyState={<EmptyStatePreset kind="noData" size="sm" />} />
+      </div>
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Error</p>
+        <InfoList.Root errorState={<EmptyStatePreset kind="serverError" size="sm" />} />
+      </div>
     </div>
   ),
 };

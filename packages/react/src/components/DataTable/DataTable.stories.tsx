@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable, type DataTableColumn } from './DataTable.js';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 
 const meta: Meta = {
   title: 'Data Display/DataTable',
@@ -243,4 +244,25 @@ export const ServerSide: Story = {
       />
     );
   },
+};
+
+const stateColumns: DataTableColumn<User>[] = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'role', header: 'Role' },
+];
+
+export const DataStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <DataTable caption="Users, loading" captionHidden columns={stateColumns} data={[]} loading />
+      <DataTable caption="Users, empty" captionHidden columns={stateColumns} data={[]} />
+      <DataTable
+        caption="Users, failed"
+        captionHidden
+        columns={stateColumns}
+        data={[]}
+        errorState={<ErrorState className="py-4" title="Could not load users" onRetry={() => {}} />}
+      />
+    </div>
+  ),
 };

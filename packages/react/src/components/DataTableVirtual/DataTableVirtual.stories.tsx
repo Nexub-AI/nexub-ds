@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import type { DataTableColumn } from '../DataTable/DataTable.js';
 import { DataTableVirtual } from './DataTableVirtual.js';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 
 const meta: Meta = {
   title: 'Data Display/DataTableVirtual',
@@ -29,6 +30,25 @@ export const Default: Story = {
   render: () => (
     <div style={{ maxWidth: 640 }}>
       <DataTableVirtual caption="Accounts" captionHidden columns={columns} data={data} maxHeight={320} enableSorting />
+    </div>
+  ),
+};
+
+const stateColumns = columns.slice(1);
+
+export const DataStates: Story = {
+  render: () => (
+    <div className="flex flex-col gap-8">
+      <DataTableVirtual caption="Accounts, loading" captionHidden columns={stateColumns} data={[]} maxHeight={320} loading />
+      <DataTableVirtual caption="Accounts, empty" captionHidden columns={stateColumns} data={[]} maxHeight={320} />
+      <DataTableVirtual
+        caption="Accounts, failed"
+        captionHidden
+        columns={stateColumns}
+        data={[]}
+        maxHeight={320}
+        errorState={<ErrorState className="py-4" title="Could not load accounts" onRetry={() => {}} />}
+      />
     </div>
   ),
 };

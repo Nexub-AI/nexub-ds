@@ -64,3 +64,14 @@ describe('ActionBar', () => {
     expect(screen.getByRole('region', { name: 'Unsaved changes' })).toContainElement(screen.getByRole('button', { name: 'Save' }));
   });
 });
+
+describe('Stepper motion (10.5)', () => {
+  it('the connector progress is full after a done step and empty otherwise; the tick pops in', () => {
+    const { container } = render(<Stepper steps={[{ label: 'A' }, { label: 'B' }, { label: 'C' }]} current={1} />);
+    const items = container.querySelectorAll('li');
+    expect(items[0]).toHaveClass('after:end-[calc(-50%+1.25rem)]', 'after:transition-[inset]');
+    expect(items[1]).toHaveClass('after:end-[calc(50%-1.25rem)]');
+    expect(items[2]!.className).not.toContain('after:');
+    expect(items[0]!.querySelector('svg')).toHaveClass('nx-tick');
+  });
+});
