@@ -84,3 +84,21 @@ describe('StatCard', () => {
     expect(delta.className).not.toContain('--color-error');
   });
 });
+
+describe('StatCard 10.3', () => {
+  it('puts the icon on a category chip and draws the trend in the same hue', () => {
+    const { container } = render(
+      <StatCard label="Revenue" value="$1" icon={<svg data-testid="i" />} category="emerald" trend={[1, 3, 2, 5]} trendLabel="Last 4 weeks, rising" />,
+    );
+    expect(screen.getByTestId('i').parentElement?.getAttribute('data-category')).toBe('emerald');
+    const line = screen.getByRole('img', { name: 'Last 4 weeks, rising' });
+    expect(line.querySelector('polyline')?.getAttribute('class')).toContain('stroke-chart-3');
+    expect(container.firstElementChild?.getAttribute('data-nx')).toBe('stat-card');
+  });
+
+  it('keeps the plain icon without a category, and skips a one-point trend', () => {
+    const { container } = render(<StatCard label="Users" value="2" icon={<svg data-testid="i" />} trend={[4]} />);
+    expect(screen.getByTestId('i').parentElement?.hasAttribute('data-category')).toBe(false);
+    expect(container.querySelector('polyline')).toBeNull();
+  });
+});

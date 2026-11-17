@@ -4,6 +4,8 @@ export type { ActivityItemProps } from './components/ActivityFeed/index.js';
 export { FilterBar } from './components/FilterBar/index.js';
 export type { FilterBarProps } from './components/FilterBar/index.js';
 
+export { WelcomeBanner } from './components/WelcomeBanner/index.js';
+export type { WelcomeBannerProps } from './components/WelcomeBanner/index.js';
 export { StatCard } from './components/StatCard/index.js';
 export type { StatCardProps } from './components/StatCard/index.js';
 

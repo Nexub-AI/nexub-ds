@@ -61,3 +61,16 @@ describe('PageHeader', () => {
     expect(screen.queryByRole('heading', { level: 1 })).toBeNull();
   });
 });
+
+describe('PageHeader wash (10.3)', () => {
+  it('carries the styling hook, and a padded panel only with wash', () => {
+    const { container, rerender } = render(<PageHeader title="Home" />);
+    const el = () => container.firstElementChild!;
+    expect(el().getAttribute('data-nx')).toBe('page-header');
+    expect(el().hasAttribute('data-wash')).toBe(false);
+    expect(el().className).not.toContain('p-6');
+    rerender(<PageHeader title="Home" wash />);
+    expect(el().hasAttribute('data-wash')).toBe(true);
+    expect(el().className).toContain('p-6');
+  });
+});

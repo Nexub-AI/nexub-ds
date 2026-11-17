@@ -90,3 +90,25 @@ describe('AppLauncher', () => {
     expect(screen.getByRole('link', { name: 'People' })).toHaveFocus();
   });
 });
+
+describe('AppLauncher accent (10.3)', () => {
+  it('scopes a tile to its app accent and tints the initials fallback and the current marker', async () => {
+    render(
+      <AppLauncher
+        apps={[
+          { id: 'pay', name: 'Payub', href: '/pay', accent: 'payub', current: true },
+          { id: 'os', name: 'People', href: '/people', accent: 'os' },
+          { id: 'x', name: 'Other', href: '/x' },
+        ]}
+      />,
+    );
+    await open();
+    const pay = screen.getByRole('link', { name: 'Payub' });
+    expect(pay.closest('li')).toHaveAttribute('data-product', 'payub');
+    expect(pay.className).toContain('bg-[var(--color-spot-container)]');
+    expect(pay.querySelector('[data-category="accent"]')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'People' }).closest('li')).toHaveAttribute('data-division', 'os');
+    const other = screen.getByRole('link', { name: 'Other' }).closest('li')!;
+    expect(other.hasAttribute('data-product') || other.hasAttribute('data-division')).toBe(false);
+  });
+});

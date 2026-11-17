@@ -1,4 +1,6 @@
 /* @nexub/themes — bookub.css
+   @deprecated since 10.3: import @nexub/themes/products instead (it covers [data-product='bookub']
+   and every other app). This file is removed in 11.0.
    Overrides --color-accent-* to Bookub's emerald scale when [data-product='bookub'] is set. */
 
 [data-product='bookub'] {

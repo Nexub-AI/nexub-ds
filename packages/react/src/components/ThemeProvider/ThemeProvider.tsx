@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import type { GlassMode, Product } from '@nexub/core';
+import { PRODUCT_KEYS } from '@nexub/core';
+import type { GlassMode } from '@nexub/core';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -11,9 +12,10 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 /** Glass intensity dial (user preference, like iOS 27's clear → tinted slider).
  *  'off' makes every glass surface solid. Set as `data-glass` on <html>. */
 export type { GlassMode };
-// Products with a theme file in @nexub/themes. The stored value is user-controlled
-// (localStorage), so only these names reach data-product.
-const PRODUCTS: readonly Product[] = ['leap', 'bookub', 'payub', 'founderub'];
+// Every app key in the token map (@nexub/themes/products; 10.3: was the four
+// hand-written brands). The stored value is user-controlled (localStorage), so
+// only these names reach data-product.
+const PRODUCTS: readonly string[] = PRODUCT_KEYS;
 
 const GLASS_MODES: readonly GlassMode[] = ['clear', 'balanced', 'tinted', 'off'];
 

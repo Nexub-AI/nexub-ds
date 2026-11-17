@@ -19,12 +19,14 @@ export const templateEntries: TemplateEntry[] = [
     slug: 'dashboard',
     title: 'Dashboard',
     web: 'DashboardPage',
-    description: 'The home of a money app: balance, quick actions, this month at a glance, recent activity and insights.',
+    description: 'The home of a money app and the reference screen for the 10.3 look: a welcome banner, balance, quick actions, key figures with trends, a chart, recent activity and insights.',
     code: `<DashboardPage
   title="Good morning, Mei"
   balance={{ value: 12480.32, currency: 'SGD', label: 'Total balance' }}
   quickActions={[{ id: 'send', label: 'Send', icon: <Send />, onSelect: send }]}
-  stats={[{ label: 'Spent this month', value: 'S$1,842', delta: '8%', deltaType: 'decrease', sentiment: 'positive' }]}
+  banner={<WelcomeBanner title="Two bills are due this week" actions={<Button variant="tonal">Review bills</Button>} />}
+  stats={[{ label: 'Saved', value: 'S$2,400', delta: '12%', deltaType: 'increase', icon: <Wallet />, category: 'emerald', trend: [10, 12, 13, 15, 16, 19, 22] }]}
+  chart={{ title: 'Spending', content: <BarChart title="Spending by month" data={spending} index="month" series={[{ key: 'spent' }]} /> }}
   recent={transactions}
   onSelectTransaction={open}
   onSeeAllActivity={() => router.push('/activity')}
