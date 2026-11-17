@@ -371,6 +371,15 @@
       ]
     },
     {
+      "slug": "comparison-bar",
+      "name": "Comparison Bar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "container",
       "name": "Container",
       "package": "@nexub/react",
@@ -443,6 +452,15 @@
     {
       "slug": "date-time-picker",
       "name": "Date Time Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "description-list",
+      "name": "Description List",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
@@ -1537,6 +1555,15 @@
       ]
     },
     {
+      "slug": "truncate",
+      "name": "Truncate",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "visually-hidden",
       "name": "Visually Hidden",
       "package": "@nexub/react",
@@ -1783,6 +1810,15 @@
     {
       "slug": "status-page",
       "name": "StatusPage",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "status-steps",
+      "name": "StatusSteps",
       "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],

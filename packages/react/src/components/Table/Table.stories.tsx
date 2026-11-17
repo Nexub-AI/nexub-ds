@@ -120,3 +120,27 @@ export const DataStates: StoryObj = {
     </div>
   ),
 };
+
+const people = Array.from({ length: 12 }, (_, i) => ({ name: `Person ${i + 1}`, role: i % 3 === 0 ? 'Admin' : 'Member' }));
+
+/** 10.7: a sticky header inside a capped height, compact density for this table only, and zebra rows. */
+export const Options: StoryObj = {
+  render: () => (
+    <Table.Root aria-label="People" stickyHeader maxHeight={240} density="compact" striped>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Role</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {people.map((p, i) => (
+          <Table.Row key={p.name} data-state={i === 2 ? 'selected' : undefined}>
+            <Table.Cell>{p.name}</Table.Cell>
+            <Table.Cell>{p.role}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  ),
+};

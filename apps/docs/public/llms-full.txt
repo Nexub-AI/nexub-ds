@@ -385,7 +385,9 @@ Never use a component marked deprecated.
 - [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
 - [Chart Zoom](components/chart-zoom.md) `@nexub/react`: Zoom any chart to part of its range with a two-thumb slider.
 - [Check List](components/check-list.md) `@nexub/react`: A list with a success tick before each item, for features, plan inclusions and requirements met.
+- [Comparison Bar](components/comparison-bar.md) `@nexub/react`: Two values on one split bar, with the numbers always shown as text.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
+- [Description List](components/description-list.md) `@nexub/react`: Key–value rows with list semantics: a receipt, a fee breakdown, the details of a record.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
@@ -553,6 +555,7 @@ Never use a component marked deprecated.
 
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
+- [Truncate](components/truncate.md) `@nexub/react`: Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
 
 ## Marketing — Marketing
 
@@ -584,6 +587,7 @@ Never use a component marked deprecated.
 - [FilterBar](components/filter-bar.md) `@nexub/patterns`: Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](components/info-list.md) `@nexub/patterns`: Key–value list for displaying structured metadata or details.
 - [StatCard](components/stat-card.md) `@nexub/patterns`: Metric display card showing a KPI value, label, optional delta, and icon.
+- [StatusSteps](components/status-steps.md) `@nexub/patterns`: A read-only list of steps showing where something stands: done, current, upcoming or a problem.
 - [WelcomeBanner](components/welcome-banner.md) `@nexub/patterns`: A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 
 ## Patterns — Feedback
@@ -1574,6 +1578,44 @@ export default function Example() {
       index="quarter"
       series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
     />
+  );
+}
+```
+
+## Example: Interactive
+
+A crosshair and tooltip, keyboard point navigation, a toggle legend and `onPointClick`.
+
+```tsx
+import * as React from 'react';
+import { BarChart } from '@nexub/react';
+
+type Row = { quarter: string; web: number; ios: number; android: number };
+
+const data: Row[] = [
+  { quarter: 'Q1', web: 120, ios: 80, android: 60 },
+  { quarter: 'Q2', web: 140, ios: 95, android: 72 },
+  { quarter: 'Q3', web: 150, ios: 110, android: 90 },
+  { quarter: 'Q4', web: 170, ios: 128, android: 101 },
+];
+
+export default function Example() {
+  const [picked, setPicked] = React.useState('Click a bar, or focus the chart and press Enter.');
+  const pick = (point: { datum: Row; series?: { label?: string }; value?: number }) =>
+    setPicked(`${point.datum.quarter}${point.series ? `, ${point.series.label}: ${point.value}` : ''}`);
+  return (
+    <div className="flex w-full flex-col gap-3">
+      <BarChart
+        interactive
+        legend="toggle"
+        onPointClick={pick}
+        title="Signups by platform"
+        data={data}
+        index="quarter"
+        series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
+      />
+      <p className="m-0 text-body-sm text-[var(--color-on-surface-variant)]">{picked}</p>
+    </div>
   );
 }
 ```
@@ -2910,6 +2952,78 @@ Related: [keyboard-shortcut](keyboard-shortcut.md), [dialog](dialog.md), [search
 
 ---
 
+# Comparison Bar
+
+Two values on one split bar, with the numbers always shown as text.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { ComparisonBar } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/comparison-bar
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | What is compared. |
+| `left` (required) | `{ label: string; value: number; color?: CategoryColor }` |  | The side at the inline start. |
+| `right` (required) | `{ label: string; value: number; color?: CategoryColor }` |  | The side at the inline end. |
+| `valueFormat` | `(value: number) => string` |  | Formats both values, on screen and in the text alternative. |
+| `size` | `'sm' \| 'md'` | `'md'` | Bar height and type size. |
+| `showValues` | `boolean` | `true` | The two values and the label above the bar. |
+| `showLabels` | `boolean` | `true` | The two side labels under the bar. Turn off for all but one bar in a group. |
+| `highlight` | `'higher' \| 'none'` | `'higher'` | The larger side takes the accent and the other is muted. A side with a `color` keeps it. |
+| `aria-label` | `string` |  | Replaces the text alternative built from the props. |
+
+## Example: Default
+
+```tsx
+import { ComparisonBar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm">
+      <ComparisonBar label="Goals" left={{ label: 'Team A', value: 3 }} right={{ label: 'Team B', value: 1 }} />
+    </div>
+  );
+}
+```
+
+## Example: A group of comparisons
+
+```tsx
+import { ComparisonBar } from '@nexub/react';
+
+const percent = (n: number) => `${n}%`;
+const stats: [string, number, number, ((n: number) => string)?][] = [
+  ['Possession', 58, 42, percent],
+  ['Shots', 14, 9],
+  ['Shots on target', 6, 6],
+  ['Corners', 3, 7],
+];
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-4">
+      {stats.map(([label, a, b, format], i) => (
+        <ComparisonBar
+          key={label}
+          label={label}
+          left={{ label: 'Team A', value: a, color: 'blue' }}
+          right={{ label: 'Team B', value: b, color: 'amber' }}
+          valueFormat={format}
+          showLabels={i === stats.length - 1}
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+Related: [progress](progress.md), [description-list](description-list.md)
+
+
+---
+
 # Container
 
 Centres content at a maximum width with responsive side padding.
@@ -3428,6 +3542,42 @@ export default function Example() {
 }
 ```
 
+## Example: Footer and column filters
+
+`footer` on a column adds a totals row; a render function gets the table, so a sum can follow the filtered rows. `meta.filter` (`text`, `select` or `number-range`) adds a filter button to the header. Control it with `columnFilters` / `onColumnFiltersChange`; `manualFiltering` leaves the rows to the server.
+
+```tsx
+import { DataTable, type DataTableColumn } from '@nexub/react';
+
+type Invoice = { id: string; customer: string; status: string; amount: number };
+
+const data: Invoice[] = [
+  { id: 'INV-1042', customer: 'Acme', status: 'Paid', amount: 1200 },
+  { id: 'INV-1043', customer: 'Globex', status: 'Due', amount: 860 },
+  { id: 'INV-1044', customer: 'Initech', status: 'Paid', amount: 430 },
+  { id: 'INV-1045', customer: 'Umbrella', status: 'Overdue', amount: 2150 },
+];
+
+const money = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+
+const columns: DataTableColumn<Invoice>[] = [
+  { accessorKey: 'customer', header: 'Customer', footer: 'Total', meta: { filter: 'text' } },
+  { accessorKey: 'status', header: 'Status', meta: { filter: 'select' } },
+  {
+    accessorKey: 'amount',
+    header: 'Amount',
+    cell: ({ getValue }) => money(getValue<number>()),
+    // The filtered rows, so the total follows the filters.
+    footer: ({ table }) => money(table.getFilteredRowModel().rows.reduce((sum, r) => sum + r.original.amount, 0)),
+    meta: { align: 'end', filter: 'number-range' },
+  },
+];
+
+export default function Example() {
+  return <DataTable caption="Invoices" captionHidden columns={columns} data={data} />;
+}
+```
+
 ## Accessibility
 
 - Roles: table (default), grid (with `grid`), columnheader with aria-sort when sortable
@@ -3628,6 +3778,71 @@ export default function Example() {
 - A labelled group holding the DatePicker button and the native time input.
 
 Related: [date-picker](date-picker.md), [time-picker](time-picker.md)
+
+
+---
+
+# Description List
+
+Key–value rows with list semantics: a receipt, a fee breakdown, the details of a record.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { DescriptionList } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/description-list
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Root layout` | `'inline' \| 'stacked'` | `'inline'` | Label and value on one row, or label above the value. |
+| `Root columns` | `1 \| 2 \| 3` | `1` | Pairs per row. Falls back to fewer columns when the list itself is narrow. |
+| `Root divided` | `boolean` |  | A hairline between rows. |
+| `Root size` | `'sm' \| 'md'` | `'md'` | Row height and type size. |
+| `Item label` (required) | `React.ReactNode` |  | The term. |
+| `Item children` | `React.ReactNode` |  | The value. |
+| `Item emphasis` | `boolean` |  | A total: stronger label and value, and a rule above. |
+| `Item align` | `'start' \| 'end'` |  | Where the value sits. Defaults to the end when inline, the start when stacked. |
+| `Item helpText` | `React.ReactNode` |  | A small muted line under the label. |
+
+## Example: Receipt with a total
+
+```tsx
+import { DescriptionList } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm">
+      <DescriptionList.Root divided aria-label="Order summary">
+        <DescriptionList.Item label="Subtotal" helpText="2 items">$40.00</DescriptionList.Item>
+        <DescriptionList.Item label="Shipping">$5.00</DescriptionList.Item>
+        <DescriptionList.Item label="Service fee">$1.50</DescriptionList.Item>
+        <DescriptionList.Item label="Total" emphasis>$46.50</DescriptionList.Item>
+      </DescriptionList.Root>
+    </div>
+  );
+}
+```
+
+## Example: Stacked, in columns
+
+```tsx
+import { DescriptionList } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <DescriptionList.Root layout="stacked" columns={3}>
+      <DescriptionList.Item label="Applicant">Ada Lovelace</DescriptionList.Item>
+      <DescriptionList.Item label="Submitted">12 March 2026</DescriptionList.Item>
+      <DescriptionList.Item label="Reference">APP-2041</DescriptionList.Item>
+      <DescriptionList.Item label="Plan">Standard</DescriptionList.Item>
+      <DescriptionList.Item label="Reviewer">Not assigned</DescriptionList.Item>
+      <DescriptionList.Item label="Status">Under review</DescriptionList.Item>
+    </DescriptionList.Root>
+  );
+}
+```
+
+Related: [info-list](info-list.md), [table](table.md)
 
 
 ---
@@ -4195,6 +4410,33 @@ export default function Example() {
         onDayClick={(d) => setPicked(d.toDateString())}
       />
       <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{picked && `Opened: ${picked}`}</p>
+    </div>
+  );
+}
+```
+
+## Example: Day and agenda views
+
+`views` adds Day (an hour grid with a "now" line) and Agenda (the month as a list) to the switcher.
+
+```tsx
+import { EventCalendar, type CalendarEvent } from '@nexub/react';
+
+const today = new Date();
+const at = (day: number, hour = 0, minute = 0) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + day, hour, minute);
+
+const events: CalendarEvent[] = [
+  { id: '1', title: 'Offsite', start: at(0), allDay: true, tone: 'success' },
+  { id: '2', title: 'Standup', start: at(0, 9, 30), end: at(0, 10) },
+  { id: '3', title: 'Design review', start: at(0, 9, 30), end: at(0, 11), tone: 'info' },
+  { id: '4', title: 'Launch', start: at(0, 14), end: at(0, 15, 30), tone: 'warning' },
+  { id: '5', title: 'Retro', start: at(1, 16) },
+];
+
+export default function Example() {
+  return (
+    <div className="w-full">
+      <EventCalendar events={events} defaultView="day" views={['month', 'week', 'day', 'agenda']} />
     </div>
   );
 }
@@ -9041,6 +9283,37 @@ export default function Example() {
 }
 ```
 
+## Example: Sticky header, compact and striped
+
+`stickyHeader` with `maxHeight` keeps the header in view, `density="compact"` tightens this table only, and `striped` tints every other row.
+
+```tsx
+import { Table } from '@nexub/react';
+
+const rows = Array.from({ length: 12 }, (_, i) => ({ name: `Person ${i + 1}`, role: i % 3 === 0 ? 'Admin' : 'Member' }));
+
+export default function Example() {
+  return (
+    <Table.Root aria-label="People" stickyHeader maxHeight={240} density="compact" striped className="w-full max-w-[30rem]">
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Role</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((r) => (
+          <Table.Row key={r.name}>
+            <Table.Cell>{r.name}</Table.Cell>
+            <Table.Cell>{r.role}</Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  );
+}
+```
+
 
 ---
 
@@ -9953,6 +10226,61 @@ export default function Example() {
 - The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item.
 
 Related: [data-table](data-table.md), [sidebar](sidebar.md)
+
+
+---
+
+# Truncate
+
+Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
+
+- Package: `@nexub/react` · Category: Typography · Status: alpha
+- Import: `import { Truncate } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/truncate
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `lines` | `number` | `1` | Lines shown before the text is clipped. |
+| `as` | `React.ElementType` | `'span'` | The element to render. |
+| `tooltip` | `boolean` | `true` | Show the full text in a tooltip while it is clipped. Needs string children. |
+
+## Example: Default
+
+```tsx
+import { Truncate } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-56 max-w-full flex-col gap-2 text-body-md">
+      <Truncate>Quarterly infrastructure invoice for the Singapore and Frankfurt regions</Truncate>
+      <Truncate>Short text</Truncate>
+    </div>
+  );
+}
+```
+
+## Example: Several lines
+
+```tsx
+import { Truncate } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Truncate lines={2} as="p" className="w-56 text-body-md">
+      Quarterly infrastructure invoice for the Singapore and Frankfurt regions, including premium support, data transfer and reserved capacity.
+    </Truncate>
+  );
+}
+```
+
+## Accessibility
+
+- Clipped text is a tab stop, so keyboard users can read the tooltip. Text that fits adds no tab stop and no tooltip.
+- The tooltip needs string children; other children are clipped only.
+
+Related: [text](text.md), [tooltip](tooltip.md)
 
 
 ---
@@ -11577,6 +11905,76 @@ export default function Example() {
   return <StatusPage as="div" kind="serverError" code="500" onRetry={retry} />;
 }
 ```
+
+
+---
+
+# StatusSteps
+
+A read-only list of steps showing where something stands: done, current, upcoming or a problem.
+
+- Package: `@nexub/patterns` · Category: Data · Status: alpha
+- Import: `import { StatusSteps } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/status-steps
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `steps` (required) | `{ id?: string; title: ReactNode; description?: ReactNode; status: 'done' \| 'current' \| 'upcoming' \| 'error'; timestamp?: ReactNode; action?: ReactNode }[]` |  | The steps, first to last. |
+| `aria-label` (required) | `string` |  | Names the list. `aria-labelledby` works too. |
+| `size` | `'sm' \| 'md'` | `'md'` | Marker, type and spacing. |
+
+## Example: Application review
+
+```tsx
+import { StatusSteps } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm">
+      <StatusSteps
+        aria-label="Application progress"
+        steps={[
+          { id: 'submitted', title: 'Submitted', status: 'done', timestamp: <time dateTime="2026-03-12">12 Mar</time> },
+          { id: 'review', title: 'Under review', status: 'current', description: 'Usually takes two working days.' },
+          { id: 'approved', title: 'Approved', status: 'upcoming' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
+## Example: With a problem
+
+```tsx
+import { StatusSteps } from '@nexub/patterns';
+import { Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm">
+      <StatusSteps
+        aria-label="Application progress"
+        steps={[
+          { id: 'submitted', title: 'Submitted', status: 'done', timestamp: <time dateTime="2026-03-12">12 Mar</time> },
+          {
+            id: 'documents',
+            title: 'Documents need another look',
+            status: 'error',
+            description: 'The proof of address is older than three months.',
+            action: <Button size="sm" variant="tonal">Upload again</Button>,
+          },
+          { id: 'approved', title: 'Approved', status: 'upcoming' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
+Related: [stepper](stepper.md), [progress](progress.md), [activity-feed](activity-feed.md)
 
 
 ---

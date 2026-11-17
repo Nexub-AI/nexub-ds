@@ -24,6 +24,7 @@ const entry: ComponentEntry = {
   examples: [
     { title: 'Grouped' },
     { title: 'Stacked' },
+    { title: 'Interactive', description: 'A crosshair and tooltip, keyboard point navigation, a toggle legend and `onPointClick`.' },
   ],
   a11y: {
     screenReader: [
