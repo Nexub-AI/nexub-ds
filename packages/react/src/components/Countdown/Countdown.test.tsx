@@ -27,8 +27,9 @@ afterEach(() => {
 describe('Countdown', () => {
   it('renders a placeholder on the server, then the time left', () => {
     const html = renderToString(<Countdown to={BASE + 299_000} now={now} />);
-    expect(html).toContain('–:––');
-    expect(html).not.toMatch(/\d:\d\d/);
+    expect(html).toContain('invisible');
+    expect(html).toContain('0:00');
+    expect(html).not.toContain('4:59');
     render(<Countdown to={BASE + 299_000} now={now} />);
     expect(timer()).toHaveTextContent('4:59');
     expect(timer()).toHaveAttribute('aria-live', 'off');

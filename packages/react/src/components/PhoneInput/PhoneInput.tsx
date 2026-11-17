@@ -70,6 +70,8 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       return countries?.length && !countries.includes(start) ? countries[0]! : start;
     });
     const [inner, setInner] = React.useState(defaultValue ?? '');
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => setMounted(true), []);
     const e164 = value ?? inner;
     // The value names its own country; an empty one leaves the picked country alone.
     const { country, national } = parsePhone(e164, countryProp ?? countryState);
@@ -134,6 +136,12 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
       </>
     );
 
+    const pickerFallback = (
+              <button type="button" aria-haspopup="listbox" aria-label={label} disabled={disabled} className={triggerClass}>
+                {picked}
+                <ChevronDown size="sm" className="shrink-0 text-[var(--color-on-surface-variant)]" aria-hidden="true" />
+              </button>
+    );
     return (
       <div className={cn(inputWrapperVariants({ size, invalid }), className)}>
         {single ? (
@@ -141,14 +149,12 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             {picked}
           </span>
         ) : (
-          <React.Suspense
-            fallback={
-              <button type="button" aria-haspopup="listbox" aria-label={label} disabled={disabled} className={triggerClass}>
-                {picked}
-                <ChevronDown size="sm" className="shrink-0 text-[var(--color-on-surface-variant)]" aria-hidden="true" />
-              </button>
-            }
-          >
+          // The picker chunk loads after mount: suspending in the first render would make the
+          // server fall back to client rendering. Until then the plain trigger shows, same size.
+          !mounted ? (
+            pickerFallback
+          ) : (
+            <React.Suspense fallback={pickerFallback}>
             <LazyPicker
               country={country}
               onCountryChange={(next) => commit(national, next)}
@@ -163,7 +169,8 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
             >
               {picked}
             </LazyPicker>
-          </React.Suspense>
+            </React.Suspense>
+          )
         )}
         <input
           type="tel"

@@ -110,8 +110,9 @@ export const Countdown = React.forwardRef<HTMLSpanElement, CountdownProps>(
 
     const tone: CountdownTone =
       toneProp !== 'auto' ? toneProp : !ready ? 'neutral' : seconds < dangerAt ? 'danger' : seconds < warnAt ? 'warning' : 'neutral';
-    // Same on the server and the first client paint; digits swap in after mount at the same width.
-    const text = ready ? formatTime(seconds, format) : format === 'h:mm:ss' ? '–:––:––' : '–:––';
+    // Same on the server and the first client paint; digits swap in after mount.
+    // Before mount: real digits, hidden, so the box already has its final width (no layout shift).
+    const text = ready ? formatTime(seconds, format) : <span className="invisible">{format === 'h:mm:ss' ? '0:00:00' : '0:00'}</span>;
     const timer = { role: 'timer', 'aria-live': 'off', 'data-tone': tone } as const;
 
     return (
