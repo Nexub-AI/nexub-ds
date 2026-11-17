@@ -84,6 +84,69 @@ export interface PageTemplateMessages {
   password: string;
   forgotPassword: string;
   createAccount: string;
+  // 10.8 getting-in templates: sign up, forgot password, verify code, onboarding, KYC.
+  signUp: string;
+  name: string;
+  phone: string;
+  haveAccount: string;
+  or: string;
+  passwordHint: string;
+  passwordStrength: (label: string) => string;
+  /** Weak, fair, good, strong: one per meter segment. */
+  strengthLabels: string[];
+  enterName: string;
+  enterValidEmail: string;
+  enterValidPhone: string;
+  choosePassword: string;
+  acceptTerms: string;
+  resetPassword: string;
+  resetDescription: string;
+  sendResetLink: string;
+  checkEmail: string;
+  resetSent: (email: string) => string;
+  resendEmail: string;
+  resendEmailIn: string;
+  resendCode: string;
+  resendCodeIn: string;
+  backToSignIn: string;
+  enterCode: string;
+  codeSentTo: (length: number, destination: string) => string;
+  changeDestination: string;
+  codeExpiresIn: string;
+  otherMethods: string;
+  skip: string;
+  finish: string;
+  stepInvalid: string;
+  allSet: string;
+  verifyIdentity: string;
+  personalDetails: string;
+  legalName: string;
+  legalNameHint: string;
+  dateOfBirth: string;
+  country: string;
+  document: string;
+  documentType: string;
+  passport: string;
+  nationalId: string;
+  drivingLicence: string;
+  documentFront: string;
+  documentBack: string;
+  documentTips: string[];
+  fileRequirements: string;
+  review: string;
+  submitVerification: string;
+  kycSubmitted: string;
+  kycUnderReview: string;
+  kycApproved: string;
+  kycRejected: string;
+  fixAndResubmit: string;
+  verificationStatus: string;
+  enterLegalName: string;
+  enterDateOfBirth: string;
+  chooseCountry: string;
+  chooseDocumentType: string;
+  uploadFront: string;
+  uploadBack: string;
   howMuch: string;
   amountToSend: string;
   balance: (formatted: string) => string;
@@ -107,6 +170,78 @@ export interface PageTemplateMessages {
   recentActivity: string;
   seeAll: string;
   insights: string;
+  // 10.8 daily-work templates: table, detail, booking, invoice, team, notifications, search results.
+  clearFilters: string;
+  rowActions: string;
+  discardChangesTitle: string;
+  discardChangesDescription: string;
+  discard: string;
+  keepEditing: string;
+  bookTitle: string;
+  pickDate: string;
+  pickTime: string;
+  pickDateFirst: string;
+  noTimes: string;
+  yourBooking: string;
+  time: string;
+  confirmBooking: string;
+  heldFor: string;
+  holdExpired: string;
+  pickAnotherTime: string;
+  bookingConfirmed: string;
+  reference: string;
+  invoice: string;
+  receipt: string;
+  issued: string;
+  due: string;
+  billedFrom: string;
+  billedTo: string;
+  taxId: (id: string) => string;
+  lineItems: string;
+  itemDescription: string;
+  quantity: string;
+  unitPrice: string;
+  amount: string;
+  subtotal: string;
+  discount: string;
+  total: string;
+  notes: string;
+  invoiceStatus: (status: 'draft' | 'due' | 'paid' | 'overdue' | 'void') => string;
+  team: string;
+  member: string;
+  role: string;
+  status: string;
+  lastActive: string;
+  you: string;
+  memberStatus: (status: 'active' | 'invited' | 'suspended') => string;
+  roleFor: (name: string) => string;
+  removeMember: (name: string) => string;
+  removeMemberTitle: (name: string) => string;
+  removeMemberDescription: string;
+  invitePeople: string;
+  inviteDescription: string;
+  emailAddresses: string;
+  emailAddressesHint: string;
+  invalidEmail: (email: string) => string;
+  emailRequired: string;
+  sendInvites: string;
+  pendingInvites: string;
+  inviteResend: (email: string) => string;
+  inviteRevoke: (email: string) => string;
+  inviteResendLabel: string;
+  inviteRevokeLabel: string;
+  seatsUsed: (used: number, total: number) => string;
+  inbox: string;
+  all: string;
+  unreadOnly: string;
+  markRead: (title: string) => string;
+  markUnread: (title: string) => string;
+  yesterday: string;
+  caughtUpTitle: string;
+  caughtUpDescription: string;
+  searchResults: string;
+  resultsFor: (count: number, query: string) => string;
+  trySearching: string;
 }
 
 export const defaultPageTemplateMessages: PageTemplateMessages = {
@@ -127,6 +262,71 @@ export const defaultPageTemplateMessages: PageTemplateMessages = {
   password: 'Password',
   forgotPassword: 'Forgot password?',
   createAccount: 'Create an account',
+  signUp: 'Create your account',
+  name: 'Name',
+  phone: 'Phone number',
+  haveAccount: 'Already have an account?',
+  or: 'or',
+  passwordHint: 'Use 8 or more characters with upper and lower case letters and a number or symbol.',
+  passwordStrength: (label) => `Password strength: ${label}`,
+  strengthLabels: ['Weak', 'Fair', 'Good', 'Strong'],
+  enterName: 'Enter your name',
+  enterValidEmail: 'Enter a valid email address',
+  enterValidPhone: 'Enter a valid phone number',
+  choosePassword: 'Choose a stronger password',
+  acceptTerms: 'Accept the terms to continue',
+  resetPassword: 'Reset your password',
+  resetDescription: 'Enter your email and we will send you a link to reset it.',
+  sendResetLink: 'Send reset link',
+  checkEmail: 'Check your email',
+  resetSent: (email) => `If an account exists for ${email}, we sent a link to reset your password.`,
+  resendEmail: 'Resend email',
+  resendEmailIn: 'Resend email in',
+  resendCode: 'Resend code',
+  resendCodeIn: 'Resend code in',
+  backToSignIn: 'Back to sign in',
+  enterCode: 'Enter the code',
+  codeSentTo: (length, destination) => `We sent a ${length}-digit code to ${destination}.`,
+  changeDestination: 'Use a different number',
+  codeExpiresIn: 'Code expires in',
+  otherMethods: 'Other ways to verify',
+  skip: 'Skip',
+  finish: 'Finish',
+  stepInvalid: 'Check this step before you continue.',
+  allSet: 'You are all set',
+  verifyIdentity: 'Verify your identity',
+  personalDetails: 'Personal details',
+  legalName: 'Full legal name',
+  legalNameHint: 'As it appears on your document.',
+  dateOfBirth: 'Date of birth',
+  country: 'Country of residence',
+  document: 'Document',
+  documentType: 'Document type',
+  passport: 'Passport',
+  nationalId: 'National ID',
+  drivingLicence: 'Driving licence',
+  documentFront: 'Front of the document',
+  documentBack: 'Back of the document',
+  documentTips: [
+    'Use the original document, not a copy or a screenshot.',
+    'Make sure all four corners are in the photo.',
+    'Check the text is sharp and there is no glare.',
+  ],
+  fileRequirements: 'JPG, PNG or PDF, up to 10 MB each.',
+  review: 'Review',
+  submitVerification: 'Submit for verification',
+  kycSubmitted: 'Submitted',
+  kycUnderReview: 'Under review',
+  kycApproved: 'Approved',
+  kycRejected: 'We could not verify your identity',
+  fixAndResubmit: 'Fix and resubmit',
+  verificationStatus: 'Verification status',
+  enterLegalName: 'Enter your full legal name',
+  enterDateOfBirth: 'Enter your date of birth',
+  chooseCountry: 'Choose your country of residence',
+  chooseDocumentType: 'Choose a document type',
+  uploadFront: 'Upload the front of the document',
+  uploadBack: 'Upload the back of the document',
   howMuch: 'How much?',
   amountToSend: 'Amount to send',
   balance: (b) => `Balance ${b}`,
@@ -150,6 +350,77 @@ export const defaultPageTemplateMessages: PageTemplateMessages = {
   recentActivity: 'Recent activity',
   seeAll: 'See all',
   insights: 'Insights',
+  clearFilters: 'Clear filters',
+  rowActions: 'Actions',
+  discardChangesTitle: 'Discard your changes?',
+  discardChangesDescription: 'The edits you made have not been saved.',
+  discard: 'Discard',
+  keepEditing: 'Keep editing',
+  bookTitle: 'Book a time',
+  pickDate: 'Pick a date',
+  pickTime: 'Pick a time',
+  pickDateFirst: 'Pick a date to see the times.',
+  noTimes: 'No times are free on this day.',
+  yourBooking: 'Your booking',
+  time: 'Time',
+  confirmBooking: 'Confirm booking',
+  heldFor: 'Held for',
+  holdExpired: 'We are no longer holding this time.',
+  pickAnotherTime: 'Pick another time',
+  bookingConfirmed: 'Booking confirmed',
+  reference: 'Reference',
+  invoice: 'Invoice',
+  receipt: 'Receipt',
+  issued: 'Issued',
+  due: 'Due',
+  billedFrom: 'From',
+  billedTo: 'Billed to',
+  taxId: (id) => `Tax ID ${id}`,
+  lineItems: 'Line items',
+  itemDescription: 'Description',
+  quantity: 'Qty',
+  unitPrice: 'Unit price',
+  amount: 'Amount',
+  subtotal: 'Subtotal',
+  discount: 'Discount',
+  total: 'Total',
+  notes: 'Notes',
+  invoiceStatus: (s) => ({ draft: 'Draft', due: 'Due', paid: 'Paid', overdue: 'Overdue', void: 'Void' })[s],
+  team: 'Team',
+  member: 'Member',
+  role: 'Role',
+  status: 'Status',
+  lastActive: 'Last active',
+  you: 'You',
+  memberStatus: (s) => ({ active: 'Active', invited: 'Invited', suspended: 'Suspended' })[s],
+  roleFor: (name) => `Role for ${name}`,
+  removeMember: (name) => `Remove ${name}`,
+  removeMemberTitle: (name) => `Remove ${name} from the team?`,
+  removeMemberDescription: 'They lose access straight away. You can invite them again later.',
+  invitePeople: 'Invite people',
+  inviteDescription: 'Everyone you add gets an email with a link to join.',
+  emailAddresses: 'Email addresses',
+  emailAddressesHint: 'Separate addresses with a comma, a space or Enter.',
+  invalidEmail: (email) => `${email} is not a valid email address`,
+  emailRequired: 'Add at least one email address',
+  sendInvites: 'Send invites',
+  pendingInvites: 'Pending invites',
+  inviteResend: (email) => `Resend the invite to ${email}`,
+  inviteRevoke: (email) => `Revoke the invite to ${email}`,
+  inviteResendLabel: 'Resend',
+  inviteRevokeLabel: 'Revoke',
+  seatsUsed: (used, total) => `${used} of ${total} seats used`,
+  inbox: 'Notifications',
+  all: 'All',
+  unreadOnly: 'Unread',
+  markRead: (title) => `Mark as read: ${title}`,
+  markUnread: (title) => `Mark as unread: ${title}`,
+  yesterday: 'Yesterday',
+  caughtUpTitle: 'You are all caught up',
+  caughtUpDescription: 'New notifications will show up here.',
+  searchResults: 'Search results',
+  resultsFor: (count, query) => `${count} result${count === 1 ? '' : 's'} for “${query}”`,
+  trySearching: 'Try:',
 };
 
 /** Defaults ← NexubProvider `messages` ← the template's own `messages` prop. */

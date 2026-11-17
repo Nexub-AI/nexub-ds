@@ -69,6 +69,7 @@ Never use a component marked deprecated.
 
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
 - [Celebrate](components/celebrate.md) `@nexub/react`: A short confetti burst for a real win, such as a first payment or finishing onboarding.
+- [Countdown](components/countdown.md) `@nexub/react`: Time left to a deadline, as a chip or inline text. Stays right after the tab was in the background.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
 - [Success Check](components/success-check.md) `@nexub/react`: A small success moment: a ring that pops in and a tick that draws.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
@@ -104,10 +105,12 @@ Never use a component marked deprecated.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
+- [Phone Input](components/phone-input.md) `@nexub/react`: A phone field with a country picker. Groups the number as you type and reports it in E.164.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
+- [Time Slot Picker](components/time-slot-picker.md) `@nexub/react`: Pick one time from a list of slots, for booking flows.
 
 ## Components — Forms
 
@@ -269,4 +272,4 @@ Never use a component marked deprecated.
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
 - `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, ThemeProvider
-- `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage
+- `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage

@@ -419,6 +419,7 @@ Never use a component marked deprecated.
 
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
 - [Celebrate](components/celebrate.md) `@nexub/react`: A short confetti burst for a real win, such as a first payment or finishing onboarding.
+- [Countdown](components/countdown.md) `@nexub/react`: Time left to a deadline, as a chip or inline text. Stays right after the tab was in the background.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
 - [Success Check](components/success-check.md) `@nexub/react`: A small success moment: a ring that pops in and a tick that draws.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
@@ -454,10 +455,12 @@ Never use a component marked deprecated.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
+- [Phone Input](components/phone-input.md) `@nexub/react`: A phone field with a country picker. Groups the number as you type and reports it in E.164.
 - [Radio Card](components/radio-card.md) `@nexub/react`: A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
+- [Time Slot Picker](components/time-slot-picker.md) `@nexub/react`: Pick one time from a list of slots, for booking flows.
 
 ## Components — Forms
 
@@ -619,7 +622,7 @@ Never use a component marked deprecated.
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
 - `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, ThemeProvider
-- `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, ChatPage, CheckoutPage, DashboardPage, PageFrame, PaywallPage, SettingsLayout, SettingsPage, SignInPage, TransactionDetailPage
+- `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage
 
 
 ---
@@ -3140,6 +3143,84 @@ export default function Example() {
 - `Escape`: Closes the menu.
 
 Related: [dropdown-menu](dropdown-menu.md), [menubar](menubar.md)
+
+
+---
+
+# Countdown
+
+Time left to a deadline, as a chip or inline text. Stays right after the tab was in the background.
+
+- Package: `@nexub/react` · Category: Feedback · Status: alpha
+- Import: `import { Countdown } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/countdown
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `to` (required) | `number \| Date` |  | The deadline: a Date or milliseconds since the epoch. Not a duration. |
+| `format` | `'m:ss' \| 'h:mm:ss' \| 'auto'` | `'auto'` | `auto` shows hours only from one hour up. |
+| `variant` | `'chip' \| 'inline'` | `'chip'` | A small badge, or plain text in the surrounding font. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the chip. |
+| `tone` | `'auto' \| 'neutral' \| 'warning' \| 'danger'` | `'auto'` | `auto` turns warning under `warnAt` and danger under `dangerAt`. |
+| `warnAt / dangerAt` | `number` | `60 / 10` | Thresholds for `tone="auto"`, in seconds. |
+| `onExpire` | `() => void` |  | Called once when the deadline is reached. |
+| `now` | `() => number` | `Date.now` | The clock. Inject one for tests and static previews. |
+
+## Example: Hold timer
+
+```tsx
+import * as React from 'react';
+import { Button, Countdown } from '@nexub/react';
+
+export default function Example() {
+  // The deadline is set after mount, so the server and the first paint agree.
+  const [deadline, setDeadline] = React.useState<number | null>(null);
+  const [expired, setExpired] = React.useState(false);
+  const start = () => {
+    setExpired(false);
+    setDeadline(Date.now() + 75_000);
+  };
+  React.useEffect(start, []);
+  return (
+    <div className="flex flex-wrap items-center gap-3">
+      <span className="text-body-md text-[var(--color-on-surface)]">{expired ? 'The hold has ended' : 'Held for you'}</span>
+      {deadline !== null && <Countdown to={deadline} onExpire={() => setExpired(true)} />}
+      <Button size="sm" variant="outlined" onClick={start}>
+        Restart
+      </Button>
+    </div>
+  );
+}
+```
+
+## Example: Resend button with useCountdown
+
+```tsx
+import * as React from 'react';
+import { Button, useCountdown } from '@nexub/react';
+
+export default function Example() {
+  // 0 until the first click: nothing reads the clock while rendering.
+  const [deadline, setDeadline] = React.useState(0);
+  const { seconds, expired } = useCountdown(deadline);
+  const waiting = deadline > 0 && !expired;
+  return (
+    <Button variant="outlined" disabled={waiting} onClick={() => setDeadline(Date.now() + 30_000)}>
+      {waiting ? <span className="tabular-nums">Resend code in 0:{String(seconds).padStart(2, '0')}</span> : 'Send code'}
+    </Button>
+  );
+}
+```
+
+## Accessibility
+
+- The digits are a `timer` that is not read on every tick. A separate polite region speaks each whole minute, then at 30, 10 and 5 seconds, and when time is up.
+- The server and the first paint show a placeholder of the same width; the time appears after mount, so there is no hydration mismatch.
+- `useCountdown(to, { now, onExpire })` returns `{ remainingMs, seconds, expired, ready }` for custom displays.
+
+Related: [badge](badge.md), [otp-input](otp-input.md), [progress](progress.md)
 
 
 ---
@@ -7422,6 +7503,90 @@ export default function Example() {
 
 ---
 
+# Phone Input
+
+A phone field with a country picker. Groups the number as you type and reports it in E.164.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { PhoneInput } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/phone-input
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string` |  | The number in E.164 ("+919847012345"), or an empty string. |
+| `onValueChange` | `(e164: string, details: { country: string; national: string; valid: boolean }) => void` |  | Called on every change. `valid` is a length check for the country, not proof the number exists. |
+| `defaultCountry` | `string` |  | ISO 3166-1 alpha-2 code to start on. Defaults to the region of the provider locale, else `US`. |
+| `country / onCountryChange` | `string` |  | Controls the selected country. |
+| `countries` | `string[]` |  | Limits the picker to these countries, in this order. With one entry the picker becomes text. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the field. |
+| `invalid / disabled` | `boolean` |  | Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field. |
+| `name` | `string` |  | Submits the E.164 value with a form. |
+| `sheet` | `boolean \| 'auto'` | `false` | Shows the country list as a bottom sheet; `'auto'` only on phones. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { PhoneInput } from '@nexub/react';
+
+export default function Example() {
+  const [value, setValue] = React.useState('');
+  const [valid, setValid] = React.useState(false);
+  return (
+    <div className="flex w-80 max-w-full flex-col gap-2">
+      <PhoneInput
+        aria-label="Phone number"
+        defaultCountry="IN"
+        value={value}
+        onValueChange={(e164, details) => {
+          setValue(e164);
+          setValid(details.valid);
+        }}
+      />
+      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+        {value ? `${value}${valid ? '' : ' (incomplete)'}` : 'Type a number, or paste one with its country code'}
+      </p>
+    </div>
+  );
+}
+```
+
+## Example: Restricted countries in a form field
+
+```tsx
+import * as React from 'react';
+import { FormField, PhoneInput } from '@nexub/react';
+
+export default function Example() {
+  const [valid, setValid] = React.useState(true);
+  return (
+    <FormField.Root name="mobile" required invalid={!valid} className="w-80 max-w-full">
+      <FormField.Label>Mobile number</FormField.Label>
+      <FormField.Control>
+        <PhoneInput countries={['IN', 'AE', 'SA', 'QA']} sheet="auto" onValueChange={(e164, details) => setValid(!e164 || details.valid)} />
+      </FormField.Control>
+      <FormField.Description>We send a code to confirm it.</FormField.Description>
+      <FormField.Error>That number looks too short or too long.</FormField.Error>
+    </FormField.Root>
+  );
+}
+```
+
+## Accessibility
+
+- `Tab`: Moves from the country picker to the number.
+- `Enter / Space`: Opens the country list; type to filter it.
+- The picker reads "Country code, India +91". The number field takes its name from the label or `aria-label`.
+- Pasting a full international number picks its country and fills the rest.
+- Validation is plausibility only: confirm the number on the server.
+
+Related: [input](input.md), [select](select.md), [otp-input](otp-input.md), [form-field](form-field.md)
+
+
+---
+
 # Plan Tracker
 
 An agent plan: ordered steps with done, active, pending or failed status.
@@ -9676,6 +9841,91 @@ export default function Example() {
 - Native `<input type="time">`: screen readers announce each segment, and phones open their own time picker.
 
 Related: [date-time-picker](date-time-picker.md), [date-picker](date-picker.md)
+
+
+---
+
+# Time Slot Picker
+
+Pick one time from a list of slots, for booking flows.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { TimeSlotPicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/time-slot-picker
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `slots` (required) | `{ value: string; label?: string; disabled?: boolean; hint?: string }[]` |  | The times. `value` is `HH:mm` or an ISO date-time; the label defaults to the time in the provider locale. |
+| `value / defaultValue / onValueChange` | `string` |  | The selected slot value. |
+| `groupBy` | `'none' \| 'period'` | `'none'` | `period` adds Morning, Afternoon and Evening headings. |
+| `columns` | `2 \| 3 \| 4 \| 'auto'` | `'auto'` | Slots per row. `auto` fits as many as the width allows; 3 and 4 drop to fewer where the picker is narrow. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Slot height. `md` and `lg` are at least 44px tall. |
+| `invalid / disabled / readOnly / required` | `boolean` |  | Group states. Inside `FormField.Control` they come from the field. |
+| `name` | `string` |  | Submits the selected value with a form. |
+| `emptyState` | `ReactNode` | `'No times available'` | Shown when `slots` is empty. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { TimeSlotPicker } from '@nexub/react';
+
+const slots = [
+  { value: '09:00' },
+  { value: '09:30' },
+  { value: '10:00', disabled: true },
+  { value: '10:30' },
+  { value: '11:00', hint: 'Last one' },
+  { value: '11:30' },
+];
+
+export default function Example() {
+  const [time, setTime] = React.useState('09:30');
+  return (
+    <div className="flex w-96 max-w-full flex-col gap-3">
+      <TimeSlotPicker aria-label="Start time" slots={slots} value={time} onValueChange={setTime} />
+      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+        Selected: {time}
+      </p>
+    </div>
+  );
+}
+```
+
+## Example: Grouped by time of day
+
+```tsx
+import * as React from 'react';
+import { FormField, TimeSlotPicker } from '@nexub/react';
+
+const slots = ['08:30', '10:00', '11:30', '13:00', '14:30', '16:00', '17:30', '19:00'].map((value) => ({
+  value,
+  disabled: value === '13:00',
+}));
+
+export default function Example() {
+  return (
+    <FormField.Root name="time" className="w-96 max-w-full">
+      <FormField.Control>
+        <TimeSlotPicker aria-label="Appointment time" slots={slots} groupBy="period" columns={3} />
+      </FormField.Control>
+      <FormField.Description>Times are shown in the venue’s time zone.</FormField.Description>
+    </FormField.Root>
+  );
+}
+```
+
+## Accessibility
+
+- `Tab`: Moves into the group, to the selected slot.
+- `Arrow keys`: Move to and select the next available slot.
+- A radio group: give it an `aria-label` or `aria-labelledby` (it defaults to "Choose a time").
+- Unavailable slots are struck through and read as "9:30 AM, unavailable".
+- A slot is named by its time; `hint` is its description.
+
+Related: [radio-card](radio-card.md), [date-picker](date-picker.md), [segmented-control](segmented-control.md)
 
 
 ---
