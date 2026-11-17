@@ -393,6 +393,7 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
@@ -589,6 +590,7 @@ Never use a component marked deprecated.
 
 - [NotificationCenter](components/notification-center.md) `@nexub/patterns`: A bell with an unread count that opens the notification list.
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
+- [StatusPage](components/status-page.md) `@nexub/patterns`: A whole page for one state: not found, server error, maintenance, offline or no access.
 
 ## Patterns — Forms
 
@@ -5297,6 +5299,55 @@ Related: [badge](badge.md), [avatar](avatar.md)
 
 ---
 
+# Illustration
+
+A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { Illustration } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/illustration
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `kind` (required) | `'noData' \| 'noResults' \| 'noAccess' \| 'serverError' \| 'offline' \| 'notFound' \| 'maintenance'` |  | Which drawing to show. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 80, 120 or 160 CSS px wide. |
+| `title` | `string` |  | Names the drawing for assistive technology. Without it the drawing is decorative. |
+
+## Example: Default
+
+```tsx
+import { Illustration } from '@nexub/react';
+
+export default function Example() {
+  return <Illustration kind="noData" />;
+}
+```
+
+## Example: Kinds
+
+```tsx
+import { Illustration } from '@nexub/react';
+
+const kinds = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'] as const;
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap justify-center gap-6">
+      {kinds.map((kind) => (
+        <Illustration key={kind} kind={kind} title={kind} />
+      ))}
+    </div>
+  );
+}
+```
+
+Related: [empty-state](empty-state.md), [error-state](error-state.md)
+
+
+---
+
 # Inline Edit
 
 Text that becomes an input on click, for renaming things in place.
@@ -9962,10 +10013,10 @@ Chronological list of activity events with avatar, description, and timestamp.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` (required) | `React.ReactNode` |  | Activity event title. |
-| `description` | `React.ReactNode` |  | Supporting description. |
-| `timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
-| `avatar` | `React.ReactNode` |  | Avatar element for the actor. |
+| `ActivityFeedItem title` (required) | `React.ReactNode` |  | Activity event title. |
+| `ActivityFeedItem description` | `React.ReactNode` |  | Supporting description. |
+| `ActivityFeedItem timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
+| `ActivityFeedItem avatar` | `React.ReactNode` |  | Avatar element for the actor. |
 
 ## Example: Default
 
@@ -11475,6 +11526,55 @@ export default function Example() {
       />
     </div>
   );
+}
+```
+
+
+---
+
+# StatusPage
+
+A whole page for one state: not found, server error, maintenance, offline or no access.
+
+- Package: `@nexub/patterns` · Category: Feedback · Status: alpha
+- Import: `import { StatusPage } from '@nexub/patterns';`
+- Docs: https://nexub-ds-docs.pages.dev/patterns/status-page
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `kind` (required) | `'notFound' \| 'serverError' \| 'maintenance' \| 'offline' \| 'noAccess'` |  | Which state. Sets the default text and illustration. `serverError` and `offline` are announced as alerts. |
+| `title` | `React.ReactNode` |  | Overrides the localised title (the one h1). |
+| `description` | `React.ReactNode` |  | Overrides the localised description. |
+| `code` | `string` |  | A small line above the title, e.g. "404". |
+| `actions` | `React.ReactNode` |  | Buttons under the text. Replaces the default Retry or Back to home. |
+| `illustration` | `React.ReactNode` |  | Art above the text. Defaults to the Illustration for the kind; `null` hides it. |
+| `onRetry` | `() => void` |  | Shows a Retry button for `serverError` and `offline`. |
+| `homeHref` | `string` |  | Shows a "Back to home" link for `notFound` and `noAccess`. |
+| `fullScreen` | `boolean` | `false` | At least as tall as the viewport. |
+| `as` | `'main' \| 'div' \| 'section'` | `'main'` | Landmark element. Use `div` inside an app shell that already renders `<main>`. |
+
+## Example: Not found
+
+```tsx
+import { StatusPage } from '@nexub/patterns';
+
+export default function Example() {
+  return <StatusPage as="div" kind="notFound" code="404" homeHref="/" />;
+}
+```
+
+## Example: Server error with Retry
+
+```tsx
+import { StatusPage } from '@nexub/patterns';
+
+// Call your data layer's refetch here.
+const retry = () => {};
+
+export default function Example() {
+  return <StatusPage as="div" kind="serverError" code="500" onRetry={retry} />;
 }
 ```
 

@@ -2,6 +2,9 @@
 
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
+import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
+import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface TableRootProps extends React.HTMLAttributes<HTMLTableElement> {
   /**
@@ -89,12 +92,55 @@ const Header = React.forwardRef<
 ));
 Header.displayName = 'Table.Header';
 
-const Body = React.forwardRef<
-  HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
-));
+export interface TableBodyProps extends React.HTMLAttributes<HTMLTableSectionElement>, DataStateProps {
+  /**
+   * Number of columns, so a state can span the table. Setting it turns the
+   * states on: skeleton rows while `loading`, `errorState`, and `emptyState`
+   * (default: the "no results" message) when the body has no rows.
+   */
+  columns?: number;
+  /** Skeleton rows shown while loading. @default 5 */
+  loadingRows?: number;
+}
+
+const Body = React.forwardRef<HTMLTableSectionElement, TableBodyProps>(
+  ({ className, columns, loadingRows = 5, loading, emptyState, errorState, children, ...props }, ref) => {
+    const messages = useNexubMessages();
+    const states = { loading, emptyState, errorState };
+    const on = columns !== undefined;
+    const skeletonRows = Array.from({ length: loadingRows }, (_, r) => (
+      <Row key={r} data-loading="" className="hover:bg-transparent">
+        {Array.from({ length: columns ?? 0 }, (_, c) => (
+          <Cell key={c}>
+            <Skeleton />
+          </Cell>
+        ))}
+      </Row>
+    ));
+    const state = on ? dataState(states, React.Children.count(children) === 0, skeletonRows, messages.noResults) : null;
+    return (
+      <tbody
+        ref={ref}
+        aria-busy={on ? dataBusy(states) : undefined}
+        className={cn('[&_tr:last-child]:border-0', className)}
+        {...props}
+      >
+        {state == null ? (
+          children
+        ) : state === skeletonRows ? (
+          skeletonRows
+        ) : (
+          // Error and empty: one full-width row, like DataTable.
+          <Row className="hover:bg-transparent">
+            <Cell colSpan={columns} className="h-24">
+              <div className="flex flex-col">{state}</div>
+            </Cell>
+          </Row>
+        )}
+      </tbody>
+    );
+  },
+);
 Body.displayName = 'Table.Body';
 
 const TableFooter = React.forwardRef<

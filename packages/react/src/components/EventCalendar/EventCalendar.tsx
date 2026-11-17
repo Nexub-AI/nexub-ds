@@ -23,6 +23,8 @@ import { IconButton } from '../IconButton/IconButton.js';
 import { SegmentedControl } from '../SegmentedControl/SegmentedControl.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
+import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
 
 export type EventCalendarView = 'month' | 'week';
 export type EventTone = 'primary' | 'success' | 'warning' | 'error' | 'info';
@@ -39,8 +41,13 @@ export interface CalendarEvent {
   tone?: EventTone;
 }
 
-export interface EventCalendarProps {
+export interface EventCalendarProps extends DataStateProps {
   events: CalendarEvent[];
+  /**
+   * Shown under the grid when no event falls in the visible month or week. The
+   * grid stays, and an empty range is normal, so there is no default.
+   */
+  emptyState?: React.ReactNode;
   /** Any day inside the shown month or week. */
   date?: Date;
   defaultDate?: Date;
@@ -96,6 +103,9 @@ export function EventCalendar({
   maxEventsPerDay = 3,
   weekStartsOn: weekStartsOnProp,
   className,
+  loading,
+  emptyState,
+  errorState,
 }: EventCalendarProps) {
   const t = useNexubMessages();
   const { dir } = useLocale();
@@ -137,6 +147,10 @@ export function EventCalendar({
   const today = new Date();
   const step = (n: number) => setDate(month ? addMonths(date, n) : addWeeks(date, n));
   const [Back, Forward] = dir === 'rtl' ? [ChevronRight, ChevronLeft] : [ChevronLeft, ChevronRight];
+  const states = { loading, emptyState, errorState };
+  const busy = dataBusy(states);
+  // Error replaces the grid; loading and empty keep it (null skeleton and text: the grid draws them itself).
+  const state = dataState(states, !sorted.some((e) => e.start <= endOfDay(last) && (e.end ?? e.start) >= startOfDay(first)), null, null);
 
   return (
     <div className={cn('flex flex-col gap-3', className)}>
@@ -164,95 +178,103 @@ export function EventCalendar({
         </SegmentedControl.Root>
       </div>
 
-      <table className="w-full table-fixed border-collapse text-body-sm">
-        <caption className="sr-only">{title}</caption>
-        <thead>
-          <tr>
-            {weeks[0]!.map((d) => (
-              <th
-                key={d.getDay()}
-                scope="col"
-                abbr={fmt({ weekday: 'long' }).format(d)}
-                className="pb-2 text-label-md font-medium text-[var(--color-on-surface-muted)]"
-              >
-                {fmt({ weekday: 'short' }).format(d)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {weeks.map((week) => (
-            <tr key={week[0]!.toISOString()}>
-              {week.map((day) => {
-                const list = eventsOn(day);
-                const shown = month ? list.slice(0, maxEventsPerDay) : list;
-                const hidden = list.length - shown.length;
-                const isToday = isSameDay(day, today);
-                const outside = month && !isSameMonth(day, date);
-                return (
-                  <td
-                    key={day.toISOString()}
-                    aria-current={isToday ? 'date' : undefined}
-                    className={cn(
-                      'border border-[var(--color-outline-variant)] p-1 align-top',
-                      month ? 'h-28' : 'h-80',
-                      outside && 'bg-[var(--color-surface-container-low)]',
-                    )}
+      {state != null && state === errorState ? (
+        <div className="flex min-h-80 flex-col justify-center">{state}</div>
+      ) : (
+        <>
+          <table aria-busy={busy} className="w-full table-fixed border-collapse text-body-sm">
+            <caption className="sr-only">{title}</caption>
+            <thead>
+              <tr>
+                {weeks[0]!.map((d) => (
+                  <th
+                    key={d.getDay()}
+                    scope="col"
+                    abbr={fmt({ weekday: 'long' }).format(d)}
+                    className="pb-2 text-label-md font-medium text-[var(--color-on-surface-muted)]"
                   >
-                    <DayNumber
-                      day={day}
-                      label={fullFmt.format(day)}
-                      isToday={isToday}
-                      muted={outside}
-                      onClick={onDayClick}
-                    />
-                    <ul className="mt-1 flex flex-col gap-0.5">
-                      {shown.map((e) => {
-                        const time = e.allDay || !isSameDay(e.start, day) ? '' : timeFmt.format(e.start);
-                        const body = (
-                          <>
-                            {time && <span className="me-1 tabular-nums opacity-80">{time}</span>}
-                            {e.title}
-                          </>
-                        );
-                        const cls = cn(
-                          'block w-full truncate rounded-shape-min px-1.5 py-0.5 text-start text-label-md',
-                          tones[e.tone ?? 'primary'],
-                        );
-                        return (
-                          <li key={e.id}>
-                            {onEventClick ? (
-                              <button type="button" className={cn(cls, 'hover:opacity-90')} onClick={() => onEventClick(e)}>
-                                {body}
-                              </button>
-                            ) : (
-                              <span className={cls}>{body}</span>
-                            )}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                    {hidden > 0 &&
-                      (onDayClick ? (
-                        <button
-                          type="button"
-                          className="min-h-6 px-1.5 text-label-md text-[var(--color-on-surface-variant)] hover:underline"
-                          onClick={() => onDayClick(day)}
-                        >
-                          {t.moreCount(hidden)}
-                        </button>
-                      ) : (
-                        <span className="mt-0.5 block px-1.5 text-label-md text-[var(--color-on-surface-variant)]">
-                          {t.moreCount(hidden)}
-                        </span>
-                      ))}
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                    {fmt({ weekday: 'short' }).format(d)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {weeks.map((week) => (
+                <tr key={week[0]!.toISOString()}>
+                  {week.map((day) => {
+                    const list = busy ? [] : eventsOn(day);
+                    const shown = month ? list.slice(0, maxEventsPerDay) : list;
+                    const hidden = list.length - shown.length;
+                    const isToday = isSameDay(day, today);
+                    const outside = month && !isSameMonth(day, date);
+                    return (
+                      <td
+                        key={day.toISOString()}
+                        aria-current={isToday ? 'date' : undefined}
+                        className={cn(
+                          'border border-[var(--color-outline-variant)] p-1 align-top',
+                          month ? 'h-28' : 'h-80',
+                          outside && 'bg-[var(--color-surface-container-low)]',
+                        )}
+                      >
+                        <DayNumber
+                          day={day}
+                          label={fullFmt.format(day)}
+                          isToday={isToday}
+                          muted={outside}
+                          onClick={onDayClick}
+                        />
+                        {busy && <Skeleton shape="rect" className="mt-1 h-5 rounded-shape-min" />}
+                        <ul className="mt-1 flex flex-col gap-0.5">
+                          {shown.map((e) => {
+                            const time = e.allDay || !isSameDay(e.start, day) ? '' : timeFmt.format(e.start);
+                            const body = (
+                              <>
+                                {time && <span className="me-1 tabular-nums opacity-80">{time}</span>}
+                                {e.title}
+                              </>
+                            );
+                            const cls = cn(
+                              'block w-full truncate rounded-shape-min px-1.5 py-0.5 text-start text-label-md',
+                              tones[e.tone ?? 'primary'],
+                            );
+                            return (
+                              <li key={e.id}>
+                                {onEventClick ? (
+                                  <button type="button" className={cn(cls, 'hover:opacity-90')} onClick={() => onEventClick(e)}>
+                                    {body}
+                                  </button>
+                                ) : (
+                                  <span className={cls}>{body}</span>
+                                )}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                        {hidden > 0 &&
+                          (onDayClick ? (
+                            <button
+                              type="button"
+                              className="min-h-6 px-1.5 text-label-md text-[var(--color-on-surface-variant)] hover:underline"
+                              onClick={() => onDayClick(day)}
+                            >
+                              {t.moreCount(hidden)}
+                            </button>
+                          ) : (
+                            <span className="mt-0.5 block px-1.5 text-label-md text-[var(--color-on-surface-variant)]">
+                              {t.moreCount(hidden)}
+                            </span>
+                          ))}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {state != null && <div className="flex flex-col">{state}</div>}
+        </>
+      )}
     </div>
   );
 }

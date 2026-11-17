@@ -22,6 +22,17 @@ export interface ResizablePanelsProps extends Omit<React.HTMLAttributes<HTMLDivE
 
 const STEP = 5;
 
+// Server HTML carries the split as classes (no style attribute: strict CSP), so the first
+// paint already has the panel sizes. Covers an even split and sizes on the 5% scale; the
+// CSSOM flex below then sets the same proportions, and takes over once a drag leaves the scale.
+// Literal strings so Tailwind can scan them.
+const GROW: Record<number, string> = {
+  5: 'grow-[5]', 10: 'grow-[10]', 15: 'grow-[15]', 20: 'grow-[20]', 25: 'grow-[25]',
+  30: 'grow-[30]', 35: 'grow-[35]', 40: 'grow-[40]', 45: 'grow-[45]', 50: 'grow-[50]',
+  55: 'grow-[55]', 60: 'grow-[60]', 65: 'grow-[65]', 70: 'grow-[70]', 75: 'grow-[75]',
+  80: 'grow-[80]', 85: 'grow-[85]', 90: 'grow-[90]', 95: 'grow-[95]',
+};
+
 /**
  * Panels with draggable separators (ARIA window splitter). Arrow keys move a
  * focused separator by 5%, Home/End to its limits, and Enter resets the pair.
@@ -52,6 +63,7 @@ export function ResizablePanels({
   const baseId = React.useId();
   const horizontal = direction === 'horizontal';
   const min = (i: number) => minSizes?.[i] ?? 10;
+  const isEven = sizes.every((s) => s === sizes[0]);
 
   // Sets panel i to `to` percent, taking the difference from panel i+1, within both minimums.
   const resize = (current: number[], i: number, to: number) => {
@@ -113,7 +125,7 @@ export function ResizablePanels({
               // CSSOM, not a style attribute: strict-CSP pages block inline styles.
               if (el) el.style.flex = `${sizes[i] ?? 0} 1 0px`;
             }}
-            className="min-h-0 min-w-0 overflow-auto"
+            className={cn('min-h-0 min-w-0 overflow-auto', (isEven || GROW[sizes[i]!]) && 'shrink basis-0', isEven ? 'grow' : GROW[sizes[i]!])}
           >
             {panel}
           </div>

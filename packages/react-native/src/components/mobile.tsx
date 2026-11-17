@@ -25,10 +25,11 @@ import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { fontStyle } from '../theme/fonts';
 import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
-import { nxExit, nxLayout, nxSpring } from '../theme/motion';
+import { nxExit, nxLayout, nxSpring, useSpringValue } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { Banner } from './feedback';
 import { BottomSheet } from './overlays';
+import { MIN_TARGET } from './shared';
 
 // ─── SwipeableRow ────────────────────────────────────────────────────────────
 
@@ -58,7 +59,7 @@ const SWIPE_ACTION_WIDTH = 80;
  * custom accessibility actions too (VoiceOver rotor / TalkBack actions).
  */
 export function SwipeableRow({ label, onPress, actions, children, style }: SwipeableRowProps) {
-  const { roles, dir } = useTheme();
+  const { roles, tokens, dir } = useTheme();
   const play = useHaptics();
   const width = actions.length * SWIPE_ACTION_WIDTH;
   const sign = dir === 'rtl' ? 1 : -1; // open = content moves toward the start edge
@@ -141,7 +142,7 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
                 backgroundColor: roles[b],
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 4,
+                gap: tokens.spacing[1],
               }}
             >
               {Glyph && <Glyph size="md" color={roles[f]} />}
@@ -187,26 +188,28 @@ export interface PageIndicatorProps {
 
 /** Dots for paged content: "Page 2 of 4" to screen readers. */
 export function PageIndicator({ count, index, style }: PageIndicatorProps) {
-  const { roles, messages } = useTheme();
+  const { tokens, messages } = useTheme();
   return (
     <View
       accessible
       accessibilityLabel={messages.page(index + 1, count)}
-      style={[{ flexDirection: 'row', gap: 6, alignSelf: 'center' }, style]}
+      style={[{ flexDirection: 'row', gap: tokens.spacing['1-5'], alignSelf: 'center' }, style]}
     >
       {Array.from({ length: count }, (_, i) => (
-        <View
-          key={i}
-          style={{
-            width: i === index ? 20 : 6,
-            height: 6,
-            borderRadius: 3,
-            backgroundColor: roles[i === index ? 'primary' : 'outline-variant'],
-          }}
-        />
+        <PageDot key={i} active={i === index} />
       ))}
     </View>
   );
+}
+
+/** One dot: the active one stretches into a pill and takes the primary colour, on the springs. */
+function PageDot({ active }: { active: boolean }) {
+  const { roles, tokens } = useTheme();
+  const dot = tokens.spacing['1-5'];
+  const width = useSpringValue(active ? tokens.spacing[5] : dot, 'spatial', 'default');
+  const color = useSpringValue(roles[active ? 'primary' : 'outline-variant']);
+  const motion = useAnimatedStyle(() => ({ width: width.value, backgroundColor: color.value }));
+  return <Animated.View style={[{ height: dot, borderRadius: dot / 2 }, motion]} />;
 }
 
 export interface CarouselProps<T> {
@@ -344,7 +347,7 @@ export function OTPInput({
             <View
               key={i}
               style={{
-                width: 44,
+                width: MIN_TARGET,
                 height: 52,
                 borderRadius: tokens.shape.field,
                 borderWidth: active || error ? 2 : 1,
@@ -416,14 +419,14 @@ export interface NumericKeypadProps {
 
 /** On-screen digits for amounts and PINs (no system keyboard covering the screen). */
 export function NumericKeypad({ onKey, decimal, locale, style }: NumericKeypadProps) {
-  const { roles, messages, locale: loc } = useTheme();
+  const { roles, tokens, messages, locale: loc } = useTheme();
   const sep = new Intl.NumberFormat(locale ?? loc).format(1.5).replace(/\p{Nd}/gu, '') || '.';
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', decimal ? sep : '', '0', 'delete'];
   return (
     <View style={[{ flexDirection: 'row', flexWrap: 'wrap' }, style]}>
       {keys.map((k, i) =>
         k === '' ? (
-          <View key={i} style={{ width: '33.333%', height: 64 }} />
+          <View key={i} style={{ width: '33.333%', height: tokens.spacing[16] }} />
         ) : (
           <Pressable
             key={i}
@@ -432,10 +435,10 @@ export function NumericKeypad({ onKey, decimal, locale, style }: NumericKeypadPr
             onPress={() => onKey(k)}
             style={{
               width: '33.333%',
-              height: 64,
+              height: tokens.spacing[16],
               alignItems: 'center',
               justifyContent: 'center',
-              borderRadius: 16,
+              borderRadius: tokens.radius.xl,
             }}
           >
             {k === 'delete' ? (
@@ -497,7 +500,7 @@ export function ExpressiveMoneyInput({
         accessible
         accessibilityLabel={`${label}, ${text || '0'} ${currency}`}
         accessibilityLiveRegion="polite"
-        style={{ alignItems: 'center', gap: 4 }}
+        style={{ alignItems: 'center', gap: theme.tokens.spacing[1] }}
       >
         <Text
           variant="display-md"
@@ -546,7 +549,7 @@ export function SensitiveValue({
   defaultRevealed = false,
   onRevealedChange,
 }: SensitiveValueProps) {
-  const { messages } = useTheme();
+  const { messages, tokens } = useTheme();
   const [shown, setShown] = useControllableState({
     value: revealed,
     defaultValue: defaultRevealed,
@@ -557,7 +560,7 @@ export function SensitiveValue({
     return () => sub.remove();
   }, [setShown]);
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[1] }}>
       <Text
         variant={variant}
         tabular
@@ -640,12 +643,12 @@ export function OfflineBanner({
   offline: boolean;
   style?: StyleProp<ViewStyle>;
 }) {
-  const { messages } = useTheme();
+  const { messages, tokens } = useTheme();
   if (!offline) return null;
   return (
     <Banner
       tone="warning"
-      style={[{ borderRadius: 0, paddingVertical: 10 }, style]}
+      style={[{ borderRadius: 0, paddingVertical: tokens.spacing['2-5'] }, style]}
       accessibilityLiveRegion="polite"
     >
       {messages.offline}
@@ -679,12 +682,12 @@ export function Coachmark({
   const tip = (
     <View
       style={{
-        width: 14,
-        height: 14,
+        width: tokens.spacing['3-5'],
+        height: tokens.spacing['3-5'],
         marginStart: tokens.spacing[6],
         transform: [{ rotate: '45deg' }],
         backgroundColor: roles['inverse-surface'],
-        marginVertical: -7,
+        marginVertical: -tokens.spacing['3-5'] / 2,
       }}
     />
   );
@@ -749,12 +752,12 @@ export function FAB({
       stateLayer="on-primary-container"
       style={{
         position: 'absolute',
-        end: 16,
+        end: tokens.spacing[4],
         bottom: insets.bottom + 16 + bottomOffset,
-        height: 56,
-        minWidth: 56,
+        height: tokens.size.control.xl,
+        minWidth: tokens.size.control.xl,
         paddingHorizontal: extended ? 20 : 0,
-        borderRadius: 16,
+        borderRadius: tokens.shape.container,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',

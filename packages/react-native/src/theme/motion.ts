@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   FadeIn,
   FadeInDown,
@@ -11,6 +12,8 @@ import {
   SlideOutRight,
   ZoomIn,
   ZoomOut,
+  useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 import { native } from '@nexub/tokens/native';
 
@@ -26,6 +29,23 @@ export type SpringSpeed = keyof (typeof native.motion.spring)['spatial'];
 /** `withSpring` config for a spring token, honouring Reduce Motion. */
 export function nxSpring(family: SpringFamily = 'spatial', speed: SpringSpeed = 'default') {
   return { ...native.motion.spring[family][speed], reduceMotion: ReduceMotion.System };
+}
+
+/**
+ * A shared value that springs to `target` whenever it changes: a number
+ * (progress, width, angle) or a colour. It starts at `target`, so the first
+ * render is the resting state. State changes ride `effects` by default.
+ */
+export function useSpringValue<T extends number | string>(
+  target: T,
+  family: SpringFamily = 'effects',
+  speed: SpringSpeed = 'fast',
+) {
+  const value = useSharedValue<T>(target);
+  React.useEffect(() => {
+    value.value = withSpring(target as never, nxSpring(family, speed)) as T;
+  }, [target, family, speed, value]);
+  return value;
 }
 
 export type EnterKind = 'fade' | 'up' | 'down' | 'scale';

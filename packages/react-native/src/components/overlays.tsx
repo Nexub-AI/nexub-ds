@@ -237,7 +237,9 @@ export function BottomSheet({
         />
       </Animated.View>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        // Both platforms: an Android window that already resized for the
+        // keyboard overlaps it by nothing, so the padding stays 0 there.
+        behavior="padding"
         style={{ flex: 1, justifyContent: 'flex-end' }}
         pointerEvents="box-none"
       >
@@ -267,7 +269,7 @@ export function BottomSheet({
             >
               <View
                 style={{
-                  width: 36,
+                  width: tokens.spacing[9],
                   height: 5,
                   borderRadius: 3,
                   backgroundColor: roles['outline-variant'],

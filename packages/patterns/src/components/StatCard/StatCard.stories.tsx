@@ -91,3 +91,13 @@ export const CategoryAndTrend: Story = { render: () => lively };
 
 /** Under the vivid expression the cards also lift on hover. */
 export const Vivid: Story = { render: () => <div data-expression="vivid">{lively}</div> };
+
+/** 10.5: `loading` swaps the value for a skeleton; the card keeps its size. */
+export const DataStates: Story = {
+  render: () => (
+    <div className="grid w-full max-w-2xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
+      <StatCard label="Total revenue" value="$48,295" delta="+12.5%" deltaType="increase" description="vs last month" icon={<RevenueIcon />} loading />
+      <StatCard label="Total revenue" value="$48,295" delta="+12.5%" deltaType="increase" description="vs last month" icon={<RevenueIcon />} />
+    </div>
+  ),
+};

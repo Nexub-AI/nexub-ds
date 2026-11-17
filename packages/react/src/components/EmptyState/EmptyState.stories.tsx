@@ -76,3 +76,14 @@ export const Sizes: StoryObj = {
     </div>
   ),
 };
+
+/** 10.5: `illustrated` swaps the icon for a spot illustration that follows the theme and accent. */
+export const Illustrated: StoryObj = {
+  render: () => (
+    <div className="grid w-full max-w-5xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-4">
+      {(['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'] as const).map((kind) => (
+        <EmptyStatePreset key={kind} kind={kind} size="sm" illustrated />
+      ))}
+    </div>
+  ),
+};

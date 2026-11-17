@@ -31,9 +31,9 @@ import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { fontStyle } from '../theme/fonts';
 import { useHaptics, useTheme } from '../theme/ThemeProvider';
-import { nxEnter, nxExit, nxLayout, nxSpring } from '../theme/motion';
+import { nxEnter, nxExit, nxLayout, nxSpring, useSpringValue } from '../theme/motion';
 import { IconButton } from './actions';
-import { controlHeight, disabledOpacity, hitSlopFor } from './shared';
+import { MIN_TARGET, controlHeight, disabledOpacity, hitSlopFor } from './shared';
 
 // ─── TextField ───────────────────────────────────────────────────────────────
 
@@ -107,7 +107,13 @@ export function TextField({
   };
   const showClear = clearable && length > 0 && !disabled && rest.readOnly !== true;
   const body = tokens.type['body-lg'];
-  const border = error ? roles.error : focused ? roles.primary : roles.outline;
+  // Focus and error change the outline's colour and weight on the effects spring.
+  const borderColor = useSpringValue(error ? roles.error : focused ? roles.primary : roles.outline);
+  const borderWidth = useSpringValue(focused || error ? 2 : 1);
+  const outline = useAnimatedStyle(() => ({
+    borderColor: borderColor.value,
+    borderWidth: borderWidth.value,
+  }));
   return (
     <View style={[{ gap: tokens.spacing['1-5'], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       <Text
@@ -117,18 +123,19 @@ export function TextField({
       >
         {label}
       </Text>
-      <View
-        style={{
-          minHeight: controlHeight(theme, size),
-          flexDirection: 'row',
-          alignItems: multiline ? 'flex-start' : 'center',
-          gap: tokens.spacing[2],
-          paddingHorizontal: tokens.spacing['3-5'],
-          borderRadius: tokens.shape.field,
-          borderWidth: focused || error ? 2 : 1,
-          borderColor: border,
-          backgroundColor: roles['surface-container-lowest'],
-        }}
+      <Animated.View
+        style={[
+          {
+            minHeight: controlHeight(theme, size),
+            flexDirection: 'row',
+            alignItems: multiline ? 'flex-start' : 'center',
+            gap: tokens.spacing[2],
+            paddingHorizontal: tokens.spacing['3-5'],
+            borderRadius: tokens.shape.field,
+            backgroundColor: roles['surface-container-lowest'],
+          },
+          outline,
+        ]}
       >
         {leading}
         <TextInput
@@ -175,7 +182,7 @@ export function TextField({
         {loading && <ActivityIndicator size="small" color={roles['on-surface-variant']} />}
         {showClear && <IconButton icon={X} label={messages.clear} size="xs" variant="text" onPress={clear} />}
         {trailing}
-      </View>
+      </Animated.View>
       {(error || helperText) && (
         <Text
           variant="body-sm"
@@ -370,7 +377,7 @@ export function Stepper({
   disabled,
   style,
 }: StepperProps) {
-  const { messages } = useTheme();
+  const { messages, tokens } = useTheme();
   const play = useHaptics();
   const [n, setN] = useControllableState({ value, defaultValue, onChange: onValueChange });
   const set = (next: number) => {
@@ -395,7 +402,7 @@ export function Stepper({
         set(n + (e.nativeEvent.actionName === 'increment' ? step : -step))
       }
       style={[
-        { flexDirection: 'row', alignItems: 'center', gap: 12, alignSelf: 'flex-start' },
+        { flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[3], alignSelf: 'flex-start' },
         style,
       ]}
     >
@@ -407,7 +414,7 @@ export function Stepper({
         disabled={disabled || n <= min}
         onPress={() => set(n - step)}
       />
-      <Text variant="title-md" tabular style={{ minWidth: 32, textAlign: 'center' }}>
+      <Text variant="title-md" tabular style={{ minWidth: tokens.size.control.sm, textAlign: 'center' }}>
         {n}
       </Text>
       <IconButton
@@ -451,6 +458,10 @@ export function Checkbox({
     defaultValue: defaultChecked,
     onChange: onCheckedChange,
   });
+  // The box sits on the label's first line, a point clear above and below.
+  const box = tokens.type['body-md'].lineHeight - 2;
+  const fill = useSpringValue(on ? roles.primary : 'transparent');
+  const boxStyle = useAnimatedStyle(() => ({ backgroundColor: fill.value }));
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -467,28 +478,37 @@ export function Checkbox({
           flexDirection: 'row',
           gap: tokens.spacing[3],
           alignItems: 'flex-start',
-          minHeight: 44,
+          minHeight: MIN_TARGET,
           paddingVertical: tokens.spacing['2-5'],
           opacity: disabled ? disabledOpacity(theme) : 1,
         },
         style,
       ]}
     >
-      <View
-        style={{
-          width: 22,
-          height: 22,
-          marginTop: 1,
-          borderRadius: tokens.shape.min + 2,
-          borderWidth: on ? 0 : 2,
-          borderColor: roles.outline,
-          backgroundColor: on ? roles.primary : 'transparent',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+      <Animated.View
+        style={[
+          {
+            width: box,
+            height: box,
+            marginTop: 1,
+            borderRadius: tokens.shape.min + 2,
+            borderWidth: on ? 0 : 2,
+            borderColor: roles.outline,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          boxStyle,
+        ]}
       >
-        {on && <Check size={16} strokeWidth={3} color={roles['on-primary']} />}
-      </View>
+        {/* Checked on first render doesn't animate; toggling scales the check in. */}
+        <LayoutAnimationConfig skipEntering>
+          {on && (
+            <Animated.View entering={nxEnter('scale', 'fast')} exiting={nxExit('scale')}>
+              <Check size={16} strokeWidth={3} color={roles['on-primary']} />
+            </Animated.View>
+          )}
+        </LayoutAnimationConfig>
+      </Animated.View>
       <View style={{ flex: 1, gap: tokens.spacing['0-5'] }}>
         <Text variant="body-md">{label}</Text>
         {description && (
@@ -555,6 +575,12 @@ export function Radio({ value, label, description, disabled: own }: RadioProps) 
   if (!ctx) throw new Error('@nexub/react-native: <Radio> must be inside <RadioGroup>.');
   const on = ctx.value === value;
   const disabled = own || ctx.disabled;
+  const { roles, tokens } = theme;
+  // Same box as Checkbox: centred on the label's first line.
+  const box = tokens.type['body-md'].lineHeight - 2;
+  const dot = tokens.spacing['2-5'];
+  const ring = useSpringValue(on ? roles.primary : roles.outline);
+  const ringStyle = useAnimatedStyle(() => ({ borderColor: ring.value }));
   return (
     <Pressable
       accessibilityRole="radio"
@@ -568,32 +594,43 @@ export function Radio({ value, label, description, disabled: own }: RadioProps) 
       pressScale={false}
       style={{
         flexDirection: 'row',
-        gap: 12,
+        gap: tokens.spacing[3],
         alignItems: 'flex-start',
-        minHeight: 44,
-        paddingVertical: 10,
+        minHeight: MIN_TARGET,
+        paddingVertical: tokens.spacing['2-5'],
         opacity: disabled ? disabledOpacity(theme) : 1,
       }}
     >
-      <View
-        style={{
-          width: 22,
-          height: 22,
-          marginTop: 1,
-          borderRadius: 11,
-          borderWidth: 2,
-          borderColor: on ? theme.roles.primary : theme.roles.outline,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+      <Animated.View
+        style={[
+          {
+            width: box,
+            height: box,
+            marginTop: 1,
+            borderRadius: box / 2,
+            borderWidth: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          ringStyle,
+        ]}
       >
-        {on && (
-          <View
-            style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: theme.roles.primary }}
-          />
-        )}
-      </View>
-      <View style={{ flex: 1, gap: 2 }}>
+        <LayoutAnimationConfig skipEntering>
+          {on && (
+            <Animated.View
+              entering={nxEnter('scale', 'fast')}
+              exiting={nxExit('scale')}
+              style={{
+                width: dot,
+                height: dot,
+                borderRadius: dot / 2,
+                backgroundColor: roles.primary,
+              }}
+            />
+          )}
+        </LayoutAnimationConfig>
+      </Animated.View>
+      <View style={{ flex: 1, gap: tokens.spacing['0-5'] }}>
         <Text variant="body-md">{label}</Text>
         {description && (
           <Text variant="body-sm" color="on-surface-variant">
@@ -795,7 +832,9 @@ export function Slider({
   style,
 }: SliderProps) {
   const theme = useTheme();
-  const { roles } = theme;
+  const { roles, tokens } = theme;
+  const track = tokens.spacing['1-5'];
+  const thumb = tokens.size.control.xs;
   const [v, setV] = useControllableState({ value, defaultValue, onChange: onValueChange });
   const width = React.useRef(1);
   const current = React.useRef(v);
@@ -836,17 +875,17 @@ export function Slider({
       }
       onLayout={(e) => (width.current = e.nativeEvent.layout.width || 1)}
       style={[
-        { height: 44, justifyContent: 'center', opacity: disabled ? disabledOpacity(theme) : 1 },
+        { height: MIN_TARGET, justifyContent: 'center', opacity: disabled ? disabledOpacity(theme) : 1 },
         style,
       ]}
       {...responder.panHandlers}
     >
       <View
         pointerEvents="none"
-        style={{ height: 6, borderRadius: 3, backgroundColor: roles['surface-container-highest'] }}
+        style={{ height: track, borderRadius: track / 2, backgroundColor: roles['surface-container-highest'] }}
       >
         <View
-          style={{ width: `${pct}%`, height: 6, borderRadius: 3, backgroundColor: roles.primary }}
+          style={{ width: `${pct}%`, height: track, borderRadius: track / 2, backgroundColor: roles.primary }}
         />
       </View>
       <View
@@ -854,10 +893,10 @@ export function Slider({
         style={{
           position: 'absolute',
           start: `${pct}%`,
-          marginStart: -12,
-          width: 24,
-          height: 24,
-          borderRadius: 12,
+          marginStart: -thumb / 2,
+          width: thumb,
+          height: thumb,
+          borderRadius: thumb / 2,
           backgroundColor: roles['surface-container-lowest'],
           boxShadow: theme.elevation(2),
         }}
@@ -949,7 +988,7 @@ export function Chip({
           label={`${messages.remove} ${label}`}
           size="xs"
           onPress={onRemove}
-          style={{ position: 'absolute', end: 4, top: (height - controlHeight(theme, 'xs')) / 2 }}
+          style={{ position: 'absolute', end: tokens.spacing[1], top: (height - controlHeight(theme, 'xs')) / 2 }}
         />
       )}
     </Animated.View>

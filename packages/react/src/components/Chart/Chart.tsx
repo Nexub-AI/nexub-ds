@@ -9,7 +9,10 @@
 // draw-in on first paint (.nx-chart-bar / .nx-chart-line in @nexub/themes,
 // off under reduced motion).
 import * as React from 'react';
+import { defaultMessages } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
+import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
+import { Skeleton } from '../Skeleton/Skeleton.js';
 
 /** A colour from the categorical chart palette, 1–8. */
 export type ChartColor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -51,6 +54,27 @@ const defaultFormat = (n: number) => n.toLocaleString();
 const PLOT_HEIGHT = { sm: 'h-32', md: 'h-48', lg: 'h-64' } as const;
 const VB_W = 300;
 const VB_H = 100;
+const PLOT_MIN = { sm: 'min-h-32', md: 'min-h-48', lg: 'min-h-64' } as const;
+
+/**
+ * The box a data state (10.5) takes in place of a plot, or null to draw the
+ * chart. `box` gives it at least the plot's size, so the page does not jump
+ * when the data arrives. Charts have no hooks, so the default empty text is the
+ * English default; pass `emptyState` to translate it.
+ */
+export function chartState(
+  props: DataStateProps,
+  empty: boolean,
+  box: string,
+  skeleton: React.ReactNode = <Skeleton shape="rect" className="flex-1" />,
+) {
+  const state = dataState(props, empty, skeleton, defaultMessages.emptyStates.noData.title);
+  return state == null ? null : (
+    <div data-chart-state="" className={cn('flex flex-col', box)}>
+      {state}
+    </div>
+  );
+}
 
 export interface ChartLegendProps extends React.HTMLAttributes<HTMLUListElement> {
   items: { label: string; color?: ChartColor }[];
@@ -70,7 +94,7 @@ export function ChartLegend({ items, className, ...props }: ChartLegendProps) {
   );
 }
 
-interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
   /** One row per category, in order. */
   data: T[];
   /** Key of the category label in each row (the x axis). */
@@ -90,9 +114,26 @@ interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
 const valueOf = <T,>(row: T, key: string) => Number(row[key as keyof T]) || 0;
 
 function Frame<T>({
-  data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, domain, className, children, ...props
+  data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, domain, className, children,
+  loading, emptyState, errorState, ...props
 }: CartesianProps<T> & { domain: [number, number]; children: React.ReactNode }) {
   const labels = series.map((s) => s.label ?? s.key);
+  const states = { loading, emptyState, errorState };
+  const state = chartState(states, data.length === 0, cn('flex-1', PLOT_MIN[size]));
+  if (state) {
+    return (
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex flex-col gap-3', className)} {...props}>
+        {(legend ?? series.length > 1) && (
+          <ChartLegend aria-hidden="true" items={series.map((s, i) => ({ label: labels[i]!, color: s.color }))} />
+        )}
+        <div className="flex flex-col gap-1">
+          {state}
+          {/* The category labels' row, kept so the height matches the drawn chart. */}
+          <div aria-hidden="true" className="h-[1lh] text-label-sm" />
+        </div>
+      </figure>
+    );
+  }
   const [lo, hi] = domain;
   const ticks = [1, 0.75, 0.5, 0.25, 0];
   const zero = VB_H - ((0 - lo) / (hi - lo)) * VB_H;
@@ -270,7 +311,7 @@ export function LineChart<T extends object>({ area = false, ...props }: LineChar
   );
 }
 
-export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
+export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
   data: { label: string; value: number; color?: ChartColor }[];
   /** Accessible name of the chart. */
   title: string;
@@ -282,7 +323,18 @@ export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>,
 }
 
 /** Parts of a whole. Keep it to six slices or fewer; group the rest as "Other". */
-export function DonutChart({ data, title, center, valueFormat = defaultFormat, legend = true, className, ...props }: DonutChartProps) {
+export function DonutChart({
+  data, title, center, valueFormat = defaultFormat, legend = true, className, loading, emptyState, errorState, ...props
+}: DonutChartProps) {
+  const states = { loading, emptyState, errorState };
+  const state = chartState(states, data.length === 0, 'min-h-40 min-w-40 flex-1', <Skeleton shape="circle" className="size-40" />);
+  if (state) {
+    return (
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex flex-wrap items-center gap-6', className)} {...props}>
+        {state}
+      </figure>
+    );
+  }
   const total = data.reduce((sum, d) => sum + Math.max(0, d.value), 0) || 1;
   // r = 100 / 2π, so the circumference is 100 and dash lengths are percentages.
   const r = 15.9155;
@@ -323,7 +375,9 @@ export function DonutChart({ data, title, center, valueFormat = defaultFormat, l
   );
 }
 
-export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'values' | 'color'> {
+export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'values' | 'color'>, DataStateProps {
+  /** Shown when `values` is empty. No default: an empty sparkline stays an empty box. */
+  emptyState?: React.ReactNode;
   values: number[];
   /** Accessible summary, e.g. "Revenue, last 12 weeks, up 8%". Without it the sparkline is decorative. */
   label?: string;
@@ -333,7 +387,14 @@ export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>,
 }
 
 /** A tiny trend line with no axes, for stat cards and table cells. Fills its box (default 6rem × 2rem). */
-export function Sparkline({ values, label, color = 1, area = false, className, ...props }: SparklineProps) {
+export function Sparkline({ values, label, color = 1, area = false, className, loading, emptyState, errorState, ...props }: SparklineProps) {
+  const state = dataState(
+    { loading, emptyState, errorState },
+    values.length === 0,
+    <Skeleton shape="rect" className={cn('inline-block h-8 w-24 rounded-shape-min', className)} />,
+    null,
+  );
+  if (state != null) return <>{state}</>;
   const min = Math.min(...values);
   const span = Math.max(...values) - min || 1;
   const step = values.length > 1 ? VB_W / (values.length - 1) : 0;

@@ -6,14 +6,14 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
-import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
+import Animated, { LayoutAnimationConfig, useAnimatedStyle } from 'react-native-reanimated';
 import { Check, ChevronDown, ChevronRight } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
 import { Surface, type SurfaceProps } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
-import { nxEnter, nxExit, nxLayout } from '../theme/motion';
+import { nxEnter, nxExit, nxLayout, useSpringValue } from '../theme/motion';
 import { Divider } from './display';
 import { disabledOpacity } from './shared';
 
@@ -318,15 +318,25 @@ export function Accordion({
     defaultValue: defaultExpanded,
     onChange: onExpandedChange,
   });
+  // One spatial spring: the chevron turns, the content fades and settles into
+  // place, and the accordion's own height glides. The content is a plain view
+  // driven by the shared value (not an entering preset, which hides views from
+  // iOS UI tests), mounted only while open; open on first render rests at once.
+  const turn = useSpringValue(open ? 1 : 0, 'spatial', 'default');
+  const chevron = useAnimatedStyle(() => ({ transform: [{ rotate: `${turn.value * 180}deg` }] }));
+  const reveal = useAnimatedStyle(() => ({
+    opacity: Math.max(0, Math.min(1, turn.value)),
+    transform: [{ translateY: (turn.value - 1) * tokens.spacing[1] }],
+  }));
   return (
-    <View style={style}>
+    <Animated.View layout={nxLayout()} style={style}>
       <Pressable
         accessibilityLabel={title}
         accessibilityState={{ expanded: open }}
         onPress={() => setOpen(!open)}
         pressScale={false}
         style={{
-          minHeight: 56,
+          minHeight: tokens.size.control.xl,
           paddingHorizontal: tokens.spacing[4],
           flexDirection: 'row',
           alignItems: 'center',
@@ -336,17 +346,20 @@ export function Accordion({
         <Text variant="title-md" style={{ flex: 1 }}>
           {title}
         </Text>
-        <ChevronDown
-          size="sm"
-          color={roles['on-surface-variant']}
-          style={open ? { transform: [{ rotate: '180deg' }] } : undefined}
-        />
+        <Animated.View style={chevron}>
+          <ChevronDown size="sm" color={roles['on-surface-variant']} />
+        </Animated.View>
       </Pressable>
       {open && (
-        <View style={{ paddingHorizontal: tokens.spacing[4], paddingBottom: tokens.spacing[4] }}>
+        <Animated.View
+          style={[
+            { paddingHorizontal: tokens.spacing[4], paddingBottom: tokens.spacing[4] },
+            reveal,
+          ]}
+        >
           {children}
-        </View>
+        </Animated.View>
       )}
-    </View>
+    </Animated.View>
   );
 }

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { renderToString } from 'react-dom/server';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { ResizablePanels } from './ResizablePanels.js';
 import { NexubProvider } from '../NexubProvider/NexubProvider.js';
@@ -97,5 +98,15 @@ describe('ResizablePanels', () => {
     fireEvent.pointerUp(window);
     fireEvent.pointerMove(window, { clientX: 0, clientY: 0 });
     expect(onSizesChange).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('ResizablePanels server HTML (10.5)', () => {
+  it('carries the split as classes, with no style attribute', () => {
+    const html = renderToString(<Two defaultSizes={[35, 65]} />);
+    expect(html).toContain('grow-[35]');
+    expect(html).toContain('grow-[65]');
+    expect(html).not.toMatch(/ style="/);
+    expect(renderToString(<Two />).match(/basis-0 grow"/g)).toHaveLength(2);
   });
 });

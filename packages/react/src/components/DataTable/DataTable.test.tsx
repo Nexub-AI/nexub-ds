@@ -1,3 +1,5 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 import { renderToString } from 'react-dom/server';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
@@ -394,5 +396,16 @@ describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', 
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(onPageChange).toHaveBeenCalledWith(1);
     expect(screen.getByText('Page 2 of 25')).toBeInTheDocument(); // uncontrolled page
+  });
+});
+
+describe('DataTable 10.5: errorState', () => {
+  it('shows in one full-width row and wins over loading and the rows', () => {
+    const { container } = renderState(<DataTable columns={columns} data={data} loading errorState={<ErrorState title="Failed" />} />);
+    const cell = stateScreen.getByRole('heading', { name: 'Failed' }).closest('td')!;
+    expect(cell.getAttribute('colspan')).toBe(String(columns.length));
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(container.querySelector('table')!.hasAttribute('aria-busy')).toBe(false);
+    expect(container.querySelectorAll('[role="alert"]')).toHaveLength(0);
   });
 });

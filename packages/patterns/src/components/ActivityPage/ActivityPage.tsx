@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Amount, Avatar, Button, EmptyState, cn } from '@nexub/react';
+import { Amount, Avatar, Button, EmptyState, Skeleton, cn } from '@nexub/react';
 import {
   PageFrame,
   StatusBadge,
@@ -27,6 +27,12 @@ export interface ActivityPageProps extends Omit<PageFrameProps, 'title' | 'child
   /** Between the header and the list: filters, search. */
   toolbar?: React.ReactNode;
   empty?: React.ReactNode;
+  /** 10.5: shows skeleton rows in place of the list (the first load) and sets aria-busy. */
+  loading?: boolean;
+  /** Shown when there are no transactions. Same as `empty`, under the name the other patterns use. */
+  emptyState?: React.ReactNode;
+  /** Shown in place of the list; wins over `loading` and the empty state. */
+  errorState?: React.ReactNode;
   /** @default messages.activity */
   title?: React.ReactNode;
   messages?: Partial<PageTemplateMessages>;
@@ -74,6 +80,22 @@ export function TransactionRow({
   );
 }
 
+/** The shape of a TransactionRow while its data loads (same paddings and line heights). */
+export function TransactionRowSkeleton() {
+  return (
+    <li aria-hidden="true" className="flex items-center gap-3 border-t border-[var(--color-outline-variant)] px-4 py-3 first:border-t-0">
+      <Skeleton shape="circle" className="shrink-0" />
+      <span className="flex min-w-0 flex-1 flex-col">
+        <Skeleton className="my-1 h-4 w-2/5" />
+        <Skeleton className="my-0.5 h-4 w-1/4" />
+      </span>
+      <Skeleton className="h-4 w-16 shrink-0" />
+    </li>
+  );
+}
+
+const listBox = 'overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)]';
+
 /**
  * Transactions grouped by day, newest first. Web twin of the native
  * `ActivityList`: pull-to-refresh becomes a Refresh button, paging a
@@ -91,6 +113,9 @@ export const ActivityPage = React.forwardRef<HTMLElement, ActivityPageProps>(fun
     rowActions,
     toolbar,
     empty,
+    loading,
+    emptyState,
+    errorState,
     title,
     actions,
     messages,
@@ -121,8 +146,19 @@ export const ActivityPage = React.forwardRef<HTMLElement, ActivityPageProps>(fun
       {...props}
     >
       {toolbar}
-      {sections.length === 0 ? (
-        empty ?? (
+      {errorState != null ? (
+        errorState
+      ) : loading ? (
+        <div className="flex flex-col gap-2" aria-busy="true">
+          <Skeleton aria-hidden="true" className="mx-1 my-0.5 h-4 w-28" />
+          <ul className={listBox}>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <TransactionRowSkeleton key={i} />
+            ))}
+          </ul>
+        </div>
+      ) : sections.length === 0 ? (
+        emptyState ?? empty ?? (
           <EmptyState.Root>
             <EmptyState.Title>{m.noActivityTitle}</EmptyState.Title>
             <EmptyState.Description>{m.noActivityDescription}</EmptyState.Description>

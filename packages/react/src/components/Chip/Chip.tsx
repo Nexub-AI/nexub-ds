@@ -7,7 +7,8 @@ import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import type { ToneValue } from '../Button/Button.js';
 
 export const chipVariants = cva(
-  'inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] select-none',
+  // 10.5: a tone change crossfades.
+  'inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] select-none transition-colors duration-effects-fast ease-effects-fast',
   {
     variants: {
       size: {

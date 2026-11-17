@@ -184,7 +184,8 @@ function RuleRow({
         }}
       >
         <Select.Trigger aria-label={t.filterField} className="w-auto min-w-36">
-          <Select.Value />
+          {/* The label as children: Radix alone fills the value only after mount, and the trigger then changed width. */}
+          <Select.Value>{field?.label}</Select.Value>
         </Select.Trigger>
         <Select.Content>
           {fields.map((f) => (
@@ -197,7 +198,7 @@ function RuleRow({
 
       <Select.Root value={rule.operator} onValueChange={(op) => onChange((r) => ({ ...r, operator: op as FilterOperator }))}>
         <Select.Trigger aria-label={t.filterOperator} className="w-auto min-w-32">
-          <Select.Value />
+          <Select.Value>{t.filterOperators[rule.operator]}</Select.Value>
         </Select.Trigger>
         <Select.Content>
           {ops.map((op) => (
@@ -212,7 +213,7 @@ function RuleRow({
         (field?.type === 'select' ? (
           <Select.Root value={rule.value || undefined} onValueChange={(v) => onChange((r) => ({ ...r, value: v }))}>
             <Select.Trigger aria-label={t.filterValue} className="w-auto min-w-36">
-              <Select.Value />
+              <Select.Value>{field.options?.find((o) => o.value === rule.value)?.label}</Select.Value>
             </Select.Trigger>
             <Select.Content>
               {field.options?.map((o) => (

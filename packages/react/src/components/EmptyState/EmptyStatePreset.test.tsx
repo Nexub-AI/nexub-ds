@@ -13,4 +13,17 @@ describe('EmptyStatePreset', () => {
     rerender(<EmptyStatePreset kind="noAccess" title="Billing is admin-only" />);
     expect(screen.getByRole('heading', { name: 'Billing is admin-only' })).toBeInTheDocument();
   });
+
+  it('notFound and maintenance have text; illustrated swaps the icon for the drawing', () => {
+    const { container, rerender } = render(<EmptyStatePreset kind="notFound" />);
+    expect(screen.getByRole('heading', { name: 'Page not found' })).toBeInTheDocument();
+    expect(container.querySelector('[data-nx="illustration"]')).toBeNull();
+    rerender(<EmptyStatePreset kind="maintenance" illustrated size="sm" />);
+    expect(screen.getByRole('heading', { name: 'Down for maintenance' })).toBeInTheDocument();
+    const art = container.querySelector('[data-nx="illustration"]')!;
+    expect(art).toHaveAttribute('data-kind', 'maintenance');
+    expect(art).toHaveAttribute('aria-hidden', 'true');
+    expect(art).toHaveClass('w-20');
+    expect(container.querySelectorAll('svg')).toHaveLength(1);
+  });
 });

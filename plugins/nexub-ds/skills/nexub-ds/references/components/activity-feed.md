@@ -10,10 +10,10 @@ Chronological list of activity events with avatar, description, and timestamp.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `title` (required) | `React.ReactNode` |  | Activity event title. |
-| `description` | `React.ReactNode` |  | Supporting description. |
-| `timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
-| `avatar` | `React.ReactNode` |  | Avatar element for the actor. |
+| `ActivityFeedItem title` (required) | `React.ReactNode` |  | Activity event title. |
+| `ActivityFeedItem description` | `React.ReactNode` |  | Supporting description. |
+| `ActivityFeedItem timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
+| `ActivityFeedItem avatar` | `React.ReactNode` |  | Avatar element for the actor. |
 
 ## Example: Default
 

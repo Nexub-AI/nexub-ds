@@ -10,6 +10,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = { title: 'Example: Mobile dashboard', description: 'The Payub-style home screen in @nexub/react-native.' };
 
 const dashboard = getTemplateEntry('dashboard')!;
+const native = dashboard.native!; // the dashboard always has a twin
 
 export default function MobileDashboardPage() {
   return (
@@ -37,17 +38,17 @@ export default function MobileDashboardPage() {
 
       <div className="grid items-start gap-10 lg:grid-cols-[auto_minmax(0,1fr)]">
         <div className="flex justify-center">
-          <PhoneFrame path={`preview/${dashboard.native.preview}`} title="Mobile dashboard" height={680} />
+          <PhoneFrame path={`preview/${native.preview}`} title="Mobile dashboard" height={680} />
         </div>
         <div className="flex min-w-0 flex-col">
           <Section id="code" title="Code" className="!mt-0">
-            <CodeBlock lang="tsx" code={dashboard.native.code} />
+            <CodeBlock lang="tsx" code={native.code} />
           </Section>
           <Section id="web-vs-mobile" title="Web vs mobile">
             <DocTable
               caption="Dashboard: web vs mobile"
               head={['', 'Web (DashboardPage)', 'iOS & Android (HomeScreen)']}
-              rows={dashboard.native.differences.map((d) => [<strong key="a">{d.aspect}</strong>, d.web, d.mobile])}
+              rows={native.differences.map((d) => [<strong key="a">{d.aspect}</strong>, d.web, d.mobile])}
             />
           </Section>
         </div>

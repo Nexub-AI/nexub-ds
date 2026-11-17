@@ -136,6 +136,7 @@ import motionCollapseEntry from './components/motion-collapse';
 // ─── Pattern entries ──────────────────────────────────────────────────────────
 import statCardEntry from './patterns/stat-card';
 import welcomeBannerEntry from './patterns/welcome-banner';
+import statusPageEntry from './patterns/status-page';
 import authCardEntry from './patterns/auth-card';
 import filterBarEntry from './patterns/filter-bar';
 import userCardEntry from './patterns/user-card';
@@ -208,6 +209,7 @@ import containerEntry from './components/container';
 import contextMenuEntry from './components/context-menu';
 import countryBadgeEntry from './components/country-badge';
 import iconChipEntry from './components/icon-chip';
+import illustrationEntry from './components/illustration';
 import successCheckEntry from './components/success-check';
 import dropdownMenuEntry from './components/dropdown-menu';
 import fileUploadEntry from './components/file-upload';
@@ -326,6 +328,7 @@ export const componentEntries: ComponentEntry[] = [
   sortableEntry,
   kanbanEntry,
   emptyStateEntry,
+  illustrationEntry,
   errorStateEntry,
   checkListEntry,
   numberTickerEntry,
@@ -412,6 +415,7 @@ export const marketingEntries: ComponentEntry[] = [
 export const patternEntries: ComponentEntry[] = [
   statCardEntry,
   welcomeBannerEntry,
+  statusPageEntry,
   authCardEntry,
   filterBarEntry,
   userCardEntry,

@@ -424,6 +424,7 @@
       "enableColumnResizing",
       "enableRowSelection",
       "enableSorting",
+      "errorState",
       "expanded",
       "getRowId",
       "getRowLabel",
@@ -617,7 +618,10 @@
       "defaultChecked",
       "defaultExpanded",
       "defaultSelected",
+      "emptyState",
+      "errorState",
       "expanded",
+      "loading",
       "onCheckedChange",
       "onExpandedChange",
       "onLoadChildren",
@@ -781,10 +785,15 @@
     ]
   },
   "activity-feed": {
-    "web": null,
+    "web": "ActivityFeedRoot",
     "native": "ActivityList",
     "shared": [],
-    "webOnly": [],
+    "webOnly": [
+      "emptyState",
+      "errorState",
+      "loading",
+      "loadingRows"
+    ],
     "nativeOnly": [
       "actions",
       "empty",
@@ -909,6 +918,7 @@
       "avatarFallback",
       "avatarSrc",
       "email",
+      "loading",
       "role",
       "size"
     ],

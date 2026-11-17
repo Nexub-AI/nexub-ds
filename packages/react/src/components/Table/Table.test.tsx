@@ -1,3 +1,5 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, afterEach } from 'vitest';
@@ -146,5 +148,39 @@ describe('Table', () => {
       render(<Wide scrollLabel="Invoice table" />);
       expect(screen.getByRole('region', { name: 'Invoice table' })).toBeInTheDocument();
     });
+  });
+});
+
+describe('Table.Body 10.5: data states', () => {
+  const table = (body: React.ReactNode) => <Table.Root aria-label="Users">{body}</Table.Root>;
+
+  it('without `columns` an empty body stays empty', () => {
+    const { container } = renderState(table(<Table.Body />));
+    expect(container.querySelector('tbody')!.children).toHaveLength(0);
+  });
+
+  it('loading shows skeleton rows, sets aria-busy and hides the rows', () => {
+    const { container } = renderState(
+      table(
+        <Table.Body columns={3} loadingRows={2} loading>
+          <Table.Row><Table.Cell>Ada</Table.Cell></Table.Row>
+        </Table.Body>,
+      ),
+    );
+    expect(container.querySelector('tbody')!.getAttribute('aria-busy')).toBe('true');
+    expect(container.querySelectorAll('tr[data-loading]')).toHaveLength(2);
+    expect(container.querySelectorAll('tr[data-loading] td')).toHaveLength(6);
+    expect(stateScreen.queryByText('Ada')).toBeNull();
+  });
+
+  it('empty shows the default or emptyState in a full-width row; errorState wins', () => {
+    const { rerender } = renderState(table(<Table.Body columns={3} />));
+    expect(stateScreen.getByText('No results found.').closest('td')!.getAttribute('colspan')).toBe('3');
+    rerender(table(<Table.Body columns={3} emptyState="No users" />));
+    expect(stateScreen.getByText('No users')).toBeTruthy();
+    rerender(table(<Table.Body columns={3} loading emptyState="No users" errorState={<ErrorState title="Failed" />} />));
+    expect(stateScreen.getByRole('heading', { name: 'Failed' }).closest('td')!.getAttribute('colspan')).toBe('3');
+    expect(stateScreen.queryByText('No users')).toBeNull();
+    expect(stateScreen.getByRole('table').querySelector('tbody')!.hasAttribute('aria-busy')).toBe(false);
   });
 });

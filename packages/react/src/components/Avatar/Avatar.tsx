@@ -108,6 +108,14 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     const statusLabel = status ? messages.presence[status] : undefined;
     const label = [name, statusLabel].filter(Boolean).join(', ') || undefined;
 
+    // 10.5: the dot pops when the status changes, never on first render.
+    const lastStatus = React.useRef(status);
+    const statusChanged = React.useRef(false);
+    if (lastStatus.current !== status) {
+      lastStatus.current = status;
+      statusChanged.current = true;
+    }
+
     const showImage = Boolean(src) && failedSrc !== src;
     const initials = name ? getInitials(name) : null;
     // An unnamed avatar is decorative: an unlabelled role="img" is an a11y violation.
@@ -157,8 +165,11 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
 
         {(badge || status) && (
           <span
+            // Keyed on the status, so the pop replays on every change.
+            key={status}
             className={cn(
               'absolute bottom-0 end-0 rounded-full ring-2 ring-[var(--color-surface)]',
+              statusChanged.current && 'nx-tick',
               badgeSizeMap[size ?? 'md'],
               status ? statusColor[status] : (badgeColor ?? 'bg-[var(--color-success)]'),
             )}

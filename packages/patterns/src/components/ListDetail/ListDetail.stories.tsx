@@ -1,5 +1,6 @@
 import type { Meta } from '@storybook/react';
 import * as React from 'react';
+import { EmptyStatePreset } from '@nexub/react';
 import { ListDetail } from './ListDetail.js';
 
 const meta: Meta = { title: 'Patterns/ListDetail' };
@@ -50,3 +51,25 @@ export const Wide = () => <Demo width={900} />;
 
 /** Narrow: one pane at a time, with a back button. */
 export const Narrow = () => <Demo width={375} />;
+
+/** 10.5: `loading`, `emptyState` and `errorState` fill the list pane (the error wins). */
+export const DataStates = () => (
+  <div className="grid w-full max-w-4xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] gap-6">
+    {(['Loading', 'Empty', 'Error'] as const).map((state) => (
+      <div key={state} className="flex min-w-0 flex-col gap-2">
+        <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{state}</p>
+        <div className="h-96 overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)]">
+          <ListDetail
+            listLabel={`Messages, ${state.toLowerCase()}`}
+            detailLabel={`Message, ${state.toLowerCase()}`}
+            list={null}
+            detail={null}
+            loading={state === 'Loading'}
+            emptyState={state === 'Empty' ? <EmptyStatePreset kind="noData" size="sm" /> : undefined}
+            errorState={state === 'Error' ? <EmptyStatePreset kind="serverError" size="sm" /> : undefined}
+          />
+        </div>
+      </div>
+    ))}
+  </div>
+);

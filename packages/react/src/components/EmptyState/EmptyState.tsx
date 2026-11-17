@@ -34,7 +34,8 @@ const Illustration = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
       ref={ref}
       className={cn(
         'text-[var(--color-on-surface-muted)]',
-        'group-data-[size=sm]/empty-state:[&_svg]:size-8 group-data-[size=lg]/empty-state:[&_svg]:size-16',
+        // An <Illustration> keeps its own size (10.5): only icons are scaled.
+        'group-data-[size=sm]/empty-state:[&_svg:not(.nx-illustration)]:size-8 group-data-[size=lg]/empty-state:[&_svg:not(.nx-illustration)]:size-16',
         className,
       )}
       {...props}

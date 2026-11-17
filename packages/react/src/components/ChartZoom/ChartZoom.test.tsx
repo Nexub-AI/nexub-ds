@@ -1,3 +1,5 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ChartZoom as StateZoom } from './ChartZoom.js';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -21,5 +23,27 @@ describe('ChartZoom', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Reset zoom' }));
     expect(screen.getByText('Jan Feb Mar Apr May Jun')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Reset zoom' })).toBeDisabled();
+  });
+});
+
+describe('ChartZoom 10.5: data states', () => {
+  const rows = ['Jan', 'Feb', 'Mar'].map((month) => ({ month }));
+
+  it('hands the states to the chart and disables the controls while loading or failed', () => {
+    const seen: object[] = [];
+    const child = (_: unknown, state: object) => {
+      seen.push(state);
+      return null;
+    };
+    const { container, rerender } = renderState(<StateZoom data={rows} index="month" defaultRange={[0, 1]} loading>{child}</StateZoom>);
+    expect(seen.at(-1)).toMatchObject({ loading: true });
+    expect(container.firstElementChild!.getAttribute('aria-busy')).toBe('true');
+    expect((stateScreen.getByRole('button') as HTMLButtonElement).disabled).toBe(true);
+    rerender(<StateZoom data={rows} index="month" defaultRange={[0, 1]} loading errorState="Failed">{child}</StateZoom>);
+    expect(seen.at(-1)).toMatchObject({ errorState: 'Failed' });
+    expect(container.firstElementChild!.hasAttribute('aria-busy')).toBe(false);
+    expect((stateScreen.getByRole('button') as HTMLButtonElement).disabled).toBe(true);
+    rerender(<StateZoom data={rows} index="month" defaultRange={[0, 1]}>{child}</StateZoom>);
+    expect((stateScreen.getByRole('button') as HTMLButtonElement).disabled).toBe(false);
   });
 });
