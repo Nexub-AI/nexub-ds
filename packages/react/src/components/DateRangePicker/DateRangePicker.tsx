@@ -7,8 +7,8 @@ import type { Locale } from 'date-fns';
 import { CalendarDays } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { useCalendarLocale } from '../DatePicker/DatePicker.js';
-import { field, fieldFocusVisible } from '../../utils/control.js';
+import { dateTriggerSizes, useCalendarLocale } from '../DatePicker/DatePicker.js';
+import { field, fieldFocusVisible, fieldReadOnly, type Size } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
 
 export type { DateRange };
@@ -39,6 +39,10 @@ export interface DateRangePickerProps {
   onChange?: (range: DateRange | undefined) => void;
   placeholder?: string;
   disabled?: boolean;
+  /** Shows the range but the calendar can't open; stays focusable. */
+  readOnly?: boolean;
+  /** @default 'md' */
+  size?: Size;
   minDate?: Date;
   maxDate?: Date;
   className?: string;
@@ -76,23 +80,23 @@ function formatRange(
 const calendarClassNames = {
   months: 'flex flex-col sm:flex-row gap-4',
   month: 'flex flex-col gap-4',
-  month_caption: 'flex h-8 items-center justify-center',
+  month_caption: 'flex h-[var(--day-cell,2rem)] items-center justify-center',
   caption_label: 'text-label-lg text-[var(--color-on-surface)]',
   // v9 renders nav beside the months, not in the caption: pin it to the caption row.
-  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-8 items-center justify-between',
+  nav: 'pointer-events-none absolute inset-x-3 top-3 flex h-[var(--day-cell,2rem)] items-center justify-between',
   button_previous:
     'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   button_next:
     'nx-state-layer pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-on-surface)] disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   month_grid: 'w-full border-collapse',
   weekdays: 'flex',
-  weekday: 'text-[var(--color-on-surface-muted)] w-8 text-label-sm flex-1 text-center',
+  weekday: 'text-[var(--color-on-surface-muted)] w-[var(--day-cell,2rem)] text-label-sm flex-1 text-center',
   week: 'flex w-full mt-2',
   day: 'relative flex flex-1 justify-center p-0 text-center focus-within:z-20',
   day_button: cn(
     // Capsule day with a state layer; focus = the global ring. The transparent
     // border carries today's primary outline.
-    'nx-state-layer inline-flex h-8 w-8 items-center justify-center rounded-full border border-transparent text-body-sm text-[var(--color-on-surface)]',
+    'nx-state-layer inline-flex h-[var(--day-cell,2rem)] w-[var(--day-cell,2rem)] items-center justify-center rounded-full border border-transparent text-body-sm tabular-nums text-[var(--color-on-surface)]',
     'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
   ),
   // Ends (and a lone start) are filled primary capsules; the middle is a
@@ -122,6 +126,8 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
       onChange,
       placeholder: placeholderProp,
       disabled = false,
+      readOnly = false,
+      size = 'md',
       minDate,
       maxDate,
       className,
@@ -166,17 +172,20 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
     const label = ariaLabel ? `${ariaLabel}: ${display}` : display;
 
     return (
-      <RadixPopover.Root open={open} onOpenChange={setOpen}>
+      <RadixPopover.Root open={open && !readOnly} onOpenChange={setOpen}>
         <RadixPopover.Trigger asChild>
           <button
             ref={ref}
             id={id}
             disabled={disabled}
+            data-readonly={readOnly ? '' : undefined}
             aria-label={label}
             className={cn(
-              'inline-flex h-control-md w-full items-center justify-start gap-2 px-3.5 text-body-md',
+              'inline-flex w-full items-center justify-start',
+              dateTriggerSizes[size],
               field,
               fieldFocusVisible,
+              fieldReadOnly,
               // Open reads like focus: the 2px primary border (as Select).
               'data-[state=open]:border-[var(--color-primary)] data-[state=open]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
               'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',

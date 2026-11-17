@@ -10,12 +10,12 @@ export const labelVariants = cva(
   {
     variants: {
       size: {
-        sm: 'text-xs',
-        md: 'text-sm',
-        lg: 'text-base',
+        sm: 'text-label-sm',
+        md: 'text-body-sm',
+        lg: 'text-body-md',
       },
       disabled: {
-        true: 'opacity-50 cursor-not-allowed',
+        true: 'text-[var(--color-text-disabled)] cursor-not-allowed',
       },
     },
     defaultVariants: {
@@ -41,9 +41,10 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
         data-tone={tone}
         style={style}
         className={cn(
-          labelVariants({ size, disabled }),
           'text-[var(--color-on-surface)]',
           tone && toneTextClasses[tone],
+          // After the colours: disabled wins over tone.
+          labelVariants({ size, disabled }),
           className,
         )}
         {...props}

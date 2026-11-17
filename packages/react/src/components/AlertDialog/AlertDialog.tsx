@@ -3,7 +3,7 @@
 import * as React from 'react';
 import * as RadixAlertDialog from '@radix-ui/react-alert-dialog';
 import { cn } from '../../utils/cn.js';
-import { overlaySurface, scrim } from '../../utils/surface.js';
+import { dialogSurface, overlaySurface, scrim } from '../../utils/surface.js';
 import { buttonVariants } from '../Button/Button.js';
 import { Input } from '../Input/Input.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -64,7 +64,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogCon
         ref={ref}
         className={cn(
           'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
-          'nx-motion nx-dialog', overlaySurface,
+          'nx-motion nx-dialog', overlaySurface, dialogSurface,
           'p-6 focus:outline-none',
           className,
         )}
@@ -83,7 +83,7 @@ const Title = React.forwardRef<HTMLHeadingElement, RadixAlertDialog.AlertDialogT
     return (
       <RadixAlertDialog.Title
         ref={ref}
-        className={cn('text-lg font-semibold text-[var(--color-on-surface)]', className)}
+        className={cn('text-body-lg font-semibold text-[var(--color-on-surface)]', className)}
         {...props}
       />
     );
@@ -98,7 +98,7 @@ const Description = React.forwardRef<
   return (
     <RadixAlertDialog.Description
       ref={ref}
-      className={cn('mt-1 text-sm text-[var(--color-on-surface-muted)]', className)}
+      className={cn('mt-1 text-body-sm text-[var(--color-on-surface-muted)]', className)}
       {...props}
     />
   );

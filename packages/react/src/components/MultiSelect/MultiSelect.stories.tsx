@@ -36,3 +36,15 @@ export const MoreChips: Story = {
     </div>
   ),
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <MultiSelect size="sm" aria-label="Small" options={labels} defaultValue={["bug"]} />
+      <MultiSelect size="md" aria-label="Medium" options={labels} defaultValue={["bug"]} />
+      <MultiSelect size="lg" aria-label="Large" options={labels} defaultValue={["bug"]} />
+      <MultiSelect readOnly aria-label="Read-only" options={labels} defaultValue={["bug", "docs"]} />
+    </div>
+  ),
+};

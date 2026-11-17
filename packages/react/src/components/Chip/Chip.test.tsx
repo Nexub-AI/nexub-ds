@@ -37,3 +37,12 @@ describe('Chip', () => {
     expect(screen.queryByRole('button', { name: /remove/i })).not.toBeInTheDocument();
   });
 });
+
+describe('Chip 10.4 density', () => {
+  it('heights read a density variable with the old value as fallback', () => {
+    const { rerender } = render(<Chip>React</Chip>);
+    expect(screen.getByText('React').closest('span')).toHaveClass('h-[var(--chip-h-md,2rem)]');
+    rerender(<Chip size="sm">React</Chip>);
+    expect(screen.getByText('React').closest('span')).toHaveClass('h-[var(--chip-h-sm,1.5rem)]');
+  });
+});

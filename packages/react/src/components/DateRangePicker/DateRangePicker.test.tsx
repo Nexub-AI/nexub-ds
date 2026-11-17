@@ -92,3 +92,19 @@ describe('DateRangePicker presets and time zone', () => {
   });
 });
 
+describe('DateRangePicker 10.4', () => {
+  it('size: md by default, lg on request', () => {
+    const { rerender } = render(<DateRangePicker />);
+    expect(screen.getByRole('button')).toHaveClass('h-control-md', 'px-3.5');
+    rerender(<DateRangePicker size="lg" />);
+    expect(screen.getByRole('button')).toHaveClass('h-control-lg', 'px-4');
+  });
+
+  it('readOnly: the calendar cannot open', () => {
+    render(<DateRangePicker readOnly />);
+    const trigger = screen.getByRole('button');
+    expect(trigger).toHaveAttribute('data-readonly');
+    fireEvent.click(trigger);
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+  });
+});

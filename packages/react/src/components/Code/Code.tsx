@@ -13,7 +13,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
         <code
           ref={ref as React.Ref<HTMLElement>}
           className={cn(
-            'font-mono text-sm bg-[var(--color-surface-container-high)] px-1.5 py-0.5 rounded-shape-min',
+            'font-mono text-body-sm bg-[var(--color-surface-container-high)] px-1.5 py-0.5 rounded-shape-min',
             className,
           )}
           {...rest}
@@ -32,7 +32,7 @@ export const Code = React.forwardRef<HTMLElement, CodeProps>(
       >
         <code
           ref={ref as React.Ref<HTMLElement>}
-          className="font-mono text-sm"
+          className="font-mono text-body-sm"
           data-language={language}
           {...rest}
         >

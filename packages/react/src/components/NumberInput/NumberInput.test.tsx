@@ -43,3 +43,19 @@ describe('NumberInput bounds', () => {
     expect(screen.getByLabelText('Decrement')).not.toBeDisabled();
   });
 });
+
+describe('NumberInput 10.4', () => {
+  it('readOnly: steppers are disabled and arrow keys do not change the value', async () => {
+    const onValueChange = vi.fn();
+    render(<NumberInput readOnly showSteppers defaultValue={5} onValueChange={onValueChange} />);
+    const input = screen.getByRole('spinbutton');
+    expect(input).toHaveAttribute('readonly');
+    expect(input).toHaveClass('tabular-nums');
+    expect(screen.getByRole('button', { name: 'Increment' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Decrement' })).toBeDisabled();
+    await userEvent.click(input);
+    await userEvent.keyboard('{ArrowUp}{ArrowDown}');
+    expect(onValueChange).not.toHaveBeenCalled();
+    expect(input).toHaveValue(5);
+  });
+});

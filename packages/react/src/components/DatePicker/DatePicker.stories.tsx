@@ -114,3 +114,18 @@ export const TypeablePresetsWeekdays: Story = {
     );
   },
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <DatePicker size="sm" aria-label="Small" value={new Date(2024, 0, 15)} />
+      <DatePicker size="md" aria-label="Medium" value={new Date(2024, 0, 15)} />
+      <DatePicker size="lg" aria-label="Large" value={new Date(2024, 0, 15)} />
+      <DatePicker readOnly aria-label="Read-only" value={new Date(2024, 0, 15)} />
+      <DatePicker invalid aria-label="Invalid" value={new Date(2024, 0, 15)} />
+      <DatePicker typeable size="sm" aria-label="Typed, small" value={new Date(2024, 0, 15)} />
+      <DatePicker typeable readOnly aria-label="Typed, read-only" value={new Date(2024, 0, 15)} />
+    </div>
+  ),
+};

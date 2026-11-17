@@ -309,7 +309,11 @@
       "disabled",
       "onCheckedChange"
     ],
-    "webOnly": [],
+    "webOnly": [
+      "invalid",
+      "readOnly",
+      "size"
+    ],
     "nativeOnly": [
       "description",
       "label"
@@ -341,6 +345,8 @@
     ],
     "webOnly": [
       "checkedIcon",
+      "invalid",
+      "readOnly",
       "size",
       "uncheckedIcon"
     ],
@@ -381,7 +387,9 @@
       "loading",
       "maxVisibleChips",
       "onCreate",
-      "onInputChange"
+      "onInputChange",
+      "readOnly",
+      "size"
     ],
     "nativeOnly": [
       "error",
@@ -491,7 +499,9 @@
       "disabled",
       "invalid",
       "mode",
-      "name"
+      "name",
+      "readOnly",
+      "size"
     ],
     "nativeOnly": [
       "error",
@@ -529,8 +539,11 @@
     "webOnly": [
       "disabled",
       "disabledDates",
+      "invalid",
       "locale",
       "presets",
+      "readOnly",
+      "size",
       "typeable"
     ],
     "nativeOnly": [
@@ -579,8 +592,11 @@
     "webOnly": [
       "defaultTime",
       "disabled",
+      "invalid",
       "locale",
       "minuteStep",
+      "readOnly",
+      "size",
       "timeZone"
     ],
     "nativeOnly": [

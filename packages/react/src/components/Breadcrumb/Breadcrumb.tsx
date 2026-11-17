@@ -19,7 +19,7 @@ const List = React.forwardRef<HTMLOListElement, React.HTMLAttributes<HTMLOListEl
     <ol
       ref={ref}
       className={cn(
-        'flex flex-wrap items-center gap-1.5 text-sm text-[var(--color-on-surface-muted)] sm:gap-2.5',
+        'flex flex-wrap items-center gap-1.5 text-body-sm text-[var(--color-on-surface-muted)] sm:gap-2.5',
         className,
       )}
       {...props}

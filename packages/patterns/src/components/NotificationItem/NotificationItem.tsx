@@ -45,7 +45,7 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
 
         {/* content */}
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[var(--color-on-surface)] truncate">
+          <p className="text-body-sm font-medium text-[var(--color-on-surface)] truncate">
             {href ? (
               <a href={safeHref(href)} onClick={onSelect} className={stretched}>
                 {title}
@@ -59,12 +59,12 @@ export const NotificationItem = React.forwardRef<HTMLDivElement, NotificationIte
             )}
           </p>
           {description && (
-            <p className="text-sm text-[var(--color-on-surface-muted)] mt-0.5 line-clamp-2">
+            <p className="text-body-sm text-[var(--color-on-surface-muted)] mt-0.5 line-clamp-2">
               {description}
             </p>
           )}
           {timestamp && (
-            <time className="text-xs text-[var(--color-on-surface-muted)] mt-1 block">
+            <time className="text-label-sm font-normal text-[var(--color-on-surface-muted)] mt-1 block">
               {timestamp}
             </time>
           )}

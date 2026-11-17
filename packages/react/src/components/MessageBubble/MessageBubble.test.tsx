@@ -15,7 +15,7 @@ describe('MessageBubble', () => {
     );
     const user = screen.getByRole('article', { name: 'You said' });
     expect(user).toHaveClass('items-end');
-    expect(screen.getByText('Hi')).toHaveClass('bg-[var(--color-primary-container)]', 'rounded-ee-[6px]', 'max-w-[85%]');
+    expect(screen.getByText('Hi')).toHaveClass('bg-[var(--color-primary-container)]', 'rounded-ee-[0.375rem]', 'max-w-[85%]');
     const assistant = screen.getByRole('article', { name: 'Assistant said' });
     expect(assistant).toHaveClass('items-start');
     expect(screen.getByText('Joined').closest('article')).toHaveClass('justify-center', 'text-label-sm');

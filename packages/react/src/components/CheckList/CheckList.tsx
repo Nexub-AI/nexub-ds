@@ -44,7 +44,7 @@ export const CheckListItem = React.forwardRef<HTMLLIElement, CheckListItemProps>
             aria-hidden="true"
           />
         </span>
-        <span className="text-sm">{children}</span>
+        <span className="text-body-sm">{children}</span>
       </li>
     );
   },

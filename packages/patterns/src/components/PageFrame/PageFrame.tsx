@@ -257,7 +257,7 @@ export interface PageFrameProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   width?: 'sm' | 'md' | 'lg';
 }
 
-const widths = { sm: 'max-w-[480px]', md: 'max-w-3xl', lg: 'max-w-6xl' };
+const widths = { sm: 'max-w-[30rem]', md: 'max-w-3xl', lg: 'max-w-6xl' };
 
 /** Page frame shared by the templates: centred column, h1 header, responsive padding. */
 export const PageFrame = React.forwardRef<HTMLElement, PageFrameProps>(function PageFrame(

@@ -28,6 +28,8 @@ const source = readdirSync(reactSrc, { recursive: true })
 test('every component token aliases a real semantic token', () => {
   const roles = new Set([...Object.keys(ROLES), ...Object.keys(tertiary('primary'))]);
   for (const [name, token] of entries) {
+    // A default with no semantic token behind it is a literal (table-head-bg, avatar-radius).
+    if (/^(transparent|\d+px)$/.test(token.$value)) continue;
     const [, ns, key] = token.$value.match(/^\{(color|shape)\.([\w-]+)\}$/) ?? [];
     assert.ok(ns === 'color' ? roles.has(key) : ns === 'shape' && key in shape, `${name}: ${token.$value}`);
   }
@@ -43,6 +45,8 @@ test('components read each token with the documented fallback', () => {
 
 test('components read no undocumented component token', () => {
   const documented = new Set(entries.map(([n]) => n));
-  const used = new Set([...source.matchAll(/var\(--((?:button|field|card|badge)-[\w-]+),/g)].map((m) => m[1]));
-  assert.deepEqual([...used].filter((n) => !documented.has(n)), []);
+  const used = new Set([...source.matchAll(/var\(--((?:button|field|card|badge|dialog|popover|menu|tooltip|toast|tabs|avatar|alert|nav)-[\w-]+),/g)].map((m) => m[1]));
+  // Density knobs ([data-density] in @nexub/themes core.css), not component tokens.
+  const density = /^badge-h-(sm|md|lg)$/;
+  assert.deepEqual([...used].filter((n) => !documented.has(n) && !density.test(n)), []);
 });

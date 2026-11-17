@@ -191,3 +191,40 @@ describe('FileUpload previews, paste and list motion', () => {
     expect(onReject.mock.calls[0]![0][0].reason).toBe('type');
   });
 });
+
+describe('FileUpload 10.4 consistent controls', () => {
+  it('invalid: aria-invalid on the file input and an error border on the drop zone', () => {
+    render(
+      <FileUpload.Root invalid data-testid="root">
+        <FileUpload.Dropzone data-testid="zone" />
+      </FileUpload.Root>,
+    );
+    expect(screen.getByLabelText(/click to upload/i)).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByTestId('zone')).toHaveClass('border-[var(--color-error)]');
+    expect(screen.getByTestId('root')).not.toHaveAttribute('invalid');
+  });
+
+  it('readOnly: files stay listed, nothing can be dropped or removed', () => {
+    const onFilesChange = vi.fn();
+    const Harness = ({ readOnly }: { readOnly?: boolean }) => (
+      <FileUpload.Root readOnly={readOnly} onFilesChange={onFilesChange} data-testid="root">
+        <FileUpload.Dropzone data-testid="zone" />
+        <FileUpload.List>
+          <FileUpload.Item index={0} />
+          <FileUpload.Item index={1} />
+        </FileUpload.List>
+      </FileUpload.Root>
+    );
+    const { rerender } = render(<Harness />);
+    const file = (name: string) => new File(['x'], name, { type: 'text/plain' });
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [file('a.txt')] } });
+    expect(onFilesChange).toHaveBeenCalledTimes(1);
+    rerender(<Harness readOnly />);
+    expect(screen.getByTestId('root')).not.toHaveAttribute('readonly');
+    fireEvent.drop(screen.getByTestId('zone'), { dataTransfer: { files: [file('b.txt')] } });
+    expect(onFilesChange).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('a.txt')).toBeInTheDocument();
+    expect(screen.queryByText('b.txt')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+});

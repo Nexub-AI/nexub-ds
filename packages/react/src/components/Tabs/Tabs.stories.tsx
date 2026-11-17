@@ -130,3 +130,23 @@ export const WithIcons: Story = {
     </div>
   ),
 };
+
+/** 10.4: the three sizes of the shared control scale (`md` is the default). */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 24 }}>
+      {(['sm', 'md', 'lg'] as const).map((size) => (
+        <Tabs.Root key={size} defaultValue="one">
+          <Tabs.List size={size} aria-label={`Size ${size}`}>
+            <Tabs.Trigger value="one">One</Tabs.Trigger>
+            <Tabs.Trigger value="two">Two</Tabs.Trigger>
+            <Tabs.Trigger value="three">Three</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="one">Size {size}</Tabs.Content>
+          <Tabs.Content value="two">Two</Tabs.Content>
+          <Tabs.Content value="three">Three</Tabs.Content>
+        </Tabs.Root>
+      ))}
+    </div>
+  ),
+};

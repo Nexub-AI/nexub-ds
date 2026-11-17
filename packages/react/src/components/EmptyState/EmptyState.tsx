@@ -48,8 +48,8 @@ const Title = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHead
     <h3
       ref={ref}
       className={cn(
-        'text-lg font-semibold text-[var(--color-on-surface)]',
-        'group-data-[size=sm]/empty-state:text-base group-data-[size=lg]/empty-state:text-xl',
+        'text-body-lg font-semibold text-[var(--color-on-surface)]',
+        'group-data-[size=sm]/empty-state:text-title-md group-data-[size=lg]/empty-state:text-title-lg',
         className,
       )}
       {...props}
@@ -65,8 +65,8 @@ const Description = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      'max-w-sm text-sm text-[var(--color-on-surface-muted)]',
-      'group-data-[size=sm]/empty-state:text-xs group-data-[size=lg]/empty-state:text-base',
+      'max-w-sm text-body-sm text-[var(--color-on-surface-muted)]',
+      'group-data-[size=sm]/empty-state:text-label-sm group-data-[size=sm]/empty-state:font-normal group-data-[size=lg]/empty-state:text-body-md',
       className,
     )}
     {...props}

@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as RadixMenubar from '@radix-ui/react-menubar';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
+import { floatingSurface, menuContent, menuItem, menuItemFg, menuSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Menu = RadixMenubar.Menu;
 const Portal = RadixMenubar.Portal;
@@ -48,7 +48,7 @@ Trigger.displayName = 'Menubar.Trigger';
 
 const contentBaseClasses = cn(
   'z-[var(--z-popover)] min-w-48 outline-none',
-  floatingSurface,
+  floatingSurface, menuSurface,
   menuContent,
   'nx-motion nx-pop origin-[var(--radix-menubar-content-transform-origin)]',
 );
@@ -68,7 +68,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarContentProp
 Content.displayName = 'Menubar.Content';
 
 const itemBaseClasses = cn(
-  menuItem,
+  menuItem, menuItemFg,
 );
 
 const Item = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarItemProps>(

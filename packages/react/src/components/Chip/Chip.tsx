@@ -11,8 +11,8 @@ export const chipVariants = cva(
   {
     variants: {
       size: {
-        sm: 'h-6 px-2.5 text-label-md',
-        md: 'h-8 px-3 text-label-lg',
+        sm: 'h-[var(--chip-h-sm,1.5rem)] px-2.5 text-label-md',
+        md: 'h-[var(--chip-h-md,2rem)] px-3 text-label-lg',
       },
       // Containers + on-container text (WCAG AA by construction).
       tone: {

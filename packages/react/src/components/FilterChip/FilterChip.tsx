@@ -3,23 +3,32 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { disabledText } from '../../utils/control.js';
+import { disabledText, type Size } from '../../utils/control.js';
 
 export interface FilterChipProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
+  /** `sm` 24px, `md` 32px (default), `lg` 40px. */
+  size?: Size;
   count?: number;
   onRemove?: () => void;
   children: React.ReactNode;
 }
 
+const chipSize: Record<Size, string> = {
+  sm: 'h-6 px-2 text-label-md',
+  md: 'h-8 px-3 text-label-lg',
+  lg: 'h-10 px-4 text-label-lg',
+};
+
 export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
-  ({ className, selected = false, count, onRemove, children, ...props }, ref) => {
+  ({ className, selected = false, size = 'md', count, onRemove, children, ...props }, ref) => {
     const messages = useNexubMessages();
     return (
       <span
         className={cn(
           // Matches Chip; hover/press come from the state layer.
-          'nx-state-layer inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] border h-8 px-3 text-label-lg select-none',
+          'nx-state-layer inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] border select-none',
+          chipSize[size],
           selected
             ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)] border-transparent'
             : 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] border-[var(--color-outline-variant)]',
@@ -40,7 +49,7 @@ export const FilterChip = React.forwardRef<HTMLButtonElement, FilterChipProps>(
           {count !== undefined && (
             <span
               className={cn(
-                'inline-flex items-center justify-center rounded-full text-label-sm px-1.5 min-w-[1.25rem] h-5',
+                'inline-flex items-center justify-center rounded-full text-label-sm tabular-nums px-1.5 min-w-[1.25rem] h-5',
                 selected
                   ? 'bg-[var(--color-on-secondary-container)] text-[var(--color-secondary-container)]'
                   : 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface-variant)]',

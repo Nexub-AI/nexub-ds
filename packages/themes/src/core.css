@@ -604,6 +604,29 @@ code, kbd, pre, samp {
   --size-control-md: 2rem;
   --size-control-lg: 2.5rem;
   --size-control-xl: 3rem;
+  /* 10.4: the sizes that sit outside the control ladder step down too. Each is read
+     with its comfortable value as the fallback, so default density is unchanged. */
+  --pagination-size: 2.25rem;
+  --otp-h: 2.5rem;
+  --otp-w: 2rem;
+  --float-field-h: 3rem;
+  --chip-h-sm: 1.25rem;
+  --chip-h-md: 1.75rem;
+  --badge-h-sm: 1rem;
+  --badge-h-md: 1.25rem;
+  --badge-h-lg: 1.5rem;
+  --table-head-h: 2rem;
+  --table-cell-p: 0.5rem;
+  --day-cell: 1.75rem;
+}
+
+/* 10.4: Firefox has no ::-webkit-scrollbar, so it gets the standard properties.
+   Guarded: setting these in Chromium would switch off the styled scrollbar above. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline) var(--color-surface-container-low);
+  }
 }
 
 /* Logo-scroll marquee keyframe (used by LogoWall) */

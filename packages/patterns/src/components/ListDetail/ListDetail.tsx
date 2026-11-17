@@ -24,7 +24,7 @@ export interface ListDetailProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 const widths = {
   sm: '[@container(min-width:720px)]:w-72',
   md: '[@container(min-width:720px)]:w-80',
-  lg: '[@container(min-width:720px)]:w-[400px]',
+  lg: '[@container(min-width:720px)]:w-[25rem]',
 };
 
 /**

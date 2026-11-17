@@ -17,3 +17,13 @@ export const Default: Story = {
     size: 'md',
   },
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <Textarea aria-label="Editable" defaultValue="Editable" />
+      <Textarea readOnly aria-label="Read-only" defaultValue="Read-only" />
+    </div>
+  ),
+};

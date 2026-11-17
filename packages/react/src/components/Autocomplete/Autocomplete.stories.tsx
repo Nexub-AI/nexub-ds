@@ -40,3 +40,15 @@ export const Default: Story = {
 };
 
 // The 5.x default: the list always shows under the input.
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <Autocomplete size="sm" aria-label="Small" options={countryOptions} value="ca" />
+      <Autocomplete size="md" aria-label="Medium" options={countryOptions} value="ca" />
+      <Autocomplete size="lg" aria-label="Large" options={countryOptions} value="ca" />
+      <Autocomplete readOnly aria-label="Read-only" options={countryOptions} value="ca" />
+    </div>
+  ),
+};

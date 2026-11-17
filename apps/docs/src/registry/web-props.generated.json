@@ -257,6 +257,19 @@
           "description": ""
         },
         {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value but it can't be changed; stays focusable."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
           "name": "value",
           "type": "string",
           "required": false,
@@ -769,7 +782,27 @@
     },
     "Checkbox": {
       "file": "components/Checkbox/Checkbox.tsx",
-      "props": [],
+      "props": [
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border and `aria-invalid`."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change; sets `aria-readonly`."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Box size: `sm` 16px, `md` 18px (default), `lg` 20px."
+        }
+      ],
       "inherited": [
         "asChild",
         "checked",
@@ -812,10 +845,22 @@
           "description": "Leading icon."
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border and `aria-invalid`."
+        },
+        {
           "name": "onCheckedChange",
           "type": "((checked: boolean) => void)",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change."
         },
         {
           "name": "title",
@@ -1480,6 +1525,12 @@
           "description": "Id for the trigger button, e.g. to pair with a `<label htmlFor>`."
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
           "name": "locale",
           "type": "Locale",
           "required": false,
@@ -1514,6 +1565,20 @@
           "type": "{ label: string; date: Date; }[]",
           "required": false,
           "description": "Quick picks under the calendar (Today, In a week…); choosing one sets the value and closes."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Shows the date but the calendar can't open and nothing can be typed; stays focusable."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
         },
         {
           "name": "typeable",
@@ -1595,6 +1660,20 @@
           "description": "Quick ranges beside the calendar. `true` shows Today, Last 7 days, Last 30 days, Month to date and Last month; or pass your own."
         },
         {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Shows the range but the calendar can't open; stays focusable."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
           "name": "timeZone",
           "type": "string",
           "required": false,
@@ -1637,6 +1716,12 @@
           "description": ""
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
           "name": "locale",
           "type": "Locale",
           "required": false,
@@ -1665,6 +1750,19 @@
           "type": "((value: Date) => void)",
           "required": false,
           "description": "Called with the new value."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Both fields show the value but can't be changed."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
         },
         {
           "name": "timeZone",
@@ -2223,6 +2321,12 @@
           "description": ""
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border on the drop zone and `aria-invalid` on its file input."
+        },
+        {
           "name": "maxFiles",
           "type": "number",
           "required": false,
@@ -2245,6 +2349,12 @@
           "type": "((rejections: FileRejection[]) => void)",
           "required": false,
           "description": "Files turned away by `accept`, `maxSize` or `maxFiles`, from the picker or a drop."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Files stay listed; nothing can be picked, dropped, pasted or removed."
         },
         {
           "name": "validate",
@@ -2323,6 +2433,13 @@
           "required": false,
           "default": "false",
           "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "`sm` 24px, `md` 32px (default), `lg` 40px."
         }
       ]
     },
@@ -3513,6 +3630,19 @@
           "description": ""
         },
         {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the chips but nothing can be added or removed; stays focusable."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
           "name": "value",
           "type": "string[]",
           "required": false,
@@ -3785,6 +3915,19 @@
           "type": "((value: string) => void)",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Boxes show the value but take no input."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Box size: `sm` 40px tall, `md` 48px (default), `lg` 56px."
         },
         {
           "name": "value",
@@ -4125,6 +4268,18 @@
           "description": "Leading icon."
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border and `aria-invalid`."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change."
+        },
+        {
           "name": "title",
           "type": "React.ReactNode",
           "required": true,
@@ -4147,6 +4302,18 @@
           "required": false,
           "default": "1",
           "description": "Grid columns (collapses to one column on narrow screens)."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border and `aria-invalid`."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change."
         }
       ],
       "inherited": [
@@ -4740,16 +4907,35 @@
           "description": "Formats the bubble and each thumb's `aria-valuetext`."
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error-coloured range and thumb, `aria-invalid` on the root."
+        },
+        {
           "name": "marks",
           "type": "SliderMark[]",
           "required": false,
           "description": "Ticks along the track, optionally labelled (`[0, { value: 50, label: '50%' }, 100]`)."
         },
         {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but pointer and keys do not change the value; `aria-readonly` on each thumb."
+        },
+        {
           "name": "showValue",
           "type": "false | true | 'hover'",
           "required": false,
           "description": "Value bubble above each thumb: `true` always, `'hover'` on hover, focus and drag."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Track thickness and thumb size; `md` is the default."
         },
         {
           "name": "thumbLabels",
@@ -5148,10 +5334,22 @@
           "description": "Small icon inside the thumb while on."
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border on the track and `aria-invalid`."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Spinner in the thumb and `aria-busy`; clicks don't toggle while loading. Stays focusable."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot toggle; sets `aria-readonly`."
         },
         {
           "name": "size",

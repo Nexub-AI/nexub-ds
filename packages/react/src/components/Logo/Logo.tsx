@@ -33,9 +33,9 @@ const iconSizeMap: Record<Size, string> = {
 };
 
 const wordmarkSizeMap: Record<Size, string> = {
-  sm: 'text-base',
-  md: 'text-xl',
-  lg: 'text-2xl',
+  sm: 'text-body-md',
+  md: 'text-title-lg',
+  lg: 'text-headline-sm',
 };
 
 export interface LogoProps

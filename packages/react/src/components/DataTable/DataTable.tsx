@@ -116,7 +116,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'h-10 px-4 text-start align-middle text-xs font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0',
+      'h-10 px-4 text-start align-middle text-label-sm font-medium text-[var(--color-on-surface-muted)] [&:has([role=checkbox])]:pe-0',
       className,
     )}
     {...props}
@@ -839,7 +839,7 @@ export function DataTable<TData>({
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {multiSort && header.column.getIsSorted() && (
-                          <span className="text-[10px] tabular-nums leading-none">
+                          <span className="text-[0.625rem] tabular-nums leading-none">
                             <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
                             <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
                           </span>
@@ -946,7 +946,7 @@ export function DataTable<TData>({
       </TableRoot>
 
       {pagination && (
-        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-[var(--color-on-surface-muted)]">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-body-sm text-[var(--color-on-surface-muted)]">
           <span>
             {messages.pageOf(table.getState().pagination.pageIndex + 1, table.getPageCount())}
           </span>

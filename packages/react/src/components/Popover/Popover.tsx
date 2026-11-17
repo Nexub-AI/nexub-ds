@@ -3,7 +3,7 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { cn } from '../../utils/cn.js';
-import { floatingSurface } from '../../utils/surface.js';
+import { floatingSurface, popoverSurface } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
 const Root = RadixPopover.Root;
@@ -21,7 +21,7 @@ const Content = React.forwardRef<
         sideOffset={sideOffset}
         className={cn(
           'z-[var(--z-popover)] p-4 outline-none',
-          floatingSurface,
+          floatingSurface, popoverSurface,
           'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
           surface === 'glass' && glassSurfaceClass,
           className,

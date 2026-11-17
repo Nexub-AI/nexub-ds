@@ -9,7 +9,7 @@ import { disabledText, pressable } from '../../utils/control.js';
 // Text capsules with a state layer; the current page is a filled primary capsule.
 const navButton = cn(
   pressable,
-  'inline-flex h-11 w-11 items-center justify-center bg-transparent text-[var(--color-on-surface)]',
+  'inline-flex h-[var(--pagination-size,2.75rem)] w-[var(--pagination-size,2.75rem)] items-center justify-center bg-transparent text-[var(--color-on-surface)]',
   disabledText,
 );
 
@@ -81,7 +81,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
           p === '...' ? (
             <span
               key={`ellipsis-${i}`}
-              className="flex h-11 w-11 items-center justify-center text-[var(--color-on-surface-muted)]"
+              className="flex h-[var(--pagination-size,2.75rem)] w-[var(--pagination-size,2.75rem)] items-center justify-center text-[var(--color-on-surface-muted)]"
             >
               <MoreHorizontal size="sm" aria-hidden="true" />
             </span>
@@ -95,7 +95,7 @@ export const Pagination = React.forwardRef<HTMLElement, PaginationProps>(
                 pressable,
                 // tabular-nums on the button itself: Tailwind 4's preflight lets buttons
                 // inherit it from the nav, Tailwind 3's (UA font reset) does not.
-                'inline-flex h-11 min-w-11 px-2 items-center justify-center text-label-lg tabular-nums',
+                'inline-flex h-[var(--pagination-size,2.75rem)] min-w-[var(--pagination-size,2.75rem)] px-2 items-center justify-center text-label-lg tabular-nums',
                 p === page
                   ? 'bg-[var(--color-primary)] text-[var(--color-on-primary)]'
                   : 'bg-transparent text-[var(--color-on-surface)]',
