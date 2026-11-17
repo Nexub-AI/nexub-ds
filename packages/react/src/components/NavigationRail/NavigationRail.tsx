@@ -51,13 +51,15 @@ const Item = React.forwardRef<HTMLAnchorElement, NavigationRailItemProps>(
       <>
         {/* The indicator pill: active fill, plus a state layer driven by the item's hover/press. */}
         <span
+          data-nx="rail-pill"
+          data-active={active ? '' : undefined}
           className={cn(
             'relative grid h-8 w-14 place-items-center rounded-full [&>svg]:h-5 [&>svg]:w-5',
             'before:absolute before:inset-0 before:rounded-full before:bg-current before:opacity-0',
             'before:transition-opacity before:duration-effects-fast before:ease-effects-fast',
             'group-hover:before:opacity-[var(--state-hover)] group-active:before:opacity-[var(--state-pressed)]',
             active
-              ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)]'
+              ? 'bg-[var(--nav-active-bg,var(--color-secondary-container))] text-[var(--nav-active-fg,var(--color-on-secondary-container))]'
               : 'text-[var(--color-on-surface-variant)]',
           )}
         >

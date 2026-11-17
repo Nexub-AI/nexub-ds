@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { accentAttrs } from '@nexub/react';
+import type { DivisionKey, ProductKey } from '@nexub/react';
 import {
   Avatar,
   CommandPalette,
@@ -44,6 +46,10 @@ export interface AppHeaderUser {
 export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
   /** e.g. "Command Hub". Shown after the Nexub wordmark and in the search field. */
   productName?: string;
+  /** 10.3: this app's key in the product map (or its division). Sets `data-product` /
+   *  `data-division` on the header, so its focus ring and accents follow the app
+   *  (needs `@nexub/themes/products` or `/divisions`). */
+  accent?: ProductKey | DivisionKey;
   /** Where the logo links. @default '/' */
   homeHref?: string;
   /** Client-side routing for the logo and launcher. When set, plain clicks call this instead of following the link. */
@@ -420,6 +426,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
   (
     {
       productName,
+      accent,
       homeHref = '/',
       onNavigate,
       menu,
@@ -454,6 +461,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
           ref={ref}
           role="banner"
           surface={surface}
+          {...accentAttrs(accent)}
           data-condense={condense ? '' : undefined}
           className={cn(
             'h-[var(--app-header-height,64px)] px-2 sm:px-4',

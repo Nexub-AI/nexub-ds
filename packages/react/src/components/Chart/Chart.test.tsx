@@ -22,7 +22,10 @@ describe('charts', () => {
     expect(screen.getByRole('cell', { name: '25' })).toBeTruthy();
     const bars = container.querySelectorAll('rect');
     expect(bars).toHaveLength(4);
-    expect(bars[1]!.getAttribute('class')).toContain('fill-chart-4');
+    // 10.3: a bar is filled through its series' gradient (.nx-chart-grad-N sets the stop colour).
+    const grad = container.querySelector(bars[1]!.getAttribute('fill')!.slice(4, -1).replace(/[^#\w-]/g, '\\$&'))!;
+    expect(grad.getAttribute('class')).toBe('nx-chart-grad nx-chart-grad-4');
+    expect(grad.children).toHaveLength(2);
     // Tallest value 30 → axis max 50, so 30 fills 60% of the 100-unit plot.
     expect(bars[1]!.getAttribute('height')).toBe('60');
   });

@@ -100,7 +100,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] data-[state=selected]:bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]',
+        'border-b border-[var(--color-outline-variant)] transition-colors hover:bg-[var(--row-hover,color-mix(in_srgb,var(--color-on-surface)_8%,transparent))] data-[state=selected]:bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]',
         className,
       )}
       {...props}

@@ -156,6 +156,32 @@ export const CHART_KEYS = [
   ...CHART_DIV.map((_, i) => `div-${i + 1}`),
 ];
 
+// Category colours (10.3): eight named hues for icon chips, tags and avatars,
+// one per chart series so a category keeps its colour between a chip and a
+// chart. Each has a text colour for surfaces and a container pair; all three
+// clear 4.5:1 in both schemes (generate.test.mjs).
+export const CATEGORIES = ['blue', 'amber', 'emerald', 'pink', 'violet', 'cyan', 'red', 'lime'];
+const hct = (h, c, t) => hexFromArgb(Hct.from(h, c, t).toInt());
+export const categoryColors = () =>
+  CATEGORIES.map((name, i) => {
+    const h = CHART[i][0];
+    return {
+      name,
+      text: [hct(h, 60, 38), hct(h, 50, 82)],
+      container: [hct(h, 32, 92), hct(h, 30, 26)],
+      onContainer: [hct(h, 48, 22), hct(h, 40, 90)],
+    };
+  });
+function categoryCss() {
+  return categoryColors()
+    .flatMap((c) => [
+      `  --color-category-${c.name}: light-dark(${c.text.join(', ')});`,
+      `  --color-category-${c.name}-container: light-dark(${c.container.join(', ')});`,
+      `  --color-on-category-${c.name}-container: light-dark(${c.onContainer.join(', ')});`,
+    ])
+    .join('\n');
+}
+
 function chartCss() {
   return [
     ...chartCategorical().map(([l, d], i) => `  --color-chart-${i + 1}: light-dark(${l}, ${d});`),
@@ -227,6 +253,7 @@ ${contrastBlocks(false)}
 
 :root {
 ${chartCss()}
+${categoryCss()}
 }
 
 ${styleCss()}

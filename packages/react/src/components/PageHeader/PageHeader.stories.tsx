@@ -53,3 +53,18 @@ export const Level2: Story = {
     level: 2,
   },
 };
+
+/** 10.3: `wash` sits the header on a tonal panel. */
+export const Wash: Story = {
+  args: { title: 'Good morning, Mei', description: 'Here is what changed since yesterday.', wash: true },
+};
+
+/** Under the vivid expression the title is heavier and the wash carries the accent. */
+export const Vivid: Story = {
+  render: () => (
+    <div data-expression="vivid" className="flex flex-col gap-6">
+      <PageHeader title="Good morning, Mei" description="Here is what changed since yesterday." wash />
+      <PageHeader title="Invoices" description="Sent and received this quarter." level={2} />
+    </div>
+  ),
+};

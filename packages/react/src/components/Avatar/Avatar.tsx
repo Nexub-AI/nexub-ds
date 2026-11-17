@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { CATEGORY_COLORS } from '@nexub/core';
+import type { CategoryColor } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { safeSrc } from '../../utils/safeHref.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -41,6 +43,14 @@ const statusColor: Record<AvatarStatus, string> = {
   offline: 'bg-[var(--color-outline)]',
 };
 
+// 'auto': the same name always gets the same hue (a small string hash), skipping 'accent'.
+function autoCategory(name: string | undefined): CategoryColor | undefined {
+  if (!name) return undefined;
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return CATEGORY_COLORS[1 + (h % (CATEGORY_COLORS.length - 1))];
+}
+
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/);
   const first = parts[0] ?? '';
@@ -54,6 +64,9 @@ export interface AvatarProps
     VariantProps<typeof avatarVariants> {
   src?: string;
   name?: string;
+  /** 10.3: colour of the initials fallback. `'auto'` picks a stable colour from `name`,
+   *  so a list of people is easier to scan. Images are not affected. */
+  category?: CategoryColor | 'auto';
   fallback?: React.ReactNode;
   badge?: boolean;
   badgeColor?: string;
@@ -69,6 +82,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       src: srcProp,
       name,
       fallback,
+      category: categoryProp,
       badge,
       badgeColor,
       status,
@@ -89,6 +103,7 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       },
       [],
     );
+    const category = categoryProp === 'auto' ? autoCategory(name) : categoryProp;
     const messages = useNexubMessages();
     const statusLabel = status ? messages.presence[status] : undefined;
     const label = [name, statusLabel].filter(Boolean).join(', ') || undefined;
@@ -101,7 +116,12 @@ export const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     return (
       <span
         ref={ref}
-        className={cn(avatarVariants({ size }), className)}
+        data-category={category}
+        className={cn(
+          avatarVariants({ size }),
+          category && 'bg-[var(--nx-cat-container)] text-[var(--nx-on-cat-container)]',
+          className,
+        )}
         aria-label={label}
         role={labelled ? 'img' : undefined}
         aria-hidden={labelled ? undefined : true}

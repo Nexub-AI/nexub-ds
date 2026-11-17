@@ -193,8 +193,22 @@ export function BarChart<T extends object>({ stacked = false, ...props }: BarCha
   const slot = VB_W / Math.max(1, data.length);
   const groupW = slot * 0.7;
   const barW = stacked ? groupW : groupW / series.length;
+  // One vertical gradient per series, in the series colour. It is a flat fill
+  // unless an expression layer fades the lower stop (--nx-chart-fade, vivid).
+  const gid = React.useId();
   return (
     <Frame {...props} domain={domain}>
+      <defs>
+        {series.map((s, j) => {
+          const c = colorIndex(s.color, j);
+          return (
+            <linearGradient key={s.key} id={`${gid}${j}`} x1="0" y1="0" x2="0" y2="1" className={`nx-chart-grad nx-chart-grad-${c + 1}`}>
+              <stop offset="0" />
+              <stop offset="1" />
+            </linearGradient>
+          );
+        })}
+      </defs>
       {data.map((row, i) => {
         let up = 0;
         let down = 0;
@@ -212,7 +226,10 @@ export function BarChart<T extends object>({ stacked = false, ...props }: BarCha
               const x = i * slot + (slot - groupW) / 2 + (stacked ? 0 : j * barW);
               return (
                 <rect key={s.key} x={x} y={top} width={Math.max(0, barW - (stacked ? 0 : 1))} height={Math.abs(y(to) - y(from))}
-                  data-negative={v < 0 ? '' : undefined} className={cn('nx-chart-bar', FILL[colorIndex(s.color, j)])} />
+                  data-negative={v < 0 ? '' : undefined}
+                  // Bars above the baseline take the gradient; the class is the fallback and the fill of negative bars.
+                  {...(v > 0 && !stacked ? { fill: `url(#${gid}${j})` } : {})}
+                  className={cn('nx-chart-bar', (v <= 0 || stacked) && FILL[colorIndex(s.color, j)])} />
               );
             })}
           </g>

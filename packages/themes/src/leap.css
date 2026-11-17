@@ -1,4 +1,6 @@
 /* @nexub/themes — leap.css
+   @deprecated since 10.3: import @nexub/themes/products instead (it covers [data-product='leap']
+   and every other app). This file is removed in 11.0.
    Overrides --color-accent-* to Leap's indigo scale when [data-product='leap'] is set on an ancestor. */
 
 [data-product='leap'] {

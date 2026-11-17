@@ -730,6 +730,15 @@
       "screenReader": []
     },
     {
+      "slug": "icon-chip",
+      "name": "Icon Chip",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "inline-edit",
       "name": "Inline Edit",
       "package": "@nexub/react",
@@ -1343,6 +1352,15 @@
       ]
     },
     {
+      "slug": "success-check",
+      "name": "Success Check",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "switch",
       "name": "Switch",
       "package": "@nexub/react",
@@ -1765,6 +1783,15 @@
     {
       "slug": "user-card",
       "name": "UserCard",
+      "package": "@nexub/patterns",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "welcome-banner",
+      "name": "WelcomeBanner",
       "package": "@nexub/patterns",
       "automated": "pass",
       "exceptions": [],

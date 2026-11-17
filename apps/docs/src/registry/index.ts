@@ -135,6 +135,7 @@ import motionCollapseEntry from './components/motion-collapse';
 
 // ─── Pattern entries ──────────────────────────────────────────────────────────
 import statCardEntry from './patterns/stat-card';
+import welcomeBannerEntry from './patterns/welcome-banner';
 import authCardEntry from './patterns/auth-card';
 import filterBarEntry from './patterns/filter-bar';
 import userCardEntry from './patterns/user-card';
@@ -206,6 +207,8 @@ import commandPaletteEntry from './components/command-palette';
 import containerEntry from './components/container';
 import contextMenuEntry from './components/context-menu';
 import countryBadgeEntry from './components/country-badge';
+import iconChipEntry from './components/icon-chip';
+import successCheckEntry from './components/success-check';
 import dropdownMenuEntry from './components/dropdown-menu';
 import fileUploadEntry from './components/file-upload';
 import flagEntry from './components/flag';
@@ -258,6 +261,8 @@ export const componentEntries: ComponentEntry[] = [
   chipEntry,
   eyebrowChipEntry,
   countryBadgeEntry,
+  iconChipEntry,
+  successCheckEntry,
   flagEntry,
   // Avatar
   avatarEntry,
@@ -406,6 +411,7 @@ export const marketingEntries: ComponentEntry[] = [
 // ─── All pattern entries (flat) ───────────────────────────────────────────────
 export const patternEntries: ComponentEntry[] = [
   statCardEntry,
+  welcomeBannerEntry,
   authCardEntry,
   filterBarEntry,
   userCardEntry,
