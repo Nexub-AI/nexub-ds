@@ -1,3 +1,4 @@
+import { ErrorState } from '../ErrorState/ErrorState.js';
 import * as React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -44,5 +45,28 @@ describe('EventCalendar', () => {
     expect(onDateChange).toHaveBeenCalledWith(new Date(2026, 10, 16));
     await userEvent.click(screen.getByRole('radio', { name: 'Month' }));
     expect(screen.getByRole('heading', { name: 'November 2026' })).toBeInTheDocument();
+  });
+});
+
+describe('EventCalendar 10.5: data states', () => {
+  it('loading keeps the grid, sets aria-busy and hides the events', () => {
+    const { container } = renderCal({ loading: true });
+    expect(screen.getByRole('table').getAttribute('aria-busy')).toBe('true');
+    expect(screen.queryByText('Standup')).toBeNull();
+    expect(container.querySelectorAll('td > span[aria-hidden="true"]').length).toBeGreaterThan(27);
+  });
+
+  it('emptyState shows under the grid only when the visible range has no events', () => {
+    renderCal({ emptyState: 'No events' });
+    expect(screen.queryByText('No events')).toBeNull();
+    renderCal({ emptyState: 'No events here', defaultDate: new Date(2027, 0, 15) });
+    expect(screen.getByText('No events here')).toBeTruthy();
+    expect(screen.getAllByRole('table')).toHaveLength(2);
+  });
+
+  it('errorState replaces the grid and wins over loading', () => {
+    renderCal({ loading: true, errorState: <ErrorState title="Failed" /> });
+    expect(screen.getByRole('heading', { name: 'Failed' })).toBeTruthy();
+    expect(screen.queryByRole('table')).toBeNull();
   });
 });

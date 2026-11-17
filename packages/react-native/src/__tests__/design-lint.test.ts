@@ -17,23 +17,16 @@ const PROPS =
   'gap|rowGap|columnGap|width|height|minWidth|minHeight|maxWidth|maxHeight|borderRadius|fontSize|lineHeight|top|bottom|left|right|start|end';
 const RAW = new RegExp(`\\b(?:${PROPS})\\s*:\\s*-?(\\d+(?:\\.\\d+)?)\\b(?!\\s*[%*/+.-])`, 'g');
 
-// file (relative to src/) → allowed count. Mostly sizes with no token yet (icon
-// and thumb geometry, indicator dots, small radii) and styles outside a
-// component that reads the theme.
+// file (relative to src/) → allowed count. What is left (10.5) has no token and
+// no honest relation to one: Dialog maxWidth 400, the SegmentedControl's 3pt
+// pill inset (4), the OTP cell height 52, the sheet grabber 5 × radius 3, the
+// chat composer maxHeight 140 and the native tab label's 11pt.
 const KNOWN: Record<string, number> = {
-  'components/actions.tsx': 1,
-  'components/containers.tsx': 1,
-  'components/data.tsx': 3,
-  'components/display.tsx': 3,
-  'components/feedback.tsx': 16,
-  'components/inputs.tsx': 29,
-  'components/mobile.tsx': 19,
-  'components/overlays.tsx': 3,
-  'components/workflow.tsx': 5,
-  'patterns/app.tsx': 19,
-  'patterns/auth.tsx': 3,
-  'patterns/home.tsx': 3,
-  'patterns/money.tsx': 3,
+  'components/feedback.tsx': 1,
+  'components/inputs.tsx': 4,
+  'components/mobile.tsx': 1,
+  'components/overlays.tsx': 2,
+  'patterns/app.tsx': 1,
   'theme/navigation.ts': 1,
 };
 

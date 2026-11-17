@@ -88,6 +88,9 @@ const List = React.forwardRef<HTMLDivElement, ComboboxListProps>(
           'box-content h-[var(--cmdk-list-height)] max-h-64 overflow-y-auto overflow-x-hidden p-1',
           'transition-[height] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
           loading && '[&_[cmdk-empty]]:hidden',
+          // cmdk counts its items only after mount, so server HTML has Empty above the options
+          // and it vanished on hydration (a layout shift). Options in the list = no Empty.
+          '[&:has([cmdk-item])_[cmdk-empty]]:hidden',
           className,
         )}
         {...props}

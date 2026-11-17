@@ -118,6 +118,8 @@ const cases: Record<string, () => React.ReactElement> = {
   CountryBadge: () => <N.CountryBadge code="SG" label="Singapore" />,
   IconChip: () => <N.IconChip category="violet" aria-label="Payments"><svg /></N.IconChip>,
   SuccessCheck: () => <N.SuccessCheck label="Payment sent" />,
+  Illustration: () => <N.Illustration kind="noData" />,
+  SkeletonPreset: () => <N.SkeletonPreset preset="card" />,
   KeyboardShortcut: () => <N.KeyboardShortcut keys={['Ctrl', 'K']} />,
   Kbd: () => <N.Kbd>K</N.Kbd>,
   Code: () => <N.Code>x</N.Code>,

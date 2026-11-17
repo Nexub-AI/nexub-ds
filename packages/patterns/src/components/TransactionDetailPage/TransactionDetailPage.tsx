@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Amount, Avatar, Badge, Button } from '@nexub/react';
+import { Amount, Avatar, Badge, Button, EmptyStatePreset, Skeleton } from '@nexub/react';
 import { ArrowLeft } from '@nexub/icons';
 import { InfoList } from '../InfoList/index.js';
 import {
@@ -13,7 +13,14 @@ import {
 } from '../PageFrame/PageFrame.js';
 
 export interface TransactionDetailPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
-  transaction: Transaction;
+  /** Optional since 10.5: leave it out while `loading`, or when there is nothing to show. */
+  transaction?: Transaction;
+  /** 10.5: shows skeletons in place of the hero and the rows, and sets aria-busy on the page. */
+  loading?: boolean;
+  /** Shown when there is no `transaction`. @default the "Nothing here yet" preset */
+  emptyState?: React.ReactNode;
+  /** Shown in place of the content; wins over `loading` and `emptyState`. */
+  errorState?: React.ReactNode;
   /** Extra rows: reference, account, category… */
   rows?: ReviewRow[];
   /** Under the details: "Download receipt", "Report a problem". */
@@ -25,18 +32,46 @@ export interface TransactionDetailPageProps extends Omit<PageFrameProps, 'title'
 
 /** One transaction: hero amount, status and summary rows. Web twin of the native `TransactionDetail`. */
 export const TransactionDetailPage = React.forwardRef<HTMLElement, TransactionDetailPageProps>(
-  function TransactionDetailPage({ transaction: t, rows = [], footer, onBack, messages, ...props }, ref) {
+  function TransactionDetailPage({ transaction: t, rows = [], footer, onBack, loading, emptyState, errorState, messages, ...props }, ref) {
     const m = usePageMessages(messages);
     const locale = useTemplateLocale();
     const headingId = React.useId();
+    const back = onBack && (
+      <Button variant="text" size="sm" className="self-start" onClick={onBack} leadingIcon={<ArrowLeft size="sm" className="rtl:-scale-x-100" aria-hidden="true" />}>
+        {m.back}
+      </Button>
+    );
+    if (errorState != null || loading || !t)
+      return (
+        <PageFrame ref={ref} width="sm" aria-busy={(loading && errorState == null) || undefined} {...props}>
+          {back}
+          {errorState ??
+            (loading ? (
+              <div aria-hidden="true" className="flex flex-col gap-6">
+                <div className="flex flex-col items-center gap-2 py-4">
+                  <Skeleton shape="circle" className="size-16" />
+                  <Skeleton className="my-1 h-5 w-40" />
+                  <Skeleton className="my-1 h-9 w-48" />
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                </div>
+                <div className="flex flex-col gap-6 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] p-4">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="flex items-center justify-between gap-4">
+                      <Skeleton className="h-4 w-20" />
+                      <Skeleton className="h-4 w-32" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              (emptyState ?? <EmptyStatePreset kind="noData" />)
+            ))}
+        </PageFrame>
+      );
     const when = new Intl.DateTimeFormat(locale, { dateStyle: 'full', timeStyle: 'short' }).format(t.date);
     return (
       <PageFrame ref={ref} width="sm" aria-labelledby={headingId} {...props}>
-        {onBack && (
-          <Button variant="text" size="sm" className="self-start" onClick={onBack} leadingIcon={<ArrowLeft size="sm" className="rtl:-scale-x-100" aria-hidden="true" />}>
-            {m.back}
-          </Button>
-        )}
+        {back}
         <div className="flex flex-col items-center gap-2 py-4 text-center">
           <Avatar name={t.title} src={t.image} size="xl" />
           <h1 id={headingId} className="text-title-lg text-[var(--color-on-surface)]">

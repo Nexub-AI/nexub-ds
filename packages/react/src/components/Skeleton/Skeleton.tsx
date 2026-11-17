@@ -103,3 +103,66 @@ export const SkeletonText = React.forwardRef<HTMLSpanElement, SkeletonTextProps>
 );
 
 SkeletonText.displayName = 'SkeletonText';
+
+export interface SkeletonPresetProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    Pick<SkeletonProps, 'animated' | 'animation'> {
+  /** The layout to stand in for. */
+  preset: 'card' | 'tableRow' | 'listRow' | 'chart' | 'form';
+  /** How many to stack: rows, cards or fields. @default 1 */
+  count?: number;
+}
+
+/** Ready-made placeholders for common layouts, built from Skeleton shapes. Decorative: put aria-busy on the region they fill. */
+export const SkeletonPreset = React.forwardRef<HTMLDivElement, SkeletonPresetProps>(
+  ({ preset, count = 1, animated, animation, className, ...props }, ref) => {
+    const a = { animated, animation };
+    const one: Record<SkeletonPresetProps['preset'], () => React.ReactNode> = {
+      card: () => (
+        <span className="flex flex-col gap-3 rounded-shape-container border border-[var(--color-outline-variant)] p-4 text-body-md">
+          <Skeleton {...a} shape="rect" className="h-32" />
+          <Skeleton {...a} className="w-3/5" />
+          <SkeletonText {...a} lines={2} />
+        </span>
+      ),
+      tableRow: () => (
+        <span className="flex items-center gap-4 border-b border-[var(--color-outline-variant)] py-3 text-body-sm">
+          {[0, 1, 2, 3].map((i) => (
+            <Skeleton key={i} {...a} className="flex-1" />
+          ))}
+        </span>
+      ),
+      listRow: () => (
+        <span className="flex items-center gap-3 py-2 text-body-md">
+          <Skeleton {...a} shape="circle" className="shrink-0" />
+          <span className="flex min-w-0 flex-1 flex-col gap-2">
+            <Skeleton {...a} className="w-2/5" />
+            <Skeleton {...a} className="w-3/5" />
+          </span>
+        </span>
+      ),
+      chart: () => <Skeleton {...a} shape="rect" className="h-48" />,
+      form: () => (
+        <span className="flex flex-col gap-2 text-body-md">
+          <Skeleton {...a} className="w-24" />
+          <Skeleton {...a} shape="rect" className="h-control-md rounded-shape-field" />
+        </span>
+      ),
+    };
+    return (
+      <div
+        ref={ref}
+        aria-hidden="true"
+        data-preset={preset}
+        className={cn('flex flex-col', preset === 'tableRow' || preset === 'listRow' ? 'gap-0' : 'gap-4', className)}
+        {...props}
+      >
+        {Array.from({ length: count }, (_, i) => (
+          <React.Fragment key={i}>{one[preset]()}</React.Fragment>
+        ))}
+      </div>
+    );
+  },
+);
+
+SkeletonPreset.displayName = 'SkeletonPreset';

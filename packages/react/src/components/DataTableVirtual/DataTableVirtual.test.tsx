@@ -1,3 +1,5 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ErrorState } from '../ErrorState/ErrorState.js';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
@@ -30,5 +32,16 @@ describe('DataTableVirtual', () => {
     expect(rendered.length).toBeGreaterThan(0);
     expect(rendered.length).toBeLessThan(100);
     expect(rendered[0]).toHaveAttribute('aria-rowindex', '2');
+  });
+});
+
+describe('DataTableVirtual 10.5: errorState', () => {
+  it('shows in place of the rows and wins over loading', () => {
+    const { container } = renderState(
+      <DataTableVirtual columns={[{ accessorKey: 'id', header: 'ID' }]} data={[{ id: 1 }]} maxHeight={200} loading errorState={<ErrorState title="Failed" />} />,
+    );
+    expect(stateScreen.getByRole('heading', { name: 'Failed' })).toBeTruthy();
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(1);
+    expect(container.querySelector('table')!.hasAttribute('aria-busy')).toBe(false);
   });
 });

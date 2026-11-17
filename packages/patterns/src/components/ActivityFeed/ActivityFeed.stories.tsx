@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { EmptyStatePreset } from '@nexub/react';
 import { ActivityFeed } from './ActivityFeed.js';
 
 const meta: Meta = {
@@ -62,6 +63,28 @@ export const Default: Story = {
           timestamp="1h ago"
         />
       </ActivityFeed.Root>
+    </div>
+  ),
+};
+
+const stateLabel = 'm-0 text-label-md text-[var(--color-on-surface-variant)]';
+
+/** 10.5: `loading`, `emptyState` and `errorState` (the error wins). */
+export const DataStates: Story = {
+  render: () => (
+    <div className="grid w-full max-w-4xl grid-cols-[repeat(auto-fit,minmax(15rem,1fr))] items-start gap-6">
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Loading</p>
+        <ActivityFeed.Root loading />
+      </div>
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Empty</p>
+        <ActivityFeed.Root emptyState={<EmptyStatePreset kind="noData" size="sm" />} />
+      </div>
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className={stateLabel}>Error</p>
+        <ActivityFeed.Root errorState={<EmptyStatePreset kind="serverError" size="sm" />} />
+      </div>
     </div>
   ),
 };

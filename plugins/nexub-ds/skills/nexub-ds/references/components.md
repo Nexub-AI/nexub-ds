@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v10.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -43,6 +43,7 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
+- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
@@ -239,6 +240,7 @@ Never use a component marked deprecated.
 
 - [NotificationCenter](components/notification-center.md) `@nexub/patterns`: A bell with an unread count that opens the notification list.
 - [NotificationItem](components/notification-item.md) `@nexub/patterns`: Single notification row for notification panels or dropdowns.
+- [StatusPage](components/status-page.md) `@nexub/patterns`: A whole page for one state: not found, server error, maintenance, offline or no access.
 
 ## Patterns — Forms
 

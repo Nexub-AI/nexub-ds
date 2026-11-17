@@ -1,3 +1,4 @@
+import { ErrorState } from '../ErrorState/ErrorState.js';
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -75,5 +76,41 @@ describe('TreeView', () => {
     expect(item('Team')).toHaveAttribute('aria-busy', 'true');
     resolve();
     expect(await screen.findByRole('treeitem', { name: 'Ada' })).toBeInTheDocument();
+  });
+});
+
+describe('TreeView 10.5: data states and indent', () => {
+  it('loading shows skeleton rows in a busy group instead of the tree', () => {
+    const { container } = render(<TreeView aria-label="Files" nodes={nodes} loading />);
+    expect(screen.getByRole('group', { name: 'Files' }).getAttribute('aria-busy')).toBe('true');
+    expect(screen.queryByRole('tree')).toBeNull();
+    expect(container.querySelectorAll('span[aria-hidden="true"]')).toHaveLength(4);
+  });
+
+  it('no nodes shows the default message or emptyState; errorState wins', () => {
+    const { rerender } = render(<TreeView aria-label="Files" nodes={[]} />);
+    expect(screen.getByText('Nothing here yet')).toBeTruthy();
+    rerender(<TreeView aria-label="Files" nodes={[]} emptyState="No files" />);
+    expect(screen.getByText('No files')).toBeTruthy();
+    rerender(<TreeView aria-label="Files" nodes={[]} loading emptyState="No files" errorState={<ErrorState title="Failed" />} />);
+    expect(screen.getByRole('heading', { name: 'Failed' })).toBeTruthy();
+    expect(screen.queryByText('No files')).toBeNull();
+    expect(screen.getByRole('group', { name: 'Files' }).hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('indents rows with classes, not a style set on mount', () => {
+    render(<TreeView aria-label="Files" nodes={nodes} defaultExpanded={['src', 'lib']} />);
+    const row = (name: string) => item(name).firstElementChild as HTMLElement;
+    expect(row('src').className).toContain('ps-[0.25rem]');
+    expect(row('util').className).toContain('ps-[2.75rem]');
+    expect(row('util').style.paddingInlineStart).toBe('');
+  });
+
+  it('collapsing removes the group at once when no transition runs', async () => {
+    const user = userEvent.setup();
+    render(<TreeView aria-label="Files" nodes={nodes} defaultExpanded={['src']} />);
+    await user.click(item('src').firstElementChild!);
+    expect(screen.queryByRole('treeitem', { name: 'app.tsx' })).toBeNull();
+    expect(screen.queryByText('app.tsx')).toBeNull();
   });
 });

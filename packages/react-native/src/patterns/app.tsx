@@ -6,6 +6,7 @@ import { Button, IconButton } from '../components/actions';
 import { Card, ListItem, ListSection, type ListItemProps } from '../components/containers';
 import { Avatar, Badge } from '../components/display';
 import { EmptyState } from '../components/feedback';
+import { MIN_TARGET } from '../components/shared';
 import { SearchField, SegmentedControl, Chip } from '../components/inputs';
 import { BottomSheet } from '../components/overlays';
 import { Carousel, StickyFooter } from '../components/mobile';
@@ -89,6 +90,8 @@ export function PermissionPrimer({
   onNotNow,
 }: PermissionPrimerProps) {
   const { roles, tokens } = useTheme();
+  // The largest avatar plus a ring of breathing room.
+  const disc = tokens.size.avatar.xl + tokens.spacing[6];
   return (
     <StickyFooter
       footer={
@@ -113,9 +116,9 @@ export function PermissionPrimer({
       >
         <View
           style={{
-            width: 88,
-            height: 88,
-            borderRadius: 44,
+            width: disc,
+            height: disc,
+            borderRadius: disc / 2,
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: roles['primary-container'],
@@ -310,11 +313,11 @@ export function NotificationsInbox({
                       <View
                         style={{
                           position: 'absolute',
-                          top: -2,
-                          end: -2,
-                          width: 8,
-                          height: 8,
-                          borderRadius: 4,
+                          top: -tokens.spacing['0-5'],
+                          end: -tokens.spacing['0-5'],
+                          width: tokens.spacing[2],
+                          height: tokens.spacing[2],
+                          borderRadius: tokens.spacing[2] / 2,
                           backgroundColor: roles.primary,
                         }}
                       />
@@ -488,12 +491,12 @@ export function ChatScreen({
           multiline
           style={{
             flex: 1,
-            minHeight: 44,
+            minHeight: MIN_TARGET,
             maxHeight: 140,
             paddingHorizontal: tokens.spacing[4],
             paddingTop: tokens.spacing[3],
             paddingBottom: tokens.spacing[3],
-            borderRadius: 22,
+            borderRadius: MIN_TARGET / 2,
             backgroundColor: roles['surface-container-high'],
             color: roles['on-surface'],
             fontSize: tokens.type['body-md'].size,
@@ -513,21 +516,21 @@ export function ChatScreen({
 }
 
 function ThinkingDots() {
-  const { roles, messages } = useTheme();
+  const { roles, tokens, messages } = useTheme();
   return (
     <View
       accessible
       accessibilityLabel={messages.thinking}
       accessibilityLiveRegion="polite"
-      style={{ flexDirection: 'row', gap: 4, padding: 12, alignSelf: 'flex-start' }}
+      style={{ flexDirection: 'row', gap: tokens.spacing[1], padding: tokens.spacing[3], alignSelf: 'flex-start' }}
     >
       {[0, 1, 2].map((i) => (
         <View
           key={i}
           style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
+            width: tokens.spacing[2],
+            height: tokens.spacing[2],
+            borderRadius: tokens.spacing[2] / 2,
             backgroundColor: roles['on-surface-variant'],
             opacity: 0.4 + i * 0.2,
           }}
@@ -589,7 +592,7 @@ export function PaywallScreen({
         </>
       }
     >
-      <ScreenContainer>
+      <ScreenContainer keyboardAvoiding={false}>
         <Heading variant="headline-md">{title}</Heading>
         <View accessibilityRole="radiogroup" style={{ gap: tokens.spacing[3] }}>
           {plans.map((p) => {
@@ -667,6 +670,8 @@ export function AppSwitcherSheet({
   onOpenApp,
 }: AppSwitcherSheetProps) {
   const { roles, tokens } = useTheme();
+  // App tile: corners are a quarter of its side.
+  const tile = tokens.size.control.xl;
   return (
     <BottomSheet open={open} onOpenChange={onOpenChange} title="Nexub apps">
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', rowGap: tokens.spacing[4] }}>
@@ -686,9 +691,9 @@ export function AppSwitcherSheet({
             >
               <View
                 style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 14,
+                  width: tile,
+                  height: tile,
+                  borderRadius: tile / 4,
                   overflow: 'hidden',
                   alignItems: 'center',
                   justifyContent: 'center',

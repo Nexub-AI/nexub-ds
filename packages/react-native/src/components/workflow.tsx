@@ -32,14 +32,14 @@ export interface TreeListProps {
  * open the next level, leaves are picked, and a back row returns.
  */
 export function TreeList({ nodes, rootTitle, selected, onSelect, style }: TreeListProps) {
-  const { roles, messages } = useTheme();
+  const { roles, tokens, messages } = useTheme();
   const [path, setPath] = React.useState<TreeListNode[]>([]);
   const here = path.at(-1);
   const list = here?.children ?? nodes;
   const parentTitle = path.length > 1 ? path.at(-2)!.title : rootTitle;
 
   return (
-    <View style={[{ gap: 8 }, style]}>
+    <View style={[{ gap: tokens.spacing[2] }, style]}>
       {here && (
         <ListSection>
           <ListItem
@@ -88,7 +88,7 @@ export interface StepProgressProps {
 
 /** Progress through a multi-step flow (web Stepper on mobile): segments and "Step 2 of 4: Billing". */
 export function StepProgress({ steps, current, style }: StepProgressProps) {
-  const { roles, messages } = useTheme();
+  const { roles, tokens, messages } = useTheme();
   const text = `${messages.stepOf(current + 1, steps.length)}: ${steps[current]?.label ?? ''}`;
   return (
     <View
@@ -96,13 +96,13 @@ export function StepProgress({ steps, current, style }: StepProgressProps) {
       accessibilityRole="progressbar"
       accessibilityLabel={text}
       accessibilityValue={{ min: 1, max: steps.length, now: current + 1, text }}
-      style={[{ gap: 8 }, style]}
+      style={[{ gap: tokens.spacing[2] }, style]}
     >
-      <View style={{ flexDirection: 'row', gap: 4 }}>
+      <View style={{ flexDirection: 'row', gap: tokens.spacing[1] }}>
         {steps.map((s, i) => (
           <View
             key={s.id}
-            style={{ flex: 1, height: 4, borderRadius: 2, backgroundColor: i <= current ? roles.primary : roles['outline-variant'] }}
+            style={{ flex: 1, height: tokens.spacing[1], borderRadius: tokens.radius.xs, backgroundColor: i <= current ? roles.primary : roles['outline-variant'] }}
           />
         ))}
       </View>

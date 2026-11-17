@@ -1,5 +1,5 @@
 export { ActivityFeed } from './components/ActivityFeed/index.js';
-export type { ActivityItemProps } from './components/ActivityFeed/index.js';
+export type { ActivityItemProps, ActivityFeedRootProps } from './components/ActivityFeed/index.js';
 
 export { FilterBar } from './components/FilterBar/index.js';
 export type { FilterBarProps } from './components/FilterBar/index.js';
@@ -86,5 +86,7 @@ export { ChatPage } from './components/ChatPage/index.js';
 export type { ChatPageProps } from './components/ChatPage/index.js';
 export { PaywallPage } from './components/PaywallPage/index.js';
 export type { PaywallPageProps } from './components/PaywallPage/index.js';
+export { StatusPage } from './components/StatusPage/index.js';
+export type { StatusPageProps, StatusPageKind } from './components/StatusPage/index.js';
 export { DashboardPage } from './components/DashboardPage/index.js';
 export type { DashboardPageProps, DashboardStat } from './components/DashboardPage/index.js';

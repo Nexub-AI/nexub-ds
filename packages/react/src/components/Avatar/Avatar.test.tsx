@@ -115,3 +115,13 @@ describe('Avatar category (10.3)', () => {
     expect(container.firstElementChild!.hasAttribute('data-category')).toBe(false);
   });
 });
+
+describe('Avatar status change (10.5)', () => {
+  it('the dot pops when the status changes, not on first render', () => {
+    const dot = (c: HTMLElement) => c.querySelector('.rounded-full.absolute')!;
+    const { container, rerender } = render(<Avatar name="Ada" status="online" />);
+    expect(dot(container)).not.toHaveClass('nx-tick');
+    rerender(<Avatar name="Ada" status="busy" />);
+    expect(dot(container)).toHaveClass('nx-tick', 'bg-[var(--color-error)]');
+  });
+});

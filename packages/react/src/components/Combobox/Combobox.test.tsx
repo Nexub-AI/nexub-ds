@@ -98,3 +98,17 @@ describe('Combobox 10.4', () => {
     expect(screen.getByPlaceholderText('sm')).toHaveAttribute('readonly');
   });
 });
+
+describe('Combobox server HTML (10.5)', () => {
+  it('Empty is hidden by CSS while the list has options (cmdk counts them only after mount)', () => {
+    render(
+      <Combobox.Root label="Fruit">
+        <Combobox.List>
+          <Combobox.Empty>None</Combobox.Empty>
+          <Combobox.Item value="a">Apple</Combobox.Item>
+        </Combobox.List>
+      </Combobox.Root>,
+    );
+    expect(screen.getByRole('listbox')).toHaveClass('[&:has([cmdk-item])_[cmdk-empty]]:hidden');
+  });
+});

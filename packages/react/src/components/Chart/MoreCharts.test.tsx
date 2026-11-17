@@ -1,3 +1,6 @@
+import { render as renderState, screen as stateScreen } from '@testing-library/react';
+import { ErrorState } from '../ErrorState/ErrorState.js';
+import { Gauge as StateGauge, Funnel as StateFunnel, Heatmap as StateHeatmap, KpiTile as StateKpi } from './MoreCharts.js';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { render, screen } from '@testing-library/react';
@@ -36,5 +39,48 @@ describe('charts 2.0', () => {
   it('all render on the server without style attributes', () => {
     const html = renderToString(<><Gauge title="g" value={1} /><Heatmap title="h" rowLabels={['a']} data={[[1]]} /><Funnel title="f" data={[{ label: 'a', value: 1 }]} /><KpiTile label="k" value="1" /></>);
     expect(html).not.toContain('style=');
+  });
+});
+
+describe('Charts 2.0, 10.5: data states', () => {
+  it('Gauge, Funnel and Heatmap: loading sets aria-busy on the figure and hides the data', () => {
+    const { container } = renderState(
+      <>
+        <StateGauge title="Storage" value={40} loading />
+        <StateFunnel title="Signup" data={[{ label: 'Visit', value: 10 }]} loading />
+        <StateHeatmap title="Activity" data={[[1]]} rowLabels={['Mon']} loading />
+      </>,
+    );
+    for (const name of ['Storage', 'Signup', 'Activity']) {
+      expect(stateScreen.getByRole('figure', { name }).getAttribute('aria-busy')).toBe('true');
+    }
+    expect(container.querySelector('svg, table, figcaption')).toBeNull();
+  });
+
+  it('empty shows the default or emptyState; errorState wins', () => {
+    renderState(
+      <>
+        <StateFunnel title="Signup" data={[]} />
+        <StateHeatmap title="Activity" data={[]} rowLabels={[]} emptyState="No activity" />
+        <StateGauge title="Storage" value={Number.NaN} loading errorState={<ErrorState title="Failed" />} />
+      </>,
+    );
+    expect(stateScreen.getByText('Nothing here yet')).toBeTruthy();
+    expect(stateScreen.getByText('No activity')).toBeTruthy();
+    expect(stateScreen.getByRole('heading', { name: 'Failed' })).toBeTruthy();
+    expect(stateScreen.getByRole('figure', { name: 'Storage' }).hasAttribute('aria-busy')).toBe(false);
+  });
+
+  it('KpiTile: loading keeps the label and hides the value; emptyState is opt-in; errorState wins', () => {
+    const { container, rerender } = renderState(<StateKpi label="Revenue" value="$10" change={0.1} trend={[1, 2]} loading />);
+    expect(stateScreen.getByText('Revenue')).toBeTruthy();
+    expect(stateScreen.queryByText('$10')).toBeNull();
+    expect(container.firstElementChild!.getAttribute('aria-busy')).toBe('true');
+    expect(container.querySelector('svg')).toBeNull();
+    rerender(<StateKpi label="Revenue" value={null} emptyState="No sales" />);
+    expect(stateScreen.getByText('No sales')).toBeTruthy();
+    rerender(<StateKpi label="Revenue" value="$10" loading errorState="Failed" />);
+    expect(stateScreen.getByText('Failed')).toBeTruthy();
+    expect(container.firstElementChild!.hasAttribute('aria-busy')).toBe(false);
   });
 });

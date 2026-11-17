@@ -738,8 +738,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   animation-timing-function: var(--motion-spring-spatial-default-easing);
 }
 .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] {
-  animation-duration: var(--motion-spring-effects-default-duration);
-  animation-timing-function: var(--motion-spring-effects-default-easing);
+  /* 10.5: the same quick exit as Dialog and .nx-motion. */
+  animation-duration: var(--motion-spring-effects-fast-duration);
+  animation-timing-function: var(--motion-spring-effects-fast-easing);
 }
 .nx-drawer-overlay[data-vaul-overlay][data-vaul-snap-points='false'] {
   animation-duration: var(--motion-spring-effects-default-duration);
