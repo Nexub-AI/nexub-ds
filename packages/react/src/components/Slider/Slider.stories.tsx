@@ -28,3 +28,16 @@ export const MarksAndValue: Story = {
     formatValue: (v: number) => `${v}%`,
   },
 };
+
+/** 10.4: sizes, invalid and read-only side by side. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div className="flex max-w-xs flex-col gap-4">
+      {(['sm', 'md', 'lg'] as const).map((size) => (
+        <Slider key={size} size={size} defaultValue={[40]} aria-label={`${size} volume`} />
+      ))}
+      <Slider invalid defaultValue={[60]} aria-label="Invalid volume" />
+      <Slider readOnly defaultValue={[25]} aria-label="Read-only volume" />
+    </div>
+  ),
+};

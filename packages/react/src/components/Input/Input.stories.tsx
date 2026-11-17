@@ -29,3 +29,16 @@ export const WithCount: Story = {
 export const Loading: Story = {
   args: { 'aria-label': 'Username', defaultValue: 'ada', loading: true },
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <Input size="sm" aria-label="Small" defaultValue="Small" />
+      <Input size="md" aria-label="Medium" defaultValue="Medium" />
+      <Input size="lg" aria-label="Large" defaultValue="Large" />
+      <Input readOnly clearable aria-label="Read-only" defaultValue="Read-only" />
+      <Input readOnly aria-label="Read-only site" leadingAddon="https://" defaultValue="nexub.app" />
+    </div>
+  ),
+};

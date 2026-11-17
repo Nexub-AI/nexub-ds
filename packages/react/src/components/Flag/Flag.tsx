@@ -16,9 +16,9 @@ function countryCodeToEmoji(code: string): string {
 }
 
 const sizeClass: Record<Size, string> = {
-  sm: 'text-base',
-  md: 'text-xl',
-  lg: 'text-3xl',
+  sm: 'text-body-md',
+  md: 'text-title-lg',
+  lg: 'text-[1.875rem] leading-9',
 };
 
 export const Flag = React.forwardRef<HTMLSpanElement, FlagProps>(

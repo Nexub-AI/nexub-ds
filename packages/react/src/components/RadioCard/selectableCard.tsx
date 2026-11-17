@@ -6,6 +6,7 @@
 import * as React from 'react';
 import { Check } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { controlInvalid } from '../../utils/controlState.js';
 
 export interface SelectableCardContentProps {
   /** Leading icon. */
@@ -18,6 +19,13 @@ export interface SelectableCardContentProps {
   children?: React.ReactNode;
 }
 
+export interface SelectableCardStateProps {
+  /** Error border and `aria-invalid`. */
+  invalid?: boolean;
+  /** Focusable but cannot change. */
+  readOnly?: boolean;
+}
+
 /** Card surface + selected state (2px primary edge: 1px border + 1px inset, no layout shift; a 6% primary tint). */
 export const selectableCardClass = [
   'group nx-state-layer flex w-full items-start gap-3 p-4 text-start',
@@ -26,6 +34,9 @@ export const selectableCardClass = [
   'cursor-pointer transition-[border-color,box-shadow] duration-effects-fast ease-effects-fast',
   'data-[state=checked]:border-[var(--color-primary)] data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-primary)]',
   'data-[state=checked]:bg-[color-mix(in_srgb,var(--color-primary)_6%,var(--color-surface-elevated))]',
+  // Invalid: an error edge, selected or not.
+  controlInvalid,
+  'aria-invalid:data-[state=checked]:border-[var(--color-error)] aria-invalid:data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-error)]',
   'data-[disabled]:cursor-not-allowed data-[disabled]:text-[var(--color-text-disabled)]',
   'data-[disabled]:data-[state=checked]:border-[var(--color-text-disabled)] data-[disabled]:data-[state=checked]:shadow-[inset_0_0_0_1px_var(--color-text-disabled)] data-[disabled]:data-[state=checked]:bg-[var(--color-surface-elevated)]',
 ].join(' ');
@@ -59,13 +70,13 @@ export function SelectableCardContent({
         </span>
       )}
       <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span id={titleId} className="text-sm font-medium">
+        <span id={titleId} className="text-body-sm font-medium">
           {title}
         </span>
         {description != null && (
           <span
             id={descriptionId}
-            className="text-sm text-[var(--color-on-surface-variant)] group-data-[disabled]:text-[var(--color-text-disabled)]"
+            className="text-body-sm text-[var(--color-on-surface-variant)] group-data-[disabled]:text-[var(--color-text-disabled)]"
           >
             {description}
           </span>

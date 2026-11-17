@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { cn } from '../../utils/cn.js';
 import { Input, type InputProps } from '../Input/Input.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 
@@ -19,7 +20,7 @@ export interface TimePickerProps
  * keyboard segments, the platform's picker on phones, and form submission.
  */
 export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(function TimePicker(
-  { value: valueProp, defaultValue, onValueChange, minuteStep = 1, ...props },
+  { value: valueProp, defaultValue, onValueChange, minuteStep = 1, className, ...props },
   ref,
 ) {
   const [value = '', setValue] = useControllableState<string>({
@@ -34,6 +35,7 @@ export const TimePicker = React.forwardRef<HTMLInputElement, TimePickerProps>(fu
       step={minuteStep * 60}
       value={value}
       onChange={(e) => setValue(e.target.value)}
+      className={cn('tabular-nums', className)}
       {...props}
     />
   );

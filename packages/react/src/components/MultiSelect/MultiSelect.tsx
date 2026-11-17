@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Check, Plus } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Chip } from '../Chip/Chip.js';
@@ -31,6 +32,10 @@ export interface MultiSelectProps {
   /** Chips shown before the rest collapse into "+N more". Default 3. */
   maxVisibleChips?: number;
   disabled?: boolean;
+  /** Shows the chips but nothing can be added or removed; stays focusable. */
+  readOnly?: boolean;
+  /** @default 'md' */
+  size?: Size;
   className?: string;
   id?: string;
   'aria-label'?: string;
@@ -54,6 +59,8 @@ export function MultiSelect({
   onCreate,
   maxVisibleChips = 3,
   disabled,
+  readOnly,
+  size,
   className,
   id,
   'aria-label': ariaLabel,
@@ -93,7 +100,7 @@ export function MultiSelect({
         <Chip
           key={v}
           size="sm"
-          onRemove={disabled ? undefined : () => remove(v)}
+          onRemove={disabled || readOnly ? undefined : () => remove(v)}
           removeLabel={messages.removeOption(labelOf(v))}
         >
           {labelOf(v)}
@@ -114,6 +121,8 @@ export function MultiSelect({
         onOpenChange={setOpen}
         before={chips}
         disabled={disabled}
+        readOnly={readOnly}
+        size={size}
         input={{
           id,
           'aria-label': ariaLabel,
@@ -125,7 +134,7 @@ export function MultiSelect({
             setOpen(true);
           },
           onKeyDown: (e) => {
-            if (e.key === 'Backspace' && !(e.nativeEvent.isComposing || e.keyCode === 229) && search === '' && value.length) remove(value[value.length - 1]!);
+            if (e.key === 'Backspace' && !readOnly && !(e.nativeEvent.isComposing || e.keyCode === 229) && search === '' && value.length) remove(value[value.length - 1]!);
           },
         }}
       >

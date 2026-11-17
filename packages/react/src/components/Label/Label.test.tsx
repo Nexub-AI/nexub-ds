@@ -27,7 +27,8 @@ describe('Label', () => {
 
   it('applies disabled styling when disabled', () => {
     render(<Label disabled>Label</Label>);
-    expect(screen.getByText('Label').closest('label')).toHaveClass('opacity-50');
+    expect(screen.getByText('Label').closest('label')).toHaveClass('text-[var(--color-text-disabled)]', 'cursor-not-allowed');
+    expect(screen.getByText('Label').closest('label')).not.toHaveClass('opacity-50');
   });
 
   it('associates with input via htmlFor', () => {
@@ -43,5 +44,18 @@ describe('Label', () => {
   it('tints text with the tone colour', () => {
     render(<Label tone="danger">Required field</Label>);
     expect(screen.getByText('Required field')).toHaveClass('text-[var(--color-error)]');
+  });
+});
+
+describe('Label 10.4 type roles', () => {
+  it('sizes use type roles and stay medium weight', () => {
+    render(<Label size="sm">Small</Label>);
+    expect(screen.getByText('Small')).toHaveClass('text-label-sm', 'font-medium');
+  });
+
+  it('disabled wins over tone', () => {
+    render(<Label disabled tone="danger">Off</Label>);
+    expect(screen.getByText('Off')).toHaveClass('text-[var(--color-text-disabled)]');
+    expect(screen.getByText('Off')).not.toHaveClass('text-[var(--color-error)]');
   });
 });

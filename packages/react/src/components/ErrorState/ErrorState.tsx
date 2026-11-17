@@ -43,9 +43,9 @@ export const ErrorState = React.forwardRef<HTMLDivElement, ErrorStateProps>(
       >
         <span className={color}>{icon}</span>
         <div className="flex flex-col gap-1">
-          <h3 className="text-lg font-semibold text-[var(--color-on-surface)]">{title}</h3>
+          <h3 className="text-body-lg font-semibold text-[var(--color-on-surface)]">{title}</h3>
           {description && (
-            <p className="max-w-sm text-sm text-[var(--color-on-surface-muted)]">{description}</p>
+            <p className="max-w-sm text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>
           )}
         </div>
         {onRetry && (

@@ -11,9 +11,9 @@ export const badgeVariants = cva(
   {
     variants: {
       size: {
-        sm: 'h-5 px-2 text-label-sm',
-        md: 'h-6 px-2.5 text-label-md',
-        lg: 'h-7 px-3 text-label-lg',
+        sm: 'h-[var(--badge-h-sm,1.25rem)] px-2 text-label-sm',
+        md: 'h-[var(--badge-h-md,1.5rem)] px-2.5 text-label-md',
+        lg: 'h-[var(--badge-h-lg,1.75rem)] px-3 text-label-lg',
       },
       variant: {
         solid: '',

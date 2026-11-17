@@ -42,3 +42,13 @@ export const Disabled = () => (
     <CheckboxCard title="Dedicated region" description="Enterprise only" disabled />
   </div>
 );
+
+/** 10.4: invalid and read-only cards. */
+export const ConsistentControls = () => (
+  <div className="grid gap-3 sm:grid-cols-2">
+    <CheckboxCard title="Terms" description="Invalid" invalid />
+    <CheckboxCard title="Terms" description="Invalid, checked" invalid defaultChecked />
+    <CheckboxCard title="Backups" description="Read-only" readOnly />
+    <CheckboxCard title="Backups" description="Read-only, checked" readOnly defaultChecked />
+  </div>
+);

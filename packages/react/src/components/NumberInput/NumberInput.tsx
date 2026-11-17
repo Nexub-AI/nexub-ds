@@ -48,6 +48,8 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       onValueChange,
       invalid,
       disabled,
+      readOnly,
+      onKeyDown,
       ...props
     },
     ref,
@@ -59,6 +61,8 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     const currentValue = controlled ? value : internalValue;
 
     const commit = (next: number) => {
+      // Covers typing, steppers, arrow keys and the wheel.
+      if (readOnly) return;
       const clamped = clampValue(next, min, max);
       if (!controlled) setInternalValue(clamped);
       change(clamped);
@@ -90,10 +94,15 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
           max={max}
           step={step}
           disabled={disabled}
+          readOnly={readOnly}
+          onKeyDown={(e) => {
+            if (readOnly && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) e.preventDefault();
+            onKeyDown?.(e);
+          }}
           aria-invalid={invalid ?? undefined}
           className={cn(
             // Wrapper owns ALL focus styling — strip every indicator from the inner input.
-            'flex-1 min-w-0 bg-transparent text-[var(--color-on-surface)]',
+            'flex-1 min-w-0 bg-transparent tabular-nums text-[var(--color-on-surface)]',
             'border-0 shadow-none',
             'outline-none focus:outline-none focus-visible:outline-none',
             'ring-0 focus:ring-0 focus-visible:ring-0',
@@ -110,8 +119,8 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               type="button"
               tabIndex={-1}
               onClick={increment}
-              disabled={disabled || (max !== undefined && currentValue >= max)}
-              className={cn(stepperButtonClass, 'border-b border-[var(--color-outline-variant)] text-xs leading-none flex-1')}
+              disabled={disabled || readOnly || (max !== undefined && currentValue >= max)}
+              className={cn(stepperButtonClass, 'border-b border-[var(--color-outline-variant)] text-label-sm font-normal leading-none flex-1')}
               aria-label={messages.increment}
             >
               ▲
@@ -120,8 +129,8 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
               type="button"
               tabIndex={-1}
               onClick={decrement}
-              disabled={disabled || (min !== undefined && currentValue <= min)}
-              className={cn(stepperButtonClass, 'text-xs leading-none flex-1')}
+              disabled={disabled || readOnly || (min !== undefined && currentValue <= min)}
+              className={cn(stepperButtonClass, 'text-label-sm font-normal leading-none flex-1')}
               aria-label={messages.decrement}
             >
               ▼

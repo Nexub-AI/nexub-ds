@@ -42,3 +42,15 @@ export const WithPresetRange: Story = {
     );
   },
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <DateRangePicker size="sm" aria-label="Small" value={{ from: new Date(2024, 0, 15), to: new Date(2024, 0, 20) }} />
+      <DateRangePicker size="md" aria-label="Medium" value={{ from: new Date(2024, 0, 15), to: new Date(2024, 0, 20) }} />
+      <DateRangePicker size="lg" aria-label="Large" value={{ from: new Date(2024, 0, 15), to: new Date(2024, 0, 20) }} />
+      <DateRangePicker readOnly aria-label="Read-only" value={{ from: new Date(2024, 0, 15), to: new Date(2024, 0, 20) }} />
+    </div>
+  ),
+};

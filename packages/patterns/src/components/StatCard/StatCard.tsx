@@ -80,7 +80,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
         {...props}
       >
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-[var(--color-on-surface-muted)]">{label}</span>
+          <span className="text-body-sm font-medium text-[var(--color-on-surface-muted)]">{label}</span>
           {icon &&
             (category ? (
               <IconChip category={category} size="sm">
@@ -91,7 +91,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             ))}
         </div>
 
-        <div className="text-3xl font-bold tracking-tight tabular-nums text-[var(--color-on-surface)]">
+        <div className="text-[1.875rem] leading-9 font-bold tracking-tight tabular-nums text-[var(--color-on-surface)]">
           {animate && (typeof value === 'number' || typeof value === 'string') ? (
             <NumberTicker value={value} aria-live="polite" />
           ) : (
@@ -103,7 +103,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
           <div className="flex items-center gap-2">
             {delta && (
               <span
-                className={cn('inline-flex items-center gap-1 text-xs font-medium', deltaColor)}
+                className={cn('inline-flex items-center gap-1 text-label-sm font-medium', deltaColor)}
                 data-delta-type={deltaType}
                 data-sentiment={tone}
               >
@@ -112,7 +112,7 @@ export const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
               </span>
             )}
             {description && (
-              <span className="text-xs text-[var(--color-on-surface-muted)]">{description}</span>
+              <span className="text-label-sm font-normal text-[var(--color-on-surface-muted)]">{description}</span>
             )}
             {trend && trend.length > 1 && (
               <Sparkline

@@ -6,8 +6,8 @@ import { cn } from '../../utils/cn.js';
 const GRADIENT_H = 'bg-[image:var(--gradient-brand-horizontal)]';
 const GRADIENT_V = 'bg-[image:var(--gradient-brand-vertical)]';
 
-const THICKNESS_H: Record<number, string> = { 1: 'h-px', 2: 'h-0.5', 3: 'h-[3px]', 4: 'h-1' };
-const THICKNESS_V: Record<number, string> = { 1: 'w-px', 2: 'w-0.5', 3: 'w-[3px]', 4: 'w-1' };
+const THICKNESS_H: Record<number, string> = { 1: 'h-px', 2: 'h-0.5', 3: 'h-[0.1875rem]', 4: 'h-1' };
+const THICKNESS_V: Record<number, string> = { 1: 'w-px', 2: 'w-0.5', 3: 'w-[0.1875rem]', 4: 'w-1' };
 
 export interface GradientDividerProps extends React.HTMLAttributes<HTMLDivElement> {
   height?: number;

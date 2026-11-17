@@ -19,3 +19,13 @@ export const Default: Story = {
     </div>
   ),
 };
+
+/** 10.4: the shared size scale and the read-only state. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+      <FloatingInput label="Full name" defaultValue="Ada Lovelace" />
+      <FloatingInput readOnly label="Account ID" defaultValue="NX-20418" />
+    </div>
+  ),
+};

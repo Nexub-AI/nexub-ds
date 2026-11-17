@@ -8,7 +8,7 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const alertVariants = cva(
   [
-    'relative flex gap-3 rounded-shape-container border-s-4 p-4',
+    'relative flex gap-3 rounded-[var(--alert-radius,var(--shape-container))] border-s-4 p-4',
     'w-full',
   ],
   {
@@ -80,10 +80,10 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         )}
         <div className="flex-1 min-w-0">
           {title && (
-            <p className="font-semibold text-sm mb-0.5">{title}</p>
+            <p className="font-semibold text-body-sm mb-0.5">{title}</p>
           )}
           {children && (
-            <div className="text-sm">{children}</div>
+            <div className="text-body-sm">{children}</div>
           )}
           {action && <div className="mt-2">{action}</div>}
         </div>

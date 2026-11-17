@@ -46,7 +46,8 @@ export const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
         className={cn('tabular-nums', className)}
         value={shown}
         onFocus={(e) => {
-          setDraft(value == null ? '' : formatForEditing(value, currency, locale));
+          // Read-only keeps the grouped display: there is nothing to edit.
+          if (!props.readOnly) setDraft(value == null ? '' : formatForEditing(value, currency, locale));
           onFocus?.(e);
         }}
         onChange={(e) => {

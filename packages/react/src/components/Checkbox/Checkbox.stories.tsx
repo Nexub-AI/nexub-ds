@@ -33,3 +33,17 @@ export const Signature: Story = {
     </div>
   ),
 };
+
+/** 10.4: sizes, invalid and read-only side by side. */
+export const ConsistentControls: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-4">
+      {(['sm', 'md', 'lg'] as const).map((size) => (
+        <Checkbox key={size} size={size} aria-label={`${size} on`} defaultChecked />
+      ))}
+      <Checkbox aria-label="invalid" invalid />
+      <Checkbox aria-label="read-only off" readOnly />
+      <Checkbox aria-label="read-only on" readOnly defaultChecked />
+    </div>
+  ),
+};

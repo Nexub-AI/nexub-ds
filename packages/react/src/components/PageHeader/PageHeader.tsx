@@ -32,11 +32,11 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
         {breadcrumb && <div>{breadcrumb}</div>}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1">
-            <Heading className="text-2xl ![font-weight:var(--page-title-weight,600)] ![letter-spacing:var(--page-title-tracking,-0.025em)] text-[var(--color-on-surface)] truncate">
+            <Heading className="text-headline-sm leading-8 ![font-weight:var(--page-title-weight,600)] ![letter-spacing:var(--page-title-tracking,-0.025em)] text-[var(--color-on-surface)] truncate">
               {title}
             </Heading>
             {description && (
-              <p className="mt-1 text-sm text-[var(--color-on-surface-muted)]">{description}</p>
+              <p className="mt-1 text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>
             )}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}

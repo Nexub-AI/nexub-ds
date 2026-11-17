@@ -30,7 +30,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
       onClear?.();
     };
 
-    const clearButton = hasValue ? (
+    const clearButton = hasValue && !props.readOnly ? (
       <button
         type="button"
         onClick={handleClear}

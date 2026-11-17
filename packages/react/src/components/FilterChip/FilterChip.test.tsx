@@ -42,3 +42,16 @@ describe('FilterChip', () => {
     expect(screen.getByRole('button', { name: /category/i })).toHaveAttribute('aria-pressed', 'true');
   });
 });
+
+describe('FilterChip 10.4 consistent controls', () => {
+  it('sizes: md is the default, sm and lg change the height', () => {
+    const { rerender } = render(<FilterChip count={3}>Category</FilterChip>);
+    const shell = () => screen.getByRole('button', { name: /category/i }).parentElement;
+    expect(shell()).toHaveClass('h-8', 'px-3', 'text-label-lg');
+    rerender(<FilterChip count={3} size="sm">Category</FilterChip>);
+    expect(shell()).toHaveClass('h-6', 'px-2', 'text-label-md');
+    rerender(<FilterChip count={3} size="lg">Category</FilterChip>);
+    expect(shell()).toHaveClass('h-10', 'px-4', 'text-label-lg');
+    expect(screen.getByText('3')).toHaveClass('tabular-nums');
+  });
+});

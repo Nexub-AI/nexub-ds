@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
-import { overlaySurface, scrim } from '../../utils/surface.js';
+import { dialogSurface, overlaySurface, scrim } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 import { ClassLockOverlay, ScrollLockContext, type ScrollLock } from '../../hooks/useClassScrollLock.js';
 import { useMediaQuery } from '../../hooks/useMediaQuery.js';
@@ -95,7 +95,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
           asSheet
             ? 'fixed inset-x-0 bottom-0 z-[var(--z-modal)] w-full'
             : 'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2',
-          'nx-motion nx-dialog', overlaySurface,
+          'nx-motion nx-dialog', overlaySurface, dialogSurface,
           'max-h-[90vh] overflow-y-auto p-6 focus:outline-none',
           asSheet ? 'rounded-b-none' : sizeMap[size],
           surface === 'glass' && glassSurfaceClass,
@@ -126,7 +126,7 @@ const Title = React.forwardRef<HTMLHeadingElement, RadixDialog.DialogTitleProps>
     return (
       <RadixDialog.Title
         ref={ref}
-        className={cn('text-lg font-semibold text-[var(--color-on-surface)]', className)}
+        className={cn('text-body-lg font-semibold text-[var(--color-on-surface)]', className)}
         {...props}
       />
     );
@@ -139,7 +139,7 @@ const Description = React.forwardRef<HTMLParagraphElement, RadixDialog.DialogDes
     return (
       <RadixDialog.Description
         ref={ref}
-        className={cn('mt-1 text-sm text-[var(--color-on-surface-muted)]', className)}
+        className={cn('mt-1 text-body-sm text-[var(--color-on-surface-muted)]', className)}
         {...props}
       />
     );

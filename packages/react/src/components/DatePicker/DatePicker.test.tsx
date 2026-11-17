@@ -159,3 +159,39 @@ describe('DatePicker 7.5', () => {
     expect(screen.getByRole('button', { name: /January 15, 2024/ })).toBeEnabled();
   });
 });
+
+describe('DatePicker 10.4', () => {
+  it('size: md by default, sm on request', () => {
+    const { rerender } = render(<DatePicker />);
+    expect(screen.getByRole('button')).toHaveClass('h-control-md', 'px-3.5', 'text-body-md');
+    rerender(<DatePicker size="sm" />);
+    expect(screen.getByRole('button')).toHaveClass('h-control-sm', 'text-body-sm');
+  });
+
+  it('readOnly: the calendar cannot open', () => {
+    render(<DatePicker readOnly value={new Date(2024, 0, 15)} />);
+    const trigger = screen.getByRole('button');
+    expect(trigger).toHaveAttribute('data-readonly');
+    expect(trigger).not.toBeDisabled();
+    fireEvent.click(trigger);
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+  });
+
+  it('readOnly + typeable: the input is read-only and the calendar button is off', () => {
+    render(<DatePicker readOnly typeable aria-label="Due" value={new Date(2024, 0, 15)} />);
+    expect(screen.getByLabelText('Due')).toHaveAttribute('readonly');
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('invalid marks the trigger', () => {
+    render(<DatePicker invalid />);
+    expect(screen.getByRole('button')).toHaveAttribute('aria-invalid', 'true');
+  });
+
+  it('day cells follow the density variable and use tabular numbers', () => {
+    render(<DatePicker value={new Date(2024, 0, 15)} />);
+    fireEvent.click(screen.getByRole('button'));
+    const day = screen.getAllByRole('button').find((b) => b.textContent === '15')!;
+    expect(day).toHaveClass('h-[var(--day-cell,2rem)]', 'w-[var(--day-cell,2rem)]', 'tabular-nums');
+  });
+});

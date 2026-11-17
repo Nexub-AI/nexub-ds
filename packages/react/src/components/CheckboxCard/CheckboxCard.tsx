@@ -8,18 +8,20 @@ import {
   selectableCardClass,
   useCardIds,
   type SelectableCardContentProps,
+  type SelectableCardStateProps,
 } from '../RadioCard/selectableCard.js';
 
 export interface CheckboxCardProps
   extends Omit<RadixCheckbox.CheckboxProps, 'title' | 'children' | 'checked' | 'defaultChecked' | 'onCheckedChange'>,
-    SelectableCardContentProps {
+    SelectableCardContentProps,
+    SelectableCardStateProps {
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
 }
 
 export const CheckboxCard = React.forwardRef<HTMLButtonElement, CheckboxCardProps>(
-  ({ className, icon, title, description, children, onCheckedChange, ...props }, ref) => {
+  ({ className, icon, title, description, children, onCheckedChange, invalid, readOnly, onClick, ...props }, ref) => {
     const ids = useCardIds(description != null);
     return (
       <RadixCheckbox.Root
@@ -27,9 +29,16 @@ export const CheckboxCard = React.forwardRef<HTMLButtonElement, CheckboxCardProp
         aria-labelledby={ids.titleId}
         aria-describedby={ids.describedBy}
         data-selectable-card=""
-        className={cn(selectableCardClass, className)}
+        className={cn(selectableCardClass, readOnly && 'cursor-default', className)}
         onCheckedChange={onCheckedChange ? (c) => onCheckedChange(c === true) : undefined}
+        onClick={(e) => {
+          onClick?.(e);
+          // Radix skips its toggle when the click is default-prevented.
+          if (readOnly) e.preventDefault();
+        }}
         {...props}
+        aria-invalid={invalid || props['aria-invalid']}
+        aria-readonly={readOnly || undefined}
       >
         <SelectableCardContent
           icon={icon}

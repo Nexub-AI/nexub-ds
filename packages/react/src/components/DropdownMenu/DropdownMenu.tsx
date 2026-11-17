@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { floatingSurface, menuContent, menuItem, menuLabel, menuSeparator } from '../../utils/surface.js';
+import { floatingSurface, menuContent, menuItem, menuItemFg, menuSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixDropdownMenu.Root;
 const Trigger = RadixDropdownMenu.Trigger;
@@ -21,7 +21,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMenuC
         sideOffset={sideOffset}
         className={cn(
           'z-[var(--z-popover)] min-w-48 outline-none',
-          floatingSurface,
+          floatingSurface, menuSurface,
           menuContent,
           'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',
           className,
@@ -34,7 +34,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMenuC
 Content.displayName = 'DropdownMenu.Content';
 
 const itemBaseClasses = cn(
-  menuItem,
+  menuItem, menuItemFg,
 );
 
 const Item = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMenuItemProps>(
@@ -154,7 +154,7 @@ const SubContent = React.forwardRef<
       ref={ref}
       className={cn(
         'z-[var(--z-popover)] min-w-48 outline-none',
-        floatingSurface,
+        floatingSurface, menuSurface,
         menuContent,
         'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',
         className,

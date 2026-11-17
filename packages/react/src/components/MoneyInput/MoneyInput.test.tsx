@@ -65,3 +65,13 @@ describe('Amount', () => {
     expect(screen.getByTestId('down').className).toContain('color-error');
   });
 });
+
+describe('MoneyInput 10.4', () => {
+  it('readOnly: keeps the grouped display on focus', async () => {
+    render(<MoneyInput readOnly aria-label="Amount" currency="USD" locale="en-US" defaultValue={1234.5} />);
+    const input = screen.getByLabelText('Amount');
+    await userEvent.click(input);
+    expect(input).toHaveAttribute('readonly');
+    expect(input).toHaveValue('1,234.50');
+  });
+});

@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Plus } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';
 import { ComboboxLoading, ComboboxPopover } from '../Combobox/ComboboxPopover.js';
@@ -29,6 +30,10 @@ export interface AutocompleteProps {
   /** Adds a "Create “text”" option when the text matches no option exactly. */
   onCreate?: (text: string) => void;
   disabled?: boolean;
+  /** Shows the value but it can't be changed; stays focusable. */
+  readOnly?: boolean;
+  /** @default 'md' */
+  size?: Size;
   className?: string;
   'aria-label'?: string;
 }
@@ -44,6 +49,8 @@ export function Autocomplete({
   onInputChange,
   onCreate,
   disabled,
+  readOnly,
+  size,
   className,
   'aria-label': ariaLabel,
 }: AutocompleteProps) {
@@ -126,7 +133,7 @@ export function Autocomplete({
       className={cn('overflow-visible rounded-none bg-transparent', className)}
       shouldFilter={!onInputChange}
     >
-      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled}>
+      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled} readOnly={readOnly} size={size}>
         {list}
       </ComboboxPopover>
     </Combobox.Root>

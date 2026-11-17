@@ -30,3 +30,12 @@ describe('Textarea', () => {
     expect(screen.getByRole('textbox')).toBeDisabled();
   });
 });
+
+describe('Textarea 10.4', () => {
+  it('readOnly: native attribute and the read-only look', () => {
+    render(<Textarea readOnly defaultValue="note" />);
+    const el = screen.getByRole('textbox');
+    expect(el).toHaveAttribute('readonly');
+    expect(el.className).toContain('[&[readonly]]:bg-');
+  });
+});

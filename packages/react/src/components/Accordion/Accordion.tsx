@@ -32,7 +32,7 @@ const Trigger = React.forwardRef<HTMLButtonElement, RadixAccordion.AccordionTrig
       <RadixAccordion.Trigger
         ref={ref}
         className={cn(
-          'flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all',
+          'flex flex-1 items-center justify-between py-4 text-body-sm font-medium transition-all',
           'hover:underline',
           '[&[data-state=open]>svg]:rotate-180',
           className,
@@ -52,7 +52,7 @@ const Content = React.forwardRef<HTMLDivElement, RadixAccordion.AccordionContent
     <RadixAccordion.Content
       ref={ref}
       className={cn(
-        'overflow-hidden text-sm',
+        'overflow-hidden text-body-sm',
         'data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
         className,
       )}

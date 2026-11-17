@@ -71,6 +71,6 @@ describe('EmptyState', () => {
       </EmptyState.Root>,
     );
     expect(container.firstChild).toHaveClass('py-8', 'nx-reveal');
-    expect(screen.getByRole('heading')).toHaveClass('group-data-[size=sm]/empty-state:text-base');
+    expect(screen.getByRole('heading')).toHaveClass('group-data-[size=sm]/empty-state:text-title-md');
   });
 });

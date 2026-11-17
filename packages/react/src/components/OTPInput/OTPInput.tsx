@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
-import { field, fieldFocusVisible, fieldInvalid } from '../../utils/control.js';
+import { field, fieldFocusVisible, fieldInvalid, fieldReadOnly, type Size } from '../../utils/control.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -19,12 +19,22 @@ export interface OTPInputProps {
   mode?: 'numeric' | 'alphanumeric';
   disabled?: boolean;
   invalid?: boolean;
+  /** Boxes show the value but take no input. */
+  readOnly?: boolean;
+  /** Box size: `sm` 40px tall, `md` 48px (default), `lg` 56px. */
+  size?: Size;
   /** Group name; defaults to "Verification code". */
   'aria-label'?: string;
   className?: string;
   /** Submits with a form under this name. */
   name?: string;
 }
+
+const slotSize: Record<Size, string> = {
+  sm: 'h-10 w-8 text-title-sm',
+  md: 'h-[var(--otp-h,3rem)] w-[var(--otp-w,2.5rem)] text-title-md',
+  lg: 'h-14 w-12 text-title-lg',
+};
 
 /**
  * One box per character. Typing moves on, Backspace moves back, paste and
@@ -40,6 +50,8 @@ export function OTPInput({
   mode = 'numeric',
   disabled,
   invalid,
+  readOnly,
+  size = 'md',
   'aria-label': ariaLabel,
   className,
   name,
@@ -59,6 +71,7 @@ export function OTPInput({
   const clean = (s: string) => (s.match(mode === 'numeric' ? /\d/g : /[a-z0-9]/gi) ?? []).join('');
 
   const commit = (next: string) => {
+    if (readOnly) return;
     const v = next.slice(0, length);
     filled.current = v.length;
     setValue(v);
@@ -86,6 +99,7 @@ export function OTPInput({
           pattern={mode === 'numeric' ? '[0-9]*' : undefined}
           maxLength={i === 0 ? length : 2}
           disabled={disabled}
+          readOnly={readOnly}
           aria-invalid={invalid || undefined}
           value={value[i] ?? ''}
           onFocus={(e) => {
@@ -100,13 +114,14 @@ export function OTPInput({
           }}
           onPaste={(e) => {
             const pasted = clean(e.clipboardData.getData('text'));
-            if (!pasted) return;
+            if (!pasted || readOnly) return;
             e.preventDefault();
             writeAt(Math.min(i, value.length), pasted);
           }}
           onKeyDown={(e) => {
             if (e.key === 'Backspace') {
               e.preventDefault();
+              if (readOnly) return;
               if (value[i]) commit(value.slice(0, i) + value.slice(i + 1));
               else if (i > 0) {
                 commit(value.slice(0, i - 1) + value.slice(i));
@@ -123,8 +138,10 @@ export function OTPInput({
           className={cn(
             field,
             fieldFocusVisible,
+            fieldReadOnly,
             invalid && fieldInvalid,
-            'h-12 w-10 text-center text-title-md tabular-nums',
+            slotSize[size],
+            'text-center tabular-nums',
             'disabled:cursor-not-allowed disabled:border-[var(--color-outline-variant)] disabled:bg-[var(--color-surface-container-low)] disabled:text-[var(--color-text-disabled)]',
           )}
         />

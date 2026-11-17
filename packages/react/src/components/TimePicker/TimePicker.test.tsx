@@ -37,3 +37,13 @@ describe('DateTimePicker', () => {
     expect([picked.getDate(), picked.getHours(), picked.getMinutes()]).toEqual([15, 10, 30]);
   });
 });
+
+describe('TimePicker 10.4', () => {
+  it('size and readOnly pass through to the Input; digits are tabular', () => {
+    render(<TimePicker aria-label="Start" size="sm" readOnly defaultValue="09:00" className="custom" />);
+    const input = screen.getByLabelText('Start');
+    expect(input).toHaveAttribute('readonly');
+    expect(input).toHaveClass('tabular-nums', 'text-body-sm', 'custom');
+    expect(input.parentElement).toHaveClass('h-control-sm');
+  });
+});

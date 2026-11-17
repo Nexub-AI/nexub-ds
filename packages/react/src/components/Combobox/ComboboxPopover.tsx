@@ -8,7 +8,7 @@ import * as RadixPopover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
 import { floatingSurface } from '../../utils/surface.js';
-import { field, fieldDisabled, fieldFocusWithin } from '../../utils/control.js';
+import { field, fieldDisabled, fieldFocusWithin, fieldReadOnlyWithin, type Size } from '../../utils/control.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Skeleton } from '../Skeleton/Skeleton.js';
@@ -20,6 +20,10 @@ export interface ComboboxPopoverProps {
   before?: React.ReactNode;
   input: React.ComponentProps<typeof Command.Input>;
   disabled?: boolean;
+  /** Focusable, but the list can't open and the text can't change. */
+  readOnly?: boolean;
+  /** @default 'md' */
+  size?: Size;
   /** The list (a Combobox.List). */
   children: React.ReactNode;
 }
@@ -28,7 +32,10 @@ export interface ComboboxPopoverProps {
  * A field that keeps focus in its input while a list opens below it.
  * The list is not portalled: cmdk finds its items inside the Command root.
  */
-export function ComboboxPopover({ open, onOpenChange, before, input, disabled, children }: ComboboxPopoverProps) {
+const fieldSizes: Record<Size, string> = { sm: 'min-h-control-sm', md: 'min-h-control-md', lg: 'min-h-control-lg' };
+
+export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', children }: ComboboxPopoverProps) {
+  const open = openProp && !readOnly;
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   // cmdk hard-codes aria-expanded="true" and its own aria-labelledby after
@@ -49,7 +56,9 @@ export function ComboboxPopover({ open, onOpenChange, before, input, disabled, c
           className={cn(
             field,
             fieldFocusWithin,
-            'flex min-h-control-md w-full flex-wrap items-center gap-1.5 px-3 py-1',
+            fieldReadOnlyWithin,
+            'flex w-full flex-wrap items-center gap-1.5 px-3 py-1',
+            fieldSizes[size],
             disabled && fieldDisabled,
           )}
           onPointerDown={(e) => {
@@ -58,20 +67,23 @@ export function ComboboxPopover({ open, onOpenChange, before, input, disabled, c
             if ((e.target as HTMLElement).closest('button')) return;
             if (e.target !== inputRef.current) e.preventDefault();
             inputRef.current?.focus();
-            onOpenChange(true);
+            if (!readOnly) onOpenChange(true);
           }}
         >
           {before}
           <Command.Input
             ref={inputRef}
             disabled={disabled}
+            readOnly={readOnly}
+            aria-readonly={readOnly || undefined}
             {...input}
             onKeyDown={(e) => {
-              if (e.key === 'ArrowDown' && !open) onOpenChange(true);
+              if (e.key === 'ArrowDown' && !open && !readOnly) onOpenChange(true);
               input.onKeyDown?.(e);
             }}
             className={cn(
-              'min-w-8 flex-1 bg-transparent text-body-md outline-none placeholder:text-[var(--color-on-surface-muted)]',
+              'min-w-8 flex-1 bg-transparent outline-none placeholder:text-[var(--color-on-surface-muted)]',
+              size === 'sm' ? 'text-body-sm' : 'text-body-md',
               input.className,
             )}
           />

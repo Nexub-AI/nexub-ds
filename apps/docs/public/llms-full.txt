@@ -2470,6 +2470,32 @@ export default function Example() {
 }
 ```
 
+## Example: Sizes, invalid and read-only
+
+size follows the shared sm / md / lg scale. invalid draws the error border and sets aria-invalid. readOnly stays focusable but cannot change.
+
+```tsx
+import { Checkbox, Label } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-3 items-start">
+      <div className="flex items-center gap-4">
+        <Checkbox size="sm" defaultChecked aria-label="Small" />
+        <Checkbox size="md" defaultChecked aria-label="Medium" />
+        <Checkbox size="lg" defaultChecked aria-label="Large" />
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="terms" invalid /><Label htmlFor="terms">Invalid: accept the terms to continue</Label>
+      </div>
+      <div className="flex items-center gap-2">
+        <Checkbox id="plan" readOnly defaultChecked /><Label htmlFor="plan">Read-only: set by your plan</Label>
+      </div>
+    </div>
+  );
+}
+```
+
 
 ---
 
@@ -8009,6 +8035,39 @@ export default function Example() {
           <Select.Item value="option-1">Option 1</Select.Item>
           <Select.Item value="option-2">Option 2</Select.Item>
           <Select.Item value="option-3">Option 3</Select.Item>
+        </Select.Content>
+      </Select.Root>
+    </div>
+  );
+}
+```
+
+## Example: Sizes and read-only
+
+size on Select.Trigger matches Input. A readOnly trigger keeps its value readable and does not open.
+
+```tsx
+import { Select } from '@nexub/react';
+
+const sizes = ['sm', 'md', 'lg'] as const;
+
+export default function Example() {
+  return (
+    <div className="flex w-56 flex-col gap-3">
+      {sizes.map((size) => (
+        <Select.Root key={size}>
+          <Select.Trigger size={size} aria-label={`Size ${size}`}><Select.Value placeholder={`Size ${size}`} /></Select.Trigger>
+          <Select.Content>
+            <Select.Item value="inr">INR</Select.Item>
+            <Select.Item value="usd">USD</Select.Item>
+          </Select.Content>
+        </Select.Root>
+      ))}
+      <Select.Root defaultValue="inr">
+        <Select.Trigger readOnly aria-label="Currency"><Select.Value /></Select.Trigger>
+        <Select.Content>
+          <Select.Item value="inr">INR (read-only)</Select.Item>
+          <Select.Item value="usd">USD</Select.Item>
         </Select.Content>
       </Select.Root>
     </div>

@@ -76,3 +76,13 @@ describe('PasswordInput', () => {
     expect(document.querySelector('input')).toHaveAttribute('autocomplete', 'new-password');
   });
 });
+
+describe('PasswordInput 10.4', () => {
+  it('readOnly: the value can still be revealed', async () => {
+    render(<PasswordInput readOnly aria-label="Key" defaultValue="secret" />);
+    const input = screen.getByLabelText('Key');
+    expect(input).toHaveAttribute('readonly');
+    await userEvent.click(screen.getByRole('button'));
+    expect(input).toHaveAttribute('type', 'text');
+  });
+});

@@ -68,3 +68,24 @@ describe('Autocomplete', () => {
     expect(onCreate).toHaveBeenCalledWith('Solid');
   });
 });
+
+describe('Autocomplete 10.4', () => {
+  it('size sets the field min-height and text size', () => {
+    render(<Autocomplete options={options} size="sm" />);
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveClass('text-body-sm');
+    expect(input.parentElement).toHaveClass('min-h-control-sm');
+  });
+
+  it('readOnly: keeps the value and never opens', async () => {
+    const onValueChange = vi.fn();
+    render(<Autocomplete readOnly options={options} value="vue" onValueChange={onValueChange} />);
+    const input = screen.getByRole('combobox');
+    expect(input).toHaveAttribute('aria-readonly', 'true');
+    await typeIn('re{ArrowDown}');
+    expect(input).toHaveValue('Vue');
+    expect(input).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+});

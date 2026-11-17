@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as RadixTabs from '@radix-ui/react-tabs';
 import { cn } from '../../utils/cn.js';
+import type { Size } from '../../utils/control.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useSlidingIndicator } from '../../hooks/useSlidingIndicator.js';
 
@@ -15,20 +16,30 @@ Root.displayName = 'Tabs.Root';
 
 // Which List variant the triggers sit in (pill triggers sit above the thumb).
 const VariantContext = React.createContext<'line' | 'pill'>('line');
+const SizeContext = React.createContext<Size>('md');
+
+const triggerSize: Record<Size, string> = {
+  sm: 'h-control-sm px-3 text-label-md',
+  md: 'h-control-md px-4 text-label-lg',
+  lg: 'h-control-lg px-5 text-label-lg',
+};
 
 export interface TabsListProps extends RadixTabs.TabsListProps {
   /** `line` (default): underline. `pill`: a raised thumb slides behind the active tab. */
   variant?: 'line' | 'pill';
+  /** 10.4: trigger height on the shared control scale. Default `md`. */
+  size?: Size;
 }
 
 const List = React.forwardRef<HTMLDivElement, TabsListProps>(
-  ({ className, children, variant = 'line', ...props }, forwardedRef) => {
+  ({ className, children, variant = 'line', size = 'md', ...props }, forwardedRef) => {
     const ref = React.useRef<HTMLDivElement>(null);
     useSlidingIndicator(ref, '[data-state="active"]');
     useOverflow(ref);
     const pill = variant === 'pill';
     return (
       <VariantContext.Provider value={variant}>
+      <SizeContext.Provider value={size}>
         <RadixTabs.List
           ref={useMergedRefs(ref, forwardedRef)}
           data-variant={variant}
@@ -62,16 +73,17 @@ const List = React.forwardRef<HTMLDivElement, TabsListProps>(
             <span
               aria-hidden="true"
               className={cn(
-                'pointer-events-none absolute bottom-0 left-0 h-[3px] rounded-t-full bg-[var(--color-primary)]',
+                'pointer-events-none absolute bottom-0 left-0 h-[0.1875rem] rounded-t-full bg-[var(--tabs-indicator,var(--color-primary))]',
                 'w-[var(--nx-ind-w,0px)] translate-x-[var(--nx-ind-x,0px)] opacity-[var(--nx-ind-o,0)]',
                 'group-data-[orientation=vertical]/tabs:top-0 group-data-[orientation=vertical]/tabs:bottom-auto group-data-[orientation=vertical]/tabs:left-auto group-data-[orientation=vertical]/tabs:end-0',
-                'group-data-[orientation=vertical]/tabs:h-[var(--nx-ind-h,0px)] group-data-[orientation=vertical]/tabs:w-[3px] group-data-[orientation=vertical]/tabs:rounded-none group-data-[orientation=vertical]/tabs:rounded-s-full',
+                'group-data-[orientation=vertical]/tabs:h-[var(--nx-ind-h,0px)] group-data-[orientation=vertical]/tabs:w-[0.1875rem] group-data-[orientation=vertical]/tabs:rounded-none group-data-[orientation=vertical]/tabs:rounded-s-full',
                 'group-data-[orientation=vertical]/tabs:translate-x-0 group-data-[orientation=vertical]/tabs:translate-y-[var(--nx-ind-y,0px)]',
                 '[[data-nx-indicator=ready]>&]:transition-[transform,width,height] [[data-nx-indicator=ready]>&]:duration-spatial-default [[data-nx-indicator=ready]>&]:ease-spatial-default',
               )}
             />
           )}
         </RadixTabs.List>
+      </SizeContext.Provider>
       </VariantContext.Provider>
     );
   },
@@ -125,18 +137,20 @@ function useOverflow(ref: React.RefObject<HTMLElement | null>) {
 const Trigger = React.forwardRef<HTMLButtonElement, RadixTabs.TabsTriggerProps>(
   ({ className, ...props }, ref) => {
     const pill = React.useContext(VariantContext) === 'pill';
+    const size = React.useContext(SizeContext);
     return (
       <RadixTabs.Trigger
         ref={ref}
         className={cn(
           // State layer for hover/press; focus = the global ring.
-          'nx-state-layer relative inline-flex h-control-md items-center justify-center gap-1.5 whitespace-nowrap px-4 text-label-lg select-none',
+          'nx-state-layer relative inline-flex items-center justify-center gap-1.5 whitespace-nowrap select-none',
+          triggerSize[size],
           'group-data-[orientation=vertical]/tabs:justify-start',
-          'text-[var(--color-on-surface-variant)] transition-colors duration-effects-fast ease-effects-fast',
+          'text-[var(--tabs-fg,var(--color-on-surface-variant))] transition-colors duration-effects-fast ease-effects-fast',
           pill
             ? 'z-10 rounded-[var(--shape-pill,var(--shape-control))] hover:text-[var(--color-on-surface)] data-[state=active]:text-[var(--color-on-surface)]'
             : cn(
-                'rounded-t-[var(--shape-field)] data-[state=active]:text-[var(--color-primary)]',
+                'rounded-t-[var(--shape-field)] data-[state=active]:text-[var(--tabs-active-fg,var(--color-primary))]',
                 'group-data-[orientation=vertical]/tabs:rounded-none group-data-[orientation=vertical]/tabs:rounded-s-[var(--shape-field)]',
               ),
           'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
