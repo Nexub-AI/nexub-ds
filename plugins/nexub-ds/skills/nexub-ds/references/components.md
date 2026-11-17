@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v10.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -67,6 +67,7 @@ Never use a component marked deprecated.
 - [Alert](components/alert.md) `@nexub/react`: Inline contextual message with optional title, icon, and dismiss action.
 - [Celebrate](components/celebrate.md) `@nexub/react`: A short confetti burst for a real win, such as a first payment or finishing onboarding.
 - [Spinner](components/spinner.md) `@nexub/react`: Animated loading indicator. Inherits color from context.
+- [Success Check](components/success-check.md) `@nexub/react`: A small success moment: a ring that pops in and a tick that draws.
 - [Toast](components/toast.md) `@nexub/react`: Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 
 ## Components — Form & Input
@@ -136,6 +137,7 @@ Never use a component marked deprecated.
 - [Eyebrow Chip](components/eyebrow-chip.md) `@nexub/react`: A compact eyebrow label, typically used above headings.
 - [Filter Chip](components/filter-chip.md) `@nexub/react`: Interactive chip for filtering, supports selected/unselected state.
 - [Flag](components/flag.md) `@nexub/react`: A country flag from its ISO code, drawn with the system emoji font.
+- [Icon Chip](components/icon-chip.md) `@nexub/react`: An icon on a tinted tile, in one of the category colours or the product accent.
 
 ## Components — Layout
 
@@ -231,6 +233,7 @@ Never use a component marked deprecated.
 - [FilterBar](components/filter-bar.md) `@nexub/patterns`: Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](components/info-list.md) `@nexub/patterns`: Key–value list for displaying structured metadata or details.
 - [StatCard](components/stat-card.md) `@nexub/patterns`: Metric display card showing a KPI value, label, optional delta, and icon.
+- [WelcomeBanner](components/welcome-banner.md) `@nexub/patterns`: A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 
 ## Patterns — Feedback
 

@@ -54,6 +54,29 @@ describe('PageFrame helpers', () => {
   });
 });
 
+describe('DashboardPage 10.3', () => {
+  it('shows the banner and a titled chart panel, and makes the first quick action the main one', () => {
+    render(
+      <DashboardPage
+        title="Home"
+        balance={{ value: 10, currency: 'SGD' }}
+        banner={<p>Welcome back</p>}
+        chart={{ title: 'Spending', content: <svg data-testid="chart" />, action: <button type="button">Month</button> }}
+        quickActions={[
+          { id: 'send', label: 'Send', onSelect: () => {} },
+          { id: 'add', label: 'Add money', onSelect: () => {} },
+        ]}
+        stats={[{ label: 'Saved', value: 'S$2', category: 'emerald', trend: [1, 2, 3] }]}
+      />,
+    );
+    expect(screen.getByText('Welcome back')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Spending' })).toContainElement(screen.getByTestId('chart'));
+    expect(screen.getByRole('button', { name: 'Month' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Send' })).toHaveAttribute('data-variant', 'filled');
+    expect(screen.getByRole('button', { name: 'Add money' })).toHaveAttribute('data-variant', 'tonal');
+  });
+});
+
 describe('ActivityPage', () => {
   it('is a main landmark with day sections and selectable rows', async () => {
     const onSelect = vi.fn();

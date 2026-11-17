@@ -95,7 +95,9 @@
       "tone",
       "variant"
     ],
-    "webOnly": [],
+    "webOnly": [
+      "category"
+    ],
     "nativeOnly": []
   },
   "avatar": {
@@ -110,6 +112,7 @@
     ],
     "webOnly": [
       "badgeColor",
+      "category",
       "fallback"
     ],
     "nativeOnly": []

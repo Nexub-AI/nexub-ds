@@ -77,3 +77,17 @@ export const SentimentOverride: Story = {
     </div>
   ),
 };
+
+const lively = (
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', maxWidth: '900px' }}>
+    <StatCard label="Revenue" value="$84,320" delta="12.5%" deltaType="increase" icon={<RevenueIcon />} category="emerald" trend={[12, 14, 13, 17, 16, 21, 24]} />
+    <StatCard label="Active users" value="2,841" delta="4.1%" deltaType="increase" icon={<UsersIcon />} category="violet" trend={[30, 28, 31, 33, 32, 35, 36]} />
+    <StatCard label="Refunds" value="18" delta="2" deltaType="decrease" sentiment="positive" icon={<RevenueIcon />} category="amber" trend={[9, 8, 8, 6, 7, 5, 4]} />
+  </div>
+);
+
+/** 10.3: a category colours the icon chip and the trend line. */
+export const CategoryAndTrend: Story = { render: () => lively };
+
+/** Under the vivid expression the cards also lift on hover. */
+export const Vivid: Story = { render: () => <div data-expression="vivid">{lively}</div> };

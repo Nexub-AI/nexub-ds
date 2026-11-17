@@ -1,5 +1,11 @@
 # @nexub/brand
 
+## 10.2.0
+
+### Minor Changes
+
+- 30720fe: Brand: app icon for CRM. `app-icon-crm.svg`, `-light.svg`, `-192.png`, `-512.png` and the `mobile/crm-*` iOS and Android set.
+
 ## 10.1.0
 
 ## 10.0.0

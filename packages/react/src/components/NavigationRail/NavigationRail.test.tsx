@@ -35,3 +35,18 @@ describe('NavigationRail', () => {
     expect(link).toContainElement(screen.getByTestId('icon'));
   });
 });
+
+describe('NavigationRail 10.3', () => {
+  it('marks the active pill for the expression layers', () => {
+    const { container } = render(
+      <NavigationRail.Root>
+        <NavigationRail.Item href="/a" icon={<svg />} label="Home" active />
+        <NavigationRail.Item href="/b" icon={<svg />} label="Pay" />
+      </NavigationRail.Root>,
+    );
+    const pills = container.querySelectorAll('[data-nx="rail-pill"]');
+    expect(pills).toHaveLength(2);
+    expect(pills[0]!.hasAttribute('data-active')).toBe(true);
+    expect(pills[1]!.hasAttribute('data-active')).toBe(false);
+  });
+});

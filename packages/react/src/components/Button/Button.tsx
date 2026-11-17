@@ -30,6 +30,20 @@ const toneClasses: Record<ToneValue, string> = {
   founderub: 'bg-[var(--color-founderub)] text-[var(--color-on-founderub)]',
 };
 
+// 10.3: with variant="tonal" a tone is the role's container pair (a soft,
+// coloured button) instead of the solid fill.
+const tonalToneClasses: Record<ToneValue, string> = {
+  neutral: 'bg-[var(--color-surface-container-high)] text-[var(--color-on-surface)]',
+  info: 'bg-[var(--color-info-container)] text-[var(--color-on-info-container)]',
+  success: 'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
+  warning: 'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
+  danger: 'bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
+  leap: 'bg-[var(--color-leap-container)] text-[var(--color-on-leap-container)]',
+  bookub: 'bg-[var(--color-bookub-container)] text-[var(--color-on-bookub-container)]',
+  payub: 'bg-[var(--color-payub-container)] text-[var(--color-on-payub-container)]',
+  founderub: 'bg-[var(--color-founderub-container)] text-[var(--color-on-founderub-container)]',
+};
+
 const filled = `bg-[var(--button-filled-bg,var(--color-primary))] text-[var(--button-filled-fg,var(--color-on-primary))] ${disabledContainer}`;
 const tonal = `bg-[var(--button-tonal-bg,var(--color-secondary-container))] text-[var(--button-tonal-fg,var(--color-on-secondary-container))] ${disabledContainer}`;
 const outlined = `bg-transparent border border-[var(--button-outlined-border,var(--color-outline-variant))] text-[var(--button-outlined-fg,var(--color-on-surface))] ${disabledContainer}`;
@@ -161,7 +175,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const sharedProps = {
       className: cn(
         buttonVariants({ variant, size, fullWidth }),
-        tone ? toneClasses[tone] : '',
+        tone ? (variant === 'tonal' ? tonalToneClasses : toneClasses)[tone] : '',
         !asChild && status === 'error' && 'nx-shake',
         magnetic && 'nx-magnetic',
         className,

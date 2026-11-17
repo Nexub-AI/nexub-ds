@@ -1,4 +1,6 @@
 /* @nexub/themes — founderub.css
+   @deprecated since 10.3: import @nexub/themes/products instead (it covers [data-product='founderub']
+   and every other app). This file is removed in 11.0.
    Overrides --color-accent-* to Founderub's amber scale when [data-product='founderub'] is set. */
 
 [data-product='founderub'] {

@@ -77,3 +77,17 @@ export const Async: Story = {
     return <AsyncDemo />;
   },
 };
+
+/** 10.3: `variant="tonal"` with a tone is a soft, coloured button (the role's container pair). */
+export const TonalTones: Story = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <Button variant="tonal">Default</Button>
+      {(['neutral', 'info', 'success', 'warning', 'danger'] as const).map((t) => (
+        <Button key={t} variant="tonal" tone={t}>
+          {t}
+        </Button>
+      ))}
+    </div>
+  ),
+};

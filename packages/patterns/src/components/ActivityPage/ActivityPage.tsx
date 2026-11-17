@@ -48,7 +48,7 @@ export function TransactionRow({
 }) {
   const body = (
     <>
-      <Avatar name={t.title} src={t.image} />
+      <Avatar name={t.title} src={t.image} category="auto" />
       <span className="flex min-w-0 flex-1 flex-col text-start">
         <span className="truncate text-body-md font-medium text-[var(--color-on-surface)]">{t.title}</span>
         {t.subtitle && <span className="truncate text-body-sm text-[var(--color-on-surface-muted)]">{t.subtitle}</span>}
@@ -61,7 +61,7 @@ export function TransactionRow({
   );
   const row = 'flex w-full items-center gap-3 px-4 py-3';
   return (
-    <li className="flex items-center border-t border-[var(--color-outline-variant)] first:border-t-0">
+    <li data-nx="row" className="flex items-center border-t border-[var(--color-outline-variant)] first:border-t-0">
       {onSelect ? (
         <button type="button" onClick={() => onSelect(t)} className={cn(row, 'nx-state-layer min-h-14')}>
           {body}

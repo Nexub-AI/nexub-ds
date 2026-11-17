@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/cn.js';
+import type { CategoryColor } from '@nexub/core';
 import type { ToneValue } from '../Button/Button.js';
 
 export const badgeVariants = cva(
@@ -93,12 +94,21 @@ const dotClasses: Record<ToneValue, string> = {
   payub: 'bg-[var(--color-payub)]',
   founderub: 'bg-[var(--color-founderub)]',
 };
+// Category colours (10.3): data-category sets the three --nx-cat-* values (@nexub/themes core).
+const categoryClasses = {
+  solid: 'bg-[var(--nx-cat-container)] text-[var(--nx-on-cat-container)]',
+  soft: 'bg-[var(--nx-cat-container)] text-[var(--nx-on-cat-container)]',
+  outline: 'border-[color-mix(in_srgb,var(--nx-cat)_50%,transparent)] text-[var(--nx-cat)]',
+} as const;
 const dotSizes = { sm: 'size-1.5', md: 'size-2', lg: 'size-2.5' } as const;
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badgeVariants> {
   tone?: ToneValue;
+  /** 10.3: a category colour for tags and labels (e.g. one per project or team). Wins over `tone`.
+   *  It carries no meaning by itself: status still uses `tone`. */
+  category?: CategoryColor;
   leadingIcon?: React.ReactNode;
   /**
    * A status dot. Before the label when there is one; on its own (no children
@@ -112,9 +122,9 @@ export interface BadgeProps
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, size, variant = 'solid', tone = 'neutral', leadingIcon, dot, count, max = 99, children, ...props }, ref) => {
+  ({ className, size, variant = 'solid', tone = 'neutral', category, leadingIcon, dot, count, max = 99, children, ...props }, ref) => {
     const resolvedVariant: 'solid' | 'soft' | 'outline' = variant ?? 'solid';
-    const toneStyle = toneClasses[tone][resolvedVariant];
+    const toneStyle = category ? categoryClasses[resolvedVariant] : toneClasses[tone][resolvedVariant];
     const dotSize = dotSizes[size ?? 'md'];
 
     if (dot && children == null && count == null) {
@@ -135,6 +145,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <span
         ref={ref}
+        data-category={category}
         className={cn(badgeVariants({ size, variant: resolvedVariant }), toneStyle, className)}
         {...props}
       >

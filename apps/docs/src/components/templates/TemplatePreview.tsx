@@ -6,6 +6,7 @@ import {
   ChatPage,
   CheckoutPage,
   DashboardPage,
+  WelcomeBanner,
   PaywallPage,
   SettingsPage,
   SignInPage,
@@ -13,8 +14,8 @@ import {
   type ChatMessage,
   type Transaction,
 } from '@nexub/patterns';
-import { Avatar, Button, Logo, Switch } from '@nexub/react';
-import { ArrowDown, CreditCard, Plus, Send } from '@nexub/icons';
+import { Avatar, BarChart, Button, Logo, Switch } from '@nexub/react';
+import { ArrowDown, CreditCard, Plus, Receipt, Send, TrendingUp, Wallet } from '@nexub/icons';
 
 const day = (d: number, h = 10) => new Date(2026, 9, 30 - d, h, 12);
 const txs: Transaction[] = [
@@ -39,11 +40,35 @@ function Dashboard() {
         { id: 'request', label: 'Request', icon: <ArrowDown size={18} />, onSelect: noop },
         { id: 'card', label: 'Card', icon: <CreditCard size={18} />, onSelect: noop },
       ]}
+      banner={
+        <WelcomeBanner
+          title="Two bills are due this week"
+          description="Singtel on 2 Nov and SP Services on 4 Nov."
+          actions={<Button variant="tonal">Review bills</Button>}
+        />
+      }
       stats={[
-        { label: 'Spent this month', value: 'S$1,842', delta: '8%', deltaType: 'decrease', sentiment: 'positive' },
-        { label: 'Saved', value: 'S$2,400', delta: '12%', deltaType: 'increase', sentiment: 'positive' },
-        { label: 'Bills due', value: '2', description: 'Next: Singtel on 2 Nov' },
+        { label: 'Spent this month', value: 'S$1,842', delta: '8%', deltaType: 'decrease', sentiment: 'positive', icon: <Receipt size={16} />, category: 'pink', trend: [22, 20, 21, 18, 19, 17, 16] },
+        { label: 'Saved', value: 'S$2,400', delta: '12%', deltaType: 'increase', icon: <Wallet size={16} />, category: 'emerald', trend: [10, 12, 13, 15, 16, 19, 22] },
+        { label: 'Invested', value: 'S$8,150', delta: '3%', deltaType: 'increase', icon: <TrendingUp size={16} />, category: 'violet', trend: [40, 41, 39, 42, 43, 43, 45] },
       ]}
+      chart={{
+        title: 'Spending',
+        content: (
+          <BarChart
+            title="Spending by month"
+            data={[
+              { month: 'Jul', spent: 1740 },
+              { month: 'Aug', spent: 2210 },
+              { month: 'Sep', spent: 2004 },
+              { month: 'Oct', spent: 1842 },
+            ]}
+            index="month"
+            series={[{ key: 'spent', label: 'Spent' }]}
+            size="sm"
+          />
+        ),
+      }}
       recent={txs.slice(0, 4)}
       onSelectTransaction={noop}
       onSeeAllActivity={noop}

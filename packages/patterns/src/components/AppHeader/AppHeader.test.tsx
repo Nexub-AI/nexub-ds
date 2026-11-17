@@ -281,3 +281,16 @@ describe('AppHeader', () => {
     expect(await screen.findByRole('menuitem', { name: 'Se déconnecter' })).toBeInTheDocument();
   });
 });
+
+describe('AppHeader accent (10.3)', () => {
+  it('scopes the header to its app or division', () => {
+    setup({ accent: 'payub' });
+    expect(screen.getByRole('banner')).toHaveAttribute('data-product', 'payub');
+  });
+
+  it('sets nothing without an accent', () => {
+    setup();
+    const banner = screen.getByRole('banner');
+    expect(banner.hasAttribute('data-product') || banner.hasAttribute('data-division')).toBe(false);
+  });
+});

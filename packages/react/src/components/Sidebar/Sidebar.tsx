@@ -2,24 +2,35 @@
 
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { accentAttrs } from '@nexub/core';
+import type { DivisionKey, ProductKey } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
+import { useMergedRefs } from '../../hooks/useMergedRefs.js';
+import { useSlidingIndicator } from '../../hooks/useSlidingIndicator.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
   collapsed?: boolean;
+  /** 10.3: the app or division this sidebar belongs to. Sets `data-product` / `data-division`,
+   *  so the active item takes that accent (needs `@nexub/themes/products` or `/divisions`). */
+  accent?: ProductKey | DivisionKey;
 }
 
 const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
-  ({ className, collapsed = false, ...props }, ref) => {
+  ({ className, collapsed = false, accent, children, ...props }, forwardedRef) => {
     const messages = useNexubMessages();
+    const ref = React.useRef<HTMLElement>(null);
+    // Drives the marker beside the active item (shown by the vivid layer only).
+    useSlidingIndicator(ref, '[aria-current="page"]');
     return (
     <nav
-      ref={ref}
+      ref={useMergedRefs(ref, forwardedRef)}
+      {...accentAttrs(accent)}
       aria-label={messages.sidebar}
       data-collapsed={collapsed}
       className={cn(
         // Chrome recedes: a tonal panel, no divider.
-        'group/sidebar flex flex-col gap-1 bg-[var(--color-surface-container-low)] transition-[width] duration-spatial-default ease-spatial-default',
+        'group/sidebar relative flex flex-col gap-1 bg-[var(--color-surface-container-low)] transition-[width] duration-spatial-default ease-spatial-default',
         collapsed
           ? 'w-[var(--size-nav-sidebar-collapsed,56px)]'
           : 'w-[var(--size-nav-sidebar,240px)]',
@@ -27,7 +38,17 @@ const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
         className,
       )}
       {...props}
-    />
+    >
+      {children}
+      <span
+        aria-hidden="true"
+        className={cn(
+          'nx-nav-marker pointer-events-none absolute start-0 top-2 w-1 rounded-e-full bg-[var(--color-spot,var(--color-primary))]',
+          'h-[calc(var(--nx-ind-h,0px)-1rem)] translate-y-[var(--nx-ind-y,0px)] opacity-[var(--nx-ind-o,0)]',
+          '[[data-nx-indicator=ready]>&]:transition-transform [[data-nx-indicator=ready]>&]:duration-spatial-default [[data-nx-indicator=ready]>&]:ease-spatial-default',
+        )}
+      />
+    </nav>
     );
   },
 );
@@ -99,13 +120,14 @@ const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
     const itemProps = {
       ref,
       'aria-current': active ? ('page' as const) : undefined,
+      'data-nx': 'nav-item',
       // Native tooltip for the icon-only collapsed state.
       title: typeof label === 'string' ? label : undefined,
       className: cn(
         // Active = the secondary-container pill (M3 nav indicator), not a solid brand fill.
         'nx-state-layer relative flex h-control-md items-center gap-3 rounded-shape-control px-3 text-label-lg',
         active
-          ? 'bg-[var(--color-secondary-container)] text-[var(--color-on-secondary-container)]'
+          ? 'bg-[var(--nav-active-bg,var(--color-secondary-container))] text-[var(--nav-active-fg,var(--color-on-secondary-container))]'
           : 'text-[var(--color-on-surface-variant)]',
         className,
       ),
