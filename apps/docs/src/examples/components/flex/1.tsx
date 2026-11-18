@@ -4,7 +4,7 @@ import { Flex, Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Flex justify="between" className="w-full max-w-[320px]">
+    <Flex justify="between" className="w-full max-w-80">
       <Badge tone="success">Active</Badge>
       <Badge tone="neutral">Draft</Badge>
     </Flex>

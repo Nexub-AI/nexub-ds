@@ -43,9 +43,9 @@ export default function VocabularyPage() {
           caption="Preferred terms"
           head={['Use this', 'Not this', 'Notes']}
           rows={vocab.map((v) => [
-            <span key="u" className="whitespace-nowrap font-semibold text-[var(--color-success)]">{v.use}</span>,
-            <span key="a" className="text-[var(--color-error)] line-through decoration-1">{v.avoid}</span>,
-            <span key="n" className="text-[var(--color-on-surface-variant)]">{v.notes}</span>,
+            <span key="u" className="whitespace-nowrap font-semibold text-success">{v.use}</span>,
+            <span key="a" className="text-error line-through decoration-1">{v.avoid}</span>,
+            <span key="n" className="text-on-surface-variant">{v.notes}</span>,
           ])}
         />
       </Section>
@@ -54,7 +54,7 @@ export default function VocabularyPage() {
         <div className="grid gap-3">
           {glossary.map((g) => (
             <Card key={g.term} className="grid gap-1 p-4 sm:grid-cols-[140px_1fr] sm:gap-4">
-              <Text weight="semibold" className="font-mono !text-[var(--color-primary)]">{g.term}</Text>
+              <Text weight="semibold" className="font-mono !text-primary">{g.term}</Text>
               <Text tone="secondary">{g.def}</Text>
             </Card>
           ))}

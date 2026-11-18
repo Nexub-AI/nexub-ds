@@ -28,7 +28,7 @@ export function FeedbackButton() {
             setOpen(true);
           }}
           aria-label="Send feedback"
-          className="docs-feedback-fab nx-state-layer fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] inline-flex items-center gap-2 rounded-shape-control border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] px-3.5 py-2.5 text-label-lg font-semibold text-[var(--color-on-surface)] shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
+          className="docs-feedback-fab nx-state-layer fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] inline-flex items-center gap-2 rounded-shape-control border border-outline-variant bg-surface-elevated px-3.5 py-2.5 text-label-lg font-semibold text-on-surface shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
         >
           <MessageSquare size={15} aria-hidden="true" />
           Feedback

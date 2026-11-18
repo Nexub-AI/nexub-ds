@@ -9,7 +9,7 @@ export default function Example() {
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Slide in={visible} direction="up" unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Sliding content</Text></Card>
       </Slide>
     </div>
   );

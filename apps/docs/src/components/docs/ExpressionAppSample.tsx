@@ -14,7 +14,7 @@ const SPENDING = [
 /** A small app screen: the surfaces Vivid styles since 10.3. */
 export function AppSample({ label }: { label: string }) {
   return (
-    <div className="flex min-h-[420px] overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]">
+    <div className="flex min-h-105 overflow-hidden rounded-shape-container border border-outline-variant bg-surface">
       <Sidebar.Root aria-label={`Sample navigation (${label})`} className="hidden w-44 shrink-0 sm:flex">
         <Sidebar.Group label={label}>
           <Sidebar.Item href="#app" active icon={<Home size={16} />}>Home</Sidebar.Item>

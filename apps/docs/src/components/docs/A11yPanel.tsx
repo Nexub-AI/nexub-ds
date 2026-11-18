@@ -4,7 +4,7 @@ import type { A11yDef } from '@/registry/types';
 
 function Bullets({ items }: { items: string[] }) {
   return (
-    <ul className="m-0 flex list-disc flex-col gap-1 ps-[1.1rem] marker:text-[var(--color-on-surface-muted)]">
+    <ul className="m-0 flex list-disc flex-col gap-1 ps-[1.1rem] marker:text-on-surface-muted">
       {items.map((t, i) => (
         <li key={i}>
           <Text size="body-sm" tone="secondary">

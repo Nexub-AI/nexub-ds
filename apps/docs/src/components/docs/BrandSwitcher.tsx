@@ -73,8 +73,8 @@ const BrandButton = React.memo(function BrandButton({ brand: b, isActive, onSele
       aria-pressed={isActive}
       aria-label={`${b.label} brand`}
       className={
-        'nx-hit h-[18px] w-[18px] rounded-full border-2 bg-[var(--nx-swatch)] outline-offset-1 transition-[outline-color] duration-effects-fast ' +
-        (isActive ? 'border-[var(--color-surface)] outline outline-2 outline-[var(--nx-swatch)]' : 'border-transparent')
+        'nx-hit h-4.5 w-4.5 rounded-full border-2 bg-[var(--nx-swatch)] outline-offset-1 transition-[outline-color] duration-effects-fast ' +
+        (isActive ? 'border-surface outline outline-2 outline-[var(--nx-swatch)]' : 'border-transparent')
       }
       style={{ '--nx-swatch': b.color } as React.CSSProperties}
     />

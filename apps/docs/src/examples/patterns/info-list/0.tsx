@@ -5,7 +5,7 @@ import { Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <InfoList.Root>
         <InfoList.Item label="Plan" value="Pro" />
         <InfoList.Item label="Seats" value="12 / 50" />

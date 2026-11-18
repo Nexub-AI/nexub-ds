@@ -31,7 +31,7 @@ const columns: DataTableColumn<Invoice>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden
