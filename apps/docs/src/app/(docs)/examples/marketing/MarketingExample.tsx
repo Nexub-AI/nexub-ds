@@ -33,11 +33,11 @@ function DashboardVisual() {
         ].map(([label, value, width]) => (
           <div key={label} className="flex flex-col gap-1.5">
             <div className="flex justify-between text-body-sm">
-              <span className="text-[var(--color-on-surface-variant)]">{label}</span>
+              <span className="text-on-surface-variant">{label}</span>
               <span className="tabular-nums">{value}</span>
             </div>
-            <div className="h-2 rounded-full bg-[var(--color-surface-container-high)]">
-              <div className={`nx-mkt-bar h-2 rounded-full bg-[var(--color-primary)] ${width}`} />
+            <div className="h-2 rounded-full bg-surface-container-high">
+              <div className={`nx-mkt-bar h-2 rounded-full bg-primary ${width}`} />
             </div>
           </div>
         ))}
@@ -58,7 +58,7 @@ function DashboardVisual() {
 
 export function MarketingExample() {
   return (
-    <div data-mode="marketing" className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-lowest)]">
+    <div data-mode="marketing" className="overflow-hidden rounded-shape-container border border-outline-variant bg-surface-container-lowest">
       <MarketingNav
         className="static"
         logo={<Logo size="sm" />}
@@ -105,7 +105,7 @@ export function MarketingExample() {
       <div className="nx-mkt-accent-line" aria-hidden="true" />
       <LogoStrip label="Trusted by 2,000+ teams">
         {customers.map((name) => (
-          <span key={name} className="text-title-lg text-[var(--color-on-surface-muted)]">{name}</span>
+          <span key={name} className="text-title-lg text-on-surface-muted">{name}</span>
         ))}
       </LogoStrip>
       <StatBand>

@@ -29,7 +29,7 @@ import { FileUpload } from '@nexub/react';
 
 export default function Example() {
   return (
-    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-[480px]">
+    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-120">
       <FileUpload.Dropzone />
       <FileUpload.List>
         {[0, 1, 2].map((i) => <FileUpload.Item key={i} index={i} />)}
@@ -51,10 +51,10 @@ export default function Example() {
       maxFiles={1}
       maxSize={5 * 1024 * 1024}
       validate={(file) => (file.name.includes(' ') ? 'Rename the file without spaces.' : null)}
-      className="w-full max-w-[480px]"
+      className="w-full max-w-120"
     >
       <FileUpload.Dropzone>
-        <Text size="body-sm"><span className="font-semibold text-[var(--color-primary)]">Choose a CSV</span> or drop it here</Text>
+        <Text size="body-sm"><span className="font-semibold text-primary">Choose a CSV</span> or drop it here</Text>
         <Text size="caption" tone="muted">One file, up to 5 MB</Text>
       </FileUpload.Dropzone>
       <FileUpload.List>

@@ -4,7 +4,7 @@ import { PlanCard } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <PlanCard
         name="Pro"
         price="$49"

@@ -5,7 +5,7 @@ import { Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <FilterBar
         searchPlaceholder="Search users…"
         filters={

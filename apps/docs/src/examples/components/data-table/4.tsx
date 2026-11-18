@@ -26,7 +26,7 @@ const columns: DataTableColumn<Event>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTableVirtual caption="Audit log" captionHidden columns={columns} data={events} maxHeight={360} enableSorting />
     </div>
   );

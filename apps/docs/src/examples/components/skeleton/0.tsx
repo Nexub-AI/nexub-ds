@@ -4,7 +4,7 @@ import { Skeleton } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-[280px]">
+    <div className="flex flex-col gap-2 items-start w-70">
       <Skeleton shape="line" width="60%" />
       <Skeleton shape="line" width="100%" />
       <Skeleton shape="line" width="80%" />

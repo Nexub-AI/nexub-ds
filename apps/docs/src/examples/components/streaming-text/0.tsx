@@ -15,7 +15,7 @@ export default function Example() {
     return () => clearTimeout(id);
   }, [length, streaming]);
   return (
-    <div className="flex flex-col gap-3 items-start max-w-[480px]">
+    <div className="flex flex-col gap-3 items-start max-w-120">
       <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
       <Button variant="outlined" size="sm" onClick={() => setLength(0)}>Restart</Button>
     </div>

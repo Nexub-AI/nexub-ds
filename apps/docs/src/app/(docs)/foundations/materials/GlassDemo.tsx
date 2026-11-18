@@ -23,11 +23,11 @@ export function GlassDemo() {
         <SegmentedControl.Item value="off">Solid</SegmentedControl.Item>
       </SegmentedControl.Root>
       <div className="docs-glass-backdrop flex flex-wrap items-center justify-center gap-5 rounded-shape-overlay p-8">
-        <Card className="w-[200px] p-6">
+        <Card className="w-50 p-6">
           <Text weight="semibold">Solid</Text>
           <Text size="body-sm" tone="secondary" className="mt-1 font-mono">surface=&quot;solid&quot;</Text>
         </Card>
-        <Card surface="glass" className="w-[200px] p-6">
+        <Card surface="glass" className="w-50 p-6">
           <Text weight="semibold">Glass</Text>
           <Text size="body-sm" tone="secondary" className="mt-1 font-mono">surface=&quot;glass&quot;</Text>
         </Card>

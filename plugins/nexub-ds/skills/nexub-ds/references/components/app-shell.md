@@ -34,7 +34,7 @@ import { BarChart3, Home, Settings } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <AppShell.Root className="h-[360px] w-full rounded-shape-container border border-[var(--color-outline-variant)]">
+    <AppShell.Root className="h-90 w-full rounded-shape-container border border-outline-variant">
       <AppShell.Header>
         <TopNav.Root className="static">
           <TopNav.Logo><Logo size="sm" /></TopNav.Logo>

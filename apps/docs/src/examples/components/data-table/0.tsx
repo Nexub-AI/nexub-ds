@@ -16,7 +16,7 @@ export default function Example() {
     { accessorKey: 'status', header: 'Status' },
   ];
   return (
-    <div className="w-full max-w-[600px]">
+    <div className="w-full max-w-150">
       <DataTable columns={columns} data={data} />
     </div>
   );

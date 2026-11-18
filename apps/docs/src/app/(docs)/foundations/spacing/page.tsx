@@ -29,11 +29,11 @@ export default function SpacingPage() {
             const px = n * 4;
             const name = String(n).replace('.', '-');
             return (
-              <div key={n} className="flex items-center gap-4 border-b border-[var(--color-outline-variant)] py-1.5">
-                <code className="w-[120px] shrink-0 font-mono text-label-sm text-[var(--color-primary)]">--spacing-{name}</code>
-                <code className="w-[56px] shrink-0 font-mono text-label-sm text-[var(--color-on-surface-muted)]">{px}px</code>
+              <div key={n} className="flex items-center gap-4 border-b border-outline-variant py-1.5">
+                <code className="w-30 shrink-0 font-mono text-label-sm text-primary">--spacing-{name}</code>
+                <code className="w-14 shrink-0 font-mono text-label-sm text-on-surface-muted">{px}px</code>
                 <div
-                  className="h-4 min-w-[2px] rounded-[2px] bg-[var(--color-primary)] opacity-70"
+                  className="h-4 min-w-0.5 rounded-xs bg-primary opacity-70"
                   style={{ width: `${Math.min(px, 256)}px` }}
                 />
               </div>
