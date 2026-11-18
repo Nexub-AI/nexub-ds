@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   AppState,
-  BackHandler,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -21,7 +20,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { currencySymbol, fractionDigits, parseMoney } from '@nexub/core';
 import { Calendar, Delete, Eye, EyeOff, type NativeIconProps } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
-import { useLatest } from '../hooks/useLatest';
 import { Pressable } from '../primitives/Pressable';
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
@@ -688,7 +686,7 @@ export interface CoachmarkProps {
 
 /**
  * A one-time hint next to a new feature. Place it in your layout; it doesn't
- * measure targets. Android back dismisses it while it is shown.
+ * measure targets. It is inline, so Android back is left to navigation.
  */
 export function Coachmark({
   title,
@@ -699,15 +697,6 @@ export function Coachmark({
   style,
 }: CoachmarkProps) {
   const { roles, tokens, messages } = useTheme();
-  // Not a Modal, so no onRequestClose: take Android back ourselves (no-op on iOS).
-  const dismiss = useLatest(onDismiss);
-  React.useEffect(() => {
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
-      dismiss.current();
-      return true;
-    });
-    return () => sub.remove();
-  }, [dismiss]);
   const tip = (
     <View
       style={{
