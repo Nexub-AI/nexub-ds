@@ -171,6 +171,12 @@ jobs:
         if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
+      # The screen patterns in dark, high contrast and RTL: a second session, because one session
+      # of every preview plus the variants outlived the iOS test driver.
+      - name: Maestro preview screenshots (schemes)
+        if: env.SOAK != 'true'
+        run: maestro test apps/mobile/.maestro/previews-schemes --test-output-dir maestro-previews-schemes-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-schemes-out; exit 1; }
+
       # The screen patterns again with large text (pattern-<name>--lg--ios.png). Text size is an
       # OS setting the app can't override, so it is set here, around a flow of its own.
       - name: Maestro preview screenshots (large text)
@@ -204,6 +210,7 @@ jobs:
             maestro-out
             maestro-soak-out
             maestro-previews-out
+            maestro-previews-schemes-out
             maestro-previews-lg-out
             screenshot-diffs
             *.png
@@ -305,7 +312,7 @@ jobs:
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             sh apps/mobile/scripts/android-settle.sh
             sh apps/mobile/scripts/android-ready.sh
-            maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
+            maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml apps/mobile/.maestro/previews-schemes/previews-schemes.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
             sh apps/mobile/scripts/screenshot-gate.sh android
 
       - name: Upload screenshots

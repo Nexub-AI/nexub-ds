@@ -29,7 +29,7 @@ dir="apps/mobile/.maestro/baselines/$platform"
 shots="screenshots-$platform"
 mkdir -p "$shots"
 { find . -maxdepth 1 -type f -name "*--$platform.png"
-  find maestro-out maestro-previews-out maestro-previews-lg-out -type f -name "*--$platform.png" 2>/dev/null; } |
+  find maestro-out maestro-previews-out maestro-previews-schemes-out maestro-previews-lg-out -type f -name "*--$platform.png" 2>/dev/null; } |
   while read -r f; do cp "$f" "$shots/"; done
 echo "Found $(ls "$shots" | wc -l | tr -d ' ') $platform preview screenshots."
 
