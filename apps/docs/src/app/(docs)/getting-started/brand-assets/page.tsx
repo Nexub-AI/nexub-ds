@@ -26,7 +26,7 @@ function AppTiles() {
       {apps.map(([id, name]) => {
         const base = id ? `app-icon-${id}` : 'app-icon';
         return (
-          <li key={base} className="flex flex-col items-center gap-2 rounded-shape-container bg-[var(--color-surface-container-low)] p-4">
+          <li key={base} className="flex flex-col items-center gap-2 rounded-shape-container bg-surface-container-low p-4">
             {/* Inline data URIs on a static export: next/image has nothing to optimise. */}
             {/* eslint-disable @next/next/no-img-element */}
             <div className="flex gap-2">

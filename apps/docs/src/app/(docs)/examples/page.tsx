@@ -40,7 +40,7 @@ function ExampleCard({ href, title, badge, body }: { href: string; title: string
     <Card variant="interactive" className="flex flex-col gap-2 p-5">
       <Badge variant="soft" tone="info" className="self-start">{badge}</Badge>
       <CardLink asChild>
-        <Link href={href} className="text-title-md text-[var(--color-on-surface)] no-underline">{title}</Link>
+        <Link href={href} className="text-title-md text-on-surface no-underline">{title}</Link>
       </CardLink>
       <Text size="body-sm" tone="secondary">{body}</Text>
     </Card>

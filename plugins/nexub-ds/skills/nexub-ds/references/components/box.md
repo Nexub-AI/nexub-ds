@@ -19,7 +19,7 @@ import { Box, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Box className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+    <Box className="p-4 bg-surface-container-low rounded-shape-field">
       <Text size="body-sm">Content inside a Box</Text>
     </Box>
   );
@@ -33,9 +33,9 @@ import { Box, Heading, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Box className="p-6 bg-[var(--color-surface-container-low)] rounded-shape-container">
+    <Box className="p-6 bg-surface-container-low rounded-shape-container">
       <Heading size="h4">Section title</Heading>
-      <Box className="p-3 bg-[var(--color-surface)] rounded-shape-field mt-2">
+      <Box className="p-3 bg-surface rounded-shape-field mt-2">
         <Text size="body-sm">Nested box content</Text>
       </Box>
     </Box>

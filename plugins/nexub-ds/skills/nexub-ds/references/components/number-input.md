@@ -23,7 +23,7 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 import { NumberInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[180px]"><NumberInput defaultValue={0} /></div>;
+  return <div className="w-45"><NumberInput defaultValue={0} /></div>;
 }
 ```
 
@@ -33,6 +33,6 @@ export default function Example() {
 import { NumberInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[180px]"><NumberInput defaultValue={5} min={0} max={10} /></div>;
+  return <div className="w-45"><NumberInput defaultValue={5} min={0} max={10} /></div>;
 }
 ```

@@ -22,7 +22,7 @@ Animates opacity between 0 and 1 based on the `in` prop.
 import { Fade, Card, Text } from '@nexub/react';
 
 export default function Example() {
-  return <Fade in><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>;
+  return <Fade in><Card className="w-50"><Text size="body-sm">Faded in content</Text></Card></Fade>;
 }
 ```
 
@@ -40,7 +40,7 @@ export default function Example() {
         {visible ? 'Hide' : 'Show'}
       </Button>
       <Fade in={visible} unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Animated content</Text></Card>
       </Fade>
     </div>
   );
@@ -59,7 +59,7 @@ export default function Example() {
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Fade in={visible} duration="slow">
-        <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>
   );

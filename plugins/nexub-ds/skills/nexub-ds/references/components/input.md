@@ -40,7 +40,7 @@ Text input field for forms. Supports size variants, icons, addons, and validatio
 import { Input } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Input placeholder="Enter value…" /></div>;
+  return <div className="w-70"><Input placeholder="Enter value…" /></div>;
 }
 ```
 
@@ -51,7 +51,7 @@ import { Input } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-[280px]">
+    <div className="flex flex-col gap-2 items-start w-70">
       <Input size="sm" placeholder="Small" />
       <Input size="md" placeholder="Medium" />
       <Input size="lg" placeholder="Large" />
@@ -66,7 +66,7 @@ export default function Example() {
 import { Input } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Input invalid placeholder="Invalid value" /></div>;
+  return <div className="w-70"><Input invalid placeholder="Invalid value" /></div>;
 }
 ```
 
@@ -77,7 +77,7 @@ import { Label, Input, HelperText } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-1 items-start w-[280px]">
+    <div className="flex flex-col gap-1 items-start w-70">
       <Label htmlFor="demo-email">Email address</Label>
       <Input id="demo-email" type="email" placeholder="you@example.com" />
       <HelperText>We&apos;ll never share your email.</HelperText>

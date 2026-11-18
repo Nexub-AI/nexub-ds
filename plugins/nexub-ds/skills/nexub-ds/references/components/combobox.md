@@ -25,7 +25,7 @@ import { Combobox } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Combobox.Root className="w-[260px]">
+    <Combobox.Root className="w-65">
       <Combobox.Input placeholder="Search…" />
       <Combobox.List>
         <Combobox.Empty>No results found.</Combobox.Empty>

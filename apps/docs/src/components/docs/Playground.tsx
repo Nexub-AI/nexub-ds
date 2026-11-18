@@ -42,8 +42,8 @@ export function Playground({ slug, componentName, def }: Props) {
   const framed = toolbar.width !== 'full';
 
   return (
-    <div className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]">
-      <div className="flex items-center justify-between gap-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 py-2">
+    <div className="overflow-hidden rounded-shape-container border border-outline-variant bg-surface">
+      <div className="flex items-center justify-between gap-3 border-b border-outline-variant bg-surface-container-low px-3 py-2">
         <Text size="label" weight="semibold" tone="secondary" className="uppercase tracking-wider">
           {def.title ?? 'Playground'}
         </Text>
@@ -53,19 +53,19 @@ export function Playground({ slug, componentName, def }: Props) {
       </div>
 
       <div className="docs-playground-grid">
-        <div className="flex min-w-0 flex-col gap-3 border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-4 max-md:border-b md:border-e">
+        <div className="flex min-w-0 flex-col gap-3 border-outline-variant bg-surface-container-low p-4 max-md:border-b md:border-e">
           {def.controls.map((c) => (
             <ControlField key={c.name} id={`${id}-${c.name}`} control={c} value={values[c.name]} onChange={(v) => set(c.name, v)} />
           ))}
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <div dir={toolbar.dir} className={'flex min-h-[180px] items-center justify-center p-8 ' + bgClass(toolbar.bg)}>
+          <div dir={toolbar.dir} className={'flex min-h-45 items-center justify-center p-8 ' + bgClass(toolbar.bg)}>
             <div
               className={
                 'flex max-w-full items-center justify-center' +
                 (framed
-                  ? ' rounded-shape-field border border-dashed border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-4'
+                  ? ' rounded-shape-field border border-dashed border-outline-variant bg-surface p-4'
                   : '')
               }
               style={{ width: widthPx(toolbar.width) }}

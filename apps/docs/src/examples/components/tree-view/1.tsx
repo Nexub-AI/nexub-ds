@@ -20,7 +20,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Permissions" nodes={nodes} checkable defaultExpanded={['reports', 'settings']} checked={checked} onCheckedChange={setChecked} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Granted: {checked.join(', ') || 'nothing'}</p>
+      <p className="text-body-sm text-on-surface-muted">Granted: {checked.join(', ') || 'nothing'}</p>
     </div>
   );
 }

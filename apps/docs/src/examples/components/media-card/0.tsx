@@ -11,7 +11,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
     </div>
   );

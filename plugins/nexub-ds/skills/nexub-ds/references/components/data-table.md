@@ -56,7 +56,7 @@ export default function Example() {
     { accessorKey: 'status', header: 'Status' },
   ];
   return (
-    <div className="w-full max-w-[600px]">
+    <div className="w-full max-w-150">
       <DataTable columns={columns} data={data} />
     </div>
   );
@@ -82,7 +82,7 @@ export default function Example() {
     { accessorKey: 'status', header: 'Status' },
   ];
   return (
-    <div className="w-full max-w-[600px]">
+    <div className="w-full max-w-150">
       <DataTable columns={columns} data={data} enableSorting />
     </div>
   );
@@ -124,7 +124,7 @@ const columns: DataTableColumn<Invoice>[] = [
 export default function Example() {
   const [selection, setSelection] = React.useState<Record<string, boolean>>({ 'INV-2041': true, 'INV-2044': true });
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden
@@ -190,7 +190,7 @@ const columns: DataTableColumn<Invoice>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden
@@ -239,7 +239,7 @@ const columns: DataTableColumn<Event>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTableVirtual caption="Audit log" captionHidden columns={columns} data={events} maxHeight={360} enableSorting />
     </div>
   );

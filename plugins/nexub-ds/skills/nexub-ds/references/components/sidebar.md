@@ -27,7 +27,7 @@ import { BarChart3, Folder, Home, Settings, Users } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="h-[380px]">
+    <div className="h-95">
       <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
         <Sidebar.Header status={<Badge variant="soft" size="sm">Beta</Badge>}>
           <Logo size="sm" />
@@ -41,7 +41,7 @@ export default function Example() {
           <Sidebar.Item href="#" icon={<Users size="sm" />}>Members</Sidebar.Item>
           <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
         </Sidebar.Group>
-        <Sidebar.Footer className="text-body-sm text-[var(--color-on-surface-muted)]">v2.4.0</Sidebar.Footer>
+        <Sidebar.Footer className="text-body-sm text-on-surface-muted">v2.4.0</Sidebar.Footer>
       </Sidebar.Root>
     </div>
   );
@@ -58,7 +58,7 @@ import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
 export default function Example() {
   const [collapsed, setCollapsed] = React.useState(true);
   return (
-    <div className="flex h-[280px] items-start gap-4">
+    <div className="flex h-70 items-start gap-4">
       <Sidebar.Root aria-label="Workspace" collapsed={collapsed} className="rounded-shape-container">
         <Sidebar.Group>
           <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
