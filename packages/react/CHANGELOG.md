@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 10.5.1
+
+### Patch Changes
+
+- @nexub/icons@10.5.1
+- @nexub/core@10.5.1
+
 ## 10.5.0
 
 ### Minor Changes

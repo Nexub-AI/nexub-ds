@@ -1,5 +1,11 @@
 # @nexub/tokens
 
+## 10.5.1
+
+### Patch Changes
+
+- c60dbed: Tailwind 4: `bg-surface`, `text-surface` and `border-surface` now work. The `surface` colour role was dropped from `@nexub/tokens/tailwind.css` because the `color.surface.*` token tree overwrote it, so those classes generated nothing.
+
 ## 10.5.0
 
 ## 10.4.0
