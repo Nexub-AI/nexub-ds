@@ -20,7 +20,7 @@ export default function Example() {
     return () => clearTimeout(t);
   }, [query]);
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Autocomplete
         aria-label="City"
         placeholder="Search cities…"

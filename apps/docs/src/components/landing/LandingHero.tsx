@@ -73,7 +73,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
 
       {/* ── Hero icon with orbital rings ──────────────────────────────────── */}
       <div className="hero-icon-wrap relative z-[2]">
-        <div aria-hidden="true" className="absolute h-20 w-20 rounded-full bg-[var(--color-primary)] opacity-[0.18] blur-[24px]" />
+        <div aria-hidden="true" className="absolute h-20 w-20 rounded-full bg-primary opacity-[0.18] blur-xl" />
         <Image src="/nexub-icon.svg" alt="Nexub" width={72} height={52} priority className="relative z-[2] block" />
         <div className="logo-ring logo-ring-1" />
         <div className="logo-ring logo-ring-2" />
@@ -88,7 +88,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       <Heading
         level={1}
         size="display"
-        className="hero-anim-2 relative z-[2] mb-5 max-w-[860px] docs-hero-title"
+        className="hero-anim-2 relative z-[2] mb-5 max-w-215 docs-hero-title"
       >
         Design system for<br />
         {/* Calm override of the brand rainbow: ink to primary. */}
@@ -98,14 +98,14 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       </Heading>
 
       {/* ── Subheading — CSS animation ────────────────────────────────────── */}
-      <Text size="body-lg" tone="secondary" className="hero-anim-3 relative z-[2] mb-10 max-w-[540px]">
+      <Text size="body-lg" tone="secondary" className="hero-anim-3 relative z-[2] mb-10 max-w-135">
         Accessible, token-driven components and patterns for React on the web and React Native on iOS and Android.
         One set of tokens, two platforms, every product brand.
       </Text>
 
       {/* ── CTAs — CSS animation ──────────────────────────────────────────── */}
       <div className="hero-anim-4 relative z-[2] flex flex-wrap justify-center gap-3">
-        <Button asChild variant="filled" size="lg" className="landing-cta-shimmer">
+        <Button asChild variant="filled" size="lg">
           <Link href="/getting-started">Get started <ArrowRight size="sm" aria-hidden="true" /></Link>
         </Button>
         <Button asChild variant="outlined" size="lg">
@@ -115,7 +115,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
 
       {/* ── Remix: try a brand colour and the expression layer ────────────── */}
       <div className="hero-anim-4 relative z-[2] mt-8 flex flex-wrap items-center justify-center gap-3">
-        <span className="text-label-md text-[var(--color-on-surface-variant)]">Remix this page</span>
+        <span className="text-label-md text-on-surface-variant">Remix this page</span>
         <div role="group" aria-label="Brand colour" className="flex gap-1.5">
           {[null, '#e4572e', '#0f9d58', '#7b1fa2', '#ffb300', '#00897b'].map((c) => (
             <button
@@ -125,7 +125,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
               aria-label={c ? `Use ${c}` : 'Nexub blue'}
               onClick={() => setSeed(c)}
               ref={(el) => el?.style.setProperty('background', c ?? 'var(--color-primary)')}
-              className="size-7 rounded-full border-2 border-[var(--color-surface)] outline-offset-2 aria-pressed:outline-2 aria-pressed:outline-solid aria-pressed:outline-[var(--color-on-surface)]"
+              className="size-7 rounded-full border-2 border-surface outline-offset-2 aria-pressed:outline-2 aria-pressed:outline-solid aria-pressed:outline-on-surface"
             />
           ))}
         </div>
@@ -140,7 +140,7 @@ export function LandingHero({ version, componentCount, patternCount }: LandingHe
       <div className="landing-stats hero-stats relative z-[2] mt-[4.5rem] flex flex-wrap justify-center gap-12">
         {stats.map((s) => (
           <div key={s.label} className="text-center">
-            <Text size="body" weight="bold" className="text-headline-lg leading-tight text-[var(--color-primary)]">{s.num}</Text>
+            <Text size="body" weight="bold" className="text-headline-lg leading-tight text-primary">{s.num}</Text>
             <Text size="caption" tone="muted" weight="medium" className="mt-0.5">{s.label}</Text>
           </div>
         ))}

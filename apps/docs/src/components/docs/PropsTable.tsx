@@ -27,12 +27,12 @@ export function PropsTable({ props }: { props: PropDef[] }) {
       head={['Prop', 'Type', 'Default', 'Description']}
       mono={[1, 2]}
       rows={props.map((p) => [
-        <span key="n" className="flex flex-wrap items-center gap-1.5 whitespace-nowrap font-mono text-body-sm font-semibold text-[var(--color-primary)]">
+        <span key="n" className="flex flex-wrap items-center gap-1.5 whitespace-nowrap font-mono text-body-sm font-semibold text-primary">
           {p.name}
           {p.required && <Badge size="sm" tone="danger" variant="soft">required</Badge>}
         </span>,
-        <span key="t" className="text-[var(--color-on-surface-variant)]">{p.type}</span>,
-        <span key="d" className="text-[var(--color-on-surface-muted)]">{p.default ?? '—'}</span>,
+        <span key="t" className="text-on-surface-variant">{p.type}</span>,
+        <span key="d" className="text-on-surface-muted">{p.default ?? '—'}</span>,
         <InlineCode key="x" text={p.description} />,
       ])}
     />

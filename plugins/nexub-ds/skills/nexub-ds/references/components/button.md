@@ -122,7 +122,7 @@ export default function Example() {
       <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
         Save
       </Button>
-      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+      <span className="text-body-sm text-on-surface-variant">status: {status}</span>
     </div>
   );
 }

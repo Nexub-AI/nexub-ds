@@ -23,7 +23,7 @@ import { UserCard } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[300px]">
+    <div className="w-75">
       <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
     </div>
   );

@@ -17,7 +17,7 @@ const updated = new Intl.DateTimeFormat('en-GB', {
 
 const year = built.getFullYear();
 const REPO = 'https://github.com/Nexub-AI/nexub-ds';
-const linkClass = 'font-medium text-[var(--color-primary)] no-underline hover:underline';
+const linkClass = 'font-medium text-primary no-underline hover:underline';
 
 // Brand marks inline: @nexub/icons (Lucide) ships no brand logos.
 const SOCIALS = [
@@ -57,7 +57,7 @@ const SOCIALS = [
 /** The site footer, shared by the landing page and every docs page. */
 export function DocsFooter() {
   return (
-    <footer className="border-t border-[var(--color-outline-variant)] px-6 py-6 text-center">
+    <footer className="border-t border-outline-variant px-6 py-6 text-center">
       <Text size="caption" tone="muted">
         Open source under the{' '}
         <a href={`${REPO}/blob/development/LICENSE`} target="_blank" rel="noopener noreferrer" className={linkClass}>
@@ -93,7 +93,7 @@ export function DocsFooter() {
             rel="noopener noreferrer"
             aria-label={s.label}
             title={s.label}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-on-surface-muted)] transition-colors hover:bg-[var(--color-surface-container-high)] hover:text-[var(--color-on-surface)]"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-on-surface-muted transition-colors hover:bg-surface-container-high hover:text-on-surface"
           >
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
               {s.icon}
