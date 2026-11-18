@@ -281,20 +281,6 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
-      - openLink: nexub://preview/pattern/apps
-      - runFlow:
-          when:
-            visible: "Open"
-          commands:
-            - tapOn: "Open"
-      - extendedWaitUntil:
-          visible: "Nexub apps"
-          timeout: 15000
-- waitForAnimationToEnd
-- takeScreenshot: pattern-apps--lg--${maestro.platform}
-- retry:
-    maxRetries: 1
-    commands:
       - openLink: nexub://preview/pattern/status
       - runFlow:
           when:
