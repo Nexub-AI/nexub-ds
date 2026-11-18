@@ -33,7 +33,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
     </div>
   );
@@ -54,7 +54,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
         <Button size="sm" variant="tonal">Open</Button>
         <Button size="sm" variant="text">Share</Button>
@@ -80,7 +80,7 @@ export default function Example() {
   return (
     <div className="flex gap-3 flex-wrap items-start justify-center">
       {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
-        <div key={r} className="w-[160px]">
+        <div key={r} className="w-40">
           <MediaCard ratio={r} src={COVER} alt="" title={r} />
         </div>
       ))}

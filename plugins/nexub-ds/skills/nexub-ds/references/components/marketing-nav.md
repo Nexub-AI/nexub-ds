@@ -163,8 +163,8 @@ export const items: MarketingNavItem[] = [
     ],
     feature: (
       <Card variant="surface" className="flex h-full flex-col gap-2 p-5">
-        <p className="m-0 text-label-md text-[var(--color-on-surface-muted)]">Customer story</p>
-        <p className="m-0 text-title-md text-[var(--color-on-surface)]">
+        <p className="m-0 text-label-md text-on-surface-muted">Customer story</p>
+        <p className="m-0 text-title-md text-on-surface">
           <CardLink href="#story">How a 40-person studio closes its books in two days</CardLink>
         </p>
       </Card>

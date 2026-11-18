@@ -38,7 +38,7 @@ import { Flex, Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Flex justify="between" className="w-full max-w-[320px]">
+    <Flex justify="between" className="w-full max-w-80">
       <Badge tone="success">Active</Badge>
       <Badge tone="neutral">Draft</Badge>
     </Flex>
@@ -53,7 +53,7 @@ import { Flex, Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Flex gap="sm" wrap className="max-w-[260px]">
+    <Flex gap="sm" wrap className="max-w-65">
       {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
         <Badge key={t} tone="info">{t}</Badge>
       ))}
