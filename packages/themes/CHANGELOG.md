@@ -1,5 +1,12 @@
 # @nexub/themes
 
+## 10.5.1
+
+### Patch Changes
+
+- Updated dependencies [c60dbed]
+  - @nexub/tokens@10.5.1
+
 ## 10.5.0
 
 ### Minor Changes

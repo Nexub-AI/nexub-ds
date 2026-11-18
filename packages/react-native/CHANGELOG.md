@@ -1,5 +1,14 @@
 # @nexub/react-native
 
+## 10.5.1
+
+### Patch Changes
+
+- Updated dependencies [c60dbed]
+  - @nexub/tokens@10.5.1
+  - @nexub/icons@10.5.1
+  - @nexub/core@10.5.1
+
 ## 10.5.0
 
 ### Minor Changes
