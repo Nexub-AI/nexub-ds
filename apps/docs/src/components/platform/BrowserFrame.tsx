@@ -50,13 +50,13 @@ export function BrowserFrame({ src, title, height = 720 }: { src: string; title:
       <div ref={box} className="w-full">
         <div
           data-live-preview
-          className="mx-auto overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] shadow-elevation-2"
+          className="mx-auto overflow-hidden rounded-shape-container border border-outline-variant bg-surface shadow-elevation-2"
           style={{ width: w * scale, height: height * scale + 32 }}
         >
-          <div className="flex h-8 items-center gap-1.5 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container)] px-3" aria-hidden="true">
-            <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-outline-variant)]" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-outline-variant)]" />
-            <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-outline-variant)]" />
+          <div className="flex h-8 items-center gap-1.5 border-b border-outline-variant bg-surface-container px-3" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" />
+            <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" />
+            <span className="h-2.5 w-2.5 rounded-full bg-outline-variant" />
           </div>
           <iframe
             ref={frame}

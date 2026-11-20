@@ -39,7 +39,7 @@ export default function ComponentsPage() {
                   {/* Live preview: decorative, never interactive inside the link card. */}
                   <div
                     aria-hidden="true"
-                    className="docs-dot-grid pointer-events-none relative flex h-[120px] items-center justify-center overflow-hidden border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+                    className="docs-dot-grid pointer-events-none relative flex h-30 items-center justify-center overflow-hidden border-b border-outline-variant bg-surface-container-low"
                   >
                     <MiniPreviewCard>
                       <LivePreview slug={e.meta.slug} idx={0} />
@@ -47,7 +47,7 @@ export default function ComponentsPage() {
                   </div>
                   <div className="flex flex-1 flex-col gap-1 px-3.5 py-3">
                     <CardLink asChild>
-                      <DocsLink href={`/components/${e.meta.slug}`} className="text-title-sm font-semibold text-[var(--color-on-surface)] no-underline">
+                      <DocsLink href={`/components/${e.meta.slug}`} className="text-title-sm font-semibold text-on-surface no-underline">
                         {e.meta.title}
                       </DocsLink>
                     </CardLink>

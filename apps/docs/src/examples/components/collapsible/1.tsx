@@ -8,7 +8,7 @@ export default function Example() {
   return (
     <Collapsible.Root open={open2} onOpenChange={setOpen2}>
       <div className="flex items-center gap-2">
-        <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
+        <span className="font-medium text-on-surface text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
           <Button variant="text" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>

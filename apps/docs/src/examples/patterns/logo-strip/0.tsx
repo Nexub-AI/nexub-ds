@@ -9,7 +9,7 @@ export default function Example() {
     <div data-mode="marketing" className="w-full">
       <LogoStrip label="Trusted by 2,000+ teams">
         {customers.map((name) => (
-          <span key={name} className="text-title-lg text-[var(--color-on-surface-muted)]">{name}</span>
+          <span key={name} className="text-title-lg text-on-surface-muted">{name}</span>
         ))}
       </LogoStrip>
     </div>

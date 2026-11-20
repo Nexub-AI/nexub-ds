@@ -72,23 +72,23 @@ export function PhoneFrame({
       </SegmentedControl.Root>
       <div
         data-live-preview
-        className="relative shrink-0 overflow-hidden bg-[var(--color-inverse-surface)] p-[10px] shadow-elevation-3"
+        className="relative shrink-0 overflow-hidden bg-inverse-surface p-2.5 shadow-elevation-3"
         style={{ width: d.w * scale + 20, height: height + 20, borderRadius: d.radius * scale + 10 }}
       >
         <div
-          className="relative overflow-hidden bg-[var(--color-surface)]"
+          className="relative overflow-hidden bg-surface"
           style={{ width: d.w * scale, height, borderRadius: d.radius * scale }}
         >
           {/* Status bar: the preview starts below it, as under a native safe area. */}
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 flex items-center justify-between font-semibold text-[var(--color-on-surface)]"
+            className="absolute inset-x-0 top-0 flex items-center justify-between font-semibold text-on-surface"
             style={{ height: d.statusBar * scale, paddingInline: (device === 'ios' ? 34 : 22) * scale, fontSize: 15 * scale }}
           >
             <span>9:41</span>
             <span className="flex items-center" style={{ gap: 5 * scale }}>
-              <span className="rounded-[2px] bg-current" style={{ width: 17 * scale, height: 10 * scale, opacity: 0.9 }} />
-              <span className="rounded-[3px] border border-current" style={{ width: 24 * scale, height: 11 * scale }} />
+              <span className="rounded-xs bg-current" style={{ width: 17 * scale, height: 10 * scale, opacity: 0.9 }} />
+              <span className="rounded-xs border border-current" style={{ width: 24 * scale, height: 11 * scale }} />
             </span>
           </div>
           {src && (

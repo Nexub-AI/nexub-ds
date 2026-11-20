@@ -47,7 +47,7 @@ export default function Example() {
         onEventClick={(e) => setPicked(e.title)}
         onDayClick={(d) => setPicked(d.toDateString())}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{picked && `Opened: ${picked}`}</p>
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">{picked && `Opened: ${picked}`}</p>
     </div>
   );
 }
@@ -60,8 +60,8 @@ export default function Example() {
 ```tsx
 import { EventCalendar, type CalendarEvent } from '@nexub/react';
 
-const today = new Date();
-const at = (day: number, hour = 0, minute = 0) => new Date(today.getFullYear(), today.getMonth(), today.getDate() + day, hour, minute);
+// A fixed day, so the page renders the same on the server and in every time zone.
+const at = (day: number, hour = 0, minute = 0) => new Date(2026, 10, 16 + day, hour, minute);
 
 const events: CalendarEvent[] = [
   { id: '1', title: 'Offsite', start: at(0), allDay: true, tone: 'success' },
@@ -74,7 +74,7 @@ const events: CalendarEvent[] = [
 export default function Example() {
   return (
     <div className="w-full">
-      <EventCalendar events={events} defaultView="day" views={['month', 'week', 'day', 'agenda']} />
+      <EventCalendar events={events} defaultDate={at(0)} now={at(0, 11)} defaultView="day" views={['month', 'week', 'day', 'agenda']} />
     </div>
   );
 }

@@ -24,7 +24,7 @@ Range slider built on Radix UI Slider.
 import { Slider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[240px]"><Slider defaultValue={[50]} min={0} max={100} /></div>;
+  return <div className="w-60"><Slider defaultValue={[50]} min={0} max={100} /></div>;
 }
 ```
 
@@ -34,6 +34,6 @@ export default function Example() {
 import { Slider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
+  return <div className="w-60"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
 }
 ```

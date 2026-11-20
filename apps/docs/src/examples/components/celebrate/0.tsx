@@ -11,7 +11,7 @@ export default function Example() {
       <Button magnetic status={paid ? 'success' : 'idle'} successLabel="Paid" onClick={() => setPaid((p) => !p)}>
         Pay $1,250
       </Button>
-      <p role="status" className="m-0 min-h-5 text-body-sm text-[var(--color-on-surface-variant)]">{paid ? 'Payment sent. Your first one!' : ''}</p>
+      <p role="status" className="m-0 min-h-5 text-body-sm text-on-surface-variant">{paid ? 'Payment sent. Your first one!' : ''}</p>
     </div>
   );
 }

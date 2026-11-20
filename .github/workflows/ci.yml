@@ -118,12 +118,18 @@ jobs:
   # (`pnpm --filter @nexub/react test:visual:docker --update-snapshots`), so
   # font rendering matches pixel for pixel.
   visual:
-    name: Visual regression & contrast
+    name: Visual regression & contrast (${{ matrix.shard }}/3)
     # Skip on promotion, Version Packages and back-merge PRs: they carry code that
     # already passed this job on development (push), so it only slowed releases.
     if: github.event_name == 'push' || (github.base_ref == 'development' && github.head_ref != 'production')
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # ~4,300 tests took ~26 min on one runner (2 workers), on the edge of the timeout.
+    # Three shards run them in parallel; each shard builds what it needs (~3 min).
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     container:
       image: mcr.microsoft.com/playwright:v1.65.0-noble@sha256:9beb546099e11f52d62e505537914870e01a67e0e6b00ae41da4775324e73dbe
       options: --ipc=host
@@ -154,13 +160,13 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: Visual regression & contrast
-        run: pnpm --filter @nexub/react test:visual --project=storybook --project=perf --project=docs
+        run: pnpm --filter @nexub/react test:visual --project=storybook --project=perf --project=docs --shard=${{ matrix.shard }}/3
 
       - name: Upload diff report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: visual-report
+          name: visual-report-${{ matrix.shard }}
           path: |
             packages/react/playwright-report
             packages/react/test-results

@@ -5,7 +5,7 @@ import { Wallet } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <StatCard
         label="Saved"
         value="S$2,400"

@@ -20,9 +20,9 @@ import { AspectRatio } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[400px]">
+    <div className="w-full max-w-100">
       <AspectRatio ratio={16 / 9} className="rounded-shape-container">
-        <div className="flex h-full w-full items-center justify-center bg-[var(--color-primary-container)] text-[var(--color-on-primary-container)] text-label-lg">
+        <div className="flex h-full w-full items-center justify-center bg-primary-container text-on-primary-container text-label-lg">
           16 : 9
         </div>
       </AspectRatio>
@@ -44,10 +44,10 @@ const ratios = [
 
 export default function Example() {
   return (
-    <div className="grid w-full max-w-[480px] grid-cols-3 items-start gap-3">
+    <div className="grid w-full max-w-120 grid-cols-3 items-start gap-3">
       {ratios.map(({ ratio, label }) => (
         <AspectRatio key={label} ratio={ratio} className="rounded-shape-container">
-          <div className="flex h-full w-full items-center justify-center bg-[var(--color-surface-container-high)] text-label-md text-[var(--color-on-surface-variant)]">
+          <div className="flex h-full w-full items-center justify-center bg-surface-container-high text-label-md text-on-surface-variant">
             {label}
           </div>
         </AspectRatio>

@@ -44,7 +44,7 @@ export function PageIntro({
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <Text size="label" weight="semibold" className="uppercase tracking-wider !text-[var(--color-primary)]">
+    <Text size="label" weight="semibold" className="uppercase tracking-wider !text-primary">
       {children}
     </Text>
   );
@@ -87,7 +87,7 @@ export function Section({
 /** Body copy at the docs reading size and measure. */
 export function Prose({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <Text size="body-lg" tone="secondary" className={'max-w-[72ch] [&_strong]:text-[var(--color-on-surface)] ' + (className ?? '')}>
+    <Text size="body-lg" tone="secondary" className={'max-w-[72ch] [&_strong]:text-on-surface ' + (className ?? '')}>
       {children}
     </Text>
   );
@@ -108,7 +108,7 @@ export function DocTable({
   mono?: number[];
 }) {
   return (
-    <div className="overflow-x-auto rounded-shape-container border border-[var(--color-outline-variant)]">
+    <div className="overflow-x-auto rounded-shape-container border border-outline-variant">
       <Table.Root>
         {caption && <Table.Caption className="sr-only">{caption}</Table.Caption>}
         <Table.Header>
@@ -170,8 +170,8 @@ function GuidanceCard({ tone, title, items }: { tone: 'success' | 'danger'; titl
         <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
           {items.map((item, i) => (
             <li key={i} className="flex gap-2.5">
-              <Icon size={16} strokeWidth={2.5} className="mt-[3px] shrink-0" style={{ color: accent }} aria-hidden="true" />
-              <Text className="text-[var(--color-on-surface)]">{item}</Text>
+              <Icon size={16} strokeWidth={2.5} className="mt-0.75 shrink-0" style={{ color: accent }} aria-hidden="true" />
+              <Text className="text-on-surface">{item}</Text>
             </li>
           ))}
         </ul>
@@ -217,12 +217,12 @@ export function List({ items, ordered = false }: { items: React.ReactNode[]; ord
     <Tag
       className={
         (ordered ? 'list-decimal' : 'list-disc') +
-        ' m-0 flex max-w-[72ch] flex-col gap-2 ps-6 marker:text-[var(--color-on-surface-muted)]'
+        ' m-0 flex max-w-[72ch] flex-col gap-2 ps-6 marker:text-on-surface-muted'
       }
     >
       {items.map((item, i) => (
         <li key={i} className="ps-1">
-          <Text size="body-lg" className="text-[var(--color-on-surface-variant)] [&_strong]:text-[var(--color-on-surface)]">{item}</Text>
+          <Text size="body-lg" className="text-on-surface-variant [&_strong]:text-on-surface">{item}</Text>
         </li>
       ))}
     </Tag>
@@ -246,9 +246,9 @@ export function DoDont({
   return (
     <Card className="overflow-hidden p-0">
       {(title || description) && (
-        <div className="flex flex-col gap-1 border-b border-[var(--color-outline-variant)] px-5 py-4">
+        <div className="flex flex-col gap-1 border-b border-outline-variant px-5 py-4">
           {title && (
-            <Text weight="semibold" className="text-[var(--color-on-surface)]">
+            <Text weight="semibold" className="text-on-surface">
               {title}
             </Text>
           )}
@@ -277,7 +277,7 @@ function DoDontCell({ tone, label, children }: { tone: 'success' | 'danger'; lab
     <div
       className={
         'flex flex-col gap-2 px-5 py-4' +
-        (tone === 'success' ? ' border-[var(--color-outline-variant)] max-sm:border-b sm:border-e' : '')
+        (tone === 'success' ? ' border-outline-variant max-sm:border-b sm:border-e' : '')
       }
     >
       <Badge
@@ -289,7 +289,7 @@ function DoDontCell({ tone, label, children }: { tone: 'success' | 'danger'; lab
       >
         {label}
       </Badge>
-      <Text size="body-sm" className="text-[var(--color-on-surface)]">
+      <Text size="body-sm" className="text-on-surface">
         {children}
       </Text>
     </div>

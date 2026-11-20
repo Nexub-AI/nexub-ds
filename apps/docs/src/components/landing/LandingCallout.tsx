@@ -4,7 +4,7 @@ import { ArrowRight } from '@nexub/icons';
 
 export function LandingCallout() {
   return (
-    <Section paddingY="md" data-reveal-scroll className="border-b border-[var(--color-outline-variant)]">
+    <Section paddingY="md" data-reveal-scroll className="border-b border-outline-variant">
       <Container size="md">
         <Card
           variant="surface"
@@ -14,7 +14,7 @@ export function LandingCallout() {
             <Heading level={2} size="h4" className="mb-2">
               This site is built with Nexub DS
             </Heading>
-            <Text size="body-sm" tone="muted" className="max-w-[460px]">
+            <Text size="body-sm" tone="muted" className="max-w-115">
               Every header, sidebar, badge, button, and code block you see here is a real{' '}
               <Code inline>@nexub/react</Code> component. We eat our own cooking.
             </Text>

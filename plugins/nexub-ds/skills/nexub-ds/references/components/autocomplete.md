@@ -28,7 +28,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete
         options={[
           { value: 'react', label: 'React' },
@@ -50,7 +50,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete options={[]} loading placeholder="Type to see the loading state" />
     </div>
   );
@@ -64,7 +64,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete
         options={[
           { value: 'nexub', label: 'Nexub' },
@@ -105,7 +105,7 @@ export default function Example() {
     return () => clearTimeout(t);
   }, [query]);
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Autocomplete
         aria-label="City"
         placeholder="Search cities…"

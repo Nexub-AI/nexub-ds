@@ -27,7 +27,7 @@ export default function Example() {
       <Logo />
       <Logo variant="icon" />
       <Logo mark="mono" />
-      <span className="rounded-shape-container bg-[var(--color-inverse-surface)] p-3">
+      <span className="rounded-shape-container bg-inverse-surface p-3">
         <Logo tone="inverse" />
       </span>
     </div>

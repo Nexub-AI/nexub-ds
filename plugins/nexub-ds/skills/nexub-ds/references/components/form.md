@@ -53,7 +53,7 @@ export default function Example() {
         <FormField.Error />
       </FormField.Root>
       <Submit />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{sent}</p>
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">{sent}</p>
     </Form>
   );
 }

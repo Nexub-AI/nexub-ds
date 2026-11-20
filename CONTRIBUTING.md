@@ -90,6 +90,8 @@ In Claude Code, `/graphify .` builds the full graph (code plus the plans, README
 
 ## PR checklist
 
+After a version is done, follow the [release routine](./PUBLISHING.md#release-routine-checklist): promotion, wrap-up and the status format.
+
 - [ ] `pnpm build` passes.
 - [ ] `pnpm typecheck` passes.
 - [ ] `pnpm test` passes.

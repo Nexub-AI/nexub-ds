@@ -45,14 +45,14 @@ export function MotionGallery({ springs, children }: { springs: SpringToken[]; c
 
   return (
     <GalleryCtx.Provider value={{ run }}>
-      <div className="sticky top-[calc(var(--docs-header-height)+8px)] z-10 mb-6 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-4 py-3 shadow-elevation-1">
+      <div className="sticky top-[calc(var(--docs-header-height)+8px)] z-10 mb-6 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-shape-container border border-outline-variant bg-surface-container-low px-4 py-3 shadow-elevation-1">
         <Button size="sm" leadingIcon={<Play size={14} />} onClick={() => setRun((r) => r + 1)}>
           Replay all
         </Button>
-        <label className="flex items-center gap-2 text-label-lg text-[var(--color-on-surface)]">
+        <label className="flex items-center gap-2 text-label-lg text-on-surface">
           <Switch checked={slow} onCheckedChange={setSlow} aria-label="Slow motion" /> Slow motion (0.25×)
         </label>
-        <label className="flex items-center gap-2 text-label-lg text-[var(--color-on-surface)]">
+        <label className="flex items-center gap-2 text-label-lg text-on-surface">
           <Switch checked={reduced} onCheckedChange={setReduced} aria-label="Preview reduced motion" /> Reduced motion
         </label>
         <Text size="caption" tone="muted" className="basis-full">
@@ -72,9 +72,9 @@ const useRun = () => React.useContext(GalleryCtx).run;
 function Demo({ title, token, children, code }: { title: string; token: string; children: React.ReactNode; code?: string }) {
   return (
     <Card className="flex flex-col overflow-hidden p-0">
-      <div className="docs-dot-grid flex min-h-[180px] flex-1 items-center justify-center p-6">{children}</div>
-      <div className="flex flex-col gap-1 border-t border-[var(--color-outline-variant)] px-4 py-3">
-        <Text size="label" weight="semibold" className="text-[var(--color-on-surface)]">{title}</Text>
+      <div className="docs-dot-grid flex min-h-45 flex-1 items-center justify-center p-6">{children}</div>
+      <div className="flex flex-col gap-1 border-t border-outline-variant px-4 py-3">
+        <Text size="label" weight="semibold" className="text-on-surface">{title}</Text>
         <Text size="caption" tone="muted" className="font-mono">{token}</Text>
         {code && <Text size="caption" tone="secondary" className="font-mono">{code}</Text>}
       </div>
@@ -100,22 +100,22 @@ export function SpringCurves({ springs }: { springs: SpringToken[] }) {
         return (
           <Card key={f} className="flex flex-col gap-3 p-4">
             <div className="flex items-baseline justify-between">
-              <Text weight="semibold" className="capitalize text-[var(--color-on-surface)]">{f}</Text>
+              <Text weight="semibold" className="capitalize text-on-surface">{f}</Text>
               <Text size="caption" tone="muted" className="font-mono">{Math.round(s.durationMs)} ms</Text>
             </div>
-            <svg viewBox={`0 0 ${W} ${H}`} className="h-[120px] w-full overflow-visible" role="img" aria-label={`${f} spring curve`}>
+            <svg viewBox={`0 0 ${W} ${H}`} className="h-30 w-full overflow-visible" role="img" aria-label={`${f} spring curve`}>
               <line x1="0" x2={W} y1={H - (1 / max) * (H - 8) - 4} y2={H - (1 / max) * (H - 8) - 4} stroke="var(--color-outline-variant)" strokeDasharray="3 3" />
               <polyline points={pts} fill="none" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinejoin="round" />
             </svg>
             <button
               type="button"
               onClick={() => setLocal((n) => n + 1)}
-              className="nx-state-layer relative h-10 overflow-hidden rounded-shape-control bg-[var(--color-surface-container-high)]"
+              className="nx-state-layer relative h-10 overflow-hidden rounded-shape-control bg-surface-container-high"
               aria-label={`Run the ${f} spring`}
             >
               <span
                 key={`${run}-${local}`}
-                className="docs-spring-dot absolute start-1 top-1 h-8 w-8 rounded-full bg-[var(--color-primary)]"
+                className="docs-spring-dot absolute start-1 top-1 h-8 w-8 rounded-full bg-primary"
                 style={{ animationDuration: `var(--motion-spring-${f}-default-duration)`, animationTimingFunction: `var(--motion-spring-${f}-default-easing)` }}
               />
             </button>
@@ -199,24 +199,24 @@ export function WebDemos() {
       </Demo>
 
       <Demo title="Stagger" token="nx-stagger · 40 ms apart" code="Re-key the parent to replay">
-        <div key={run} className="nx-stagger grid w-full max-w-[260px] grid-cols-3 gap-2">
+        <div key={run} className="nx-stagger grid w-full max-w-65 grid-cols-3 gap-2">
           {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} className="h-12 rounded-shape-control bg-[var(--color-primary-container)]" />
+            <div key={i} className="h-12 rounded-shape-control bg-primary-container" />
           ))}
         </div>
       </Demo>
 
       <Demo title="List add and remove" token="ListTransition · rows grow in, collapse out">
-        <div className="flex w-full max-w-[260px] flex-col gap-2">
+        <div className="flex w-full max-w-65 flex-col gap-2">
           <ListTransition as="ul" itemAs="li" className="m-0 list-none p-0">
             {items.map((i) => (
               <div key={i} className="pb-1.5">
-                <div className="flex items-center justify-between rounded-shape-control bg-[var(--color-surface-container-high)] py-2 pe-1 ps-3">
+                <div className="flex items-center justify-between rounded-shape-control bg-surface-container-high py-2 pe-1 ps-3">
                   <Text size="body-sm">Payment #{i}</Text>
                   <button
                     type="button"
                     aria-label={`Remove payment ${i}`}
-                    className="nx-state-layer grid h-7 w-7 place-items-center rounded-full text-[var(--color-on-surface-variant)]"
+                    className="nx-state-layer grid h-7 w-7 place-items-center rounded-full text-on-surface-variant"
                     onClick={() => setItems((xs) => xs.filter((x) => x !== i))}
                   >
                     <X size={14} />
@@ -232,10 +232,10 @@ export function WebDemos() {
       </Demo>
 
       <Demo title="Skeleton to content" token="SkeletonSwap · crossfade">
-        <div className="flex w-full max-w-[260px] flex-col gap-3">
+        <div className="flex w-full max-w-65 flex-col gap-3">
           <SkeletonSwap loading={loading} skeleton={<Skeleton shape="rect" height={64} />}>
-            <div className="flex h-16 items-center gap-3 rounded-shape-control bg-[var(--color-surface-container-high)] px-3">
-              <div className="h-10 w-10 rounded-full bg-[var(--color-tertiary-container)]" />
+            <div className="flex h-16 items-center gap-3 rounded-shape-control bg-surface-container-high px-3">
+              <div className="h-10 w-10 rounded-full bg-tertiary-container" />
               <Text size="body-sm">Mei Tan sent you S$42.50</Text>
             </div>
           </SkeletonSwap>
@@ -247,7 +247,7 @@ export function WebDemos() {
 
       <Demo title="Number ticker" token="NumberTicker · digits roll on the spatial spring">
         <div className="flex flex-col items-center gap-3">
-          <NumberTicker value={n} format={{ style: 'currency', currency: 'SGD' }} locale="en-SG" className="text-headline-sm text-[var(--color-on-surface)]" />
+          <NumberTicker value={n} format={{ style: 'currency', currency: 'SGD' }} locale="en-SG" className="text-headline-sm text-on-surface" />
           <Button size="sm" variant="outlined" onClick={() => setN((v) => v + Math.round(Math.random() * 4000 - 1500))}>
             Change
           </Button>
@@ -274,14 +274,14 @@ export function WebDemos() {
       </Demo>
 
       <Demo title="Fade · Slide · Scale · Collapse" token="Motion primitives · on springs">
-        <div className="flex w-full max-w-[280px] flex-col items-center gap-3">
+        <div className="flex w-full max-w-70 flex-col items-center gap-3">
           <div className="grid w-full grid-cols-3 gap-2">
-            <Fade in={shown}><div className="h-10 rounded-shape-control bg-[var(--color-secondary-container)]" /></Fade>
-            <Slide in={shown} direction="up"><div className="h-10 rounded-shape-control bg-[var(--color-secondary-container)]" /></Slide>
-            <Scale in={shown}><div className="h-10 rounded-shape-control bg-[var(--color-secondary-container)]" /></Scale>
+            <Fade in={shown}><div className="h-10 rounded-shape-control bg-secondary-container" /></Fade>
+            <Slide in={shown} direction="up"><div className="h-10 rounded-shape-control bg-secondary-container" /></Slide>
+            <Scale in={shown}><div className="h-10 rounded-shape-control bg-secondary-container" /></Scale>
           </div>
           <Collapse in={shown} className="w-full">
-            <div className="rounded-shape-control bg-[var(--color-surface-container-high)] p-3">
+            <div className="rounded-shape-control bg-surface-container-high p-3">
               <Text size="body-sm">Collapse animates height on the spatial spring.</Text>
             </div>
           </Collapse>

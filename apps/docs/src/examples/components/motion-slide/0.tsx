@@ -3,5 +3,5 @@
 import { Slide, Card, Text } from '@nexub/react';
 
 export default function Example() {
-  return <Slide in direction="up"><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
+  return <Slide in direction="up"><Card className="w-50"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
 }
