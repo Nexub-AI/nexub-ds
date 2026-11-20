@@ -33,13 +33,18 @@ export default function CountryPicker({ country, onCountryChange, countries, nam
     // `key` stands in for `countries`: callers pass a fresh array each render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, nameOf]);
+  // Radix Select renders its items into a hidden fragment even while closed. The trigger shows
+  // its own flag and code, so a closed picker keeps only the selected item: about 240 fewer
+  // items (each with a Flag) per PhoneInput on the page.
+  const [open, setOpen] = React.useState(false);
+  const shown = open ? options : options.filter((o) => o.code === country);
   return (
-    <Select.Root value={country} onValueChange={onCountryChange} disabled={disabled}>
+    <Select.Root value={country} onValueChange={onCountryChange} onOpenChange={setOpen} disabled={disabled}>
       <Select.Trigger aria-label={label} size={size} readOnly={readOnly} className={className}>
         {children}
       </Select.Trigger>
       <Select.Content searchable={options.length > 8} sheet={sheet} align="start" className="w-72 max-w-[calc(100vw-1rem)]">
-        {options.map((o) => (
+        {shown.map((o) => (
           <Select.Item key={o.code} value={o.code} textValue={`${o.name} +${o.cc}`}>
             <span className="flex items-center gap-2">
               <Flag code={o.code} size="sm" aria-hidden="true" />
