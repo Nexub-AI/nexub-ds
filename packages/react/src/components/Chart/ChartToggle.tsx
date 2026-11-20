@@ -19,41 +19,63 @@ export interface ChartToggleProps {
   className?: string;
 }
 
-export function ChartToggle({ series, children, label = 'Series', className }: ChartToggleProps) {
-  const [hidden, setHidden] = React.useState<Set<string>>(() => new Set());
+export interface SeriesToggleOptions {
+  /** Keys of the hidden series, controlled. */
+  hidden?: string[];
+  defaultHidden?: string[];
+  onChange?: (hidden: string[]) => void;
+}
+
+/** Which series are on. At least one always stays on, and each keeps the palette colour of its position. */
+export function useSeriesToggle(series: ChartSeries[], { hidden: controlled, defaultHidden, onChange }: SeriesToggleOptions = {}) {
+  const [own, setOwn] = React.useState<string[]>(defaultHidden ?? []);
+  const hidden = controlled ?? own;
   // Keep each series' palette colour stable while others are hidden.
   const coloured = series.map((s, i) => ({ ...s, color: s.color ?? (((i % 8) + 1) as ChartColor) }));
-  const visible = coloured.filter((s) => !hidden.has(s.key));
-  const toggle = (key: string) =>
-    setHidden((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else if (series.length - next.size > 1) next.add(key);
-      return next;
-    });
+  const visible = coloured.filter((s) => !hidden.includes(s.key));
+  const toggle = (key: string) => {
+    if (!hidden.includes(key) && visible.length < 2) return;
+    const next = hidden.includes(key) ? hidden.filter((k) => k !== key) : [...hidden, key];
+    setOwn(next);
+    onChange?.(next);
+  };
+  return { coloured, hidden, visible, toggle };
+}
+
+type Toggle = ReturnType<typeof useSeriesToggle>;
+
+/** The legend as toggle buttons. */
+export function SeriesToggles({ coloured, hidden, toggle, label }: Pick<Toggle, 'coloured' | 'hidden' | 'toggle'> & { label?: string }) {
+  return (
+    <div role="group" aria-label={label} className="flex flex-wrap gap-2">
+      {coloured.map((s) => {
+        const on = !hidden.includes(s.key);
+        return (
+          <button
+            key={s.key}
+            type="button"
+            aria-pressed={on}
+            onClick={() => toggle(s.key)}
+            className={cn(
+              'nx-state-layer inline-flex h-control-xs items-center gap-1.5 rounded-full border px-2.5 text-label-md',
+              on ? 'border-[var(--color-outline-variant)] text-[var(--color-on-surface)]' : 'border-dashed border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] line-through',
+            )}
+          >
+            <span aria-hidden="true" className={cn('size-2.5 rounded-full', on ? BG[(s.color - 1) % 8] : 'bg-[var(--color-outline-variant)]')} />
+            {s.label ?? s.key}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+export function ChartToggle({ series, children, label = 'Series', className }: ChartToggleProps) {
+  const toggle = useSeriesToggle(series);
   return (
     <div className={cn('flex flex-col gap-3', className)}>
-      <div role="group" aria-label={label} className="flex flex-wrap gap-2">
-        {coloured.map((s) => {
-          const on = !hidden.has(s.key);
-          return (
-            <button
-              key={s.key}
-              type="button"
-              aria-pressed={on}
-              onClick={() => toggle(s.key)}
-              className={cn(
-                'nx-state-layer inline-flex h-control-xs items-center gap-1.5 rounded-full border px-2.5 text-label-md',
-                on ? 'border-[var(--color-outline-variant)] text-[var(--color-on-surface)]' : 'border-dashed border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] line-through',
-              )}
-            >
-              <span aria-hidden="true" className={cn('size-2.5 rounded-full', on ? BG[(s.color - 1) % 8] : 'bg-[var(--color-outline-variant)]')} />
-              {s.label ?? s.key}
-            </button>
-          );
-        })}
-      </div>
-      {children(visible)}
+      <SeriesToggles {...toggle} label={label} />
+      {children(toggle.visible)}
     </div>
   );
 }

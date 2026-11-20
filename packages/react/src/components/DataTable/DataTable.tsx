@@ -10,6 +10,9 @@ import {
   getExpandedRowModel,
   flexRender,
   type ColumnDef,
+  type ColumnFiltersState,
+  type FilterFn,
+  type FilterFnOption,
   type SortingState,
   type RowSelectionState,
   type PaginationState,
@@ -23,7 +26,7 @@ import {
   type ExpandedState,
   type Row,
 } from '@tanstack/react-table';
-import { ArrowUp, ArrowDown, ChevronDown, ChevronRight, ChevronsUpDown, SlidersHorizontal, X } from '@nexub/icons';
+import { ArrowUp, ArrowDown, ChevronDown, ChevronRight, ChevronsUpDown, Filter, SlidersHorizontal, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, pressable } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
@@ -44,8 +47,18 @@ declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {
     /** Horizontal alignment of the header and cells. Use 'end' for numbers. @default 'start' */
     align?: 'start' | 'end' | 'center';
+    /**
+     * Adds a filter button to the header (10.7). `text`: contains, ignoring case. `select`: any of
+     * the ticked values. `number-range`: between min and max. A column's own `filterFn` wins.
+     */
+    filter?: 'text' | 'select' | 'number-range';
+    /** Choices for `filter: 'select'`. Defaults to the column's distinct values in `data`: pass them when filtering on the server. */
+    filterOptions?: readonly string[];
   }
 }
+
+/** The filter state: `[{ id: 'status', value: ['Active'] }]`. Values: a string (text), string[] (select), `[min, max]` (number-range). */
+export type DataTableColumnFilters = ColumnFiltersState;
 
 /** A DataTable column: TanStack's `ColumnDef`, with `meta.align` for numeric columns. */
 export type DataTableColumn<TData> = ColumnDef<TData, unknown>;
@@ -222,6 +235,17 @@ function TreeCell({
 /** CSSOM, not a style attribute: strict CSP pages block inline styles. */
 const px = (n: number | string) => (typeof n === 'number' ? `${n}px` : n);
 
+const selectFilter: FilterFn<unknown> = (row, id, value: string[]) => value.includes(String(row.getValue(id)));
+selectFilter.autoRemove = (value?: string[]) => !value?.length;
+const filterFns = { text: 'includesString', select: selectFilter, 'number-range': 'inNumberRange' } as const;
+
+// ponytail: top-level columns only; walk `columns` of group columns if grouped headers ever need filters.
+const withFilterFns = <TData,>(columns: DataTableColumn<TData>[]): DataTableColumn<TData>[] =>
+  columns.map((c) => (c.meta?.filter && !c.filterFn ? { ...c, filterFn: filterFns[c.meta.filter] as FilterFnOption<TData> } : c));
+
+// Loaded only when a column sets `meta.filter`, so tables without filters don't pull in Radix Popover.
+const ColumnFilter = React.lazy(() => import('./ColumnFilter.js').then((m) => ({ default: m.ColumnFilter })));
+
 // Loaded only with `viewOptions`, so tables without the menu don't pull in Radix DropdownMenu.
 const ViewOptions = React.lazy(() => import('./ViewOptions.js').then((m) => ({ default: m.ViewOptions })));
 
@@ -391,6 +415,15 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   /** Total rows across all pages, with `manualPagination`. */
   rowCount?: number;
   /**
+   * Column filters, for columns that set `meta.filter`: `[{ id: 'status', value: ['Active'] }]`.
+   * Changing a filter goes back to the first page.
+   */
+  columnFilters?: DataTableColumnFilters;
+  defaultColumnFilters?: DataTableColumnFilters;
+  onColumnFiltersChange?: (filters: DataTableColumnFilters) => void;
+  /** Rows arrive filtered (server-side): the headers still edit `columnFilters`, but rows aren't filtered here. */
+  manualFiltering?: boolean;
+  /**
    * Nested rows (a tree table): return a row's children. The first column gets
    * an expand toggle and indents each level. Sorting sorts within each level.
    */
@@ -457,6 +490,10 @@ export function DataTable<TData>({
   onPageChange,
   manualPagination = false,
   rowCount,
+  columnFilters: columnFiltersProp,
+  defaultColumnFilters,
+  onColumnFiltersChange,
+  manualFiltering = false,
   getSubRows,
   expanded: expandedProp,
   defaultExpanded,
@@ -515,6 +552,11 @@ export function DataTable<TData>({
     value: expandedProp,
     defaultValue: defaultExpanded ?? {},
     onChange: onExpandedChange,
+  });
+  const [columnFilters = [], setColumnFilters] = useControllableState<ColumnFiltersState>({
+    value: columnFiltersProp,
+    defaultValue: defaultColumnFilters ?? [],
+    onChange: onColumnFiltersChange,
   });
   const [announcement, setAnnouncement] = React.useState('');
   const tableRef = React.useRef<HTMLTableElement>(null);
@@ -592,9 +634,9 @@ export function DataTable<TData>({
                 />
               ),
             },
-            ...columns,
+            ...withFilterFns(columns),
           ]
-        : columns),
+        : withFilterFns(columns)),
     [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow, withRowHandles],
   );
 
@@ -609,6 +651,7 @@ export function DataTable<TData>({
       columnSizing,
       columnOrder,
       columnPinning,
+      columnFilters,
       expanded: getSubRows ? expanded : undefined,
     }),
 
@@ -625,6 +668,7 @@ export function DataTable<TData>({
       columnSizing,
       columnOrder,
       columnPinning,
+      columnFilters,
     ],
   );
 
@@ -640,6 +684,12 @@ export function DataTable<TData>({
     onColumnSizingChange: (u) => setColumnSizing(apply(u, columnSizing)),
     onColumnOrderChange: (u) => setColumnOrder(apply(u, columnOrder)),
     onColumnPinningChange: (u) => setColumnPinning(apply(u, columnPinning)),
+    onColumnFiltersChange: (u) => {
+      setColumnFilters(apply(u, columnFilters));
+      // Explicit, because TanStack's own reset doesn't run with manual filtering or pagination.
+      if (pagination && pageIndex !== 0) setPageIndex(0);
+    },
+    manualFiltering,
     enableColumnResizing,
     columnResizeMode: 'onChange',
     columnResizeDirection: dir,
@@ -678,6 +728,7 @@ export function DataTable<TData>({
   const useRowWindow = rowWindow ?? useAllRows;
   const rowWin = useRowWindow(rows.length, () => tableRef.current?.parentElement ?? null);
   const pinned = (columnPinning.left?.length ?? 0) + (columnPinning.right?.length ?? 0) > 0;
+  const hasFooter = !hasError && !loading && table.getAllLeafColumns().some((c) => c.columnDef.footer != null);
 
   // Sizes and offsets through the CSSOM (strict CSP: no style attributes).
   useIsomorphicLayoutEffect(() => {
@@ -766,7 +817,7 @@ export function DataTable<TData>({
         ref={tableRef}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
-        aria-rowcount={rowWin.virtual ? rows.length + 1 : undefined}
+        aria-rowcount={rowWin.virtual ? rows.length + 1 + (hasFooter ? 1 : 0) : undefined}
         aria-busy={(loading && !hasError) || undefined}
         role={grid ? 'grid' : undefined}
         onKeyDown={grid ? gridNav.onKeyDown : undefined}
@@ -784,6 +835,56 @@ export function DataTable<TData>({
                 const col = header.column;
                 const reorderable = enableColumnReordering && col.id !== '__select' && !col.getIsPinned();
                 const sortable = enableSorting && col.getCanSort();
+                const filterType = !header.isPlaceholder && col.getCanFilter() ? col.columnDef.meta?.filter : undefined;
+                const filterValue = col.getFilterValue();
+                const filterName = filterType ? messages.filterColumn(columnLabel(col)) : '';
+                const filterButton = filterType && (
+                  <button
+                    type="button"
+                    aria-label={
+                      filterValue === undefined
+                        ? filterName
+                        : `${filterName}, ${messages.filtersApplied(filterType === 'select' ? (filterValue as string[]).length : 1)}`
+                    }
+                    data-active={filterValue !== undefined || undefined}
+                    className={cn(
+                      'relative inline-flex size-6 shrink-0 items-center justify-center rounded-shape-min hover:bg-[var(--color-surface-container-high)]',
+                      filterValue === undefined ? 'text-[var(--color-on-surface-variant)]' : 'text-[var(--color-primary)]',
+                    )}
+                  >
+                    <Filter size="xs" aria-hidden="true" />
+                    {filterValue !== undefined && (
+                      <span aria-hidden="true" className="absolute end-0 top-0 size-1.5 rounded-full bg-[var(--color-primary)]" />
+                    )}
+                  </button>
+                );
+                const label = header.isPlaceholder ? null : enableSorting && header.column.getCanSort() ? (
+                  <button
+                    type="button"
+                    onClick={header.column.getToggleSortingHandler()}
+                    className={cn(
+                      'flex w-full items-center gap-1 hover:text-[var(--color-on-surface)]',
+                      alignJustify[align],
+                    )}
+                  >
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {multiSort && header.column.getIsSorted() && (
+                      <span className="text-[0.625rem] tabular-nums leading-none">
+                        <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
+                        <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
+                      </span>
+                    )}
+                    {header.column.getIsSorted() === 'asc' ? (
+                      <ArrowUp size="xs" aria-hidden="true" />
+                    ) : header.column.getIsSorted() === 'desc' ? (
+                      <ArrowDown size="xs" aria-hidden="true" />
+                    ) : (
+                      <ChevronsUpDown size="xs" className="opacity-40" aria-hidden="true" />
+                    )}
+                  </button>
+                ) : (
+                  flexRender(header.column.columnDef.header, header.getContext())
+                );
                 return (
                   <TableHead
                     key={header.id}
@@ -832,32 +933,28 @@ export function DataTable<TData>({
                         : undefined
                     }
                   >
-                    {header.isPlaceholder ? null : enableSorting && header.column.getCanSort() ? (
-                      <button
-                        type="button"
-                        onClick={header.column.getToggleSortingHandler()}
-                        className={cn(
-                          'flex w-full items-center gap-1 hover:text-[var(--color-on-surface)]',
-                          alignJustify[align],
-                        )}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {multiSort && header.column.getIsSorted() && (
-                          <span className="text-[0.625rem] tabular-nums leading-none">
-                            <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
-                            <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
-                          </span>
-                        )}
-                        {header.column.getIsSorted() === 'asc' ? (
-                          <ArrowUp size="xs" aria-hidden="true" />
-                        ) : header.column.getIsSorted() === 'desc' ? (
-                          <ArrowDown size="xs" aria-hidden="true" />
-                        ) : (
-                          <ChevronsUpDown size="xs" className="opacity-40" aria-hidden="true" />
-                        )}
-                      </button>
+                    {filterType && filterButton ? (
+                      <div className={cn('flex items-center gap-1', alignJustify[align])}>
+                        {label}
+                        {/* The plain button stands in (same size, no layout shift) until the popover loads. */}
+                        <React.Suspense fallback={filterButton}>
+                          <ColumnFilter
+                            trigger={filterButton}
+                            type={filterType}
+                            label={columnLabel(col)}
+                            value={filterValue}
+                            onChange={col.setFilterValue}
+                            getOptions={() =>
+                              col.columnDef.meta?.filterOptions ??
+                              [...new Set(table.getCoreRowModel().flatRows.map((r) => String(r.getValue(col.id))))].sort((a, b) =>
+                                a.localeCompare(b, locale, { numeric: true }),
+                              )
+                            }
+                          />
+                        </React.Suspense>
+                      </div>
                     ) : (
-                      flexRender(header.column.columnDef.header, header.getContext())
+                      label
                     )}
                     {enableColumnResizing && col.getCanResize() && (
                       <div
@@ -946,11 +1043,42 @@ export function DataTable<TData>({
                 colSpan={table.getVisibleLeafColumns().length}
                 className="h-24 text-center text-[var(--color-on-surface-muted)]"
               >
-                {emptyState ?? messages.noResults}
+                {/* Filters hid every row: that is "no results", not the table's own "no data" state. */}
+                {columnFilters.length ? messages.noResults : (emptyState ?? messages.noResults)}
               </TableCell>
             </TableRow>
           )}
         </TableBody>
+        {hasFooter && (
+          <tfoot className="border-t border-[var(--color-outline-variant)] font-medium tabular-nums">
+            {table.getFooterGroups().map((group) => (
+              <tr key={group.id} aria-rowindex={rowWin.virtual ? rows.length + 2 : undefined}>
+                {group.headers.map((footer) => {
+                  const col = footer.column;
+                  return (
+                    <TableCell
+                      key={footer.id}
+                      ref={pinned || enableColumnResizing ? placeCell(col, enableColumnResizing) : undefined}
+                      className={cn(
+                        alignText[col.columnDef.meta?.align ?? 'start'],
+                        compact && 'py-1.5',
+                        // With a capped height the totals stay in view, like the header.
+                        maxHeight != null &&
+                          'sticky bottom-0 z-[2] bg-[var(--color-surface)] shadow-[inset_0_1px_0_var(--color-outline-variant)]',
+                        pinClass(col),
+                        col.getIsPinned() && '[tr:hover>&]:bg-[var(--color-surface)]',
+                        maxHeight != null && col.getIsPinned() && 'z-[3]',
+                        enableColumnResizing && 'truncate',
+                      )}
+                    >
+                      {footer.isPlaceholder ? null : flexRender(col.columnDef.footer, footer.getContext())}
+                    </TableCell>
+                  );
+                })}
+              </tr>
+            ))}
+          </tfoot>
+        )}
       </TableRoot>
 
       {pagination && (

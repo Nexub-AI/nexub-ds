@@ -46,6 +46,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Collapsible](https://nexub-ds-docs.pages.dev/components/collapsible.md): Toggle visibility of content with smooth animation.
 - [Combobox](https://nexub-ds-docs.pages.dev/components/combobox.md): Command-palette style searchable dropdown built on cmdk.
 - [Command Palette](https://nexub-ds-docs.pages.dev/components/command-palette.md): A searchable command menu in a modal dialog (cmdk), with nested pages, recents and an optional Cmd+K shortcut.
+- [Comparison Bar](https://nexub-ds-docs.pages.dev/components/comparison-bar.md): Two values on one split bar, with the numbers always shown as text.
 - [Container](https://nexub-ds-docs.pages.dev/components/container.md): Centres content at a maximum width with responsive side padding.
 - [Context Menu](https://nexub-ds-docs.pages.dev/components/context-menu.md): A menu that opens at the pointer on right-click (or long-press), built on Radix.
 - [Country Badge](https://nexub-ds-docs.pages.dev/components/country-badge.md): A pill with a country flag and its name or code.
@@ -53,6 +54,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
 - [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker.md): Dual-calendar date range selector.
 - [Date Time Picker](https://nexub-ds-docs.pages.dev/components/date-time-picker.md): A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
+- [Description List](https://nexub-ds-docs.pages.dev/components/description-list.md): Key–value rows with list semantics: a receipt, a fee breakdown, the details of a record.
 - [Dialog](https://nexub-ds-docs.pages.dev/components/dialog.md): Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA roles.
 - [Diff View](https://nexub-ds-docs.pages.dev/components/diff-view.md): A unified diff with added and removed lines, for agent changes.
 - [Donut Chart](https://nexub-ds-docs.pages.dev/components/donut-chart.md): Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
@@ -158,6 +160,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Tooltip](https://nexub-ds-docs.pages.dev/components/tooltip.md): Floating label that appears on hover. Built on Radix UI Tooltip.
 - [Top Nav](https://nexub-ds-docs.pages.dev/components/top-nav.md): A sticky app header: logo, main navigation links and trailing actions.
 - [Tree View](https://nexub-ds-docs.pages.dev/components/tree-view.md): A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
+- [Truncate](https://nexub-ds-docs.pages.dev/components/truncate.md): Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
 - [Visually Hidden](https://nexub-ds-docs.pages.dev/components/visually-hidden.md): Content for screen readers only: hidden on screen but still read out (Radix).
 
 ## Patterns
@@ -176,6 +179,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [SettingsSection](https://nexub-ds-docs.pages.dev/patterns/settings-section.md): Grouped settings panel with title, description, and action area.
 - [StatCard](https://nexub-ds-docs.pages.dev/patterns/stat-card.md): Metric display card showing a KPI value, label, optional delta, and icon.
 - [StatusPage](https://nexub-ds-docs.pages.dev/patterns/status-page.md): A whole page for one state: not found, server error, maintenance, offline or no access.
+- [StatusSteps](https://nexub-ds-docs.pages.dev/patterns/status-steps.md): A read-only list of steps showing where something stands: done, current, upcoming or a problem.
 - [UserCard](https://nexub-ds-docs.pages.dev/patterns/user-card.md): User profile card displaying avatar, name, role, and optional actions.
 - [WelcomeBanner](https://nexub-ds-docs.pages.dev/patterns/welcome-banner.md): A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 

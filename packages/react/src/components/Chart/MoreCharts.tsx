@@ -6,7 +6,8 @@ import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
 import { Skeleton } from '../Skeleton/Skeleton.js';
-import { Sparkline, chartState, type ChartColor } from './Chart.js';
+import { Sparkline, chartState, pt, type ChartColor, type ChartInteractiveProps, type ChartIx, type ChartPoint } from './Chart.js';
+import { InteractiveFunnel, InteractiveHeatmap } from './ChartInteraction.js';
 
 const FILL = ['fill-chart-1', 'fill-chart-2', 'fill-chart-3', 'fill-chart-4', 'fill-chart-5', 'fill-chart-6', 'fill-chart-7', 'fill-chart-8'];
 const STROKE = ['stroke-chart-1', 'stroke-chart-2', 'stroke-chart-3', 'stroke-chart-4', 'stroke-chart-5', 'stroke-chart-6', 'stroke-chart-7', 'stroke-chart-8'];
@@ -61,7 +62,15 @@ export function Gauge({ value, max = 100, title, label, color = 1, className, lo
 
 /* ── Heatmap ───────────────────────────────────────────────────────────────── */
 
-export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
+/** The cell handed to a Heatmap's `onPointClick` (10.7). `index` counts cells row by row. */
+export interface HeatmapPoint {
+  index: number;
+  row: number;
+  column: number;
+  value: number;
+}
+
+export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps, ChartInteractiveProps<HeatmapPoint> {
   /** Rows of values, e.g. one row per weekday, one column per week. */
   data: number[][];
   rowLabels: string[];
@@ -71,9 +80,15 @@ export interface HeatmapProps extends Omit<React.HTMLAttributes<HTMLElement>, 't
 }
 
 /** Intensity over a grid (activity by day and week, load by hour). Seven steps of the sequential palette. */
-export function Heatmap({
-  data, rowLabels, columnLabels, title, valueFormat = fmt, className, loading, emptyState, errorState, ...props
-}: HeatmapProps) {
+export function Heatmap(props: HeatmapProps) {
+  return (props.interactive ?? props.onPointClick) ? <InteractiveHeatmap {...props} /> : <HeatmapView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function HeatmapView({
+  data, rowLabels, columnLabels, title, valueFormat = fmt, className, loading, emptyState, errorState, ix,
+  interactive: _interactive, onPointClick: _onPointClick, ...props
+}: HeatmapProps & { ix?: ChartIx }) {
   const flat = data.flat();
   const states = { loading, emptyState, errorState };
   const state = chartState(states, flat.length === 0, 'min-h-32 min-w-0 flex-1');
@@ -88,20 +103,28 @@ export function Heatmap({
   const span = Math.max(...flat) - lo || 1;
   const step = (v: number) => Math.min(SEQ.length - 1, Math.floor(((v - lo) / span) * SEQ.length));
   const cols = Math.max(...data.map((r) => r.length));
+  const cells = (className: string) => (
+    <svg aria-hidden="true" viewBox={`0 0 ${cols * 12} ${data.length * 12}`} className={className}>
+      {data.map((row, y) =>
+        row.map((v, x) => (
+          <rect key={`${x}-${y}`} x={x * 12 + 1} y={y * 12 + 1} width="10" height="10" rx="2" data-pt={pt(ix, y * cols + x)} className={SEQ[step(v)]}>
+            <title>{`${rowLabels[y]}${columnLabels?.[x] ? `, ${columnLabels[x]}` : ''}: ${valueFormat(v)}`}</title>
+          </rect>
+        )),
+      )}
+    </svg>
+  );
   return (
     <figure aria-label={title} className={cn('m-0 flex gap-2', className)} {...props}>
       <div aria-hidden="true" className="flex flex-col justify-around text-label-sm text-[var(--color-on-surface-muted)]">
         {rowLabels.map((l) => <span key={l}>{l}</span>)}
       </div>
-      <svg aria-hidden="true" viewBox={`0 0 ${cols * 12} ${data.length * 12}`} className="h-auto min-w-0 flex-1 rtl:-scale-x-100">
-        {data.map((row, y) =>
-          row.map((v, x) => (
-            <rect key={`${x}-${y}`} x={x * 12 + 1} y={y * 12 + 1} width="10" height="10" rx="2" className={SEQ[step(v)]}>
-              <title>{`${rowLabels[y]}${columnLabels?.[x] ? `, ${columnLabels[x]}` : ''}: ${valueFormat(v)}`}</title>
-            </rect>
-          )),
-        )}
-      </svg>
+      {ix?.overlay != null ? (
+        <div className="relative min-w-0 flex-1 self-start">
+          {cells('block h-auto w-full rtl:-scale-x-100')}
+          {ix.overlay}
+        </div>
+      ) : cells('h-auto min-w-0 flex-1 rtl:-scale-x-100')}
       <table className="sr-only">
         <caption>{title}</caption>
         <tbody>
@@ -119,7 +142,7 @@ export function Heatmap({
 
 /* ── Funnel ────────────────────────────────────────────────────────────────── */
 
-export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'>, DataStateProps {
+export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title' | 'color'>, DataStateProps, ChartInteractiveProps<ChartPoint<{ label: string; value: number }>> {
   data: { label: string; value: number }[];
   title: string;
   valueFormat?: (value: number) => string;
@@ -127,7 +150,15 @@ export interface FunnelProps extends Omit<React.HTMLAttributes<HTMLElement>, 'ti
 }
 
 /** Drop-off through ordered steps, with the conversion from the first step. */
-export function Funnel({ data, title, valueFormat = fmt, color = 1, className, loading, emptyState, errorState, ...props }: FunnelProps) {
+export function Funnel(props: FunnelProps) {
+  return (props.interactive ?? props.onPointClick) ? <InteractiveFunnel {...props} /> : <FunnelView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function FunnelView({
+  data, title, valueFormat = fmt, color = 1, className, loading, emptyState, errorState, ix,
+  interactive: _interactive, onPointClick: _onPointClick, ...props
+}: FunnelProps & { ix?: ChartIx }) {
   const states = { loading, emptyState, errorState };
   // Three bars, each as tall as a step's row.
   const state = chartState(states, data.length === 0, 'min-h-24 gap-2', [0, 1, 2].map((i) => <Skeleton key={i} shape="rect" className="h-7" />));
@@ -139,20 +170,21 @@ export function Funnel({ data, title, valueFormat = fmt, color = 1, className, l
     );
   }
   const top = Math.max(1, data[0]?.value ?? 1);
+  const steps = data.map((d, i) => {
+    const pct = Math.max(0, d.value) / top;
+    return (
+      <div key={d.label} aria-hidden="true" className="grid grid-cols-[8rem_1fr_4rem] items-center gap-3 text-body-sm">
+        <span className="truncate text-[var(--color-on-surface-variant)]">{d.label}</span>
+        <svg viewBox="0 0 100 10" preserveAspectRatio="none" className="h-7 w-full">
+          <rect x={(100 - pct * 100) / 2} y="0" width={pct * 100} height="10" rx="1.5" data-pt={pt(ix, i)} className={FILL[ci(color)]} />
+        </svg>
+        <span className="text-end tabular-nums text-[var(--color-on-surface)]">{valueFormat(d.value)}</span>
+      </div>
+    );
+  });
   return (
     <figure aria-label={title} className={cn('m-0 flex flex-col gap-2', className)} {...props}>
-      {data.map((d) => {
-        const pct = Math.max(0, d.value) / top;
-        return (
-          <div key={d.label} aria-hidden="true" className="grid grid-cols-[8rem_1fr_4rem] items-center gap-3 text-body-sm">
-            <span className="truncate text-[var(--color-on-surface-variant)]">{d.label}</span>
-            <svg viewBox="0 0 100 10" preserveAspectRatio="none" className="h-7 w-full">
-              <rect x={(100 - pct * 100) / 2} y="0" width={pct * 100} height="10" rx="1.5" className={FILL[ci(color)]} />
-            </svg>
-            <span className="text-end tabular-nums text-[var(--color-on-surface)]">{valueFormat(d.value)}</span>
-          </div>
-        );
-      })}
+      {ix?.overlay != null ? <div className="relative flex flex-col gap-2">{steps}{ix.overlay}</div> : steps}
       <table className="sr-only">
         <caption>{title}</caption>
         <tbody>

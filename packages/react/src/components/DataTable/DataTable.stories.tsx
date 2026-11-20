@@ -266,3 +266,48 @@ export const DataStates: Story = {
     </div>
   ),
 };
+
+interface Invoice {
+  id: string;
+  customer: string;
+  status: string;
+  amount: number;
+}
+const invoices: Invoice[] = [
+  { id: 'INV-1042', customer: 'Acme', status: 'Paid', amount: 1200 },
+  { id: 'INV-1043', customer: 'Globex', status: 'Due', amount: 860 },
+  { id: 'INV-1044', customer: 'Initech', status: 'Paid', amount: 430 },
+  { id: 'INV-1045', customer: 'Umbrella', status: 'Overdue', amount: 2150 },
+];
+const money = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+const invoiceColumns = (filters: boolean): DataTableColumn<Invoice>[] => [
+  { accessorKey: 'customer', header: 'Customer', footer: 'Total', meta: filters ? { filter: 'text' } : undefined },
+  { accessorKey: 'status', header: 'Status', meta: filters ? { filter: 'select' } : undefined },
+  {
+    accessorKey: 'amount',
+    header: 'Amount',
+    cell: ({ getValue }) => money(getValue<number>()),
+    // The filtered rows, so the total follows the filters.
+    footer: ({ table }) => money(table.getFilteredRowModel().rows.reduce((sum, r) => sum + r.original.amount, 0)),
+    meta: { align: 'end', ...(filters ? { filter: 'number-range' as const } : {}) },
+  },
+];
+
+/** 10.7: `footer` on a column adds a totals row; a render function gets the table. */
+export const Footer: Story = {
+  render: () => <DataTable caption="Invoices" captionHidden columns={invoiceColumns(false)} data={invoices} />,
+};
+
+/** 10.7: `meta.filter` adds a filter button to the header. One filter is active here; the total follows it. */
+export const ColumnFilters: Story = {
+  render: () => (
+    <DataTable
+      caption="Invoices"
+      captionHidden
+      columns={invoiceColumns(true)}
+      data={invoices}
+      enableSorting
+      defaultColumnFilters={[{ id: 'status', value: ['Paid'] }]}
+    />
+  ),
+};

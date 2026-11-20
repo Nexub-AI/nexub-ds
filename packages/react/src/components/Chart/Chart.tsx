@@ -8,11 +8,17 @@
 // tooltip per category built from a CSS grid over the plot (no JS), and a
 // draw-in on first paint (.nx-chart-bar / .nx-chart-line in @nexub/themes,
 // off under reduced motion).
+//
+// 10.7: `interactive`, `onPointClick` and `legend="toggle"` are opt-in and hand
+// the chart to the client layer in ChartInteraction.tsx, which draws it through
+// the same *View functions below. Without them nothing here changes: same
+// markup, no client code run.
 import * as React from 'react';
 import { defaultMessages } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
 import { Skeleton } from '../Skeleton/Skeleton.js';
+import { InteractiveCartesian, InteractiveDonut, InteractiveSparkline } from './ChartInteraction.js';
 
 /** A colour from the categorical chart palette, 1–8. */
 export type ChartColor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -23,6 +29,8 @@ const STROKE = ['stroke-chart-1', 'stroke-chart-2', 'stroke-chart-3', 'stroke-ch
 const BG = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4', 'bg-chart-5', 'bg-chart-6', 'bg-chart-7', 'bg-chart-8'];
 
 const colorIndex = (color: ChartColor | undefined, i: number) => ((color ?? (i % 8) + 1) - 1) % 8;
+/** Internal: the swatch class of a series colour. */
+export const chartBg = (color: ChartColor | undefined, i: number) => BG[colorIndex(color, i)]!;
 
 export interface ChartSeries {
   /** Key of the value in each data row. */
@@ -48,6 +56,60 @@ export function niceDomain(values: number[]): [number, number] {
   if (lo === 0) return [0, niceMax(hi)];
   if (hi === 0) return [-niceMax(-lo), 0];
   return [-niceMax(-lo), niceMax(hi)];
+}
+
+/** The point handed to `onPointClick` (10.7). `series` and `value` are set when the click names one series. */
+export interface ChartPoint<T> {
+  index: number;
+  datum: T;
+  series?: ChartSeries;
+  value?: number;
+}
+
+/** The opt-in pointer and keyboard layer (10.7). Either prop makes the chart a client component. */
+export interface ChartInteractiveProps<P> {
+  /** A crosshair and tooltip that follow the pointer, and arrow-key navigation between points. */
+  interactive?: boolean;
+  /** Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false. */
+  onPointClick?: (point: P) => void;
+}
+
+/** Internal: what the client layer hands a chart's drawing. */
+export interface ChartIx {
+  /** The point under the pointer or the keyboard; `s` names one series (or marks keyboard focus). */
+  active: { i: number; s?: number } | null;
+  /** Replaces the CSS-only hover overlay. */
+  overlay?: React.ReactNode;
+  /** Replaces the legend. */
+  legend?: React.ReactNode;
+}
+
+/** Internal: data-pt of a mark: '' at rest, 'on' / 'focus' when active, 'off' while another is. */
+export const pt = (ix: ChartIx | undefined, i: number, s = 0) =>
+  !ix?.overlay ? undefined : !ix.active ? '' : ix.active.i !== i ? 'off' : ix.active.s === s ? 'focus' : 'on';
+
+const wantsLayer = (p: ChartInteractiveProps<never>) => Boolean(p.interactive ?? p.onPointClick);
+
+/** The equal band a pointer is over: `x` within `width`, split in `count` bands, mirrored in RTL. */
+export function nearestIndex(x: number, width: number, count: number, rtl = false): number {
+  if (!(width > 0) || count < 1) return 0;
+  const i = Math.min(count - 1, Math.max(0, Math.floor((x / width) * count)));
+  return rtl ? count - 1 - i : i;
+}
+
+/** The donut segment under a point (fractions of the donut's box, x mirrored in RTL), or -1 off the ring. */
+export function segmentAt(fx: number, fy: number, values: number[]): number {
+  const r = Math.hypot(fx - 0.5, fy - 0.5);
+  const total = values.reduce((sum, v) => sum + Math.max(0, v), 0);
+  if (r < 0.3 || r > 0.46 || !total) return -1;
+  // Turns clockwise from 12 o'clock, where the first segment starts.
+  let turn = (Math.atan2(fx - 0.5, 0.5 - fy) / (2 * Math.PI) + 1) % 1;
+  for (let i = 0; i < values.length; i++) {
+    const share = Math.max(0, values[i]!) / total;
+    if (turn < share) return i;
+    turn -= share;
+  }
+  return values.length - 1;
 }
 
 const defaultFormat = (n: number) => n.toLocaleString();
@@ -94,7 +156,7 @@ export function ChartLegend({ items, className, ...props }: ChartLegendProps) {
   );
 }
 
-interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
+interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps, ChartInteractiveProps<ChartPoint<T>> {
   /** One row per category, in order. */
   data: T[];
   /** Key of the category label in each row (the x axis). */
@@ -107,16 +169,30 @@ interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
   valueFormat?: (value: number) => string;
   /** Height of the plot area. */
   size?: keyof typeof PLOT_HEIGHT;
-  /** Show the legend above the chart. Defaults to on for more than one series. */
-  legend?: boolean;
+  /**
+   * Show the legend above the chart. Defaults to on for more than one series.
+   * `'toggle'` (10.7) makes its entries buttons that hide and show a series; one always stays on.
+   */
+  legend?: boolean | 'toggle';
+  /** Keys of the hidden series, controlled (10.7). */
+  hiddenSeries?: string[];
+  /** Keys of the series hidden at first. */
+  defaultHiddenSeries?: string[];
+  onHiddenSeriesChange?: (hidden: string[]) => void;
 }
 
-const valueOf = <T,>(row: T, key: string) => Number(row[key as keyof T]) || 0;
+/** Internal. */
+export const valueOf = <T,>(row: T, key: string) => Number(row[key as keyof T]) || 0;
+
+const wantsClient = (p: ChartInteractiveProps<never> & { legend?: unknown; hiddenSeries?: unknown; defaultHiddenSeries?: unknown }) =>
+  wantsLayer(p) || p.legend === 'toggle' || p.hiddenSeries != null || p.defaultHiddenSeries != null;
 
 function Frame<T>({
   data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, domain, className, children,
-  loading, emptyState, errorState, ...props
-}: CartesianProps<T> & { domain: [number, number]; children: React.ReactNode }) {
+  loading, emptyState, errorState, ix,
+  interactive: _interactive, onPointClick: _onPointClick, hiddenSeries: _hidden, defaultHiddenSeries: _defaultHidden, onHiddenSeriesChange: _onHidden,
+  ...props
+}: CartesianProps<T> & { domain: [number, number]; children: React.ReactNode; ix?: ChartIx }) {
   const labels = series.map((s) => s.label ?? s.key);
   const states = { loading, emptyState, errorState };
   const state = chartState(states, data.length === 0, cn('flex-1', PLOT_MIN[size]));
@@ -137,13 +213,16 @@ function Frame<T>({
   const [lo, hi] = domain;
   const ticks = [1, 0.75, 0.5, 0.25, 0];
   const zero = VB_H - ((0 - lo) / (hi - lo)) * VB_H;
+  // With the client layer the plot holds a focusable group, so the drawing is hidden piece by piece.
+  const live = ix?.overlay != null;
+  const piece = live ? 'true' : undefined;
   return (
     <figure aria-label={title} className={cn('m-0 flex flex-col gap-3', className)} {...props}>
-      {(legend ?? series.length > 1) && (
+      {ix?.legend ?? ((legend ?? series.length > 1) && (
         <ChartLegend aria-hidden="true" items={series.map((s, i) => ({ label: labels[i]!, color: s.color }))} />
-      )}
-      <div aria-hidden="true" className="flex gap-2">
-        <div className={cn('flex flex-col justify-between text-end text-label-sm tabular-nums text-[var(--color-on-surface-muted)]', PLOT_HEIGHT[size])}>
+      ))}
+      <div aria-hidden={live ? undefined : 'true'} className="flex gap-2">
+        <div aria-hidden={piece} className={cn('flex flex-col justify-between text-end text-label-sm tabular-nums text-[var(--color-on-surface-muted)]', PLOT_HEIGHT[size])}>
           {ticks.map((t) => (
             <span key={t} className="flex h-0 items-center justify-end">{valueFormat(lo + (hi - lo) * t)}</span>
           ))}
@@ -151,7 +230,7 @@ function Frame<T>({
         <div className="flex min-w-0 flex-1 flex-col gap-1">
           <div className={cn('relative', PLOT_HEIGHT[size])}>
             {/* Mirrored in RTL, like the category labels under it. */}
-            <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none" className="size-full overflow-visible rtl:-scale-x-100">
+            <svg aria-hidden={piece} viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none" className="size-full overflow-visible rtl:-scale-x-100">
               {ticks.map((t) => (
                 <line key={t} x1="0" x2={VB_W} y1={VB_H * (1 - t)} y2={VB_H * (1 - t)} strokeWidth="1" vectorEffect="non-scaling-stroke"
                   className="stroke-[var(--color-outline-variant)]" />
@@ -159,8 +238,8 @@ function Frame<T>({
               <line x1="0" x2={VB_W} y1={zero} y2={zero} strokeWidth="1" vectorEffect="non-scaling-stroke" className="stroke-[var(--color-outline)]" />
               {children}
             </svg>
-            {/* Hover tooltip: one column per category over the plot, CSS only. */}
-            <div className="absolute inset-0 grid auto-cols-fr grid-flow-col">
+            {/* Hover tooltip: one column per category over the plot, CSS only. The client layer (10.7) replaces it. */}
+            {live ? ix.overlay : <div className="absolute inset-0 grid auto-cols-fr grid-flow-col">
               {data.map((row, i) => (
                 <div key={i} className="group/col relative rounded-shape-tooltip transition-colors hover:bg-[color-mix(in_oklab,var(--color-on-surface)_6%,transparent)]">
                   {/* Crosshair (4.5): a guide through the hovered category. */}
@@ -185,9 +264,9 @@ function Frame<T>({
                   </div>
                 </div>
               ))}
-            </div>
+            </div>}
           </div>
-          <div className="grid auto-cols-fr grid-flow-col text-center text-label-sm text-[var(--color-on-surface-muted)]">
+          <div aria-hidden={piece} className="grid auto-cols-fr grid-flow-col text-center text-label-sm text-[var(--color-on-surface-muted)]">
             {data.map((row, i) => (
               <span key={i} className="truncate px-0.5">{String(row[index])}</span>
             ))}
@@ -221,8 +300,13 @@ export interface BarChartProps<T> extends CartesianProps<T> {
 }
 
 /** Bars per category, grouped or stacked. Negative values grow down from the zero line. */
-export function BarChart<T extends object>({ stacked = false, ...props }: BarChartProps<T>) {
-  const { data, series } = props;
+export function BarChart<T extends object>(props: BarChartProps<T>) {
+  return wantsClient(props) ? <InteractiveCartesian kind="bar" {...props} /> : <BarChartView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function BarChartView<T extends object>({ stacked = false, ...props }: BarChartProps<T> & { ix?: ChartIx }) {
+  const { data, series, ix } = props;
   const totals = data.flatMap((row) => {
     if (!stacked) return series.map((s) => valueOf(row, s.key));
     const vals = series.map((s) => valueOf(row, s.key));
@@ -268,6 +352,7 @@ export function BarChart<T extends object>({ stacked = false, ...props }: BarCha
               return (
                 <rect key={s.key} x={x} y={top} width={Math.max(0, barW - (stacked ? 0 : 1))} height={Math.abs(y(to) - y(from))}
                   data-negative={v < 0 ? '' : undefined}
+                  data-pt={pt(ix, i, j)}
                   // Bars above the baseline take the gradient; the class is the fallback and the fill of negative bars.
                   {...(v > 0 && !stacked ? { fill: `url(#${gid}${j})` } : {})}
                   className={cn('nx-chart-bar', (v <= 0 || stacked) && FILL[colorIndex(s.color, j)])} />
@@ -286,7 +371,12 @@ export interface LineChartProps<T> extends CartesianProps<T> {
 }
 
 /** One line per series across the categories. Negative values go below the zero line. */
-export function LineChart<T extends object>({ area = false, ...props }: LineChartProps<T>) {
+export function LineChart<T extends object>(props: LineChartProps<T>) {
+  return wantsClient(props) ? <InteractiveCartesian kind="line" {...props} /> : <LineChartView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function LineChartView<T extends object>({ area = false, ...props }: LineChartProps<T> & { ix?: ChartIx }) {
   const { data, series } = props;
   const domain = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))));
   const [lo, hi] = domain;
@@ -311,8 +401,14 @@ export function LineChart<T extends object>({ area = false, ...props }: LineChar
   );
 }
 
-export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
-  data: { label: string; value: number; color?: ChartColor }[];
+export interface DonutDatum {
+  label: string;
+  value: number;
+  color?: ChartColor;
+}
+
+export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps, ChartInteractiveProps<ChartPoint<DonutDatum>> {
+  data: DonutDatum[];
   /** Accessible name of the chart. */
   title: string;
   /** Content in the hole, such as the total. */
@@ -323,9 +419,15 @@ export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>,
 }
 
 /** Parts of a whole. Keep it to six slices or fewer; group the rest as "Other". */
-export function DonutChart({
-  data, title, center, valueFormat = defaultFormat, legend = true, className, loading, emptyState, errorState, ...props
-}: DonutChartProps) {
+export function DonutChart(props: DonutChartProps) {
+  return wantsLayer(props) ? <InteractiveDonut {...props} /> : <DonutChartView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function DonutChartView({
+  data, title, center, valueFormat = defaultFormat, legend = true, className, loading, emptyState, errorState, ix,
+  interactive: _interactive, onPointClick: _onPointClick, ...props
+}: DonutChartProps & { ix?: ChartIx }) {
   const states = { loading, emptyState, errorState };
   const state = chartState(states, data.length === 0, 'min-h-40 min-w-40 flex-1', <Skeleton shape="circle" className="size-40" />);
   if (state) {
@@ -339,16 +441,18 @@ export function DonutChart({
   // r = 100 / 2π, so the circumference is 100 and dash lengths are percentages.
   const r = 15.9155;
   let offset = 25; // start at 12 o'clock
+  const live = ix?.overlay != null;
+  const piece = live ? 'true' : undefined;
   return (
     <figure aria-label={title} className={cn('m-0 flex flex-wrap items-center gap-6', className)} {...props}>
-      <div aria-hidden="true" className="relative size-40 shrink-0">
-        <svg viewBox="0 0 42 42" className="size-full rtl:-scale-x-100">
+      <div aria-hidden={live ? undefined : 'true'} className="relative size-40 shrink-0">
+        <svg aria-hidden={piece} viewBox="0 0 42 42" className="size-full rtl:-scale-x-100">
           <circle cx="21" cy="21" r={r} fill="none" strokeWidth="6" className="stroke-[var(--color-surface-container-high)]" />
           {data.map((d, i) => {
             const pct = (Math.max(0, d.value) / total) * 100;
             const dash = `${pct} ${100 - pct}`;
             const el = (
-              <circle key={d.label} cx="21" cy="21" r={r} fill="none" strokeWidth="6" strokeDasharray={dash} strokeDashoffset={offset} className={STROKE[colorIndex(d.color, i)]}>
+              <circle key={d.label} cx="21" cy="21" r={r} fill="none" strokeWidth="6" strokeDasharray={dash} strokeDashoffset={offset} data-pt={pt(ix, i)} className={STROKE[colorIndex(d.color, i)]}>
                 <title>{`${d.label}: ${valueFormat(d.value)} (${Math.round(pct)}%)`}</title>
               </circle>
             );
@@ -356,7 +460,8 @@ export function DonutChart({
             return el;
           })}
         </svg>
-        {center != null && <div className="absolute inset-0 flex items-center justify-center text-center text-title-md text-[var(--color-on-surface)]">{center}</div>}
+        {center != null && <div aria-hidden={piece} className="absolute inset-0 flex items-center justify-center text-center text-title-md text-[var(--color-on-surface)]">{center}</div>}
+        {ix?.overlay}
       </div>
       {legend && <ChartLegend aria-hidden="true" className="flex-col" items={data.map((d) => ({ label: d.label, color: d.color }))} />}
       <table className="sr-only">
@@ -375,7 +480,7 @@ export function DonutChart({
   );
 }
 
-export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'values' | 'color'>, DataStateProps {
+export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'values' | 'color'>, DataStateProps, ChartInteractiveProps<ChartPoint<number>> {
   /** Shown when `values` is empty. No default: an empty sparkline stays an empty box. */
   emptyState?: React.ReactNode;
   values: number[];
@@ -387,7 +492,15 @@ export interface SparklineProps extends Omit<React.SVGAttributes<SVGSVGElement>,
 }
 
 /** A tiny trend line with no axes, for stat cards and table cells. Fills its box (default 6rem × 2rem). */
-export function Sparkline({ values, label, color = 1, area = false, className, loading, emptyState, errorState, ...props }: SparklineProps) {
+export function Sparkline(props: SparklineProps) {
+  return wantsLayer(props) ? <InteractiveSparkline {...props} /> : <SparklineView {...props} />;
+}
+
+/** Internal: the drawing. */
+export function SparklineView({
+  values, label, color = 1, area = false, className, loading, emptyState, errorState, ix,
+  interactive: _interactive, onPointClick: _onPointClick, ...props
+}: SparklineProps & { ix?: ChartIx }) {
   const state = dataState(
     { loading, emptyState, errorState },
     values.length === 0,
@@ -400,14 +513,28 @@ export function Sparkline({ values, label, color = 1, area = false, className, l
   const step = values.length > 1 ? VB_W / (values.length - 1) : 0;
   const pts = values.map((v, i) => `${i * step},${VB_H - 4 - ((v - min) / span) * (VB_H - 8)}`).join(' ');
   const c = colorIndex(color, 0);
+  const line = (
+    <g className="nx-chart-line">
+      {area && values.length > 1 && <polygon points={`0,${VB_H} ${pts} ${VB_W},${VB_H}`} className={cn(FILL[c], 'opacity-15')} />}
+      <polyline points={pts} fill="none" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" className={STROKE[c]} />
+    </g>
+  );
+  // With the client layer the box is a span that holds the drawing and the layer; the layer carries the label.
+  if (ix?.overlay != null && values.length > 0) {
+    return (
+      <span className={cn('relative inline-block h-8 w-24', className)}>
+        <svg aria-hidden="true" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none" className="size-full overflow-visible rtl:-scale-x-100" {...props}>
+          {line}
+        </svg>
+        {ix.overlay}
+      </span>
+    );
+  }
   return (
     <svg viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="none"
       {...(label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true })}
       className={cn('h-8 w-24 overflow-visible rtl:-scale-x-100', className)} {...props}>
-      <g className="nx-chart-line">
-        {area && values.length > 1 && <polygon points={`0,${VB_H} ${pts} ${VB_W},${VB_H}`} className={cn(FILL[c], 'opacity-15')} />}
-        <polyline points={pts} fill="none" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" vectorEffect="non-scaling-stroke" className={STROKE[c]} />
-      </g>
+      {line}
     </svg>
   );
 }

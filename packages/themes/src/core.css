@@ -1274,3 +1274,29 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
     [data-nx-sheet='auto']::before { background: CanvasText; }
   }
 }
+
+/* ─── 10.7 interactive charts ─── */
+/* @nexub/react charts with `interactive`: the client layer marks each bar,
+   segment, cell or step with data-pt ('' at rest, 'on' under the pointer,
+   'focus' for the keyboard's point or the one bar under the pointer, 'off'
+   while another point is active). */
+[data-pt='off'] { opacity: 0.45; }
+rect[data-pt='focus'] {
+  stroke: var(--color-on-surface);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+circle[data-pt='on'],
+circle[data-pt='focus'] { stroke-width: 8; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-pt] { transition: opacity var(--motion-spring-effects-fast-duration, 150ms) var(--motion-spring-effects-fast-easing, ease-out); }
+}
+@media (forced-colors: active) {
+  [data-pt='off'] { opacity: 1; }
+  rect[data-pt='on'],
+  rect[data-pt='focus'] {
+    stroke: Highlight;
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke;
+  }
+}

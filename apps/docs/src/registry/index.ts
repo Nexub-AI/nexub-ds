@@ -209,6 +209,10 @@ import containerEntry from './components/container';
 import contextMenuEntry from './components/context-menu';
 import countryBadgeEntry from './components/country-badge';
 import iconChipEntry from './components/icon-chip';
+import descriptionListEntry from './components/description-list';
+import comparisonBarEntry from './components/comparison-bar';
+import truncateEntry from './components/truncate';
+import statusStepsEntry from './patterns/status-steps';
 import illustrationEntry from './components/illustration';
 import successCheckEntry from './components/success-check';
 import dropdownMenuEntry from './components/dropdown-menu';
@@ -264,6 +268,9 @@ export const componentEntries: ComponentEntry[] = [
   eyebrowChipEntry,
   countryBadgeEntry,
   iconChipEntry,
+  descriptionListEntry,
+  comparisonBarEntry,
+  truncateEntry,
   successCheckEntry,
   flagEntry,
   // Avatar
@@ -415,6 +422,7 @@ export const marketingEntries: ComponentEntry[] = [
 export const patternEntries: ComponentEntry[] = [
   statCardEntry,
   welcomeBannerEntry,
+  statusStepsEntry,
   statusPageEntry,
   authCardEntry,
   filterBarEntry,

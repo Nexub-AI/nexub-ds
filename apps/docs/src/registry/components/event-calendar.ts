@@ -20,7 +20,10 @@ const entry: ComponentEntry = {
     { name: 'maxEventsPerDay', type: 'number', default: '3', required: false, description: 'Month view only.' },
     { name: 'weekStartsOn', type: '0–6', required: false, description: 'Defaults to the locale’s first day (Monday for en-GB, Sunday for en-US).' },
   ],
-  examples: [{ title: 'Team calendar' }],
+  examples: [
+    { title: 'Team calendar' },
+    { title: 'Day and agenda views', description: '`views` adds Day (an hour grid with a "now" line) and Agenda (the month as a list) to the switcher.' },
+  ],
   a11y: {
     notes: [
       'A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.',

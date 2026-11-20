@@ -147,12 +147,27 @@ export interface NexubMessages {
   calendarView: string;
   monthView: string;
   weekView: string;
+  /** EventCalendar day and agenda views (10.7). */
+  dayView: string;
+  agendaView: string;
+  previousDay: string;
+  nextDay: string;
+  allDay: string;
+  /** DataTable column filter (10.7): the header button, e.g. "Filter Status", and the popover's controls. */
+  filterColumn: (column: string) => string;
+  clearFilter: string;
+  filterMin: string;
+  filterMax: string;
   /** DataTable sub-row toggle. */
   expandRow: string;
   collapseRow: string;
   /** Stepper, e.g. "Step 2 of 4". */
   stepOf: (step: number, total: number) => string;
   stepCompleted: string;
+  /** StatusSteps: read before a step's title, with `stepCompleted`. */
+  stepCurrent: string;
+  stepUpcoming: string;
+  stepProblem: string;
   /** ResizablePanels separator. */
   resizePanels: string;
   /** Sortable, Kanban and DataTable row handles. */
@@ -169,6 +184,9 @@ export interface NexubMessages {
   zoomStart: string;
   zoomEnd: string;
   resetZoom: string;
+  /** Interactive charts (10.7): the plot's role description and the name of the legend toggles. */
+  interactiveChart: string;
+  chartSeries: string;
   /** React Native SortableList and TreeList. */
   moveUp: string;
   moveDown: string;
@@ -365,10 +383,22 @@ export const defaultMessages: NexubMessages = {
   calendarView: 'Calendar view',
   monthView: 'Month',
   weekView: 'Week',
+  dayView: 'Day',
+  agendaView: 'Agenda',
+  previousDay: 'Go to previous day',
+  nextDay: 'Go to next day',
+  allDay: 'All day',
+  filterColumn: (column) => `Filter ${column}`,
+  clearFilter: 'Clear filter',
+  filterMin: 'Min',
+  filterMax: 'Max',
   expandRow: 'Expand row',
   collapseRow: 'Collapse row',
   stepOf: (step, total) => `Step ${step} of ${total}`,
   stepCompleted: 'completed',
+  stepCurrent: 'current',
+  stepUpcoming: 'upcoming',
+  stepProblem: 'problem',
   resizePanels: 'Resize panels',
   moveItem: (label) => `Move ${label}`,
   reorderHint: 'Alt+Arrow keys move it',
@@ -381,6 +411,8 @@ export const defaultMessages: NexubMessages = {
   zoomStart: 'Zoom start',
   zoomEnd: 'Zoom end',
   resetZoom: 'Reset zoom',
+  interactiveChart: 'interactive chart',
+  chartSeries: 'Series',
   moveUp: 'Move up',
   moveDown: 'Move down',
   backTo: (label) => `Back to ${label}`,
