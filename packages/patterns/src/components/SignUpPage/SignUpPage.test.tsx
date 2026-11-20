@@ -11,10 +11,18 @@ const type = (el: Element, text: string) => userEvent.setup({ delay: null }).typ
 
 const terms = 'I agree to the Terms';
 
+// Paste, one event per field: typing re-renders and re-validates the whole form per key,
+// which ran this file to 30s on a slow CI runner. Typing itself is covered by the tests above.
+const paste = async (el: HTMLElement, text: string) => {
+  const user = userEvent.setup({ delay: null });
+  await user.click(el);
+  await user.paste(text);
+};
+
 async function fill() {
-  await type(screen.getByLabelText(/^Name/), ' Mei Tan ');
-  await type(screen.getByLabelText(/^Email/), 'mei@example.com');
-  await type(screen.getByLabelText(/^Password/), 'Abcdef12');
+  await paste(screen.getByLabelText(/^Name/), ' Mei Tan ');
+  await paste(screen.getByLabelText(/^Email/), 'mei@example.com');
+  await paste(screen.getByLabelText(/^Password/), 'Abcdef12');
   await userEvent.click(screen.getByRole('checkbox', { name: /I agree/ }));
 }
 
@@ -110,12 +118,13 @@ describe('SignUpPage', () => {
     expect(screen.getByRole('button', { name: /Join/ })).toHaveAttribute('aria-busy', 'true');
     finish();
     await screen.findByRole('button', { name: 'Join' });
-    await type(screen.getByLabelText(/Phone number/), '9847012345');
+    await paste(screen.getByLabelText(/Phone number/), '9847012345');
     await userEvent.click(screen.getByRole('button', { name: /Join/ }));
     expect(onSubmit).toHaveBeenLastCalledWith({ name: 'Mei Tan', email: 'mei@example.com', password: 'Abcdef12', phone: '+919847012345' });
     expect(screen.queryByRole('alert', { name: 'There is a problem' })).not.toBeInTheDocument();
     unmount();
-  });
+    // Two submits plus PhoneInput's lazy country list: the slowest test in the file on CI.
+  }, 45_000);
 
   it('takes its own password rules and shows loading', async () => {
     const onSubmit = vi.fn();
