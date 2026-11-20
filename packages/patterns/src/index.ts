@@ -6,6 +6,8 @@ export type { FilterBarProps } from './components/FilterBar/index.js';
 
 export { WelcomeBanner } from './components/WelcomeBanner/index.js';
 export type { WelcomeBannerProps } from './components/WelcomeBanner/index.js';
+export { StatusSteps } from './components/StatusSteps/index.js';
+export type { StatusStepsProps, StatusStep, StatusStepStatus } from './components/StatusSteps/index.js';
 export { StatCard } from './components/StatCard/index.js';
 export type { StatCardProps } from './components/StatCard/index.js';
 

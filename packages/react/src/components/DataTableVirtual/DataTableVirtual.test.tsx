@@ -45,3 +45,19 @@ describe('DataTableVirtual 10.5: errorState', () => {
     expect(container.querySelector('table')!.hasAttribute('aria-busy')).toBe(false);
   });
 });
+
+describe('DataTableVirtual 10.7: footer', () => {
+  it('renders the footer row after the windowed rows and counts it', () => {
+    const { container } = renderState(
+      <DataTableVirtual
+        columns={[{ accessorKey: 'id', header: 'ID', footer: ({ table }) => `${table.getFilteredRowModel().rows.length} rows` }]}
+        data={rows}
+        maxHeight={400}
+      />,
+    );
+    expect(container.querySelector('tfoot')).toHaveTextContent('1000 rows');
+    expect(container.querySelector('table')).toHaveAttribute('aria-rowcount', '1002');
+    expect(container.querySelector('tfoot tr')).toHaveAttribute('aria-rowindex', '1002');
+    expect(container.querySelector('tfoot td')).toHaveClass('sticky', 'bottom-0');
+  });
+});

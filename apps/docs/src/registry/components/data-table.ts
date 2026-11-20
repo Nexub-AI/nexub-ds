@@ -66,6 +66,10 @@ const entry: ComponentEntry = {
       title: 'Export CSV',
       description: '`toCSV(rows, columns)` quotes and escapes per RFC 4180 and neutralises cells that start like a spreadsheet formula. Pass what the person sees.',
     },
+    {
+      title: 'Footer and column filters',
+      description: '`footer` on a column adds a totals row; a render function gets the table, so a sum can follow the filtered rows. `meta.filter` (`text`, `select` or `number-range`) adds a filter button to the header. Control it with `columnFilters` / `onColumnFiltersChange`; `manualFiltering` leaves the rows to the server.',
+    },
   ],
   a11y: {
     roles: ['table (default)', 'grid (with `grid`)', 'columnheader with aria-sort when sortable'],

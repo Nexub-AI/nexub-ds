@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v10.5.1. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.6.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -35,7 +35,9 @@ Never use a component marked deprecated.
 - [Chart Toggle](components/chart-toggle.md) `@nexub/react`: A legend whose entries switch series on and off, wrapped around any chart.
 - [Chart Zoom](components/chart-zoom.md) `@nexub/react`: Zoom any chart to part of its range with a two-thumb slider.
 - [Check List](components/check-list.md) `@nexub/react`: A list with a success tick before each item, for features, plan inclusions and requirements met.
+- [Comparison Bar](components/comparison-bar.md) `@nexub/react`: Two values on one split bar, with the numbers always shown as text.
 - [Data Table](components/data-table.md) `@nexub/react`: Feature-rich data table with sorting and row selection powered by TanStack Table.
+- [Description List](components/description-list.md) `@nexub/react`: Key–value rows with list semantics: a receipt, a fee breakdown, the details of a record.
 - [Donut Chart](components/donut-chart.md) `@nexub/react`: Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 - [Empty State](components/empty-state.md) `@nexub/react`: Placeholder UI shown when a list or page has no content.
 - [Error State](components/error-state.md) `@nexub/react`: Full-page or section error view with retry action.
@@ -203,6 +205,7 @@ Never use a component marked deprecated.
 
 - [Heading](components/heading.md) `@nexub/react`: Semantic heading component with size, weight, and tone control.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
+- [Truncate](components/truncate.md) `@nexub/react`: Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
 
 ## Marketing — Marketing
 
@@ -234,6 +237,7 @@ Never use a component marked deprecated.
 - [FilterBar](components/filter-bar.md) `@nexub/patterns`: Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](components/info-list.md) `@nexub/patterns`: Key–value list for displaying structured metadata or details.
 - [StatCard](components/stat-card.md) `@nexub/patterns`: Metric display card showing a KPI value, label, optional delta, and icon.
+- [StatusSteps](components/status-steps.md) `@nexub/patterns`: A read-only list of steps showing where something stands: done, current, upcoming or a problem.
 - [WelcomeBanner](components/welcome-banner.md) `@nexub/patterns`: A greeting at the top of a home or dashboard page: what is new, or the next step for a new account.
 
 ## Patterns — Feedback

@@ -43,3 +43,40 @@ export const DataStates: Story = {
     </div>
   ),
 };
+
+const dayEvents: CalendarEvent[] = [
+  { id: 'd1', title: 'Offsite', start: new Date(2026, 10, 16), allDay: true, tone: 'success' },
+  { id: 'd2', title: 'Standup', start: new Date(2026, 10, 16, 9, 30), end: new Date(2026, 10, 16, 10) },
+  { id: 'd3', title: 'Design review', start: new Date(2026, 10, 16, 9, 30), end: new Date(2026, 10, 16, 11), tone: 'info' },
+  { id: 'd4', title: 'Launch', start: new Date(2026, 10, 16, 14), end: new Date(2026, 10, 16, 15, 30), tone: 'warning' },
+  { id: 'd5', title: 'Incident review', start: new Date(2026, 10, 16, 17), tone: 'error' },
+];
+const allViews = ['month', 'week', 'day', 'agenda'] as const;
+
+/** 10.7: one day by the hour. `now` is pinned so the line stays put in screenshots. */
+export const Day: Story = {
+  render: () => (
+    <EventCalendar
+      events={dayEvents}
+      defaultDate={new Date(2026, 10, 16)}
+      now={new Date(2026, 10, 16, 11, 15)}
+      defaultView="day"
+      views={[...allViews]}
+      onEventClick={() => {}}
+    />
+  ),
+};
+
+/** 10.7: the month's events as a list grouped by day. */
+export const Agenda: Story = {
+  render: () => (
+    <EventCalendar
+      events={events}
+      defaultDate={new Date(2026, 10, 16)}
+      now={new Date(2026, 10, 16, 11, 15)}
+      defaultView="agenda"
+      views={[...allViews]}
+      onEventClick={() => {}}
+    />
+  ),
+};
