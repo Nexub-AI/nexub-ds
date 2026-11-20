@@ -53,7 +53,7 @@ function VerifyCode() {
 }
 
 const option = (label: string, on?: boolean) => (
-  <label key={label} className="flex items-center gap-3 text-body-md text-[var(--color-on-surface)]">
+  <label key={label} className="flex items-center gap-3 text-body-md text-on-surface">
     <Checkbox defaultChecked={on} />
     {label}
   </label>

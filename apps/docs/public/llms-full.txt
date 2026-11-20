@@ -3186,7 +3186,7 @@ export default function Example() {
   React.useEffect(start, []);
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-body-md text-[var(--color-on-surface)]">{expired ? 'The hold has ended' : 'Held for you'}</span>
+      <span className="text-body-md text-on-surface">{expired ? 'The hold has ended' : 'Held for you'}</span>
       <Countdown to={deadline} onExpire={() => deadline > 0 && setExpired(true)} />
       <Button size="sm" variant="outlined" onClick={start}>
         Restart
@@ -7546,7 +7546,7 @@ export default function Example() {
           setValid(details.valid);
         }}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         {value ? `${value}${valid ? '' : ' (incomplete)'}` : 'Type a number, or paste one with its country code'}
       </p>
     </div>
@@ -9889,7 +9889,7 @@ export default function Example() {
   return (
     <div className="flex w-96 max-w-full flex-col gap-3">
       <TimeSlotPicker aria-label="Start time" slots={slots} value={time} onValueChange={setTime} />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         Selected: {time}
       </p>
     </div>

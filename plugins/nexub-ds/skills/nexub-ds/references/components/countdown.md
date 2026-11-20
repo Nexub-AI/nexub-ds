@@ -37,7 +37,7 @@ export default function Example() {
   React.useEffect(start, []);
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-body-md text-[var(--color-on-surface)]">{expired ? 'The hold has ended' : 'Held for you'}</span>
+      <span className="text-body-md text-on-surface">{expired ? 'The hold has ended' : 'Held for you'}</span>
       <Countdown to={deadline} onExpire={() => deadline > 0 && setExpired(true)} />
       <Button size="sm" variant="outlined" onClick={start}>
         Restart
