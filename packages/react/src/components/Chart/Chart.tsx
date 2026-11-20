@@ -312,43 +312,57 @@ export function LineChart<T extends object>({ area = false, ...props }: LineChar
 }
 
 export interface DonutChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps {
-  data: { label: string; value: number; color?: ChartColor }[];
+  /** One slice each. `href` makes its legend row a link (for example, a list filtered to that slice). */
+  data: { label: string; value: number; color?: ChartColor; href?: string }[];
   /** Accessible name of the chart. */
   title: string;
-  /** Content in the hole, such as the total. */
+  /** Content in the hole, such as the total. Replaced by the hovered slice while one is hovered. */
   center?: React.ReactNode;
   valueFormat?: (value: number) => string;
-  /** Show the legend beside the donut. Default on. */
+  /** Show the legend beside the donut (below it on narrow screens). Default on. */
   legend?: boolean;
+  /** Diameter: `sm` 128px, `md` 160px, `lg` 224px. @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
 }
 
-/** Parts of a whole. Keep it to six slices or fewer; group the rest as "Other". */
+const DONUT_SIZE = { sm: 'size-32', md: 'size-40', lg: 'size-56' } as const;
+
+/**
+ * Parts of a whole. Keep it to six slices or fewer; group the rest as "Other".
+ * Hovering a slice or its legend row highlights it (the others dim) and shows
+ * its label, value and share in the hole; the legend lists each value and share.
+ */
 export function DonutChart({
-  data, title, center, valueFormat = defaultFormat, legend = true, className, loading, emptyState, errorState, ...props
+  data, title, center, valueFormat = defaultFormat, legend = true, size = 'md', className, loading, emptyState, errorState, ...props
 }: DonutChartProps) {
+  const [active, setActive] = React.useState<number | null>(null);
   const states = { loading, emptyState, errorState };
-  const state = chartState(states, data.length === 0, 'min-h-40 min-w-40 flex-1', <Skeleton shape="circle" className="size-40" />);
+  const state = chartState(states, data.length === 0, cn('min-w-40 flex-1', size === 'lg' ? 'min-h-56' : 'min-h-40'), <Skeleton shape="circle" className={DONUT_SIZE[size]} />);
   if (state) {
     return (
-      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex flex-wrap items-center gap-6', className)} {...props}>
+      <figure aria-label={title} aria-busy={dataBusy(states)} className={cn('m-0 flex flex-wrap items-center justify-center gap-6', className)} {...props}>
         {state}
       </figure>
     );
   }
   const total = data.reduce((sum, d) => sum + Math.max(0, d.value), 0) || 1;
+  const share = (v: number) => Math.round((Math.max(0, v) / total) * 100);
+  const links = data.some((d) => d.href);
   // r = 100 / 2π, so the circumference is 100 and dash lengths are percentages.
   const r = 15.9155;
   let offset = 25; // start at 12 o'clock
+  const hot = active == null ? null : data[active];
   return (
-    <figure aria-label={title} className={cn('m-0 flex flex-wrap items-center gap-6', className)} {...props}>
-      <div aria-hidden="true" className="relative size-40 shrink-0">
+    <figure aria-label={title} className={cn('m-0 flex flex-wrap items-center justify-center gap-x-8 gap-y-4', className)} {...props}>
+      <div aria-hidden="true" className={cn('relative shrink-0', DONUT_SIZE[size])} onMouseLeave={() => setActive(null)}>
         <svg viewBox="0 0 42 42" className="size-full rtl:-scale-x-100">
           <circle cx="21" cy="21" r={r} fill="none" strokeWidth="6" className="stroke-[var(--color-surface-container-high)]" />
           {data.map((d, i) => {
             const pct = (Math.max(0, d.value) / total) * 100;
-            const dash = `${pct} ${100 - pct}`;
             const el = (
-              <circle key={d.label} cx="21" cy="21" r={r} fill="none" strokeWidth="6" strokeDasharray={dash} strokeDashoffset={offset} className={STROKE[colorIndex(d.color, i)]}>
+              <circle key={d.label} cx="21" cy="21" r={r} fill="none" strokeWidth={active === i ? 7.5 : 6} strokeDasharray={`${pct} ${100 - pct}`} strokeDashoffset={offset}
+                data-slice={i} onMouseEnter={() => setActive(i)}
+                className={cn(STROKE[colorIndex(d.color, i)], 'cursor-default transition-[stroke-width,opacity] duration-150', active != null && active !== i && 'opacity-35')}>
                 <title>{`${d.label}: ${valueFormat(d.value)} (${Math.round(pct)}%)`}</title>
               </circle>
             );
@@ -356,9 +370,43 @@ export function DonutChart({
             return el;
           })}
         </svg>
-        {center != null && <div className="absolute inset-0 flex items-center justify-center text-center text-title-md text-[var(--color-on-surface)]">{center}</div>}
+        {(hot || center != null) && (
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-title-md text-[var(--color-on-surface)]">
+            {hot ? (
+              <>
+                <span className="tabular-nums">{valueFormat(hot.value)}</span>
+                <span className="line-clamp-2 text-label-sm text-[var(--color-on-surface-variant)]">{hot.label} · {share(hot.value)}%</span>
+              </>
+            ) : center}
+          </div>
+        )}
       </div>
-      {legend && <ChartLegend aria-hidden="true" className="flex-col" items={data.map((d) => ({ label: d.label, color: d.color }))} />}
+      {legend && (
+        <ul aria-hidden={links ? undefined : true} aria-label={links ? title : undefined} className="flex min-w-48 flex-col divide-y divide-[var(--color-outline-variant)] text-label-md text-[var(--color-on-surface-variant)]">
+          {data.map((d, i) => {
+            const row = (
+              <>
+                <span aria-hidden="true" className={cn('size-2.5 shrink-0 rounded-full', BG[colorIndex(d.color, i)])} />
+                <span className="min-w-0 flex-1 truncate">{d.label}</span>
+                <span className="tabular-nums text-[var(--color-on-surface)]">{valueFormat(d.value)}</span>
+                <span className="w-10 text-end tabular-nums text-[var(--color-on-surface-muted)]">{share(d.value)}%</span>
+              </>
+            );
+            const hover = { onMouseEnter: () => setActive(i), onMouseLeave: () => setActive(null), onFocus: () => setActive(i), onBlur: () => setActive(null) };
+            const rowClass = cn('flex items-center gap-2 rounded-shape-control px-1 py-1.5 transition-colors', active === i && 'bg-[color-mix(in_oklab,var(--color-on-surface)_6%,transparent)]');
+            return (
+              <li key={d.label}>
+                {d.href ? (
+                  <a href={d.href} {...hover} className={cn(rowClass, 'hover:text-[var(--color-on-surface)] focus-visible:outline-2 focus-visible:outline-[var(--color-primary)]')}
+                    aria-label={`${d.label}: ${valueFormat(d.value)} (${share(d.value)}%)`}>{row}</a>
+                ) : (
+                  <div {...hover} className={rowClass}>{row}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
       <table className="sr-only">
         <caption>{title}</caption>
         <tbody>
@@ -366,7 +414,7 @@ export function DonutChart({
             <tr key={d.label}>
               <th scope="row">{d.label}</th>
               <td>{valueFormat(d.value)}</td>
-              <td>{Math.round((Math.max(0, d.value) / total) * 100)}%</td>
+              <td>{share(d.value)}%</td>
             </tr>
           ))}
         </tbody>
