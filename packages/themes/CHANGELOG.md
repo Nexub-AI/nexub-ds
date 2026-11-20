@@ -1,5 +1,12 @@
 # @nexub/themes
 
+## 10.9.0
+
+### Patch Changes
+
+- Updated dependencies [c71bb65]
+  - @nexub/tokens@10.9.0
+
 ## 10.8.0
 
 ### Patch Changes
