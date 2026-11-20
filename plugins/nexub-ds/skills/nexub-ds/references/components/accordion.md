@@ -28,7 +28,7 @@ import { Accordion, Code } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Accordion.Root type="single" collapsible>
         <Accordion.Item value="a">
           <Accordion.Trigger>What is Nexub?</Accordion.Trigger>
@@ -55,7 +55,7 @@ import { Accordion } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Accordion.Root type="multiple">
         <Accordion.Item value="x">
           <Accordion.Trigger>Section A</Accordion.Trigger>

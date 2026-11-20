@@ -14,7 +14,7 @@ export default function HomePage() {
       <DocsHeader />
       {/* Phone drawer only: the landing page has no sidebar column. */}
       <DocsSidebar navGroups={navGroups} drawerOnly />
-      <main className="bg-[var(--color-surface)] text-[var(--color-on-surface)]">
+      <main className="bg-surface text-on-surface">
         <LandingHero
           version={DS_VERSION}
           componentCount={componentEntries.length}

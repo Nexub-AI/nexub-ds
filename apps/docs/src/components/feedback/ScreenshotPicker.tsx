@@ -112,7 +112,7 @@ export function ScreenshotPicker({ value, onChange, onError }: Props) {
           />
         </label>
       </div>
-      <p className="m-0 text-label-sm text-[var(--color-on-surface-muted)]">
+      <p className="m-0 text-label-sm text-on-surface-muted">
         Capture page = current viewport (no permission). Capture screen = native picker (browser/window/screen). Max 2 MB.
       </p>
     </div>
@@ -141,7 +141,7 @@ function CaptureBtn({
       disabled={disabled}
       className={
         btnClass +
-        (primary ? ' !border-[var(--color-primary)] !text-[var(--color-primary)]' : '') +
+        (primary ? ' !border-primary !text-primary' : '') +
         (disabled ? ' cursor-not-allowed' : ' cursor-pointer') +
         (disabled && !busy ? ' opacity-60' : '')
       }
@@ -153,4 +153,4 @@ function CaptureBtn({
 }
 
 const btnClass =
-  'nx-state-layer relative inline-flex items-center gap-1.5 whitespace-nowrap rounded-shape-control border border-[var(--color-outline-variant)] bg-[var(--color-surface)] px-3 py-1.5 text-label-md font-medium text-[var(--color-on-surface-variant)]';
+  'nx-state-layer relative inline-flex items-center gap-1.5 whitespace-nowrap rounded-shape-control border border-outline-variant bg-surface px-3 py-1.5 text-label-md font-medium text-on-surface-variant';

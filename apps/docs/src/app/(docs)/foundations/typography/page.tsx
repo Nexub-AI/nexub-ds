@@ -69,11 +69,11 @@ export default function TypographyPage() {
           {typeScale.map((t) => (
             <div
               key={t.name}
-              className="grid grid-cols-[96px_1fr] items-center gap-4 border-b border-[var(--color-outline-variant)] py-3 md:grid-cols-[120px_1fr_160px]"
+              className="grid grid-cols-[96px_1fr] items-center gap-4 border-b border-outline-variant py-3 md:grid-cols-[120px_1fr_160px]"
             >
-              <code className="font-mono text-label-sm text-[var(--color-primary)]">{t.name}</code>
-              <span className={'truncate text-[var(--color-on-surface)] ' + t.className}>The quick brown fox</span>
-              <span className="hidden font-mono text-label-sm text-[var(--color-on-surface-muted)] md:block">text-{t.name}</span>
+              <code className="font-mono text-label-sm text-primary">{t.name}</code>
+              <span className={'truncate text-on-surface ' + t.className}>The quick brown fox</span>
+              <span className="hidden font-mono text-label-sm text-on-surface-muted md:block">text-{t.name}</span>
             </div>
           ))}
         </div>
@@ -83,8 +83,8 @@ export default function TypographyPage() {
         <div className="flex flex-col gap-3">
           {families.map((f) => (
             <Card key={f.name} className="flex flex-col gap-1.5 p-4">
-              <code className="font-mono text-label-sm text-[var(--color-on-surface-muted)]">{f.name}</code>
-              <span className={'text-title-lg text-[var(--color-on-surface)] ' + f.className}>{f.sample}</span>
+              <code className="font-mono text-label-sm text-on-surface-muted">{f.name}</code>
+              <span className={'text-title-lg text-on-surface ' + f.className}>{f.sample}</span>
             </Card>
           ))}
         </div>
@@ -94,10 +94,10 @@ export default function TypographyPage() {
         <div className="flex flex-col gap-2">
           {weights.map((w) => (
             <div key={w.name} className="flex items-center gap-4">
-              <code className="w-[160px] shrink-0 font-mono text-label-sm text-[var(--color-on-surface-muted)]">
+              <code className="w-40 shrink-0 font-mono text-label-sm text-on-surface-muted">
                 --font-weight-{w.name}
               </code>
-              <Text className={'text-[var(--color-on-surface)] ' + w.className}>
+              <Text className={'text-on-surface ' + w.className}>
                 {w.value}: {w.name.charAt(0).toUpperCase() + w.name.slice(1)}
               </Text>
             </div>

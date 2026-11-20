@@ -10,7 +10,7 @@ const CITATION_SOURCES: CitationSource[] = [
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-4 items-stretch max-w-[560px]">
+    <div className="flex flex-col gap-4 items-stretch max-w-140">
       <p>
         Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
         part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas

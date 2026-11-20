@@ -36,7 +36,7 @@ import { Select } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[220px]">
+    <div className="w-55">
       <Select.Root>
         <Select.Trigger><Select.Value placeholder="Select an option…" /></Select.Trigger>
         <Select.Content>

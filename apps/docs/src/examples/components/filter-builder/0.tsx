@@ -29,9 +29,9 @@ export default function Example() {
     ],
   });
   return (
-    <div className="flex w-full max-w-[640px] flex-col gap-4">
+    <div className="flex w-full max-w-160 flex-col gap-4">
       <FilterBuilder fields={fields} value={query} onValueChange={setQuery} />
-      <pre className="max-h-40 overflow-auto rounded-shape-container bg-[var(--color-surface-container-low)] p-3 text-label-sm">
+      <pre className="max-h-40 overflow-auto rounded-shape-container bg-surface-container-low p-3 text-label-sm">
         {JSON.stringify(query, null, 2)}
       </pre>
     </div>

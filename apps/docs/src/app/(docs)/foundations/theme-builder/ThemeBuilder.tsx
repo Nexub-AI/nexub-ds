@@ -57,9 +57,9 @@ function Pane({ scheme, level, vars, onSurface, children }: {
       data-theme={scheme}
       data-contrast={level}
       data-theme-builder-pane=""
-      className="flex flex-col gap-4 rounded-2xl border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-5 text-[var(--color-on-surface)]"
+      className="flex flex-col gap-4 rounded-2xl border border-outline-variant bg-surface p-5 text-on-surface"
     >
-      <p className="text-label-md text-[var(--color-on-surface-variant)]">{scheme === 'light' ? 'Light' : 'Dark'}</p>
+      <p className="text-label-md text-on-surface-variant">{scheme === 'light' ? 'Light' : 'Dark'}</p>
       {children}
     </div>
   );
@@ -89,7 +89,7 @@ function Ratio({ r, min }: { r: number; min: number }) {
   return (
     <td className="tabular-nums">
       {r.toFixed(2)}{' '}
-      <span className={pass ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>{pass ? '✓' : `✗ below ${min}`}</span>
+      <span className={pass ? 'text-success' : 'text-error'}>{pass ? '✓' : `✗ below ${min}`}</span>
     </td>
   );
 }
@@ -146,14 +146,14 @@ import { createSeedStylesheet } from '@nexub/tokens/seed';
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end gap-4">
         <div className="flex flex-col gap-1.5">
-          <span id="tb-colour" className="text-label-md text-[var(--color-on-surface-variant)]">Brand colour</span>
+          <span id="tb-colour" className="text-label-md text-on-surface-variant">Brand colour</span>
           <span className="flex items-center gap-2">
             <input
               type="color"
               value={long(s)}
               onChange={(e) => setInput(e.target.value)}
               aria-label="Pick brand colour"
-              className="size-10 cursor-pointer rounded-lg border border-[var(--color-outline-variant)] bg-transparent p-0.5"
+              className="size-10 cursor-pointer rounded-lg border border-outline-variant bg-transparent p-0.5"
             />
             <Input
               value={input}
@@ -172,7 +172,7 @@ import { createSeedStylesheet } from '@nexub/tokens/seed';
               onClick={() => setInput(p)}
               aria-label={`Use ${p}`}
               aria-pressed={s.toLowerCase() === p}
-              className="size-8 rounded-full border-2 border-[var(--color-surface)] outline-offset-2 aria-pressed:outline-2 aria-pressed:outline-[var(--color-on-surface)] aria-pressed:outline-solid"
+              className="size-8 rounded-full border-2 border-surface outline-offset-2 aria-pressed:outline-2 aria-pressed:outline-on-surface aria-pressed:outline-solid"
               ref={(el) => el?.style.setProperty('background', p)}
             />
           ))}
@@ -188,7 +188,7 @@ import { createSeedStylesheet } from '@nexub/tokens/seed';
         </SegmentedControl.Root>
       </div>
       {!valid && (
-        <p role="alert" className="text-body-sm text-[var(--color-error)]">
+        <p role="alert" className="text-body-sm text-error">
           Enter a hex colour such as #e4572e. Showing the last valid one.
         </p>
       )}

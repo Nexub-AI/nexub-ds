@@ -18,10 +18,12 @@ export default function Example() {
   ) : (
     <div className="flex w-full flex-col gap-2">
       {people.map((p) => (
-        <button key={p.id} type="button" onClick={() => go(p.id)} className="nx-state-layer flex items-center gap-3 rounded-shape-container border border-[var(--color-outline-variant)] p-3 text-start">
-          <SharedElement name={`avatar-${p.id}`}><Avatar size="sm" fallback={p.id.toUpperCase()} /></SharedElement>
-          <span className="text-body-md">{p.name} · {p.role}</span>
-        </button>
+        <Card key={p.id} variant="interactive" asChild>
+          <button type="button" onClick={() => go(p.id)} className="flex items-center gap-3 p-3 text-start">
+            <SharedElement name={`avatar-${p.id}`}><Avatar size="sm" fallback={p.id.toUpperCase()} /></SharedElement>
+            <span className="text-body-md">{p.name} · {p.role}</span>
+          </button>
+        </Card>
       ))}
     </div>
   );

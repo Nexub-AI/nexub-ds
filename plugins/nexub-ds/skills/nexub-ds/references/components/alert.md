@@ -47,7 +47,7 @@ import { Alert } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-full max-w-[480px]">
+    <div className="flex flex-col gap-2 items-start w-full max-w-120">
       <Alert tone="info" title="Info">Informational message.</Alert>
       <Alert tone="success" title="Success">Operation completed successfully.</Alert>
       <Alert tone="warning" title="Warning">Something needs your attention.</Alert>
@@ -64,7 +64,7 @@ import { Alert } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
     </div>
   );

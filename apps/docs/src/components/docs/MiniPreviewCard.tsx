@@ -27,7 +27,7 @@ class PreviewErrorBoundary extends React.Component<
 
 const PreviewFallback = () => (
   <div
-    className="w-[28px] h-[28px] rounded-shape-field bg-[var(--color-surface-container-high)] border border-[var(--color-outline-variant)]"
+    className="w-7 h-7 rounded-shape-field bg-surface-container-high border border-outline-variant"
   />
 );
 
@@ -80,7 +80,7 @@ function FitToBox({ children }: { children: React.ReactNode }) {
       <div
         ref={innerRef}
         // scale-[0.8] until measured; measure() then sets the fitted scale.
-        className={`flex w-max min-w-[280px] max-w-[360px] shrink-0 scale-[0.8] flex-col items-center ${cropped ? 'origin-top' : 'origin-center'}`}
+        className={`flex w-max min-w-70 max-w-90 shrink-0 scale-[0.8] flex-col items-center ${cropped ? 'origin-top' : 'origin-center'}`}
       >
         {children}
       </div>
