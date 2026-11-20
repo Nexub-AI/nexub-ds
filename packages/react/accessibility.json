@@ -403,6 +403,15 @@
       "screenReader": []
     },
     {
+      "slug": "countdown",
+      "name": "Countdown",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "country-badge",
       "name": "Country Badge",
       "package": "@nexub/react",
@@ -1093,6 +1102,18 @@
       "screenReader": []
     },
     {
+      "slug": "phone-input",
+      "name": "Phone Input",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves from the country picker to the number.",
+        "Enter / Space: Opens the country list; type to filter it."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "plan-tracker",
       "name": "Plan Tracker",
       "package": "@nexub/react",
@@ -1462,6 +1483,18 @@
       "keyboard": [
         "ArrowUp / ArrowDown: Changes the focused segment (hour, minute, AM/PM).",
         "ArrowLeft / ArrowRight: Moves between segments."
+      ],
+      "screenReader": []
+    },
+    {
+      "slug": "time-slot-picker",
+      "name": "Time Slot Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves into the group, to the selected slot.",
+        "Arrow keys: Move to and select the next available slot."
       ],
       "screenReader": []
     },

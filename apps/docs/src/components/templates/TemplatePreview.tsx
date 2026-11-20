@@ -17,6 +17,8 @@ import {
 } from '@nexub/patterns';
 import { Avatar, BarChart, Button, Logo, Switch } from '@nexub/react';
 import { ArrowDown, CreditCard, Plus, Receipt, Send, TrendingUp, Wallet } from '@nexub/icons';
+import { gettingInPreviews } from './previews-getting-in';
+import { dailyWorkPreviews } from './previews-daily-work';
 
 const day = (d: number, h = 10) => new Date(2026, 9, 30 - d, h, 12);
 const txs: Transaction[] = [
@@ -230,6 +232,8 @@ export const templatePreviews = {
   'not-found': NotFound,
   'server-error': ServerError,
   maintenance: Maintenance,
+  ...gettingInPreviews,
+  ...dailyWorkPreviews,
 } as const;
 
 export type TemplateSlug = keyof typeof templatePreviews;
