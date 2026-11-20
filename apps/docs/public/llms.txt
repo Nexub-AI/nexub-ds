@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 10.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -49,6 +49,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Comparison Bar](https://nexub-ds-docs.pages.dev/components/comparison-bar.md): Two values on one split bar, with the numbers always shown as text.
 - [Container](https://nexub-ds-docs.pages.dev/components/container.md): Centres content at a maximum width with responsive side padding.
 - [Context Menu](https://nexub-ds-docs.pages.dev/components/context-menu.md): A menu that opens at the pointer on right-click (or long-press), built on Radix.
+- [Countdown](https://nexub-ds-docs.pages.dev/components/countdown.md): Time left to a deadline, as a chip or inline text. Stays right after the tab was in the background.
 - [Country Badge](https://nexub-ds-docs.pages.dev/components/country-badge.md): A pill with a country flag and its name or code.
 - [Data Table](https://nexub-ds-docs.pages.dev/components/data-table.md): Feature-rich data table with sorting and row selection powered by TanStack Table.
 - [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
@@ -115,6 +116,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Page Header](https://nexub-ds-docs.pages.dev/components/page-header.md): The top of a page: title, description, breadcrumb and actions.
 - [Pagination](https://nexub-ds-docs.pages.dev/components/pagination.md): Page navigation control with prev/next and page number buttons.
 - [Password Input](https://nexub-ds-docs.pages.dev/components/password-input.md): A password field with a built-in toggle to reveal or hide the entered value.
+- [Phone Input](https://nexub-ds-docs.pages.dev/components/phone-input.md): A phone field with a country picker. Groups the number as you type and reports it in E.164.
 - [Plan Tracker](https://nexub-ds-docs.pages.dev/components/plan-tracker.md): An agent plan: ordered steps with done, active, pending or failed status.
 - [Popover](https://nexub-ds-docs.pages.dev/components/popover.md): Floating content panel anchored to a trigger element.
 - [Progress](https://nexub-ds-docs.pages.dev/components/progress.md): Horizontal progress bar with optional tone and animation.
@@ -152,6 +154,7 @@ Version 10.6.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Textarea](https://nexub-ds-docs.pages.dev/components/textarea.md): A multi-line text input with configurable resize behaviour, size, and validation states.
 - [Thinking Indicator](https://nexub-ds-docs.pages.dev/components/thinking-indicator.md): Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
 - [Time Picker](https://nexub-ds-docs.pages.dev/components/time-picker.md): A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
+- [Time Slot Picker](https://nexub-ds-docs.pages.dev/components/time-slot-picker.md): Pick one time from a list of slots, for booking flows.
 - [Toast](https://nexub-ds-docs.pages.dev/components/toast.md): Imperative toast notifications using the toast object. Render <Toaster /> once in your layout.
 - [Toggle Group](https://nexub-ds-docs.pages.dev/components/toggle-group.md): Group of toggle buttons where one or many can be active.
 - [Toggle](https://nexub-ds-docs.pages.dev/components/toggle.md): Pressable toggle button built on Radix UI Toggle.

@@ -3,6 +3,8 @@
  * @nexub/react-native screen that does the same job.
  */
 import type { NativeTwin } from './native';
+import { gettingInTemplates } from './templates-getting-in';
+import { dailyWorkTemplates } from './templates-daily-work';
 
 export interface TemplateEntry {
   slug:
@@ -16,13 +18,25 @@ export interface TemplateEntry {
     | 'paywall'
     | 'not-found'
     | 'server-error'
-    | 'maintenance';
+    | 'maintenance'
+    | 'sign-up'
+    | 'forgot-password'
+    | 'verify-code'
+    | 'onboarding'
+    | 'kyc'
+    | 'table-page'
+    | 'detail-page'
+    | 'booking'
+    | 'invoice'
+    | 'team'
+    | 'notifications'
+    | 'search-results';
   title: string;
   /** Export from @nexub/patterns. */
   web: string;
   description: string;
   code: string;
-  /** Left out when @nexub/react-native has no screen for this page (the 10.5 status pages). */
+  /** Left out when @nexub/react-native has no screen for this page. */
   native?: NativeTwin;
 }
 
@@ -196,6 +210,8 @@ export const templateEntries: TemplateEntry[] = [
   fullScreen
 />`,
   },
+  ...(gettingInTemplates as unknown as TemplateEntry[]),
+  ...(dailyWorkTemplates as unknown as TemplateEntry[]),
 ];
 
 export const getTemplateEntry = (slug: string) => templateEntries.find((t) => t.slug === slug);

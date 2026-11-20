@@ -212,6 +212,9 @@ import iconChipEntry from './components/icon-chip';
 import descriptionListEntry from './components/description-list';
 import comparisonBarEntry from './components/comparison-bar';
 import truncateEntry from './components/truncate';
+import phoneInputEntry from './components/phone-input';
+import countdownEntry from './components/countdown';
+import timeSlotPickerEntry from './components/time-slot-picker';
 import statusStepsEntry from './patterns/status-steps';
 import illustrationEntry from './components/illustration';
 import successCheckEntry from './components/success-check';
@@ -271,6 +274,9 @@ export const componentEntries: ComponentEntry[] = [
   descriptionListEntry,
   comparisonBarEntry,
   truncateEntry,
+  phoneInputEntry,
+  countdownEntry,
+  timeSlotPickerEntry,
   successCheckEntry,
   flagEntry,
   // Avatar

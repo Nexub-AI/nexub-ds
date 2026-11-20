@@ -10,6 +10,8 @@ export default defineConfig({
     // parallel runs under turbo delete each other's cache (ENOTEMPTY).
     fsModuleCachePath: new URL('node_modules/.vitest-cache', import.meta.url).pathname,
     environment: 'jsdom',
+    // Whole-form tests type many fields; 5s is too tight on a loaded CI runner.
+    testTimeout: 20_000,
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     // On for `pnpm test` (vitest run --coverage); reports land in coverage/.

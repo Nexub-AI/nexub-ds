@@ -248,6 +248,17 @@ export interface NexubMessages {
   clear: string;
   /** Input `showCount`, read near the limit ("72 of 80 characters"). */
   characterCount: (count: number, max: number) => string;
+  /** PhoneInput country picker name ("Country code, India +91"). */
+  countryCode: (country: string, code: string) => string;
+  /** Countdown announcements ("2 minutes left", "30 seconds left"). */
+  timeLeft: (count: number, unit: 'minute' | 'second') => string;
+  /** Countdown at zero. */
+  timeUp: string;
+  /** TimeSlotPicker: default group name, period headings, empty text, and a slot that cannot be picked. */
+  chooseTime: string;
+  dayPeriods: Record<'morning' | 'afternoon' | 'evening', string>;
+  noTimesAvailable: string;
+  slotUnavailable: (label: string) => string;
   /** CommandPalette `recentKey` group heading. */
   recent: string;
 }
@@ -463,6 +474,13 @@ export const defaultMessages: NexubMessages = {
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
+  countryCode: (country, code) => `Country code, ${country} +${code}`,
+  timeLeft: (count, unit) => `${count} ${unit}${count !== 1 ? 's' : ''} left`,
+  timeUp: 'Time is up',
+  chooseTime: 'Choose a time',
+  dayPeriods: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' },
+  noTimesAvailable: 'No times available',
+  slotUnavailable: (label) => `${label}, unavailable`,
   recent: 'Recent',
 };
 
