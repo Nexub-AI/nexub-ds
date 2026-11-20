@@ -3,7 +3,7 @@ import { ErrorState } from '../ErrorState/ErrorState.js';
 import { Sparkline as StateSparkline, BarChart as StateBar, DonutChart as StateDonut } from './Chart.js';
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { BarChart, DonutChart, LineChart, Sparkline, niceDomain, niceMax } from './Chart.js';
 
@@ -50,6 +50,14 @@ describe('charts', () => {
   it('DonutChart slices add up to the circle and report percentages', () => {
     render(<DonutChart title="Plans" data={[{ label: 'Pro', value: 3 }, { label: 'Free', value: 1 }]} />);
     expect(screen.getByRole('cell', { name: '75%' })).toBeTruthy();
+  });
+
+  it('DonutChart highlights a hovered slice in the hole and links legend rows', () => {
+    const { container } = render(<DonutChart title="Plans" center="4" data={[{ label: 'Pro', value: 3, href: '/pro' }, { label: 'Free', value: 1 }]} />);
+    fireEvent.mouseEnter(container.querySelector('[data-slice="1"]')!);
+    expect(container.textContent).toContain('Free · 25%');
+    expect(container.querySelector('[data-slice="0"]')!.getAttribute('class')).toContain('opacity-35');
+    expect(screen.getByRole('link', { name: 'Pro: 3 (75%)' }).getAttribute('href')).toBe('/pro');
   });
 
   it('Sparkline is decorative without a label and an image with one', () => {
