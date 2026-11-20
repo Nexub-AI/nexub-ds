@@ -5,6 +5,10 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import { ForgotPasswordPage } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 afterEach(() => vi.useRealTimers());
 
 describe('ForgotPasswordPage', () => {
@@ -15,7 +19,7 @@ describe('ForgotPasswordPage', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Reset your password' })).toBeInTheDocument();
     expect(screen.getByRole('alert')).toHaveTextContent('Too many attempts');
     const email = screen.getByLabelText(/^Email/);
-    await userEvent.type(email, 'mei');
+    await type(email, 'mei');
     await userEvent.click(screen.getByRole('button', { name: 'Send reset link' }));
     expect(onSubmit).not.toHaveBeenCalled();
     expect(screen.getByText('Enter a valid email address')).toBeInTheDocument();

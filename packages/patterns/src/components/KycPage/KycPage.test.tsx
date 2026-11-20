@@ -5,6 +5,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { KycPage, type KycValues } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 const file = (name: string, type = 'image/png') => new File(['x'], name, { type });
 const h1 = () => screen.getByRole('heading', { level: 1 });
 const next = () => userEvent.click(screen.getByRole('button', { name: 'Continue' }));
@@ -31,17 +35,17 @@ describe('KycPage', () => {
     await userEvent.click(within(summary).getByRole('link', { name: 'Enter your full legal name' }));
     expect(name).toHaveFocus();
     // Editing a field clears its message.
-    await userEvent.type(name, 'Mei Tan');
+    await type(name, 'Mei Tan');
     expect(name).not.toHaveAttribute('aria-invalid');
   });
 
   it('takes typed details, then a document, a review with edit links, and submits', async () => {
     const onSubmit = vi.fn<(v: KycValues) => Promise<void>>(() => Promise.resolve());
     render(<KycPage as="div" onSubmit={onSubmit} defaultValues={{ country: 'SG' }} defaultCountry="SG" countries={['SG', 'IN']} />);
-    await userEvent.type(screen.getByLabelText(/Full legal name/), ' Mei Tan ');
-    await userEvent.type(screen.getByLabelText(/Date of birth/), '01/15/1990');
+    await type(screen.getByLabelText(/Full legal name/), ' Mei Tan ');
+    await type(screen.getByLabelText(/Date of birth/), '01/15/1990');
     await userEvent.tab();
-    await userEvent.type(screen.getByLabelText(/Phone number/), '91234567');
+    await type(screen.getByLabelText(/Phone number/), '91234567');
     await next();
     expect(h1()).toHaveTextContent('Document');
     expect(h1()).toHaveFocus();
