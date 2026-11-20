@@ -6,6 +6,8 @@ Drafted 2026-11-15, last rewritten 2026-11-17. Follows [ROADMAP_8.x.md](ROADMAP_
 
 **Pace (decided 2026-11-17).** Fast, as in 8.x and 9.x: each version ships as soon as it is ready, one at a time, development → staging → production → npm. The 3–4 week rhythm in ROADMAP_8.x.md does not apply to this plan.
 
+**Shipped.** 10.3.0 (2026-11-17), 10.4.0 (2026-11-17), 10.5.0 (2026-11-18, 10.5.1 the same day), 10.6.0 (2026-11-20). 10.7–11.0 are built on their `feat/*` branches and not yet released.
+
 **Direction.** 5.x–7.x added components and a look. 8.x–9.x made the library stable and secure. 10.x is about what people see:
 
 - **10.3 — The app stops looking plain.**
