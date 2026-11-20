@@ -387,3 +387,55 @@ test('changes-in-9: renames the 8.5 aliases, reports classic and hidePassword', 
   // The web DatePicker rule doesn't touch an @nexub/react-native import, and vice versa.
   assert.equal(migrateSource("import { NumberInput } from '@nexub/react-native';\n<NumberInput onChange={f} />", { ext: '.tsx', rules: only('changes-in-9') }).output.includes('onChange'), true);
 });
+
+// ─── changes-in-11 ───
+test('changes-in-11: product theme files move to the generated map', () => {
+  const css = [
+    "@import '@nexub/themes/light' layer(base);",
+    "@import '@nexub/themes/leap' layer(base);",
+    '@import "@nexub/themes/src/payub.css";',
+    '@import url(@nexub/themes/founderub);',
+    '[data-product="leap"] { color: red; }',
+  ].join('\n');
+  const c = migrateSource(css, { ext: '.css', rules: only('changes-in-11') });
+  assert.equal(c.output, [
+    "@import '@nexub/themes/light' layer(base);",
+    "@import '@nexub/themes/products' layer(base);",
+    '@import "@nexub/themes/src/products.css";',
+    '@import url(@nexub/themes/products);',
+    '[data-product="leap"] { color: red; }',
+  ].join('\n'));
+  // The second and third are now duplicates of the first: reported so they get deleted.
+  assert.deepEqual(c.manual.map((m) => [m.line, m.rule]), [[3, 'changes-in-11'], [4, 'changes-in-11']]);
+
+  const js = migrateSource("import '@nexub/themes/products';\nimport '@nexub/themes/bookub';\nimport '@nexub/themes/leapfrog';", { ext: '.ts', rules: only('changes-in-11') });
+  assert.equal(js.output, "import '@nexub/themes/products';\nimport '@nexub/themes/products';\nimport '@nexub/themes/leapfrog';");
+  assert.deepEqual(js.manual.map((m) => m.line), [2]);
+  // A second run changes nothing.
+  assert.equal(migrateSource(c.output, { ext: '.css', rules: only('changes-in-11') }).output, c.output);
+});
+
+test('changes-in-11: reports overlays without a sheet prop, rewrites none', () => {
+  const src = [
+    "import { Select, DropdownMenu as Menu, DatePicker, Breadcrumb, Dialog, Button } from '@nexub/react';",
+    "import { AppHeader } from '@nexub/patterns';",
+    '<Select.Root><Select.Trigger /><Select.Content>x</Select.Content></Select.Root>',
+    '<Select.Content sheet="auto">x</Select.Content>',
+    '<Menu.Content align="end" />',
+    '<Menu.Content sheet={false} />',
+    '<DatePicker value={d} />',
+    '<DatePicker sheet />',
+    '<DatePicker {...props} />',
+    '<Breadcrumb.Trail items={items} />',
+    '<AppHeader user={user} />',
+    '<Dialog.Content /><Button />',
+  ].join('\n');
+  const r = migrateSource(src, { ext: '.tsx', rules: only('changes-in-11') });
+  assert.equal(r.output, src);
+  assert.deepEqual(r.manual.map((m) => [m.line, m.rule]), [3, 5, 7, 9, 10, 11].map((l) => [l, 'changes-in-11']));
+  assert.match(r.manual[0].message, /^<Select\.Content> has no sheet prop: in 11\.0 the default changes from false to "auto".*sheet=\{false\}/);
+  assert.match(r.manual[1].message, /^<DropdownMenu\.Content>/);
+  assert.match(r.manual[3].message, /spread/);
+  // Same names from another package are not ours.
+  assert.deepEqual(migrateSource("import { DatePicker } from 'antd';\n<DatePicker />", { ext: '.tsx', rules: only('changes-in-11') }).manual, []);
+});

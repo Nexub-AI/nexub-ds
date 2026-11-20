@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   ActivityIndicator,
-  PanResponder,
   Switch as RNSwitch,
   TextInput,
   View,
@@ -20,8 +19,10 @@ import {
   X,
   type NativeIconProps,
 } from '@nexub/icons/native';
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import Animated, {
   LayoutAnimationConfig,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -818,7 +819,12 @@ export interface SliderProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** Continuous value. Drag anywhere on the track; VoiceOver/TalkBack adjust by `step`. */
+/**
+ * Continuous value. Drag anywhere on the track; VoiceOver/TalkBack adjust by `step`.
+ *
+ * The drag is read on the UI thread through react-native-gesture-handler (a
+ * required peer): wrap your app root in `GestureHandlerRootView`.
+ */
 export function Slider({
   label,
   value,
@@ -836,72 +842,87 @@ export function Slider({
   const track = tokens.spacing['1-5'];
   const thumb = tokens.size.control.xs;
   const [v, setV] = useControllableState({ value, defaultValue, onChange: onValueChange });
-  const width = React.useRef(1);
-  const current = React.useRef(v);
-  current.current = v;
-  const responder = React.useMemo(() => {
-    const snap = (x: number) => {
-      const raw = min + Math.min(1, Math.max(0, x / width.current)) * (max - min);
-      return Math.min(max, Math.max(min, Math.round(raw / step) * step));
-    };
-    return PanResponder.create({
-      onStartShouldSetPanResponder: () => !disabled,
-      onMoveShouldSetPanResponder: () => !disabled,
-      onPanResponderTerminationRequest: () => false,
-      onPanResponderGrant: (e) => setV(snap(e.nativeEvent.locationX)),
-      onPanResponderMove: (e) => {
-        const next = snap(e.nativeEvent.locationX);
-        if (next !== current.current) setV(next);
-      },
-    });
-  }, [disabled, min, max, step, setV]);
+  const rtl = theme.dir === 'rtl';
+  const width = useSharedValue(1);
+  // The value the drag last reported, so a move within one step stays on the UI thread.
+  const last = useSharedValue(v);
+  const drag = usePanGesture(
+    React.useMemo(() => {
+      const move = (x: number, force: boolean) => {
+        'worklet';
+        const ratio = Math.min(1, Math.max(0, x / width.value));
+        const raw = min + (rtl ? 1 - ratio : ratio) * (max - min);
+        const next = Math.min(max, Math.max(min, Math.round(raw / step) * step));
+        if (force || next !== last.value) {
+          last.value = next;
+          runOnJS(setV)(next);
+        }
+      };
+      return {
+        testID: `nx-slider:${label}`,
+        enabled: !disabled,
+        // Touch down sets the value; any move after that is the drag.
+        minDistance: 0,
+        shouldCancelWhenOutside: false,
+        onBegin: (e: { x: number }) => {
+          'worklet';
+          move(e.x, true);
+        },
+        onUpdate: (e: { x: number }) => {
+          'worklet';
+          move(e.x, false);
+        },
+      };
+    }, [label, disabled, min, max, step, rtl, setV, width, last]),
+  );
   const pct = ((v - min) / (max - min)) * 100;
   return (
-    <View
-      accessible
-      accessibilityRole="adjustable"
-      accessibilityLabel={label}
-      accessibilityValue={{ min, max, now: v, text: formatValue?.(v) }}
-      accessibilityState={{ disabled: !!disabled }}
-      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
-      onAccessibilityAction={(e) =>
-        !disabled &&
-        setV(
-          Math.min(
-            max,
-            Math.max(min, v + (e.nativeEvent.actionName === 'increment' ? step : -step)),
-          ),
-        )
-      }
-      onLayout={(e) => (width.current = e.nativeEvent.layout.width || 1)}
-      style={[
-        { height: MIN_TARGET, justifyContent: 'center', opacity: disabled ? disabledOpacity(theme) : 1 },
-        style,
-      ]}
-      {...responder.panHandlers}
-    >
+    <GestureDetector gesture={drag}>
       <View
-        pointerEvents="none"
-        style={{ height: track, borderRadius: track / 2, backgroundColor: roles['surface-container-highest'] }}
+        accessible
+        accessibilityRole="adjustable"
+        accessibilityLabel={label}
+        accessibilityValue={{ min, max, now: v, text: formatValue?.(v) }}
+        accessibilityState={{ disabled: !!disabled }}
+        accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
+        onAccessibilityAction={(e) =>
+          !disabled &&
+          setV(
+            Math.min(
+              max,
+              Math.max(min, v + (e.nativeEvent.actionName === 'increment' ? step : -step)),
+            ),
+          )
+        }
+        onLayout={(e) => (width.value = e.nativeEvent.layout.width || 1)}
+        style={[
+          { height: MIN_TARGET, justifyContent: 'center', opacity: disabled ? disabledOpacity(theme) : 1 },
+          style,
+        ]}
       >
         <View
-          style={{ width: `${pct}%`, height: track, borderRadius: track / 2, backgroundColor: roles.primary }}
+          pointerEvents="none"
+          style={{ height: track, borderRadius: track / 2, backgroundColor: roles['surface-container-highest'] }}
+        >
+          <View
+            style={{ width: `${pct}%`, height: track, borderRadius: track / 2, backgroundColor: roles.primary }}
+          />
+        </View>
+        <View
+          pointerEvents="none"
+          style={{
+            position: 'absolute',
+            start: `${pct}%`,
+            marginStart: -thumb / 2,
+            width: thumb,
+            height: thumb,
+            borderRadius: thumb / 2,
+            backgroundColor: roles['surface-container-lowest'],
+            boxShadow: theme.elevation(2),
+          }}
         />
       </View>
-      <View
-        pointerEvents="none"
-        style={{
-          position: 'absolute',
-          start: `${pct}%`,
-          marginStart: -thumb / 2,
-          width: thumb,
-          height: thumb,
-          borderRadius: thumb / 2,
-          backgroundColor: roles['surface-container-lowest'],
-          boxShadow: theme.elevation(2),
-        }}
-      />
-    </View>
+    </GestureDetector>
   );
 }
 

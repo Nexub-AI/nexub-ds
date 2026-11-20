@@ -24,7 +24,7 @@ export interface SavedViewsProps {
   onUpdate?: (id: string) => void;
   /** "Delete ‹view›": remove the active view. */
   onDelete?: (id: string) => void;
-  /** The menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false */
+  /** The menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
   className?: string;
 }

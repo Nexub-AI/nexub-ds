@@ -232,6 +232,8 @@ export type { PhoneInputProps } from './components/PhoneInput/index.js';
 export { Countdown, useCountdown } from './components/Countdown/index.js';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/Countdown/index.js';
 export { TimeSlotPicker } from './components/TimeSlotPicker/index.js';
+export { QRCode } from './components/QRCode/index.js';
+export type { QRCodeProps } from './components/QRCode/index.js';
 export type { TimeSlotPickerProps, TimeSlot } from './components/TimeSlotPicker/index.js';
 export type { ChartPoint, ChartInteractiveProps, DonutDatum, HeatmapPoint } from './components/Chart/index.js';
 export { CountryBadge } from './components/CountryBadge/index.js';

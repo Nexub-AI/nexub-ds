@@ -3,7 +3,6 @@ import {
   AppState,
   FlatList,
   KeyboardAvoidingView,
-  PanResponder,
   Platform,
   RefreshControl as RNRefreshControl,
   StyleSheet,
@@ -15,7 +14,8 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { currencySymbol, fractionDigits, parseMoney } from '@nexub/core';
 import { Calendar, Delete, Eye, EyeOff, type NativeIconProps } from '@nexub/icons/native';
@@ -53,10 +53,15 @@ export interface SwipeableRowProps {
 }
 
 const SWIPE_ACTION_WIDTH = 80;
+// Captured by the swipe worklets (nxSpring itself is not a worklet).
+const SWIPE_SPRING = nxSpring('spatial', 'default');
 
 /**
  * Swipe a row to reveal actions. Never the only way to an action: they are
  * custom accessibility actions too (VoiceOver rotor / TalkBack actions).
+ *
+ * The swipe runs on the UI thread through react-native-gesture-handler (a
+ * required peer): wrap your app root in `GestureHandlerRootView`.
  */
 export function SwipeableRow({ label, onPress, actions, children, style }: SwipeableRowProps) {
   const { roles, tokens, dir } = useTheme();
@@ -64,33 +69,44 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
   const width = actions.length * SWIPE_ACTION_WIDTH;
   const sign = dir === 'rtl' ? 1 : -1; // open = content moves toward the start edge
   const x = useSharedValue(0);
-  const open = React.useRef(false);
+  // Read by the swipe worklets, so a shared value rather than a ref.
+  const open = useSharedValue(false);
   const settle = React.useCallback(
     (to: boolean) => {
-      if (to !== open.current) play('snap');
-      open.current = to;
-      x.value = withSpring(to ? sign * width : 0, nxSpring('spatial', 'default'));
+      if (to !== open.value) play('snap');
+      open.value = to;
+      x.value = withSpring(to ? sign * width : 0, SWIPE_SPRING);
     },
-    [play, sign, width, x],
+    [play, sign, width, x, open],
   );
-  const responder = React.useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (_, g) =>
-          Math.abs(g.dx) > 8 && Math.abs(g.dx) > Math.abs(g.dy) * 1.5,
-        onPanResponderMove: (_, g) => {
-          const base = open.current ? sign * width : 0;
-          const next = base + g.dx;
+  // Swipe on the UI thread; JS hears only the haptic when the row changes side.
+  const swipe = usePanGesture(
+    React.useMemo(
+      () => ({
+        testID: `nx-swipe-row:${label}`,
+        activeOffsetX: [-8, 8] as [number, number],
+        // A mostly vertical move belongs to the list's scroll.
+        failOffsetY: [-6, 6] as [number, number],
+        onUpdate: (e: { translationX: number }) => {
+          'worklet';
+          const next = (open.value ? sign * width : 0) + e.translationX;
           x.value =
             sign < 0
               ? Math.min(0, Math.max(-width * 1.2, next))
               : Math.max(0, Math.min(width * 1.2, next));
         },
-        onPanResponderRelease: (_, g) =>
-          settle(Math.abs((open.current ? sign * width : 0) + g.dx) > width / 2),
-        onPanResponderTerminate: () => settle(open.current),
+        onDeactivate: (e: { translationX: number; canceled: boolean }) => {
+          'worklet';
+          const to = e.canceled
+            ? open.value
+            : Math.abs((open.value ? sign * width : 0) + e.translationX) > width / 2;
+          if (to !== open.value) runOnJS(play)('snap');
+          open.value = to;
+          x.value = withSpring(to ? sign * width : 0, SWIPE_SPRING);
+        },
       }),
-    [width, sign, x, settle],
+      [label, width, sign, x, open, play],
+    ),
   );
   const slide = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));
   const bg: Record<NonNullable<SwipeAction['tone']>, [RoleName, RoleName]> = {
@@ -153,12 +169,11 @@ export function SwipeableRow({ label, onPress, actions, children, style }: Swipe
           );
         })}
       </View>
-      <Animated.View
-        style={[{ backgroundColor: roles['surface-container-lowest'] }, slide]}
-        {...responder.panHandlers}
-      >
-        {children}
-      </Animated.View>
+      <GestureDetector gesture={swipe}>
+        <Animated.View style={[{ backgroundColor: roles['surface-container-lowest'] }, slide]}>
+          {children}
+        </Animated.View>
+      </GestureDetector>
     </Animated.View>
   );
 }
@@ -669,7 +684,10 @@ export interface CoachmarkProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** A one-time hint next to a new feature. Place it in your layout; it doesn't measure targets. */
+/**
+ * A one-time hint next to a new feature. Place it in your layout; it doesn't
+ * measure targets. It is inline, so Android back is left to navigation.
+ */
 export function Coachmark({
   title,
   children,

@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 10.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 10.8.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -121,6 +121,7 @@ Version 10.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Popover](https://nexub-ds-docs.pages.dev/components/popover.md): Floating content panel anchored to a trigger element.
 - [Progress](https://nexub-ds-docs.pages.dev/components/progress.md): Horizontal progress bar with optional tone and animation.
 - [Prompt Input](https://nexub-ds-docs.pages.dev/components/prompt-input.md): The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
+- [QR Code](https://nexub-ds-docs.pages.dev/components/qr-code.md): A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
 - [Radio Card](https://nexub-ds-docs.pages.dev/components/radio-card.md): A radio group where each option is a whole card: title, description and optional icon, one choice.
 - [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group.md): Group of mutually exclusive radio inputs.
 - [Rating](https://nexub-ds-docs.pages.dev/components/rating.md): Star rating input, supports controlled and read-only modes.

@@ -2,6 +2,7 @@
 // overlays and inputs first, then display, feedback, mobile and primitives.
 import * as React from 'react';
 import { ActionSheetIOS, AppState, Platform, StyleSheet, Text as RNText, type AppStateStatus } from 'react-native';
+import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Plus } from '@nexub/icons/native';
 import * as ScreenCapture from 'expo-screen-capture';
@@ -263,7 +264,8 @@ describe('Slider', () => {
     await wrap(<Slider label="Volume" step={25} onValueChange={onChange} />);
     const s = screen.getByRole('adjustable', { name: 'Volume' });
     await fireEvent(s, 'layout', { nativeEvent: { layout: { width: 200 } } });
-    await fireEvent(s, 'responderGrant', { nativeEvent: { locationX: 140, touches: [], changedTouches: [] }, touchHistory: { touchBank: [] } });
+    // Touch down at x=140 of 200, through the gesture handler.
+    await React.act(async () => fireGestureHandler(getByGestureTestId('nx-slider:Volume'), [{ x: 140 }]));
     expect(onChange).toHaveBeenLastCalledWith(75);
   });
 

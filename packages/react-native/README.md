@@ -9,7 +9,7 @@ Status: **alpha**. Built for Expo SDK 58+ / React Native 0.86+ (New Architecture
 ## Install
 
 ```bash
-npx expo install @nexub/react-native react-native-reanimated react-native-worklets react-native-svg react-native-safe-area-context expo-font
+npx expo install @nexub/react-native react-native-gesture-handler react-native-reanimated react-native-worklets react-native-svg react-native-safe-area-context expo-font
 ```
 
 Optional peers. Add only what you use; without them the feature is a no-op or the component tells you what to install:
@@ -28,6 +28,7 @@ Optional peers. Add only what you use; without them the feature is a no-op or th
 ```tsx
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NexubNativeProvider, ToastProvider, nexubFonts, useNexubNavigation } from '@nexub/react-native';
 
 function Screens() {
@@ -39,14 +40,18 @@ export default function RootLayout() {
   const [ready] = useFonts(nexubFonts);
   if (!ready) return null;
   return (
-    <NexubNativeProvider product="payub">
-      <ToastProvider>
-        <Screens />
-      </ToastProvider>
-    </NexubNativeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NexubNativeProvider product="payub">
+        <ToastProvider>
+          <Screens />
+        </ToastProvider>
+      </NexubNativeProvider>
+    </GestureHandlerRootView>
   );
 }
 ```
+
+`GestureHandlerRootView` at the root is required since 10.9: `BottomSheet`, `SwipeableRow`, `Slider` and toasts read their gestures on the UI thread through `react-native-gesture-handler` (3.0 or newer, now a required peer).
 
 `NexubNativeProvider` props:
 
@@ -105,7 +110,7 @@ Icons: `import { Search } from '@nexub/icons/native'`. These are the same names 
 
 ## Testing your app
 
-The library's own tests use Jest (jest-expo) and React Native Testing Library. In your Jest setup, stub `react-native-reanimated`'s APIs and use `react-native-safe-area-context/jest/mock`; `packages/react-native/jest.setup.js` in the repo shows the pattern.
+The library's own tests use Jest (jest-expo) and React Native Testing Library. In your Jest setup, stub `react-native-reanimated`'s APIs, add `react-native-gesture-handler/jestSetup` and use `react-native-safe-area-context/jest/mock`; `packages/react-native/jest.setup.js` in the repo shows the pattern.
 
 ## Links
 
