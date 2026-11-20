@@ -30,7 +30,7 @@ export interface DateTimePickerProps {
   'aria-label'?: string;
   className?: string;
   locale?: Locale;
-  /** The calendar as a bottom sheet: see DatePicker `sheet`. @default false */
+  /** The calendar as a bottom sheet: see DatePicker `sheet`. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 

@@ -71,11 +71,19 @@ test('published tarballs must match checksums.txt exactly', async () => {
   assert.throws(() => parseChecksums('not a checksum line\n'), /unreadable line/);
 });
 
-test('the 10.0 release candidate (9.9.x) publishes to "next", everything else to "latest"', async () => {
+test('release candidates (9.9.x for 10.0, 10.9.x for 11.0) publish to "next", everything else to "latest"', async () => {
   const { distTag } = await import('./publish-tarballs.mjs');
   assert.equal(distTag('9.9.0'), 'next');
   assert.equal(distTag('9.9.1'), 'next');
   assert.equal(distTag('9.8.0'), 'latest');
   assert.equal(distTag('10.0.0'), 'latest');
   assert.equal(distTag('19.9.0'), 'latest');
+  assert.equal(distTag('10.9.0'), 'next');
+  assert.equal(distTag('10.9.3'), 'next');
+  assert.equal(distTag('10.8.0'), 'latest');
+  assert.equal(distTag('10.8.2'), 'latest');
+  assert.equal(distTag('10.10.0'), 'latest');
+  assert.equal(distTag('10.90.0'), 'latest');
+  assert.equal(distTag('110.9.0'), 'latest');
+  assert.equal(distTag('11.0.0'), 'latest');
 });

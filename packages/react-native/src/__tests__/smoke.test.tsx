@@ -15,6 +15,10 @@ jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({
   default: () => mockColorScheme(),
 }));
 
+// The camera is an optional peer: the smoke run covers the app that did not install it.
+jest.mock('expo-camera', () => {
+  throw new Error('expo-camera is not installed');
+});
 jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
   impactAsync: jest.fn(() => Promise.resolve()),
@@ -74,6 +78,9 @@ const CASES: Record<string, Case> = {
   Badge: { props: { children: 'New' } },
   Avatar: { props: { name: 'Ada Lovelace' }, a11y: ['image', 'Ada Lovelace'] },
   AvatarGroup: { props: { children: [<Lib.Avatar key="a" name="Ada" />] }, a11y: ['image', 'Ada'] },
+  IconChip: { props: { category: 'emerald', accessibilityLabel: 'Savings', children: <Plus /> }, a11y: ['image', 'Savings'] },
+  NumberTicker: { props: { value: 1204 }, a11y: '1,204' },
+  StatCard: { props: { label: 'Revenue', value: '$4,200', delta: '+2%', deltaType: 'increase', onPress: noop }, a11y: ['button', 'Revenue, $4,200, +2%'] },
   Divider: { props: {} },
   // Inputs
   TextField: { props: { label: 'Name' }, a11y: 'Name' },
@@ -145,8 +152,17 @@ const CASES: Record<string, Case> = {
   },
   TreeList: { props: { rootTitle: 'Teams', nodes: [{ id: 'a', title: 'Ada' }], onSelect: noop } },
   StepProgress: { props: { steps: [{ id: 'a', label: 'Account' }], current: 0 }, a11y: 'Step 1 of 1: Account' },
+  StepIndicator: { props: { steps: [{ id: 'a', label: 'Account' }], current: 0 }, a11y: 'Step 1 of 1: Account' },
+  Rating: { props: { defaultValue: 3 }, a11y: ['adjustable', 'Rating'] },
+  Tooltip: { props: { label: 'Copy link', children: <Lib.Button onPress={noop}>Copy</Lib.Button> }, a11y: ['button', 'Copy'] },
   SortableList: { props: { items: ['A'], keyExtractor: (i: string) => i, title: (i: string) => i, onReorder: noop } },
   InlineEdit: { props: { label: 'Name', value: 'Acme', onSave: noop }, a11y: 'Edit Name, Acme' },
+  // 10.9: QR codes and the twins of the 10.7/10.8 web components (DescriptionList is a { Root, Item } object: twins.test.tsx)
+  QRCode: { props: { value: 'https://example.com/h/4729' }, a11y: ['image', 'QR code for https://example.com/h/4729'] },
+  QRScanner: { props: { onScan: noop, fallback: <Lib.Button onPress={noop}>Enter code</Lib.Button> }, a11y: ['button', 'Enter code'] },
+  ComparisonBar: { props: { label: 'Orders', left: { label: 'A', value: 3 }, right: { label: 'B', value: 1 } }, a11y: ['image', 'Orders: A 3, B 1'] },
+  PhoneInput: { props: { label: 'Phone', defaultCountry: 'IN' }, a11y: ['button', 'Country code, India +91'] },
+  Countdown: { props: { to: 272_000, now: () => 0 }, a11y: ['timer', '4:32'] },
   // Patterns
   HomeScreen: { props: { greeting: 'Hi', balance: { value: 1, currency: 'USD' } } },
   AuthScreen: { props: { title: 'Welcome', children: t('form'), footer: <Lib.Button onPress={noop}>Go</Lib.Button> }, a11y: ['header', 'Welcome'] },
@@ -172,6 +188,7 @@ const CASES: Record<string, Case> = {
   ChatScreen: { props: { messages: [], onSend: noop }, a11y: ['button', 'Send message'] },
   PaywallScreen: { props: { title: 'Go Pro', plans: [{ id: 'm', name: 'Monthly', price: '$9', features: [] }], onSubscribe: noop }, a11y: ['radio', 'Monthly, $9'] },
   AppSwitcherSheet: { props: { open: true, onOpenChange: noop, apps: [{ id: 'leap', name: 'Leap' }], onOpenApp: noop }, a11y: ['button', 'Leap'] },
+  StatusSteps: { props: { accessibilityLabel: 'Status', steps: [{ title: 'Sent', status: 'done' }] }, a11y: 'Status' },
 };
 
 const isComponent = (name: string, v: unknown) =>

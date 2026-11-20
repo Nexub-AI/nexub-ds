@@ -8,6 +8,8 @@ export default defineConfig({
     // parallel runs under turbo delete each other's cache (ENOTEMPTY).
     fsModuleCachePath: new URL('node_modules/.vitest-cache', import.meta.url).pathname,
     environment: 'jsdom',
+    // Every package's tests run at once in CI; 5s is too tight for the typing-heavy ones.
+    testTimeout: 20_000,
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     // visual/ is the Playwright suite (pnpm test:visual), not vitest.

@@ -173,6 +173,20 @@ export type {
 export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
 export { TreeList, StepProgress, SortableList, InlineEdit } from './components/workflow';
 export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps } from './components/workflow';
+/**
+ * `StepIndicator` is `StepProgress` under the name RFC #302 asks for: the twin
+ * of web `Stepper`. On native, `Stepper` is the − / + number control.
+ */
+export { StepProgress as StepIndicator } from './components/workflow';
+export type { StepProgressProps as StepIndicatorProps } from './components/workflow';
+export { Tabs } from './components/tabs';
+export type { TabsRootProps, TabsListProps, TabsTriggerProps, TabsContentProps } from './components/tabs';
+export { Table } from './components/table';
+export type { TableRootProps, TableSectionProps, TableRowProps, TableCellProps, TableCaptionProps } from './components/table';
+export { Rating } from './components/rating';
+export type { RatingProps } from './components/rating';
+export { Tooltip } from './components/tooltip';
+export type { TooltipProps } from './components/tooltip';
 export type {
   MultiSelectOption,
   MultiSelectProps,
@@ -195,3 +209,33 @@ export {
 export { SkeletonText } from './components/feedback';
 export type { SkeletonTextProps } from './components/feedback';
 export type { AvatarStatus } from './components/display';
+
+// 10.9: lively surfaces (expression, spot accent, category colours, stats, breakpoints)
+export { dynamicPrimary, DENSE_MAX_FONT_SCALE } from './theme/ThemeProvider';
+export type { Expression, ThemeColors } from './theme/ThemeProvider';
+export { useBreakpoint, useResponsive, TABLET_MIN } from './theme/layout';
+export type { Breakpoint } from './theme/layout';
+export { IconChip, categoryPalette, autoCategory } from './components/display';
+export type { IconChipProps, CategoryPalette } from './components/display';
+export { NumberTicker, StatCard } from './components/stats';
+export type { NumberTickerProps, StatCardProps } from './components/stats';
+export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS } from '@nexub/core';
+export type { CategoryColor, ProductKey, DivisionKey } from '@nexub/core';
+
+// 10.9: QR codes, and the native twins of the 10.7/10.8 web components
+export { QRCode, QRScanner } from './components/qr';
+export type { QRCodeProps, QRScannerProps } from './components/qr';
+export { DescriptionList, ComparisonBar } from './components/datadisplay';
+export type {
+  DescriptionListProps,
+  DescriptionListRootProps,
+  DescriptionListItemProps,
+  ComparisonBarProps,
+  ComparisonBarSide,
+} from './components/datadisplay';
+export { PhoneInput } from './components/phone';
+export type { PhoneInputProps } from './components/phone';
+export { Countdown, useCountdown } from './components/countdown';
+export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/countdown';
+export { encodeQR, qrPath, COUNTRIES, callingCode, formatNational, toE164, parsePhone, isValidPhone } from '@nexub/core';
+export type { QRErrorCorrection, QRMatrix, CountryCode, ParsedPhone } from '@nexub/core';

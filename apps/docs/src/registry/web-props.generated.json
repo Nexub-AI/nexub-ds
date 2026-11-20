@@ -355,7 +355,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -652,7 +652,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "The \"More\" menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         }
       ]
@@ -1312,7 +1312,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above."
         },
         {
@@ -1953,7 +1953,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -2053,7 +2053,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -2151,7 +2151,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "The calendar as a bottom sheet: see DatePicker `sheet`."
         },
         {
@@ -4372,7 +4372,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
         },
         {
@@ -5052,6 +5052,57 @@
         }
       ]
     },
+    "QRCode": {
+      "file": "components/QRCode/QRCode.tsx",
+      "props": [
+        {
+          "name": "caption",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The text under the code. Defaults to the value, so it can be read and typed without a camera. `false` hides it."
+        },
+        {
+          "name": "ecc",
+          "type": "'L' | 'M' | 'Q' | 'H'",
+          "required": false,
+          "default": "'M', or 'H' with a `logo`",
+          "description": "Error correction: how much of the code may be damaged or covered."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "'QR code for <value>'",
+          "description": "Text alternative of the image."
+        },
+        {
+          "name": "logo",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A mark in the centre, on a light tile a fifth of the width. Raises the default `ecc` to 'H'."
+        },
+        {
+          "name": "quietZone",
+          "type": "number",
+          "required": false,
+          "default": "4",
+          "description": "Light margin around the code, in modules. Readers need 4."
+        },
+        {
+          "name": "size",
+          "type": "string | number",
+          "required": false,
+          "default": "160",
+          "description": "Width of the code: a number of pixels, or any CSS length. It never grows past its container."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": true,
+          "description": "The text to encode, usually a URL. Up to 2,953 bytes of UTF-8 (1,273 with a logo)."
+        }
+      ]
+    },
     "RadioCard": {
       "file": "components/RadioCard/RadioCard.tsx",
       "props": [
@@ -5278,7 +5329,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {
@@ -6032,7 +6083,7 @@
           "name": "sheet",
           "type": "false | true | 'auto'",
           "required": false,
-          "default": "false",
+          "default": "false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens)",
           "description": "The menu as a bottom sheet: see DropdownMenu.Content `sheet`."
         },
         {

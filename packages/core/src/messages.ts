@@ -254,6 +254,20 @@ export interface NexubMessages {
   timeLeft: (count: number, unit: 'minute' | 'second') => string;
   /** Countdown at zero. */
   timeUp: string;
+  /** QRCode text alternative ("QR code for https://example.com"). */
+  qrCodeFor: (value: string) => string;
+  /** QRScanner (native): hint over the camera, permission primer and its button, the denied state and its button. */
+  scanInstructions: string;
+  cameraPermission: string;
+  allowCamera: string;
+  cameraDenied: string;
+  openSettings: string;
+  /** QRScanner: no camera module in the app, the switch to manual entry and back, the torch button, and the announcement after a scan. */
+  cameraUnavailable: string;
+  enterCodeManually: string;
+  scanCode: string;
+  torch: string;
+  codeScanned: string;
   /** TimeSlotPicker: default group name, period headings, empty text, and a slot that cannot be picked. */
   chooseTime: string;
   dayPeriods: Record<'morning' | 'afternoon' | 'evening', string>;
@@ -477,6 +491,17 @@ export const defaultMessages: NexubMessages = {
   countryCode: (country, code) => `Country code, ${country} +${code}`,
   timeLeft: (count, unit) => `${count} ${unit}${count !== 1 ? 's' : ''} left`,
   timeUp: 'Time is up',
+  qrCodeFor: (value) => `QR code for ${value}`,
+  scanInstructions: 'Point the camera at a QR code',
+  cameraPermission: 'Allow camera access to scan a code.',
+  allowCamera: 'Allow camera',
+  cameraDenied: 'Camera access is off. Turn it on in Settings to scan a code.',
+  openSettings: 'Open settings',
+  cameraUnavailable: 'Scanning isn’t available on this device.',
+  enterCodeManually: 'Enter code manually',
+  scanCode: 'Scan a code',
+  torch: 'Flashlight',
+  codeScanned: 'Code scanned',
   chooseTime: 'Choose a time',
   dayPeriods: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' },
   noTimesAvailable: 'No times available',

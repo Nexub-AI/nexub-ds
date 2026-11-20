@@ -1,5 +1,5 @@
 import { Stack as Screen, router } from 'expo-router';
-import { Bell, Layers, MessageSquare, Settings, Smartphone, Sparkles, Wallet } from '@nexub/icons/native';
+import { Bell, Home, Layers, MessageSquare, Settings, Smartphone, Sparkles, Wallet } from '@nexub/icons/native';
 import { Icon, ListItem, ListSection, ScreenContainer } from '@nexub/react-native';
 
 const SECTIONS = [
@@ -10,6 +10,8 @@ const SECTIONS = [
   { href: '/feedback', title: 'Feedback', subtitle: 'Banner, toast, dialog, progress, states', icon: Bell },
   { href: '/mobile', title: 'Mobile patterns', subtitle: 'Sheets, swipe, OTP, keypad, privacy', icon: Smartphone },
   { href: '/patterns', title: 'Screens', subtitle: 'Payub flows: sign-in, send money, activity, settings', icon: Wallet },
+  // Last, so the rows the Maestro catalogue flow scrolls to keep their place.
+  { href: '/demo', title: 'Demo app', subtitle: 'One connected flow: sign in, tabs, detail, sign out', icon: Home },
 ] as const;
 
 export default function Catalogue() {

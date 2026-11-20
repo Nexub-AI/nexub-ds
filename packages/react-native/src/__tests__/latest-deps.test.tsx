@@ -1,9 +1,11 @@
 // 8.4 (A3): hooks that used to silence exhaustive-deps. Each effect or gesture
 // responder must run on its own trigger only: a parent re-render with a new
 // inline callback or array must not replay springs, re-present sheets or
-// rebuild a responder mid-drag, and the newest callback is the one called.
+// rebuild a gesture mid-drag, and the newest callback is the one called.
 import * as React from 'react';
-import { ActionSheetIOS, PanResponder, Text as RNText } from 'react-native';
+import { ActionSheetIOS, Text as RNText } from 'react-native';
+import { State } from 'react-native-gesture-handler';
+import { fireGestureHandler, getByGestureTestId } from 'react-native-gesture-handler/jest-utils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import {
   ActionSheet,
@@ -32,13 +34,15 @@ const Reanimated = require('react-native-reanimated');
 const withSpring = jest.fn((to: number) => to);
 Reanimated.withSpring = withSpring;
 
-type Config = Parameters<typeof PanResponder.create>[0];
-const create = jest.spyOn(PanResponder, 'create');
-const lastConfig = () => create.mock.lastCall![0] as Required<Config>;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- handlers only read the fields we pass
-const g = (o: object) => ({ dx: 0, dy: 0, vx: 0, vy: 0, ...o }) as any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const ev = (o: object = {}) => ({ nativeEvent: { locationX: 0, ...o } }) as any;
+// One pan through the handler: touch down, a move, lift.
+const pan = (testID: string, move: object) =>
+  React.act(async () =>
+    fireGestureHandler(getByGestureTestId(testID), [
+      { state: State.BEGAN, ...move },
+      { state: State.ACTIVE, ...move },
+      { state: State.END, ...move },
+    ]),
+  );
 
 const Provider = ({ children }: { children: React.ReactNode }) => (
   <NexubNativeProvider scheme="light" contrast="standard" locale="en-US">
@@ -47,10 +51,7 @@ const Provider = ({ children }: { children: React.ReactNode }) => (
 );
 const wrap = (ui: React.ReactElement) => render(ui, { wrapper: Provider });
 
-beforeEach(() => {
-  withSpring.mockClear();
-  create.mockClear();
-});
+beforeEach(() => withSpring.mockClear());
 
 describe('BottomSheet', () => {
   const sheet = (onOpenChange: (o: boolean) => void) => (
@@ -59,17 +60,17 @@ describe('BottomSheet', () => {
     </BottomSheet>
   );
 
-  it('re-render with new detents/onOpenChange keeps the open spring and responder; drag-dismiss calls the latest', async () => {
+  it('re-render with new detents/onOpenChange keeps the open spring and gesture; drag-dismiss calls the latest', async () => {
     const first = jest.fn();
     const latest = jest.fn();
     await wrap(sheet(first));
     const springs = withSpring.mock.calls.length;
-    const responders = create.mock.calls.length;
+    const drag = getByGestureTestId('nx-sheet-drag');
     expect(springs).toBeGreaterThan(0);
     await screen.rerender(sheet(latest));
     expect(withSpring).toHaveBeenCalledTimes(springs);
-    expect(create).toHaveBeenCalledTimes(responders);
-    lastConfig().onPanResponderRelease(ev(), g({ dy: 2000, vy: 3 }));
+    expect(getByGestureTestId('nx-sheet-drag')).toBe(drag);
+    await pan('nx-sheet-drag', { translationY: 2000, velocityY: 3000 });
     expect(latest).toHaveBeenCalledWith(false);
     expect(first).not.toHaveBeenCalled();
   });
@@ -126,25 +127,24 @@ describe('MoneyInput', () => {
 });
 
 describe('Slider', () => {
-  it('keeps one responder across re-renders; a drag reports to the latest onValueChange', async () => {
+  it('keeps one gesture across re-renders; a drag reports to the latest onValueChange', async () => {
     const first = jest.fn();
     const latest = jest.fn();
     await wrap(<Slider label="Volume" step={25} onValueChange={first} />);
-    const s = screen.getByRole('adjustable', { name: 'Volume' });
-    const grant = s.props.onResponderGrant;
+    const drag = getByGestureTestId('nx-slider:Volume');
     await screen.rerender(<Slider label="Volume" step={25} onValueChange={latest} />);
-    expect(screen.getByRole('adjustable', { name: 'Volume' }).props.onResponderGrant).toBe(grant);
+    expect(getByGestureTestId('nx-slider:Volume')).toBe(drag);
     await fireEvent(screen.getByRole('adjustable', { name: 'Volume' }), 'layout', {
       nativeEvent: { layout: { width: 200 } },
     });
-    await React.act(async () => lastConfig().onPanResponderGrant(ev({ locationX: 140 }), g({})));
+    await pan('nx-slider:Volume', { x: 140 });
     expect(latest).toHaveBeenLastCalledWith(75);
     expect(first).not.toHaveBeenCalled();
   });
 });
 
 describe('SwipeableRow', () => {
-  it('keeps one responder across re-renders with new inline props', async () => {
+  it('keeps one gesture across re-renders with new inline props', async () => {
     const row = (onPress: () => void) => (
       <SwipeableRow
         label="Row"
@@ -155,11 +155,11 @@ describe('SwipeableRow', () => {
       </SwipeableRow>
     );
     await wrap(row(() => {}));
-    const responders = create.mock.calls.length;
+    const swipe = getByGestureTestId('nx-swipe-row:Row');
     await screen.rerender(row(() => {}));
-    expect(create).toHaveBeenCalledTimes(responders);
-    // The kept responder still settles open past half the actions' width.
-    lastConfig().onPanResponderRelease(ev(), g({ dx: -200 }));
+    expect(getByGestureTestId('nx-swipe-row:Row')).toBe(swipe);
+    // The kept gesture still settles open past half the actions' width.
+    await pan('nx-swipe-row:Row', { translationX: -200 });
     expect(withSpring).toHaveBeenLastCalledWith(expect.any(Number), expect.anything());
     expect(withSpring.mock.lastCall![0]).toBeLessThan(0);
   });
@@ -181,10 +181,10 @@ describe('Toast', () => {
     await React.act(async () => show({ message: 'Saved' }));
     expect(screen.getByText('Saved')).toBeTruthy();
     const springs = withSpring.mock.calls.length;
-    const responders = create.mock.calls.length;
+    const swipe = getByGestureTestId('nx-toast-swipe');
     await screen.rerender(host(24));
     expect(withSpring).toHaveBeenCalledTimes(springs);
-    expect(create).toHaveBeenCalledTimes(responders);
+    expect(getByGestureTestId('nx-toast-swipe')).toBe(swipe);
   });
 });
 

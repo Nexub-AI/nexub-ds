@@ -3,7 +3,6 @@ import {
   ActionSheetIOS,
   KeyboardAvoidingView,
   Modal,
-  PanResponder,
   Platform,
   Pressable as RNPressable,
   ScrollView,
@@ -18,6 +17,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { GestureDetector, GestureHandlerRootView, usePanGesture } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronsUpDown } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
@@ -45,6 +45,7 @@ const GRABBER = 24;
  * position and `vy` the release velocity in px/s (down is positive).
  */
 export function sheetRelease(y: number, vy: number, offsets: number[], dismissible: boolean) {
+  'worklet';
   if (dismissible && (y > Math.max(...offsets) + 80 || vy > 1200)) return -1;
   // Nearest detent to where the fling would carry it.
   const target = y + vy * 0.12;
@@ -72,6 +73,10 @@ export interface BottomSheetProps {
  * A modal sheet from the bottom edge (one at a time, per Apple and Material).
  * Drag the grabber to resize or dismiss; tapping it cycles the detents, which
  * also works with VoiceOver/TalkBack.
+ *
+ * The drag runs on the UI thread through react-native-gesture-handler (a
+ * required peer): wrap your app root in `GestureHandlerRootView`. The sheet
+ * brings its own root view inside its Modal.
  */
 export function BottomSheet({
   open,
@@ -148,36 +153,46 @@ export function BottomSheet({
     refit.current();
   }, [content, refit]);
 
-  // ponytail: PanResponder moves arrive on the JS thread and write the shared
-  // value; a UI-thread drag needs react-native-gesture-handler as a peer.
-  const start = React.useRef(0);
-  // One responder for the sheet's life (a new one mid-drag drops the gesture);
-  // the release reads the latest detents, index and onOpenChange.
-  const release = useLatest((dy: number, vy: number) => {
-    fling.current = vy * 1000; // PanResponder px/ms → Reanimated px/s
-    const best = sheetRelease(
-      start.current + dy,
-      fling.current,
-      heights.map((h) => tallest - h),
-      dismissible,
-    );
-    if (best < 0) return onOpenChange(false);
+  // The drag runs on the UI thread: the worklets follow the finger, pick the
+  // detent and start the snap spring there. JS hears only the outcome (close,
+  // or the new detent and its haptic).
+  const start = useSharedValue(0);
+  const offsets = heights.map((h) => tallest - h);
+  const offsetsKey = offsets.join();
+  const landed = useLatest((best: number, vy: number) => {
+    if (best < 0) {
+      fling.current = vy; // carried into the exit spring
+      return onOpenChange(false);
+    }
     if (best !== index) play('snap');
-    snapTo(best);
+    setIndex(best);
   });
-  const responder = React.useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dy) > 4,
-        onPanResponderGrant: () => {
-          start.current = translate.value;
+  const onLanded = React.useCallback((best: number, vy: number) => landed.current(best, vy), [landed]);
+  const drag = usePanGesture(
+    React.useMemo(
+      () => ({
+        testID: 'nx-sheet-drag',
+        activeOffsetY: [-4, 4] as [number, number],
+        onActivate: () => {
+          'worklet';
+          start.value = translate.value;
         },
-        onPanResponderMove: (_, g) => {
-          translate.value = Math.max(0, start.current + g.dy);
+        onUpdate: (e: { translationY: number }) => {
+          'worklet';
+          translate.value = Math.max(0, start.value + e.translationY);
         },
-        onPanResponderRelease: (_, g) => release.current(g.dy, g.vy),
+        onDeactivate: (e: { translationY: number; velocityY: number }) => {
+          'worklet';
+          const best = sheetRelease(start.value + e.translationY, e.velocityY, offsets, dismissible);
+          if (best >= 0) {
+            translate.value = withSpring(offsets[best]!, { ...SHEET_SPRING, velocity: e.velocityY });
+          }
+          runOnJS(onLanded)(best, e.velocityY);
+        },
       }),
-    [translate, release],
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- offsets by value, not identity
+      [offsetsKey, dismissible, start, translate, onLanded],
+    ),
   );
 
   const sheetStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translate.value }] }));
@@ -216,76 +231,81 @@ export function BottomSheet({
       navigationBarTranslucent
       onRequestClose={close}
     >
-      <Animated.View
-        style={[
-          {
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            start: 0,
-            end: 0,
-            backgroundColor: roles.scrim,
-          },
-          scrimStyle,
-        ]}
-      >
-        <RNPressable
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={{ flex: 1 }}
-          onPress={close}
-        />
-      </Animated.View>
-      <KeyboardAvoidingView
-        // Both platforms: an Android window that already resized for the
-        // keyboard overlaps it by nothing, so the padding stays 0 there.
-        behavior="padding"
-        style={{ flex: 1, justifyContent: 'flex-end' }}
-        pointerEvents="box-none"
-      >
+      {/* Gestures inside a Modal need their own root view (Android). */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <Animated.View
-          accessibilityViewIsModal
           style={[
             {
-              height: tallest,
-              borderTopStartRadius: tokens.shape.overlay,
-              borderTopEndRadius: tokens.shape.overlay,
-              backgroundColor: roles['surface-elevated'],
-              boxShadow: tokens.elevation[3][theme.scheme],
-              overflow: 'hidden',
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              start: 0,
+              end: 0,
+              backgroundColor: roles.scrim,
             },
-            sheetStyle,
+            scrimStyle,
           ]}
         >
-          <View {...responder.panHandlers}>
-            <Pressable
-              accessibilityLabel={messages.resize}
-              accessibilityHint={title}
-              disabled={heights.length < 2}
-              onPress={() => snapTo((index + 1) % heights.length)}
-              stateLayer={false}
-              pressScale={false}
-              style={{ height: GRABBER, alignItems: 'center', justifyContent: 'center' }}
-            >
-              <View
-                style={{
-                  width: tokens.spacing[9],
-                  height: 5,
-                  borderRadius: 3,
-                  backgroundColor: roles['outline-variant'],
-                }}
-              />
-            </Pressable>
-          </View>
-          {scroll ? (
-            <ScrollView style={{ maxHeight: height - GRABBER }} keyboardShouldPersistTaps="handled">
-              {body}
-            </ScrollView>
-          ) : (
-            body
-          )}
+          <RNPressable
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={{ flex: 1 }}
+            onPress={close}
+          />
         </Animated.View>
-      </KeyboardAvoidingView>
+        <KeyboardAvoidingView
+          // Both platforms: an Android window that already resized for the
+          // keyboard overlaps it by nothing, so the padding stays 0 there.
+          behavior="padding"
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+          pointerEvents="box-none"
+        >
+          <Animated.View
+            accessibilityViewIsModal
+            style={[
+              {
+                height: tallest,
+                borderTopStartRadius: tokens.shape.overlay,
+                borderTopEndRadius: tokens.shape.overlay,
+                backgroundColor: roles['surface-elevated'],
+                boxShadow: tokens.elevation[3][theme.scheme],
+                overflow: 'hidden',
+              },
+              sheetStyle,
+            ]}
+          >
+            <GestureDetector gesture={drag}>
+              <View>
+                <Pressable
+                  accessibilityLabel={messages.resize}
+                  accessibilityHint={title}
+                  disabled={heights.length < 2}
+                  onPress={() => snapTo((index + 1) % heights.length)}
+                  stateLayer={false}
+                  pressScale={false}
+                  style={{ height: GRABBER, alignItems: 'center', justifyContent: 'center' }}
+                >
+                  <View
+                    style={{
+                      width: tokens.spacing[9],
+                      height: 5,
+                      borderRadius: 3,
+                      backgroundColor: roles['outline-variant'],
+                    }}
+                  />
+                </Pressable>
+              </View>
+            </GestureDetector>
+            {scroll ? (
+              <ScrollView style={{ maxHeight: height - GRABBER }} keyboardShouldPersistTaps="handled">
+                {body}
+              </ScrollView>
+            ) : (
+              body
+            )}
+          </Animated.View>
+        </KeyboardAvoidingView>
+      </GestureHandlerRootView>
     </Modal>
   );
 }

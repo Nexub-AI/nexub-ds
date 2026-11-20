@@ -60,9 +60,10 @@ jobs:
     # job's GITHUB_TOKEN. Never a PAT here: this job runs PR-branch scripts.
     permissions:
       contents: write
-    # A passing run takes ~58 min (Release build 23–34, previews ~19), so 60
-    # cancelled any slow runner.
-    timeout-minutes: 90
+    # A passing run took ~58 min (Release build 23–34, previews ~19), so 60
+    # cancelled any slow runner. 10.9 adds the pattern screens in dark, high
+    # contrast, RTL and large text: 72 more screenshots, about 15 minutes.
+    timeout-minutes: 105
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
       # Path-independent hits, and room for a full React Native build.
@@ -170,8 +171,23 @@ jobs:
         if: env.SOAK != 'true'
         run: maestro test apps/mobile/.maestro/previews --test-output-dir maestro-previews-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-out; exit 1; }
 
+      # The screen patterns in dark, high contrast and RTL: a second session, because one session
+      # of every preview plus the variants outlived the iOS test driver.
+      - name: Maestro preview screenshots (schemes)
+        if: env.SOAK != 'true'
+        run: maestro test apps/mobile/.maestro/previews-schemes --test-output-dir maestro-previews-schemes-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-schemes-out; exit 1; }
+
+      # The screen patterns again with large text (pattern-<name>--lg--ios.png). Text size is an
+      # OS setting the app can't override, so it is set here, around a flow of its own.
+      - name: Maestro preview screenshots (large text)
+        if: env.SOAK != 'true'
+        run: |
+          xcrun simctl ui booted content_size extra-extra-extra-large
+          maestro test apps/mobile/.maestro/previews-lg --test-output-dir maestro-previews-lg-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-previews-lg-out; exit 1; }
+          xcrun simctl ui booted content_size large
+
       # Compare the preview screenshots with apps/mobile/.maestro/baselines/ios
-      # (or record them on a PR that has none; see screenshot-gate.sh).
+      # (or record them on a manual run on a branch that has none; see screenshot-gate.sh).
       - name: Screenshot baselines
         if: env.SOAK != 'true'
         env:
@@ -194,6 +210,8 @@ jobs:
             maestro-out
             maestro-soak-out
             maestro-previews-out
+            maestro-previews-schemes-out
+            maestro-previews-lg-out
             screenshot-diffs
             *.png
           retention-days: 14
@@ -204,7 +222,8 @@ jobs:
     # Not on soak runs: the soak is iOS only.
     if: github.head_ref != 'production' && github.event_name != 'schedule' && inputs.soak != true
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # 75 since 10.9: the pattern screens in dark, high contrast and RTL add 54 screenshots.
+    timeout-minutes: 75
     # See the iOS job: baselines are pushed with GITHUB_TOKEN, never a PAT.
     permissions:
       contents: write
@@ -265,7 +284,7 @@ jobs:
       - name: Maestro flows
         uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         # For screenshot-gate.sh (last line of the script): compare with
-        # apps/mobile/.maestro/baselines/android, or record them on a PR.
+        # apps/mobile/.maestro/baselines/android, or record them on a manual run.
         env:
           # PR branch, or the branch a manual run targets (to record new baselines before merge).
           HEAD_REF: ${{ github.head_ref || (github.event_name == 'workflow_dispatch' && github.ref_name) || '' }}
@@ -293,7 +312,7 @@ jobs:
             adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             sh apps/mobile/scripts/android-settle.sh
             sh apps/mobile/scripts/android-ready.sh
-            maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
+            maestro test apps/mobile/.maestro/catalogue.yaml apps/mobile/.maestro/previews/previews.yaml apps/mobile/.maestro/previews-schemes/previews-schemes.yaml --test-output-dir maestro-out || { sh apps/mobile/scripts/maestro-failure.sh maestro-out; sh apps/mobile/scripts/android-crash-log.sh; exit 1; }
             sh apps/mobile/scripts/screenshot-gate.sh android
 
       - name: Upload screenshots

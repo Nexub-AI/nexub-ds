@@ -26,7 +26,8 @@ function shotsFor(preview: string, platform: string) {
     ? `pattern-${name.slice('pattern/'.length)}--`
     : `${name}--`;
   return readdirSync(dir)
-    .filter((f) => f.startsWith(prefix) && f.endsWith(`--${platform}.png`))
+    // Not the extra schemes (pattern-home--dark--ios.png …): the page shows the light shot.
+    .filter((f) => f.startsWith(prefix) && f.endsWith(`--${platform}.png`) && !/--(dark|hc|rtl|lg)--/.test(f))
     .sort()
     .map((f) => ({ file: f, ...pngSize(join(dir, f)) }));
 }

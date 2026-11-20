@@ -4,7 +4,8 @@
 //   node scripts/screenshots.mjs compare <ios|android> <dir> [--out <diff-dir>]
 //
 // <dir> holds the flow's screenshots, named <slug>--<example>--<platform>.png
-// (patterns: pattern-<name>--<platform>.png). Baselines live in
+// (patterns: pattern-<name>--<platform>.png, plus pattern-<name>--<dark|hc|rtl|lg>--<platform>.png
+// for the extra schemes). Baselines live in
 // .maestro/baselines/<platform>/, downscaled to BASE_WIDTH so they stay small
 // (never upscaled) and comparisons ignore sub-pixel rendering noise. The docs show the same
 // files as "on device" shots.
@@ -32,8 +33,10 @@ export const TOLERANCE = { ios: 0.001, android: 0.005 };
 // suggestions are in the shot. They get a looser limit instead of the platform's.
 export const ANIMATED = new Set(['loading-indicator--0', 'button--1', 'skeleton--0', 'pattern-search']);
 export const ANIMATED_TOLERANCE = 0.01;
+// A scheme variant of a shot (pattern-search--dark) is the same screen, so it gets the same limit.
+export const VARIANT = /--(dark|hc|rtl|lg)(?=--(ios|android)\.png$)/;
 export const limitFor = (file, platform) =>
-  ANIMATED.has(basename(file).replace(/--(ios|android)\.png$/, '')) ? ANIMATED_TOLERANCE : TOLERANCE[platform];
+  ANIMATED.has(basename(file).replace(VARIANT, '').replace(/--(ios|android)\.png$/, '')) ? ANIMATED_TOLERANCE : TOLERANCE[platform];
 // A pixel differs when any channel moves by more than this (0–255).
 const CHANNEL_DELTA = 32;
 

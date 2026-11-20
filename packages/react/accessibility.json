@@ -1161,6 +1161,15 @@
       ]
     },
     {
+      "slug": "qr-code",
+      "name": "QR Code",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "radio-card",
       "name": "Radio Card",
       "package": "@nexub/react",

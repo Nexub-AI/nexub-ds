@@ -160,6 +160,26 @@ import { Send } from '@nexub/icons/native';
     differences: [],
     code: `<AvatarGroup max={3}>{people.map((p) => <Avatar key={p.id} name={p.name} />)}</AvatarGroup>`,
   },
+  'icon-chip': {
+    name: 'IconChip',
+    preview: 'icon-chip',
+    differences: [
+      { aspect: 'Icon', web: 'Any child; an SVG is sized by the chip.', mobile: 'One icon element; it takes the chip\'s colour and size unless it sets its own.' },
+      { aspect: 'Accessible name', web: '`aria-label`.', mobile: '`accessibilityLabel`. Without it the chip is hidden from screen readers.' },
+    ],
+    code: `<IconChip category="emerald"><Wallet /></IconChip>`,
+  },
+  'number-ticker': {
+    name: 'NumberTicker',
+    preview: 'number-ticker',
+    differences: [
+      { aspect: 'Value', web: 'A number, a string or styled parts.', mobile: 'A number or a string.' },
+      { aspect: 'Type', web: 'Inherits the text style around it.', mobile: '`variant` and `color` (type and colour roles).' },
+      { aspect: 'Announcing changes', web: '`aria-live="polite"`.', mobile: '`live`.' },
+      { aspect: 'Count on view', web: '`countOnView` counts up when scrolled into view.', mobile: 'Not available.' },
+    ],
+    code: `<NumberTicker value={balance} format={{ style: 'currency', currency: 'USD' }} variant="headline-md" live />`,
+  },
   separator: {
     name: 'Divider',
     preview: 'divider',
@@ -256,6 +276,75 @@ import { Send } from '@nexub/icons/native';
     ],
     code: `<MultiSelect label="Labels" options={labels} value={picked} onValueChange={setPicked} />`,
   },
+  tabs: {
+    name: 'Tabs',
+    preview: 'tabs',
+    differences: [
+      { aspect: 'Overflow', web: 'The list scrolls with edge fades; arrow keys move between tabs.', mobile: 'The list scrolls sideways and centres the active tab; no edge fades.' },
+      { aspect: 'Orientation', web: 'Horizontal or vertical.', mobile: 'Horizontal only.' },
+      { aspect: 'Panels', web: 'Crossfade in; swipe is not built in.', mobile: 'Swap without a transition; no swipe between panels.' },
+      { aspect: 'Hit area', web: 'The trigger height.', mobile: '`sm` tabs extend to 44pt up and down with hitSlop.' },
+    ],
+    code: `<Tabs.Root defaultValue="overview">
+  <Tabs.List accessibilityLabel="Project">
+    <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+    <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="overview">…</Tabs.Content>
+  <Tabs.Content value="activity">…</Tabs.Content>
+</Tabs.Root>`,
+  },
+  table: {
+    name: 'Table',
+    preview: 'table',
+    differences: [
+      { aspect: 'Column widths', web: 'Table layout: columns size to their content.', mobile: 'Set per column with `columns` on Root (128pt when unset); the last column fills what is left.' },
+      { aspect: 'Sticky', web: '`stickyHeader` with `maxHeight`.', mobile: '`stickyFirstColumn`; rows are then one line high. No sticky header: the screen scrolls.' },
+      { aspect: 'Screen readers', web: 'Native table semantics.', mobile: 'Each row is one element read as "Header: value" pairs; `accessible={false}` on a Row frees its controls.' },
+      { aspect: 'States', web: '`Body` can show loading, empty and error states.', mobile: 'Not built in; use Skeleton, EmptyState and ErrorState around the table.' },
+      { aspect: 'Extra', web: 'No divider prop.', mobile: '`dividerAfter` draws a heavier line under a row (the cut in a ranked list).' },
+    ],
+    code: `<Table.Root stickyFirstColumn columns={[120, 88, 88]}>
+  <Table.Header>
+    <Table.Row>
+      <Table.Head>Team</Table.Head>
+      <Table.Head numeric>Played</Table.Head>
+      <Table.Head numeric>Points</Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
+    <Table.Row>
+      <Table.Cell>Rovers</Table.Cell>
+      <Table.Cell numeric>12</Table.Cell>
+      <Table.Cell numeric>29</Table.Cell>
+    </Table.Row>
+  </Table.Body>
+</Table.Root>`,
+  },
+  rating: {
+    name: 'Rating',
+    preview: 'rating',
+    differences: [
+      { aspect: 'Screen readers', web: 'A radio group: one radio per star, arrow keys move.', mobile: 'One adjustable control: swipe up or down to change the value; it can go down to 0.' },
+      { aspect: 'Feedback', web: 'Stars preview on hover.', mobile: 'No hover; a selection haptic when the value changes.' },
+      { aspect: 'Hit area', web: 'The star.', mobile: '44pt tall with hitSlop; sideways each star keeps its own width so neighbours do not overlap.' },
+      { aspect: 'Props', web: '`value` only; `aria-label` names it.', mobile: 'Adds `defaultValue` and `label`.' },
+    ],
+    code: `<Rating value={stars} onValueChange={setStars} />`,
+  },
+  tooltip: {
+    name: 'Tooltip',
+    preview: 'tooltip',
+    differences: [
+      { aspect: 'Trigger', web: 'Hover or keyboard focus, after `delayDuration`.', mobile: 'Long-press; `delayDuration` is how long to hold.' },
+      { aspect: 'Hiding', web: 'When the pointer or focus leaves.', mobile: 'After `duration` (2.5s) or a tap anywhere.' },
+      { aspect: 'Screen readers', web: 'The tip describes the trigger.', mobile: 'The tip is the child’s `accessibilityHint`; the popover is hidden from VoiceOver and TalkBack.' },
+      { aspect: 'Content', web: '`label` can be any node, with `description`, `shortcut` and `arrow`.', mobile: 'A text `label` only.' },
+    ],
+    code: `<Tooltip label="Copy link">
+  <IconButton icon={Copy} label="Copy" />
+</Tooltip>`,
+  },
   'data-table': {
     name: 'DataList',
     preview: 'data-list',
@@ -331,6 +420,57 @@ import { Send } from '@nexub/icons/native';
     preview: 'inline-edit',
     differences: [{ aspect: 'Saving', web: 'Enter or blur saves; Escape reverts.', mobile: 'Return or leaving the field saves.' }],
     code: `<InlineEdit label="Project name" value={name} onSave={setName} />`,
+  },
+  'qr-code': {
+    name: 'QRCode',
+    preview: 'qr-code',
+    differences: [
+      { aspect: 'Drawing', web: 'An inline SVG; `size` takes pixels or any CSS length.', mobile: 'react-native-svg; `size` is in points.' },
+      { aspect: 'Colours', web: 'Dark on light in every theme (the light roles are pinned).', mobile: 'The same: the light scheme’s colours, also in dark mode.' },
+      { aspect: 'Reading one', web: 'Not in the browser.', mobile: '`QRScanner` reads codes with the camera.' },
+    ],
+    code: `<QRCode value="https://example.com/h/4729" size={200} />`,
+  },
+  'description-list': {
+    name: 'DescriptionList',
+    preview: 'description-list',
+    differences: [
+      { aspect: 'Columns', web: 'Up to three, by the width of the list itself.', mobile: 'One on phones; two from 600pt of window width.' },
+      { aspect: 'Screen readers', web: '`<dl>`, `<dt>` and `<dd>`.', mobile: 'A row of plain text reads as one element: "Fee, $1.00".' },
+    ],
+    code: `<DescriptionList.Root divided>
+  <DescriptionList.Item label="Fee">$1.00</DescriptionList.Item>
+  <DescriptionList.Item label="Total" emphasis>$251.00</DescriptionList.Item>
+</DescriptionList.Root>`,
+  },
+  'comparison-bar': {
+    name: 'ComparisonBar',
+    preview: 'comparison-bar',
+    differences: [
+      { aspect: 'Text alternative', web: 'The bar is an image; `aria-label` replaces its name.', mobile: 'The whole component is one image; `accessibilityLabel` replaces its name.' },
+      { aspect: 'Motion', web: 'The split moves with a CSS transition.', mobile: 'The split glides on the spatial spring (Reanimated); Reduce Motion is honoured.' },
+    ],
+    code: `<ComparisonBar label="Orders" left={{ label: 'This week', value: 128 }} right={{ label: 'Last week', value: 96 }} />`,
+  },
+  'phone-input': {
+    name: 'PhoneInput',
+    preview: 'phone-input',
+    differences: [
+      { aspect: 'Country list', web: 'A searchable select, or a sheet on phones with `sheet`.', mobile: 'Always a bottom sheet with search.' },
+      { aspect: 'Label and errors', web: 'Bring your own Label and FormError; `invalid` turns the outline red.', mobile: '`label` is required; `error` shows the message and the red outline.' },
+      { aspect: 'Keyboard', web: '`type="tel"`.', mobile: 'The phone pad, with the platform’s phone-number autofill.' },
+    ],
+    code: `<PhoneInput label="Mobile number" defaultCountry="SG" value={phone} onValueChange={(e164, { valid }) => setPhone(e164)} />`,
+  },
+  countdown: {
+    name: 'Countdown',
+    preview: 'countdown',
+    differences: [
+      { aspect: 'In the background', web: 'Reads the clock again when the tab is visible.', mobile: 'Reads the clock again when the app returns to the foreground.' },
+      { aspect: 'Announcements', web: 'A polite live region.', mobile: 'VoiceOver and TalkBack announcements at the same moments: each minute, 30, 10 and 5 seconds, and the end.' },
+      { aspect: 'Sizes', web: 'sm, md and lg chips.', mobile: 'sm and md chips.' },
+    ],
+    code: `<Countdown to={expiresAt} onExpire={resend} />`,
   },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {
@@ -430,6 +570,7 @@ export const mobileOnly: MobileOnlyEntry[] = [
   { slug: 'offline-banner', name: 'OfflineBanner', title: 'Offline Banner', category: 'Feedback', preview: 'offline-banner', description: 'A slim banner while the device is offline.', code: `<OfflineBanner />` },
   { slug: 'coachmark', name: 'Coachmark', title: 'Coachmark', category: 'Feedback', preview: 'coachmark', description: 'A one-time hint pointing at a control, dismissed by the user.', code: `<Coachmark title="New: split bills" onDismiss={seen}>Tap here to split.</Coachmark>` },
   { slug: 'fab', name: 'FAB', title: 'FAB', category: 'Actions', preview: 'fab', description: 'Floating action button. Android only by default (`platforms`), since it reads as Material.', code: `<FAB icon={Plus} label="New transfer" onPress={create} extended />` },
+  { slug: 'qr-scanner', name: 'QRScanner', title: 'QR Scanner', category: 'Inputs', preview: 'qr-scanner', description: 'Scans QR codes with the camera (optional peer expo-camera): permission flow, torch, a haptic and an announcement on each code, and manual entry always one tap away. The preview has no camera, so it shows the manual-entry fallback.', code: `<QRScanner onScan={redeem} fallback={<TextField label="Code" value={code} onChangeText={setCode} />} />`, webAlternative: 'QRCode shows a code; reading one needs the device camera' },
 ];
 
 export function getMobileOnly(slug: string) {
@@ -438,6 +579,17 @@ export function getMobileOnly(slug: string) {
 
 /** Web pattern (docs slug) → the native screen that does the same job. */
 export const nativePatternTwins: Record<string, NativeTwin> = {
+  'status-steps': {
+    name: 'StatusSteps',
+    preview: 'pattern/status',
+    differences: [
+      { aspect: 'Screen readers', web: 'An ordered list; each title is prefixed with its status.', mobile: 'Each step is one element: "completed: Application sent, Mon 10:30". Its action stays a separate element.' },
+      { aspect: 'Name', web: '`aria-label` or `aria-labelledby`.', mobile: '`accessibilityLabel` (required).' },
+    ],
+    code: `import { StatusSteps } from '@nexub/react-native/patterns';
+
+<StatusSteps accessibilityLabel="Application status" steps={steps} />`,
+  },
   'activity-feed': {
     name: 'ActivityList',
     preview: 'pattern/activity',
@@ -499,6 +651,17 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
     code: `import { NotificationsInbox } from '@nexub/react-native/patterns';
 
 <NotificationsInbox notifications={items} onPress={open} onMarkAllRead={markAll} />`,
+  },
+  'stat-card': {
+    name: 'StatCard',
+    preview: 'stat-card',
+    differences: [
+      { aspect: 'Import', web: '`@nexub/patterns`.', mobile: '`@nexub/react-native` (the main entry).' },
+      { aspect: 'Icon', web: 'Any node.', mobile: 'One icon element, e.g. `<Wallet />`.' },
+      { aspect: 'Pressable', web: 'Wrap it in a link.', mobile: '`onPress` makes the card one button.' },
+      { aspect: 'Vivid', web: 'Lifts on hover.', mobile: 'Lifts while pressed (pressable cards).' },
+    ],
+    code: `<StatCard label="Active members" value={2840} delta="+12.5%" deltaType="increase" icon={<Users />} category="emerald" trend={weekly} />`,
   },
   'user-card': {
     name: 'ProfileHeader',
