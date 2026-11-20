@@ -1,5 +1,11 @@
 # @nexub/themes
 
+## 10.8.0
+
+### Patch Changes
+
+- @nexub/tokens@10.8.0
+
 ## 10.7.0
 
 ### Minor Changes
