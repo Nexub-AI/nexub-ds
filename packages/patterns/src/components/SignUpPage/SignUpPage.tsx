@@ -107,7 +107,7 @@ export const SignUpPage = React.forwardRef<HTMLElement, SignUpPageProps>(functio
 
   const errors: Partial<Record<Field, string>> = {
     name: name.trim() ? undefined : m.enterName,
-    email: /^\S+@\S+\.\S+$/.test(email.trim()) ? undefined : m.enterValidEmail,
+    email: /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email.trim()) ? undefined : m.enterValidEmail,
     password: score >= 3 ? undefined : m.choosePassword,
     phone: phone && tel.national && !tel.valid ? m.enterValidPhone : undefined,
     terms: accepted ? undefined : m.acceptTerms,
