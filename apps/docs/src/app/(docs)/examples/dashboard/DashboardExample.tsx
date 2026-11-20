@@ -85,7 +85,7 @@ function RevenueChart() {
   const data = months.map((month, i) => ({ month, thisYear: revenue.thisYear[i]!, lastYear: revenue.lastYear[i]! }));
   return (
     <div className="flex h-full flex-col gap-3">
-      <h2 className="text-title-md text-[var(--color-on-surface)]">Revenue</h2>
+      <h2 className="text-title-md text-on-surface">Revenue</h2>
       <BarChart
         title="Revenue by month, in thousands of dollars"
         data={data}
@@ -126,10 +126,10 @@ function AssistantPanel() {
   return (
     <section
       aria-labelledby="assistant-title"
-      className="flex h-[32rem] flex-col rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+      className="flex h-[32rem] flex-col rounded-shape-container border border-outline-variant bg-surface-container-low"
     >
-      <h2 id="assistant-title" className="flex items-center gap-2 px-4 pt-4 text-title-md text-[var(--color-on-surface)]">
-        <Sparkles size="sm" aria-hidden="true" className="text-[var(--color-primary)]" />
+      <h2 id="assistant-title" className="flex items-center gap-2 px-4 pt-4 text-title-md text-on-surface">
+        <Sparkles size="sm" aria-hidden="true" className="text-primary" />
         Assistant
       </h2>
       <Conversation
@@ -262,7 +262,7 @@ function Dashboard() {
         }
       />
       <div className="flex min-w-0">
-        <NavigationRail.Root className="hidden h-auto border-e border-[var(--color-outline-variant)] md:flex">
+        <NavigationRail.Root className="hidden h-auto border-e border-outline-variant md:flex">
           {nav.map((n) => (
             <NavigationRail.Item key={n.label} href="#" icon={n.icon} label={n.label} active={n.active} onClick={(e) => e.preventDefault()} />
           ))}
@@ -316,8 +316,8 @@ function Dashboard() {
                   <RevenueChart />
                 </BentoTile>
                 <BentoTile size="2x2">
-                  <h2 id="plan-title" className="mb-1 text-title-md text-[var(--color-on-surface)]">Plan</h2>
-                  <p className="mb-3 text-body-sm text-[var(--color-on-surface-muted)]">Changes apply at the next billing date.</p>
+                  <h2 id="plan-title" className="mb-1 text-title-md text-on-surface">Plan</h2>
+                  <p className="mb-3 text-body-sm text-on-surface-muted">Changes apply at the next billing date.</p>
                   <RadioCardGroup
                     aria-labelledby="plan-title"
                     value={plan}
@@ -333,8 +333,8 @@ function Dashboard() {
                 </BentoTile>
               </BentoGrid>
 
-              <section aria-labelledby="tx-title" className="flex min-w-0 flex-col gap-3 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)] p-4">
-                <h2 id="tx-title" ref={txTitle} tabIndex={-1} className="text-title-md text-[var(--color-on-surface)]">Recent transactions</h2>
+              <section aria-labelledby="tx-title" className="flex min-w-0 flex-col gap-3 rounded-shape-container border border-outline-variant bg-surface-elevated p-4">
+                <h2 id="tx-title" ref={txTitle} tabIndex={-1} className="text-title-md text-on-surface">Recent transactions</h2>
                 <DataTable columns={columns} data={rows} enableSorting />
               </section>
             </div>
@@ -368,7 +368,7 @@ export function DashboardExample() {
       <NexubProvider dir={dir} locale={dir === 'rtl' ? 'ar' : 'en-US'}>
         <div
           dir={dir}
-          className="transform-gpu overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] text-[var(--color-on-surface)]"
+          className="transform-gpu overflow-hidden rounded-shape-container border border-outline-variant bg-surface text-on-surface"
         >
           <Dashboard />
         </div>

@@ -123,8 +123,8 @@ function Settings() {
         <div className="flex items-center gap-3">
           <Avatar name="Mei Tan" size="lg" />
           <div>
-            <p className="m-0 text-title-md text-[var(--color-on-surface)]">Mei Tan</p>
-            <p className="m-0 text-body-sm text-[var(--color-on-surface-variant)]">mei@payub.sg</p>
+            <p className="m-0 text-title-md text-on-surface">Mei Tan</p>
+            <p className="m-0 text-body-sm text-on-surface-variant">mei@payub.sg</p>
           </div>
         </div>
       }

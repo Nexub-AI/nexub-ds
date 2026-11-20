@@ -5,7 +5,7 @@ import { Label, Input, Button } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[360px]">
+    <div className="w-90">
       <AuthCard title="Sign in" description="Welcome back — enter your credentials to continue.">
         <div className="flex flex-col gap-3 items-start">
           <div className="flex flex-col gap-1 items-start">

@@ -12,6 +12,6 @@ A decorative gradient-faded horizontal rule.
 import { GradientDivider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><GradientDivider /></div>;
+  return <div className="w-70"><GradientDivider /></div>;
 }
 ```

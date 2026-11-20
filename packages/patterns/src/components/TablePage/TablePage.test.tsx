@@ -5,6 +5,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { Button, type DataTableColumn } from '@nexub/react';
 import { TablePage } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 interface Row {
   id: string;
   name: string;
@@ -72,7 +76,7 @@ describe('TablePage', () => {
         onClearFilters={onClear}
       />,
     );
-    await userEvent.type(screen.getByRole('searchbox', { name: 'Search projects' }), 'n');
+    await type(screen.getByRole('searchbox', { name: 'Search projects' }), 'n');
     expect(onChange).toHaveBeenCalledWith('n');
     expect(screen.getByRole('button', { name: 'Status' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Clear all' }));

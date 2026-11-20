@@ -63,12 +63,12 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
                 onSelect={() => go(item.href)}
                 className="gap-3"
               >
-                <span className="shrink-0 text-[var(--color-on-surface-muted)]" aria-hidden="true">
+                <span className="shrink-0 text-on-surface-muted" aria-hidden="true">
                   {item.category.startsWith('Pattern') ? <Layers size={16} /> : <FileText size={16} />}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="text-body-sm font-medium text-[var(--color-on-surface)]">{item.label}</span>
-                  <span className="truncate text-label-sm text-[var(--color-on-surface-muted)]">{item.description}</span>
+                  <span className="text-body-sm font-medium text-on-surface">{item.label}</span>
+                  <span className="truncate text-label-sm text-on-surface-muted">{item.description}</span>
                 </span>
               </CommandPalette.Item>
             ))}

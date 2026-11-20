@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 function Sample({ label }: { label: string }) {
   return (
     <div className="flex flex-col gap-4">
-      <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{label}</p>
+      <p className="m-0 text-label-md text-on-surface-variant">{label}</p>
       <div className="flex flex-wrap gap-2">
         <Button>Save changes</Button>
         <Button variant="tonal">Preview</Button>
@@ -23,7 +23,7 @@ function Sample({ label }: { label: string }) {
       </div>
       <Card variant="interactive" className="p-4">
         <p className="m-0 text-title-sm">Monthly revenue</p>
-        <p className="m-0 text-body-sm text-[var(--color-on-surface-variant)]">$68,420 · up 11%</p>
+        <p className="m-0 text-body-sm text-on-surface-variant">$68,420 · up 11%</p>
       </Card>
       <Input aria-label={`Workspace name (${label})`} placeholder="Workspace name" />
       <div className="flex items-center gap-4">
@@ -54,10 +54,10 @@ export default function ExpressionPage() {
 
       <Section id="compare" title="Side by side">
         <div className="not-prose grid gap-4 md:grid-cols-2">
-          <div className="rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-5">
+          <div className="rounded-shape-container border border-outline-variant bg-surface p-5">
             <Sample label="Calm" />
           </div>
-          <div data-expression="vivid" className="rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)] p-5">
+          <div data-expression="vivid" className="rounded-shape-container border border-outline-variant bg-surface p-5">
             <Sample label="Vivid" />
           </div>
         </div>
@@ -146,8 +146,8 @@ export default function ExpressionPage() {
       <Section id="aurora" title="Aurora">
         <div data-expression="vivid" className="not-prose relative isolate flex flex-col items-center gap-3 overflow-hidden rounded-shape-container px-6 py-16 text-center">
           <Aurora />
-          <p className="m-0 text-headline-md text-[var(--color-on-surface)]">Welcome back, Sam</p>
-          <p className="m-0 text-body-md text-[var(--color-on-surface)]">Three invoices were paid while you were away.</p>
+          <p className="m-0 text-headline-md text-on-surface">Welcome back, Sam</p>
+          <p className="m-0 text-body-md text-on-surface">Three invoices were paid while you were away.</p>
           <Button>See activity</Button>
         </div>
       </Section>

@@ -5,6 +5,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { Badge, Input } from '@nexub/react';
 import { DetailPage, type DetailSection } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 const sections: DetailSection[] = [
   {
     id: 'contact',
@@ -57,7 +61,7 @@ describe('DetailPage', () => {
     expect(screen.getByText('Edited elsewhere')).toBeInTheDocument();
     const name = screen.getByRole('textbox', { name: /Name/ });
     await userEvent.clear(name);
-    await userEvent.type(name, 'Ada P.');
+    await type(name, 'Ada P.');
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     await waitFor(() => expect(onEditingChange).toHaveBeenLastCalledWith(false));
     expect(onSave.mock.calls[0]![0].get('name')).toBe('Ada P.');
@@ -72,7 +76,7 @@ describe('DetailPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(screen.getByRole('alert', { name: 'There is a problem' })).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
-    await userEvent.type(name, 'Ada');
+    await type(name, 'Ada');
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
     expect(await screen.findByText('Could not save')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Save' }));
@@ -88,7 +92,7 @@ describe('DetailPage', () => {
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(onEditingChange).toHaveBeenLastCalledWith(false);
 
-    await userEvent.type(screen.getByRole('textbox', { name: /Name/ }), '!');
+    await type(screen.getByRole('textbox', { name: /Name/ }), '!');
     await userEvent.click(screen.getByRole('button', { name: 'Cancel' }));
     const dialog = await screen.findByRole('alertdialog', { name: 'Discard your changes?' });
     expect(dialog).toBeInTheDocument();

@@ -74,6 +74,7 @@ Checked on every PR by `scripts/check-supply-chain.mjs`.
   | Advisory | Package | Why it can't be reached |
   |---|---|---|
   | GHSA-7pqw-9j4j-h8q3, GHSA-jmr9-qjv8-65gv | `extract-zip` (through Lighthouse CI → puppeteer-core) | It unpacks a browser download. Lighthouse CI uses the Chrome already on the runner and never downloads one. Not shipped |
+  | GHSA-fc5q-39xc-vjpf | `picomatch` (through Changesets → micromatch, and tinyglobby) | A ReDoS on crafted glob patterns. Only our own build and release globs reach it, never user input. No patched version yet; remove this line when one ships. Not shipped |
 
 - **CodeQL:** no open alert of high or critical severity. Blocking on every PR.
 - **OpenSSF Scorecard:** at least `scorecardMin` in `security-gates.json`, which only goes up, toward 8. Blocking on every push to `development`.

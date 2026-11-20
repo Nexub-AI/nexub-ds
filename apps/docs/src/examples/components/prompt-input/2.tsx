@@ -16,7 +16,7 @@ export default function Example() {
     setStatus('idle');
   };
   return (
-    <div className="w-full max-w-[520px]">
+    <div className="w-full max-w-130">
       <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
     </div>
   );

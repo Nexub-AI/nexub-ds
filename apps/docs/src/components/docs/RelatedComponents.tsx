@@ -16,7 +16,7 @@ export function RelatedComponents({ slugs }: { slugs: string[] }) {
         <Card key={e.meta.slug} variant="interactive" className="flex flex-col gap-1 px-4 py-3.5">
           <div className="flex items-baseline justify-between gap-2">
             <CardLink asChild>
-              <DocsLink href={`/components/${e.meta.slug}`} className="font-semibold text-[var(--color-on-surface)] no-underline">
+              <DocsLink href={`/components/${e.meta.slug}`} className="font-semibold text-on-surface no-underline">
                 {e.meta.title}
               </DocsLink>
             </CardLink>

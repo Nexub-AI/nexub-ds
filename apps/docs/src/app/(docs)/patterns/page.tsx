@@ -34,7 +34,7 @@ export default function PatternsPage() {
               {entries.map((e) => (
                 <Card key={e.meta.slug} variant="interactive" className="flex flex-col gap-1.5 px-5 py-4">
                   <CardLink asChild>
-                    <DocsLink href={`/patterns/${e.meta.slug}`} className="text-title-sm font-semibold text-[var(--color-on-surface)] no-underline">
+                    <DocsLink href={`/patterns/${e.meta.slug}`} className="text-title-sm font-semibold text-on-surface no-underline">
                       {e.meta.title}
                     </DocsLink>
                   </CardLink>

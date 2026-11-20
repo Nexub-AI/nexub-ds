@@ -13,7 +13,7 @@ export default function Example() {
   return (
     <div className="flex gap-3 flex-wrap items-start justify-center">
       {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
-        <div key={r} className="w-[160px]">
+        <div key={r} className="w-40">
           <MediaCard ratio={r} src={COVER} alt="" title={r} />
         </div>
       ))}

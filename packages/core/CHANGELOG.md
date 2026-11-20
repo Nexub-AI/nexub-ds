@@ -1,5 +1,39 @@
 # @nexub/core
 
+## 10.7.0
+
+### Minor Changes
+
+- 9d9c9eb: 10.7 Charts, calendar and tables.
+
+  - **Interactive charts** (opt-in; default charts stay server-rendered): `interactive` on BarChart, LineChart (and `area`), DonutChart, Heatmap, Funnel and Sparkline adds a crosshair that snaps to the nearest point, a tooltip that stays inside the plot, tap on touch, and keyboard navigation (arrows, Home, End, Escape) with the focused point announced. `onPointClick` reports the point. `legend="toggle"` on BarChart and LineChart turns the legend into show/hide buttons (`hiddenSeries`, `defaultHiddenSeries`, `onHiddenSeriesChange`).
+  - **EventCalendar**: `day` view with an hour grid and a now line, and `agenda` view as a list grouped by day. `views` picks what the switcher offers (default unchanged); `now` makes it deterministic.
+  - **Table**: `stickyHeader` with `maxHeight`, `density`, `striped` on `Table.Root`.
+  - **DataTable**: a footer row from each column's `footer` (sums follow the filtered rows), and per-column filters (`meta.filter: 'text' | 'select' | 'number-range'`, `columnFilters`, `defaultColumnFilters`, `onColumnFiltersChange`, `manualFiltering`). The filter popover loads only when used.
+  - **`Truncate`**: clips text to one or more lines and shows a tooltip only when the text is really cut.
+  - **New (#306)**: `DescriptionList` (label and value rows on `<dl>`, inline or stacked, 1 to 3 columns, emphasis for totals), `ComparisonBar` (two values on one split bar with a text alternative) and the `StatusSteps` pattern (a read-only progress list with done, current, upcoming and problem steps).
+
+## 10.6.0
+
+## 10.5.1
+
+## 10.5.0
+
+### Minor Changes
+
+- 11c1fd9: 10.5 Every state: loading, empty and error look designed everywhere, and state changes move.
+
+  - **One prop shape** (`loading`, `emptyState`, `errorState`; error wins, then loading, then empty) on BarChart, LineChart, DonutChart, Gauge, Heatmap, Funnel, Sparkline, KpiTile, ChartZoom, EventCalendar, TreeView, Kanban, `Table.Body`, and `errorState` on DataTable and DataTableVirtual. Patterns too: ActivityFeed, InfoList, NotificationCenter, SettingsPage, DashboardPage, ListDetail, TransactionDetailPage, ActivityPage; `loading` on StatCard and UserCard. Exported as `DataStateProps`.
+  - **Behaviour change**: a chart, tree or board with no data now says "Nothing here yet" instead of drawing an empty plot. Pass `emptyState` to change it.
+  - **`SkeletonPreset`**: card, tableRow, listRow, chart, form.
+  - **`Illustration`**: seven spot drawings (noData, noResults, noAccess, serverError, offline, notFound, maintenance) coloured by the theme and the product accent. `EmptyStatePreset illustrated` uses them; the preset gains `notFound` and `maintenance`.
+  - **`StatusPage`** pattern for 404, 500, maintenance, offline and no access, with three new templates.
+  - **Motion**: a sliding indicator on ToggleGroup (single), NavigationRail and Pagination; Stepper progress, Chip and FilterChip colours, the Avatar status dot and TreeView expand now animate; Drawer exits at the same speed as Dialog. `ErrorState` takes `retryLabel`.
+  - **Docs layout shift**: ResizablePanels, Combobox, FilterBuilder and Slider render their final layout on the server.
+  - **React Native**: Accordion, Progress, Checkbox, Radio, PageIndicator, TextField and Dialog animate on the shared springs. `ScreenContainer keyboardAvoiding` (default on) keeps inputs above the keyboard on iOS and Android; BottomSheet does the same on Android. Sizes read the theme tokens (lint exceptions 109 → 10).
+
+## 10.4.0
+
 ## 10.3.0
 
 ### Minor Changes

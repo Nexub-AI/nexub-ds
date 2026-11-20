@@ -47,7 +47,7 @@ function Ramp({ keys }: { keys: string[] }) {
 function Pair({ bg, fg, label }: { bg: string; fg: string; label: string }) {
   return (
     <div
-      className="rounded-shape-field border border-[var(--color-outline-variant)] px-3.5 py-3"
+      className="rounded-shape-field border border-outline-variant px-3.5 py-3"
       style={{ background: `var(--color-${bg})`, color: `var(--color-${fg})` }}
     >
       <div className="font-semibold">{label}</div>
@@ -109,16 +109,16 @@ color: var(--color-on-surface);
           ['primary', 'Links'],
         ].map(([role, label]) => (
           <div key={role} className="flex gap-3 items-baseline">
-            <span className="min-w-0 sm:min-w-[320px]" style={{ color: `var(--color-${role})` }}>{label}</span>
+            <span className="min-w-0 sm:min-w-80" style={{ color: `var(--color-${role})` }}>{label}</span>
             <code className={mono}>--color-{role}</code>
           </div>
         ))}
         <div className="flex gap-3 items-center">
-          <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline)]" />
+          <span className="w-30 h-8 rounded-md border border-outline" />
           <code className={mono}>--color-outline (≥ 3:1, field borders, focus)</code>
         </div>
         <div className="flex gap-3 items-center">
-          <span className="w-[120px] h-[32px] rounded-[8px] border border-[var(--color-outline-variant)]" />
+          <span className="w-30 h-8 rounded-md border border-outline-variant" />
           <code className={mono}>--color-outline-variant (hairlines, dividers)</code>
         </div>
       </div>
@@ -134,7 +134,7 @@ color: var(--color-on-surface);
       <CodeBlock lang="html" code={`<html data-contrast="medium">   <!-- standard | medium | high -->`} />
       <div className={grid}>
         {(['standard', 'medium', 'high'] as const).map((level) => (
-          <div key={level} data-contrast={level} className="grid gap-2 p-3 rounded-[16px] bg-[var(--color-surface)]">
+          <div key={level} data-contrast={level} className="grid gap-2 p-3 rounded-shape-container bg-surface">
             <Pair bg="primary" fg="on-primary" label={`primary (${level})`} />
             <Pair bg="surface-container" fg="on-surface-variant" label="variant text" />
           </div>

@@ -7,6 +7,9 @@ import { PhoneInput } from './PhoneInput.js';
 import { FormField } from '../FormField/FormField.js';
 
 const field = () => screen.getByRole('textbox') as HTMLInputElement;
+// No pause between keystrokes: under a loaded full-suite run the default delay let a long
+// type() outlive the 5s timeout and leak keys into the next test.
+const type = (el: HTMLElement, text: string) => userEvent.setup({ delay: null }).type(el, text);
 
 describe('phone helpers', () => {
   it('knows the calling codes, each country once', () => {
@@ -49,21 +52,21 @@ describe('PhoneInput', () => {
   it('groups as you type and reports E.164 with the valid flag', async () => {
     const onValueChange = vi.fn();
     render(<PhoneInput aria-label="Phone" defaultCountry="IN" onValueChange={onValueChange} />);
-    await userEvent.type(field(), '984701234');
+    await type(field(), '984701234');
     expect(field()).toHaveValue('98470 1234');
     expect(onValueChange).toHaveBeenLastCalledWith('+91984701234', { country: 'IN', national: '984701234', valid: false });
-    await userEvent.type(field(), '5');
+    await type(field(), '5');
     expect(field()).toHaveValue('98470 12345');
     expect(onValueChange).toHaveBeenLastCalledWith('+919847012345', { country: 'IN', national: '9847012345', valid: true });
   });
 
   it('formats US and generic countries', async () => {
     const { unmount } = render(<PhoneInput aria-label="Phone" defaultCountry="US" />);
-    await userEvent.type(field(), '4155550132');
+    await type(field(), '4155550132');
     expect(field()).toHaveValue('415 555 0132');
     unmount();
     render(<PhoneInput aria-label="Phone" defaultCountry="BR" />);
-    await userEvent.type(field(), '11987x65');
+    await type(field(), '11987x65');
     expect(field()).toHaveValue('119 8765');
   });
 
@@ -151,7 +154,7 @@ describe('PhoneInput', () => {
     render(<Controlled />);
     expect(field()).toHaveValue('415 555 0132');
     expect(await screen.findByRole('combobox')).toHaveAccessibleName('Country code, United States +1');
-    await userEvent.type(field(), '{Backspace}');
+    await type(field(), '{Backspace}');
     expect(screen.getByRole('status')).toHaveTextContent('+1415555013');
     await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
     expect(field()).toHaveValue('');
@@ -159,7 +162,7 @@ describe('PhoneInput', () => {
     // A parent that ignores changes keeps its value on screen.
     render(<PhoneInput aria-label="Frozen" value="+6591234567" />);
     const frozen = screen.getByRole('textbox', { name: 'Frozen' });
-    await userEvent.type(frozen, '8');
+    await type(frozen, '8');
     expect(frozen).toHaveValue('9123 4567');
   });
 
@@ -198,7 +201,7 @@ describe('PhoneInput', () => {
     const onValueChange = vi.fn();
     const { unmount } = render(<PhoneInput aria-label="Phone" defaultCountry="IN" defaultValue="+9198470" readOnly onValueChange={onValueChange} />);
     const trigger = await screen.findByRole('combobox');
-    await userEvent.type(field(), '1');
+    await type(field(), '1');
     fireEvent.keyDown(trigger, { key: 'Enter' });
     expect(screen.queryByRole('option')).not.toBeInTheDocument();
     expect(trigger).toHaveAttribute('aria-readonly', 'true');

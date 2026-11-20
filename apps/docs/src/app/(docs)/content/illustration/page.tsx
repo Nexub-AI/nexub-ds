@@ -44,7 +44,7 @@ export default function IllustrationPage() {
         <CardGrid min={260}>
           {principles.map((p) => (
             <Card key={p.title} className="flex flex-col gap-2 p-5">
-              <Text weight="semibold" className="text-[var(--color-on-surface)]">{p.title}</Text>
+              <Text weight="semibold" className="text-on-surface">{p.title}</Text>
               <Text size="body-sm" tone="secondary">{p.desc}</Text>
             </Card>
           ))}
@@ -55,7 +55,7 @@ export default function IllustrationPage() {
         <div className="grid gap-3">
           {whenToUse.map((w) => (
             <Card key={w.context} className="grid gap-1 p-4 sm:grid-cols-[160px_1fr] sm:gap-4">
-              <Text weight="semibold" className="!text-[var(--color-primary)]">{w.context}</Text>
+              <Text weight="semibold" className="!text-primary">{w.context}</Text>
               <Text tone="secondary">{w.guidance}</Text>
             </Card>
           ))}

@@ -13,7 +13,7 @@ export default function Example() {
       {products.map((p) => (
         <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
           <h3 className="m-0 text-title-lg">{p.name}</h3>
-          <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+          <p className="m-0 text-body-md text-on-surface-variant">{p.line}</p>
         </Card>
       ))}
     </div>

@@ -5,7 +5,7 @@ import { Sparkles } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-4 items-stretch w-full max-w-[560px]">
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-140">
       <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
       <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
         <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>

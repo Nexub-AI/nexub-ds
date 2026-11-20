@@ -126,7 +126,7 @@ export const ForgotPasswordPage = React.forwardRef<HTMLElement, ForgotPasswordPa
         >
           <Form
             className="gap-4"
-            validate={() => ({ email: /^\S+@\S+\.\S+$/.test(email.trim()) ? undefined : m.enterValidEmail })}
+            validate={() => ({ email: /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email.trim()) ? undefined : m.enterValidEmail })}
             onSubmit={async () => {
               try {
                 await onSubmit(email.trim());

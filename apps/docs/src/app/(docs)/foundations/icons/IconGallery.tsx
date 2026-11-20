@@ -50,7 +50,7 @@ export function IconGallery() {
                 type="button"
                 onClick={() => copy(name)}
                 title={`Copy import for ${name}`}
-                className="flex w-full flex-col items-center gap-2 rounded-shape-container bg-[var(--color-surface-container-low)] px-2 py-4 text-[var(--color-on-surface)] transition-colors hover:bg-[var(--color-surface-container)] focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="flex w-full flex-col items-center gap-2 rounded-shape-container bg-surface-container-low px-2 py-4 text-on-surface transition-colors hover:bg-surface-container focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 <Icon size={24} />
                 <span className="w-full truncate text-center font-mono text-label-sm">

@@ -4,7 +4,7 @@ import { ActivityFeed } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[340px]">
+    <div className="w-85">
       <ActivityFeed.Root>
         <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
         <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />

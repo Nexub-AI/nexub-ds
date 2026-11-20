@@ -10,7 +10,7 @@ const rows = [
 
 export default function Example() {
   return (
-    <ul className="flex w-[260px] flex-col gap-2">
+    <ul className="flex w-65 flex-col gap-2">
       {rows.map((r) => (
         <li key={r.label} className="flex items-center justify-between">
           <Text size="body-sm">{r.label}</Text>

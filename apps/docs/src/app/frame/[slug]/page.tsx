@@ -18,7 +18,7 @@ export default async function TemplateFrame({ params }: { params: Promise<{ slug
   const t = getTemplateEntry(slug);
   if (!t) notFound();
   return (
-    <div className="min-h-screen bg-[var(--color-surface)]">
+    <div className="min-h-screen bg-surface">
       <FrameThemeSync />
       <TemplatePreview slug={t.slug} />
     </div>

@@ -13,3 +13,7 @@
 - **`TimeSlotPicker`**: a radio group of time slots, optionally grouped into morning, afternoon and evening.
 
 Every template uses the 10.3 look, the 10.5 loading, empty and error states and the 10.6 phone behaviour, and responds to its container.
+
+**Fix**: a read-only `Select` no longer switches Radix from uncontrolled to controlled after mount, which logged a React warning on every render of a read-only Select (seen first on a read-only `PhoneInput`).
+
+**Performance**: a closed `PhoneInput` country picker renders only the selected country, not all ~240 (Radix Select renders items while closed). 1,000 mounts of six PhoneInputs: over 10 minutes before, 10 seconds after.

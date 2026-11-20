@@ -35,8 +35,11 @@ export interface SelectRootProps extends RadixSelect.SelectProps {
   clearable?: boolean;
 }
 
-const Root = ({ clearable = false, value, defaultValue, onValueChange, onOpenChange, ...props }: SelectRootProps) => {
+const Root = ({ clearable = false, value, defaultValue, onValueChange, open: openProp, defaultOpen, onOpenChange, ...props }: SelectRootProps) => {
   const [current, setCurrent] = useControllableState<string>({ value, defaultValue, onChange: onValueChange });
+  // `open` is always controlled here: read-only (set by the Trigger after mount) forces it shut,
+  // and switching Radix from uncontrolled to controlled at that point warns on every mount.
+  const [open, setOpen] = useControllableState<boolean>({ value: openProp, defaultValue: defaultOpen ?? false, onChange: onOpenChange });
   const [query, setQuery] = React.useState('');
   const [readOnly, setReadOnly] = React.useState(false);
   const ctx = React.useMemo(
@@ -50,10 +53,12 @@ const Root = ({ clearable = false, value, defaultValue, onValueChange, onOpenCha
         // Clearing needs the value in our hands; otherwise Radix keeps its own state as before.
         {...(clearable ? { value: current ?? '', onValueChange: setCurrent } : { value, defaultValue, onValueChange })}
         // Read-only (set on the Trigger): the list stays shut and the value can't change.
-        {...(readOnly ? { open: false, onValueChange: undefined } : null)}
-        onOpenChange={(open) => {
-          if (!open) setQuery('');
-          onOpenChange?.(open);
+        {...(readOnly ? { onValueChange: undefined } : null)}
+        open={readOnly ? false : open}
+        onOpenChange={(next) => {
+          if (readOnly && next) return;
+          if (!next) setQuery('');
+          setOpen(next);
         }}
       />
     </SelectContext.Provider>

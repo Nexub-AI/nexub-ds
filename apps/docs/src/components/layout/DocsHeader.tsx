@@ -64,7 +64,7 @@ export function DocsHeader() {
         type="button"
         onClick={openSearch}
         aria-keyshortcuts="Meta+K Control+K"
-        className="docs-header-search nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-[var(--color-surface-container-highest)] ps-4 pe-2 text-body-md text-[var(--color-on-surface-variant)]"
+        className="docs-header-search nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-surface-container-highest ps-4 pe-2 text-body-md text-on-surface-variant"
       >
         <span className="flex items-center gap-2">
           <Search size={14} aria-hidden="true" />
