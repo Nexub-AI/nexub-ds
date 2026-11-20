@@ -7,7 +7,7 @@ import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
 export default function Example() {
   const [collapsed, setCollapsed] = React.useState(true);
   return (
-    <div className="flex h-[280px] items-start gap-4">
+    <div className="flex h-70 items-start gap-4">
       <Sidebar.Root aria-label="Workspace" collapsed={collapsed} className="rounded-shape-container">
         <Sidebar.Group>
           <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>

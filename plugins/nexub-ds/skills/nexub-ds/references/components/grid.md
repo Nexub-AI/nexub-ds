@@ -20,7 +20,7 @@ import { Grid, Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Grid cols={2} gap="md" className="w-full max-w-[400px]">
+    <Grid cols={2} gap="md" className="w-full max-w-100">
       {[1, 2, 3, 4].map((n) => (
         <Card key={n}><Text size="body-sm" tone="muted">Card {n}</Text></Card>
       ))}
@@ -36,7 +36,7 @@ import { Grid, Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Grid cols={3} gap="sm" className="w-full max-w-[480px]">
+    <Grid cols={3} gap="sm" className="w-full max-w-120">
       {[1, 2, 3, 4, 5, 6].map((n) => (
         <Card key={n}><Text size="caption" tone="muted">Item {n}</Text></Card>
       ))}

@@ -24,7 +24,7 @@ import { Collapse, Text } from '@nexub/react';
 export default function Example() {
   return (
     <Collapse in>
-      <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+      <div className="p-4 bg-surface-container-low rounded-shape-field">
         <Text size="body-sm">Collapsed content goes here.</Text>
       </div>
     </Collapse>
@@ -46,7 +46,7 @@ export default function Example() {
         {visible ? 'Collapse' : 'Expand'}
       </Button>
       <Collapse in={visible}>
-        <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+        <div className="p-4 bg-surface-container-low rounded-shape-field">
           <Text size="body-sm">This content collapses and expands smoothly.</Text>
         </div>
       </Collapse>

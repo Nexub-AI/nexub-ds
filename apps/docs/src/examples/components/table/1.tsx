@@ -9,7 +9,7 @@ export default function Example() {
     { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
   ];
   return (
-    <Table.Root className="w-full max-w-[480px]">
+    <Table.Root className="w-full max-w-120">
       <Table.Caption>Recent user activity — last 30 days</Table.Caption>
       <Table.Header>
         <Table.Row>
@@ -29,7 +29,7 @@ export default function Example() {
       </Table.Body>
       <Table.Footer>
         <Table.Row>
-          <Table.Cell colSpan={3} className="text-[var(--color-on-surface-variant)] text-body-sm">
+          <Table.Cell colSpan={3} className="text-on-surface-variant text-body-sm">
             Showing {rows.length} of {rows.length} users
           </Table.Cell>
         </Table.Row>

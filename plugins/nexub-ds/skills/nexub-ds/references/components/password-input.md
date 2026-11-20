@@ -24,7 +24,7 @@ A password field with a built-in toggle to reveal or hide the entered value.
 import { PasswordInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+  return <div className="w-70"><PasswordInput placeholder="Enter password…" /></div>;
 }
 ```
 
@@ -34,6 +34,6 @@ export default function Example() {
 import { PasswordInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+  return <div className="w-70"><PasswordInput invalid placeholder="Password is too short" /></div>;
 }
 ```

@@ -77,7 +77,7 @@ export default function Example() {
 
   return (
     <Conversation
-      className="h-[420px] w-full"
+      className="h-105 w-full"
       composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
     >
       {messages.map((msg) =>

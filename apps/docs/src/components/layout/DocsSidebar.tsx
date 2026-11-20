@@ -40,8 +40,8 @@ function NavSection({ group, pathname, depth }: { group: NavGroup; pathname: str
         className={
           'nx-state-layer flex w-full items-center justify-between rounded-shape-control px-3 text-start ' +
           (depth === 0
-            ? 'h-control-sm text-label-md font-semibold text-[var(--color-on-surface)]'
-            : 'h-control-xs text-label-sm font-medium uppercase tracking-wider text-[var(--color-on-surface-muted)]')
+            ? 'h-control-sm text-label-md font-semibold text-on-surface'
+            : 'h-control-xs text-label-sm font-medium uppercase tracking-wider text-on-surface-muted')
         }
       >
         {group.title}
@@ -105,12 +105,12 @@ export function DocsSidebar({ navGroups, drawerOnly = false }: { navGroups: NavG
           <Drawer.Content side="left" className="w-[min(320px,86vw)] overflow-y-auto p-0">
             <Drawer.Title className="sr-only">Documentation navigation</Drawer.Title>
             <NavTree navGroups={navGroups} />
-            <div className="flex items-center justify-between gap-3 border-t border-[var(--color-outline-variant)] px-5 py-4">
+            <div className="flex items-center justify-between gap-3 border-t border-outline-variant px-5 py-4">
               <BrandSwitcher />
               <ThemeSwitcher />
             </div>
             <div className="flex items-center justify-between gap-3 px-5 pb-4">
-              <span className="text-label-md text-[var(--color-on-surface-variant)]">Contrast</span>
+              <span className="text-label-md text-on-surface-variant">Contrast</span>
               <ContrastSwitcher />
             </div>
           </Drawer.Content>

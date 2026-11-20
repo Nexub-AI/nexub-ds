@@ -100,7 +100,7 @@
 /* Tailwind initialises --tw-ring-offset-color to #fff (white), which creates
    an ugly light halo in dark mode. Override globally with the design-system
    token so the ring gap always matches the page background. */
-* { --tw-ring-offset-color: var(--color-ring-offset, #fff); }
+* { --tw-ring-offset-color: var(--color-ring-offset, var(--color-surface)); }
 
 /* Field input focus: the component-level Tailwind classes shift the border
    to the ring color and apply a semi-transparent ring halo on focus, so no
@@ -165,10 +165,10 @@ body {
 /* Busy backdrop for the Materials glass demo. */
 .docs-glass-backdrop {
   background:
-    radial-gradient(circle at 18% 30%, #4099f1 0 20%, transparent 21%),
-    radial-gradient(circle at 72% 40%, #f59e0b 0 16%, transparent 17%),
-    radial-gradient(circle at 45% 85%, #8b5cf6 0 22%, transparent 23%),
-    light-dark(#eceef4, #1b1d24);
+    radial-gradient(circle at 18% 30%, var(--color-palette-primary-60) 0 20%, transparent 21%),
+    radial-gradient(circle at 72% 40%, var(--color-palette-warning-70) 0 16%, transparent 17%),
+    radial-gradient(circle at 45% 85%, var(--color-palette-secondary-60) 0 22%, transparent 23%),
+    var(--color-surface-container);
 }
 
 /* Tailwind's preflight strips list markers; raw prose lists get them back. */
@@ -438,7 +438,7 @@ html, body {
 }
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
-    animation: docs-reveal-in 420ms var(--motion-spring-effects-default-easing, cubic-bezier(0.2, 0, 0, 1)) both;
+    animation: docs-reveal-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing) both;
   }
 }
 
@@ -505,9 +505,7 @@ html, body {
 @media (prefers-reduced-motion: no-preference) {
   .docs-feedback-fab:hover {
     transform: translateY(-1px);
-    box-shadow:
-      0 8px 24px -8px color-mix(in srgb, var(--color-primary) 35%, transparent),
-      0 1px 2px color-mix(in srgb, var(--color-on-surface) 6%, transparent);
+    box-shadow: var(--elevation-2);
   }
 }
 .docs-feedback-fab:focus-visible {
@@ -526,11 +524,11 @@ html, body {
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero-anim-1 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.1s; }
-.hero-anim-2 { opacity: 0; animation: hero-fade-up 0.6s ease forwards; animation-delay: 0.25s; }
-.hero-anim-3 { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.4s; }
-.hero-anim-4 { opacity: 0; animation: hero-fade-up 0.45s ease forwards; animation-delay: 0.55s; }
-.hero-stats { opacity: 0; animation: hero-fade-up 0.5s ease forwards; animation-delay: 0.7s; }
+.hero-anim-1 { opacity: 0; animation: hero-fade-up var(--motion-spring-spatial-slow-duration) var(--motion-spring-spatial-slow-easing) forwards; animation-delay: 0.1s; }
+.hero-anim-2 { opacity: 0; animation: hero-fade-up var(--motion-spring-spatial-slow-duration) var(--motion-spring-spatial-slow-easing) forwards; animation-delay: 0.25s; }
+.hero-anim-3 { opacity: 0; animation: hero-fade-up var(--motion-spring-spatial-slow-duration) var(--motion-spring-spatial-slow-easing) forwards; animation-delay: 0.4s; }
+.hero-anim-4 { opacity: 0; animation: hero-fade-up var(--motion-spring-spatial-slow-duration) var(--motion-spring-spatial-slow-easing) forwards; animation-delay: 0.55s; }
+.hero-stats { opacity: 0; animation: hero-fade-up var(--motion-spring-spatial-slow-duration) var(--motion-spring-spatial-slow-easing) forwards; animation-delay: 0.7s; }
 
 /* ── Landing page — orbital rings ────────────────────────────────────────── */
 @keyframes ring-orbit-cw {
@@ -589,30 +587,6 @@ html, body {
   box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-primary) 70%, transparent);
 }
 
-/* ── Landing page — CTA shimmer ───────────────────────────────────────────── */
-@keyframes btn-shimmer {
-  0%   { background-position: 200% center; }
-  100% { background-position: -200% center; }
-}
-.landing-cta-shimmer {
-  position: relative;
-  overflow: hidden;
-}
-.landing-cta-shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 40%,
-    rgba(255, 255, 255, 0.18) 50%,
-    transparent 60%
-  );
-  background-size: 200% 100%;
-  animation: btn-shimmer 2.5s linear infinite;
-  border-radius: inherit;
-  pointer-events: none;
-}
 
 /* ── Motion gallery (foundations/motion) ─────────────────────────────────── */
 /* The dot travels by translate (100cqi = the track), not inset, so a run is not a layout shift (9.2). */

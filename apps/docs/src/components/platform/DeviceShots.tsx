@@ -51,7 +51,7 @@ export function DeviceShots({ preview, title }: { preview: string; title: string
                 width={shot!.width}
                 height={shot!.height}
                 loading="lazy"
-                className="h-auto w-[180px] rounded-shape-container border border-[var(--color-outline-variant)] shadow-elevation-1"
+                className="h-auto w-45 rounded-shape-container border border-outline-variant shadow-elevation-1"
               />
               <Text size="caption" tone="muted">
                 {label}

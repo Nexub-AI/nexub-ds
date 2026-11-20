@@ -16,7 +16,7 @@ export default function Example() {
     });
   };
   return (
-    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-[340px]">
+    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-85">
       <ErrorSummary errors={errors} />
       <div className="flex flex-col gap-1 items-stretch">
         <Label htmlFor="es-name">Name</Label>

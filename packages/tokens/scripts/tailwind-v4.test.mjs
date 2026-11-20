@@ -17,6 +17,7 @@ const themePath = join(root, 'dist/tailwind/theme.css');
 const EXPECT = {
   'bg-primary': ['background-color: var(--color-primary)'],
   'text-on-surface': ['color: var(--color-on-surface)'],
+  'bg-surface': ['background-color: var(--color-surface)'],
   'bg-surface-container-high': ['background-color: var(--color-surface-container-high)'],
   'bg-palette-primary-40': ['background-color: var(--color-palette-primary-40)'],
   'bg-chart-3': ['background-color: var(--color-chart-3)'],

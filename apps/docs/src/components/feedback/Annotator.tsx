@@ -142,7 +142,7 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
 
   if (!imageUrl || !previewDims) {
     return (
-      <div className="text-label-sm text-[var(--color-on-surface-muted)]">
+      <div className="text-label-sm text-on-surface-muted">
         Loading capture…
       </div>
     );
@@ -151,7 +151,7 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <div
-        className="relative max-w-full touch-none overflow-hidden rounded-shape-field border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]"
+        className="relative max-w-full touch-none overflow-hidden rounded-shape-field border border-outline-variant bg-surface-container-low"
         style={{ width: previewDims.w, height: previewDims.h }}
       >
         <img
@@ -173,7 +173,7 @@ export function Annotator({ source, onFlatten, onDiscard }: Props) {
       </div>
 
       <div
-        className="flex items-center justify-between gap-2 text-label-sm text-[var(--color-on-surface-muted)]"
+        className="flex items-center justify-between gap-2 text-label-sm text-on-surface-muted"
       >
         <span>Click and drag to mark the area. Strokes save with the screenshot.</span>
         <div className="flex gap-1.5">

@@ -28,7 +28,7 @@ const columns: DataTableColumn<Invoice>[] = [
 export default function Example() {
   const [selection, setSelection] = React.useState<Record<string, boolean>>({ 'INV-2041': true, 'INV-2044': true });
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden

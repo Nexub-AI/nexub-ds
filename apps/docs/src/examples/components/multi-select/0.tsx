@@ -16,7 +16,7 @@ export default function Example() {
   const [options, setOptions] = React.useState(labels);
   const [value, setValue] = React.useState(['bug', 'a11y']);
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MultiSelect
         aria-label="Labels"
         placeholder="Add labels…"

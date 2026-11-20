@@ -64,8 +64,8 @@ export function DocsTOC({ items }: Props) {
                   'block border-s-2 py-1 pe-2 text-label-md leading-normal no-underline transition-colors duration-effects-fast ease-effects-fast ' +
                   (it.level === 3 ? 'ps-5 ' : 'ps-2 ') +
                   (isActive
-                    ? 'border-[var(--color-primary)] font-semibold text-[var(--color-on-surface)]'
-                    : 'border-transparent text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]')
+                    ? 'border-primary font-semibold text-on-surface'
+                    : 'border-transparent text-on-surface-muted hover:text-on-surface')
                 }
               >
                 {it.label}

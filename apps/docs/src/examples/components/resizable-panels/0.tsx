@@ -4,7 +4,7 @@ import { ResizablePanels } from '@nexub/react';
 
 export default function Example() {
   return (
-    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-[var(--color-outline-variant)]">
+    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-outline-variant">
       <ul className="flex flex-col gap-2 p-4 text-body-md">
         <li>Quarterly report</li>
         <li>Launch checklist</li>

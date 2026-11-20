@@ -4,19 +4,20 @@
    that v4 changed. (The v3 button pointer cursor comes from @nexub/themes/base.) */
 
 @layer base {
-  /* v3 preflight: unspecified border colour was gray-200 (v4: currentColor). */
+  /* v3 preflight: unspecified border colour was gray-200 (v4: currentColor). Use the
+     Nexub hairline role so bare `border` follows light/dark and brand. */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: #e5e7eb;
+    border-color: var(--color-outline-variant);
   }
 
   /* v3 preflight: placeholders were gray-400 (v4: currentColor at 50%). */
   input::placeholder,
   textarea::placeholder {
-    color: #9ca3af;
+    color: var(--color-on-surface-variant);
   }
 }
 

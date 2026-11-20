@@ -11,7 +11,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
         <Button size="sm" variant="tonal">Open</Button>
         <Button size="sm" variant="text">Share</Button>

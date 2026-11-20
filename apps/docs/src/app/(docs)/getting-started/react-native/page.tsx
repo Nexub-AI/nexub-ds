@@ -98,7 +98,7 @@ export default function RootLayout() {
           caption="Web components and their React Native twins"
           head={['@nexub/react', '@nexub/react-native', 'Differences']}
           rows={Object.entries(nativeTwins).map(([slug, t]) => [
-            <Link key="w" href={`/components/${slug}#mobile`} className="font-medium text-[var(--color-primary)] no-underline hover:underline">
+            <Link key="w" href={`/components/${slug}#mobile`} className="font-medium text-primary no-underline hover:underline">
               {titleOf(slug)}
             </Link>,
             <code key="n" className="font-mono text-body-sm">{t.name}</code>,
@@ -116,7 +116,7 @@ export default function RootLayout() {
           caption="Web and native props per component"
           head={['Component', 'Same name', 'Web only', 'Native only']}
           rows={Object.entries(parity).map(([slug, p]) => [
-            <Link key="w" href={`/${slug in nativePatternTwins ? 'patterns' : 'components'}/${slug}#mobile`} className="font-medium text-[var(--color-primary)] no-underline hover:underline">
+            <Link key="w" href={`/${slug in nativePatternTwins ? 'patterns' : 'components'}/${slug}#mobile`} className="font-medium text-primary no-underline hover:underline">
               {titleOf(slug)}
             </Link>,
             p.web ? names(p.shared) : 'Compound on web',
@@ -137,10 +137,10 @@ export default function RootLayout() {
             <Link
               key={m.slug}
               href={`/components/native/${m.slug}`}
-              className="nx-state-layer flex flex-col gap-1 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-4 no-underline"
+              className="nx-state-layer flex flex-col gap-1 rounded-shape-container border border-outline-variant bg-surface-container-low p-4 no-underline"
             >
-              <span className="text-title-sm text-[var(--color-on-surface)]">{m.title}</span>
-              <span className="text-body-sm text-[var(--color-on-surface-variant)]">{m.description}</span>
+              <span className="text-title-sm text-on-surface">{m.title}</span>
+              <span className="text-body-sm text-on-surface-variant">{m.description}</span>
             </Link>
           ))}
         </CardGrid>
