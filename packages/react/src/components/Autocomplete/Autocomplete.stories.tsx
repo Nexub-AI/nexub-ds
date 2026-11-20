@@ -52,3 +52,12 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual list above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <div style={{ width: '18rem', maxWidth: '100%' }}>
+      <Autocomplete aria-label="Country" options={countryOptions} placeholder="Search countries..." sheet="auto" />
+    </div>
+  ),
+};

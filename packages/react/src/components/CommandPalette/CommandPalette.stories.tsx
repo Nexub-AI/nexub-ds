@@ -84,3 +84,23 @@ export const Loading: Story = {
     </CommandPalette.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual palette above. */
+export const SheetAuto: Story = {
+  render: () => {
+    const [open, setOpen] = React.useState(false);
+    return (
+      <>
+        <button onClick={() => setOpen(true)}>Open command palette</button>
+        <CommandPalette.Root open={open} onOpenChange={setOpen} sheet="auto">
+          <CommandPalette.Input placeholder="Type a command or search…" />
+          <CommandPalette.List>
+            <CommandPalette.Empty>No results found.</CommandPalette.Empty>
+            <CommandPalette.Item onSelect={() => setOpen(false)}>Go to Dashboard</CommandPalette.Item>
+            <CommandPalette.Item onSelect={() => setOpen(false)}>Go to Settings</CommandPalette.Item>
+          </CommandPalette.List>
+        </CommandPalette.Root>
+      </>
+    );
+  },
+};

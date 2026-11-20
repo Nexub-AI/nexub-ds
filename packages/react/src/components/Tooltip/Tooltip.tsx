@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as RadixTooltip from '@radix-ui/react-tooltip';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING } from '../../utils/popper.js';
 import { Kbd } from '../Kbd/Kbd.js';
 
 // Lets <Tooltip> (and IconButton's built-in tooltip) work without an app-level
@@ -23,11 +24,12 @@ const Root = RadixTooltip.Root;
 const Trigger = RadixTooltip.Trigger;
 
 const Content = React.forwardRef<HTMLDivElement, RadixTooltip.TooltipContentProps>(
-  function TooltipContent({ className, sideOffset = 4, ...props }, ref) {
+  function TooltipContent({ className, sideOffset = 4, collisionPadding = COLLISION_PADDING, ...props }, ref) {
     return (
       <RadixTooltip.Content
         ref={ref}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
         className={cn(
           'z-[var(--z-tooltip,1800)] rounded-[var(--tooltip-radius,var(--shape-tooltip))] bg-[var(--tooltip-bg,var(--color-inverse-surface))] px-2.5 py-1.5 text-label-md text-[var(--tooltip-fg,var(--color-inverse-on-surface))] shadow-elevation-1',
           'nx-motion nx-pop origin-[var(--radix-tooltip-content-transform-origin)]',

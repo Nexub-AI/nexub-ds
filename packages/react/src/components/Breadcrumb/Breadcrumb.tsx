@@ -106,10 +106,12 @@ export interface BreadcrumbTrailProps extends React.HTMLAttributes<HTMLElement> 
    * `maxItems - 1`, and put the rest in a "More" menu. Default 4.
    */
   maxItems?: number;
+  /** The "More" menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false */
+  sheet?: boolean | 'auto';
 }
 
 /** A whole breadcrumb from data, collapsing long paths into a menu. */
-const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxItems = 4, ...props }, ref) => {
+const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxItems = 4, sheet, ...props }, ref) => {
   const messages = useNexubMessages();
   const keep = Math.max(2, maxItems);
   const collapsed = items.length > keep;
@@ -136,7 +138,7 @@ const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxI
                     >
                       <MoreHorizontal size="sm" aria-hidden="true" />
                     </DropdownMenu.Trigger>
-                    <DropdownMenu.Content align="start">
+                    <DropdownMenu.Content align="start" sheet={sheet}>
                       {hidden.map((h, j) => (
                         <DropdownMenu.Item key={j} asChild>
                           <a href={safeHref(h.href)}>{h.label}</a>

@@ -33,14 +33,14 @@ export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
   ({ searchPlaceholder, searchLabel, onSearch, searchValue, filters, actions, activeCount = 0, onClearAll, className, ...props }, ref) => {
     const t = useNexubMessages();
     return (
-      <div ref={ref} className={cn('flex flex-wrap items-center gap-3', className)} {...props}>
+      <div ref={ref} className={cn('@container flex flex-wrap items-center gap-3', className)} {...props}>
         <SearchInput
           aria-label={searchLabel ?? (searchPlaceholder && stripEllipsis(searchPlaceholder)) ?? t.search}
           placeholder={searchPlaceholder ?? t.searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearch?.(e.target.value)}
           onClear={() => onSearch?.('')}
-          wrapperClassName="w-full sm:w-64"
+          wrapperClassName="w-full @xl:w-64"
         />
         {filters && <div className="flex flex-wrap items-center gap-2">{filters}</div>}
         {activeCount > 0 && (

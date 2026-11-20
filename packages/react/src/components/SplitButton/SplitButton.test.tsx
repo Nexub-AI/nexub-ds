@@ -48,3 +48,11 @@ describe('SplitButton', () => {
     expect(screen.getByRole('button', { name: 'More save options' })).toBeDisabled();
   });
 });
+
+describe('SplitButton sheet (10.6)', () => {
+  it('passes sheet to the menu', async () => {
+    render(<SplitButton menuLabel="More" menu={<DropdownMenu.Item>Draft</DropdownMenu.Item>} sheet="auto">Save</SplitButton>);
+    await userEvent.click(screen.getByRole('button', { name: 'More' }));
+    expect(await screen.findByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

@@ -45,3 +45,23 @@ export const Default: Story = {
     </ContextMenu.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual menu above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <ContextMenu.Root>
+      <ContextMenu.Trigger asChild>
+        <div className="flex h-24 w-56 items-center justify-center rounded-shape-container border border-dashed border-[var(--color-outline)] text-body-sm text-[var(--color-on-surface)]">
+          Long-press or right-click
+        </div>
+      </ContextMenu.Trigger>
+      <ContextMenu.Portal>
+        <ContextMenu.Content sheet="auto">
+          <ContextMenu.Item>View</ContextMenu.Item>
+          <ContextMenu.Item>Edit</ContextMenu.Item>
+          <ContextMenu.Item>Share</ContextMenu.Item>
+        </ContextMenu.Content>
+      </ContextMenu.Portal>
+    </ContextMenu.Root>
+  ),
+};

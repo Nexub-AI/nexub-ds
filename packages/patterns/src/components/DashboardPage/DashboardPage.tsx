@@ -93,8 +93,8 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
       {failed ? (
         errorState
       ) : (
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
+      <div className="grid gap-6 @[60rem]:grid-cols-3">
+        <div className="flex min-w-0 flex-col gap-6 @[60rem]:col-span-2">
           <Card className="flex flex-col gap-5 p-6">
             <div className="flex flex-col gap-1">
               <p className="text-label-lg text-[var(--color-on-surface-variant)]">{balance.label ?? m.totalBalance}</p>
@@ -105,7 +105,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
               )}
             </div>
             {quickActions.length > 0 && (
-              <ul aria-label={m.quickActions} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <ul aria-label={m.quickActions} className="grid grid-cols-2 gap-2 @xl:grid-cols-4">
                 {quickActions.map((a, i) => (
                   <li key={a.id}>
                     {/* The first action is the screen's one main (gradient under vivid) action. */}
@@ -119,7 +119,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
           </Card>
 
           {statList.length > 0 && (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 @xl:grid-cols-2 @[76rem]:grid-cols-3">
               {statList.map((s, i) => (
                 <StatCard key={loading ? i : s.label} {...s} loading={loading} />
               ))}

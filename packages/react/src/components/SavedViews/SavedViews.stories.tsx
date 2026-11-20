@@ -21,3 +21,10 @@ export const Default: Story = {
     />
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual menu above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <SavedViews views={[{ id: 'mine', name: 'My open deals' }]} activeId="mine" onSelect={() => {}} sheet="auto" />
+  ),
+};

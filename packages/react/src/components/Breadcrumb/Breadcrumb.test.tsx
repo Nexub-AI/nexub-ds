@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import { Breadcrumb } from './Breadcrumb.js';
 
@@ -83,5 +84,19 @@ describe('Breadcrumb', () => {
     render(<Breadcrumb.Trail items={[{ label: 'Home', href: '/' }, { label: 'Docs' }]} />);
     expect(screen.queryByRole('button', { name: 'More' })).toBeNull();
     expect(screen.getByText('Docs')).toHaveAttribute('aria-current', 'page');
+  });
+});
+
+describe('Breadcrumb.Trail sheet (10.6)', () => {
+  const items = [{ label: 'Home', href: '/' }, { label: 'Org', href: '/o' }, { label: 'Team', href: '/o/t' }, { label: 'Page' }];
+
+  it('passes sheet to the More menu, and leaves it off by default', async () => {
+    const { unmount } = render(<Breadcrumb.Trail items={items} maxItems={2} />);
+    await userEvent.click(screen.getByRole('button', { name: 'More' }));
+    expect(await screen.findByRole('menu')).not.toHaveAttribute('data-nx-sheet');
+    unmount();
+    render(<Breadcrumb.Trail items={items} maxItems={2} sheet="auto" />);
+    await userEvent.click(screen.getByRole('button', { name: 'More' }));
+    expect(await screen.findByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
   });
 });

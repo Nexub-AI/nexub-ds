@@ -48,3 +48,12 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual list above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <div style={{ width: '18rem', maxWidth: '100%' }}>
+      <MultiSelect aria-label="Labels" options={labels} defaultValue={['bug']} sheet="auto" />
+    </div>
+  ),
+};

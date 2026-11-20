@@ -9,6 +9,7 @@ import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { dateTriggerSizes, useCalendarLocale } from '../DatePicker/DatePicker.js';
 import { field, fieldFocusVisible, fieldReadOnly, type Size } from '../../utils/control.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
 
 export type { DateRange };
@@ -62,6 +63,8 @@ export interface DateRangePickerProps {
    * calendar, and presets count "today" there.
    */
   timeZone?: string;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
 }
 
 function formatRange(
@@ -136,6 +139,7 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
       locale: localeProp,
       presets: presetsProp,
       timeZone,
+      sheet = false,
     },
     ref,
   ) {
@@ -200,8 +204,11 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
         <RadixPopover.Portal>
           <RadixPopover.Content
             align="start"
+            collisionPadding={COLLISION_PADDING}
+            data-nx-sheet={sheet || undefined}
             className={cn(
               'z-[var(--z-popover)] outline-none',
+              'max-h-[var(--radix-popover-content-available-height)] overflow-y-auto',
               floatingSurface,
               'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
             )}

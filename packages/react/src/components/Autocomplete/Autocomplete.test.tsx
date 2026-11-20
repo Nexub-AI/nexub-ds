@@ -89,3 +89,20 @@ describe('Autocomplete 10.4', () => {
     expect(onValueChange).not.toHaveBeenCalled();
   });
 });
+
+describe('Autocomplete sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+  const sheetOptions = [{ value: 'one', label: 'One' }];
+
+  it('marks the list popover with data-nx-sheet only when asked', async () => {
+    const { unmount } = render(<Autocomplete options={sheetOptions} aria-label="Sheet field" />);
+    await userEvent.type(screen.getByRole('combobox'), 'o');
+    expect(await screen.findByRole('option', { name: 'One' })).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+    unmount();
+
+    render(<Autocomplete options={sheetOptions} aria-label="Sheet field" sheet="auto" />);
+    await userEvent.type(screen.getByRole('combobox'), 'o');
+    expect((await screen.findByRole('option', { name: 'One' })).closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

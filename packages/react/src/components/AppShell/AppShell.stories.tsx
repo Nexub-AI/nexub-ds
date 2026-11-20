@@ -116,3 +116,41 @@ export const Default: Story = {
     </AppShell.Root>
   ),
 };
+
+/**
+ * 10.6: `drawerBelow="md"` on the sidebar slot. Below that breakpoint the sidebar leaves the
+ * layout and opens in a drawer from `AppShell.NavTrigger`; choosing a link closes it.
+ */
+export const MobileDrawer: Story = {
+  render: () => (
+    <AppShell.Root>
+      <AppShell.Header>
+        <TopNav.Root>
+          <AppShell.NavTrigger label="Open navigation" drawerBelow="md" />
+          <TopNav.Logo>
+            <span className="text-title-md font-semibold">Nexub</span>
+          </TopNav.Logo>
+        </TopNav.Root>
+      </AppShell.Header>
+
+      <AppShell.Body>
+        <AppShell.Sidebar drawerBelow="md" drawerLabel="Navigation">
+          <Sidebar.Root style={{ height: '100%' }}>
+            <Sidebar.Group>
+              <Sidebar.Item href="#" active icon={<HomeIcon />}>Dashboard</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<BarChartIcon />}>Analytics</Sidebar.Item>
+              <Sidebar.Item href="#" icon={<SettingsIcon />}>Settings</Sidebar.Item>
+            </Sidebar.Group>
+          </Sidebar.Root>
+        </AppShell.Sidebar>
+
+        <AppShell.Main className="min-w-0">
+          <h1 className="text-title-lg text-[var(--color-on-surface)]">Dashboard</h1>
+          <p className="mt-2 text-body-md text-[var(--color-on-surface-variant)]">
+            Below 768px the sidebar moves into a drawer, opened from the menu button in the header.
+          </p>
+        </AppShell.Main>
+      </AppShell.Body>
+    </AppShell.Root>
+  ),
+};

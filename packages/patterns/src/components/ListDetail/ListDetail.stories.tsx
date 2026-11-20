@@ -11,7 +11,7 @@ const messages = ['Quarterly report', 'Design review notes', 'Invoice #4821', 'T
 function Demo({ width }: { width: number }) {
   const [selected, setSelected] = React.useState<number | null>(0);
   return (
-    <div style={{ width, height: 320, border: '1px solid var(--color-outline-variant)', borderRadius: 16, overflow: 'hidden' }}>
+    <div style={{ width: `min(${width}px, 100%)`, height: 320, border: '1px solid var(--color-outline-variant)', borderRadius: 16, overflow: 'hidden' }}>
       <ListDetail
         listLabel="Messages"
         detailLabel="Message"

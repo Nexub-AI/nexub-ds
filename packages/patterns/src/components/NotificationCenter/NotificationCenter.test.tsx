@@ -32,4 +32,11 @@ describe('NotificationCenter', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Notifications' }));
     expect(screen.getByText('You’re all caught up')).toBeInTheDocument();
   });
+
+  // 10.6. Needs the @nexub/react build that has `sheet` on Popover.Content.
+  it('forwards sheet to the panel', async () => {
+    render(<NotificationCenter notifications={[]} sheet="auto" />);
+    await userEvent.click(screen.getByRole('button', { name: 'Notifications' }));
+    expect(screen.getByRole('dialog', { name: 'Notifications' })).toHaveAttribute('data-nx-sheet', 'auto');
+  });
 });

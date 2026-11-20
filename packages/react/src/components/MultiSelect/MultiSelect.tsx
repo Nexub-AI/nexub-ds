@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Check, Plus } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
+import type { SheetProp } from '../../utils/popper.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Chip } from '../Chip/Chip.js';
@@ -36,6 +37,8 @@ export interface MultiSelectProps {
   readOnly?: boolean;
   /** @default 'md' */
   size?: Size;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
   className?: string;
   id?: string;
   'aria-label'?: string;
@@ -61,6 +64,7 @@ export function MultiSelect({
   disabled,
   readOnly,
   size,
+  sheet,
   className,
   id,
   'aria-label': ariaLabel,
@@ -123,6 +127,7 @@ export function MultiSelect({
         disabled={disabled}
         readOnly={readOnly}
         size={size}
+        sheet={sheet}
         input={{
           id,
           'aria-label': ariaLabel,

@@ -47,3 +47,20 @@ describe('NavigationMenu', () => {
     expect(document.querySelector('.custom-nav')).toBeInTheDocument();
   });
 });
+
+describe('NavigationMenu reflow (10.6)', () => {
+  it('lets the top-level list wrap on phones only', () => {
+    render(
+      <NavigationMenu.Root>
+        <NavigationMenu.List>
+          <NavigationMenu.Item>
+            <NavigationMenu.Link href="#">Home</NavigationMenu.Link>
+          </NavigationMenu.Item>
+        </NavigationMenu.List>
+      </NavigationMenu.Root>,
+    );
+    const list = screen.getByRole('list');
+    expect(list).toHaveClass('max-sm:flex-wrap');
+    expect(list).not.toHaveClass('flex-wrap');
+  });
+});

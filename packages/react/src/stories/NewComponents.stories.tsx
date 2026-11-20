@@ -19,7 +19,8 @@ export default meta;
 const row: React.CSSProperties = { display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' };
 
 export const Gallery = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: '96px 1fr', gap: 24, maxWidth: 860 }}>
+  // One column on phones (the rail sits above the content), the rail beside it from `sm` up.
+  <div className="grid grid-cols-[96px_1fr] max-sm:grid-cols-1" style={{ gap: 24, maxWidth: 860 }}>
     <NavigationRail.Root
       aria-label="Workspace"
       header={
@@ -34,7 +35,7 @@ export const Gallery = () => (
       <NavigationRail.Item href="#" icon={<Settings />} label="Settings" />
     </NavigationRail.Root>
 
-    <div style={{ display: 'grid', gap: 24, alignContent: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 24, alignContent: 'start' }}>
       <div style={row}>
         <ButtonGroup attached aria-label="Alignment">
           <Button variant="tonal">Left</Button>
@@ -66,7 +67,7 @@ export const Gallery = () => (
             'radial-gradient(circle at 20% 30%, #4099f1 0 22%, transparent 23%), radial-gradient(circle at 75% 60%, #f59e0b 0 18%, transparent 19%), light-dark(#eceef4, #1b1d24)',
         }}
       >
-        <Toolbar.Root floating aria-label="Formatting" style={{ width: 'fit-content' }}>
+        <Toolbar.Root floating aria-label="Formatting" style={{ width: 'fit-content', maxWidth: '100%', flexWrap: 'wrap' }}>
           <Toolbar.ToggleGroup type="multiple" defaultValue={['b']} aria-label="Text style">
             <Toolbar.ToggleItem value="b" aria-label="Bold">B</Toolbar.ToggleItem>
             <Toolbar.ToggleItem value="i" aria-label="Italic">I</Toolbar.ToggleItem>

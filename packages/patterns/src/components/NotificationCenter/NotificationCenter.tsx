@@ -30,6 +30,8 @@ export interface NotificationCenterProps {
   emptyState?: React.ReactNode;
   /** Shown in place of the list; wins over `loading` and `emptyState`. */
   errorState?: React.ReactNode;
+  /** 10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide). */
+  sheet?: boolean | 'auto';
   className?: string;
 }
 
@@ -46,6 +48,7 @@ export function NotificationCenter({
   loading,
   emptyState,
   errorState,
+  sheet,
   className,
 }: NotificationCenterProps) {
   const t = useNexubMessages();
@@ -72,7 +75,7 @@ export function NotificationCenter({
           )}
         </IconButton>
       </Popover.Trigger>
-      <Popover.Content align="end" aria-labelledby={headingId} aria-busy={(loading && errorState == null) || undefined} className="flex w-96 max-w-[calc(100vw-2rem)] flex-col gap-1 p-2">
+      <Popover.Content align="end" collisionPadding={8} sheet={sheet} aria-labelledby={headingId} aria-busy={(loading && errorState == null) || undefined} className="flex w-96 max-w-[calc(100vw-2rem)] flex-col gap-1 p-2">
         <div className="flex items-center justify-between gap-2 px-2 py-1">
           <h2 id={headingId} className="text-title-sm font-semibold text-[var(--color-on-surface)]">
             {t.notificationCenter}

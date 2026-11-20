@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RadixMenubar from '@radix-ui/react-menubar';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING, arrowSafe, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface, menuContent, menuItem, menuItemFg, menuSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Menu = RadixMenubar.Menu;
@@ -48,17 +49,25 @@ Trigger.displayName = 'Menubar.Trigger';
 
 const contentBaseClasses = cn(
   'z-[var(--z-popover)] min-w-48 outline-none',
+  'max-h-[var(--radix-menubar-content-available-height)] overflow-y-auto', arrowSafe,
   floatingSurface, menuSurface,
   menuContent,
   'nx-motion nx-pop origin-[var(--radix-menubar-content-transform-origin)]',
 );
 
-const Content = React.forwardRef<HTMLDivElement, RadixMenubar.MenubarContentProps>(
-  function MenubarContent({ className, sideOffset = 8, ...props }, ref) {
+export interface MenubarContentProps extends RadixMenubar.MenubarContentProps {
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
+}
+
+const Content = React.forwardRef<HTMLDivElement, MenubarContentProps>(
+  function MenubarContent({ className, sideOffset = 8, collisionPadding = COLLISION_PADDING, sheet = false, ...props }, ref) {
     return (
       <RadixMenubar.Content
         ref={ref}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
+        data-nx-sheet={sheet || undefined}
         className={cn(contentBaseClasses, className)}
         {...props}
       />
@@ -182,10 +191,11 @@ SubTrigger.displayName = 'Menubar.SubTrigger';
 const SubContent = React.forwardRef<
   HTMLDivElement,
   RadixMenubar.MenubarSubContentProps
->(function MenubarSubContent({ className, ...props }, ref) {
+>(function MenubarSubContent({ className, collisionPadding = COLLISION_PADDING, ...props }, ref) {
   return (
     <RadixMenubar.SubContent
       ref={ref}
+      collisionPadding={collisionPadding}
       className={cn(contentBaseClasses, className)}
       {...props}
     />

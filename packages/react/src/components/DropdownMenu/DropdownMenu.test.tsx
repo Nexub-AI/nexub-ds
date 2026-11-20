@@ -80,3 +80,32 @@ describe('DropdownMenu', () => {
     expect(deleteItem.closest('[data-disabled]')).toBeTruthy();
   });
 });
+
+describe('DropdownMenu sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+  const Menu = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>Sheet trigger</DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content sheet={sheet}>
+          <DropdownMenu.Item>Sheet item</DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+
+  it('marks the content with data-nx-sheet only when asked, and still opens and closes', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Menu />);
+    await user.click(screen.getByText('Sheet trigger'));
+    expect(await screen.findByText('Sheet item')).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Sheet item')).not.toBeInTheDocument());
+    unmount();
+
+    render(<Menu sheet="auto" />);
+    await user.click(screen.getByText('Sheet trigger'));
+    expect((await screen.findByText('Sheet item')).closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});
