@@ -7,3 +7,5 @@ export { filterOperators, isFilterGroup, filterId, emptyFilter, newFilterRule, c
 export type { FilterFieldType, FilterOperator, FilterField, FilterRule, FilterGroup } from './filters.js';
 export { COUNTRIES, callingCode, formatNational, toE164, parsePhone, isValidPhone } from './phone.js';
 export type { CountryCode, ParsedPhone } from './phone.js';
+export { encodeQR, qrPath } from './qr.js';
+export type { QRErrorCorrection, QRMatrix } from './qr.js';

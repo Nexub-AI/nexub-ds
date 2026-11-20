@@ -55,7 +55,7 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOve
 Overlay.displayName = 'AlertDialog.Overlay';
 
 export interface AlertDialogContentProps extends RadixAlertDialog.AlertDialogContentProps {
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
 }
 

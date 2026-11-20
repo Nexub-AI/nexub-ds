@@ -57,3 +57,5 @@ export type {
   NexubApp,
   AppSwitcherSheetProps,
 } from './app';
+export { StatusSteps } from './status';
+export type { StatusStepsProps, StatusStep, StatusStepStatus } from './status';

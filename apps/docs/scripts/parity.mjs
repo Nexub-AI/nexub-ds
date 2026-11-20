@@ -28,7 +28,8 @@ const result = {};
 for (const [slug, nativeName] of twins) {
   const key = slug.replace(/-/g, '');
   const [webName, w] = find(key) ?? find(`${key}root`) ?? [];
-  const n = native[nativeName];
+  // Compound native components generate their props under <Name>Root, like web.
+  const n = native[nativeName] ?? native[`${nativeName}Root`];
   if (!n) throw new Error(`parity: ${slug} → ${nativeName} has no generated native props`);
   // Deprecated names are on their way out (9.0), so they aren't part of the matrix.
   const nNames = n.props.filter((p) => !p.description.startsWith('Deprecated.')).map((p) => p.name).filter((p) => !PLATFORM.has(p));

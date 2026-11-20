@@ -125,6 +125,7 @@ const cases: Record<string, () => React.ReactElement> = {
   PhoneInput: () => <N.PhoneInput aria-label="Phone" defaultCountry="IN" />,
   Countdown: () => <N.Countdown to={0} now={() => 0} />,
   TimeSlotPicker: () => <N.TimeSlotPicker aria-label="Time" slots={[{ value: '09:00' }]} />,
+  QRCode: () => <N.QRCode value="https://example.com/h/4729" />,
   SkeletonPreset: () => <N.SkeletonPreset preset="card" />,
   KeyboardShortcut: () => <N.KeyboardShortcut keys={['Ctrl', 'K']} />,
   Kbd: () => <N.Kbd>K</N.Kbd>,

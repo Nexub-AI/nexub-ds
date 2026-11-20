@@ -8,10 +8,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, { LayoutAnimationConfig } from 'react-native-reanimated';
-import { moneyFormatter, type ToneValue } from '@nexub/core';
+import { CATEGORY_COLORS, moneyFormatter, type CategoryColor, type ToneValue } from '@nexub/core';
 import type { NativeIconProps } from '@nexub/icons/native';
 import { Text } from '../primitives/Text';
-import { useTheme } from '../theme/ThemeProvider';
+import { useTheme, type NexubTheme } from '../theme/ThemeProvider';
 import { nxEnter } from '../theme/motion';
 import { TONE_CONTAINERS, TONE_ROLES, TONE_TEXT } from './shared';
 
@@ -113,6 +113,87 @@ function AmountFigure({
   );
 }
 
+// ─── Category colours (10.9, web 10.3) ───────────────────────────────────────
+
+export interface CategoryPalette {
+  /** Text or icon colour on a surface. */
+  color: string;
+  container: string;
+  onContainer: string;
+}
+
+/** One of the eight generated hues, or `'accent'` for the product's spot accent. */
+export function categoryPalette(theme: NexubTheme, category: CategoryColor): CategoryPalette {
+  if (category === 'accent') {
+    const { spot, spotContainer, onSpotContainer } = theme.colors;
+    return { color: spot, container: spotContainer, onContainer: onSpotContainer };
+  }
+  return theme.tokens.color.categories[theme.scheme][category];
+}
+
+/** The same name always gets the same hue, on web and native (same hash as web Avatar), skipping 'accent'. */
+export function autoCategory(name: string | undefined): CategoryColor | undefined {
+  if (!name) return undefined;
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return CATEGORY_COLORS[1 + (h % (CATEGORY_COLORS.length - 1))];
+}
+
+// ─── IconChip ────────────────────────────────────────────────────────────────
+
+export interface IconChipProps extends ViewProps {
+  /** Colour of the chip. `'accent'` is the product's spot accent. Without it the chip is neutral. */
+  category?: CategoryColor;
+  /** @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
+  /** @default 'square' */
+  shape?: 'square' | 'circle';
+  /** One icon element, e.g. `<Wallet />`. It takes the chip's colour and size unless it sets its own. */
+  children: React.ReactNode;
+}
+
+// [tile spacing step, icon size]: 32 / 40 / 48 with a 16 / 20 / 24 icon, as web.
+const CHIP = { sm: [8, 'sm'], md: [10, 'md'], lg: [12, 'lg'] } as const;
+
+/**
+ * An icon on a tinted tile: the leading mark of a stat card, a list row or a
+ * settings section. Decorative unless you give it an `accessibilityLabel`.
+ */
+export function IconChip({ category, size = 'md', shape = 'square', children, style, accessibilityLabel, ...rest }: IconChipProps) {
+  const theme = useTheme();
+  const { roles, tokens } = theme;
+  const [step, icon] = CHIP[size];
+  const side = tokens.spacing[step];
+  const pal = category && categoryPalette(theme, category);
+  const color = pal ? pal.onContainer : roles['on-surface-variant'];
+  const glyph = React.isValidElement<NativeIconProps>(children)
+    ? React.cloneElement(children, { color: children.props.color ?? color, size: children.props.size ?? icon })
+    : children;
+  return (
+    <View
+      accessible={!!accessibilityLabel}
+      accessibilityRole={accessibilityLabel ? 'image' : undefined}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityElementsHidden={!accessibilityLabel}
+      importantForAccessibility={accessibilityLabel ? 'yes' : 'no-hide-descendants'}
+      style={[
+        {
+          width: side,
+          height: side,
+          borderRadius: shape === 'circle' ? side / 2 : tokens.shape.control,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: pal ? pal.container : roles['surface-container-high'],
+        },
+        style,
+      ]}
+      {...rest}
+    >
+      {glyph}
+    </View>
+  );
+}
+
 // ─── Badge ───────────────────────────────────────────────────────────────────
 
 export interface BadgeProps extends ViewProps {
@@ -130,6 +211,8 @@ export interface BadgeProps extends ViewProps {
   /** @default 99 */
   max?: number;
   leadingIcon?: React.ComponentType<NativeIconProps>;
+  /** A category colour for tags and labels (one per project or team). Wins over `tone`. */
+  category?: CategoryColor;
 }
 
 /** Status, count or category label. Never tappable; use `Chip` for anything a user toggles. */
@@ -142,12 +225,18 @@ export function Badge({
   count,
   max = 99,
   leadingIcon: Lead,
+  category,
   style,
   ...rest
 }: BadgeProps) {
-  const { roles, tokens } = useTheme();
+  const theme = useTheme();
+  const { roles, tokens } = theme;
   const [bg, fg] = variant === 'solid' ? TONE_ROLES[tone] : TONE_CONTAINERS[tone];
   const fgColor = variant === 'outline' ? TONE_TEXT[tone] : fg;
+  // Category (as web): solid and soft share the container pair; outline is the text colour with a 50% border.
+  const cat = category && categoryPalette(theme, category);
+  const catFg = cat && (variant === 'outline' ? cat.color : cat.onContainer);
+  const catText = catFg ? { color: catFg } : undefined;
   const height = size === 'sm' ? 20 : 24;
   return (
     <View
@@ -162,9 +251,9 @@ export function Badge({
           justifyContent: 'center',
           gap: tokens.spacing[1],
           alignSelf: 'flex-start',
-          backgroundColor: variant === 'outline' ? 'transparent' : roles[bg],
+          backgroundColor: variant === 'outline' ? 'transparent' : cat ? cat.container : roles[bg],
         },
-        variant === 'outline' && { borderWidth: 1, borderColor: roles['outline-variant'] },
+        variant === 'outline' && { borderWidth: 1, borderColor: cat ? cat.color + '80' : roles['outline-variant'] },
         style,
       ]}
       {...rest}
@@ -176,17 +265,18 @@ export function Badge({
             height: tokens.spacing['1-5'],
             borderRadius: tokens.spacing['1-5'] / 2,
             backgroundColor:
-              roles[TONE_TEXT[tone] === 'on-surface-variant' ? 'outline' : TONE_TEXT[tone]],
+              catFg ?? roles[TONE_TEXT[tone] === 'on-surface-variant' ? 'outline' : TONE_TEXT[tone]],
           }}
         />
       )}
-      {Lead && <Lead size="xs" color={roles[fgColor]} />}
+      {Lead && <Lead size="xs" color={catFg ?? roles[fgColor]} />}
       {children !== undefined && (
         <Text
           variant={size === 'sm' ? 'label-sm' : 'label-md'}
           color={fgColor}
           tabular
           numberOfLines={1}
+          style={catText}
         >
           {String(children)}
         </Text>
@@ -197,6 +287,7 @@ export function Badge({
           color={fgColor}
           tabular
           numberOfLines={1}
+          style={catText}
           accessibilityLabel={String(count)}
         >
           {count > max ? `${max}+` : String(count)}
@@ -221,6 +312,11 @@ export interface AvatarProps extends ViewProps {
   badge?: boolean;
   /** Presence dot; its name is added to the accessible label ("Ada Lovelace, Away"). */
   status?: AvatarStatus;
+  /**
+   * Colour of the initials fallback. `'auto'` picks a stable colour from `name`,
+   * the same one the web Avatar picks. Without it the avatar is neutral.
+   */
+  category?: CategoryColor | 'auto';
 }
 
 export type AvatarStatus = 'online' | 'away' | 'busy' | 'offline';
@@ -235,8 +331,11 @@ const initials = (name = '') =>
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-export function Avatar({ src, name, size = 'md', badge, status, style, ...rest }: AvatarProps) {
-  const { roles, tokens, messages } = useTheme();
+export function Avatar({ src, name, size = 'md', badge, status, category: categoryProp, style, ...rest }: AvatarProps) {
+  const theme = useTheme();
+  const { roles, tokens, messages } = theme;
+  const category = categoryProp === 'auto' ? autoCategory(name) : categoryProp;
+  const cat = category && categoryPalette(theme, category);
   const label = [name, status && messages.presence[status]].filter(Boolean).join(', ') || undefined;
   const [broken, setBroken] = React.useState(false);
   const px = tokens.size.avatar[size];
@@ -256,7 +355,7 @@ export function Avatar({ src, name, size = 'md', badge, status, style, ...rest }
           overflow: 'hidden',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: roles['secondary-container'],
+          backgroundColor: cat ? cat.container : roles['secondary-container'],
         }}
       >
         {src && !broken ? (
@@ -269,7 +368,7 @@ export function Avatar({ src, name, size = 'md', badge, status, style, ...rest }
           <Text
             variant={px >= 48 ? 'title-md' : 'label-md'}
             color="on-secondary-container"
-            style={{ fontSize: px * 0.4, lineHeight: px * 0.5 }}
+            style={[{ fontSize: px * 0.4, lineHeight: px * 0.5 }, cat && { color: cat.onContainer }]}
             maxFontSizeMultiplier={1}
           >
             {initials(name)}

@@ -63,3 +63,64 @@ test('signature roles match the Signature palette tones in roles.css', () => {
   for (const { light: l, dark: d } of Object.values(native.signature.elevation))
     for (const v of [l, d]) assert.doesNotMatch(v, /light-dark|var\(|\//);
 });
+
+// ─── 10.9: category colours and the spot accent ──────────────────────────────
+
+const lum = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const ratio = (a, b) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+
+test('every native category pair meets 4.5:1 and matches roles.css', () => {
+  const css = readFileSync(new URL('roles.css', dist), 'utf8');
+  const failures = [];
+  for (const scheme of ['light', 'dark']) {
+    const cats = native.color.categories[scheme];
+    assert.deepEqual(Object.keys(cats), ['blue', 'amber', 'emerald', 'pink', 'violet', 'cyan', 'red', 'lime']);
+    for (const [name, c] of Object.entries(cats)) {
+      const inside = ratio(c.onContainer, c.container);
+      if (inside < 4.5) failures.push(`${name} ${scheme} on-container: ${inside.toFixed(2)}`);
+      for (const s of ['surface', 'surface-container', 'surface-container-high']) {
+        const r = ratio(c.color, native.signature.roles.standard[scheme][s] ?? native.color.roles.standard[scheme][s]);
+        if (r < 4.5) failures.push(`${name} ${scheme} text on ${s}: ${r.toFixed(2)}`);
+      }
+      const i = scheme === 'dark' ? 2 : 1;
+      assert.equal(c.color, css.match(new RegExp(`--color-category-${name}: light-dark\\((#\\w+), (#\\w+)\\)`))[i]);
+      assert.equal(c.container, css.match(new RegExp(`--color-category-${name}-container: light-dark\\((#\\w+), (#\\w+)\\)`))[i]);
+    }
+  }
+  assert.deepEqual(failures, []);
+});
+
+test('spot roles: primary by default, the division family for an app, its own scale for a built-in product', () => {
+  const { spot, divisions, products } = native.color;
+  for (const lvl of ['standard', 'medium', 'high'])
+    for (const scheme of ['light', 'dark']) {
+      const sig = native.signature.roles[lvl][scheme];
+      assert.deepEqual(spot.default[lvl][scheme], {
+        spot: sig.primary, onSpot: sig['on-primary'], spotContainer: sig['primary-container'], onSpotContainer: sig['on-primary-container'],
+      });
+      assert.equal(spot.money[lvl][scheme].spot, divisions.fintech[lvl][scheme].tertiary);
+      assert.equal(spot.fintech[lvl][scheme].onSpot, divisions.fintech[lvl][scheme]['on-tertiary']);
+      assert.equal(spot.payub[lvl][scheme].spotContainer, products.payub[lvl][scheme]['tertiary-container']);
+      assert.deepEqual(spot.payhub[lvl][scheme], spot.payub[lvl][scheme]);
+      for (const [key, v] of Object.entries(spot)) {
+        const s = v[lvl][scheme];
+        assert.ok(ratio(s.onSpot, s.spot) >= 4.5, `${key} ${lvl} ${scheme} on-spot`);
+        assert.ok(ratio(s.onSpotContainer, s.spotContainer) >= 4.5, `${key} ${lvl} ${scheme} on-spot-container`);
+      }
+    }
+  // default + 5 divisions + 17 product keys; 'commerce' is both a division and its one app.
+  assert.equal(Object.keys(spot).length, 1 + 5 + 17 - 1);
+});
+
+test('the vivid gradient end keeps on-primary readable', () => {
+  for (const lvl of ['standard', 'medium', 'high'])
+    for (const scheme of ['light', 'dark']) {
+      const { accent2 } = native.color.vivid[lvl][scheme];
+      const sig = native.signature.roles[lvl][scheme];
+      assert.notEqual(accent2, sig.primary);
+      assert.ok(ratio(sig['on-primary'], accent2) >= 4.5, `${lvl} ${scheme}: ${ratio(sig['on-primary'], accent2).toFixed(2)}`);
+    }
+});

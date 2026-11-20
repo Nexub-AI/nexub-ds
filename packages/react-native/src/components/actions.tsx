@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ActivityIndicator, View, type StyleProp, type ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import type { ControlSize, ToneValue } from '@nexub/core';
 import type { NativeIconProps } from '@nexub/icons/native';
 import { Pressable, type PressableProps } from '../primitives/Pressable';
@@ -7,9 +8,17 @@ import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme, type RoleName } from '../theme/ThemeProvider';
 import type { HapticToken } from '../theme/haptics';
-import { TONE_ROLES, controlHeight, disabledOpacity, hitSlopFor } from './shared';
+import { TONE_CONTAINERS, TONE_ROLES, controlHeight, disabledOpacity, hitSlopFor } from './shared';
 
-export type ButtonVariant = 'filled' | 'tonal' | 'outlined' | 'text' | 'glass';
+/** `hero` is the main action: a filled button that takes the gradient under `expression="vivid"` (as web). */
+export type ButtonVariant = 'filled' | 'tonal' | 'outlined' | 'text' | 'glass' | 'hero';
+
+// variant="tonal" with a tone is the role's container pair (a soft, coloured
+// button) instead of the solid fill. Same table as web `tonalToneClasses`.
+const TONAL_TONE: typeof TONE_CONTAINERS = {
+  ...TONE_CONTAINERS,
+  neutral: ['surface-container-high', 'on-surface'],
+};
 
 // [container role | undefined, content role]
 const VARIANT: Record<ButtonVariant, [RoleName | undefined, RoleName]> = {
@@ -18,6 +27,7 @@ const VARIANT: Record<ButtonVariant, [RoleName | undefined, RoleName]> = {
   outlined: [undefined, 'on-surface'],
   text: [undefined, 'primary'],
   glass: [undefined, 'on-surface'],
+  hero: ['primary', 'on-primary'],
 };
 
 const LABEL: Record<ControlSize, 'label-md' | 'label-lg' | 'title-md'> = {
@@ -90,10 +100,30 @@ export function Button({
 }: ButtonProps) {
   const theme = useTheme();
   const { roles } = theme;
-  const [bgRole, fgRole] = tone ? TONE_ROLES[tone] : VARIANT[variant];
+  const [bgRole, fgRole] = tone
+    ? (variant === 'tonal' ? TONAL_TONE : TONE_ROLES)[tone]
+    : VARIANT[variant];
   const height = controlHeight(theme, size);
   const fg = roles[fgRole];
   const inactive = disabled || loading;
+  // Vivid: the untoned main action is a gradient with a soft glow. High contrast
+  // keeps the flat fill (the roles already carry the contrast), as does disabled.
+  const vivid =
+    theme.expression === 'vivid' &&
+    theme.contrast !== 'high' &&
+    !tone &&
+    !disabled &&
+    (variant === 'filled' || variant === 'hero');
+  // The far stop is generated for the default primary. A seeded primary fades
+  // into the tertiary instead; a system colour (dynamicColor) cannot go in a gradient.
+  const defaultEnd = theme.tokens.color.vivid[theme.contrast][theme.scheme].accent2;
+  const gradientEnd =
+    theme.colors.primary !== roles.primary
+      ? undefined
+      : roles.primary === theme.tokens.signature.roles[theme.contrast][theme.scheme].primary
+        ? defaultEnd
+        : roles.tertiary;
+  const gradientId = React.useId().replace(/\W/g, '');
   const spinner = useSpinner(!!loading);
   const label = typeof children === 'string' ? children : undefined;
 
@@ -113,7 +143,12 @@ export function Button({
         Leading && <Leading size={ICON[size]} color={fg} />
       )}
       {typeof children === 'string' ? (
-        <Text variant={LABEL[size]} style={{ color: fg }} numberOfLines={1}>
+        <Text
+          variant={LABEL[size]}
+          style={{ color: fg }}
+          numberOfLines={1}
+          maxFontSizeMultiplier={theme.denseMaxFontScale}
+        >
           {children}
         </Text>
       ) : (
@@ -130,8 +165,10 @@ export function Button({
       borderRadius: theme.tokens.shape.control,
       justifyContent: 'center',
       alignSelf: fullWidth ? 'stretch' : 'flex-start',
-      backgroundColor: bgRole ? roles[bgRole] : 'transparent',
+      // colors.primary is roles.primary unless dynamicColor swapped in the system accent.
+      backgroundColor: bgRole ? (bgRole === 'primary' ? theme.colors.primary : roles[bgRole]) : 'transparent',
     },
+    vivid && { boxShadow: `0 6px 18px -6px ${roles.primary}61` }, // glow: primary at 38%
     variant === 'outlined' && !tone && { borderWidth: 1, borderColor: roles['outline-variant'] },
     disabled && bgRole && { backgroundColor: roles['on-surface'] + '1f' }, // disabled-container 12%
     style,
@@ -157,6 +194,25 @@ export function Button({
         >
           {body}
         </Surface>
+      ) : vivid && gradientEnd ? (
+        <>
+          <View
+            pointerEvents="none"
+            testID="button-gradient"
+            style={[StyleSheet.absoluteFill, { borderRadius: theme.tokens.shape.control, overflow: 'hidden' }]}
+          >
+            <Svg width="100%" height="100%">
+              <Defs>
+                <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+                  <Stop offset="0" stopColor={roles.primary} />
+                  <Stop offset="1" stopColor={gradientEnd} />
+                </LinearGradient>
+              </Defs>
+              <Rect width="100%" height="100%" fill={`url(#${gradientId})`} />
+            </Svg>
+          </View>
+          {body}
+        </>
       ) : (
         body
       )}

@@ -215,6 +215,7 @@ import truncateEntry from './components/truncate';
 import phoneInputEntry from './components/phone-input';
 import countdownEntry from './components/countdown';
 import timeSlotPickerEntry from './components/time-slot-picker';
+import qrCodeEntry from './components/qr-code';
 import statusStepsEntry from './patterns/status-steps';
 import illustrationEntry from './components/illustration';
 import successCheckEntry from './components/success-check';
@@ -277,6 +278,7 @@ export const componentEntries: ComponentEntry[] = [
   phoneInputEntry,
   countdownEntry,
   timeSlotPickerEntry,
+  qrCodeEntry,
   successCheckEntry,
   flagEntry,
   // Avatar
@@ -486,6 +488,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
   { id: 'release-status', label: '10.0 release status', description: 'Where each 10.0 exit criterion stood on release day', href: '/getting-started/release-status', category: 'Docs' },
+  { id: 'migrating-to-11', label: 'Migrating to 11.0', description: 'What 11.0 takes out (the four product theme files) and flips (overlays open as a bottom sheet on small screens). 10.9 is the release candidate, on the next tag', href: '/getting-started/migrating-to-11', category: 'Docs' },
   { id: 'migrating-to-10', label: 'Migrating to 10.0', description: '10.0 removes nothing; versions follow semver from 10.0', href: '/getting-started/migrating-to-10', category: 'Docs' },
   { id: 'migrating-to-9', label: 'Migrating to 9.0', description: 'Removed in 9.0: the classic style, Button legacy variants, the 8.5 parity aliases and hidePassword, and how to move off them', href: '/getting-started/migrating-to-9', category: 'Docs' },
   { id: 'migrating-to-8', label: 'Migrating to 8.0', description: 'Signature by default, class scroll lock, strict safeHref, legacy motion tokens removed: try it on 7.9', href: '/getting-started/migrating-to-8', category: 'Docs' },

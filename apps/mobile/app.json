@@ -3,12 +3,13 @@
     "name": "Nexub Mobile",
     "slug": "nexub-mobile",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "../../packages/brand/assets/mobile/nexub-ios.png",
     "scheme": "nexub",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "bundleIdentifier": "ai.nexub.mobile"
+      "bundleIdentifier": "ai.nexub.mobile",
+      "supportsTablet": true
     },
     "android": {
       "package": "ai.nexub.mobile",

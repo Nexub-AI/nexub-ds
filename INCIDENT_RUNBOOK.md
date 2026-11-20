@@ -55,7 +55,9 @@ When CI is the thing that is broken, fix CI first. A release that skipped its ga
 
 ### While a release candidate is on `next`
 
-Production is on the RC, which publishes to the `next` tag; `latest` is the previous version and can't get a patch. If `latest` users need the fix, remove the RC rule from `distTag` in `scripts/publish-tarballs.mjs` in the fix PR. The RC then publishes to `latest`, and the advisory names it as the patched version. (This was the case for 9.9.x before 10.0.0; no RC is out now.)
+Production is on the RC, which publishes to the `next` tag; `latest` is the previous version and can't get a patch. If `latest` users need the fix, remove the RC line from `RC_LINES` in `scripts/publish-tarballs.mjs` in the fix PR. The RC then publishes to `latest`, and the advisory names it as the patched version.
+
+**An RC is out now: 10.9.x on `next`,** the candidate for 11.0. `latest` stays on 10.8.x until 11.0.0. Consumers install the RC with `npm i @nexub/react@next`; a plain install still gives 10.8.x. A fix for RC users ships as 10.9.1 (still `next`). (9.9.x was the same case before 10.0.0.)
 
 ## 3. A bad version is on npm
 

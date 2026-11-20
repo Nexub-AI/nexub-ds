@@ -86,6 +86,7 @@
     "web": "Badge",
     "native": "Badge",
     "shared": [
+      "category",
       "children",
       "count",
       "dot",
@@ -95,9 +96,7 @@
       "tone",
       "variant"
     ],
-    "webOnly": [
-      "category"
-    ],
+    "webOnly": [],
     "nativeOnly": []
   },
   "avatar": {
@@ -105,6 +104,7 @@
     "native": "Avatar",
     "shared": [
       "badge",
+      "category",
       "name",
       "size",
       "src",
@@ -112,7 +112,6 @@
     ],
     "webOnly": [
       "badgeColor",
-      "category",
       "fallback"
     ],
     "nativeOnly": []
@@ -129,6 +128,37 @@
       "spacing"
     ],
     "nativeOnly": []
+  },
+  "icon-chip": {
+    "web": "IconChip",
+    "native": "IconChip",
+    "shared": [
+      "category",
+      "children",
+      "shape",
+      "size"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "number-ticker": {
+    "web": "NumberTicker",
+    "native": "NumberTicker",
+    "shared": [
+      "format",
+      "locale",
+      "value"
+    ],
+    "webOnly": [
+      "aria-live",
+      "countOnView"
+    ],
+    "nativeOnly": [
+      "animate",
+      "color",
+      "live",
+      "variant"
+    ]
   },
   "separator": {
     "web": "Separator",
@@ -397,6 +427,64 @@
       "helperText",
       "label",
       "searchable"
+    ]
+  },
+  "tabs": {
+    "web": null,
+    "native": "Tabs",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "defaultValue",
+      "onValueChange",
+      "value"
+    ]
+  },
+  "table": {
+    "web": "TableRoot",
+    "native": "Table",
+    "shared": [
+      "density",
+      "striped"
+    ],
+    "webOnly": [
+      "maxHeight",
+      "scrollLabel",
+      "stickyHeader"
+    ],
+    "nativeOnly": [
+      "columns",
+      "dividerAfter",
+      "stickyFirstColumn"
+    ]
+  },
+  "rating": {
+    "web": "Rating",
+    "native": "Rating",
+    "shared": [
+      "defaultValue",
+      "max",
+      "onValueChange",
+      "readOnly",
+      "size",
+      "value"
+    ],
+    "webOnly": [],
+    "nativeOnly": [
+      "label"
+    ]
+  },
+  "tooltip": {
+    "web": null,
+    "native": "Tooltip",
+    "shared": [],
+    "webOnly": [],
+    "nativeOnly": [
+      "children",
+      "delayDuration",
+      "duration",
+      "label",
+      "side"
     ]
   },
   "data-table": {
@@ -687,6 +775,86 @@
     ],
     "nativeOnly": []
   },
+  "qr-code": {
+    "web": "QRCode",
+    "native": "QRCode",
+    "shared": [
+      "caption",
+      "ecc",
+      "label",
+      "logo",
+      "quietZone",
+      "size",
+      "value"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "description-list": {
+    "web": "DescriptionListRoot",
+    "native": "DescriptionList",
+    "shared": [
+      "columns",
+      "divided",
+      "layout",
+      "size"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "comparison-bar": {
+    "web": "ComparisonBar",
+    "native": "ComparisonBar",
+    "shared": [
+      "highlight",
+      "label",
+      "left",
+      "right",
+      "showLabels",
+      "showValues",
+      "size",
+      "valueFormat"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
+  },
+  "phone-input": {
+    "web": "PhoneInput",
+    "native": "PhoneInput",
+    "shared": [
+      "countries",
+      "country",
+      "defaultCountry",
+      "defaultValue",
+      "invalid",
+      "onCountryChange",
+      "onValueChange",
+      "value"
+    ],
+    "webOnly": [
+      "sheet",
+      "size"
+    ],
+    "nativeOnly": []
+  },
+  "countdown": {
+    "web": "Countdown",
+    "native": "Countdown",
+    "shared": [
+      "dangerAt",
+      "format",
+      "size",
+      "to",
+      "tone",
+      "variant",
+      "warnAt"
+    ],
+    "webOnly": [
+      "now",
+      "onExpire"
+    ],
+    "nativeOnly": []
+  },
   "dialog": {
     "web": null,
     "native": "Dialog",
@@ -790,6 +958,16 @@
     "nativeOnly": [
       "radius"
     ]
+  },
+  "status-steps": {
+    "web": "StatusSteps",
+    "native": "StatusSteps",
+    "shared": [
+      "size",
+      "steps"
+    ],
+    "webOnly": [],
+    "nativeOnly": []
   },
   "activity-feed": {
     "web": "ActivityFeedRoot",
@@ -911,6 +1089,28 @@
     "nativeOnly": [
       "notifications",
       "onMarkAllRead",
+      "onPress"
+    ]
+  },
+  "stat-card": {
+    "web": "StatCard",
+    "native": "StatCard",
+    "shared": [
+      "animate",
+      "category",
+      "delta",
+      "deltaType",
+      "description",
+      "icon",
+      "label",
+      "loading",
+      "sentiment",
+      "trend",
+      "trendLabel",
+      "value"
+    ],
+    "webOnly": [],
+    "nativeOnly": [
       "onPress"
     ]
   },

@@ -21,6 +21,7 @@ import {
   Search,
   Send,
   Trash2,
+  Users,
   Wallet,
 } from '@nexub/icons/native';
 import {
@@ -60,6 +61,7 @@ import {
   Heading,
   Icon,
   IconButton,
+  IconChip,
   Inline,
   Link,
   ListItem,
@@ -67,6 +69,7 @@ import {
   LoadingIndicator,
   MoneyInput,
   MultiSelect,
+  NumberTicker,
   NumericKeypad,
   OTPInput,
   OfflineBanner,
@@ -77,6 +80,7 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  Rating,
   SearchField,
   SegmentedControl,
   Select,
@@ -85,13 +89,23 @@ import {
   SkeletonSwap,
   Slider,
   Stack,
+  StatCard,
   Stepper,
   StickyFooter,
   Surface,
   SwipeableRow,
   Switch,
+  Table,
+  Tabs,
   Text,
   TextField,
+  Tooltip,
+  ComparisonBar,
+  Countdown,
+  DescriptionList,
+  PhoneInput,
+  QRCode,
+  QRScanner,
   useTheme,
   useToast,
   type SurfaceTone,
@@ -251,6 +265,18 @@ export const EXAMPLES: Examples = {
       </ButtonGroup>
     ),
   ],
+  tooltip: [
+    () => (
+      <Stack gap="2">
+        <Tooltip label="Copy link">
+          <IconButton icon={Copy} label="Copy" variant="tonal" />
+        </Tooltip>
+        <Text variant="body-sm" color="on-surface-variant">
+          Touch and hold the button.
+        </Text>
+      </Stack>
+    ),
+  ],
   'icon-button': [
     function IconButtons() {
       const [fav, setFav] = useState(false);
@@ -317,6 +343,80 @@ export const EXAMPLES: Examples = {
       </AvatarGroup>
     ),
   ],
+  'icon-chip': [
+    () => (
+      <Inline>
+        <IconChip category="blue">
+          <Wallet />
+        </IconChip>
+        <IconChip category="emerald">
+          <Users />
+        </IconChip>
+        <IconChip category="amber">
+          <Bell />
+        </IconChip>
+        <IconChip category="accent">
+          <Heart />
+        </IconChip>
+        <IconChip>
+          <Lock />
+        </IconChip>
+      </Inline>
+    ),
+    () => (
+      <Inline>
+        <IconChip category="violet" size="sm">
+          <Globe />
+        </IconChip>
+        <IconChip category="violet">
+          <Globe />
+        </IconChip>
+        <IconChip category="violet" size="lg" shape="circle" accessibilityLabel="Global account">
+          <Globe />
+        </IconChip>
+      </Inline>
+    ),
+  ],
+  'number-ticker': [
+    function RollingTotal() {
+      const [total, setTotal] = useState(1284);
+      return (
+        <Stack gap="3">
+          <NumberTicker value={total} variant="headline-md" live />
+          <Button variant="tonal" size="sm" leadingIcon={Plus} onPress={() => setTotal((t) => t + 137)}>
+            Add 137
+          </Button>
+        </Stack>
+      );
+    },
+  ],
+  'stat-card': [
+    () => (
+      <StatCard
+        label="Active members"
+        value={2840}
+        delta="+12.5%"
+        deltaType="increase"
+        description="vs last month"
+        icon={<Users />}
+        category="emerald"
+        trend={[12, 14, 13, 17, 19, 18, 24]}
+        trendLabel="Last 7 weeks, rising"
+      />
+    ),
+    () => (
+      <StatCard
+        label="Open invoices"
+        value="18"
+        delta="-3"
+        deltaType="decrease"
+        sentiment="positive"
+        icon={<CreditCard />}
+        category="blue"
+        onPress={() => {}}
+      />
+    ),
+  ],
 
   'text-field': [
     () => <TextField label="Full name" placeholder="As on your ID" textContentType="name" autoComplete="name" />,
@@ -360,6 +460,44 @@ export const EXAMPLES: Examples = {
         ]}
       />
     ),
+  ],
+  tabs: [
+    () => (
+      <Tabs.Root defaultValue="overview">
+        <Tabs.List accessibilityLabel="Project">
+          <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+          <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+          <Tabs.Trigger value="files">Files</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="overview">
+          <Text color="on-surface-variant">Three tasks are due this week.</Text>
+        </Tabs.Content>
+        <Tabs.Content value="activity">
+          <Text color="on-surface-variant">Two comments since yesterday.</Text>
+        </Tabs.Content>
+        <Tabs.Content value="files">
+          <Text color="on-surface-variant">Five files, updated today.</Text>
+        </Tabs.Content>
+      </Tabs.Root>
+    ),
+    () => (
+      <Tabs.Root defaultValue="mon">
+        <Tabs.List variant="pill" size="sm" accessibilityLabel="Day">
+          {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+            <Tabs.Trigger key={day} value={day.toLowerCase()}>
+              {day}
+            </Tabs.Trigger>
+          ))}
+        </Tabs.List>
+      </Tabs.Root>
+    ),
+  ],
+  rating: [
+    function RatingExample() {
+      const [stars, setStars] = useState(3);
+      return <Rating value={stars} onValueChange={setStars} />;
+    },
+    () => <Rating value={4} readOnly size="sm" label="Average rating" />,
   ],
   slider: [
     function SliderExample() {
@@ -487,6 +625,66 @@ export const EXAMPLES: Examples = {
       );
     },
   ],
+  table: [
+    () => (
+      <Table.Root stickyFirstColumn dividerAfter={1} columns={[120, 88, 88, 88]}>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Team</Table.Head>
+            <Table.Head numeric>Played</Table.Head>
+            <Table.Head numeric>Won</Table.Head>
+            <Table.Head numeric>Points</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {[
+            ['Rovers', 12, 9, 29],
+            ['United', 12, 8, 26],
+            ['Athletic', 12, 6, 21],
+            ['Wanderers', 12, 4, 15],
+          ].map(([team, played, won, points]) => (
+            <Table.Row key={team}>
+              <Table.Cell>{team}</Table.Cell>
+              <Table.Cell numeric>{played}</Table.Cell>
+              <Table.Cell numeric>{won}</Table.Cell>
+              <Table.Cell numeric>{points}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+        <Table.Caption>The top two go through.</Table.Caption>
+      </Table.Root>
+    ),
+    () => (
+      <Table.Root density="compact" striped columns={[160]}>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head>Item</Table.Head>
+            <Table.Head numeric>Amount</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell>Design</Table.Cell>
+            <Table.Cell numeric>1,200.00</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Build</Table.Cell>
+            <Table.Cell numeric>3,450.00</Table.Cell>
+          </Table.Row>
+          <Table.Row>
+            <Table.Cell>Support</Table.Cell>
+            <Table.Cell numeric>600.00</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.Cell>Total</Table.Cell>
+            <Table.Cell numeric>5,250.00</Table.Cell>
+          </Table.Row>
+        </Table.Footer>
+      </Table.Root>
+    ),
+  ],
   'data-list': [
     function DataListExample() {
       const [selected, setSelected] = useState<string[]>([]);
@@ -576,6 +774,57 @@ export const EXAMPLES: Examples = {
       const [name, setName] = useState('Q4 launch plan');
       return <InlineEdit label="Project name" value={name} onSave={setName} />;
     },
+  ],
+  'description-list': [
+    () => (
+      <DescriptionList.Root divided>
+        <DescriptionList.Item label="You send">$250.00</DescriptionList.Item>
+        <DescriptionList.Item label="Fee" helpText="Charged once">
+          $1.00
+        </DescriptionList.Item>
+        <DescriptionList.Item label="Total" emphasis>
+          $251.00
+        </DescriptionList.Item>
+      </DescriptionList.Root>
+    ),
+    () => (
+      <DescriptionList.Root layout="stacked" size="sm" columns={2}>
+        <DescriptionList.Item label="Reference">NX-4821-XQ</DescriptionList.Item>
+        <DescriptionList.Item label="Paid on">31 October 2026</DescriptionList.Item>
+      </DescriptionList.Root>
+    ),
+  ],
+  'comparison-bar': [
+    () => (
+      <Stack gap="4">
+        <ComparisonBar label="Orders" left={{ label: 'This week', value: 128 }} right={{ label: 'Last week', value: 96 }} showLabels={false} />
+        <ComparisonBar label="Returns" left={{ label: 'This week', value: 4 }} right={{ label: 'Last week', value: 9 }} />
+      </Stack>
+    ),
+  ],
+  'qr-code': [
+    () => <QRCode value="https://example.com/h/4729" />,
+    () => <QRCode value="https://example.com/h/4729" size={200} logo={<Icon icon={Wallet} color="primary" />} caption="example.com/h/4729" />,
+  ],
+  'qr-scanner': [
+    // With no camera module (or no permission) the scanner shows this fallback, which is what a preview can show.
+    function ManualEntry() {
+      const [code, setCode] = useState('');
+      return <QRScanner onScan={setCode} fallback={<TextField label="Code" placeholder="NX-0000" value={code} onChangeText={setCode} autoCapitalize="characters" />} />;
+    },
+  ],
+  'phone-input': [() => <PhoneInput label="Mobile number" defaultCountry="SG" defaultValue="+6581234567" helperText="We’ll text you a code." />],
+  countdown: [
+    // A fixed clock, so the screenshot never changes: 4 minutes 32 seconds and 8 seconds left.
+    () => (
+      <Inline>
+        <Countdown to={272_000} now={() => 0} />
+        <Countdown to={8000} now={() => 0} />
+        <Text color="on-surface-variant">
+          Code expires in <Countdown variant="inline" to={272_000} now={() => 0} />
+        </Text>
+      </Inline>
+    ),
   ],
   'list-section': [
     function Security() {
