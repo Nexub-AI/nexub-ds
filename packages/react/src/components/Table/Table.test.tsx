@@ -184,3 +184,51 @@ describe('Table.Body 10.5: data states', () => {
     expect(stateScreen.getByRole('table').querySelector('tbody')!.hasAttribute('aria-busy')).toBe(false);
   });
 });
+
+describe('Table.Root 10.7: stickyHeader, density, striped', () => {
+  const rows = (
+    <>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Name</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>Alice</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </>
+  );
+
+  it('unset: no new classes, attributes or max height', () => {
+    render(<Table.Root>{rows}</Table.Root>);
+    const table = screen.getByRole('table');
+    expect(table.className).toBe('w-full caption-bottom text-body-sm tabular-nums');
+    expect(table).not.toHaveAttribute('data-striped');
+    expect(table).not.toHaveAttribute('data-sticky-header');
+    expect(table.parentElement!.style.maxHeight).toBe('');
+  });
+
+  it('stickyHeader sticks the header cells on an opaque background; maxHeight caps the scroll container', () => {
+    const { rerender } = render(<Table.Root stickyHeader maxHeight={200}>{rows}</Table.Root>);
+    const table = screen.getByRole('table');
+    expect(table).toHaveAttribute('data-sticky-header');
+    expect(table.className).toContain('[&_thead_th]:sticky');
+    expect(table.className).toContain('[&_thead_th]:bg-[var(--table-head-bg,var(--color-surface))]');
+    expect(table.parentElement!.style.maxHeight).toBe('200px');
+    rerender(<Table.Root stickyHeader maxHeight="50vh">{rows}</Table.Root>);
+    expect(table.parentElement!.style.maxHeight).toBe('50vh');
+    rerender(<Table.Root stickyHeader>{rows}</Table.Root>);
+    expect(table.parentElement!.style.maxHeight).toBe('');
+  });
+
+  it('density scopes the table variables; striped tints even body rows below hover and selected', () => {
+    render(<Table.Root density="compact" striped>{rows}</Table.Root>);
+    const table = screen.getByRole('table');
+    expect(table.className).toContain('[--table-head-h:2rem] [--table-cell-p:0.5rem]');
+    expect(table).toHaveAttribute('data-striped');
+    // :where() keeps the stripe weaker than Row's hover and selected classes.
+    expect(table.className).toContain('[&_:where(tbody>tr:nth-child(even))]:bg-');
+  });
+});

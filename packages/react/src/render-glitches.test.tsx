@@ -63,6 +63,8 @@ describe.each(stories)('%s', (key, Story) => {
     // (renderToString can't wait on Suspense; Next.js streaming does).
     await act(async () => {
       render(<Story />);
+      // Wait for the chunks themselves: on a busy machine the import outlives the act tick.
+      await vi.dynamicImportSettled();
     });
     cleanup();
     const html = renderToString(<Story />);

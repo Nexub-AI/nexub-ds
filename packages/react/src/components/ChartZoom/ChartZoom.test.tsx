@@ -47,3 +47,25 @@ describe('ChartZoom 10.5: data states', () => {
     expect((stateScreen.getByRole('button') as HTMLButtonElement).disabled).toBe(false);
   });
 });
+
+describe('ChartZoom 10.7: an interactive chart inside', () => {
+  it('points map to the visible slice', async () => {
+    const { BarChart } = await import('../Chart/Chart.js');
+    const clicks: unknown[] = [];
+    render(
+      <ChartZoom data={data} index="month" defaultRange={[1, 3]}>
+        {(slice) => <BarChart title="Value" data={slice} index="month" series={[{ key: 'value' }]} onPointClick={(p) => clicks.push(p)} />}
+      </ChartZoom>,
+    );
+    const layer = screen.getByRole('group', { name: 'Value' });
+    layer.focus();
+    await userEvent.keyboard('{End}{Enter}');
+    expect(clicks).toEqual([{ index: 2, datum: { month: 'Apr', value: 3 }, series: { key: 'value' }, value: 3 }]);
+    // Zooming out under an open tooltip keeps the point valid.
+    screen.getByRole('slider', { name: 'Zoom end: Apr' }).focus();
+    await userEvent.keyboard('{ArrowLeft}');
+    layer.focus();
+    await userEvent.keyboard('{End}{Enter}');
+    expect(clicks.at(-1)).toMatchObject({ index: 1, datum: { month: 'Mar' } });
+  });
+});

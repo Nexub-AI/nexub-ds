@@ -525,6 +525,12 @@
           "description": "One row per category, in order."
         },
         {
+          "name": "defaultHiddenSeries",
+          "type": "string[]",
+          "required": false,
+          "description": "Keys of the series hidden at first."
+        },
+        {
           "name": "emptyState",
           "type": "React.ReactNode",
           "required": false,
@@ -537,23 +543,47 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "hiddenSeries",
+          "type": "string[]",
+          "required": false,
+          "description": "Keys of the hidden series, controlled (10.7)."
+        },
+        {
           "name": "index",
           "type": "keyof T & string",
           "required": true,
           "description": "Key of the category label in each row (the x axis)."
         },
         {
-          "name": "legend",
+          "name": "interactive",
           "type": "boolean",
           "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
+          "name": "legend",
+          "type": "false | true | 'toggle'",
+          "required": false,
           "default": "true",
-          "description": "Show the legend above the chart. Defaults to on for more than one series."
+          "description": "Show the legend above the chart. Defaults to on for more than one series. `'toggle'` (10.7) makes its entries buttons that hide and show a series; one always stays on."
         },
         {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onHiddenSeriesChange",
+          "type": "((hidden: string[]) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: ChartPoint<T>) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "series",
@@ -814,6 +844,23 @@
           "required": false,
           "default": "28",
           "description": "Number of pieces."
+        }
+      ]
+    },
+    "ChartInteractive": {
+      "file": "components/Chart/Chart.tsx",
+      "props": [
+        {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: P) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         }
       ]
     },
@@ -1290,6 +1337,70 @@
         "open"
       ]
     },
+    "ComparisonBar": {
+      "file": "components/ComparisonBar/ComparisonBar.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Replaces the text alternative built from the props (\"Orders: Team A 3, Team B 1\")."
+        },
+        {
+          "name": "highlight",
+          "type": "'none' | 'higher'",
+          "required": false,
+          "default": "'higher'",
+          "description": "`higher`: the larger side takes the accent and the other is muted; equal values look the same."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "What is compared, e.g. \"Orders\"."
+        },
+        {
+          "name": "left",
+          "type": "ComparisonBarSide",
+          "required": true,
+          "description": "The side at the inline start (the left in left-to-right text)."
+        },
+        {
+          "name": "right",
+          "type": "ComparisonBarSide",
+          "required": true,
+          "description": "The side at the inline end."
+        },
+        {
+          "name": "showLabels",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "The two side labels under the bar. Turn off for every bar but one in a group."
+        },
+        {
+          "name": "showValues",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "The two values and the label above the bar."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "valueFormat",
+          "type": "((value: number) => string)",
+          "required": false,
+          "default": "String",
+          "description": ""
+        }
+      ]
+    },
     "Container": {
       "file": "components/Container/Container.tsx",
       "props": [
@@ -1386,6 +1497,12 @@
           "description": "Keep the caption for screen readers only."
         },
         {
+          "name": "columnFilters",
+          "type": "ColumnFiltersState",
+          "required": false,
+          "description": "Column filters, for columns that set `meta.filter`: `[{ id: 'status', value: ['Active'] }]`. Changing a filter goes back to the first page."
+        },
+        {
           "name": "columnOrder",
           "type": "ColumnOrderState",
           "required": false,
@@ -1419,6 +1536,12 @@
           "name": "data",
           "type": "TData[]",
           "required": true,
+          "description": ""
+        },
+        {
+          "name": "defaultColumnFilters",
+          "type": "ColumnFiltersState",
+          "required": false,
           "description": ""
         },
         {
@@ -1521,6 +1644,13 @@
           "description": "Shows skeleton rows (one page's worth) and sets aria-busy on the table."
         },
         {
+          "name": "manualFiltering",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Rows arrive filtered (server-side): the headers still edit `columnFilters`, but rows aren't filtered here."
+        },
+        {
           "name": "manualPagination",
           "type": "boolean",
           "required": false,
@@ -1539,6 +1669,12 @@
           "type": "string | number",
           "required": false,
           "description": "Cap the table's height. Rows scroll and the header stays in view."
+        },
+        {
+          "name": "onColumnFiltersChange",
+          "type": "((filters: DataTableColumnFilters) => void)",
+          "required": false,
+          "description": ""
         },
         {
           "name": "onColumnOrderChange",
@@ -1974,6 +2110,74 @@
         }
       ]
     },
+    "DescriptionListItem": {
+      "file": "components/DescriptionList/DescriptionList.tsx",
+      "props": [
+        {
+          "name": "align",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'end' in the inline layout, 'start' when stacked",
+          "description": "Where the value sits."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The value."
+        },
+        {
+          "name": "emphasis",
+          "type": "boolean",
+          "required": false,
+          "description": "A total: stronger label and value, and a rule above."
+        },
+        {
+          "name": "helpText",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A small muted line under the label."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        }
+      ]
+    },
+    "DescriptionListRoot": {
+      "file": "components/DescriptionList/DescriptionList.tsx",
+      "props": [
+        {
+          "name": "columns",
+          "type": "1 | 2 | 3",
+          "required": false,
+          "default": "1",
+          "description": "Pairs per row. Falls back to fewer columns when the list's own width is narrow."
+        },
+        {
+          "name": "divided",
+          "type": "boolean",
+          "required": false,
+          "description": "A hairline between rows."
+        },
+        {
+          "name": "layout",
+          "type": "'inline' | 'stacked'",
+          "required": false,
+          "default": "'inline'",
+          "description": "`inline`: label at the start, value at the end of one row. `stacked`: label above the value."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        }
+      ]
+    },
     "DiffView": {
       "file": "components/AgentKit/AgentKit.tsx",
       "props": [
@@ -2002,7 +2206,7 @@
         },
         {
           "name": "data",
-          "type": "{ label: string; value: number; color?: ChartColor; }[]",
+          "type": "DonutDatum[]",
           "required": true,
           "description": ""
         },
@@ -2019,6 +2223,12 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
           "name": "legend",
           "type": "boolean",
           "required": false,
@@ -2030,6 +2240,12 @@
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: ChartPoint<DonutDatum>) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "title",
@@ -2367,7 +2583,7 @@
         },
         {
           "name": "defaultView",
-          "type": "'month' | 'week'",
+          "type": "'month' | 'week' | 'day' | 'agenda'",
           "required": false,
           "default": "'month'",
           "description": ""
@@ -2376,7 +2592,7 @@
           "name": "emptyState",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Shown under the grid when no event falls in the visible month or week. The grid stays, and an empty range is normal, so there is no default."
+          "description": "Shown under the grid when no event falls in the visible range (the month, week or day; agenda covers the month). The grid stays, and an empty range is normal, so there is no default."
         },
         {
           "name": "errorState",
@@ -2404,6 +2620,13 @@
           "description": "Events shown per day in month view before \"N more\"."
         },
         {
+          "name": "now",
+          "type": "Date",
+          "required": false,
+          "default": "new Date()",
+          "description": "The current time: marks today and draws the \"now\" line in day view. Pass a fixed date in tests and screenshots."
+        },
+        {
           "name": "onDateChange",
           "type": "((date: Date) => void)",
           "required": false,
@@ -2429,9 +2652,16 @@
         },
         {
           "name": "view",
-          "type": "'month' | 'week'",
+          "type": "'month' | 'week' | 'day' | 'agenda'",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "views",
+          "type": "EventCalendarView[]",
+          "required": false,
+          "default": "['month', 'week']",
+          "description": "Views offered in the switcher. `'day'` (an hour grid for one day) and `'agenda'` (the month's events as a list) are opt-in; the current view is always offered."
         },
         {
           "name": "weekStartsOn",
@@ -2872,10 +3102,22 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: ChartPoint<{ label: string; value: number; }>) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "title",
@@ -3067,10 +3309,22 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: HeatmapPoint) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "rowLabels",
@@ -3485,6 +3739,12 @@
           "description": "One row per category, in order."
         },
         {
+          "name": "defaultHiddenSeries",
+          "type": "string[]",
+          "required": false,
+          "description": "Keys of the series hidden at first."
+        },
+        {
           "name": "emptyState",
           "type": "React.ReactNode",
           "required": false,
@@ -3497,23 +3757,47 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "hiddenSeries",
+          "type": "string[]",
+          "required": false,
+          "description": "Keys of the hidden series, controlled (10.7)."
+        },
+        {
           "name": "index",
           "type": "keyof T & string",
           "required": true,
           "description": "Key of the category label in each row (the x axis)."
         },
         {
-          "name": "legend",
+          "name": "interactive",
           "type": "boolean",
           "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
+          "name": "legend",
+          "type": "false | true | 'toggle'",
+          "required": false,
           "default": "true",
-          "description": "Show the legend above the chart. Defaults to on for more than one series."
+          "description": "Show the legend above the chart. Defaults to on for more than one series. `'toggle'` (10.7) makes its entries buttons that hide and show a series; one always stays on."
         },
         {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onHiddenSeriesChange",
+          "type": "((hidden: string[]) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: ChartPoint<T>) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "series",
@@ -5503,6 +5787,12 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "interactive",
+          "type": "boolean",
+          "required": false,
+          "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
+        },
+        {
           "name": "label",
           "type": "string",
           "required": false,
@@ -5513,6 +5803,12 @@
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "onPointClick",
+          "type": "((point: ChartPoint<number>) => void)",
+          "required": false,
+          "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
           "name": "values",
@@ -5873,10 +6169,34 @@
       "file": "components/Table/Table.tsx",
       "props": [
         {
+          "name": "density",
+          "type": "'comfortable' | 'compact'",
+          "required": false,
+          "description": "Row height and cell padding for this table only. Unset: inherits the page density."
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Caps the scroll container's height; a number is pixels."
+        },
+        {
           "name": "scrollLabel",
           "type": "string",
           "required": false,
           "description": "Accessible name of the scroll region shown when the table overflows horizontally. Falls back to the table's `aria-label`/`aria-labelledby`, then its caption."
+        },
+        {
+          "name": "stickyHeader",
+          "type": "boolean",
+          "required": false,
+          "description": "Keeps the header row in view while the body scrolls. Set `maxHeight` so there is something to scroll."
+        },
+        {
+          "name": "striped",
+          "type": "boolean",
+          "required": false,
+          "description": "Tints every other body row. Hover and selected rows still stand out."
         }
       ]
     },
@@ -6422,6 +6742,32 @@
           "type": "string",
           "required": false,
           "description": "Single selection (ignored when `checkable`)."
+        }
+      ]
+    },
+    "Truncate": {
+      "file": "components/Truncate/Truncate.tsx",
+      "props": [
+        {
+          "name": "as",
+          "type": "React.ElementType<any, keyof React.JSX.IntrinsicElements>",
+          "required": false,
+          "default": "'span'",
+          "description": ""
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "Lines shown before the text is clipped."
+        },
+        {
+          "name": "tooltip",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the full text in a tooltip while it is clipped (string children only)."
         }
       ]
     }
@@ -8276,6 +8622,24 @@
           "type": "React.ReactNode",
           "required": false,
           "description": "Overrides the localised title; the description too."
+        }
+      ]
+    },
+    "StatusSteps": {
+      "file": "components/StatusSteps/StatusSteps.tsx",
+      "props": [
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "steps",
+          "type": "StatusStep[]",
+          "required": true,
+          "description": ""
         }
       ]
     },

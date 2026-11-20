@@ -219,6 +219,15 @@ export type { SuccessCheckProps } from './components/SuccessCheck/index.js';
 export { Illustration } from './components/Illustration/index.js';
 export type { IllustrationProps, IllustrationKind } from './components/Illustration/index.js';
 export type { DataStateProps } from './utils/dataState.js';
+export { DescriptionList } from './components/DescriptionList/index.js';
+export type { DescriptionListRootProps, DescriptionListItemProps } from './components/DescriptionList/index.js';
+export { ComparisonBar } from './components/ComparisonBar/index.js';
+export type { ComparisonBarProps, ComparisonBarSide } from './components/ComparisonBar/index.js';
+export { Truncate } from './components/Truncate/index.js';
+export type { TruncateProps } from './components/Truncate/index.js';
+export type { DataTableColumnFilters } from './components/DataTable/index.js';
+export { nearestIndex, segmentAt } from './components/Chart/index.js';
+export type { ChartPoint, ChartInteractiveProps, DonutDatum, HeatmapPoint } from './components/Chart/index.js';
 export { CountryBadge } from './components/CountryBadge/index.js';
 export type { CountryBadgeProps } from './components/CountryBadge/index.js';
 

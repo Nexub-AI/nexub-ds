@@ -2,7 +2,7 @@ import { render as renderState, screen as stateScreen } from '@testing-library/r
 import { ErrorState } from '../ErrorState/ErrorState.js';
 import { renderToString } from 'react-dom/server';
 import * as React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -407,5 +407,156 @@ describe('DataTable 10.5: errorState', () => {
     expect(container.querySelectorAll('tbody tr')).toHaveLength(1);
     expect(container.querySelector('table')!.hasAttribute('aria-busy')).toBe(false);
     expect(container.querySelectorAll('[role="alert"]')).toHaveLength(0);
+  });
+});
+
+describe('DataTable 10.7: footer and column filters', () => {
+  interface Member extends Person {
+    role: string;
+  }
+  const members: Member[] = [
+    { name: 'Alice', age: 30, role: 'Admin' },
+    { name: 'Bob', age: 25, role: 'Member' },
+    { name: 'Carol', age: 41, role: 'Member' },
+  ];
+  const memberColumns: DataTableColumn<Member>[] = [
+    { accessorKey: 'name', header: 'Name', footer: 'Total', meta: { filter: 'text' } },
+    { accessorKey: 'role', header: 'Role', meta: { filter: 'select' } },
+    {
+      accessorKey: 'age',
+      header: 'Age',
+      meta: { align: 'end', filter: 'number-range' },
+      footer: ({ table }) => table.getFilteredRowModel().rows.reduce((sum, r) => sum + r.original.age, 0),
+    },
+  ];
+  const bodyNames = (container: HTMLElement) =>
+    Array.from(container.querySelectorAll('tbody tr')).map((r) => r.firstElementChild!.textContent);
+  /** The popover loads lazily; the plain button stands in until then. */
+  const openFilter = async (name: string | RegExp) => {
+    await vi.waitFor(() => expect(screen.getByRole('button', { name })).toHaveAttribute('aria-haspopup', 'dialog'));
+    await userEvent.click(screen.getByRole('button', { name }));
+    return screen.getByRole('dialog');
+  };
+
+  it('no footer and no filter button unless a column asks for them', () => {
+    const { container } = render(<DataTable columns={columns} data={data} />);
+    expect(container.querySelector('tfoot')).toBeNull();
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('footer: a tfoot row aligned like its column, hidden while loading', () => {
+    const footerColumns = memberColumns.map((c) => ({ ...c, meta: { align: c.meta?.align } }));
+    const { container, rerender } = render(<DataTable columns={footerColumns} data={members} />);
+    const cells = container.querySelectorAll('tfoot td');
+    expect(Array.from(cells).map((c) => c.textContent)).toEqual(['Total', '', '96']);
+    expect(cells[2]).toHaveClass('text-end');
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(3);
+    rerender(<DataTable columns={footerColumns} data={members} loading />);
+    expect(container.querySelector('tfoot')).toBeNull();
+  });
+
+  it('text filter: narrows the rows and the footer sum, marks the button, and Clear restores them', async () => {
+    const { container } = render(<DataTable columns={memberColumns} data={members} emptyState="No members yet" />);
+    const dialog = await openFilter('Filter Name');
+    await userEvent.type(within(dialog).getByRole('textbox', { name: 'Filter Name' }), 'BO');
+    expect(bodyNames(container)).toEqual(['Bob']);
+    expect(container.querySelector('tfoot td:last-child')).toHaveTextContent('25');
+    expect(screen.getByRole('button', { name: 'Filter Name, 1 filter' })).toHaveAttribute('data-active');
+    // Filters hid every row: "no results", not the table's empty state.
+    await userEvent.type(within(dialog).getByRole('textbox'), 'zz');
+    expect(screen.getByText('No results found.')).toBeInTheDocument();
+    expect(screen.queryByText('No members yet')).toBeNull();
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Clear filter' }));
+    expect(bodyNames(container)).toEqual(['Alice', 'Bob', 'Carol']);
+    expect(screen.getByRole('button', { name: 'Filter Name' })).not.toHaveAttribute('data-active');
+  });
+
+  it('select filter: a checkbox per distinct value', async () => {
+    const { container } = render(<DataTable columns={memberColumns} data={members} />);
+    const dialog = await openFilter('Filter Role');
+    expect(within(dialog).getAllByRole('checkbox').map((c) => c.closest('label')!.textContent)).toEqual(['Admin', 'Member']);
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
+    expect(bodyNames(container)).toEqual(['Bob', 'Carol']);
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Admin' }));
+    expect(bodyNames(container)).toEqual(['Alice', 'Bob', 'Carol']);
+    expect(screen.getByRole('button', { name: 'Filter Role, 2 filters' })).toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
+    expect(bodyNames(container)).toEqual(['Alice']);
+  });
+
+  it('number-range filter: min, max or both', async () => {
+    const { container } = render(<DataTable columns={memberColumns} data={members} />);
+    const dialog = await openFilter('Filter Age');
+    await userEvent.type(within(dialog).getByRole('spinbutton', { name: 'Min' }), '26');
+    expect(bodyNames(container)).toEqual(['Alice', 'Carol']);
+    await userEvent.type(within(dialog).getByRole('spinbutton', { name: 'Max' }), '35');
+    expect(bodyNames(container)).toEqual(['Alice']);
+    await userEvent.clear(within(dialog).getByRole('spinbutton', { name: 'Min' }));
+    expect(bodyNames(container)).toEqual(['Alice', 'Bob']);
+  });
+
+  it('controlled: rows follow `columnFilters`, edits go to onColumnFiltersChange', async () => {
+    const onColumnFiltersChange = vi.fn();
+    const { container } = render(
+      <DataTable columns={memberColumns} data={members} columnFilters={[{ id: 'role', value: ['Admin'] }]} onColumnFiltersChange={onColumnFiltersChange} />,
+    );
+    expect(bodyNames(container)).toEqual(['Alice']);
+    const dialog = await openFilter(/Filter Role/);
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
+    expect(onColumnFiltersChange).toHaveBeenCalledWith([{ id: 'role', value: ['Admin', 'Member'] }]);
+    expect(bodyNames(container)).toEqual(['Alice']);
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Clear filter' }));
+    expect(onColumnFiltersChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it('manualFiltering: the state changes but rows are left to the server; filterOptions lists the choices', async () => {
+    const onColumnFiltersChange = vi.fn();
+    const serverColumns = memberColumns.map((c, i) => (i === 1 ? { ...c, meta: { ...c.meta, filterOptions: ['Admin', 'Member', 'Owner'] } } : c));
+    const { container } = render(
+      <DataTable
+        columns={serverColumns}
+        data={members}
+        manualFiltering
+        defaultColumnFilters={[{ id: 'name', value: 'bob' }]}
+        onColumnFiltersChange={onColumnFiltersChange}
+      />,
+    );
+    expect(bodyNames(container)).toEqual(['Alice', 'Bob', 'Carol']);
+    const dialog = await openFilter('Filter Role');
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Owner' }));
+    expect(onColumnFiltersChange).toHaveBeenCalledWith([
+      { id: 'name', value: 'bob' },
+      { id: 'role', value: ['Owner'] },
+    ]);
+    expect(bodyNames(container)).toEqual(['Alice', 'Bob', 'Carol']);
+  });
+
+  it('a filter change goes back to the first page; sorting and aria-sort still work beside the filter', async () => {
+    const { container } = render(<DataTable columns={memberColumns} data={members} pageSize={1} enableSorting />);
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
+    const dialog = await openFilter('Filter Role');
+    await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
+    expect(screen.getByText('Page 1 of 2')).toBeInTheDocument();
+    await userEvent.keyboard('{Escape}');
+    await userEvent.click(screen.getByRole('button', { name: 'Name' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Name' }));
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute('aria-sort', 'descending');
+    expect(bodyNames(container)).toEqual(['Carol']);
+  });
+
+  it('grid: the filter button is a stop in its header cell, and keys inside the popover stay there', async () => {
+    const user = userEvent.setup();
+    render(<DataTable grid aria-label="Members" columns={memberColumns} data={members} />);
+    await vi.waitFor(() => expect(screen.getByRole('button', { name: 'Filter Name' })).toHaveAttribute('aria-haspopup', 'dialog'));
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'Filter Name' })).toHaveFocus();
+    await user.keyboard('{ArrowRight}');
+    expect(screen.getByRole('button', { name: 'Filter Role' })).toHaveFocus();
+    await user.keyboard('{Enter}');
+    const first = within(screen.getByRole('dialog')).getAllByRole('checkbox')[0]!;
+    first.focus();
+    await user.keyboard('{ArrowDown}{End}');
+    expect(first).toHaveFocus();
   });
 });

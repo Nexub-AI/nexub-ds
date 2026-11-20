@@ -26,6 +26,10 @@ const entry: ComponentEntry = {
     {
       title: 'With caption',
     },
+    {
+      title: 'Sticky header, compact and striped',
+      description: '`stickyHeader` with `maxHeight` keeps the header in view, `density="compact"` tightens this table only, and `striped` tints every other row.',
+    },
   ],
 };
 

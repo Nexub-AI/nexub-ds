@@ -12,13 +12,36 @@ export interface TableRootProps extends React.HTMLAttributes<HTMLTableElement> {
    * horizontally. Falls back to the table's `aria-label`/`aria-labelledby`, then its caption.
    */
   scrollLabel?: string;
+  /** Keeps the header row in view while the body scrolls. Set `maxHeight` so there is something to scroll. */
+  stickyHeader?: boolean;
+  /** Caps the scroll container's height; a number is pixels. */
+  maxHeight?: string | number;
+  /** Row height and cell padding for this table only. Unset: inherits the page density. */
+  density?: 'comfortable' | 'compact';
+  /** Tints every other body row. Hover and selected rows still stand out. */
+  striped?: boolean;
 }
+
+// The values the global compact density sets (themes core.css), scoped to one table.
+const densities = {
+  comfortable: '[--table-head-h:2.5rem] [--table-cell-p:1rem]',
+  compact: '[--table-head-h:2rem] [--table-cell-p:0.5rem]',
+};
+// Opaque (rows scroll under it), from the same hook Head reads; the inset line stands in for
+// the row border, which a sticky cell loses under border-collapse.
+const sticky =
+  '[&_thead_th]:sticky [&_thead_th]:top-0 [&_thead_th]:z-[1] [&_thead_th]:bg-[var(--table-head-bg,var(--color-surface))] [&_thead_th]:shadow-[inset_0_-1px_0_var(--table-border,var(--color-outline-variant))]';
+// :where() keeps the stripe at one class of specificity, so Row's hover and selected classes win;
+// both get a stronger tint here because their defaults are as faint as the stripe. Forced colours
+// drop every background: the row borders still separate the rows.
+const stripes =
+  '[&_:where(tbody>tr:nth-child(even))]:bg-[var(--table-stripe,var(--color-surface-container-low))] [--row-hover:color-mix(in_srgb,var(--color-on-surface)_8%,transparent)] [&_tr[data-state=selected]]:bg-[color-mix(in_srgb,var(--color-primary)_10%,transparent)]';
 
 // Lets Table.Caption get an id without the author passing one, so the scroll region can point at it.
 const CaptionIdContext = React.createContext<string | undefined>(undefined);
 
 const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
-  ({ className, scrollLabel, ...props }, ref) => {
+  ({ className, scrollLabel, stickyHeader, maxHeight, density, striped, ...props }, ref) => {
     const wrapperRef = React.useRef<HTMLDivElement>(null);
     const tableRef = React.useRef<HTMLTableElement | null>(null);
     const captionId = React.useId();
@@ -45,6 +68,16 @@ const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
       if (tableRef.current) ro.observe(tableRef.current);
       return () => ro.disconnect();
     }, []);
+
+    // CSSOM, not a style attribute: strict CSP pages block inline styles.
+    React.useEffect(() => {
+      const wrapper = wrapperRef.current;
+      if (!wrapper || maxHeight == null) return;
+      wrapper.style.maxHeight = typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight;
+      return () => {
+        wrapper.style.maxHeight = '';
+      };
+    }, [maxHeight]);
 
     const setRefs = (el: HTMLTableElement | null) => {
       tableRef.current = el;
@@ -74,7 +107,15 @@ const Root = React.forwardRef<HTMLTableElement, TableRootProps>(
         >
           <table
             ref={setRefs}
-            className={cn('w-full caption-bottom text-body-sm tabular-nums', className)}
+            data-sticky-header={stickyHeader || undefined}
+            data-striped={striped || undefined}
+            className={cn(
+              'w-full caption-bottom text-body-sm tabular-nums',
+              density && densities[density],
+              stickyHeader && sticky,
+              striped && stripes,
+              className,
+            )}
             {...props}
           />
         </div>
