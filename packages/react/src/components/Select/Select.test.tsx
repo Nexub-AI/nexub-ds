@@ -139,3 +139,26 @@ describe('Select 10.4', () => {
     expect(trigger).toHaveTextContent('Option A');
   });
 });
+
+describe('Select sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+  const Open = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <Select.Root open>
+      <Select.Trigger aria-label="Letter">
+        <Select.Value placeholder="Pick one" />
+      </Select.Trigger>
+      <Select.Content sheet={sheet}>
+        <Select.Item value="a">Option A</Select.Item>
+      </Select.Content>
+    </Select.Root>
+  );
+
+  it('marks the content with data-nx-sheet only when asked', () => {
+    const { unmount } = render(<Open />);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+    unmount();
+    render(<Open sheet="auto" />);
+    expect(screen.getByRole('listbox')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

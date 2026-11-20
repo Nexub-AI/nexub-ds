@@ -39,3 +39,11 @@ describe('SavedViews', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 });
+
+describe('SavedViews sheet (10.6)', () => {
+  it('passes sheet to the menu', async () => {
+    render(<SavedViews views={[{ id: 'a', name: 'Alpha' }]} onSelect={() => {}} sheet="auto" />);
+    await userEvent.click(screen.getByRole('button'));
+    expect(await screen.findByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

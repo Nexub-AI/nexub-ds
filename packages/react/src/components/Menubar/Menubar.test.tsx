@@ -97,3 +97,35 @@ describe('Menubar', () => {
     });
   });
 });
+
+describe('Menubar sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+  const Bar = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <Menubar.Root>
+      <Menubar.Menu>
+        <Menubar.Trigger>Sheet trigger</Menubar.Trigger>
+        <Menubar.Portal>
+          <Menubar.Content sheet={sheet}>
+            <Menubar.Item>Sheet item</Menubar.Item>
+          </Menubar.Content>
+        </Menubar.Portal>
+      </Menubar.Menu>
+    </Menubar.Root>
+  );
+
+  it('marks the content with data-nx-sheet only when asked, and still opens and closes', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Bar />);
+    await user.click(screen.getByText('Sheet trigger'));
+    expect(await screen.findByText('Sheet item')).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Sheet item')).not.toBeInTheDocument());
+    unmount();
+
+    render(<Bar sheet />);
+    await user.click(screen.getByText('Sheet trigger'));
+    await screen.findByText('Sheet item');
+    expect(sheetAttr()).toBe('true');
+  });
+});

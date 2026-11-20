@@ -4,6 +4,7 @@ import * as React from 'react';
 import type { Locale } from 'date-fns';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
+import type { SheetProp } from '../../utils/popper.js';
 import { DatePicker } from '../DatePicker/DatePicker.js';
 import { TimePicker } from '../TimePicker/TimePicker.js';
 import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
@@ -29,6 +30,8 @@ export interface DateTimePickerProps {
   'aria-label'?: string;
   className?: string;
   locale?: Locale;
+  /** The calendar as a bottom sheet: see DatePicker `sheet`. @default false */
+  sheet?: SheetProp;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -56,6 +59,7 @@ export function DateTimePicker({
   'aria-label': ariaLabel,
   className,
   locale,
+  sheet,
 }: DateTimePickerProps) {
   const change = (v: Date | undefined) => onValueChange?.(v);
   const messages = useNexubMessages();
@@ -83,6 +87,7 @@ export function DateTimePicker({
           invalid={invalid}
           size={size}
           locale={locale}
+          sheet={sheet}
         />
       </div>
       <TimePicker

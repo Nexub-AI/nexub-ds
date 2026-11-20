@@ -8,6 +8,7 @@ import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { overlaySurface, scrim } from '../../utils/surface.js';
 import { useClassScrollLock } from '../../hooks/useClassScrollLock.js';
+import { useMediaQuery } from '../../hooks/useMediaQuery.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
@@ -45,6 +46,8 @@ export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   recentKey?: string;
   /** @default 5 */
   recentLimit?: number;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false */
+  sheet?: boolean | 'auto';
 }
 
 interface Recent { value: string; label: string }
@@ -87,7 +90,9 @@ function ClassLockOverlay() {
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
   ({ children, label: labelProp, scrollLock = 'class', shouldFilter, shortcut, open: openProp, defaultOpen, onOpenChange,
-    pages: pagesProp, defaultPages, onPagesChange, loading, recentKey, recentLimit = 5, ...props }, ref) => {
+    pages: pagesProp, defaultPages, onPagesChange, loading, recentKey, recentLimit = 5, sheet = false, ...props }, ref) => {
+  const narrow = useMediaQuery('(max-width: 47.99rem)');
+  const asSheet = sheet === true || (sheet === 'auto' && narrow);
   const messages = useNexubMessages();
   const [pages = [], setPages] = useControllableState({ value: pagesProp, defaultValue: defaultPages, onChange: onPagesChange });
   const [open = false, setOpenState] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
@@ -159,9 +164,13 @@ const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
           returnFocusRef.current?.focus();
         }}
         className={cn(
-          'fixed left-1/2 top-[20%] z-[var(--z-modal)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2',
+          asSheet
+            ? 'fixed inset-x-0 bottom-0 z-[var(--z-modal)] flex max-h-[90dvh] w-full flex-col pb-[env(safe-area-inset-bottom)]'
+            : 'fixed left-1/2 top-[20%] z-[var(--z-modal)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2',
           'nx-motion nx-dialog overflow-hidden', overlaySurface,
+          asSheet && 'rounded-b-none',
         )}
+        data-sheet={asSheet ? '' : undefined}
       >
         <RadixDialog.Title className="sr-only">{label}</RadixDialog.Title>
         <Command

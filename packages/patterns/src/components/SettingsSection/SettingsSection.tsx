@@ -10,9 +10,9 @@ export interface SettingsSectionProps extends React.HTMLAttributes<HTMLDivElemen
 
 export const SettingsSection = React.forwardRef<HTMLDivElement, SettingsSectionProps>(
   ({ title, description, actions, children, className, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col gap-8', className)} {...props}>
-      <div className="flex flex-col gap-6 md:flex-row md:gap-8">
-        <div className="md:w-1/3 flex flex-col gap-1">
+    <div ref={ref} className={cn('@container flex flex-col gap-8', className)} {...props}>
+      <div className="flex flex-col gap-6 @2xl:flex-row @2xl:gap-8">
+        <div className="@2xl:w-1/3 flex flex-col gap-1">
           <h2 className="text-body-md font-semibold text-[var(--color-on-surface)]">{title}</h2>
           {description && (
             <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>

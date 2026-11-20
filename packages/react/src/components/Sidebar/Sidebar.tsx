@@ -7,30 +7,49 @@ import type { DivisionKey, ProductKey } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useSlidingIndicator } from '../../hooks/useSlidingIndicator.js';
-import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useMediaQuery } from '../../hooks/useMediaQuery.js';
+import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
+// Loaded only once a sidebar is collapsed, so expanded sidebars don't pull Radix Tooltip in.
+const LazyTooltip = React.lazy(() => import('../Tooltip/Tooltip.js').then((m) => ({ default: m.Tooltip })));
+
+const CollapsedContext = React.createContext(false);
+
+// Just under the sm / md / lg breakpoint tokens (640 / 768 / 1024px), in rem so they follow zoom.
+const BELOW = { sm: '(max-width: 39.99rem)', md: '(max-width: 47.99rem)', lg: '(max-width: 63.99rem)' };
 
 export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
+  /** Icon rail. Controlled: when passed it always wins over `collapseBelow`. */
   collapsed?: boolean;
+  /** 10.6: collapse to the icon rail below this breakpoint (when `collapsed` is not passed). */
+  collapseBelow?: 'sm' | 'md' | 'lg';
   /** 10.3: the app or division this sidebar belongs to. Sets `data-product` / `data-division`,
    *  so the active item takes that accent (needs `@nexub/themes/products` or `/divisions`). */
   accent?: ProductKey | DivisionKey;
 }
 
 const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
-  ({ className, collapsed = false, accent, children, ...props }, forwardedRef) => {
+  ({ className, collapsed: collapsedProp, collapseBelow, accent, children, ...props }, forwardedRef) => {
+    const auto = collapsedProp === undefined ? collapseBelow : undefined;
+    const below = useMediaQuery(BELOW[auto ?? 'md']);
+    const collapsed = collapsedProp ?? (auto !== undefined && below);
     const messages = useNexubMessages();
     const ref = React.useRef<HTMLElement>(null);
     // Drives the marker beside the active item (shown by the vivid layer only).
     useSlidingIndicator(ref, '[aria-current="page"]');
     return (
+    <CollapsedContext.Provider value={collapsed}>
     <nav
       ref={useMergedRefs(ref, forwardedRef)}
       {...accentAttrs(accent)}
       aria-label={messages.sidebar}
       data-collapsed={collapsed}
+      data-collapse-below={auto}
       className={cn(
         // Chrome recedes: a tonal panel, no divider.
-        'group/sidebar relative flex flex-col gap-1 bg-[var(--color-surface-container-low)] transition-[width] duration-spatial-default ease-spatial-default',
+        'group/sidebar relative flex flex-col gap-1 bg-[var(--color-surface-container-low)] transition-[width] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
+        // The media query is false on the server: CSS sets the rail width at the breakpoint, so
+        // nothing jumps after hydration (labels follow once the query is read).
+        'data-[collapse-below=sm]:max-sm:w-[var(--size-nav-sidebar-collapsed,56px)] data-[collapse-below=md]:max-md:w-[var(--size-nav-sidebar-collapsed,56px)] data-[collapse-below=lg]:max-lg:w-[var(--size-nav-sidebar-collapsed,56px)]',
         collapsed
           ? 'w-[var(--size-nav-sidebar-collapsed,56px)]'
           : 'w-[var(--size-nav-sidebar,240px)]',
@@ -49,6 +68,7 @@ const Root = React.forwardRef<HTMLElement, SidebarRootProps>(
         )}
       />
     </nav>
+    </CollapsedContext.Provider>
     );
   },
 );
@@ -110,6 +130,8 @@ const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
   ({ className, icon, active, asChild, children, ...props }, ref) => {
     const child = asChild && React.isValidElement<{ children?: React.ReactNode }>(children) ? children : null;
     const label = child ? child.props.children : children;
+    const { dir } = useLocale();
+    const tip = React.useContext(CollapsedContext) && typeof label === 'string' ? label : undefined;
     const content = (
       <>
         {icon && <span className="shrink-0" aria-hidden="true">{icon}</span>}
@@ -117,12 +139,11 @@ const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
         <span className="flex-1 truncate group-data-[collapsed=true]/sidebar:sr-only">{label}</span>
       </>
     );
-    const itemProps = {
+    const itemProps = (title: string | undefined) => ({
       ref,
       'aria-current': active ? ('page' as const) : undefined,
       'data-nx': 'nav-item',
-      // Native tooltip for the icon-only collapsed state.
-      title: typeof label === 'string' ? label : undefined,
+      title,
       className: cn(
         // Active = the secondary-container pill (M3 nav indicator), not a solid brand fill.
         'nx-state-layer relative flex h-control-md items-center gap-3 rounded-shape-control px-3 text-label-lg',
@@ -132,11 +153,23 @@ const Item = React.forwardRef<HTMLAnchorElement, SidebarItemProps>(
         className,
       ),
       ...props,
-    };
-    return child ? (
-      <Slot {...itemProps}>{React.cloneElement(child, undefined, content)}</Slot>
-    ) : (
-      <a {...itemProps}>{content}</a>
+    });
+    const item = (title: string | undefined) =>
+      child ? (
+        <Slot {...itemProps(title)}>{React.cloneElement(child, undefined, content)}</Slot>
+      ) : (
+        <a {...itemProps(title)}>{content}</a>
+      );
+    const title = typeof label === 'string' ? label : undefined;
+    if (tip === undefined) return item(title);
+    // Collapsed: the DS tooltip on the inline-end side replaces the native title (which
+    // stays as the fallback until the tooltip has loaded).
+    return (
+      <React.Suspense fallback={item(title)}>
+        <LazyTooltip label={tip} side={dir === 'rtl' ? 'left' : 'right'}>
+          {item(undefined)}
+        </LazyTooltip>
+      </React.Suspense>
     );
   },
 );

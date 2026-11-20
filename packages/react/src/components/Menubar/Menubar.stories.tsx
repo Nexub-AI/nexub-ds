@@ -53,3 +53,29 @@ export const Default: Story = {
     </Menubar.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual menu above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <Menubar.Root>
+      <Menubar.Menu>
+        <Menubar.Trigger>File</Menubar.Trigger>
+        <Menubar.Portal>
+          <Menubar.Content sheet="auto">
+            <Menubar.Item>New file</Menubar.Item>
+            <Menubar.Item>Save</Menubar.Item>
+          </Menubar.Content>
+        </Menubar.Portal>
+      </Menubar.Menu>
+      <Menubar.Menu>
+        <Menubar.Trigger>Edit</Menubar.Trigger>
+        <Menubar.Portal>
+          <Menubar.Content sheet="auto">
+            <Menubar.Item>Undo</Menubar.Item>
+            <Menubar.Item>Redo</Menubar.Item>
+          </Menubar.Content>
+        </Menubar.Portal>
+      </Menubar.Menu>
+    </Menubar.Root>
+  ),
+};

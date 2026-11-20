@@ -24,7 +24,8 @@ const List = React.forwardRef<HTMLUListElement, RadixNav.NavigationMenuListProps
   ({ className, ...props }, ref) => (
     <RadixNav.List
       ref={ref}
-      className={cn('group flex flex-1 list-none items-center justify-center gap-1', className)}
+      // Phones only: items wrap to a second line instead of pushing the page sideways.
+      className={cn('group flex flex-1 list-none items-center justify-center gap-1 max-sm:flex-wrap', className)}
       {...props}
     />
   ),

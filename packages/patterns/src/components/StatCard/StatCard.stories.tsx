@@ -27,7 +27,7 @@ const UsersIcon = () => (
 
 export const Default: Story = {
   render: () => (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', maxWidth: '600px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 15rem), 1fr))', gap: '16px', maxWidth: '600px' }}>
       <StatCard
         label="Total Revenue"
         value="$84,320"

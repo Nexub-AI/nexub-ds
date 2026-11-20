@@ -154,3 +154,25 @@ export const Vivid: Story = {
     return <Demo />;
   },
 };
+
+/**
+ * 10.6: `collapseBelow="md"` turns the sidebar into the icon rail below that breakpoint, with
+ * no state in the app. Collapsed items show their label in a tooltip on hover and focus.
+ */
+export const CollapseBelow: Story = {
+  render: () => (
+    <div style={{ height: '320px', display: 'flex' }}>
+      <Sidebar.Root collapseBelow="md">
+        <Sidebar.Group>
+          <Sidebar.Item href="#" active icon={<DashboardIcon />}>Dashboard</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<BarChartIcon />}>Analytics</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<UsersIcon />}>Team</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<SettingsIcon />}>Settings</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Root>
+      <p className="min-w-0 flex-1 p-4 text-body-md text-[var(--color-on-surface-variant)]">
+        Narrow the window below 768px: the sidebar becomes an icon rail.
+      </p>
+    </div>
+  ),
+};

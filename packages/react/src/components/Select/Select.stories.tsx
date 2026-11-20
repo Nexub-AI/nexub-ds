@@ -93,3 +93,19 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual popover above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <Select.Root>
+      <Select.Trigger aria-label="Country" className="max-w-56">
+        <Select.Value placeholder="Select a country" />
+      </Select.Trigger>
+      <Select.Content sheet="auto">
+        <Select.Item value="us">United States</Select.Item>
+        <Select.Item value="ca">Canada</Select.Item>
+        <Select.Item value="mx">Mexico</Select.Item>
+      </Select.Content>
+    </Select.Root>
+  ),
+};

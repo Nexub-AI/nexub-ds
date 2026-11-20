@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface, menuContent, menuItem, menuItemFg, menuSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixDropdownMenu.Root;
@@ -13,14 +14,22 @@ const Group = RadixDropdownMenu.Group;
 const RadioGroup = RadixDropdownMenu.RadioGroup;
 const Sub = RadixDropdownMenu.Sub;
 
-const Content = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMenuContentProps>(
-  function DropdownMenuContent({ className, sideOffset = 4, ...props }, ref) {
+export interface DropdownMenuContentProps extends RadixDropdownMenu.DropdownMenuContentProps {
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
+}
+
+const Content = React.forwardRef<HTMLDivElement, DropdownMenuContentProps>(
+  function DropdownMenuContent({ className, sideOffset = 4, collisionPadding = COLLISION_PADDING, sheet = false, ...props }, ref) {
     return (
       <RadixDropdownMenu.Content
         ref={ref}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
+        data-nx-sheet={sheet || undefined}
         className={cn(
           'z-[var(--z-popover)] min-w-48 outline-none',
+          'max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto',
           floatingSurface, menuSurface,
           menuContent,
           'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',
@@ -148,12 +157,14 @@ SubTrigger.displayName = 'DropdownMenu.SubTrigger';
 const SubContent = React.forwardRef<
   HTMLDivElement,
   RadixDropdownMenu.DropdownMenuSubContentProps
->(function DropdownMenuSubContent({ className, ...props }, ref) {
+>(function DropdownMenuSubContent({ className, collisionPadding = COLLISION_PADDING, ...props }, ref) {
   return (
     <RadixDropdownMenu.SubContent
       ref={ref}
+      collisionPadding={collisionPadding}
       className={cn(
         'z-[var(--z-popover)] min-w-48 outline-none',
+        'max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto',
         floatingSurface, menuSurface,
         menuContent,
         'nx-motion nx-pop origin-[var(--radix-dropdown-menu-content-transform-origin)]',

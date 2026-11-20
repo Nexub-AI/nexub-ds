@@ -275,3 +275,22 @@ describe('stacked overlays (9.3)', () => {
     expect(screen.getByText('Open Dialog')).toHaveFocus();
   });
 });
+
+describe('Dialog sheet height (10.6)', () => {
+  it('sheets cap at 90dvh with safe-area padding; centred dialogs keep 90vh', () => {
+    const Open = ({ sheet }: { sheet?: boolean }) => (
+      <Dialog.Root open>
+        <Dialog.Portal>
+          <Dialog.Content sheet={sheet} aria-describedby={undefined}><Dialog.Title>T</Dialog.Title></Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+    const { unmount } = render(<Open />);
+    expect(screen.getByRole('dialog').className).toContain('max-h-[90vh]');
+    expect(screen.getByRole('dialog').className).not.toContain('safe-area');
+    unmount();
+    render(<Open sheet />);
+    expect(screen.getByRole('dialog').className).toContain('max-h-[90dvh]');
+    expect(screen.getByRole('dialog').className).toContain('env(safe-area-inset-bottom)');
+  });
+});

@@ -23,14 +23,15 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
         data-nx="page-header"
         data-wash={wash ? '' : undefined}
         className={cn(
-          'flex flex-col gap-4',
+          // 10.6: the title row follows this header's own width (a query container), not the viewport.
+          '@container flex flex-col gap-4',
           wash && 'rounded-shape-container bg-[var(--color-surface-container-low)] p-6',
           className,
         )}
         {...props}
       >
         {breadcrumb && <div>{breadcrumb}</div>}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-2 @xl:flex-row @xl:items-start @xl:justify-between">
           <div className="min-w-0 flex-1">
             <Heading className="text-headline-sm leading-8 ![font-weight:var(--page-title-weight,600)] ![letter-spacing:var(--page-title-tracking,-0.025em)] text-[var(--color-on-surface)] truncate">
               {title}

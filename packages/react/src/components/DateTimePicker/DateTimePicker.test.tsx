@@ -68,3 +68,11 @@ describe('DateTimePicker 10.4', () => {
     expect(time()).toBeDisabled();
   });
 });
+
+describe('DateTimePicker sheet (10.6)', () => {
+  it('passes sheet to the calendar popover', async () => {
+    render(<DateTimePicker aria-label="Starts" sheet />);
+    await userEvent.click(screen.getByRole('button', { name: /Date/ }));
+    expect(screen.getByRole('grid').closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'true');
+  });
+});

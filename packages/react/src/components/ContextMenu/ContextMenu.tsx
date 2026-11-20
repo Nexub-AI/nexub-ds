@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RadixContextMenu from '@radix-ui/react-context-menu';
 import { Check, ChevronRight } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface, menuContent, menuItem, menuItemFg, menuSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 
 const Root = RadixContextMenu.Root;
@@ -13,13 +14,21 @@ const Group = RadixContextMenu.Group;
 const RadioGroup = RadixContextMenu.RadioGroup;
 const Sub = RadixContextMenu.Sub;
 
-const Content = React.forwardRef<HTMLDivElement, RadixContextMenu.ContextMenuContentProps>(
-  function ContextMenuContent({ className, ...props }, ref) {
+export interface ContextMenuContentProps extends RadixContextMenu.ContextMenuContentProps {
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
+}
+
+const Content = React.forwardRef<HTMLDivElement, ContextMenuContentProps>(
+  function ContextMenuContent({ className, collisionPadding = COLLISION_PADDING, sheet = false, ...props }, ref) {
     return (
       <RadixContextMenu.Content
         ref={ref}
+        collisionPadding={collisionPadding}
+        data-nx-sheet={sheet || undefined}
         className={cn(
           'z-[var(--z-popover)] min-w-48 outline-none',
+          'max-h-[var(--radix-context-menu-content-available-height)] overflow-y-auto',
           floatingSurface, menuSurface,
           menuContent,
           'nx-motion nx-pop origin-[var(--radix-context-menu-content-transform-origin)]',
@@ -147,12 +156,14 @@ SubTrigger.displayName = 'ContextMenu.SubTrigger';
 const SubContent = React.forwardRef<
   HTMLDivElement,
   RadixContextMenu.ContextMenuSubContentProps
->(function ContextMenuSubContent({ className, ...props }, ref) {
+>(function ContextMenuSubContent({ className, collisionPadding = COLLISION_PADDING, ...props }, ref) {
   return (
     <RadixContextMenu.SubContent
       ref={ref}
+      collisionPadding={collisionPadding}
       className={cn(
         'z-[var(--z-popover)] min-w-48 outline-none',
+        'max-h-[var(--radix-context-menu-content-available-height)] overflow-y-auto',
         floatingSurface, menuSurface,
         menuContent,
         'nx-motion nx-pop origin-[var(--radix-context-menu-content-transform-origin)]',

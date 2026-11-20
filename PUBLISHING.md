@@ -118,6 +118,49 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
 >
 > `RELEASE_PAT` (a fine-grained PAT with Contents + Pull requests write; the org blocks the Actions bot from creating PRs) and the Cloudflare secrets belong in the **`release` environment** (Settings → Environments, deployment branch `production` only), not in repo secrets, so no PR-triggered workflow can read them. Since the version PR is opened by a real user, CI runs on it like any other PR.
 
+### Release routine (checklist)
+
+Follow this list every time a version is done. It covers each hop, the post-release wrap-up and how to report status. A version is finished only when every box is ticked.
+
+**Rules for every hop**
+
+- Merge only when the PR's CI is green. Never merge red. Repo auto-merge is off, so you merge each hop by hand: `gh pr merge <n> --merge`.
+- Watch CI yourself, don't wait for someone to ping you: `gh pr checks <n> --watch --fail-fast`, or `gh run watch <run-id> --exit-status` for a workflow run.
+- A changed PR base does not start CI. Push a commit (for example, merge the base in) to start it.
+
+**1. Promote**
+
+- [ ] **feature → `development`**: changeset included, full CI green (build, typecheck, lint, test, visual, Lighthouse, release rehearsal). Merge.
+- [ ] **Mobile (Maestro) on `development`**: runs after the merge, about an hour. It must pass for the commit you are promoting. If the PR adds native previews or changes the native look (tokens, React Native theme defaults), dispatch the Mobile workflow on the branch *before* merging.
+- [ ] **`development` → `staging`**: build, typecheck and lint run (visual and Lighthouse already passed on `development`). Merge, then watch `staging.yml` deploy the staging docs.
+- [ ] **`staging` → `production`**: confirm the Mobile run from the step above is green. Merge. `release.yml` opens the **Version Packages** PR.
+- [ ] **Version Packages PR**: CI green (it rehearses the publish). Merge. Watch `release.yml` until `publish`, `verify-published` and `deploy-docs` pass.
+- [ ] **Check npm**: `curl -sH 'Cache-Control: no-cache' https://registry.npmjs.org/@nexub/react | jq -r '."dist-tags".latest'` shows the new version. The registry can lag a few minutes.
+- [ ] **Back-merge PR** (`chore(release): back-merge vX into development`): CI green, merge. Do this before the next promotion.
+- [ ] Add the row to [Release History](#release-history) and mark the version shipped in its `ROADMAP_*.md`.
+
+If a step fails after the publish, see `INCIDENT_RUNBOOK.md`.
+
+**2. Wrap up**
+
+- [ ] **Open PRs**: merge the green, low-risk ones. List the rest with a recommendation. Don't close someone else's PR.
+- [ ] **Branches**: `git fetch --prune`, delete local branches that are merged or gone (`git branch -d`; run `git cherry` before using `-D`), `git worktree prune`. Leave other people's worktrees alone.
+- [ ] **Graphify**: in Claude Code, run `/graphify . --update` in the checkout that holds `graphify-out/`. For a code-only refresh without an LLM, run `graphify update .`. See [CONTRIBUTING.md](./CONTRIBUTING.md#knowledge-graph-graphify).
+- [ ] **Obsidian vault**: stage the new graph report, the changed repo docs (plans, roadmap, this file) and the release notes in the vault inbox. Ingest them in one transaction with the claude-obsidian `wiki-ingest` skill, then checkpoint. Use the UTC date (`date -u +%F`) for ledger dates. Ask the maintainer for the vault path.
+
+**3. Report status**
+
+Whenever someone asks for status, during a release or any other work, answer with this table:
+
+| Environment | Progress | Expected time (approx.) |
+|---|---|---|
+| development | ✅ #701 merged; Mobile run green | done |
+| staging | 🔄 #702 CI running | ~10 min |
+| production | ⏳ waits for staging | ~20 min |
+| npm / docs | ⏳ Version PR not open yet | ~40 min |
+
+Use one row per environment (or per stream of work outside a release). Under Progress, give the state plus the PR or run number. Expected time is a rough estimate.
+
 ### Pre-flight check (optional)
 
 ```bash

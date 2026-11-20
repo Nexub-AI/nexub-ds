@@ -7,6 +7,7 @@ import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { Command } from 'cmdk';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
 import { field, fieldDisabled, fieldFocusWithin, fieldReadOnlyWithin, type Size } from '../../utils/control.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
@@ -24,6 +25,8 @@ export interface ComboboxPopoverProps {
   readOnly?: boolean;
   /** @default 'md' */
   size?: Size;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
   /** The list (a Combobox.List). */
   children: React.ReactNode;
 }
@@ -34,7 +37,7 @@ export interface ComboboxPopoverProps {
  */
 const fieldSizes: Record<Size, string> = { sm: 'min-h-control-sm', md: 'min-h-control-md', lg: 'min-h-control-lg' };
 
-export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', children }: ComboboxPopoverProps) {
+export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', sheet = false, children }: ComboboxPopoverProps) {
   const open = openProp && !readOnly;
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -92,6 +95,8 @@ export function ComboboxPopover({ open: openProp, onOpenChange, before, input, d
       <RadixPopover.Content
         align="start"
         sideOffset={4}
+        collisionPadding={COLLISION_PADDING}
+        data-nx-sheet={sheet || undefined}
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
         onInteractOutside={(e) => {

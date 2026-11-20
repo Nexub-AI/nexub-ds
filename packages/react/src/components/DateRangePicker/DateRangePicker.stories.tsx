@@ -54,3 +54,12 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual popover above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <div style={{ maxWidth: '17.5rem' }}>
+      <DateRangePicker aria-label="Period" placeholder="Select date range" sheet="auto" />
+    </div>
+  ),
+};

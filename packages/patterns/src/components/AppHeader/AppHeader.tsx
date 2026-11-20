@@ -84,6 +84,9 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   /** Extra `DropdownMenu.Item`s, shown above Sign out. */
   accountMenuItems?: React.ReactNode;
 
+  /** 10.6: on phones the organisation, account and app menus open as bottom sheets (`true`, or `'auto'`). */
+  sheet?: boolean | 'auto';
+
   surface?: 'solid' | 'glass';
   /** `soft`: page content dissolves under the header instead of meeting a divider. */
   scrollEdge?: 'soft' | 'hard';
@@ -261,7 +264,8 @@ function OrgSwitcher({
   orgs,
   currentOrgId,
   onOrgChange,
-}: Pick<AppHeaderProps, 'currentOrgId' | 'onOrgChange'> & { orgs: AppHeaderOrg[] }) {
+  sheet,
+}: Pick<AppHeaderProps, 'currentOrgId' | 'onOrgChange' | 'sheet'> & { orgs: AppHeaderOrg[] }) {
   const t = useNexubMessages();
   const current = orgs.find((o) => o.id === currentOrgId) ?? orgs[0];
   if (!current) return null;
@@ -289,7 +293,7 @@ function OrgSwitcher({
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content align="end" className="max-w-[calc(100vw-1rem)]">
+        <DropdownMenu.Content align="end" collisionPadding={8} sheet={sheet} className="max-w-[calc(100vw-1rem)]">
           <DropdownMenu.Label>{t.organizations}</DropdownMenu.Label>
           <DropdownMenu.RadioGroup value={current.id} onValueChange={(id) => onOrgChange?.(id)}>
             {orgs.map((org) => (
@@ -349,7 +353,8 @@ function AccountMenu({
   onSignOut,
   accountMenuItems,
   glassControl,
-}: Pick<AppHeaderProps, 'accountHref' | 'privacyHref' | 'termsHref' | 'onSignOut' | 'accountMenuItems'> & {
+  sheet,
+}: Pick<AppHeaderProps, 'accountHref' | 'privacyHref' | 'termsHref' | 'onSignOut' | 'accountMenuItems' | 'sheet'> & {
   user: AppHeaderUser;
   glassControl?: boolean;
 }) {
@@ -400,7 +405,7 @@ function AccountMenu({
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content align="end" className="w-72 max-w-[calc(100vw-1rem)]">
+        <DropdownMenu.Content align="end" collisionPadding={8} sheet={sheet} className="w-72 max-w-[calc(100vw-1rem)]">
           <DropdownMenu.Label className="flex flex-col gap-0.5 py-2">
             <span className="truncate text-title-sm text-[var(--color-on-surface)]">{user.name}</span>
             {user.email && <span className="truncate text-body-sm text-[var(--color-on-surface-muted)]">{user.email}</span>}
@@ -444,6 +449,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
       termsHref,
       onSignOut,
       accountMenuItems,
+      sheet,
       surface = 'solid',
       condense = false,
       position = 'fixed',
@@ -493,10 +499,10 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
               )}
             </div>
             <nav aria-label={t.accountAndApps} className="flex shrink-0 items-center gap-0.5 sm:gap-1">
-              {orgs.length > 0 && <OrgSwitcher orgs={orgs} currentOrgId={currentOrgId} onOrgChange={onOrgChange} />}
+              {orgs.length > 0 && <OrgSwitcher orgs={orgs} currentOrgId={currentOrgId} onOrgChange={onOrgChange} sheet={sheet} />}
               {showThemeSwitch && <ThemeSwitch />}
               {apps && (
-                <AppLauncher apps={apps} surface={surface} onNavigate={onNavigate && ((app) => onNavigate(app.href))} />
+                <AppLauncher apps={apps} surface={surface} sheet={sheet} onNavigate={onNavigate && ((app) => onNavigate(app.href))} />
               )}
               {user && (
                 <AccountMenu
@@ -506,6 +512,7 @@ export const AppHeader = React.forwardRef<HTMLElement, AppHeaderProps>(
                   termsHref={termsHref}
                   onSignOut={onSignOut}
                   accountMenuItems={accountMenuItems}
+                  sheet={sheet}
                   glassControl={showThemeSwitch && surface === 'glass'}
                 />
               )}

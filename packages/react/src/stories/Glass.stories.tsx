@@ -31,7 +31,7 @@ function Swatch({ label, ...attrs }: { label: string } & Record<string, string |
 
 export const Material = () => (
   <div style={{ display: 'grid', gap: 24, maxWidth: 760 }}>
-    <div style={{ ...backdrop, display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+    <div style={{ ...backdrop, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 12rem), 1fr))', gap: 16 }}>
       <Swatch label="Thin" data-glass-thickness="thin" />
       <Swatch label="Regular" />
       <Swatch label="Thick" data-glass-thickness="thick" />
@@ -49,7 +49,7 @@ export const Material = () => (
       </div>
     </div>
     {/* The dial: the same surface at every user intensity. */}
-    <div style={{ ...backdrop, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+    <div style={{ ...backdrop, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 9rem), 1fr))', gap: 16 }}>
       {(['clear', 'balanced', 'tinted', 'off'] as const).map((g) => (
         <div key={g} data-glass={g}>
           <Swatch label={`Dial · ${g}`} />

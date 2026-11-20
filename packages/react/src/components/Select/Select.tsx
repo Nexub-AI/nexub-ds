@@ -5,6 +5,7 @@ import * as RadixSelect from '@radix-ui/react-select';
 import { Check, ChevronDown, ChevronUp, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { field, fieldFocusVisible, fieldInvalid, fieldReadOnly, type Size } from '../../utils/control.js';
+import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface, menuLabel, menuSeparator } from '../../utils/surface.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
@@ -173,10 +174,12 @@ ScrollDownButton.displayName = 'Select.ScrollDownButton';
 export interface SelectContentProps extends RadixSelect.SelectContentProps {
   /** A filter field at the top; items whose text (or `textValue`) doesn't match are hidden. Typing on an item moves to the field. */
   searchable?: boolean;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
 }
 
 const Content = React.forwardRef<HTMLDivElement, SelectContentProps>(
-  ({ className, children, position = 'popper', searchable, onKeyDown, ...props }, ref) => {
+  ({ className, children, position = 'popper', searchable, sheet = false, collisionPadding = COLLISION_PADDING, onKeyDown, ...props }, ref) => {
     const ctx = React.useContext(SelectContext);
     const messages = useNexubMessages();
     const searchRef = React.useRef<HTMLInputElement>(null);
@@ -189,10 +192,12 @@ const Content = React.forwardRef<HTMLDivElement, SelectContentProps>(
             floatingSurface,
             'nx-motion nx-pop origin-[var(--radix-select-content-transform-origin)]',
             position === 'popper' &&
-              'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 w-[var(--radix-select-trigger-width)]',
+              'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1 w-[var(--radix-select-trigger-width)] max-h-[min(24rem,var(--radix-select-content-available-height))]',
             className,
           )}
           position={position}
+          collisionPadding={collisionPadding}
+          data-nx-sheet={sheet || undefined}
           onKeyDown={(e) => {
             onKeyDown?.(e);
             // Searchable: printable keys filter instead of typeahead. preventDefault skips Radix's typeahead.

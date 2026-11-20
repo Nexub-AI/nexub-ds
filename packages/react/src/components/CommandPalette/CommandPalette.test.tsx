@@ -236,3 +236,25 @@ describe('CommandPalette', () => {
     });
   });
 });
+
+describe('CommandPalette sheet (10.6)', () => {
+  const Open = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <CommandPalette.Root open sheet={sheet}>
+      <CommandPalette.Input placeholder="Search" />
+      <CommandPalette.List>
+        <CommandPalette.Item>One</CommandPalette.Item>
+      </CommandPalette.List>
+    </CommandPalette.Root>
+  );
+
+  it('top-anchored by default; sheet anchors to the bottom; auto stays put on wide screens', () => {
+    const { unmount, rerender } = render(<Open />);
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('data-sheet');
+    rerender(<Open sheet="auto" />);
+    expect(screen.getByRole('dialog')).not.toHaveAttribute('data-sheet');
+    unmount();
+    render(<Open sheet />);
+    expect(screen.getByRole('dialog')).toHaveAttribute('data-sheet');
+    expect(screen.getByRole('dialog').className).toContain('bottom-0');
+  });
+});

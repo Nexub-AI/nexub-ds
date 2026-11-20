@@ -50,3 +50,19 @@ export const Glass: Story = {
     </Popover.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual popover above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <button>Filters</button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content sheet="auto" aria-label="Filters">
+          <p className="text-body-sm">Filter options go here.</p>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  ),
+};
