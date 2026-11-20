@@ -16,7 +16,7 @@ type Values = { name: string; email: string; password: string };
 function validate(v: Values): FormErrorMap {
   return {
     name: v.name.trim() ? undefined : 'Enter your name',
-    email: /^\S+@\S+\.\S+$/.test(v.email) ? undefined : 'Enter an email address, like name@example.com',
+    email: /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(v.email) ? undefined : 'Enter an email address, like name@example.com',
     password: v.password.length >= 8 ? undefined : 'Password must be 8 characters or more',
   };
 }

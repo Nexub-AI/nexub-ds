@@ -1427,6 +1427,71 @@
         }
       ]
     },
+    "Countdown": {
+      "file": "components/Countdown/Countdown.tsx",
+      "props": [
+        {
+          "name": "dangerAt",
+          "type": "number",
+          "required": false,
+          "default": "10",
+          "description": "Seconds."
+        },
+        {
+          "name": "format",
+          "type": "'auto' | 'm:ss' | 'h:mm:ss'",
+          "required": false,
+          "default": "'auto'",
+          "description": "`auto` shows hours only from one hour up."
+        },
+        {
+          "name": "now",
+          "type": "(() => number)",
+          "required": false,
+          "description": "The clock, in ms. Defaults to `Date.now`; inject one for tests and static previews."
+        },
+        {
+          "name": "onExpire",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Called once when the deadline is reached (also when it has already passed on mount)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Chip size."
+        },
+        {
+          "name": "to",
+          "type": "number | Date",
+          "required": true,
+          "description": "The deadline: a Date or ms since the epoch."
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'warning' | 'danger' | 'auto'",
+          "required": false,
+          "default": "'auto'",
+          "description": "`auto`: neutral, warning under `warnAt`, danger under `dangerAt`."
+        },
+        {
+          "name": "variant",
+          "type": "'inline' | 'chip'",
+          "required": false,
+          "default": "'chip'",
+          "description": "`chip` is a small badge; `inline` is plain text in the surrounding font."
+        },
+        {
+          "name": "warnAt",
+          "type": "number",
+          "required": false,
+          "default": "60",
+          "description": "Seconds."
+        }
+      ]
+    },
     "CountryBadge": {
       "file": "components/CountryBadge/CountryBadge.tsx",
       "props": [
@@ -4770,6 +4835,72 @@
         }
       ]
     },
+    "PhoneInput": {
+      "file": "components/PhoneInput/PhoneInput.tsx",
+      "props": [
+        {
+          "name": "countries",
+          "type": "string[]",
+          "required": false,
+          "description": "Limits the picker to these countries, in this order. One entry shows it as text."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": false,
+          "description": "Controlled country (ISO 3166-1 alpha-2)."
+        },
+        {
+          "name": "defaultCountry",
+          "type": "string",
+          "required": false,
+          "description": "Country to start on. Defaults to the region of the provider's locale, else `US`."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onCountryChange",
+          "type": "((country: CountryCode) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((e164: string, details: { country: CountryCode; national: string; valid: boolean; }) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "description": "The country list as a bottom sheet: `true`, or `'auto'` for phones only."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "Controlled E.164 value (\"+919847012345\"), '' when empty."
+        }
+      ]
+    },
     "PlanTracker": {
       "file": "components/AgentKit/AgentKit.tsx",
       "props": [
@@ -6492,6 +6623,67 @@
         }
       ]
     },
+    "TimeSlotPicker": {
+      "file": "components/TimeSlotPicker/TimeSlotPicker.tsx",
+      "props": [
+        {
+          "name": "columns",
+          "type": "'auto' | 2 | 3 | 4",
+          "required": false,
+          "default": "'auto'",
+          "description": "Slots per row; `auto` fits as many as the width allows."
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when `slots` is empty."
+        },
+        {
+          "name": "groupBy",
+          "type": "'none' | 'period'",
+          "required": false,
+          "default": "'none'",
+          "description": "`period` adds Morning / Afternoon / Evening headings."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "slots",
+          "type": "TimeSlot[]",
+          "required": true,
+          "description": ""
+        }
+      ],
+      "inherited": [
+        "defaultValue",
+        "dir",
+        "disabled",
+        "form",
+        "loop",
+        "name",
+        "onValueChange",
+        "required",
+        "value"
+      ]
+    },
     "Toaster": {
       "file": "components/Toast/Toaster.tsx",
       "props": [
@@ -7241,6 +7433,188 @@
         "tone"
       ]
     },
+    "BookingPage": {
+      "file": "components/BookingPage/BookingPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "confirmation",
+          "type": "{ title?: React.ReactNode; description?: React.ReactNode; reference?: string; actions?: React.ReactNode; }",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "confirmed",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the confirmed view straight away (a deep link, a reload after booking)."
+        },
+        {
+          "name": "date",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultDate",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultSlot",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "details",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Extra fields on the confirm step (name, notes). They sit in the form that `onConfirm` receives."
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "holdUntil",
+          "type": "number | Date",
+          "required": false,
+          "description": "Until when the chosen time is held: shows a countdown; past it the confirm button is disabled."
+        },
+        {
+          "name": "isDateDisabled",
+          "type": "((date: Date) => boolean)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "maxDate",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "minDate",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "now",
+          "type": "(() => number)",
+          "required": false,
+          "description": "The clock the hold countdown reads. Pass a fixed one in tests and screenshots."
+        },
+        {
+          "name": "onConfirm",
+          "type": "(booking: { date: Date; slot: string; formData: FormData; }) => void | Promise<unknown>",
+          "required": true,
+          "description": "Makes the booking. A rejected promise shows its message and stays on the confirm step."
+        },
+        {
+          "name": "onDateChange",
+          "type": "((date: Date) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onHoldExpire",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onSlotChange",
+          "type": "((slot: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "service",
+          "type": "{ title: React.ReactNode; duration?: React.ReactNode; price?: React.ReactNode; description?: React.ReactNode; }",
+          "required": false,
+          "description": "What is being booked: shown in the summary."
+        },
+        {
+          "name": "slot",
+          "type": "string",
+          "required": false,
+          "description": "The chosen slot's `value`."
+        },
+        {
+          "name": "slots",
+          "type": "BookingSlot[]",
+          "required": true,
+          "description": "The times for the chosen date. Your app loads them when the date changes."
+        },
+        {
+          "name": "slotsError",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the times, e.g. an ErrorState with Retry."
+        },
+        {
+          "name": "slotsLoading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "messages.bookTitle",
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
     "ChatPage": {
       "file": "components/ChatPage/ChatPage.tsx",
       "props": [
@@ -7611,6 +7985,140 @@
         }
       ]
     },
+    "DetailPage": {
+      "file": "components/DetailPage/DetailPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "aside",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the sections at wide widths, below them when narrow: activity, StatusSteps."
+        },
+        {
+          "name": "backHref",
+          "type": "string",
+          "required": false,
+          "description": "A back link above the title. `onBack` renders a button in its place."
+        },
+        {
+          "name": "defaultEditing",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": ""
+        },
+        {
+          "name": "editing",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the sections; wins over `loading`."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Skeletons in place of the sections; sets aria-busy on the page."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onBack",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onCancel",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Called after edit mode is left without saving."
+        },
+        {
+          "name": "onEditingChange",
+          "type": "((editing: boolean) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onSave",
+          "type": "((data: FormData) => void | Promise<unknown>)",
+          "required": false,
+          "description": "Saves the edit form. A rejected promise shows its message and stays in edit mode. Without it there is no Edit button."
+        },
+        {
+          "name": "sections",
+          "type": "DetailSection[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "status",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A status badge beside the actions."
+        },
+        {
+          "name": "subtitle",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
     "ErrorSummary": {
       "file": "components/ErrorSummary/ErrorSummary.tsx",
       "props": [
@@ -7689,6 +8197,105 @@
         }
       ]
     },
+    "ForgotPasswordPage": {
+      "file": "components/ForgotPasswordPage/ForgotPasswordPage.tsx",
+      "props": [
+        {
+          "name": "as",
+          "type": "'main' | 'div'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element."
+        },
+        {
+          "name": "defaultEmail",
+          "type": "string",
+          "required": false,
+          "default": "''",
+          "description": "Prefills the email, e.g. from the sign-in form."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error from the last attempt (announced)."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "logo",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "now",
+          "type": "(() => number)",
+          "required": false,
+          "default": "Date.now",
+          "description": "Clock for the cooldown (tests, stories)."
+        },
+        {
+          "name": "onBackToSignIn",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onResend",
+          "type": "((email: string) => void | Promise<unknown>)",
+          "required": false,
+          "description": "Renders \"Resend email\" on the confirmation, behind a cooldown."
+        },
+        {
+          "name": "onSubmit",
+          "type": "(email: string) => void | Promise<unknown>",
+          "required": true,
+          "description": "Sends the reset link. When it resolves the page shows \"Check your email\"; a rejection stays on the form (say why in `error`)."
+        },
+        {
+          "name": "resendAfter",
+          "type": "number",
+          "required": false,
+          "default": "30",
+          "description": "Seconds before Resend is allowed again."
+        },
+        {
+          "name": "sent",
+          "type": "boolean",
+          "required": false,
+          "description": "Show the confirmation. Leave unset to let the page switch after `onSubmit` resolves."
+        },
+        {
+          "name": "submitLabel",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "InfoListItem": {
       "file": "components/InfoList/InfoList.tsx",
       "props": [
@@ -7745,6 +8352,293 @@
           "required": false,
           "default": "3",
           "description": "Skeleton rows while `loading`."
+        }
+      ]
+    },
+    "InvoicePage": {
+      "file": "components/InvoicePage/InvoicePage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "description": "ISO 4217 code."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "discount",
+          "type": "number",
+          "required": false,
+          "description": "A positive number; it is taken off."
+        },
+        {
+          "name": "dueOn",
+          "type": "string | Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "from",
+          "type": "InvoiceParty",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "issuedOn",
+          "type": "string | Date",
+          "required": true,
+          "description": "A Date, or an ISO day (\"2026-11-03\", read as a local day)."
+        },
+        {
+          "name": "items",
+          "type": "InvoiceItem[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "default": "the provider's locale",
+          "description": ""
+        },
+        {
+          "name": "logo",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "notes",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "number",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "payment",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "How to pay, or \"Paid on … with …\"."
+        },
+        {
+          "name": "status",
+          "type": "'draft' | 'due' | 'paid' | 'overdue' | 'void'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "subtotal",
+          "type": "number",
+          "required": false,
+          "default": "the sum of the items",
+          "description": ""
+        },
+        {
+          "name": "taxes",
+          "type": "{ label: string; amount: number; }[]",
+          "required": false,
+          "default": "[]",
+          "description": ""
+        },
+        {
+          "name": "to",
+          "type": "InvoiceParty",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "total",
+          "type": "number",
+          "required": false,
+          "default": "subtotal − discount + taxes",
+          "description": ""
+        },
+        {
+          "name": "variant",
+          "type": "'invoice' | 'receipt'",
+          "required": false,
+          "default": "'invoice'",
+          "description": "`receipt`: compact and centred, with a success mark and the amount as the hero."
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
+    "KycPage": {
+      "file": "components/KycPage/KycPage.tsx",
+      "props": [
+        {
+          "name": "accept",
+          "type": "string[]",
+          "required": false,
+          "default": "JPG, PNG, PDF",
+          "description": "Accepted upload types."
+        },
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "countries",
+          "type": "string[]",
+          "required": false,
+          "default": "a short common list",
+          "description": "Countries offered for residence and for the phone number."
+        },
+        {
+          "name": "defaultCountry",
+          "type": "string",
+          "required": false,
+          "description": "Country the phone field starts on."
+        },
+        {
+          "name": "defaultValues",
+          "type": "Partial<KycValues>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "documentTypes",
+          "type": "KycDocumentType[]",
+          "required": false,
+          "default": "passport, national ID (two-sided), driving licence (two-sided)",
+          "description": ""
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "An error from outside the form (announced)."
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "maxSize",
+          "type": "number",
+          "required": false,
+          "default": "10 MB",
+          "description": "Largest upload in bytes."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onSubmit",
+          "type": "(values: KycValues) => void | Promise<unknown>",
+          "required": true,
+          "description": "Sends the application. When it resolves the page shows the status; a rejection shows its message on Review."
+        },
+        {
+          "name": "rejectionReason",
+          "type": "string",
+          "required": false,
+          "description": "Why it was rejected, shown on the failed step."
+        },
+        {
+          "name": "status",
+          "type": "'draft' | 'submitted' | 'review' | 'approved' | 'rejected'",
+          "required": false,
+          "description": "Where the application stands, from your server. Unset: the form, then \"submitted\" after `onSubmit`."
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
         }
       ]
     },
@@ -7939,6 +8833,301 @@
           "name": "title",
           "type": "string",
           "required": true,
+          "description": ""
+        }
+      ]
+    },
+    "NotificationsPage": {
+      "file": "components/NotificationsPage/NotificationsPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "defaultTab",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "an illustrated 'all caught up' state",
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the list; wins over `loading` and the empty state."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "hasMore",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "loadingMore",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "notifications",
+          "type": "NotificationsPageItem[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "now",
+          "type": "Date",
+          "required": false,
+          "description": "Today, for the \"Today\" and \"Yesterday\" headings. Without it every day shows its date (render never reads the clock)."
+        },
+        {
+          "name": "onDismiss",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onLoadMore",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Shows \"Load more\" under the list while `hasMore`."
+        },
+        {
+          "name": "onMarkAllRead",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onMarkRead",
+          "type": "((id: string, read: boolean) => void)",
+          "required": false,
+          "description": "Adds a read / unread toggle to each row; `read` is the state asked for."
+        },
+        {
+          "name": "onOpen",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": "Called when a notification is opened (clicked or Enter)."
+        },
+        {
+          "name": "onOpenSettings",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onTabChange",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "settingsHref",
+          "type": "string",
+          "required": false,
+          "description": "A link to notification settings. `onOpenSettings` renders a button in its place."
+        },
+        {
+          "name": "tab",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "tabs",
+          "type": "NotificationsPageTab[]",
+          "required": false,
+          "default": "'All' and 'Unread' (with the unread count)",
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "messages.inbox",
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
+    "OnboardingPage": {
+      "file": "components/OnboardingPage/OnboardingPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "completeActions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Buttons on the completion view: \"Go to dashboard\"."
+        },
+        {
+          "name": "completeDescription",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "completeTitle",
+          "type": "string",
+          "required": false,
+          "default": "messages.allSet",
+          "description": "Completion view title."
+        },
+        {
+          "name": "defaultStep",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "An error from outside the steps (announced)."
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Something outside the steps is in progress: the buttons wait."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onComplete",
+          "type": "() => void | Promise<unknown>",
+          "required": true,
+          "description": "After the last step. A rejected promise shows its message and stays on the step."
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onSkip",
+          "type": "((step: OnboardingStep) => void)",
+          "required": false,
+          "description": "Called with the step that was skipped."
+        },
+        {
+          "name": "onStepChange",
+          "type": "((index: number) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "required": false,
+          "description": "Controlled step index."
+        },
+        {
+          "name": "steps",
+          "type": "OnboardingStep[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'sm'",
           "description": ""
         }
       ]
@@ -8158,6 +9347,182 @@
           "type": "string",
           "required": true,
           "description": ""
+        }
+      ]
+    },
+    "SearchResultsPage": {
+      "file": "components/SearchResultsPage/SearchResultsPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "the 'no results' preset with `suggestions`",
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the results; wins over `loading` and the empty state."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "filters",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the count: filter chips."
+        },
+        {
+          "name": "highlight",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Wraps the query's words in `<mark>` in titles and excerpts."
+        },
+        {
+          "name": "kind",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "kinds",
+          "type": "SearchResultKind[]",
+          "required": false,
+          "description": "Result types as tabs: \"All\", \"People\", \"Files\". Your app filters `results` by `kind`."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onKindChange",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onPageChange",
+          "type": "((page: number) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onQueryChange",
+          "type": "(query: string) => void",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "onSubmit",
+          "type": "((query: string) => void)",
+          "required": false,
+          "description": "Enter in the field, or a suggestion."
+        },
+        {
+          "name": "page",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": "One-based."
+        },
+        {
+          "name": "pageSize",
+          "type": "number",
+          "required": false,
+          "default": "10",
+          "description": ""
+        },
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "results",
+          "type": "SearchResult[]",
+          "required": true,
+          "description": "The current page of results."
+        },
+        {
+          "name": "sort",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the count: a sort Select."
+        },
+        {
+          "name": "suggestions",
+          "type": "string[]",
+          "required": false,
+          "default": "[]",
+          "description": "Other searches offered when nothing matches."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "messages.searchResults",
+          "description": ""
+        },
+        {
+          "name": "total",
+          "type": "number",
+          "required": false,
+          "default": "results.length",
+          "description": "Across all pages."
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
         }
       ]
     },
@@ -8478,6 +9843,103 @@
         }
       ]
     },
+    "SignUpPage": {
+      "file": "components/SignUpPage/SignUpPage.tsx",
+      "props": [
+        {
+          "name": "as",
+          "type": "'main' | 'div'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element."
+        },
+        {
+          "name": "defaultCountry",
+          "type": "string",
+          "required": false,
+          "description": "Country the phone field starts on (ISO 3166-1 alpha-2)."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error from the last attempt (announced)."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "logo",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onSignIn",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Renders the \"Already have an account? Sign in\" footer."
+        },
+        {
+          "name": "onSubmit",
+          "type": "(values: SignUpValues) => void | Promise<unknown>",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "passwordRules",
+          "type": "PasswordRule[]",
+          "required": false,
+          "default": "defaultPasswordRules",
+          "description": "Checks behind the strength meter. The share that passes fills four segments; three or more segments is accepted. Say what you ask for in `messages.passwordHint`."
+        },
+        {
+          "name": "phone",
+          "type": "boolean",
+          "required": false,
+          "description": "Adds an optional phone number field."
+        },
+        {
+          "name": "social",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the form, followed by an \"or\" divider: \"Continue with …\" buttons."
+        },
+        {
+          "name": "submitLabel",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "termsLabel",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The terms checkbox label, e.g. \"I agree to the Terms and Privacy Policy\" with links."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "StatCard": {
       "file": "components/StatCard/StatCard.tsx",
       "props": [
@@ -8643,6 +10105,332 @@
         }
       ]
     },
+    "TablePage": {
+      "file": "components/TablePage/TablePage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "activeFilterCount",
+          "type": "number",
+          "required": false,
+          "default": "0",
+          "description": "How many filters are on: shows \"N filters\" with a clear button, and picks the \"no results\" empty state."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "bulkActions",
+          "type": "((rows: TData[], clear: () => void) => React.ReactNode)",
+          "required": false,
+          "description": "Actions for the selected rows; turns row selection on."
+        },
+        {
+          "name": "columns",
+          "type": "DataTableColumn<TData>[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "data",
+          "type": "TData[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "the 'no data' preset with `actions`, or 'no results' with Clear filters while a search or filter is on",
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in the table in place of rows; wins over `loading` and the empty state."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "filters",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the search: filter chips, a FilterBuilder trigger."
+        },
+        {
+          "name": "getRowId",
+          "type": "((row: TData, index: number) => string)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Skeleton rows; sets aria-busy on the table."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onClearFilters",
+          "type": "(() => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onRowOpen",
+          "type": "((row: TData) => void)",
+          "required": false,
+          "description": "Opens a record: the first cell becomes a button."
+        },
+        {
+          "name": "onTabChange",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "pagination",
+          "type": "{ pageSize?: number; }",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "ref",
+          "type": "React.Ref<HTMLElement>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "rowActions",
+          "type": "((row: TData) => React.ReactNode)",
+          "required": false,
+          "description": "A trailing column per row: a menu button, \"Edit\"."
+        },
+        {
+          "name": "search",
+          "type": "{ value: string; onChange: (value: string) => void; placeholder?: string; }",
+          "required": false,
+          "description": "A search field above the table. Your app filters `data`."
+        },
+        {
+          "name": "tab",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "tableProps",
+          "type": "Partial<Omit<DataTableProps<TData>, 'columns' | 'data'>>",
+          "required": false,
+          "description": "Anything else DataTable takes: `viewOptions`, `sort`, `density`, `columnFilters`…"
+        },
+        {
+          "name": "tabs",
+          "type": "TablePageTab[]",
+          "required": false,
+          "description": "Saved segments above the table: \"All\", \"Active\", \"Archived\". Your app filters `data` by `tab`."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
+    "TeamPage": {
+      "file": "components/TeamPage/TeamPage.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Top-right of the header: buttons, filters."
+        },
+        {
+          "name": "as",
+          "type": "'main' | 'div' | 'section'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element. Use `div` inside an app shell that already renders `<main>`."
+        },
+        {
+          "name": "canManage",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "False: roles, removal and inviting are read-only."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "the 'no data' preset, or 'no results' while searching",
+          "description": ""
+        },
+        {
+          "name": "errorFallback",
+          "type": "React.ReactNode | ((state: { error: unknown; reset: () => void; }) => React.ReactNode)",
+          "required": false,
+          "description": "Shown in place of content that threw while rendering. Default: the \"Something went wrong\" state with Retry."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the members; wins over `loading` and the empty state."
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Above the title, e.g. a back link."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "members",
+          "type": "TeamMember[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onError",
+          "type": "((error: unknown, info: React.ErrorInfo) => void)",
+          "required": false,
+          "description": "Called with the error, for reporting (Sentry, Datadog)."
+        },
+        {
+          "name": "onInvite",
+          "type": "((invite: { emails: string[]; roleId: string; }) => void | Promise<unknown>)",
+          "required": false,
+          "description": "Shows \"Invite people\". A rejected promise shows its message and keeps the dialog open."
+        },
+        {
+          "name": "onRemove",
+          "type": "((memberId: string) => void)",
+          "required": false,
+          "description": "Called after the confirm dialog."
+        },
+        {
+          "name": "onResendInvite",
+          "type": "((inviteId: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onRevokeInvite",
+          "type": "((inviteId: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onRoleChange",
+          "type": "((memberId: string, roleId: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "pendingInvites",
+          "type": "TeamInvite[]",
+          "required": false,
+          "default": "[]",
+          "description": ""
+        },
+        {
+          "name": "roles",
+          "type": "TeamRole[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "search",
+          "type": "{ value: string; onChange: (value: string) => void; placeholder?: string; }",
+          "required": false,
+          "description": "A search field. Your app filters `members`."
+        },
+        {
+          "name": "seats",
+          "type": "{ used: number; total: number; }",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "messages.team",
+          "description": ""
+        },
+        {
+          "name": "width",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "Content width."
+        }
+      ]
+    },
     "TransactionDetailPage": {
       "file": "components/TransactionDetailPage/TransactionDetailPage.tsx",
       "props": [
@@ -8793,6 +10581,123 @@
           "type": "'sm' | 'md' | 'lg'",
           "required": false,
           "default": "'md'",
+          "description": ""
+        }
+      ]
+    },
+    "VerifyCodePage": {
+      "file": "components/VerifyCodePage/VerifyCodePage.tsx",
+      "props": [
+        {
+          "name": "as",
+          "type": "'main' | 'div'",
+          "required": false,
+          "default": "'main'",
+          "description": "Landmark element."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "destination",
+          "type": "string",
+          "required": true,
+          "description": "Where the code went, already masked: \"+65 •••• 4821\", \"m•••@example.com\"."
+        },
+        {
+          "name": "error",
+          "type": "string",
+          "required": false,
+          "description": "Error from the last attempt (announced). Clears the boxes and returns focus to the first."
+        },
+        {
+          "name": "expiresAt",
+          "type": "number | Date",
+          "required": false,
+          "description": "When the code stops working: shows the time left."
+        },
+        {
+          "name": "length",
+          "type": "number",
+          "required": false,
+          "default": "6",
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "The code is being checked: the boxes are read-only and Continue shows progress."
+        },
+        {
+          "name": "logo",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "messages",
+          "type": "Partial<PageTemplateMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "methods",
+          "type": "VerifyMethod[]",
+          "required": false,
+          "description": "Other second factors, as a short list of links."
+        },
+        {
+          "name": "now",
+          "type": "(() => number)",
+          "required": false,
+          "default": "Date.now",
+          "description": "Clock for the countdowns (tests, stories)."
+        },
+        {
+          "name": "onChangeDestination",
+          "type": "(() => void)",
+          "required": false,
+          "description": "Renders \"Use a different number\" (rename it with `messages.changeDestination`)."
+        },
+        {
+          "name": "onComplete",
+          "type": "(code: string) => void | Promise<unknown>",
+          "required": true,
+          "description": "Called as soon as every box is filled, and from the Continue button."
+        },
+        {
+          "name": "onMethodChange",
+          "type": "((id: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onResend",
+          "type": "(() => void | Promise<unknown>)",
+          "required": false,
+          "description": "Renders \"Resend code\" behind a cooldown."
+        },
+        {
+          "name": "resendAfter",
+          "type": "number",
+          "required": false,
+          "default": "30",
+          "description": "Seconds before Resend is allowed again."
+        },
+        {
+          "name": "submitLabel",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
           "description": ""
         }
       ]

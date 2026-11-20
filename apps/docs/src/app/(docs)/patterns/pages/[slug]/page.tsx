@@ -68,7 +68,7 @@ export default async function TemplatePage({ params }: Props) {
           </Section>
         ) : (
           <Section id="mobile-heading" title="On iOS & Android">
-            <p>This template has no native twin yet. On mobile, build it from EmptyState or ErrorState in @nexub/react-native.</p>
+            <p>This template has no native twin yet. On mobile, compose it from the @nexub/react-native components listed on the React Native page.</p>
           </Section>
         )}
       </PlatformPanel>
