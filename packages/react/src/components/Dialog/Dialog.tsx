@@ -96,8 +96,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
             ? 'fixed inset-x-0 bottom-0 z-[var(--z-modal)] w-full'
             : 'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2',
           'nx-motion nx-dialog', overlaySurface, dialogSurface,
-          'max-h-[90vh] overflow-y-auto p-6 focus:outline-none',
-          asSheet ? 'rounded-b-none' : sizeMap[size],
+          'overflow-y-auto p-6 focus:outline-none',
+          // Sheets: dvh follows the mobile browser bars; the padding clears the home indicator.
+          asSheet ? 'max-h-[90dvh] rounded-b-none pb-[calc(1.5rem+env(safe-area-inset-bottom))]' : cn('max-h-[90vh]', sizeMap[size]),
           surface === 'glass' && glassSurfaceClass,
           className,
         )}

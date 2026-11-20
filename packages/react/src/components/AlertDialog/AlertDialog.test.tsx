@@ -134,3 +134,28 @@ describe('AlertDialog.Confirm', () => {
     expect(onAction).toHaveBeenCalled();
   });
 });
+
+describe('AlertDialog sheet (10.6)', () => {
+  const Open = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <AlertDialog.Root open>
+      <AlertDialog.Portal>
+        <AlertDialog.Content sheet={sheet} aria-describedby={undefined}>
+          <AlertDialog.Title>Sure?</AlertDialog.Title>
+          <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
+  );
+
+  it('centred by default with a gutter; sheet anchors to the bottom; auto stays centred on wide screens', () => {
+    const { unmount, rerender } = render(<Open />);
+    expect(screen.getByRole('alertdialog')).not.toHaveAttribute('data-sheet');
+    expect(screen.getByRole('alertdialog').className).toContain('w-[calc(100%-2rem)]');
+    rerender(<Open sheet="auto" />);
+    expect(screen.getByRole('alertdialog')).not.toHaveAttribute('data-sheet');
+    unmount();
+    render(<Open sheet />);
+    expect(screen.getByRole('alertdialog')).toHaveAttribute('data-sheet');
+    expect(screen.getByRole('alertdialog').className).toContain('bottom-0');
+  });
+});

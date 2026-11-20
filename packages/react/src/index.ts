@@ -291,6 +291,7 @@ export type { TopNavItemProps, TopNavRootProps } from './components/TopNav/index
 export { Sidebar } from './components/Sidebar/index.js';
 export type { SidebarRootProps, SidebarHeaderProps, SidebarGroupProps, SidebarItemProps } from './components/Sidebar/index.js';
 export { AppShell } from './components/AppShell/index.js';
+export type { AppShellRootProps, AppShellSidebarProps, AppShellNavTriggerProps } from './components/AppShell/index.js';
 export { PageHeader } from './components/PageHeader/index.js';
 export type { PageHeaderProps } from './components/PageHeader/index.js';
 export { Breadcrumb } from './components/Breadcrumb/index.js';

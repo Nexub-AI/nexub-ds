@@ -26,6 +26,8 @@ export interface AppLauncherProps {
   surface?: 'solid' | 'glass';
   /** Accessible name of the trigger and the menu. */
   label?: string;
+  /** 10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide). */
+  sheet?: boolean | 'auto';
   className?: string;
 }
 
@@ -65,7 +67,7 @@ function AppIcon({ app }: { app: AppLauncherApp }) {
 }
 
 export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>(
-  ({ apps, onNavigate, surface = 'solid', label = 'Nexub apps', className }, ref) => {
+  ({ apps, onNavigate, surface = 'solid', label = 'Nexub apps', sheet, className }, ref) => {
     const [open, setOpen] = React.useState(false);
     const listRef = React.useRef<HTMLDivElement>(null);
     if (apps.length === 0) return null;
@@ -123,6 +125,8 @@ export const AppLauncher = React.forwardRef<HTMLButtonElement, AppLauncherProps>
         <Popover.Portal>
           <Popover.Content
             align="end"
+            collisionPadding={8}
+            sheet={sheet}
             surface={surface}
             aria-label={label}
             onOpenAutoFocus={onOpenAutoFocus}

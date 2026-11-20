@@ -30,3 +30,8 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual calendar popover above. */
+export const SheetAuto: Story = {
+  render: () => <DateTimePicker aria-label="Starts" defaultTime="09:30" sheet="auto" className="max-w-md" />,
+};

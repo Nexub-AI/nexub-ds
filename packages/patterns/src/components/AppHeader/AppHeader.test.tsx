@@ -142,6 +142,13 @@ describe('AppHeader', () => {
   describe('account menu', () => {
     const user = { name: 'Sam Lee', email: 'sam@example.com' };
 
+    // 10.6. Needs the @nexub/react build that has `sheet` on DropdownMenu.Content.
+    it('forwards sheet to the menu', async () => {
+      const u = setup({ user, sheet: 'auto' });
+      await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
+      expect(screen.getByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+    });
+
     it('shows name, email, links and sign out; legal links only when set', async () => {
       const u = setup({ user, accountHref: '/account', privacyHref: '/privacy', accountMenuItems: <span>Extra</span>, onSignOut: vi.fn() });
       await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));

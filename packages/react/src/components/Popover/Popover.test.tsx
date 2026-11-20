@@ -77,3 +77,32 @@ describe('Popover', () => {
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });
+
+describe('Popover sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+  const Menu = ({ sheet }: { sheet?: boolean | 'auto' }) => (
+    <Popover.Root>
+      <Popover.Trigger>Sheet trigger</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content sheet={sheet} aria-label="Sheet">
+          <p>Sheet item</p>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+
+  it('marks the content with data-nx-sheet only when asked, and still opens and closes', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<Menu />);
+    await user.click(screen.getByText('Sheet trigger'));
+    expect(await screen.findByText('Sheet item')).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByText('Sheet item')).not.toBeInTheDocument());
+    unmount();
+
+    render(<Menu sheet="auto" />);
+    await user.click(screen.getByText('Sheet trigger'));
+    expect((await screen.findByText('Sheet item')).closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

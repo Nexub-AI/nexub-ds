@@ -3,6 +3,7 @@
 import * as React from 'react';
 import * as RadixPopover from '@radix-ui/react-popover';
 import { cn } from '../../utils/cn.js';
+import { COLLISION_PADDING, arrowSafe, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface, popoverSurface } from '../../utils/surface.js';
 import { glassSurfaceClass, type SurfaceValue } from '../../utils/glass.js';
 
@@ -13,14 +14,21 @@ const Close = RadixPopover.Close;
 
 const Content = React.forwardRef<
   HTMLDivElement,
-  RadixPopover.PopoverContentProps & { surface?: SurfaceValue }
->(function PopoverContent({ className, sideOffset = 4, surface = 'solid', ...props }, ref) {
+  RadixPopover.PopoverContentProps & {
+    surface?: SurfaceValue;
+    /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+    sheet?: SheetProp;
+  }
+>(function PopoverContent({ className, sideOffset = 4, collisionPadding = COLLISION_PADDING, surface = 'solid', sheet = false, ...props }, ref) {
     return (
       <RadixPopover.Content
         ref={ref}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
+        data-nx-sheet={sheet || undefined}
         className={cn(
           'z-[var(--z-popover)] p-4 outline-none',
+          'max-h-[var(--radix-popover-content-available-height)] overflow-y-auto', arrowSafe,
           floatingSurface, popoverSurface,
           'nx-motion nx-pop origin-[var(--radix-popover-content-transform-origin)]',
           surface === 'glass' && glassSurfaceClass,

@@ -111,4 +111,11 @@ describe('AppLauncher accent (10.3)', () => {
     const other = screen.getByRole('link', { name: 'Other' }).closest('li')!;
     expect(other.hasAttribute('data-product') || other.hasAttribute('data-division')).toBe(false);
   });
+
+  // 10.6. Needs the @nexub/react build that has `sheet` on Popover.Content.
+  it('forwards sheet to the panel', async () => {
+    render(<AppLauncher apps={apps} sheet="auto" />);
+    await open();
+    expect(screen.getByRole('dialog', { name: 'Nexub apps' })).toHaveAttribute('data-nx-sheet', 'auto');
+  });
 });

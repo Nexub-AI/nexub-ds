@@ -15,7 +15,7 @@ export default meta;
 
 /** In-flow cards: tonal + hairline (flat), elevated (surface), interactive. */
 export const Cards = () => (
-  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, maxWidth: 760 }}>
+  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 12rem), 1fr))', gap: 16, maxWidth: 760 }}>
     {(['flat', 'surface', 'interactive'] as const).map((variant) => (
       <Card key={variant} variant={variant} style={{ padding: 20 }}>
         <p className="text-title-md">{variant}</p>

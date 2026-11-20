@@ -55,3 +55,27 @@ export const TypeToConfirm: Story = {
     </AlertDialog.Root>
   ),
 };
+
+/** 10.6: a bottom sheet below the md breakpoint, the usual centred dialog above. */
+export const SheetAuto: Story = {
+  render: () => (
+    <AlertDialog.Root>
+      <AlertDialog.Trigger asChild>
+        <button>Delete project</button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay />
+        <AlertDialog.Content sheet="auto">
+          <AlertDialog.Header>
+            <AlertDialog.Title>Delete this project?</AlertDialog.Title>
+            <AlertDialog.Description>This cannot be undone.</AlertDialog.Description>
+          </AlertDialog.Header>
+          <AlertDialog.Footer>
+            <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+            <AlertDialog.Action>Delete</AlertDialog.Action>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
+  ),
+};

@@ -7,6 +7,7 @@ import { dialogSurface, overlaySurface, scrim } from '../../utils/surface.js';
 import { buttonVariants } from '../Button/Button.js';
 import { Input } from '../Input/Input.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { useMediaQuery } from '../../hooks/useMediaQuery.js';
 import { ClassLockOverlay, ScrollLockContext, type ScrollLock } from '../../hooks/useClassScrollLock.js';
 
 // Type-to-confirm: Confirm registers the text, Action stays disabled until it's typed.
@@ -53,8 +54,15 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOve
 );
 Overlay.displayName = 'AlertDialog.Overlay';
 
-const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogContentProps>(
-  function AlertDialogContent({ className, children, ...props }, ref) {
+export interface AlertDialogContentProps extends RadixAlertDialog.AlertDialogContentProps {
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false */
+  sheet?: boolean | 'auto';
+}
+
+const Content = React.forwardRef<HTMLDivElement, AlertDialogContentProps>(
+  function AlertDialogContent({ className, children, sheet = false, ...props }, ref) {
+    const narrow = useMediaQuery('(max-width: 47.99rem)');
+    const asSheet = sheet === true || (sheet === 'auto' && narrow);
     const [required, setRequired] = React.useState<string | null>(null);
     const [typed, setTyped] = React.useState('');
     const confirm = React.useMemo(() => ({ required, setRequired, typed, setTyped }), [required, typed]);
@@ -63,11 +71,16 @@ const Content = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogCon
       <RadixAlertDialog.Content
         ref={ref}
         className={cn(
-          'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-full max-w-lg -translate-x-1/2 -translate-y-1/2',
+          // Same shape as Dialog.Content: a 1rem gutter when centred, or a bottom sheet.
+          asSheet
+            ? 'fixed inset-x-0 bottom-0 z-[var(--z-modal)] w-full'
+            : 'fixed left-1/2 top-1/2 z-[var(--z-modal)] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2',
           'nx-motion nx-dialog', overlaySurface, dialogSurface,
-          'p-6 focus:outline-none',
+          'max-h-[90dvh] overflow-y-auto p-6 focus:outline-none',
+          asSheet && 'rounded-b-none pb-[calc(1.5rem+env(safe-area-inset-bottom))]',
           className,
         )}
+        data-sheet={asSheet ? '' : undefined}
         {...props}
       >
         {children}

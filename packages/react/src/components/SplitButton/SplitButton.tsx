@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { ChevronDown } from '@nexub/icons';
+import type { SheetProp } from '../../utils/popper.js';
 import { cn } from '../../utils/cn.js';
 import { Button, type ButtonProps } from '../Button/Button.js';
 import { ButtonGroup } from '../ButtonGroup/ButtonGroup.js';
@@ -14,6 +15,8 @@ export interface SplitButtonProps extends Omit<ButtonProps, 'asChild' | 'trailin
   menu: React.ReactNode;
   /** Menu alignment against the toggle. @default 'end' */
   align?: 'start' | 'end';
+  /** The menu as a bottom sheet: see DropdownMenu.Content `sheet`. @default false */
+  sheet?: SheetProp;
 }
 
 /**
@@ -21,7 +24,7 @@ export interface SplitButtonProps extends Omit<ButtonProps, 'asChild' | 'trailin
  * connected control (M3 Expressive split button). The ref goes to the primary button.
  */
 export const SplitButton = React.forwardRef<HTMLButtonElement, SplitButtonProps>(
-  ({ menuLabel, menu, align = 'end', variant, size, tone, disabled, loading, className, ...props }, ref) => {
+  ({ menuLabel, menu, align = 'end', sheet, variant, size, tone, disabled, loading, className, ...props }, ref) => {
     const shared = { variant, size, tone };
     const busy = loading || props.status === 'loading';
     return (
@@ -44,7 +47,7 @@ export const SplitButton = React.forwardRef<HTMLButtonElement, SplitButtonProps>
               <ChevronDown size="sm" aria-hidden="true" />
             </Button>
           </DropdownMenu.Trigger>
-          <DropdownMenu.Content align={align}>{menu}</DropdownMenu.Content>
+          <DropdownMenu.Content align={align} sheet={sheet}>{menu}</DropdownMenu.Content>
         </DropdownMenu.Root>
       </ButtonGroup>
     );

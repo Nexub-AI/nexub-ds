@@ -51,9 +51,15 @@ describe('RadioCard', () => {
     expect(ent).toHaveAttribute('data-state', 'unchecked');
   });
 
-  it('lays out columns with literal classes', () => {
-    render(<Plans columns={3} />);
-    expect(screen.getByRole('radiogroup')).toHaveClass('grid', 'sm:grid-cols-3');
+  it('lays out columns with literal classes, sized by a query container around the grid (10.6)', () => {
+    const { unmount } = render(<Plans columns={3} />);
+    const group = screen.getByRole('radiogroup');
+    expect(group).toHaveClass('grid', '@xl:grid-cols-3');
+    expect(group.parentElement).toHaveClass('@container', 'w-full');
+    unmount();
+    // One column never changes with width: no wrapper.
+    render(<Plans columns={1} />);
+    expect(screen.getByRole('radiogroup').parentElement).not.toHaveClass('@container');
   });
 
   it('server-renders no style attribute of its own', () => {

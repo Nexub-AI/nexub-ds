@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Plus } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
+import type { SheetProp } from '../../utils/popper.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';
 import { ComboboxLoading, ComboboxPopover } from '../Combobox/ComboboxPopover.js';
@@ -34,6 +35,8 @@ export interface AutocompleteProps {
   readOnly?: boolean;
   /** @default 'md' */
   size?: Size;
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false */
+  sheet?: SheetProp;
   className?: string;
   'aria-label'?: string;
 }
@@ -51,6 +54,7 @@ export function Autocomplete({
   disabled,
   readOnly,
   size,
+  sheet,
   className,
   'aria-label': ariaLabel,
 }: AutocompleteProps) {
@@ -133,7 +137,7 @@ export function Autocomplete({
       className={cn('overflow-visible rounded-none bg-transparent', className)}
       shouldFilter={!onInputChange}
     >
-      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled} readOnly={readOnly} size={size}>
+      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled} readOnly={readOnly} size={size} sheet={sheet}>
         {list}
       </ComboboxPopover>
     </Combobox.Root>

@@ -108,3 +108,21 @@ describe('DateRangePicker 10.4', () => {
     expect(screen.queryByRole('grid')).not.toBeInTheDocument();
   });
 });
+
+describe('DateRangePicker sheet (10.6)', () => {
+  const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
+
+  it('marks the calendar popover with data-nx-sheet only when asked, and still closes', () => {
+    const { unmount } = render(<DateRangePicker aria-label="When" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getAllByRole('grid').length).toBeGreaterThan(0);
+    expect(sheetAttr()).toBeNull();
+    fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
+    expect(screen.queryByRole('grid')).not.toBeInTheDocument();
+    unmount();
+
+    render(<DateRangePicker aria-label="When" sheet="auto" />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getAllByRole('grid')[0]!.closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});

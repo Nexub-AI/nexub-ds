@@ -32,7 +32,7 @@ export const WelcomeBanner = React.forwardRef<HTMLElement, WelcomeBannerProps>(
         aria-labelledby={id}
         data-nx="welcome-banner"
         className={cn(
-          'relative flex items-center gap-6 overflow-hidden rounded-shape-container bg-[var(--color-surface-container-low)] p-6',
+          '@container relative flex items-center gap-6 overflow-hidden rounded-shape-container bg-[var(--color-surface-container-low)] p-6',
           className,
         )}
         {...props}
@@ -45,7 +45,7 @@ export const WelcomeBanner = React.forwardRef<HTMLElement, WelcomeBannerProps>(
           {actions && <div className="mt-2 flex flex-wrap items-center gap-2">{actions}</div>}
         </div>
         {media && (
-          <div aria-hidden="true" className="hidden shrink-0 sm:block">
+          <div aria-hidden="true" className="hidden shrink-0 @lg:block">
             {media}
           </div>
         )}
