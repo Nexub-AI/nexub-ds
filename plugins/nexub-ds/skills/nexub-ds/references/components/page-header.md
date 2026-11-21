@@ -15,6 +15,7 @@ The top of a page: title, description, breadcrumb and actions.
 | `actions` | `ReactNode` |  | Buttons on the end side; they wrap under the title on narrow screens. |
 | `breadcrumb` | `ReactNode` |  | A `Breadcrumb` above the title. |
 | `level` | `1 \| 2 \| 3` |  | Heading level of the title. Use 2 or 3 when the page already has an h1. |
+| `eyebrow` | `ReactNode` |  | 11.5: a row above the title, e.g. an EyebrowChip and status badges. |
 
 ## Example: Default
 

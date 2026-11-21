@@ -15,6 +15,7 @@ const entry: ComponentEntry = {
     { name: 'onOpenChange', type: '(open: boolean) => void', required: false, description: 'Callback when open state changes.' },
     { name: 'defaultOpen', type: 'boolean', default: 'false', required: false, description: 'Uncontrolled initial open state.' },
     { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material on Dialog.Content — see Foundations → Materials.' },
+    { name: 'maxHeight', type: 'string', description: '11.5 (Dialog.Content): the tallest the dialog gets before its content scrolls, e.g. "32rem". Set through CSSOM (strict CSP safe).' },
   ],
   examples: [
     {

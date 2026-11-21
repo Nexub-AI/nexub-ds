@@ -61,6 +61,11 @@ interface ContentProps extends RadixDialog.DialogContentProps {
   closeLabel?: string;
   /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false */
   sheet?: boolean | 'auto';
+  /**
+   * 11.5: the tallest the dialog gets before its content scrolls, e.g. '32rem' or '60vh'
+   * (default 90vh, 90dvh as a sheet). Set through CSSOM, so it works under a strict CSP.
+   */
+  maxHeight?: string;
 }
 
 // Each open Content tells the Content it was opened from, which then steps back (data-nested).
@@ -68,9 +73,23 @@ const StackContext = React.createContext<React.Dispatch<React.SetStateAction<num
 
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(
   function DialogContent(
-    { className, size = 'md', surface = 'solid', showClose = false, closeLabel, sheet = false, children, ...props },
+    { className, size = 'md', surface = 'solid', showClose = false, closeLabel, sheet = false, maxHeight, children, ...props },
     ref,
   ) {
+    const innerRef = React.useRef<HTMLDivElement | null>(null);
+    React.useEffect(() => {
+      const el = innerRef.current;
+      if (!el || !maxHeight) return;
+      el.style.maxHeight = maxHeight;
+      return () => {
+        el.style.maxHeight = '';
+      };
+    }, [maxHeight]);
+    const setRefs = (el: HTMLDivElement | null) => {
+      innerRef.current = el;
+      if (typeof ref === 'function') ref(el);
+      else if (ref) ref.current = el;
+    };
     const messages = useNexubMessages();
     const narrow = useMediaQuery('(max-width: 47.99rem)');
     const asSheet = sheet === true || (sheet === 'auto' && narrow);
@@ -90,7 +109,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(
     };
     return (
       <RadixDialog.Content
-        ref={ref}
+        ref={setRefs}
         className={cn(
           asSheet
             ? 'fixed inset-x-0 bottom-0 z-[var(--z-modal)] w-full'

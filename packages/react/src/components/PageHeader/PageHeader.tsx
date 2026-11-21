@@ -6,6 +6,8 @@ export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   description?: React.ReactNode;
   actions?: React.ReactNode;
   breadcrumb?: React.ReactNode;
+  /** 11.5: a row above the title, e.g. an EyebrowChip and status badges. Wraps on narrow screens. */
+  eyebrow?: React.ReactNode;
   /** Heading level of the title. Use 2 or 3 when the page already has an h1. @default 1 */
   level?: 1 | 2 | 3;
   /** 10.3: sit the header on a padded, rounded panel. Under `data-expression="vivid"` the panel
@@ -14,7 +16,7 @@ export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 }
 
 export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
-  ({ className, title, description, actions, breadcrumb, level = 1, wash = false, ...props }, ref) => {
+  ({ className, title, description, actions, breadcrumb, eyebrow, level = 1, wash = false, ...props }, ref) => {
     const Heading = `h${level}` as const;
     return (
       <div
@@ -33,6 +35,7 @@ export const PageHeader = React.forwardRef<HTMLDivElement, PageHeaderProps>(
         {breadcrumb && <div>{breadcrumb}</div>}
         <div className="flex flex-col gap-2 @xl:flex-row @xl:items-start @xl:justify-between">
           <div className="min-w-0 flex-1">
+            {eyebrow && <div className="mb-2 flex flex-wrap items-center gap-2">{eyebrow}</div>}
             <Heading className="text-headline-sm leading-8 ![font-weight:var(--page-title-weight,600)] ![letter-spacing:var(--page-title-tracking,-0.025em)] text-[var(--color-on-surface)] truncate">
               {title}
             </Heading>

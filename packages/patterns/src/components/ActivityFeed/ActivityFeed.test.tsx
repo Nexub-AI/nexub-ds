@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 import { ActivityFeed } from './ActivityFeed.js';
@@ -111,5 +111,64 @@ describe('ActivityFeed', () => {
     expect(screen.getByText('First')).toBeDefined();
     expect(screen.getByText('Second')).toBeDefined();
     expect(screen.getByText('Third')).toBeDefined();
+  });
+});
+
+describe('ActivityFeed 11.5', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('a Date timestamp renders <time dateTime> with relative text and a full-date tooltip', async () => {
+    vi.useFakeTimers({ now: new Date('2026-11-21T12:00:00Z'), toFake: ['Date'] });
+    const when = new Date('2026-11-21T11:55:00Z');
+    render(
+      <ActivityFeed.Root>
+        <ActivityFeed.Item title="Edited" timestamp={when} />
+        <ActivityFeed.Item title="Created" timestamp={new Date('2026-11-01T09:00:00Z')} />
+      </ActivityFeed.Root>,
+    );
+    const time = screen.getByText('5 minutes ago');
+    expect(time.tagName).toBe('TIME');
+    expect(time).toHaveAttribute('dateTime', when.toISOString());
+    expect(screen.getByText('Nov 1')).toBeInTheDocument();
+    vi.useRealTimers();
+    time.focus();
+    expect(await screen.findByRole('tooltip')).toHaveTextContent(/Saturday, November 21, 2026/);
+  });
+
+  it('title and description render block content (no <p>)', () => {
+    const { container } = render(
+      <ActivityFeed.Root>
+        <ActivityFeed.Item title={<div>Block title</div>} description={<ul><li>one</li></ul>} />
+      </ActivityFeed.Root>,
+    );
+    expect(container.querySelector('p')).toBeNull();
+    expect(screen.getByText('Block title')).toBeInTheDocument();
+  });
+
+  it('actions slot and tone marker', () => {
+    const { container } = render(
+      <ActivityFeed.Root>
+        <ActivityFeed.Item title="Failed" tone="danger" actions={<button type="button">Retry</button>} />
+      </ActivityFeed.Root>,
+    );
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(container.querySelector('li')).toHaveAttribute('data-tone', 'danger');
+    expect(container.querySelector('.bg-\\[var\\(--color-error\\)\\]')).not.toBeNull();
+  });
+
+  it('Group names a nested list with its header', () => {
+    render(
+      <ActivityFeed.Root>
+        <ActivityFeed.Group label="Today" headingLevel={3}>
+          <ActivityFeed.Item title="A" />
+        </ActivityFeed.Group>
+        <ActivityFeed.Group label="Yesterday">
+          <ActivityFeed.Item title="B" />
+        </ActivityFeed.Group>
+      </ActivityFeed.Root>,
+    );
+    expect(screen.getByRole('heading', { level: 3, name: 'Today' })).toBeInTheDocument();
+    expect(screen.getByRole('list', { name: 'Today' })).toContainElement(screen.getByText('A'));
+    expect(screen.getByRole('list', { name: 'Yesterday' })).toContainElement(screen.getByText('B'));
   });
 });

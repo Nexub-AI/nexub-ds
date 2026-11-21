@@ -22,6 +22,10 @@ const entry: ComponentEntry = {
     { name: 'surface', type: "'solid' | 'glass'", default: "'solid'", required: false, description: 'Glass material for composers floating over content.' },
     { name: 'label', type: 'string', default: "messages.promptLabel ('Message')", required: false, description: 'Accessible name of the text field.' },
     { name: 'messages', type: 'Partial<PromptInputMessages>', required: false, description: 'Local overrides for `promptLabel`, `sendMessage`, `stopGenerating`, `promptHint`.' },
+    { name: 'sendLabel', type: 'ReactNode', required: false, description: '11.5: a visible text label on Send, beside the arrow. Without it, Send is an icon button.' },
+    { name: 'submitOn', type: "'enter' | 'mod-enter'", default: "'enter'", required: false, description: '11.5: `mod-enter` sends on Cmd/Ctrl+Enter, makes Enter add a line and shows that hint under the field.' },
+    { name: 'hint', type: 'ReactNode', required: false, description: '11.5: helper text under the field, linked with `aria-describedby`.' },
+    { name: 'error', type: 'ReactNode', required: false, description: '11.5: an error under the field. Marks the field invalid (`aria-invalid`) and links it.' },
     { name: 'textareaClassName', type: 'string', required: false, description: 'Class for the textarea; `className` goes to the outer container.' },
   ],
   examples: [
@@ -35,6 +39,10 @@ const entry: ComponentEntry = {
     {
       title: 'Streaming',
       description: 'Send a message: the button turns into Stop for three seconds. Stop or Escape ends it early.',
+    },
+    {
+      title: 'Label, hint and error',
+      description: 'Cmd/Ctrl+Enter sends and Enter adds a line. Type more than 280 characters to see the error.',
     },
   ],
   usage: {
@@ -52,6 +60,7 @@ const entry: ComponentEntry = {
     keyboard: [
       { key: 'Enter', description: 'Sends. Ignored while an IME composition is open.' },
       { key: 'Shift + Enter', description: 'New line.' },
+      { key: 'Cmd/Ctrl + Enter', description: 'Sends with `submitOn="mod-enter"`, where Enter adds a line.' },
       { key: 'Escape', description: 'Stops the reply while streaming.' },
     ],
     focus: [

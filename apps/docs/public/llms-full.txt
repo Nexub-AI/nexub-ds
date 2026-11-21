@@ -248,6 +248,8 @@ Fonts: `font-sans` and `font-display` (both Plus Jakarta Sans, the one Nexub typ
 | `--spacing-48` | `48` | 192px |
 | `--spacing-56` | `56` | 224px |
 | `--spacing-64` | `64` | 256px |
+| `--spacing-88` | `88` | 352px |
+| `--spacing-104` | `104` | 416px |
 | `--spacing-px` | `px` | 1px |
 | `--spacing-0-5` | `0-5` | 2px |
 | `--spacing-1-5` | `1-5` | 6px |
@@ -400,6 +402,7 @@ Never use a component marked deprecated.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Org Chart](components/org-chart.md) `@nexub/react`: People top-down as cards joined by lines, keyboard navigable as a tree. A TreeView on narrow screens.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
 - [Resource Timeline](components/resource-timeline.md) `@nexub/react`: One row per person, days across: rosters, team leave and allocation, with totals in the footer.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
@@ -925,7 +928,7 @@ Inline contextual message with optional title, icon, and dismiss action.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic colour tone of the alert. |
-| `title` | `string` |  | Bold title rendered at the top of the alert. |
+| `title` | `ReactNode` |  | Bold title rendered at the top of the alert. 11.5: any content (a link, a name in bold); was a string. |
 | `icon` | `ReactNode` |  | Custom icon rendered to the left of the content. |
 | `action` | `ReactNode` |  | Action element (e.g. a button) rendered beside the content. |
 | `onClose` | `() => void` |  | When provided, renders a close button that calls this handler. |
@@ -1844,6 +1847,7 @@ Hierarchical navigation trail showing page location.
 | `Breadcrumb.Trail maxItems` | `number` | `4` | Longer trails keep the first item and the last `maxItems - 1`, and move the rest into a "More" menu. |
 | `Breadcrumb.Separator children` | `React.ReactNode` |  | Custom separator element. Defaults to a chevron icon. |
 | `Breadcrumb.Ellipsis aria-label` | `string` | `'More'` | Accessible label for the ellipsis element used to collapse long trails. |
+| `Breadcrumb.Section` | `component` |  | 11.5: a plain section in the trail, neither a link nor the current page. In `Breadcrumb.Trail`, an item before the last with no `href` renders as one. |
 
 ## Example: Default
 
@@ -2972,6 +2976,7 @@ Toggle visibility of content with smooth animation.
 | `Collapsible.Root disabled` | `boolean` | `false` | Prevents the user from toggling the collapsible. |
 | `Collapsible.Trigger asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
 | `Collapsible.Content forceMount` | `boolean` | `false` | Keeps the content mounted in the DOM even when closed. |
+| `variant` | `'unstyled' \| 'default'` | `'unstyled'` | 11.5 (Collapsible.Trigger): `default` is a styled full-width row with a chevron that turns when open. |
 
 ## Example: Default
 
@@ -4730,6 +4735,7 @@ Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA ro
 | `onOpenChange` | `(open: boolean) => void` |  | Callback when open state changes. |
 | `defaultOpen` | `boolean` | `false` | Uncontrolled initial open state. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Dialog.Content — see Foundations → Materials. |
+| `maxHeight` | `string` |  | 11.5 (Dialog.Content): the tallest the dialog gets before its content scrolls, e.g. "32rem". Set through CSSOM (strict CSP safe). |
 
 ## Example: Default
 
@@ -6880,6 +6886,9 @@ Text that becomes an input on click, for renaming things in place.
 | `label` (required) | `string` |  | Names the input, and the button reads "Edit ‹label›, ‹value›". |
 | `placeholder` | `string` |  | Shown when the value is empty. |
 | `disabled` | `boolean` |  | Shows the text without editing. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'title' \| 'headline'` | `'md'` | 11.5. Type role of the text and the input: body small, medium, large, title large or headline small. With `as` and no `size`, the text takes the wrapper’s type. |
+| `as` | `ElementType` |  | 11.5. Wraps the text, and the input while editing, in this element: a heading (`"h2"`) or a component such as `Sheet.Title` or `Dialog.Title`, so the heading and the dialog’s name stay in place. |
+| `maxLength` | `number` |  | 11.5. Caps the input and shows a "12/40" counter, announced near the limit. |
 
 ## Example: Rename
 
@@ -6900,6 +6909,29 @@ export default function Example() {
         if (!next.trim()) return Promise.reject(new Error('Name is required'));
         setName(next.trim());
       }}
+    />
+  );
+}
+```
+
+## Example: Editable page title
+
+A headline inside an `h2`, capped at 40 characters.
+
+```tsx
+import * as React from 'react';
+import { InlineEdit } from '@nexub/react';
+
+export default function Example() {
+  const [title, setTitle] = React.useState('Quarterly roadmap');
+  return (
+    <InlineEdit
+      as="h2"
+      size="headline"
+      maxLength={40}
+      label="Page title"
+      value={title}
+      onSave={(next) => setTitle(next.trim() || title)}
     />
   );
 }
@@ -7795,9 +7827,10 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `from` (required) | `'user' \| 'assistant' \| 'system'` |  | Who sent it. Sets layout and the default accessible name. |
-| `avatar` | `ReactNode` |  | Assistant only: shown at the inline start. |
-| `name` | `string` |  | Accessible name of the message. Defaults to "You said" or "Assistant said". |
+| `from` (required) | `'user' \| 'assistant' \| 'system' \| 'other'` |  | Who sent it. Sets layout and the default accessible name. `other` (11.5) is a third party in a group conversation. |
+| `avatar` | `ReactNode` |  | Assistant and other: shown at the inline start. |
+| `name` | `string` |  | Accessible name of the message. Defaults to "You said" or "Assistant said". With `from="other"` it is also shown as the header. |
+| `meta` | `ReactNode` |  | 11.5: header text beside the name, e.g. the time. |
 | `status` | `'sending' \| 'error'` |  | `sending` sets `aria-busy`; `error` shows "Failed to send". |
 | `onRetry` | `() => void` |  | With `status="error"`, adds a Retry button. |
 | `messages` | `Partial<MessageStrings>` |  | Local string overrides. |
@@ -7805,6 +7838,7 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 | `MessageActions copy` | `boolean` | `true` | Set false to hide Copy. |
 | `MessageActions feedback / defaultFeedback / onFeedback` | `'up' \| 'down' \| null` |  | Thumbs up/down appear when `onFeedback` is set. Pressing the active one clears it. |
 | `MessageActions onRegenerate` | `() => void` |  | Shows Regenerate when set. |
+| `MessageActions actions` | `{ label: string; icon: ReactNode; onSelect: () => void; disabled?: boolean }[]` |  | 11.5: your own icon buttons after the built-in ones. `children` render after these. |
 
 ## Example: Conversation
 
@@ -7842,6 +7876,37 @@ export default function Example() {
     <div className="w-full max-w-140">
       <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
         Can I get a refund for last month?
+      </MessageBubble>
+    </div>
+  );
+}
+```
+
+## Example: Group thread
+
+A third party with a name and time header, and a custom Pin action.
+
+```tsx
+import { MessageBubble, Avatar, MessageActions, toast } from '@nexub/react';
+import { Pin, Sparkles } from '@nexub/icons';
+
+const REPLY = 'I moved the review to Thursday at 10:00 and told the team.';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-140">
+      <MessageBubble from="other" name="Ada Lovelace" meta="09:40" avatar={<Avatar size="sm" fallback="AL" />}>
+        Can we move the review to Thursday?
+      </MessageBubble>
+      <MessageBubble from="user" meta="09:41">
+        Thursday works for me.
+      </MessageBubble>
+      <MessageBubble from="assistant" meta="09:41" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+        <p>{REPLY}</p>
+        <MessageActions
+          text={REPLY}
+          actions={[{ label: 'Pin to thread', icon: <Pin size="sm" aria-hidden="true" />, onSelect: () => toast.info('Pinned') }]}
+        />
       </MessageBubble>
     </div>
   );
@@ -8462,10 +8527,13 @@ Navigation for medium-width windows: icons over labels, with an active pill behi
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Root header` | `ReactNode` |  | Slot above the items, e.g. a primary action. |
+| `Root header` | `ReactNode` |  | Slot above the items, e.g. a primary action. Not shown in the bottom bar. |
+| `Root orientation` | `'vertical' \| 'bottom'` | `'vertical'` | 11.5. `bottom` is a phone tab bar: a row that sticks to the bottom of the scroll area, with safe-area padding and 48px targets. Put it after the page content. |
 | `Root aria-label` | `string` | `'Main'` | Name of the nav landmark. |
 | `Item icon / label` (required) | `ReactNode` |  | Icon in the indicator pill; label below. |
 | `Item active` | `boolean` |  | Marks the current page (aria-current="page"). |
+| `Item badge` | `number \| boolean` |  | 11.5. A count on the icon (99+ above 99, nothing at 0), or `true` for a dot. Screen readers hear it after the label: "Inbox, 3 unread" or "Feed, New". |
+| `Item badgeLabel` | `string` |  | 11.5. Other wording for the badge, e.g. "2 failed builds". |
 | `Item asChild` | `boolean` |  | Use your router link as the item; pass it as the only child. |
 
 ## Example: Default
@@ -8483,6 +8551,29 @@ export default function Example() {
       <NavigationRail.Item href="#" icon={glyph('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z')} label="Files" />
       <NavigationRail.Item href="#" icon={glyph('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')} label="Settings" />
     </NavigationRail.Root>
+  );
+}
+```
+
+## Example: Bottom tab bar with badges
+
+For phones: `orientation="bottom"`, with a count and a dot badge.
+
+```tsx
+import { NavigationRail } from '@nexub/react';
+import { Bell, Home, Inbox, User } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex h-80 w-full max-w-sm flex-col overflow-auto rounded-shape-overlay border border-outline-variant">
+      <main className="flex-1 p-4 text-body-md text-on-surface-variant">Page content scrolls above the tab bar.</main>
+      <NavigationRail.Root orientation="bottom" aria-label="Main">
+        <NavigationRail.Item href="#" icon={<Home />} label="Home" active />
+        <NavigationRail.Item href="#" icon={<Inbox />} label="Inbox" badge={3} />
+        <NavigationRail.Item href="#" icon={<Bell />} label="Alerts" badge />
+        <NavigationRail.Item href="#" icon={<User />} label="Profile" />
+      </NavigationRail.Root>
+    </div>
   );
 }
 ```
@@ -8642,6 +8733,135 @@ Related: [amount](amount.md), [stat-card](stat-card.md)
 
 ---
 
+# Org Chart
+
+People top-down as cards joined by lines, keyboard navigable as a tree. A TreeView on narrow screens.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { OrgChart } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/org-chart
+
+## When to use
+
+- Reporting lines: a company, a team, a studio.
+- Any small hierarchy people scan by face or name.
+
+## When not to use
+
+- Deep or wide data people search or check: use TreeView.
+- Free-form graphs and workflows: use DiagramCanvas.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `nodes` (required) | `OrgChartNode[]` |  | The TreeView node shape plus `description` (the role line) and `avatar` (photo URL; initials without one). |
+| `aria-label / aria-labelledby` (required) | `string` |  | Names the tree. |
+| `expanded / defaultExpanded / onExpandedChange` | `string[]` |  | Open node ids. Shared with the narrow-screen TreeView. |
+| `onActivate` | `(node) => void` |  | Click or Enter on a card, e.g. to open the profile. |
+| `renderCard` | `(node) => ReactNode` |  | Replaces the card content; it also names the item. The reports control stays. |
+| `className` | `string` |  | On the scroll box. Wide charts scroll sideways inside it. |
+
+## Example: Default
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { OrgChart, type OrgChartNode } from '@nexub/react';
+
+const people: OrgChartNode[] = [
+  {
+    id: 'ada',
+    label: 'Ada Lovelace',
+    description: 'Chief Executive',
+    children: [
+      {
+        id: 'alan',
+        label: 'Alan Turing',
+        description: 'Engineering',
+        children: [
+          { id: 'grace', label: 'Grace Hopper', description: 'Platform lead' },
+          { id: 'margaret', label: 'Margaret Hamilton', description: 'Flight software' },
+        ],
+      },
+      { id: 'mary', label: 'Mary Somerville', description: 'Finance', children: [{ id: 'emmy', label: 'Emmy Noether', description: 'Analyst' }] },
+      { id: 'katherine', label: 'Katherine Johnson', description: 'Research' },
+    ],
+  },
+];
+
+export default function Example() {
+  const [opened, setOpened] = React.useState<string | null>(null);
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <OrgChart aria-label="Company" nodes={people} defaultExpanded={['ada', 'alan']} onActivate={(p) => setOpened(String(p.label))} />
+      <p className="text-body-sm text-on-surface-muted">Opened: {opened ?? 'nobody yet'}</p>
+    </div>
+  );
+}
+```
+
+## Example: Custom cards, controlled
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Badge, OrgChart, type OrgChartNode } from '@nexub/react';
+
+const teams: OrgChartNode[] = [
+  {
+    id: 'studio',
+    label: 'Studio',
+    description: '24 people',
+    children: [
+      { id: 'design', label: 'Design', description: '8 people' },
+      { id: 'build', label: 'Build', description: '12 people', children: [{ id: 'web', label: 'Web', description: '7 people' }, { id: 'apps', label: 'Apps', description: '5 people' }] },
+      { id: 'ops', label: 'Ops', description: '4 people' },
+    ],
+  },
+];
+
+export default function Example() {
+  const [expanded, setExpanded] = React.useState<string[]>(['studio']);
+  return (
+    <OrgChart
+      aria-label="Teams"
+      nodes={teams}
+      expanded={expanded}
+      onExpandedChange={setExpanded}
+      renderCard={(team) => (
+        <span className="flex flex-col items-center gap-1">
+          <span className="text-title-sm">{team.label}</span>
+          <Badge variant="soft">{team.description}</Badge>
+        </span>
+      )}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- Roles: tree, treeitem with aria-level, aria-setsize, aria-posinset, aria-expanded, group
+- `ArrowDown / ArrowUp`: Next or previous visible card in tree order (depth first), as in TreeView, not by position on screen.
+- `ArrowRight`: Opens a closed card, or moves to its first report. Mirrored in RTL.
+- `ArrowLeft`: Closes an open card, or moves to its manager. Mirrored in RTL.
+- `Home / End`: First or last visible card.
+- `Enter`: Calls `onActivate`.
+- `Space`: Opens or closes the card’s reports.
+- The chart is one tab stop (roving tabindex); focus scrolls the card into view.
+- Each item is named by its name and role only, not by its reports.
+- The "3 reports" control is a pointer shortcut; keyboard and screen readers use the item’s expanded state.
+- Below 768px the same nodes render as a TreeView (photo, name and role on one row).
+- Connectors are CSS borders on logical sides, so RTL mirrors and forced colours keep them.
+
+Related: [tree-view](tree-view.md), [avatar](avatar.md)
+
+
+---
+
 # OTP Input
 
 One box per digit for verification codes, with paste and one-time-code autofill.
@@ -8731,6 +8951,7 @@ The top of a page: title, description, breadcrumb and actions.
 | `actions` | `ReactNode` |  | Buttons on the end side; they wrap under the title on narrow screens. |
 | `breadcrumb` | `ReactNode` |  | A `Breadcrumb` above the title. |
 | `level` | `1 \| 2 \| 3` |  | Heading level of the title. Use 2 or 3 when the page already has an h1. |
+| `eyebrow` | `ReactNode` |  | 11.5: a row above the title, e.g. an EyebrowChip and status badges. |
 
 ## Example: Default
 
@@ -9155,6 +9376,10 @@ The composer for a chat: an auto-growing text field with Send, which turns into 
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material for composers floating over content. |
 | `label` | `string` | `messages.promptLabel ('Message')` | Accessible name of the text field. |
 | `messages` | `Partial<PromptInputMessages>` |  | Local overrides for `promptLabel`, `sendMessage`, `stopGenerating`, `promptHint`. |
+| `sendLabel` | `ReactNode` |  | 11.5: a visible text label on Send, beside the arrow. Without it, Send is an icon button. |
+| `submitOn` | `'enter' \| 'mod-enter'` | `'enter'` | 11.5: `mod-enter` sends on Cmd/Ctrl+Enter, makes Enter add a line and shows that hint under the field. |
+| `hint` | `ReactNode` |  | 11.5: helper text under the field, linked with `aria-describedby`. |
+| `error` | `ReactNode` |  | 11.5: an error under the field. Marks the field invalid (`aria-invalid`) and links it. |
 | `textareaClassName` | `string` |  | Class for the textarea; `className` goes to the outer container. |
 
 ## Example: Default
@@ -9234,11 +9459,46 @@ export default function Example() {
 }
 ```
 
+## Example: Label, hint and error
+
+Cmd/Ctrl+Enter sends and Enter adds a line. Type more than 280 characters to see the error.
+
+```tsx
+import * as React from 'react';
+import { PromptInput, toast } from '@nexub/react';
+
+const LIMIT = 280;
+
+export default function Example() {
+  const [value, setValue] = React.useState('');
+  const tooLong = value.length > LIMIT;
+  return (
+    <div className="w-full max-w-130">
+      <PromptInput
+        placeholder="Write a reply to the thread"
+        value={value}
+        onValueChange={setValue}
+        onSubmit={() => {
+          if (tooLong) return;
+          toast.success('Reply sent');
+          setValue('');
+        }}
+        submitOn="mod-enter"
+        sendLabel="Reply"
+        hint="Everyone in the thread can see your reply."
+        error={tooLong ? `Shorten your reply to ${LIMIT} characters.` : undefined}
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: textbox (multiline), button (Send / Stop)
 - `Enter`: Sends. Ignored while an IME composition is open.
 - `Shift + Enter`: New line.
+- `Cmd/Ctrl + Enter`: Sends with `submitOn="mod-enter"`, where Enter adds a line.
 - `Escape`: Stops the reply while streaming.
 - Focus stays in the field after sending, so the user can type the next message straight away.
 - An empty field keeps Send focusable with `aria-disabled`, rather than removing it from the tab order.
@@ -9715,8 +9975,12 @@ A menu to switch, save, update and delete saved filter views. Your app stores th
 | `views` (required) | `{ id: string; name: string }[]` |  | The saved views. |
 | `activeId` | `string` |  | The view in use; its name shows on the button. |
 | `onSelect` (required) | `(id: string) => void` |  | Switch to a view: restore its filters, sort and columns. |
-| `onSave` | `(name: string) => void` |  | Adds "Save as new view…", which asks for a name. |
-| `onUpdate / onDelete` | `(id: string) => void` |  | Add "Update" and "Delete" for the active view. |
+| `onSave` | `(name: string) => void \| Promise<unknown>` |  | Adds "Save as new view…", which asks for a name. A returned promise keeps the dialog busy; a rejection shows its message. |
+| `onUpdate / onDelete` | `(id: string) => void \| Promise<unknown>` |  | Add "Update" and "Delete" for the active view. A returned promise holds the control busy; a rejection shows its message. |
+| `onRename` | `(id: string, name: string) => void \| Promise<unknown>` |  | 11.5: adds "Rename" for the active view, which asks for a new name. |
+| `confirmDelete` | `boolean` | `false` | 11.5: ask in an AlertDialog before deleting. |
+| `defaultView` | `string` |  | 11.5: the default view’s id. Tagged "Default" in the menu, and applied once on mount when `activeId` is undefined. |
+| `maxLength` | `number` |  | 11.5: the longest name allowed when saving or renaming. |
 
 ## Example: Views for a deals table
 
@@ -9746,6 +10010,52 @@ export default function Example() {
       onDelete={(id) => {
         setViews((v) => v.filter((x) => x.id !== id));
         setActive('');
+      }}
+    />
+  );
+}
+```
+
+## Example: Async, with a default view
+
+Save, rename and delete wait on a request. Saving an existing name fails; deleting asks first.
+
+```tsx
+import * as React from 'react';
+import { SavedViews, type SavedView } from '@nexub/react';
+
+// Stands in for a request to your server.
+const request = () => new Promise((resolve) => setTimeout(resolve, 800));
+
+export default function Example() {
+  const [views, setViews] = React.useState<SavedView[]>([
+    { id: 'mine', name: 'My open deals' },
+    { id: 'big', name: 'Over $10k' },
+  ]);
+  const [active, setActive] = React.useState<string>();
+  return (
+    <SavedViews
+      views={views}
+      activeId={active}
+      onSelect={setActive}
+      defaultView="mine"
+      maxLength={40}
+      confirmDelete
+      onSave={async (name) => {
+        await request();
+        if (views.some((v) => v.name === name)) throw new Error('A view with this name already exists.');
+        const id = crypto.randomUUID();
+        setViews((v) => [...v, { id, name }]);
+        setActive(id);
+      }}
+      onRename={async (id, name) => {
+        await request();
+        setViews((v) => v.map((x) => (x.id === id ? { ...x, name } : x)));
+      }}
+      onDelete={async (id) => {
+        await request();
+        setViews((v) => v.filter((x) => x.id !== id));
+        setActive('mine');
       }}
     />
   );
@@ -12217,10 +12527,13 @@ A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state check
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `nodes` (required) | `TreeNode[]` |  | `{ id, label, textValue?, icon?, children?, hasChildren?, disabled? }`. |
+| `nodes` (required) | `TreeNode[]` |  | `{ id, label, textValue?, icon?, children?, hasChildren?, disabled?, trailing?, href? }`. `trailing` (11.5) is meta at the row end, e.g. a count or a date. `href` (11.5) makes the row a link: click and Enter follow it, Cmd/Ctrl-click and middle-click open a new tab. |
 | `aria-label / aria-labelledby` (required) | `string` |  | Names the tree. |
 | `expanded / defaultExpanded / onExpandedChange` | `string[]` |  | Open node ids. |
 | `selected / defaultSelected / onSelectedChange` | `string \| null` |  | Single selection, set by click, Enter or Space. |
+| `onActivate` | `(node) => void` |  | 11.5. Opens a node: Enter or double-click. Separate from selection, which click and Space set (Enter selects too). Disabled nodes never activate. |
+| `renderActions` | `(node) => ReactNode` |  | 11.5. Row actions, shown on hover and focus and always on touch screens. Their space is always reserved, so rows never shift. Tab from the focused row reaches them; the item is named by its label and `trailing` only. |
+| `ref` | `Ref<TreeViewHandle>` |  | 11.5. `scrollToNode(id, { focus? })` opens the node's ancestors, then scrolls its row into view (and focuses it). |
 | `checkable` | `boolean` |  | Checkboxes instead of selection. A parent is checked when all its children are and mixed when some are. |
 | `checked / defaultChecked / onCheckedChange` | `string[]` |  | Every checked id, parents included. |
 | `onLoadChildren` | `(node) => Promise` |  | Called when a `hasChildren` node without `children` opens. Load them and pass the new `nodes`; the item is `aria-busy` meanwhile. |
@@ -12299,6 +12612,62 @@ export default function Example() {
 }
 ```
 
+## Example: Actions, meta, links and scrollToNode
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { MoreHorizontal } from '@nexub/icons';
+import { Button, IconButton, TreeView, type TreeNode, type TreeViewHandle } from '@nexub/react';
+
+const folders: TreeNode[] = [
+  {
+    id: 'inbox',
+    label: 'Inbox',
+    trailing: '12',
+    children: [
+      { id: 'work', label: 'Work', trailing: '3', href: '#work' },
+      {
+        id: 'projects',
+        label: 'Projects',
+        children: [
+          { id: 'atlas', label: 'Atlas', trailing: 'Mar 4', href: '#atlas' },
+          { id: 'orbit', label: 'Orbit', trailing: 'Feb 12', href: '#orbit' },
+        ],
+      },
+    ],
+  },
+  { id: 'sent', label: 'Sent', href: '#sent' },
+  { id: 'archive', label: 'Archive', trailing: '1,204', href: '#archive' },
+];
+
+export default function Example() {
+  const tree = React.useRef<TreeViewHandle>(null);
+  const [opened, setOpened] = React.useState<string | null>(null);
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-2">
+      <TreeView
+        ref={tree}
+        aria-label="Folders"
+        nodes={folders}
+        defaultExpanded={['inbox']}
+        onActivate={(node) => setOpened(String(node.label))}
+        renderActions={(node) => (
+          <IconButton size="xs" variant="ghost" label={`More for ${String(node.label)}`}>
+            <MoreHorizontal size="sm" />
+          </IconButton>
+        )}
+      />
+      <Button size="sm" variant="outlined" onClick={() => tree.current?.scrollToNode('orbit', { focus: true })}>
+        Reveal Orbit
+      </Button>
+      <p className="text-body-sm text-on-surface-muted">Opened: {opened ?? 'none (press Enter or double-click)'}</p>
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: tree, treeitem with aria-level, aria-setsize, aria-posinset, aria-expanded, group
@@ -12306,7 +12675,9 @@ export default function Example() {
 - `ArrowRight`: Opens a closed item, or moves to its first child. Mirrored in RTL.
 - `ArrowLeft`: Closes an open item, or moves to its parent. Mirrored in RTL.
 - `Home / End`: First or last visible item.
-- `Enter / Space`: Selects the item, or toggles its checkbox.
+- `Enter`: Selects the item (or toggles its checkbox), calls `onActivate` and follows a link node.
+- `Space`: Selects the item, or toggles its checkbox.
+- `Tab`: From the focused item to its row actions (`renderActions`), then out of the tree.
 - `Type a letter`: Moves to the next item starting with the typed text.
 - The tree is one tab stop (roving tabindex); it returns to the last focused or the selected item.
 
@@ -12590,9 +12961,13 @@ Chronological list of activity events with avatar, description, and timestamp.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `ActivityFeedItem title` (required) | `React.ReactNode` |  | Activity event title. |
-| `ActivityFeedItem description` | `React.ReactNode` |  | Supporting description. |
-| `ActivityFeedItem timestamp` | `string` |  | Time string (e.g. "2 hours ago"). |
+| `ActivityFeedItem title` (required) | `React.ReactNode` |  | Activity event title. Block content is fine (a `div` since 11.5). |
+| `ActivityFeedItem description` | `React.ReactNode` |  | Supporting description. Block content is fine (a `div` since 11.5). |
+| `ActivityFeedItem timestamp` | `ReactNode \| Date` |  | Text as given (e.g. "2 hours ago"), or (11.5) a `Date`: shown in `<time dateTime>` as relative text, a short date after a week, with the full date in a tooltip on hover or focus. |
+| `ActivityFeedItem actions` | `React.ReactNode` |  | 11.5. Trailing controls, e.g. an IconButton or a menu trigger. |
+| `ActivityFeedItem tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` |  | 11.5. A coloured dot in place of the avatar, or a badge on it. Decorative: say what happened in the title. |
+| `ActivityFeedGroup label` (required) | `React.ReactNode` |  | 11.5. `ActivityFeed.Group` header, e.g. "Today"; it names the group’s list. |
+| `ActivityFeedGroup headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` |  | 11.5. Renders the header as a heading for heading navigation. Default: a plain `div`. |
 | `ActivityFeedItem avatar` | `React.ReactNode` |  | Avatar element for the actor. |
 
 ## Example: Default
@@ -12607,6 +12982,38 @@ export default function Example() {
         <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
         <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />
         <ActivityFeed.Item title="Maria R. added a comment" description="On the design review document" timestamp="1 hr ago" />
+      </ActivityFeed.Root>
+    </div>
+  );
+}
+```
+
+## Example: Groups, tones and actions
+
+`ActivityFeed.Group` headers, `Date` timestamps (focus one for the full date), `tone` dots and a menu per item.
+
+```tsx
+import { ActivityFeed } from '@nexub/patterns';
+import { IconButton } from '@nexub/react';
+import { MoreHorizontal } from '@nexub/icons';
+
+export default function Example() {
+  const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000);
+  const more = (
+    <IconButton size="xs" label="More actions">
+      <MoreHorizontal className="size-4" aria-hidden="true" />
+    </IconButton>
+  );
+  return (
+    <div className="w-full max-w-md">
+      <ActivityFeed.Root>
+        <ActivityFeed.Group label="Today">
+          <ActivityFeed.Item tone="success" title="Deploy to production finished" timestamp={minutesAgo(5)} actions={more} />
+          <ActivityFeed.Item tone="danger" title="Contacts import failed" description="Row 12 is missing an email." timestamp={minutesAgo(42)} actions={more} />
+        </ActivityFeed.Group>
+        <ActivityFeed.Group label="Yesterday">
+          <ActivityFeed.Item tone="info" title="Maria R. joined the workspace" timestamp={minutesAgo(26 * 60)} />
+        </ActivityFeed.Group>
       </ActivityFeed.Root>
     </div>
   );
@@ -12629,10 +13036,11 @@ Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a cent
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` (required) | `string` |  | Card heading (e.g. "Sign in to Nexub"). |
-| `description` | `string` |  | Subheading text. |
+| `description` | `ReactNode` |  | Subheading text. 11.5: any content, e.g. the address in bold; was a string. |
 | `logo` | `React.ReactNode` |  | Logo or brand mark above the title. |
 | `footer` | `React.ReactNode` |  | Footer content (e.g. "Don't have an account?"). |
 | `children` (required) | `React.ReactNode` |  | Form content. |
+| `logoAlign` | `'start' \| 'center'` | `'center'` | 11.5: where the logo sits. |
 
 ## Example: Sign in
 
@@ -12757,6 +13165,7 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 | `composer` | `ReactNode` |  | Sticky slot under the list, usually a PromptInput. |
 | `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". |
 | `announce` | `boolean` | `false` | Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk. |
+| `maxHeight` | `number \| string` |  | 11.5: cap the height so it works in normal flow without a fixed-height parent. It grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent (`h-full`). |
 | `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest` and `conversation`. |
 
 ## Example: Mini chat
@@ -12831,6 +13240,49 @@ export default function Example() {
         ),
       )}
     </Conversation>
+  );
+}
+```
+
+## Example: In normal flow
+
+No fixed-height parent: `maxHeight="20rem"` lets it grow with its messages, then scroll.
+
+```tsx
+import * as React from 'react';
+import { PromptInput, MessageBubble } from '@nexub/react';
+import { Conversation } from '@nexub/patterns';
+
+type ChatMessage = { id: number; from: 'user' | 'other'; text: string };
+
+export default function Example() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    { id: 1, from: 'other', text: 'Morning! Did the invoices go out?' },
+  ]);
+  return (
+    <div className="w-full">
+      <Conversation
+        maxHeight="20rem"
+        composer={
+          <PromptInput
+            placeholder="Reply to Grace"
+            onSubmit={(text) => setMessages((m) => [...m, { id: Date.now(), from: 'user', text }])}
+          />
+        }
+      >
+        {messages.map((msg) =>
+          msg.from === 'other' ? (
+            <MessageBubble key={msg.id} from="other" name="Grace Hopper">
+              {msg.text}
+            </MessageBubble>
+          ) : (
+            <MessageBubble key={msg.id} from="user">
+              {msg.text}
+            </MessageBubble>
+          ),
+        )}
+      </Conversation>
+    </div>
   );
 }
 ```

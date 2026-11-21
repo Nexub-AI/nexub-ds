@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, cn, useNexubMessages } from '@nexub/react';
+import { Button, cn, useMergedRefs, useNexubMessages } from '@nexub/react';
 import { ArrowDown } from '@nexub/icons';
 
 export interface ConversationMessages {
@@ -28,6 +28,12 @@ export interface ConversationProps extends Omit<React.HTMLAttributes<HTMLDivElem
    */
   announce?: boolean;
   messages?: Partial<ConversationMessages>;
+  /**
+   * 11.5: cap the height (a CSS length, or a number of px) so it works in normal flow without a
+   * fixed-height parent: it grows with its messages up to this, then the list scrolls and follows.
+   * Without it, it fills its parent's height (`h-full`) as before.
+   */
+  maxHeight?: number | string;
 }
 
 /** Within this distance of the bottom counts as "at the bottom". */
@@ -43,7 +49,7 @@ function atBottom(el: HTMLElement) {
  * reader is there; scrolling up stops following and offers "Jump to latest".
  */
 export const Conversation = React.forwardRef<HTMLDivElement, ConversationProps>(
-  ({ children, composer, autoScroll = true, announce = false, messages, className, ...props }, ref) => {
+  ({ children, composer, autoScroll = true, announce = false, messages, maxHeight, className, ...props }, ref) => {
     const provided = useNexubMessages() as unknown as Partial<ConversationMessages>;
     const m: ConversationMessages = {
       jumpToLatest: messages?.jumpToLatest ?? provided.jumpToLatest ?? fallbackMessages.jumpToLatest,
@@ -51,6 +57,16 @@ export const Conversation = React.forwardRef<HTMLDivElement, ConversationProps>(
     };
     const scrollRef = React.useRef<HTMLDivElement>(null);
     const contentRef = React.useRef<HTMLDivElement>(null);
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const mergedRef = useMergedRefs(ref, rootRef);
+
+    // Through the CSSOM, not a style attribute (strict CSP).
+    React.useEffect(() => {
+      const el = rootRef.current;
+      if (!el) return;
+      if (maxHeight === undefined) el.style.removeProperty('max-height');
+      else el.style.setProperty('max-height', typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight);
+    }, [maxHeight]);
     const pinnedRef = React.useRef(true);
     const lastTop = React.useRef(0);
     const [pinned, setPinned] = React.useState(true);
@@ -108,8 +124,10 @@ export const Conversation = React.forwardRef<HTMLDivElement, ConversationProps>(
       : ({ role: 'region' } as const);
 
     return (
-      <div ref={ref} className={cn('flex h-full min-h-0 flex-col', className)} {...props}>
-        <div className="relative min-h-0 flex-1">
+      <div ref={mergedRef} className={cn('flex h-full min-h-0 flex-col', className)} {...props}>
+        {/* A flex column all the way down, so the list scrolls whether the height comes from the
+            parent (h-full) or only from maxHeight. */}
+        <div className="relative flex min-h-0 flex-1 flex-col">
           <div
             ref={scrollRef}
             onScroll={onScroll}
@@ -117,7 +135,7 @@ export const Conversation = React.forwardRef<HTMLDivElement, ConversationProps>(
             tabIndex={0}
             {...live}
             className={cn(
-              'h-full overflow-y-auto',
+              'min-h-0 flex-1 overflow-y-auto',
               composer &&
                 '[-webkit-mask-image:linear-gradient(to_bottom,black_calc(100%-24px),transparent)] [mask-image:linear-gradient(to_bottom,black_calc(100%-24px),transparent)]',
             )}

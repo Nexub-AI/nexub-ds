@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TreeView, type TreeNode } from './TreeView.js';
 import { ErrorState } from '../ErrorState/ErrorState.js';
+import { IconButton } from '../IconButton/IconButton.js';
+import { MoreHorizontal } from '@nexub/icons';
 
 const meta: Meta = {
   title: 'Components/TreeView',
@@ -43,5 +45,31 @@ export const DataStates: Story = {
         className="min-w-0 flex-1 basis-60"
       />
     </div>
+  ),
+};
+
+const folders: TreeNode[] = [
+  {
+    id: 'inbox',
+    label: 'Inbox',
+    trailing: '12',
+    children: [
+      { id: 'work', label: 'Work', trailing: '3', href: '#work' },
+      { id: 'personal', label: 'Personal', trailing: 'Mar 4', href: '#personal' },
+    ],
+  },
+  { id: 'sent', label: 'Sent', href: '#sent' },
+];
+
+export const ActionsAndLinks: Story = {
+  render: () => (
+    <TreeView
+      aria-label="Folders"
+      nodes={folders}
+      defaultExpanded={['inbox']}
+      defaultSelected="work"
+      renderActions={(n) => <IconButton size="xs" variant="ghost" label={`More for ${String(n.label)}`}><MoreHorizontal /></IconButton>}
+      className="max-w-xs"
+    />
   ),
 };

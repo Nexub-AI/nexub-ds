@@ -137,6 +137,8 @@ Fonts: `font-sans` and `font-display` (both Plus Jakarta Sans, the one Nexub typ
 | `--spacing-48` | `48` | 192px |
 | `--spacing-56` | `56` | 224px |
 | `--spacing-64` | `64` | 256px |
+| `--spacing-88` | `88` | 352px |
+| `--spacing-104` | `104` | 416px |
 | `--spacing-px` | `px` | 1px |
 | `--spacing-0-5` | `0-5` | 2px |
 | `--spacing-1-5` | `1-5` | 6px |

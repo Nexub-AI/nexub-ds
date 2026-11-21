@@ -90,3 +90,15 @@ describe('AuthCard', () => {
     expect(container.firstElementChild?.classList.contains('auth-custom')).toBe(true);
   });
 });
+
+describe('AuthCard (11.5)', () => {
+  it('description takes any content and the logo can sit at the start', () => {
+    const { container } = render(
+      <AuthCard title="Check your email" description={<>We sent a code to <strong>mei@nexub.test</strong></>} logo={<span>Logo</span>} logoAlign="start">
+        <span>Form</span>
+      </AuthCard>,
+    );
+    expect(screen.getByText('mei@nexub.test').tagName).toBe('STRONG');
+    expect(container.querySelector('.justify-start')).toHaveTextContent('Logo');
+  });
+});

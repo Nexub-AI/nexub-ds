@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { EmptyStatePreset } from '@nexub/react';
+import { EmptyStatePreset, IconButton } from '@nexub/react';
+import { MoreHorizontal } from '@nexub/icons';
 import { ActivityFeed } from './ActivityFeed.js';
 
 const meta: Meta = {
@@ -87,4 +88,36 @@ export const DataStates: Story = {
       </div>
     </div>
   ),
+};
+
+/** 11.5: `Group` headers, `Date` timestamps (focus one for the full date), `tone` and an actions slot. */
+export const GroupsAndTones: Story = {
+  render: () => {
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60_000);
+    const more = (
+      <IconButton size="xs" variant="ghost" label="More actions">
+        <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+      </IconButton>
+    );
+    return (
+      <div className="max-w-lg">
+        <ActivityFeed.Root>
+          <ActivityFeed.Group label="Today">
+            <ActivityFeed.Item tone="success" title="Deploy to production finished" timestamp={fiveMinutesAgo} actions={more} />
+            <ActivityFeed.Item
+              avatar={<AvatarCircle initials="AJ" color="primary" />}
+              tone="danger"
+              title="Alice Johnson's import failed"
+              description={<ul className="list-disc ps-4"><li>Row 12: missing email</li><li>Row 40: duplicate ID</li></ul>}
+              timestamp={fiveMinutesAgo}
+              actions={more}
+            />
+          </ActivityFeed.Group>
+          <ActivityFeed.Group label="Earlier">
+            <ActivityFeed.Item tone="info" title="Workspace created" timestamp={new Date(2025, 0, 14, 9, 30)} />
+          </ActivityFeed.Group>
+        </ActivityFeed.Root>
+      </div>
+    );
+  },
 };

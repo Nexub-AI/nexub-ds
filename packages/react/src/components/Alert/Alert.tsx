@@ -41,10 +41,11 @@ export const alertVariants = cva(
 );
 
 export interface AlertProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'>,
     VariantProps<typeof alertVariants> {
   tone?: ToneValue;
-  title?: string;
+  /** 11.5: any content (a link, a name in bold). */
+  title?: React.ReactNode;
   icon?: React.ReactNode;
   action?: React.ReactNode;
   onClose?: () => void;
@@ -80,7 +81,7 @@ export const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
         )}
         <div className="flex-1 min-w-0">
           {title && (
-            <p className="font-semibold text-body-sm mb-0.5">{title}</p>
+            <div className="font-semibold text-body-sm mb-0.5">{title}</div>
           )}
           {children && (
             <div className="text-body-sm">{children}</div>

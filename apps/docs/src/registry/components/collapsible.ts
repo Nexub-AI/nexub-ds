@@ -17,6 +17,7 @@ const entry: ComponentEntry = {
     { name: 'Collapsible.Root disabled', type: 'boolean', default: 'false', required: false, description: 'Prevents the user from toggling the collapsible.' },
     { name: 'Collapsible.Trigger asChild', type: 'boolean', default: 'false', required: false, description: 'Merges props onto the immediate child element (Radix Slot).' },
     { name: 'Collapsible.Content forceMount', type: 'boolean', default: 'false', required: false, description: 'Keeps the content mounted in the DOM even when closed.' },
+    { name: 'variant', type: "'unstyled' | 'default'", default: "'unstyled'", description: '11.5 (Collapsible.Trigger): `default` is a styled full-width row with a chevron that turns when open.' },
   ],
   examples: [
     {

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import axe from 'axe-core';
 import { PromptInput } from './PromptInput.js';
 
 const field = () => screen.getByRole('textbox', { name: 'Message' });
@@ -95,5 +96,41 @@ describe('PromptInput', () => {
     expect(container.firstElementChild).toHaveAttribute('data-material', 'glass');
     expect(renderToString(<PromptInput maxRows={4} attachments="a" actions="b" />)).not.toMatch(/ style="/);
     expect(renderToString(<PromptInput status="streaming" />)).not.toMatch(/ style="/);
+  });
+
+  it('11.5 sendLabel puts visible text on Send', () => {
+    const onSubmit = vi.fn();
+    render(<PromptInput defaultValue="hi" sendLabel="Send" onSubmit={onSubmit} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+    expect(onSubmit).toHaveBeenCalledWith('hi');
+  });
+
+  it('11.5 submitOn="mod-enter": Enter is a new line, Cmd/Ctrl+Enter sends, hint shown', () => {
+    const onSubmit = vi.fn();
+    render(<PromptInput defaultValue="hi" submitOn="mod-enter" onSubmit={onSubmit} />);
+    expect(field()).toHaveAccessibleDescription('Press Ctrl+Enter to send, Enter for a new line');
+    expect(screen.getByText('Press Ctrl+Enter to send, Enter for a new line')).toBeVisible();
+    fireEvent.keyDown(field(), { key: 'Enter' });
+    expect(onSubmit).not.toHaveBeenCalled();
+    fireEvent.keyDown(field(), { key: 'Enter', ctrlKey: true });
+    fireEvent.keyDown(field(), { key: 'Enter', metaKey: true });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('11.5 hint and error are described; error marks the field invalid', () => {
+    const { rerender } = render(<PromptInput hint="Replies use your workspace data" aria-describedby="ext" />);
+    expect(field()).not.toHaveAttribute('aria-invalid');
+    expect(field().getAttribute('aria-describedby')!.split(' ')).toHaveLength(3);
+    rerender(<PromptInput hint="Replies use your workspace data" error="Too long" />);
+    expect(field()).toHaveAttribute('aria-invalid', 'true');
+    expect(field()).toHaveAccessibleDescription(
+      'Too long Replies use your workspace data Press Enter to send, Shift+Enter for a new line',
+    );
+  });
+
+  it('11.5 is axe-clean with a label, hint and error', async () => {
+    const { container } = render(<PromptInput sendLabel="Send" submitOn="mod-enter" hint="Hint" error="Error" defaultValue="x" />);
+    const { violations } = await axe.run(container);
+    expect(violations).toEqual([]);
   });
 });

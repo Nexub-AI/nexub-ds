@@ -99,3 +99,21 @@ describe('Conversation', () => {
     expect(renderToString(<Harness count={2} />)).not.toContain('style="');
   });
 });
+
+describe('Conversation 11.5 maxHeight', () => {
+  it('caps its height through the CSSOM so it works without a fixed-height parent', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const { rerender } = render(<Conversation ref={ref} maxHeight={480}>hi</Conversation>);
+    expect(ref.current!.style.maxHeight).toBe('480px');
+    rerender(<Conversation ref={ref} maxHeight="60dvh">hi</Conversation>);
+    expect(ref.current!.style.maxHeight).toBe('60dvh');
+    rerender(<Conversation ref={ref}>hi</Conversation>);
+    expect(ref.current!.style.maxHeight).toBe('');
+    expect(renderToString(<Conversation maxHeight={480}>hi</Conversation>)).not.toContain('style="');
+  });
+
+  it('the list is a shrinking flex item, so it scrolls under maxHeight', () => {
+    render(<Conversation maxHeight="20rem">hi</Conversation>);
+    expect(screen.getByRole('region', { name: 'Conversation' })).toHaveClass('min-h-0', 'flex-1', 'overflow-y-auto');
+  });
+});
