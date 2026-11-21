@@ -1,5 +1,14 @@
 # @nexub/react-native
 
+## 11.5.0
+
+### Patch Changes
+
+- Updated dependencies [826dba3]
+  - @nexub/core@11.5.0
+  - @nexub/tokens@11.5.0
+  - @nexub/icons@11.5.0
+
 ## 11.4.0
 
 ### Patch Changes
