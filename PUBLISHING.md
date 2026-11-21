@@ -49,6 +49,7 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 | `10.7.0` | 2026-11-20 | Minor | Charts, calendar and tables: opt-in `interactive` charts (crosshair, tooltip, keyboard point navigation, `onPointClick`, legend toggles); EventCalendar day and agenda views; Table `stickyHeader`, `density`, `striped`; DataTable footer row and per-column filters; new `Truncate`, `DescriptionList`, `ComparisonBar` and the `StatusSteps` pattern (#306) | [@nexub/react@10.7.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.7.0) |
 | `10.8.0` | 2026-11-20 | Minor | Templates: twelve page templates (SignUp, ForgotPassword, VerifyCode, Onboarding, KYC, Table, Detail, Booking, Invoice, Team, Notifications, SearchResults); `PhoneInput` (#303), `Countdown` and `useCountdown` (#304), `TimeSlotPicker`; a read-only `Select` no longer warns on mount; a closed PhoneInput country picker renders only the selected country | [@nexub/react@10.8.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.8.0) |
 | `10.9.0` | 2026-11-20 | Minor (RC, on `next`) | Native next level and the 11.0 release candidate: `NexubNativeProvider expression="vivid"`, opt-in Android `dynamicColor`, gestures on the UI thread (`react-native-gesture-handler` >= 3 is now a required peer), native twins of `Tabs`, `Table`, `Rating`, `Tooltip` and more (#302), `QRCode` and native `QRScanner` (#305), and the `changes-in-11` codemod; `latest` stays on 10.8.0 | [@nexub/react@10.9.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.9.0) |
+| `11.0.0` | 2026-11-21 | Major (RFC #662) | Better defaults and one source for the product accent, the first major by RFC: the four product theme files (`@nexub/themes/leap`, `/bookub`, `/payub`, `/founderub`) are removed in favour of `@nexub/themes/products`, and overlays default to `sheet='auto'` (a bottom sheet below 768px). Migrate with `npx nexub-migrate --rules changes-in-11`. Also docs playgrounds, States sections, a token explorer and page navigation | [@nexub/react@11.0.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4011.0.0) |
 
 ---
 
@@ -84,9 +85,9 @@ Rules:
 | RC line | Candidate for | `latest` meanwhile |
 |---|---|---|
 | 9.9.x | 10.0 (shipped 2026-11-14) | 9.8.x |
-| **10.9.x** | **11.0** (RFC: `RFC_11.0.md`) | 10.8.x, until 11.0.0 |
+| 10.9.x | 11.0 (RFC: `RFC_11.0.md`; shipped 2026-11-21) | 10.8.x |
 
-**An RC is out now: 10.9.x on `next`.** Consumers try it with `npm install @nexub/react@next` (same tag for every `@nexub/*` package), run `npx nexub-migrate --rules changes-in-11`, and read `/getting-started/migrating-to-11`. A plain `npm install @nexub/react` keeps giving 10.8.x. 10.9.0 itself breaks nothing: it is a normal 10.x minor that carries the 11.0 warnings and migration tooling.
+**11.0.0 shipped on 2026-11-21** on `latest`, one day after its release candidate 10.9.0 went to `next`. No RC is out now; `next` still points at 10.9.0 as history. Apps upgrade with `npx nexub-migrate --rules changes-in-11` and `/getting-started/migrating-to-11`.
 
 **10.0.0 shipped on 2026-11-14, one day into the planned 4-week soak.** The owner waived three exit criteria (flake rate, Scorecard 8, the soak) so apps could move to 10 at once; 9.9 changed no component since 9.8. The docs page `/getting-started/release-status` records where each criterion stood. Flakes and Scorecard are still tracked.
 
@@ -106,7 +107,7 @@ For a future release candidate, add its line to `RC_LINES` (and a case to the te
 4. One changeset with `major` for the fixed group, each breaking line starting with `**Breaking:**`.
 5. The two changes of the RFC and nothing else: delete `packages/themes/src/{leap,bookub,payub,founderub}.css`, their `exports` in `packages/themes/package.json` and their imports in `packages/react/src/styles.css`, `packages/react/.storybook/preview.css` and `apps/docs/src/styles/globals.css`; set the `sheet` default to `'auto'` (`SheetProp` in `packages/react/src/utils/popper.ts`) and update the `@default` JSDoc. The first test in `packages/tokens/bin/nexub-migrate.test.mjs` reads the four files: drop them from its list. In the docs, point "Migrating to the latest version" (`apps/docs/src/registry/index.ts`) at `migrating-to-11` and move the "(latest)" label in `MigrationPicker.tsx`.
 6. `scripts/publish-tarballs.mjs` needs no change: 11.0.0 is not on an RC line, so it publishes to `latest`. Keep `10.9` in `RC_LINES` as history.
-7. In the first PR after 11.0.0 is on npm, put both guards back so the next `major` needs its own RFC.
+7. In the first PR after 11.0.0 is on npm, put both guards back so the next `major` needs its own RFC. Done by design (checked in the 11.0.0 bookkeeping PR): `allowMajor` is true only while `@nexub/react` is on 10.x, and `nextVersion` passes only `10.x → 11.0.0`, so from 11.0.0 a `major` changeset fails CI again. The next major raises `APPROVED_MAJOR` with its own RFC.
 
 The policy code lives in `scripts/release-version.mjs` and `scripts/check-changesets.mjs`, tested by `scripts/release-version.test.mjs`.
 
