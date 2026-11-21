@@ -42,24 +42,31 @@
   }
 }
 
+/* 11.1: every rule below applies to the nearest expression. An area marked with another
+   expression (data-expression="calm") inside a vivid page opts back out: each rule's subject
+   ends with :not(<vivid> <other expression> *). Custom properties still inherit, so the
+   calm area also clears the fallback-read tokens (end of file); shadows keep vivid's faint
+   accent tint, the one thing that can't be reset without the base value. A vivid area
+   nested inside that calm one stays calm (put the expression on siblings instead). */
+
 /* Filled (primary) buttons: gradient fill, a soft accent glow, a small lift on hover. */
-[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled) {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-image: var(--vivid-gradient);
   box-shadow: 0 1px 0 0 color-mix(in oklab, white 25%, transparent) inset, 0 6px 18px -6px var(--vivid-glow);
   transition: box-shadow var(--motion-spring-effects-default-duration, 200ms) ease, translate var(--motion-spring-spatial-fast-duration, 200ms) var(--motion-spring-spatial-fast-easing, ease-out);
 }
-[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):hover {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):hover:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-image: var(--vivid-gradient-hover);
   box-shadow: 0 1px 0 0 color-mix(in oklab, white 30%, transparent) inset, 0 10px 26px -6px var(--vivid-glow);
   translate: 0 -1px;
 }
-[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):active {
+[data-expression='vivid'] :is([data-variant='filled'], [data-variant='hero']):is(:not([data-tone]), [data-tone='primary']):not(:disabled):active:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   translate: 0 0;
   box-shadow: 0 2px 8px -4px var(--vivid-glow);
 }
 
 /* Interactive cards: an accent-gradient edge and glow on hover. */
-[data-expression='vivid'] [data-variant='interactive']:hover {
+[data-expression='vivid'] [data-variant='interactive']:hover:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   border-color: transparent;
   background-image: linear-gradient(var(--card-bg, var(--color-surface-elevated)), var(--card-bg, var(--color-surface-elevated))), var(--vivid-gradient);
   background-origin: border-box;
@@ -70,28 +77,28 @@
 /* Selection controls (Switch, Checkbox, Radio) and progress pick up the gradient.
    RadioCard and CheckboxCard share those roles but are cards with text: they keep
    their own selected state. */
-[data-expression='vivid'] :is(button[role='switch'], button[role='checkbox'], button[role='radio'])[data-state='checked']:not(:disabled, [data-selectable-card]) {
+[data-expression='vivid'] :is(button[role='switch'], button[role='checkbox'], button[role='radio'])[data-state='checked']:not(:disabled, [data-selectable-card]):not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-image: var(--vivid-gradient);
   border-color: transparent;
 }
-[data-expression='vivid'] [role='progressbar'] > [data-part='fill'] {
+[data-expression='vivid'] [role='progressbar'] > [data-part='fill']:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-image: var(--vivid-gradient);
 }
 
 /* Focus on controls: the usual outline plus a soft accent halo. */
-[data-expression='vivid'] :is(a, button, input, textarea, select, [role='combobox'], [role='tab']):focus-visible {
+[data-expression='vivid'] :is(a, button, input, textarea, select, [role='combobox'], [role='tab']):focus-visible:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   box-shadow: 0 0 0 6px var(--vivid-ring);
 }
 
 /* Aurora is richer under vivid (base styles live in core.css). */
-[data-expression='vivid'] .nx-aurora {
+[data-expression='vivid'] .nx-aurora:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   --nx-aurora-strength: 0.42;
 }
 
 /* Glass 3.0 under vivid: glass surfaces get the specular edge (as .nx-glass-edge
    in core.css). Sheen surfaces are skipped; they own ::after. */
-[data-expression='vivid'] [data-material='glass']:not(.nx-sheen) { position: relative; }
-[data-expression='vivid'] [data-material='glass']:not(.nx-sheen)::after {
+[data-expression='vivid'] [data-material='glass']:not(.nx-sheen):not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) { position: relative; }
+[data-expression='vivid'] [data-material='glass']:not(.nx-sheen):not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *)::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -105,7 +112,7 @@
   mask-composite: exclude;
 }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
-  [data-expression='vivid'] [data-material='glass']::after { display: none; }
+  [data-expression='vivid'] [data-material='glass']:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *)::after { display: none; }
 }
 
 /* ── 10.3: Vivid reaches the app ──────────────────────────────────────────────
@@ -114,30 +121,30 @@
 
 /* Page header and welcome banner: a soft colour wash (PageHeader needs its
    wash prop). The heavier title comes from --page-title-* below. */
-[data-expression='vivid'] :is([data-nx='page-header'][data-wash], [data-nx='welcome-banner']) {
+[data-expression='vivid'] :is([data-nx='page-header'][data-wash], [data-nx='welcome-banner']):not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-image: linear-gradient(120deg, color-mix(in oklab, var(--color-spot, var(--color-primary)) 14%, transparent) 0%, color-mix(in oklab, var(--vivid-accent-2) 8%, transparent) 55%, transparent 100%);
 }
 
 /* Stat cards lift a little on hover. */
-[data-expression='vivid'] [data-nx='stat-card'] {
+[data-expression='vivid'] [data-nx='stat-card']:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   transition: translate var(--motion-spring-spatial-fast-duration, 200ms) var(--motion-spring-spatial-fast-easing, ease-out), box-shadow var(--motion-spring-effects-default-duration, 200ms) ease;
 }
-[data-expression='vivid'] [data-nx='stat-card']:hover {
+[data-expression='vivid'] [data-nx='stat-card']:hover:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   translate: 0 -2px;
   box-shadow: var(--elevation-2);
 }
 
 /* Navigation: the active item is tinted with the spot accent (--nav-active-*
    below) and, in the Sidebar, marked by a bar that slides between items. */
-[data-expression='vivid'] .nx-nav-marker {
+[data-expression='vivid'] .nx-nav-marker:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   display: block;
 }
 
 /* One hover language for rows and list items: a faint accent tint. */
-[data-expression='vivid'] [data-nx='row'] {
+[data-expression='vivid'] [data-nx='row']:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   transition: background-color var(--motion-spring-effects-fast-duration, 150ms) ease;
 }
-[data-expression='vivid'] [data-nx='row']:hover {
+[data-expression='vivid'] [data-nx='row']:hover:not([data-expression='vivid'] [data-expression]:not([data-expression='vivid']) *) {
   background-color: var(--row-hover);
 }
 
@@ -164,4 +171,14 @@
   [data-expression='vivid'] {
     --nx-chart-fade: 1;
   }
+}
+
+/* 11.1: a calm area inside a vivid page reads the calm fallbacks again. */
+[data-expression='vivid'] [data-expression]:not([data-expression='vivid']) {
+  --page-title-weight: initial;
+  --page-title-tracking: initial;
+  --nav-active-bg: initial;
+  --nav-active-fg: initial;
+  --row-hover: initial;
+  --nx-chart-fade: initial;
 }

@@ -229,6 +229,9 @@ export type { DataTableColumnFilters } from './components/DataTable/index.js';
 export { nearestIndex, segmentAt } from './components/Chart/index.js';
 export { PhoneInput } from './components/PhoneInput/index.js';
 export type { PhoneInputProps } from './components/PhoneInput/index.js';
+// 11.1: display and parts of an E.164 value (from @nexub/core).
+export { formatPhone, parsePhone, isValidPhone } from '@nexub/core';
+export type { FormatPhoneOptions, ParsedPhone } from '@nexub/core';
 export { Countdown, useCountdown } from './components/Countdown/index.js';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/Countdown/index.js';
 export { TimeSlotPicker } from './components/TimeSlotPicker/index.js';
