@@ -3,8 +3,10 @@
 import * as React from 'react';
 import {
   addDays,
+  addMinutes,
   addMonths,
   addWeeks,
+  differenceInCalendarDays,
   endOfDay,
   endOfMonth,
   endOfWeek,
@@ -39,6 +41,13 @@ export interface CalendarEvent {
   allDay?: boolean;
   /** @default 'primary' */
   tone?: EventTone;
+  /** `false` keeps it in place when `onEventMove` is set. @default true */
+  editable?: boolean;
+}
+
+export interface EventCalendarLegendItem {
+  label: string;
+  tone: EventTone;
 }
 
 export interface EventCalendarProps extends DataStateProps {
@@ -69,6 +78,17 @@ export interface EventCalendarProps extends DataStateProps {
   maxEventsPerDay?: number;
   /** 0 = Sunday. Defaults to the locale's first day of the week. */
   weekStartsOn?: Day;
+  /**
+   * Makes events movable: drag one to another day (month, week) or time (day view), or press Alt+Arrow on it,
+   * pick with the arrows and press Enter. Called with the new start and end; the duration is kept.
+   */
+  onEventMove?: (event: CalendarEvent, range: { start: Date; end?: Date }) => void;
+  /** A per-day slot, e.g. a small add button: in each day's header (month, week), above the day view and beside each agenda day. */
+  renderDayAction?: (date: Date) => React.ReactNode;
+  /** Controls for one event, e.g. a menu. Beside it in day and agenda views; on hover or focus in month and week cells. */
+  eventActions?: (event: CalendarEvent) => React.ReactNode;
+  /** A row under the toolbar naming what each tone means. */
+  legend?: EventCalendarLegendItem[];
   className?: string;
 }
 
@@ -87,6 +107,24 @@ const markers: Record<EventTone, string> = {
   warning: 'bg-[var(--color-warning)]',
   error: 'bg-[var(--color-error)]',
   info: 'bg-[var(--color-info)]',
+};
+
+/** Keyboard and drag steps in day view (minutes). */
+const SNAP = 15;
+type Move = { id: string; days: number; mins: number; pointer?: boolean };
+const shifted = (e: CalendarEvent, m: Pick<Move, 'days' | 'mins'>) => {
+  const by = (d: Date) => addMinutes(addDays(d, m.days), m.mins);
+  return { start: by(e.start), end: e.end && by(e.end) };
+};
+const dayOf = (el: Element | null | undefined) => {
+  const v = el?.closest<HTMLElement>('[data-nx-day]')?.dataset.nxDay;
+  return v ? new Date(+v.slice(0, 4), +v.slice(5, 7) - 1, +v.slice(8, 10)) : undefined;
+};
+/** Minutes from midnight under `y` on the day view's hour grid. */
+const minuteAt = (grid: HTMLElement, y: number) => {
+  const [h0, h1] = grid.dataset.nxHours!.split('-').map(Number) as [number, number];
+  const r = grid.getBoundingClientRect();
+  return h0 * 60 + ((y - r.top) / (r.height || 1)) * (h1 - h0) * 60;
 };
 
 const DEFAULT_VIEWS: EventCalendarView[] = ['month', 'week'];
@@ -156,6 +194,10 @@ export function EventCalendar({
   weekStartsOn: weekStartsOnProp,
   views = DEFAULT_VIEWS,
   now,
+  onEventMove,
+  renderDayAction,
+  eventActions,
+  legend,
   className,
   loading,
   emptyState,
@@ -191,8 +233,14 @@ export function EventCalendar({
     () => [...events].sort((a, b) => a.start.getTime() - b.start.getTime()),
     [events],
   );
+  // While an event is being moved it is drawn at its new place: that is the drop preview.
+  const [moving, setMoving] = React.useState<Move | null>(null);
+  const [announcement, setAnnouncement] = React.useState('');
+  const shown = moving
+    ? sorted.map((e) => (e.id === moving.id ? { ...e, ...shifted(e, moving) } : e)).sort((a, b) => a.start.getTime() - b.start.getTime())
+    : sorted;
   const eventsOn = (day: Date) =>
-    sorted.filter((e) => e.start <= endOfDay(day) && (e.end ?? e.start) >= startOfDay(day));
+    shown.filter((e) => e.start <= endOfDay(day) && (e.end ?? e.start) >= startOfDay(day));
 
   const fmt = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(intlLocale, o);
   const timeFmt = fmt({ timeStyle: 'short' });
@@ -221,16 +269,151 @@ export function EventCalendar({
   // Error replaces the grid; loading and empty keep it (null skeleton and text: the grid draws them itself).
   const state = dataState(states, !sorted.some((e) => e.start <= endOfDay(last) && (e.end ?? e.start) >= startOfDay(first)), null, null);
 
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const hintId = React.useId();
+  const refocus = React.useRef<string | null>(null);
+  const dragged = React.useRef(false);
+  const original = (id: string) => events.find((e) => e.id === id)!;
+  const when = (e: CalendarEvent, start: Date) => fmt(e.allDay ? { dateStyle: 'full' } : { dateStyle: 'full', timeStyle: 'short' }).format(start);
+  const preview = (m: Move) => {
+    const e = original(m.id);
+    const { start } = shifted(e, m);
+    if (start < first || start > last) setDate(start);
+    setMoving(m);
+    return { e, start };
+  };
+  const finish = (m: Move | null, keyboard?: boolean) => {
+    if (keyboard && moving) refocus.current = moving.id;
+    setMoving(null);
+    if (!m) return setAnnouncement(t.eventMoveCancelled);
+    const e = original(m.id);
+    if (!m.days && !m.mins) return;
+    const range = shifted(e, m);
+    setAnnouncement(t.eventMoved(e.title, when(e, range.start)));
+    onEventMove?.(e, range);
+  };
+  // A keyboard move redraws the event in another cell: keep focus on it.
+  React.useEffect(() => {
+    const id = moving && !moving.pointer ? moving.id : refocus.current;
+    if (id == null) return;
+    refocus.current = null;
+    [...(rootRef.current?.querySelectorAll<HTMLElement>('[data-nx-event]') ?? [])].find((el) => el.dataset.nxEvent === id)?.focus();
+  });
+
+  const onMoveKey = (ev: React.KeyboardEvent, e: CalendarEvent) => {
+    const active = moving?.id === e.id && !moving.pointer ? moving : null;
+    if (active && (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Escape')) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      return finish(ev.key === 'Escape' ? null : active, true);
+    }
+    const horizontal = ev.key === 'ArrowLeft' || ev.key === 'ArrowRight';
+    if ((!horizontal && ev.key !== 'ArrowUp' && ev.key !== 'ArrowDown') || (!active && !ev.altKey) || (moving && !active)) return;
+    ev.preventDefault();
+    const m = active ?? { id: e.id, days: 0, mins: 0 };
+    const sign = ev.key === 'ArrowRight' || ev.key === 'ArrowDown' ? 1 : -1;
+    const next = horizontal
+      ? { ...m, days: m.days + sign * (dir === 'rtl' ? -1 : 1) }
+      : oneDay && !e.allDay
+        ? { ...m, mins: m.mins + sign * SNAP }
+        : { ...m, days: m.days + sign * (oneDay ? 1 : 7) };
+    const { start } = preview(next);
+    setAnnouncement(t.eventMoveTo(e.title, when(e, start)));
+  };
+
+  const onPointerDown = (ev: React.PointerEvent, e: CalendarEvent) => {
+    if (ev.button !== 0 || moving) return;
+    const [x0, y0] = [ev.clientX, ev.clientY];
+    const grid = (ev.currentTarget as HTMLElement).closest<HTMLElement>('[data-nx-hours]');
+    // Where on the event it was grabbed: a day of a multi-day event, or minutes into a timed one.
+    const grabDay = dayOf(ev.currentTarget);
+    const grabDays = grabDay ? differenceInCalendarDays(grabDay, e.start) : 0;
+    const startMins = (e.start.getTime() - startOfDay(e.start).getTime()) / MINUTE;
+    const grabMins = grid ? minuteAt(grid, y0) - startMins : 0;
+    let m: Move | null = null;
+    const targetAt = (x: number, y: number): Move | null => {
+      const el = document.elementFromPoint(x, y);
+      if (grid) {
+        const over = el?.closest<HTMLElement>('[data-nx-hours]');
+        const at = Math.min(1440 - SNAP, Math.max(0, Math.round((minuteAt(over ?? grid, y) - grabMins) / SNAP) * SNAP));
+        return over ? { id: e.id, days: 0, mins: at - startMins, pointer: true } : null;
+      }
+      const day = dayOf(el);
+      return day ? { id: e.id, days: differenceInCalendarDays(day, e.start) - grabDays, mins: 0, pointer: true } : null;
+    };
+    const move = (p: PointerEvent) => {
+      if (!m && Math.hypot(p.clientX - x0, p.clientY - y0) < 4) return;
+      m = targetAt(p.clientX, p.clientY) ?? m ?? { id: e.id, days: 0, mins: 0, pointer: true };
+      setMoving(m);
+    };
+    const end = (drop: boolean) => () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', cancel);
+      window.removeEventListener('keydown', key);
+      if (!m) return;
+      dragged.current = true;
+      setTimeout(() => (dragged.current = false));
+      finish(drop ? m : null);
+    };
+    const up = end(true);
+    const cancel = end(false);
+    const key = (k: KeyboardEvent) => k.key === 'Escape' && cancel();
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', cancel);
+    window.addEventListener('keydown', key);
+  };
+
   const chip = 'block w-full truncate rounded-shape-min px-1.5 py-0.5 text-start text-label-md';
-  /** An event as a button (with onEventClick) or plain text. */
-  const eventNode = (e: CalendarEvent, cls: string, body: React.ReactNode) =>
-    onEventClick ? (
-      <button type="button" className={cn(cls, 'hover:opacity-90')} onClick={() => onEventClick(e)}>
+  /** An event as a button (clickable or movable) or plain text. */
+  const eventNode = (e: CalendarEvent, cls: string, body: React.ReactNode) => {
+    const movable = !!onEventMove && e.editable !== false;
+    const c = cn(cls, moving?.id === e.id && 'outline-2 outline-offset-1 outline-dashed outline-[var(--color-primary)]', movable && 'cursor-grab touch-none');
+    return onEventClick || movable ? (
+      <button
+        type="button"
+        data-nx-event={e.id}
+        aria-describedby={movable ? hintId : undefined}
+        className={cn(c, 'hover:opacity-90')}
+        onClick={() => !dragged.current && onEventClick?.(e)}
+        onKeyDown={movable ? (ev) => onMoveKey(ev, e) : undefined}
+        onPointerDown={movable ? (ev) => onPointerDown(ev, e) : undefined}
+        // Removing the old button (the event moved cells) blurs with no relatedTarget; that is not a cancel.
+        onBlur={(ev) => moving?.id === e.id && !moving.pointer && ev.relatedTarget && finish(null)}
+      >
         {body}
       </button>
     ) : (
-      <span className={cls}>{body}</span>
+      <span className={c}>{body}</span>
     );
+  };
+  /**
+   * The event with its actions: beside it (`inline`, agenda and all-day), in its top corner (`corner`, day view),
+   * or over its end on hover and focus (month and week cells, so the layout does not change).
+   */
+  const withActions = (e: CalendarEvent, node: React.ReactNode, mode?: 'inline' | 'corner') => {
+    const actions = eventActions?.(e);
+    if (actions == null) return node;
+    return mode === 'inline' ? (
+      <div className="flex items-center gap-1">
+        <div className="min-w-0 flex-1">{node}</div>
+        {actions}
+      </div>
+    ) : (
+      <div className={cn('group relative', mode && 'size-full')}>
+        {node}
+        <div
+          className={cn(
+            'absolute end-0 flex items-center',
+            mode ? 'top-0' : 'inset-y-0 opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 pointer-coarse:opacity-100',
+          )}
+        >
+          {actions}
+        </div>
+      </div>
+    );
+  };
   const timed = (time: string, title: string) => (
     <>
       {time && <span className="me-1 tabular-nums opacity-80">{time}</span>}
@@ -239,7 +422,7 @@ export function EventCalendar({
   );
 
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
+    <div ref={rootRef} className={cn('flex flex-col gap-3', className)}>
       <div className="flex flex-wrap items-center gap-2">
         <h2 aria-live="polite" className="me-auto text-title-lg font-semibold text-[var(--color-on-surface)]">
           {title}
@@ -266,11 +449,32 @@ export function EventCalendar({
           ))}
         </SegmentedControl.Root>
       </div>
+      {legend && legend.length > 0 && (
+        <ul aria-label={t.calendarLegend} className="flex flex-wrap gap-x-4 gap-y-1 text-label-md text-[var(--color-on-surface-variant)]">
+          {legend.map((l) => (
+            <li key={l.label} className="flex items-center gap-1.5">
+              <span aria-hidden="true" className={cn('size-2.5 rounded-full', markers[l.tone])} />
+              {l.label}
+            </li>
+          ))}
+        </ul>
+      )}
+      {onEventMove && (
+        <>
+          <span id={hintId} hidden>
+            {t.eventMoveHint}
+          </span>
+          <span aria-live="polite" className="sr-only">
+            {announcement}
+          </span>
+        </>
+      )}
 
       {state != null && state === errorState ? (
         <div className="flex min-h-80 flex-col justify-center">{state}</div>
       ) : oneDay ? (
         <>
+          {renderDayAction && <div className="flex justify-end">{renderDayAction(first)}</div>}
           <DayGrid
             day={first}
             events={busy ? [] : eventsOn(first)}
@@ -279,7 +483,9 @@ export function EventCalendar({
             allDayLabel={t.allDay}
             hourFmt={fmt({ hour: 'numeric' })}
             timeFmt={timeFmt}
-            renderEvent={(e, time, cls) => eventNode(e, cn(cls, tones[e.tone ?? 'primary']), <span className="block truncate">{timed(time, e.title)}</span>)}
+            renderEvent={(e, time, cls) =>
+              withActions(e, eventNode(e, cn(cls, tones[e.tone ?? 'primary']), <span className="block truncate">{timed(time, e.title)}</span>), time ? 'corner' : 'inline')
+            }
           />
           {state != null && <div className="flex flex-col">{state}</div>}
         </>
@@ -294,17 +500,20 @@ export function EventCalendar({
                 const id = `${headingId}-${format(d, 'yyyy-MM-dd')}`;
                 return (
                   <section key={id} aria-labelledby={id}>
-                    <h3
-                      id={id}
-                      aria-current={isSameDay(d, today) ? 'date' : undefined}
-                      className="border-b border-[var(--color-outline-variant)] pb-1 text-label-lg font-medium text-[var(--color-on-surface-variant)] aria-[current]:text-[var(--color-primary)]"
-                    >
-                      {fullFmt.format(d)}
-                    </h3>
+                    <div className="flex items-center gap-2 border-b border-[var(--color-outline-variant)] pb-1">
+                      <h3
+                        id={id}
+                        aria-current={isSameDay(d, today) ? 'date' : undefined}
+                        className="me-auto text-label-lg font-medium text-[var(--color-on-surface-variant)] aria-[current]:text-[var(--color-primary)]"
+                      >
+                        {fullFmt.format(d)}
+                      </h3>
+                      {renderDayAction?.(d)}
+                    </div>
                     <ul className="flex flex-col">
                       {list.map((e) => (
                         <li key={e.id}>
-                          {eventNode(
+                          {withActions(e, eventNode(
                             e,
                             'flex min-h-10 w-full items-center gap-3 rounded-shape-min px-1 py-1 text-start text-body-sm text-[var(--color-on-surface)]',
                             <>
@@ -314,7 +523,7 @@ export function EventCalendar({
                               </span>
                               <span className="min-w-0 truncate">{e.title}</span>
                             </>,
-                          )}
+                          ), 'inline')}
                         </li>
                       ))}
                     </ul>
@@ -347,13 +556,18 @@ export function EventCalendar({
                 <tr key={week[0]!.toISOString()}>
                   {week.map((day) => {
                     const list = busy ? [] : eventsOn(day);
-                    const shown = month ? list.slice(0, maxEventsPerDay) : list;
+                    let shown = month ? list.slice(0, maxEventsPerDay) : list;
+                    // The event being moved always shows, so the preview and focus stay visible.
+                    const mover = moving && list.find((e) => e.id === moving.id);
+                    if (mover && !shown.includes(mover)) shown = [...shown.slice(0, -1), mover];
                     const hidden = list.length - shown.length;
                     const isToday = isSameDay(day, today);
                     const outside = month && !isSameMonth(day, date);
+                    const dayNumber = <DayNumber day={day} label={fullFmt.format(day)} isToday={isToday} muted={outside} onClick={onDayClick} />;
                     return (
                       <td
                         key={day.toISOString()}
+                        data-nx-day={onEventMove ? format(day, 'yyyy-MM-dd') : undefined}
                         aria-current={isToday ? 'date' : undefined}
                         className={cn(
                           'border border-[var(--color-outline-variant)] p-1 align-top',
@@ -361,18 +575,19 @@ export function EventCalendar({
                           outside && 'bg-[var(--color-surface-container-low)]',
                         )}
                       >
-                        <DayNumber
-                          day={day}
-                          label={fullFmt.format(day)}
-                          isToday={isToday}
-                          muted={outside}
-                          onClick={onDayClick}
-                        />
+                        {renderDayAction ? (
+                          <div className="flex items-center justify-between gap-1">
+                            {dayNumber}
+                            {renderDayAction(day)}
+                          </div>
+                        ) : (
+                          dayNumber
+                        )}
                         {busy && <Skeleton shape="rect" className="mt-1 h-5 rounded-shape-min" />}
                         <ul className="mt-1 flex flex-col gap-0.5">
                           {shown.map((e) => {
                             const time = e.allDay || !isSameDay(e.start, day) ? '' : timeFmt.format(e.start);
-                            return <li key={e.id}>{eventNode(e, cn(chip, tones[e.tone ?? 'primary']), timed(time, e.title))}</li>;
+                            return <li key={e.id}>{withActions(e, eventNode(e, cn(chip, tones[e.tone ?? 'primary']), timed(time, e.title)))}</li>;
                           })}
                         </ul>
                         {hidden > 0 &&
@@ -460,7 +675,7 @@ function DayGrid({
           ))}
         </ul>
       )}
-      <div className="relative">
+      <div className="relative" data-nx-hours={`${firstHour}-${lastHour}`}>
         {Array.from({ length: lastHour - firstHour }, (_, i) => (
           <div key={i} aria-hidden="true" className="h-12 border-t border-[var(--color-outline-variant)]">
             <span className="block w-12 pt-0.5 text-label-sm tabular-nums text-[var(--color-on-surface-muted)]">

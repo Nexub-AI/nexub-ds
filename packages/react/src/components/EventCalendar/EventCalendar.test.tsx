@@ -2,6 +2,7 @@ import { ErrorState } from '../ErrorState/ErrorState.js';
 import * as React from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import axe from 'axe-core';
 import { describe, it, expect, vi } from 'vitest';
 import { EventCalendar, type CalendarEvent } from './EventCalendar.js';
 import { NexubProvider } from '../NexubProvider/NexubProvider.js';
@@ -161,5 +162,94 @@ describe('EventCalendar 10.7: day and agenda views', () => {
     const { container } = renderCal({ defaultView: 'agenda', loading: true });
     expect(screen.queryByText('Standup')).toBeNull();
     expect(container.querySelector('[aria-busy="true"]')).not.toBeNull();
+  });
+});
+
+describe('EventCalendar 11.4: moves, day actions, event actions, legend', () => {
+  const live = () => document.querySelector('[aria-live="polite"].sr-only')!;
+
+  it('Alt+Arrow starts a keyboard move, arrows pick the day, Enter drops with the duration kept', async () => {
+    const onEventMove = vi.fn();
+    renderCal({ onEventMove });
+    const offsite = screen.getAllByRole('button', { name: 'Offsite' })[0]!;
+    expect(offsite).toHaveAccessibleDescription(/Alt\+Arrow/);
+    offsite.focus();
+    await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}{ArrowDown}');
+    expect(live()).toHaveTextContent(/Move Offsite to Wednesday,? 18 November 2026/);
+    // The preview: the event now sits on the 18th and 19th, and keeps focus.
+    expect(document.activeElement).toHaveTextContent('Offsite');
+    expect(document.activeElement!.closest('td')!.getAttribute('data-nx-day')).toBe('2026-11-18');
+    await userEvent.keyboard('{Enter}');
+    expect(onEventMove).toHaveBeenCalledWith(events[1], { start: new Date(2026, 10, 18), end: new Date(2026, 10, 19) });
+    expect(live()).toHaveTextContent(/Offsite moved to/);
+  });
+
+  it('Escape cancels; plain arrows and editable: false do nothing; without onEventMove nothing is movable', async () => {
+    const onEventMove = vi.fn();
+    const { unmount } = renderCal({ onEventMove, events: [...events.slice(0, 1), { ...events[2]!, editable: false }] });
+    screen.getByRole('button', { name: /Standup/ }).focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(screen.getByRole('button', { name: /Standup/ }).closest('td')!.getAttribute('data-nx-day')).toBe('2026-11-09');
+    await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}{Escape}');
+    expect(live()).toHaveTextContent('Move cancelled');
+    expect(onEventMove).not.toHaveBeenCalled();
+    expect(screen.getByText('Review').closest('span')).not.toBeNull();
+    expect(screen.queryByRole('button', { name: /Review/ })).toBeNull();
+    unmount();
+    const { container } = renderCal();
+    expect(container.querySelector('[data-nx-event], [data-nx-day]')).toBeNull();
+  });
+
+  it('day view: arrows move a timed event by 15 minutes', async () => {
+    const onEventMove = vi.fn();
+    const ev: CalendarEvent = { id: 's', title: 'Standup', start: new Date(2026, 10, 9, 9, 30), end: new Date(2026, 10, 9, 10) };
+    renderCal({ onEventMove, events: [ev], defaultView: 'day', now: new Date(2026, 10, 1) });
+    screen.getByRole('button', { name: /Standup/ }).focus();
+    await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}{ArrowDown}{Enter}');
+    expect(onEventMove).toHaveBeenCalledWith(ev, { start: new Date(2026, 10, 9, 10), end: new Date(2026, 10, 9, 10, 30) });
+  });
+
+  it('pointer drag to another day cell drops there', async () => {
+    const onEventMove = vi.fn();
+    const onEventClick = vi.fn();
+    const { container } = renderCal({ onEventMove, onEventClick });
+    const target = container.querySelector('[data-nx-day="2026-11-12"]')!;
+    document.elementFromPoint = () => target;
+    const standup = screen.getByRole('button', { name: /Standup/ });
+    standup.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, clientX: 0, clientY: 0 }));
+    await React.act(async () => window.dispatchEvent(new PointerEvent('pointermove', { clientX: 50, clientY: 50 })));
+    expect(within(target as HTMLElement).getByRole('button', { name: /Standup/ })).toBeInTheDocument();
+    await React.act(async () => window.dispatchEvent(new PointerEvent('pointerup', { clientX: 50, clientY: 50 })));
+    expect(onEventMove).toHaveBeenCalledWith(events[0], { start: new Date(2026, 10, 12, 9, 30), end: undefined });
+    expect(onEventClick).not.toHaveBeenCalled();
+    delete (document as { elementFromPoint?: unknown }).elementFromPoint;
+  });
+
+  it('renderDayAction, eventActions and legend', async () => {
+    const { container } = renderCal({
+      renderDayAction: (d) => <button type="button">Add on {d.getDate()}</button>,
+      eventActions: (e) => <button type="button">Actions for {e.title}</button>,
+      legend: [
+        { label: 'Meetings', tone: 'primary' },
+        { label: 'Away', tone: 'success' },
+      ],
+      onEventMove: () => {},
+    });
+    expect(screen.getByRole('button', { name: 'Add on 9' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Actions for Offsite' })).toHaveLength(2);
+    expect(within(screen.getByRole('list', { name: 'Legend' })).getAllByRole('listitem').map((l) => l.textContent)).toEqual(['Meetings', 'Away']);
+    const { violations } = await axe.run(container, { rules: { 'color-contrast': { enabled: false }, region: { enabled: false } } });
+    expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(' | ')}`)).toEqual([]);
+  });
+
+  it('agenda and day views show event actions beside the event', () => {
+    const { unmount } = renderCal({ defaultView: 'agenda', eventActions: (e) => <button type="button">More {e.title}</button>, renderDayAction: () => <button type="button">Add</button> });
+    const monday = screen.getByRole('region', { name: /Monday,? 9 November 2026/ });
+    expect(within(monday).getByRole('button', { name: 'More Standup' })).toBeInTheDocument();
+    expect(within(monday).getByRole('button', { name: 'Add' })).toBeInTheDocument();
+    unmount();
+    renderCal({ defaultView: 'day', eventActions: (e) => <button type="button">More {e.title}</button>, renderDayAction: () => <button type="button">Add</button> });
+    expect(screen.getByRole('button', { name: 'More Standup' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
 });

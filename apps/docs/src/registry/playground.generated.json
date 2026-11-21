@@ -4023,13 +4023,31 @@
     ],
     "controls": [
       {
+        "kind": "select",
+        "name": "columnWidth",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
         "kind": "switch",
         "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly",
+        "default": false
       }
     ],
     "states": [
       {
         "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
         "value": true
       },
       {
@@ -5574,6 +5592,28 @@
     ],
     "states": []
   },
+  "resource-timeline": {
+    "tag": "ResourceTimeline",
+    "children": "none",
+    "fixed": [
+      "resources={people}",
+      "range={range}",
+      "now={new Date(2026, 10, 9)}",
+      "getCell={…}",
+      "onCellActivate={…}",
+      "footer={…}",
+      "rowTotal={…}",
+      "grandTotal={Object.keys(cells).length}"
+    ],
+    "controls": [
+      {
+        "kind": "text",
+        "name": "label",
+        "initial": "Team leave, November 2026"
+      }
+    ],
+    "states": []
+  },
   "saved-views": {
     "tag": "SavedViews",
     "children": "none",
@@ -6087,7 +6127,58 @@
     ]
   },
   "sortable": {
-    "skip": "no controllable props and no states"
+    "tag": "Sortable",
+    "children": "nodes",
+    "fixed": [
+      "aria-label=\"Dashboard widgets\"",
+      "items={widgets}",
+      "getId={(w) => w}",
+      "getLabel={(w) => w}",
+      "onReorder={setWidgets}",
+      "className=\"w-full max-w-sm\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "variant",
+        "options": [
+          "default",
+          "flat"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "select",
+        "name": "layout",
+        "options": [
+          "list",
+          "grid"
+        ],
+        "default": "list"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "variant",
+        "value": "default"
+      },
+      {
+        "prop": "variant",
+        "value": "flat"
+      }
+    ]
   },
   "sparkline": {
     "tag": "Sparkline",

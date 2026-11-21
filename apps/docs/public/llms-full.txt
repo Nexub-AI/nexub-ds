@@ -401,6 +401,7 @@ Never use a component marked deprecated.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
+- [Resource Timeline](components/resource-timeline.md) `@nexub/react`: One row per person, days across: rosters, team leave and allocation, with totals in the footer.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Stage Counter](components/stage-counter.md) `@nexub/react`: A row of selectable stat cards, each with a count and a failed count, that filters a list.
@@ -5364,6 +5365,10 @@ A month or week grid of events. Display only: your app owns the events and what 
 | `onDayClick` | `(date) => void` |  | Makes day numbers and "N more" buttons, for example to open the day. |
 | `maxEventsPerDay` | `number` | `3` | Month view only. |
 | `weekStartsOn` | `0–6` |  | Defaults to the locale’s first day (Monday for en-GB, Sunday for en-US). |
+| `onEventMove` | `(event, { start, end }) => void` |  | 11.4. Makes events movable: drag one to another day (month, week) or time (day view, 15-minute steps), or press Alt+Arrow on it, pick with the arrows and press Enter (Escape cancels). The duration is kept. Events with `editable: false` stay put. |
+| `renderDayAction` | `(date) => ReactNode` |  | 11.4. A per-day slot, e.g. a small add button: in each day’s header (month, week), above the day view and beside each agenda day. |
+| `eventActions` | `(event) => ReactNode` |  | 11.4. Controls for one event, e.g. a menu: beside it in day and agenda views, over its end on hover or focus in month and week cells (always shown on touch screens). |
+| `legend` | `{ label, tone }[]` |  | 11.4. A row under the toolbar naming what each tone means. Colour is never the only signal: titles still say what an event is. |
 
 ## Example: Team calendar
 
@@ -5427,10 +5432,66 @@ export default function Example() {
 }
 ```
 
+## Example: Move, add and act on events
+
+Drag an event, or press Alt+Arrow on it, to move it; a "+" per day, a menu per event and a legend.
+
+```tsx
+import * as React from 'react';
+import { EventCalendar, IconButton, type CalendarEvent } from '@nexub/react';
+import { MoreHorizontal, Plus } from '@nexub/icons';
+
+// A fixed month, so the page renders the same on the server and in every time zone.
+const at = (day: number, hour = 0, minute = 0) => new Date(2026, 10, day, hour, minute);
+
+const initial: CalendarEvent[] = [
+  { id: '1', title: 'Design review', start: at(3, 10), end: at(3, 11) },
+  { id: '2', title: 'Offsite', start: at(11), end: at(12), allDay: true, tone: 'success' },
+  { id: '3', title: 'Standup', start: at(16, 9, 30), end: at(16, 10) },
+  { id: '4', title: 'Launch', start: at(16, 14), tone: 'warning' },
+  { id: '5', title: 'Payroll', start: at(25), allDay: true, tone: 'info', editable: false },
+];
+
+export default function Example() {
+  const [events, setEvents] = React.useState(initial);
+  return (
+    <div className="w-full">
+      <EventCalendar
+        events={events}
+        defaultDate={at(16)}
+        now={at(16, 11)}
+        views={['month', 'week', 'day', 'agenda']}
+        onEventMove={(event, range) => setEvents((list) => list.map((e) => (e.id === event.id ? { ...e, ...range } : e)))}
+        renderDayAction={(date) => (
+          <IconButton variant="ghost" size="xs" label={`Add event on ${date.toDateString()}`}>
+            <Plus size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        eventActions={(event) => (
+          <IconButton variant="ghost" size="xs" label={`Actions for ${event.title}`}>
+            <MoreHorizontal size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        legend={[
+          { label: 'Meetings', tone: 'primary' },
+          { label: 'Away', tone: 'success' },
+          { label: 'Deadlines', tone: 'warning' },
+          { label: 'Payroll (fixed)', tone: 'info' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
+- `Alt + Arrow keys`: With `onEventMove`, on an event: starts a move and takes the first step.
+- `Arrow keys`: While moving: left and right a day; up and down a week, or 15 minutes in day view.
+- `Enter / Escape`: Drops the event there, or cancels the move.
 - A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.
 - The title is a polite live region, so Today and the arrows announce the new month or week.
+- Movable events describe the keyboard move (Alt+Arrow, then arrows, Enter or Escape); each step and the drop are announced in a polite live region.
 
 Related: [date-picker](date-picker.md), [date-time-picker](date-time-picker.md)
 
@@ -6974,6 +7035,14 @@ Columns of cards people move by dragging or with Alt+Arrow keys.
 | `getId / getLabel` (required) | `(item) => string` |  | Stable key and the name read when it moves. |
 | `onChange` (required) | `(columns) => void` |  | Called with the columns after a move; store them (and save to your server). |
 | `renderCard` (required) | `(item) => ReactNode` |  | The card’s content. |
+| `onChange` | `(columns, move: { item, from, to }) => void` |  | 11.4: the second argument names the moved card and its column and lane before and after. |
+| `readOnly` | `boolean` |  | 11.4: no drag handles, no keyboard moves. |
+| `canMove` | `(move: { item, from, to }) => boolean` |  | 11.4: refuse a target before the card lands (a WIP limit, a rule); the drop mark does not show and the keyboard announces it. |
+| `dropTargets` | `{ id, label, icon?, onDrop(item, from) }[]` |  | 11.4: areas outside the columns (Archive, Trash). Alt+Arrow keys reach them after the last column. |
+| `renderColumnHeader / renderColumnFooter` | `(column, …) => ReactNode` |  | 11.4: replace the header (WIP badge, actions); add a slot under the cards (quick add). |
+| `lanes / getLane` | `{ id, title }[] / (item) => string` |  | 11.4: swimlanes: one row of columns per lane. |
+| `getTone` | `(item) => 'info' \| 'success' \| 'warning' \| 'danger' \| undefined` |  | 11.4: a coloured edge on the card; say the meaning in the card text too. |
+| `columnWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | 11.4: 15, 18 or 24rem. |
 
 ## Example: Task board
 
@@ -7004,6 +7073,57 @@ export default function Example() {
         </div>
       )}
     />
+  );
+}
+```
+
+## Example: Workflow: lanes, WIP limit, archive
+
+```tsx
+import * as React from 'react';
+import { Kanban, type KanbanColumn } from '@nexub/react';
+
+type Ticket = { id: string; title: string; owner: string; high?: boolean };
+const start: KanbanColumn<Ticket>[] = [
+  { id: 'todo', title: 'To do', items: [{ id: 't1', title: 'Renew SSL certificate', owner: 'ana', high: true }, { id: 't2', title: 'Update pricing page', owner: 'ben' }] },
+  { id: 'doing', title: 'Doing', items: [{ id: 't3', title: 'Migrate invoices', owner: 'ana' }] },
+  { id: 'done', title: 'Done', items: [] },
+];
+const WIP = 2;
+
+export default function Example() {
+  const [cols, setCols] = React.useState(start);
+  const [archived, setArchived] = React.useState<string[]>([]);
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <Kanban
+        columns={cols}
+        getId={(t) => t.id}
+        getLabel={(t) => t.title}
+        lanes={[{ id: 'ana', title: 'Ana' }, { id: 'ben', title: 'Ben' }]}
+        getLane={(t) => t.owner}
+        onChange={(next, { item, to }) =>
+          setCols(next.map((c) => ({ ...c, items: c.items.map((t) => (t.id === item.id && to.laneId ? { ...t, owner: to.laneId } : t)) })))
+        }
+        canMove={({ to }) => to.columnId !== 'doing' || cols[1]!.items.length < WIP}
+        renderColumnHeader={(c, count) => (
+          <span className="flex w-full items-center justify-between">
+            {c.title}
+            <span className="text-label-md font-normal text-on-surface-muted">{c.id === 'doing' ? `${count} / ${WIP}` : count}</span>
+          </span>
+        )}
+        getTone={(t) => (t.high ? 'danger' : undefined)}
+        columnWidth="sm"
+        dropTargets={[{ id: 'archive', label: 'Archive', onDrop: (t) => setArchived((a) => [...a, t.title]) }]}
+        renderCard={(t) => (
+          <span className="flex flex-col">
+            {t.title}
+            {t.high && <span className="text-label-sm text-error">High priority</span>}
+          </span>
+        )}
+      />
+      <p className="text-body-sm text-on-surface-muted">Archived: {archived.join(', ') || '—'}</p>
+    </div>
   );
 }
 ```
@@ -9455,6 +9575,131 @@ Related: [sidebar](sidebar.md), [app-shell](app-shell.md)
 
 ---
 
+# Resource Timeline
+
+One row per person, days across: rosters, team leave and allocation, with totals in the footer.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { ResourceTimeline } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/resource-timeline
+
+## When to use
+
+- Who is where, day by day: rosters, leave, shifts, allocation.
+- A few weeks across and up to a few dozen people.
+
+## When not to use
+
+- Events at times of day: use EventCalendar.
+- Rows with many fields that sort and filter: use DataTable.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `string` |  | Names the table, e.g. "Team leave, November". |
+| `resources` (required) | `TimelineResource[]` |  | `{ id, label, description?, avatar? }`, one row each. The first column stays put while the days scroll. |
+| `range` (required) | `{ from: Date; to: Date }` |  | The days shown, both ends included. |
+| `getCell` | `(resourceId, date) => { value?, tone? } \| undefined` |  | A cell’s content. `tone` (neutral, primary, success, warning, error, info) colours it; `value` must say what it means too. |
+| `onCellActivate` | `(resourceId, date, cell: HTMLElement) => void` |  | Makes the cells a grid: arrow keys move between them, Enter, Space or a click calls this, e.g. to open your editor anchored to `cell`. |
+| `footer` | `(date) => ReactNode` |  | A totals row: one cell per day. |
+| `rowTotal / grandTotal` | `(resourceId) => ReactNode / ReactNode` |  | A total column at the end, and its footer cell. |
+| `resourceHeader` | `ReactNode` | `"Name"` | The first column’s header. |
+| `weekend` | `number[]` | `[0, 6]` | Days of the week shaded as weekend (0 = Sunday). |
+| `now` | `Date` | `new Date()` | Marks today. Pin it in tests and screenshots. |
+
+## Example: Team leave
+
+Enter or a click on a cell toggles leave; your app opens its own editor there.
+
+```tsx
+import * as React from 'react';
+import { Avatar, ResourceTimeline, type ResourceCell } from '@nexub/react';
+
+// A fixed fortnight, so the page renders the same on the server and in every time zone.
+const range = { from: new Date(2026, 10, 2), to: new Date(2026, 10, 15) };
+const people = [
+  { id: 'ana', label: 'Ana Lima', description: 'Design' },
+  { id: 'ben', label: 'Ben Ode', description: 'Engineering' },
+  { id: 'cho', label: 'Cho Park', description: 'Support' },
+].map((p) => ({ ...p, avatar: <Avatar size="sm" name={p.label} /> }));
+const leave: ResourceCell = { value: 'AL', tone: 'info' };
+
+export default function Example() {
+  const [cells, setCells] = React.useState<Record<string, ResourceCell>>({ 'ana-3': leave, 'ana-4': leave, 'ben-10': { value: 'Sick', tone: 'warning' } });
+  const count = (match: (key: string) => boolean) => Object.keys(cells).filter(match).length;
+  return (
+    <div className="w-full">
+      <ResourceTimeline
+        label="Team leave, November 2026"
+        resources={people}
+        range={range}
+        now={new Date(2026, 10, 9)}
+        getCell={(id, date) => cells[`${id}-${date.getDate()}`]}
+        onCellActivate={(id, date) =>
+          setCells((c) => {
+            const key = `${id}-${date.getDate()}`;
+            const { [key]: had, ...rest } = c;
+            return had ? rest : { ...c, [key]: leave };
+          })
+        }
+        footer={(date) => count((k) => k.endsWith(`-${date.getDate()}`)) || ''}
+        rowTotal={(id) => count((k) => k.startsWith(`${id}-`))}
+        grandTotal={Object.keys(cells).length}
+      />
+    </div>
+  );
+}
+```
+
+## Example: Read-only roster
+
+Without `onCellActivate` it is a plain table, and the scroller takes focus so the days can be scrolled.
+
+```tsx
+import { ResourceTimeline } from '@nexub/react';
+
+const range = { from: new Date(2026, 10, 9), to: new Date(2026, 10, 15) };
+const people = [
+  { id: 'ana', label: 'Ana Lima' },
+  { id: 'ben', label: 'Ben Ode' },
+];
+const shifts: Record<string, string> = { 'ana-9': 'Early', 'ana-10': 'Early', 'ben-11': 'Late', 'ben-12': 'Late', 'ben-14': 'On call' };
+
+export default function Example() {
+  return (
+    <div className="w-full">
+      <ResourceTimeline
+        label="Support rota"
+        resources={people}
+        range={range}
+        now={new Date(2026, 10, 9)}
+        resourceHeader="Agent"
+        getCell={(id, date) => {
+          const value = shifts[`${id}-${date.getDate()}`];
+          return value ? { value, tone: value === 'On call' ? 'warning' : 'neutral' } : undefined;
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Tab`: Enters the grid at the last focused cell (one Tab stop).
+- `Arrow keys`: Move between people and days (left and right follow the reading direction).
+- `Home / End`: First or last day in the row; with Ctrl, the first or last cell.
+- `Enter / Space / F2`: Calls `onCellActivate` for the cell.
+- A real table: column headers read the full date, row headers the person, so each cell is announced with both.
+- With `onCellActivate` the table has `role="grid"` and roving focus; without it, a plain table in a focusable scroll region.
+- Today’s header has `aria-current="date"` and a filled day number; weekends are shaded and still read their weekday.
+
+Related: [event-calendar](event-calendar.md), [data-table](data-table.md)
+
+
+---
+
 # Saved Views
 
 A menu to switch, save, update and delete saved filter views. Your app stores them.
@@ -10188,11 +10433,18 @@ A list people reorder by dragging or with Alt+Arrow keys on a handle.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` (required) | `T[]` |  | The list, in order. |
-| `getId / getLabel` (required) | `(item) => string` |  | Stable key, and the name read in "Move ‹label›" and the move announcements. |
-| `onReorder` (required) | `(items: T[]) => void` |  | Called with the new order; store it. |
+| `items` (required) | `T[]` |  | The list, in order. Not used with `list`. |
+| `getLabel` | `(item) => string` |  | The name read in "Move ‹label›" and the move announcements. Defaults to `String(item)`: pass it for objects. |
+| `getId` | `(item) => string` |  | Stable key. Defaults to `item.id`, else a key kept per object, else the value itself (keep string values unique). |
+| `onReorder` (required) | `(items: T[]) => void` |  | Called with the new order; store it. Not used with `list`. |
 | `children` (required) | `(item) => ReactNode` |  | The item’s content; the handle sits before it. |
-| `aria-label` | `string` |  | Names the list. |
+| `aria-label` | `string` |  | Names the list. Inside a group it defaults to the list’s label. |
+| `layout` | `'list' \| 'grid'` |  | Default `list`. `grid` wraps items into cells (cards, images); Alt+Arrow keys move an item by one cell or row. |
+| `variant` | `'default' \| 'flat'` |  | Default `default`. `flat` drops the card chrome around items, for dense lists inside a card. |
+| `disabled` | `boolean` |  | Turns every handle off: nothing moves. |
+| `isLocked` | `(item) => boolean` |  | Locked items show a lock, can’t be moved, and keep their index while others move around them, so nothing lands above a locked first item. |
+| `list` | `string` |  | Inside `Sortable.Group`: which of its lists this renders (instead of `items` / `onReorder`). |
+| `Sortable.Group` | `{ lists: { id, label, items }[]; onChange; getLabel; getId?; isLocked?; disabled? }` |  | Owns several lists items move between; `onChange` gets every list after a move. |
 
 ## Example: Widget order
 
@@ -10212,12 +10464,116 @@ export default function Example() {
 }
 ```
 
+## Example: Grid
+
+Cards that wrap; the items have no id.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Sortable } from '@nexub/react';
+
+type Photo = { name: string; hue: string };
+
+export default function Example() {
+  // No ids: objects get a stable key of their own.
+  const [photos, setPhotos] = React.useState<Photo[]>([
+    { name: 'Harbour', hue: 'bg-primary-container' },
+    { name: 'Dunes', hue: 'bg-tertiary-container' },
+    { name: 'Forest', hue: 'bg-secondary-container' },
+    { name: 'Glacier', hue: 'bg-surface-container-high' },
+    { name: 'Canyon', hue: 'bg-primary-container' },
+    { name: 'Meadow', hue: 'bg-secondary-container' },
+  ]);
+  return (
+    <Sortable aria-label="Gallery order" layout="grid" items={photos} getLabel={(p) => p.name} onReorder={setPhotos} className="w-full">
+      {(p) => (
+        <figure className="m-0 flex flex-col gap-2">
+          <div className={`aspect-video rounded-shape-control ${p.hue}`} />
+          <figcaption className="text-body-sm text-on-surface-variant">{p.name}</figcaption>
+        </figure>
+      )}
+    </Sortable>
+  );
+}
+```
+
+## Example: Flat, locked and disabled
+
+A dense list in a card: the first column is locked, and the switch turns editing off.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Card, Sortable, SwitchField } from '@nexub/react';
+
+export default function Example() {
+  const [columns, setColumns] = React.useState(['Name', 'Owner', 'Status', 'Due date', 'Budget']);
+  const [editing, setEditing] = React.useState(true);
+  return (
+    <Card className="flex w-full max-w-sm flex-col gap-3 p-4">
+      <SwitchField checked={editing} onCheckedChange={setEditing} label="Edit order" />
+      <Sortable
+        aria-label="Table columns"
+        variant="flat"
+        disabled={!editing}
+        isLocked={(c) => c === 'Name'}
+        items={columns}
+        getLabel={(c) => c}
+        onReorder={setColumns}
+      >
+        {(c) => c}
+      </Sortable>
+    </Card>
+  );
+}
+```
+
+## Example: Groups
+
+Move stories between the backlog and the sprint, by drag or Alt+ArrowLeft / Alt+ArrowRight.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Sortable } from '@nexub/react';
+
+type Story = { id: string; title: string };
+type Lists = { id: string; label: string; items: Story[] }[];
+
+export default function Example() {
+  const [lists, setLists] = React.useState<Lists>([
+    { id: 'backlog', label: 'Backlog', items: [{ id: '1', title: 'Export to CSV' }, { id: '2', title: 'Dark mode charts' }, { id: '3', title: 'SSO for teams' }] },
+    { id: 'sprint', label: 'This sprint', items: [{ id: '4', title: 'Invoice reminders' }] },
+  ]);
+  return (
+    <Sortable.Group lists={lists} onChange={setLists} getLabel={(s) => s.title}>
+      <div className="grid w-full gap-6 sm:grid-cols-2">
+        {lists.map((l) => (
+          <div key={l.id} className="flex flex-col gap-2">
+            <h3 className="m-0 text-title-sm text-on-surface">{l.label}</h3>
+            <Sortable<Story> list={l.id} className="min-h-16">
+              {(s) => s.title}
+            </Sortable>
+          </div>
+        ))}
+      </div>
+    </Sortable.Group>
+  );
+}
+```
+
 ## Accessibility
 
-- `Alt+ArrowUp / Alt+ArrowDown`: On a handle: moves the item; focus stays on its handle.
+- `Alt+ArrowUp / Alt+ArrowDown`: On a handle: moves the item (by a row in a grid); focus stays on its handle.
+- `Alt+ArrowLeft / Alt+ArrowRight`: In a grid, moves the item by one cell; in a group, to the previous or next list. Mirrored in RTL.
 - Every handle is a button named "Move ‹label›", described by the key hint.
-- Moves are announced: "Alpha moved to position 3 of 5".
-- Mouse drag uses the native drag-and-drop API, so there is no extra dependency.
+- Moves are announced: "Alpha moved to position 3 of 5", or "Alpha moved to Sprint, position 1 of 2" across lists.
+- A locked item’s handle is disabled and named "‹label› is locked".
+- Dragging uses Pointer Events (mouse, pen, touch; Escape cancels), so there is no extra dependency. The settle animation is off under reduced motion.
 
 Related: [kanban](kanban.md), [data-table](data-table.md)
 
@@ -10542,6 +10898,9 @@ Progress through a multi-step flow, with clickable steps that follow the order y
 | `nonLinear` | `boolean` |  | Every step is reachable. |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Vertical suits side columns and narrow screens. |
 | `aria-label` | `string` |  | Names the navigation landmark, e.g. "Setup steps". |
+| `steps[].status` | `'complete' \| 'current' \| 'upcoming' \| 'error' \| 'warning' \| 'skipped' \| 'cancelled'` |  | 11.4: the step's state, named as in StatusSteps; read after the label. Wins over `current` and `completed`. |
+| `steps[].description` | `ReactNode` |  | 11.4: any content (a date, a link). |
+| `steps[].actions` | `ReactNode` |  | 11.4: actions under the step, e.g. Retry. |
 
 ## Example: Wizard with a form per step
 
@@ -10577,6 +10936,29 @@ export default function Example() {
         <p className="text-body-md">All set.</p>
       )}
     </div>
+  );
+}
+```
+
+## Example: Statuses and actions
+
+`current={-1}` for "all done" is deprecated in 11.4 (removed in 12.0): use `status`. `nexub-migrate --rules deprecated-in-11` finds it.
+
+```tsx
+import { Button, Stepper } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stepper
+      className="w-full"
+      current={2}
+      steps={[
+        { label: 'Details', status: 'complete' },
+        { label: 'Identity', status: 'skipped', description: 'Not needed for this plan' },
+        { label: 'Bank check', status: 'error', description: 'The bank rejected the account', actions: <Button size="sm" variant="outlined">Retry</Button> },
+        { label: 'Payout', status: 'upcoming' },
+      ]}
+    />
   );
 }
 ```

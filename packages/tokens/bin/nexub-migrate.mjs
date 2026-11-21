@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11'];
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11', 'deprecated-in-11'];
 // Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
 const OPT_IN = new Set(['keep-5-defaults']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
@@ -572,6 +572,21 @@ function changesIn11(src, ext, report) {
   return output;
 }
 
+// ─── deprecated-in-11: deprecated in an 11.x minor, removed in 12.0 ───────────
+// 11.4: Stepper current={-1} for "every step done". Reported, never rewritten: the fix is a
+// `status` on each step (or `completed`), which only the app knows.
+function deprecatedIn11(src, report) {
+  for (const [local] of importedAs(src, '@nexub/react', ['Stepper'])) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const tag = readTag(src, m.index + m[0].length);
+      if (!tag) continue;
+      const text = src.slice(m.index, tag.end);
+      if (/\bcurrent=\{\s*-\s*1\s*\}/.test(text))
+        report(m.index, '<Stepper current={-1}> is deprecated in 11.4 and removed in 12.0: give each step a status (status: "complete") or pass completed with every index, and set current to the step being shown');
+    }
+  }
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -632,6 +647,8 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
     text = changesIn9(text, (at, message) => items.push({ at, rule: 'changes-in-9', message }));
   if (rules.has('changes-in-11') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.scss' || ext === '.html'))
     text = changesIn11(text, ext, (at, message) => items.push({ at, rule: 'changes-in-11', message }));
+  if (rules.has('deprecated-in-11') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(src))
+    deprecatedIn11(src, (at, message) => items.push({ at, rule: 'deprecated-in-11', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -714,6 +731,8 @@ Rules:
                      (import and CSS @import) to @nexub/themes/products; reports every overlay
                      without a sheet prop (the default became "auto": a bottom sheet below
                      768px; sheet={false} keeps the popover)
+  deprecated-in-11   report what an 11.x minor deprecated (removed in 12.0): <Stepper current={-1}>
+                     (11.4: give steps a status instead)
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
