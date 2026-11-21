@@ -47,3 +47,30 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 11.1: a button with no drop zone, an icon-only paperclip, the phone camera, a compact zone and a busy state. */
+export const TriggerAndStates: Story = {
+  render: () => {
+    const [files, setFiles] = React.useState<File[]>([]);
+    return (
+      <div style={{ display: 'grid', gap: 16, maxWidth: 420 }}>
+        <FileUpload.Root accept={['.csv']} files={files} onFilesChange={setFiles}>
+          <FileUpload.Trigger>Import CSV</FileUpload.Trigger>
+          <FileUpload.List>{files.map((f, i) => <FileUpload.Item key={f.name + i} index={i} />)}</FileUpload.List>
+        </FileUpload.Root>
+        <FileUpload.Root>
+          <FileUpload.Trigger iconOnly aria-label="Attach a file" />
+        </FileUpload.Root>
+        <FileUpload.Root accept={['image/*']} capture="environment" maxFiles={1}>
+          <FileUpload.Trigger variant="tonal">Take a photo</FileUpload.Trigger>
+        </FileUpload.Root>
+        <FileUpload.Root>
+          <FileUpload.Dropzone size="sm" />
+        </FileUpload.Root>
+        <FileUpload.Root busy progress={60}>
+          <FileUpload.Dropzone size="sm" />
+        </FileUpload.Root>
+      </div>
+    );
+  },
+};

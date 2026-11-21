@@ -18,6 +18,9 @@ export interface NexubMessages {
   tooManyFiles: (maxFiles: number) => string;
   clickToUpload: string;
   orDragAndDrop: string;
+  /** 11.1: FileUpload.Trigger's name when it shows only an icon, and its busy label. */
+  uploadFile: string;
+  uploading: string;
   clearSearch: string;
   showPassword: string;
   increment: string;
@@ -46,6 +49,13 @@ export interface NexubMessages {
   previousMonth: string;
   nextMonth: string;
   calendarNavigation: string;
+  /** 11.1: DatePicker `granularity="month"` and `"year"`. */
+  pickMonth: string;
+  pickYear: string;
+  previousYear: string;
+  nextYear: string;
+  previousYears: string;
+  nextYears: string;
   /** Wraps a day's formatted date when it is today. */
   todayDate: (date: string) => string;
   /** Wraps a day's (possibly today-wrapped) label when it is selected. */
@@ -290,6 +300,8 @@ export const defaultMessages: NexubMessages = {
   tooManyFiles: (maxFiles) => `You can add up to ${maxFiles} file${maxFiles !== 1 ? 's' : ''}`,
   clickToUpload: 'Click to upload',
   orDragAndDrop: 'or drag and drop',
+  uploadFile: 'Upload file',
+  uploading: 'Uploading',
   clearSearch: 'Clear search',
   showPassword: 'Show password',
   increment: 'Increment',
@@ -315,6 +327,12 @@ export const defaultMessages: NexubMessages = {
   previousMonth: 'Go to previous month',
   nextMonth: 'Go to next month',
   calendarNavigation: 'Calendar navigation',
+  pickMonth: 'Pick a month',
+  pickYear: 'Pick a year',
+  previousYear: 'Go to previous year',
+  nextYear: 'Go to next year',
+  previousYears: 'Go to previous years',
+  nextYears: 'Go to next years',
   todayDate: (date) => `Today, ${date}`,
   selectedDate: (label) => `${label}, selected`,
   commandPalette: 'Command palette',

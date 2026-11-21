@@ -52,7 +52,7 @@ export { Textarea, textareaVariants } from './components/Textarea/index.js';
 export type { TextareaProps } from './components/Textarea/index.js';
 
 export { NumberInput } from './components/NumberInput/index.js';
-export type { NumberInputProps } from './components/NumberInput/index.js';
+export type { NumberInputProps, NullableNumberInputProps } from './components/NumberInput/index.js';
 export { MoneyInput } from './components/MoneyInput/index.js';
 export type { MoneyInputProps } from './components/MoneyInput/index.js';
 export { Amount } from './components/Amount/index.js';
@@ -329,7 +329,7 @@ export type { ErrorStateProps } from './components/ErrorState/index.js';
 
 // Components — Input
 export { FileUpload, fileAccepted } from './components/FileUpload/index.js';
-export type { FileUploadRootProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
+export type { FileUploadRootProps, FileUploadDropzoneProps, FileUploadTriggerProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
 export { OTPInput } from './components/OTPInput/index.js';
 export { Form, useForm } from './components/Form/index.js';
 export type { FormProps, FormErrorItem, FormErrors, FormContextValue } from './components/Form/index.js';
@@ -359,7 +359,7 @@ export { toCSV } from './utils/csv.js';
 export type { CSVColumn } from './utils/csv.js';
 export type { OTPInputProps } from './components/OTPInput/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
-export type { DatePickerProps } from './components/DatePicker/index.js';
+export type { DatePickerProps, DatePeriodPickerProps } from './components/DatePicker/index.js';
 export { DateRangePicker } from './components/DateRangePicker/index.js';
 export { todayIn } from './components/DateRangePicker/index.js';
 export type { DateRangePickerProps, DateRange, DateRangePreset } from './components/DateRangePicker/index.js';

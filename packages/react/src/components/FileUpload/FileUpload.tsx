@@ -1,11 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Upload, X } from '@nexub/icons';
+import { Paperclip, Upload, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Progress } from '../Progress/Progress.js';
 import { SPRING_MS } from '../Motion/useMotion.js';
+import { Button, type ButtonProps } from '../Button/Button.js';
+import { IconButton } from '../IconButton/IconButton.js';
 
 /** Localised file size ("12.3 kB", "1,5 Mo"), 1024-based as before. */
 export function formatFileSize(bytes: number, locale: string): string {
@@ -45,12 +47,16 @@ interface FileUploadContextValue {
   onFilesChange?: (files: File[]) => void;
   files: File[];
   rejections: FileRejection[];
-  addFiles: (newFiles: File[]) => void;
+  addFiles: (newFiles: File[]) => void | Promise<void>;
   removeFile: (index: number) => void;
   isDragging: boolean;
   setIsDragging: (v: boolean) => void;
   invalid?: boolean;
   readOnly?: boolean;
+  disabled?: boolean;
+  busy?: boolean;
+  progress?: number;
+  capture?: FileUploadRootProps['capture'];
 }
 
 const FileUploadContext = React.createContext<FileUploadContextValue | null>(null);
@@ -78,36 +84,109 @@ export interface FileUploadRootProps extends React.HTMLAttributes<HTMLDivElement
   invalid?: boolean;
   /** Files stay listed; nothing can be picked, dropped, pasted or removed. */
   readOnly?: boolean;
+  /**
+   * 11.1: controlled list. Pass `files` with `onFilesChange` to clear or set the list from
+   * outside (e.g. `files={[]}` after a send), instead of remounting with a `key`.
+   */
+  files?: File[];
+  /** 11.1: the starting list when uncontrolled. */
+  defaultFiles?: File[];
+  /** 11.1: nothing can be picked, dropped or pasted; the zone and trigger look disabled. */
+  disabled?: boolean;
+  /** 11.1: an upload is running. Picking is blocked and the zone or trigger shows it (with `progress`, a bar). */
+  busy?: boolean;
+  /** 11.1: 0–100 while `busy`. */
+  progress?: number;
+  /**
+   * 11.1: open the phone camera instead of the file list (the input's `capture`):
+   * `'environment'` (back), `'user'` (front), or `true` for the browser's choice.
+   */
+  capture?: boolean | 'user' | 'environment';
+  /**
+   * 11.1: runs on each file after the `accept` check and before `maxSize` and `validate`, e.g.
+   * to shrink a photo. Return the file to keep (a new File or the same one). May be async.
+   */
+  transform?: (file: File) => File | Promise<File>;
 }
 
 const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
-  ({ className, accept, maxFiles, maxSize, onFilesChange, onReject, validate, invalid, readOnly, onPaste, children, ...props }, ref) => {
-    const [files, setFiles] = React.useState<File[]>([]);
+  (
+    {
+      className,
+      accept,
+      maxFiles,
+      maxSize,
+      onFilesChange,
+      onReject,
+      validate,
+      invalid,
+      readOnly,
+      onPaste,
+      files: filesProp,
+      defaultFiles,
+      disabled,
+      busy,
+      progress,
+      capture,
+      transform,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const [internalFiles, setInternalFiles] = React.useState<File[]>(defaultFiles ?? []);
+    const controlled = filesProp !== undefined;
+    const files = controlled ? filesProp : internalFiles;
+    const setFiles = (next: File[]) => {
+      if (!controlled) setInternalFiles(next);
+    };
     const [rejections, setRejections] = React.useState<FileRejection[]>([]);
     const [isDragging, setIsDragging] = React.useState(false);
+    // Latest list for the async transform path: files picked while one is transforming append, not replace.
+    const filesRef = React.useRef(files);
+    filesRef.current = files;
+    const blocked = readOnly || disabled || busy;
 
-    // Picker and drop both come through here, so both are filtered.
+    // Picker, drop, paste and Trigger all come through here, so all are filtered.
     const addFiles = React.useCallback(
-      (newFiles: File[]) => {
-        if (readOnly) return;
+      async (newFiles: File[]) => {
+        if (blocked) return;
         const rejected: FileRejection[] = [];
+        const kept: File[] = [];
         let custom: string | null;
-        const next = [...files];
-        for (const file of newFiles) {
-          if (!fileAccepted(file, accept)) rejected.push({ file, reason: 'type' });
-          else if (maxSize !== undefined && file.size > maxSize) rejected.push({ file, reason: 'size' });
+        for (const original of newFiles) {
+          if (!fileAccepted(original, accept)) {
+            rejected.push({ file: original, reason: 'type' });
+            continue;
+          }
+          let file = original;
+          if (transform) {
+            try {
+              file = await transform(original);
+            } catch (error) {
+              rejected.push({ file: original, reason: 'custom', message: error instanceof Error ? error.message : String(error) });
+              continue;
+            }
+          }
+          if (maxSize !== undefined && file.size > maxSize) rejected.push({ file, reason: 'size' });
           else if ((custom = validate?.(file) || null)) rejected.push({ file, reason: 'custom', message: custom });
-          else if (maxFiles !== undefined && next.length >= maxFiles) rejected.push({ file, reason: 'count' });
+          else kept.push(file);
+        }
+        const next = [...filesRef.current];
+        for (const file of kept) {
+          if (maxFiles !== undefined && next.length >= maxFiles) rejected.push({ file, reason: 'count' });
           else next.push(file);
         }
         setRejections(rejected);
-        if (next.length !== files.length) {
+        if (next.length !== filesRef.current.length) {
+          filesRef.current = next;
           setFiles(next);
           onFilesChange?.(next);
         }
         if (rejected.length) onReject?.(rejected);
       },
-      [files, accept, maxFiles, maxSize, onFilesChange, onReject, validate, readOnly],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [accept, maxFiles, maxSize, onFilesChange, onReject, validate, blocked, transform, controlled],
     );
 
     const removeFile = React.useCallback(
@@ -116,16 +195,18 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
         const next = files.filter((_, i) => i !== index);
         setFiles(next);
         setRejections([]);
+        filesRef.current = next;
         onFilesChange?.(next);
       },
-      [files, onFilesChange, readOnly],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [files, onFilesChange, readOnly, controlled],
     );
 
     // Memoize the context value so that consumers only re-render when one of
     // the tracked values actually changes — not on every parent render cycle.
     const contextValue = React.useMemo(
-      () => ({ accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly }),
-      [accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly],
+      () => ({ accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly, disabled, busy, progress, capture }),
+      [accept, maxFiles, maxSize, onFilesChange, files, rejections, addFiles, removeFile, isDragging, setIsDragging, invalid, readOnly, disabled, busy, progress, capture],
     );
 
     return (
@@ -137,7 +218,7 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
           onPaste={(e) => {
             onPaste?.(e);
             const pasted = Array.from(e.clipboardData?.files ?? []);
-            if (e.defaultPrevented || !pasted.length) return;
+            if (e.defaultPrevented || !pasted.length || blocked) return;
             e.preventDefault();
             addFiles(pasted);
           }}
@@ -151,19 +232,74 @@ const Root = React.forwardRef<HTMLDivElement, FileUploadRootProps>(
 );
 Root.displayName = 'FileUpload.Root';
 
-const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, children, ...props }, ref) => {
-    const { accept, maxFiles, maxSize, rejections, addFiles, isDragging, setIsDragging, invalid, readOnly } = useFileUpload();
+/** Rejection messages: always mounted so screen readers announce new errors. */
+function Rejections({ id, className }: { id: string; className?: string }) {
+  const { maxFiles, maxSize, rejections } = useFileUpload();
+  const messages = useNexubMessages();
+  const { locale } = useLocale();
+  return (
+    <div id={id} role="alert" className={cn('empty:hidden text-start text-body-sm text-error', className)}>
+      {rejections.length > 0 && (
+        <ul>
+          {rejections.map(({ file, reason, message }, i) => (
+            <li key={`${file.name}-${i}`}>
+              {reason === 'custom'
+                ? message
+                : reason === 'type'
+                  ? messages.fileTypeRejected(file.name)
+                  : reason === 'size'
+                    ? messages.fileTooLarge(file.name, formatFileSize(maxSize ?? 0, locale))
+                    : messages.tooManyFiles(maxFiles ?? 0)}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/** Props for the hidden native input shared by Dropzone and Trigger. */
+function useFileInputProps(errorId: string): React.InputHTMLAttributes<HTMLInputElement> {
+  const { accept, maxFiles, rejections, addFiles, invalid, readOnly, disabled, busy, capture } = useFileUpload();
+  return {
+    type: 'file',
+    className: 'sr-only',
+    multiple: maxFiles !== 1,
+    accept: accept?.join(','),
+    capture: capture === true ? ('' as never) : capture || undefined,
+    disabled,
+    'aria-invalid': invalid || undefined,
+    'aria-describedby': rejections.length ? errorId : undefined,
+    // Read-only and busy: stays focusable, the picker never opens.
+    onClick: (e) => {
+      if (readOnly || busy) e.preventDefault();
+    },
+    onChange: (e) => {
+      if (e.target.files) void addFiles(Array.from(e.target.files));
+      e.target.value = '';
+    },
+  };
+}
+
+export interface FileUploadDropzoneProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** 11.1: `'sm'` is a compact one-line zone for forms and side panels. @default 'md' */
+  size?: 'sm' | 'md';
+}
+
+const Dropzone = React.forwardRef<HTMLDivElement, FileUploadDropzoneProps>(
+  ({ className, children, size = 'md', ...props }, ref) => {
+    const { addFiles, isDragging, setIsDragging, invalid, readOnly, disabled, busy, progress } = useFileUpload();
     const messages = useNexubMessages();
-    const { locale } = useLocale();
     const errorId = React.useId();
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const inputProps = useFileInputProps(errorId);
+    const inert = readOnly || disabled || busy;
+    const compact = size === 'sm';
 
     function handleDrop(e: React.DragEvent) {
       e.preventDefault();
       setIsDragging(false);
-      const dropped = Array.from(e.dataTransfer.files);
-      addFiles(dropped);
+      if (inert) return;
+      void addFiles(Array.from(e.dataTransfer.files));
     }
 
     return (
@@ -172,77 +308,128 @@ const Dropzone = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
       // focus ring follows the input's keyboard focus onto the drop zone.
       <div
         ref={ref}
+        data-disabled={disabled ? '' : undefined}
+        aria-busy={busy || undefined}
         onDragOver={(e) => {
           e.preventDefault();
-          if (!readOnly) setIsDragging(true);
+          if (!inert) setIsDragging(true);
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         className={cn(
           // Hover/press = the state layer.
-          'rounded-shape-container border-2 border-dashed text-center text-[var(--color-on-surface)] transition-colors',
-          'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-[var(--color-primary)]',
-          !readOnly && 'nx-state-layer',
-          readOnly
-            ? 'border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)]'
-            : isDragging
-              ? 'border-[var(--color-primary)] bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
-              : invalid
-                ? 'border-[var(--color-error)]'
-                : 'border-[var(--color-outline)] hover:border-[var(--color-primary)]',
+          'rounded-shape-container border-2 border-dashed text-center text-on-surface transition-colors',
+          'has-[input:focus-visible]:outline has-[input:focus-visible]:outline-3 has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-primary',
+          !inert && 'nx-state-layer',
+          disabled
+            ? 'border-outline-variant text-[var(--color-text-disabled)]'
+            : readOnly || busy
+              ? 'border-outline-variant bg-surface-container-low'
+              : isDragging
+                ? 'border-primary bg-[color-mix(in_srgb,var(--color-primary)_8%,transparent)]'
+                : invalid
+                  ? 'border-error'
+                  : 'border-outline hover:border-primary',
           className,
         )}
         {...props}
       >
-        <label className={cn('flex flex-col items-center justify-center gap-2 p-8', readOnly ? 'cursor-default' : 'cursor-pointer')}>
-          <Upload size="lg" className="text-[var(--color-on-surface-muted)]" aria-hidden="true" />
-          {children ?? (
-            <span className="text-body-sm text-[var(--color-on-surface-muted)]">
-              <span className="font-semibold text-[var(--color-primary)]">{messages.clickToUpload}</span>{' '}
-              {messages.orDragAndDrop}
-            </span>
+        <label
+          className={cn(
+            'flex items-center justify-center',
+            compact ? 'flex-row gap-2 px-4 py-3' : 'flex-col gap-2 p-8',
+            disabled ? 'cursor-not-allowed' : inert ? 'cursor-default' : 'cursor-pointer',
           )}
-          <input
-            ref={inputRef}
-            type="file"
-            className="sr-only"
-            multiple
-            accept={accept?.join(',')}
-            aria-invalid={invalid || undefined}
-            // Read-only: stays focusable, the picker never opens.
-            onClick={(e) => {
-              if (readOnly) e.preventDefault();
-            }}
-            onChange={(e) => {
-              if (e.target.files) addFiles(Array.from(e.target.files));
-              e.target.value = '';
-            }}
-            aria-describedby={rejections.length ? errorId : undefined}
-          />
+        >
+          <Upload size={compact ? 'sm' : 'lg'} className={disabled ? undefined : 'text-on-surface-muted'} aria-hidden="true" />
+          {busy ? (
+            <span className="text-body-sm text-on-surface-muted">{messages.uploading}</span>
+          ) : (
+            (children ?? (
+              <span className={cn('text-body-sm', !disabled && 'text-on-surface-muted')}>
+                <span className={cn('font-semibold', !disabled && 'text-primary')}>{messages.clickToUpload}</span>{' '}
+                {messages.orDragAndDrop}
+              </span>
+            ))
+          )}
+          <input {...inputProps} />
         </label>
-        {/* Always mounted so screen readers announce new errors. */}
-        <div id={errorId} role="alert" className="empty:hidden px-4 pb-3 text-start text-body-sm text-[var(--color-error)]">
-          {rejections.length > 0 && (
-            <ul>
-              {rejections.map(({ file, reason, message }, i) => (
-                <li key={`${file.name}-${i}`}>
-                  {reason === 'custom'
-                    ? message
-                    : reason === 'type'
-                    ? messages.fileTypeRejected(file.name)
-                    : reason === 'size'
-                      ? messages.fileTooLarge(file.name, formatFileSize(maxSize ?? 0, locale))
-                      : messages.tooManyFiles(maxFiles ?? 0)}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        {busy && progress !== undefined && (
+          <Progress value={Math.round(progress)} size="sm" className={compact ? 'mx-4 mb-3' : 'mx-8 mb-6'} aria-label={messages.uploading} />
+        )}
+        <Rejections id={errorId} className="px-4 pb-3" />
       </div>
     );
   },
 );
 Dropzone.displayName = 'FileUpload.Dropzone';
+
+
+export interface FileUploadTriggerProps extends Omit<ButtonProps, 'onClick' | 'type'> {
+  /**
+   * 11.1: no visible text, only the icon (a paperclip by default). The button's name is
+   * `aria-label` or the `uploadFile` message.
+   */
+  iconOnly?: boolean;
+  /** The icon. @default a paperclip */
+  icon?: React.ReactNode;
+}
+
+/**
+ * 11.1: a button that opens the file picker, with no drop zone: a composer's paperclip, an
+ * "Import CSV" button, a photo button with `capture`. Files take the same path as the drop
+ * zone (accept, transform, size, validate, count), and rejections show under the button.
+ */
+const Trigger = React.forwardRef<HTMLButtonElement, FileUploadTriggerProps>(
+  ({ iconOnly = false, icon, children, className, variant = 'outlined', size, 'aria-label': ariaLabel, ...props }, ref) => {
+    const { disabled, readOnly, busy, rejections } = useFileUpload();
+    const messages = useNexubMessages();
+    const errorId = React.useId();
+    const inputProps = useFileInputProps(errorId);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const open = () => {
+      if (!readOnly && !busy) inputRef.current?.click();
+    };
+    const glyph = icon ?? <Paperclip size="sm" aria-hidden="true" />;
+    return (
+      <span className={cn('inline-flex flex-col items-start gap-1', className)}>
+        {iconOnly ? (
+          <IconButton
+            ref={ref}
+            label={ariaLabel ?? messages.uploadFile}
+            variant={variant === 'filled' ? 'solid' : variant === 'outlined' ? 'outline' : variant === 'tonal' || variant === 'subtle' ? 'subtle' : 'ghost'}
+            disabled={disabled}
+            loading={busy}
+            aria-describedby={rejections.length ? errorId : undefined}
+            onClick={open}
+          >
+            {glyph}
+          </IconButton>
+        ) : (
+          <Button
+            ref={ref}
+            type="button"
+            variant={variant}
+            size={size}
+            disabled={disabled}
+            loading={busy}
+            loadingLabel={messages.uploading}
+            leadingIcon={glyph}
+            aria-label={ariaLabel}
+            aria-describedby={rejections.length ? errorId : undefined}
+            onClick={open}
+            {...props}
+          >
+            {children ?? messages.uploadFile}
+          </Button>
+        )}
+        <input {...inputProps} ref={inputRef} tabIndex={-1} aria-hidden="true" />
+        <Rejections id={errorId} />
+      </span>
+    );
+  },
+);
+Trigger.displayName = 'FileUpload.Trigger';
 
 const List = React.forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListElement>>(
   ({ className, ...props }, ref) => {
@@ -351,4 +538,4 @@ const Item = React.forwardRef<HTMLLIElement, FileUploadItemProps>(({ className, 
 });
 Item.displayName = 'FileUpload.Item';
 
-export const FileUpload = { Root, Dropzone, List, Item };
+export const FileUpload = { Root, Dropzone, Trigger, List, Item };
