@@ -177,7 +177,7 @@ export function buildBase(source, names, slug) {
   const base = usesLocal ? body : `function Base(pg: Record<string, unknown>) {${idLine}\n  return (\n    ${body}\n  );\n}`;
 
   // Module-level code the base still uses: other statements first (to a fixpoint), then imports.
-  const uses = (code, name) => new RegExp(`(?<![\\w$.])${name.replace(/\$/g, '\\$')}(?![\\w$])`).test(code);
+  const uses = (code, name) => new RegExp(`(?<![\\w$.])${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w$])`).test(code);
   const declared = (s) =>
     ts.isVariableStatement(s) ? s.declarationList.declarations.flatMap((d) => (ts.isIdentifier(d.name) ? [d.name.text] : [])) : s.name ? [s.name.text] : [];
   const others = sf.statements.filter((s) => s !== fn && !ts.isImportDeclaration(s) && !(ts.isExpressionStatement(s) && ts.isStringLiteral(s.expression)));
