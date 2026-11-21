@@ -258,6 +258,10 @@
       },
       {
         "kind": "switch",
+        "name": "clearOnSelect"
+      },
+      {
+        "kind": "switch",
         "name": "disabled"
       },
       {
@@ -1382,6 +1386,78 @@
       }
     ]
   },
+  "color-picker": {
+    "tag": "ColorPicker",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Label colour\"",
+      "value={color}",
+      "onValueChange={setColor}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
   "combobox-field": {
     "tag": "ComboboxField",
     "children": "none",
@@ -1475,6 +1551,44 @@
   },
   "combobox": {
     "skip": "no controllable props and no states"
+  },
+  "command-list": {
+    "tag": "CommandList",
+    "children": "none",
+    "fixed": [
+      "items={items}",
+      "onSelect={setPicked}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "autoFocus",
+        "default": true,
+        "initial": false
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "text",
+        "name": "label"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
   },
   "command-palette": {
     "tag": "CommandPalette.Root",
@@ -1808,6 +1922,87 @@
       }
     ]
   },
+  "currency-select": {
+    "tag": "CurrencySelect",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Currency\"",
+      "value={currency}",
+      "onValueChange={setCurrency}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "default": "Select…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
   "data-table": {
     "tag": "DataTable",
     "children": "none",
@@ -2002,6 +2197,11 @@
       },
       {
         "kind": "switch",
+        "name": "endExclusive",
+        "default": false
+      },
+      {
+        "kind": "switch",
         "name": "readOnly",
         "default": false
       },
@@ -2065,6 +2265,10 @@
           true,
           "auto"
         ]
+      },
+      {
+        "kind": "switch",
+        "name": "clearable"
       },
       {
         "kind": "switch",
@@ -2325,6 +2529,98 @@
   },
   "dropdown-menu": {
     "skip": "no controllable props and no states"
+  },
+  "emoji-picker": {
+    "tag": "EmojiPicker",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Space icon\"",
+      "value={emoji}",
+      "onValueChange={setEmoji}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "skinTone",
+        "options": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
   },
   "empty-state": {
     "tag": "EmptyState.Root",
@@ -3365,6 +3661,86 @@
     "states": [
       {
         "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
+  "icon-picker": {
+    "tag": "IconPicker",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Menu icon\"",
+      "value={icon}",
+      "onValueChange={setIcon}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
         "value": true
       },
       {
@@ -4449,9 +4825,14 @@
         "name": "mode",
         "options": [
           "numeric",
-          "alphanumeric"
+          "alphanumeric",
+          "backup"
         ],
         "default": "numeric"
+      },
+      {
+        "kind": "switch",
+        "name": "autoFocus"
       },
       {
         "kind": "switch",
@@ -4467,8 +4848,7 @@
       },
       {
         "kind": "number",
-        "name": "length",
-        "default": 6
+        "name": "length"
       }
     ],
     "states": [

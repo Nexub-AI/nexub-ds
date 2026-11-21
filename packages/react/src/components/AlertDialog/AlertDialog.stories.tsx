@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
-import { AlertDialog } from './AlertDialog.js';
+import { AlertDialog, usePrompt } from './AlertDialog.js';
 
 const meta: Meta = {
   title: 'Overlays/AlertDialog',
@@ -79,3 +79,38 @@ export const SheetAuto: Story = {
     </AlertDialog.Root>
   ),
 };
+
+/** 11.2: asks for a reason in place of window.prompt. Open by default so the dialog is visible. */
+export const Prompt: Story = {
+  render: () => (
+    <AlertDialog.Prompt
+      defaultOpen
+      title="Reject expense claim"
+      description="The submitter sees this reason."
+      label="Reason"
+      placeholder="Missing receipt"
+      minLength={5}
+      maxLength={200}
+      multiline
+      tone="destructive"
+      confirmLabel="Reject claim"
+      onSubmit={() => new Promise((resolve) => setTimeout(resolve, 800))}
+    />
+  ),
+};
+
+function UsePromptDemo() {
+  const [prompt, element] = usePrompt();
+  const [name, setName] = React.useState<string | null>(null);
+  return (
+    <div style={{ display: 'grid', gap: 8, justifyItems: 'start' }}>
+      <button type="button" onClick={async () => setName(await prompt({ title: 'Rename space', label: 'Name', defaultValue: name ?? 'Q3 plan' }))}>
+        Rename…
+      </button>
+      <span>Answer: {name ?? '—'}</span>
+      {element}
+    </div>
+  );
+}
+
+export const UsePrompt: Story = { render: () => <UsePromptDemo /> };

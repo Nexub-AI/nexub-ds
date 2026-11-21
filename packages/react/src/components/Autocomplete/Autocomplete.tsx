@@ -1,17 +1,22 @@
 'use client';
 
 import * as React from 'react';
-import { Plus } from '@nexub/icons';
+import { Plus, X } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import type { Size } from '../../utils/control.js';
+import { pressable, type Size } from '../../utils/control.js';
 import type { SheetProp } from '../../utils/popper.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';
 import { ComboboxLoading, ComboboxPopover } from '../Combobox/ComboboxPopover.js';
+import { labelVariants } from '../Label/Label.js';
 
 export interface AutocompleteOption {
   value: string;
   label: string;
+  /** 11.2: a second line under the label (an email, a code). Also searched. */
+  description?: string;
+  /** 11.2 */
+  disabled?: boolean;
 }
 
 export interface AutocompleteProps {
@@ -39,6 +44,20 @@ export interface AutocompleteProps {
   sheet?: SheetProp;
   className?: string;
   'aria-label'?: string;
+  /** 11.2: a visible label above the field. */
+  label?: React.ReactNode;
+  /** 11.2: the input's id (the label points at it). */
+  id?: string;
+  /**
+   * 11.2: "add" mode: after a pick the text empties and the field is ready for the next one
+   * (add a person, add a tag). The value stays yours to keep in a list.
+   */
+  clearOnSelect?: boolean;
+  /**
+   * 11.2: called when the person clears the field (the clear button, or deleting all the text) so
+   * the page can drop the value. With it, a clear button shows while there is text.
+   */
+  onClear?: () => void;
 }
 
 export function Autocomplete({
@@ -57,8 +76,15 @@ export function Autocomplete({
   sheet,
   className,
   'aria-label': ariaLabel,
+  label,
+  id: idProp,
+  clearOnSelect,
+  onClear,
 }: AutocompleteProps) {
   const messages = useNexubMessages();
+  const autoId = React.useId();
+  const id = idProp ?? autoId;
+  const labelId = `${id}-label`;
   const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
   // Input text. Follows the selected option's label when `value` changes from
   // outside (adjusted during render, not in an effect).
@@ -72,7 +98,7 @@ export function Autocomplete({
   };
   if (value !== prevValue) {
     setPrevValue(value);
-    setInnerSearch(selectedLabel);
+    setInnerSearch(clearOnSelect ? '' : selectedLabel);
   }
 
   const text = search.trim();
@@ -91,14 +117,22 @@ export function Autocomplete({
               key={opt.value}
               // cmdk filters on `value`, so match the visible label (id as keyword).
               value={opt.label}
-              keywords={[opt.value]}
+              keywords={opt.description ? [opt.value, opt.description] : [opt.value]}
+              disabled={opt.disabled}
               onSelect={() => {
                 onValueChange?.(opt.value);
-                setSearch(opt.label);
+                setSearch(clearOnSelect ? '' : opt.label);
                 setOpen(false);
               }}
             >
-              {opt.label}
+              {opt.description ? (
+                <span className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate">{opt.label}</span>
+                  <span className="truncate text-label-sm font-normal text-on-surface-muted">{opt.description}</span>
+                </span>
+              ) : (
+                opt.label
+              )}
             </Combobox.Item>
           ))}
           {canCreate && (
@@ -124,23 +158,50 @@ export function Autocomplete({
   const input = {
     placeholder: placeholder ?? messages.searchPlaceholder,
     value: search,
-    'aria-label': ariaLabel,
+    id,
+    'aria-label': label ? undefined : ariaLabel,
+    'aria-labelledby': label ? labelId : undefined,
     onValueChange: (t: string) => {
       setSearch(t);
       setOpen(true);
+      if (t === '' && search !== '') onClear?.();
     },
   };
 
-  return (
+  const clearButton =
+    onClear && search !== '' && !disabled && !readOnly ? (
+      <button
+        type="button"
+        aria-label={messages.clear}
+        className={cn(pressable, '-me-1.5 inline-flex h-6 w-6 shrink-0 items-center justify-center text-on-surface-variant')}
+        onClick={() => {
+          setSearch('');
+          onClear();
+        }}
+      >
+        <X className="h-4 w-4" aria-hidden="true" />
+      </button>
+    ) : null;
+
+  const field = (
     <Combobox.Root
-      label={ariaLabel}
-      className={cn('overflow-visible rounded-none bg-transparent', className)}
+      label={label ? undefined : ariaLabel}
+      className={cn('overflow-visible rounded-none bg-transparent', !label && className)}
       shouldFilter={!onInputChange}
     >
-      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} disabled={disabled} readOnly={readOnly} size={size} sheet={sheet}>
+      <ComboboxPopover open={open && !disabled} onOpenChange={setOpen} input={input} after={clearButton} disabled={disabled} readOnly={readOnly} size={size} sheet={sheet}>
         {list}
       </ComboboxPopover>
     </Combobox.Root>
+  );
+  if (!label) return field;
+  return (
+    <div className={cn('flex flex-col gap-1.5', className)}>
+      <label id={labelId} htmlFor={id} className={labelVariants({ disabled })}>
+        {label}
+      </label>
+      {field}
+    </div>
   );
 }
 

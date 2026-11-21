@@ -16,6 +16,7 @@ A DatePicker and a TimePicker that edit one Date, with an optional time-zone lab
 | `minDate / maxDate` | `Date` |  | Limits the calendar. |
 | `timeZone` | `string` |  | IANA zone named next to the fields, e.g. "Time zone: GMT+8 (Asia/Singapore)". Label only. |
 | `aria-label` | `string` |  | Names the group; the parts read "Date" and "Time". |
+| `clearable` | `boolean` |  | 11.2: a clear button empties the value. |
 
 ## Example: Meeting start
 
@@ -31,6 +32,22 @@ export default function Example() {
     <div className="flex w-full max-w-md flex-col gap-2">
       <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
       <p className="text-body-sm text-on-surface-muted">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
+    </div>
+  );
+}
+```
+
+## Example: Clearable reminder
+
+```tsx
+import * as React from 'react';
+import { DateTimePicker } from '@nexub/react';
+
+export default function Example() {
+  const [reminder, setReminder] = React.useState<Date | undefined>(new Date(2026, 10, 24, 9, 0));
+  return (
+    <div className="w-full max-w-md">
+      <DateTimePicker aria-label="Remind me" clearable value={reminder} onValueChange={setReminder} />
     </div>
   );
 }

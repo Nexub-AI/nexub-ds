@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v11.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v11.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -102,10 +102,14 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Checkbox Field](components/checkbox-field.md) `@nexub/react`: A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
+- [Color Picker](components/color-picker.md) `@nexub/react`: Pick a colour from swatches or type a hex, with an optional contrast hint against a background.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
 - [Combobox Field](components/combobox-field.md) `@nexub/react`: A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
+- [Currency Select](components/currency-select.md) `@nexub/react`: A searchable ISO 4217 currency picker built from Intl: code, name and symbol. Also sits next to a MoneyInput.
+- [Emoji Picker](components/emoji-picker.md) `@nexub/react`: Pick an emoji from a searchable grid with categories, recent picks and skin tone. A popover, a bottom sheet on phones.
 - [File Upload](components/file-upload.md) `@nexub/react`: A drop zone and file list: pick, drop or paste files, with type, size and count checks and per-file progress.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
+- [Icon Picker](components/icon-picker.md) `@nexub/react`: Pick an icon from @nexub/icons in a searchable grid with recent picks and optional categories. A popover, a bottom sheet on phones.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
 - [Phone Input](components/phone-input.md) `@nexub/react`: A phone field with a country picker. Groups the number as you type and reports it in E.164.
@@ -184,6 +188,7 @@ Never use a component marked deprecated.
 ## Components — Navigation
 
 - [Breadcrumb](components/breadcrumb.md) `@nexub/react`: Hierarchical navigation trail showing page location.
+- [Command List](components/command-list.md) `@nexub/react`: A search box over a filtered, grouped list you move through with the keyboard. Inline: put it in a Dialog, Sheet, Drawer or page.
 - [Command Palette](components/command-palette.md) `@nexub/react`: A searchable command menu in a modal dialog (cmdk), with nested pages, recents and an optional Cmd+K shortcut.
 - [Menubar](components/menubar.md) `@nexub/react`: A horizontal bar of menus, like a desktop app’s File / Edit / View, built on Radix.
 - [Navigation Menu](components/navigation-menu.md) `@nexub/react`: Site navigation links with flyout panels, built on Radix.

@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: 'locale', type: 'string', required: false, description: "BCP 47 locale for separators. Defaults to the user's." },
     { name: 'value / defaultValue', type: 'number | null', required: false, description: 'The amount, or null when empty.' },
     { name: 'onValueChange', type: '(value: number | null) => void', required: false, description: 'Parsed amount, rounded to the minor unit, as the person types.' },
+    { name: 'currencySlot', type: 'ReactNode', description: '11.2: shown before the amount, e.g. a CurrencySelect.' },
   ],
   examples: [
     {

@@ -20,6 +20,10 @@ Type-to-search input with matching options dropdown.
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
+| `label` | `ReactNode` |  | 11.2: a visible label above the field. |
+| `clearOnSelect` | `boolean` |  | 11.2: "add" mode: the text empties after a pick. |
+| `onClear` | `() => void` |  | 11.2: called from the clear button or when the text is deleted; shows the clear button. |
+| `options[].description / disabled` | `string / boolean` |  | 11.2: a second line (also searched), and options that can't be picked. |
 
 ## Example: Default
 
@@ -113,6 +117,37 @@ export default function Example() {
         loading={loading}
         onInputChange={setQuery}
       />
+    </div>
+  );
+}
+```
+
+## Example: Add mode with a label
+
+```tsx
+import * as React from 'react';
+import { Autocomplete } from '@nexub/react';
+
+const people = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'aisha@nexub.test' },
+  { value: 'u2', label: 'Ben Ong', description: 'ben@nexub.test' },
+  { value: 'u3', label: 'Chen Wei', description: 'On leave', disabled: true },
+  { value: 'u4', label: 'Dana Lee', description: 'dana@nexub.test' },
+];
+
+export default function Example() {
+  const [added, setAdded] = React.useState<string[]>([]);
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-2">
+      <Autocomplete
+        label="Add a reviewer"
+        clearOnSelect
+        options={people.filter((p) => !added.includes(p.value))}
+        onValueChange={(v) => setAdded((a) => [...a, v])}
+      />
+      <p className="text-body-sm text-on-surface-muted">
+        Reviewers: {added.map((v) => people.find((p) => p.value === v)?.label).join(', ') || '—'}
+      </p>
     </div>
   );
 }

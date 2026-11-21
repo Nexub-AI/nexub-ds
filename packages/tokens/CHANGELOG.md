@@ -1,5 +1,7 @@
 # @nexub/tokens
 
+## 11.1.0
+
 ## 11.0.0
 
 ### Major Changes

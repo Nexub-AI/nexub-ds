@@ -57,3 +57,29 @@ export const SheetAuto: Story = {
     </div>
   ),
 };
+
+const initials = (name: string) => (
+  <span
+    aria-hidden="true"
+    style={{ display: 'inline-grid', placeItems: 'center', width: 20, height: 20, borderRadius: 999, fontSize: 10, background: 'var(--color-primary-container)', color: 'var(--color-on-primary-container)' }}
+  >
+    {name.split(' ').map((p) => p[0]).join('')}
+  </span>
+);
+
+/** 11.2: people as chips with avatars, a second line per option, and a disabled option. */
+export const People: Story = {
+  render: () => {
+    const people = [
+      { value: 'u1', label: 'Aisha Rahman', description: 'Finance', avatar: initials('Aisha Rahman') },
+      { value: 'u2', label: 'Ben Ong', description: 'Sales', avatar: initials('Ben Ong') },
+      { value: 'u3', label: 'Chen Wei', description: 'On leave', avatar: initials('Chen Wei'), disabled: true },
+    ];
+    const [value, setValue] = React.useState(['u1', 'u2']);
+    return (
+      <div style={{ maxWidth: 420 }}>
+        <MultiSelect aria-label="Reviewers" options={people} value={value} onValueChange={setValue} />
+      </div>
+    );
+  },
+};

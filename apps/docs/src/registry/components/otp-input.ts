@@ -19,8 +19,10 @@ const entry: ComponentEntry = {
     { name: 'invalid / disabled', type: 'boolean', required: false, description: 'Error styling (pair with a FormError) and the disabled state.' },
     { name: 'name', type: 'string', required: false, description: 'Submits the code with a form.' },
     { name: 'aria-label', type: 'string', default: "'Verification code'", required: false, description: 'Group name; each box reads "Digit N of M".' },
+    { name: "mode: 'backup'", type: "'numeric' | 'alphanumeric' | 'backup'", description: '11.2: a 12-character recovery code in one field, grouped in fours; the value has no dashes.' },
+    { name: 'autoFocus', type: 'boolean', description: '11.2: focus the first box on mount.' },
   ],
-  examples: [{ title: 'Verification code' }],
+  examples: [{ title: 'Verification code' }, { title: 'Backup code' }],
   a11y: {
     keyboard: [
       { key: 'Type', description: 'Fills the box and moves to the next.' },

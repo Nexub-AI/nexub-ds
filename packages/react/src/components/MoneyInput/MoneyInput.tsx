@@ -18,6 +18,11 @@ export interface MoneyInputProps
   currency: string;
   /** BCP 47 locale for separators. Defaults to the user's. */
   locale?: string;
+  /**
+   * 11.2: shown before the amount, e.g. `<CurrencySelect aria-label="Currency" value={currency}
+   * onValueChange={setCurrency} />`, so people can change the currency next to the amount.
+   */
+  currencySlot?: React.ReactNode;
 }
 
 /**
@@ -26,7 +31,7 @@ export interface MoneyInputProps
  * (e.g. 1234.5 → "1,234.50"). Raw while editing so the caret never jumps.
  */
 export const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
-  ({ value: valueProp, defaultValue = null, onValueChange, currency, locale: localeProp, onFocus, onBlur, className, ...props }, ref) => {
+  ({ value: valueProp, defaultValue = null, onValueChange, currency, locale: localeProp, currencySlot, onFocus, onBlur, className, ...props }, ref) => {
     const locale = useIntlLocale(localeProp);
     const [value, setValue] = useControllableState<number | null>({
       value: valueProp,
@@ -37,7 +42,7 @@ export const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
     const shown =
       draft ?? (value == null ? '' : formatForDisplay(value, currency, locale));
 
-    return (
+    const input = (
       <Input
         ref={ref}
         inputMode="decimal"
@@ -61,6 +66,13 @@ export const MoneyInput = React.forwardRef<HTMLInputElement, MoneyInputProps>(
         }}
         {...props}
       />
+    );
+    if (!currencySlot) return input;
+    return (
+      <div className="flex w-full gap-2">
+        <div className="w-32 shrink-0">{currencySlot}</div>
+        <div className="min-w-0 flex-1">{input}</div>
+      </div>
     );
   },
 );

@@ -145,6 +145,8 @@ export interface NexubMessages {
   typeToConfirm: (text: string) => string;
   /** OTPInput group name when no aria-label is given. */
   verificationCode: string;
+  /** OTPInput `mode="backup"` (11.2). */
+  backupCode: string;
   /** FileUpload per-file progress and cancel. */
   uploadProgress: (fileName: string, percent: number) => string;
   cancelUpload: (fileName: string) => string;
@@ -244,6 +246,10 @@ export interface NexubMessages {
   /** Sheet grabber: cycles the sheet height. */
   resize: string;
   cancel: string;
+  /** AlertDialog.Prompt (11.2): the default confirm label and the built-in checks. */
+  promptConfirm: string;
+  fieldRequired: string;
+  textTooShort: (min: number) => string;
   show: (label: string) => string;
   hide: (label: string) => string;
   /** Read in place of a masked value. */
@@ -285,6 +291,23 @@ export interface NexubMessages {
   dayPeriods: Record<'morning' | 'afternoon' | 'evening', string>;
   noTimesAvailable: string;
   slotUnavailable: (label: string) => string;
+  /** EmojiPicker / IconPicker: trigger and panel names, category headings and the group naming them, the recent picks heading, search results heading and the skin tone choice. */
+  pickEmoji: string;
+  pickIcon: string;
+  emojiCategories: Record<'smileys' | 'people' | 'animals' | 'food' | 'travel' | 'activities' | 'objects' | 'symbols' | 'flags', string>;
+  pickerCategories: string;
+  recentlyUsed: string;
+  searchResults: string;
+  allIcons: string;
+  skinTone: string;
+  skinTones: Record<'default' | 'light' | 'mediumLight' | 'medium' | 'mediumDark' | 'dark', string>;
+  /** ColorPicker: popover name, hex field label, swatch group name, contrast ratio (e.g. "4.8") and the AA text hint. */
+  colorPicker: string;
+  colorHex: string;
+  colorSwatches: string;
+  contrastRatio: (ratio: string) => string;
+  contrastPasses: string;
+  contrastFails: string;
   /** CommandPalette `recentKey` group heading. */
   recent: string;
 }
@@ -419,6 +442,7 @@ export const defaultMessages: NexubMessages = {
   backToHome: 'Back to home',
   typeToConfirm: (text) => `Type ${text} to confirm`,
   verificationCode: 'Verification code',
+  backupCode: 'Backup code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
   editField: (label) => `Edit ${label}`,
@@ -498,6 +522,9 @@ export const defaultMessages: NexubMessages = {
   activityFeed: 'Activity feed',
   resize: 'Resize',
   cancel: 'Cancel',
+  promptConfirm: 'Continue',
+  fieldRequired: 'This field is required.',
+  textTooShort: (min) => `Enter at least ${min} characters.`,
   show: (label) => `Show ${label}`,
   hide: (label) => `Hide ${label}`,
   hidden: 'Hidden',
@@ -527,6 +554,31 @@ export const defaultMessages: NexubMessages = {
   dayPeriods: { morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' },
   noTimesAvailable: 'No times available',
   slotUnavailable: (label) => `${label}, unavailable`,
+  pickEmoji: 'Pick an emoji',
+  pickIcon: 'Pick an icon',
+  emojiCategories: {
+    smileys: 'Smileys & emotion',
+    people: 'People & body',
+    animals: 'Animals & nature',
+    food: 'Food & drink',
+    travel: 'Travel & places',
+    activities: 'Activities',
+    objects: 'Objects',
+    symbols: 'Symbols',
+    flags: 'Flags',
+  },
+  pickerCategories: 'Categories',
+  recentlyUsed: 'Recently used',
+  searchResults: 'Search results',
+  allIcons: 'All icons',
+  skinTone: 'Skin tone',
+  skinTones: { default: 'Default', light: 'Light', mediumLight: 'Medium-light', medium: 'Medium', mediumDark: 'Medium-dark', dark: 'Dark' },
+  colorPicker: 'Color',
+  colorHex: 'Hex',
+  colorSwatches: 'Swatches',
+  contrastRatio: (ratio) => `Contrast ${ratio}:1`,
+  contrastPasses: 'Passes AA for text',
+  contrastFails: 'Fails AA for text (needs 4.5:1)',
   recent: 'Recent',
 };
 

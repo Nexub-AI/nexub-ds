@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v11.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v11.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v11.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v11.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -452,10 +452,14 @@ Never use a component marked deprecated.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 - [Checkbox Field](components/checkbox-field.md) `@nexub/react`: A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
+- [Color Picker](components/color-picker.md) `@nexub/react`: Pick a colour from swatches or type a hex, with an optional contrast hint against a background.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
 - [Combobox Field](components/combobox-field.md) `@nexub/react`: A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
+- [Currency Select](components/currency-select.md) `@nexub/react`: A searchable ISO 4217 currency picker built from Intl: code, name and symbol. Also sits next to a MoneyInput.
+- [Emoji Picker](components/emoji-picker.md) `@nexub/react`: Pick an emoji from a searchable grid with categories, recent picks and skin tone. A popover, a bottom sheet on phones.
 - [File Upload](components/file-upload.md) `@nexub/react`: A drop zone and file list: pick, drop or paste files, with type, size and count checks and per-file progress.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
+- [Icon Picker](components/icon-picker.md) `@nexub/react`: Pick an icon from @nexub/icons in a searchable grid with recent picks and optional categories. A popover, a bottom sheet on phones.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
 - [OTP Input](components/otp-input.md) `@nexub/react`: One box per digit for verification codes, with paste and one-time-code autofill.
 - [Phone Input](components/phone-input.md) `@nexub/react`: A phone field with a country picker. Groups the number as you type and reports it in E.164.
@@ -534,6 +538,7 @@ Never use a component marked deprecated.
 ## Components — Navigation
 
 - [Breadcrumb](components/breadcrumb.md) `@nexub/react`: Hierarchical navigation trail showing page location.
+- [Command List](components/command-list.md) `@nexub/react`: A search box over a filtered, grouped list you move through with the keyboard. Inline: put it in a Dialog, Sheet, Drawer or page.
 - [Command Palette](components/command-palette.md) `@nexub/react`: A searchable command menu in a modal dialog (cmdk), with nested pages, recents and an optional Cmd+K shortcut.
 - [Menubar](components/menubar.md) `@nexub/react`: A horizontal bar of menus, like a desktop app’s File / Edit / View, built on Radix.
 - [Navigation Menu](components/navigation-menu.md) `@nexub/react`: Site navigation links with flyout panels, built on Radix.
@@ -781,6 +786,8 @@ Confirmation dialog that requires an explicit user action before proceeding.
 | `AlertDialog.Action` | `compound` |  | Confirms the destructive or affirmative action and closes the dialog. |
 | `AlertDialog.Cancel` | `compound` |  | Cancels the action and closes the dialog. |
 | `AlertDialog.Confirm text` | `string` |  | Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources. |
+| `AlertDialog.Prompt` | `component` |  | 11.2: asks for one line of text in place of `window.prompt`: `title`, `label`, `required` (default true), `minLength`, `maxLength`, `validate`, `multiline`, `tone`, and `onSubmit` (busy while its promise runs; a rejection shows its message and keeps the dialog open). |
+| `usePrompt()` | `[prompt, element]` |  | 11.2: render `element` once; `await prompt(options)` resolves to the trimmed answer, or `null` when cancelled. |
 
 ## Example: Default
 
@@ -840,6 +847,46 @@ export default function Example() {
         </AlertDialog.Footer>
       </AlertDialog.Content>
     </AlertDialog.Root>
+  );
+}
+```
+
+## Example: Ask for a reason
+
+usePrompt replaces window.prompt, with limits and a busy state.
+
+```tsx
+import * as React from 'react';
+import { Button, usePrompt } from '@nexub/react';
+
+export default function Example() {
+  const [prompt, promptElement] = usePrompt();
+  const [reason, setReason] = React.useState<string | null>(null);
+  return (
+    <div className="flex flex-col items-start gap-2">
+      <Button
+        variant="outlined"
+        onClick={async () =>
+          setReason(
+            await prompt({
+              title: 'Reject expense claim',
+              description: 'The submitter sees this reason.',
+              label: 'Reason',
+              minLength: 5,
+              maxLength: 200,
+              multiline: true,
+              tone: 'destructive',
+              confirmLabel: 'Reject claim',
+              onSubmit: () => new Promise((resolve) => setTimeout(resolve, 800)),
+            }),
+          )
+        }
+      >
+        Reject…
+      </Button>
+      <p className="text-body-sm text-on-surface-muted">Reason: {reason ?? '—'}</p>
+      {promptElement}
+    </div>
   );
 }
 ```
@@ -1207,6 +1254,10 @@ Type-to-search input with matching options dropdown.
 | `onInputChange` | `(text: string) => void` |  | Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option (5.2). |
 | `aria-label` | `string` |  | Accessible name of the field when it has no visible label. |
+| `label` | `ReactNode` |  | 11.2: a visible label above the field. |
+| `clearOnSelect` | `boolean` |  | 11.2: "add" mode: the text empties after a pick. |
+| `onClear` | `() => void` |  | 11.2: called from the clear button or when the text is deleted; shows the clear button. |
+| `options[].description / disabled` | `string / boolean` |  | 11.2: a second line (also searched), and options that can't be picked. |
 
 ## Example: Default
 
@@ -1300,6 +1351,37 @@ export default function Example() {
         loading={loading}
         onInputChange={setQuery}
       />
+    </div>
+  );
+}
+```
+
+## Example: Add mode with a label
+
+```tsx
+import * as React from 'react';
+import { Autocomplete } from '@nexub/react';
+
+const people = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'aisha@nexub.test' },
+  { value: 'u2', label: 'Ben Ong', description: 'ben@nexub.test' },
+  { value: 'u3', label: 'Chen Wei', description: 'On leave', disabled: true },
+  { value: 'u4', label: 'Dana Lee', description: 'dana@nexub.test' },
+];
+
+export default function Example() {
+  const [added, setAdded] = React.useState<string[]>([]);
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-2">
+      <Autocomplete
+        label="Add a reviewer"
+        clearOnSelect
+        options={people.filter((p) => !added.includes(p.value))}
+        onValueChange={(v) => setAdded((a) => [...a, v])}
+      />
+      <p className="text-body-sm text-on-surface-muted">
+        Reviewers: {added.map((v) => people.find((p) => p.value === v)?.label).join(', ') || '—'}
+      </p>
     </div>
   );
 }
@@ -2870,6 +2952,95 @@ export default function Example() {
 
 ---
 
+# Color Picker
+
+Pick a colour from swatches or type a hex, with an optional contrast hint against a background.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { ColorPicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/color-picker
+
+## When to use
+
+- Brand, label or theme colours from a small palette.
+- A text or accent colour that must stay readable on a known background (`contrastAgainst`).
+
+## When not to use
+
+- Free-form colour mixing (hue, saturation, alpha): not covered.
+- A few named options where the colour is incidental: use Select or RadioGroup.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string` | `'#000000'` | The colour as `#rrggbb`. |
+| `onValueChange` | `(hex: string) => void` |  | Called with a lowercase `#rrggbb`. |
+| `swatches` | `Array<string \| { value: string; label?: string }>` |  | The colours offered. A `label` is read out instead of the hex. Defaults to neutrals and hues. |
+| `contrastAgainst` | `string` |  | A background hex: shows the WCAG 2.x contrast ratio and whether it passes AA for text (4.5:1). |
+| `disabled / readOnly / invalid` | `boolean` |  | Field states. Read-only stays focusable but does not open. |
+| `name` | `string` |  | A hidden input posts the value with a plain form. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the trigger. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | The popover as a bottom sheet below 768px. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { ColorPicker } from '@nexub/react';
+
+export default function Example() {
+  const [color, setColor] = React.useState('#2563eb');
+  return <ColorPicker aria-label="Label colour" value={color} onValueChange={setColor} />;
+}
+```
+
+## Example: Contrast hint
+
+```tsx
+import * as React from 'react';
+import { ColorPicker } from '@nexub/react';
+
+export default function Example() {
+  const [color, setColor] = React.useState('#777777');
+  return <ColorPicker aria-label="Text colour" value={color} onValueChange={setColor} contrastAgainst="#ffffff" />;
+}
+```
+
+## Example: Named swatches
+
+```tsx
+import * as React from 'react';
+import { ColorPicker } from '@nexub/react';
+
+const swatches = [
+  { value: '#16a34a', label: 'Done' },
+  { value: '#d97706', label: 'In review' },
+  { value: '#dc2626', label: 'Blocked' },
+  { value: '#64748b', label: 'Backlog' },
+];
+
+export default function Example() {
+  return <ColorPicker aria-label="Status colour" swatches={swatches} defaultValue="#16a34a" />;
+}
+```
+
+## Accessibility
+
+- `Enter / Space`: Opens the popover with focus on the picked swatch.
+- `Arrow keys`: Move between swatches and pick (six per row).
+- `Home / End`: First and last swatch.
+- `Tab`: Moves to the hex field. Enter or leaving it applies the hex.
+- `Escape`: Closes the popover.
+- The trigger is a `combobox` named by `aria-label`; its text is the hex.
+- Swatches are a `radiogroup` with one tab stop. An invalid hex keeps the last colour and marks the field invalid.
+- The contrast hint is announced politely when it changes.
+
+Related: [combobox-field](combobox-field.md), [input](input.md), [popover](popover.md)
+
+
+---
+
 # Combobox Field
 
 A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
@@ -3039,6 +3210,146 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Command List
+
+A search box over a filtered, grouped list you move through with the keyboard. Inline: put it in a Dialog, Sheet, Drawer or page.
+
+- Package: `@nexub/react` · Category: Navigation · Status: alpha
+- Import: `import { CommandList } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/command-list
+
+## When to use
+
+- Picking one item from a long list inside a dialog or sheet: move to folder, assign to, jump to.
+- A search the server answers (`onSearch` with `loading`).
+
+## When not to use
+
+- An app-wide launcher opened with Cmd+K: use CommandPalette.
+- A form field that shows the picked value: use ComboboxField.
+- Ten choices or fewer: use a RadioGroup or Select.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` (required) | `CommandListItem[]` |  | `{ value, label, description?, keywords?, icon?, group?, disabled?, shortcut? }`. `description` and `keywords` are searched too; `group` lists the item under a heading; `shortcut` shows keys at the end of the row. |
+| `onSelect` | `(value: string, item: CommandListItem) => void` |  | Called when an item is picked with Enter or a click. |
+| `label` | `string` | `'Search'` | Accessible name of the search box and list. |
+| `placeholder` | `string` | `'Search…'` | The search box placeholder. |
+| `emptyText` | `ReactNode` | `'No results found.'` | Shown when the search finds nothing. |
+| `onSearch / loading` | `(text: string) => void / boolean` |  | Server search: while `onSearch` is set the list is not filtered here. `loading` shows a busy row. |
+| `autoFocus` | `boolean` | `true` | Focus the search box on mount. |
+| `maxHeight` | `string` | `'20rem'` | The list scrolls past this height (any CSS length). |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { CommandList } from '@nexub/react';
+
+const items = [
+  { value: 'invoice', label: 'New invoice', group: 'Create', keywords: ['bill'] },
+  { value: 'customer', label: 'New customer', group: 'Create' },
+  { value: 'reports', label: 'Reports', description: 'Revenue, cash flow and tax', group: 'Go to' },
+  { value: 'settings', label: 'Settings', group: 'Go to', shortcut: ['⌘', ','] },
+];
+
+export default function Example() {
+  const [picked, setPicked] = React.useState('');
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-2">
+      <div className="rounded-shape-container border border-outline-variant">
+        <CommandList items={items} onSelect={setPicked} autoFocus={false} />
+      </div>
+      <p className="text-body-sm text-on-surface-muted">Picked: {picked || '—'}</p>
+    </div>
+  );
+}
+```
+
+## Example: In a dialog
+
+```tsx
+import * as React from 'react';
+import { Button, CommandList, Dialog } from '@nexub/react';
+
+const spaces = ['Finance', 'Marketing', 'Operations', 'People', 'Product', 'Sales'].map((s) => ({ value: s.toLowerCase(), label: s }));
+
+export default function Example() {
+  const [open, setOpen] = React.useState(false);
+  const [space, setSpace] = React.useState('Finance');
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger asChild>
+        <Button variant="outlined">Move to {space}…</Button>
+      </Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Title>Move to space</Dialog.Title>
+        <div className="mt-4">
+          <CommandList
+            label="Spaces"
+            items={spaces}
+            onSelect={(_, item) => {
+              setSpace(item.label);
+              setOpen(false);
+            }}
+          />
+        </div>
+      </Dialog.Content>
+    </Dialog.Root>
+  );
+}
+```
+
+## Example: Server search
+
+```tsx
+import * as React from 'react';
+import { CommandList, type CommandListItem } from '@nexub/react';
+
+const all = ['Acme Corp', 'Apex Labs', 'Blue Harbor', 'Cobalt Systems', 'Delta Freight', 'Evergreen Foods'];
+
+export default function Example() {
+  const [items, setItems] = React.useState<CommandListItem[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  return (
+    <div className="w-full max-w-sm rounded-shape-container border border-outline-variant">
+      <CommandList
+        label="Companies"
+        autoFocus={false}
+        items={items}
+        loading={loading}
+        onSearch={(text) => {
+          clearTimeout(timer.current);
+          setLoading(true);
+          timer.current = setTimeout(() => {
+            const q = text.toLowerCase();
+            setItems(all.filter((c) => c.toLowerCase().includes(q)).map((c) => ({ value: c, label: c })));
+            setLoading(false);
+          }, 400);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Arrow Up / Arrow Down`: Moves the highlight; wraps at the ends.
+- `Home / End`: Moves to the first or last item.
+- `Enter`: Picks the highlighted item.
+- Focus stays in the search box, a `combobox` that points at the highlighted `option` with `aria-activedescendant`.
+- Group headings name their groups; disabled items are skipped and marked `aria-disabled`.
+- While loading, the list has `aria-busy`.
+
+Related: [command-palette](command-palette.md), [combobox](combobox.md), [combobox-field](combobox-field.md), [dialog](dialog.md), [drawer](drawer.md)
 
 
 ---
@@ -3475,6 +3786,117 @@ export default function Example() {
 ```
 
 Related: [flag](flag.md), [badge](badge.md)
+
+
+---
+
+# Currency Select
+
+A searchable ISO 4217 currency picker built from Intl: code, name and symbol. Also sits next to a MoneyInput.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { CurrencySelect } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/currency-select
+
+## When to use
+
+- Picking the currency of a price, an invoice or an account.
+- Letting people change the currency next to an amount (`MoneyInput currencySlot`).
+
+## When not to use
+
+- Two or three fixed currencies: use SegmentedControl or Select.
+- Showing an amount: use Amount.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string \| null` |  | The ISO 4217 code, e.g. `"USD"`. |
+| `onValueChange` | `(code: string \| null) => void` |  | Called with the picked code. |
+| `currencies` | `string[]` |  | Only these codes, in this order. Default: every code the browser knows (`Intl.supportedValuesOf`). |
+| `priority / priorityLabel / restLabel` | `string[] / string / string` |  | Codes listed first; with `priorityLabel`, under that heading and the rest under `restLabel`. |
+| `locale` | `string` |  | BCP 47 locale for names and symbols. Defaults to the user's. |
+| `name` | `string` |  | A hidden input posts the code with a plain form. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the field. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | The list as a bottom sheet below 768px. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { CurrencySelect } from '@nexub/react';
+
+export default function Example() {
+  const [currency, setCurrency] = React.useState<string | null>('EUR');
+  return (
+    <div className="w-full max-w-xs">
+      <CurrencySelect aria-label="Currency" value={currency} onValueChange={setCurrency} />
+    </div>
+  );
+}
+```
+
+## Example: Labelled field
+
+`CurrencyField` adds `label`, `description` and `error`, as ComboboxField.
+
+```tsx
+import * as React from 'react';
+import { CurrencyField } from '@nexub/react';
+
+export default function Example() {
+  const [currency, setCurrency] = React.useState<string | null>('USD');
+  return (
+    <div className="w-full max-w-sm">
+      <CurrencyField
+        label="Billing currency"
+        description="Invoices are issued in this currency"
+        priority={['USD', 'EUR', 'GBP', 'MYR', 'SGD']}
+        priorityLabel="Common"
+        restLabel="All currencies"
+        value={currency}
+        onValueChange={setCurrency}
+      />
+    </div>
+  );
+}
+```
+
+## Example: Next to an amount
+
+MoneyInput `currencySlot` puts the picker before the amount.
+
+```tsx
+import * as React from 'react';
+import { CurrencySelect, MoneyInput } from '@nexub/react';
+
+export default function Example() {
+  const [currency, setCurrency] = React.useState('EUR');
+  const [amount, setAmount] = React.useState<number | null>(1250);
+  return (
+    <div className="w-full max-w-md">
+      <MoneyInput
+        aria-label="Amount"
+        currency={currency}
+        value={amount}
+        onValueChange={setAmount}
+        currencySlot={<CurrencySelect aria-label="Currency" value={currency} onValueChange={(c) => c && setCurrency(c)} />}
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Enter / Space / Arrow Down`: Opens the list with focus in the search box.
+- `Type`: Finds by code, name or symbol.
+- `Enter`: Picks the highlighted currency.
+- Built on ComboboxField: the trigger is a `combobox` named by the label.
+- `currencyOptions(locale)` returns the same list for your own ComboboxField.
+
+Related: [combobox-field](combobox-field.md), [money-input](money-input.md), [amount](amount.md)
 
 
 ---
@@ -3983,6 +4405,8 @@ Dual-calendar date range selector.
 | `id` | `string` |  | Id for the trigger button, e.g. to pair with a <label htmlFor>. |
 | `presets` | `boolean \| { label: string; range: (today: Date) => DateRange }[]` |  | `true` adds Today, Last 7 days, Last 30 days, Month to date and Last month beside the calendar; or pass your own (5.5). |
 | `timeZone` | `string` |  | IANA zone the dates mean, e.g. `Europe/London`. Shown under the calendar; presets count "today" there (5.5). `todayIn(zone)` is exported. |
+| `endExclusive` | `boolean` |  | 11.2: `to` is the day after the last day (half-open), in and out; the calendar still shows the last day. |
+| `onComplete` | `(range: { from: Date; to: Date }) => void` |  | 11.2: called once both ends are set (the second day picked, or a preset). |
 
 ## Example: Default
 
@@ -4035,6 +4459,33 @@ export default function Example() {
 }
 ```
 
+## Example: Half-open stay
+
+endExclusive and onComplete.
+
+```tsx
+import * as React from 'react';
+import { DateRangePicker, type DateRange } from '@nexub/react';
+
+export default function Example() {
+  // Stored half-open, as the booking API does: 1–3 March is { from: 1 Mar, to: 4 Mar }.
+  const [stay, setStay] = React.useState<DateRange | undefined>();
+  const [nights, setNights] = React.useState<number | null>(null);
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-2">
+      <DateRangePicker
+        aria-label="Stay"
+        endExclusive
+        value={stay}
+        onChange={setStay}
+        onComplete={({ from, to }) => setNights(Math.round((to.getTime() - from.getTime()) / 86400000))}
+      />
+      <p className="text-body-sm text-on-surface-muted">{nights === null ? 'Pick check-in and check-out' : `${nights} nights`}</p>
+    </div>
+  );
+}
+```
+
 
 ---
 
@@ -4056,6 +4507,7 @@ A DatePicker and a TimePicker that edit one Date, with an optional time-zone lab
 | `minDate / maxDate` | `Date` |  | Limits the calendar. |
 | `timeZone` | `string` |  | IANA zone named next to the fields, e.g. "Time zone: GMT+8 (Asia/Singapore)". Label only. |
 | `aria-label` | `string` |  | Names the group; the parts read "Date" and "Time". |
+| `clearable` | `boolean` |  | 11.2: a clear button empties the value. |
 
 ## Example: Meeting start
 
@@ -4071,6 +4523,22 @@ export default function Example() {
     <div className="flex w-full max-w-md flex-col gap-2">
       <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
       <p className="text-body-sm text-on-surface-muted">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
+    </div>
+  );
+}
+```
+
+## Example: Clearable reminder
+
+```tsx
+import * as React from 'react';
+import { DateTimePicker } from '@nexub/react';
+
+export default function Example() {
+  const [reminder, setReminder] = React.useState<Date | undefined>(new Date(2026, 10, 24, 9, 0));
+  return (
+    <div className="w-full max-w-md">
+      <DateTimePicker aria-label="Remind me" clearable value={reminder} onValueChange={setReminder} />
     </div>
   );
 }
@@ -4517,6 +4985,114 @@ export default function Example() {
 - `Escape`: Closes the menu and returns focus to the trigger.
 
 Related: [split-button](split-button.md), [context-menu](context-menu.md), [popover](popover.md)
+
+
+---
+
+# Emoji Picker
+
+Pick an emoji from a searchable grid with categories, recent picks and skin tone. A popover, a bottom sheet on phones.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { EmojiPicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/emoji-picker
+
+## When to use
+
+- An emoji for a space, doc, label or status.
+- A reaction picker: `EmojiPicker.Panel` inside your own popover.
+
+## When not to use
+
+- An icon from the design system: use IconPicker.
+- Emoji inside running text: let the keyboard’s emoji input handle it.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string \| null` |  | The picked emoji, skin tone included. `null` for none. |
+| `onValueChange` | `(emoji: string) => void` |  | Called with the picked emoji. The picker closes. |
+| `placeholder` | `string` | `'Pick an emoji'` | Shown on the trigger when nothing is picked. |
+| `recent` | `string[]` |  | Recent picks, newest first. Unset: the last 16 picks are kept in localStorage (`nx-emoji-recent`). |
+| `skinTone / defaultSkinTone` | `0 \| 1 \| 2 \| 3 \| 4 \| 5` |  | Skin tone for emoji that take one (0 is the default yellow). Unset: the last tone chosen on this device. |
+| `onSkinToneChange` | `(tone: SkinTone) => void` |  | Called when the tone changes. |
+| `name` | `string` |  | A hidden input posts the value with a plain form. |
+| `disabled / readOnly / invalid / required` | `boolean` |  | Field states, as on Select. Read-only stays focusable and does not open. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the trigger. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | The grid as a bottom sheet below 768px. |
+| `EmojiPicker.Panel` | `component` |  | The grid alone (`value`, `onValueChange`, `recent`, skin tone props, `autoFocus`), for any popover or page. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { EmojiPicker } from '@nexub/react';
+
+export default function Example() {
+  const [emoji, setEmoji] = React.useState<string | null>('🚀');
+  return <EmojiPicker aria-label="Space icon" value={emoji} onValueChange={setEmoji} />;
+}
+```
+
+## Example: Panel in a popover
+
+```tsx
+import * as React from 'react';
+import { Button, EmojiPickerPanel, Popover } from '@nexub/react';
+
+export default function Example() {
+  const [reaction, setReaction] = React.useState('👍');
+  const [open, setOpen] = React.useState(false);
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <Button variant="outlined">React {reaction}</Button>
+      </Popover.Trigger>
+      <Popover.Content className="p-0">
+        <EmojiPickerPanel
+          aria-label="Reactions"
+          value={reaction}
+          onValueChange={(e) => {
+            setReaction(e);
+            setOpen(false);
+          }}
+        />
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
+```
+
+## Example: States
+
+```tsx
+import { EmojiPicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <EmojiPicker aria-label="Invalid" invalid />
+      <EmojiPicker aria-label="Read-only" readOnly defaultValue="📚" />
+      <EmojiPicker aria-label="Disabled" disabled defaultValue="🎯" />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: combobox (trigger), listbox with a group per category, option
+- `Enter / Space / Arrow Down`: On the trigger: opens the picker with focus in the search box.
+- `Arrow Down`: From the search box: into the grid.
+- `Arrow keys`: Move between emoji; Arrow Up from the first row returns to the search box.
+- `Home / End`: First or last emoji in the row; with Ctrl, in the whole list.
+- `Enter / Space`: Picks the focused emoji. Enter in the search box picks the first result.
+- `Escape`: Closes without changing the value.
+- Each emoji is named by its CLDR-style name ("party popper"), not read as a glyph.
+- The emoji set loads when the picker opens, in its own chunk, so it stays out of the main bundle.
+
+Related: [icon-picker](icon-picker.md), [combobox-field](combobox-field.md), [popover](popover.md)
 
 
 ---
@@ -5886,6 +6462,101 @@ Related: [badge](badge.md), [avatar](avatar.md)
 
 ---
 
+# Icon Picker
+
+Pick an icon from @nexub/icons in a searchable grid with recent picks and optional categories. A popover, a bottom sheet on phones.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { IconPicker } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/icon-picker
+
+## When to use
+
+- An icon for a space, doc, category or saved view.
+- The value is the icon’s export name, so it can be stored and drawn later.
+
+## When not to use
+
+- An emoji: use EmojiPicker.
+- Icons outside @nexub/icons: build a grid of your own.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value / defaultValue` | `string \| null` |  | The picked icon’s export name, e.g. `"CalendarDays"`. `null` for none. |
+| `onValueChange` | `(name: string) => void` |  | Called with the picked name. The picker closes. |
+| `icons` | `string[]` |  | Only these icons, in this order. Default: every @nexub/icons export, A–Z. |
+| `categories` | `{ label: string; icons: string[] }[]` |  | Icons under headings, with a row of buttons to jump between them. Overrides `icons`. |
+| `placeholder` | `string` | `'Pick an icon'` | Shown on the trigger when nothing is picked. |
+| `recent` | `string[]` |  | Recent picks, newest first. Unset: the last 16 picks are kept in localStorage (`nx-icon-recent`). |
+| `name` | `string` |  | A hidden input posts the value with a plain form. |
+| `disabled / readOnly / invalid / required` | `boolean` |  | Field states, as on Select. Read-only stays focusable and does not open. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the trigger. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | The grid as a bottom sheet below 768px. |
+| `IconPicker.Panel` | `component` |  | The grid alone (`value`, `onValueChange`, `icons`, `categories`, `recent`, `autoFocus`), for any popover or page. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { IconPicker } from '@nexub/react';
+
+export default function Example() {
+  const [icon, setIcon] = React.useState<string | null>('CalendarDays');
+  return <IconPicker aria-label="Menu icon" value={icon} onValueChange={setIcon} />;
+}
+```
+
+## Example: Categories
+
+```tsx
+import { IconPicker } from '@nexub/react';
+
+const categories = [
+  { label: 'Files', icons: ['FileText', 'Folder', 'Paperclip', 'Download'] },
+  { label: 'People', icons: ['User', 'Users', 'Mail', 'Phone'] },
+  { label: 'Time', icons: ['Calendar', 'CalendarDays', 'Clock', 'Bell'] },
+];
+
+export default function Example() {
+  return <IconPicker aria-label="Category icon" categories={categories} defaultValue="Folder" />;
+}
+```
+
+## Example: States
+
+```tsx
+import { IconPicker } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap gap-4">
+      <IconPicker aria-label="Invalid" invalid />
+      <IconPicker aria-label="Read-only" readOnly defaultValue="Star" />
+      <IconPicker aria-label="Disabled" disabled defaultValue="Bell" />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: combobox (trigger), listbox with a group per section, option
+- `Enter / Space / Arrow Down`: On the trigger: opens the picker with focus in the search box.
+- `Arrow Down`: From the search box: into the grid.
+- `Arrow keys`: Move between icons; Arrow Up from the first row returns to the search box.
+- `Home / End`: First or last icon in the row; with Ctrl, in the whole list.
+- `Enter / Space`: Picks the focused icon. Enter in the search box picks the first result.
+- `Escape`: Closes without changing the value.
+- Each icon is named from its export name ("ArrowUpRight" reads "Arrow up right").
+- The icon set is loaded with a dynamic import when the picker opens or shows a value.
+
+Related: [emoji-picker](emoji-picker.md), [icon](icon.md), [combobox-field](combobox-field.md)
+
+
+---
+
 # Illustration
 
 A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
@@ -6859,6 +7530,7 @@ An amount field: locale-aware parsing as you type, grouped on blur, the currency
 | `locale` | `string` |  | BCP 47 locale for separators. Defaults to the user's. |
 | `value / defaultValue` | `number \| null` |  | The amount, or null when empty. |
 | `onValueChange` | `(value: number \| null) => void` |  | Parsed amount, rounded to the minor unit, as the person types. |
+| `currencySlot` | `ReactNode` |  | 11.2: shown before the amount, e.g. a CurrencySelect. |
 
 ## Example: Default
 
@@ -7250,6 +7922,8 @@ Pick several options as chips, with search, "+N more" and an optional create opt
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option. |
 | `loading` | `boolean` |  | Skeleton rows instead of options; "Loading" is announced. |
 | `aria-label / aria-labelledby` | `string` |  | Name the field: there is no visible label inside it. |
+| `onSearch` | `(text: string) => void` |  | 11.2: async search (same as `onInputChange`); picked values keep their labels and avatars. |
+| `options[].description / disabled / avatar` | `string / boolean / ReactNode` |  | 11.2: a second line (also searched), options that can't be picked, and an avatar in the list and on the chip. |
 
 ## Example: Labels with create
 
@@ -7283,6 +7957,48 @@ export default function Example() {
           const v = text.toLowerCase();
           setOptions((o) => [...o, { value: v, label: text }]);
           setValue((s) => [...s, v]);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Example: People with server search
+
+```tsx
+import * as React from 'react';
+import { Avatar, MultiSelect, type MultiSelectOption } from '@nexub/react';
+
+const all: MultiSelectOption[] = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'Finance' },
+  { value: 'u2', label: 'Ben Ong', description: 'Sales' },
+  { value: 'u3', label: 'Chen Wei', description: 'On leave', disabled: true },
+  { value: 'u4', label: 'Dana Lee', description: 'Product' },
+  { value: 'u5', label: 'Eli Tan', description: 'Support' },
+].map((p) => ({ ...p, avatar: <Avatar size="xs" name={p.label} /> }));
+
+export default function Example() {
+  const [value, setValue] = React.useState<string[]>(['u1']);
+  const [options, setOptions] = React.useState(all);
+  const [loading, setLoading] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  return (
+    <div className="w-full max-w-md">
+      <MultiSelect
+        aria-label="Reviewers"
+        options={options}
+        value={value}
+        onValueChange={setValue}
+        loading={loading}
+        onSearch={(text) => {
+          clearTimeout(timer.current);
+          setLoading(true);
+          timer.current = setTimeout(() => {
+            const q = text.toLowerCase();
+            setOptions(all.filter((p) => p.label.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)));
+            setLoading(false);
+          }, 300);
         }}
       />
     </div>
@@ -7597,6 +8313,8 @@ One box per digit for verification codes, with paste and one-time-code autofill.
 | `invalid / disabled` | `boolean` |  | Error styling (pair with a FormError) and the disabled state. |
 | `name` | `string` |  | Submits the code with a form. |
 | `aria-label` | `string` | `'Verification code'` | Group name; each box reads "Digit N of M". |
+| `mode: 'backup'` | `'numeric' \| 'alphanumeric' \| 'backup'` |  | 11.2: a 12-character recovery code in one field, grouped in fours; the value has no dashes. |
+| `autoFocus` | `boolean` |  | 11.2: focus the first box on mount. |
 
 ## Example: Verification code
 
@@ -7615,6 +8333,23 @@ export default function Example() {
         {status || 'Try 123456'}
       </p>
     </div>
+  );
+}
+```
+
+## Example: Backup code
+
+```tsx
+import * as React from 'react';
+import { OTPInput } from '@nexub/react';
+
+export default function Example() {
+  const [done, setDone] = React.useState(false);
+  return (
+    <form className="flex w-full max-w-xs flex-col gap-2">
+      <OTPInput mode="backup" name="recoveryCode" autoFocus={false} onComplete={() => setDone(true)} />
+      <p className="text-body-sm text-on-surface-muted">{done ? 'Checking the code…' : 'Enter one of your 12-character backup codes'}</p>
+    </form>
   );
 }
 ```
