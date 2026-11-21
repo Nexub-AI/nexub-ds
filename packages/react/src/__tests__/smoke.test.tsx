@@ -137,6 +137,8 @@ const cases: Record<string, () => React.ReactElement> = {
   UsageTile: () => <N.UsageTile label="Seats" used={42} limit={50} />,
   UsageBar: () => <N.UsageBar used={3} limit={10} aria-label="Storage" />,
   StageCounter: () => <N.StageCounter aria-label="Stages" stages={[{ value: 'new', label: 'New', count: 4 }]} />,
+  ResourceTimeline: () => <N.ResourceTimeline label="Leave" resources={[{ id: 'a', label: 'Ana' }]} range={{ from: new Date(2026, 10, 2), to: new Date(2026, 10, 8) }} />,
+  SortableGroup: () => <N.SortableGroup lists={[{ id: 'a', label: 'A', items: ['x'] }]} onChange={() => {}} getLabel={(s: string) => s}><N.Sortable list="a">{(s: string) => s}</N.Sortable></N.SortableGroup>,
   CheckboxField: () => <N.CheckboxField label="Gift wrap" aside="$4" />,
   CheckboxGroupField: () => <N.CheckboxGroupField label="Channels" options={[{ value: 'email', label: 'Email' }]} />,
   Countdown: () => <N.Countdown to={0} now={() => 0} />,
