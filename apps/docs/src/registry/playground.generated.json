@@ -1117,6 +1117,60 @@
       }
     ]
   },
+  "checkbox-field": {
+    "tag": "CheckboxField",
+    "children": "none",
+    "fixed": [
+      "label=\"Gift wrap\"",
+      "description=\"Paper and ribbon\"",
+      "aside=\"$4.00\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
   "checkbox": {
     "tag": "Checkbox",
     "children": "none",
@@ -1325,6 +1379,97 @@
       {
         "prop": "disabled",
         "value": true
+      }
+    ]
+  },
+  "combobox-field": {
+    "tag": "ComboboxField",
+    "children": "none",
+    "fixed": [
+      "label=\"Country\"",
+      "description=\"Where the company is registered\"",
+      "options={countries}",
+      "value={value}",
+      "onValueChange={setValue}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
+        "kind": "select",
+        "name": "sheet",
+        "options": [
+          false,
+          true,
+          "auto"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "default": "Select…"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
       }
     ]
   },
@@ -2451,6 +2596,24 @@
     ],
     "controls": [
       {
+        "kind": "select",
+        "name": "capture",
+        "options": [
+          false,
+          true,
+          "user",
+          "environment"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "busy"
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
         "kind": "switch",
         "name": "invalid"
       },
@@ -2466,11 +2629,19 @@
       {
         "kind": "number",
         "name": "maxSize"
+      },
+      {
+        "kind": "number",
+        "name": "progress"
       }
     ],
     "states": [
       {
         "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
         "value": true
       },
       {
@@ -4208,11 +4379,6 @@
       },
       {
         "kind": "number",
-        "name": "step",
-        "default": 1
-      },
-      {
-        "kind": "number",
         "name": "value"
       }
     ],
@@ -5883,6 +6049,85 @@
       }
     ]
   },
+  "switch-field": {
+    "tag": "SwitchField",
+    "children": "none",
+    "fixed": [
+      "label=\"Online store\"",
+      "description={…}",
+      "defaultChecked"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "layout",
+        "options": [
+          "start",
+          "end"
+        ],
+        "default": "end"
+      },
+      {
+        "kind": "switch",
+        "name": "checked"
+      },
+      {
+        "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "invalid",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      },
+      {
+        "prop": "checked",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
   "switch": {
     "tag": "Switch",
     "children": "none",
@@ -6041,6 +6286,9 @@
         "name": "tone",
         "options": [
           "subtle",
+          "success",
+          "warning",
+          "danger",
           "default",
           "muted",
           "inverse",
@@ -6113,6 +6361,18 @@
       {
         "prop": "tone",
         "value": "subtle"
+      },
+      {
+        "prop": "tone",
+        "value": "success"
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
       },
       {
         "prop": "tone",

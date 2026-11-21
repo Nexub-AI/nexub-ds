@@ -322,6 +322,7 @@
     ],
     "webOnly": [
       "invalid",
+      "nullable",
       "precision",
       "showSteppers",
       "size"
@@ -633,6 +634,7 @@
     "webOnly": [
       "disabled",
       "disabledDates",
+      "granularity",
       "invalid",
       "locale",
       "presets",

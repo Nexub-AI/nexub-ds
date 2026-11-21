@@ -1060,6 +1060,132 @@
         "required"
       ]
     },
+    "CheckboxField": {
+      "file": "components/ChoiceFields/ChoiceFields.tsx",
+      "props": [
+        {
+          "name": "aside",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "At the row's end: a price, a count."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help under the label."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The error under the field; also marks the control invalid."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border and `aria-invalid`."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot change; sets `aria-readonly`."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "Box size: `sm` 16px, `md` 18px (default), `lg` 20px."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "checked",
+        "defaultChecked",
+        "onCheckedChange",
+        "required"
+      ]
+    },
+    "CheckboxGroupField": {
+      "file": "components/ChoiceFields/ChoiceFields.tsx",
+      "props": [
+        {
+          "name": "defaultValue",
+          "type": "string[]",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help under the label."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The error under the field; also marks the control invalid."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Each box's `name`: picked values post with a plain `<form>` as repeated fields."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string[]) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "options",
+          "type": "CheckboxGroupOption[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "orientation",
+          "type": "'row' | 'column'",
+          "required": false,
+          "default": "'column'",
+          "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string[]",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "CheckList": {
       "file": "components/CheckList/CheckList.tsx",
       "props": [
@@ -1202,6 +1328,340 @@
           "required": false,
           "default": "false",
           "description": "Remove the element from the DOM when `in` becomes false (after the exit transition completes)."
+        }
+      ]
+    },
+    "ComboboxField": {
+      "file": "components/ComboboxField/ComboboxField.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "null",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help under the field."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyText",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'No results found.'",
+          "description": "Shown when the search finds nothing."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The error under the field; also marks the field invalid."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "The options are loading (async search)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "noneOption",
+          "type": "string",
+          "required": false,
+          "description": "A first option that clears the value (`null`), labelled with this text, e.g. \"No manager\"."
+        },
+        {
+          "name": "onSearch",
+          "type": "((text: string) => void)",
+          "required": false,
+          "description": "Async search: called with the typed text (debounce on your side). While set, the list is not filtered here: show what the server returned in `options`."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void)",
+          "required": false,
+          "description": "Called with the picked value, or `null` when the \"none\" option is picked."
+        },
+        {
+          "name": "options",
+          "type": "ComboboxOption[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select…'",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the list can't open. Stays focusable."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "default": "'Search…'",
+          "description": "The search box's placeholder."
+        },
+        {
+          "name": "selectedOption",
+          "type": "ComboboxOption",
+          "required": false,
+          "description": "The picked option when it may not be in `options` (async search: the current value's label before any search has run)."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        }
+      ]
+    },
+    "ComboboxPicker": {
+      "file": "components/ComboboxField/ComboboxField.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "null",
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyText",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'No results found.'",
+          "description": "Shown when the search finds nothing."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "The options are loading (async search)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "noneOption",
+          "type": "string",
+          "required": false,
+          "description": "A first option that clears the value (`null`), labelled with this text, e.g. \"No manager\"."
+        },
+        {
+          "name": "onSearch",
+          "type": "((text: string) => void)",
+          "required": false,
+          "description": "Async search: called with the typed text (debounce on your side). While set, the list is not filtered here: show what the server returned in `options`."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void)",
+          "required": false,
+          "description": "Called with the picked value, or `null` when the \"none\" option is picked."
+        },
+        {
+          "name": "options",
+          "type": "ComboboxOption[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select…'",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the list can't open. Stays focusable."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "default": "'Search…'",
+          "description": "The search box's placeholder."
+        },
+        {
+          "name": "selectedOption",
+          "type": "ComboboxOption",
+          "required": false,
+          "description": "The picked option when it may not be in `options` (async search: the current value's label before any search has run)."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
         }
       ]
     },
@@ -1866,6 +2326,99 @@
         }
       ]
     },
+    "DatePeriodPicker": {
+      "file": "components/DatePicker/DatePicker.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Field name for screen readers; the current value is appended."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": ""
+        },
+        {
+          "name": "granularity",
+          "type": "'month' | 'year'",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "Id for the trigger button, e.g. to pair with a `<label htmlFor>`."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "maxDate",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "minDate",
+          "type": "Date",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void)",
+          "required": false,
+          "description": "Called with `'YYYY-MM'` or `'YYYY'`."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Shows the date but the calendar can't open and nothing can be typed; stays focusable."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (pass `sheet={false}` to keep a popover on small screens)",
+          "description": "`true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "`'YYYY-MM'` (month) or `'YYYY'` (year)."
+        }
+      ]
+    },
     "DatePicker": {
       "file": "components/DatePicker/DatePicker.tsx",
       "props": [
@@ -1893,6 +2446,13 @@
           "type": "Matcher | Matcher[]",
           "required": false,
           "description": "Days that can't be picked (react-day-picker Matcher), e.g. `{ dayOfWeek: [0, 6] }`."
+        },
+        {
+          "name": "granularity",
+          "type": "'day'",
+          "required": false,
+          "default": "'day'",
+          "description": "11.1: `'month'` and `'year'` pick a whole month or year (see `DatePeriodPickerProps`)."
         },
         {
           "name": "id",
@@ -2823,6 +3383,18 @@
         }
       ]
     },
+    "FileUploadDropzone": {
+      "file": "components/FileUpload/FileUpload.tsx",
+      "props": [
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'md'",
+          "description": "11.1: `'sm'` is a compact one-line zone for forms and side panels."
+        }
+      ]
+    },
     "FileUploadItem": {
       "file": "components/FileUpload/FileUpload.tsx",
       "props": [
@@ -2862,6 +3434,36 @@
           "description": ""
         },
         {
+          "name": "busy",
+          "type": "boolean",
+          "required": false,
+          "description": "11.1: an upload is running. Picking is blocked and the zone or trigger shows it (with `progress`, a bar)."
+        },
+        {
+          "name": "capture",
+          "type": "false | true | 'user' | 'environment'",
+          "required": false,
+          "description": "11.1: open the phone camera instead of the file list (the input's `capture`): `'environment'` (back), `'user'` (front), or `true` for the browser's choice."
+        },
+        {
+          "name": "defaultFiles",
+          "type": "File[]",
+          "required": false,
+          "description": "11.1: the starting list when uncontrolled."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "11.1: nothing can be picked, dropped or pasted; the zone and trigger look disabled."
+        },
+        {
+          "name": "files",
+          "type": "File[]",
+          "required": false,
+          "description": "11.1: controlled list. Pass `files` with `onFilesChange` to clear or set the list from outside (e.g. `files={[]}` after a send), instead of remounting with a `key`."
+        },
+        {
           "name": "invalid",
           "type": "boolean",
           "required": false,
@@ -2892,16 +3494,130 @@
           "description": "Files turned away by `accept`, `maxSize` or `maxFiles`, from the picker or a drop."
         },
         {
+          "name": "progress",
+          "type": "number",
+          "required": false,
+          "description": "11.1: 0–100 while `busy`."
+        },
+        {
           "name": "readOnly",
           "type": "boolean",
           "required": false,
           "description": "Files stay listed; nothing can be picked, dropped, pasted or removed."
         },
         {
+          "name": "transform",
+          "type": "((file: File) => File | Promise<File>)",
+          "required": false,
+          "description": "11.1: runs on each file after the `accept` check and before `maxSize` and `validate`, e.g. to shrink a photo. Return the file to keep (a new File or the same one). May be async."
+        },
+        {
           "name": "validate",
           "type": "((file: File) => string)",
           "required": false,
           "description": "Your own check, run after `accept` and `maxSize`: return a message to reject the file. Client-side checks are a convenience; validate again on the server."
+        }
+      ]
+    },
+    "FileUploadTrigger": {
+      "file": "components/FileUpload/FileUpload.tsx",
+      "props": [
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "errorLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Something went wrong'",
+          "description": "Announced on error."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "a paperclip",
+          "description": "The icon."
+        },
+        {
+          "name": "iconOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "11.1: no visible text, only the icon (a paperclip by default). The button's name is `aria-label` or the `uploadFile` message."
+        },
+        {
+          "name": "leadingIcon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Alias for `status=\"loading\"`. A `type=\"submit\"` button also shows loading while its parent `<form action>` is pending (React 19 `useFormStatus`)."
+        },
+        {
+          "name": "loadingLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Loading'",
+          "description": "Announced while loading."
+        },
+        {
+          "name": "magnetic",
+          "type": "boolean",
+          "required": false,
+          "description": "4.3: the button drifts a few pixels toward the pointer on hover. For one key action per screen. Off for touch and reduced motion."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'xs' | 'lg' | 'xl'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "status",
+          "type": "'idle' | 'error' | 'success' | 'loading'",
+          "required": false,
+          "description": "Async feedback. `loading` blocks clicks (aria-disabled, focus kept), `success` draws a check, `error` shakes once. Not applied with `asChild`."
+        },
+        {
+          "name": "successLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Done'",
+          "description": "Announced on success; when given it also replaces the visible label."
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'leap' | 'bookub' | 'payub' | 'founderub'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "trailingIcon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "variant",
+          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'subtle' | 'destructive' | 'accent' | 'link'",
+          "required": false,
+          "default": "'filled'",
+          "description": "Visual style."
         }
       ]
     },
@@ -4486,14 +5202,13 @@
         }
       ]
     },
-    "NumberInput": {
+    "NullableNumberInput": {
       "file": "components/NumberInput/NumberInput.tsx",
       "props": [
         {
           "name": "defaultValue",
           "type": "number",
           "required": false,
-          "default": "0",
           "description": ""
         },
         {
@@ -4506,12 +5221,94 @@
           "name": "max",
           "type": "number",
           "required": false,
-          "description": ""
+          "description": "Applied when the field loses focus (or on a stepper or arrow key), never while typing."
         },
         {
           "name": "min",
           "type": "number",
           "required": false,
+          "description": "Applied when the field loses focus (or on a stepper or arrow key), never while typing."
+        },
+        {
+          "name": "nullable",
+          "type": "true",
+          "required": true,
+          "default": "false",
+          "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: number) => void)",
+          "required": false,
+          "description": "Called with the new value, or `null` when the field is cleared."
+        },
+        {
+          "name": "precision",
+          "type": "number",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "showSteppers",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "step",
+          "type": "number | 'any'",
+          "required": false,
+          "default": "1",
+          "description": "Stepper and arrow-key increment. `'any'` (11.1) allows any decimal; steppers then move by 1."
+        },
+        {
+          "name": "value",
+          "type": "number",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
+    "NumberInput": {
+      "file": "components/NumberInput/NumberInput.tsx",
+      "props": [
+        {
+          "name": "defaultValue",
+          "type": "number",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "description": "Applied when the field loses focus (or on a stepper or arrow key), never while typing."
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false,
+          "description": "Applied when the field loses focus (or on a stepper or arrow key), never while typing."
+        },
+        {
+          "name": "nullable",
+          "type": "false",
+          "required": false,
+          "default": "false",
           "description": ""
         },
         {
@@ -4542,10 +5339,10 @@
         },
         {
           "name": "step",
-          "type": "number",
+          "type": "number | 'any'",
           "required": false,
           "default": "1",
-          "description": ""
+          "description": "Stepper and arrow-key increment. `'any'` (11.1) allows any decimal; steppers then move by 1."
         },
         {
           "name": "value",
@@ -6312,6 +7109,79 @@
         "required"
       ]
     },
+    "SwitchField": {
+      "file": "components/ChoiceFields/ChoiceFields.tsx",
+      "props": [
+        {
+          "name": "checkedIcon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Small icon inside the thumb while on."
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help under the label."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The error under the field; also marks the control invalid."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Error border on the track and `aria-invalid`."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "layout",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'end'",
+          "description": "`'end'`: label first, the switch at the row's end (settings lists). `'start'`: the switch first, then the label, compact for tight rows and headings."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Spinner in the thumb and `aria-busy`; clicks don't toggle while loading. Stays focusable."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Focusable but cannot toggle; sets `aria-readonly`."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "uncheckedIcon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Small icon inside the thumb while off."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "checked",
+        "defaultChecked",
+        "onCheckedChange",
+        "required"
+      ]
+    },
     "TableBody": {
       "file": "components/Table/Table.tsx",
       "props": [
@@ -6408,7 +7278,7 @@
         },
         {
           "name": "tone",
-          "type": "'subtle' | 'default' | 'muted' | 'inverse' | 'secondary'",
+          "type": "'subtle' | 'success' | 'warning' | 'danger' | 'default' | 'muted' | 'inverse' | 'secondary'",
           "required": false,
           "default": "'default'",
           "description": ""

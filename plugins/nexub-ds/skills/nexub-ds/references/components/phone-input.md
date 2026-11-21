@@ -19,6 +19,8 @@ A phone field with a country picker. Groups the number as you type and reports i
 | `invalid / disabled` | `boolean` |  | Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field. |
 | `name` | `string` |  | Submits the E.164 value with a form. |
 | `sheet` | `boolean \| 'auto'` | `'auto'` | Shows the country list as a bottom sheet; `'auto'` only on phones. |
+| `formatPhone(e164, { style })` | `(e164: string, options?: { style?: 'national' \| 'international' }) => string` |  | Read-only display of a stored number: "+91 98470 12345" or "98470 12345". |
+| `parsePhone(value)` | `(value: string) => { country, dialCode, national, e164, valid }` |  | The parts, for apps that store the country and number apart. The E.164 string stays the one stored form. |
 
 ## Example: Default
 

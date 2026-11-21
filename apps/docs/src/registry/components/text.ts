@@ -12,7 +12,7 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'size', type: "'body-lg' | 'body' | 'body-sm' | 'caption' | 'label'", default: "'body'", required: false, description: 'Controls the font size and line height.' },
-    { name: 'tone', type: "'default' | 'secondary' | 'muted' | 'subtle' | 'inverse'", required: false, description: 'Color tone applied to the text.' },
+    { name: 'tone', type: "'default' | 'secondary' | 'muted' | 'subtle' | 'inverse' | 'danger' | 'success' | 'warning'", required: false, description: 'Color tone applied to the text. The status tones (11.1) meet 4.5:1 on every surface.' },
     { name: 'weight', type: "'regular' | 'medium' | 'semibold' | 'bold'", required: false, description: 'Font weight of the text.' },
     { name: 'truncate', type: 'boolean', required: false, description: 'Truncates text with an ellipsis when it overflows.' },
     { name: 'lineClamp', type: 'number', required: false, description: 'Clamps the text to a maximum number of lines.' },

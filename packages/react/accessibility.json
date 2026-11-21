@@ -294,6 +294,15 @@
       ]
     },
     {
+      "slug": "checkbox-field",
+      "name": "Checkbox Field",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
       "slug": "checkbox",
       "name": "Checkbox",
       "package": "@nexub/react",
@@ -342,6 +351,20 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "combobox-field",
+      "name": "Combobox Field",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space / Arrow Down: Opens the list with focus in the search box.",
+        "Arrow Up / Arrow Down: Moves through the options.",
+        "Enter: Picks the highlighted option and closes.",
+        "Escape: Closes without changing the value."
+      ],
       "screenReader": []
     },
     {
@@ -1411,6 +1434,15 @@
     {
       "slug": "success-check",
       "name": "Success Check",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "switch-field",
+      "name": "Switch Field",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],

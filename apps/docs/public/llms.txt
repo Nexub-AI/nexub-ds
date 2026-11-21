@@ -40,11 +40,13 @@ Version 11.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Chart Zoom](https://nexub-ds-docs.pages.dev/components/chart-zoom.md): Zoom any chart to part of its range with a two-thumb slider.
 - [Check List](https://nexub-ds-docs.pages.dev/components/check-list.md): A list with a success tick before each item, for features, plan inclusions and requirements met.
 - [Checkbox Card](https://nexub-ds-docs.pages.dev/components/checkbox-card.md): A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
+- [Checkbox Field](https://nexub-ds-docs.pages.dev/components/checkbox-field.md): A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
 - [Checkbox](https://nexub-ds-docs.pages.dev/components/checkbox.md): Binary checkbox input built on Radix UI.
 - [Chip](https://nexub-ds-docs.pages.dev/components/chip.md): Compact label chip, optionally dismissible.
 - [Citation](https://nexub-ds-docs.pages.dev/components/citation.md): Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
 - [Code](https://nexub-ds-docs.pages.dev/components/code-inline.md): Inline code span for technical terms and short code snippets.
 - [Collapsible](https://nexub-ds-docs.pages.dev/components/collapsible.md): Toggle visibility of content with smooth animation.
+- [Combobox Field](https://nexub-ds-docs.pages.dev/components/combobox-field.md): A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
 - [Combobox](https://nexub-ds-docs.pages.dev/components/combobox.md): Command-palette style searchable dropdown built on cmdk.
 - [Command Palette](https://nexub-ds-docs.pages.dev/components/command-palette.md): A searchable command menu in a modal dialog (cmdk), with nested pages, recents and an optional Cmd+K shortcut.
 - [Comparison Bar](https://nexub-ds-docs.pages.dev/components/comparison-bar.md): Two values on one split bar, with the numbers always shown as text.
@@ -53,7 +55,7 @@ Version 11.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Countdown](https://nexub-ds-docs.pages.dev/components/countdown.md): Time left to a deadline, as a chip or inline text. Stays right after the tab was in the background.
 - [Country Badge](https://nexub-ds-docs.pages.dev/components/country-badge.md): A pill with a country flag and its name or code.
 - [Data Table](https://nexub-ds-docs.pages.dev/components/data-table.md): Feature-rich data table with sorting and row selection powered by TanStack Table.
-- [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input.
+- [Date Picker](https://nexub-ds-docs.pages.dev/components/date-picker.md): Calendar date picker with text input. `granularity` picks a whole month or year.
 - [Date Range Picker](https://nexub-ds-docs.pages.dev/components/date-range-picker.md): Dual-calendar date range selector.
 - [Date Time Picker](https://nexub-ds-docs.pages.dev/components/date-time-picker.md): A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Description List](https://nexub-ds-docs.pages.dev/components/description-list.md): Key–value rows with list semantics: a receipt, a fee breakdown, the details of a record.
@@ -111,7 +113,7 @@ Version 11.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Multi Select](https://nexub-ds-docs.pages.dev/components/multi-select.md): Pick several options as chips, with search, "+N more" and an optional create option.
 - [Navigation Menu](https://nexub-ds-docs.pages.dev/components/navigation-menu.md): Site navigation links with flyout panels, built on Radix.
 - [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail.md): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
-- [Number Input](https://nexub-ds-docs.pages.dev/components/number-input.md): A numeric input with increment and decrement controls, supporting min/max clamping and step.
+- [Number Input](https://nexub-ds-docs.pages.dev/components/number-input.md): A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
 - [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker.md): A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [OTP Input](https://nexub-ds-docs.pages.dev/components/otp-input.md): One box per digit for verification codes, with paste and one-time-code autofill.
 - [Page Header](https://nexub-ds-docs.pages.dev/components/page-header.md): The top of a page: title, description, breadcrumb and actions.
@@ -148,6 +150,7 @@ Version 11.0.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Stepper](https://nexub-ds-docs.pages.dev/components/stepper.md): Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Streaming Text](https://nexub-ds-docs.pages.dev/components/streaming-text.md): Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
 - [Success Check](https://nexub-ds-docs.pages.dev/components/success-check.md): A small success moment: a ring that pops in and a tick that draws.
+- [Switch Field](https://nexub-ds-docs.pages.dev/components/switch-field.md): A Switch with its label, description and error, the label clickable.
 - [Switch](https://nexub-ds-docs.pages.dev/components/switch.md): Toggle control for binary on/off settings. Built on Radix UI Switch.
 - [Table](https://nexub-ds-docs.pages.dev/components/table.md): Semantic HTML table with styled variants.
 - [Tabs](https://nexub-ds-docs.pages.dev/components/tabs.md): Layered content panels switched by tab triggers. Built on Radix UI Tabs.

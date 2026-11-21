@@ -4,13 +4,15 @@ const entry: ComponentEntry = {
   meta: {
     slug: 'date-picker',
     title: 'Date Picker',
-    description: 'Calendar date picker with text input.',
+    description: 'Calendar date picker with text input. `granularity` picks a whole month or year.',
     category: 'Form & Input',
     package: '@nexub/react',
     status: 'stable',
     addedIn: '0.0.1',
+    updatedIn: '11.1.0',
   },
   props: [
+    { name: 'granularity', type: "'day' | 'month' | 'year'", default: "'day'", required: false, description: "`'month'` and `'year'` show a grid of months or years; the value is then a string, `'YYYY-MM'` or `'YYYY'`." },
     { name: 'value', type: 'Date | undefined', required: false, description: 'Controlled selected date value.' },
     { name: 'onValueChange', type: '(date: Date | undefined) => void', required: false, description: 'Called with the picked date.' },
     { name: 'locale', type: 'Locale (date-fns)', required: false, description: 'Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL.' },
@@ -30,6 +32,10 @@ const entry: ComponentEntry = {
     },
     {
       title: 'With constraints',
+    },
+    {
+      title: 'Month and year',
+      description: "Pay periods and tax years: `'2026-11'` and `'2026'`.",
     },
   ],
 };
