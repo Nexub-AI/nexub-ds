@@ -179,12 +179,12 @@ ScrollDownButton.displayName = 'Select.ScrollDownButton';
 export interface SelectContentProps extends RadixSelect.SelectContentProps {
   /** A filter field at the top; items whose text (or `textValue`) doesn't match are hidden. Typing on an item moves to the field. */
   searchable?: boolean;
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 
 const Content = React.forwardRef<HTMLDivElement, SelectContentProps>(
-  ({ className, children, position = 'popper', searchable, sheet = false, collisionPadding = COLLISION_PADDING, onKeyDown, ...props }, ref) => {
+  ({ className, children, position = 'popper', searchable, sheet = 'auto', collisionPadding = COLLISION_PADDING, onKeyDown, ...props }, ref) => {
     const ctx = React.useContext(SelectContext);
     const messages = useNexubMessages();
     const searchRef = React.useRef<HTMLInputElement>(null);

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { AppShell, NexubProvider, ThemeProvider } from '@nexub/react';
@@ -143,6 +143,16 @@ describe('AppHeader', () => {
     const user = { name: 'Sam Lee', email: 'sam@example.com' };
 
     // 10.6. Needs the @nexub/react build that has `sheet` on DropdownMenu.Content.
+    it('the menu is sheet="auto" by default (11.0); sheet={false} turns it off', async () => {
+      const u = setup({ user });
+      await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
+      expect(screen.getByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+      cleanup();
+      const v = setup({ user, sheet: false });
+      await v.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));
+      expect(screen.getByRole('menu')).not.toHaveAttribute('data-nx-sheet');
+    });
+
     it('forwards sheet to the menu', async () => {
       const u = setup({ user, sheet: 'auto' });
       await u.click(screen.getByRole('button', { name: 'Account: Sam Lee' }));

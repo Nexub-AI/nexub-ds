@@ -20,7 +20,7 @@ const entry: ComponentEntry = {
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Height of the field.' },
     { name: 'invalid / disabled', type: 'boolean', description: 'Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field.' },
     { name: 'name', type: 'string', description: 'Submits the E.164 value with a form.' },
-    { name: 'sheet', type: "boolean | 'auto'", default: 'false', description: "Shows the country list as a bottom sheet; `'auto'` only on phones." },
+    { name: 'sheet', type: "boolean | 'auto'", default: "'auto'", description: "Shows the country list as a bottom sheet; `'auto'` only on phones." },
   ],
   examples: [{ title: 'Default' }, { title: 'Restricted countries in a form field' }],
   a11y: {

@@ -112,11 +112,18 @@ describe('DateRangePicker 10.4', () => {
 describe('DateRangePicker sheet (10.6)', () => {
   const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
 
-  it('marks the calendar popover with data-nx-sheet only when asked, and still closes', () => {
+  it('sheet={false} keeps the popover (11.0)', () => {
+    render(<DateRangePicker aria-label="When" sheet={false} />);
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getAllByRole('grid')[0]).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+  });
+
+  it('marks the calendar popover with data-nx-sheet="auto" by default (11.0), and still closes', () => {
     const { unmount } = render(<DateRangePicker aria-label="When" />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getAllByRole('grid').length).toBeGreaterThan(0);
-    expect(sheetAttr()).toBeNull();
+    expect(sheetAttr()).toBe('auto');
     fireEvent.keyDown(document.activeElement ?? document.body, { key: 'Escape' });
     expect(screen.queryByRole('grid')).not.toBeInTheDocument();
     unmount();

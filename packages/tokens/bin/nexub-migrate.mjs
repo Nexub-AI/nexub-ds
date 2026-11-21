@@ -537,7 +537,7 @@ function changesIn9(src, report) {
   return output;
 }
 
-// ─── changes-in-11: what 11.0 removes and flips ─────────────────────────────
+// ─── changes-in-11: what 11.0 removed and flipped ─────────────────────────────
 // Removed: the four hand-written product theme files (deprecated in 10.3). They set the same
 // [data-product] accent the generated map sets, so the import is rewritten to it.
 // Flipped: overlays' `sheet` default, false -> 'auto'. Reported, never rewritten.
@@ -553,7 +553,7 @@ const SHEET_11 = [
 function changesIn11(src, ext, report) {
   let seen = HAS_PRODUCTS.test(src);
   const output = src.replace(PRODUCT_THEME, (_, head, name, at) => {
-    if (seen) report(at, `@nexub/themes/${name} is removed in 11.0 and this file already imports @nexub/themes/products, which covers it: delete this line`);
+    if (seen) report(at, `@nexub/themes/${name} was removed in 11.0 and this file already imports @nexub/themes/products, which covers it: delete this line`);
     seen = true;
     return `${head}products`;
   });
@@ -565,7 +565,7 @@ function changesIn11(src, ext, report) {
         const tag = readTag(src, m.index + m[0].length);
         if (!tag || tag.attrs.some((a) => a.name === 'sheet')) continue;
         const spread = src.slice(m.index, tag.end).includes('{...') ? ' (a {...spread} here may already pass it)' : '';
-        report(m.index, `<${part ? `${name}.${part}` : name}> has no sheet prop${spread}: in 11.0 the default changes from false to "auto" (a bottom sheet below 768px). Pass sheet={false} to keep the popover on small screens, or sheet="auto" to opt in now`);
+        report(m.index, `<${part ? `${name}.${part}` : name}> has no sheet prop${spread}: in 11.0 the default changed from false to "auto" (a bottom sheet below 768px). Pass sheet={false} to keep the popover on small screens, or sheet="auto" to keep the new default`);
       }
     }
   }
@@ -710,9 +710,9 @@ Rules:
                      DateTimeField minimumDate/maximumDate -> minDate/maxDate, ButtonGroup
                      direction row/stack -> orientation horizontal/vertical (@nexub/react-native);
                      reports the classic style and the hidePassword message
-  changes-in-11      what 11.0 removes and flips: rewrites @nexub/themes/{leap,bookub,payub,founderub}
+  changes-in-11      what 11.0 removed and flipped: rewrites @nexub/themes/{leap,bookub,payub,founderub}
                      (import and CSS @import) to @nexub/themes/products; reports every overlay
-                     without a sheet prop (the default becomes "auto": a bottom sheet below
+                     without a sheet prop (the default became "auto": a bottom sheet below
                      768px; sheet={false} keeps the popover)
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.

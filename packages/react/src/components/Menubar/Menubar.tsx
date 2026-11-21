@@ -56,12 +56,12 @@ const contentBaseClasses = cn(
 );
 
 export interface MenubarContentProps extends RadixMenubar.MenubarContentProps {
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 
 const Content = React.forwardRef<HTMLDivElement, MenubarContentProps>(
-  function MenubarContent({ className, sideOffset = 8, collisionPadding = COLLISION_PADDING, sheet = false, ...props }, ref) {
+  function MenubarContent({ className, sideOffset = 8, collisionPadding = COLLISION_PADDING, sheet = 'auto', ...props }, ref) {
     return (
       <RadixMenubar.Content
         ref={ref}

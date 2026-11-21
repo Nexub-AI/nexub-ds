@@ -247,7 +247,20 @@ describe('CommandPalette sheet (10.6)', () => {
     </CommandPalette.Root>
   );
 
-  it('top-anchored by default; sheet anchors to the bottom; auto stays put on wide screens', () => {
+  it('is a bottom sheet on a narrow screen by default (11.0); sheet={false} keeps it centred', () => {
+    const spy = vi.spyOn(window, 'matchMedia').mockImplementation((query) => ({ matches: true, media: query, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList);
+    try {
+      const { unmount } = render(<Open />);
+      expect(screen.getByRole('dialog')).toHaveAttribute('data-sheet');
+      unmount();
+      render(<Open sheet={false} />);
+      expect(screen.getByRole('dialog')).not.toHaveAttribute('data-sheet');
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('top-anchored on wide screens by default; sheet anchors to the bottom; auto stays put on wide screens', () => {
     const { unmount, rerender } = render(<Open />);
     expect(screen.getByRole('dialog')).not.toHaveAttribute('data-sheet');
     rerender(<Open sheet="auto" />);

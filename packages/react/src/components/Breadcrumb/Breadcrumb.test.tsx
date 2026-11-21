@@ -90,13 +90,13 @@ describe('Breadcrumb', () => {
 describe('Breadcrumb.Trail sheet (10.6)', () => {
   const items = [{ label: 'Home', href: '/' }, { label: 'Org', href: '/o' }, { label: 'Team', href: '/o/t' }, { label: 'Page' }];
 
-  it('passes sheet to the More menu, and leaves it off by default', async () => {
+  it('the More menu is sheet="auto" by default (11.0); sheet={false} turns it off', async () => {
     const { unmount } = render(<Breadcrumb.Trail items={items} maxItems={2} />);
     await userEvent.click(screen.getByRole('button', { name: 'More' }));
-    expect(await screen.findByRole('menu')).not.toHaveAttribute('data-nx-sheet');
-    unmount();
-    render(<Breadcrumb.Trail items={items} maxItems={2} sheet="auto" />);
-    await userEvent.click(screen.getByRole('button', { name: 'More' }));
     expect(await screen.findByRole('menu')).toHaveAttribute('data-nx-sheet', 'auto');
+    unmount();
+    render(<Breadcrumb.Trail items={items} maxItems={2} sheet={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'More' }));
+    expect(await screen.findByRole('menu')).not.toHaveAttribute('data-nx-sheet');
   });
 });

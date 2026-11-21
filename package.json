@@ -21,7 +21,7 @@
     "check:rsc": "node scripts/check-rsc.mjs",
     "check:release-policy": "node scripts/check-changesets.mjs && node --test scripts/*.test.mjs",
     "ai-docs": "node --experimental-strip-types --no-warnings scripts/build-ai-docs.mjs",
-    "ci:local": "pnpm audit --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm check:rsc && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
+    "ci:local": "pnpm audit --audit-level=high && pnpm check:supply-chain && pnpm turbo build --filter='./packages/*' && pnpm check:size && pnpm check:rsc && pnpm --filter @nexub/docs build && node apps/docs/scripts/check-links.mjs && pnpm check:release-policy && pnpm ai-docs --check && node apps/docs/scripts/native-props.mjs --check && node apps/docs/scripts/web-props.mjs --check && node apps/docs/scripts/playground.mjs --check && node apps/docs/scripts/parity.mjs --check && node apps/docs/scripts/check-samples.mjs && pnpm turbo typecheck && pnpm turbo lint && pnpm turbo test",
     "ci:local:visual": "pnpm --filter @nexub/react build-storybook --quiet && pnpm --filter @nexub/react test:visual:docker",
     "check:supply-chain": "node scripts/check-supply-chain.mjs",
     "check:reproducible": "node scripts/reproducible-build.mjs"

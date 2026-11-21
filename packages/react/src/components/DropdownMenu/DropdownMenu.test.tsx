@@ -94,12 +94,19 @@ describe('DropdownMenu sheet (10.6)', () => {
     </DropdownMenu.Root>
   );
 
-  it('marks the content with data-nx-sheet only when asked, and still opens and closes', async () => {
+  it('sheet={false} keeps the popover (11.0)', async () => {
+    render(<Menu sheet={false} />);
+    await userEvent.setup().click(screen.getByText('Sheet trigger'));
+    expect(await screen.findByText('Sheet item')).toBeInTheDocument();
+    expect(sheetAttr()).toBeNull();
+  });
+
+  it('marks the content with data-nx-sheet="auto" by default (11.0), and still opens and closes', async () => {
     const user = userEvent.setup();
     const { unmount } = render(<Menu />);
     await user.click(screen.getByText('Sheet trigger'));
     expect(await screen.findByText('Sheet item')).toBeInTheDocument();
-    expect(sheetAttr()).toBeNull();
+    expect(sheetAttr()).toBe('auto');
     await user.keyboard('{Escape}');
     await waitFor(() => expect(screen.queryByText('Sheet item')).not.toBeInTheDocument());
     unmount();

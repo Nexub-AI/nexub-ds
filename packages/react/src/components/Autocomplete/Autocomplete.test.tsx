@@ -94,11 +94,18 @@ describe('Autocomplete sheet (10.6)', () => {
   const sheetAttr = () => document.querySelector('[data-nx-sheet]')?.getAttribute('data-nx-sheet') ?? null;
   const sheetOptions = [{ value: 'one', label: 'One' }];
 
-  it('marks the list popover with data-nx-sheet only when asked', async () => {
-    const { unmount } = render(<Autocomplete options={sheetOptions} aria-label="Sheet field" />);
+  it('sheet={false} keeps the popover (11.0)', async () => {
+    render(<Autocomplete options={sheetOptions} aria-label="Sheet field" sheet={false} />);
     await userEvent.type(screen.getByRole('combobox'), 'o');
     expect(await screen.findByRole('option', { name: 'One' })).toBeInTheDocument();
     expect(sheetAttr()).toBeNull();
+  });
+
+  it('marks the list popover with data-nx-sheet="auto" by default (11.0)', async () => {
+    const { unmount } = render(<Autocomplete options={sheetOptions} aria-label="Sheet field" />);
+    await userEvent.type(screen.getByRole('combobox'), 'o');
+    expect(await screen.findByRole('option', { name: 'One' })).toBeInTheDocument();
+    expect(sheetAttr()).toBe('auto');
     unmount();
 
     render(<Autocomplete options={sheetOptions} aria-label="Sheet field" sheet="auto" />);

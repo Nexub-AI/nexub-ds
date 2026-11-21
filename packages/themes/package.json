@@ -1,6 +1,6 @@
 {
   "name": "@nexub/themes",
-  "version": "10.8.0",
+  "version": "10.9.0",
   "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (the five Nexub divisions and every app) as importable CSS.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -33,10 +33,6 @@
     "./dark": "./src/dark.css",
     "./glass": "./src/glass.css",
     "./view-transitions": "./src/view-transitions.css",
-    "./leap": "./src/leap.css",
-    "./bookub": "./src/bookub.css",
-    "./payub": "./src/payub.css",
-    "./founderub": "./src/founderub.css",
     "./divisions": "./src/divisions.css",
     "./divisions/os": "./src/divisions/os.css",
     "./divisions/commerce": "./src/divisions/commerce.css",

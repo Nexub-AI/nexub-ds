@@ -34,6 +34,16 @@ describe('NotificationCenter', () => {
   });
 
   // 10.6. Needs the @nexub/react build that has `sheet` on Popover.Content.
+  it('the panel is sheet="auto" by default (11.0); sheet={false} turns it off', async () => {
+    const { unmount } = render(<NotificationCenter notifications={[]} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Notifications' }));
+    expect(screen.getByRole('dialog', { name: 'Notifications' })).toHaveAttribute('data-nx-sheet', 'auto');
+    unmount();
+    render(<NotificationCenter notifications={[]} sheet={false} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Notifications' }));
+    expect(screen.getByRole('dialog', { name: 'Notifications' })).not.toHaveAttribute('data-nx-sheet');
+  });
+
   it('forwards sheet to the panel', async () => {
     render(<NotificationCenter notifications={[]} sheet="auto" />);
     await userEvent.click(screen.getByRole('button', { name: 'Notifications' }));

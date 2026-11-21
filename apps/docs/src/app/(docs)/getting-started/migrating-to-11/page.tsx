@@ -9,7 +9,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Migrating to 11.0',
   description:
-    '11.0 removes the four hand-written product theme files and makes overlays open as a bottom sheet on small screens by default. 10.9 is its release candidate, on the next tag.',
+    '11.0 removes the four hand-written product theme files and makes overlays open as a bottom sheet on small screens by default. Both can be cleared on 10.9 first.',
 };
 
 export default function MigratingTo11Page() {
@@ -20,16 +20,15 @@ export default function MigratingTo11Page() {
       </PageIntro>
       <p>
         11.0 is the first major since versions began to follow semver, so it is the first one that means &ldquo;something
-        breaks&rdquo;. Two things change, and both can be cleared on 10.x before you upgrade. 11.0 is not released yet:
-        10.9 is its release candidate.
+        breaks&rdquo;. Two things changed, and both can be cleared on 10.9, its release candidate, before you upgrade.
       </p>
 
-      <h2>Try the release candidate</h2>
+      <h2>Upgrade in two steps</h2>
       <p>
-        10.9.x publishes under the npm tag <code>next</code>. <code>latest</code> stays on 10.8.x until 11.0.0, so a
-        plain install does not move you. Move every <code>@nexub</code> package you use together:
+        10.9.x was the release candidate for 11.0. Stop there first if you are on an older 10.x, and move every{' '}
+        <code>@nexub</code> package you use together:
       </p>
-      <CodeBlock lang="bash" code={`npm install @nexub/react@next @nexub/themes@next @nexub/tokens@next @nexub/icons@next`} />
+      <CodeBlock lang="bash" code={`npm install @nexub/react@10.9 @nexub/themes@10.9 @nexub/tokens@10.9 @nexub/icons@10.9`} />
       <p>
         10.9 breaks nothing: it is 10.x with the warnings and the codemod rule for 11.0. Run the rule, clear what it
         finds, and 11.0 is a version bump.
@@ -72,14 +71,14 @@ npx nexub-migrate --rules changes-in-11 --check  # CI: exit 1 while anything is 
       />
       <p>
         If you import <code>@nexub/react/styles.css</code> and none of the four files yourself, there is nothing to do:
-        the stylesheet moves to the generated map in 11.0.
+        the stylesheet moved to the generated map in 11.0.
       </p>
 
       <h2>What changes by default: overlays on small screens</h2>
       <p>
         Since 10.6 pickers and menus can open as a bottom sheet with the <code>sheet</code> prop. In 11.0 its default
-        goes from <code>false</code> to <code>&quot;auto&quot;</code>: a bottom sheet below 768px, the usual popover
-        above. It is done in CSS, so nothing flashes after hydration.
+        went from <code>false</code> to <code>&quot;auto&quot;</code>: a bottom sheet below 768px, the usual popover
+        above. For poppers it is done in CSS, so nothing flashes after hydration; AlertDialog and CommandPalette switch right after mount.
       </p>
       <DocTable
         head={['Package', 'Components with the prop']}
@@ -104,7 +103,7 @@ npx nexub-migrate --rules changes-in-11 --check  # CI: exit 1 while anything is 
       />
       <CodeBlock
         lang="tsx"
-        code={`<Select.Content sheet="auto">…</Select.Content>   {/* the 11.0 default: adopt it today */}
+        code={`<Select.Content sheet="auto">…</Select.Content>   {/* the 11.0 default, written out */}
 <Select.Content sheet={false}>…</Select.Content>  {/* keep a popover on small screens */}`}
       />
       <p>

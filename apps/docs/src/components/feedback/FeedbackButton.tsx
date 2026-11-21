@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { MessageSquare } from '@nexub/icons';
+import { Button } from '@nexub/react';
 
 // Dialog + Turnstile + screenshot/annotation code loads on first click only.
 const FeedbackDialog = React.lazy(() =>
@@ -21,18 +22,19 @@ export function FeedbackButton() {
   return (
     <>
       {!open && (
-        <button
-          type="button"
+        <Button
+          variant="outlined"
           onClick={() => {
             setLoaded(true);
             setOpen(true);
           }}
           aria-label="Send feedback"
-          className="docs-feedback-fab nx-state-layer fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] inline-flex items-center gap-2 rounded-shape-control border border-outline-variant bg-surface-elevated px-3.5 py-2.5 text-label-lg font-semibold text-on-surface shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
+          leadingIcon={<MessageSquare size={15} aria-hidden="true" />}
+          // Same pill as before: the DS button supplies the shape, state layer and press.
+          className="docs-feedback-fab fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] h-auto bg-surface-elevated px-3.5 py-2.5 font-semibold shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
         >
-          <MessageSquare size={15} aria-hidden="true" />
           Feedback
-        </button>
+        </Button>
       )}
 
       {loaded && (
