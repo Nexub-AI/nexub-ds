@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { Button } from '@nexub/react';
 import { FilterBar } from './FilterBar.js';
 
 const meta: Meta = {
@@ -68,4 +69,17 @@ function FilterBarDemo() {
 
 export const Default: Story = {
   render: () => <FilterBarDemo />,
+};
+
+/** 11.3: `search={false}` for a bar of filters and actions only. */
+export const WithoutSearch: Story = {
+  render: () => (
+    <FilterBar
+      search={false}
+      filters={<Button variant="outlined" size="sm">Status</Button>}
+      activeCount={1}
+      onClearAll={() => {}}
+      actions={<Button size="sm">Export</Button>}
+    />
+  ),
 };

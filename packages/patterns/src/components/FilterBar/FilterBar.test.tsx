@@ -140,5 +140,11 @@ describe('FilterBar', () => {
     }
     expect(await screen.findAllByRole('listitem')).toHaveLength(11); // Item 29, 290–299
   });
-});
 
+  it('11.3: search={false} leaves the search field out and keeps filters and actions', () => {
+    render(<FilterBar search={false} filters={<button type="button">Status</button>} actions={<button type="button">Export</button>} />);
+    expect(screen.queryByRole('searchbox')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Status' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Export' })).toBeTruthy();
+  });
+});

@@ -102,3 +102,50 @@ describe('StatCard 10.3', () => {
     expect(container.querySelector('polyline')).toBeNull();
   });
 });
+
+describe('StatCard 11.3', () => {
+  it('writes a numeric change as a percent by default, with the arrow from its sign', () => {
+    render(<StatCard label="MRR" value="$5,000" change={0.125} changeLabel="vs last month" />);
+    const delta = screen.getByText('+12.5%');
+    expect(delta).toHaveAttribute('data-delta-type', 'increase');
+    expect(delta).toHaveAttribute('data-sentiment', 'positive');
+    expect(screen.getByText('vs last month')).toBeDefined();
+  });
+
+  it('writes an absolute change, or uses a custom formatter', () => {
+    const { rerender } = render(<StatCard label="Tickets" value="120" change={-12} changeFormat="absolute" />);
+    expect(screen.getByText('−12')).toHaveAttribute('data-delta-type', 'decrease');
+    rerender(<StatCard label="Revenue" value="$9k" change={1500} changeFormat={(n) => `+${n} USD`} />);
+    expect(screen.getByText('+1500 USD')).toBeDefined();
+  });
+
+  it('bad-when-high inverts the derived colour; sentiment still wins', () => {
+    const { rerender } = render(<StatCard label="Costs" value="$3k" change={0.1} tone="bad-when-high" />);
+    expect(screen.getByText('+10.0%')).toHaveAttribute('data-sentiment', 'negative');
+    expect(screen.getByText('+10.0%').className).toContain('--color-error');
+    rerender(<StatCard label="Costs" value="$3k" delta="-4%" deltaType="decrease" tone="bad-when-high" />);
+    expect(screen.getByText('-4%')).toHaveAttribute('data-sentiment', 'positive');
+    rerender(<StatCard label="Costs" value="$3k" change={0.1} tone="bad-when-high" sentiment="neutral" />);
+    expect(screen.getByText('+10.0%')).toHaveAttribute('data-sentiment', 'neutral');
+  });
+
+  it('delta wins over change, so existing callers are unchanged', () => {
+    render(<StatCard label="MRR" value="$5,000" delta="+12%" change={0.5} />);
+    expect(screen.getByText('+12%')).toHaveAttribute('data-delta-type', 'neutral');
+    expect(screen.queryByText('+50.0%')).toBeNull();
+  });
+
+  it('renders the compact size and a note inside the tile', () => {
+    const { container } = render(<StatCard label="Users" value="2" size="sm" note={<span>Includes trials</span>} />);
+    const root = container.firstElementChild!;
+    expect(root).toHaveAttribute('data-size', 'sm');
+    expect(root.className).toContain('p-4');
+    expect(root).toContainElement(screen.getByText('Includes trials'));
+  });
+
+  it('keeps the default size without the new props', () => {
+    const { container } = render(<StatCard label="Users" value="2" />);
+    expect(container.firstElementChild).not.toHaveAttribute('data-size');
+    expect(container.firstElementChild?.className).toContain('p-6');
+  });
+});

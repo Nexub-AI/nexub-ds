@@ -74,8 +74,8 @@ export { ChartToggle } from './components/Chart/index.js';
 export { ChartZoom } from './components/ChartZoom/index.js';
 export type { ChartZoomProps } from './components/ChartZoom/index.js';
 export type { ChartToggleProps } from './components/Chart/index.js';
-export type { GaugeProps, HeatmapProps, FunnelProps, KpiTileProps } from './components/Chart/index.js';
-export type { BarChartProps, LineChartProps, DonutChartProps, SparklineProps, ChartLegendProps, ChartSeries, ChartColor } from './components/Chart/index.js';
+export type { GaugeProps, GaugeTone, HeatmapProps, FunnelProps, FunnelDatum, FunnelSeries, KpiTileProps } from './components/Chart/index.js';
+export type { BarChartProps, LineChartProps, DonutChartProps, SparklineProps, ChartLegendProps, ChartSeries, ChartColor, ChartTone, ChartPaint } from './components/Chart/index.js';
 export type { AmountProps } from './components/Amount/index.js';
 export { NumberTicker } from './components/NumberTicker/index.js';
 export type { NumberTickerProps, NumberTickerPart } from './components/NumberTicker/index.js';
@@ -155,7 +155,7 @@ export type { RatingProps } from './components/Rating/index.js';
 
 // Components — Content
 export { CheckList, CheckListItem } from './components/CheckList/index.js';
-export type { CheckListProps, CheckListItemProps } from './components/CheckList/index.js';
+export type { CheckListProps, CheckListItemProps, CheckListEntry, CheckListStatus } from './components/CheckList/index.js';
 
 // Components — Inline Primitives
 export { Code } from './components/Code/index.js';
@@ -296,6 +296,11 @@ export { EmojiPicker, EmojiPickerPanel, loadEmojiData, withSkinTone } from './co
 export type { EmojiPickerProps, EmojiPickerPanelProps, SkinTone, EmojiCategory, EmojiCategoryId, EmojiItem } from './components/EmojiPicker/index.js';
 export { IconPicker, IconPickerPanel, loadIcons } from './components/IconPicker/index.js';
 export type { IconPickerProps, IconPickerPanelProps, IconPickerCategory } from './components/IconPicker/index.js';
+// 11.3 Dashboards tell the truth
+export { UsageTile, UsageBar, usageLevel } from './components/Usage/index.js';
+export type { UsageTileProps, UsageBarProps, UsageLevel } from './components/Usage/index.js';
+export { StageCounter } from './components/StageCounter/index.js';
+export type { StageCounterProps, StageCounterStage } from './components/StageCounter/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
 export type { SliderProps, SliderMark } from './components/Slider/index.js';
