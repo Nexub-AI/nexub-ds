@@ -18,6 +18,13 @@ Compare values across categories, grouped or stacked. Server-rendered SVG on the
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
 | `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
 | `stacked` | `boolean` | `false` | One bar per category with the series stacked. |
+| `series[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a semantic tone. |
+| `series[].valueFormat` | `(value: number) => string` |  | 11.3: formats this series in the tooltip and table (one currency per series). |
+| `integerTicks` | `boolean` |  | 11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure with the same data. Works without JS. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 11.3: categories down the side for long names and ranked lists. |
+| `variant / totalKey` | `'default' \| 'waterfall' / keyof T` |  | 11.3: a waterfall of the first series from a running total; `totalKey` marks rows drawn from zero. |
+| `colorOf` | `(row, series, index) => colour \| tone \| undefined` |  | 11.3: a colour per bar (e.g. over budget in danger). |
 
 ## Example: Grouped
 
@@ -106,6 +113,53 @@ export default function Example() {
         series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
       />
       <p className="m-0 text-body-sm text-on-surface-variant">{picked}</p>
+    </div>
+  );
+}
+```
+
+## Example: Waterfall
+
+Rises in the good tone, falls in danger, totals from zero.
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const cash = [
+  { step: 'Opening', v: 120000, total: true },
+  { step: 'Sales', v: 64000, total: false },
+  { step: 'Payroll', v: -52000, total: false },
+  { step: 'Refunds', v: -6000, total: false },
+  { step: 'Closing', v: 126000, total: true },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(v);
+
+export default function Example() {
+  return <BarChart className="w-full max-w-2xl" title="Cash flow, Q3" variant="waterfall" totalKey="total" valueFormat={usd} data={cash} index="step" series={[{ key: 'v', label: 'Cash', color: 2 }]} tableView />;
+}
+```
+
+## Example: Horizontal and per-bar tones
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const products = [
+  { product: 'Enterprise plan (annual)', revenue: 48200 },
+  { product: 'Team plan', revenue: 31900 },
+  { product: 'Starter', revenue: 12800 },
+];
+const spend = [
+  { month: 'Jan', spend: 82 },
+  { month: 'Feb', spend: 97 },
+  { month: 'Mar', spend: 118 },
+];
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-2xl flex-col gap-8">
+      <BarChart title="Top products" orientation="horizontal" data={products} index="product" series={[{ key: 'revenue', label: 'Revenue' }]} />
+      <BarChart title="Spend against a budget of 100" data={spend} index="month" series={[{ key: 'spend', label: 'Spend', color: 'good' }]} colorOf={(row) => (row.spend > 100 ? 'danger' : undefined)} />
     </div>
   );
 }

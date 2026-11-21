@@ -669,6 +669,12 @@
       "file": "components/Chart/Chart.tsx",
       "props": [
         {
+          "name": "colorOf",
+          "type": "((row: T, series: ChartSeries, index: number) => ChartPaint)",
+          "required": false,
+          "description": "11.3: a colour per bar, e.g. red for the months over budget. Return undefined for the series colour."
+        },
+        {
           "name": "data",
           "type": "T[]",
           "required": true,
@@ -705,6 +711,12 @@
           "description": "Key of the category label in each row (the x axis)."
         },
         {
+          "name": "integerTicks",
+          "type": "boolean",
+          "required": false,
+          "description": "11.3: gridlines and axis labels on whole numbers only (counts)."
+        },
+        {
           "name": "interactive",
           "type": "boolean",
           "required": false,
@@ -736,6 +748,12 @@
           "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
+          "name": "orientation",
+          "type": "'horizontal' | 'vertical'",
+          "required": false,
+          "description": "11.3: `horizontal` lays the categories down the side and the bars across, for long category names and ranked lists. Drawn without the pointer layer: `interactive` and `onPointClick` apply to vertical bars."
+        },
+        {
           "name": "series",
           "type": "ChartSeries[]",
           "required": true,
@@ -756,10 +774,22 @@
           "description": "Stack the series in one bar per category instead of side by side."
         },
         {
+          "name": "tableView",
+          "type": "string | boolean",
+          "required": false,
+          "description": "11.3: a visible \"Show as table\" under the chart that lists the same data as a table. A native disclosure, so it works without JS. Pass a string to label it."
+        },
+        {
           "name": "title",
           "type": "string",
           "required": true,
           "description": "Accessible name of the chart, e.g. \"Revenue by month\"."
+        },
+        {
+          "name": "totalKey",
+          "type": "(keyof T & string)",
+          "required": false,
+          "description": "11.3 waterfall: the key of a boolean in each row that marks a total (opening, subtotal, closing)."
         },
         {
           "name": "valueFormat",
@@ -767,6 +797,13 @@
           "required": false,
           "default": "defaultFormat",
           "description": "Formats axis labels, the tooltip and the data table."
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'waterfall'",
+          "required": false,
+          "default": "'default'",
+          "description": "11.3: `waterfall` draws the first series as steps from a running total: rises in the `good` tone, falls in `danger`, and rows marked by `totalKey` as full bars from zero in the series colour. Vertical only."
         }
       ]
     },
@@ -1019,7 +1056,7 @@
       "props": [
         {
           "name": "items",
-          "type": "{ label: string; color?: ChartColor; }[]",
+          "type": "{ label: string; color?: ChartPaint; }[]",
           "required": true,
           "description": ""
         }
@@ -1347,9 +1384,9 @@
         },
         {
           "name": "items",
-          "type": "string[]",
+          "type": "(string | CheckListEntry)[]",
           "required": false,
-          "description": ""
+          "description": "Plain strings draw the check; 11.3: `{ label, status }` entries show done or pending."
         }
       ]
     },
@@ -1361,6 +1398,19 @@
           "type": "React.ReactNode",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "status",
+          "type": "'done' | 'pending'",
+          "required": false,
+          "description": "11.3: `done` draws the check, `pending` an empty ring with muted text. Either one is also read out after the text (\"Done\" / \"Pending\"), so the state is not shape or colour alone."
+        },
+        {
+          "name": "statusLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Done' / 'Pending'",
+          "description": "11.3: the words read for `status`."
         }
       ]
     },
@@ -3555,16 +3605,49 @@
           "description": "Show the legend beside the donut. Default on."
         },
         {
+          "name": "legendValues",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "11.3: each legend row also lists its value and share."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
           "description": "Shows a skeleton in place of the data and sets aria-busy."
         },
         {
+          "name": "maxSlices",
+          "type": "number",
+          "required": false,
+          "description": "11.3: at most this many slices: the smallest of the rest are added up into one \"Other\" slice (in the `neutral` tone), so a long tail stays readable."
+        },
+        {
           "name": "onPointClick",
           "type": "((point: ChartPoint<DonutDatum>) => void)",
           "required": false,
           "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
+        },
+        {
+          "name": "otherLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Other'",
+          "description": "11.3: the label of the grouped slice."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": "11.3: diameter: `sm` 8rem, `md` 10rem, `lg` 14rem."
+        },
+        {
+          "name": "tableView",
+          "type": "string | boolean",
+          "required": false,
+          "description": "11.3: a visible \"Show as table\" under the chart. Pass a string to label it."
         },
         {
           "name": "title",
@@ -4693,7 +4776,7 @@
         },
         {
           "name": "data",
-          "type": "{ label: string; value: number; }[]",
+          "type": "FunnelDatum[]",
           "required": true,
           "description": ""
         },
@@ -4728,6 +4811,24 @@
           "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
         },
         {
+          "name": "series",
+          "type": "FunnelSeries[]",
+          "required": false,
+          "description": "11.3: several series per step (this month vs last, web vs app), drawn as stacked thin bars with a legend. `{ key: 'value' }` reads each step's `value`, any other key reads `values[key]`. The interactive tooltip and `onPointClick` use `value`."
+        },
+        {
+          "name": "show",
+          "type": "'both' | 'drop-off' | 'conversion'",
+          "required": false,
+          "description": "11.3: visible numbers under each step: `conversion` (share of the first step and of the previous step), `drop-off` (how many left since the previous step), or `both`. Unset draws the bars only, as before."
+        },
+        {
+          "name": "tableView",
+          "type": "string | boolean",
+          "required": false,
+          "description": "11.3: a \"Show as table\" disclosure under the drawing; a string sets its label."
+        },
+        {
           "name": "title",
           "type": "string",
           "required": true,
@@ -4745,6 +4846,12 @@
     "Gauge": {
       "file": "components/Chart/MoreCharts.tsx",
       "props": [
+        {
+          "name": "caption",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.3: a short line under the value, e.g. \"of 50 GB\" or \"On track\". Also read with the value."
+        },
         {
           "name": "color",
           "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
@@ -4788,6 +4895,12 @@
           "type": "string",
           "required": true,
           "description": "Accessible name, e.g. \"Storage used\"."
+        },
+        {
+          "name": "tone",
+          "type": "'warning' | 'danger' | 'good'",
+          "required": false,
+          "description": "11.3: success, warning or error colour for the arc; wins over `color`."
         },
         {
           "name": "value",
@@ -4900,9 +5013,9 @@
         },
         {
           "name": "data",
-          "type": "number[][]",
+          "type": "(number)[][]",
           "required": true,
-          "description": "Rows of values, e.g. one row per weekday, one column per week."
+          "description": "Rows of values, e.g. one row per weekday, one column per week. 11.3: a missing cell (`null`, `undefined` or a hole) is drawn as an empty hatched cell and listed as \"—\"."
         },
         {
           "name": "emptyState",
@@ -4923,6 +5036,12 @@
           "description": "A crosshair and tooltip that follow the pointer, and arrow-key navigation between points."
         },
         {
+          "name": "legend",
+          "type": "boolean",
+          "required": false,
+          "description": "11.3: a low → high scale under the grid with the min and max values."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
@@ -4939,6 +5058,12 @@
           "type": "string[]",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "tableView",
+          "type": "string | boolean",
+          "required": false,
+          "description": "11.3: a \"Show as table\" disclosure under the drawing; a string sets its label."
         },
         {
           "name": "title",
@@ -5574,6 +5699,12 @@
           "description": "Key of the category label in each row (the x axis)."
         },
         {
+          "name": "integerTicks",
+          "type": "boolean",
+          "required": false,
+          "description": "11.3: gridlines and axis labels on whole numbers only (counts)."
+        },
+        {
           "name": "interactive",
           "type": "boolean",
           "required": false,
@@ -5616,6 +5747,12 @@
           "required": false,
           "default": "'md'",
           "description": "Height of the plot area."
+        },
+        {
+          "name": "tableView",
+          "type": "string | boolean",
+          "required": false,
+          "description": "11.3: a visible \"Show as table\" under the chart that lists the same data as a table. A native disclosure, so it works without JS. Pass a string to label it."
         },
         {
           "name": "title",
@@ -7790,10 +7927,10 @@
         },
         {
           "name": "color",
-          "type": "1 | 2 | 3 | 4 | 5 | 6 | 7 | 8",
+          "type": "1 | 'neutral' | 'warning' | 'danger' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'good'",
           "required": false,
           "default": "1",
-          "description": ""
+          "description": "Palette colour or (11.3) a tone."
         },
         {
           "name": "emptyState",
@@ -8006,6 +8143,47 @@
           "required": false,
           "default": "false",
           "description": ""
+        }
+      ]
+    },
+    "StageCounter": {
+      "file": "components/StageCounter/StageCounter.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Names the group, e.g. \"Filter by stage\"."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string | string[]",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "multiple",
+          "type": "boolean",
+          "required": false,
+          "description": "Several stages can be selected; an empty array = all."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void) | ((value: string[]) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "stages",
+          "type": "StageCounterStage[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string | string[]",
+          "required": false,
+          "description": "The selected stage, `null` = all."
         }
       ]
     },
@@ -8923,6 +9101,124 @@
           "required": false,
           "default": "true",
           "description": "Show the full text in a tooltip while it is clipped (string children only)."
+        }
+      ]
+    },
+    "UsageBar": {
+      "file": "components/Usage/Usage.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": "Names the meter, e.g. \"Seats\". Without it the meter is named by its value."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'used / limit'; `false` hides it.",
+          "description": "Inline text beside the bar."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": true,
+          "description": "`null` or `Infinity` = no limit: the value and \"Unlimited\", no bar."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'sm'",
+          "description": ""
+        },
+        {
+          "name": "used",
+          "type": "number",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "valueFormat",
+          "type": "((value: number) => string)",
+          "required": false,
+          "default": "toLocaleString",
+          "description": "Formats `used` and `limit`."
+        },
+        {
+          "name": "warnAt",
+          "type": "number",
+          "required": false,
+          "default": "0.8",
+          "description": "Share of the limit that turns the bar to the warning tone."
+        }
+      ]
+    },
+    "UsageTile": {
+      "file": "components/Usage/Usage.tsx",
+      "props": [
+        {
+          "name": "action",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "A control beside the label, e.g. an \"Upgrade\" link."
+        },
+        {
+          "name": "emptyState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown when there is no data. Defaults to the \"no data\" message."
+        },
+        {
+          "name": "errorState",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": true,
+          "description": "`null` or `Infinity` = no limit: the value and \"Unlimited\", no bar."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a skeleton in place of the data and sets aria-busy."
+        },
+        {
+          "name": "note",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Extra line under the bar, e.g. \"Resets on 1 May\"."
+        },
+        {
+          "name": "used",
+          "type": "number",
+          "required": true,
+          "description": "`null` / undefined = no data yet (empty state)."
+        },
+        {
+          "name": "valueFormat",
+          "type": "((value: number) => string)",
+          "required": false,
+          "default": "toLocaleString",
+          "description": "Formats `used` and `limit`."
+        },
+        {
+          "name": "warnAt",
+          "type": "number",
+          "required": false,
+          "default": "0.8",
+          "description": "Share of the limit that turns the bar to the warning tone."
         }
       ]
     }
@@ -10141,6 +10437,13 @@
           "type": "((value: string) => void)",
           "required": false,
           "description": "Fires on every keystroke. Filter big lists from a deferred copy so typing stays responsive: `const query = React.useDeferredValue(search)`, then filter by `query` (in a memoised component or `useMemo`)."
+        },
+        {
+          "name": "search",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "11.3: `false` leaves the search field out (filters and actions only)."
         },
         {
           "name": "searchLabel",
@@ -11923,6 +12226,25 @@
           "description": "10.3: puts the icon on a tinted chip of this colour, and colours the trend line to match."
         },
         {
+          "name": "change",
+          "type": "number",
+          "required": false,
+          "description": "11.3: the change as a number. Sets the arrow from its sign and the text from `changeFormat` (ignored when `delta` is set). Percent takes a fraction: 0.125 → \"+12.5%\"."
+        },
+        {
+          "name": "changeFormat",
+          "type": "'percent' | 'absolute' | ((change: number) => string)",
+          "required": false,
+          "default": "'percent'",
+          "description": "11.3: how `change` is written. `absolute` adds the sign to the number."
+        },
+        {
+          "name": "changeLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.3: text after the change, e.g. \"vs last month\"."
+        },
+        {
           "name": "delta",
           "type": "string",
           "required": false,
@@ -11932,7 +12254,6 @@
           "name": "deltaType",
           "type": "'increase' | 'decrease' | 'neutral'",
           "required": false,
-          "default": "'neutral'",
           "description": "Direction of the change: sets the arrow (and, by default, the colour)."
         },
         {
@@ -11961,11 +12282,31 @@
           "description": "10.5: skeletons in place of the value and the line under it; the card keeps its size."
         },
         {
+          "name": "note",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.3: an extra line inside the tile, under the change, e.g. \"Includes 2 refunds\"."
+        },
+        {
           "name": "sentiment",
           "type": "'neutral' | 'positive' | 'negative'",
           "required": false,
           "default": "derived from `deltaType` (increase → positive, decrease → negative)",
           "description": "Whether the change is good or bad, independent of its direction — e.g. churn going down is `deltaType=\"decrease\"` + `sentiment=\"positive\"`."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md'",
+          "required": false,
+          "default": "'md'",
+          "description": "11.3: `sm` is the compact tile (less padding, smaller value)."
+        },
+        {
+          "name": "tone",
+          "type": "'default' | 'bad-when-high'",
+          "required": false,
+          "default": "'default'",
+          "description": "11.3: `bad-when-high` inverts the derived colour (an increase shows the danger tone), for costs, churn, errors. `sentiment` still wins."
         },
         {
           "name": "trend",

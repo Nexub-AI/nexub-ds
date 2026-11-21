@@ -15,6 +15,12 @@ Parts of a whole, with an optional total in the hole. Keep it to six slices or f
 | `center` | `ReactNode` |  | Content in the hole, such as the total. |
 | `valueFormat` | `(value: number) => string` |  | Formats the hover text and the data table. |
 | `legend` | `boolean` | `true` | Show the legend beside the donut. |
+| `maxSlices / otherLabel` | `number / string` |  | 11.3: group the smallest slices into one "Other". |
+| `legendValues` | `boolean` |  | 11.3: value and share on each legend row. |
+| `data[].href` | `string` |  | 11.3: makes the slice's legend row a link. |
+| `data[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a tone. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 11.3: diameter. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure. |
 
 ## Example: With total
 
@@ -42,6 +48,25 @@ export default function Example() {
       }
     />
   );
+}
+```
+
+## Example: Other, legend values and links
+
+```tsx
+import { DonutChart } from '@nexub/react';
+
+const plans = [
+  { label: 'Enterprise', value: 42, href: '#enterprise' },
+  { label: 'Team', value: 31, href: '#team' },
+  { label: 'Starter', value: 15 },
+  { label: 'Education', value: 6 },
+  { label: 'Nonprofit', value: 4 },
+  { label: 'Trial', value: 2 },
+];
+
+export default function Example() {
+  return <DonutChart title="Plans" size="lg" legendValues maxSlices={4} data={plans} center="100" tableView />;
 }
 ```
 
