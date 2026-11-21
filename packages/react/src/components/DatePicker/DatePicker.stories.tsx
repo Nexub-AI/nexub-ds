@@ -138,3 +138,17 @@ export const SheetAuto: Story = {
     </div>
   ),
 };
+
+/** 11.1: a whole month (`'YYYY-MM'`) or year (`'YYYY'`), for pay periods, reports and tax years. */
+export const MonthAndYear: Story = {
+  render: () => {
+    const [month, setMonth] = React.useState<string | undefined>('2026-11');
+    const [year, setYear] = React.useState<string | undefined>();
+    return (
+      <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+        <DatePicker granularity="month" aria-label="Pay period" value={month} onValueChange={setMonth} />
+        <DatePicker granularity="year" aria-label="Tax year" value={year} onValueChange={setYear} />
+      </div>
+    );
+  },
+};

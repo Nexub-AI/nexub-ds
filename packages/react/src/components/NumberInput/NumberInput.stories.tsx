@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { NumberInput } from './NumberInput.js';
 
@@ -31,4 +32,17 @@ export const ConsistentControls: Story = {
       <NumberInput readOnly aria-label="Read-only" defaultValue={12} showSteppers />
     </div>
   ),
+};
+
+/** 11.1: can be empty (`null`), keeps a half-typed "2." while focused, limits apply on blur, `step="any"`. */
+export const Nullable: Story = {
+  render: () => {
+    const [value, setValue] = React.useState<number | null>(null);
+    return (
+      <div style={{ display: 'grid', gap: 12, maxWidth: 280 }}>
+        <NumberInput nullable aria-label="Target" placeholder="No target" min={15} max={100} step="any" value={value} onValueChange={setValue} showSteppers />
+        <span>{value === null ? 'null' : value}</span>
+      </div>
+    );
+  },
 };

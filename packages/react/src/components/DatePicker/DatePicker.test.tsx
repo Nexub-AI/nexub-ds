@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderToString } from 'react-dom/server';
 import { fr } from 'date-fns/locale/fr';
+import userEvent from '@testing-library/user-event';
 import { DatePicker } from './DatePicker.js';
 import { NexubProvider, defaultMessages } from '../NexubProvider/NexubProvider.js';
 
@@ -218,5 +219,63 @@ describe('DatePicker sheet (10.6)', () => {
     render(<DatePicker aria-label="When" sheet="auto" />);
     fireEvent.click(screen.getByRole('button'));
     expect(screen.getByRole('grid').closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+  });
+});
+
+describe('DatePicker granularity (11.1)', () => {
+  // The grid loads lazily; a placeholder trigger holds the spot. Wait for the real one (Radix adds aria-haspopup).
+  const trigger = async (name: RegExp | string) => {
+    await waitFor(() => expect(screen.getByRole('button', { name })).toHaveAttribute('aria-haspopup', 'dialog'));
+    return screen.getByRole('button', { name });
+  };
+
+  it('month: shows the month, picks a month as YYYY-MM', async () => {
+    const onValueChange = vi.fn();
+    render(<DatePicker granularity="month" aria-label="Pay period" value="2026-03" onValueChange={onValueChange} />);
+    await userEvent.click(await trigger(/Pay period: March 2026/));
+    expect(screen.getByRole('button', { name: 'March 2026' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'March 2026' })).toHaveFocus();
+    await userEvent.click(screen.getByRole('button', { name: 'July 2026' }));
+    expect(onValueChange).toHaveBeenCalledWith('2026-07');
+  });
+
+  it('month: the year buttons turn the page and arrow keys move focus', async () => {
+    const onValueChange = vi.fn();
+    render(<DatePicker granularity="month" aria-label="Period" value="2026-12" onValueChange={onValueChange} />);
+    await userEvent.click(await trigger(/Period/));
+    await userEvent.keyboard('{ArrowRight}');
+    expect(screen.getByRole('button', { name: 'January 2027' })).toHaveFocus();
+    await userEvent.click(screen.getByRole('button', { name: 'Go to previous year' }));
+    expect(screen.getByRole('button', { name: 'June 2026' })).toBeInTheDocument();
+    await userEvent.keyboard('{Enter}');
+  });
+
+  it('month: minDate and maxDate disable the months outside', async () => {
+    render(<DatePicker granularity="month" aria-label="Period" value="2026-05" minDate={new Date(2026, 3, 10)} maxDate={new Date(2026, 8, 1)} />);
+    await userEvent.click(await trigger(/Period/));
+    expect(screen.getByRole('button', { name: 'March 2026' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'April 2026' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'September 2026' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'October 2026' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Go to next year' })).toBeDisabled();
+  });
+
+  it('year: a page of twelve years, picks YYYY', async () => {
+    const onValueChange = vi.fn();
+    render(<DatePicker granularity="year" aria-label="Tax year" value="2026" onValueChange={onValueChange} />);
+    await userEvent.click(await trigger('Tax year: 2026'));
+    expect(screen.getByRole('button', { name: '2016' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '2027' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Go to next years' }));
+    await userEvent.click(screen.getByRole('button', { name: '2030' }));
+    expect(onValueChange).toHaveBeenCalledWith('2030');
+  });
+
+  it('empty month shows the placeholder and read-only does not open', async () => {
+    const { rerender } = render(<DatePicker granularity="month" aria-label="Period" />);
+    expect(await trigger('Period: Pick a month')).toBeInTheDocument();
+    rerender(<DatePicker granularity="month" aria-label="Period" value="2026-01" readOnly />);
+    await userEvent.click(await trigger(/Period/));
+    expect(screen.queryByRole('button', { name: 'January 2026' })).not.toBeInTheDocument();
   });
 });

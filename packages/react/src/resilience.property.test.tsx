@@ -176,21 +176,33 @@ describe('CSV', () => {
 describe('typed inputs', () => {
   const runs = { numRuns: 60 };
 
-  it('NumberInput only reports finite numbers inside min and max', () => {
-    const text = fc.oneof(anyText, fc.double().map(String), fc.constantFrom('Infinity', '-Infinity', '1e999', '-1e999', 'NaN'));
+  // 11.1: limits apply on blur, not per keystroke (typing 30 with a minimum of 15 must reach the 0),
+  // so what's reported while typing is any finite number and the value after blur is inside them.
+  it('NumberInput only reports finite numbers, inside min and max once it loses focus', () => {
+    const text = fc.oneof(anyText, fc.double().map(String), fc.constantFrom('Infinity', '-Infinity', '1e999', '-1e999', 'NaN', '2.', '-', ''));
     fc.assert(
-      fc.property(fc.array(text, { maxLength: 6 }), fc.integer({ min: -1000, max: 0 }), fc.integer({ min: 0, max: 1000 }), fc.boolean(), (texts, min, max, bounded) => {
-        const seen: number[] = [];
-        const { container } = render(<NumberInput aria-label="n" {...(bounded ? { min, max } : {})} onValueChange={(v) => seen.push(v)} />);
+      fc.property(fc.array(text, { maxLength: 6 }), fc.integer({ min: -1000, max: 0 }), fc.integer({ min: 0, max: 1000 }), fc.boolean(), fc.boolean(), (texts, min, max, bounded, nullable) => {
+        const seen: (number | null)[] = [];
+        const { container } = render(
+          nullable ? (
+            <NumberInput nullable aria-label="n" {...(bounded ? { min, max } : {})} onValueChange={(v) => seen.push(v)} />
+          ) : (
+            <NumberInput aria-label="n" {...(bounded ? { min, max } : {})} onValueChange={(v) => seen.push(v)} />
+          ),
+        );
         const input = container.querySelector('input')!;
         // jsdom sanitises type="number" values; a text field passes every string through, as an IME or autofill can.
         input.type = 'text';
+        fireEvent.focus(input);
         for (const t of texts) fireEvent.change(input, { target: { value: t } });
+        fireEvent.blur(input);
         cleanup();
         for (const v of seen) {
-          expect(Number.isFinite(v)).toBe(true);
-          if (bounded) expect(v >= min && v <= max).toBe(true);
+          if (v === null) expect(nullable).toBe(true);
+          else expect(Number.isFinite(v)).toBe(true);
         }
+        const last = seen.at(-1);
+        if (bounded && typeof last === 'number') expect(last >= min && last <= max).toBe(true);
       }),
       runs,
     );

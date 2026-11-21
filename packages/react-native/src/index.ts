@@ -237,5 +237,5 @@ export { PhoneInput } from './components/phone';
 export type { PhoneInputProps } from './components/phone';
 export { Countdown, useCountdown } from './components/countdown';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/countdown';
-export { encodeQR, qrPath, COUNTRIES, callingCode, formatNational, toE164, parsePhone, isValidPhone } from '@nexub/core';
+export { encodeQR, qrPath, COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone } from '@nexub/core';
 export type { QRErrorCorrection, QRMatrix, CountryCode, ParsedPhone } from '@nexub/core';

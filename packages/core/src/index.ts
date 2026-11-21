@@ -5,7 +5,7 @@ export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS, accentAttrs } from './types.j
 export type { ToneValue, CategoryColor, Product, ProductKey, DivisionKey, GlassMode, ContrastLevel, ControlSize } from './types.js';
 export { filterOperators, isFilterGroup, filterId, emptyFilter, newFilterRule, countFilters } from './filters.js';
 export type { FilterFieldType, FilterOperator, FilterField, FilterRule, FilterGroup } from './filters.js';
-export { COUNTRIES, callingCode, formatNational, toE164, parsePhone, isValidPhone } from './phone.js';
-export type { CountryCode, ParsedPhone } from './phone.js';
+export { COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone } from './phone.js';
+export type { CountryCode, ParsedPhone, FormatPhoneOptions } from './phone.js';
 export { encodeQR, qrPath } from './qr.js';
 export type { QRErrorCorrection, QRMatrix } from './qr.js';

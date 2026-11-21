@@ -9,6 +9,9 @@ export default function Example() {
       <Text tone="secondary">Secondary</Text>
       <Text tone="muted">Muted</Text>
       <Text tone="subtle">Subtle</Text>
+      <Text tone="danger">Danger</Text>
+      <Text tone="success">Success</Text>
+      <Text tone="warning">Warning</Text>
     </div>
   );
 }

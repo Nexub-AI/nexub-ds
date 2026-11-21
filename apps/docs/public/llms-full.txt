@@ -428,7 +428,7 @@ Never use a component marked deprecated.
 ## Components — Form & Input
 
 - [Action Bar](components/action-bar.md) `@nexub/react`: Save and cancel that stay in view at the bottom of a long form.
-- [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
+- [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input. `granularity` picks a whole month or year.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
 - [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
@@ -440,7 +440,7 @@ Never use a component marked deprecated.
 - [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
-- [Number Input](components/number-input.md) `@nexub/react`: A numeric input with increment and decrement controls, supporting min/max clamping and step.
+- [Number Input](components/number-input.md) `@nexub/react`: A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
 - [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
 - [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
 - [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
@@ -451,7 +451,9 @@ Never use a component marked deprecated.
 - [Autocomplete](components/autocomplete.md) `@nexub/react`: Type-to-search input with matching options dropdown.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
+- [Checkbox Field](components/checkbox-field.md) `@nexub/react`: A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Combobox Field](components/combobox-field.md) `@nexub/react`: A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
 - [File Upload](components/file-upload.md) `@nexub/react`: A drop zone and file list: pick, drop or paste files, with type, size and count checks and per-file progress.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
@@ -461,6 +463,7 @@ Never use a component marked deprecated.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
+- [Switch Field](components/switch-field.md) `@nexub/react`: A Switch with its label, description and error, the label clickable.
 - [Time Slot Picker](components/time-slot-picker.md) `@nexub/react`: Pick one time from a list of slots, for booking flows.
 
 ## Components — Forms
@@ -622,7 +625,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage
 
 
@@ -2453,6 +2456,75 @@ Related: [checkbox](checkbox.md), [radio-card](radio-card.md), [card](card.md)
 
 ---
 
+# Checkbox Field
+
+A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { CheckboxField } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/checkbox-field
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `ReactNode` |  | Names the box; clicking it toggles. |
+| `description / error` | `ReactNode` |  | Help under the label and the error under the row. |
+| `aside` | `ReactNode` |  | At the row end: a price, a count. |
+| `checked` | `boolean \| 'indeterminate'` |  | As Checkbox; `indeterminate` for a parent of a partly picked list. |
+| `CheckboxGroupField options` | `{ value, label, description?, disabled? }[]` |  | The choices, with `value` / `onValueChange` (string[]), `orientation`, `required`, `name` and one `error` for the group. |
+
+## Example: Field
+
+```tsx
+import { CheckboxField } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <CheckboxField label="Gift wrap" description="Paper and ribbon" aside="$4.00" />
+      <CheckboxField label="All invoices" checked="indeterminate" />
+      <CheckboxField label="I accept the terms" error="Accept the terms to continue" />
+    </div>
+  );
+}
+```
+
+## Example: Group
+
+```tsx
+import * as React from 'react';
+import { CheckboxGroupField } from '@nexub/react';
+
+export default function Example() {
+  const [value, setValue] = React.useState<string[]>(['email']);
+  return (
+    <CheckboxGroupField
+      label="Notify me by"
+      description="Pick one or more"
+      required
+      options={[
+        { value: 'email', label: 'Email' },
+        { value: 'sms', label: 'SMS', description: 'Carrier rates apply' },
+        { value: 'push', label: 'Push', disabled: true },
+      ]}
+      value={value}
+      onValueChange={setValue}
+      error={value.length ? undefined : 'Pick at least one'}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- CheckboxGroupField is a `fieldset` named by its legend; its error describes the group and marks every box invalid.
+
+Related: [checkbox](checkbox.md), [switch-field](switch-field.md), [checkbox-card](checkbox-card.md), [fieldset](fieldset.md)
+
+
+---
+
 # Checkbox
 
 Binary checkbox input built on Radix UI.
@@ -2794,6 +2866,133 @@ export default function Example() {
   );
 }
 ```
+
+
+---
+
+# Combobox Field
+
+A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { ComboboxField } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/combobox-field
+
+## When to use
+
+- One choice from a long list: people, countries, companies, codes.
+- A list the server searches (`onSearch` with `loading`).
+
+## When not to use
+
+- Ten options or fewer: use Select.
+- Several choices: use MultiSelect.
+- Free text with suggestions: use Autocomplete.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `ReactNode` |  | The field label. `ComboboxPicker` is the same control without it (name it with `aria-label`). |
+| `options` (required) | `ComboboxOption[]` |  | `{ value, label, description?, keywords?, disabled?, group? }`. `description` is a second line; `keywords` and `description` are searched too; `group` lists the option under a heading. |
+| `value / defaultValue` | `string \| null` |  | The picked value, `null` for none. |
+| `onValueChange` | `(value: string \| null) => void` |  | Called with the picked value, or `null` from the none option. |
+| `noneOption` | `string` |  | A first option that clears the value, e.g. "No manager". |
+| `onSearch / loading` | `(text: string) => void / boolean` |  | Server search: the list is not filtered here while `onSearch` is set. |
+| `selectedOption` | `ComboboxOption` |  | Labels the value when it is not in `options` (before an async search has run). |
+| `description / error` | `ReactNode` |  | Help and the inline error under the field. `error` marks it invalid. |
+| `name` | `string` |  | A hidden input posts the value with a plain form. Inside `Form`, also picks up the form error. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the field. |
+| `sheet` | `boolean \| 'auto'` | `'auto'` | The list as a bottom sheet below 768px. |
+
+## Example: Default
+
+```tsx
+import * as React from 'react';
+import { ComboboxField } from '@nexub/react';
+
+const countries = ['Australia', 'India', 'Indonesia', 'Malaysia', 'New Zealand', 'Philippines', 'Singapore', 'Thailand', 'United Kingdom', 'United States', 'Vietnam'].map((label) => ({
+  value: label.toLowerCase().replace(/ /g, '-'),
+  label,
+}));
+
+export default function Example() {
+  const [value, setValue] = React.useState<string | null>('singapore');
+  return (
+    <div className="w-full max-w-sm">
+      <ComboboxField label="Country" description="Where the company is registered" options={countries} value={value} onValueChange={setValue} />
+    </div>
+  );
+}
+```
+
+## Example: Groups and a none option
+
+```tsx
+import { ComboboxField } from '@nexub/react';
+
+const people = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'Finance lead', keywords: ['aisha@nexub.test'], group: 'Finance' },
+  { value: 'u2', label: 'Ben Ong', description: 'Accountant', group: 'Finance' },
+  { value: 'u3', label: 'Chen Wei', description: 'Account executive', group: 'Sales' },
+  { value: 'u4', label: 'Dana Lee', description: 'On leave', group: 'Sales', disabled: true },
+];
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-sm">
+      <ComboboxField label="Manager" noneOption="No manager" options={people} error="Pick who approves leave" />
+    </div>
+  );
+}
+```
+
+## Example: Server search
+
+```tsx
+import * as React from 'react';
+import { ComboboxField, type ComboboxOption } from '@nexub/react';
+
+const companies: ComboboxOption[] = ['Acme Corp', 'Apex Labs', 'Nexub Pte Ltd', 'Zeta Holdings'].map((label, i) => ({ value: `c${i}`, label }));
+
+export default function Example() {
+  const [options, setOptions] = React.useState<ComboboxOption[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const [value, setValue] = React.useState<string | null>('c2');
+  const timer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  return (
+    <div className="w-full max-w-sm">
+      <ComboboxField
+        label="Company"
+        options={options}
+        loading={loading}
+        value={value}
+        onValueChange={setValue}
+        selectedOption={companies.find((o) => o.value === value)}
+        onSearch={(text) => {
+          clearTimeout(timer.current);
+          setLoading(true);
+          timer.current = setTimeout(() => {
+            setOptions(companies.filter((o) => o.label.toLowerCase().includes(text.toLowerCase())));
+            setLoading(false);
+          }, 300);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- `Enter / Space / Arrow Down`: Opens the list with focus in the search box.
+- `Arrow Up / Arrow Down`: Moves through the options.
+- `Enter`: Picks the highlighted option and closes.
+- `Escape`: Closes without changing the value.
+- The trigger is a `combobox` named by the label; the picked option is its text.
+- Description and error are linked with `aria-describedby`.
+
+Related: [select](select.md), [combobox](combobox.md), [autocomplete](autocomplete.md), [form-field](form-field.md)
 
 
 ---
@@ -3680,7 +3879,7 @@ export default function Example() {
 
 # Date Picker
 
-Calendar date picker with text input.
+Calendar date picker with text input. `granularity` picks a whole month or year.
 
 - Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { DatePicker } from '@nexub/react';`
@@ -3690,6 +3889,7 @@ Calendar date picker with text input.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `granularity` | `'day' \| 'month' \| 'year'` | `'day'` | `'month'` and `'year'` show a grid of months or years; the value is then a string, `'YYYY-MM'` or `'YYYY'`. |
 | `value` | `Date \| undefined` |  | Controlled selected date value. |
 | `onValueChange` | `(date: Date \| undefined) => void` |  | Called with the picked date. |
 | `locale` | `Locale (date-fns)` |  | Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL. |
@@ -3733,6 +3933,26 @@ export default function Example() {
       minDate={new Date()}
       maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
     />
+  );
+}
+```
+
+## Example: Month and year
+
+Pay periods and tax years: `'2026-11'` and `'2026'`.
+
+```tsx
+import * as React from 'react';
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  const [month, setMonth] = React.useState<string | undefined>('2026-11');
+  const [year, setYear] = React.useState<string | undefined>();
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-3">
+      <DatePicker granularity="month" aria-label="Pay period" value={month} onValueChange={setMonth} />
+      <DatePicker granularity="year" aria-label="Tax year" value={year} onValueChange={setYear} />
+    </div>
   );
 }
 ```
@@ -4665,7 +4885,13 @@ A drop zone and file list: pick, drop or paste files, with type, size and count 
 | `onFilesChange` | `(files: File[]) => void` |  | The accepted files after every add or remove. Your app does the upload. |
 | `onReject` | `(rejections: FileRejection[]) => void` |  | Files turned away, with the reason (`type`, `size`, `count` or `custom`). |
 | `validate` | `(file: File) => string \| null \| undefined` |  | Your own check: return a message to reject the file. Validate again on the server. |
+| `files / defaultFiles` | `File[]` |  | Controlled list: clear or set it from the page (`files={[]}` after a send) instead of remounting. |
+| `transform` | `(file: File) => File \| Promise<File>` |  | Runs after the type check and before `maxSize` and `validate`, e.g. to shrink a photo. |
+| `capture` | `boolean \| 'user' \| 'environment'` |  | Opens the phone camera instead of the file list. |
+| `disabled / busy / progress` | `boolean / boolean / number` |  | Nothing can be added; `busy` shows an upload in progress (with `progress`, a bar). |
+| `FileUpload.Trigger` | `compound` |  | An outlined button (or `iconOnly` paperclip) that opens the picker, with no drop zone: Import CSV, attach, take a photo. `asChild` takes your own Button for another look. Rejections show under it. |
 | `FileUpload.Dropzone` | `compound` |  | A `<label>` around the native file input: click, Enter, Space, drop or paste. Children replace the default prompt. Rejection messages are announced. |
+| `Dropzone size` | `'sm' \| 'md'` |  | `'sm'` is a compact one-line zone. |
 | `FileUpload.List` | `compound` |  | Renders nothing until there are files. |
 | `FileUploadItem index` | `number` |  | Which accepted file this row shows. Rows past the file count render nothing. |
 | `FileUploadItem progress / onCancel` | `number / () => void` |  | Upload progress 0–100; below 100 shows a bar and, with `onCancel`, a cancel button. |
@@ -4710,6 +4936,42 @@ export default function Example() {
         <FileUpload.Item index={0} />
       </FileUpload.List>
     </FileUpload.Root>
+  );
+}
+```
+
+## Example: Trigger, camera and busy
+
+No drop zone: a button, a paperclip, the phone camera, and a busy compact zone.
+
+```tsx
+import * as React from 'react';
+import { Button, FileUpload } from '@nexub/react';
+
+export default function Example() {
+  const [files, setFiles] = React.useState<File[]>([]);
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <FileUpload.Root accept={['.csv']} maxFiles={1} files={files} onFilesChange={setFiles}>
+        <div className="flex items-center gap-2">
+          <FileUpload.Trigger>Import CSV</FileUpload.Trigger>
+          <FileUpload.Trigger iconOnly aria-label="Attach a file" />
+        </div>
+        <FileUpload.List>
+          {files.map((f, i) => (
+            <FileUpload.Item key={f.name + i} index={i} />
+          ))}
+        </FileUpload.List>
+      </FileUpload.Root>
+      <FileUpload.Root accept={['image/*']} capture="environment" maxFiles={1}>
+        <FileUpload.Trigger asChild>
+          <Button variant="tonal">Take a photo</Button>
+        </FileUpload.Trigger>
+      </FileUpload.Root>
+      <FileUpload.Root busy progress={60}>
+        <FileUpload.Dropzone size="sm" />
+      </FileUpload.Root>
+    </div>
   );
 }
 ```
@@ -7168,7 +7430,7 @@ Related: [sidebar](sidebar.md), [top-nav](top-nav.md)
 
 # Number Input
 
-A numeric input with increment and decrement controls, supporting min/max clamping and step.
+A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
 
 - Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { NumberInput } from '@nexub/react';`
@@ -7178,10 +7440,12 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number` |  | Controlled value of the input. |
-| `min` | `number` |  | Minimum allowed value. |
-| `max` | `number` |  | Maximum allowed value. |
-| `step` | `number` | `1` | Amount to increment or decrement on each step. |
+| `value` | `number \| null` |  | Controlled value. `null` (with `nullable`) shows an empty field. |
+| `nullable` | `boolean` | `false` | The field can be empty: clearing it reports `null`, not 0, and a half-typed `2.` or `-` stays while focused. |
+| `onValueChange` | `(value: number) => void \| (value: number \| null) => void` |  | Called while typing (not yet clamped) and with the clamped value on blur, steppers and arrow keys. With `nullable`, `null` when cleared. |
+| `min` | `number` |  | Lowest value, applied on blur, steppers and arrow keys (never mid-typing, so 30 can be typed with a minimum of 15). |
+| `max` | `number` |  | Highest value, applied the same way. |
+| `step` | `number \| 'any'` | `1` | Increment for steppers and arrow keys. `'any'` allows any decimal (steppers then move by 1). |
 | `disabled` | `boolean` |  | Disables the input and its controls. |
 | `size` | `'sm' \| 'md' \| 'lg'` |  | Controls font size and padding. |
 
@@ -7202,6 +7466,25 @@ import { NumberInput } from '@nexub/react';
 
 export default function Example() {
   return <div className="w-45"><NumberInput defaultValue={5} min={0} max={10} /></div>;
+}
+```
+
+## Example: Can be empty
+
+`nullable`: cleared means null. The limits apply on blur.
+
+```tsx
+import * as React from 'react';
+import { NumberInput } from '@nexub/react';
+
+export default function Example() {
+  const [value, setValue] = React.useState<number | null>(null);
+  return (
+    <div className="flex w-56 flex-col gap-2">
+      <NumberInput nullable aria-label="Seat limit" placeholder="No limit" min={15} max={500} step="any" showSteppers value={value} onValueChange={setValue} />
+      <span className="text-body-sm text-on-surface-muted">{value === null ? 'No limit (null)' : `${value} seats`}</span>
+    </div>
+  );
 }
 ```
 
@@ -7526,6 +7809,8 @@ A phone field with a country picker. Groups the number as you type and reports i
 | `invalid / disabled` | `boolean` |  | Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field. |
 | `name` | `string` |  | Submits the E.164 value with a form. |
 | `sheet` | `boolean \| 'auto'` | `'auto'` | Shows the country list as a bottom sheet; `'auto'` only on phones. |
+| `formatPhone(e164, { style })` | `(e164: string, options?: { style?: 'national' \| 'international' }) => string` |  | Read-only display of a stored number: "+91 98470 12345" or "98470 12345". |
+| `parsePhone(value)` | `(value: string) => { country, dialCode, national, e164, valid }` |  | The parts, for apps that store the country and number apart. The E.164 string stays the one stored form. |
 
 ## Example: Default
 
@@ -9361,6 +9646,58 @@ Related: [celebrate](celebrate.md), [toast](toast.md)
 
 ---
 
+# Switch Field
+
+A Switch with its label, description and error, the label clickable.
+
+- Package: `@nexub/react` · Category: Form Controls · Status: alpha
+- Import: `import { SwitchField } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/switch-field
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `ReactNode` |  | Names the switch; clicking it toggles. |
+| `description / error` | `ReactNode` |  | Help under the label and the error under the row. `error` marks the switch invalid. |
+| `layout` | `'end' \| 'start'` | `'end'` | `'end'`: label first, the switch at the row end (settings lists). `'start'`: the switch first, for tight rows. |
+| `checked / onCheckedChange` | `boolean / (checked: boolean) => void` |  | As Switch, with `size`, `loading`, `disabled` and `readOnly`. |
+
+## Example: Settings row
+
+```tsx
+import { SwitchField } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-md flex-col gap-4">
+      <SwitchField label="Online store" description="Buyers can see and order from the shop" defaultChecked />
+      <SwitchField label="Two-step sign-in" error="Required by your organisation" />
+    </div>
+  );
+}
+```
+
+## Example: Compact, before the label
+
+```tsx
+import { SwitchField } from '@nexub/react';
+
+export default function Example() {
+  return <SwitchField label="Email me a weekly summary" layout="start" size="sm" />;
+}
+```
+
+## Accessibility
+
+- The label is a `<label for>` on the switch, so it names it and toggles it.
+- Description and error are linked with `aria-describedby`.
+
+Related: [switch](switch.md), [checkbox-field](checkbox-field.md), [form-field](form-field.md)
+
+
+---
+
 # Switch
 
 Toggle control for binary on/off settings. Built on Radix UI Switch.
@@ -9674,7 +10011,7 @@ Paragraph text component with size, tone, and weight variants.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `'body-lg' \| 'body' \| 'body-sm' \| 'caption' \| 'label'` | `'body'` | Controls the font size and line height. |
-| `tone` | `'default' \| 'secondary' \| 'muted' \| 'subtle' \| 'inverse'` |  | Color tone applied to the text. |
+| `tone` | `'default' \| 'secondary' \| 'muted' \| 'subtle' \| 'inverse' \| 'danger' \| 'success' \| 'warning'` |  | Color tone applied to the text. The status tones (11.1) meet 4.5:1 on every surface. |
 | `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold'` |  | Font weight of the text. |
 | `truncate` | `boolean` |  | Truncates text with an ellipsis when it overflows. |
 | `lineClamp` | `number` |  | Clamps the text to a maximum number of lines. |
@@ -9719,6 +10056,9 @@ export default function Example() {
       <Text tone="secondary">Secondary</Text>
       <Text tone="muted">Muted</Text>
       <Text tone="subtle">Subtle</Text>
+      <Text tone="danger">Danger</Text>
+      <Text tone="success">Success</Text>
+      <Text tone="warning">Warning</Text>
     </div>
   );
 }
