@@ -16,12 +16,17 @@ const entry: ComponentEntry = {
     { name: 'composer', type: 'ReactNode', required: false, description: 'Sticky slot under the list, usually a PromptInput.' },
     { name: 'autoScroll', type: 'boolean', default: 'true', required: false, description: 'Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest".' },
     { name: 'announce', type: 'boolean', default: 'false', required: false, description: 'Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk.' },
+    { name: 'maxHeight', type: 'number | string', required: false, description: '11.5: cap the height so it works in normal flow without a fixed-height parent. It grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent (`h-full`).' },
     { name: 'messages', type: 'Partial<ConversationMessages>', required: false, description: 'Overrides for `jumpToLatest` and `conversation`.' },
   ],
   examples: [
     {
       title: 'Mini chat',
       description: 'Send a message: it shows Thinking, then streams a cited reply. Stop or Escape ends the reply early.',
+    },
+    {
+      title: 'In normal flow',
+      description: 'No fixed-height parent: `maxHeight="20rem"` lets it grow with its messages, then scroll.',
     },
   ],
   usage: {

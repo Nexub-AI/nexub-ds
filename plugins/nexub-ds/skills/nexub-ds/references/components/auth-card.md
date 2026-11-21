@@ -11,10 +11,11 @@ Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a cent
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` (required) | `string` |  | Card heading (e.g. "Sign in to Nexub"). |
-| `description` | `string` |  | Subheading text. |
+| `description` | `ReactNode` |  | Subheading text. 11.5: any content, e.g. the address in bold; was a string. |
 | `logo` | `React.ReactNode` |  | Logo or brand mark above the title. |
 | `footer` | `React.ReactNode` |  | Footer content (e.g. "Don't have an account?"). |
 | `children` (required) | `React.ReactNode` |  | Form content. |
+| `logoAlign` | `'start' \| 'center'` | `'center'` | 11.5: where the logo sits. |
 
 ## Example: Sign in
 

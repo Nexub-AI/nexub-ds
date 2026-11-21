@@ -722,10 +722,12 @@
       "errorState",
       "expanded",
       "loading",
+      "onActivate",
       "onCheckedChange",
       "onExpandedChange",
       "onLoadChildren",
-      "onSelectedChange"
+      "onSelectedChange",
+      "renderActions"
     ],
     "nativeOnly": [
       "onSelect",
@@ -782,7 +784,10 @@
       "value"
     ],
     "webOnly": [
-      "disabled"
+      "as",
+      "disabled",
+      "maxLength",
+      "size"
     ],
     "nativeOnly": []
   },
@@ -1011,7 +1016,8 @@
     "webOnly": [
       "children",
       "description",
-      "footer"
+      "footer",
+      "logoAlign"
     ],
     "nativeOnly": [
       "biometricLabel",
@@ -1035,7 +1041,8 @@
       "announce",
       "autoScroll",
       "children",
-      "composer"
+      "composer",
+      "maxHeight"
     ],
     "nativeOnly": [
       "empty",

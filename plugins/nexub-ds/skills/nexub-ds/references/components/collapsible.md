@@ -16,6 +16,7 @@ Toggle visibility of content with smooth animation.
 | `Collapsible.Root disabled` | `boolean` | `false` | Prevents the user from toggling the collapsible. |
 | `Collapsible.Trigger asChild` | `boolean` | `false` | Merges props onto the immediate child element (Radix Slot). |
 | `Collapsible.Content forceMount` | `boolean` | `false` | Keeps the content mounted in the DOM even when closed. |
+| `variant` | `'unstyled' \| 'default'` | `'unstyled'` | 11.5 (Collapsible.Trigger): `default` is a styled full-width row with a chevron that turns when open. |
 
 ## Example: Default
 

@@ -50,6 +50,7 @@ Never use a component marked deprecated.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Org Chart](components/org-chart.md) `@nexub/react`: People top-down as cards joined by lines, keyboard navigable as a tree. A TreeView on narrow screens.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
 - [Resource Timeline](components/resource-timeline.md) `@nexub/react`: One row per person, days across: rosters, team leave and allocation, with totals in the footer.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.

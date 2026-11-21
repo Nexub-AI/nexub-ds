@@ -19,6 +19,7 @@ const entry: ComponentEntry = {
     { name: 'Breadcrumb.Trail maxItems', type: 'number', default: '4', required: false, description: 'Longer trails keep the first item and the last `maxItems - 1`, and move the rest into a "More" menu.' },
     { name: 'Breadcrumb.Separator children', type: 'React.ReactNode', required: false, description: 'Custom separator element. Defaults to a chevron icon.' },
     { name: 'Breadcrumb.Ellipsis aria-label', type: 'string', default: "'More'", required: false, description: 'Accessible label for the ellipsis element used to collapse long trails.' },
+    { name: 'Breadcrumb.Section', type: 'component', description: '11.5: a plain section in the trail, neither a link nor the current page. In `Breadcrumb.Trail`, an item before the last with no `href` renders as one.' },
   ],
   examples: [
     {
