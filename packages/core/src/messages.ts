@@ -187,6 +187,15 @@ export interface NexubMessages {
   previousDay: string;
   nextDay: string;
   allDay: string;
+  /** EventCalendar moves (11.4): the hint on a movable event, the live announcements, and the legend's name. */
+  eventMoveHint: string;
+  eventMoveTo: (title: string, when: string) => string;
+  eventMoved: (title: string, when: string) => string;
+  eventMoveCancelled: string;
+  calendarLegend: string;
+  /** ResourceTimeline (11.4): the first column's header and the totals row and column. */
+  resourceColumn: string;
+  rowTotal: string;
   /** DataTable column filter (10.7): the header button, e.g. "Filter Status", and the popover's controls. */
   filterColumn: (column: string) => string;
   clearFilter: string;
@@ -202,6 +211,10 @@ export interface NexubMessages {
   stepCurrent: string;
   stepUpcoming: string;
   stepProblem: string;
+  /** Stepper step statuses (11.4), read after the label. */
+  stepWarning: string;
+  stepSkipped: string;
+  stepCancelled: string;
   /** ResizablePanels separator. */
   resizePanels: string;
   /** Sortable, Kanban and DataTable row handles. */
@@ -209,6 +222,9 @@ export interface NexubMessages {
   reorderHint: string;
   itemMoved: (label: string, position: number, total: number) => string;
   itemMovedToColumn: (label: string, column: string, position: number, total: number) => string;
+  /** Sortable (11.4): a locked item's disabled handle; a keyboard move a `canMove` rule refuses. */
+  itemLocked: (label: string) => string;
+  cannotMoveHere: string;
   /** NotificationCenter (@nexub/patterns). */
   notificationCenter: string;
   unreadNotifications: (count: number) => string;
@@ -497,6 +513,13 @@ export const defaultMessages: NexubMessages = {
   previousDay: 'Go to previous day',
   nextDay: 'Go to next day',
   allDay: 'All day',
+  eventMoveHint: 'Alt+Arrow keys pick a new day or time, Enter drops it, Escape cancels',
+  eventMoveTo: (title, when) => `Move ${title} to ${when}`,
+  eventMoved: (title, when) => `${title} moved to ${when}`,
+  eventMoveCancelled: 'Move cancelled',
+  calendarLegend: 'Legend',
+  resourceColumn: 'Name',
+  rowTotal: 'Total',
   filterColumn: (column) => `Filter ${column}`,
   clearFilter: 'Clear filter',
   filterMin: 'Min',
@@ -508,11 +531,16 @@ export const defaultMessages: NexubMessages = {
   stepCurrent: 'current',
   stepUpcoming: 'upcoming',
   stepProblem: 'problem',
+  stepWarning: 'needs attention',
+  stepSkipped: 'skipped',
+  stepCancelled: 'cancelled',
   resizePanels: 'Resize panels',
   moveItem: (label) => `Move ${label}`,
   reorderHint: 'Alt+Arrow keys move it',
   itemMoved: (label, position, total) => `${label} moved to position ${position} of ${total}`,
   itemMovedToColumn: (label, column, position, total) => `${label} moved to ${column}, position ${position} of ${total}`,
+  itemLocked: (label) => `${label} is locked`,
+  cannotMoveHere: "Can't move here",
   notificationCenter: 'Notifications',
   unreadNotifications: (count) => `${count} unread`,
   markAllRead: 'Mark all as read',

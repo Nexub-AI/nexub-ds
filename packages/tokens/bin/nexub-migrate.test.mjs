@@ -439,3 +439,16 @@ test('changes-in-11: reports overlays without a sheet prop, rewrites none', () =
   // Same names from another package are not ours.
   assert.deepEqual(migrateSource("import { DatePicker } from 'antd';\n<DatePicker />", { ext: '.tsx', rules: only('changes-in-11') }).manual, []);
 });
+
+test('deprecated-in-11: reports Stepper current={-1}, rewrites nothing', () => {
+  const src = [
+    "import { Stepper as Steps } from '@nexub/react';",
+    '<Steps steps={s} current={-1} />',
+    '<Steps steps={s} current={2} />',
+    '<Steps steps={s} current={ - 1 } orientation="vertical" />',
+  ].join('\n');
+  const r = migrateSource(src, { ext: '.tsx', rules: only('deprecated-in-11') });
+  assert.equal(r.output, src);
+  assert.deepEqual(r.manual.map((m) => [m.line, m.rule]), [[2, 'deprecated-in-11'], [4, 'deprecated-in-11']]);
+  assert.deepEqual(migrateSource("import { Stepper } from 'other';\n<Stepper current={-1} />", { ext: '.tsx', rules: only('deprecated-in-11') }).manual, []);
+});

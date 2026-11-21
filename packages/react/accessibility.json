@@ -635,7 +635,11 @@
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
-      "keyboard": [],
+      "keyboard": [
+        "Alt + Arrow keys: With `onEventMove`, on an event: starts a move and takes the first step.",
+        "Arrow keys: While moving: left and right a day; up and down a week, or 15 minutes in day view.",
+        "Enter / Escape: Drops the event there, or cancels the move."
+      ],
       "screenReader": []
     },
     {
@@ -1313,6 +1317,20 @@
       "screenReader": []
     },
     {
+      "slug": "resource-timeline",
+      "name": "Resource Timeline",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Enters the grid at the last focused cell (one Tab stop).",
+        "Arrow keys: Move between people and days (left and right follow the reading direction).",
+        "Home / End: First or last day in the row; with Ctrl, the first or last cell.",
+        "Enter / Space / F2: Calls `onCellActivate` for the cell."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "saved-views",
       "name": "Saved Views",
       "package": "@nexub/react",
@@ -1440,7 +1458,8 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [
-        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the item; focus stays on its handle."
+        "Alt+ArrowUp / Alt+ArrowDown: On a handle: moves the item (by a row in a grid); focus stays on its handle.",
+        "Alt+ArrowLeft / Alt+ArrowRight: In a grid, moves the item by one cell; in a group, to the previous or next list. Mirrored in RTL."
       ],
       "screenReader": []
     },

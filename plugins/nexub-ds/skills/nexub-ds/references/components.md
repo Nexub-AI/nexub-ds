@@ -51,6 +51,7 @@ Never use a component marked deprecated.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 - [Number Ticker](components/number-ticker.md) `@nexub/react`: A number whose digits roll to new values on the spatial spring. The first render never animates.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
+- [Resource Timeline](components/resource-timeline.md) `@nexub/react`: One row per person, days across: rosters, team leave and allocation, with totals in the footer.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
 - [Stage Counter](components/stage-counter.md) `@nexub/react`: A row of selectable stat cards, each with a count and a failed count, that filters a list.
