@@ -11,7 +11,7 @@ Paragraph text component with size, tone, and weight variants.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `'body-lg' \| 'body' \| 'body-sm' \| 'caption' \| 'label'` | `'body'` | Controls the font size and line height. |
-| `tone` | `'default' \| 'secondary' \| 'muted' \| 'subtle' \| 'inverse'` |  | Color tone applied to the text. |
+| `tone` | `'default' \| 'secondary' \| 'muted' \| 'subtle' \| 'inverse' \| 'danger' \| 'success' \| 'warning'` |  | Color tone applied to the text. The status tones (11.1) meet 4.5:1 on every surface. |
 | `weight` | `'regular' \| 'medium' \| 'semibold' \| 'bold'` |  | Font weight of the text. |
 | `truncate` | `boolean` |  | Truncates text with an ellipsis when it overflows. |
 | `lineClamp` | `number` |  | Clamps the text to a maximum number of lines. |
@@ -56,6 +56,9 @@ export default function Example() {
       <Text tone="secondary">Secondary</Text>
       <Text tone="muted">Muted</Text>
       <Text tone="subtle">Subtle</Text>
+      <Text tone="danger">Danger</Text>
+      <Text tone="success">Success</Text>
+      <Text tone="warning">Warning</Text>
     </div>
   );
 }

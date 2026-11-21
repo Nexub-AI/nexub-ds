@@ -30,13 +30,13 @@ describe('phone helpers', () => {
   });
 
   it('parses pasted forms', () => {
-    expect(parsePhone('+971 50 123 4567', 'IN')).toEqual({ country: 'AE', national: '501234567', e164: '+971501234567', valid: true });
+    expect(parsePhone('+971 50 123 4567', 'IN')).toEqual({ country: 'AE', national: '501234567', e164: '+971501234567', valid: true, dialCode: '+971' });
     expect(parsePhone('0091 98470-12345', 'US').e164).toBe('+919847012345');
     expect(parsePhone('098470 12345', 'IN').national).toBe('9847012345');
     // Shared calling code: the current country stays.
     expect(parsePhone('+1 (415) 555-0132', 'CA').country).toBe('CA');
     expect(parsePhone('+1 (415) 555-0132', 'IN').country).toBe('US');
-    expect(parsePhone('', 'IN')).toEqual({ country: 'IN', national: '', e164: '', valid: false });
+    expect(parsePhone('', 'IN')).toEqual({ country: 'IN', national: '', e164: '', valid: false, dialCode: '+91' });
   });
 
   it('checks plausibility only', () => {
@@ -212,5 +212,21 @@ describe('PhoneInput', () => {
     render(<PhoneInput aria-label="Phone" name="phone" disabled />);
     expect(field()).toBeDisabled();
     expect(await screen.findByRole('combobox')).toBeDisabled();
+  });
+});
+
+describe('formatPhone and parsePhone (11.1)', () => {
+  it('formats an E.164 value for display, international or national', async () => {
+    const { formatPhone } = await import('@nexub/core');
+    expect(formatPhone('+919847012345')).toBe('+91 98470 12345');
+    expect(formatPhone('+919847012345', { style: 'national' })).toBe('98470 12345');
+    expect(formatPhone('+6591234567')).toMatch(/^\+65 9123 ?4567$/);
+    expect(formatPhone('')).toBe('');
+  });
+
+  it('parsePhone gives the parts apps store: country, dial code, national digits', async () => {
+    const { parsePhone } = await import('@nexub/core');
+    expect(parsePhone('+919847012345')).toMatchObject({ country: 'IN', dialCode: '+91', national: '9847012345', valid: true });
+    expect(parsePhone('+447700900123')).toMatchObject({ country: 'GB', dialCode: '+44', national: '7700900123' });
   });
 });

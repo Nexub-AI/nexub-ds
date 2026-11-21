@@ -1,6 +1,6 @@
 # Date Picker
 
-Calendar date picker with text input.
+Calendar date picker with text input. `granularity` picks a whole month or year.
 
 - Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { DatePicker } from '@nexub/react';`
@@ -10,6 +10,7 @@ Calendar date picker with text input.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `granularity` | `'day' \| 'month' \| 'year'` | `'day'` | `'month'` and `'year'` show a grid of months or years; the value is then a string, `'YYYY-MM'` or `'YYYY'`. |
 | `value` | `Date \| undefined` |  | Controlled selected date value. |
 | `onValueChange` | `(date: Date \| undefined) => void` |  | Called with the picked date. |
 | `locale` | `Locale (date-fns)` |  | Month and weekday names, week start and the trigger format. Defaults to the NexubProvider `dateLocale`; the calendar also follows the provider `dir`, so arrows flip in RTL. |
@@ -53,6 +54,26 @@ export default function Example() {
       minDate={new Date()}
       maxDate={new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)}
     />
+  );
+}
+```
+
+## Example: Month and year
+
+Pay periods and tax years: `'2026-11'` and `'2026'`.
+
+```tsx
+import * as React from 'react';
+import { DatePicker } from '@nexub/react';
+
+export default function Example() {
+  const [month, setMonth] = React.useState<string | undefined>('2026-11');
+  const [year, setYear] = React.useState<string | undefined>();
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-3">
+      <DatePicker granularity="month" aria-label="Pay period" value={month} onValueChange={setMonth} />
+      <DatePicker granularity="year" aria-label="Tax year" value={year} onValueChange={setYear} />
+    </div>
   );
 }
 ```

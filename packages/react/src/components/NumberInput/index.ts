@@ -1,2 +1,2 @@
 export { NumberInput } from './NumberInput.js';
-export type { NumberInputProps } from './NumberInput.js';
+export type { NumberInputProps, NullableNumberInputProps } from './NumberInput.js';

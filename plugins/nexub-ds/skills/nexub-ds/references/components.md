@@ -1,6 +1,6 @@
 # Component index
 
-Nexub DS v10.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v11.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -78,7 +78,7 @@ Never use a component marked deprecated.
 ## Components — Form & Input
 
 - [Action Bar](components/action-bar.md) `@nexub/react`: Save and cancel that stay in view at the bottom of a long form.
-- [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input.
+- [Date Picker](components/date-picker.md) `@nexub/react`: Calendar date picker with text input. `granularity` picks a whole month or year.
 - [Date Range Picker](components/date-range-picker.md) `@nexub/react`: Dual-calendar date range selector.
 - [Date Time Picker](components/date-time-picker.md) `@nexub/react`: A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 - [Fieldset](components/fieldset.md) `@nexub/react`: Groups related fields under a legend; disabling it disables everything inside.
@@ -90,7 +90,7 @@ Never use a component marked deprecated.
 - [Input](components/input.md) `@nexub/react`: Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Label](components/label.md) `@nexub/react`: An accessible form label that optionally shows a required asterisk and links to an input via htmlFor.
 - [Money Input](components/money-input.md) `@nexub/react`: An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
-- [Number Input](components/number-input.md) `@nexub/react`: A numeric input with increment and decrement controls, supporting min/max clamping and step.
+- [Number Input](components/number-input.md) `@nexub/react`: A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
 - [Password Input](components/password-input.md) `@nexub/react`: A password field with a built-in toggle to reveal or hide the entered value.
 - [Search Input](components/search-input.md) `@nexub/react`: A text input pre-wired with a search icon and a clear button for filtering content.
 - [Textarea](components/textarea.md) `@nexub/react`: A multi-line text input with configurable resize behaviour, size, and validation states.
@@ -101,7 +101,9 @@ Never use a component marked deprecated.
 - [Autocomplete](components/autocomplete.md) `@nexub/react`: Type-to-search input with matching options dropdown.
 - [Checkbox](components/checkbox.md) `@nexub/react`: Binary checkbox input built on Radix UI.
 - [Checkbox Card](components/checkbox-card.md) `@nexub/react`: A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
+- [Checkbox Field](components/checkbox-field.md) `@nexub/react`: A Checkbox with its label, description, aside and error; CheckboxGroupField puts several under one question.
 - [Combobox](components/combobox.md) `@nexub/react`: Command-palette style searchable dropdown built on cmdk.
+- [Combobox Field](components/combobox-field.md) `@nexub/react`: A labelled, searchable single choice that looks like a Select. For lists longer than about ten options.
 - [File Upload](components/file-upload.md) `@nexub/react`: A drop zone and file list: pick, drop or paste files, with type, size and count checks and per-file progress.
 - [Filter Builder](components/filter-builder.md) `@nexub/react`: Build AND/OR filter queries with nested groups. The output is plain JSON your app runs.
 - [Multi Select](components/multi-select.md) `@nexub/react`: Pick several options as chips, with search, "+N more" and an optional create option.
@@ -111,6 +113,7 @@ Never use a component marked deprecated.
 - [Radio Group](components/radio-group.md) `@nexub/react`: Group of mutually exclusive radio inputs.
 - [Select](components/select.md) `@nexub/react`: Accessible dropdown select built on Radix UI. Supports groups and search.
 - [Switch](components/switch.md) `@nexub/react`: Toggle control for binary on/off settings. Built on Radix UI Switch.
+- [Switch Field](components/switch-field.md) `@nexub/react`: A Switch with its label, description and error, the label clickable.
 - [Time Slot Picker](components/time-slot-picker.md) `@nexub/react`: Pick one time from a list of slots, for booking flows.
 
 ## Components — Forms
@@ -272,5 +275,5 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage

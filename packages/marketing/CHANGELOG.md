@@ -1,5 +1,16 @@
 # @nexub/marketing
 
+## 11.0.0
+
+### Patch Changes
+
+- Updated dependencies [40b2b2f]
+  - @nexub/react@11.0.0
+  - @nexub/patterns@11.0.0
+  - @nexub/themes@11.0.0
+  - @nexub/tokens@11.0.0
+  - @nexub/icons@11.0.0
+
 ## 10.9.0
 
 ## 10.8.0
