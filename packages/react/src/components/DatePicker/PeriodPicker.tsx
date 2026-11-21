@@ -8,6 +8,7 @@ import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/Nex
 import { field, fieldFocusVisible, fieldInvalid, fieldReadOnly, type Size } from '../../utils/control.js';
 import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
+import { formatPeriod, parsePeriod } from './period.js';
 
 /** 11.1: DatePicker `granularity="month"` (value `'YYYY-MM'`) or `"year"` (value `'YYYY'`). */
 export type PeriodGranularity = 'month' | 'year';
@@ -34,15 +35,7 @@ const YEARS_PER_PAGE = 12;
 const COLUMNS = 3;
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** `'2026-03'` → { year: 2026, month: 2 }; `'2026'` → { year: 2026, month: 0 }. `undefined` if malformed. */
-export function parsePeriod(value: string | undefined): { year: number; month: number } | undefined {
-  const m = value ? /^(\d{4})(?:-(\d{2}))?$/.exec(value) : null;
-  if (!m) return undefined;
-  const month = m[2] ? Number(m[2]) - 1 : 0;
-  return month >= 0 && month <= 11 ? { year: Number(m[1]), month } : undefined;
-}
-
-export const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProps>(function PeriodPicker(
+const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProps>(function PeriodPicker(
   {
     granularity,
     value,
@@ -71,10 +64,9 @@ export const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProp
 
   const monthName = (month: number, style: 'long' | 'short') =>
     new Intl.DateTimeFormat(intlLocale, { month: style, timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month, 1)));
-  const formatMonth = (year: number, month: number) =>
-    new Intl.DateTimeFormat(intlLocale, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(Date.UTC(year, month, 1)));
+  const formatMonth = (year: number, month: number) => formatPeriod('month', year, month, intlLocale);
 
-  const display = selected ? (isMonth ? formatMonth(selected.year, selected.month) : String(selected.year)) : (placeholderProp ?? (isMonth ? messages.pickMonth : messages.pickYear));
+  const display = selected ? formatPeriod(granularity, selected.year, selected.month, intlLocale) : (placeholderProp ?? (isMonth ? messages.pickMonth : messages.pickYear));
 
   // The page on show: a year of months, or a block of twelve years.
   const startYear = selected?.year ?? now.getFullYear();
@@ -266,3 +258,5 @@ export const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProp
     </RadixPopover.Root>
   );
 });
+
+export default PeriodPicker;

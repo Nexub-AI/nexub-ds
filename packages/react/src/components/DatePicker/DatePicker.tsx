@@ -11,7 +11,11 @@ import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid
 import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
 import { Button } from '../Button/Button.js';
-import { PeriodPicker } from './PeriodPicker.js';
+import { formatPeriod, parsePeriod } from './period.js';
+
+// The month and year grid loads only when a picker uses it, so day pickers (and DateRangePicker,
+// DateTimePicker) don't carry it. A same-looking trigger holds the spot meanwhile.
+const LazyPeriodPicker = React.lazy(() => import('./PeriodPicker.js'));
 
 /**
  * A date-fns Locale wins (date-fns 'PP'); else with a NexubProvider locale,
@@ -175,10 +179,35 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps | 
 ) {
   if (props.granularity === 'month' || props.granularity === 'year') {
     const { size = 'md', sheet = 'auto', ...rest } = props;
-    return <PeriodPicker ref={ref} {...rest} size={size} sheet={sheet} triggerSize={dateTriggerSizes[size]} />;
+    return (
+      <React.Suspense fallback={<PeriodTriggerPlaceholder {...props} size={size} />}>
+        <LazyPeriodPicker ref={ref} {...rest} size={size} sheet={sheet} triggerSize={dateTriggerSizes[size]} />
+      </React.Suspense>
+    );
   }
   return <DayDatePicker ref={ref} {...(props as DatePickerProps)} />;
 });
+
+/** The period trigger while the grid loads: same box, same text, not yet interactive. */
+function PeriodTriggerPlaceholder({ granularity, value, placeholder, size, disabled, invalid, className, id, 'aria-label': ariaLabel }: DatePeriodPickerProps & { size: Size }) {
+  const messages = useNexubMessages();
+  const intlLocale = useIntlLocale();
+  const selected = parsePeriod(value);
+  const display = selected ? formatPeriod(granularity, selected.year, selected.month, intlLocale) : (placeholder ?? (granularity === 'month' ? messages.pickMonth : messages.pickYear));
+  return (
+    <button
+      type="button"
+      id={id}
+      disabled={disabled}
+      aria-invalid={invalid || undefined}
+      aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
+      className={cn('inline-flex w-full items-center justify-start', dateTriggerSizes[size], field, invalid && fieldInvalid, !selected && 'text-on-surface-muted', className)}
+    >
+      <CalendarDays size="sm" aria-hidden="true" />
+      {display}
+    </button>
+  );
+}
 
 const DayDatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   function DayDatePicker(

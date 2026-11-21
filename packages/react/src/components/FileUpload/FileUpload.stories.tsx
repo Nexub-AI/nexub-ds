@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { FileUpload } from './FileUpload.js';
+import { Button } from '../Button/Button.js';
 
 const meta: Meta = {
   title: 'Forms/FileUpload',
@@ -62,7 +63,9 @@ export const TriggerAndStates: Story = {
           <FileUpload.Trigger iconOnly aria-label="Attach a file" />
         </FileUpload.Root>
         <FileUpload.Root accept={['image/*']} capture="environment" maxFiles={1}>
-          <FileUpload.Trigger variant="tonal">Take a photo</FileUpload.Trigger>
+          <FileUpload.Trigger asChild>
+          <Button variant="tonal">Take a photo</Button>
+        </FileUpload.Trigger>
         </FileUpload.Root>
         <FileUpload.Root>
           <FileUpload.Dropzone size="sm" />

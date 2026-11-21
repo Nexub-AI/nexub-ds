@@ -23,7 +23,7 @@ const entry: ComponentEntry = {
     { name: 'transform', type: '(file: File) => File | Promise<File>', description: 'Runs after the type check and before `maxSize` and `validate`, e.g. to shrink a photo.' },
     { name: 'capture', type: "boolean | 'user' | 'environment'", description: 'Opens the phone camera instead of the file list.' },
     { name: 'disabled / busy / progress', type: 'boolean / boolean / number', description: 'Nothing can be added; `busy` shows an upload in progress (with `progress`, a bar).' },
-    { name: 'FileUpload.Trigger', type: 'compound', required: false, description: 'A button (or `iconOnly` paperclip) that opens the picker, with no drop zone: Import CSV, attach, take a photo. Rejections show under it.' },
+    { name: 'FileUpload.Trigger', type: 'compound', required: false, description: 'An outlined button (or `iconOnly` paperclip) that opens the picker, with no drop zone: Import CSV, attach, take a photo. `asChild` takes your own Button for another look. Rejections show under it.' },
     { name: 'FileUpload.Dropzone', type: 'compound', required: false, description: 'A `<label>` around the native file input: click, Enter, Space, drop or paste. Children replace the default prompt. Rejection messages are announced.' },
     { name: 'Dropzone size', type: "'sm' | 'md'", description: "`'sm'` is a compact one-line zone." },
     { name: 'FileUpload.List', type: 'compound', required: false, description: 'Renders nothing until there are files.' },

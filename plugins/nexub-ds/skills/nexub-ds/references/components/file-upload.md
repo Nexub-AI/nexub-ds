@@ -20,7 +20,7 @@ A drop zone and file list: pick, drop or paste files, with type, size and count 
 | `transform` | `(file: File) => File \| Promise<File>` |  | Runs after the type check and before `maxSize` and `validate`, e.g. to shrink a photo. |
 | `capture` | `boolean \| 'user' \| 'environment'` |  | Opens the phone camera instead of the file list. |
 | `disabled / busy / progress` | `boolean / boolean / number` |  | Nothing can be added; `busy` shows an upload in progress (with `progress`, a bar). |
-| `FileUpload.Trigger` | `compound` |  | A button (or `iconOnly` paperclip) that opens the picker, with no drop zone: Import CSV, attach, take a photo. Rejections show under it. |
+| `FileUpload.Trigger` | `compound` |  | An outlined button (or `iconOnly` paperclip) that opens the picker, with no drop zone: Import CSV, attach, take a photo. `asChild` takes your own Button for another look. Rejections show under it. |
 | `FileUpload.Dropzone` | `compound` |  | A `<label>` around the native file input: click, Enter, Space, drop or paste. Children replace the default prompt. Rejection messages are announced. |
 | `Dropzone size` | `'sm' \| 'md'` |  | `'sm'` is a compact one-line zone. |
 | `FileUpload.List` | `compound` |  | Renders nothing until there are files. |
@@ -77,7 +77,7 @@ No drop zone: a button, a paperclip, the phone camera, and a busy compact zone.
 
 ```tsx
 import * as React from 'react';
-import { FileUpload } from '@nexub/react';
+import { Button, FileUpload } from '@nexub/react';
 
 export default function Example() {
   const [files, setFiles] = React.useState<File[]>([]);
@@ -86,7 +86,7 @@ export default function Example() {
       <FileUpload.Root accept={['.csv']} maxFiles={1} files={files} onFilesChange={setFiles}>
         <div className="flex items-center gap-2">
           <FileUpload.Trigger>Import CSV</FileUpload.Trigger>
-          <FileUpload.Trigger iconOnly aria-label="Attach a file" variant="text" />
+          <FileUpload.Trigger iconOnly aria-label="Attach a file" />
         </div>
         <FileUpload.List>
           {files.map((f, i) => (
@@ -95,7 +95,9 @@ export default function Example() {
         </FileUpload.List>
       </FileUpload.Root>
       <FileUpload.Root accept={['image/*']} capture="environment" maxFiles={1}>
-        <FileUpload.Trigger variant="tonal">Take a photo</FileUpload.Trigger>
+        <FileUpload.Trigger asChild>
+          <Button variant="tonal">Take a photo</Button>
+        </FileUpload.Trigger>
       </FileUpload.Root>
       <FileUpload.Root busy progress={60}>
         <FileUpload.Dropzone size="sm" />

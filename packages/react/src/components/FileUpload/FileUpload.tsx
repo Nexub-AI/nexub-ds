@@ -6,8 +6,8 @@ import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Progress } from '../Progress/Progress.js';
 import { SPRING_MS } from '../Motion/useMotion.js';
-import { Button, type ButtonProps } from '../Button/Button.js';
-import { IconButton } from '../IconButton/IconButton.js';
+import { Slot } from '@radix-ui/react-slot';
+import { disabledContainer, disabledText, pressable } from '../../utils/control.js';
 
 /** Localised file size ("12.3 kB", "1,5 Mo"), 1024-based as before. */
 export function formatFileSize(bytes: number, locale: string): string {
@@ -365,7 +365,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, FileUploadDropzoneProps>(
 Dropzone.displayName = 'FileUpload.Dropzone';
 
 
-export interface FileUploadTriggerProps extends Omit<ButtonProps, 'onClick' | 'type'> {
+export interface FileUploadTriggerProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   /**
    * 11.1: no visible text, only the icon (a paperclip by default). The button's name is
    * `aria-label` or the `uploadFile` message.
@@ -373,56 +373,64 @@ export interface FileUploadTriggerProps extends Omit<ButtonProps, 'onClick' | 't
   iconOnly?: boolean;
   /** The icon. @default a paperclip */
   icon?: React.ReactNode;
+  /** Your own button (e.g. `<Button>`) as the trigger: it gets the click and the ARIA wiring. */
+  asChild?: boolean;
 }
+
+// The outlined Button and the ghost IconButton, from the shared control classes: importing
+// Button or IconButton would add their whole code to every FileUpload. Any other look: asChild.
+const triggerButton = `${pressable} nx-hit relative inline-flex max-w-full items-center justify-center gap-2 whitespace-nowrap h-control-md px-5 text-label-lg bg-transparent border border-[var(--button-outlined-border,var(--color-outline-variant))] text-[var(--button-outlined-fg,var(--color-on-surface))] ${disabledContainer}`;
+const triggerIcon = `${pressable} nx-hit relative inline-flex flex-shrink-0 items-center justify-center h-control-md w-control-md bg-transparent text-on-surface-variant ${disabledText}`;
 
 /**
  * 11.1: a button that opens the file picker, with no drop zone: a composer's paperclip, an
  * "Import CSV" button, a photo button with `capture`. Files take the same path as the drop
  * zone (accept, transform, size, validate, count), and rejections show under the button.
+ * It looks like an outlined Button (or, `iconOnly`, a plain IconButton); for any other look
+ * pass your own Button with `asChild`.
  */
 const Trigger = React.forwardRef<HTMLButtonElement, FileUploadTriggerProps>(
-  ({ iconOnly = false, icon, children, className, variant = 'outlined', size, 'aria-label': ariaLabel, ...props }, ref) => {
-    const { disabled, readOnly, busy, rejections } = useFileUpload();
+  ({ iconOnly = false, icon, asChild = false, children, className, disabled: disabledProp, onClick, 'aria-label': ariaLabel, ...props }, ref) => {
+    const { disabled: rootDisabled, readOnly, busy, rejections } = useFileUpload();
     const messages = useNexubMessages();
     const errorId = React.useId();
     const inputProps = useFileInputProps(errorId);
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const open = () => {
-      if (!readOnly && !busy) inputRef.current?.click();
-    };
-    const glyph = icon ?? <Paperclip size="sm" aria-hidden="true" />;
+    const disabled = disabledProp || rootDisabled;
+    const glyph = busy ? (
+      <span aria-hidden="true" className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-t-transparent" />
+    ) : (
+      (icon ?? <Paperclip size="sm" aria-hidden="true" />)
+    );
+    const Comp = asChild ? Slot : 'button';
     return (
       <span className={cn('inline-flex flex-col items-start gap-1', className)}>
-        {iconOnly ? (
-          <IconButton
-            ref={ref}
-            label={ariaLabel ?? messages.uploadFile}
-            variant={variant === 'filled' ? 'solid' : variant === 'outlined' ? 'outline' : variant === 'tonal' || variant === 'subtle' ? 'subtle' : 'ghost'}
-            disabled={disabled}
-            loading={busy}
-            aria-describedby={rejections.length ? errorId : undefined}
-            onClick={open}
-          >
-            {glyph}
-          </IconButton>
-        ) : (
-          <Button
-            ref={ref}
-            type="button"
-            variant={variant}
-            size={size}
-            disabled={disabled}
-            loading={busy}
-            loadingLabel={messages.uploading}
-            leadingIcon={glyph}
-            aria-label={ariaLabel}
-            aria-describedby={rejections.length ? errorId : undefined}
-            onClick={open}
-            {...props}
-          >
-            {children ?? messages.uploadFile}
-          </Button>
-        )}
+        <Comp
+          ref={ref}
+          type="button"
+          disabled={disabled}
+          aria-busy={busy || undefined}
+          aria-disabled={busy || undefined}
+          aria-label={ariaLabel ?? (iconOnly ? messages.uploadFile : undefined)}
+          aria-describedby={rejections.length ? errorId : undefined}
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick?.(e);
+            if (!e.defaultPrevented && !readOnly && !busy) inputRef.current?.click();
+          }}
+          className={asChild ? undefined : iconOnly ? triggerIcon : triggerButton}
+          {...props}
+        >
+          {asChild ? (
+            children
+          ) : iconOnly ? (
+            glyph
+          ) : (
+            <>
+              {glyph}
+              {busy ? messages.uploading : (children ?? messages.uploadFile)}
+            </>
+          )}
+        </Comp>
         <input {...inputProps} ref={inputRef} tabIndex={-1} aria-hidden="true" />
         <Rejections id={errorId} />
       </span>

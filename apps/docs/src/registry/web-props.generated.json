@@ -3526,20 +3526,8 @@
           "name": "asChild",
           "type": "boolean",
           "required": false,
-          "description": ""
-        },
-        {
-          "name": "errorLabel",
-          "type": "string",
-          "required": false,
-          "default": "'Something went wrong'",
-          "description": "Announced on error."
-        },
-        {
-          "name": "fullWidth",
-          "type": "boolean",
-          "required": false,
-          "description": ""
+          "default": "false",
+          "description": "Your own button (e.g. `<Button>`) as the trigger: it gets the click and the ARIA wiring."
         },
         {
           "name": "icon",
@@ -3554,70 +3542,6 @@
           "required": false,
           "default": "false",
           "description": "11.1: no visible text, only the icon (a paperclip by default). The button's name is `aria-label` or the `uploadFile` message."
-        },
-        {
-          "name": "leadingIcon",
-          "type": "React.ReactNode",
-          "required": false,
-          "description": ""
-        },
-        {
-          "name": "loading",
-          "type": "boolean",
-          "required": false,
-          "description": "Alias for `status=\"loading\"`. A `type=\"submit\"` button also shows loading while its parent `<form action>` is pending (React 19 `useFormStatus`)."
-        },
-        {
-          "name": "loadingLabel",
-          "type": "string",
-          "required": false,
-          "default": "'Loading'",
-          "description": "Announced while loading."
-        },
-        {
-          "name": "magnetic",
-          "type": "boolean",
-          "required": false,
-          "description": "4.3: the button drifts a few pixels toward the pointer on hover. For one key action per screen. Off for touch and reduced motion."
-        },
-        {
-          "name": "size",
-          "type": "'sm' | 'md' | 'xs' | 'lg' | 'xl'",
-          "required": false,
-          "default": "'md'",
-          "description": ""
-        },
-        {
-          "name": "status",
-          "type": "'idle' | 'error' | 'success' | 'loading'",
-          "required": false,
-          "description": "Async feedback. `loading` blocks clicks (aria-disabled, focus kept), `success` draws a check, `error` shakes once. Not applied with `asChild`."
-        },
-        {
-          "name": "successLabel",
-          "type": "string",
-          "required": false,
-          "default": "'Done'",
-          "description": "Announced on success; when given it also replaces the visible label."
-        },
-        {
-          "name": "tone",
-          "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'leap' | 'bookub' | 'payub' | 'founderub'",
-          "required": false,
-          "description": ""
-        },
-        {
-          "name": "trailingIcon",
-          "type": "React.ReactNode",
-          "required": false,
-          "description": ""
-        },
-        {
-          "name": "variant",
-          "type": "'glass' | 'filled' | 'tonal' | 'outlined' | 'text' | 'hero' | 'subtle' | 'destructive' | 'accent' | 'link'",
-          "required": false,
-          "default": "'filled'",
-          "description": "Visual style."
         }
       ]
     },
