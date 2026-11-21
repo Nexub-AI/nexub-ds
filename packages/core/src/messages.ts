@@ -42,6 +42,8 @@ export interface NexubMessages {
   mainNavigation: string;
   sidebar: string;
   searchPlaceholder: string;
+  /** 11.1: ComboboxField's placeholder when nothing is picked. */
+  selectPlaceholder: string;
   noResults: string;
   pickDate: string;
   pickDateRange: string;
@@ -321,6 +323,7 @@ export const defaultMessages: NexubMessages = {
   mainNavigation: 'Main',
   sidebar: 'Sidebar',
   searchPlaceholder: 'Search…',
+  selectPlaceholder: 'Select…',
   noResults: 'No results found.',
   pickDate: 'Pick a date',
   pickDateRange: 'Pick a date range',

@@ -266,6 +266,8 @@ export type { DrawerRootProps } from './components/Drawer/index.js';
 // Components — Form Controls (Radix)
 export { Select } from './components/Select/index.js';
 export { Combobox } from './components/Combobox/index.js';
+export { ComboboxField, ComboboxPicker } from './components/ComboboxField/index.js';
+export type { ComboboxFieldProps, ComboboxPickerProps, ComboboxOption } from './components/ComboboxField/index.js';
 export { Autocomplete } from './components/Autocomplete/index.js';
 export type { AutocompleteOption, AutocompleteProps } from './components/Autocomplete/index.js';
 export { MultiSelect } from './components/MultiSelect/index.js';
@@ -278,6 +280,8 @@ export { Switch } from './components/Switch/index.js';
 export type { SwitchProps } from './components/Switch/index.js';
 export { Checkbox } from './components/Checkbox/index.js';
 export type { CheckboxProps } from './components/Checkbox/index.js';
+export { SwitchField, CheckboxField, CheckboxGroupField } from './components/ChoiceFields/index.js';
+export type { SwitchFieldProps, CheckboxFieldProps, CheckboxGroupFieldProps, CheckboxGroupOption } from './components/ChoiceFields/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
 export type { SliderProps, SliderMark } from './components/Slider/index.js';

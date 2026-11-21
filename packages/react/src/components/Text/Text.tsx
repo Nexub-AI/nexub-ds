@@ -19,6 +19,10 @@ export const textVariants = cva('', {
       muted: 'text-[var(--color-on-surface-muted)]',
       subtle: 'text-[var(--color-outline)]',
       inverse: 'text-[var(--color-inverse-on-surface)]',
+      // 11.1: status text on a surface (an inline error, a saved note, a warning).
+      danger: 'text-error',
+      success: 'text-success',
+      warning: 'text-warning',
     },
     weight: {
       regular: 'font-normal',
