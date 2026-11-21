@@ -215,6 +215,11 @@ import comparisonBarEntry from './components/comparison-bar';
 import truncateEntry from './components/truncate';
 import phoneInputEntry from './components/phone-input';
 import comboboxFieldEntry from './components/combobox-field';
+import currencySelectEntry from './components/currency-select';
+import colorPickerEntry from './components/color-picker';
+import commandListEntry from './components/command-list';
+import emojiPickerEntry from './components/emoji-picker';
+import iconPickerEntry from './components/icon-picker';
 import switchFieldEntry from './components/switch-field';
 import checkboxFieldEntry from './components/checkbox-field';
 import countdownEntry from './components/countdown';
@@ -281,6 +286,11 @@ export const componentEntries: ComponentEntry[] = [
   truncateEntry,
   phoneInputEntry,
   comboboxFieldEntry,
+  currencySelectEntry,
+  colorPickerEntry,
+  commandListEntry,
+  emojiPickerEntry,
+  iconPickerEntry,
   switchFieldEntry,
   checkboxFieldEntry,
   countdownEntry,

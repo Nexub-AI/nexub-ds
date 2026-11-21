@@ -18,6 +18,8 @@ Pick several options as chips, with search, "+N more" and an optional create opt
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option. |
 | `loading` | `boolean` |  | Skeleton rows instead of options; "Loading" is announced. |
 | `aria-label / aria-labelledby` | `string` |  | Name the field: there is no visible label inside it. |
+| `onSearch` | `(text: string) => void` |  | 11.2: async search (same as `onInputChange`); picked values keep their labels and avatars. |
+| `options[].description / disabled / avatar` | `string / boolean / ReactNode` |  | 11.2: a second line (also searched), options that can't be picked, and an avatar in the list and on the chip. |
 
 ## Example: Labels with create
 
@@ -51,6 +53,48 @@ export default function Example() {
           const v = text.toLowerCase();
           setOptions((o) => [...o, { value: v, label: text }]);
           setValue((s) => [...s, v]);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+## Example: People with server search
+
+```tsx
+import * as React from 'react';
+import { Avatar, MultiSelect, type MultiSelectOption } from '@nexub/react';
+
+const all: MultiSelectOption[] = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'Finance' },
+  { value: 'u2', label: 'Ben Ong', description: 'Sales' },
+  { value: 'u3', label: 'Chen Wei', description: 'On leave', disabled: true },
+  { value: 'u4', label: 'Dana Lee', description: 'Product' },
+  { value: 'u5', label: 'Eli Tan', description: 'Support' },
+].map((p) => ({ ...p, avatar: <Avatar size="xs" name={p.label} /> }));
+
+export default function Example() {
+  const [value, setValue] = React.useState<string[]>(['u1']);
+  const [options, setOptions] = React.useState(all);
+  const [loading, setLoading] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  return (
+    <div className="w-full max-w-md">
+      <MultiSelect
+        aria-label="Reviewers"
+        options={options}
+        value={value}
+        onValueChange={setValue}
+        loading={loading}
+        onSearch={(text) => {
+          clearTimeout(timer.current);
+          setLoading(true);
+          timer.current = setTimeout(() => {
+            const q = text.toLowerCase();
+            setOptions(all.filter((p) => p.label.toLowerCase().includes(q) || p.description?.toLowerCase().includes(q)));
+            setLoading(false);
+          }, 300);
         }}
       />
     </div>

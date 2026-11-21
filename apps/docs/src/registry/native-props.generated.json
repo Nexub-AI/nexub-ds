@@ -2062,6 +2062,13 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "mode",
+        "type": "'numeric' | 'backup'",
+        "required": false,
+        "default": "'date'",
+        "description": "11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to\n12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web."
       }
     ]
   },
