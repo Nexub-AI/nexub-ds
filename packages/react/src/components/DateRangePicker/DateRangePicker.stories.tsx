@@ -63,3 +63,23 @@ export const SheetAuto: Story = {
     </div>
   ),
 };
+
+/** 11.2: a half-open range (the end is the day after) and onComplete once both ends are set. */
+export const EndExclusive: Story = {
+  render: () => {
+    const [range, setRange] = React.useState<DateRange | undefined>({ from: new Date(2026, 2, 1), to: new Date(2026, 2, 4) });
+    const [done, setDone] = React.useState('');
+    return (
+      <div style={{ display: 'grid', gap: 8, maxWidth: 320 }}>
+        <DateRangePicker
+          aria-label="Stay"
+          endExclusive
+          value={range}
+          onChange={setRange}
+          onComplete={(r) => setDone(`${r.from.toDateString()} → ${r.to.toDateString()} (exclusive)`)}
+        />
+        <span>{done || 'Pick two days'}</span>
+      </div>
+    );
+  },
+};

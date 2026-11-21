@@ -133,3 +133,49 @@ describe('DateRangePicker sheet (10.6)', () => {
     expect(screen.getAllByRole('grid')[0]!.closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
   });
 });
+
+describe('DateRangePicker endExclusive and onComplete (11.2)', () => {
+  const day = (n: number) => screen.getAllByRole('button').find((b) => b.textContent === String(n) && b.closest('[role="grid"]'))!;
+
+  it('onComplete fires on the second day picked, not the first', () => {
+    const onComplete = vi.fn();
+    const onChange = vi.fn();
+    const { rerender } = render(<DateRangePicker aria-label="When" value={undefined} onChange={onChange} onComplete={onComplete} />);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(day(3));
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onComplete).not.toHaveBeenCalled();
+    const first = onChange.mock.calls[0]![0];
+    rerender(<DateRangePicker aria-label="When" value={first} onChange={onChange} onComplete={onComplete} />);
+    fireEvent.click(day(6));
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    const { from, to } = onComplete.mock.calls[0]![0];
+    expect(from.getDate()).toBe(3);
+    expect(to.getDate()).toBe(6);
+  });
+
+  it('endExclusive: `to` is the day after the last day, in and out', () => {
+    const onChange = vi.fn();
+    const onComplete = vi.fn();
+    const value = { from: new Date(2026, 2, 1), to: new Date(2026, 2, 4) };
+    const { rerender } = render(<DateRangePicker aria-label="Stay" endExclusive value={value} onChange={onChange} onComplete={onComplete} />);
+    // Shown as 1–3 March.
+    expect(screen.getByRole('button').getAttribute('aria-label')).toMatch(/Mar 3|3 Mar/);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(day(10));
+    const next = onChange.mock.calls[0]![0];
+    rerender(<DateRangePicker aria-label="Stay" endExclusive value={next} onChange={onChange} onComplete={onComplete} />);
+    fireEvent.click(day(12));
+    const last = onChange.mock.calls.at(-1)![0];
+    expect(last.to.getDate()).toBe(13);
+    expect(onComplete.mock.calls[0]![0].to.getDate()).toBe(13);
+  });
+
+  it('a preset completes the range', () => {
+    const onComplete = vi.fn();
+    render(<DateRangePicker presets onComplete={onComplete} />);
+    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole('button', { name: 'Last 7 days' }));
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+});

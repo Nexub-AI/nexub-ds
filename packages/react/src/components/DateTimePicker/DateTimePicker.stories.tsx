@@ -35,3 +35,15 @@ export const ConsistentControls: Story = {
 export const SheetAuto: Story = {
   render: () => <DateTimePicker aria-label="Starts" defaultTime="09:30" sheet="auto" className="max-w-md" />,
 };
+
+/** 11.2: a clear button empties the value. */
+export const Clearable: Story = {
+  render: () => {
+    const [value, setValue] = React.useState<Date | undefined>(new Date(2026, 10, 21, 14, 30));
+    return (
+      <div style={{ maxWidth: 480 }}>
+        <DateTimePicker aria-label="Starts" clearable value={value} onValueChange={setValue} />
+      </div>
+    );
+  },
+};

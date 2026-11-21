@@ -86,3 +86,14 @@ describe('DateTimePicker sheet (10.6)', () => {
     expect(screen.getByRole('grid').closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'true');
   });
 });
+
+describe('DateTimePicker clearable (11.2)', () => {
+  it('shows a clear button only with a value, and it empties the value', async () => {
+    const onValueChange = vi.fn();
+    const { rerender } = render(<DateTimePicker aria-label="Starts" clearable value={new Date(2026, 10, 21, 14, 30)} onValueChange={onValueChange} />);
+    await userEvent.click(screen.getByRole('button', { name: 'Clear' }));
+    expect(onValueChange).toHaveBeenCalledWith(undefined);
+    rerender(<DateTimePicker aria-label="Starts" clearable value={undefined} onValueChange={onValueChange} />);
+    expect(screen.queryByRole('button', { name: 'Clear' })).not.toBeInTheDocument();
+  });
+});

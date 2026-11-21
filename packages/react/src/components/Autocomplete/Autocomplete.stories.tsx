@@ -61,3 +61,29 @@ export const SheetAuto: Story = {
     </div>
   ),
 };
+
+const people112 = [
+  { value: 'u1', label: 'Aisha Rahman', description: 'aisha@nexub.test' },
+  { value: 'u2', label: 'Ben Ong', description: 'ben@nexub.test' },
+  { value: 'u3', label: 'Chen Wei', description: 'On leave', disabled: true },
+];
+
+/** 11.2: a visible label, a second line per option, a clear button, and "add" mode. */
+export const LabelAndAddMode: Story = {
+  render: () => {
+    const [owner, setOwner] = React.useState<string | undefined>('u2');
+    const [added, setAdded] = React.useState<string[]>([]);
+    return (
+      <div style={{ display: 'grid', gap: 16, maxWidth: 360 }}>
+        <Autocomplete label="Owner" options={people112} value={owner} onValueChange={setOwner} onClear={() => setOwner(undefined)} />
+        <Autocomplete
+          label="Add a reviewer"
+          clearOnSelect
+          options={people112.filter((p) => !added.includes(p.value))}
+          onValueChange={(v) => setAdded((a) => [...a, v])}
+        />
+        <span>Reviewers: {added.join(', ') || '—'}</span>
+      </div>
+    );
+  },
+};

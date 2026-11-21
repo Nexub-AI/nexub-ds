@@ -354,6 +354,21 @@
       "screenReader": []
     },
     {
+      "slug": "color-picker",
+      "name": "Color Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space: Opens the popover with focus on the picked swatch.",
+        "Arrow keys: Move between swatches and pick (six per row).",
+        "Home / End: First and last swatch.",
+        "Tab: Moves to the hex field. Enter or leaving it applies the hex.",
+        "Escape: Closes the popover."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "combobox-field",
       "name": "Combobox Field",
       "package": "@nexub/react",
@@ -374,6 +389,19 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "command-list",
+      "name": "Command List",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Arrow Up / Arrow Down: Moves the highlight; wraps at the ends.",
+        "Home / End: Moves to the first or last item.",
+        "Enter: Picks the highlighted item."
+      ],
       "screenReader": []
     },
     {
@@ -441,6 +469,19 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "currency-select",
+      "name": "Currency Select",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space / Arrow Down: Opens the list with focus in the search box.",
+        "Type: Finds by code, name or symbol.",
+        "Enter: Picks the highlighted currency."
+      ],
       "screenReader": []
     },
     {
@@ -551,6 +592,22 @@
         "Arrow Up / Down: Moves between items.",
         "Arrow Right / Left: Opens or closes a submenu.",
         "Escape: Closes the menu and returns focus to the trigger."
+      ],
+      "screenReader": []
+    },
+    {
+      "slug": "emoji-picker",
+      "name": "Emoji Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space / Arrow Down: On the trigger: opens the picker with focus in the search box.",
+        "Arrow Down: From the search box: into the grid.",
+        "Arrow keys: Move between emoji; Arrow Up from the first row returns to the search box.",
+        "Home / End: First or last emoji in the row; with Ctrl, in the whole list.",
+        "Enter / Space: Picks the focused emoji. Enter in the search box picks the first result.",
+        "Escape: Closes without changing the value."
       ],
       "screenReader": []
     },
@@ -786,6 +843,22 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "icon-picker",
+      "name": "Icon Picker",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter / Space / Arrow Down: On the trigger: opens the picker with focus in the search box.",
+        "Arrow Down: From the search box: into the grid.",
+        "Arrow keys: Move between icons; Arrow Up from the first row returns to the search box.",
+        "Home / End: First or last icon in the row; with Ctrl, in the whole list.",
+        "Enter / Space: Picks the focused icon. Enter in the search box picks the first result.",
+        "Escape: Closes without changing the value."
+      ],
       "screenReader": []
     },
     {

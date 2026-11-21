@@ -14,6 +14,12 @@ import { ComboboxLoading, ComboboxPopover } from '../Combobox/ComboboxPopover.js
 export interface MultiSelectOption {
   value: string;
   label: string;
+  /** 11.2: a second line under the label (an email, a role). Also searched. */
+  description?: string;
+  /** 11.2: listed but can't be picked (a chip already picked stays removable). */
+  disabled?: boolean;
+  /** 11.2: shown before the label in the list and on the chip, e.g. `<Avatar size="xs" … />` for people. */
+  avatar?: React.ReactNode;
 }
 
 export interface MultiSelectProps {
@@ -28,6 +34,12 @@ export interface MultiSelectProps {
   inputValue?: string;
   /** Called as the user types; options are then shown as given (no built-in filtering). */
   onInputChange?: (text: string) => void;
+  /**
+   * 11.2: async search, the same as `onInputChange` (named as on ComboboxField): called with the
+   * typed text; show what the server returned in `options` and set `loading` meanwhile. Picked
+   * values keep their labels and avatars when they drop out of `options`.
+   */
+  onSearch?: (text: string) => void;
   /** Adds a "Create “text”" option when the text matches no option exactly. */
   onCreate?: (text: string) => void;
   /** Chips shown before the rest collapse into "+N more". Default 3. */
@@ -58,7 +70,8 @@ export function MultiSelect({
   emptyText,
   loading = false,
   inputValue,
-  onInputChange,
+  onInputChange: onInputChangeProp,
+  onSearch,
   onCreate,
   maxVisibleChips = 3,
   disabled,
@@ -71,6 +84,13 @@ export function MultiSelect({
   'aria-labelledby': ariaLabelledBy,
 }: MultiSelectProps) {
   const messages = useNexubMessages();
+  const onInputChange =
+    onInputChangeProp || onSearch
+      ? (text: string) => {
+          onInputChangeProp?.(text);
+          onSearch?.(text);
+        }
+      : undefined;
   const [value = [], setValue] = useControllableState<string[]>({
     value: valueProp,
     defaultValue: defaultValue ?? [],
@@ -85,10 +105,11 @@ export function MultiSelect({
   };
 
   // Labels for selected values, even ones no longer in `options` (async search).
-  const [labels, setLabels] = React.useState<ReadonlyMap<string, string>>(() => new Map());
-  const missing = options.some((o) => labels.get(o.value) !== o.label);
-  if (missing) setLabels(new Map([...labels, ...options.map((o) => [o.value, o.label] as const)]));
-  const labelOf = (v: string) => labels.get(v) ?? options.find((o) => o.value === v)?.label ?? v;
+  const [known, setKnown] = React.useState<ReadonlyMap<string, MultiSelectOption>>(() => new Map());
+  const missing = options.some((o) => known.get(o.value) !== o);
+  if (missing) setKnown(new Map([...known, ...options.map((o) => [o.value, o] as const)]));
+  const optionOf = (v: string) => options.find((o) => o.value === v) ?? known.get(v);
+  const labelOf = (v: string) => optionOf(v)?.label ?? v;
 
   const toggle = (v: string) => setValue(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
   const remove = (v: string) => setValue(value.filter((x) => x !== v));
@@ -107,7 +128,14 @@ export function MultiSelect({
           onRemove={disabled || readOnly ? undefined : () => remove(v)}
           removeLabel={messages.removeOption(labelOf(v))}
         >
-          {labelOf(v)}
+          {optionOf(v)?.avatar ? (
+            <span className="inline-flex items-center gap-1.5">
+              {optionOf(v)!.avatar}
+              {labelOf(v)}
+            </span>
+          ) : (
+            labelOf(v)
+          )}
         </Chip>
       ))}
       {hiddenCount > 0 && <Chip size="sm">+{messages.moreCount(hiddenCount)}</Chip>}
@@ -155,7 +183,8 @@ export function MultiSelect({
                   <Combobox.Item
                     key={opt.value}
                     value={opt.label}
-                    keywords={[opt.value]}
+                    keywords={opt.description ? [opt.value, opt.description] : [opt.value]}
+                    disabled={opt.disabled}
                     aria-checked={checked}
                     onSelect={() => {
                       toggle(opt.value);
@@ -163,8 +192,16 @@ export function MultiSelect({
                     }}
                     className="gap-2"
                   >
-                    <Check size="sm" aria-hidden="true" className={cn(!checked && 'invisible')} />
-                    {opt.label}
+                    <Check size="sm" aria-hidden="true" className={cn('shrink-0', !checked && 'invisible')} />
+                    {opt.avatar}
+                    {opt.description ? (
+                      <span className="flex min-w-0 flex-1 flex-col">
+                        <span className="truncate">{opt.label}</span>
+                        <span className="truncate text-label-sm font-normal text-on-surface-muted">{opt.description}</span>
+                      </span>
+                    ) : (
+                      opt.label
+                    )}
                   </Combobox.Item>
                 );
               })}

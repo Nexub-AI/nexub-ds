@@ -17,6 +17,8 @@ One box per digit for verification codes, with paste and one-time-code autofill.
 | `invalid / disabled` | `boolean` |  | Error styling (pair with a FormError) and the disabled state. |
 | `name` | `string` |  | Submits the code with a form. |
 | `aria-label` | `string` | `'Verification code'` | Group name; each box reads "Digit N of M". |
+| `mode: 'backup'` | `'numeric' \| 'alphanumeric' \| 'backup'` |  | 11.2: a 12-character recovery code in one field, grouped in fours; the value has no dashes. |
+| `autoFocus` | `boolean` |  | 11.2: focus the first box on mount. |
 
 ## Example: Verification code
 
@@ -35,6 +37,23 @@ export default function Example() {
         {status || 'Try 123456'}
       </p>
     </div>
+  );
+}
+```
+
+## Example: Backup code
+
+```tsx
+import * as React from 'react';
+import { OTPInput } from '@nexub/react';
+
+export default function Example() {
+  const [done, setDone] = React.useState(false);
+  return (
+    <form className="flex w-full max-w-xs flex-col gap-2">
+      <OTPInput mode="backup" name="recoveryCode" autoFocus={false} onComplete={() => setDone(true)} />
+      <p className="text-body-sm text-on-surface-muted">{done ? 'Checking the code…' : 'Enter one of your 12-character backup codes'}</p>
+    </form>
   );
 }
 ```

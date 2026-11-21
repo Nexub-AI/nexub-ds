@@ -22,6 +22,10 @@ const entry: ComponentEntry = {
     { name: 'onInputChange', type: '(text: string) => void', required: false, description: 'Called as the user types, so you can fetch options (5.1). When set, options are shown as given, without built-in filtering.' },
     { name: 'onCreate', type: '(text: string) => void', required: false, description: 'Adds a "Create “text”" option when the text matches no option (5.2).' },
     { name: 'aria-label', type: 'string', required: false, description: 'Accessible name of the field when it has no visible label.' },
+    { name: 'label', type: 'ReactNode', description: '11.2: a visible label above the field.' },
+    { name: 'clearOnSelect', type: 'boolean', description: '11.2: "add" mode: the text empties after a pick.' },
+    { name: 'onClear', type: '() => void', description: '11.2: called from the clear button or when the text is deleted; shows the clear button.' },
+    { name: 'options[].description / disabled', type: 'string / boolean', description: '11.2: a second line (also searched), and options that can\'t be picked.' },
   ],
   examples: [
     {
@@ -37,6 +41,7 @@ const entry: ComponentEntry = {
       title: 'Fetch as you type',
       description: '`onInputChange`: the app filters, the list shows skeleton rows while loading.',
     },
+    { title: 'Add mode with a label' },
   ],
 };
 
