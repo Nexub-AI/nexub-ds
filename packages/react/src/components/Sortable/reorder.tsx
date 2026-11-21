@@ -2,18 +2,36 @@
 
 import * as React from 'react';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
-import { GripVertical } from '@nexub/icons';
+import { GripVertical, Lock } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 /** Internal: lists of items, moved by dragging a handle (Pointer Events) or Alt+Arrow on it. */
 export type Pos = [list: number, index: number];
 
-export function moveItem<T>(lists: T[][], [fc, fi]: Pos, [tc, ti]: Pos): T[][] {
+/**
+ * Moves the item at `from` so it lands at index `to` (clamped). With `isLocked`, locked items
+ * keep their index: the move happens among the free items, which flow around them (so nothing
+ * lands above a locked first item). Across lists the source list still closes its gap.
+ */
+export function moveItem<T>(lists: T[][], [fc, fi]: Pos, [tc, ti]: Pos, isLocked?: (item: T) => boolean): T[][] {
   const next = lists.map((l) => [...l]);
   const [item] = next[fc]!.splice(fi, 1);
   if (item === undefined) return lists;
-  next[tc]!.splice(Math.min(ti, next[tc]!.length), 0, item);
+  if (!isLocked) {
+    next[tc]!.splice(Math.min(ti, next[tc]!.length), 0, item);
+    return next;
+  }
+  const free = (l: T[]) => l.filter((it) => !isLocked(it));
+  const relock = (orig: T[], out: T[]) => {
+    orig.forEach((it, i) => isLocked(it) && out.splice(Math.min(i, out.length), 0, it));
+    return out;
+  };
+  const base = next[tc]!;
+  const dest = free(base);
+  dest.splice(free(base.slice(0, ti)).length, 0, item);
+  next[tc] = relock(lists[tc]!, dest);
+  if (fc !== tc) next[fc] = relock(lists[fc]!, free(next[fc]!));
   return next;
 }
 
@@ -24,7 +42,18 @@ interface ReorderOptions<T> {
   /** List names, for moves across lists. */
   listLabels?: string[];
   onMove: (next: T[][]) => void;
+  /** Turns every handle off: nothing can be moved. */
+  disabled?: boolean;
+  /** Locked items can't be moved and keep their index while others move (see `moveItem`). */
+  isLocked?: (item: T) => boolean;
+  /**
+   * Vetoes a move (`to` is the requested landing spot): a drag shows no drop line there and
+   * dropping snaps back; a keyboard move is announced as refused.
+   */
+  canMove?: (from: Pos, to: Pos) => boolean;
 }
+
+export type ReorderLayout = 'list' | 'grid';
 
 /** Pointer travel (CSS px) before a press on a handle becomes a drag. */
 const THRESHOLD = 4;
@@ -86,11 +115,12 @@ const sameMark = (a: Mark | null, b: Mark | null) =>
   a === b || (!!a && !!b && a.edge === b.edge && ('id' in a ? 'id' in b && a.id === b.id : 'list' in b && a.list === b.list));
 
 /** Shared engine: pointer drag, keyboard moves, focus after a move, FLIP settle, announcements. */
-export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: ReorderOptions<T>) {
+export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove, disabled, isLocked, canMove }: ReorderOptions<T>) {
   const t = useNexubMessages();
   const { dir } = useLocale();
   const handles = React.useRef(new Map<string, HTMLButtonElement>());
   const listEls = React.useRef(new Map<number, HTMLElement>());
+  const layouts = React.useRef(new Map<number, ReorderLayout>());
   const refocus = React.useRef<string | null>(null);
   const drag = React.useRef<Drag | null>(null);
   const flipFrom = React.useRef<Map<string, DOMRect> | null>(null);
@@ -140,9 +170,11 @@ export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: Re
   const move = (from: Pos, to: Pos, keepFocus: boolean) => {
     if (from[0] === to[0] && from[1] === to[1]) return;
     const item = lists[from[0]]![from[1]]!;
-    const next = moveItem(lists, from, to);
+    if (isLocked?.(item)) return;
+    const next = moveItem(lists, from, to, isLocked);
     const [tc] = to;
     const ti = next[tc]!.indexOf(item);
+    if (tc === from[0] && ti === from[1]) return; // locked items left no room
     if (keepFocus) refocus.current = getId(item);
     flipFrom.current ??= snapshot();
     onMove(next);
@@ -165,21 +197,30 @@ export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: Re
         if (dist < best) [best, list] = [dist, l];
       }
     }
-    // Index among the list's other items: before the first whose middle is below the pointer.
+    // Index among the list's other items: before the first whose middle is past the pointer
+    // (below it; in a grid, a later row or further along the same row).
+    const grid = layouts.current.get(list) === 'grid';
     const others = lists[list]!.filter((it) => getId(it) !== d.id);
     let k = others.findIndex((it) => {
       const h = handles.current.get(getId(it));
       const r = h && itemOf(h)?.getBoundingClientRect();
-      return r && d.y < r.top + r.height / 2;
+      if (!r) return false;
+      if (!grid || d.y < r.top) return d.y < r.top + r.height / 2;
+      const mid = r.left + r.width / 2;
+      return d.y < r.bottom && (dir === 'rtl' ? d.x > mid : d.x < mid);
     });
     if (k < 0) k = others.length;
     const to: Pos = [list, k];
-    if (list === d.from[0] && k === d.from[1]) return { to, mark: null };
+    if (canMove && !canMove(d.from, to)) return { to, mark: null };
+    // The line marks where the item really lands (locked items can push it along).
+    const row = moveItem(lists, d.from, to, isLocked)[list]!;
+    const f = row.findIndex((it) => getId(it) === d.id);
+    if (list === d.from[0] && f === d.from[1]) return { to, mark: null };
     const m: Mark =
-      k < others.length
-        ? { id: getId(others[k]!), edge: 'before' }
-        : others.length
-          ? { id: getId(others[others.length - 1]!), edge: 'after' }
+      f < row.length - 1
+        ? { id: getId(row[f + 1]!), edge: 'before' }
+        : f > 0
+          ? { id: getId(row[f - 1]!), edge: 'after' }
           : { list, edge: 'inside' };
     return { to, mark: m };
   };
@@ -263,27 +304,42 @@ export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: Re
     return next;
   };
 
-  /** Props for a list's container: lets a drag land in it, even when it is empty. */
-  const listProps = (list: number) => ({
-    ref: (el: HTMLElement | null) => {
-      if (el) listEls.current.set(list, el);
-      else listEls.current.delete(list);
-    },
-    'data-nx-drop': mark && 'list' in mark && mark.list === list ? 'inside' : undefined,
-  });
+  /** Props for a list's container: lets a drag land in it, even when it is empty. A grid reorders in 2D. */
+  const listProps = (list: number, layout: ReorderLayout = 'list') => {
+    layouts.current.set(list, layout);
+    return {
+      ref: (el: HTMLElement | null) => {
+        if (el) listEls.current.set(list, el);
+        else listEls.current.delete(list);
+      },
+      'data-nx-drop': mark && 'list' in mark && mark.list === list ? ('inside' as const) : undefined,
+    };
+  };
+
+  /** Items per row in a grid list: how many share the first item's top. */
+  const columnsOf = (list: number) => {
+    const tops = lists[list]!.map((it) => {
+      const h = handles.current.get(getId(it));
+      return Math.round(h ? (itemOf(h)?.getBoundingClientRect().top ?? 0) : 0);
+    });
+    const k = tops.findIndex((top) => top !== tops[0]);
+    return k < 0 ? tops.length || 1 : k;
+  };
 
   /** The grip button for the item at `pos` (a render function, not a component, so focus survives renders). */
   const handle = (pos: Pos, className?: string) => {
     const item = lists[pos[0]]![pos[1]]!;
     const id = getId(item);
+    const locked = isLocked?.(item) ?? false;
     return (
       <button
         type="button"
+        disabled={disabled || locked || undefined}
         ref={(el) => {
           if (el) handles.current.set(id, el);
           else handles.current.delete(id);
         }}
-        aria-label={t.moveItem(getLabel(item))}
+        aria-label={locked ? t.itemLocked(getLabel(item)) : t.moveItem(getLabel(item))}
         aria-describedby={hintId}
         onPointerDown={(e) => {
           if (e.button !== 0 || drag.current) return;
@@ -334,25 +390,45 @@ export function useReorder<T>({ lists, getId, getLabel, listLabels, onMove }: Re
         onKeyDown={(e) => {
           if (!e.altKey) return;
           const [c, i] = pos;
-          const sideways = lists.length > 1;
+          const n = lists[c]!.length;
+          const grid = layouts.current.get(c) === 'grid';
+          const cols = grid ? columnsOf(c) : 1;
+          // The nearest unlocked index from i + by onwards, in by's direction.
+          const step = (by: number): Pos | null => {
+            for (let j = i + by; by && j >= 0 && j < n; j += Math.sign(by)) if (!isLocked?.(lists[c]![j]!)) return [c, j];
+            return null;
+          };
           const toNext = dir === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
           const toPrev = dir === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
           let to: Pos | null = null;
-          if (e.key === 'ArrowUp' && i > 0) to = [c, i - 1];
-          else if (e.key === 'ArrowDown' && i < lists[c]!.length - 1) to = [c, i + 1];
-          else if (sideways && e.key === toNext && c < lists.length - 1) to = [c + 1, i];
-          else if (sideways && e.key === toPrev && c > 0) to = [c - 1, i];
+          if (e.key === 'ArrowUp') to = step(-cols);
+          else if (e.key === 'ArrowDown')
+            // From a cell above a short last row, Down goes to the end of that row.
+            to = step(i + cols >= n && Math.floor(i / cols) < Math.floor((n - 1) / cols) ? n - 1 - i : cols);
+          else if (e.key === toNext || e.key === toPrev) {
+            const by = e.key === toNext ? 1 : -1;
+            if (grid) to = step(by);
+            // Across lists: same index in a list layout; the near end of a grid.
+            const l = c + by;
+            if (!to && l >= 0 && l < lists.length) to = [l, grid && by < 0 ? lists[l]!.length : grid ? 0 : i];
+          }
           if (!to) return;
           e.preventDefault();
+          if (canMove && !canMove(pos, to)) {
+            // Re-announce a repeated refusal (a live region ignores an unchanged text).
+            setAnnouncement((a) => (a === t.cannotMoveHere ? `${a}\u00a0` : t.cannotMoveHere));
+            return;
+          }
           move(pos, to, true);
         }}
         className={cn(
           'inline-flex size-7 shrink-0 cursor-grab touch-none select-none items-center justify-center rounded-shape-min text-[var(--color-on-surface-variant)]',
           'hover:bg-[var(--color-surface-container-high)] active:cursor-grabbing',
+          'disabled:cursor-default disabled:bg-transparent disabled:text-[var(--color-text-disabled)]',
           className,
         )}
       >
-        <GripVertical size="sm" aria-hidden="true" />
+        {locked ? <Lock size="sm" aria-hidden="true" /> : <GripVertical size="sm" aria-hidden="true" />}
       </button>
     );
   };

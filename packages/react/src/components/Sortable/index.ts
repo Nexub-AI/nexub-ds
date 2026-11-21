@@ -1,2 +1,2 @@
-export { Sortable } from './Sortable.js';
-export type { SortableProps } from './Sortable.js';
+export { Sortable, SortableGroup } from './Sortable.js';
+export type { SortableProps, SortableGroupProps, SortableList } from './Sortable.js';

@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EventCalendar, type CalendarEvent } from './EventCalendar.js';
 import { ErrorState } from '../ErrorState/ErrorState.js';
+import * as React from 'react';
+import { Plus, MoreHorizontal } from '@nexub/icons';
+import { IconButton } from '../IconButton/IconButton.js';
 
 const meta: Meta = {
   title: 'Components/EventCalendar',
@@ -79,4 +82,38 @@ export const Agenda: Story = {
       onEventClick={() => {}}
     />
   ),
+};
+
+/** 11.4: drag an event (or Alt+Arrow, arrows, Enter) to move it; a "+" per day, a menu per event and a legend. */
+export const Editable: Story = {
+  render: function Render() {
+    const [list, setList] = React.useState(events);
+    return (
+      <EventCalendar
+        events={list}
+        defaultDate={new Date(2026, 10, 16)}
+        now={new Date(2026, 10, 16, 11, 15)}
+        weekStartsOn={1}
+        views={[...allViews]}
+        onEventMove={(e, range) => setList((l) => l.map((x) => (x.id === e.id ? { ...x, ...range } : x)))}
+        renderDayAction={(d) => (
+          <IconButton variant="ghost" size="xs" label={`Add event on ${d.toDateString()}`}>
+            <Plus size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        eventActions={(e) => (
+          <IconButton variant="ghost" size="xs" label={`Actions for ${e.title}`}>
+            <MoreHorizontal size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        legend={[
+          { label: 'Meetings', tone: 'primary' },
+          { label: 'Away', tone: 'success' },
+          { label: 'Deadlines', tone: 'warning' },
+          { label: 'Incidents', tone: 'error' },
+          { label: 'Payroll', tone: 'info' },
+        ]}
+      />
+    );
+  },
 };
