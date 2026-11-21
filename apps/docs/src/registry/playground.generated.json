@@ -2447,7 +2447,7 @@
     "children": "nodes",
     "fixed": [
       "accept={['image/*', '.pdf']}",
-      "className=\"w-full max-w-[480px]\""
+      "className=\"w-full max-w-120\""
     ],
     "controls": [
       {
@@ -2788,7 +2788,7 @@
     "fixed": [
       "cols={2}",
       "gap=\"md\"",
-      "className=\"w-full max-w-[400px]\""
+      "className=\"w-full max-w-100\""
     ],
     "controls": [
       {
@@ -5965,7 +5965,7 @@
     "tag": "Table.Root",
     "children": "nodes",
     "fixed": [
-      "className=\"w-full max-w-[480px]\""
+      "className=\"w-full max-w-120\""
     ],
     "controls": [
       {

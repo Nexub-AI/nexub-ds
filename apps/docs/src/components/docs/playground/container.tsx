@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <Container size="sm" className="rounded-shape-container bg-[var(--color-surface)] py-4" {...pg}>
+    <Container size="sm" className="rounded-shape-container bg-surface py-4" {...pg}>
         <Text size="body-sm">Centred at up to 640 px, with responsive side padding.</Text>
       </Container>
   );

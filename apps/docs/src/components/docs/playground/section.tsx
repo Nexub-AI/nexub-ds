@@ -7,7 +7,7 @@ const tones = ['default', 'subtle', 'muted', 'inverse'] as const;
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <div className="w-full overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)]">
+    <div className="w-full overflow-hidden rounded-shape-container border border-outline-variant">
       {tones.map((tone) => (
         <Section key={tone} tone={tone} paddingY="sm" aria-label={`${tone} tone`} {...pg}>
           <Container size="sm">

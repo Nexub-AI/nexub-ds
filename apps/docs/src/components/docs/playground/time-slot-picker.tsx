@@ -18,7 +18,7 @@ function Base(pg: Record<string, unknown>) {
   return (
     <div className="flex w-96 max-w-full flex-col gap-3">
       <TimeSlotPicker aria-label="Start time" slots={slots} value={time} onValueChange={setTime} {...pg} />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         Selected: {time}
       </p>
     </div>

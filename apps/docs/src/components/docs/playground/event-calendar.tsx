@@ -26,7 +26,7 @@ function Base(pg: Record<string, unknown>) {
         onEventClick={(e) => setPicked(e.title)}
         onDayClick={(d) => setPicked(d.toDateString())} {...pg}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{picked && `Opened: ${picked}`}</p>
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">{picked && `Opened: ${picked}`}</p>
     </div>
   );
 }

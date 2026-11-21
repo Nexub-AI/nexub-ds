@@ -19,7 +19,7 @@ function Base(pg: Record<string, unknown>) {
         <span>
           1,200
           <br />
-          <span className="text-label-sm text-[var(--color-on-surface-muted)]">customers</span>
+          <span className="text-label-sm text-on-surface-muted">customers</span>
         </span>
       } {...pg}
     />

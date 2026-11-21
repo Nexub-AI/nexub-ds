@@ -9,7 +9,7 @@ function Base(pg: Record<string, unknown>) {
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
       <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" {...pg} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
+      <p className="text-body-sm text-on-surface-muted">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
     </div>
   );
 }

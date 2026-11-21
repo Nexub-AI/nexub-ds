@@ -23,7 +23,7 @@ export function PlaygroundView({ view, recipe, base }: PlaygroundViewProps & { b
   return view === 'states' ? <StatesGallery recipe={recipe} base={base} /> : <GeneratedPlayground recipe={recipe} base={base} />;
 }
 
-const frame = 'overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]';
+const frame = 'overflow-hidden rounded-shape-container border border-outline-variant bg-surface';
 
 function GeneratedPlayground({ recipe, base: Base }: { recipe: PlaygroundRecipe; base: Base }) {
   // Only what the reader changed; everything else stays as the example has it.
@@ -34,7 +34,7 @@ function GeneratedPlayground({ recipe, base: Base }: { recipe: PlaygroundRecipe;
 
   return (
     <div className={frame}>
-      <div className="flex items-center justify-between gap-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 py-2">
+      <div className="flex items-center justify-between gap-3 border-b border-outline-variant bg-surface-container-low px-3 py-2">
         <Text size="label" weight="semibold" tone="secondary" className="uppercase tracking-wider">
           Props
         </Text>
@@ -51,14 +51,14 @@ function GeneratedPlayground({ recipe, base: Base }: { recipe: PlaygroundRecipe;
       </div>
 
       <div className="docs-playground-grid">
-        <div key={resets} className="flex min-w-0 flex-col gap-3 border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-4 max-md:border-b md:border-e">
+        <div key={resets} className="flex min-w-0 flex-col gap-3 border-outline-variant bg-surface-container-low p-4 max-md:border-b md:border-e">
           {recipe.controls.map((c) => (
             <ControlField key={c.name} id={`${id}-${c.name}`} control={c} value={effective(c, bag)} onChange={(v) => set(c.name, v)} />
           ))}
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <div role="group" aria-label="Preview" className="docs-bg-grid flex min-h-[220px] flex-1 items-center justify-center overflow-hidden p-8">
+          <div role="group" aria-label="Preview" className="docs-bg-grid flex min-h-55 flex-1 items-center justify-center overflow-hidden p-8">
             {/* Remounts on change so mount-only props apply and nothing switches between controlled and uncontrolled. */}
             <Base key={JSON.stringify(bag)} {...bag} />
           </div>
@@ -93,7 +93,7 @@ function ControlField({ id, control, value, onChange }: { id: string; control: P
     if (control.options.length <= 4 && index >= 0) {
       return (
         <div className="flex flex-col gap-1">
-          <span id={id} className={labelClass + ' font-medium text-[var(--color-on-surface)]'}>
+          <span id={id} className={labelClass + ' font-medium text-on-surface'}>
             {control.name}
           </span>
           <SegmentedControl.Root size="sm" aria-labelledby={id} value={String(index)} onValueChange={pick} className="w-full">
@@ -147,11 +147,11 @@ function StatesGallery({ recipe, base: Base }: { recipe: PlaygroundRecipe; base:
       {recipe.states.map(({ prop, value }) => {
         const isDefault = prop === 'default';
         return (
-          <li key={`${prop}-${value}`} className="flex min-w-0 flex-col bg-[var(--color-surface)]">
-            <div className="flex min-h-[96px] flex-1 items-center justify-center overflow-hidden p-4">
+          <li key={`${prop}-${value}`} className="flex min-w-0 flex-col bg-surface">
+            <div className="flex min-h-24 flex-1 items-center justify-center overflow-hidden p-4">
               <Base {...(isDefault ? {} : { [prop]: value })} />
             </div>
-            <code className="border-t border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] px-3 py-1.5 font-mono text-label-md text-[var(--color-on-surface-variant)]">
+            <code className="border-t border-outline-variant bg-surface-container-low px-3 py-1.5 font-mono text-label-md text-on-surface-variant">
               {isDefault ? 'default' : printAttr(prop, value)}
             </code>
           </li>

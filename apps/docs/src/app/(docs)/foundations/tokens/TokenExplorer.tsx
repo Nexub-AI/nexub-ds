@@ -15,7 +15,7 @@ const TIER_TONE = { role: 'info', component: 'success', reference: 'neutral' } a
 function Swatch({ colour }: { colour: string }) {
   return (
     <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="shrink-0">
-      <rect x="0.5" y="0.5" width="15" height="15" rx="4" fill={colour} className="stroke-[var(--color-outline-variant)]" />
+      <rect x="0.5" y="0.5" width="15" height="15" rx="4" fill={colour} className="stroke-outline-variant" />
     </svg>
   );
 }
@@ -101,7 +101,7 @@ export function TokenExplorer({ rows }: { rows: TokenRow[] }) {
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-shape-container border border-[var(--color-outline-variant)]">
+        <div className="overflow-x-auto rounded-shape-container border border-outline-variant">
           <Table.Root density="compact">
             <Table.Caption className="sr-only">Design tokens: name, tier, category and value</Table.Caption>
             <Table.Header>

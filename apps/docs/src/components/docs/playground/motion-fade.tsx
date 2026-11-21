@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <Fade in {...pg}><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>
+    <Fade in {...pg}><Card className="w-50"><Text size="body-sm">Faded in content</Text></Card></Fade>
   );
 }
 

@@ -9,7 +9,7 @@ function Base(pg: Record<string, unknown>) {
   return (
     <Marquee {...pg}>
         {tools.map((t) => (
-          <span key={t} className="text-title-md text-[var(--color-on-surface-variant)]">{t}</span>
+          <span key={t} className="text-title-md text-on-surface-variant">{t}</span>
         ))}
       </Marquee>
   );

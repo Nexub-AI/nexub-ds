@@ -9,7 +9,7 @@ function Base(pg: Record<string, unknown>) {
   return (
     <div className="flex flex-col items-start gap-3">
       <OTPInput onComplete={(code) => setStatus(code === '123456' ? 'Verified' : 'That code didn’t work')} onValueChange={() => setStatus('')} {...pg} />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         {status || 'Try 123456'}
       </p>
     </div>

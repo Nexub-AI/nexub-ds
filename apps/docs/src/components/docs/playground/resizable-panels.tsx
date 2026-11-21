@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-[var(--color-outline-variant)]" {...pg}>
+    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-outline-variant" {...pg}>
       <ul className="flex flex-col gap-2 p-4 text-body-md">
         <li>Quarterly report</li>
         <li>Launch checklist</li>

@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-[480px]" {...pg}>
+    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-120" {...pg}>
       <FileUpload.Dropzone />
       <FileUpload.List>
         {[0, 1, 2].map((i) => <FileUpload.Item key={i} index={i} />)}

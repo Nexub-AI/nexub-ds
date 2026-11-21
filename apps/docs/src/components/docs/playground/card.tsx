@@ -6,7 +6,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 function Base(pg: Record<string, unknown>) {
   return (
     <Card {...pg}>
-        <div className="font-semibold mb-1 text-[var(--color-on-surface)]">Card title</div>
+        <div className="font-semibold mb-1 text-on-surface">Card title</div>
         <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
       </Card>
   );

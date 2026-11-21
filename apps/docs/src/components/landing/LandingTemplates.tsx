@@ -40,7 +40,7 @@ function TemplateCard({ t, preview }: { t: TemplateEntry; preview?: boolean }) {
 /** The page templates in @nexub/patterns: a few shown live, all of them linked. */
 export function LandingTemplates() {
   return (
-    <Section paddingY="md" className="border-b border-[var(--color-outline-variant)]">
+    <Section paddingY="md" className="border-b border-outline-variant">
       <Container size="lg" className="text-center">
         <EyebrowChip tone="info" className="mb-3">
           Templates

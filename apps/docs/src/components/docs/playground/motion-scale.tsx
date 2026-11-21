@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <Scale in {...pg}><Card className="w-[200px]"><Text size="body-sm">Scaled content</Text></Card></Scale>
+    <Scale in {...pg}><Card className="w-50"><Text size="body-sm">Scaled content</Text></Card></Scale>
   );
 }
 

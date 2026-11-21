@@ -5,7 +5,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 
 function Base(pg: Record<string, unknown>) {
   return (
-    <Slide in direction="up" {...pg}><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>
+    <Slide in direction="up" {...pg}><Card className="w-50"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>
   );
 }
 

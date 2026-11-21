@@ -12,13 +12,13 @@ function Base(pg: Record<string, unknown>) {
           <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="tab1">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Overview content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Overview content goes here.</div>
         </Tabs.Content>
         <Tabs.Content value="tab2">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Analytics content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Analytics content goes here.</div>
         </Tabs.Content>
         <Tabs.Content value="tab3">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Settings content goes here.</div>
         </Tabs.Content>
       </Tabs.Root>
   );

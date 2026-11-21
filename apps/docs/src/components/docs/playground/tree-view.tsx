@@ -33,7 +33,7 @@ function Base(pg: Record<string, unknown>) {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Teams" nodes={nodes} defaultExpanded={['eng', 'web']} selected={selected} onSelectedChange={setSelected} onLoadChildren={load} {...pg} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Selected: {selected ?? 'none'}</p>
+      <p className="text-body-sm text-on-surface-muted">Selected: {selected ?? 'none'}</p>
     </div>
   );
 }

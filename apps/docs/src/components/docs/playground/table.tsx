@@ -10,7 +10,7 @@ function Base(pg: Record<string, unknown>) {
     { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
   ];
   return (
-    <Table.Root className="w-full max-w-[480px]" {...pg}>
+    <Table.Root className="w-full max-w-120" {...pg}>
       <Table.Header>
         <Table.Row>
           <Table.Head>Name</Table.Head>

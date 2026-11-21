@@ -6,7 +6,7 @@ import { PlaygroundView, type PlaygroundViewProps } from '../GeneratedPlayground
 function Base(pg: Record<string, unknown>) {
   return (
     <Collapse in {...pg}>
-      <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+      <div className="p-4 bg-surface-container-low rounded-shape-field">
         <Text size="body-sm">Collapsed content goes here.</Text>
       </div>
     </Collapse>

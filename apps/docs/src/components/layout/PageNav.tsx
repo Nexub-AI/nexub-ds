@@ -26,7 +26,7 @@ export function DocsBreadcrumbs({ navGroups }: { navGroups: NavGroup[] }) {
                 <Breadcrumb.Page>{crumb.label}</Breadcrumb.Page>
               ) : crumb.href ? (
                 // Breadcrumb.Link is a plain <a>; DocsLink keeps the navigation client-side.
-                <DocsLink href={crumb.href} className="no-underline transition-colors hover:text-[var(--color-on-surface)]">
+                <DocsLink href={crumb.href} className="no-underline transition-colors hover:text-on-surface">
                   {crumb.label}
                 </DocsLink>
               ) : (

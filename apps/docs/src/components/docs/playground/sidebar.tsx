@@ -19,7 +19,7 @@ function Base(pg: Record<string, unknown>) {
           <Sidebar.Item href="#" icon={<Users size="sm" />}>Members</Sidebar.Item>
           <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
         </Sidebar.Group>
-        <Sidebar.Footer className="text-body-sm text-[var(--color-on-surface-muted)]">v2.4.0</Sidebar.Footer>
+        <Sidebar.Footer className="text-body-sm text-on-surface-muted">v2.4.0</Sidebar.Footer>
       </Sidebar.Root>
   );
 }
