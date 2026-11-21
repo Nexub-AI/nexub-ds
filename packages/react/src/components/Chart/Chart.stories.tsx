@@ -87,3 +87,56 @@ export const InteractiveHeatmap: Story = {
     />
   ),
 };
+
+/* ── 11.3: small chart options (Funnel series and conversion, Heatmap gaps and legend, Gauge tone and caption) ── */
+
+const funnelSteps = [
+  { label: 'Visited', value: 12000, values: { app: 8000 } },
+  { label: 'Signed up', value: 4200, values: { app: 3600 } },
+  { label: 'Activated', value: 2600, values: { app: 2500 } },
+  { label: 'Paid', value: 900, values: { app: 1100 } },
+];
+
+/** Conversion from the first and previous step, plus the drop-off, under each step. */
+export const FunnelConversion: Story = {
+  render: () => <Funnel className="max-w-lg" title="Signup funnel" data={funnelSteps} show="both" tableView />,
+};
+
+/** Two series per step with a legend: `{ key: 'value' }` reads `value`, other keys read `values`. */
+export const FunnelSeries: Story = {
+  render: () => (
+    <Funnel
+      className="max-w-lg"
+      title="Signup funnel by channel"
+      data={funnelSteps}
+      series={[{ key: 'value', label: 'Web' }, { key: 'app', label: 'App', color: 3 }]}
+      show="conversion"
+    />
+  ),
+};
+
+/** Missing cells (null) are hatched and listed as "—"; `legend` adds the low → high scale. */
+export const HeatmapGapsAndLegend: Story = {
+  render: () => (
+    <Heatmap
+      className="max-w-md"
+      title="Activity by day and week"
+      legend
+      tableView
+      rowLabels={['Mon', 'Wed', 'Fri']}
+      columnLabels={['W1', 'W2', 'W3', 'W4', 'W5', 'W6']}
+      data={[[2, 5, null, 3, 9, 4], [6, 1, 7, 10, null, 5], [3, 8, 4, 6, 1, null]]}
+    />
+  ),
+};
+
+/** `tone` colours the arc by status; `caption` says it in words under the value. */
+export const GaugeToneAndCaption: Story = {
+  render: () => (
+    <div className="flex flex-wrap gap-6">
+      <Gauge title="Uptime" value={99} tone="good" caption="On target" />
+      <Gauge title="Storage used" value={82} tone="warning" caption="41 of 50 GB" />
+      <Gauge title="Budget spent" value={104} max={100} tone="danger" label="104%" caption="Over budget" />
+    </div>
+  ),
+};
