@@ -28,6 +28,7 @@ Modal dialog built on Radix UI. Fully accessible with focus trapping and ARIA ro
 | `onOpenChange` | `(open: boolean) => void` |  | Callback when open state changes. |
 | `defaultOpen` | `boolean` | `false` | Uncontrolled initial open state. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material on Dialog.Content — see Foundations → Materials. |
+| `maxHeight` | `string` |  | 11.5 (Dialog.Content): the tallest the dialog gets before its content scrolls, e.g. "32rem". Set through CSSOM (strict CSP safe). |
 
 ## Example: Default
 

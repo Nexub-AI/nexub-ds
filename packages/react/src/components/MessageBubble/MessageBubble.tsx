@@ -33,15 +33,21 @@ export const defaultMessageStrings: MessageStrings = {
   regenerate: 'Regenerate',
 };
 
-export type MessageFrom = 'user' | 'assistant' | 'system';
+/** 11.5: `other` is a third party in a group conversation (another person or agent). */
+export type MessageFrom = 'user' | 'assistant' | 'system' | 'other';
 
 export interface MessageBubbleProps extends React.HTMLAttributes<HTMLElement> {
   /** Who sent it. (Not `role`, which is the ARIA attribute.) */
   from: MessageFrom;
-  /** Assistant only: shown at the inline-start. */
+  /** Assistant and other: shown at the inline-start. */
   avatar?: React.ReactNode;
-  /** Accessible label for the message; defaults to "You said" / "Assistant said". */
+  /**
+   * Accessible label for the message; defaults to "You said" / "Assistant said".
+   * With `from="other"` it is also shown as the header (the sender's name).
+   */
   name?: string;
+  /** 11.5: header text beside the name, e.g. the time. Not for `system`. */
+  meta?: React.ReactNode;
   status?: 'sending' | 'error';
   /** With status="error": renders a Retry text button. */
   onRetry?: () => void;
@@ -49,7 +55,7 @@ export interface MessageBubbleProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
-  ({ from, avatar, name, status, onRetry, messages, className, children, ...props }, ref) => {
+  ({ from, avatar, name, meta, status, onRetry, messages, className, children, ...props }, ref) => {
     const m = { ...useNexubMessages(), ...messages };
     const label = name ?? (from === 'user' ? m.youSaid : from === 'assistant' ? m.assistantSaid : undefined);
 
@@ -68,6 +74,14 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
       </p>
     );
 
+    const shownName = from === 'other' ? name : undefined;
+    const header = (shownName || meta) && (
+      <div className="mb-1 flex items-baseline gap-2 text-label-sm text-[var(--color-on-surface-muted)]">
+        {shownName && <span className="font-medium text-[var(--color-on-surface)]">{shownName}</span>}
+        {meta && <span>{meta}</span>}
+      </div>
+    );
+
     return (
       <article
         ref={ref}
@@ -77,7 +91,7 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
         className={cn(
           'group flex w-full',
           from === 'user' && 'flex-col items-end',
-          from === 'assistant' && 'items-start gap-3',
+          (from === 'assistant' || from === 'other') && 'items-start gap-3',
           from === 'system' && 'justify-center text-center text-label-sm text-[var(--color-on-surface-muted)]',
           className,
         )}
@@ -85,6 +99,7 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
       >
         {from === 'user' ? (
           <>
+            {header}
             <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-shape-container rounded-ee-[0.375rem] bg-[var(--color-primary-container)] px-4 py-2.5 text-body-md text-[var(--color-on-primary-container)]">
               {children}
             </div>
@@ -94,7 +109,19 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
           <>
             {avatar && <div className="shrink-0">{avatar}</div>}
             <div className="min-w-0 flex-1 text-body-md text-[var(--color-on-surface)]">
+              {header}
               {children}
+              {error}
+            </div>
+          </>
+        ) : from === 'other' ? (
+          <>
+            {avatar && <div className="shrink-0">{avatar}</div>}
+            <div className="flex min-w-0 max-w-[85%] flex-col items-start">
+              {header}
+              <div className="whitespace-pre-wrap break-words rounded-shape-container rounded-es-[0.375rem] bg-[var(--color-surface-container-high)] px-4 py-2.5 text-body-md text-[var(--color-on-surface)]">
+                {children}
+              </div>
               {error}
             </div>
           </>
@@ -123,12 +150,22 @@ export interface MessageActionsProps extends React.HTMLAttributes<HTMLDivElement
   onFeedback?: (feedback: Feedback) => void;
   /** Shows Regenerate when provided. */
   onRegenerate?: () => void;
+  /** 11.5: your own actions, after the built-in ones. `children` render after these. */
+  actions?: MessageAction[];
   messages?: Partial<MessageStrings>;
+}
+
+export interface MessageAction {
+  /** The button's accessible name and tooltip. */
+  label: string;
+  icon: React.ReactNode;
+  onSelect: () => void;
+  disabled?: boolean;
 }
 
 /** Copy / feedback / regenerate row. Fades in on hover or focus of the parent MessageBubble on pointer devices. */
 export const MessageActions = React.forwardRef<HTMLDivElement, MessageActionsProps>(
-  ({ text = '', copy = true, feedback: feedbackProp, defaultFeedback = null, onFeedback, onRegenerate, messages, className, ...props }, ref) => {
+  ({ text = '', copy = true, feedback: feedbackProp, defaultFeedback = null, onFeedback, onRegenerate, actions, messages, className, children, ...props }, ref) => {
     const m = { ...useNexubMessages(), ...messages };
     const [feedback, setFeedback] = useControllableState<Feedback>({
       value: feedbackProp,
@@ -197,6 +234,14 @@ export const MessageActions = React.forwardRef<HTMLDivElement, MessageActionsPro
               </IconButton>
             </Tooltip>
           )}
+          {actions?.map((a) => (
+            <Tooltip key={a.label} label={a.label}>
+              <IconButton size="sm" label={a.label} disabled={a.disabled} onClick={a.onSelect}>
+                {a.icon}
+              </IconButton>
+            </Tooltip>
+          ))}
+          {children}
           <span role="status" className="sr-only">
             {copied ? m.copied : ''}
           </span>

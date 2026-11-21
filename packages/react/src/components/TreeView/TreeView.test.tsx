@@ -3,7 +3,7 @@ import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
-import { TreeView, type TreeNode } from './TreeView.js';
+import { TreeView, type TreeNode, type TreeViewHandle } from './TreeView.js';
 
 const nodes: TreeNode[] = [
   {
@@ -112,5 +112,72 @@ describe('TreeView 10.5: data states and indent', () => {
     await user.click(item('src').firstElementChild!);
     expect(screen.queryByRole('treeitem', { name: 'app.tsx' })).toBeNull();
     expect(screen.queryByText('app.tsx')).toBeNull();
+  });
+});
+
+describe('TreeView 11.5: actions, trailing, links, onActivate, scrollToNode', () => {
+  const mail: TreeNode[] = [
+    { id: 'inbox', label: 'Inbox', trailing: '12', children: [{ id: 'work', label: 'Work', href: '/mail/work' }] },
+    { id: 'sent', label: 'Sent', href: '/mail/sent' },
+  ];
+
+  it('actions do not select, are named apart from the item, and only the tab-stop row is in the tab order', async () => {
+    const onSelectedChange = vi.fn();
+    const onRename = vi.fn();
+    render(
+      <TreeView
+        aria-label="Mail"
+        nodes={mail}
+        onSelectedChange={onSelectedChange}
+        renderActions={(n) => <button type="button" aria-label={`Rename ${String(n.label)}`} onClick={() => onRename(n.id)} />}
+      />,
+    );
+    expect(screen.getByRole('treeitem', { name: 'Inbox 12' })).toBeInTheDocument();
+    await userEvent.tab();
+    expect(item('Inbox')).toHaveFocus();
+    await userEvent.tab();
+    expect(screen.getByRole('button', { name: 'Rename Inbox' })).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Rename Sent' })).toHaveAttribute('tabindex', '-1');
+    await userEvent.keyboard('{Enter}');
+    expect(onRename).toHaveBeenCalledWith('inbox');
+    expect(onSelectedChange).not.toHaveBeenCalled();
+  });
+
+  it('Enter and double-click activate; Space and click only select', async () => {
+    const onActivate = vi.fn();
+    const onSelectedChange = vi.fn();
+    render(<TreeView aria-label="Mail" nodes={mail} onActivate={onActivate} onSelectedChange={onSelectedChange} />);
+    await userEvent.tab();
+    await userEvent.keyboard(' ');
+    expect(onSelectedChange).toHaveBeenLastCalledWith('inbox');
+    expect(onActivate).not.toHaveBeenCalled();
+    await userEvent.keyboard('{Enter}');
+    expect(onActivate).toHaveBeenCalledWith(mail[0]);
+    // The double-click's first click opens Inbox; its second doesn't close it again.
+    await userEvent.dblClick(screen.getByText('Inbox'));
+    expect(onActivate).toHaveBeenCalledTimes(2);
+    expect(item('Inbox')).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('link nodes render the row as a link that Enter follows', async () => {
+    render(<TreeView aria-label="Mail" nodes={mail} />);
+    const link = screen.getByText('Sent').closest('a')!;
+    expect(link).toHaveAttribute('href', '/mail/sent');
+    expect(link).toHaveAttribute('tabindex', '-1');
+    const followed = vi.fn((e: MouseEvent) => e.preventDefault());
+    link.addEventListener('click', followed);
+    item('Sent').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(followed).toHaveBeenCalledTimes(1);
+    expect(item('Sent')).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('scrollToNode opens the ancestors and can focus the node', async () => {
+    const ref = React.createRef<TreeViewHandle>();
+    render(<TreeView ref={ref} aria-label="Mail" nodes={mail} />);
+    expect(screen.queryByText('Work')).toBeNull();
+    React.act(() => ref.current!.scrollToNode('work', { focus: true }));
+    expect(item('Inbox')).toHaveAttribute('aria-expanded', 'true');
+    expect(item('Work')).toHaveFocus();
   });
 });

@@ -17,6 +17,7 @@ const entry: ComponentEntry = {
     { name: 'actions', type: 'ReactNode', description: 'Buttons on the end side; they wrap under the title on narrow screens.' },
     { name: 'breadcrumb', type: 'ReactNode', description: 'A `Breadcrumb` above the title.' },
     { name: 'level', type: '1 | 2 | 3', description: 'Heading level of the title. Use 2 or 3 when the page already has an h1.' },
+    { name: 'eyebrow', type: 'ReactNode', description: '11.5: a row above the title, e.g. an EyebrowChip and status badges.' },
   ],
   examples: [{ title: 'Default' }, { title: 'With breadcrumb' }],
 };

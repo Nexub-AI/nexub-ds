@@ -12,7 +12,7 @@ const entry: ComponentEntry = {
   },
   props: [
     { name: 'tone', type: "'neutral' | 'info' | 'success' | 'warning' | 'danger'", default: "'neutral'", required: false, description: 'Semantic colour tone of the alert.' },
-    { name: 'title', type: 'string', required: false, description: 'Bold title rendered at the top of the alert.' },
+    { name: 'title', type: 'ReactNode', required: false, description: 'Bold title rendered at the top of the alert. 11.5: any content (a link, a name in bold); was a string.' },
     { name: 'icon', type: 'ReactNode', required: false, description: 'Custom icon rendered to the left of the content.' },
     { name: 'action', type: 'ReactNode', required: false, description: 'Action element (e.g. a button) rendered beside the content.' },
     { name: 'onClose', type: '() => void', required: false, description: 'When provided, renders a close button that calls this handler.' },

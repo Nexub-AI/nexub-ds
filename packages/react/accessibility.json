@@ -30,6 +30,18 @@
       "rules": [
         "label-content-name-mismatch"
       ]
+    },
+    {
+      "component": "orgchart",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
+    },
+    {
+      "component": "treeview",
+      "rules": [
+        "label-content-name-mismatch"
+      ]
     }
   ],
   "components": [
@@ -1162,6 +1174,26 @@
       ]
     },
     {
+      "slug": "org-chart",
+      "name": "Org Chart",
+      "package": "@nexub/react",
+      "automated": "pass with documented exception",
+      "exceptions": [
+        "label-content-name-mismatch"
+      ],
+      "keyboard": [
+        "ArrowDown / ArrowUp: Next or previous visible card in tree order (depth first), as in TreeView, not by position on screen.",
+        "ArrowRight: Opens a closed card, or moves to its first report. Mirrored in RTL.",
+        "ArrowLeft: Closes an open card, or moves to its manager. Mirrored in RTL.",
+        "Home / End: First or last visible card.",
+        "Enter: Calls `onActivate`.",
+        "Space: Opens or closes the card’s reports."
+      ],
+      "screenReader": [
+        "The chart is one tab stop (roving tabindex); focus scrolls the card into view."
+      ]
+    },
+    {
       "slug": "otp-input",
       "name": "OTP Input",
       "package": "@nexub/react",
@@ -1251,6 +1283,7 @@
       "keyboard": [
         "Enter: Sends. Ignored while an IME composition is open.",
         "Shift + Enter: New line.",
+        "Cmd/Ctrl + Enter: Sends with `submitOn=\"mod-enter\"`, where Enter adds a line.",
         "Escape: Stops the reply while streaming."
       ],
       "screenReader": [
@@ -1718,14 +1751,18 @@
       "slug": "tree-view",
       "name": "Tree View",
       "package": "@nexub/react",
-      "automated": "pass",
-      "exceptions": [],
+      "automated": "pass with documented exception",
+      "exceptions": [
+        "label-content-name-mismatch"
+      ],
       "keyboard": [
         "ArrowDown / ArrowUp: Next or previous visible item.",
         "ArrowRight: Opens a closed item, or moves to its first child. Mirrored in RTL.",
         "ArrowLeft: Closes an open item, or moves to its parent. Mirrored in RTL.",
         "Home / End: First or last visible item.",
-        "Enter / Space: Selects the item, or toggles its checkbox.",
+        "Enter: Selects the item (or toggles its checkbox), calls `onActivate` and follows a link node.",
+        "Space: Selects the item, or toggles its checkbox.",
+        "Tab: From the focused item to its row actions (`renderActions`), then out of the tree.",
         "Type a letter: Moves to the next item starting with the typed text."
       ],
       "screenReader": [

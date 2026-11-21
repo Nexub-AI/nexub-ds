@@ -25,7 +25,7 @@ Inline contextual message with optional title, icon, and dismiss action.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `tone` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Semantic colour tone of the alert. |
-| `title` | `string` |  | Bold title rendered at the top of the alert. |
+| `title` | `ReactNode` |  | Bold title rendered at the top of the alert. 11.5: any content (a link, a name in bold); was a string. |
 | `icon` | `ReactNode` |  | Custom icon rendered to the left of the content. |
 | `action` | `ReactNode` |  | Action element (e.g. a button) rendered beside the content. |
 | `onClose` | `() => void` |  | When provided, renders a close button that calls this handler. |

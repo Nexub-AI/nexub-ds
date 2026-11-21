@@ -330,3 +330,11 @@ describe('error boundary', () => {
     spy.mockRestore();
   });
 });
+
+describe('DashboardPage (11.5)', () => {
+  it('the headline figure can be a count, not only money', () => {
+    render(<DashboardPage title="Members" balance={{ value: 1240, label: 'Active members' }} />);
+    expect(screen.getByText('Active members')).toBeInTheDocument();
+    expect(screen.getByText('1,240')).toBeInTheDocument();
+  });
+});
