@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { act, render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { FileUpload, fileAccepted, formatFileSize } from './FileUpload.js';
 
@@ -200,7 +201,7 @@ describe('FileUpload 10.4 consistent controls', () => {
       </FileUpload.Root>,
     );
     expect(screen.getByLabelText(/click to upload/i)).toHaveAttribute('aria-invalid', 'true');
-    expect(screen.getByTestId('zone')).toHaveClass('border-[var(--color-error)]');
+    expect(screen.getByTestId('zone')).toHaveClass('border-error');
     expect(screen.getByTestId('root')).not.toHaveAttribute('invalid');
   });
 
@@ -226,5 +227,109 @@ describe('FileUpload 10.4 consistent controls', () => {
     expect(screen.getByText('a.txt')).toBeInTheDocument();
     expect(screen.queryByText('b.txt')).not.toBeInTheDocument();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+});
+
+describe('FileUpload 11.1', () => {
+  const file = (name: string, size = 10, type = 'text/plain') => new File(['x'.repeat(size)], name, { type });
+
+  it('Trigger: a button opens the picker with no drop zone; picked files are listed', async () => {
+    const onFilesChange = vi.fn();
+    render(
+      <FileUpload.Root onFilesChange={onFilesChange}>
+        <FileUpload.Trigger>Import CSV</FileUpload.Trigger>
+      </FileUpload.Root>,
+    );
+    const button = screen.getByRole('button', { name: 'Import CSV' });
+    const input = document.querySelector('input[type=file]') as HTMLInputElement;
+    const click = vi.spyOn(input, 'click');
+    await userEvent.click(button);
+    expect(click).toHaveBeenCalled();
+    fireEvent.change(input, { target: { files: [file('a.csv')] } });
+    expect(onFilesChange).toHaveBeenCalledWith([expect.objectContaining({ name: 'a.csv' })]);
+    expect(screen.queryByText(/drag and drop/i)).not.toBeInTheDocument();
+  });
+
+  it('Trigger iconOnly: an icon button named "Upload file", and rejections show under it', () => {
+    render(
+      <FileUpload.Root accept={['.pdf']}>
+        <FileUpload.Trigger iconOnly />
+      </FileUpload.Root>,
+    );
+    expect(screen.getByRole('button', { name: 'Upload file' })).toBeInTheDocument();
+    fireEvent.change(document.querySelector('input[type=file]')!, { target: { files: [file('a.txt')] } });
+    expect(screen.getByRole('alert')).toHaveTextContent('a.txt');
+  });
+
+  it('controlled files: the page can clear the list', () => {
+    const { rerender } = render(
+      <FileUpload.Root files={[file('one.txt')]} onFilesChange={() => {}}>
+        <FileUpload.List>
+          <FileUpload.Item index={0} />
+        </FileUpload.List>
+      </FileUpload.Root>,
+    );
+    expect(screen.getByText('one.txt')).toBeInTheDocument();
+    rerender(
+      <FileUpload.Root files={[]} onFilesChange={() => {}}>
+        <FileUpload.List>
+          <FileUpload.Item index={0} />
+        </FileUpload.List>
+      </FileUpload.Root>,
+    );
+    expect(screen.queryByText('one.txt')).not.toBeInTheDocument();
+  });
+
+  it('capture and maxFiles=1 reach the native input', () => {
+    render(
+      <FileUpload.Root capture="environment" maxFiles={1} accept={['image/*']}>
+        <FileUpload.Dropzone />
+      </FileUpload.Root>,
+    );
+    const input = document.querySelector('input[type=file]') as HTMLInputElement;
+    expect(input).toHaveAttribute('capture', 'environment');
+    expect(input).not.toHaveAttribute('multiple');
+  });
+
+  it('transform runs before the size check (shrink a photo)', async () => {
+    const onFilesChange = vi.fn();
+    const onReject = vi.fn();
+    render(
+      <FileUpload.Root maxSize={100} transform={async (f) => new File(['small'], f.name, { type: f.type })} onFilesChange={onFilesChange} onReject={onReject}>
+        <FileUpload.Dropzone />
+      </FileUpload.Root>,
+    );
+    fireEvent.change(document.querySelector('input[type=file]')!, { target: { files: [file('photo.jpg', 5000, 'image/jpeg')] } });
+    await waitFor(() => expect(onFilesChange).toHaveBeenCalled());
+    expect(onFilesChange.mock.calls[0]![0][0].size).toBe(5);
+    expect(onReject).not.toHaveBeenCalled();
+  });
+
+  it('disabled and busy: nothing is added, busy shows its progress', () => {
+    const onFilesChange = vi.fn();
+    const { rerender } = render(
+      <FileUpload.Root disabled onFilesChange={onFilesChange}>
+        <FileUpload.Dropzone data-testid="zone" />
+      </FileUpload.Root>,
+    );
+    expect(document.querySelector('input[type=file]')).toBeDisabled();
+    rerender(
+      <FileUpload.Root busy progress={40} onFilesChange={onFilesChange}>
+        <FileUpload.Dropzone data-testid="zone" />
+      </FileUpload.Root>,
+    );
+    expect(screen.getByTestId('zone')).toHaveAttribute('aria-busy', 'true');
+    expect(screen.getByRole('progressbar', { name: 'Uploading' })).toHaveAttribute('aria-valuenow', '40');
+    fireEvent.change(document.querySelector('input[type=file]')!, { target: { files: [file('a.txt')] } });
+    expect(onFilesChange).not.toHaveBeenCalled();
+  });
+
+  it('Dropzone size="sm" is the compact one-line zone', () => {
+    render(
+      <FileUpload.Root>
+        <FileUpload.Dropzone size="sm" />
+      </FileUpload.Root>,
+    );
+    expect(screen.getByText(/click to upload/i).closest('label')).toHaveClass('flex-row');
   });
 });

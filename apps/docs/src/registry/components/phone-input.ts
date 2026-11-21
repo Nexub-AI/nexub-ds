@@ -9,6 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'alpha',
     addedIn: '10.8.0',
+    updatedIn: '11.1.0',
     related: ['input', 'select', 'otp-input', 'form-field'],
   },
   props: [
@@ -21,6 +22,8 @@ const entry: ComponentEntry = {
     { name: 'invalid / disabled', type: 'boolean', description: 'Field states, with `readOnly` and `required`. Inside `FormField.Control` they come from the field.' },
     { name: 'name', type: 'string', description: 'Submits the E.164 value with a form.' },
     { name: 'sheet', type: "boolean | 'auto'", default: "'auto'", description: "Shows the country list as a bottom sheet; `'auto'` only on phones." },
+    { name: 'formatPhone(e164, { style })', type: "(e164: string, options?: { style?: 'national' | 'international' }) => string", description: 'Read-only display of a stored number: "+91 98470 12345" or "98470 12345".' },
+    { name: 'parsePhone(value)', type: '(value: string) => { country, dialCode, national, e164, valid }', description: 'The parts, for apps that store the country and number apart. The E.164 string stays the one stored form.' },
   ],
   examples: [{ title: 'Default' }, { title: 'Restricted countries in a form field' }],
   a11y: {

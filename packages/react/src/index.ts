@@ -52,7 +52,7 @@ export { Textarea, textareaVariants } from './components/Textarea/index.js';
 export type { TextareaProps } from './components/Textarea/index.js';
 
 export { NumberInput } from './components/NumberInput/index.js';
-export type { NumberInputProps } from './components/NumberInput/index.js';
+export type { NumberInputProps, NullableNumberInputProps } from './components/NumberInput/index.js';
 export { MoneyInput } from './components/MoneyInput/index.js';
 export type { MoneyInputProps } from './components/MoneyInput/index.js';
 export { Amount } from './components/Amount/index.js';
@@ -229,6 +229,9 @@ export type { DataTableColumnFilters } from './components/DataTable/index.js';
 export { nearestIndex, segmentAt } from './components/Chart/index.js';
 export { PhoneInput } from './components/PhoneInput/index.js';
 export type { PhoneInputProps } from './components/PhoneInput/index.js';
+// 11.1: display and parts of an E.164 value (from @nexub/core).
+export { formatPhone, parsePhone, isValidPhone } from '@nexub/core';
+export type { FormatPhoneOptions, ParsedPhone } from '@nexub/core';
 export { Countdown, useCountdown } from './components/Countdown/index.js';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/Countdown/index.js';
 export { TimeSlotPicker } from './components/TimeSlotPicker/index.js';
@@ -266,6 +269,8 @@ export type { DrawerRootProps } from './components/Drawer/index.js';
 // Components — Form Controls (Radix)
 export { Select } from './components/Select/index.js';
 export { Combobox } from './components/Combobox/index.js';
+export { ComboboxField, ComboboxPicker } from './components/ComboboxField/index.js';
+export type { ComboboxFieldProps, ComboboxPickerProps, ComboboxOption } from './components/ComboboxField/index.js';
 export { Autocomplete } from './components/Autocomplete/index.js';
 export type { AutocompleteOption, AutocompleteProps } from './components/Autocomplete/index.js';
 export { MultiSelect } from './components/MultiSelect/index.js';
@@ -278,6 +283,8 @@ export { Switch } from './components/Switch/index.js';
 export type { SwitchProps } from './components/Switch/index.js';
 export { Checkbox } from './components/Checkbox/index.js';
 export type { CheckboxProps } from './components/Checkbox/index.js';
+export { SwitchField, CheckboxField, CheckboxGroupField } from './components/ChoiceFields/index.js';
+export type { SwitchFieldProps, CheckboxFieldProps, CheckboxGroupFieldProps, CheckboxGroupOption } from './components/ChoiceFields/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
 export type { SliderProps, SliderMark } from './components/Slider/index.js';
@@ -329,7 +336,7 @@ export type { ErrorStateProps } from './components/ErrorState/index.js';
 
 // Components — Input
 export { FileUpload, fileAccepted } from './components/FileUpload/index.js';
-export type { FileUploadRootProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
+export type { FileUploadRootProps, FileUploadDropzoneProps, FileUploadTriggerProps, FileUploadItemProps, FileRejection } from './components/FileUpload/index.js';
 export { OTPInput } from './components/OTPInput/index.js';
 export { Form, useForm } from './components/Form/index.js';
 export type { FormProps, FormErrorItem, FormErrors, FormContextValue } from './components/Form/index.js';
@@ -359,7 +366,7 @@ export { toCSV } from './utils/csv.js';
 export type { CSVColumn } from './utils/csv.js';
 export type { OTPInputProps } from './components/OTPInput/index.js';
 export { DatePicker } from './components/DatePicker/index.js';
-export type { DatePickerProps } from './components/DatePicker/index.js';
+export type { DatePickerProps, DatePeriodPickerProps } from './components/DatePicker/index.js';
 export { DateRangePicker } from './components/DateRangePicker/index.js';
 export { todayIn } from './components/DateRangePicker/index.js';
 export type { DateRangePickerProps, DateRange, DateRangePreset } from './components/DateRangePicker/index.js';

@@ -214,6 +214,9 @@ import descriptionListEntry from './components/description-list';
 import comparisonBarEntry from './components/comparison-bar';
 import truncateEntry from './components/truncate';
 import phoneInputEntry from './components/phone-input';
+import comboboxFieldEntry from './components/combobox-field';
+import switchFieldEntry from './components/switch-field';
+import checkboxFieldEntry from './components/checkbox-field';
 import countdownEntry from './components/countdown';
 import timeSlotPickerEntry from './components/time-slot-picker';
 import qrCodeEntry from './components/qr-code';
@@ -277,6 +280,9 @@ export const componentEntries: ComponentEntry[] = [
   comparisonBarEntry,
   truncateEntry,
   phoneInputEntry,
+  comboboxFieldEntry,
+  switchFieldEntry,
+  checkboxFieldEntry,
   countdownEntry,
   timeSlotPickerEntry,
   qrCodeEntry,

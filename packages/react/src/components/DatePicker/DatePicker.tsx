@@ -11,6 +11,11 @@ import { field, fieldDisabled, fieldFocusVisible, fieldFocusWithin, fieldInvalid
 import { COLLISION_PADDING, type SheetProp } from '../../utils/popper.js';
 import { floatingSurface } from '../../utils/surface.js';
 import { Button } from '../Button/Button.js';
+import { formatPeriod, parsePeriod } from './period.js';
+
+// The month and year grid loads only when a picker uses it, so day pickers (and DateRangePicker,
+// DateTimePicker) don't carry it. A same-looking trigger holds the spot meanwhile.
+const LazyPeriodPicker = React.lazy(() => import('./PeriodPicker.js'));
 
 /**
  * A date-fns Locale wins (date-fns 'PP'); else with a NexubProvider locale,
@@ -62,6 +67,8 @@ export function useCalendarLocale(localeProp?: Locale) {
 }
 
 export interface DatePickerProps {
+  /** 11.1: `'month'` and `'year'` pick a whole month or year (see `DatePeriodPickerProps`). @default 'day' */
+  granularity?: 'day';
   value?: Date;
   /** Called with the new value. */
   onValueChange?: (date: Date | undefined) => void;
@@ -95,6 +102,21 @@ export interface DatePickerProps {
   typeable?: boolean;
   /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
+}
+
+/**
+ * 11.1: a month or a year instead of a day. The value is a string, so a month never carries a
+ * day or a time zone: `'2026-03'` for `granularity="month"`, `'2026'` for `"year"`. The popover
+ * (a sheet on phones) shows a 3 × 4 grid of months or years; arrow keys move, Page Up and Page
+ * Down turn the page. `minDate` and `maxDate` disable the months or years outside them.
+ */
+export interface DatePeriodPickerProps
+  extends Pick<DatePickerProps, 'placeholder' | 'disabled' | 'readOnly' | 'invalid' | 'size' | 'minDate' | 'maxDate' | 'className' | 'id' | 'aria-label' | 'sheet'> {
+  granularity: 'month' | 'year';
+  /** `'YYYY-MM'` (month) or `'YYYY'` (year). */
+  value?: string;
+  /** Called with `'YYYY-MM'` or `'YYYY'`. */
+  onValueChange?: (value: string | undefined) => void;
 }
 
 /** Internal: trigger button sizes shared with DateRangePicker (the Input size map). */
@@ -151,8 +173,44 @@ const calendarClassNames = {
   weeks_before_exit: 'animate-[nx-fade-out_var(--motion-spring-effects-fast-duration)_var(--motion-spring-effects-fast-easing)_forwards]',
 } as Record<string, string>;
 
-export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
-  function DatePicker(
+export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps | DatePeriodPickerProps>(function DatePicker(
+  props,
+  ref,
+) {
+  if (props.granularity === 'month' || props.granularity === 'year') {
+    const { size = 'md', sheet = 'auto', ...rest } = props;
+    return (
+      <React.Suspense fallback={<PeriodTriggerPlaceholder {...props} size={size} />}>
+        <LazyPeriodPicker ref={ref} {...rest} size={size} sheet={sheet} triggerSize={dateTriggerSizes[size]} />
+      </React.Suspense>
+    );
+  }
+  return <DayDatePicker ref={ref} {...(props as DatePickerProps)} />;
+});
+
+/** The period trigger while the grid loads: same box, same text, not yet interactive. */
+function PeriodTriggerPlaceholder({ granularity, value, placeholder, size, disabled, invalid, className, id, 'aria-label': ariaLabel }: DatePeriodPickerProps & { size: Size }) {
+  const messages = useNexubMessages();
+  const intlLocale = useIntlLocale();
+  const selected = parsePeriod(value);
+  const display = selected ? formatPeriod(granularity, selected.year, selected.month, intlLocale) : (placeholder ?? (granularity === 'month' ? messages.pickMonth : messages.pickYear));
+  return (
+    <button
+      type="button"
+      id={id}
+      disabled={disabled}
+      aria-invalid={invalid || undefined}
+      aria-label={ariaLabel ? `${ariaLabel}: ${display}` : display}
+      className={cn('inline-flex w-full items-center justify-start', dateTriggerSizes[size], field, invalid && fieldInvalid, !selected && 'text-on-surface-muted', className)}
+    >
+      <CalendarDays size="sm" aria-hidden="true" />
+      {display}
+    </button>
+  );
+}
+
+const DayDatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
+  function DayDatePicker(
     {
       value,
       onValueChange,
@@ -171,6 +229,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       presets,
       typeable = false,
       sheet = 'auto',
+      granularity: _granularity,
     },
     ref,
   ) {

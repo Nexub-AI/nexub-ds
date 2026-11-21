@@ -12,6 +12,8 @@ export interface ParsedPhone {
   /** `+<calling code><national>`, or '' when there are no digits. */
   e164: string;
   valid: boolean;
+  /** 11.1: the calling code with its plus ("+91"), for apps that store the parts. */
+  dialCode: string;
 }
 
 // Code + calling code, back to back. Where several share a calling code, the
@@ -122,7 +124,28 @@ export function parsePhone(value: string, defaultCountry: CountryCode = 'US'): P
   // Trunk 0 is dropped abroad, except where it is part of the number (Italy, Vatican).
   if (country !== 'IT' && country !== 'VA') national = national.replace(/^0/, '');
   national = national.slice(0, 15 - (callingCode(country).length || 1));
-  return { country, national, e164: toE164(national, country), valid: plausible(national, country) };
+  const cc = callingCode(country);
+  return { country, national, e164: toE164(national, country), valid: plausible(national, country), dialCode: cc ? `+${cc}` : '' };
+}
+
+export interface FormatPhoneOptions {
+  /** `'international'`: "+91 98470 12345". `'national'`: "98470 12345". @default 'international' */
+  style?: 'national' | 'international';
+  /** The country for a value without a calling code. @default 'US' */
+  defaultCountry?: CountryCode;
+}
+
+/**
+ * 11.1: an E.164 number for display, grouped the way PhoneInput groups it as you type
+ * (`formatPhone('+919847012345')` → "+91 98470 12345"). Read-only display: tables, profiles,
+ * contact cards. '' for an empty value.
+ */
+export function formatPhone(e164: string, { style = 'international', defaultCountry = 'US' }: FormatPhoneOptions = {}): string {
+  const { country, national } = parsePhone(e164, defaultCountry);
+  if (!national) return '';
+  const grouped = formatNational(national, country);
+  const cc = callingCode(country);
+  return style === 'national' || !cc ? grouped : `+${cc} ${grouped}`;
 }
 
 /** Plausible E.164: known calling code and a national length the country (or E.164) allows. */
