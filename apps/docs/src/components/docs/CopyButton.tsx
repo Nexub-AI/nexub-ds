@@ -41,7 +41,7 @@ export function CopyButton({ text }: CopyButtonProps) {
         onClick={handleCopy}
         title={copied ? 'Copied!' : 'Copy code'}
         label={copied ? 'Copied to clipboard' : 'Copy code to clipboard'}
-        className={'nx-press !h-7 !w-7 ' + (copied ? '!text-[var(--color-success)]' : '')}
+        className={'nx-press !h-7 !w-7 ' + (copied ? '!text-success' : '')}
       >
         {copied ? <Check size={13} /> : <Copy size={13} />}
       </IconButton>

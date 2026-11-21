@@ -35,7 +35,7 @@ export function LandingFeatures() {
     <Section
       paddingY="md"
       tone="subtle"
-      className="border-t border-[var(--color-outline-variant)] border-b"
+      className="border-t border-outline-variant border-b"
     >
       <Container size="lg" className="text-center">
         <EyebrowChip tone="info" data-reveal-scroll className="mb-3">
@@ -51,11 +51,11 @@ export function LandingFeatures() {
             <Card key={title} variant="surface" data-reveal-scroll className="p-7">
               <span
                 aria-hidden="true"
-                className="mb-4 w-[44px] h-[44px] flex items-center justify-center bg-[var(--color-primary-container)] rounded-shape-container text-[var(--color-on-primary-container)]"
+                className="mb-4 w-11 h-11 flex items-center justify-center bg-primary-container rounded-shape-container text-on-primary-container"
               >
                 <Icon size="md" />
               </span>
-              <Text weight="bold" className="text-headline-lg leading-none mb-1 text-[var(--color-primary)]">
+              <Text weight="bold" className="text-headline-lg leading-none mb-1 text-primary">
                 {stat}
               </Text>
               <Heading level={3} size="h6" className="mb-2">

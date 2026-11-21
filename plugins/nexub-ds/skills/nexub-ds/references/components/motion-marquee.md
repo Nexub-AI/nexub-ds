@@ -26,7 +26,7 @@ export default function Example() {
     <div data-mode="marketing" className="w-full">
       <Marquee>
         {tools.map((t) => (
-          <span key={t} className="text-title-md text-[var(--color-on-surface-variant)]">{t}</span>
+          <span key={t} className="text-title-md text-on-surface-variant">{t}</span>
         ))}
       </Marquee>
     </div>

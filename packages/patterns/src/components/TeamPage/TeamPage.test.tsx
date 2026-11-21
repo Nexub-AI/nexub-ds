@@ -4,6 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { TeamPage, type TeamMember, type TeamRole } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 const roles: TeamRole[] = [
   { id: 'admin', label: 'Admin', description: 'Everything, including billing.' },
   { id: 'member', label: 'Member' },
@@ -70,10 +74,10 @@ describe('TeamPage', () => {
     await userEvent.click(send);
     expect(within(dialog).getByText('Add at least one email address')).toBeInTheDocument();
     const field = within(dialog).getByRole('textbox', { name: 'Email addresses' });
-    await userEvent.type(field, 'Kai@harbour.test,');
+    await type(field, 'Kai@harbour.test,');
     expect(within(dialog).getByText('kai@harbour.test')).toBeInTheDocument();
     expect(field).toHaveValue('');
-    await userEvent.type(field, 'nope{Enter}');
+    await type(field, 'nope{Enter}');
     expect(within(dialog).getByText('nope is not a valid email address')).toBeInTheDocument();
     expect(field).toHaveValue('nope');
     await userEvent.click(send);
@@ -88,7 +92,7 @@ describe('TeamPage', () => {
     await userEvent.paste('ola@harbour.test');
     await userEvent.tab();
     expect(within(dialog).getAllByRole('listitem')).toHaveLength(3);
-    await userEvent.type(field, 'zed@harbour.test');
+    await type(field, 'zed@harbour.test');
 
     await userEvent.click(send);
     expect(await within(dialog).findByText('Seat limit reached')).toBeInTheDocument();
@@ -123,7 +127,7 @@ describe('TeamPage', () => {
     const onChange = vi.fn();
     const { rerender } = render(<TeamPage members={members} roles={roles} search={{ value: 'a', onChange, placeholder: 'Search members' }} />);
     const box = screen.getByRole('searchbox', { name: 'Search members' });
-    await userEvent.type(box, 'd');
+    await type(box, 'd');
     expect(onChange).toHaveBeenCalledWith('ad');
     await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));
     expect(onChange).toHaveBeenCalledWith('');

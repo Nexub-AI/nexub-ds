@@ -4,6 +4,10 @@
 
 Open for comments for at least **3 working days** from the day this issue is opened. A maintainer then records the decision here (accepted, accepted with changes, or declined) and closes the issue. The 11.0 PR links it.
 
+## Decision
+
+**Accepted as written** on 2026-11-21 by a maintainer. RFC issue #662 was open from 2026-11-17 with no comments. 11.0 makes exactly the two breaking changes below: the four product theme files are removed, and `sheet` defaults to `'auto'`. 10.9.0 shipped as the release candidate on `next` on 2026-11-20.
+
 Release candidate: **10.9.x, on the npm tag `next`** (`npm i @nexub/react@next`). `latest` stays on 10.8.x until 11.0.0.
 
 ## Problem

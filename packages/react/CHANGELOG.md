@@ -1,5 +1,133 @@
 # @nexub/react
 
+## 10.9.0
+
+### Minor Changes
+
+- c71bb65: 10.9 Native, next level, and the 11.0 release candidate. 10.9.x is published under the npm tag `next`; `latest` stays on 10.8.x until 11.0.
+
+  - **Native look**: `NexubNativeProvider expression="vivid"`, `product` accepts every product in the generated map, and the theme exposes the product accent. Category colours on `Badge` and `Avatar`, new `IconChip`, `StatCard`, `NumberTicker`, a gradient main action and tone-aware tonal buttons. `dynamicColor` follows the Android 12+ system accent (opt-in). `useBreakpoint` and `useResponsive` for tablets and landscape.
+  - **Gestures on the UI thread**: BottomSheet, Toast, SwipeableRow and Slider read touches with react-native-gesture-handler worklets. **`react-native-gesture-handler` >= 3 is now a required peer**: wrap the app root in `GestureHandlerRootView`.
+  - **New native twins** (#302): `Tabs`, `Table`, `Rating`, `Tooltip`, `StepIndicator` (alias of `StepProgress`), plus twins of `DescriptionList`, `ComparisonBar`, `PhoneInput`, `Countdown` and the `StatusSteps` pattern.
+  - **QR codes** (#305): `QRCode` on web and native (always dark on light, value shown as text) and native `QRScanner` (optional `expo-camera` peer, with permission states, torch and a manual-entry fallback). The encoder is `encodeQR` in `@nexub/core`.
+  - **Toward 11.0**: `npx nexub-migrate --rules changes-in-11` rewrites the four deprecated product theme imports and lists overlays that rely on the old `sheet` default. See "Migrating to 11.0" in the docs and RFC #662.
+  - Device baselines for the pattern screens are also captured in dark, high contrast, RTL and (iOS) large text. The mobile demo gains a small connected app under `/demo`.
+
+### Patch Changes
+
+- Updated dependencies [c71bb65]
+  - @nexub/core@10.9.0
+  - @nexub/icons@10.9.0
+
+## 10.8.0
+
+### Minor Changes
+
+- b46edf1: 10.8 Templates: twelve new page templates and the three controls they needed.
+
+  - **Getting in**: `SignUpPage` (password strength said in words, optional phone, terms), `ForgotPasswordPage` (request and "check your email" with a resend cooldown), `VerifyCodePage` (OTP and 2FA with resend countdown, other methods, code lifetime), `OnboardingPage` (a generic step wizard with validation, skip and a completion view) and `KycPage` (personal details, document upload, review, status).
+  - **Daily work**: `TablePage` (search, filters, tabs, bulk and row actions, pagination), `DetailPage` (view and edit modes with an unsaved-changes guard), `BookingPage` (date, time slot, confirm, with an optional hold timer), `InvoicePage` (invoice and receipt), `TeamPage` (members, roles, invites, seats), `NotificationsPage` (grouped by day, tabs, load more) and `SearchResultsPage` (highlighted matches, kinds, pagination).
+  - **`PhoneInput`** (#303): country picker, formatting as you type, E.164 out, paste of full international numbers. Country calling codes and helpers (`parsePhone`, `formatNational`, `toE164`, `isValidPhone`) are in `@nexub/core`.
+  - **`Countdown`** and `useCountdown` (#304): time left to a deadline that stays right after the tab was in the background, tone changes near the end, and announcements at sensible intervals only.
+  - **`TimeSlotPicker`**: a radio group of time slots, optionally grouped into morning, afternoon and evening.
+
+  Every template uses the 10.3 look, the 10.5 loading, empty and error states and the 10.6 phone behaviour, and responds to its container.
+
+  **Fix**: a read-only `Select` no longer switches Radix from uncontrolled to controlled after mount, which logged a React warning on every render of a read-only Select (seen first on a read-only `PhoneInput`).
+
+  **Performance**: a closed `PhoneInput` country picker renders only the selected country, not all ~240 (Radix Select renders items while closed). 1,000 mounts of six PhoneInputs: over 10 minutes before, 10 seconds after.
+
+### Patch Changes
+
+- Updated dependencies [b46edf1]
+  - @nexub/core@10.8.0
+  - @nexub/icons@10.8.0
+
+## 10.7.0
+
+### Minor Changes
+
+- 9d9c9eb: 10.7 Charts, calendar and tables.
+
+  - **Interactive charts** (opt-in; default charts stay server-rendered): `interactive` on BarChart, LineChart (and `area`), DonutChart, Heatmap, Funnel and Sparkline adds a crosshair that snaps to the nearest point, a tooltip that stays inside the plot, tap on touch, and keyboard navigation (arrows, Home, End, Escape) with the focused point announced. `onPointClick` reports the point. `legend="toggle"` on BarChart and LineChart turns the legend into show/hide buttons (`hiddenSeries`, `defaultHiddenSeries`, `onHiddenSeriesChange`).
+  - **EventCalendar**: `day` view with an hour grid and a now line, and `agenda` view as a list grouped by day. `views` picks what the switcher offers (default unchanged); `now` makes it deterministic.
+  - **Table**: `stickyHeader` with `maxHeight`, `density`, `striped` on `Table.Root`.
+  - **DataTable**: a footer row from each column's `footer` (sums follow the filtered rows), and per-column filters (`meta.filter: 'text' | 'select' | 'number-range'`, `columnFilters`, `defaultColumnFilters`, `onColumnFiltersChange`, `manualFiltering`). The filter popover loads only when used.
+  - **`Truncate`**: clips text to one or more lines and shows a tooltip only when the text is really cut.
+  - **New (#306)**: `DescriptionList` (label and value rows on `<dl>`, inline or stacked, 1 to 3 columns, emphasis for totals), `ComparisonBar` (two values on one split bar with a text alternative) and the `StatusSteps` pattern (a read-only progress list with done, current, upcoming and problem steps).
+
+### Patch Changes
+
+- Updated dependencies [9d9c9eb]
+  - @nexub/core@10.7.0
+  - @nexub/icons@10.7.0
+
+## 10.6.0
+
+### Minor Changes
+
+- 710752b: 10.6 Phone-first overlays: pickers and menus can open as a bottom sheet on a phone, and layouts follow their container.
+
+  - **`sheet`** (`true` or `"auto"`, off by default until 11.0) on Select, MultiSelect, Autocomplete, DatePicker, DateRangePicker, DateTimePicker, DropdownMenu, ContextMenu, Menubar, Popover, SplitButton, SavedViews, the Breadcrumb overflow menu, AlertDialog and CommandPalette, and on NotificationCenter, AppLauncher and the AppHeader menus. `"auto"` is a bottom sheet below 768px and the usual popover above; it is done in CSS, so there is no flash after hydration.
+  - **Poppers stay on screen**: every popper keeps 8px from the viewport edge and scrolls inside the space it has instead of running off it.
+  - **AlertDialog** keeps a 1rem gutter on narrow screens and scrolls when it is taller than the screen. Dialog sheets use `dvh` and respect the bottom safe area.
+  - **Sidebar** `collapseBelow="sm" | "md" | "lg"` collapses to the icon rail on its own, and collapsed items show a real tooltip. **AppShell** gains an opt-in mobile drawer: `AppShell.Sidebar drawerBelow` plus `AppShell.NavTrigger`.
+  - **Container queries**: PageHeader, RadioCard groups, PageFrame, DashboardPage, TransactionDetailPage, SettingsSection, WelcomeBanner and FilterBar now respond to the width of their container, not the viewport.
+  - NavigationMenu wraps at 320px. The reflow exception list is empty.
+
+### Patch Changes
+
+- @nexub/icons@10.6.0
+- @nexub/core@10.6.0
+
+## 10.5.1
+
+### Patch Changes
+
+- @nexub/icons@10.5.1
+- @nexub/core@10.5.1
+
+## 10.5.0
+
+### Minor Changes
+
+- 11c1fd9: 10.5 Every state: loading, empty and error look designed everywhere, and state changes move.
+
+  - **One prop shape** (`loading`, `emptyState`, `errorState`; error wins, then loading, then empty) on BarChart, LineChart, DonutChart, Gauge, Heatmap, Funnel, Sparkline, KpiTile, ChartZoom, EventCalendar, TreeView, Kanban, `Table.Body`, and `errorState` on DataTable and DataTableVirtual. Patterns too: ActivityFeed, InfoList, NotificationCenter, SettingsPage, DashboardPage, ListDetail, TransactionDetailPage, ActivityPage; `loading` on StatCard and UserCard. Exported as `DataStateProps`.
+  - **Behaviour change**: a chart, tree or board with no data now says "Nothing here yet" instead of drawing an empty plot. Pass `emptyState` to change it.
+  - **`SkeletonPreset`**: card, tableRow, listRow, chart, form.
+  - **`Illustration`**: seven spot drawings (noData, noResults, noAccess, serverError, offline, notFound, maintenance) coloured by the theme and the product accent. `EmptyStatePreset illustrated` uses them; the preset gains `notFound` and `maintenance`.
+  - **`StatusPage`** pattern for 404, 500, maintenance, offline and no access, with three new templates.
+  - **Motion**: a sliding indicator on ToggleGroup (single), NavigationRail and Pagination; Stepper progress, Chip and FilterChip colours, the Avatar status dot and TreeView expand now animate; Drawer exits at the same speed as Dialog. `ErrorState` takes `retryLabel`.
+  - **Docs layout shift**: ResizablePanels, Combobox, FilterBuilder and Slider render their final layout on the server.
+  - **React Native**: Accordion, Progress, Checkbox, Radio, PageIndicator, TextField and Dialog animate on the shared springs. `ScreenContainer keyboardAvoiding` (default on) keeps inputs above the keyboard on iOS and Android; BottomSheet does the same on Android. Sizes read the theme tokens (lint exceptions 109 → 10).
+
+### Patch Changes
+
+- Updated dependencies [11c1fd9]
+  - @nexub/core@10.5.0
+  - @nexub/icons@10.5.0
+
+## 10.4.0
+
+### Minor Changes
+
+- 12a5ea5: 10.4 Consistent controls: one size scale, and invalid, read-only and disabled look the same everywhere.
+
+  - **Sizes**: `size="sm" | "md" | "lg"` on `Select.Trigger`, `Combobox.Input`, `MultiSelect`, `Autocomplete`, `DatePicker`, `DateRangePicker`, `DateTimePicker`, `Tabs.List`, `Slider`, `Checkbox`, `RadioGroup`, `OTPInput` and `FilterChip`. `md` is what each rendered before.
+  - **Invalid**: `invalid` on `Checkbox`, `RadioGroup`, `Switch`, `Slider`, `RadioCard`, `CheckboxCard`, `FileUpload`, `DatePicker` and `DateTimePicker`, so `FormField` marks them like a text field.
+  - **Read-only**: `readOnly` on every input. Text inputs get a quiet fill with readable text; selects, pickers, checkboxes, radios, switches, sliders and file upload stay focusable and cannot change. `NumberInput` steppers switch off.
+  - **Disabled**: `Label` uses the disabled colour instead of 50% opacity.
+  - **Density**: Pagination, OTPInput, FloatingInput, Chip, Badge, Table and calendar day cells step down under `data-density="compact"`.
+  - **Component tokens** for Dialog, Popover, menus, Tooltip, Toast, Tabs, Table, Switch, Checkbox, Avatar, Alert and the active navigation item (unset by default).
+  - **Type and px**: every component reads its type size from the type roles, and no arbitrary px is left. 12px text gains the label role's 0.01em tracking.
+  - Scrollbars are styled in Firefox; numbers in NumberInput, time and date pickers, Slider, FilterChip and AvatarGroup are tabular.
+
+### Patch Changes
+
+- @nexub/icons@10.4.0
+- @nexub/core@10.4.0
+
 ## 10.3.0
 
 ### Minor Changes

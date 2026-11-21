@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v10.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v10.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -350,7 +350,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v10.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v10.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -658,7 +658,7 @@ import { Accordion, Code } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Accordion.Root type="single" collapsible>
         <Accordion.Item value="a">
           <Accordion.Trigger>What is Nexub?</Accordion.Trigger>
@@ -685,7 +685,7 @@ import { Accordion } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Accordion.Root type="multiple">
         <Accordion.Item value="x">
           <Accordion.Trigger>Section A</Accordion.Trigger>
@@ -893,7 +893,7 @@ import { Alert } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-full max-w-[480px]">
+    <div className="flex flex-col gap-2 items-start w-full max-w-120">
       <Alert tone="info" title="Info">Informational message.</Alert>
       <Alert tone="success" title="Success">Operation completed successfully.</Alert>
       <Alert tone="warning" title="Warning">Something needs your attention.</Alert>
@@ -910,7 +910,7 @@ import { Alert } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <Alert tone="success" title="Saved" onClose={() => {}}>Your changes have been saved.</Alert>
     </div>
   );
@@ -1006,7 +1006,7 @@ import { BarChart3, Home, Settings } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <AppShell.Root className="h-[360px] w-full rounded-shape-container border border-[var(--color-outline-variant)]">
+    <AppShell.Root className="h-90 w-full rounded-shape-container border border-outline-variant">
       <AppShell.Header>
         <TopNav.Root className="static">
           <TopNav.Logo><Logo size="sm" /></TopNav.Logo>
@@ -1098,9 +1098,9 @@ import { AspectRatio } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[400px]">
+    <div className="w-full max-w-100">
       <AspectRatio ratio={16 / 9} className="rounded-shape-container">
-        <div className="flex h-full w-full items-center justify-center bg-[var(--color-primary-container)] text-[var(--color-on-primary-container)] text-label-lg">
+        <div className="flex h-full w-full items-center justify-center bg-primary-container text-on-primary-container text-label-lg">
           16 : 9
         </div>
       </AspectRatio>
@@ -1122,10 +1122,10 @@ const ratios = [
 
 export default function Example() {
   return (
-    <div className="grid w-full max-w-[480px] grid-cols-3 items-start gap-3">
+    <div className="grid w-full max-w-120 grid-cols-3 items-start gap-3">
       {ratios.map(({ ratio, label }) => (
         <AspectRatio key={label} ratio={ratio} className="rounded-shape-container">
-          <div className="flex h-full w-full items-center justify-center bg-[var(--color-surface-container-high)] text-label-md text-[var(--color-on-surface-variant)]">
+          <div className="flex h-full w-full items-center justify-center bg-surface-container-high text-label-md text-on-surface-variant">
             {label}
           </div>
         </AspectRatio>
@@ -1164,8 +1164,8 @@ export default function Example() {
     <div className="relative isolate flex w-full flex-col items-center gap-4 overflow-hidden rounded-shape-container px-6 py-14 text-center">
       <Aurora />
       <EyebrowChip>New</EyebrowChip>
-      <h3 className="m-0 text-headline-md text-[var(--color-on-surface)]">Your money, at a glance</h3>
-      <p className="m-0 max-w-[40ch] text-body-md text-[var(--color-on-surface)]">The colour follows your brand, theme and dark mode.</p>
+      <h3 className="m-0 text-headline-md text-on-surface">Your money, at a glance</h3>
+      <p className="m-0 max-w-[40ch] text-body-md text-on-surface">The colour follows your brand, theme and dark mode.</p>
       <Button>Get started</Button>
     </div>
   );
@@ -1212,7 +1212,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete
         options={[
           { value: 'react', label: 'React' },
@@ -1234,7 +1234,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete options={[]} loading placeholder="Type to see the loading state" />
     </div>
   );
@@ -1248,7 +1248,7 @@ import { Autocomplete } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <Autocomplete
         options={[
           { value: 'nexub', label: 'Nexub' },
@@ -1289,7 +1289,7 @@ export default function Example() {
     return () => clearTimeout(t);
   }, [query]);
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Autocomplete
         aria-label="City"
         placeholder="Search cities…"
@@ -1489,7 +1489,7 @@ export default function Example() {
   return (
     <div className="flex gap-2 flex-wrap items-center justify-center">
       {(['success', 'danger', 'warning'] as const).map((t) => (
-        <Badge key={t} tone={t} leadingIcon={<span className="w-[6px] h-[6px] rounded-full bg-current inline-block" />}>
+        <Badge key={t} tone={t} leadingIcon={<span className="w-1.5 h-1.5 rounded-full bg-current inline-block" />}>
           {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
         </Badge>
       ))}
@@ -1618,7 +1618,7 @@ export default function Example() {
         index="quarter"
         series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
       />
-      <p className="m-0 text-body-sm text-[var(--color-on-surface-variant)]">{picked}</p>
+      <p className="m-0 text-body-sm text-on-surface-variant">{picked}</p>
     </div>
   );
 }
@@ -1655,7 +1655,7 @@ import { Box, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Box className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+    <Box className="p-4 bg-surface-container-low rounded-shape-field">
       <Text size="body-sm">Content inside a Box</Text>
     </Box>
   );
@@ -1669,9 +1669,9 @@ import { Box, Heading, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Box className="p-6 bg-[var(--color-surface-container-low)] rounded-shape-container">
+    <Box className="p-6 bg-surface-container-low rounded-shape-container">
       <Heading size="h4">Section title</Heading>
-      <Box className="p-3 bg-[var(--color-surface)] rounded-shape-field mt-2">
+      <Box className="p-3 bg-surface rounded-shape-field mt-2">
         <Text size="body-sm">Nested box content</Text>
       </Box>
     </Box>
@@ -1959,7 +1959,7 @@ export default function Example() {
       <Button status={status} loadingLabel="Saving" successLabel="Saved" errorLabel="Couldn't save" onClick={() => setStatus(NEXT_STATUS[status])}>
         Save
       </Button>
-      <span className="text-body-sm text-[var(--color-on-surface-variant)]">status: {status}</span>
+      <span className="text-body-sm text-on-surface-variant">status: {status}</span>
     </div>
   );
 }
@@ -2040,9 +2040,9 @@ import { Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card>
-        <div className="font-semibold mb-1 text-[var(--color-on-surface)]">Card title</div>
+        <div className="font-semibold mb-1 text-on-surface">Card title</div>
         <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
       </Card>
     </div>
@@ -2057,7 +2057,7 @@ import { Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+    <div className="flex flex-col gap-2.5 items-start w-70">
       <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
       <Card variant="surface"><Text size="body-sm">Surface</Text></Card>
       <Card variant="interactive"><Text size="body-sm">Interactive</Text></Card>
@@ -2077,7 +2077,7 @@ import { Card, Heading, CardLink, Text, Button } from '@nexub/react';
 export default function Example() {
   const [starred, setStarred] = React.useState(false);
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card variant="interactive" className="p-4">
         <Heading level={3} size="h5">
           <CardLink href="#">Atlas</CardLink>
@@ -2101,7 +2101,7 @@ import { Card, Heading, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card variant="surface" effect="sheen" className="p-6">
         <Heading level={3} size="h5">Pro</Heading>
         <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
@@ -2129,7 +2129,7 @@ export default function Example() {
       {products.map((p) => (
         <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
           <h3 className="m-0 text-title-lg">{p.name}</h3>
-          <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+          <p className="m-0 text-body-md text-on-surface-variant">{p.line}</p>
         </Card>
       ))}
     </div>
@@ -2149,7 +2149,7 @@ export default function Example() {
     <div className="grid w-full grid-cols-2 gap-4">
       {['Revenue', 'Customers'].map((t) => (
         <Card key={t} variant="interactive" effect="tilt" className="p-6">
-          <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{t}</p>
+          <p className="m-0 text-label-md text-on-surface-variant">{t}</p>
           <p className="m-0 text-title-lg">{t === 'Revenue' ? '$68,420' : '1,204'}</p>
         </Card>
       ))}
@@ -2211,7 +2211,7 @@ export default function Example() {
       <Button magnetic status={paid ? 'success' : 'idle'} successLabel="Paid" onClick={() => setPaid((p) => !p)}>
         Pay $1,250
       </Button>
-      <p role="status" className="m-0 min-h-5 text-body-sm text-[var(--color-on-surface-variant)]">{paid ? 'Payment sent. Your first one!' : ''}</p>
+      <p role="status" className="m-0 min-h-5 text-body-sm text-on-surface-variant">{paid ? 'Payment sent. Your first one!' : ''}</p>
     </div>
   );
 }
@@ -2373,7 +2373,7 @@ export default function Example() {
   return (
     <CheckList aria-label="Password requirements">
       <CheckListItem>At least 12 characters</CheckListItem>
-      <CheckListItem>One number <span className="text-[var(--color-on-surface-muted)]">(0–9)</span></CheckListItem>
+      <CheckListItem>One number <span className="text-on-surface-muted">(0–9)</span></CheckListItem>
       <CheckListItem>Not used on another account</CheckListItem>
     </CheckList>
   );
@@ -2432,7 +2432,7 @@ import { CheckboxCard } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-3 items-stretch w-[320px]">
+    <div className="flex flex-col gap-3 items-stretch w-80">
       <CheckboxCard title="SSO" description="Available on Enterprise." disabled />
       <CheckboxCard title="Data residency" description="Included in your plan." defaultChecked disabled />
     </div>
@@ -2645,7 +2645,7 @@ const CITATION_SOURCES: CitationSource[] = [
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-4 items-stretch max-w-[560px]">
+    <div className="flex flex-col gap-4 items-stretch max-w-140">
       <p>
         Most homes can use an air-source heat pump<Citation index={1} source={CITATION_SOURCES[0]!} />. Grants cover
         part of the cost<Citation index={2} source={CITATION_SOURCES[1]!} />, and running costs are close to gas
@@ -2751,7 +2751,7 @@ export default function Example() {
         <Button variant="outlined">{open ? 'Hide details' : 'Show details'}</Button>
       </Collapsible.Trigger>
       <Collapsible.Content>
-        <div className="pt-3 text-[var(--color-on-surface-variant)] text-body-sm">
+        <div className="pt-3 text-on-surface-variant text-body-sm">
           Hidden content revealed on toggle. This section can hold any content.
         </div>
       </Collapsible.Content>
@@ -2771,7 +2771,7 @@ export default function Example() {
   return (
     <Collapsible.Root open={open2} onOpenChange={setOpen2}>
       <div className="flex items-center gap-2">
-        <span className="font-medium text-[var(--color-on-surface)] text-body-sm">Advanced settings</span>
+        <span className="font-medium text-on-surface text-body-sm">Advanced settings</span>
         <Collapsible.Trigger asChild>
           <Button variant="text" size="sm">{open2 ? 'Collapse' : 'Expand'}</Button>
         </Collapsible.Trigger>
@@ -2825,7 +2825,7 @@ import { Combobox } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Combobox.Root className="w-[260px]">
+    <Combobox.Root className="w-65">
       <Combobox.Input placeholder="Search…" />
       <Combobox.List>
         <Combobox.Empty>No results found.</Combobox.Empty>
@@ -3051,8 +3051,8 @@ import { Container, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full bg-[var(--color-surface-container-low)] py-4">
-      <Container size="sm" className="rounded-shape-container bg-[var(--color-surface)] py-4">
+    <div className="w-full bg-surface-container-low py-4">
+      <Container size="sm" className="rounded-shape-container bg-surface py-4">
         <Text size="body-sm">Centred at up to 640 px, with responsive side padding.</Text>
       </Container>
     </div>
@@ -3118,7 +3118,7 @@ import { ContextMenu } from '@nexub/react';
 export default function Example() {
   return (
     <ContextMenu.Root>
-      <ContextMenu.Trigger className="flex h-32 w-64 select-none items-center justify-center rounded-shape-container border-2 border-dashed border-[var(--color-outline-variant)] text-body-sm text-[var(--color-on-surface-muted)]">
+      <ContextMenu.Trigger className="flex h-32 w-64 select-none items-center justify-center rounded-shape-container border-2 border-dashed border-outline-variant text-body-sm text-on-surface-muted">
         Right-click here
       </ContextMenu.Trigger>
       <ContextMenu.Portal>
@@ -3187,7 +3187,7 @@ export default function Example() {
   React.useEffect(start, []);
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-body-md text-[var(--color-on-surface)]">{expired ? 'The hold has ended' : 'Held for you'}</span>
+      <span className="text-body-md text-on-surface">{expired ? 'The hold has ended' : 'Held for you'}</span>
       <Countdown to={deadline} onExpire={() => deadline > 0 && setExpired(true)} />
       <Button size="sm" variant="outlined" onClick={start}>
         Restart
@@ -3338,7 +3338,7 @@ export default function Example() {
     { accessorKey: 'status', header: 'Status' },
   ];
   return (
-    <div className="w-full max-w-[600px]">
+    <div className="w-full max-w-150">
       <DataTable columns={columns} data={data} />
     </div>
   );
@@ -3364,7 +3364,7 @@ export default function Example() {
     { accessorKey: 'status', header: 'Status' },
   ];
   return (
-    <div className="w-full max-w-[600px]">
+    <div className="w-full max-w-150">
       <DataTable columns={columns} data={data} enableSorting />
     </div>
   );
@@ -3406,7 +3406,7 @@ const columns: DataTableColumn<Invoice>[] = [
 export default function Example() {
   const [selection, setSelection] = React.useState<Record<string, boolean>>({ 'INV-2041': true, 'INV-2044': true });
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden
@@ -3472,7 +3472,7 @@ const columns: DataTableColumn<Invoice>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTable
         caption="Invoices"
         captionHidden
@@ -3521,7 +3521,7 @@ const columns: DataTableColumn<Event>[] = [
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full max-w-160">
       <DataTableVirtual caption="Audit log" captionHidden columns={columns} data={events} maxHeight={360} enableSorting />
     </div>
   );
@@ -3808,7 +3808,7 @@ import { DateRangePicker, type DateRange } from '@nexub/react';
 export default function Example() {
   const [range, setRange] = React.useState<DateRange | undefined>();
   return (
-    <div className="w-[300px]">
+    <div className="w-75">
       <DateRangePicker aria-label="Report period" value={range} onChange={setRange} presets timeZone="Europe/London" />
     </div>
   );
@@ -3850,7 +3850,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-md flex-col gap-2">
       <DateTimePicker aria-label="Meeting starts" value={starts} onValueChange={setStarts} minuteStep={15} timeZone="Asia/Singapore" />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
+      <p className="text-body-sm text-on-surface-muted">{starts ? starts.toString() : 'Pick a date first; the time defaults to 09:00.'}</p>
     </div>
   );
 }
@@ -4075,7 +4075,7 @@ export default function Example() {
         <span>
           1,200
           <br />
-          <span className="text-label-sm text-[var(--color-on-surface-muted)]">customers</span>
+          <span className="text-label-sm text-on-surface-muted">customers</span>
         </span>
       }
     />
@@ -4492,7 +4492,7 @@ export default function Example() {
         onEventClick={(e) => setPicked(e.title)}
         onDayClick={(d) => setPicked(d.toDateString())}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{picked && `Opened: ${picked}`}</p>
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">{picked && `Opened: ${picked}`}</p>
     </div>
   );
 }
@@ -4571,7 +4571,7 @@ export default function Example() {
   return (
     <div className="flex flex-col gap-2 items-start">
       <EyebrowChip>Now available</EyebrowChip>
-      <h2 className="m-0 text-headline-sm font-bold text-[var(--color-on-surface)]">Version 2.0</h2>
+      <h2 className="m-0 text-headline-sm font-bold text-on-surface">Version 2.0</h2>
     </div>
   );
 }
@@ -4678,7 +4678,7 @@ import { FileUpload } from '@nexub/react';
 
 export default function Example() {
   return (
-    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-[480px]">
+    <FileUpload.Root accept={['image/*', '.pdf']} maxFiles={3} className="w-full max-w-120">
       <FileUpload.Dropzone />
       <FileUpload.List>
         {[0, 1, 2].map((i) => <FileUpload.Item key={i} index={i} />)}
@@ -4700,10 +4700,10 @@ export default function Example() {
       maxFiles={1}
       maxSize={5 * 1024 * 1024}
       validate={(file) => (file.name.includes(' ') ? 'Rename the file without spaces.' : null)}
-      className="w-full max-w-[480px]"
+      className="w-full max-w-120"
     >
       <FileUpload.Dropzone>
-        <Text size="body-sm"><span className="font-semibold text-[var(--color-primary)]">Choose a CSV</span> or drop it here</Text>
+        <Text size="body-sm"><span className="font-semibold text-primary">Choose a CSV</span> or drop it here</Text>
         <Text size="caption" tone="muted">One file, up to 5 MB</Text>
       </FileUpload.Dropzone>
       <FileUpload.List>
@@ -4775,9 +4775,9 @@ export default function Example() {
     ],
   });
   return (
-    <div className="flex w-full max-w-[640px] flex-col gap-4">
+    <div className="flex w-full max-w-160 flex-col gap-4">
       <FilterBuilder fields={fields} value={query} onValueChange={setQuery} />
-      <pre className="max-h-40 overflow-auto rounded-shape-container bg-[var(--color-surface-container-low)] p-3 text-label-sm">
+      <pre className="max-h-40 overflow-auto rounded-shape-container bg-surface-container-low p-3 text-label-sm">
         {JSON.stringify(query, null, 2)}
       </pre>
     </div>
@@ -4913,7 +4913,7 @@ import { Flex, Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Flex justify="between" className="w-full max-w-[320px]">
+    <Flex justify="between" className="w-full max-w-80">
       <Badge tone="success">Active</Badge>
       <Badge tone="neutral">Draft</Badge>
     </Flex>
@@ -4928,7 +4928,7 @@ import { Flex, Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Flex gap="sm" wrap className="max-w-[260px]">
+    <Flex gap="sm" wrap className="max-w-65">
       {['React', 'TypeScript', 'Tailwind', 'Radix UI', 'Storybook'].map((t) => (
         <Badge key={t} tone="info">{t}</Badge>
       ))}
@@ -5011,7 +5011,7 @@ import { FormError, Input, Label } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex w-[280px] flex-col gap-1">
+    <div className="flex w-70 flex-col gap-1">
       <Label htmlFor="fe-email">Email</Label>
       <Input id="fe-email" type="email" defaultValue="jane@" aria-invalid aria-describedby="fe-email-error" />
       <FormError id="fe-email-error">Enter an email address like name@example.com.</FormError>
@@ -5053,7 +5053,7 @@ import { Label, Input, HelperText } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-1 items-start w-[280px]">
+    <div className="flex flex-col gap-1 items-start w-70">
       <Label htmlFor="field-name" required>Full name</Label>
       <Input id="field-name" placeholder="Jane Smith" />
       <HelperText>Enter your legal name.</HelperText>
@@ -5120,7 +5120,7 @@ export default function Example() {
         <FormField.Error />
       </FormField.Root>
       <Submit />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">{sent}</p>
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">{sent}</p>
     </Form>
   );
 }
@@ -5230,7 +5230,7 @@ A decorative gradient-faded horizontal rule.
 import { GradientDivider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><GradientDivider /></div>;
+  return <div className="w-70"><GradientDivider /></div>;
 }
 ```
 
@@ -5259,7 +5259,7 @@ import { Grid, Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Grid cols={2} gap="md" className="w-full max-w-[400px]">
+    <Grid cols={2} gap="md" className="w-full max-w-100">
       {[1, 2, 3, 4].map((n) => (
         <Card key={n}><Text size="body-sm" tone="muted">Card {n}</Text></Card>
       ))}
@@ -5275,7 +5275,7 @@ import { Grid, Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Grid cols={3} gap="sm" className="w-full max-w-[480px]">
+    <Grid cols={3} gap="sm" className="w-full max-w-120">
       {[1, 2, 3, 4, 5, 6].map((n) => (
         <Card key={n}><Text size="caption" tone="muted">Item {n}</Text></Card>
       ))}
@@ -5769,7 +5769,7 @@ Text input field for forms. Supports size variants, icons, addons, and validatio
 import { Input } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Input placeholder="Enter value…" /></div>;
+  return <div className="w-70"><Input placeholder="Enter value…" /></div>;
 }
 ```
 
@@ -5780,7 +5780,7 @@ import { Input } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-[280px]">
+    <div className="flex flex-col gap-2 items-start w-70">
       <Input size="sm" placeholder="Small" />
       <Input size="md" placeholder="Medium" />
       <Input size="lg" placeholder="Large" />
@@ -5795,7 +5795,7 @@ export default function Example() {
 import { Input } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Input invalid placeholder="Invalid value" /></div>;
+  return <div className="w-70"><Input invalid placeholder="Invalid value" /></div>;
 }
 ```
 
@@ -5806,7 +5806,7 @@ import { Label, Input, HelperText } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-1 items-start w-[280px]">
+    <div className="flex flex-col gap-1 items-start w-70">
       <Label htmlFor="demo-email">Email address</Label>
       <Input id="demo-email" type="email" placeholder="you@example.com" />
       <HelperText>We&apos;ll never share your email.</HelperText>
@@ -5980,7 +5980,7 @@ const rows = [
 
 export default function Example() {
   return (
-    <ul className="flex w-[260px] flex-col gap-2">
+    <ul className="flex w-65 flex-col gap-2">
       {rows.map((r) => (
         <li key={r.label} className="flex items-center justify-between">
           <Text size="body-sm">{r.label}</Text>
@@ -6084,7 +6084,7 @@ import { Label, Input } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-1 items-start w-[280px]">
+    <div className="flex flex-col gap-1 items-start w-70">
       <Label htmlFor="email-ex">Email</Label>
       <Input id="email-ex" type="email" placeholder="you@example.com" />
     </div>
@@ -6267,7 +6267,7 @@ export default function Example() {
       <Logo />
       <Logo variant="icon" />
       <Logo mark="mono" />
-      <span className="rounded-shape-container bg-[var(--color-inverse-surface)] p-3">
+      <span className="rounded-shape-container bg-inverse-surface p-3">
         <Logo tone="inverse" />
       </span>
     </div>
@@ -6336,7 +6336,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" eyebrow="Guide" title="A weekend in Lisbon" description="Where to eat, walk and stay." href="#" />
     </div>
   );
@@ -6357,7 +6357,7 @@ const COVER =
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MediaCard src={COVER} alt="" title="Q3 brand shoot" description="48 photos">
         <Button size="sm" variant="tonal">Open</Button>
         <Button size="sm" variant="text">Share</Button>
@@ -6383,7 +6383,7 @@ export default function Example() {
   return (
     <div className="flex gap-3 flex-wrap items-start justify-center">
       {(['16/9', '4/3', '1/1', '3/4'] as const).map((r) => (
-        <div key={r} className="w-[160px]">
+        <div key={r} className="w-40">
           <MediaCard ratio={r} src={COVER} alt="" title={r} />
         </div>
       ))}
@@ -6535,7 +6535,7 @@ import { Sparkles } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-4 items-stretch w-full max-w-[560px]">
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-140">
       <MessageBubble from="user">How do I cancel my subscription?</MessageBubble>
       <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
         <p>Open Settings, then Billing, and choose Cancel plan. You keep access until the end of the billing period.</p>
@@ -6558,7 +6558,7 @@ import { MessageBubble, toast } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[560px]">
+    <div className="w-full max-w-140">
       <MessageBubble from="user" status="error" onRetry={() => toast.info('Retrying…')}>
         Can I get a refund for last month?
       </MessageBubble>
@@ -6649,7 +6649,7 @@ import { Collapse, Text } from '@nexub/react';
 export default function Example() {
   return (
     <Collapse in>
-      <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+      <div className="p-4 bg-surface-container-low rounded-shape-field">
         <Text size="body-sm">Collapsed content goes here.</Text>
       </div>
     </Collapse>
@@ -6671,7 +6671,7 @@ export default function Example() {
         {visible ? 'Collapse' : 'Expand'}
       </Button>
       <Collapse in={visible}>
-        <div className="p-4 bg-[var(--color-surface-container-low)] rounded-shape-field">
+        <div className="p-4 bg-surface-container-low rounded-shape-field">
           <Text size="body-sm">This content collapses and expands smoothly.</Text>
         </div>
       </Collapse>
@@ -6707,7 +6707,7 @@ Animates opacity between 0 and 1 based on the `in` prop.
 import { Fade, Card, Text } from '@nexub/react';
 
 export default function Example() {
-  return <Fade in><Card className="w-[200px]"><Text size="body-sm">Faded in content</Text></Card></Fade>;
+  return <Fade in><Card className="w-50"><Text size="body-sm">Faded in content</Text></Card></Fade>;
 }
 ```
 
@@ -6725,7 +6725,7 @@ export default function Example() {
         {visible ? 'Hide' : 'Show'}
       </Button>
       <Fade in={visible} unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Animated content</Text></Card>
       </Fade>
     </div>
   );
@@ -6744,7 +6744,7 @@ export default function Example() {
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Fade in={visible} duration="slow">
-        <Card className="w-[200px]"><Text size="body-sm">Slow spring fade animation.</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Slow spring fade animation.</Text></Card>
       </Fade>
     </div>
   );
@@ -6819,7 +6819,7 @@ export default function Example() {
     <div data-mode="marketing" className="w-full">
       <Marquee>
         {tools.map((t) => (
-          <span key={t} className="text-title-md text-[var(--color-on-surface-variant)]">{t}</span>
+          <span key={t} className="text-title-md text-on-surface-variant">{t}</span>
         ))}
       </Marquee>
     </div>
@@ -6853,7 +6853,7 @@ import { Card, Reveal } from '@nexub/react';
 export default function Example() {
   return (
     <div data-mode="marketing" role="region" aria-label="Reveal demo" tabIndex={0} className="flex h-64 w-full flex-col gap-6 overflow-y-auto p-2">
-      <p className="m-0 shrink-0 pb-40 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
+      <p className="m-0 shrink-0 pb-40 text-body-md text-on-surface-variant">Scroll down</p>
       {[1, 2, 3].map((n) => (
         <Reveal key={n} className="shrink-0">
           <Card variant="showcase" className="p-6">Section {n}</Card>
@@ -6891,7 +6891,7 @@ Scales content in/out from its center.
 import { Scale, Card, Text } from '@nexub/react';
 
 export default function Example() {
-  return <Scale in><Card className="w-[200px]"><Text size="body-sm">Scaled content</Text></Card></Scale>;
+  return <Scale in><Card className="w-50"><Text size="body-sm">Scaled content</Text></Card></Scale>;
 }
 ```
 
@@ -6907,7 +6907,7 @@ export default function Example() {
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Scale in={visible} unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Scaling content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Scaling content</Text></Card>
       </Scale>
     </div>
   );
@@ -6942,7 +6942,7 @@ Slides content in from a direction based on the `in` prop.
 import { Slide, Card, Text } from '@nexub/react';
 
 export default function Example() {
-  return <Slide in direction="up"><Card className="w-[200px]"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
+  return <Slide in direction="up"><Card className="w-50"><Text size="body-sm">Slid in from bottom</Text></Card></Slide>;
 }
 ```
 
@@ -6958,7 +6958,7 @@ export default function Example() {
     <div className="flex flex-col gap-3 items-start">
       <Button variant="outlined" onClick={() => setVisible((v) => !v)}>Toggle</Button>
       <Slide in={visible} direction="up" unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Sliding content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Sliding content</Text></Card>
       </Slide>
     </div>
   );
@@ -7010,7 +7010,7 @@ export default function Example() {
   const [options, setOptions] = React.useState(labels);
   const [value, setValue] = React.useState(['bug', 'a11y']);
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <MultiSelect
         aria-label="Labels"
         placeholder="Add labels…"
@@ -7088,12 +7088,12 @@ export default function Example() {
         <NavigationMenu.Item>
           <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
           <NavigationMenu.Content>
-            <ul className="grid w-[280px] gap-1 p-2">
+            <ul className="grid w-70 gap-1 p-2">
               {products.map((p) => (
                 <li key={p.title}>
                   <NavigationMenu.Link href="#">
                     <span className="block text-label-lg">{p.title}</span>
-                    <span className="mt-1 block text-body-sm text-[var(--color-on-surface-muted)]">{p.body}</span>
+                    <span className="mt-1 block text-body-sm text-on-surface-muted">{p.body}</span>
                   </NavigationMenu.Link>
                 </li>
               ))}
@@ -7152,7 +7152,7 @@ export default function Example() {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
   );
   return (
-    <NavigationRail.Root aria-label="Workspace" className="h-auto bg-[var(--color-surface-container-low)] rounded-[24px]">
+    <NavigationRail.Root aria-label="Workspace" className="h-auto bg-surface-container-low rounded-shape-overlay">
       <NavigationRail.Item href="#" icon={glyph('M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z')} label="Home" active />
       <NavigationRail.Item href="#" icon={glyph('M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z')} label="Files" />
       <NavigationRail.Item href="#" icon={glyph('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z')} label="Settings" />
@@ -7191,7 +7191,7 @@ A numeric input with increment and decrement controls, supporting min/max clampi
 import { NumberInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[180px]"><NumberInput defaultValue={0} /></div>;
+  return <div className="w-45"><NumberInput defaultValue={0} /></div>;
 }
 ```
 
@@ -7201,7 +7201,7 @@ export default function Example() {
 import { NumberInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[180px]"><NumberInput defaultValue={5} min={0} max={10} /></div>;
+  return <div className="w-45"><NumberInput defaultValue={5} min={0} max={10} /></div>;
 }
 ```
 
@@ -7278,7 +7278,7 @@ import { NumberTicker } from '@nexub/react';
 export default function Example() {
   return (
     <div className="flex h-48 w-full flex-col overflow-y-auto">
-      <p className="m-0 shrink-0 pb-64 text-body-md text-[var(--color-on-surface-variant)]">Scroll down</p>
+      <p className="m-0 shrink-0 pb-64 text-body-md text-on-surface-variant">Scroll down</p>
       <NumberTicker value={2000} countOnView className="shrink-0 text-display-sm" />
     </div>
   );
@@ -7328,7 +7328,7 @@ export default function Example() {
   return (
     <div className="flex flex-col items-start gap-3">
       <OTPInput onComplete={(code) => setStatus(code === '123456' ? 'Verified' : 'That code didn’t work')} onValueChange={() => setStatus('')} />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         {status || 'Try 123456'}
       </p>
     </div>
@@ -7488,7 +7488,7 @@ A password field with a built-in toggle to reveal or hide the entered value.
 import { PasswordInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><PasswordInput placeholder="Enter password…" /></div>;
+  return <div className="w-70"><PasswordInput placeholder="Enter password…" /></div>;
 }
 ```
 
@@ -7498,7 +7498,7 @@ export default function Example() {
 import { PasswordInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><PasswordInput invalid placeholder="Password is too short" /></div>;
+  return <div className="w-70"><PasswordInput invalid placeholder="Password is too short" /></div>;
 }
 ```
 
@@ -7547,7 +7547,7 @@ export default function Example() {
           setValid(details.valid);
         }}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         {value ? `${value}${valid ? '' : ' (incomplete)'}` : 'Type a number, or paste one with its country code'}
       </p>
     </div>
@@ -7721,7 +7721,7 @@ Horizontal progress bar with optional tone and animation.
 import { Progress } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Progress value={65} /></div>;
+  return <div className="w-70"><Progress value={65} /></div>;
 }
 ```
 
@@ -7732,7 +7732,7 @@ import { Progress } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+    <div className="flex flex-col gap-2.5 items-start w-70">
       <Progress value={80} tone="success" />
       <Progress value={55} tone="info" />
       <Progress value={30} tone="warning" />
@@ -7748,7 +7748,7 @@ export default function Example() {
 import { Progress } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Progress value={40} animated tone="info" /></div>;
+  return <div className="w-70"><Progress value={40} animated tone="info" /></div>;
 }
 ```
 
@@ -7798,7 +7798,7 @@ import { PromptInput } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[520px]">
+    <div className="w-full max-w-130">
       <PromptInput placeholder="Ask anything" />
     </div>
   );
@@ -7815,7 +7815,7 @@ import { Paperclip, Globe } from '@nexub/icons';
 export default function Example() {
   const [files, setFiles] = React.useState(['q3-report.pdf', 'pricing.csv']);
   return (
-    <div className="w-full max-w-[520px]">
+    <div className="w-full max-w-130">
       <PromptInput
         placeholder="Ask about these files"
         attachments={
@@ -7859,7 +7859,7 @@ export default function Example() {
     setStatus('idle');
   };
   return (
-    <div className="w-full max-w-[520px]">
+    <div className="w-full max-w-130">
       <PromptInput placeholder="Ask anything" status={status} onSubmit={send} onStop={stop} />
     </div>
   );
@@ -8183,7 +8183,7 @@ import { ResizablePanels } from '@nexub/react';
 
 export default function Example() {
   return (
-    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-[var(--color-outline-variant)]">
+    <ResizablePanels defaultSizes={[35, 65]} minSizes={[20, 30]} className="h-64 w-full rounded-shape-container border border-outline-variant">
       <ul className="flex flex-col gap-2 p-4 text-body-md">
         <li>Quarterly report</li>
         <li>Launch checklist</li>
@@ -8289,9 +8289,9 @@ import { ScrollArea } from '@nexub/react';
 
 export default function Example() {
   return (
-    <ScrollArea className="h-[200px] w-[280px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+    <ScrollArea className="h-50 w-70 border border-outline-variant rounded-shape-field p-3">
       {Array.from({ length: 20 }, (_, i) => (
-        <div key={i} className="py-1 px-0 text-body-sm text-[var(--color-on-surface-variant)]">
+        <div key={i} className="py-1 px-0 text-body-sm text-on-surface-variant">
           List item {i + 1}
         </div>
       ))}
@@ -8307,12 +8307,12 @@ import { ScrollArea } from '@nexub/react';
 
 export default function Example() {
   return (
-    <ScrollArea orientation="horizontal" className="w-[320px] border border-[var(--color-outline-variant)] rounded-shape-field p-3">
+    <ScrollArea orientation="horizontal" className="w-80 border border-outline-variant rounded-shape-field p-3">
       <div className="flex gap-2 w-max">
         {Array.from({ length: 12 }, (_, i) => (
           <div
             key={i}
-            className="w-[80px] h-[80px] bg-[var(--color-surface-container-low)] rounded-shape-tooltip flex items-center justify-center text-label-sm text-[var(--color-on-surface-variant)] shrink-0"
+            className="w-20 h-20 bg-surface-container-low rounded-shape-tooltip flex items-center justify-center text-label-sm text-on-surface-variant shrink-0"
           >
             Card {i + 1}
           </div>
@@ -8347,7 +8347,7 @@ import { ScrollProgress } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full text-body-sm text-[var(--color-on-surface-variant)]">
+    <div className="w-full text-body-sm text-on-surface-variant">
       <ScrollProgress />
       Scroll this page: the bar along the very top of the window fills as you read.
     </div>
@@ -8387,7 +8387,7 @@ A text input pre-wired with a search icon and a clear button for filtering conte
 import { SearchInput } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><SearchInput placeholder="Search…" /></div>;
+  return <div className="w-70"><SearchInput placeholder="Search…" /></div>;
 }
 ```
 
@@ -8419,7 +8419,7 @@ const tones = ['default', 'subtle', 'muted', 'inverse'] as const;
 
 export default function Example() {
   return (
-    <div className="w-full overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)]">
+    <div className="w-full overflow-hidden rounded-shape-container border border-outline-variant">
       {tones.map((tone) => (
         <Section key={tone} tone={tone} paddingY="sm" aria-label={`${tone} tone`}>
           <Container size="sm">
@@ -8534,7 +8534,7 @@ import { Select } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[220px]">
+    <div className="w-55">
       <Select.Root>
         <Select.Trigger><Select.Value placeholder="Select an option…" /></Select.Trigger>
         <Select.Content>
@@ -8604,7 +8604,7 @@ A horizontal or vertical visual divider.
 import { Separator } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Separator /></div>;
+  return <div className="w-70"><Separator /></div>;
 }
 ```
 
@@ -8615,10 +8615,10 @@ import { Separator } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex h-[32px] items-center gap-4">
-      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Left</span>
+    <div className="flex h-8 items-center gap-4">
+      <span className="text-on-surface-variant text-body-sm">Left</span>
       <Separator orientation="vertical" />
-      <span className="text-[var(--color-on-surface-variant)] text-body-sm">Right</span>
+      <span className="text-on-surface-variant text-body-sm">Right</span>
     </div>
   );
 }
@@ -8665,10 +8665,12 @@ export default function Example() {
   ) : (
     <div className="flex w-full flex-col gap-2">
       {people.map((p) => (
-        <button key={p.id} type="button" onClick={() => go(p.id)} className="nx-state-layer flex items-center gap-3 rounded-shape-container border border-[var(--color-outline-variant)] p-3 text-start">
-          <SharedElement name={`avatar-${p.id}`}><Avatar size="sm" fallback={p.id.toUpperCase()} /></SharedElement>
-          <span className="text-body-md">{p.name} · {p.role}</span>
-        </button>
+        <Card key={p.id} variant="interactive" asChild>
+          <button type="button" onClick={() => go(p.id)} className="flex items-center gap-3 p-3 text-start">
+            <SharedElement name={`avatar-${p.id}`}><Avatar size="sm" fallback={p.id.toUpperCase()} /></SharedElement>
+            <span className="text-body-md">{p.name} · {p.role}</span>
+          </button>
+        </Card>
       ))}
     </div>
   );
@@ -8771,7 +8773,7 @@ import { BarChart3, Folder, Home, Settings, Users } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="h-[380px]">
+    <div className="h-95">
       <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
         <Sidebar.Header status={<Badge variant="soft" size="sm">Beta</Badge>}>
           <Logo size="sm" />
@@ -8785,7 +8787,7 @@ export default function Example() {
           <Sidebar.Item href="#" icon={<Users size="sm" />}>Members</Sidebar.Item>
           <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
         </Sidebar.Group>
-        <Sidebar.Footer className="text-body-sm text-[var(--color-on-surface-muted)]">v2.4.0</Sidebar.Footer>
+        <Sidebar.Footer className="text-body-sm text-on-surface-muted">v2.4.0</Sidebar.Footer>
       </Sidebar.Root>
     </div>
   );
@@ -8802,7 +8804,7 @@ import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
 export default function Example() {
   const [collapsed, setCollapsed] = React.useState(true);
   return (
-    <div className="flex h-[280px] items-start gap-4">
+    <div className="flex h-70 items-start gap-4">
       <Sidebar.Root aria-label="Workspace" collapsed={collapsed} className="rounded-shape-container">
         <Sidebar.Group>
           <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
@@ -8848,7 +8850,7 @@ import { Skeleton } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-[280px]">
+    <div className="flex flex-col gap-2 items-start w-70">
       <Skeleton shape="line" width="60%" />
       <Skeleton shape="line" width="100%" />
       <Skeleton shape="line" width="80%" />
@@ -8909,7 +8911,7 @@ Range slider built on Radix UI Slider.
 import { Slider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[240px]"><Slider defaultValue={[50]} min={0} max={100} /></div>;
+  return <div className="w-60"><Slider defaultValue={[50]} min={0} max={100} /></div>;
 }
 ```
 
@@ -8919,7 +8921,7 @@ export default function Example() {
 import { Slider } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[240px]"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
+  return <div className="w-60"><Slider defaultValue={[20, 80]} min={0} max={100} /></div>;
 }
 ```
 
@@ -8998,10 +9000,10 @@ import { Sparkline } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex items-end gap-4 rounded-2xl border border-[var(--color-outline-variant)] p-4">
+    <div className="flex items-end gap-4 rounded-2xl border border-outline-variant p-4">
       <div>
-        <p className="text-label-md text-[var(--color-on-surface-variant)]">Monthly revenue</p>
-        <p className="text-title-lg text-[var(--color-on-surface)]">$68,420</p>
+        <p className="text-label-md text-on-surface-variant">Monthly revenue</p>
+        <p className="text-title-lg text-on-surface">$68,420</p>
       </div>
       <Sparkline area values={[42, 48, 45, 56, 61, 68]} label="Up 62% over six months" color={2} />
     </div>
@@ -9161,7 +9163,7 @@ import { Stack, Separator, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <Stack gap="md" divider={<Separator />} className="w-[220px]">
+    <Stack gap="md" divider={<Separator />} className="w-55">
       <Text size="body-sm">First item</Text>
       <Text size="body-sm">Second item</Text>
       <Text size="body-sm">Third item</Text>
@@ -9288,7 +9290,7 @@ export default function Example() {
     return () => clearTimeout(id);
   }, [length, streaming]);
   return (
-    <div className="flex flex-col gap-3 items-start max-w-[480px]">
+    <div className="flex flex-col gap-3 items-start max-w-120">
       <StreamingText as="p" text={STREAM_DEMO_TEXT.slice(0, length)} streaming={streaming} />
       <Button variant="outlined" size="sm" onClick={() => setLength(0)}>Restart</Button>
     </div>
@@ -9332,7 +9334,7 @@ export default function Example() {
   return (
     <div className="flex flex-col items-center gap-3">
       <SuccessCheck size="lg" />
-      <p className="m-0 text-title-md text-[var(--color-on-surface)]">Payment sent</p>
+      <p className="m-0 text-title-md text-on-surface">Payment sent</p>
     </div>
   );
 }
@@ -9432,7 +9434,7 @@ export default function Example() {
     { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
   ];
   return (
-    <Table.Root className="w-full max-w-[480px]">
+    <Table.Root className="w-full max-w-120">
       <Table.Header>
         <Table.Row>
           <Table.Head>Name</Table.Head>
@@ -9466,7 +9468,7 @@ export default function Example() {
     { name: 'Carol Davis', status: 'Inactive', date: 'Jan 10, 2026' },
   ];
   return (
-    <Table.Root className="w-full max-w-[480px]">
+    <Table.Root className="w-full max-w-120">
       <Table.Caption>Recent user activity — last 30 days</Table.Caption>
       <Table.Header>
         <Table.Row>
@@ -9486,7 +9488,7 @@ export default function Example() {
       </Table.Body>
       <Table.Footer>
         <Table.Row>
-          <Table.Cell colSpan={3} className="text-[var(--color-on-surface-variant)] text-body-sm">
+          <Table.Cell colSpan={3} className="text-on-surface-variant text-body-sm">
             Showing {rows.length} of {rows.length} users
           </Table.Cell>
         </Table.Row>
@@ -9568,7 +9570,7 @@ import { Tabs } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[320px]">
+    <div className="w-80">
       <Tabs.Root defaultValue="tab1">
         <Tabs.List>
           <Tabs.Trigger value="tab1">Overview</Tabs.Trigger>
@@ -9576,13 +9578,13 @@ export default function Example() {
           <Tabs.Trigger value="tab3">Settings</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="tab1">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Overview content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Overview content goes here.</div>
         </Tabs.Content>
         <Tabs.Content value="tab2">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Analytics content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Analytics content goes here.</div>
         </Tabs.Content>
         <Tabs.Content value="tab3">
-          <div className="py-3 px-0 text-[var(--color-on-surface-variant)] text-body-sm">Settings content goes here.</div>
+          <div className="py-3 px-0 text-on-surface-variant text-body-sm">Settings content goes here.</div>
         </Tabs.Content>
       </Tabs.Root>
     </div>
@@ -9599,7 +9601,7 @@ import { Tabs } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[420px]">
+    <div className="w-105">
       <Tabs.Root defaultValue="profile" orientation="vertical">
         <Tabs.List aria-label="Account">
           <Tabs.Trigger value="profile">Profile</Tabs.Trigger>
@@ -9607,13 +9609,13 @@ export default function Example() {
           <Tabs.Trigger value="billing">Billing</Tabs.Trigger>
         </Tabs.List>
         <Tabs.Content value="profile">
-          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Name, photo and contact details.</div>
+          <div className="p-3 text-body-sm text-on-surface-variant">Name, photo and contact details.</div>
         </Tabs.Content>
         <Tabs.Content value="security">
-          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Password, passkeys and sessions.</div>
+          <div className="p-3 text-body-sm text-on-surface-variant">Password, passkeys and sessions.</div>
         </Tabs.Content>
         <Tabs.Content value="billing">
-          <div className="p-3 text-body-sm text-[var(--color-on-surface-variant)]">Plan, invoices and payment method.</div>
+          <div className="p-3 text-body-sm text-on-surface-variant">Plan, invoices and payment method.</div>
         </Tabs.Content>
       </Tabs.Root>
     </div>
@@ -9750,7 +9752,7 @@ A multi-line text input with configurable resize behaviour, size, and validation
 import { Textarea } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Textarea placeholder="Enter your message…" /></div>;
+  return <div className="w-70"><Textarea placeholder="Enter your message…" /></div>;
 }
 ```
 
@@ -9761,7 +9763,7 @@ import { Textarea } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2 items-start w-[280px]">
+    <div className="flex flex-col gap-2 items-start w-70">
       <Textarea size="sm" placeholder="Small" rows={2} />
       <Textarea size="md" placeholder="Medium" rows={3} />
       <Textarea size="lg" placeholder="Large" rows={4} />
@@ -9776,7 +9778,7 @@ export default function Example() {
 import { Textarea } from '@nexub/react';
 
 export default function Example() {
-  return <div className="w-[280px]"><Textarea invalid placeholder="This field has an error" /></div>;
+  return <div className="w-70"><Textarea invalid placeholder="This field has an error" /></div>;
 }
 ```
 
@@ -9934,7 +9936,7 @@ export default function Example() {
   return (
     <div className="flex w-96 max-w-full flex-col gap-3">
       <TimeSlotPicker aria-label="Start time" slots={slots} value={time} onValueChange={setTime} />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         Selected: {time}
       </p>
     </div>
@@ -10475,7 +10477,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Teams" nodes={nodes} defaultExpanded={['eng', 'web']} selected={selected} onSelectedChange={setSelected} onLoadChildren={load} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Selected: {selected ?? 'none'}</p>
+      <p className="text-body-sm text-on-surface-muted">Selected: {selected ?? 'none'}</p>
     </div>
   );
 }
@@ -10506,7 +10508,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Permissions" nodes={nodes} checkable defaultExpanded={['reports', 'settings']} checked={checked} onCheckedChange={setChecked} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Granted: {checked.join(', ') || 'nothing'}</p>
+      <p className="text-body-sm text-on-surface-muted">Granted: {checked.join(', ') || 'nothing'}</p>
     </div>
   );
 }
@@ -10651,7 +10653,7 @@ import { ActivityFeed } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[340px]">
+    <div className="w-85">
       <ActivityFeed.Root>
         <ActivityFeed.Item title="Sarah K. created an invoice" description="Invoice #1042 for Acme Corp" timestamp="2 min ago" />
         <ActivityFeed.Item title="James L. approved a request" description="Budget increase for Q2" timestamp="15 min ago" />
@@ -10691,7 +10693,7 @@ import { Label, Input, Button } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[360px]">
+    <div className="w-90">
       <AuthCard title="Sign in" description="Welcome back — enter your credentials to continue.">
         <div className="flex flex-col gap-3 items-start">
           <div className="flex flex-col gap-1 items-start">
@@ -10746,8 +10748,8 @@ import { BentoGrid, BentoTile } from '@nexub/patterns';
 function BentoStat({ label, value }: { label: string; value: string }) {
   return (
     <BentoTile className="flex flex-col justify-between">
-      <span className="text-label-md text-[var(--color-on-surface-variant)]">{label}</span>
-      <span className="text-title-lg text-[var(--color-on-surface)]">{value}</span>
+      <span className="text-label-md text-on-surface-variant">{label}</span>
+      <span className="text-title-lg text-on-surface">{value}</span>
     </BentoTile>
   );
 }
@@ -10757,16 +10759,16 @@ export default function Example() {
   return (
     <BentoGrid className="w-full">
       <BentoTile size="2x2" className="flex flex-col gap-3">
-        <h3 className="text-title-sm text-[var(--color-on-surface)]">Revenue, last 7 days</h3>
+        <h3 className="text-title-sm text-on-surface">Revenue, last 7 days</h3>
         <div role="img" aria-label={`Bar chart: ${bars.join(', ')}`} className="flex flex-1 items-end gap-2">
           {bars.map((h, i) => (
-            <div key={i} className="flex-1 rounded-shape-min bg-[var(--color-primary-container)]" style={{ height: h }} />
+            <div key={i} className="flex-1 rounded-shape-min bg-primary-container" style={{ height: h }} />
           ))}
         </div>
       </BentoTile>
       <BentoStat label="Active users" value="12,480" />
       <BentoStat label="Conversion" value="3.2%" />
-      <BentoTile size="2x1" className="flex items-center text-body-md text-[var(--color-on-surface-variant)]">
+      <BentoTile size="2x1" className="flex items-center text-body-md text-on-surface-variant">
         3 invoices awaiting approval.
       </BentoTile>
       <BentoStat label="Churn" value="0.8%" />
@@ -10860,7 +10862,7 @@ export default function Example() {
 
   return (
     <Conversation
-      className="h-[420px] w-full"
+      className="h-105 w-full"
       composer={<PromptInput placeholder="Ask about heat pumps" status={status} onSubmit={send} onStop={stop} />}
     >
       {messages.map((msg) =>
@@ -11018,11 +11020,11 @@ export default function Example() {
     const data = new FormData(e.currentTarget);
     setSubmitted({
       'es-name': String(data.get('name')).trim() ? undefined : 'Enter your name',
-      'es-email': /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+      'es-email': /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
     });
   };
   return (
-    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-[340px]">
+    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-85">
       <ErrorSummary errors={errors} />
       <div className="flex flex-col gap-1 items-stretch">
         <Label htmlFor="es-name">Name</Label>
@@ -11164,7 +11166,7 @@ import { Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[480px]">
+    <div className="w-full max-w-120">
       <FilterBar
         searchPlaceholder="Search users…"
         filters={
@@ -11293,7 +11295,7 @@ import { Badge } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <InfoList.Root>
         <InfoList.Item label="Plan" value="Pro" />
         <InfoList.Item label="Seats" value="12 / 50" />
@@ -11329,13 +11331,14 @@ The list-detail layout: side by side at 720px+ of its own width (a container que
 
 ```tsx
 import * as React from 'react';
+import { Button } from '@nexub/react';
 import { ListDetail } from '@nexub/patterns';
 
 export default function Example() {
   const [selected, setSelected] = React.useState<number | null>(0);
   const items = ['Quarterly report', 'Design review', 'Invoice #4821'];
   return (
-    <div className="w-full h-[240px] border border-[var(--color-outline-variant)] rounded-[16px] overflow-hidden">
+    <div className="w-full h-60 border border-outline-variant rounded-shape-container overflow-hidden">
       <ListDetail
         showDetail={selected !== null}
         onBack={() => setSelected(null)}
@@ -11343,9 +11346,9 @@ export default function Example() {
           <ul className="p-2 m-0 list-none">
             {items.map((m, i) => (
               <li key={m}>
-                <button type="button" onClick={() => setSelected(i)} className="nx-state-layer relative w-full rounded-shape-container px-3 py-2 text-left text-body-sm">
+                <Button variant={selected === i ? 'tonal' : 'text'} onClick={() => setSelected(i)} className="w-full justify-start">
                   {m}
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
@@ -11388,7 +11391,7 @@ export default function Example() {
     <div data-mode="marketing" className="w-full">
       <LogoStrip label="Trusted by 2,000+ teams">
         {customers.map((name) => (
-          <span key={name} className="text-title-lg text-[var(--color-on-surface-muted)]">{name}</span>
+          <span key={name} className="text-title-lg text-on-surface-muted">{name}</span>
         ))}
       </LogoStrip>
     </div>
@@ -11611,8 +11614,8 @@ export const items: MarketingNavItem[] = [
     ],
     feature: (
       <Card variant="surface" className="flex h-full flex-col gap-2 p-5">
-        <p className="m-0 text-label-md text-[var(--color-on-surface-muted)]">Customer story</p>
-        <p className="m-0 text-title-md text-[var(--color-on-surface)]">
+        <p className="m-0 text-label-md text-on-surface-muted">Customer story</p>
+        <p className="m-0 text-title-md text-on-surface">
           <CardLink href="#story">How a 40-person studio closes its books in two days</CardLink>
         </p>
       </Card>
@@ -11762,7 +11765,7 @@ import { NotificationItem } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[340px]">
+    <div className="w-85">
       <NotificationItem title="New team member" description="Sarah joined your workspace." timestamp="2 min ago" read={false} />
       <NotificationItem title="Invoice paid" description="Invoice #1042 was paid successfully." timestamp="1 hr ago" read />
     </div>
@@ -11801,7 +11804,7 @@ import { PlanCard } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <PlanCard
         name="Pro"
         price="$49"
@@ -11998,12 +12001,12 @@ import { Switch } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-full max-w-[560px]">
+    <div className="w-full max-w-140">
       <SettingsSection title="Notifications" description="Control how and when you receive notifications.">
         <div className="flex flex-col gap-3 items-start">
           {['Email alerts', 'Push notifications'].map((item) => (
             <div key={item} className="flex items-center justify-between">
-              <span className="text-body-sm text-[var(--color-on-surface)]">{item}</span>
+              <span className="text-body-sm text-on-surface">{item}</span>
               <Switch defaultChecked />
             </div>
           ))}
@@ -12089,7 +12092,7 @@ import { StatCard } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[240px]">
+    <div className="w-60">
       <StatCard label="Total Revenue" value="$48,295" delta="+12.5%" deltaType="increase" description="vs last month" />
     </div>
   );
@@ -12121,7 +12124,7 @@ import { Button } from '@nexub/react';
 export default function Example() {
   const [orders, setOrders] = React.useState(1284);
   return (
-    <div className="flex flex-col gap-3 items-stretch w-[240px]">
+    <div className="flex flex-col gap-3 items-stretch w-60">
       <StatCard label="Orders today" value={orders.toLocaleString('en-US')} animate />
       <Button size="sm" variant="outlined" onClick={() => setOrders((o) => o + Math.ceil(Math.random() * 40))}>
         New orders
@@ -12139,7 +12142,7 @@ import { Wallet } from '@nexub/icons';
 
 export default function Example() {
   return (
-    <div className="w-[260px]">
+    <div className="w-65">
       <StatCard
         label="Saved"
         value="S$2,400"
@@ -12343,7 +12346,7 @@ import { UserCard } from '@nexub/patterns';
 
 export default function Example() {
   return (
-    <div className="w-[300px]">
+    <div className="w-75">
       <UserCard name="Alex Johnson" email="alex@example.com" role="Admin" avatarFallback="AJ" />
     </div>
   );

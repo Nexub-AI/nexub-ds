@@ -15,12 +15,12 @@ export default function Example() {
         <NavigationMenu.Item>
           <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
           <NavigationMenu.Content>
-            <ul className="grid w-[280px] gap-1 p-2">
+            <ul className="grid w-70 gap-1 p-2">
               {products.map((p) => (
                 <li key={p.title}>
                   <NavigationMenu.Link href="#">
                     <span className="block text-label-lg">{p.title}</span>
-                    <span className="mt-1 block text-body-sm text-[var(--color-on-surface-muted)]">{p.body}</span>
+                    <span className="mt-1 block text-body-sm text-on-surface-muted">{p.body}</span>
                   </NavigationMenu.Link>
                 </li>
               ))}

@@ -68,7 +68,7 @@ export function DocsHeader() {
         leadingIcon={<Search size={14} aria-hidden="true" />}
         // The name is the visible "Search" (WCAG 2.5.3); aria-keyshortcuts carries ⌘K.
         trailingIcon={<Kbd aria-hidden="true" className="ms-auto">⌘K</Kbd>}
-        className="docs-header-search w-56 shrink-0 justify-start rounded-shape-field bg-[var(--color-surface-container-highest)] ps-4 pe-2 text-body-md font-normal text-[var(--color-on-surface-variant)]"
+        className="docs-header-search w-56 shrink-0 justify-start rounded-shape-field bg-surface-container-highest ps-4 pe-2 text-body-md font-normal text-on-surface-variant"
       >
         Search
       </Button>

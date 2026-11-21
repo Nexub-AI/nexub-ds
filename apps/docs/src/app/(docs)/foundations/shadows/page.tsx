@@ -52,9 +52,9 @@ export default function ElevationShapePage() {
           defined with <code>light-dark()</code> so dark mode gets deeper, quieter shadows. On React Native the same levels
           ship as per-scheme <code>boxShadow</code> values.
         </Prose>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-5 rounded-shape-overlay bg-[var(--color-surface-container-low)] p-6">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-5 rounded-shape-overlay bg-surface-container-low p-6">
           {levels.map(([n, use]) => (
-            <div key={n} className={'min-h-24 rounded-shape-container bg-[var(--color-surface-elevated)] p-4 ' + shadow[String(n)]}>
+            <div key={n} className={'min-h-24 rounded-shape-container bg-surface-elevated p-4 ' + shadow[String(n)]}>
               <code className="font-mono text-label-md">elevation-{n}</code>
               <Text size="body-sm" tone="secondary" className="mt-1.5">{use}</Text>
             </div>
@@ -70,8 +70,8 @@ export default function ElevationShapePage() {
         <div className="grid gap-3">
           {shapes.map(([name, value, use]) => (
             <Card key={name} className="grid items-center gap-3 p-3 sm:grid-cols-[120px_180px_1fr] sm:gap-4">
-              <div className={'h-11 bg-[var(--color-secondary-container)] ' + radius[String(name)]} />
-              <code className="font-mono text-label-sm text-[var(--color-on-surface-muted)]">
+              <div className={'h-11 bg-secondary-container ' + radius[String(name)]} />
+              <code className="font-mono text-label-sm text-on-surface-muted">
                 --shape-{name} ({value})
               </code>
               <Text size="body-sm">{use}</Text>
@@ -86,8 +86,8 @@ export default function ElevationShapePage() {
           floored at <code>--shape-min</code> (4px). Menus (16px with 6px padding) use 10px items; the command palette
           (24px with 8px padding) uses 16px items.
         </Prose>
-        <div className="inline-block self-start rounded-shape-overlay bg-[var(--color-surface-container-high)] p-2">
-          <div className="h-16 w-[240px] max-w-full rounded-shape-container bg-[var(--color-surface-elevated)]" />
+        <div className="inline-block self-start rounded-shape-overlay bg-surface-container-high p-2">
+          <div className="h-16 w-60 max-w-full rounded-shape-container bg-surface-elevated" />
         </div>
       </Section>
     </div>

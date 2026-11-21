@@ -84,7 +84,9 @@ describe.each(stories)('%s', (key, Story) => {
       container.remove();
     }
     expect([...recoverable, ...errors].map((m) => m.slice(0, 600))).toEqual([]);
-  });
+    // Three renders plus a lazy-chunk wait: stories with big chunks (PhoneInput's country
+    // list) pass 5s when every package's tests run at once. 15s still catches a hang.
+  }, 15_000);
 });
 
 it('KNOWN only lists stories that exist', () => {

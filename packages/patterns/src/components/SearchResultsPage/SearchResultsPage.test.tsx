@@ -5,6 +5,10 @@ import { afterEach, describe, it, expect, vi } from 'vitest';
 import { XSS_TEXT, XSS_URLS, auditDom } from 'xss-corpus';
 import { SearchResultsPage, type SearchResult } from './index.js';
 
+// No pause between keystrokes: on a busy CI runner the default delay let a long
+// type() pass the test timeout and leak keys into the next test.
+const type = (el: Element, text: string) => userEvent.setup({ delay: null }).type(el, text);
+
 afterEach(cleanup);
 
 const results: SearchResult[] = [
@@ -53,7 +57,7 @@ describe('SearchResultsPage', () => {
     const onSubmit = vi.fn();
     render(<SearchResultsPage query="inv" onQueryChange={onQueryChange} onSubmit={onSubmit} results={results} />);
     const box = screen.getByRole('searchbox', { name: 'Search' });
-    await userEvent.type(box, 'o{Enter}');
+    await type(box, 'o{Enter}');
     expect(onQueryChange).toHaveBeenCalledWith('invo');
     expect(onSubmit).toHaveBeenCalledWith('inv');
     await userEvent.click(screen.getByRole('button', { name: 'Clear search' }));

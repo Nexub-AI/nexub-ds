@@ -58,7 +58,7 @@ const SOCIALS = [
 /** The site footer, shared by the landing page and every docs page. */
 export function DocsFooter() {
   return (
-    <footer className="border-t border-[var(--color-outline-variant)] px-6 py-6 text-center">
+    <footer className="border-t border-outline-variant px-6 py-6 text-center">
       <Text size="caption" tone="muted">
         Open source under the{' '}
         <Link href={`${REPO}/blob/development/LICENSE`} target="_blank" className={linkClass}>
@@ -93,7 +93,7 @@ export function DocsFooter() {
             size="sm"
             label={s.label}
             title={s.label}
-            className="text-[var(--color-on-surface-muted)] hover:text-[var(--color-on-surface)]"
+            className="text-on-surface-muted hover:text-on-surface"
           >
             <a href={s.href} target="_blank" rel="noopener noreferrer">
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">

@@ -1,5 +1,91 @@
 # @nexub/react-native
 
+## 10.9.0
+
+### Minor Changes
+
+- c71bb65: 10.9 Native, next level, and the 11.0 release candidate. 10.9.x is published under the npm tag `next`; `latest` stays on 10.8.x until 11.0.
+
+  - **Native look**: `NexubNativeProvider expression="vivid"`, `product` accepts every product in the generated map, and the theme exposes the product accent. Category colours on `Badge` and `Avatar`, new `IconChip`, `StatCard`, `NumberTicker`, a gradient main action and tone-aware tonal buttons. `dynamicColor` follows the Android 12+ system accent (opt-in). `useBreakpoint` and `useResponsive` for tablets and landscape.
+  - **Gestures on the UI thread**: BottomSheet, Toast, SwipeableRow and Slider read touches with react-native-gesture-handler worklets. **`react-native-gesture-handler` >= 3 is now a required peer**: wrap the app root in `GestureHandlerRootView`.
+  - **New native twins** (#302): `Tabs`, `Table`, `Rating`, `Tooltip`, `StepIndicator` (alias of `StepProgress`), plus twins of `DescriptionList`, `ComparisonBar`, `PhoneInput`, `Countdown` and the `StatusSteps` pattern.
+  - **QR codes** (#305): `QRCode` on web and native (always dark on light, value shown as text) and native `QRScanner` (optional `expo-camera` peer, with permission states, torch and a manual-entry fallback). The encoder is `encodeQR` in `@nexub/core`.
+  - **Toward 11.0**: `npx nexub-migrate --rules changes-in-11` rewrites the four deprecated product theme imports and lists overlays that rely on the old `sheet` default. See "Migrating to 11.0" in the docs and RFC #662.
+  - Device baselines for the pattern screens are also captured in dark, high contrast, RTL and (iOS) large text. The mobile demo gains a small connected app under `/demo`.
+
+### Patch Changes
+
+- Updated dependencies [c71bb65]
+  - @nexub/core@10.9.0
+  - @nexub/tokens@10.9.0
+  - @nexub/icons@10.9.0
+
+## 10.8.0
+
+### Patch Changes
+
+- Updated dependencies [b46edf1]
+  - @nexub/core@10.8.0
+  - @nexub/tokens@10.8.0
+  - @nexub/icons@10.8.0
+
+## 10.7.0
+
+### Patch Changes
+
+- Updated dependencies [9d9c9eb]
+  - @nexub/core@10.7.0
+  - @nexub/tokens@10.7.0
+  - @nexub/icons@10.7.0
+
+## 10.6.0
+
+### Patch Changes
+
+- @nexub/tokens@10.6.0
+- @nexub/icons@10.6.0
+- @nexub/core@10.6.0
+
+## 10.5.1
+
+### Patch Changes
+
+- Updated dependencies [c60dbed]
+  - @nexub/tokens@10.5.1
+  - @nexub/icons@10.5.1
+  - @nexub/core@10.5.1
+
+## 10.5.0
+
+### Minor Changes
+
+- 11c1fd9: 10.5 Every state: loading, empty and error look designed everywhere, and state changes move.
+
+  - **One prop shape** (`loading`, `emptyState`, `errorState`; error wins, then loading, then empty) on BarChart, LineChart, DonutChart, Gauge, Heatmap, Funnel, Sparkline, KpiTile, ChartZoom, EventCalendar, TreeView, Kanban, `Table.Body`, and `errorState` on DataTable and DataTableVirtual. Patterns too: ActivityFeed, InfoList, NotificationCenter, SettingsPage, DashboardPage, ListDetail, TransactionDetailPage, ActivityPage; `loading` on StatCard and UserCard. Exported as `DataStateProps`.
+  - **Behaviour change**: a chart, tree or board with no data now says "Nothing here yet" instead of drawing an empty plot. Pass `emptyState` to change it.
+  - **`SkeletonPreset`**: card, tableRow, listRow, chart, form.
+  - **`Illustration`**: seven spot drawings (noData, noResults, noAccess, serverError, offline, notFound, maintenance) coloured by the theme and the product accent. `EmptyStatePreset illustrated` uses them; the preset gains `notFound` and `maintenance`.
+  - **`StatusPage`** pattern for 404, 500, maintenance, offline and no access, with three new templates.
+  - **Motion**: a sliding indicator on ToggleGroup (single), NavigationRail and Pagination; Stepper progress, Chip and FilterChip colours, the Avatar status dot and TreeView expand now animate; Drawer exits at the same speed as Dialog. `ErrorState` takes `retryLabel`.
+  - **Docs layout shift**: ResizablePanels, Combobox, FilterBuilder and Slider render their final layout on the server.
+  - **React Native**: Accordion, Progress, Checkbox, Radio, PageIndicator, TextField and Dialog animate on the shared springs. `ScreenContainer keyboardAvoiding` (default on) keeps inputs above the keyboard on iOS and Android; BottomSheet does the same on Android. Sizes read the theme tokens (lint exceptions 109 → 10).
+
+### Patch Changes
+
+- Updated dependencies [11c1fd9]
+  - @nexub/core@10.5.0
+  - @nexub/tokens@10.5.0
+  - @nexub/icons@10.5.0
+
+## 10.4.0
+
+### Patch Changes
+
+- Updated dependencies [12a5ea5]
+  - @nexub/tokens@10.4.0
+  - @nexub/icons@10.4.0
+  - @nexub/core@10.4.0
+
 ## 10.3.0
 
 ### Patch Changes

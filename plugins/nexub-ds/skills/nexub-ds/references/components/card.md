@@ -25,9 +25,9 @@ import { Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card>
-        <div className="font-semibold mb-1 text-[var(--color-on-surface)]">Card title</div>
+        <div className="font-semibold mb-1 text-on-surface">Card title</div>
         <Text size="body-sm" tone="muted">Cards group related content on a raised surface.</Text>
       </Card>
     </div>
@@ -42,7 +42,7 @@ import { Card, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="flex flex-col gap-2.5 items-start w-[280px]">
+    <div className="flex flex-col gap-2.5 items-start w-70">
       <Card variant="flat"><Text size="body-sm">Flat</Text></Card>
       <Card variant="surface"><Text size="body-sm">Surface</Text></Card>
       <Card variant="interactive"><Text size="body-sm">Interactive</Text></Card>
@@ -62,7 +62,7 @@ import { Card, Heading, CardLink, Text, Button } from '@nexub/react';
 export default function Example() {
   const [starred, setStarred] = React.useState(false);
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card variant="interactive" className="p-4">
         <Heading level={3} size="h5">
           <CardLink href="#">Atlas</CardLink>
@@ -86,7 +86,7 @@ import { Card, Heading, Text } from '@nexub/react';
 
 export default function Example() {
   return (
-    <div className="w-[280px]">
+    <div className="w-70">
       <Card variant="surface" effect="sheen" className="p-6">
         <Heading level={3} size="h5">Pro</Heading>
         <Text size="body-sm" tone="muted">Everything in Team, plus audit logs.</Text>
@@ -114,7 +114,7 @@ export default function Example() {
       {products.map((p) => (
         <Card key={p.name} variant="showcase" accent={p.accent} className="flex flex-col gap-2 p-6">
           <h3 className="m-0 text-title-lg">{p.name}</h3>
-          <p className="m-0 text-body-md text-[var(--color-on-surface-variant)]">{p.line}</p>
+          <p className="m-0 text-body-md text-on-surface-variant">{p.line}</p>
         </Card>
       ))}
     </div>
@@ -134,7 +134,7 @@ export default function Example() {
     <div className="grid w-full grid-cols-2 gap-4">
       {['Revenue', 'Customers'].map((t) => (
         <Card key={t} variant="interactive" effect="tilt" className="p-6">
-          <p className="m-0 text-label-md text-[var(--color-on-surface-variant)]">{t}</p>
+          <p className="m-0 text-label-md text-on-surface-variant">{t}</p>
           <p className="m-0 text-title-lg">{t === 'Revenue' ? '$68,420' : '1,204'}</p>
         </Card>
       ))}

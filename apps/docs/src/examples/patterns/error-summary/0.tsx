@@ -12,11 +12,11 @@ export default function Example() {
     const data = new FormData(e.currentTarget);
     setSubmitted({
       'es-name': String(data.get('name')).trim() ? undefined : 'Enter your name',
-      'es-email': /^\S+@\S+\.\S+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
+      'es-email': /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(String(data.get('email'))) ? undefined : 'Enter an email address, like name@example.com',
     });
   };
   return (
-    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-[340px]">
+    <form noValidate onSubmit={submit} className="flex flex-col gap-3 items-stretch w-85">
       <ErrorSummary errors={errors} />
       <div className="flex flex-col gap-1 items-stretch">
         <Label htmlFor="es-name">Name</Label>

@@ -373,7 +373,7 @@ function buildNested(tokens) {
 // { palette: { primary: { 40: v } } } → { 'palette-primary-40': v } (v3's nested-key naming).
 function flatten(obj, prefix = '') {
   return Object.entries(obj).reduce((out, [k, v]) => {
-    const key = prefix ? `${prefix}-${k}` : k;
+    const key = k === 'DEFAULT' ? prefix : prefix ? `${prefix}-${k}` : k;
     return Object.assign(out, typeof v === 'object' ? flatten(v, key) : { [key]: v });
   }, {});
 }
@@ -382,7 +382,9 @@ function setDeep(obj, path, value) {
   let cur = obj;
   for (let i = 0; i < path.length - 1; i++) {
     const key = path[i];
-    if (!cur[key] || typeof cur[key] !== 'object') cur[key] = {};
+    // Keep a role that a token tree nests under (color.surface.warm vs the `surface` role) as DEFAULT.
+    if (typeof cur[key] === 'string') cur[key] = { DEFAULT: cur[key] };
+    else if (!cur[key] || typeof cur[key] !== 'object') cur[key] = {};
     cur = cur[key];
   }
   cur[path[path.length - 1]] = value;

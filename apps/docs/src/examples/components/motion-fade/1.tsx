@@ -11,7 +11,7 @@ export default function Example() {
         {visible ? 'Hide' : 'Show'}
       </Button>
       <Fade in={visible} unmountOnExit>
-        <Card className="w-[200px]"><Text size="body-sm">Animated content</Text></Card>
+        <Card className="w-50"><Text size="body-sm">Animated content</Text></Card>
       </Fade>
     </div>
   );

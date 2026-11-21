@@ -18,13 +18,13 @@ export function VariantMatrix({ slug, def }: Props) {
 
   return (
     <div
-      className="overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface)]"
+      className="overflow-hidden rounded-shape-container border border-outline-variant bg-surface"
     >
       <div
-        className="py-2 px-3 border-b border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] flex items-center justify-between gap-3"
+        className="py-2 px-3 border-b border-outline-variant bg-surface-container-low flex items-center justify-between gap-3"
       >
         <span
-          className="text-label-sm font-bold text-[var(--color-on-surface-variant)] tracking-wider uppercase"
+          className="text-label-sm font-bold text-on-surface-variant tracking-wider uppercase"
         >
           Variants ×{' '}
           <span className="font-mono">{rowsProp}</span> /{' '}
@@ -40,7 +40,7 @@ export function VariantMatrix({ slug, def }: Props) {
           <thead>
             <tr>
               <th className={cornerClass}>
-                <span className="font-mono font-semibold text-[var(--color-on-surface-muted)]">
+                <span className="font-mono font-semibold text-on-surface-muted">
                   {rowsProp} ↓ / {colsProp} →
                 </span>
               </th>
@@ -67,7 +67,7 @@ export function VariantMatrix({ slug, def }: Props) {
                   return (
                     <td key={c} className={cellClass}>
                       <div
-                        className="min-h-[56px] flex items-center justify-center p-2"
+                        className="min-h-14 flex items-center justify-center p-2"
                       >
                         {renderPlayground(slug, props)}
                       </div>
@@ -84,9 +84,9 @@ export function VariantMatrix({ slug, def }: Props) {
 }
 
 const headBase =
-  'bg-[var(--color-surface-container-low)] px-3 py-2 font-semibold text-[var(--color-on-surface-muted)] border-b border-[var(--color-outline-variant)]';
-const headClass = headBase + ' text-center border-s border-[var(--color-surface-container-high)]';
+  'bg-surface-container-low px-3 py-2 font-semibold text-on-surface-muted border-b border-outline-variant';
+const headClass = headBase + ' text-center border-s border-surface-container-high';
 const cornerClass = headBase + ' text-start whitespace-nowrap';
 const rowHeadClass =
-  'sticky start-0 whitespace-nowrap bg-[var(--color-surface-container-low)] px-3 py-2 text-start font-semibold text-[var(--color-on-surface-muted)] border-b border-e border-[var(--color-surface-container-high)]';
-const cellClass = 'p-0 bg-[var(--color-surface)] border-b border-s border-[var(--color-surface-container-high)]';
+  'sticky start-0 whitespace-nowrap bg-surface-container-low px-3 py-2 text-start font-semibold text-on-surface-muted border-b border-e border-surface-container-high';
+const cellClass = 'p-0 bg-surface border-b border-s border-surface-container-high';

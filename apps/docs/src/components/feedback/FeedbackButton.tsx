@@ -31,7 +31,7 @@ export function FeedbackButton() {
           aria-label="Send feedback"
           leadingIcon={<MessageSquare size={15} aria-hidden="true" />}
           // Same pill as before: the DS button supplies the shape, state layer and press.
-          className="docs-feedback-fab fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] h-auto bg-[var(--color-surface-elevated)] px-3.5 py-2.5 font-semibold shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
+          className="docs-feedback-fab fixed bottom-[clamp(12px,2vw,24px)] end-[clamp(12px,2vw,24px)] z-[90] h-auto bg-surface-elevated px-3.5 py-2.5 font-semibold shadow-elevation-2 transition-[transform,box-shadow] duration-spatial-fast ease-spatial-fast"
         >
           Feedback
         </Button>

@@ -55,7 +55,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Teams" nodes={nodes} defaultExpanded={['eng', 'web']} selected={selected} onSelectedChange={setSelected} onLoadChildren={load} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Selected: {selected ?? 'none'}</p>
+      <p className="text-body-sm text-on-surface-muted">Selected: {selected ?? 'none'}</p>
     </div>
   );
 }
@@ -86,7 +86,7 @@ export default function Example() {
   return (
     <div className="flex w-full max-w-xs flex-col gap-2">
       <TreeView aria-label="Permissions" nodes={nodes} checkable defaultExpanded={['reports', 'settings']} checked={checked} onCheckedChange={setChecked} />
-      <p className="text-body-sm text-[var(--color-on-surface-muted)]">Granted: {checked.join(', ') || 'nothing'}</p>
+      <p className="text-body-sm text-on-surface-muted">Granted: {checked.join(', ') || 'nothing'}</p>
     </div>
   );
 }

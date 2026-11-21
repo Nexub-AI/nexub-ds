@@ -45,6 +45,10 @@ All seven packages are in a changesets **`fixed`** group — they always publish
 | `2.3.0` | 2026-10-31 | Minor | Sticky `Sidebar.Footer` and `SettingsLayout` `navFooter`; docs and Storybook on Tailwind 4, `@nexub/tokens` peer accepts Tailwind `^3 \|\| ^4` (v4 theme pins `max-w-*` and text line heights; button pointer cursor in `@nexub/themes`; Pagination tabular figures); React Native enter/exit/layout presets back on the springs (2.2.0's timed presets broke iOS) and the toast on Reanimated's stock fade | [@nexub/react@2.3.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%402.3.0) |
 | `2.3.1` | 2026-10-31 | Patch | First release published with npm trusted publishing (OIDC) from `release.yml`; every package now carries npm provenance. No code changes. `NPM_TOKEN` retired | [@nexub/react@2.3.1](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%402.3.1) |
 | `2.4.0` | 2026-10-31 | Minor | Release hardening, no API changes: native previews checked against committed iOS/Android screenshot baselines in CI (also shown as "On device" shots in the docs); Lighthouse CI (≥95 in all four categories on 5 docs pages); `GOVERNANCE.md` with the alpha → beta → stable → deprecated lifecycle and status badges; Banner, Callout, Tag and StatusPill removal planned in 3.0; post-publish check of npm versions and provenance | [@nexub/react@2.4.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%402.4.0) |
+| `10.6.0` | 2026-11-20 | Minor | Phone-first overlays: `sheet` (`true` or `"auto"`, off by default until 11.0) opens pickers, menus, AlertDialog and CommandPalette as a bottom sheet below 768px; poppers keep 8px from the viewport edge; Sidebar `collapseBelow` with tooltips; opt-in AppShell mobile drawer; container queries on PageHeader, PageFrame and six more; NavigationMenu fits 320px | [@nexub/react@10.6.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.6.0) |
+| `10.7.0` | 2026-11-20 | Minor | Charts, calendar and tables: opt-in `interactive` charts (crosshair, tooltip, keyboard point navigation, `onPointClick`, legend toggles); EventCalendar day and agenda views; Table `stickyHeader`, `density`, `striped`; DataTable footer row and per-column filters; new `Truncate`, `DescriptionList`, `ComparisonBar` and the `StatusSteps` pattern (#306) | [@nexub/react@10.7.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.7.0) |
+| `10.8.0` | 2026-11-20 | Minor | Templates: twelve page templates (SignUp, ForgotPassword, VerifyCode, Onboarding, KYC, Table, Detail, Booking, Invoice, Team, Notifications, SearchResults); `PhoneInput` (#303), `Countdown` and `useCountdown` (#304), `TimeSlotPicker`; a read-only `Select` no longer warns on mount; a closed PhoneInput country picker renders only the selected country | [@nexub/react@10.8.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.8.0) |
+| `10.9.0` | 2026-11-20 | Minor (RC, on `next`) | Native next level and the 11.0 release candidate: `NexubNativeProvider expression="vivid"`, opt-in Android `dynamicColor`, gestures on the UI thread (`react-native-gesture-handler` >= 3 is now a required peer), native twins of `Tabs`, `Table`, `Rating`, `Tooltip` and more (#302), `QRCode` and native `QRScanner` (#305), and the `changes-in-11` codemod; `latest` stays on 10.8.0 | [@nexub/react@10.9.0](https://github.com/Nexub-AI/nexub-ds/releases/tag/%40nexub%2Freact%4010.9.0) |
 
 ---
 
@@ -136,6 +140,49 @@ Publishing is automated by `.github/workflows/release.yml` (changesets/action). 
 > `release.yml` holds one credential per job (since 7.1). `build` has no secrets and builds packages and docs; `version` (Version PR) and `back-merge` use `RELEASE_PAT`; `publish` uses only npm OIDC and the job's own token; `deploy-docs` uses only the Cloudflare token, with wrangler pinned in the lockfile. Jobs that hold a credential install with `--ignore-scripts` and build nothing.
 >
 > `RELEASE_PAT` (a fine-grained PAT with Contents + Pull requests write; the org blocks the Actions bot from creating PRs) and the Cloudflare secrets belong in the **`release` environment** (Settings → Environments, deployment branch `production` only), not in repo secrets, so no PR-triggered workflow can read them. Since the version PR is opened by a real user, CI runs on it like any other PR.
+
+### Release routine (checklist)
+
+Follow this list every time a version is done. It covers each hop, the post-release wrap-up and how to report status. A version is finished only when every box is ticked.
+
+**Rules for every hop**
+
+- Merge only when the PR's CI is green. Never merge red. Repo auto-merge is off, so you merge each hop by hand: `gh pr merge <n> --merge`.
+- Watch CI yourself, don't wait for someone to ping you: `gh pr checks <n> --watch --fail-fast`, or `gh run watch <run-id> --exit-status` for a workflow run.
+- A changed PR base does not start CI. Push a commit (for example, merge the base in) to start it.
+
+**1. Promote**
+
+- [ ] **feature → `development`**: changeset included, full CI green (build, typecheck, lint, test, visual, Lighthouse, release rehearsal). Merge.
+- [ ] **Mobile (Maestro) on `development`**: runs after the merge, about an hour. It must pass for the commit you are promoting. If the PR adds native previews or changes the native look (tokens, React Native theme defaults), dispatch the Mobile workflow on the branch *before* merging.
+- [ ] **`development` → `staging`**: build, typecheck and lint run (visual and Lighthouse already passed on `development`). Merge, then watch `staging.yml` deploy the staging docs.
+- [ ] **`staging` → `production`**: confirm the Mobile run from the step above is green. Merge. `release.yml` opens the **Version Packages** PR.
+- [ ] **Version Packages PR**: CI green (it rehearses the publish). Merge. Watch `release.yml` until `publish`, `verify-published` and `deploy-docs` pass.
+- [ ] **Check npm**: `curl -sH 'Cache-Control: no-cache' https://registry.npmjs.org/@nexub/react | jq -r '."dist-tags".latest'` shows the new version. The registry can lag a few minutes.
+- [ ] **Back-merge PR** (`chore(release): back-merge vX into development`): CI green, merge. Do this before the next promotion.
+- [ ] Add the row to [Release History](#release-history) and mark the version shipped in its `ROADMAP_*.md`.
+
+If a step fails after the publish, see `INCIDENT_RUNBOOK.md`.
+
+**2. Wrap up**
+
+- [ ] **Open PRs**: merge the green, low-risk ones. List the rest with a recommendation. Don't close someone else's PR.
+- [ ] **Branches**: `git fetch --prune`, delete local branches that are merged or gone (`git branch -d`; run `git cherry` before using `-D`), `git worktree prune`. Leave other people's worktrees alone.
+- [ ] **Graphify**: in Claude Code, run `/graphify . --update` in the checkout that holds `graphify-out/`. For a code-only refresh without an LLM, run `graphify update .`. See [CONTRIBUTING.md](./CONTRIBUTING.md#knowledge-graph-graphify).
+- [ ] **Obsidian vault**: stage the new graph report, the changed repo docs (plans, roadmap, this file) and the release notes in the vault inbox. Ingest them in one transaction with the claude-obsidian `wiki-ingest` skill, then checkpoint. Use the UTC date (`date -u +%F`) for ledger dates. Ask the maintainer for the vault path.
+
+**3. Report status**
+
+Whenever someone asks for status, during a release or any other work, answer with this table:
+
+| Environment | Progress | Expected time (approx.) |
+|---|---|---|
+| development | ✅ #701 merged; Mobile run green | done |
+| staging | 🔄 #702 CI running | ~10 min |
+| production | ⏳ waits for staging | ~20 min |
+| npm / docs | ⏳ Version PR not open yet | ~40 min |
+
+Use one row per environment (or per stream of work outside a release). Under Progress, give the state plus the PR or run number. Expected time is a rough estimate.
 
 ### Pre-flight check (optional)
 

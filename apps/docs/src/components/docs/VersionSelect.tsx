@@ -15,11 +15,11 @@ export function VersionSelect({ label, value, options, onValueChange }: VersionS
   const id = React.useId();
   return (
     <div className="flex flex-col gap-1">
-      <span id={id} className="text-label-sm font-medium text-[var(--color-on-surface-muted)]">
+      <span id={id} className="text-label-sm font-medium text-on-surface-muted">
         {label}
       </span>
       <Select.Root value={value} onValueChange={onValueChange}>
-        <Select.Trigger aria-labelledby={id} className="w-[180px]">
+        <Select.Trigger aria-labelledby={id} className="w-45">
           <Select.Value />
         </Select.Trigger>
         <Select.Content>

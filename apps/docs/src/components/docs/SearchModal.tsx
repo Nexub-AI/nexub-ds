@@ -97,15 +97,15 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
                 onSelect={() => go(item.href)}
                 className="gap-3"
               >
-                <span className="shrink-0 text-[var(--color-on-surface-muted)]" aria-hidden="true">
+                <span className="shrink-0 text-on-surface-muted" aria-hidden="true">
                   {item.category.startsWith('Pattern') ? <Layers size={16} /> : <FileText size={16} />}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col">
-                  <span className="text-body-sm font-medium text-[var(--color-on-surface)]">{item.label}</span>
+                  <span className="text-body-sm font-medium text-on-surface">{item.label}</span>
                   {/* Generated content, not a text node: the palette names a Recent row by the item's text, which should be the title alone. */}
                   <span
                     data-description={item.description}
-                    className="truncate text-label-sm text-[var(--color-on-surface-muted)] before:content-[attr(data-description)]"
+                    className="truncate text-label-sm text-on-surface-muted before:content-[attr(data-description)]"
                   />
                 </span>
               </CommandPalette.Item>
@@ -113,7 +113,7 @@ export function SearchModal({ searchIndex }: { searchIndex: SearchEntry[] }) {
           </CommandPalette.Group>
         ))}
       </CommandPalette.List>
-      <div className="flex min-h-10 flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-[var(--color-outline-variant)] px-4 py-1.5 text-label-sm text-[var(--color-on-surface-muted)]">
+      <div className="flex min-h-10 flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-outline-variant px-4 py-1.5 text-label-sm text-on-surface-muted">
         <span aria-hidden="true" className="flex flex-wrap items-center gap-1.5">
           <Kbd>↑</Kbd>
           <Kbd>↓</Kbd> to move

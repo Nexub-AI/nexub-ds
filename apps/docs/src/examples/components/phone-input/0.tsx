@@ -17,7 +17,7 @@ export default function Example() {
           setValid(details.valid);
         }}
       />
-      <p aria-live="polite" className="text-body-sm text-[var(--color-on-surface-muted)]">
+      <p aria-live="polite" className="text-body-sm text-on-surface-muted">
         {value ? `${value}${valid ? '' : ' (incomplete)'}` : 'Type a number, or paste one with its country code'}
       </p>
     </div>
