@@ -2,6 +2,7 @@ import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, it, expect, vi } from 'vitest';
+import axe from 'axe-core';
 import { MessageActions, MessageBubble } from './MessageBubble.js';
 
 describe('MessageBubble', () => {
@@ -98,5 +99,53 @@ describe('MessageActions', () => {
     render(<MessageActions onRegenerate={onRegenerate} />);
     fireEvent.click(screen.getByRole('button', { name: 'Regenerate' }));
     expect(onRegenerate).toHaveBeenCalledOnce();
+  });
+});
+
+describe('MessageBubble 11.5', () => {
+  it('from="other" shows the name and meta header and is named by the sender', () => {
+    render(
+      <MessageBubble from="other" name="Ada Lovelace" meta="09:41" avatar={<span>AL</span>}>
+        Sounds good
+      </MessageBubble>,
+    );
+    const article = screen.getByRole('article', { name: 'Ada Lovelace' });
+    expect(article).toHaveAttribute('data-from', 'other');
+    expect(article).toHaveClass('items-start');
+    expect(screen.getByText('Ada Lovelace')).toBeVisible();
+    expect(screen.getByText('09:41')).toBeVisible();
+    expect(screen.getByText('Sounds good')).toHaveClass('bg-[var(--color-surface-container-high)]');
+  });
+
+  it('meta works for user; name stays an accessible label only for user', () => {
+    render(<MessageBubble from="user" name="Me" meta="09:42">Hi</MessageBubble>);
+    expect(screen.getByText('09:42')).toBeInTheDocument();
+    expect(screen.queryByText('Me')).toBeNull();
+  });
+
+  it('MessageActions renders custom actions and children', () => {
+    const onSelect = vi.fn();
+    render(
+      <MessageActions copy={false} actions={[{ label: 'Pin', icon: <span aria-hidden="true">*</span>, onSelect }]}>
+        <button type="button">More</button>
+      </MessageActions>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Pin' }));
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: 'More' })).toBeInTheDocument();
+  });
+
+  it('11.5 is axe-clean', async () => {
+    const { container } = render(
+      <>
+        <MessageBubble from="other" name="Ada" meta="09:41">Hi</MessageBubble>
+        <MessageBubble from="assistant" meta="09:42">
+          Hello
+          <MessageActions actions={[{ label: 'Pin', icon: <span aria-hidden="true">*</span>, onSelect: () => {} }]} />
+        </MessageBubble>
+      </>,
+    );
+    const { violations } = await axe.run(container);
+    expect(violations).toEqual([]);
   });
 });

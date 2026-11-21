@@ -62,3 +62,22 @@ function Demo() {
 }
 
 export const Scripted = { render: () => <Demo /> };
+
+/** 11.5: in normal flow, no fixed-height parent. It grows with its messages up to `maxHeight`, then scrolls. */
+function InFlow() {
+  const [count, setCount] = React.useState(1);
+  return (
+    <div className="flex flex-col gap-4">
+      <button type="button" className="self-start text-body-md underline" onClick={() => setCount((c) => c + 1)}>
+        Add a message
+      </button>
+      <Conversation maxHeight="24rem" composer={<Textarea aria-label="Message" placeholder="Ask anything…" rows={2} />}>
+        {Array.from({ length: count }, (_, i) => (
+          <Bubble key={i} {...script[i % script.length]!} />
+        ))}
+      </Conversation>
+    </div>
+  );
+}
+
+export const MaxHeightInFlow = { render: () => <InFlow /> };

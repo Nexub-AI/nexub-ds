@@ -3,18 +3,21 @@
 import * as React from 'react';
 import { ArrowUp } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
-import { fieldDisabledWithin, fieldFocusWithin } from '../../utils/control.js';
+import { fieldDisabledWithin, fieldFocusWithin, fieldInvalid } from '../../utils/control.js';
 import { glassSurfaceClass } from '../../utils/glass.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
 import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { IconButton } from '../IconButton/IconButton.js';
+import { Button } from '../Button/Button.js';
 
 export interface PromptInputMessages {
   promptLabel: string;
   sendMessage: string;
   stopGenerating: string;
   promptHint: string;
+  /** 11.5: the visible hint with `submitOn="mod-enter"`; `mod` is "⌘" or "Ctrl". */
+  promptHintModEnter: (mod: string) => string;
 }
 
 const fallbackMessages: PromptInputMessages = {
@@ -22,6 +25,7 @@ const fallbackMessages: PromptInputMessages = {
   sendMessage: 'Send message',
   stopGenerating: 'Stop generating',
   promptHint: 'Press Enter to send, Shift+Enter for a new line',
+  promptHintModEnter: (mod) => `Press ${mod}+Enter to send, Enter for a new line`,
 };
 
 export type PromptInputStatus = 'idle' | 'submitting' | 'streaming';
@@ -53,6 +57,17 @@ export interface PromptInputProps
   messages?: Partial<PromptInputMessages>;
   /** Class for the outer container (`className` goes to it too); this one targets the textarea. */
   textareaClassName?: string;
+  /** 11.5: a visible text label on Send (the arrow icon stays). Without it, Send is an icon button. */
+  sendLabel?: React.ReactNode;
+  /**
+   * 11.5: `mod-enter` sends on Cmd/Ctrl+Enter and makes Enter add a line, and shows that hint.
+   * @default 'enter'
+   */
+  submitOn?: 'enter' | 'mod-enter';
+  /** 11.5: helper text under the field, linked with `aria-describedby`. */
+  hint?: React.ReactNode;
+  /** 11.5: an error under the field; marks it invalid. */
+  error?: React.ReactNode;
 }
 
 const stopIcon = <span aria-hidden="true" className="size-3.5 rounded-shape-min bg-current" />;
@@ -78,6 +93,10 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       onKeyDown,
       id,
       'aria-describedby': describedBy,
+      sendLabel,
+      submitOn = 'enter',
+      hint,
+      error,
       ...props
     },
     ref,
@@ -93,6 +112,14 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       onChange: onValueChange,
     });
     const hintId = React.useId();
+    const hintPropId = `${hintId}-hint`;
+    const errorId = `${hintId}-error`;
+    const modEnter = submitOn === 'mod-enter';
+    // "⌘" on Apple devices; decided after mount so the server render matches.
+    const [mod, setMod] = React.useState('Ctrl');
+    React.useEffect(() => {
+      if (modEnter && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) setMod('⌘');
+    }, [modEnter]);
     const growRef = React.useRef<HTMLDivElement>(null);
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const mergedRef = useMergedRefs(ref, textareaRef);
@@ -114,7 +141,7 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       onKeyDown?.(e);
       if (e.defaultPrevented) return;
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === 'Enter' && !e.shiftKey && (!modEnter || e.metaKey || e.ctrlKey)) {
         // Enter that confirms an IME composition (CJK input) must not send.
         if ((e.nativeEvent.isComposing || e.keyCode === 229)) return;
         e.preventDefault();
@@ -129,7 +156,10 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
     const textClass =
       'col-start-1 row-start-1 m-0 px-1 py-1.5 text-body-md max-h-[calc(var(--nx-max-rows,8)*1lh+0.75rem)] whitespace-pre-wrap break-words';
 
-    return (
+    const invalid = error != null && error !== false;
+    const describedByIds = [invalid && errorId, hint && hintPropId, hintId, describedBy].filter(Boolean).join(' ');
+
+    const box = (
       <div
         className={cn(
           'flex flex-col gap-2 p-3 rounded-shape-overlay border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] text-[var(--color-on-surface)]',
@@ -137,6 +167,7 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
           fieldFocusWithin,
           fieldDisabledWithin,
           surface === 'glass' && glassSurfaceClass,
+          invalid && fieldInvalid,
           className,
         )}
         data-material={surface === 'glass' ? 'glass' : undefined}
@@ -157,7 +188,8 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
             onKeyDown={handleKeyDown}
             disabled={disabled}
             aria-label={label ?? m.promptLabel}
-            aria-describedby={describedBy ? `${hintId} ${describedBy}` : hintId}
+            aria-describedby={describedByIds}
+            aria-invalid={invalid || undefined}
             className={cn(
               textClass,
               'w-full resize-none overflow-y-auto bg-transparent border-0 text-inherit',
@@ -167,9 +199,11 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
             {...props}
           />
         </div>
-        <span id={hintId} hidden>
-          {m.promptHint}
-        </span>
+        {!modEnter && (
+          <span id={hintId} hidden>
+            {m.promptHint}
+          </span>
+        )}
         <div className="flex items-end gap-2">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1">{actions}</div>
           {streaming ? (
@@ -183,6 +217,18 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
             >
               {stopIcon}
             </IconButton>
+          ) : sendLabel ? (
+            <Button
+              type="button"
+              size="sm"
+              disabled={disabled}
+              aria-disabled={!canSubmit || undefined}
+              onClick={submit}
+              trailingIcon={<ArrowUp size="sm" aria-hidden="true" />}
+              className="aria-disabled:bg-[color-mix(in_srgb,var(--color-on-surface)_12%,transparent)] aria-disabled:text-[var(--color-text-disabled)]"
+            >
+              {sendLabel}
+            </Button>
           ) : (
             <IconButton
               type="button"
@@ -197,6 +243,29 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
             </IconButton>
           )}
         </div>
+      </div>
+    );
+
+    // Without hint, error or the mod-enter hint, the DOM is exactly as before 11.5.
+    if (!invalid && !hint && !modEnter) return box;
+    return (
+      <div className="flex min-w-0 flex-col gap-1.5">
+        {box}
+        {invalid && (
+          <p id={errorId} className="px-3 text-body-sm text-[var(--color-error)]">
+            {error}
+          </p>
+        )}
+        {hint && (
+          <p id={hintPropId} className="px-3 text-body-sm text-[var(--color-on-surface-muted)]">
+            {hint}
+          </p>
+        )}
+        {modEnter && (
+          <p id={hintId} className="px-3 text-label-sm text-[var(--color-on-surface-muted)]">
+            {m.promptHintModEnter(mod)}
+          </p>
+        )}
       </div>
     );
   },

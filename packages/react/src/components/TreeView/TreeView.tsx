@@ -19,6 +19,16 @@ export interface TreeNode {
   /** Children exist but aren't loaded yet: expanding calls `onLoadChildren`. */
   hasChildren?: boolean;
   disabled?: boolean;
+  /** 11.5: meta at the row end, e.g. a count or a date. */
+  trailing?: React.ReactNode;
+  /** 11.5: the row is a link. Click and Enter follow it; Cmd/Ctrl-click and middle-click open a new tab. */
+  href?: string;
+}
+
+/** 11.5: the `ref` handle. */
+export interface TreeViewHandle {
+  /** Opens the node's ancestors, then scrolls its row into view (and focuses it with `focus: true`). */
+  scrollToNode: (id: string, options?: { focus?: boolean }) => void;
 }
 
 export interface TreeViewProps extends DataStateProps {
@@ -39,6 +49,11 @@ export interface TreeViewProps extends DataStateProps {
   onCheckedChange?: (ids: string[]) => void;
   /** Load a `hasChildren` node's children, then pass them in through `nodes`. */
   onLoadChildren?: (node: TreeNode) => Promise<unknown>;
+  /** 11.5: row actions, shown on hover and focus (always on touch screens). Tab from the focused row reaches them. */
+  renderActions?: (node: TreeNode) => React.ReactNode;
+  /** 11.5: Enter or double-click "opens" a node. Separate from selection, which click and Space (and Enter) set. */
+  onActivate?: (node: TreeNode) => void;
+  ref?: React.Ref<TreeViewHandle>;
   className?: string;
 }
 
@@ -59,6 +74,7 @@ const hasKids = (n: TreeNode) => Boolean(n.children?.length || (n.hasChildren &&
 const text = (n: TreeNode) => n.textValue ?? (typeof n.label === 'string' ? n.label : '');
 const descendants = (n: TreeNode): string[] =>
   (n.children ?? []).flatMap((c) => [c.id, ...descendants(c)]);
+const FOCUSABLE = 'a[href],button,input,select,textarea,[tabindex]';
 
 /**
  * A hierarchy people can browse with the keyboard (ARIA tree): Arrow keys move
@@ -78,6 +94,9 @@ export function TreeView({
   defaultChecked,
   onCheckedChange,
   onLoadChildren,
+  renderActions,
+  onActivate,
+  ref,
   className,
   loading: rootLoading,
   emptyState,
@@ -112,6 +131,11 @@ export function TreeView({
   }, []);
   const refs = React.useRef(new Map<string, HTMLLIElement>());
   const typed = React.useRef({ text: '', at: 0 });
+  const uid = React.useId();
+  // scrollToNode: the node to reveal once its ancestors have rendered open (without the slide, so it lands right).
+  const pending = React.useRef<{ id: string; focus?: boolean } | null>(null);
+  // Set while Enter replays a click on a link row, so the row's own click handler stays out of it.
+  const following = React.useRef(false);
 
   const open = React.useMemo(() => new Set(expanded), [expanded]);
   const checkedSet = React.useMemo(() => new Set(checked), [checked]);
@@ -142,6 +166,40 @@ export function TreeView({
     setFocused(id);
     refs.current.get(id)?.focus();
   };
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      scrollToNode(id, options) {
+        if (!all.has(id)) return;
+        const closed: string[] = [];
+        for (let p = all.get(id)!.parent; p; p = all.get(p)?.parent ?? null) if (!open.has(p)) closed.push(p);
+        pending.current = { id, focus: options?.focus };
+        if (closed.length) setExpanded([...expanded, ...closed]);
+        else reveal();
+      },
+    }),
+    [all, open, expanded],
+  );
+  const reveal = () => {
+    const target = pending.current;
+    const el = target && refs.current.get(target.id);
+    if (!target || !el) return;
+    pending.current = null;
+    (el.firstElementChild as HTMLElement | null)?.scrollIntoView?.({ block: 'nearest' });
+    if (target.focus) focus(target.id);
+  };
+  React.useEffect(reveal);
+
+  // Row actions are in the tab order only on the tab-stop row: Tab goes from it to its actions, not every row's.
+  React.useEffect(() => {
+    if (!renderActions) return;
+    for (const [id, li] of refs.current) {
+      li.querySelector(':scope > * > [data-tree-actions]')
+        ?.querySelectorAll<HTMLElement>(FOCUSABLE)
+        .forEach((el) => (el.tabIndex = id === tabStop ? 0 : -1));
+    }
+  });
 
   const toggle = async (node: TreeNode, to = !open.has(node.id)) => {
     if (!hasKids(node) || to === open.has(node.id)) return;
@@ -184,6 +242,8 @@ export function TreeView({
   };
 
   const onKeyDown = (e: React.KeyboardEvent, flat: Flat) => {
+    // Keys from row actions (or ones a nested item left alone) aren't this item's.
+    if (e.target !== e.currentTarget) return;
     const { node } = flat;
     const i = visible.findIndex((f) => f.node.id === node.id);
     const rtl = getComputedStyle(e.currentTarget).direction === 'rtl';
@@ -212,6 +272,18 @@ export function TreeView({
         else focus(flat.parent ?? undefined);
         break;
       case 'Enter':
+        activate(node);
+        if (!node.disabled) {
+          onActivate?.(node);
+          const link = node.href && e.currentTarget.querySelector<HTMLAnchorElement>(':scope > a');
+          if (link) {
+            following.current = true;
+            // Modifiers ride along, so Cmd/Ctrl+Enter can open a new tab where the browser allows it.
+            link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey: e.ctrlKey, metaKey: e.metaKey, shiftKey: e.shiftKey }));
+            following.current = false;
+          }
+        }
+        break;
       case ' ':
         activate(node);
         break;
@@ -243,6 +315,9 @@ export function TreeView({
       const isChecked = checkedSet.has(node.id);
       const mixed = !isChecked && descendants(node).some((id) => checkedSet.has(id));
       const flat = { node, level, parent };
+      const Row = node.href && !node.disabled ? 'a' : 'div';
+      const labelId = `${uid}-${encodeURIComponent(node.id)}`;
+      const actions = renderActions?.(node);
       return (
         <li
           key={node.id}
@@ -259,29 +334,44 @@ export function TreeView({
           aria-checked={checkable ? (mixed ? 'mixed' : isChecked) : undefined}
           aria-disabled={node.disabled || undefined}
           aria-busy={loading === node.id || undefined}
+          // Name the item by its label and meta, not its actions (or its children).
+          aria-labelledby={renderActions ? (node.trailing != null ? `${labelId} ${labelId}-t` : labelId) : undefined}
           tabIndex={tabStop === node.id ? 0 : -1}
           onKeyDown={(e) => onKeyDown(e, flat)}
           onFocus={(e) => {
             if (e.target === e.currentTarget) setFocused(node.id);
           }}
-          className="outline-none [&:focus-visible>div:first-child]:outline [&:focus-visible>div:first-child]:outline-2 [&:focus-visible>div:first-child]:-outline-offset-2 [&:focus-visible>div:first-child]:outline-[var(--color-primary)]"
+          className="outline-none [&:focus-visible>:first-child]:outline [&:focus-visible>:first-child]:outline-2 [&:focus-visible>:first-child]:-outline-offset-2 [&:focus-visible>:first-child]:outline-[var(--color-primary)]"
         >
-          <div
+          <Row
+            href={Row === 'a' ? node.href : undefined}
+            tabIndex={Row === 'a' ? -1 : undefined}
             ref={
               INDENT[level - 1]
                 ? undefined
-                : (el) => {
+                : (el: HTMLElement | null) => {
                     // CSSOM so strict-CSP pages still get the indent.
                     if (el) el.style.paddingInlineStart = `${(level - 1) * 1.25 + 0.25}rem`;
                   }
             }
-            onClick={() => {
+            onClick={(e: React.MouseEvent) => {
+              if (following.current || (e.target as Element).closest('[data-tree-actions]')) return;
+              // A new-tab click on a link leaves the tree as it is.
+              if (Row === 'a' && (e.metaKey || e.ctrlKey || e.shiftKey)) return;
+              // The second click of a double-click is the activation, not another toggle.
+              if (onActivate && e.detail > 1) return;
               focus(node.id);
               if (kids && !checkable) void toggle(node);
               activate(node);
             }}
+            onDoubleClick={
+              onActivate &&
+              ((e: React.MouseEvent) => {
+                if (!node.disabled && !(e.target as Element).closest('[data-tree-actions]')) onActivate(node);
+              })
+            }
             className={cn(
-              'flex min-h-control-sm cursor-default items-center gap-1.5 rounded-shape-control pe-2 text-body-md text-[var(--color-on-surface)]',
+              'group/row flex min-h-control-sm cursor-default items-center gap-1.5 rounded-shape-control pe-2 text-body-md text-[var(--color-on-surface)] no-underline',
               INDENT[level - 1],
               'hover:bg-[var(--color-surface-container-high)]',
               !checkable &&
@@ -327,8 +417,27 @@ export function TreeView({
                 {node.icon}
               </span>
             )}
-            <span className="truncate">{node.label}</span>
-          </div>
+            <span id={renderActions ? labelId : undefined} className="min-w-0 flex-1 truncate">
+              {node.label}
+            </span>
+            {node.trailing != null && (
+              <span
+                id={renderActions ? `${labelId}-t` : undefined}
+                className="shrink-0 text-body-sm text-[var(--color-on-surface-variant)] tabular-nums"
+              >
+                {node.trailing}
+              </span>
+            )}
+            {actions != null && (
+              // Always laid out (no shift when it shows); faded in on hover, row focus and on touch screens.
+              <span
+                data-tree-actions=""
+                className="flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover/row:opacity-100 focus-within:opacity-100 pointer-coarse:opacity-100 motion-reduce:transition-none [:focus>*>&]:opacity-100"
+              >
+                {actions}
+              </span>
+            )}
+          </Row>
           {kids && node.children && (isOpen || closing.has(node.id)) && (
             // Rows 0fr → 1fr: the group slides open on mount (@starting-style) and shut before it unmounts.
             <div
@@ -349,7 +458,7 @@ export function TreeView({
               className={cn(
                 'grid transition-[grid-template-rows] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
                 isOpen ? 'grid-rows-[1fr]' : 'pointer-events-none grid-rows-[0fr]',
-                isOpen && mounted.current && '[@starting-style]:grid-rows-[0fr]',
+                isOpen && mounted.current && !pending.current && '[@starting-style]:grid-rows-[0fr]',
               )}
             >
               <ul role="group" className="m-0 min-h-0 list-none overflow-hidden p-0">

@@ -19,7 +19,30 @@ export interface InlineEditProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  /**
+   * 11.5: type role of the text and the input, from body text up to a headline.
+   * @default 'md' (or the `as` element's own type when `as` is set)
+   */
+  size?: InlineEditSize;
+  /**
+   * 11.5: wraps the text (and the input while editing) in this element, e.g.
+   * `'h2'` or `Sheet.Title` / `Dialog.Title`, so the heading or the dialog's
+   * name stays in place. The button inside it does the editing.
+   */
+  as?: React.ElementType;
+  /** 11.5: caps the input's length and shows a "12/80" counter. */
+  maxLength?: number;
 }
+
+export type InlineEditSize = 'sm' | 'md' | 'lg' | 'title' | 'headline';
+
+const typeRole: Record<InlineEditSize, string> = {
+  sm: 'text-body-sm',
+  md: 'text-body-md',
+  lg: 'text-body-lg',
+  title: 'text-title-lg',
+  headline: 'text-headline-sm',
+};
 
 /**
  * Text that turns into an input on click. Enter or blur saves, Escape reverts,
@@ -32,7 +55,13 @@ export function InlineEdit({
   placeholder,
   disabled,
   className,
+  size,
+  as: Wrapper,
+  maxLength,
 }: InlineEditProps) {
+  // With `as` and no `size`, the text takes the wrapper's type (e.g. Sheet.Title's).
+  const role = size ? typeRole[size] : Wrapper ? undefined : typeRole.md;
+  const big = size === 'title' || size === 'headline';
   const t = useNexubMessages();
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(value);
@@ -70,8 +99,10 @@ export function InlineEdit({
     }
   };
 
+  const wrap = (node: React.ReactElement) => (Wrapper ? <Wrapper>{node}</Wrapper> : node);
+
   if (editing) {
-    return (
+    return wrap(
       <Input
         autoFocus
         aria-label={label}
@@ -79,6 +110,10 @@ export function InlineEdit({
         invalid={failed}
         aria-busy={saving || undefined}
         readOnly={saving}
+        maxLength={maxLength}
+        showCount={maxLength !== undefined}
+        size={size === 'sm' ? 'sm' : big ? 'lg' : undefined}
+        className={size && size !== 'sm' && size !== 'md' ? role : undefined}
         wrapperClassName={className}
         onChange={(e) => {
           setDraft(e.target.value);
@@ -99,11 +134,11 @@ export function InlineEdit({
         onBlur={() => {
           if (!failed) void save(false);
         }}
-      />
+      />,
     );
   }
 
-  return (
+  return wrap(
     <button
       ref={buttonRef}
       type="button"
@@ -115,13 +150,15 @@ export function InlineEdit({
       }}
       className={cn(
         '-mx-2 inline-flex min-h-control-sm max-w-full items-center rounded-shape-control px-2 text-start',
-        'text-body-md text-[var(--color-on-surface)] hover:bg-[var(--color-surface-container-high)]',
+        role,
+        big && 'min-h-control-md',
+        'text-[var(--color-on-surface)] hover:bg-[var(--color-surface-container-high)]',
         'disabled:cursor-not-allowed disabled:hover:bg-transparent',
         !value && 'text-[var(--color-on-surface-muted)]',
         className,
       )}
     >
       <span className="truncate">{value || placeholder}</span>
-    </button>
+    </button>,
   );
 }

@@ -76,3 +76,13 @@ export const WithAttachmentsAndStreaming: Story = {
     );
   },
 };
+
+/** 11.5: a visible Send label, Cmd/Ctrl+Enter to send, a hint and an error. */
+export const LabelHintAndError: Story = {
+  render: () => (
+    <div className="flex flex-col gap-6">
+      <PromptInput placeholder="Write a long answer" sendLabel="Send" submitOn="mod-enter" hint="Visible to everyone in the thread." />
+      <PromptInput placeholder="Ask anything" defaultValue="A very long prompt" error="Shorten your message to 4,000 characters." />
+    </div>
+  ),
+};
