@@ -120,3 +120,14 @@ it('FAB renders on Android only by default', async () => {
   expect(screen.getByRole('button', { name: 'New transfer' })).toBeTruthy();
   Platform.OS = os;
 });
+
+it('OTPInput mode="backup" (11.2): groups of four, value without dashes, completes at 12', async () => {
+  const onComplete = jest.fn();
+  const onValueChange = jest.fn();
+  await wrap(<OTPInput label="Backup code" mode="backup" onComplete={onComplete} onValueChange={onValueChange} />);
+  const input = screen.getByLabelText('Backup code');
+  await fireEvent.changeText(input, 'ab12-cd34-ef56zz');
+  expect(onValueChange).toHaveBeenLastCalledWith('ab12cd34ef56');
+  expect(onComplete).toHaveBeenCalledWith('ab12cd34ef56');
+  expect(screen.getByLabelText('Backup code').props.value).toBe('ab12-cd34-ef56');
+});

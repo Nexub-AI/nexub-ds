@@ -23,3 +23,8 @@ export const ConsistentControls: Story = {
     </div>
   ),
 };
+
+/** 11.2: a 12-character recovery code in one field, grouped in fours. */
+export const Backup: Story = {
+  render: () => <OTPInput mode="backup" defaultValue="ab12cd34" />,
+};

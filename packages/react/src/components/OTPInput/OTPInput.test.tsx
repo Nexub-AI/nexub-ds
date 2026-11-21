@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { OTPInput } from './OTPInput.js';
@@ -64,5 +64,41 @@ describe('OTPInput 10.4 consistent controls', () => {
     fireEvent.keyDown(first, { key: 'Backspace' });
     expect(onValueChange).not.toHaveBeenCalled();
     expect(first).toHaveValue('1');
+  });
+});
+
+describe('OTPInput (11.2)', () => {
+  it('backup mode: one field, 12 letters and digits in groups of four, value without dashes', async () => {
+    const onValueChange = vi.fn();
+    const onComplete = vi.fn();
+    render(<OTPInput mode="backup" onValueChange={onValueChange} onComplete={onComplete} />);
+    const input = screen.getByRole('textbox', { name: 'Backup code' });
+    await userEvent.type(input, 'ab12-cd34 ef56zz');
+    expect(input).toHaveValue('ab12-cd34-ef56');
+    expect(onValueChange).toHaveBeenLastCalledWith('ab12cd34ef56');
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete).toHaveBeenCalledWith('ab12cd34ef56');
+  });
+
+  it('autoFocus focuses the first box', () => {
+    render(<OTPInput autoFocus />);
+    expect(screen.getAllByRole('textbox')[0]).toHaveFocus();
+  });
+
+  it('posts with an uncontrolled form, and a form reset empties it', async () => {
+    render(
+      <form data-testid="form">
+        <OTPInput name="code" length={4} />
+        <OTPInput name="backup" mode="backup" />
+      </form>,
+    );
+    const form = screen.getByTestId('form') as HTMLFormElement;
+    await userEvent.type(screen.getAllByRole('textbox')[0]!, '1234');
+    await userEvent.type(screen.getByRole('textbox', { name: 'Backup code' }), 'aaaabbbbcccc');
+    expect(new FormData(form).get('code')).toBe('1234');
+    expect(new FormData(form).get('backup')).toBe('aaaabbbbcccc');
+    act(() => form.reset());
+    expect(new FormData(form).get('code')).toBe('');
+    expect(new FormData(form).get('backup')).toBe('');
   });
 });
