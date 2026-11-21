@@ -20,8 +20,10 @@ const entry: ComponentEntry = {
     { name: 'onCreate', type: '(text: string) => void', required: false, description: 'Adds a "Create “text”" option when the text matches no option.' },
     { name: 'loading', type: 'boolean', required: false, description: 'Skeleton rows instead of options; "Loading" is announced.' },
     { name: 'aria-label / aria-labelledby', type: 'string', required: false, description: 'Name the field: there is no visible label inside it.' },
+    { name: 'onSearch', type: '(text: string) => void', description: '11.2: async search (same as `onInputChange`); picked values keep their labels and avatars.' },
+    { name: 'options[].description / disabled / avatar', type: 'string / boolean / ReactNode', description: '11.2: a second line (also searched), options that can\'t be picked, and an avatar in the list and on the chip.' },
   ],
-  examples: [{ title: 'Labels with create' }],
+  examples: [{ title: 'Labels with create' }, { title: 'People with server search' }],
   a11y: {
     keyboard: [
       { key: 'Type', description: 'Filters the options and opens the list.' },

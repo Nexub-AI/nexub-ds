@@ -77,6 +77,132 @@
         }
       ]
     },
+    "AlertDialogPrompt": {
+      "file": "components/AlertDialog/AlertDialog.tsx",
+      "props": [
+        {
+          "name": "cancelLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'Cancel'",
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "confirmLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'Continue'",
+          "description": ""
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": ""
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "''",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The field's label, e.g. \"Reason\"."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "minLength",
+          "type": "number",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "multiline",
+          "type": "boolean",
+          "required": false,
+          "description": "A Textarea instead of a one-line Input."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onSubmit",
+          "type": "((value: string) => unknown)",
+          "required": false,
+          "description": "Called with the trimmed answer. While a returned promise runs, the dialog is busy (it cannot be closed); if it rejects, its message is shown and the dialog stays open; when it resolves, the dialog closes."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "An empty answer is refused."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto'",
+          "description": "See AlertDialog.Content `sheet`."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "tone",
+          "type": "'destructive' | 'default'",
+          "required": false,
+          "default": "'default'",
+          "description": "`destructive` for a reason that goes with a delete or a reject."
+        },
+        {
+          "name": "validate",
+          "type": "((value: string) => React.ReactNode | void)",
+          "required": false,
+          "description": "Return an error message to refuse the answer (checked on submit, after `required` and `minLength`)."
+        }
+      ]
+    },
     "Amount": {
       "file": "components/Amount/Amount.tsx",
       "props": [
@@ -291,6 +417,12 @@
           "description": ""
         },
         {
+          "name": "clearOnSelect",
+          "type": "boolean",
+          "required": false,
+          "description": "11.2: \"add\" mode: after a pick the text empties and the field is ready for the next one (add a person, add a tag). The value stays yours to keep in a list."
+        },
+        {
           "name": "disabled",
           "type": "boolean",
           "required": false,
@@ -303,10 +435,22 @@
           "description": ""
         },
         {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": "11.2: the input's id (the label points at it)."
+        },
+        {
           "name": "inputValue",
           "type": "string",
           "required": false,
           "description": "Controlled input text."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.2: a visible label above the field."
         },
         {
           "name": "loading",
@@ -314,6 +458,12 @@
           "required": false,
           "default": "false",
           "description": ""
+        },
+        {
+          "name": "onClear",
+          "type": "(() => void)",
+          "required": false,
+          "description": "11.2: called when the person clears the field (the clear button, or deleting all the text) so the page can drop the value. With it, a clear button shows while there is text."
         },
         {
           "name": "onCreate",
@@ -1331,6 +1481,117 @@
         }
       ]
     },
+    "ColorPicker": {
+      "file": "components/ColorPicker/ColorPicker.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "contrastAgainst",
+          "type": "string",
+          "required": false,
+          "description": "A background hex: shows the WCAG contrast ratio of the colour against it and the AA text hint (4.5:1)."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "'#000000'",
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((hex: string) => void)",
+          "required": false,
+          "description": "Called with a lowercase `#rrggbb`."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the colour; the popover can't open. Stays focusable."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "swatches",
+          "type": "ColorSwatch[]",
+          "required": false,
+          "default": "neutrals and hues",
+          "description": "The colours offered as swatches."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked colour as `#rrggbb`."
+        }
+      ]
+    },
     "ComboboxField": {
       "file": "components/ComboboxField/ComboboxField.tsx",
       "props": [
@@ -1665,6 +1926,76 @@
         }
       ]
     },
+    "CommandList": {
+      "file": "components/CommandList/CommandList.tsx",
+      "props": [
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Focus the search box on mount."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyText",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "messages.noResults",
+          "description": "Shown when the search finds nothing."
+        },
+        {
+          "name": "items",
+          "type": "CommandListItem[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "default": "messages.search",
+          "description": "Accessible name of the search box and list."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows a loading row, sets aria-busy on the list and hides the empty text."
+        },
+        {
+          "name": "maxHeight",
+          "type": "string",
+          "required": false,
+          "default": "20rem",
+          "description": "The list's maximum height (any CSS length)."
+        },
+        {
+          "name": "onSearch",
+          "type": "((text: string) => void)",
+          "required": false,
+          "description": "Async search: called with the typed text (debounce on your side). While set, the list is not filtered here: show what the server returned in `items`."
+        },
+        {
+          "name": "onSelect",
+          "type": "((value: string, item: CommandListItem) => void)",
+          "required": false,
+          "description": "Called with the picked item's value (Enter or click)."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "messages.searchPlaceholder",
+          "description": "The search box's placeholder."
+        }
+      ]
+    },
     "CommandPaletteItem": {
       "file": "components/CommandPalette/CommandPalette.tsx",
       "props": [
@@ -1973,6 +2304,350 @@
           "required": false,
           "default": "'md'",
           "description": ""
+        }
+      ]
+    },
+    "CurrencyField": {
+      "file": "components/CurrencySelect/CurrencySelect.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "currencies",
+          "type": "string[]",
+          "required": false,
+          "description": "Only these ISO 4217 codes, in this order. Default: every code the runtime knows."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "description",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Help under the field."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyText",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'No results found.'",
+          "description": "Shown when the search finds nothing."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The error under the field; also marks the field invalid."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP 47 locale for the names and symbols. Defaults to the user's."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "noneOption",
+          "type": "string",
+          "required": false,
+          "description": "A first option that clears the value (`null`), labelled with this text, e.g. \"No manager\"."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void)",
+          "required": false,
+          "description": "Called with the picked value, or `null` when the \"none\" option is picked."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select…'",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "priority",
+          "type": "string[]",
+          "required": false,
+          "description": "Codes listed first, under a \"common\" group heading when `priorityLabel` is set."
+        },
+        {
+          "name": "priorityLabel",
+          "type": "string",
+          "required": false,
+          "description": "Heading for the `priority` group. Without it the priority codes simply come first."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the list can't open. Stays focusable."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "restLabel",
+          "type": "string",
+          "required": false,
+          "description": "Heading for the rest when `priorityLabel` is set."
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "default": "'Search…'",
+          "description": "The search box's placeholder."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        }
+      ]
+    },
+    "CurrencySelect": {
+      "file": "components/CurrencySelect/CurrencySelect.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "currencies",
+          "type": "string[]",
+          "required": false,
+          "description": "Only these ISO 4217 codes, in this order. Default: every code the runtime knows."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "emptyText",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "'No results found.'",
+          "description": "Shown when the search finds nothing."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP 47 locale for the names and symbols. Defaults to the user's."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "noneOption",
+          "type": "string",
+          "required": false,
+          "description": "A first option that clears the value (`null`), labelled with this text, e.g. \"No manager\"."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((value: string) => void)",
+          "required": false,
+          "description": "Called with the picked value, or `null` when the \"none\" option is picked."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "'Select…'",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "priority",
+          "type": "string[]",
+          "required": false,
+          "description": "Codes listed first, under a \"common\" group heading when `priorityLabel` is set."
+        },
+        {
+          "name": "priorityLabel",
+          "type": "string",
+          "required": false,
+          "description": "Heading for the `priority` group. Without it the priority codes simply come first."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the list can't open. Stays focusable."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "restLabel",
+          "type": "string",
+          "required": false,
+          "description": "Heading for the rest when `priorityLabel` is set."
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "default": "'Search…'",
+          "description": "The search box's placeholder."
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
         }
       ]
     },
@@ -2561,6 +3236,13 @@
           "description": ""
         },
         {
+          "name": "endExclusive",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "11.2: `to` is the day after the last day (a half-open range, as many APIs and bookings store it): 1–3 March is `{ from: 1 March, to: 4 March }`. The calendar and the trigger still show 1–3 March. Applies to `value`, `onChange`, `onComplete` and presets."
+        },
+        {
           "name": "id",
           "type": "string",
           "required": false,
@@ -2589,6 +3271,12 @@
           "type": "((range: DateRange) => void)",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onComplete",
+          "type": "((range: { from: Date; to: Date; }) => void)",
+          "required": false,
+          "description": "11.2: called once both ends are set: on the second day picked after the calendar opens, or when a preset is picked. Use it to fetch, or to close a filter, only when the range is whole."
         },
         {
           "name": "placeholder",
@@ -2651,6 +3339,12 @@
           "type": "string",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "required": false,
+          "description": "11.2: a clear button after the time empties the value (`onValueChange(undefined)`)."
         },
         {
           "name": "defaultTime",
@@ -3078,6 +3772,215 @@
           "required": false,
           "default": "false",
           "description": "Don't skip snap points on fast swipes."
+        }
+      ]
+    },
+    "EmojiPicker": {
+      "file": "components/EmojiPicker/EmojiPicker.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultSkinTone",
+          "type": "0 | 1 | 2 | 3 | 4 | 5",
+          "required": false,
+          "default": "the last tone chosen on this device, else 0",
+          "description": ""
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "null",
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "onSkinToneChange",
+          "type": "((tone: SkinTone) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((emoji: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "messages.pickEmoji",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the panel can't open. Stays focusable."
+        },
+        {
+          "name": "recent",
+          "type": "string[]",
+          "required": false,
+          "description": "Recent picks, newest first. When set, they are not read from or saved to localStorage."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "skinTone",
+          "type": "0 | 1 | 2 | 3 | 4 | 5",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked emoji; `null` (or `undefined` when uncontrolled) for none."
+        }
+      ]
+    },
+    "EmojiPickerPanel": {
+      "file": "components/EmojiPicker/EmojiPicker.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "default": "messages.pickEmoji",
+          "description": "Names the emoji list."
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "required": false,
+          "description": "Focus the search box on mount."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultSkinTone",
+          "type": "0 | 1 | 2 | 3 | 4 | 5",
+          "required": false,
+          "default": "the last tone chosen on this device, else 0",
+          "description": ""
+        },
+        {
+          "name": "listId",
+          "type": "string",
+          "required": false,
+          "description": "The listbox's id."
+        },
+        {
+          "name": "onSkinToneChange",
+          "type": "((tone: SkinTone) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onValueChange",
+          "type": "((emoji: string) => void)",
+          "required": false,
+          "description": "Called with the picked emoji (skin tone applied)."
+        },
+        {
+          "name": "recent",
+          "type": "string[]",
+          "required": false,
+          "description": "Recent picks, newest first. When set, they are not read from or saved to localStorage."
+        },
+        {
+          "name": "skinTone",
+          "type": "0 | 1 | 2 | 3 | 4 | 5",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked emoji, marked in the grid."
         }
       ]
     },
@@ -4132,6 +5035,203 @@
         }
       ]
     },
+    "IconPicker": {
+      "file": "components/IconPicker/IconPicker.tsx",
+      "props": [
+        {
+          "name": "aria-describedby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-invalid",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-required",
+          "type": "false | true | 'true' | 'false'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "categories",
+          "type": "IconPickerCategory[]",
+          "required": false,
+          "description": "Icons under headings, with a category row to jump between them. Overrides `icons`."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "default": "null",
+          "description": ""
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "icons",
+          "type": "string[]",
+          "required": false,
+          "default": "every `@nexub/icons` export, A–Z",
+          "description": "Only these icons, in this order."
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "With `name`, a hidden input carries the value, so a plain `<form>` posts it."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((name: string) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "default": "messages.pickIcon",
+          "description": "Shown when nothing is picked."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the value; the panel can't open. Stays focusable."
+        },
+        {
+          "name": "recent",
+          "type": "string[]",
+          "required": false,
+          "description": "Recent picks, newest first. When set, they are not read from or saved to localStorage."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "sheet",
+          "type": "false | true | 'auto'",
+          "required": false,
+          "default": "'auto' (a bottom sheet below 768px)",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked icon's name; `null` (or `undefined` when uncontrolled) for none."
+        }
+      ]
+    },
+    "IconPickerPanel": {
+      "file": "components/IconPicker/IconPicker.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "default": "messages.pickIcon",
+          "description": "Names the icon list."
+        },
+        {
+          "name": "autoFocus",
+          "type": "boolean",
+          "required": false,
+          "description": "Focus the search box on mount."
+        },
+        {
+          "name": "categories",
+          "type": "IconPickerCategory[]",
+          "required": false,
+          "description": "Icons under headings, with a category row to jump between them. Overrides `icons`."
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "icons",
+          "type": "string[]",
+          "required": false,
+          "default": "every `@nexub/icons` export, A–Z",
+          "description": "Only these icons, in this order."
+        },
+        {
+          "name": "listId",
+          "type": "string",
+          "required": false,
+          "description": "The listbox's id."
+        },
+        {
+          "name": "onValueChange",
+          "type": "((name: string) => void)",
+          "required": false,
+          "description": "Called with the picked icon's name (an `@nexub/icons` export, e.g. \"Calendar\")."
+        },
+        {
+          "name": "recent",
+          "type": "string[]",
+          "required": false,
+          "description": "Recent picks, newest first. When set, they are not read from or saved to localStorage."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The picked icon's name, marked in the grid."
+        }
+      ]
+    },
     "Illustration": {
       "file": "components/Illustration/Illustration.tsx",
       "props": [
@@ -4808,6 +5908,12 @@
           "description": "ISO 4217 code, e.g. 'USD'."
         },
         {
+          "name": "currencySlot",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.2: shown before the amount, e.g. `<CurrencySelect aria-label=\"Currency\" value={currency} onValueChange={setCurrency} />`, so people can change the currency next to the amount."
+        },
+        {
           "name": "defaultValue",
           "type": "number",
           "required": false,
@@ -4983,6 +6089,12 @@
           "type": "((text: string) => void)",
           "required": false,
           "description": "Called as the user types; options are then shown as given (no built-in filtering)."
+        },
+        {
+          "name": "onSearch",
+          "type": "((text: string) => void)",
+          "required": false,
+          "description": "11.2: async search, the same as `onInputChange` (named as on ComboboxField): called with the typed text; show what the server returned in `options` and set `loading` meanwhile. Picked values keep their labels and avatars when they drop out of `options`."
         },
         {
           "name": "onValueChange",
@@ -5322,6 +6434,12 @@
           "description": "Group name; defaults to \"Verification code\"."
         },
         {
+          "name": "autoFocus",
+          "type": "boolean",
+          "required": false,
+          "description": "11.2: focus the first box (or the backup field) on mount, e.g. on a sign-in step."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
@@ -5349,21 +6467,20 @@
           "name": "length",
           "type": "number",
           "required": false,
-          "default": "6",
           "description": "Number of characters. Default 6."
         },
         {
           "name": "mode",
-          "type": "'numeric' | 'alphanumeric'",
+          "type": "'numeric' | 'alphanumeric' | 'backup'",
           "required": false,
           "default": "'numeric'",
-          "description": "`numeric` (default) accepts digits only; `alphanumeric` accepts letters too."
+          "description": "`numeric` (default) accepts digits only; `alphanumeric` accepts letters too. 11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to 12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes."
         },
         {
           "name": "name",
           "type": "string",
           "required": false,
-          "description": "Submits with a form under this name."
+          "description": "Submits with a form under this name. A form `reset` empties it (back to `defaultValue`)."
         },
         {
           "name": "onComplete",

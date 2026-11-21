@@ -7,6 +7,8 @@ import type { Size } from '../../utils/control.js';
 import type { SheetProp } from '../../utils/popper.js';
 import { DatePicker } from '../DatePicker/DatePicker.js';
 import { TimePicker } from '../TimePicker/TimePicker.js';
+import { IconButton } from '../IconButton/IconButton.js';
+import { X } from '@nexub/icons';
 import { useIntlLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface DateTimePickerProps {
@@ -32,6 +34,8 @@ export interface DateTimePickerProps {
   locale?: Locale;
   /** The calendar as a bottom sheet: see DatePicker `sheet`. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
+  /** 11.2: a clear button after the time empties the value (`onValueChange(undefined)`). */
+  clearable?: boolean;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -60,6 +64,7 @@ export function DateTimePicker({
   className,
   locale,
   sheet,
+  clearable,
 }: DateTimePickerProps) {
   const change = (v: Date | undefined) => onValueChange?.(v);
   const messages = useNexubMessages();
@@ -105,6 +110,18 @@ export function DateTimePicker({
           else setPendingTime(next);
         }}
       />
+      {clearable && value && !disabled && !readOnly && (
+        <IconButton
+          size="sm"
+          label={messages.clear}
+          onClick={() => {
+            setPendingTime(defaultTime);
+            change(undefined);
+          }}
+        >
+          <X className="h-4 w-4" aria-hidden="true" />
+        </IconButton>
+      )}
       {zoneName && (
         <span className="text-body-sm text-[var(--color-on-surface-muted)]">
           {messages.timeZoneLabel(`${zoneName} (${timeZone})`)}

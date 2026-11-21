@@ -14,6 +14,7 @@ An amount field: locale-aware parsing as you type, grouped on blur, the currency
 | `locale` | `string` |  | BCP 47 locale for separators. Defaults to the user's. |
 | `value / defaultValue` | `number \| null` |  | The amount, or null when empty. |
 | `onValueChange` | `(value: number \| null) => void` |  | Parsed amount, rounded to the minor unit, as the person types. |
+| `currencySlot` | `ReactNode` |  | 11.2: shown before the amount, e.g. a CurrencySelect. |
 
 ## Example: Default
 

@@ -26,6 +26,10 @@ export interface MultiSelectOption<T extends string> {
   value: T;
   label: string;
   description?: string;
+  /** 11.2: listed but can't be picked. */
+  disabled?: boolean;
+  /** 11.2: shown before the label, e.g. an `Avatar` for people. */
+  avatar?: React.ReactNode;
 }
 
 export interface MultiSelectProps<T extends string> {
@@ -66,7 +70,7 @@ export function MultiSelect<T extends string>({
   const summary = labels.length > 2 ? `${labels.slice(0, 2).join(', ')}, +${messages.moreCount(labels.length - 2)}` : labels.join(', ');
   const search = searchable ?? options.length > 8;
   const q = query.trim().toLowerCase();
-  const shown = q ? options.filter((o) => o.label.toLowerCase().includes(q)) : options;
+  const shown = q ? options.filter((o) => o.label.toLowerCase().includes(q) || o.description?.toLowerCase().includes(q)) : options;
 
   return (
     <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
@@ -119,6 +123,8 @@ export function MultiSelect<T extends string>({
               variant="checkbox"
               title={o.label}
               subtitle={o.description}
+              leading={o.avatar}
+              disabled={o.disabled}
               checked={v.includes(o.value)}
               onCheckedChange={(on) => setV(on ? [...v, o.value] : v.filter((x) => x !== o.value))}
             />

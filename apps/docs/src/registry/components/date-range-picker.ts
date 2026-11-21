@@ -23,6 +23,8 @@ const entry: ComponentEntry = {
     { name: 'id', type: 'string', required: false, description: 'Id for the trigger button, e.g. to pair with a <label htmlFor>.' },
     { name: 'presets', type: 'boolean | { label: string; range: (today: Date) => DateRange }[]', required: false, description: '`true` adds Today, Last 7 days, Last 30 days, Month to date and Last month beside the calendar; or pass your own (5.5).' },
     { name: 'timeZone', type: 'string', required: false, description: 'IANA zone the dates mean, e.g. `Europe/London`. Shown under the calendar; presets count "today" there (5.5). `todayIn(zone)` is exported.' },
+    { name: 'endExclusive', type: 'boolean', description: '11.2: `to` is the day after the last day (half-open), in and out; the calendar still shows the last day.' },
+    { name: 'onComplete', type: '(range: { from: Date; to: Date }) => void', description: '11.2: called once both ends are set (the second day picked, or a preset).' },
   ],
   examples: [
     {
@@ -35,6 +37,7 @@ const entry: ComponentEntry = {
       title: 'Presets and time zone',
       description: 'Quick ranges counted in the chosen time zone, which is labelled under the calendar.',
     },
+    { title: 'Half-open stay', description: 'endExclusive and onComplete.' },
   ],
 };
 

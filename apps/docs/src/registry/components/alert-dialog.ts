@@ -22,6 +22,8 @@ const entry: ComponentEntry = {
     { name: 'AlertDialog.Action', type: 'compound', required: false, description: 'Confirms the destructive or affirmative action and closes the dialog.' },
     { name: 'AlertDialog.Cancel', type: 'compound', required: false, description: 'Cancels the action and closes the dialog.' },
     { name: 'AlertDialog.Confirm text', type: 'string', required: false, description: 'Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources.' },
+    { name: 'AlertDialog.Prompt', type: 'component', description: '11.2: asks for one line of text in place of `window.prompt`: `title`, `label`, `required` (default true), `minLength`, `maxLength`, `validate`, `multiline`, `tone`, and `onSubmit` (busy while its promise runs; a rejection shows its message and keeps the dialog open).' },
+    { name: 'usePrompt()', type: '[prompt, element]', description: '11.2: render `element` once; `await prompt(options)` resolves to the trimmed answer, or `null` when cancelled.' },
   ],
   examples: [
     {
@@ -31,6 +33,7 @@ const entry: ComponentEntry = {
       title: 'Type to confirm',
       description: 'Deleting a workspace asks for its name first.',
     },
+    { title: 'Ask for a reason', description: 'usePrompt replaces window.prompt, with limits and a busy state.' },
   ],
 };
 

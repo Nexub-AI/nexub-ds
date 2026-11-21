@@ -18,8 +18,9 @@ const entry: ComponentEntry = {
     { name: 'minDate / maxDate', type: 'Date', required: false, description: 'Limits the calendar.' },
     { name: 'timeZone', type: 'string', required: false, description: 'IANA zone named next to the fields, e.g. "Time zone: GMT+8 (Asia/Singapore)". Label only.' },
     { name: 'aria-label', type: 'string', required: false, description: 'Names the group; the parts read "Date" and "Time".' },
+    { name: 'clearable', type: 'boolean', description: '11.2: a clear button empties the value.' },
   ],
-  examples: [{ title: 'Meeting start' }],
+  examples: [{ title: 'Meeting start' }, { title: 'Clearable reminder' }],
   a11y: { notes: ['A labelled group holding the DatePicker button and the native time input.'] },
 };
 

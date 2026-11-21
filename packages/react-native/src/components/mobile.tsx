@@ -321,13 +321,71 @@ export interface OTPInputProps {
   error?: string;
   autoFocus?: boolean;
   style?: StyleProp<ViewStyle>;
+  /**
+   * 11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to
+   * 12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web.
+   */
+  mode?: 'numeric' | 'backup';
 }
 
 /**
  * One-time code / PIN entry: one hidden field (so paste and SMS autofill work:
  * iOS oneTimeCode, Android sms-otp) drawn as boxes.
  */
-export function OTPInput({
+export function OTPInput(props: OTPInputProps) {
+  return props.mode === 'backup' ? <BackupCodeInput {...props} /> : <CodeBoxes {...props} />;
+}
+
+const group4 = (v: string) => (v.match(/.{1,4}/g) ?? []).join('-');
+
+function BackupCodeInput({ label, length = 12, value, onValueChange, onComplete, error, autoFocus, style }: OTPInputProps) {
+  const { roles, tokens, fonts } = useTheme();
+  const [focused, setFocused] = React.useState(false);
+  const [code, setCode] = useControllableState({ value, defaultValue: '', onChange: onValueChange });
+  return (
+    <View style={[{ gap: tokens.spacing[2] }, style]}>
+      <TextInput
+        accessibilityLabel={label}
+        accessibilityHint={error}
+        value={group4(code)}
+        placeholder={group4('x'.repeat(length))}
+        placeholderTextColor={roles['on-surface-muted']}
+        onChangeText={(t) => {
+          const next = (t.match(/[a-z0-9]/gi) ?? []).join('').slice(0, length);
+          setCode(next);
+          if (next.length === length && next !== code) onComplete?.(next);
+        }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        autoFocus={autoFocus}
+        autoCapitalize="none"
+        autoCorrect={false}
+        spellCheck={false}
+        textContentType="oneTimeCode"
+        autoComplete="sms-otp"
+        style={{
+          height: tokens.size.control.lg,
+          paddingHorizontal: tokens.spacing[3],
+          borderRadius: tokens.shape.field,
+          borderWidth: focused || error ? 2 : 1,
+          borderColor: error ? roles.error : focused ? roles.primary : roles.outline,
+          backgroundColor: roles['surface-container-lowest'],
+          color: roles['on-surface'],
+          textAlign: 'center',
+          fontSize: tokens.type['title-md'].size,
+          ...fontStyle('mono', 400, fonts),
+        }}
+      />
+      {error && (
+        <Text variant="body-sm" color="error" style={{ textAlign: 'center' }} accessibilityLiveRegion="polite">
+          {error}
+        </Text>
+      )}
+    </View>
+  );
+}
+
+function CodeBoxes({
   label,
   length = 6,
   value,

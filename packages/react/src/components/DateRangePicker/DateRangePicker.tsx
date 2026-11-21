@@ -65,7 +65,21 @@ export interface DateRangePickerProps {
   timeZone?: string;
   /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
+  /**
+   * 11.2: `to` is the day after the last day (a half-open range, as many APIs and bookings store
+   * it): 1–3 March is `{ from: 1 March, to: 4 March }`. The calendar and the trigger still show
+   * 1–3 March. Applies to `value`, `onChange`, `onComplete` and presets.
+   */
+  endExclusive?: boolean;
+  /**
+   * 11.2: called once both ends are set: on the second day picked after the calendar opens, or
+   * when a preset is picked. Use it to fetch, or to close a filter, only when the range is whole.
+   */
+  onComplete?: (range: { from: Date; to: Date }) => void;
 }
+
+const shiftEnd = (range: DateRange | undefined, days: number): DateRange | undefined =>
+  range?.to ? { ...range, to: addDays(range.to, days) } : range;
 
 function formatRange(
   range: DateRange | undefined,
@@ -125,7 +139,7 @@ const calendarClassNames = {
 export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps>(
   function DateRangePicker(
     {
-      value,
+      value: valueProp,
       onChange,
       placeholder: placeholderProp,
       disabled = false,
@@ -140,10 +154,24 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
       presets: presetsProp,
       timeZone,
       sheet = 'auto',
+      endExclusive = false,
+      onComplete,
     },
     ref,
   ) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpenState] = React.useState(false);
+    // Days picked since the calendar opened: the second one completes the range.
+    const picks = React.useRef(0);
+    const setOpen = (next: boolean) => {
+      if (next) picks.current = 0;
+      setOpenState(next);
+    };
+    // Inside, `to` is always the last day; outside it may be the day after.
+    const value = endExclusive ? shiftEnd(valueProp, -1) : valueProp;
+    const emit = (range: DateRange | undefined) => onChange?.(endExclusive ? shiftEnd(range, 1) : range);
+    const complete = (range: DateRange | undefined) => {
+      if (range?.from && range.to) onComplete?.({ from: range.from, to: endExclusive ? addDays(range.to, 1) : range.to });
+    };
     const messages = useNexubMessages();
     const { locale } = useLocale();
     const presets: DateRangePreset[] =
@@ -222,7 +250,9 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                         type="button"
                         className="nx-state-layer w-full rounded-shape-control px-3 py-1.5 text-start text-body-sm text-[var(--color-on-surface)]"
                         onClick={() => {
-                          onChange?.(p.range(todayIn(timeZone)));
+                          const range = p.range(todayIn(timeZone));
+                          emit(range);
+                          complete(range);
                           setOpen(false);
                         }}
                       >
@@ -237,7 +267,11 @@ export const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePick
                   mode="range"
                   selected={value}
                   defaultMonth={value?.from}
-                  onSelect={onChange}
+                  onSelect={(range) => {
+                    emit(range);
+                    picks.current += 1;
+                    if (picks.current % 2 === 0) complete(range);
+                  }}
                   numberOfMonths={2}
                   startMonth={minDate}
                   endMonth={maxDate}

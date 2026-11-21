@@ -20,6 +20,8 @@ Confirmation dialog that requires an explicit user action before proceeding.
 | `AlertDialog.Action` | `compound` |  | Confirms the destructive or affirmative action and closes the dialog. |
 | `AlertDialog.Cancel` | `compound` |  | Cancels the action and closes the dialog. |
 | `AlertDialog.Confirm text` | `string` |  | Type-to-confirm (5.6): the Action stays disabled until this text is typed. For irreversible actions on named resources. |
+| `AlertDialog.Prompt` | `component` |  | 11.2: asks for one line of text in place of `window.prompt`: `title`, `label`, `required` (default true), `minLength`, `maxLength`, `validate`, `multiline`, `tone`, and `onSubmit` (busy while its promise runs; a rejection shows its message and keeps the dialog open). |
+| `usePrompt()` | `[prompt, element]` |  | 11.2: render `element` once; `await prompt(options)` resolves to the trimmed answer, or `null` when cancelled. |
 
 ## Example: Default
 
@@ -79,6 +81,46 @@ export default function Example() {
         </AlertDialog.Footer>
       </AlertDialog.Content>
     </AlertDialog.Root>
+  );
+}
+```
+
+## Example: Ask for a reason
+
+usePrompt replaces window.prompt, with limits and a busy state.
+
+```tsx
+import * as React from 'react';
+import { Button, usePrompt } from '@nexub/react';
+
+export default function Example() {
+  const [prompt, promptElement] = usePrompt();
+  const [reason, setReason] = React.useState<string | null>(null);
+  return (
+    <div className="flex flex-col items-start gap-2">
+      <Button
+        variant="outlined"
+        onClick={async () =>
+          setReason(
+            await prompt({
+              title: 'Reject expense claim',
+              description: 'The submitter sees this reason.',
+              label: 'Reason',
+              minLength: 5,
+              maxLength: 200,
+              multiline: true,
+              tone: 'destructive',
+              confirmLabel: 'Reject claim',
+              onSubmit: () => new Promise((resolve) => setTimeout(resolve, 800)),
+            }),
+          )
+        }
+      >
+        Reject…
+      </Button>
+      <p className="text-body-sm text-on-surface-muted">Reason: {reason ?? '—'}</p>
+      {promptElement}
+    </div>
   );
 }
 ```

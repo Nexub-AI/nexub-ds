@@ -19,6 +19,8 @@ export interface ComboboxPopoverProps {
   onOpenChange: (open: boolean) => void;
   /** Rendered inside the field, before the input (MultiSelect chips). */
   before?: React.ReactNode;
+  /** Rendered inside the field, after the input (a clear button). */
+  after?: React.ReactNode;
   input: React.ComponentProps<typeof Command.Input>;
   disabled?: boolean;
   /** Focusable, but the list can't open and the text can't change. */
@@ -37,7 +39,7 @@ export interface ComboboxPopoverProps {
  */
 const fieldSizes: Record<Size, string> = { sm: 'min-h-control-sm', md: 'min-h-control-md', lg: 'min-h-control-lg' };
 
-export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', sheet = 'auto', children }: ComboboxPopoverProps) {
+export function ComboboxPopover({ open: openProp, onOpenChange, before, after, input, disabled, readOnly, size = 'md', sheet = 'auto', children }: ComboboxPopoverProps) {
   const open = openProp && !readOnly;
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -90,6 +92,7 @@ export function ComboboxPopover({ open: openProp, onOpenChange, before, input, d
               input.className,
             )}
           />
+          {after}
         </div>
       </RadixPopover.Anchor>
       <RadixPopover.Content
