@@ -21,6 +21,12 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `trendLabel` | `string` |  | Accessible summary of the trend. Without it the line is decorative. |
 | `description` | `string` |  | Additional context below the value. |
 | `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
+| `size` | `'md' \| 'sm'` | `'md'` | Since 11.3. `sm` is the compact tile: less padding and a smaller value. |
+| `note` | `ReactNode` |  | Since 11.3. An extra line inside the tile, under the change. |
+| `tone` | `'default' \| 'bad-when-high'` | `'default'` | Since 11.3. `bad-when-high` inverts the derived colour, so an increase shows the danger tone (costs, churn, errors). `sentiment` still wins. |
+| `change` | `number` |  | Since 11.3. The change as a number: sets the arrow from its sign and the text from `changeFormat`. Ignored when `delta` is set. |
+| `changeFormat` | `'percent' \| 'absolute' \| ((change: number) => string)` | `'percent'` | Since 11.3. `percent` takes a fraction (0.125 → +12.5%); `absolute` signs the number (−12). |
+| `changeLabel` | `ReactNode` |  | Since 11.3. Text after the change, e.g. "vs last month". |
 
 ## Example: Default
 
@@ -90,6 +96,22 @@ export default function Example() {
         trend={[10, 12, 13, 15, 16, 19, 22]}
         trendLabel="Last 7 weeks, rising"
       />
+    </div>
+  );
+}
+```
+
+## Example: Compact, absolute change and bad-when-high
+
+```tsx
+import { StatCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
+      <StatCard size="sm" label="Revenue" value="S$84,320" change={0.125} changeLabel="vs last month" />
+      <StatCard size="sm" label="Cloud costs" value="S$12,400" change={0.08} tone="bad-when-high" changeLabel="vs last month" note="Includes a one-off migration" />
+      <StatCard size="sm" label="Open tickets" value="42" change={-12} changeFormat="absolute" tone="bad-when-high" changeLabel="since Monday" />
     </div>
   );
 }

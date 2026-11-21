@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 11.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 11.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -152,6 +152,7 @@ Version 11.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Spinner](https://nexub-ds-docs.pages.dev/components/spinner.md): Animated loading indicator. Inherits color from context.
 - [Split Button](https://nexub-ds-docs.pages.dev/components/split-button.md): A primary action with related secondary actions behind a chevron, as one connected control.
 - [Stack](https://nexub-ds-docs.pages.dev/components/stack.md): Vertical stack layout with configurable gap.
+- [Stage Counter](https://nexub-ds-docs.pages.dev/components/stage-counter.md): A row of selectable stat cards, each with a count and a failed count, that filters a list.
 - [Stepper](https://nexub-ds-docs.pages.dev/components/stepper.md): Progress through a multi-step flow, with clickable steps that follow the order you allow.
 - [Streaming Text](https://nexub-ds-docs.pages.dev/components/streaming-text.md): Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
 - [Success Check](https://nexub-ds-docs.pages.dev/components/success-check.md): A small success moment: a ring that pops in and a tick that draws.
@@ -174,6 +175,8 @@ Version 11.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Top Nav](https://nexub-ds-docs.pages.dev/components/top-nav.md): A sticky app header: logo, main navigation links and trailing actions.
 - [Tree View](https://nexub-ds-docs.pages.dev/components/tree-view.md): A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 - [Truncate](https://nexub-ds-docs.pages.dev/components/truncate.md): Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
+- [Usage Bar](https://nexub-ds-docs.pages.dev/components/usage-bar.md): A compact used-of-limit bar with its label inline, for table cells and fact grids.
+- [Usage Tile](https://nexub-ds-docs.pages.dev/components/usage-tile.md): Used of limit: the value, the limit and a bar that warns near and at the limit.
 - [Visually Hidden](https://nexub-ds-docs.pages.dev/components/visually-hidden.md): Content for screen readers only: hidden on screen but still read out (Radix).
 
 ## Patterns

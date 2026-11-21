@@ -1,5 +1,5 @@
 {
-  "version": "11.1.0",
+  "version": "11.2.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -1484,6 +1484,18 @@
       "screenReader": []
     },
     {
+      "slug": "stage-counter",
+      "name": "Stage Counter",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves between the stages.",
+        "Enter / Space: Selects or clears the stage."
+      ],
+      "screenReader": []
+    },
+    {
       "slug": "stepper",
       "name": "Stepper",
       "package": "@nexub/react",
@@ -1704,6 +1716,24 @@
     {
       "slug": "truncate",
       "name": "Truncate",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "usage-bar",
+      "name": "Usage Bar",
+      "package": "@nexub/react",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [],
+      "screenReader": []
+    },
+    {
+      "slug": "usage-tile",
+      "name": "Usage Tile",
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],

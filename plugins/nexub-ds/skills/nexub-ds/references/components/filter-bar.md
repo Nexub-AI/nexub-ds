@@ -10,6 +10,7 @@ Search + filter toolbar pattern for data-heavy list or table views.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `search` | `boolean` | `true` | 11.3: `false` leaves the search field out, for a bar of filters and actions only. |
 | `searchPlaceholder` | `string` | `'Search…'` | Placeholder text for the search input. |
 | `searchValue` | `string` |  | Controlled search value. |
 | `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
@@ -36,6 +37,27 @@ export default function Example() {
             <Badge tone="neutral">Plan: All</Badge>
           </div>
         }
+      />
+    </div>
+  );
+}
+```
+
+## Example: Without search
+
+`search={false}`.
+
+```tsx
+import { FilterBar } from '@nexub/patterns';
+import { Badge, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-120">
+      <FilterBar
+        search={false}
+        filters={<Badge tone="neutral">Status: Open</Badge>}
+        actions={<Button variant="outlined" size="sm">Export</Button>}
       />
     </div>
   );

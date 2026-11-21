@@ -12,6 +12,7 @@ const entry: ComponentEntry = {
     updatedIn: '5.5.0',
   },
   props: [
+    { name: 'search', type: 'boolean', default: 'true', required: false, description: '11.3: `false` leaves the search field out, for a bar of filters and actions only.' },
     { name: 'searchPlaceholder', type: 'string', default: "'Search…'", required: false, description: 'Placeholder text for the search input.' },
     { name: 'searchValue', type: 'string', required: false, description: 'Controlled search value.' },
     { name: 'onSearch', type: '(value: string) => void', required: false, description: 'Callback when search value changes.' },
@@ -25,6 +26,7 @@ const entry: ComponentEntry = {
     {
       title: 'Default',
     },
+    { title: 'Without search', description: '`search={false}`.' },
   ],
 };
 

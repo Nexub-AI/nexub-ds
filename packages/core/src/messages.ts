@@ -145,6 +145,26 @@ export interface NexubMessages {
   typeToConfirm: (text: string) => string;
   /** OTPInput group name when no aria-label is given. */
   verificationCode: string;
+  /** Charts `tableView` (11.3): the disclosure that shows the chart's data as a table. */
+  showAsTable: string;
+  /** A missing value in a chart's tooltip and table (11.3). */
+  noValue: string;
+  /** DonutChart `maxSlices` grouped slice, and the table view's column headings (11.3). */
+  other: string;
+  chartLabel: string;
+  chartValue: string;
+  /** Funnel `show` (11.3): conversion from the first step, e.g. "25% of Visited". */
+  chartOfFirst: (percent: string, first: string) => string;
+  /** Funnel `show` (11.3): step-to-step conversion, e.g. "50% of previous step". */
+  chartOfPrevious: (percent: string) => string;
+  /** Funnel `show` (11.3): people lost since the previous step, e.g. "250 dropped off". */
+  chartDropOff: (count: string) => string;
+  /** Heatmap `legend` (11.3): the swatch for missing cells. */
+  chartNoData: string;
+  /** CheckList item `status` (11.3), read after the item's text. */
+  checkDone: string;
+  checkPending: string;
+  chartShare: string;
   /** OTPInput `mode="backup"` (11.2). */
   backupCode: string;
   /** FileUpload per-file progress and cancel. */
@@ -308,6 +328,13 @@ export interface NexubMessages {
   contrastRatio: (ratio: string) => string;
   contrastPasses: string;
   contrastFails: string;
+  /** UsageTile / UsageBar (11.3): "42 of 50", share used, at or over the limit, no limit. */
+  usageOf: (used: string, limit: string) => string;
+  usagePercent: (percent: number) => string;
+  limitReached: string;
+  unlimited: string;
+  /** StageCounter (11.3): the failed count beside a stage's count. */
+  failedCount: (count: number) => string;
   /** CommandPalette `recentKey` group heading. */
   recent: string;
 }
@@ -442,6 +469,18 @@ export const defaultMessages: NexubMessages = {
   backToHome: 'Back to home',
   typeToConfirm: (text) => `Type ${text} to confirm`,
   verificationCode: 'Verification code',
+  showAsTable: 'Show as table',
+  noValue: '—',
+  other: 'Other',
+  chartLabel: 'Label',
+  chartValue: 'Value',
+  chartOfFirst: (percent, first) => `${percent} of ${first}`,
+  chartOfPrevious: (percent) => `${percent} of previous step`,
+  chartDropOff: (count) => `${count} dropped off`,
+  chartNoData: 'No data',
+  checkDone: 'Done',
+  checkPending: 'Pending',
+  chartShare: 'Share',
   backupCode: 'Backup code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,
@@ -579,6 +618,11 @@ export const defaultMessages: NexubMessages = {
   contrastRatio: (ratio) => `Contrast ${ratio}:1`,
   contrastPasses: 'Passes AA for text',
   contrastFails: 'Fails AA for text (needs 4.5:1)',
+  usageOf: (used, limit) => `${used} of ${limit}`,
+  usagePercent: (percent) => `${percent}% used`,
+  limitReached: 'Limit reached',
+  unlimited: 'Unlimited',
+  failedCount: (count) => `${count} failed`,
   recent: 'Recent',
 };
 

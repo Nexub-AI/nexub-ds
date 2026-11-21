@@ -220,6 +220,9 @@ import colorPickerEntry from './components/color-picker';
 import commandListEntry from './components/command-list';
 import emojiPickerEntry from './components/emoji-picker';
 import iconPickerEntry from './components/icon-picker';
+import usageTileEntry from './components/usage-tile';
+import usageBarEntry from './components/usage-bar';
+import stageCounterEntry from './components/stage-counter';
 import switchFieldEntry from './components/switch-field';
 import checkboxFieldEntry from './components/checkbox-field';
 import countdownEntry from './components/countdown';
@@ -291,6 +294,9 @@ export const componentEntries: ComponentEntry[] = [
   commandListEntry,
   emojiPickerEntry,
   iconPickerEntry,
+  usageTileEntry,
+  usageBarEntry,
+  stageCounterEntry,
   switchFieldEntry,
   checkboxFieldEntry,
   countdownEntry,
