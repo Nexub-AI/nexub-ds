@@ -40,3 +40,30 @@ export const Actions: Story = {
     </ActionBar>
   ),
 };
+
+/** 11.4: per-step status (error, warning, skipped, cancelled), rich descriptions and actions. */
+export const Statuses: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gap: 32 }}>
+      <Stepper
+        current={2}
+        steps={[
+          { label: 'Details', status: 'complete' },
+          { label: 'Identity', status: 'skipped', description: 'Not needed for this plan' },
+          { label: 'Bank check', status: 'error', description: 'The bank rejected the account', actions: <Button size="sm" variant="outlined">Retry</Button> },
+          { label: 'Review', status: 'warning' },
+          { label: 'Payout', status: 'cancelled' },
+        ]}
+      />
+      <Stepper
+        orientation="vertical"
+        current={3}
+        steps={[
+          { label: 'Ordered', status: 'complete', description: '21 Nov, 09:14' },
+          { label: 'Packed', status: 'complete', description: '21 Nov, 13:02' },
+          { label: 'Shipped', status: 'complete', description: <a href="#track">Track parcel</a> },
+        ]}
+      />
+    </div>
+  ),
+};
