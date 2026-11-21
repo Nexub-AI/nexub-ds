@@ -2,7 +2,7 @@
 
 Drafted 2026-11-21. Follows [ROADMAP_10.x.md](ROADMAP_10.x.md). 5 minor releases after 11.0.0. **Approved by the owner on 2026-11-21**, with every decision below. Development starts once 11.0.0 is released. **Goal set by the owner: all 38 gaps are closed by 11.5.**
 
-**Shipped.** 11.1.0 (2026-11-21, on `latest`): gaps #1 (check), #2, #3 (rest), #4, #5, #6 and #27 are closed. 11.2.0 (2026-11-21, on `latest`): gaps #8, #9, #10, #15, #17, #30, #31 and #33 are closed. 11.3.0 (2026-11-21, on `latest`): gaps #11, #16, #23, #25, #26 and #32 are closed. 11.4.0 (2026-11-22, on `latest`): gaps #12, #13, #14, #22 and #24 are closed.
+**Shipped.** 11.1.0 (2026-11-21, on `latest`): gaps #1 (check), #2, #3 (rest), #4, #5, #6 and #27 are closed. 11.2.0 (2026-11-21, on `latest`): gaps #8, #9, #10, #15, #17, #30, #31 and #33 are closed. 11.3.0 (2026-11-21, on `latest`): gaps #11, #16, #23, #25, #26 and #32 are closed. 11.4.0 (2026-11-22, on `latest`): gaps #12, #13, #14, #22 and #24 are closed. 11.5.0 (2026-11-22, on `latest`): gaps #18, #19, #20, #21, #28, #29, #35, #37 and #38 are closed. 36 of 38 gaps are closed; #34 (`@nexub/diagram`, RFC #713) and #36 (`@nexub/elements`, RFC #712) wait for the owner's RFC decisions.
 
 **Source.** *Nexub design-system gaps* (nexub-platform `docs/design-system-gaps.md`, 18 Nov 2026). It lists 38 gaps found while moving the 14 Nexub web apps onto the design system: 7 P1, 12 P2, 13 P3, 6 P4. It was written against **10.0.0**, so every item was checked against current code (`feat/11.0-defaults-and-showcase`) before going into this plan.
 
