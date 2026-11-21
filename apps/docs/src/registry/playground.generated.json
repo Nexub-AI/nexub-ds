@@ -602,6 +602,15 @@
     "controls": [
       {
         "kind": "select",
+        "name": "variant",
+        "options": [
+          "default",
+          "waterfall"
+        ],
+        "default": "default"
+      },
+      {
+        "kind": "select",
         "name": "size",
         "options": [
           "sm",
@@ -612,6 +621,14 @@
       },
       {
         "kind": "select",
+        "name": "orientation",
+        "options": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      {
+        "kind": "select",
         "name": "legend",
         "options": [
           false,
@@ -619,6 +636,10 @@
           "toggle"
         ],
         "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "integerTicks"
       },
       {
         "kind": "switch",
@@ -659,6 +680,14 @@
       {
         "prop": "size",
         "value": "lg"
+      },
+      {
+        "prop": "variant",
+        "value": "default"
+      },
+      {
+        "prop": "variant",
+        "value": "waterfall"
       }
     ]
   },
@@ -2425,6 +2454,16 @@
     ],
     "controls": [
       {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ],
+        "default": "md"
+      },
+      {
         "kind": "switch",
         "name": "interactive"
       },
@@ -2435,12 +2474,21 @@
       },
       {
         "kind": "switch",
+        "name": "legendValues",
+        "default": false
+      },
+      {
+        "kind": "switch",
         "name": "loading"
       },
       {
         "kind": "text",
         "name": "title",
         "initial": "Customers by plan"
+      },
+      {
+        "kind": "number",
+        "name": "maxSlices"
       }
     ],
     "states": [
@@ -2451,6 +2499,18 @@
       {
         "prop": "loading",
         "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
       }
     ]
   },
@@ -3149,6 +3209,15 @@
         "default": 1
       },
       {
+        "kind": "select",
+        "name": "show",
+        "options": [
+          "both",
+          "drop-off",
+          "conversion"
+        ]
+      },
+      {
         "kind": "switch",
         "name": "interactive"
       },
@@ -3180,6 +3249,15 @@
       "label=\"68 GB\""
     ],
     "controls": [
+      {
+        "kind": "select",
+        "name": "tone",
+        "options": [
+          "warning",
+          "danger",
+          "good"
+        ]
+      },
       {
         "kind": "select",
         "name": "color",
@@ -3224,6 +3302,18 @@
       {
         "prop": "loading",
         "value": true
+      },
+      {
+        "prop": "tone",
+        "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "danger"
+      },
+      {
+        "prop": "tone",
+        "value": "good"
       }
     ]
   },
@@ -3413,6 +3503,10 @@
       {
         "kind": "switch",
         "name": "interactive"
+      },
+      {
+        "kind": "switch",
+        "name": "legend"
       },
       {
         "kind": "switch",
@@ -4137,6 +4231,10 @@
         "kind": "switch",
         "name": "area",
         "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "integerTicks"
       },
       {
         "kind": "switch",
@@ -6003,13 +6101,17 @@
         "name": "color",
         "options": [
           1,
+          "neutral",
+          "warning",
+          "danger",
           2,
           3,
           4,
           5,
           6,
           7,
-          8
+          8,
+          "good"
         ],
         "default": 1,
         "initial": 2
@@ -6355,6 +6457,23 @@
         "kind": "switch",
         "name": "wrap",
         "default": false
+      }
+    ],
+    "states": []
+  },
+  "stage-counter": {
+    "tag": "StageCounter",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Filter imports by stage\"",
+      "stages={stages}",
+      "value={stage}",
+      "onValueChange={setStage}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "multiple"
       }
     ],
     "states": []
@@ -7290,6 +7409,91 @@
       }
     ],
     "states": []
+  },
+  "usage-bar": {
+    "tag": "UsageBar",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Seats\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md"
+        ],
+        "default": "sm"
+      },
+      {
+        "kind": "number",
+        "name": "limit",
+        "initial": 50
+      },
+      {
+        "kind": "number",
+        "name": "used",
+        "initial": 18
+      },
+      {
+        "kind": "number",
+        "name": "warnAt",
+        "default": 0.8
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      }
+    ]
+  },
+  "usage-tile": {
+    "tag": "UsageTile",
+    "children": "none",
+    "fixed": [
+      "label=\"Seats\""
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "loading"
+      },
+      {
+        "kind": "number",
+        "name": "limit",
+        "initial": 50
+      },
+      {
+        "kind": "number",
+        "name": "used",
+        "initial": 12
+      },
+      {
+        "kind": "number",
+        "name": "warnAt",
+        "default": 0.8
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "loading",
+        "value": true
+      }
+    ]
   },
   "visually-hidden": {
     "tag": "VisuallyHidden",

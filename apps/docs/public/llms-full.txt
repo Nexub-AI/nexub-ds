@@ -403,7 +403,10 @@ Never use a component marked deprecated.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
+- [Stage Counter](components/stage-counter.md) `@nexub/react`: A row of selectable stat cards, each with a count and a failed count, that filters a list.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
+- [Usage Bar](components/usage-bar.md) `@nexub/react`: A compact used-of-limit bar with its label inline, for table cells and fact grids.
+- [Usage Tile](components/usage-tile.md) `@nexub/react`: Used of limit: the value, the limit and a bar that warns near and at the limit.
 
 ## Components — Disclosure
 
@@ -630,7 +633,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage
 
 
@@ -1616,6 +1619,13 @@ Compare values across categories, grouped or stacked. Server-rendered SVG on the
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
 | `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
 | `stacked` | `boolean` | `false` | One bar per category with the series stacked. |
+| `series[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a semantic tone. |
+| `series[].valueFormat` | `(value: number) => string` |  | 11.3: formats this series in the tooltip and table (one currency per series). |
+| `integerTicks` | `boolean` |  | 11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure with the same data. Works without JS. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 11.3: categories down the side for long names and ranked lists. |
+| `variant / totalKey` | `'default' \| 'waterfall' / keyof T` |  | 11.3: a waterfall of the first series from a running total; `totalKey` marks rows drawn from zero. |
+| `colorOf` | `(row, series, index) => colour \| tone \| undefined` |  | 11.3: a colour per bar (e.g. over budget in danger). |
 
 ## Example: Grouped
 
@@ -1704,6 +1714,53 @@ export default function Example() {
         series={[{ key: 'web', label: 'Web' }, { key: 'ios', label: 'iOS' }, { key: 'android', label: 'Android' }]}
       />
       <p className="m-0 text-body-sm text-on-surface-variant">{picked}</p>
+    </div>
+  );
+}
+```
+
+## Example: Waterfall
+
+Rises in the good tone, falls in danger, totals from zero.
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const cash = [
+  { step: 'Opening', v: 120000, total: true },
+  { step: 'Sales', v: 64000, total: false },
+  { step: 'Payroll', v: -52000, total: false },
+  { step: 'Refunds', v: -6000, total: false },
+  { step: 'Closing', v: 126000, total: true },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact' }).format(v);
+
+export default function Example() {
+  return <BarChart className="w-full max-w-2xl" title="Cash flow, Q3" variant="waterfall" totalKey="total" valueFormat={usd} data={cash} index="step" series={[{ key: 'v', label: 'Cash', color: 2 }]} tableView />;
+}
+```
+
+## Example: Horizontal and per-bar tones
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const products = [
+  { product: 'Enterprise plan (annual)', revenue: 48200 },
+  { product: 'Team plan', revenue: 31900 },
+  { product: 'Starter', revenue: 12800 },
+];
+const spend = [
+  { month: 'Jan', spend: 82 },
+  { month: 'Feb', spend: 97 },
+  { month: 'Mar', spend: 118 },
+];
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-2xl flex-col gap-8">
+      <BarChart title="Top products" orientation="horizontal" data={products} index="product" series={[{ key: 'revenue', label: 'Revenue' }]} />
+      <BarChart title="Spend against a budget of 100" data={spend} index="month" series={[{ key: 'spend', label: 'Spend', color: 'good' }]} colorOf={(row) => (row.spend > 100 ? 'danger' : undefined)} />
     </div>
   );
 }
@@ -2435,9 +2492,11 @@ A list with a success tick before each item, for features, plan inclusions and r
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` |  | Plain-text items. Shorthand for one `CheckListItem` each. |
+| `items` | `(string \| { label: ReactNode; status?: CheckListStatus })[]` |  | Plain-text items. Shorthand for one `CheckListItem` each. 11.3: an object entry sets a status. |
 | `children` | `ReactNode` |  | `CheckListItem`s, for items with markup. Rendered after `items`. |
 | `CheckListItem children` (required) | `ReactNode` |  | The item text. The tick is decorative (hidden from screen readers). |
+| `CheckListItem status` | `'done' \| 'pending'` |  | 11.3: `done` draws the tick, `pending` an empty ring with muted text. Either is read after the text ("Done" / "Pending"). Unset draws the tick with nothing read, as before. |
+| `CheckListItem statusLabel` | `string` |  | 11.3: the words read for `status`, for other languages. |
 
 ## Example: From items
 
@@ -2461,6 +2520,28 @@ export default function Example() {
       <CheckListItem>One number <span className="text-on-surface-muted">(0–9)</span></CheckListItem>
       <CheckListItem>Not used on another account</CheckListItem>
     </CheckList>
+  );
+}
+```
+
+## Example: Done and pending
+
+Setup steps with a status each.
+
+```tsx
+import { CheckList } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <CheckList
+      aria-label="Workspace setup"
+      items={[
+        { label: 'Create workspace', status: 'done' },
+        { label: 'Connect bank account', status: 'done' },
+        { label: 'Invite your team', status: 'pending' },
+        { label: 'Send first invoice', status: 'pending' },
+      ]}
+    />
   );
 }
 ```
@@ -4741,6 +4822,12 @@ Parts of a whole, with an optional total in the hole. Keep it to six slices or f
 | `center` | `ReactNode` |  | Content in the hole, such as the total. |
 | `valueFormat` | `(value: number) => string` |  | Formats the hover text and the data table. |
 | `legend` | `boolean` | `true` | Show the legend beside the donut. |
+| `maxSlices / otherLabel` | `number / string` |  | 11.3: group the smallest slices into one "Other". |
+| `legendValues` | `boolean` |  | 11.3: value and share on each legend row. |
+| `data[].href` | `string` |  | 11.3: makes the slice's legend row a link. |
+| `data[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a tone. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 11.3: diameter. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure. |
 
 ## Example: With total
 
@@ -4768,6 +4855,25 @@ export default function Example() {
       }
     />
   );
+}
+```
+
+## Example: Other, legend values and links
+
+```tsx
+import { DonutChart } from '@nexub/react';
+
+const plans = [
+  { label: 'Enterprise', value: 42, href: '#enterprise' },
+  { label: 'Team', value: 31, href: '#team' },
+  { label: 'Starter', value: 15 },
+  { label: 'Education', value: 6 },
+  { label: 'Nonprofit', value: 4 },
+  { label: 'Trial', value: 2 },
+];
+
+export default function Example() {
+  return <DonutChart title="Plans" size="lg" legendValues maxSlices={4} data={plans} center="100" tableView />;
 }
 ```
 
@@ -5991,6 +6097,10 @@ Drop-off through ordered steps, with conversion from the first step.
 | --- | --- | --- | --- |
 | `data` (required) | `{ label: string; value: number }[]` |  | Steps in order, largest first. |
 | `title` (required) | `string` |  | Accessible name and table caption. |
+| `data[].values` | `Record<string, number>` |  | 11.3: the other series' numbers for this step, keyed by series key. |
+| `series` | `{ key: string; label?: string; color?: ChartColor }[]` |  | 11.3: several series per step, drawn as thin bars with a legend. `key: 'value'` reads each step's `value`; other keys read `values[key]`. The interactive tooltip uses `value`. |
+| `show` | `'conversion' \| 'drop-off' \| 'both'` |  | 11.3: visible numbers under each step: share of the first and the previous step, how many dropped off, or both. Unset draws the bars only. |
+| `tableView` | `boolean \| string` |  | 11.3: a "Show as table" disclosure under the drawing with the same data; a string sets its label. |
 
 ## Example: Signup funnel
 
@@ -6003,6 +6113,50 @@ export default function Example() {
       className="w-full"
       title="Signup funnel, October"
       data={[{ label: 'Visited', value: 12400 }, { label: 'Started signup', value: 4100 }, { label: 'Verified email', value: 2900 }, { label: 'First payment', value: 1240 }]}
+    />
+  );
+}
+```
+
+## Example: Conversion and drop-off
+
+`show="both"` with `tableView`.
+
+```tsx
+import { Funnel } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Funnel
+      className="w-full"
+      title="Signup funnel, October"
+      show="both"
+      tableView
+      data={[{ label: 'Visited', value: 12400 }, { label: 'Started signup', value: 4100 }, { label: 'Verified email', value: 2900 }, { label: 'First payment', value: 1240 }]}
+    />
+  );
+}
+```
+
+## Example: Several series
+
+Web and app side by side, with conversion.
+
+```tsx
+import { Funnel } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Funnel
+      className="w-full"
+      title="Signup funnel by channel"
+      show="conversion"
+      series={[{ key: 'value', label: 'Web' }, { key: 'app', label: 'App', color: 3 }]}
+      data={[
+        { label: 'Visited', value: 12400, values: { app: 8200 } },
+        { label: 'Started signup', value: 4100, values: { app: 3900 } },
+        { label: 'First payment', value: 1240, values: { app: 1500 } },
+      ]}
     />
   );
 }
@@ -6034,6 +6188,8 @@ Progress toward a target on a 270° arc.
 | `title` (required) | `string` |  | Accessible name. |
 | `label` | `ReactNode` |  | Centre text; defaults to the percentage. |
 | `color` | `ChartColor` | `1` | Palette colour, 1–8. |
+| `tone` | `'good' \| 'warning' \| 'danger'` |  | 11.3: success, warning or error colour for the arc; wins over `color`. Pair it with a `caption` so colour is not the only signal. |
+| `caption` | `ReactNode` |  | 11.3: a short line under the value, such as "41 of 50 GB" or "Over budget". Also read with the value. |
 
 ## Example: Storage used
 
@@ -6042,6 +6198,22 @@ import { Gauge } from '@nexub/react';
 
 export default function Example() {
   return <Gauge title="Storage used" value={68} max={100} label="68 GB" color={2} />;
+}
+```
+
+## Example: Tone and caption
+
+```tsx
+import { Gauge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap justify-center gap-6">
+      <Gauge title="Uptime" value={99} tone="good" caption="On target" />
+      <Gauge title="Storage used" value={82} tone="warning" caption="41 of 50 GB" />
+      <Gauge title="Budget spent" value={104} label="104%" tone="danger" caption="Over budget" />
+    </div>
+  );
 }
 ```
 
@@ -6203,10 +6375,12 @@ Intensity over a grid, such as activity by weekday and week, in seven sequential
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `data` (required) | `number[][]` |  | Rows of values. |
+| `data` (required) | `(number \| null)[][]` |  | Rows of values. 11.3: a missing cell (`null`, `undefined` or a hole) is drawn hatched, listed as "—" and left out of the colour range. |
 | `rowLabels` (required) | `string[]` |  | One label per row. |
 | `columnLabels` | `string[]` |  | Used in the hover text. |
 | `title` (required) | `string` |  | Accessible name and table caption. |
+| `legend` | `boolean` |  | 11.3: a low → high scale under the grid with the min and max values, plus a "No data" swatch when cells are missing. |
+| `tableView` | `boolean \| string` |  | 11.3: a "Show as table" disclosure under the drawing with the same data; a string sets its label. |
 
 ## Example: Weekly activity
 
@@ -6218,6 +6392,28 @@ const data = days.map((_, d) => Array.from({ length: 16 }, (_, w) => ((d * 7 + w
 
 export default function Example() {
   return <Heatmap className="w-full" title="Payments sent per day, last 16 weeks" rowLabels={days} data={data} />;
+}
+```
+
+## Example: Missing cells and legend
+
+`null` cells are hatched; `legend` shows the scale.
+
+```tsx
+import { Heatmap } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Heatmap
+      className="w-full max-w-md"
+      title="Deploys by day and week"
+      legend
+      tableView
+      rowLabels={['Mon', 'Wed', 'Fri']}
+      columnLabels={['W1', 'W2', 'W3', 'W4', 'W5', 'W6']}
+      data={[[2, 5, null, 3, 9, 4], [6, 1, 7, 10, null, 5], [3, 8, 4, 6, 1, null]]}
+    />
+  );
 }
 ```
 
@@ -7048,6 +7244,10 @@ Show a trend over ordered categories such as time. Server-rendered SVG on the ch
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
 | `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
 | `area` | `boolean` | `false` | Fill the area under each line. |
+| `series[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a semantic tone. |
+| `series[].valueFormat` | `(value: number) => string` |  | 11.3: formats this series in the tooltip and table (one currency per series). |
+| `integerTicks` | `boolean` |  | 11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure with the same data. Works without JS. |
 
 ## Example: Two series
 
@@ -7100,6 +7300,34 @@ export default function Example() {
       index="day"
       series={[{ key: 'p95', label: 'p95 latency', color: 6 }]}
       valueFormat={(v) => `${v} ms`}
+    />
+  );
+}
+```
+
+## Example: Gaps and one currency per series
+
+```tsx
+import { LineChart } from '@nexub/react';
+
+const months = [
+  { month: 'Jan', usd: 12400, myr: 31000 },
+  { month: 'Feb', usd: 13100, myr: null },
+  { month: 'Mar', usd: null, myr: 35500 },
+  { month: 'Apr', usd: 15800, myr: 38200 },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+const myr = (v: number) => new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(v);
+
+export default function Example() {
+  return (
+    <LineChart
+      className="w-full max-w-2xl"
+      title="Revenue by currency"
+      data={months}
+      index="month"
+      tableView
+      series={[{ key: 'usd', label: 'USD', valueFormat: usd }, { key: 'myr', label: 'MYR', valueFormat: myr }]}
     />
   );
 }
@@ -10195,6 +10423,106 @@ export default function Example() {
 
 ---
 
+# Stage Counter
+
+A row of selectable stat cards, each with a count and a failed count, that filters a list.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { StageCounter } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/stage-counter
+
+## When to use
+
+- Counts per stage above a list of jobs, imports or orders, where pressing a stage filters the list.
+
+## When not to use
+
+- Counts that do not filter anything: use StatCard.
+- Switching between views: use Tabs or SegmentedControl.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `stages` (required) | `StageCounterStage[]` |  | `{ value, label, count, failed?, tone? }`. `failed` shows "3 failed" in the danger tone; `tone` colours the count. |
+| `value / defaultValue` | `string \| null` |  | The selected stage, `null` for all. Pressing the selected stage again clears it. |
+| `onValueChange` | `(value: string \| null) => void` |  | Called with the new stage, or `null`. |
+| `multiple` | `boolean` | `false` | Several stages at once: `value` is a `string[]`, an empty array means all. |
+| `aria-label` | `string` |  | Names the group, e.g. "Filter by stage". |
+
+## Example: Filters a list
+
+```tsx
+import * as React from 'react';
+import { StageCounter } from '@nexub/react';
+
+const stages = [
+  { value: 'queued', label: 'Queued', count: 24 },
+  { value: 'processing', label: 'Processing', count: 6, tone: 'info' as const },
+  { value: 'review', label: 'In review', count: 3, tone: 'warning' as const },
+  { value: 'done', label: 'Done', count: 1284, failed: 7 },
+];
+
+const jobs = [
+  { id: 101, stage: 'queued' },
+  { id: 102, stage: 'processing' },
+  { id: 103, stage: 'review' },
+  { id: 104, stage: 'done' },
+  { id: 105, stage: 'queued' },
+];
+
+export default function Example() {
+  const [stage, setStage] = React.useState<string | null>(null);
+  const shown = stage ? jobs.filter((j) => j.stage === stage) : jobs;
+  return (
+    <div className="flex w-full max-w-3xl flex-col gap-4">
+      <StageCounter aria-label="Filter imports by stage" stages={stages} value={stage} onValueChange={setStage} />
+      <ul className="m-0 flex flex-col gap-1 ps-4 text-body-md text-on-surface">
+        {shown.map((j) => (
+          <li key={j.id}>
+            Import #{j.id} · {stages.find((s) => s.value === j.stage)?.label}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Example: Several stages
+
+```tsx
+import { StageCounter } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <StageCounter
+      aria-label="Filter orders by stage"
+      multiple
+      defaultValue={['new', 'packing']}
+      stages={[
+        { value: 'new', label: 'New', count: 18 },
+        { value: 'packing', label: 'Packing', count: 7 },
+        { value: 'shipped', label: 'Shipped', count: 342, failed: 2 },
+        { value: 'returned', label: 'Returned', count: 4, tone: 'danger' },
+      ]}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- Roles: `group` named by `aria-label`; each card is a toggle `button` with `aria-pressed`.
+- `Tab`: Moves between the stages.
+- `Enter / Space`: Selects or clears the stage.
+- The failed count is written out ("3 failed"), not shown by colour alone. Cards wrap on small screens.
+
+Related: [stat-card](stat-card.md), [segmented-control](segmented-control.md), [filter-bar](filter-bar.md), [toggle-group](toggle-group.md)
+
+
+---
+
 # Stepper
 
 Progress through a multi-step flow, with clickable steps that follow the order you allow.
@@ -11660,6 +11988,170 @@ Related: [text](text.md), [tooltip](tooltip.md)
 
 ---
 
+# Usage Bar
+
+A compact used-of-limit bar with its label inline, for table cells and fact grids.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { UsageBar } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/usage-bar
+
+## When to use
+
+- A usage column in a table (seats per workspace, quota per key).
+- A row in a DescriptionList or fact grid.
+
+## When not to use
+
+- The headline of a tile: use UsageTile.
+- A task moving toward done: use Progress.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `used` (required) | `number` |  | The amount used. |
+| `limit` (required) | `number \| null` |  | The limit. `null` or `Infinity` shows the value and "Unlimited", no bar. |
+| `label` | `ReactNode \| false` | `"used / limit"` | The inline text beside the bar. `false` hides it. |
+| `aria-label` | `string` |  | Names the meter, e.g. "Seats". Without it the meter is named by its value. |
+| `size` | `'sm' \| 'md'` | `'sm'` | Bar thickness and label size. |
+| `warnAt` | `number` | `0.8` | Share of the limit that turns the bar to the warning tone; at or over the limit it is the danger tone. |
+| `valueFormat` | `(value: number) => string` | `toLocaleString` | Formats the value and the limit. |
+
+## Example: Levels
+
+```tsx
+import { UsageBar } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-3">
+      <UsageBar aria-label="Seats" used={18} limit={50} />
+      <UsageBar aria-label="Seats" used={42} limit={50} />
+      <UsageBar aria-label="Seats" used={50} limit={50} />
+      <UsageBar aria-label="Projects" used={7} limit={null} />
+    </div>
+  );
+}
+```
+
+## Example: In a table
+
+```tsx
+import { Table, UsageBar } from '@nexub/react';
+
+const workspaces = [
+  { name: 'Marketing', seats: 18, limit: 25 },
+  { name: 'Finance', seats: 9, limit: 10 },
+  { name: 'Support', seats: 30, limit: 30 },
+];
+
+export default function Example() {
+  return (
+    <Table.Root className="w-full max-w-120">
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Workspace</Table.Head>
+          <Table.Head>Seats</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {workspaces.map((w) => (
+          <Table.Row key={w.name}>
+            <Table.Cell>{w.name}</Table.Cell>
+            <Table.Cell>
+              <UsageBar aria-label={`${w.name} seats`} used={w.seats} limit={w.limit} />
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: A `meter` with `aria-valuenow` as the percentage and `aria-valuetext` such as "42 of 50, 84% used"; the inline label is hidden from assistive tech so it is not read twice.
+
+Related: [usage-tile](usage-tile.md), [progress](progress.md), [table](table.md)
+
+
+---
+
+# Usage Tile
+
+Used of limit: the value, the limit and a bar that warns near and at the limit.
+
+- Package: `@nexub/react` · Category: Data Display · Status: alpha
+- Import: `import { UsageTile } from '@nexub/react';`
+- Docs: https://nexub-ds-docs.pages.dev/components/usage-tile
+
+## When to use
+
+- Plan limits on a billing or settings page: seats, storage, API calls.
+- A dashboard tile where the limit matters as much as the number.
+
+## When not to use
+
+- A table cell or fact grid: use UsageBar.
+- A task moving toward done: use Progress.
+- A number with its change over time: use KpiTile or StatCard.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` (required) | `ReactNode` |  | What is being used, e.g. "Seats". Also names the meter. |
+| `used` (required) | `number \| null` |  | The amount used. `null` or undefined shows the empty state. |
+| `limit` (required) | `number \| null` |  | The limit. `null` or `Infinity` shows "Unlimited" and no bar. |
+| `warnAt` | `number` | `0.8` | Share of the limit that turns the bar to the warning tone. At or over the limit it is the danger tone. |
+| `valueFormat` | `(value: number) => string` | `toLocaleString` | Formats the value and the limit, e.g. `(n) => `${n} GB``. |
+| `note` | `ReactNode` |  | An extra line under the bar, e.g. "Resets on 1 May". |
+| `action` | `ReactNode` |  | A control beside the label, e.g. an Upgrade link. |
+| `loading / emptyState / errorState` | `boolean / ReactNode / ReactNode` |  | The data states, same as KpiTile: a skeleton, the empty content, or the error content in place of the value. |
+
+## Example: Under, near and at the limit
+
+```tsx
+import { UsageTile } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
+      <UsageTile label="Seats" used={12} limit={50} />
+      <UsageTile label="Storage" used={8.6} limit={10} valueFormat={(n) => `${n} GB`} />
+      <UsageTile label="API calls" used={100000} limit={100000} />
+    </div>
+  );
+}
+```
+
+## Example: Unlimited, note and action
+
+```tsx
+import { Button, UsageTile } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+      <UsageTile label="Projects" used={42} limit={null} note="Included in your plan" />
+      <UsageTile label="Seats" used={46} limit={50} note="Billed per seat each month" action={<Button size="sm" variant="text">Add seats</Button>} />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: The bar is a `meter` named by the label, with `aria-valuetext` such as "42 of 50, 84% used".
+- The level is written out ("80% used", "Limit reached"), so colour is never the only signal.
+
+Related: [usage-bar](usage-bar.md), [kpi-tile](kpi-tile.md), [progress](progress.md), [stat-card](stat-card.md)
+
+
+---
+
 # Visually Hidden
 
 Content for screen readers only: hidden on screen but still read out (Radix).
@@ -12224,6 +12716,7 @@ Search + filter toolbar pattern for data-heavy list or table views.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `search` | `boolean` | `true` | 11.3: `false` leaves the search field out, for a bar of filters and actions only. |
 | `searchPlaceholder` | `string` | `'Search…'` | Placeholder text for the search input. |
 | `searchValue` | `string` |  | Controlled search value. |
 | `onSearch` | `(value: string) => void` |  | Callback when search value changes. |
@@ -12250,6 +12743,27 @@ export default function Example() {
             <Badge tone="neutral">Plan: All</Badge>
           </div>
         }
+      />
+    </div>
+  );
+}
+```
+
+## Example: Without search
+
+`search={false}`.
+
+```tsx
+import { FilterBar } from '@nexub/patterns';
+import { Badge, Button } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-120">
+      <FilterBar
+        search={false}
+        filters={<Badge tone="neutral">Status: Open</Badge>}
+        actions={<Button variant="outlined" size="sm">Export</Button>}
       />
     </div>
   );
@@ -13159,6 +13673,12 @@ Metric display card showing a KPI value, label, optional delta, and icon.
 | `trendLabel` | `string` |  | Accessible summary of the trend. Without it the line is decorative. |
 | `description` | `string` |  | Additional context below the value. |
 | `animate` | `boolean` | `false` | Roll the digits when a number or string `value` changes (NumberTicker), announced politely. The first render never animates. |
+| `size` | `'md' \| 'sm'` | `'md'` | Since 11.3. `sm` is the compact tile: less padding and a smaller value. |
+| `note` | `ReactNode` |  | Since 11.3. An extra line inside the tile, under the change. |
+| `tone` | `'default' \| 'bad-when-high'` | `'default'` | Since 11.3. `bad-when-high` inverts the derived colour, so an increase shows the danger tone (costs, churn, errors). `sentiment` still wins. |
+| `change` | `number` |  | Since 11.3. The change as a number: sets the arrow from its sign and the text from `changeFormat`. Ignored when `delta` is set. |
+| `changeFormat` | `'percent' \| 'absolute' \| ((change: number) => string)` | `'percent'` | Since 11.3. `percent` takes a fraction (0.125 → +12.5%); `absolute` signs the number (−12). |
+| `changeLabel` | `ReactNode` |  | Since 11.3. Text after the change, e.g. "vs last month". |
 
 ## Example: Default
 
@@ -13228,6 +13748,22 @@ export default function Example() {
         trend={[10, 12, 13, 15, 16, 19, 22]}
         trendLabel="Last 7 weeks, rising"
       />
+    </div>
+  );
+}
+```
+
+## Example: Compact, absolute change and bad-when-high
+
+```tsx
+import { StatCard } from '@nexub/patterns';
+
+export default function Example() {
+  return (
+    <div className="grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
+      <StatCard size="sm" label="Revenue" value="S$84,320" change={0.125} changeLabel="vs last month" />
+      <StatCard size="sm" label="Cloud costs" value="S$12,400" change={0.08} tone="bad-when-high" changeLabel="vs last month" note="Includes a one-off migration" />
+      <StatCard size="sm" label="Open tickets" value="42" change={-12} changeFormat="absolute" tone="bad-when-high" changeLabel="since Monday" />
     </div>
   );
 }

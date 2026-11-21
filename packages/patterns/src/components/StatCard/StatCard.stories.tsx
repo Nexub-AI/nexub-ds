@@ -101,3 +101,15 @@ export const DataStates: Story = {
     </div>
   ),
 };
+
+/** 11.3: compact size, a note, `bad-when-high`, a numeric change (percent or absolute) and a custom change label. */
+export const Options: Story = {
+  render: () => (
+    <div className="grid w-full max-w-3xl grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-4">
+      <StatCard size="sm" label="Revenue" value="$84,320" change={0.125} changeLabel="vs last month" icon={<RevenueIcon />} />
+      <StatCard size="sm" label="Cloud costs" value="$12,400" change={0.08} tone="bad-when-high" changeLabel="vs last month" note="Includes one-off migration" />
+      <StatCard size="sm" label="Open tickets" value="42" change={-12} changeFormat="absolute" tone="bad-when-high" changeLabel="since Monday" />
+      <StatCard label="Active users" value="3,842" change={214} changeFormat="absolute" changeLabel={<span>vs <strong>last week</strong></span>} icon={<UsersIcon />} />
+    </div>
+  ),
+};

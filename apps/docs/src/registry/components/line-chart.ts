@@ -20,10 +20,15 @@ const entry: ComponentEntry = {
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", required: false, description: 'Plot height: 8, 12 or 16rem.' },
     { name: 'legend', type: 'boolean', required: false, description: 'Show the legend. Defaults to on for more than one series.' },
     { name: 'area', type: 'boolean', default: 'false', required: false, description: 'Fill the area under each line.' },
+    { name: 'series[].color', type: "1–8 | 'good' | 'warning' | 'danger' | 'neutral'", description: '11.3: a palette colour or a semantic tone.' },
+    { name: 'series[].valueFormat', type: '(value: number) => string', description: '11.3: formats this series in the tooltip and table (one currency per series).' },
+    { name: 'integerTicks', type: 'boolean', description: '11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0.' },
+    { name: 'tableView', type: 'boolean | string', description: '11.3: a visible "Show as table" disclosure with the same data. Works without JS.' },
   ],
   examples: [
     { title: 'Two series' },
     { title: 'Area' },
+    { title: 'Gaps and one currency per series' },
   ],
   a11y: {
     screenReader: [

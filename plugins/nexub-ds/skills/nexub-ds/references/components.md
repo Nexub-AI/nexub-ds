@@ -53,7 +53,10 @@ Never use a component marked deprecated.
 - [QR Code](components/qr-code.md) `@nexub/react`: A QR code as an SVG, always dark on light so it scans in every theme, with its value shown as text.
 - [Sortable](components/sortable.md) `@nexub/react`: A list people reorder by dragging or with Alt+Arrow keys on a handle.
 - [Sparkline](components/sparkline.md) `@nexub/react`: A tiny trend line with no axes, for stat cards and table cells.
+- [Stage Counter](components/stage-counter.md) `@nexub/react`: A row of selectable stat cards, each with a count and a failed count, that filters a list.
 - [Table](components/table.md) `@nexub/react`: Semantic HTML table with styled variants.
+- [Usage Bar](components/usage-bar.md) `@nexub/react`: A compact used-of-limit bar with its label inline, for table cells and fact grids.
+- [Usage Tile](components/usage-tile.md) `@nexub/react`: Used of limit: the value, the limit and a bar that warns near and at the limit.
 
 ## Components — Disclosure
 
@@ -280,5 +283,5 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage

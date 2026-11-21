@@ -40,4 +40,22 @@ describe('CheckList', () => {
     render(<CheckList items={['A', 'B', 'C']} />);
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
   });
+
+  it('11.3: shows done and pending, and reads the state after the text', () => {
+    const { container } = render(
+      <CheckList items={['Plain', { label: 'Connect bank', status: 'done' }, { label: 'Invite team', status: 'pending' }]} />,
+    );
+    const [plain, done, pending] = screen.getAllByRole('listitem');
+    expect(plain!.textContent).toBe('Plain');
+    expect(plain!.hasAttribute('data-status')).toBe(false);
+    expect(done!.textContent).toBe('Connect bank, Done');
+    expect(pending!.textContent).toBe('Invite team, Pending');
+    expect(pending!.getAttribute('data-status')).toBe('pending');
+    expect(container.querySelectorAll('svg')).toHaveLength(2);
+  });
+
+  it('11.3: statusLabel replaces the read-out words', () => {
+    render(<CheckList><CheckListItem status="pending" statusLabel="To do">Ship</CheckListItem></CheckList>);
+    expect(screen.getByRole('listitem').textContent).toBe('Ship, To do');
+  });
 });

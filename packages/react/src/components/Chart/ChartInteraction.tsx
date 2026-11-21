@@ -11,7 +11,7 @@ import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 import { useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import {
-  BarChartView, DonutChartView, LineChartView, SparklineView, chartBg, nearestIndex, niceDomain, segmentAt, valueOf,
+  BarChartView, DonutChartView, LineChartView, SparklineView, chartBg, formatSeriesValue, nearestIndex, niceDomain, rawValueOf, segmentAt, valueOf,
   type BarChartProps, type ChartIx, type DonutChartProps, type LineChartProps, type SparklineProps,
 } from './Chart.js';
 import { FunnelView, HeatmapView, type FunnelProps, type HeatmapProps } from './MoreCharts.js';
@@ -213,15 +213,15 @@ export function InteractiveCartesian<T extends object>({
   const n = data.length;
   // The data can shrink under an open tooltip (ChartZoom, a hidden series).
   const act = active && active.i < n && (active.s ?? 0) < series.length ? active : null;
-  const [lo, hi] = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))));
+  const [lo, hi] = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))), props.integerTicks);
   const name = (j: number) => series[j]!.label ?? series[j]!.key;
-  const text = (i: number, j: number) => valueFormat(valueOf(data[i]!, series[j]!.key));
+  const text = (i: number, j: number) => formatSeriesValue(data[i]!, series[j]!, valueFormat);
   // One series is named by the keyboard, by a grouped bar under the pointer, or by being the only one.
   const one = (a: Active) => a.s ?? (series.length === 1 ? 0 : undefined);
   const select = (a: Active) => {
     const j = one(a);
     const picked = j == null ? undefined : props.series.find((s) => s.key === series[j]!.key);
-    onPointClick?.({ index: a.i, datum: data[a.i]!, series: picked, value: picked && valueOf(data[a.i]!, picked.key) });
+    onPointClick?.({ index: a.i, datum: data[a.i]!, series: picked, value: picked ? (rawValueOf(data[a.i]!, picked.key) ?? undefined) : undefined });
   };
 
   const overlay = (interactive ?? Boolean(onPointClick)) && n > 0 && (
@@ -249,7 +249,7 @@ export function InteractiveCartesian<T extends object>({
         <>
           <span style={{ insetInlineStart: pct(act.i / n), width: pct(1 / n) }} className="pointer-events-none absolute inset-y-0 rounded-shape-tooltip bg-[color-mix(in_oklab,var(--color-on-surface)_6%,transparent)]" />
           <span style={{ insetInlineStart: pct((act.i + 0.5) / n) }} className={CROSSHAIR} />
-          {kind === 'line' && series.map((s, j) => (
+          {kind === 'line' && series.map((s, j) => rawValueOf(data[act.i]!, s.key) == null ? null : (
             <span
               key={s.key}
               style={{ insetInlineStart: pct((act.i + 0.5) / n), top: pct(1 - (valueOf(data[act.i]!, s.key) - lo) / (hi - lo)) }}

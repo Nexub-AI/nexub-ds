@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Button, cn, SearchInput, useNexubMessages } from '@nexub/react';
 
 export interface FilterBarProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** 11.3: `false` leaves the search field out (filters and actions only). @default true */
+  search?: boolean;
   searchPlaceholder?: string;
   /**
    * Accessible name of the search field. Defaults to `searchPlaceholder` without a
@@ -30,18 +32,18 @@ function stripEllipsis(text: string): string {
 }
 
 export const FilterBar = React.forwardRef<HTMLDivElement, FilterBarProps>(
-  ({ searchPlaceholder, searchLabel, onSearch, searchValue, filters, actions, activeCount = 0, onClearAll, className, ...props }, ref) => {
+  ({ search = true, searchPlaceholder, searchLabel, onSearch, searchValue, filters, actions, activeCount = 0, onClearAll, className, ...props }, ref) => {
     const t = useNexubMessages();
     return (
       <div ref={ref} className={cn('@container flex flex-wrap items-center gap-3', className)} {...props}>
-        <SearchInput
+        {search && <SearchInput
           aria-label={searchLabel ?? (searchPlaceholder && stripEllipsis(searchPlaceholder)) ?? t.search}
           placeholder={searchPlaceholder ?? t.searchPlaceholder}
           value={searchValue}
           onChange={(e) => onSearch?.(e.target.value)}
           onClear={() => onSearch?.('')}
           wrapperClassName="w-full @xl:w-64"
-        />
+        />}
         {filters && <div className="flex flex-wrap items-center gap-2">{filters}</div>}
         {activeCount > 0 && (
           <div className="flex items-center gap-1 text-body-sm text-[var(--color-on-surface-muted)]">

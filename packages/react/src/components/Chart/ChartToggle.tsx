@@ -6,9 +6,8 @@
 // components. At least one series always stays on.
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
-import type { ChartColor, ChartSeries } from './Chart.js';
+import { chartBg, type ChartColor, type ChartSeries } from './Chart.js';
 
-const BG = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4', 'bg-chart-5', 'bg-chart-6', 'bg-chart-7', 'bg-chart-8'];
 
 export interface ChartToggleProps {
   series: ChartSeries[];
@@ -61,7 +60,7 @@ export function SeriesToggles({ coloured, hidden, toggle, label }: Pick<Toggle, 
               on ? 'border-[var(--color-outline-variant)] text-[var(--color-on-surface)]' : 'border-dashed border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] line-through',
             )}
           >
-            <span aria-hidden="true" className={cn('size-2.5 rounded-full', on ? BG[(s.color - 1) % 8] : 'bg-[var(--color-outline-variant)]')} />
+            <span aria-hidden="true" className={cn('size-2.5 rounded-full', on ? chartBg(s.color, 0) : 'bg-[var(--color-outline-variant)]')} />
             {s.label ?? s.key}
           </button>
         );
