@@ -49,7 +49,8 @@ describe('CheckboxGroupField (11.1)', () => {
   it('a fieldset named by its legend; picks add and remove values', async () => {
     const onValueChange = vi.fn();
     render(<CheckboxGroupField label="Channels" required options={options} defaultValue={['email']} onValueChange={onValueChange} />);
-    expect(screen.getByRole('group', { name: 'Channels' })).toHaveAttribute('aria-required', 'true');
+    // aria-required isn't allowed on a group (axe aria-allowed-attr): the legend's asterisk shows it.
+    expect(screen.getByRole('group', { name: 'Channels' })).not.toHaveAttribute('aria-required');
     await userEvent.click(screen.getByRole('checkbox', { name: 'SMS' }));
     expect(onValueChange).toHaveBeenLastCalledWith(['email', 'sms']);
     await userEvent.click(screen.getByRole('checkbox', { name: 'Email' }));

@@ -355,7 +355,9 @@ const Dropzone = React.forwardRef<HTMLDivElement, FileUploadDropzoneProps>(
           <input {...inputProps} />
         </label>
         {busy && progress !== undefined && (
-          <Progress value={Math.round(progress)} size="sm" className={compact ? 'mx-4 mb-3' : 'mx-8 mb-6'} aria-label={messages.uploading} />
+          <div className={compact ? 'px-4 pb-3' : 'px-8 pb-6'}>
+            <Progress value={Math.round(progress)} size="sm" aria-label={messages.uploading} />
+          </div>
         )}
         <Rejections id={errorId} className="px-4 pb-3" />
       </div>

@@ -160,7 +160,6 @@ export const CheckboxGroupField = React.forwardRef<HTMLFieldSetElement, Checkbox
       disabled={disabled}
       aria-describedby={ariaDescribedBy}
       aria-invalid={error ? true : undefined}
-      aria-required={required || undefined}
       className={cn('m-0 flex min-w-0 flex-col gap-2 border-0 p-0', className)}
       {...props}
     >
