@@ -16,10 +16,10 @@ const Content = React.forwardRef<
   HTMLDivElement,
   RadixPopover.PopoverContentProps & {
     surface?: SurfaceValue;
-    /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+    /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
     sheet?: SheetProp;
   }
->(function PopoverContent({ className, sideOffset = 4, collisionPadding = COLLISION_PADDING, surface = 'solid', sheet = false, ...props }, ref) {
+>(function PopoverContent({ className, sideOffset = 4, collisionPadding = COLLISION_PADDING, surface = 'solid', sheet = 'auto', ...props }, ref) {
     return (
       <RadixPopover.Content
         ref={ref}

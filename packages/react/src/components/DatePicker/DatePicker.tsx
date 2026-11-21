@@ -93,7 +93,7 @@ export interface DatePickerProps {
    * calendar button.
    */
   typeable?: boolean;
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 
@@ -170,7 +170,7 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
       disabledDates,
       presets,
       typeable = false,
-      sheet = false,
+      sheet = 'auto',
     },
     ref,
   ) {

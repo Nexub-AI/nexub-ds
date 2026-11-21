@@ -293,6 +293,7 @@ function llmsTxt() {
     '',
     `- [Getting started](${SITE_URL}/getting-started): install, Tailwind preset, ThemeProvider`,
     `- [Principles](${SITE_URL}/foundations/principles): the six Calm Depth rules`,
+    `- [Tokens](${SITE_URL}/foundations/tokens): every design token in one searchable table (roles, component tokens, reference scales)`,
     `- [Colors](${SITE_URL}/foundations/colors): color roles and contrast`,
     `- [Materials](${SITE_URL}/foundations/materials): Liquid Glass rules`,
     `- [Theme builder](${SITE_URL}/foundations/theme-builder): one brand colour to a contrast-checked theme`,

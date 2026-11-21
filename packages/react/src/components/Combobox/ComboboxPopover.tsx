@@ -25,7 +25,7 @@ export interface ComboboxPopoverProps {
   readOnly?: boolean;
   /** @default 'md' */
   size?: Size;
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, a popover above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
   /** The list (a Combobox.List). */
   children: React.ReactNode;
@@ -37,7 +37,7 @@ export interface ComboboxPopoverProps {
  */
 const fieldSizes: Record<Size, string> = { sm: 'min-h-control-sm', md: 'min-h-control-md', lg: 'min-h-control-lg' };
 
-export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', sheet = false, children }: ComboboxPopoverProps) {
+export function ComboboxPopover({ open: openProp, onOpenChange, before, input, disabled, readOnly, size = 'md', sheet = 'auto', children }: ComboboxPopoverProps) {
   const open = openProp && !readOnly;
   const anchorRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);

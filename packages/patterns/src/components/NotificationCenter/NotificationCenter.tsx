@@ -30,7 +30,7 @@ export interface NotificationCenterProps {
   emptyState?: React.ReactNode;
   /** Shown in place of the list; wins over `loading` and `emptyState`. */
   errorState?: React.ReactNode;
-  /** 10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide). */
+  /** 10.6: on phones the panel opens as a bottom sheet (`true`, or `'auto'` to let the component decide). @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
   className?: string;
 }

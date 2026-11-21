@@ -70,6 +70,16 @@ describe('DateTimePicker 10.4', () => {
 });
 
 describe('DateTimePicker sheet (10.6)', () => {
+  it('the calendar is sheet="auto" by default (11.0); sheet={false} turns it off', async () => {
+    const { unmount } = render(<DateTimePicker aria-label="Starts" />);
+    await userEvent.click(screen.getByRole('button', { name: /Date/ }));
+    expect(screen.getByRole('grid').closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
+    unmount();
+    render(<DateTimePicker aria-label="Starts" sheet={false} />);
+    await userEvent.click(screen.getByRole('button', { name: /Date/ }));
+    expect(screen.getByRole('grid').closest('[data-nx-sheet]')).toBeNull();
+  });
+
   it('passes sheet to the calendar popover', async () => {
     render(<DateTimePicker aria-label="Starts" sheet />);
     await userEvent.click(screen.getByRole('button', { name: /Date/ }));

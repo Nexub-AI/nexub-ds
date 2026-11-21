@@ -153,10 +153,16 @@ describe('Select sheet (10.6)', () => {
     </Select.Root>
   );
 
-  it('marks the content with data-nx-sheet only when asked', () => {
-    const { unmount } = render(<Open />);
+  it('sheet={false} keeps the popover (11.0)', () => {
+    render(<Open sheet={false} />);
     expect(screen.getByRole('listbox')).toBeInTheDocument();
     expect(sheetAttr()).toBeNull();
+  });
+
+  it('marks the content with data-nx-sheet="auto" by default (11.0)', () => {
+    const { unmount } = render(<Open />);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(sheetAttr()).toBe('auto');
     unmount();
     render(<Open sheet="auto" />);
     expect(screen.getByRole('listbox')).toHaveAttribute('data-nx-sheet', 'auto');

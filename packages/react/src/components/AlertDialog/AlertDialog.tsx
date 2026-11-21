@@ -55,12 +55,12 @@ const Overlay = React.forwardRef<HTMLDivElement, RadixAlertDialog.AlertDialogOve
 Overlay.displayName = 'AlertDialog.Overlay';
 
 export interface AlertDialogContentProps extends RadixAlertDialog.AlertDialogContentProps {
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
 }
 
 const Content = React.forwardRef<HTMLDivElement, AlertDialogContentProps>(
-  function AlertDialogContent({ className, children, sheet = false, ...props }, ref) {
+  function AlertDialogContent({ className, children, sheet = 'auto', ...props }, ref) {
     const narrow = useMediaQuery('(max-width: 47.99rem)');
     const asSheet = sheet === true || (sheet === 'auto' && narrow);
     const [required, setRequired] = React.useState<string | null>(null);
