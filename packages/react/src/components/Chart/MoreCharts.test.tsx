@@ -84,3 +84,74 @@ describe('Charts 2.0, 10.5: data states', () => {
     expect(container.firstElementChild!.hasAttribute('aria-busy')).toBe(false);
   });
 });
+
+describe('11.3: small chart options', () => {
+  it('Gauge: tone colours the arc, caption sits under the value and is read with it', () => {
+    const { container } = render(<Gauge title="Budget" value={90} tone="danger" caption="Over budget" color={3} />);
+    expect(container.querySelectorAll('circle')[1]!.getAttribute('class')).toBe('stroke-error');
+    expect(container.querySelector('[data-gauge-caption]')!.textContent).toBe('Over budget');
+    expect(container.querySelector('figcaption')!.textContent).toBe('Budget: 90 of 100 (90%), Over budget');
+  });
+
+  it('Heatmap: missing cells are hatched, listed as "—", and left out of the range; legend shows min and max', () => {
+    // eslint-disable-next-line no-sparse-arrays
+    const { container } = render(<Heatmap title="Load" rowLabels={['Mon', 'Tue']} data={[[0, null, 6], [1, , 7]]} legend />);
+    expect(container.querySelectorAll('[data-missing]')).toHaveLength(2);
+    expect(screen.getAllByRole('cell', { name: '—' })).toHaveLength(2);
+    const legend = container.querySelector('[data-chart-legend]')!;
+    expect(legend.textContent).toBe('07No data');
+    expect(container.querySelector('svg rect')!.getAttribute('class')).toBe('fill-chart-seq-1');
+  });
+
+  it('Heatmap: an all-missing grid is empty; tableView lists the grid', () => {
+    render(<Heatmap title="None" rowLabels={['Mon']} data={[[null]]} emptyState="No load" />);
+    expect(screen.getByText('No load')).toBeTruthy();
+    const { container } = render(<Heatmap title="Load" rowLabels={['Mon']} columnLabels={['W1', 'W2']} data={[[3, null]]} tableView />);
+    const details = container.querySelector('[data-chart-table]')!;
+    expect([...details.querySelectorAll('th')].map((t) => t.textContent)).toEqual(['Label', 'W1', 'W2', 'Mon']);
+    expect([...details.querySelectorAll('td')].map((t) => t.textContent)).toEqual(['3', '—']);
+  });
+
+  const steps = [
+    { label: 'Visited', value: 1000, values: { app: 400 } },
+    { label: 'Signed up', value: 500, values: { app: 300 } },
+    { label: 'Paid', value: 100, values: { app: 60 } },
+  ];
+
+  it('Funnel: show="both" prints conversion from the first and previous step, and the drop-off', () => {
+    const { container } = render(<Funnel title="Signup" data={steps} show="both" />);
+    const meta = [...container.querySelectorAll('[data-funnel-meta]')].map((m) => m.textContent);
+    expect(meta[0]).toBe('100% of Visited');
+    expect(meta[2]).toBe('10% of Visited · 20% of previous step · 400 dropped off');
+    render(<Funnel title="Lost" data={steps} show="drop-off" />);
+    expect(screen.getByRole('cell', { name: '500, 500 dropped off' })).toBeTruthy();
+  });
+
+  it('Funnel: several series draw one bar each with a legend and a column each in the table', () => {
+    const { container } = render(
+      <Funnel title="By channel" data={steps} series={[{ key: 'value', label: 'Web' }, { key: 'app', label: 'App', color: 4 }]} tableView />,
+    );
+    expect(container.querySelectorAll('[aria-hidden] rect.fill-chart-4')).toHaveLength(4); // 3 bars + legend swatch
+    expect(container.querySelector('[data-chart-legend]')!.textContent).toBe('WebApp');
+    expect(screen.getAllByRole('columnheader', { name: 'App' })).toHaveLength(2);
+    expect(screen.getByRole('cell', { name: '60, 15% of Visited' })).toBeTruthy();
+    expect(container.querySelector('[data-chart-table]')).toBeTruthy();
+  });
+
+  it('Funnel and Heatmap: the new props pass through the interactive layer', () => {
+    const { container } = render(
+      <>
+        <Funnel title="f" data={steps} show="conversion" tableView interactive />
+        <Heatmap title="h" rowLabels={['a']} data={[[1, null]]} legend tableView interactive />
+      </>,
+    );
+    expect(container.querySelectorAll('[data-chart-table]')).toHaveLength(2);
+    expect(container.querySelectorAll('[data-funnel-meta]')).toHaveLength(3);
+    expect(container.querySelector('[data-missing]')).toBeTruthy();
+  });
+
+  it('defaults render exactly as before (no legend, table view or meta)', () => {
+    const html = renderToString(<><Gauge title="g" value={1} /><Heatmap title="h" rowLabels={['a']} data={[[1]]} /><Funnel title="f" data={[{ label: 'a', value: 1 }]} /></>);
+    expect(html).not.toMatch(/data-chart-legend|data-chart-table|data-funnel-meta|data-missing|data-gauge-caption/);
+  });
+});

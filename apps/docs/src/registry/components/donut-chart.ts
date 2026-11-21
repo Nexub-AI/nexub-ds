@@ -17,9 +17,16 @@ const entry: ComponentEntry = {
     { name: 'center', type: 'ReactNode', required: false, description: 'Content in the hole, such as the total.' },
     { name: 'valueFormat', type: '(value: number) => string', required: false, description: 'Formats the hover text and the data table.' },
     { name: 'legend', type: 'boolean', default: 'true', required: false, description: 'Show the legend beside the donut.' },
+    { name: 'maxSlices / otherLabel', type: 'number / string', description: '11.3: group the smallest slices into one "Other".' },
+    { name: 'legendValues', type: 'boolean', description: '11.3: value and share on each legend row.' },
+    { name: 'data[].href', type: 'string', description: '11.3: makes the slice\'s legend row a link.' },
+    { name: 'data[].color', type: "1–8 | 'good' | 'warning' | 'danger' | 'neutral'", description: '11.3: a palette colour or a tone.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: '11.3: diameter.' },
+    { name: 'tableView', type: 'boolean | string', description: '11.3: a visible "Show as table" disclosure.' },
   ],
   examples: [
     { title: 'With total' },
+    { title: 'Other, legend values and links' },
   ],
   a11y: {
     screenReader: [

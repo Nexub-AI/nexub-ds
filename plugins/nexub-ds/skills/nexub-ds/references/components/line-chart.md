@@ -18,6 +18,10 @@ Show a trend over ordered categories such as time. Server-rendered SVG on the ch
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Plot height: 8, 12 or 16rem. |
 | `legend` | `boolean` |  | Show the legend. Defaults to on for more than one series. |
 | `area` | `boolean` | `false` | Fill the area under each line. |
+| `series[].color` | `1–8 \| 'good' \| 'warning' \| 'danger' \| 'neutral'` |  | 11.3: a palette colour or a semantic tone. |
+| `series[].valueFormat` | `(value: number) => string` |  | 11.3: formats this series in the tooltip and table (one currency per series). |
+| `integerTicks` | `boolean` |  | 11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0. |
+| `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure with the same data. Works without JS. |
 
 ## Example: Two series
 
@@ -70,6 +74,34 @@ export default function Example() {
       index="day"
       series={[{ key: 'p95', label: 'p95 latency', color: 6 }]}
       valueFormat={(v) => `${v} ms`}
+    />
+  );
+}
+```
+
+## Example: Gaps and one currency per series
+
+```tsx
+import { LineChart } from '@nexub/react';
+
+const months = [
+  { month: 'Jan', usd: 12400, myr: 31000 },
+  { month: 'Feb', usd: 13100, myr: null },
+  { month: 'Mar', usd: null, myr: 35500 },
+  { month: 'Apr', usd: 15800, myr: 38200 },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+const myr = (v: number) => new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(v);
+
+export default function Example() {
+  return (
+    <LineChart
+      className="w-full max-w-2xl"
+      title="Revenue by currency"
+      data={months}
+      index="month"
+      tableView
+      series={[{ key: 'usd', label: 'USD', valueFormat: usd }, { key: 'myr', label: 'MYR', valueFormat: myr }]}
     />
   );
 }

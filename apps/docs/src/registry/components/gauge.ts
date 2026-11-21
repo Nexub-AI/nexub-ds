@@ -17,8 +17,10 @@ const entry: ComponentEntry = {
     { name: 'title', type: 'string', required: true, description: 'Accessible name.' },
     { name: 'label', type: 'ReactNode', required: false, description: 'Centre text; defaults to the percentage.' },
     { name: 'color', type: 'ChartColor', default: '1', required: false, description: 'Palette colour, 1–8.' },
+    { name: 'tone', type: "'good' | 'warning' | 'danger'", required: false, description: '11.3: success, warning or error colour for the arc; wins over `color`. Pair it with a `caption` so colour is not the only signal.' },
+    { name: 'caption', type: 'ReactNode', required: false, description: '11.3: a short line under the value, such as "41 of 50 GB" or "Over budget". Also read with the value.' },
   ],
-  examples: [{ title: 'Storage used' }],
+  examples: [{ title: 'Storage used' }, { title: 'Tone and caption' }],
   a11y: {
     screenReader: ['The drawing is hidden from assistive tech; a visually hidden table or caption carries every value.'],
   },

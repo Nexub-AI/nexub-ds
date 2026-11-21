@@ -20,9 +20,11 @@ A list with a success tick before each item, for features, plan inclusions and r
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `string[]` |  | Plain-text items. Shorthand for one `CheckListItem` each. |
+| `items` | `(string \| { label: ReactNode; status?: CheckListStatus })[]` |  | Plain-text items. Shorthand for one `CheckListItem` each. 11.3: an object entry sets a status. |
 | `children` | `ReactNode` |  | `CheckListItem`s, for items with markup. Rendered after `items`. |
 | `CheckListItem children` (required) | `ReactNode` |  | The item text. The tick is decorative (hidden from screen readers). |
+| `CheckListItem status` | `'done' \| 'pending'` |  | 11.3: `done` draws the tick, `pending` an empty ring with muted text. Either is read after the text ("Done" / "Pending"). Unset draws the tick with nothing read, as before. |
+| `CheckListItem statusLabel` | `string` |  | 11.3: the words read for `status`, for other languages. |
 
 ## Example: From items
 
@@ -46,6 +48,28 @@ export default function Example() {
       <CheckListItem>One number <span className="text-on-surface-muted">(0–9)</span></CheckListItem>
       <CheckListItem>Not used on another account</CheckListItem>
     </CheckList>
+  );
+}
+```
+
+## Example: Done and pending
+
+Setup steps with a status each.
+
+```tsx
+import { CheckList } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <CheckList
+      aria-label="Workspace setup"
+      items={[
+        { label: 'Create workspace', status: 'done' },
+        { label: 'Connect bank account', status: 'done' },
+        { label: 'Invite your team', status: 'pending' },
+        { label: 'Send first invoice', status: 'pending' },
+      ]}
+    />
   );
 }
 ```

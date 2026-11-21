@@ -1114,7 +1114,14 @@
       "trendLabel",
       "value"
     ],
-    "webOnly": [],
+    "webOnly": [
+      "change",
+      "changeFormat",
+      "changeLabel",
+      "note",
+      "size",
+      "tone"
+    ],
     "nativeOnly": [
       "onPress"
     ]
