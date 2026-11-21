@@ -41,9 +41,9 @@
         },
         {
           "name": "title",
-          "type": "string",
+          "type": "React.ReactNode",
           "required": false,
-          "description": ""
+          "description": "11.5: any content (a link, a name in bold)."
         },
         {
           "name": "tone",
@@ -1529,6 +1529,21 @@
           "default": "false",
           "description": "Remove the element from the DOM when `in` becomes false (after the exit transition completes)."
         }
+      ]
+    },
+    "CollapsibleTrigger": {
+      "file": "components/Collapsible/Collapsible.tsx",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'default' | 'unstyled'",
+          "required": false,
+          "default": "'unstyled'",
+          "description": "11.5: `default` is a styled full-width row with a chevron that turns when open, so apps stop building their own. `unstyled` (the default, unchanged) renders only what you pass."
+        }
+      ],
+      "inherited": [
+        "asChild"
       ]
     },
     "ColorPicker": {
@@ -3706,7 +3721,7 @@
         },
         {
           "name": "direction",
-          "type": "'top' | 'bottom' | 'left' | 'right'",
+          "type": "'bottom' | 'top' | 'left' | 'right'",
           "required": false,
           "default": "'bottom'",
           "description": "Edge the drawer slides in from. Match it to `Content`'s `side`."
@@ -5409,6 +5424,12 @@
       "file": "components/InlineEdit/InlineEdit.tsx",
       "props": [
         {
+          "name": "as",
+          "type": "React.ElementType<any, keyof React.JSX.IntrinsicElements>",
+          "required": false,
+          "description": "11.5: wraps the text (and the input while editing) in this element, e.g. `'h2'` or `Sheet.Title` / `Dialog.Title`, so the heading or the dialog's name stays in place. The button inside it does the editing."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
@@ -5427,6 +5448,12 @@
           "description": "Names the field: the input's label and \"Edit ‹label›\" on the button."
         },
         {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": "11.5: caps the input's length and shows a \"12/80\" counter."
+        },
+        {
           "name": "onSave",
           "type": "(value: string) => void | Promise<unknown>",
           "required": true,
@@ -5437,6 +5464,13 @@
           "type": "string",
           "required": false,
           "description": "Shown when `value` is empty."
+        },
+        {
+          "name": "size",
+          "type": "'title' | 'sm' | 'md' | 'lg' | 'headline'",
+          "required": false,
+          "default": "'md' (or the `as` element's own type when `as` is set)",
+          "description": "11.5: type role of the text and the input, from body text up to a headline."
         },
         {
           "name": "value",
@@ -6023,6 +6057,12 @@
       "file": "components/MessageBubble/MessageBubble.tsx",
       "props": [
         {
+          "name": "actions",
+          "type": "MessageAction[]",
+          "required": false,
+          "description": "11.5: your own actions, after the built-in ones. `children` render after these."
+        },
+        {
           "name": "copy",
           "type": "boolean",
           "required": false,
@@ -6076,11 +6116,11 @@
           "name": "avatar",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Assistant only: shown at the inline-start."
+          "description": "Assistant and other: shown at the inline-start."
         },
         {
           "name": "from",
-          "type": "'user' | 'assistant' | 'system'",
+          "type": "'user' | 'assistant' | 'system' | 'other'",
           "required": true,
           "description": "Who sent it. (Not `role`, which is the ARIA attribute.)"
         },
@@ -6091,10 +6131,16 @@
           "description": ""
         },
         {
+          "name": "meta",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: header text beside the name, e.g. the time. Not for `system`."
+        },
+        {
           "name": "name",
           "type": "string",
           "required": false,
-          "description": "Accessible label for the message; defaults to \"You said\" / \"Assistant said\"."
+          "description": "Accessible label for the message; defaults to \"You said\" / \"Assistant said\". With `from=\"other\"` it is also shown as the header (the sender's name)."
         },
         {
           "name": "onRetry",
@@ -6376,6 +6422,18 @@
           "description": "Render your link (e.g. a router `<Link>`) as the item: pass it as the only child."
         },
         {
+          "name": "badge",
+          "type": "number | boolean",
+          "required": false,
+          "description": "11.5: a count (99+ above 99; nothing at 0) or `true` for a dot. Read after the label as \"3 unread\" / \"New\"; set `badgeLabel` for other wording."
+        },
+        {
+          "name": "badgeLabel",
+          "type": "string",
+          "required": false,
+          "description": "Accessible text for the badge, e.g. \"3 failed builds\"."
+        },
+        {
           "name": "children",
           "type": "React.ReactElement<unknown, string | React.JSXElementConstructor<any>>",
           "required": false,
@@ -6409,7 +6467,14 @@
           "name": "header",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Optional slot above the items, e.g. a primary action or logo."
+          "description": "Optional slot above the items, e.g. a primary action or logo. Not shown when `orientation=\"bottom\"`."
+        },
+        {
+          "name": "orientation",
+          "type": "'vertical' | 'bottom'",
+          "required": false,
+          "default": "'vertical'",
+          "description": "11.5: `bottom` is a phone tab bar: a row stuck to the bottom of the viewport with safe-area padding. Put it after the page content."
         }
       ]
     },
@@ -6642,6 +6707,65 @@
         }
       ]
     },
+    "OrgChart": {
+      "file": "components/OrgChart/OrgChart.tsx",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "aria-labelledby",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "string[]",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "expanded",
+          "type": "string[]",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "nodes",
+          "type": "OrgChartNode[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "onActivate",
+          "type": "((node: OrgChartNode) => void)",
+          "required": false,
+          "description": "Click or Enter on a card, e.g. to open the person's profile."
+        },
+        {
+          "name": "onExpandedChange",
+          "type": "((ids: string[]) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "renderCard",
+          "type": "((node: OrgChartNode) => React.ReactNode)",
+          "required": false,
+          "description": "Replaces the card's content (photo, name, role). The expand control stays."
+        }
+      ]
+    },
     "OTPInput": {
       "file": "components/OTPInput/OTPInput.tsx",
       "props": [
@@ -6753,6 +6877,12 @@
           "type": "React.ReactNode",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "eyebrow",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: a row above the title, e.g. an EyebrowChip and status badges. Wraps on narrow screens."
         },
         {
           "name": "level",
@@ -7044,6 +7174,18 @@
           "description": ""
         },
         {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: an error under the field; marks it invalid."
+        },
+        {
+          "name": "hint",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: helper text under the field, linked with `aria-describedby`."
+        },
+        {
           "name": "label",
           "type": "string",
           "required": false,
@@ -7082,11 +7224,24 @@
           "description": ""
         },
         {
+          "name": "sendLabel",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: a visible text label on Send (the arrow icon stays). Without it, Send is an icon button."
+        },
+        {
           "name": "status",
           "type": "'idle' | 'submitting' | 'streaming'",
           "required": false,
           "default": "'idle'",
           "description": "`streaming` turns Send into Stop; `submitting` holds Send."
+        },
+        {
+          "name": "submitOn",
+          "type": "'enter' | 'mod-enter'",
+          "required": false,
+          "default": "'enter'",
+          "description": "11.5: `mod-enter` sends on Cmd/Ctrl+Enter and makes Enter add a line, and shows that hint."
         },
         {
           "name": "surface",
@@ -7438,16 +7593,41 @@
           "description": ""
         },
         {
-          "name": "onDelete",
-          "type": "((id: string) => void)",
+          "name": "confirmDelete",
+          "type": "boolean",
           "required": false,
-          "description": "\"Delete ‹view›\": remove the active view."
+          "default": "false",
+          "description": "11.5: ask in an AlertDialog before deleting."
+        },
+        {
+          "name": "defaultView",
+          "type": "string",
+          "required": false,
+          "description": "11.5: the default view's id. It is tagged \"Default\" in the menu, and applied (`onSelect`) once on mount when `activeId` is undefined."
+        },
+        {
+          "name": "maxLength",
+          "type": "number",
+          "required": false,
+          "description": "11.5: the longest name allowed when saving or renaming."
+        },
+        {
+          "name": "onDelete",
+          "type": "((id: string) => MaybeAsync)",
+          "required": false,
+          "description": "\"Delete ‹view›\": remove the active view. May return a promise."
+        },
+        {
+          "name": "onRename",
+          "type": "((id: string, name: string) => MaybeAsync)",
+          "required": false,
+          "description": "11.5: \"Rename ‹view›\": asks for a new name for the active view. May return a promise."
         },
         {
           "name": "onSave",
-          "type": "((name: string) => void)",
+          "type": "((name: string) => MaybeAsync)",
           "required": false,
-          "description": "\"Save as new view…\": asks for a name, then calls this. Your app stores the view."
+          "description": "\"Save as new view…\": asks for a name, then calls this. Your app stores the view. May return a promise."
         },
         {
           "name": "onSelect",
@@ -7457,9 +7637,9 @@
         },
         {
           "name": "onUpdate",
-          "type": "((id: string) => void)",
+          "type": "((id: string) => MaybeAsync)",
           "required": false,
-          "description": "\"Update ‹view›\": overwrite the active view with the current filters."
+          "description": "\"Update ‹view›\": overwrite the active view with the current filters. May return a promise."
         },
         {
           "name": "sheet",
@@ -9288,6 +9468,12 @@
           "description": ""
         },
         {
+          "name": "onActivate",
+          "type": "((node: TreeNode) => void)",
+          "required": false,
+          "description": "11.5: Enter or double-click \"opens\" a node. Separate from selection, which click and Space (and Enter) set."
+        },
+        {
           "name": "onCheckedChange",
           "type": "((ids: string[]) => void)",
           "required": false,
@@ -9310,6 +9496,18 @@
           "type": "((id: string) => void)",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "ref",
+          "type": "React.Ref<TreeViewHandle>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "renderActions",
+          "type": "((node: TreeNode) => React.ReactNode)",
+          "required": false,
+          "description": "11.5: row actions, shown on hover and focus (always on touch screens). Tab from the focused row reaches them."
         },
         {
           "name": "selected",
@@ -9495,9 +9693,32 @@
         }
       ]
     },
+    "ActivityGroup": {
+      "file": "components/ActivityFeed/ActivityFeed.tsx",
+      "props": [
+        {
+          "name": "headingLevel",
+          "type": "2 | 3 | 4 | 5 | 6",
+          "required": false,
+          "description": "Render the header as a heading (h2–h6) for heading navigation. Default: a plain `div`."
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "The header, e.g. \"Today\" or \"Yesterday\"; it names the group's list."
+        }
+      ]
+    },
     "ActivityItem": {
       "file": "components/ActivityFeed/ActivityFeed.tsx",
       "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "11.5: trailing actions, e.g. an IconButton or a menu trigger."
+        },
         {
           "name": "avatar",
           "type": "React.ReactNode",
@@ -9518,15 +9739,21 @@
         },
         {
           "name": "timestamp",
-          "type": "string",
+          "type": "React.ReactNode | Date",
           "required": false,
-          "description": ""
+          "description": "Text as given, or (11.5) a `Date`: rendered in `<time dateTime>` as relative text (\"5 minutes ago\", a short date after a week) with the full date in a tooltip."
         },
         {
           "name": "title",
           "type": "React.ReactNode",
           "required": true,
-          "description": ""
+          "description": "Block content is fine: rendered in a `div` (11.5; was a `p`)."
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+          "required": false,
+          "description": "11.5: a coloured marker: a dot in place of the avatar, or a badge on it."
         }
       ]
     },
@@ -9888,9 +10115,9 @@
         },
         {
           "name": "description",
-          "type": "string",
+          "type": "React.ReactNode",
           "required": false,
-          "description": ""
+          "description": "11.5: any content, e.g. the address the code went to in bold."
         },
         {
           "name": "footer",
@@ -9903,6 +10130,13 @@
           "type": "React.ReactNode",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "logoAlign",
+          "type": "'start' | 'center'",
+          "required": false,
+          "default": "'center'",
+          "description": "11.5: where the logo sits."
         },
         {
           "name": "title",
@@ -10343,6 +10577,12 @@
           "description": "Sticky composer slot under the list, e.g. a PromptInput."
         },
         {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "11.5: cap the height (a CSS length, or a number of px) so it works in normal flow without a fixed-height parent: it grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent's height (`h-full`) as before."
+        },
+        {
           "name": "messages",
           "type": "Partial<ConversationMessages>",
           "required": false,
@@ -10368,9 +10608,9 @@
         },
         {
           "name": "balance",
-          "type": "{ value: number; currency: string; label?: string; }",
+          "type": "{ value: number | React.ReactNode; currency?: string; label?: string; format?: (value: number) => string; }",
           "required": true,
-          "description": ""
+          "description": "The headline figure. With `currency` it is an amount. 11.5: without one it is any figure (members, orders, uptime): `value` as a number (formatted with `format`, default the locale's grouping) or any content, under `label`."
         },
         {
           "name": "banner",
@@ -12493,7 +12733,7 @@
         },
         {
           "name": "deltaType",
-          "type": "'increase' | 'decrease' | 'neutral'",
+          "type": "'neutral' | 'increase' | 'decrease'",
           "required": false,
           "description": "Direction of the change: sets the arrow (and, by default, the colour)."
         },

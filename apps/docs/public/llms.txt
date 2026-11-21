@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 11.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 11.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -120,6 +120,7 @@ Version 11.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Navigation Rail](https://nexub-ds-docs.pages.dev/components/navigation-rail.md): Navigation for medium-width windows: icons over labels, with an active pill behind the icon.
 - [Number Input](https://nexub-ds-docs.pages.dev/components/number-input.md): A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
 - [Number Ticker](https://nexub-ds-docs.pages.dev/components/number-ticker.md): A number whose digits roll to new values on the spatial spring. The first render never animates.
+- [Org Chart](https://nexub-ds-docs.pages.dev/components/org-chart.md): People top-down as cards joined by lines, keyboard navigable as a tree. A TreeView on narrow screens.
 - [OTP Input](https://nexub-ds-docs.pages.dev/components/otp-input.md): One box per digit for verification codes, with paste and one-time-code autofill.
 - [Page Header](https://nexub-ds-docs.pages.dev/components/page-header.md): The top of a page: title, description, breadcrumb and actions.
 - [Pagination](https://nexub-ds-docs.pages.dev/components/pagination.md): Page navigation control with prev/next and page number buttons.

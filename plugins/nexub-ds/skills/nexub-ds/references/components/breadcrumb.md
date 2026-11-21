@@ -17,6 +17,7 @@ Hierarchical navigation trail showing page location.
 | `Breadcrumb.Trail maxItems` | `number` | `4` | Longer trails keep the first item and the last `maxItems - 1`, and move the rest into a "More" menu. |
 | `Breadcrumb.Separator children` | `React.ReactNode` |  | Custom separator element. Defaults to a chevron icon. |
 | `Breadcrumb.Ellipsis aria-label` | `string` | `'More'` | Accessible label for the ellipsis element used to collapse long trails. |
+| `Breadcrumb.Section` | `component` |  | 11.5: a plain section in the trail, neither a link nor the current page. In `Breadcrumb.Trail`, an item before the last with no `href` renders as one. |
 
 ## Example: Default
 

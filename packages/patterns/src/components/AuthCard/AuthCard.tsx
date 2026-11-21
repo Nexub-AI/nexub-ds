@@ -4,7 +4,10 @@ import { cn } from '@nexub/react';
 export interface AuthCardProps {
   logo?: React.ReactNode;
   title: string;
-  description?: string;
+  /** 11.5: any content, e.g. the address the code went to in bold. */
+  description?: React.ReactNode;
+  /** 11.5: where the logo sits. @default 'center' */
+  logoAlign?: 'start' | 'center';
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
@@ -14,6 +17,7 @@ export function AuthCard({
   logo,
   title,
   description,
+  logoAlign = 'center',
   children,
   footer,
   className,
@@ -26,7 +30,7 @@ export function AuthCard({
       )}
     >
       {logo && (
-        <div className="flex justify-center">{logo}</div>
+        <div className={cn('flex', logoAlign === 'start' ? 'justify-start' : 'justify-center')}>{logo}</div>
       )}
 
       <div className="flex flex-col gap-2 text-center">
@@ -34,7 +38,7 @@ export function AuthCard({
           {title}
         </h1>
         {description && (
-          <p className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</p>
+          <div className="text-body-sm text-[var(--color-on-surface-muted)]">{description}</div>
         )}
       </div>
 

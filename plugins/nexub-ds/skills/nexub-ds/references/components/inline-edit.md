@@ -15,6 +15,9 @@ Text that becomes an input on click, for renaming things in place.
 | `label` (required) | `string` |  | Names the input, and the button reads "Edit ‹label›, ‹value›". |
 | `placeholder` | `string` |  | Shown when the value is empty. |
 | `disabled` | `boolean` |  | Shows the text without editing. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'title' \| 'headline'` | `'md'` | 11.5. Type role of the text and the input: body small, medium, large, title large or headline small. With `as` and no `size`, the text takes the wrapper’s type. |
+| `as` | `ElementType` |  | 11.5. Wraps the text, and the input while editing, in this element: a heading (`"h2"`) or a component such as `Sheet.Title` or `Dialog.Title`, so the heading and the dialog’s name stay in place. |
+| `maxLength` | `number` |  | 11.5. Caps the input and shows a "12/40" counter, announced near the limit. |
 
 ## Example: Rename
 
@@ -35,6 +38,29 @@ export default function Example() {
         if (!next.trim()) return Promise.reject(new Error('Name is required'));
         setName(next.trim());
       }}
+    />
+  );
+}
+```
+
+## Example: Editable page title
+
+A headline inside an `h2`, capped at 40 characters.
+
+```tsx
+import * as React from 'react';
+import { InlineEdit } from '@nexub/react';
+
+export default function Example() {
+  const [title, setTitle] = React.useState('Quarterly roadmap');
+  return (
+    <InlineEdit
+      as="h2"
+      size="headline"
+      maxLength={40}
+      label="Page title"
+      value={title}
+      onSave={(next) => setTitle(next.trim() || title)}
     />
   );
 }

@@ -21,6 +21,12 @@ const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 // (2.5.3 Label in Name); they are image content, and putting "S L" in the name would
 // only add noise for screen-reader users.
 const MONOGRAM = ['label-content-name-mismatch'];
+// Tree items named by their own row (11.5): an OrgChart card or a TreeView row with actions is
+// named with aria-labelledby (name and role, or label and trailing meta), as the APG tree
+// pattern intends. axe counts the text of the reports or children nested inside the treeitem as
+// its visible label and wants it in the name; naming the item from content instead would make the
+// top of the chart read out the whole organisation. The row's own visible text is in the name.
+const TREE_ROW = ['label-content-name-mismatch'];
 const KNOWN: Record<string, string[]> = {
   'navigation-appshell--default': MONOGRAM,
   'navigation-topnav--default': MONOGRAM,
@@ -34,6 +40,9 @@ const KNOWN: Record<string, string[]> = {
   'patterns-appheader--phone-375-dark': MONOGRAM,
   'patterns-settingslayout--with-app-header': MONOGRAM,
   'patterns-settingslayout--with-app-header-phone': MONOGRAM,
+  'components-orgchart--default': TREE_ROW,
+  'components-orgchart--custom-card': TREE_ROW,
+  'components-treeview--actions-and-links': TREE_ROW,
 };
 
 test('KNOWN only lists existing stories', () => {

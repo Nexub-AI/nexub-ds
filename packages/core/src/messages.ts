@@ -228,6 +228,8 @@ export interface NexubMessages {
   /** NotificationCenter (@nexub/patterns). */
   notificationCenter: string;
   unreadNotifications: (count: number) => string;
+  /** NavigationRail item `badge` dot (11.5), read after the item's label. */
+  newBadge: string;
   markAllRead: string;
   noNotifications: string;
   /** ChartZoom range thumbs and reset. */
@@ -353,6 +355,16 @@ export interface NexubMessages {
   failedCount: (count: number) => string;
   /** CommandPalette `recentKey` group heading. */
   recent: string;
+  /** OrgChart (11.5): the expand control on a card, e.g. "3 reports". */
+  orgChartReports: (count: number) => string;
+  /** PromptInput `submitOn="mod-enter"` (11.5); `mod` is "⌘" on Apple devices, else "Ctrl". */
+  promptHintModEnter: (mod: string) => string;
+  /** SavedViews (11.5): rename, the default view's tag and the delete confirm. */
+  renameView: (name: string) => string;
+  defaultViewTag: string;
+  deleteViewConfirm: (name: string) => string;
+  deleteViewDescription: string;
+  deleteLabel: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -543,6 +555,7 @@ export const defaultMessages: NexubMessages = {
   cannotMoveHere: "Can't move here",
   notificationCenter: 'Notifications',
   unreadNotifications: (count) => `${count} unread`,
+  newBadge: 'New',
   markAllRead: 'Mark all as read',
   noNotifications: 'You’re all caught up',
   zoomStart: 'Zoom start',
@@ -652,6 +665,13 @@ export const defaultMessages: NexubMessages = {
   unlimited: 'Unlimited',
   failedCount: (count) => `${count} failed`,
   recent: 'Recent',
+  orgChartReports: (count) => `${count} ${count === 1 ? 'report' : 'reports'}`,
+  promptHintModEnter: (mod) => `Press ${mod}+Enter to send, Enter for a new line`,
+  renameView: (name) => `Rename “${name}”`,
+  defaultViewTag: 'Default',
+  deleteViewConfirm: (name) => `Delete “${name}”?`,
+  deleteViewDescription: 'This can’t be undone. Your data stays as it is.',
+  deleteLabel: 'Delete',
 };
 
 export type Direction = 'ltr' | 'rtl';

@@ -23,6 +23,7 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 | `composer` | `ReactNode` |  | Sticky slot under the list, usually a PromptInput. |
 | `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". |
 | `announce` | `boolean` | `false` | Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk. |
+| `maxHeight` | `number \| string` |  | 11.5: cap the height so it works in normal flow without a fixed-height parent. It grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent (`h-full`). |
 | `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest` and `conversation`. |
 
 ## Example: Mini chat
@@ -97,6 +98,49 @@ export default function Example() {
         ),
       )}
     </Conversation>
+  );
+}
+```
+
+## Example: In normal flow
+
+No fixed-height parent: `maxHeight="20rem"` lets it grow with its messages, then scroll.
+
+```tsx
+import * as React from 'react';
+import { PromptInput, MessageBubble } from '@nexub/react';
+import { Conversation } from '@nexub/patterns';
+
+type ChatMessage = { id: number; from: 'user' | 'other'; text: string };
+
+export default function Example() {
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    { id: 1, from: 'other', text: 'Morning! Did the invoices go out?' },
+  ]);
+  return (
+    <div className="w-full">
+      <Conversation
+        maxHeight="20rem"
+        composer={
+          <PromptInput
+            placeholder="Reply to Grace"
+            onSubmit={(text) => setMessages((m) => [...m, { id: Date.now(), from: 'user', text }])}
+          />
+        }
+      >
+        {messages.map((msg) =>
+          msg.from === 'other' ? (
+            <MessageBubble key={msg.id} from="other" name="Grace Hopper">
+              {msg.text}
+            </MessageBubble>
+          ) : (
+            <MessageBubble key={msg.id} from="user">
+              {msg.text}
+            </MessageBubble>
+          ),
+        )}
+      </Conversation>
+    </div>
   );
 }
 ```

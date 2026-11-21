@@ -84,3 +84,13 @@ test('@theme inline emits no self-referencing :root vars', async () => {
   assert.doesNotMatch(css, /--color-primary:\s*var\(--color-primary\)/);
   assert.doesNotMatch(css, /--radius-md:\s*var\(--radius-md\)/);
 });
+
+test('11.5 extras: 22rem/26rem spacing, perspective, brand glow, zoom widths', async () => {
+  const css = await build(['w-88', 'max-w-104', 'perspective-near', 'shadow-glow-brand', 'w-zoom-110']);
+  assert.match(css, /\.w-88\s*\{[^}]*width:\s*var\(--spacing-88\)/);
+  assert.match(css, /\.max-w-104\s*\{[^}]*max-width:\s*var\(--spacing-104\)/);
+  assert.match(css, /\.perspective-near\s*\{[^}]*perspective:\s*(20rem|var\(--perspective-near\))/);
+  assert.match(css, /\.shadow-glow-brand\s*\{/);
+  assert.match(css, /--color-primary/);
+  assert.match(css, /\.w-zoom-110\s*\{[^}]*width:\s*(110%|var\(--spacing-zoom-110\))/);
+});
