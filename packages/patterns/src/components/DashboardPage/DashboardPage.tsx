@@ -18,7 +18,12 @@ export type DashboardStat = Pick<StatCardProps, 'label' | 'value' | 'delta' | 'd
 export interface DashboardPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
   /** Page title, e.g. "Good morning, Mei". */
   title: React.ReactNode;
-  balance: { value: number; currency: string; label?: string };
+  /**
+   * The headline figure. With `currency` it is an amount. 11.5: without one it is any figure
+   * (members, orders, uptime): `value` as a number (formatted with `format`, default the
+   * locale's grouping) or any content, under `label`.
+   */
+  balance: { value: number | React.ReactNode; currency?: string; label?: string; format?: (value: number) => string };
   /** 10.3: a greeting above the balance, usually a `WelcomeBanner`. */
   banner?: React.ReactNode;
   /** 10.3: a chart panel under the key figures, e.g. spending by month. Give it a `title`. */
@@ -101,7 +106,13 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
               {loading ? (
                 <Skeleton className="my-1 h-9 w-48 max-w-full" />
               ) : (
-                <Amount value={balance.value} currency={balance.currency} locale={locale} size="display" />
+                typeof balance.value === 'number' && balance.currency ? (
+                  <Amount value={balance.value} currency={balance.currency} locale={locale} size="display" />
+                ) : (
+                  <span className="text-display-sm tabular-nums text-[var(--color-on-surface)]">
+                    {typeof balance.value === 'number' ? (balance.format ?? ((v: number) => v.toLocaleString(locale)))(balance.value) : balance.value}
+                  </span>
+                )
               )}
             </div>
             {quickActions.length > 0 && (

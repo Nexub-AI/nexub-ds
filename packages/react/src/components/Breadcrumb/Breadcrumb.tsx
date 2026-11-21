@@ -63,6 +63,14 @@ const Page = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElem
 );
 Page.displayName = 'Breadcrumb.Page';
 
+/** 11.5: a plain section in the trail: neither a link nor the current page (e.g. "Settings"). */
+const Section = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
+  ({ className, ...props }, ref) => (
+    <span ref={ref} className={cn('text-[var(--color-on-surface-muted)]', className)} {...props} />
+  ),
+);
+Section.displayName = 'Breadcrumb.Section';
+
 const Separator = ({
   children,
   className,
@@ -95,6 +103,7 @@ Ellipsis.displayName = 'Breadcrumb.Ellipsis';
 
 export interface BreadcrumbTrailItem {
   label: React.ReactNode;
+  /** A link. 11.5: an item before the last with no `href` is a plain section (text, not a link). */
   href?: string;
 }
 
@@ -118,7 +127,7 @@ const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxI
   const hidden = collapsed ? items.slice(1, items.length - (keep - 1)) : [];
   const shown = collapsed ? [items[0]!, ...items.slice(items.length - (keep - 1))] : items;
   const crumb = (item: BreadcrumbTrailItem, last: boolean) =>
-    last ? <Page>{item.label}</Page> : <Link href={safeHref(item.href)}>{item.label}</Link>;
+    last ? <Page>{item.label}</Page> : item.href == null ? <Section>{item.label}</Section> : <Link href={safeHref(item.href)}>{item.label}</Link>;
 
   return (
     <Root ref={ref} {...props}>
@@ -157,4 +166,4 @@ const Trail = React.forwardRef<HTMLElement, BreadcrumbTrailProps>(({ items, maxI
 });
 Trail.displayName = 'Breadcrumb.Trail';
 
-export const Breadcrumb = { Root, List, Item, Link, Page, Separator, Ellipsis, Trail };
+export const Breadcrumb = { Root, List, Item, Link, Page, Section, Separator, Ellipsis, Trail };

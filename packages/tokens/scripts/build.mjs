@@ -162,6 +162,14 @@ StyleDictionary.registerFormat({
     // Tailwind's 150ms ease, so every transition comes from the one motion source.
     lines.push('  --default-transition-duration: var(--motion-spring-effects-default-duration);');
     lines.push('  --default-transition-timing-function: var(--motion-spring-effects-default-easing);');
+    // 11.5 (platform gap #38): Tailwind-only extras the apps measured. perspective-near/normal/far
+    // for 3D card flips; shadow-glow-brand follows the product accent (--color-primary);
+    // w-zoom-105/110/125 for media that bleeds past its box on hover (widths above 100%).
+    lines.push('  --perspective-near: 20rem;');
+    lines.push('  --perspective-normal: 50rem;');
+    lines.push('  --perspective-far: 100rem;');
+    lines.push('  --shadow-glow-brand: 0 0 1.5rem -0.25rem color-mix(in oklab, var(--color-primary) 45%, transparent);');
+    for (const z of [105, 110, 125]) lines.push(`  --spacing-zoom-${z}: ${z}%;`);
     // Tailwind v4's max-w-sm … max-w-2xl read var(--container-*), and the Nexub layout
     // tokens use the same names (--container-sm: 640px …), so v4 would widen them.
     // Pin Tailwind's own scale (v3's maxWidth) inline; max-w-container-* stay the tokens.

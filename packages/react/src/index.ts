@@ -25,7 +25,7 @@ export type { ThinkingIndicatorProps, ThinkingIndicatorMessages } from './compon
 export { StreamingText } from './components/StreamingText/index.js';
 export type { StreamingTextProps } from './components/StreamingText/index.js';
 export { MessageBubble, MessageActions, defaultMessageStrings } from './components/MessageBubble/index.js';
-export type { MessageBubbleProps, MessageActionsProps, MessageFrom, MessageStrings, Feedback } from './components/MessageBubble/index.js';
+export type { MessageBubbleProps, MessageActionsProps, MessageFrom, MessageStrings, Feedback, MessageAction } from './components/MessageBubble/index.js';
 export { Citation, SourceChip, SourceList, safeUrl } from './components/Citation/index.js';
 export type { CitationProps, CitationSource, CitationMessages, SourceChipProps, SourceListProps } from './components/Citation/index.js';
 
@@ -304,6 +304,9 @@ export type { StageCounterProps, StageCounterStage } from './components/StageCou
 // 11.4 Boards, steps, calendars and diagrams
 export { ResourceTimeline } from './components/ResourceTimeline/index.js';
 export type { ResourceTimelineProps, TimelineResource, ResourceCell, ResourceCellTone } from './components/ResourceTimeline/index.js';
+// 11.5 Conversations, lists, chrome and the last P4s
+export { OrgChart } from './components/OrgChart/index.js';
+export type { OrgChartProps, OrgChartNode } from './components/OrgChart/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
 export type { SliderProps, SliderMark } from './components/Slider/index.js';
@@ -317,6 +320,7 @@ export type { SegmentedControlProps, SegmentedControlItemProps } from './compone
 export { Tabs } from './components/Tabs/index.js';
 export { Accordion } from './components/Accordion/index.js';
 export { Collapsible } from './components/Collapsible/index.js';
+export type { CollapsibleTriggerProps } from './components/Collapsible/index.js';
 export { ScrollArea } from './components/ScrollArea/index.js';
 export type { ScrollAreaProps } from './components/ScrollArea/index.js';
 export { Toolbar } from './components/Toolbar/index.js';
@@ -362,7 +366,7 @@ export type { FormProps, FormErrorItem, FormErrors, FormContextValue } from './c
 export { Fieldset } from './components/Fieldset/index.js';
 export type { FieldsetProps } from './components/Fieldset/index.js';
 export { InlineEdit } from './components/InlineEdit/index.js';
-export type { InlineEditProps } from './components/InlineEdit/index.js';
+export type { InlineEditProps, InlineEditSize } from './components/InlineEdit/index.js';
 export { TimePicker } from './components/TimePicker/index.js';
 export type { TimePickerProps } from './components/TimePicker/index.js';
 export { DateTimePicker } from './components/DateTimePicker/index.js';
@@ -370,7 +374,7 @@ export type { DateTimePickerProps } from './components/DateTimePicker/index.js';
 export { EventCalendar } from './components/EventCalendar/index.js';
 export type { EventCalendarProps, EventCalendarView, CalendarEvent, EventTone, EventCalendarLegendItem } from './components/EventCalendar/index.js';
 export { TreeView } from './components/TreeView/index.js';
-export type { TreeViewProps, TreeNode } from './components/TreeView/index.js';
+export type { TreeViewProps, TreeViewHandle, TreeNode } from './components/TreeView/index.js';
 export { ResizablePanels } from './components/ResizablePanels/index.js';
 export type { ResizablePanelsProps } from './components/ResizablePanels/index.js';
 export { Stepper } from './components/Stepper/index.js';

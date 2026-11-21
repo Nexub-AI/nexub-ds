@@ -1,5 +1,5 @@
 export { ActivityFeed } from './components/ActivityFeed/index.js';
-export type { ActivityItemProps, ActivityFeedRootProps } from './components/ActivityFeed/index.js';
+export type { ActivityItemProps, ActivityFeedRootProps, ActivityGroupProps, ActivityTone } from './components/ActivityFeed/index.js';
 
 export { FilterBar } from './components/FilterBar/index.js';
 export type { FilterBarProps } from './components/FilterBar/index.js';
