@@ -134,6 +134,7 @@ Version 11.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Radio Group](https://nexub-ds-docs.pages.dev/components/radio-group.md): Group of mutually exclusive radio inputs.
 - [Rating](https://nexub-ds-docs.pages.dev/components/rating.md): Star rating input, supports controlled and read-only modes.
 - [Resizable Panels](https://nexub-ds-docs.pages.dev/components/resizable-panels.md): Panels with draggable separators, for list–detail and editor layouts.
+- [Resource Timeline](https://nexub-ds-docs.pages.dev/components/resource-timeline.md): One row per person, days across: rosters, team leave and allocation, with totals in the footer.
 - [Saved Views](https://nexub-ds-docs.pages.dev/components/saved-views.md): A menu to switch, save, update and delete saved filter views. Your app stores them.
 - [Scroll Area](https://nexub-ds-docs.pages.dev/components/scroll-area.md): Scrollable container with custom styled scrollbars.
 - [Scroll Progress](https://nexub-ds-docs.pages.dev/components/scroll-progress.md): A thin bar along the top that fills as the page scrolls. CSS only.

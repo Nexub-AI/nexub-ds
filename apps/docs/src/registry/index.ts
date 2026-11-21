@@ -223,6 +223,7 @@ import iconPickerEntry from './components/icon-picker';
 import usageTileEntry from './components/usage-tile';
 import usageBarEntry from './components/usage-bar';
 import stageCounterEntry from './components/stage-counter';
+import resourceTimelineEntry from './components/resource-timeline';
 import switchFieldEntry from './components/switch-field';
 import checkboxFieldEntry from './components/checkbox-field';
 import countdownEntry from './components/countdown';
@@ -297,6 +298,7 @@ export const componentEntries: ComponentEntry[] = [
   usageTileEntry,
   usageBarEntry,
   stageCounterEntry,
+  resourceTimelineEntry,
   switchFieldEntry,
   checkboxFieldEntry,
   countdownEntry,

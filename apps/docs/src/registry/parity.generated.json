@@ -741,8 +741,13 @@
     ],
     "webOnly": [
       "children",
+      "disabled",
       "getId",
-      "getLabel"
+      "getLabel",
+      "isLocked",
+      "layout",
+      "list",
+      "variant"
     ],
     "nativeOnly": [
       "editing",
@@ -755,7 +760,6 @@
     "web": "Stepper",
     "native": "StepProgress",
     "shared": [
-      "current",
       "steps"
     ],
     "webOnly": [
@@ -764,7 +768,9 @@
       "onStepChange",
       "orientation"
     ],
-    "nativeOnly": []
+    "nativeOnly": [
+      "current"
+    ]
   },
   "inline-edit": {
     "web": "InlineEdit",

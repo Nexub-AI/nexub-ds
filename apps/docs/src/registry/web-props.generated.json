@@ -4212,10 +4212,22 @@
           "description": "Shown in place of the data when a load failed, for example an ErrorState with a retry action. Wins over loading and empty."
         },
         {
+          "name": "eventActions",
+          "type": "((event: CalendarEvent) => React.ReactNode)",
+          "required": false,
+          "description": "Controls for one event, e.g. a menu. Beside it in day and agenda views; on hover or focus in month and week cells."
+        },
+        {
           "name": "events",
           "type": "CalendarEvent[]",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "legend",
+          "type": "EventCalendarLegendItem[]",
+          "required": false,
+          "description": "A row under the toolbar naming what each tone means."
         },
         {
           "name": "loading",
@@ -4256,10 +4268,22 @@
           "description": ""
         },
         {
+          "name": "onEventMove",
+          "type": "((event: CalendarEvent, range: { start: Date; end?: Date; }) => void)",
+          "required": false,
+          "description": "Makes events movable: drag one to another day (month, week) or time (day view), or press Alt+Arrow on it, pick with the arrows and press Enter. Called with the new start and end; the duration is kept."
+        },
+        {
           "name": "onViewChange",
           "type": "((view: EventCalendarView) => void)",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "renderDayAction",
+          "type": "((date: Date) => React.ReactNode)",
+          "required": false,
+          "description": "A per-day slot, e.g. a small add button: in each day's header (month, week), above the day view and beside each agenda day."
         },
         {
           "name": "view",
@@ -5492,6 +5516,12 @@
       "file": "components/Kanban/Kanban.tsx",
       "props": [
         {
+          "name": "canMove",
+          "type": "((move: KanbanMove<T>) => boolean)",
+          "required": false,
+          "description": "11.4: refuse a move before it lands (a WIP limit, a rule). Return false to block that target."
+        },
+        {
           "name": "className",
           "type": "string",
           "required": false,
@@ -5508,6 +5538,20 @@
           "type": "KanbanColumn<T>[]",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "columnWidth",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "default": "'md' (18rem)",
+          "description": "11.4: column width."
+        },
+        {
+          "name": "dropTargets",
+          "type": "KanbanDropTarget<T>[]",
+          "required": false,
+          "default": "[]",
+          "description": "11.4: areas outside the columns that cards can be dropped on, e.g. Archive."
         },
         {
           "name": "emptyState",
@@ -5534,6 +5578,24 @@
           "description": ""
         },
         {
+          "name": "getLane",
+          "type": "((item: T) => string)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "getTone",
+          "type": "((item: T) => KanbanCardTone)",
+          "required": false,
+          "description": "11.4: a coloured edge on a card (for priority or status; the card should say it in text too)."
+        },
+        {
+          "name": "lanes",
+          "type": "KanbanLane[]",
+          "required": false,
+          "description": "11.4: rows of the board. Cards are placed by `getLane`; a card in no lane goes in the first."
+        },
+        {
           "name": "loading",
           "type": "boolean",
           "required": false,
@@ -5541,15 +5603,34 @@
         },
         {
           "name": "onChange",
-          "type": "(columns: KanbanColumn<T>[]) => void",
+          "type": "(columns: KanbanColumn<T>[], move: KanbanMove<T>) => void",
           "required": true,
-          "description": "Called with the columns after a move; store them to apply it."
+          "description": "Called with the columns after a move; store them to apply it. 11.4: the second argument names the card and where it moved (use it to update the card's lane)."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "11.4: cards can't be moved: no drag handles, no keyboard moves."
         },
         {
           "name": "renderCard",
           "type": "(item: T) => React.ReactNode",
           "required": true,
           "description": ""
+        },
+        {
+          "name": "renderColumnFooter",
+          "type": "((column: KanbanColumn<T>, lane?: KanbanLane) => React.ReactNode)",
+          "required": false,
+          "description": "11.4: a slot at the end of each column, e.g. a quick-add field or button."
+        },
+        {
+          "name": "renderColumnHeader",
+          "type": "((column: KanbanColumn<T>, count: number) => React.ReactNode)",
+          "required": false,
+          "description": "11.4: replaces a column's header (title, count, a WIP badge, actions)."
         }
       ]
     },
@@ -7250,6 +7331,85 @@
         }
       ]
     },
+    "ResourceTimeline": {
+      "file": "components/ResourceTimeline/ResourceTimeline.tsx",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "footer",
+          "type": "((date: Date) => React.ReactNode)",
+          "required": false,
+          "description": "A footer row: the total for each day."
+        },
+        {
+          "name": "getCell",
+          "type": "((resourceId: string, date: Date) => ResourceCell)",
+          "required": false,
+          "description": "A cell's content for one resource on one day."
+        },
+        {
+          "name": "grandTotal",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The footer cell under the total column."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Names the table, e.g. \"Team leave, November\"."
+        },
+        {
+          "name": "now",
+          "type": "Date",
+          "required": false,
+          "default": "new Date()",
+          "description": "Marks today. Pass a fixed date in tests and screenshots."
+        },
+        {
+          "name": "onCellActivate",
+          "type": "((resourceId: string, date: Date, cell: HTMLElement) => void)",
+          "required": false,
+          "description": "Makes the cells a grid: arrow keys move between them, and Enter, Space or a click calls this, for example to open your editor anchored to `cell`. The editing UI stays yours."
+        },
+        {
+          "name": "range",
+          "type": "{ from: Date; to: Date; }",
+          "required": true,
+          "description": "The days shown, both ends included."
+        },
+        {
+          "name": "resourceHeader",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The first column's header. Defaults to \"Name\"."
+        },
+        {
+          "name": "resources",
+          "type": "TimelineResource[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "rowTotal",
+          "type": "((resourceId: string) => React.ReactNode)",
+          "required": false,
+          "description": "A last column: the total for each resource."
+        },
+        {
+          "name": "weekend",
+          "type": "number[]",
+          "required": false,
+          "default": "[0, 6]",
+          "description": "Days of the week shaded as weekend (0 = Sunday)."
+        }
+      ]
+    },
     "Reveal": {
       "file": "components/Motion/Reveal.tsx",
       "props": [
@@ -7862,10 +8022,84 @@
           "description": ""
         },
         {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Turns every handle off: nothing moves."
+        },
+        {
           "name": "getId",
-          "type": "(item: T) => string",
+          "type": "((item: T) => string)",
+          "required": false,
+          "description": "Stable key. Defaults to `item.id`, else a key kept per object, else the value itself (keep values unique)."
+        },
+        {
+          "name": "getLabel",
+          "type": "((item: T) => string)",
+          "required": false,
+          "description": "Names the item in \"Move ‹label›\" and the move announcements. Defaults to `String(item)`: pass it for objects."
+        },
+        {
+          "name": "isLocked",
+          "type": "((item: T) => boolean)",
+          "required": false,
+          "description": "Locked items show a lock, can't be moved, and keep their index while the others move around them."
+        },
+        {
+          "name": "items",
+          "type": "T[]",
+          "required": false,
+          "description": "The list, in order. Required unless `list` is set."
+        },
+        {
+          "name": "layout",
+          "type": "'list' | 'grid'",
+          "required": false,
+          "default": "'list'",
+          "description": "`grid` wraps items into cells (cards, images); arrow keys then move by one cell."
+        },
+        {
+          "name": "list",
+          "type": "string",
+          "required": false,
+          "default": "''",
+          "description": "Inside a `Sortable.Group`: which of its lists this renders (instead of `items` / `onReorder`)."
+        },
+        {
+          "name": "onReorder",
+          "type": "((items: T[]) => void)",
+          "required": false,
+          "description": "Called with the reordered items; store them to apply the move. Required unless `list` is set."
+        },
+        {
+          "name": "variant",
+          "type": "'default' | 'flat'",
+          "required": false,
+          "default": "'default'",
+          "description": "`flat` drops the card chrome around items, for dense lists inside a card."
+        }
+      ]
+    },
+    "SortableGroup": {
+      "file": "components/Sortable/Sortable.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
           "required": true,
-          "description": ""
+          "description": "Layout, with a `<Sortable list=\"…\">` for each list."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Turns every handle off: nothing moves."
+        },
+        {
+          "name": "getId",
+          "type": "((item: T) => string)",
+          "required": false,
+          "description": "Stable key. Defaults to `item.id`, else a key kept per object, else the value itself (keep values unique)."
         },
         {
           "name": "getLabel",
@@ -7874,16 +8108,22 @@
           "description": "Names the item in \"Move ‹label›\" and the move announcements."
         },
         {
-          "name": "items",
-          "type": "T[]",
-          "required": true,
-          "description": ""
+          "name": "isLocked",
+          "type": "((item: T) => boolean)",
+          "required": false,
+          "description": "Locked items show a lock, can't be moved, and keep their index while the others move around them."
         },
         {
-          "name": "onReorder",
-          "type": "(items: T[]) => void",
+          "name": "lists",
+          "type": "SortableList<T>[]",
           "required": true,
-          "description": "Called with the reordered items; store them to apply the move."
+          "description": "The lists, in keyboard order: Alt+ArrowLeft / Alt+ArrowRight move an item to the previous / next one."
+        },
+        {
+          "name": "onChange",
+          "type": "(lists: SortableList<T>[]) => void",
+          "required": true,
+          "description": "Called with every list after a move; store them."
         }
       ]
     },
@@ -8201,6 +8441,7 @@
           "name": "current",
           "type": "number",
           "required": true,
+          "deprecated": true,
           "description": "Index of the step being shown."
         },
         {

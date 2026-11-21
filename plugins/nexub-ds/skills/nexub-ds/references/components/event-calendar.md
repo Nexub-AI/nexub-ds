@@ -17,6 +17,10 @@ A month or week grid of events. Display only: your app owns the events and what 
 | `onDayClick` | `(date) => void` |  | Makes day numbers and "N more" buttons, for example to open the day. |
 | `maxEventsPerDay` | `number` | `3` | Month view only. |
 | `weekStartsOn` | `0–6` |  | Defaults to the locale’s first day (Monday for en-GB, Sunday for en-US). |
+| `onEventMove` | `(event, { start, end }) => void` |  | 11.4. Makes events movable: drag one to another day (month, week) or time (day view, 15-minute steps), or press Alt+Arrow on it, pick with the arrows and press Enter (Escape cancels). The duration is kept. Events with `editable: false` stay put. |
+| `renderDayAction` | `(date) => ReactNode` |  | 11.4. A per-day slot, e.g. a small add button: in each day’s header (month, week), above the day view and beside each agenda day. |
+| `eventActions` | `(event) => ReactNode` |  | 11.4. Controls for one event, e.g. a menu: beside it in day and agenda views, over its end on hover or focus in month and week cells (always shown on touch screens). |
+| `legend` | `{ label, tone }[]` |  | 11.4. A row under the toolbar naming what each tone means. Colour is never the only signal: titles still say what an event is. |
 
 ## Example: Team calendar
 
@@ -80,9 +84,65 @@ export default function Example() {
 }
 ```
 
+## Example: Move, add and act on events
+
+Drag an event, or press Alt+Arrow on it, to move it; a "+" per day, a menu per event and a legend.
+
+```tsx
+import * as React from 'react';
+import { EventCalendar, IconButton, type CalendarEvent } from '@nexub/react';
+import { MoreHorizontal, Plus } from '@nexub/icons';
+
+// A fixed month, so the page renders the same on the server and in every time zone.
+const at = (day: number, hour = 0, minute = 0) => new Date(2026, 10, day, hour, minute);
+
+const initial: CalendarEvent[] = [
+  { id: '1', title: 'Design review', start: at(3, 10), end: at(3, 11) },
+  { id: '2', title: 'Offsite', start: at(11), end: at(12), allDay: true, tone: 'success' },
+  { id: '3', title: 'Standup', start: at(16, 9, 30), end: at(16, 10) },
+  { id: '4', title: 'Launch', start: at(16, 14), tone: 'warning' },
+  { id: '5', title: 'Payroll', start: at(25), allDay: true, tone: 'info', editable: false },
+];
+
+export default function Example() {
+  const [events, setEvents] = React.useState(initial);
+  return (
+    <div className="w-full">
+      <EventCalendar
+        events={events}
+        defaultDate={at(16)}
+        now={at(16, 11)}
+        views={['month', 'week', 'day', 'agenda']}
+        onEventMove={(event, range) => setEvents((list) => list.map((e) => (e.id === event.id ? { ...e, ...range } : e)))}
+        renderDayAction={(date) => (
+          <IconButton variant="ghost" size="xs" label={`Add event on ${date.toDateString()}`}>
+            <Plus size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        eventActions={(event) => (
+          <IconButton variant="ghost" size="xs" label={`Actions for ${event.title}`}>
+            <MoreHorizontal size="sm" aria-hidden="true" />
+          </IconButton>
+        )}
+        legend={[
+          { label: 'Meetings', tone: 'primary' },
+          { label: 'Away', tone: 'success' },
+          { label: 'Deadlines', tone: 'warning' },
+          { label: 'Payroll (fixed)', tone: 'info' },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
+- `Alt + Arrow keys`: With `onEventMove`, on an event: starts a move and takes the first step.
+- `Arrow keys`: While moving: left and right a day; up and down a week, or 15 minutes in day view.
+- `Enter / Escape`: Drops the event there, or cancels the move.
 - A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.
 - The title is a polite live region, so Today and the arrows announce the new month or week.
+- Movable events describe the keyboard move (Alt+Arrow, then arrows, Enter or Escape); each step and the drop are announced in a polite live region.
 
 Related: [date-picker](date-picker.md), [date-time-picker](date-time-picker.md)

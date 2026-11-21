@@ -17,6 +17,9 @@ Progress through a multi-step flow, with clickable steps that follow the order y
 | `nonLinear` | `boolean` |  | Every step is reachable. |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Vertical suits side columns and narrow screens. |
 | `aria-label` | `string` |  | Names the navigation landmark, e.g. "Setup steps". |
+| `steps[].status` | `'complete' \| 'current' \| 'upcoming' \| 'error' \| 'warning' \| 'skipped' \| 'cancelled'` |  | 11.4: the step's state, named as in StatusSteps; read after the label. Wins over `current` and `completed`. |
+| `steps[].description` | `ReactNode` |  | 11.4: any content (a date, a link). |
+| `steps[].actions` | `ReactNode` |  | 11.4: actions under the step, e.g. Retry. |
 
 ## Example: Wizard with a form per step
 
@@ -52,6 +55,29 @@ export default function Example() {
         <p className="text-body-md">All set.</p>
       )}
     </div>
+  );
+}
+```
+
+## Example: Statuses and actions
+
+`current={-1}` for "all done" is deprecated in 11.4 (removed in 12.0): use `status`. `nexub-migrate --rules deprecated-in-11` finds it.
+
+```tsx
+import { Button, Stepper } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <Stepper
+      className="w-full"
+      current={2}
+      steps={[
+        { label: 'Details', status: 'complete' },
+        { label: 'Identity', status: 'skipped', description: 'Not needed for this plan' },
+        { label: 'Bank check', status: 'error', description: 'The bank rejected the account', actions: <Button size="sm" variant="outlined">Retry</Button> },
+        { label: 'Payout', status: 'upcoming' },
+      ]}
+    />
   );
 }
 ```
