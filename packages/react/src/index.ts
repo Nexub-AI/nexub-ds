@@ -247,8 +247,8 @@ export type { KeyboardShortcutProps } from './components/KeyboardShortcut/index.
 
 // Components — Overlays
 export { Dialog } from './components/Dialog/index.js';
-export { AlertDialog } from './components/AlertDialog/index.js';
-export type { AlertDialogConfirmProps } from './components/AlertDialog/index.js';
+export { AlertDialog, usePrompt } from './components/AlertDialog/index.js';
+export type { AlertDialogConfirmProps, AlertDialogPromptProps, PromptOptions } from './components/AlertDialog/index.js';
 export { Popover } from './components/Popover/index.js';
 export { Tooltip } from './components/Tooltip/index.js';
 export { Provider as TooltipProvider } from './components/Tooltip/index.js';
@@ -285,6 +285,17 @@ export { Checkbox } from './components/Checkbox/index.js';
 export type { CheckboxProps } from './components/Checkbox/index.js';
 export { SwitchField, CheckboxField, CheckboxGroupField } from './components/ChoiceFields/index.js';
 export type { SwitchFieldProps, CheckboxFieldProps, CheckboxGroupFieldProps, CheckboxGroupOption } from './components/ChoiceFields/index.js';
+// 11.2 Pickers and prompts
+export { CurrencySelect, CurrencyField, currencyOptions } from './components/CurrencySelect/index.js';
+export type { CurrencySelectProps, CurrencyFieldProps, CurrencyOptionsConfig } from './components/CurrencySelect/index.js';
+export { ColorPicker, contrastRatio, parseHex } from './components/ColorPicker/index.js';
+export type { ColorPickerProps, ColorSwatch } from './components/ColorPicker/index.js';
+export { CommandList } from './components/CommandList/index.js';
+export type { CommandListProps, CommandListItem } from './components/CommandList/index.js';
+export { EmojiPicker, EmojiPickerPanel, loadEmojiData, withSkinTone } from './components/EmojiPicker/index.js';
+export type { EmojiPickerProps, EmojiPickerPanelProps, SkinTone, EmojiCategory, EmojiCategoryId, EmojiItem } from './components/EmojiPicker/index.js';
+export { IconPicker, IconPickerPanel, loadIcons } from './components/IconPicker/index.js';
+export type { IconPickerProps, IconPickerPanelProps, IconPickerCategory } from './components/IconPicker/index.js';
 export { RadioGroup } from './components/RadioGroup/index.js';
 export { Slider } from './components/Slider/index.js';
 export type { SliderProps, SliderMark } from './components/Slider/index.js';
