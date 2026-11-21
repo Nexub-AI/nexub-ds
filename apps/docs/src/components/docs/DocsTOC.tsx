@@ -1,49 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { Text } from '@nexub/react';
+import { Link, Text } from '@nexub/react';
+import { tocLinkClass, useActiveHeading, type TocItem } from './useToc';
 
-export interface TocItem {
-  id: string;
-  label: string;
-  level: 2 | 3;
-}
+export type { TocItem };
 
 interface Props {
   items: TocItem[];
 }
 
+/** The desktop "On this page" rail. Phones get the same list in a sheet (MobileTOC). */
 export function DocsTOC({ items }: Props) {
-  const [active, setActive] = React.useState<string>('');
-
-  React.useEffect(() => {
-    if (!items.length) return;
-    const seen = new Map<string, number>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          seen.set(e.target.id, e.intersectionRatio);
-        });
-        // Pick the heading with the highest visible ratio.
-        let best: { id: string; ratio: number } | null = null;
-        seen.forEach((ratio, id) => {
-          if (ratio > 0 && (!best || ratio > best.ratio)) {
-            best = { id, ratio };
-          }
-        });
-        if (best) setActive((best as { id: string; ratio: number }).id);
-      },
-      { rootMargin: '-72px 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] }
-    );
-
-    items.forEach((it) => {
-      const el = document.getElementById(it.id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [items]);
+  const active = useActiveHeading(items);
 
   if (!items.length) return null;
 
@@ -53,26 +22,18 @@ export function DocsTOC({ items }: Props) {
         On this page
       </Text>
       <ul className="list-none m-0 p-0 flex flex-col gap-0.5">
-        {items.map((it) => {
-          const isActive = active === it.id;
-          return (
-            <li key={it.id}>
-              <a
-                href={`#${it.id}`}
-                aria-current={isActive ? 'location' : undefined}
-                className={
-                  'block border-s-2 py-1 pe-2 text-label-md leading-normal no-underline transition-colors duration-effects-fast ease-effects-fast ' +
-                  (it.level === 3 ? 'ps-5 ' : 'ps-2 ') +
-                  (isActive
-                    ? 'border-primary font-semibold text-on-surface'
-                    : 'border-transparent text-on-surface-muted hover:text-on-surface')
-                }
-              >
-                {it.label}
-              </a>
-            </li>
-          );
-        })}
+        {items.map((it) => (
+          <li key={it.id}>
+            <Link
+              href={`#${it.id}`}
+              variant="muted"
+              aria-current={active === it.id ? 'location' : undefined}
+              className={'rounded-none ' + tocLinkClass(it.level, active === it.id)}
+            >
+              {it.label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

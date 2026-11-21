@@ -31,7 +31,7 @@ export interface PhoneInputProps
   invalid?: boolean;
   /** @default 'md' */
   size?: Size;
-  /** The country list as a bottom sheet: `true`, or `'auto'` for phones only. */
+  /** The country list as a bottom sheet: `true`, or `'auto'` for phones only. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: SheetProp;
 }
 

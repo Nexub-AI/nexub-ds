@@ -147,7 +147,20 @@ describe('AlertDialog sheet (10.6)', () => {
     </AlertDialog.Root>
   );
 
-  it('centred by default with a gutter; sheet anchors to the bottom; auto stays centred on wide screens', () => {
+  it('is a bottom sheet on a narrow screen by default (11.0); sheet={false} keeps it centred', () => {
+    const spy = vi.spyOn(window, 'matchMedia').mockImplementation((query) => ({ matches: true, media: query, addEventListener() {}, removeEventListener() {} }) as unknown as MediaQueryList);
+    try {
+      const { unmount } = render(<Open />);
+      expect(screen.getByRole('alertdialog')).toHaveAttribute('data-sheet');
+      unmount();
+      render(<Open sheet={false} />);
+      expect(screen.getByRole('alertdialog')).not.toHaveAttribute('data-sheet');
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it('centred on wide screens by default with a gutter; sheet anchors to the bottom; auto stays centred on wide screens', () => {
     const { unmount, rerender } = render(<Open />);
     expect(screen.getByRole('alertdialog')).not.toHaveAttribute('data-sheet');
     expect(screen.getByRole('alertdialog').className).toContain('w-[calc(100%-2rem)]');

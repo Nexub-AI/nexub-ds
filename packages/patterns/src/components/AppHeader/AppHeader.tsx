@@ -84,7 +84,7 @@ export interface AppHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, 
   /** Extra `DropdownMenu.Item`s, shown above Sign out. */
   accountMenuItems?: React.ReactNode;
 
-  /** 10.6: on phones the organisation, account and app menus open as bottom sheets (`true`, or `'auto'`). */
+  /** 10.6: on phones the organisation, account and app menus open as bottom sheets (`true`, or `'auto'`). @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
 
   surface?: 'solid' | 'glass';

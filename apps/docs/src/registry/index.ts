@@ -1,6 +1,7 @@
 import type { ComponentEntry, NavGroup } from './types';
 import webProps from './web-props.generated.json';
 import { mergeProps, type GeneratedProps } from './props-merge';
+import { flattenNav } from './nav';
 
 const typed = (e: ComponentEntry) => mergeProps(e, webProps as GeneratedProps);
 
@@ -488,7 +489,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'upgrading', label: 'Upgrading', description: 'Changed roles and markup, new conventions, the nexub-migrate codemod', href: '/getting-started/upgrading', category: 'Docs' },
   { id: 'nextjs', label: 'Next.js and server components', description: 'Server components, per-component imports, next/font and Tailwind 4', href: '/getting-started/nextjs', category: 'Docs' },
   { id: 'release-status', label: '10.0 release status', description: 'Where each 10.0 exit criterion stood on release day', href: '/getting-started/release-status', category: 'Docs' },
-  { id: 'migrating-to-11', label: 'Migrating to 11.0', description: 'What 11.0 takes out (the four product theme files) and flips (overlays open as a bottom sheet on small screens). 10.9 is the release candidate, on the next tag', href: '/getting-started/migrating-to-11', category: 'Docs' },
+  { id: 'migrating-to-11', label: 'Migrating to 11.0', description: 'What 11.0 takes out (the four product theme files) and flips (overlays open as a bottom sheet on small screens). Clear both on 10.9 first', href: '/getting-started/migrating-to-11', category: 'Docs' },
   { id: 'migrating-to-10', label: 'Migrating to 10.0', description: '10.0 removes nothing; versions follow semver from 10.0', href: '/getting-started/migrating-to-10', category: 'Docs' },
   { id: 'migrating-to-9', label: 'Migrating to 9.0', description: 'Removed in 9.0: the classic style, Button legacy variants, the 8.5 parity aliases and hidePassword, and how to move off them', href: '/getting-started/migrating-to-9', category: 'Docs' },
   { id: 'migrating-to-8', label: 'Migrating to 8.0', description: 'Signature by default, class scroll lock, strict safeHref, legacy motion tokens removed: try it on 7.9', href: '/getting-started/migrating-to-8', category: 'Docs' },
@@ -500,6 +501,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
   { id: 'components-status', label: 'Component status', description: 'Lifecycle status of every component and pattern on web and native', href: '/components/status', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
+  { id: 'foundations-tokens', label: 'Tokens', description: 'Every design token in one searchable table: roles with light and dark values, component tokens, reference scales', href: '/foundations/tokens', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
   { id: 'foundations-typography', label: 'Typography', description: 'Plus Jakarta Sans; the 15 type roles', href: '/foundations/typography', category: 'Foundations' },
   { id: 'foundations-spacing', label: 'Spacing', description: 'Spacing scale and layout tokens', href: '/foundations/spacing', category: 'Foundations' },
@@ -574,7 +576,7 @@ export const navGroups: NavGroup[] = [
       { title: 'Figma', href: '/getting-started/figma' },
       { title: 'Upgrading', href: '/getting-started/upgrading' },
       { title: 'Next.js and server components', href: '/getting-started/nextjs' },
-      { title: 'Migrating to the latest version', href: '/getting-started/migrating-to-10', match: '/getting-started/migrating-to-' },
+      { title: 'Migrating to the latest version', href: '/getting-started/migrating-to-11', match: '/getting-started/migrating-to-' },
       { title: 'Changelog', href: '/changelog' },
     ],
   },
@@ -582,6 +584,7 @@ export const navGroups: NavGroup[] = [
     title: 'Foundations',
     items: [
       { title: 'Principles', href: '/foundations/principles' },
+      { title: 'Tokens', href: '/foundations/tokens' },
       { title: 'Colors', href: '/foundations/colors' },
       { title: 'Typography', href: '/foundations/typography' },
       { title: 'Spacing', href: '/foundations/spacing' },
@@ -648,3 +651,9 @@ export const navGroups: NavGroup[] = [
     ],
   },
 ];
+
+// ─── Page order and breadcrumbs (pure helpers in ./nav) ───────────────────────
+export { flattenNav, pagerFor, breadcrumbTrail } from './nav';
+
+/** Every sidebar page in sidebar order: what previous / next walks. */
+export const pageOrder = flattenNav(navGroups);

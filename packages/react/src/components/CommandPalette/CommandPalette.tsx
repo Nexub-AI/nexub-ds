@@ -46,7 +46,7 @@ export interface CommandPaletteRootProps extends RadixDialog.DialogProps {
   recentKey?: string;
   /** @default 5 */
   recentLimit?: number;
-  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default false (becomes 'auto' in 11.0; pass `sheet={false}` to keep a popover on small screens) */
+  /** `true`: bottom sheet. `'auto'`: bottom sheet below the `md` breakpoint, centred above. @default 'auto' (pass `sheet={false}` to keep a popover on small screens) */
   sheet?: boolean | 'auto';
 }
 
@@ -90,7 +90,7 @@ function ClassLockOverlay() {
 
 const Root = React.forwardRef<HTMLDivElement, CommandPaletteRootProps>(
   ({ children, label: labelProp, scrollLock = 'class', shouldFilter, shortcut, open: openProp, defaultOpen, onOpenChange,
-    pages: pagesProp, defaultPages, onPagesChange, loading, recentKey, recentLimit = 5, sheet = false, ...props }, ref) => {
+    pages: pagesProp, defaultPages, onPagesChange, loading, recentKey, recentLimit = 5, sheet = 'auto', ...props }, ref) => {
   const narrow = useMediaQuery('(max-width: 47.99rem)');
   const asSheet = sheet === true || (sheet === 'auto' && narrow);
   const messages = useNexubMessages();

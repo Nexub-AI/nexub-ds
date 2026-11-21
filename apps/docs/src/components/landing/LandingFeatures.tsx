@@ -1,31 +1,32 @@
 import { Card, Container, EyebrowChip, Grid, Heading, Section, Text } from '@nexub/react';
 import { Code, Layers, Package, Sparkles } from '@nexub/icons';
 import { componentEntries, patternEntries } from '@/registry/index';
+import { templateEntries } from '@/registry/templates';
 
 const features = [
   {
     Icon: Package,
     stat: `${componentEntries.length}`,
     title: 'Components',
-    desc: 'Accessible, token-driven React components built on Radix UI primitives. Every edge case handled.',
-  },
-  {
-    Icon: Code,
-    stat: '100%',
-    title: 'TypeScript',
-    desc: 'Fully typed from props to theme tokens. Autocomplete, type safety, zero any-casting.',
-  },
-  {
-    Icon: Sparkles,
-    stat: '5',
-    title: 'Brand themes',
-    desc: 'Light, dark, and 4 product brands (Leap, Bookub, Payub, Founderub) — all CSS, zero runtime.',
+    desc: 'Accessible React components on Radix primitives, styled only with tokens. Most have a React Native twin.',
   },
   {
     Icon: Layers,
     stat: `${patternEntries.length}`,
     title: 'Patterns',
-    desc: 'Composable UI patterns for real SaaS flows: stat cards, auth, settings, activity feeds.',
+    desc: 'Blocks for real product flows: stat cards, auth, settings, filters, activity feeds.',
+  },
+  {
+    Icon: Code,
+    stat: `${templateEntries.length}`,
+    title: 'Page templates',
+    desc: 'Whole pages you pass data to: dashboard, sign-up, tables, booking, invoices. Responsive, most with a native screen.',
+  },
+  {
+    Icon: Sparkles,
+    stat: '5',
+    title: 'Brand themes',
+    desc: 'Nexub and four product brands, light and dark, three contrast levels. All CSS, or one colour through the theme builder.',
   },
 ];
 
@@ -42,7 +43,7 @@ export function LandingFeatures() {
         </EyebrowChip>
 
         <Heading level={2} size="h2" data-reveal-scroll className="mb-12">
-          Everything you need to ship faster
+          Components, patterns and whole pages
         </Heading>
 
         <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-start" gap="20px">

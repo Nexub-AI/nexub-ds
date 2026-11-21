@@ -9,6 +9,7 @@ import { LivePreview } from '@/components/docs/LivePreview';
 import { ComponentHero } from '@/components/docs/ComponentHero';
 import { UsageGrid } from '@/components/docs/UsageGrid';
 import { Playground } from '@/components/docs/Playground';
+import { GeneratedSection, playgroundRecipe } from '@/components/docs/GeneratedSection';
 import { VariantMatrix } from '@/components/docs/VariantMatrix';
 import { A11yPanel } from '@/components/docs/A11yPanel';
 import { DocsTOC, type TocItem } from '@/components/docs/DocsTOC';
@@ -46,17 +47,22 @@ export default async function ComponentPage({ params }: Props) {
 
   const { meta, props, examples, usage, playground, matrix, a11y } = entry;
   const twin = nativeTwins[slug];
+  // 11.0: generated from the prop types; a hand-written playground wins where one exists.
+  const recipe = playgroundRecipe(slug);
+  const generatedPlayground = !playground && !!recipe?.controls.length;
+  const states = !!recipe?.states.length;
 
   // Build TOC from the sections actually rendered on this page.
   // Import is intentionally not in the TOC — the hero copy-import strip
   // already exposes it right under the title.
   const toc: TocItem[] = [];
   if (usage) toc.push({ id: 'usage', label: 'Usage', level: 2 });
-  if (playground) toc.push({ id: 'playground', label: 'Playground', level: 2 });
+  if (playground || generatedPlayground) toc.push({ id: 'playground', label: 'Playground', level: 2 });
   if (examples.length) {
     toc.push({ id: 'examples', label: 'Examples', level: 2 });
     examples.forEach((ex, i) => toc.push({ id: exampleId(ex.title, i), label: ex.title, level: 3 }));
   }
+  if (states) toc.push({ id: 'states', label: 'States', level: 2 });
   if (matrix) toc.push({ id: 'matrix', label: 'Variant matrix', level: 2 });
   if (props.length) toc.push({ id: 'props', label: 'Props', level: 2 });
   if (a11y) toc.push({ id: 'accessibility', label: 'Accessibility', level: 2 });
@@ -83,6 +89,12 @@ export default async function ComponentPage({ params }: Props) {
             </Section>
           )}
 
+          {generatedPlayground && (
+            <Section id="playground" title="Playground">
+              <GeneratedSection slug={slug} view="playground" />
+            </Section>
+          )}
+
           {examples.length > 0 && (
             <Section id="examples" title="Examples">
               {examples.map((ex, i) => {
@@ -95,6 +107,12 @@ export default async function ComponentPage({ params }: Props) {
                   </Section>
                 );
               })}
+            </Section>
+          )}
+
+          {states && (
+            <Section id="states" title="States">
+              <GeneratedSection slug={slug} view="states" />
             </Section>
           )}
 

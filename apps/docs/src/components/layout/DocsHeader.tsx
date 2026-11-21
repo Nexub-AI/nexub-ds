@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, Search } from '@nexub/icons';
-import { IconButton, Kbd, Logo, TopNav } from '@nexub/react';
+import { Button, IconButton, Kbd, Logo, TopNav } from '@nexub/react';
 import { ThemeSwitcher } from '../docs/ThemeSwitcher';
 import { BrandSwitcher } from '../docs/BrandSwitcher';
 import { ContrastSwitcher } from '../docs/ContrastSwitcher';
@@ -60,19 +60,18 @@ export function DocsHeader() {
 
       <div className="flex-1" />
 
-      <button
-        type="button"
+      {/* Same box as the hand-built field it replaces: h-control-md × w-56, so the header keeps its layout. */}
+      <Button
+        variant="subtle"
         onClick={openSearch}
         aria-keyshortcuts="Meta+K Control+K"
-        className="docs-header-search nx-state-layer flex h-control-md w-56 shrink-0 items-center justify-between gap-2 rounded-shape-field bg-surface-container-highest ps-4 pe-2 text-body-md text-on-surface-variant"
+        leadingIcon={<Search size={14} aria-hidden="true" />}
+        // The name is the visible "Search" (WCAG 2.5.3); aria-keyshortcuts carries ⌘K.
+        trailingIcon={<Kbd aria-hidden="true" className="ms-auto">⌘K</Kbd>}
+        className="docs-header-search w-56 shrink-0 justify-start rounded-shape-field bg-surface-container-highest ps-4 pe-2 text-body-md font-normal text-on-surface-variant"
       >
-        <span className="flex items-center gap-2">
-          <Search size={14} aria-hidden="true" />
-          Search
-        </span>
-        {/* The name is the visible "Search" (WCAG 2.5.3); aria-keyshortcuts carries ⌘K. */}
-        <Kbd aria-hidden="true">⌘K</Kbd>
-      </button>
+        Search
+      </Button>
       <IconButton label="Search the docs" className="docs-header-search-icon" onClick={openSearch}>
         <Search size={18} />
       </IconButton>

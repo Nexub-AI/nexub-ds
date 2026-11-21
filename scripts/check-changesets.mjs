@@ -5,19 +5,24 @@
 
 import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { APPROVED_MAJOR } from './release-version.mjs';
 
-export function invalidBumps(markdown) {
+/** `allowMajor`: true only while the release an accepted RFC approved is still unreleased (see main). */
+export function invalidBumps(markdown, allowMajor = false) {
   const front = /^---\n([\s\S]*?)\n---/.exec(markdown)?.[1] ?? '';
   return [...front.matchAll(/^\s*["']?([^"':]+)["']?\s*:\s*(\w+)\s*$/gm)]
-    .filter(([, , bump]) => bump !== 'minor' && bump !== 'patch')
+    .filter(([, , bump]) => bump !== 'minor' && bump !== 'patch' && !(allowMajor && bump === 'major'))
     .map(([, pkg, bump]) => `${pkg}: ${bump}`);
 }
 
 function main() {
   const dir = fileURLToPath(new URL('../.changeset/', import.meta.url));
+  // A `major` is accepted only on the line just before the approved major (10.x for 11.0).
+  const current = JSON.parse(readFileSync(new URL('../packages/react/package.json', import.meta.url), 'utf8')).version;
+  const allowMajor = Number(current.split('.')[0]) === APPROVED_MAJOR - 1;
   const problems = readdirSync(dir)
     .filter((f) => f.endsWith('.md') && f !== 'README.md')
-    .flatMap((f) => invalidBumps(readFileSync(dir + f, 'utf8')).map((p) => `.changeset/${f} → ${p}`));
+    .flatMap((f) => invalidBumps(readFileSync(dir + f, 'utf8'), allowMajor).map((p) => `.changeset/${f} → ${p}`));
   if (problems.length) {
     console.error(
       'Changesets must use "minor" or "patch" only (a major needs an RFC, see PUBLISHING.md):\n  ' +
