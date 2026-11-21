@@ -1,5 +1,7 @@
 # @nexub/marketing
 
+## 11.1.0
+
 ## 11.0.0
 
 ### Patch Changes
