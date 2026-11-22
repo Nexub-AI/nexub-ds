@@ -20,11 +20,24 @@ import { formatDisplay, formatHint, parseTypedDate, utcDate } from './date-text.
 
 const RANK: Record<DateGranularity, number> = { year: 0, month: 1, day: 2 };
 const YEARS_PER_PAGE = 12;
-const svg = (d: string) =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-const CALENDAR = svg('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>');
-const PREVIOUS = svg('<path d="m15 18-6-6 6-6"/>');
-const NEXT = svg('<path d="m9 18 6-6-6-6"/>');
+// Icons are built as DOM nodes, not HTML strings: pages with Trusted Types (`require-trusted-types-for
+// 'script'`) block every innerHTML write, and the elements must work on them.
+type Shape = [tag: 'path' | 'rect', attributes: Record<string, string>];
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = (shapes: Shape[]): SVGSVGElement => {
+  const root = document.createElementNS(SVG_NS, 'svg');
+  const attrs: Record<string, string> = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
+  for (const [k, v] of Object.entries(attrs)) root.setAttribute(k, v);
+  for (const [tag, a] of shapes) {
+    const el = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(a)) el.setAttribute(k, v);
+    root.append(el);
+  }
+  return root;
+};
+const CALENDAR: Shape[] = [['rect', { x: '3', y: '4', width: '18', height: '18', rx: '2' }], ['path', { d: 'M16 2v4M8 2v4M3 10h18' }]];
+const PREVIOUS: Shape[] = [['path', { d: 'm15 18-6-6 6-6' }]];
+const NEXT: Shape[] = [['path', { d: 'm9 18 6-6-6-6' }]];
 /** Below this width the calendar is a bottom sheet (as `@nexub/react`'s `sheet="auto"`). */
 const SHEET_QUERY = '(max-width: 47.99rem)';
 
@@ -77,9 +90,9 @@ export class NxDatePicker extends NxFieldElement {
   constructor() {
     super();
     this.root.adoptedStyleSheets = [sheet(fieldCss), sheet(pickerCss)];
-    this.#button.innerHTML = CALENDAR;
-    this.#prev.innerHTML = PREVIOUS;
-    this.#next.innerHTML = NEXT;
+    this.#button.replaceChildren(svg(CALENDAR));
+    this.#prev.replaceChildren(svg(PREVIOUS));
+    this.#next.replaceChildren(svg(NEXT));
     const head = el('div', { class: 'head' });
     head.append(this.#prev, this.#title, this.#next);
     this.#dialog.append(head, this.#body);
