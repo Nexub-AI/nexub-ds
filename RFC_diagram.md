@@ -6,7 +6,11 @@ Open for comments for at least **3 working days** from the day this issue is ope
 
 ## Decision
 
-Pending. RFC issue #713, opened 2026-11-21.
+**Accepted with changes** on 2026-11-22 by the owner. RFC issue #713 was opened 2026-11-21 with no comments; the owner accepted it before the 3 working days had run, waiving the rest of the comment period. Changes to the text below:
+
+1. It ships in **11.6**, not 11.4 (11.4 shipped before the decision).
+2. `tone` is a field of a node's `data` (`default` / `good` / `warning` / `danger`), not a `DiagramCanvas` prop.
+3. The size budgets measure `@nexub/diagram`'s own code with `@xyflow/react` left external; React Flow is an optional peer, so only apps that draw diagrams pay for it.
 
 ## Problem
 
