@@ -99,7 +99,8 @@ td { padding: 0; padding-block-start: 0.25rem; text-align: center; }
 .day { inline-size: var(--day-cell, 2rem); block-size: var(--day-cell, 2rem); }
 .day[data-outside]:not([aria-pressed='true']):not(:disabled) { color: var(--color-on-surface-muted); }
 .cells { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.25rem; inline-size: 16.5rem; max-inline-size: 100%; }
-.cell { block-size: 2.5rem; }
+/* Long month names in some locales wrap to two lines rather than overflow. */
+.cell { block-size: 2.5rem; padding-inline: 0.25rem; line-height: 1.125; overflow-wrap: anywhere; }
 [aria-current='date'] { border-color: var(--color-primary); }
 [aria-pressed='true'], [aria-selected='true'] > button { background: var(--color-primary); color: var(--color-on-primary); }
 @media (max-width: 47.99rem) {

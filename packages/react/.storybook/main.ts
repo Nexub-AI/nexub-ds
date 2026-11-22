@@ -17,6 +17,9 @@ const config: StorybookConfig = {
     // apps/docs (coverage stories render its examples) has jsx: "preserve" for Next;
     // compile JSX here regardless of the nearest tsconfig.
     oxc: { ...(config as { oxc?: object }).oxc, jsx: { runtime: 'automatic' } },
+    // packages/elements has no React of its own (its stories are the only React there):
+    // resolve react (and react/jsx-runtime) from this package, one copy for every story.
+    resolve: { ...config.resolve, dedupe: [...(config.resolve?.dedupe ?? []), 'react', 'react-dom'] },
     build: { ...config.build, cssTarget: ['chrome123', 'edge123', 'firefox120', 'safari17.5'] },
   }),
 };

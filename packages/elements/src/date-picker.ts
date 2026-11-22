@@ -108,6 +108,7 @@ export class NxDatePicker extends NxFieldElement {
     this.#dialog.addEventListener('close', () => {
       this.#button.setAttribute('aria-expanded', 'false');
       window.removeEventListener('resize', this.#place);
+      window.removeEventListener('scroll', this.#place, true);
       this.control.focus();
     });
     // A press on the backdrop (outside the dialog's box) closes it, as a popover's outside click.
@@ -169,6 +170,8 @@ export class NxDatePicker extends NxFieldElement {
     this.#button.setAttribute('aria-expanded', 'true');
     this.#place();
     window.addEventListener('resize', this.#place);
+    // A modal dialog doesn't stop the page scrolling: follow the field (any scroller, so capture).
+    window.addEventListener('scroll', this.#place, { capture: true, passive: true });
     this.#focusActive();
   }
 
@@ -442,7 +445,9 @@ export class NxDatePicker extends NxFieldElement {
           'aria-label': isMonth ? formatDisplay(p, 'month', locale) : String(p.year),
         });
         button.disabled = out(p, g) !== undefined;
-        button.textContent = isMonth ? dtf({ month: 'short' }).format(utcDate(p)) : String(p.year);
+        // The full month name: the cell's name ("March 2026") must contain its visible text
+        // (WCAG 2.5.3 Label in Name), which an abbreviation ("Mar") isn't.
+        button.textContent = isMonth ? dtf({ month: 'long' }).format(utcDate(p)) : String(p.year);
         grid.append(button);
       }
     }

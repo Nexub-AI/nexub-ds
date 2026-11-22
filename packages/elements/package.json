@@ -24,7 +24,8 @@
     "dist"
   ],
   "sideEffects": [
-    "./dist/define.js"
+    "./dist/define.js",
+    "./src/define.ts"
   ],
   "exports": {
     ".": {

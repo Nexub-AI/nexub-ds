@@ -352,7 +352,7 @@ describe('<nx-date-picker>', () => {
     expect($(el, '.title').textContent).toBe('2026');
     expect($(el, '[role="group"]')).toBeInTheDocument();
     const cells = $$(el, 'button.cell');
-    expect(cells.map((c) => c.textContent)).toEqual(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+    expect(cells.map((c) => c.textContent)).toEqual(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']);
     expect(cells[0]).toBeDisabled();
     expect(cells[2]).toHaveAttribute('aria-pressed', 'true');
     expect(cells[2]).toHaveAttribute('aria-label', 'March 2026');
