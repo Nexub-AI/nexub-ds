@@ -12,12 +12,15 @@
     "build:mobile-web": "turbo run build:web --filter=@nexub/mobile --output-logs=errors-only && node ../mobile/scripts/copy-web.mjs public/m"
   },
   "dependencies": {
+    "@nexub/diagram": "workspace:*",
+    "@nexub/elements": "workspace:*",
     "@nexub/icons": "workspace:*",
     "@nexub/marketing": "workspace:*",
     "@nexub/patterns": "workspace:*",
     "@nexub/react": "workspace:*",
     "@nexub/themes": "workspace:*",
     "@nexub/tokens": "workspace:*",
+    "@xyflow/react": "^12.12.1",
     "cmdk": "^1.1.1",
     "html-to-image": "^1.11.13",
     "next": "^16.4.5",

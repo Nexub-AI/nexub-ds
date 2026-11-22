@@ -70,7 +70,7 @@ add('tokens (js)', join(pkgs, 'tokens/dist/js/index.js'));
 // Runtime seed theming (lazy-loaded by ThemeProvider seed); MCU is a dependency, not counted.
 add('tokens/seed', join(pkgs, 'tokens/dist/js/seed.js'));
 // Every CSS file a consumer can import (package.json exports ending in .css).
-for (const pkg of ['tokens', 'themes', 'react', 'patterns', 'marketing']) {
+for (const pkg of ['tokens', 'themes', 'react', 'patterns', 'marketing', 'diagram']) {
   const { exports } = JSON.parse(readFileSync(join(pkgs, pkg, 'package.json'), 'utf8'));
   for (const [key, target] of Object.entries(exports)) {
     if (typeof target === 'string' && target.endsWith('.css'))
@@ -87,6 +87,11 @@ add('react-native/patterns', join(pkgs, 'react-native/lib/module/patterns/index.
 add('react', join(pkgs, 'react/dist/index.js'));
 add('patterns', join(pkgs, 'patterns/dist/index.js'));
 add('marketing', join(pkgs, 'marketing/dist/index.js'));
+// 11.6: React Flow is a peer of @nexub/diagram and stays external; this is our own code.
+add('diagram', join(pkgs, 'diagram/dist/index.js'));
+// 11.6: the web components with the bundled @nexub/core rules; define.js is what a CDN page loads.
+add('elements', join(pkgs, 'elements/dist/index.js'));
+add('elements/define', join(pkgs, 'elements/dist/define.js'));
 for (const dir of ['react', 'patterns', 'marketing']) {
   const comps = join(pkgs, dir, 'dist/components');
   if (!existsSync(comps)) continue;

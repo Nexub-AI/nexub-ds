@@ -1,7 +1,9 @@
 // Generates src/registry/web-props.generated.json: the own props (not inherited
-// DOM attributes) of every exported `XProps` type in @nexub/react, @nexub/patterns
-// and @nexub/marketing, keyed by package, resolved by the
+// DOM attributes) of every exported `XProps` type in @nexub/react, @nexub/patterns,
+// @nexub/marketing and @nexub/diagram, keyed by package, resolved by the
 // TypeScript checker so cva `VariantProps` and intersections are included.
+// @nexub/elements has custom elements, not props: each exported element class
+// (`NxNumberInput`) gives `NumberInputElement`, whose rows are its attributes.
 //   node scripts/web-props.mjs          write
 //   node scripts/web-props.mjs --check  fail if out of date (CI)
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -44,8 +46,26 @@ const show = (t, at) => {
   }
   return checker.typeToString(t, at, ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope);
 };
+/** `NxNumberInput` → its attributes: every public get/set pair whose getter reads an attribute. */
+function elementAttributes(cls, sf) {
+  const type = checker.getDeclaredTypeOfSymbol(cls);
+  const byAttr = new Map();
+  for (const p of checker.getPropertiesOfType(type)) {
+    const get = p.declarations?.find(ts.isGetAccessorDeclaration);
+    const set = p.declarations?.find(ts.isSetAccessorDeclaration);
+    if (!get || !set || !ownFile(get.getSourceFile()) || !get.body) continue;
+    if (ts.getCombinedModifierFlags(get) & (ts.ModifierFlags.Private | ts.ModifierFlags.Protected)) continue;
+    const [, how, attr] = /\b(get|has)Attribute\('([\w-]+)'\)/.exec(get.body.getText(get.getSourceFile())) ?? [];
+    if (!attr || byAttr.has(attr)) continue;
+    const t = checker.getTypeOfSymbolAtLocation(p, cls.valueDeclaration ?? get);
+    const jsdoc = ts.displayPartsToString(p.getDocumentationComment(checker)).replace(/\s+/g, ' ').trim();
+    byAttr.set(attr, { name: attr, type: how === 'has' ? 'boolean' : clean(show(t, get)), required: false, description: jsdoc });
+  }
+  return { file: sf.fileName.slice(src.length), props: [...byAttr.values()].sort((a, b) => a.name.localeCompare(b.name)) };
+}
+
 const all = {};
-for (const pkg of ['react', 'patterns', 'marketing']) {
+for (const pkg of ['react', 'patterns', 'marketing', 'diagram', 'elements']) {
   const root = join(here, '../../../packages', pkg);
   src = join(root, 'src/');
   const cfg = ts.getParsedCommandLineOfConfigFile(join(root, 'tsconfig.json'), {}, { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} });
@@ -55,6 +75,13 @@ for (const pkg of ['react', 'patterns', 'marketing']) {
   const mod = checker.getSymbolAtLocation(program.getSourceFile(join(src, 'index.ts')));
   for (let sym of checker.getExportsOfModule(mod)) {
     const name = sym.name;
+    if (pkg === 'elements') {
+      if (sym.flags & ts.SymbolFlags.Alias) sym = checker.getAliasedSymbol(sym);
+      const decl = sym.declarations?.find(ts.isClassDeclaration);
+      const abstract = decl && ts.getCombinedModifierFlags(decl) & ts.ModifierFlags.Abstract;
+      if (decl && !abstract && /^Nx\w+$/.test(name) && ownFile(decl.getSourceFile())) result[`${name.slice(2)}Element`] = elementAttributes(sym, decl.getSourceFile());
+      continue;
+    }
     if (!name.endsWith('Props')) continue;
     if (sym.flags & ts.SymbolFlags.Alias) sym = checker.getAliasedSymbol(sym);
     const decl = sym.declarations?.find((d) => ts.isInterfaceDeclaration(d) || ts.isTypeAliasDeclaration(d));

@@ -122,4 +122,4 @@ export default function Example() {
 - Below 768px the same nodes render as a TreeView (photo, name and role on one row).
 - Connectors are CSS borders on logical sides, so RTL mirrors and forced colours keep them.
 
-Related: [tree-view](tree-view.md), [avatar](avatar.md)
+Related: [tree-view](tree-view.md), [avatar](avatar.md), [diagram-canvas](diagram-canvas.md)

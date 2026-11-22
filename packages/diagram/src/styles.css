@@ -1,0 +1,14 @@
+/* @nexub/diagram/styles.css: theme.css (React Flow's base styles themed on the Nexub tokens)
+   plus the utility classes the diagram uses, prebuilt (built to dist/styles.css). Import it
+   after @nexub/react/styles.css, which brings the themes, reset and fonts. Same cascade
+   layers, so your own CSS wins. If your app compiles Tailwind itself, import theme.css and
+   `@source` this package instead, so these classes don't repeat yours later in the layer. */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import '@nexub/tokens/tailwind.css';
+@import './theme.css';
+
+@source './**/*.{ts,tsx}';
+@source not './**/*.{stories,test}.tsx';

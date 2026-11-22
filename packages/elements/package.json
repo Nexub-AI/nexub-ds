@@ -1,0 +1,67 @@
+{
+  "name": "@nexub/elements",
+  "version": "11.5.0",
+  "description": "Web components for Nexub Design System: form-associated <nx-number-input> and <nx-date-picker> for server-rendered pages, with no framework.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/elements"
+  },
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "forms",
+    "design-system",
+    "nexub"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "./dist/define.js",
+    "./src/define.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./define": {
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
+    },
+    "./define.js": {
+      "types": "./dist/define.d.ts",
+      "default": "./dist/define.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "lint": "eslint src"
+  },
+  "devDependencies": {
+    "@nexub/core": "workspace:*",
+    "@nexub/tokens": "workspace:*",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/user-event": "^14.6.8",
+    "@vitest/coverage-v8": "5.1.0",
+    "jsdom": "^31.0.0",
+    "tsup": "^9.0.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.6",
+    "vitest": "^5.1.0"
+  }
+}

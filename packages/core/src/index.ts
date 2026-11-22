@@ -9,3 +9,20 @@ export { COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone
 export type { CountryCode, ParsedPhone, FormatPhoneOptions } from './phone.js';
 export { encodeQR, qrPath } from './qr.js';
 export type { QRErrorCorrection, QRMatrix } from './qr.js';
+export { isNumberDraft, parseNumberDraft, formatNumberValue, clampNumber, numberStepSize, stepNumber, numberKeyTarget } from './number.js';
+export type { NumberStep, NumberKeyOptions } from './number.js';
+export {
+  daysInMonth,
+  dateValueGranularity,
+  parseDateValue,
+  isValidDateValue,
+  formatDateValue,
+  compareDateParts,
+  dateRangeStatus,
+  weekdayOf,
+  addDays,
+  addMonths,
+  todayParts,
+  firstDayOfWeek,
+} from './dateValue.js';
+export type { DateGranularity, DateParts } from './dateValue.js';

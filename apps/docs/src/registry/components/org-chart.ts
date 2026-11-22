@@ -9,7 +9,7 @@ const entry: ComponentEntry = {
     package: '@nexub/react',
     status: 'alpha',
     addedIn: '11.5.0',
-    related: ['tree-view', 'avatar'],
+    related: ['tree-view', 'avatar', 'diagram-canvas'],
   },
   usage: {
     whenToUse: ['Reporting lines: a company, a team, a studio.', 'Any small hierarchy people scan by face or name.'],

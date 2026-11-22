@@ -2129,6 +2129,88 @@
       }
     ]
   },
+  "date-picker-element": {
+    "tag": "nx-date-picker",
+    "children": "none",
+    "fixed": [
+      "ref={ref}",
+      "id=\"start\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "select",
+        "name": "granularity",
+        "options": [
+          "day",
+          "month",
+          "year"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "readonly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "max",
+        "initial": "2026-12-31"
+      },
+      {
+        "kind": "text",
+        "name": "min",
+        "initial": "2026-01-01"
+      },
+      {
+        "kind": "text",
+        "name": "name",
+        "initial": "start"
+      },
+      {
+        "kind": "text",
+        "name": "value",
+        "initial": "2026-03-14"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
+  },
   "date-picker": {
     "tag": "DatePicker",
     "children": "none",
@@ -2420,6 +2502,70 @@
       {
         "prop": "size",
         "value": "md"
+      }
+    ]
+  },
+  "diagram-canvas": {
+    "tag": "DiagramCanvas",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Lead onboarding workflow\"",
+      "nodes={nodes}",
+      "edges={edges}",
+      "onNodesChange={onNodesChange}",
+      "onEdgesChange={onEdgesChange}",
+      "onConnect={onConnect}",
+      "minZoom={0.3}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "layout",
+        "options": [
+          "left-right",
+          "mind-map",
+          "none"
+        ],
+        "default": "none",
+        "initial": "left-right"
+      },
+      {
+        "kind": "switch",
+        "name": "controls",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "fitView",
+        "initial": true
+      },
+      {
+        "kind": "switch",
+        "name": "listView",
+        "default": true
+      },
+      {
+        "kind": "switch",
+        "name": "minimap",
+        "default": false
+      },
+      {
+        "kind": "switch",
+        "name": "readOnly"
+      },
+      {
+        "kind": "number",
+        "name": "keyboardStep"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "readOnly",
+        "value": true
       }
     ]
   },
@@ -4893,6 +5039,89 @@
       }
     ],
     "states": []
+  },
+  "number-input-element": {
+    "tag": "nx-number-input",
+    "children": "none",
+    "fixed": [
+      "ref={ref}",
+      "id=\"seats\""
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "size",
+        "options": [
+          "sm",
+          "md",
+          "lg"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "disabled"
+      },
+      {
+        "kind": "switch",
+        "name": "readonly"
+      },
+      {
+        "kind": "switch",
+        "name": "required"
+      },
+      {
+        "kind": "text",
+        "name": "max",
+        "initial": "50"
+      },
+      {
+        "kind": "text",
+        "name": "min",
+        "initial": "1"
+      },
+      {
+        "kind": "text",
+        "name": "name",
+        "initial": "seats"
+      },
+      {
+        "kind": "text",
+        "name": "placeholder",
+        "initial": "1–50"
+      },
+      {
+        "kind": "text",
+        "name": "step",
+        "initial": "1"
+      },
+      {
+        "kind": "text",
+        "name": "value",
+        "initial": "4"
+      }
+    ],
+    "states": [
+      {
+        "prop": "default",
+        "value": true
+      },
+      {
+        "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "size",
+        "value": "sm"
+      },
+      {
+        "prop": "size",
+        "value": "md"
+      },
+      {
+        "prop": "size",
+        "value": "lg"
+      }
+    ]
   },
   "number-input": {
     "tag": "NumberInput",
