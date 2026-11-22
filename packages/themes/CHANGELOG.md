@@ -1,5 +1,11 @@
 # @nexub/themes
 
+## 11.6.0
+
+### Patch Changes
+
+- @nexub/tokens@11.6.0
+
 ## 11.5.0
 
 ### Patch Changes
