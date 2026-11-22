@@ -6,7 +6,10 @@ Open for comments for at least **3 working days** from the day this issue is ope
 
 ## Decision
 
-Pending. RFC issue #712, opened 2026-11-21.
+**Accepted with changes** on 2026-11-22 by the owner. RFC issue #712 was opened 2026-11-21 with no comments; the owner accepted it before the 3 working days had run, waiving the rest of the comment period. Changes to the text below:
+
+1. It ships in **11.6**, not 11.5 (11.5 shipped before the decision).
+2. Only the number rules (parse a draft, clamp, format) and the date value parsing (`YYYY-MM-DD`, `YYYY-MM`, `YYYY`, min and max checks) move to `@nexub/core` and are shared with `@nexub/react`. The calendar grid is **not** shared: the React DatePicker renders `react-day-picker`, so `<nx-date-picker>` has its own small grid, tested against the same keyboard map.
 
 ## Problem
 

@@ -1,5 +1,5 @@
 {
-  "version": "11.4.0",
+  "version": "11.5.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -517,6 +517,29 @@
       ]
     },
     {
+      "slug": "date-picker-element",
+      "name": "Date Picker Element",
+      "package": "@nexub/elements",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Enter (in the field): Commits the typed date and submits the form.",
+        "Arrow keys: Move a day (a week up or down); in the month and year grids, one cell (three up or down). Mirrored in RTL.",
+        "PageUp / PageDown: Previous or next month; with Shift, year. In the month and year grids, the previous or next page.",
+        "Home / End: Start or end of the week (the row).",
+        "Enter / Space: Picks the focused cell and closes the calendar.",
+        "Escape: Closes the calendar without picking."
+      ],
+      "screenReader": [
+        "The field is named from the host’s `<label for>` (or a wrapping `<label>`, or `aria-label`), copied into the shadow root.",
+        "The month or year heading is a polite live region, so paging is announced.",
+        "`aria-required` and `aria-invalid` follow the field; a typed date that can’t be read stays as typed and is invalid, with a message that shows the expected format.",
+        "Opening moves focus to the selected date (or today, kept inside `min` and `max`); the grid is one tab stop.",
+        "Closing, by picking, Escape or a click outside, returns focus to the field.",
+        "Below 48rem the calendar is a bottom sheet."
+      ]
+    },
+    {
       "slug": "date-picker",
       "name": "Date Picker",
       "package": "@nexub/react",
@@ -551,6 +574,32 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "diagram-canvas",
+      "name": "Diagram Canvas",
+      "package": "@nexub/diagram",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab: Moves into the canvas onto one node (roving tabindex: the last focused, else the first in reading order), then on to the zoom controls.",
+        "Arrow keys: Move focus to the nearest node in that direction.",
+        "Home / End: First or last node in reading order (top to bottom, then by line direction; mirrored in RTL).",
+        "Alt (Option) + Arrow: Moves the focused node one grid step (`keyboardStep`); with Shift, four. The new position is announced. Off in `readOnly`.",
+        "C: Opens the \"Connect <node> to…\" menu, the keyboard alternative to dragging a handle. Only with `onConnect`.",
+        "Up / Down, Home / End, a letter: In the Connect menu: move through the nodes it can connect to; typing a letter jumps to the next title starting with it.",
+        "Enter / Space: In the Connect menu: connects to the active node and announces it.",
+        "Escape / Tab: Closes the Connect menu; focus returns to the node.",
+        "Delete / Backspace: Removes the selection, or the focused node; focus moves to the next node in reading order and the count is announced."
+      ],
+      "screenReader": [
+        "Each node is read by its title, then its tone (\"Warning\") as text, then how the keyboard works.",
+        "Connections, moves and deletes are announced in a polite live region.",
+        "\"Show as list\" lists every node with what it connects to and is connected from, by name: the text alternative to the drawing.",
+        "One node is in the Tab order at a time; focus follows arrow keys, not the DOM order of React Flow’s nodes.",
+        "After a delete, focus goes to the next node (or the previous one at the end), never to the page.",
+        "Focus rings and the 24px handle hit area come from the tokens."
+      ]
     },
     {
       "slug": "dialog",
@@ -1151,6 +1200,26 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": []
+    },
+    {
+      "slug": "number-input-element",
+      "name": "Number Input Element",
+      "package": "@nexub/elements",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "ArrowUp / ArrowDown: One step up or down, inside `min` and `max`. Fires `input` and `change`.",
+        "PageUp / PageDown: Ten steps.",
+        "Home / End: To `min` or `max`, when set.",
+        "Enter: Applies the limits and submits the form, as a native input does."
+      ],
+      "screenReader": [
+        "The inner input is named from the host’s `<label for>` (or a wrapping `<label>`, or `aria-label`): a label can’t reach into a shadow root, so the element copies its text.",
+        "`aria-required` and `aria-invalid` follow the field; the invalid state shows only after an edit or a failed submit.",
+        "Validation messages come from a native input where the browser has one, so they are in the browser’s language.",
+        "One tab stop: focus is delegated to the inner input, so `<label for>` clicks and `element.focus()` land in the field.",
+        "Focus ring from the tokens; forced colours draw it in Highlight."
+      ]
     },
     {
       "slug": "number-input",

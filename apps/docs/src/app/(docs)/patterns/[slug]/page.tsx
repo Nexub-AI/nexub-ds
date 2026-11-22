@@ -100,7 +100,7 @@ export default async function PatternPage({ params }: Props) {
         </PlatformPanel>
       ) : (
         <Section id="mobile" title="On iOS & Android">
-          <NoMobileTwin title={meta.title} />
+          <NoMobileTwin title={meta.title} reason={meta.webOnly} />
         </Section>
       )}
     </div>

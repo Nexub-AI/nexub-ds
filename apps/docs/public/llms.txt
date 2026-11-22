@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 11.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 11.5.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -218,6 +218,15 @@ Version 11.4.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [SectionHeader](https://nexub-ds-docs.pages.dev/patterns/section-header.md): Eyebrow, headline and lead that open a section. Server component.
 - [StatBand](https://nexub-ds-docs.pages.dev/patterns/stat-band.md): A band of headline numbers that count up as they scroll into view. StatBandItem is named apart from the StatCard pattern. Server component.
 - [TestimonialGrid](https://nexub-ds-docs.pages.dev/patterns/testimonial-grid.md): Customer quotes in product-coloured cards, with an optional star rating. Server component.
+
+## Diagram (@nexub/diagram, with the @xyflow/react peer)
+
+- [Diagram Canvas](https://nexub-ds-docs.pages.dev/components/diagram-canvas.md): Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
+
+## Web components (@nexub/elements, for pages without React)
+
+- [Date Picker Element](https://nexub-ds-docs.pages.dev/components/date-picker-element.md): `<nx-date-picker>`: a typed date field and a calendar as a form-associated web component, for server-rendered pages without React. The value is `YYYY-MM-DD`.
+- [Number Input Element](https://nexub-ds-docs.pages.dev/components/number-input-element.md): `<nx-number-input>`: the NumberInput rules as a form-associated web component, for server-rendered pages without React. A plain `<form>` posts its value.
 
 ## React Native
 

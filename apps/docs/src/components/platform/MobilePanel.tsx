@@ -94,11 +94,15 @@ export function MobilePanel({
   );
 }
 
-export function NoMobileTwin({ title }: { title: string }) {
+export function NoMobileTwin({ title, reason }: { title: string; reason?: string }) {
   return (
     <Note title="Web only">
-      {title} has no @nexub/react-native twin. On phones, follow the platform pattern instead, or compose it from the native
-      components listed on the React Native page.
+      {title} has no @nexub/react-native twin.{' '}
+      {reason ? (
+        <InlineCode text={reason} />
+      ) : (
+        'On phones, follow the platform pattern instead, or compose it from the native components listed on the React Native page.'
+      )}
     </Note>
   );
 }

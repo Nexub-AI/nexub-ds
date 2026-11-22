@@ -10,6 +10,14 @@ const entry: ComponentEntry = {
     status: 'stable',
     addedIn: '0.0.1',
     updatedIn: '11.1.0',
+    related: ['date-picker-element', 'date-range-picker', 'date-time-picker'],
+  },
+  usage: {
+    whenToUse: ['One date, month or year, typed or picked from a calendar.'],
+    whenNotToUse: [
+      'On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-date-picker>` from `@nexub/elements`, the same calendar as a web component.',
+      'A range: use DateRangePicker. A date and a time: use DateTimePicker.',
+    ],
   },
   props: [
     { name: 'granularity', type: "'day' | 'month' | 'year'", default: "'day'", required: false, description: "`'month'` and `'year'` show a grid of months or years; the value is then a string, `'YYYY-MM'` or `'YYYY'`." },

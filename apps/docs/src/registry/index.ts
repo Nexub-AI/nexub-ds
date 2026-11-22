@@ -225,6 +225,11 @@ import usageBarEntry from './components/usage-bar';
 import stageCounterEntry from './components/stage-counter';
 import resourceTimelineEntry from './components/resource-timeline';
 import orgChartEntry from './components/org-chart';
+
+// ─── Component entries — optional packages (11.6) ─────────────────────────────
+import diagramCanvasEntry from './components/diagram-canvas';
+import numberInputElementEntry from './components/number-input-element';
+import datePickerElementEntry from './components/date-picker-element';
 import switchFieldEntry from './components/switch-field';
 import checkboxFieldEntry from './components/checkbox-field';
 import countdownEntry from './components/countdown';
@@ -434,6 +439,11 @@ export const componentEntries: ComponentEntry[] = [
   streamingTextEntry,
   thinkingIndicatorEntry,
   citationEntry,
+  // Diagram (@nexub/diagram)
+  diagramCanvasEntry,
+  // Web Components (@nexub/elements)
+  numberInputElementEntry,
+  datePickerElementEntry,
 ].map(typed);
 
 // Marketing sections share the pattern pages (/patterns/<slug>) under their own nav group.
@@ -646,6 +656,8 @@ export const navGroups: NavGroup[] = [
       { title: 'Layout',         items: componentsByCategory('Layout') },
       { title: 'Motion',         items: componentsByCategory('Motion') },
       { title: 'AI',             items: componentsByCategory('AI') },
+      { title: 'Diagram',        items: componentsByCategory('Diagram') },
+      { title: 'Web components', items: componentsByCategory('Web Components') },
       { title: 'Mobile only',    items: mobileOnly.map((m) => ({ title: m.title, href: `/components/native/${m.slug}` })) },
     ],
   },

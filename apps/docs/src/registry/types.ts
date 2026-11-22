@@ -1,3 +1,5 @@
+import type { DocsPackage } from './packages';
+
 export interface PropDef {
   name: string;
   type: string;
@@ -29,7 +31,12 @@ export interface ComponentMeta {
   title: string;
   description: string;
   category: string;
-  package: '@nexub/react' | '@nexub/patterns' | '@nexub/marketing';
+  /** Sets the URL kind, the AI-docs group and the setup lines: see ./packages. */
+  package: DocsPackage;
+  /** `@nexub/elements` pages: the custom element's tag, e.g. 'nx-number-input'. */
+  element?: string;
+  /** Pages with no @nexub/react-native twin by design: why, shown in the "On iOS & Android" section. */
+  webOnly?: string;
   status?: ComponentStatus;
   /** Set with `status: 'deprecated'`: shown on the page and in the AI docs. */
   deprecation?: Deprecation;

@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v11.4.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v11.5.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v11.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v11.5.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -576,7 +576,11 @@ Never use a component marked deprecated.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
 - [Truncate](components/truncate.md) `@nexub/react`: Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
 
-## Marketing — Marketing
+## Diagram
+
+- [Diagram Canvas](components/diagram-canvas.md) `@nexub/diagram`: Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
+
+## Marketing
 
 - [CTABand](components/cta-band.md) `@nexub/marketing`: The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
 - [FAQ](components/faq.md) `@nexub/marketing`: Questions and answers in an Accordion, one open at a time. Client component.
@@ -632,6 +636,11 @@ Never use a component marked deprecated.
 ## Patterns — People
 
 - [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.
+
+## Web components
+
+- [Date Picker Element](components/date-picker-element.md) `@nexub/elements`: `<nx-date-picker>`: a typed date field and a calendar as a form-associated web component, for server-rendered pages without React. The value is `YYYY-MM-DD`.
+- [Number Input Element](components/number-input-element.md) `@nexub/elements`: `<nx-number-input>`: the NumberInput rules as a form-associated web component, for server-rendered pages without React. A plain `<form>` posts its value.
 
 ## Exported without a reference page
 
@@ -4386,6 +4395,146 @@ export default function Example() {
 
 ---
 
+# Date Picker Element
+
+`<nx-date-picker>`: a typed date field and a calendar as a form-associated web component, for server-rendered pages without React. The value is `YYYY-MM-DD`.
+
+- Package: `@nexub/elements` · Category: Web Components · Status: alpha
+- Load: `<script type="module" src="https://cdn.jsdelivr.net/npm/@nexub/elements/dist/define.js"></script>`
+- Install: `npm install @nexub/elements`. No build step: the script tag above registers `<nx-date-picker>`. With a bundler, `import '@nexub/elements/define';` once does the same.
+- Web only: It is a web component for HTML pages; native apps use DatePicker’s twin in `@nexub/react-native`, `DateTimeField` (the platform picker).
+- Docs: https://nexub-ds-docs.pages.dev/components/date-picker-element
+
+## When to use
+
+- A date, month or year on a page with no React: server-rendered HTML, a plain `<form method="post">`.
+- Where `<input type="date">` would do, but the calendar must match Nexub in every browser and the value must never shift across time zones.
+
+## When not to use
+
+- In a React app: use DatePicker from `@nexub/react`.
+- A range (from and to): use DateRangePicker in React, or two fields.
+- A date and a time: use DateTimePicker in React.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` |  | The form field name: a `<form>` posts the value under it. |
+| `value` | `string` |  | The starting value: `YYYY-MM-DD`, `YYYY-MM` or `YYYY` by `granularity`; what `form.reset()` goes back to. The `value` property is the current value. In React, server rendering writes `value` as this attribute; in a client-only render pass `defaultValue`. |
+| `granularity` | `'day' \| 'month' \| 'year'` |  | `day` (default), `month` or `year`: the calendar shows days, months or years, and the value has that precision. |
+| `min` | `string` |  | Earliest value, same format. Earlier cells are disabled; a typed earlier date is invalid (`rangeUnderflow`). |
+| `max` | `string` |  | Latest value (`rangeOverflow`). |
+| `required` | `boolean` |  | Empty is invalid (`valueMissing`). |
+| `disabled` | `boolean` |  | Not editable, not posted; the calendar button is disabled. |
+| `readonly` | `boolean` |  | Posted but not editable; the calendar doesn’t open. |
+| `locale` | `string` |  | BCP 47 locale for month and weekday names, the week start and the typed format. Defaults to the nearest `lang`. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | `sm`, `md` (default) or `lg`: the control heights of `@nexub/react`. |
+| `aria-label` | `string` |  | Names the field when it has no `<label for>`. |
+| `change event` | `Event` |  | When the value changes: a day picked, or a typed date committed on blur or Enter. |
+| `show() / close()` | `() => void` |  | Open the calendar (focused on the selected date, or today) and close it; `open` is true while it is. |
+
+## Example: Default
+
+Type a date or open the calendar. Rendered here in React 19; on a server-rendered page it is the same tag.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+// Registers <nx-number-input> and <nx-date-picker>. On a page without a bundler, use
+// <script type="module" src="…/@nexub/elements/dist/define.js"></script> instead.
+import '@nexub/elements/define';
+
+export default function Example() {
+  const ref = React.useRef<HTMLElementTagNameMap['nx-date-picker']>(null);
+  const [value, setValue] = React.useState('2026-03-14');
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onChange = () => setValue(el.value);
+    el.addEventListener('change', onChange);
+    return () => el.removeEventListener('change', onChange);
+  }, []);
+
+  return (
+    <div lang="en-US" className="flex w-full max-w-xs flex-col gap-2">
+      <label htmlFor="start" className="text-label-lg text-on-surface">
+        Start date
+      </label>
+      <nx-date-picker ref={ref} id="start" name="start" min="2026-01-01" max="2026-12-31" value="2026-03-14" />
+      <p className="text-body-sm text-on-surface-muted">Value: {value || 'empty'}</p>
+    </div>
+  );
+}
+```
+
+## Example: Months, in a form
+
+`granularity="month"` posts `YYYY-MM`; `required` and `min` block the submit until the value is valid.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Button } from '@nexub/react';
+import '@nexub/elements/define';
+
+export default function Example() {
+  const [posted, setPosted] = React.useState<string | null>(null);
+
+  return (
+    <form
+      lang="en-US"
+      className="flex w-full max-w-xs flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        setPosted(JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))));
+      }}
+      onReset={() => setPosted(null)}
+    >
+      <div className="flex flex-col gap-1">
+        <label htmlFor="billing-month" className="text-label-lg text-on-surface">
+          First billing month
+        </label>
+        <nx-date-picker id="billing-month" name="month" granularity="month" min="2026-04" required />
+      </div>
+      <div className="flex gap-2">
+        <Button type="submit">Save</Button>
+        <Button type="reset" variant="outlined">
+          Reset
+        </Button>
+      </div>
+      <p className="text-body-sm text-on-surface-muted">Posted: {posted ?? 'nothing yet'}</p>
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: textbox (the typed field) and a button with `aria-haspopup="dialog"` and `aria-expanded`, dialog (modal), named "Pick a date", "Pick a month" or "Pick a year", grid with gridcell buttons for days (`aria-selected`, `aria-current="date"` on today); a group of toggle buttons (`aria-pressed`) for months and years
+- `Enter (in the field)`: Commits the typed date and submits the form.
+- `Arrow keys`: Move a day (a week up or down); in the month and year grids, one cell (three up or down). Mirrored in RTL.
+- `PageUp / PageDown`: Previous or next month; with Shift, year. In the month and year grids, the previous or next page.
+- `Home / End`: Start or end of the week (the row).
+- `Enter / Space`: Picks the focused cell and closes the calendar.
+- `Escape`: Closes the calendar without picking.
+- Opening moves focus to the selected date (or today, kept inside `min` and `max`); the grid is one tab stop.
+- Closing, by picking, Escape or a click outside, returns focus to the field.
+- Below 48rem the calendar is a bottom sheet.
+- The field is named from the host’s `<label for>` (or a wrapping `<label>`, or `aria-label`), copied into the shadow root.
+- The month or year heading is a polite live region, so paging is announced.
+- `aria-required` and `aria-invalid` follow the field; a typed date that can’t be read stays as typed and is invalid, with a message that shows the expected format.
+- The value is a plain string, never a `Date`, so it never moves a day across time zones.
+- Shadow DOM: page CSS can’t break the inside. Style it with the theme variables, or `::part(field)`, `::part(input)`, `::part(button)` and `::part(calendar)`.
+- Motion only under `prefers-reduced-motion: no-preference`; forced colours redraw it with system colours.
+
+Related: [date-picker](date-picker.md), [number-input-element](number-input-element.md), [form](form.md)
+
+
+---
+
 # Date Picker
 
 Calendar date picker with text input. `granularity` picks a whole month or year.
@@ -4393,6 +4542,15 @@ Calendar date picker with text input. `granularity` picks a whole month or year.
 - Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { DatePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/date-picker
+
+## When to use
+
+- One date, month or year, typed or picked from a calendar.
+
+## When not to use
+
+- On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-date-picker>` from `@nexub/elements`, the same calendar as a web component.
+- A range: use DateRangePicker. A date and a time: use DateTimePicker.
 
 ## Props
 
@@ -4465,6 +4623,8 @@ export default function Example() {
   );
 }
 ```
+
+Related: [date-picker-element](date-picker-element.md), [date-range-picker](date-range-picker.md), [date-time-picker](date-time-picker.md)
 
 
 ---
@@ -4701,6 +4861,179 @@ export default function Example() {
 ```
 
 Related: [info-list](info-list.md), [table](table.md)
+
+
+---
+
+# Diagram Canvas
+
+Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
+
+- Package: `@nexub/diagram` · Category: Diagram · Status: alpha
+- Import: `import { DiagramCanvas } from '@nexub/diagram';` `import '@nexub/diagram/styles.css';`
+- Install: `npm install @nexub/diagram @xyflow/react`. `@xyflow/react` (React Flow) is a peer dependency: install it next to `@nexub/diagram`. Load the stylesheet after `@nexub/react`’s.
+- Web only: Native apps have no diagram editor: on phones, show the same nodes and connections as a list, as the canvas’s "Show as list" view does.
+- Docs: https://nexub-ds-docs.pages.dev/components/diagram-canvas
+
+## When to use
+
+- Free-form graphs people build or edit: workflow editors, automations, pipelines.
+- Mind maps: one idea in the middle, branches around it (`layout="mind-map"`).
+- Read-only maps of how things connect, where the shape matters (`readOnly`).
+
+## When not to use
+
+- Reporting lines and other strict hierarchies people scan by name: use OrgChart or TreeView.
+- Steps in a fixed order: use Stepper or a list.
+- An app that can’t take React Flow as a dependency (about 50 kB gzip): DiagramCanvas needs `@xyflow/react` installed next to it.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `aria-label` (required) | `string` |  | Names the canvas (role="application"). Required. |
+| `nodes / onNodesChange` | `Node[]` |  | React Flow’s controlled nodes. `type: 'nexub'` renders the Nexub card (DiagramNode) from `data: { title, description, icon, tone }`. |
+| `edges / onEdgesChange` | `Edge[]` |  | React Flow’s controlled edges. |
+| `defaultNodes / defaultEdges` | `Node[] / Edge[]` |  | Uncontrolled instead: the canvas keeps the state, and `layout` applies once. |
+| `onConnect` | `(connection: Connection) => void` |  | Called when a handle is dragged to another node, or a node is picked in the "Connect to…" menu (C). Without it, nodes can’t be connected. |
+| `layout` | `'left-right' \| 'mind-map' \| 'none'` | `'none'` | `left-right`: a layered workflow (a tidy tree when the graph is a tree). `mind-map`: a radial tree with edges between facing sides. Runs again when node ids, sizes or links change; moves made since are kept until then. |
+| `readOnly` | `boolean` |  | View only: no dragging, connecting, deleting or selecting. Arrow keys still move focus between nodes. |
+| `minimap` | `boolean` | `false` | Show the minimap. |
+| `controls` | `boolean` | `true` | Show the zoom in, zoom out and fit view buttons. |
+| `listView` | `boolean` | `true` | Show the "Show as list" text alternative under the canvas: every node with its connections by name. |
+| `labels` | `Partial<DiagramLabels>` |  | Every string the canvas shows or announces, English by default. Pass translations here. |
+| `keyboardStep` | `number` |  | Grid step for Alt+Arrow moves, in flow units; Shift moves four steps. Defaults to `snapGrid[0]`, else 16. |
+| `nodeTypes` | `NodeTypes` |  | Extra node types; `nexub` (DiagramNode) is always there. |
+| `fitView` | `boolean` |  | React Flow’s: fit the nodes into view on first render. Animation is skipped under reduced motion. |
+| `className` | `string` |  | Sizes the canvas box (24rem tall by default), e.g. `h-96`. |
+
+## Example: Workflow, left to right
+
+Controlled nodes and edges with `layout="left-right"`. Tab to a node, then try the arrow keys, Alt+arrows, C and Delete.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { addEdge, applyEdgeChanges, applyNodeChanges, type Connection, type Edge, type EdgeChange, type NodeChange } from '@xyflow/react';
+import { DiagramCanvas, type DiagramFlowNode } from '@nexub/diagram';
+
+const step = (id: string, title: string, data: Partial<DiagramFlowNode['data']> = {}): DiagramFlowNode => ({
+  id,
+  type: 'nexub',
+  position: { x: 0, y: 0 }, // layout="left-right" places the nodes
+  data: { title, ...data },
+});
+
+const initialNodes: DiagramFlowNode[] = [
+  step('signup', 'New sign-up', { description: 'Webhook from the website' }),
+  step('enrich', 'Enrich profile', { description: 'Company and role lookup' }),
+  step('score', 'Score lead', { tone: 'warning', description: 'Model update pending' }),
+  step('welcome', 'Send welcome email', { tone: 'good' }),
+  step('crm', 'Create CRM record'),
+];
+
+const initialEdges: Edge[] = [
+  { id: 'signup-enrich', source: 'signup', target: 'enrich' },
+  { id: 'signup-welcome', source: 'signup', target: 'welcome' },
+  { id: 'enrich-score', source: 'enrich', target: 'score' },
+  { id: 'score-crm', source: 'score', target: 'crm' },
+];
+
+export default function Example() {
+  const [nodes, setNodes] = React.useState(initialNodes);
+  const [edges, setEdges] = React.useState(initialEdges);
+  const onNodesChange = React.useCallback((changes: NodeChange<DiagramFlowNode>[]) => setNodes((ns) => applyNodeChanges(changes, ns)), []);
+  const onEdgesChange = React.useCallback((changes: EdgeChange<Edge>[]) => setEdges((es) => applyEdgeChanges(changes, es)), []);
+  const onConnect = React.useCallback((connection: Connection) => setEdges((es) => addEdge(connection, es)), []);
+
+  // minZoom: React Flow's default (0.5) can't fit four columns into a narrow page with fitView.
+  return (
+    <div className="w-full">
+      <DiagramCanvas
+        aria-label="Lead onboarding workflow"
+        layout="left-right"
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+        minZoom={0.3}
+      />
+    </div>
+  );
+}
+```
+
+## Example: Mind map
+
+`layout="mind-map"` and `readOnly`: a radial tree to look at, not edit.
+
+```tsx
+'use client';
+
+import type { Edge } from '@xyflow/react';
+import { DiagramCanvas, type DiagramFlowNode } from '@nexub/diagram';
+
+const idea = (id: string, title: string): DiagramFlowNode => ({ id, type: 'nexub', position: { x: 0, y: 0 }, data: { title } });
+
+const nodes: DiagramFlowNode[] = [
+  idea('launch', 'Product launch'),
+  idea('audience', 'Audience'),
+  idea('channels', 'Channels'),
+  idea('timeline', 'Timeline'),
+  idea('teams', 'Small teams'),
+  idea('enterprise', 'Enterprise'),
+  idea('email', 'Email'),
+  idea('events', 'Events'),
+  idea('beta', 'Beta in March'),
+];
+
+const link = (source: string, target: string): Edge => ({ id: `${source}-${target}`, source, target });
+const edges: Edge[] = [
+  link('launch', 'audience'),
+  link('launch', 'channels'),
+  link('launch', 'timeline'),
+  link('audience', 'teams'),
+  link('audience', 'enterprise'),
+  link('channels', 'email'),
+  link('channels', 'events'),
+  link('timeline', 'beta'),
+];
+
+export default function Example() {
+  return (
+    <div className="w-full">
+      <DiagramCanvas aria-label="Launch plan mind map" layout="mind-map" readOnly defaultNodes={nodes} defaultEdges={edges} fitView minZoom={0.3} minimap />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: application (the canvas, named by `aria-label`), group with `aria-roledescription="node"` for each node, named by its title, with the keyboard hint as its description, listbox and option (the "Connect to…" menu), Native `<details>` for "Show as list"
+- `Tab`: Moves into the canvas onto one node (roving tabindex: the last focused, else the first in reading order), then on to the zoom controls.
+- `Arrow keys`: Move focus to the nearest node in that direction.
+- `Home / End`: First or last node in reading order (top to bottom, then by line direction; mirrored in RTL).
+- `Alt (Option) + Arrow`: Moves the focused node one grid step (`keyboardStep`); with Shift, four. The new position is announced. Off in `readOnly`.
+- `C`: Opens the "Connect <node> to…" menu, the keyboard alternative to dragging a handle. Only with `onConnect`.
+- `Up / Down, Home / End, a letter`: In the Connect menu: move through the nodes it can connect to; typing a letter jumps to the next title starting with it.
+- `Enter / Space`: In the Connect menu: connects to the active node and announces it.
+- `Escape / Tab`: Closes the Connect menu; focus returns to the node.
+- `Delete / Backspace`: Removes the selection, or the focused node; focus moves to the next node in reading order and the count is announced.
+- One node is in the Tab order at a time; focus follows arrow keys, not the DOM order of React Flow’s nodes.
+- After a delete, focus goes to the next node (or the previous one at the end), never to the page.
+- Focus rings and the 24px handle hit area come from the tokens.
+- Each node is read by its title, then its tone ("Warning") as text, then how the keyboard works.
+- Connections, moves and deletes are announced in a polite live region.
+- "Show as list" lists every node with what it connects to and is connected from, by name: the text alternative to the drawing.
+- Tone is never colour alone: a dot plus text for screen readers and the list view, and a border in forced colours.
+- Fit view and animated edges respect reduced motion.
+- Every string (`labels`) is English by default: they are not in `@nexub/core` messages yet, so pass translations.
+
+Related: [org-chart](org-chart.md), [tree-view](tree-view.md), [kanban](kanban.md)
 
 
 ---
@@ -8583,6 +8916,148 @@ Related: [sidebar](sidebar.md), [top-nav](top-nav.md)
 
 ---
 
+# Number Input Element
+
+`<nx-number-input>`: the NumberInput rules as a form-associated web component, for server-rendered pages without React. A plain `<form>` posts its value.
+
+- Package: `@nexub/elements` · Category: Web Components · Status: alpha
+- Load: `<script type="module" src="https://cdn.jsdelivr.net/npm/@nexub/elements/dist/define.js"></script>`
+- Install: `npm install @nexub/elements`. No build step: the script tag above registers `<nx-number-input>`. With a bundler, `import '@nexub/elements/define';` once does the same.
+- Web only: It is a web component for HTML pages; native apps use NumberInput’s twin in `@nexub/react-native`, `Stepper`.
+- Docs: https://nexub-ds-docs.pages.dev/components/number-input-element
+
+## When to use
+
+- A number on a page with no React: server-rendered HTML, a plain `<form method="post">`, a CMS template.
+- Where `<input type="number">` would do, but it must look like the rest of Nexub, be empty without being 0, and clamp on blur as the React field does.
+
+## When not to use
+
+- In a React app: use NumberInput from `@nexub/react` (steppers, `nullable`, NexubProvider strings).
+- Phone numbers, codes and ids: use a text input. They are not quantities.
+- Money: use MoneyInput.
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` |  | The form field name: a `<form>` posts the value under it. |
+| `value` | `string` |  | The starting value, and what `form.reset()` goes back to. Empty for none. The `value` property is the current value. In React, server rendering writes `value` as this attribute; in a client-only render pass `defaultValue`, which sets it. |
+| `min` | `string` |  | Smallest value, applied on blur, Enter and steps (never while typing, so 30 can be typed with a minimum of 15). Below it, the field is invalid (`rangeUnderflow`). |
+| `max` | `string` |  | Largest value, applied the same way (`rangeOverflow`). |
+| `step` | `string` |  | Arrow-key increment: a positive number (default 1), or `any` for any decimal (keys then move by 1). |
+| `required` | `boolean` |  | Empty is invalid (`valueMissing`); the form won’t submit and shows the browser’s message. |
+| `disabled` | `boolean` |  | Not editable, not posted. A disabled `<fieldset>` around it does the same. |
+| `readonly` | `boolean` |  | Posted but not editable; arrow keys do nothing. |
+| `placeholder` | `string` |  | Hint shown while empty. |
+| `size` | `'sm' \| 'md' \| 'lg'` |  | `sm`, `md` (default) or `lg`: the control heights of `@nexub/react`. |
+| `aria-label` | `string` |  | Names the field when it has no `<label for>`. |
+| `input event` | `Event` |  | On every edit and step that changes the value. Read `event.target.value` (a string, `''` when cleared). |
+| `change event` | `Event` |  | When the value is committed: blur, Enter or a step. |
+
+## Example: Default
+
+Labelled with `<label for>`, limits applied on blur. Rendered here in React 19, which passes the attributes and listens to the element’s events.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+// Registers <nx-number-input> and <nx-date-picker>. On a page without a bundler, use
+// <script type="module" src="…/@nexub/elements/dist/define.js"></script> instead.
+import '@nexub/elements/define';
+
+export default function Example() {
+  const ref = React.useRef<HTMLElementTagNameMap['nx-number-input']>(null);
+  const [value, setValue] = React.useState('4');
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const onChange = () => setValue(el.value);
+    el.addEventListener('change', onChange);
+    return () => el.removeEventListener('change', onChange);
+  }, []);
+
+  return (
+    <div className="flex w-full max-w-xs flex-col gap-2">
+      <label htmlFor="seats" className="text-label-lg text-on-surface">
+        Seats
+      </label>
+      <nx-number-input ref={ref} id="seats" name="seats" min="1" max="50" step="1" value="4" placeholder="1–50" />
+      <p className="text-body-sm text-on-surface-muted">Committed value: {value === '' ? 'empty' : value}</p>
+    </div>
+  );
+}
+```
+
+## Example: In a form
+
+Form-associated: `FormData` has the value, `required` and `min` block the submit, and Reset goes back to the `value` attribute.
+
+```tsx
+'use client';
+
+import * as React from 'react';
+import { Button } from '@nexub/react';
+import '@nexub/elements/define';
+
+export default function Example() {
+  const [posted, setPosted] = React.useState<string | null>(null);
+
+  return (
+    <form
+      className="flex w-full max-w-xs flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        // The element is form-associated: FormData has its value, as a native input's.
+        setPosted(JSON.stringify(Object.fromEntries(new FormData(e.currentTarget))));
+      }}
+      onReset={() => setPosted(null)}
+    >
+      <div className="flex flex-col gap-1">
+        <label htmlFor="guests" className="text-label-lg text-on-surface">
+          Guests (required, 2 or more)
+        </label>
+        <nx-number-input id="guests" name="guests" min="2" required />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="budget" className="text-label-lg text-on-surface">
+          Budget per guest
+        </label>
+        <nx-number-input id="budget" name="budget" step="any" value="42.5" size="sm" />
+      </div>
+      <div className="flex gap-2">
+        <Button type="submit">Send</Button>
+        <Button type="reset" variant="outlined">
+          Reset
+        </Button>
+      </div>
+      <p className="text-body-sm text-on-surface-muted">Posted: {posted ?? 'nothing yet'}</p>
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: spinbutton (the inner `<input>`), with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`
+- `ArrowUp / ArrowDown`: One step up or down, inside `min` and `max`. Fires `input` and `change`.
+- `PageUp / PageDown`: Ten steps.
+- `Home / End`: To `min` or `max`, when set.
+- `Enter`: Applies the limits and submits the form, as a native input does.
+- One tab stop: focus is delegated to the inner input, so `<label for>` clicks and `element.focus()` land in the field.
+- Focus ring from the tokens; forced colours draw it in Highlight.
+- The inner input is named from the host’s `<label for>` (or a wrapping `<label>`, or `aria-label`): a label can’t reach into a shadow root, so the element copies its text.
+- `aria-required` and `aria-invalid` follow the field; the invalid state shows only after an edit or a failed submit.
+- Validation messages come from a native input where the browser has one, so they are in the browser’s language.
+- Shadow DOM: page CSS can’t break the inside. Style it with the theme variables, or `::part(field)` and `::part(input)`.
+- Themed by the same CSS custom properties as `@nexub/react`: load `@nexub/themes` and `data-theme` / `data-product` apply.
+
+Related: [number-input](number-input.md), [date-picker-element](date-picker-element.md), [form](form.md)
+
+
+---
+
 # Number Input
 
 A numeric input with optional steppers. Limits apply when the field loses focus; `nullable` lets it be empty.
@@ -8590,6 +9065,16 @@ A numeric input with optional steppers. Limits apply when the field loses focus;
 - Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { NumberInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/number-input
+
+## When to use
+
+- A quantity people type or step: seats, limits, percentages.
+- A value that may be empty (`nullable`) and must stay inside `min` and `max`.
+
+## When not to use
+
+- On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-number-input>` from `@nexub/elements`, the same rules as a web component.
+- Money: use MoneyInput. Phone numbers and codes: use a text input.
 
 ## Props
 
@@ -8642,6 +9127,8 @@ export default function Example() {
   );
 }
 ```
+
+Related: [number-input-element](number-input-element.md), [money-input](money-input.md), [slider](slider.md)
 
 
 ---
@@ -8857,7 +9344,7 @@ export default function Example() {
 - Below 768px the same nodes render as a TreeView (photo, name and role on one row).
 - Connectors are CSS borders on logical sides, so RTL mirrors and forced colours keep them.
 
-Related: [tree-view](tree-view.md), [avatar](avatar.md)
+Related: [tree-view](tree-view.md), [avatar](avatar.md), [diagram-canvas](diagram-canvas.md)
 
 
 ---
