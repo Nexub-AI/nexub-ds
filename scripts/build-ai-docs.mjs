@@ -10,7 +10,7 @@
 //   pnpm ai-docs          write
 //   pnpm ai-docs --check  fail if anything is stale (CI)
 
-import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, mkdirSync, rmSync, existsSync, statSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ROLES, tertiary, SPRINGS } from '../packages/tokens/scripts/generate.mjs';
@@ -31,6 +31,8 @@ const loadEntries = async (dir) => {
   return Promise.all(files.map(async (f) => (await import(pathToFileURL(join(registry, dir, f)).href)).default));
 };
 const entries = [...(await loadEntries('components')), ...(await loadEntries('patterns'))];
+// Which package a page belongs to sets its URL kind, its group and its setup lines (11.6: + diagram, elements).
+const { PACKAGES, docsKind, setupSnippet } = await import(pathToFileURL(join(registry, 'packages.ts')).href);
 const { exampleCode } = await import(pathToFileURL(join(root, 'apps/docs/src/examples/code.ts')).href);
 const examplesDir = join(root, 'apps/docs/src/examples');
 
@@ -44,7 +46,7 @@ const undocumented = Object.fromEntries(
   ]),
 );
 
-const docsUrl = (e) => `${SITE_URL}/${e.meta.package === '@nexub/react' ? 'components' : 'patterns'}/${e.meta.slug}`;
+const docsUrl = (e) => `${SITE_URL}/${docsKind(e.meta.package)}/${e.meta.slug}`;
 // llms.txt points at the Markdown version of each page (apps/docs/scripts/copy-ai-md.mjs).
 const mdUrl = (e) => `${docsUrl(e)}.md`;
 const cell = (s = '') => String(s).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
@@ -63,14 +65,23 @@ function a11yReport() {
     known[comp] = [...new Set([...(known[comp] ?? []), ...(lists[list] ?? [])])];
   }
   // A component is covered when any story renders it (Fade lives in Motion.stories, Amount in NumberTicker's).
-  const stories = ['react', 'patterns', 'marketing']
-    .map((p) => join(root, `packages/${p}/src/components`))
+  // Storybook (packages/react/.storybook/main.ts) also loads packages/diagram/src and packages/elements/stories.
+  const stories = ['react/src/components', 'patterns/src/components', 'marketing/src/components', 'diagram/src', 'elements/stories']
+    .map((p) => join(root, `packages/${p}`))
     .filter(existsSync)
-    .flatMap((dir) => readdirSync(dir).flatMap((c) => (existsSync(join(dir, c)) ? readdirSync(join(dir, c)).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(dir, c, f), 'utf8')) : [])))
+    .flatMap((dir) =>
+      readdirSync(dir).flatMap((c) => {
+        const p = join(dir, c);
+        if (statSync(p).isFile()) return c.endsWith('.stories.tsx') ? [readFileSync(p, 'utf8')] : [];
+        return readdirSync(p).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(p, f), 'utf8'));
+      }),
+    )
     .concat(readdirSync(join(root, 'apps/docs/src/stories')).filter((f) => f.endsWith('.stories.tsx')).map((f) => readFileSync(join(root, 'apps/docs/src/stories', f), 'utf8')))
     .join('\n');
-  // Covered by its own stories file, as a story's `component`, or rendered as JSX in any story.
+  // Covered by its own stories file, as a story's `component`, or rendered as JSX in any story
+  // (a web component by its tag: `<nx-number-input`).
   const storyFile = (e) =>
+    (e.meta.element && new RegExp(`<${e.meta.element}[\\s/>]`).test(stories)) ||
     [pascal(e.meta.slug), e.meta.title.replace(/\s+/g, '')].some(
       (n) =>
         ['react', 'patterns', 'marketing'].some((p) => existsSync(join(root, `packages/${p}/src/components/${n}/${n}.stories.tsx`))) ||
@@ -114,7 +125,10 @@ function componentMd(e) {
   }
   else out.push(meta.description, '');
   out.push(`- Package: \`${meta.package}\` · Category: ${meta.category} · Status: ${meta.status ?? 'stable'}`);
-  out.push(`- Import: \`import { ${pascal(meta.slug)} } from '${meta.package}';\``);
+  const setup = setupSnippet(meta, pascal(meta.slug));
+  out.push(`- ${setup.lang === 'html' ? 'Load' : 'Import'}: ${setup.lines.map((l) => `\`${l}\``).join(' ')}`);
+  if (setup.install) out.push(`- Install: \`${setup.install}\`${setup.note ? `. ${setup.note}` : ''}`);
+  if (meta.webOnly) out.push(`- Web only: ${meta.webOnly}`);
   out.push(`- Docs: ${docsUrl(e)}`, '');
   if (usage) {
     out.push('## When to use', '', ...usage.whenToUse.map((u) => `- ${u}`), '');
@@ -127,7 +141,7 @@ function componentMd(e) {
     }
     out.push('');
   }
-  const kind = meta.package === '@nexub/react' ? 'components' : 'patterns';
+  const kind = docsKind(meta.package);
   for (const [i, ex] of examples.entries()) {
     out.push(`## Example: ${ex.title}`, '');
     if (ex.description) out.push(ex.description, '');
@@ -147,7 +161,8 @@ function componentMd(e) {
 function componentsIndexMd() {
   const byCategory = new Map();
   for (const e of entries) {
-    const key = `${{ '@nexub/react': 'Components', '@nexub/patterns': 'Patterns', '@nexub/marketing': 'Marketing' }[e.meta.package]} — ${e.meta.category}`;
+    const group = PACKAGES[e.meta.package].group;
+    const key = group.toLowerCase() === e.meta.category.toLowerCase() ? group : `${group} — ${e.meta.category}`;
     if (!byCategory.has(key)) byCategory.set(key, []);
     byCategory.get(key).push(e);
   }
@@ -312,6 +327,14 @@ function llmsTxt() {
     `- [Marketing mode](${SITE_URL}/foundations/marketing-mode): guidelines, tokens and what changes`,
     `- [Next.js and server components](${SITE_URL}/getting-started/nextjs): per-component imports, next/font, Tailwind 4`,
     ...entries.filter((e) => e.meta.package === '@nexub/marketing').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
+    '',
+    '## Diagram (@nexub/diagram, with the @xyflow/react peer)',
+    '',
+    ...entries.filter((e) => e.meta.package === '@nexub/diagram').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
+    '',
+    '## Web components (@nexub/elements, for pages without React)',
+    '',
+    ...entries.filter((e) => e.meta.package === '@nexub/elements').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## React Native',
     '',

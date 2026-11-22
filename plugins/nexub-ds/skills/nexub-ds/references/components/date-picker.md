@@ -6,6 +6,15 @@ Calendar date picker with text input. `granularity` picks a whole month or year.
 - Import: `import { DatePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/date-picker
 
+## When to use
+
+- One date, month or year, typed or picked from a calendar.
+
+## When not to use
+
+- On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-date-picker>` from `@nexub/elements`, the same calendar as a web component.
+- A range: use DateRangePicker. A date and a time: use DateTimePicker.
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -77,3 +86,5 @@ export default function Example() {
   );
 }
 ```
+
+Related: [date-picker-element](date-picker-element.md), [date-range-picker](date-range-picker.md), [date-time-picker](date-time-picker.md)

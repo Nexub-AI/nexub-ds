@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Badge } from '@nexub/react';
 import type { ComponentEntry } from '@/registry/types';
 import { getComponentEntry } from '@/registry/index';
+import { setupSnippet } from '@/registry/packages';
 import { DocsLink } from '@/components/layout/DocsLink';
 import { Note, PageIntro } from '@/components/kit';
 import { CopyButton } from './CopyButton';
@@ -11,7 +12,8 @@ import { StatusBadge } from './StatusBadge';
 
 export function ComponentHero({ entry, children }: { entry: ComponentEntry; children?: React.ReactNode }) {
   const { meta } = entry;
-  const importLine = `import { ${meta.title.replace(/\s+/g, '')} } from '${meta.package}';`;
+  // One line for @nexub/react; the import and stylesheet for @nexub/diagram; a script tag for @nexub/elements.
+  const setup = setupSnippet(meta);
   const deprecation = meta.status === 'deprecated' ? meta.deprecation : undefined;
   const replacement = deprecation && getComponentEntry(deprecation.replacement);
 
@@ -39,10 +41,22 @@ export function ComponentHero({ entry, children }: { entry: ComponentEntry; chil
           {deprecation.removeIn}.
         </Note>
       )}
-      <div className="docs-code-strip">
-        <code>{importLine}</code>
-        <CopyButton text={importLine} />
-      </div>
+      {setup.lines.map((line) => (
+        <div key={line} className="docs-code-strip">
+          <code>{line}</code>
+          <CopyButton text={line} />
+        </div>
+      ))}
+      {setup.install && (
+        <p className="text-body-sm text-on-surface-variant">
+          Install: <InlineCode text={`\`${setup.install}\``} />
+          {setup.note && (
+            <>
+              . <InlineCode text={setup.note} />
+            </>
+          )}
+        </p>
+      )}
       <MarkdownActions href={`/components/${meta.slug}.md`} />
       {children}
     </PageIntro>

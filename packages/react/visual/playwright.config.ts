@@ -11,6 +11,7 @@ const storybookOut = fileURLToPath(new URL('../storybook-static/index.json', imp
 
 // 9.1: WebKit (the Safari stand-in) and Firefox run the render check, the interaction
 // states and the docs suites, each with its own baselines in __screenshots__/<engine>/.
+// 11.6: and the @nexub/elements form tests (elements.spec.ts), which need every engine.
 const DOCS = /docs\.(visual|nav|a11y|security)\.spec\.ts/;
 const docsUse = { baseURL: 'http://localhost:6008', viewport: { width: 1280, height: 800 } };
 const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
@@ -21,7 +22,7 @@ const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
   };
   const snapshotPathTemplate = `{testDir}/__screenshots__/${engine}/{arg}{ext}`;
   return [
-    { name: engine, testMatch: /(engines|states\.visual|interactions)\.spec\.ts/, use, snapshotPathTemplate },
+    { name: engine, testMatch: /(engines|states\.visual|interactions|elements)\.spec\.ts/, use, snapshotPathTemplate },
     { name: `docs-${engine}`, testMatch: DOCS, use: { ...use, ...docsUse }, snapshotPathTemplate },
   ];
 });

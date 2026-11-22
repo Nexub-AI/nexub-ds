@@ -5,6 +5,7 @@ import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { disabledText, type Size } from '../../utils/control.js';
 import { inputWrapperVariants } from '../Input/Input.js';
+import { clampNumber, formatNumberValue, isNumberDraft, numberKeyTarget, numberStepSize, parseNumberDraft, stepNumber } from '@nexub/core';
 
 interface NumberInputBaseProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'defaultValue' | 'onChange' | 'type' | 'size' | 'step'> {
@@ -42,28 +43,6 @@ export interface NullableNumberInputProps extends NumberInputBaseProps {
   onValueChange?: (value: number | null) => void;
 }
 
-const formatValue = (v: number | null, precision?: number): string => {
-  if (v === null) return '';
-  if (precision !== undefined) return v.toFixed(precision);
-  return String(v);
-};
-
-const clampValue = (v: number, min?: number, max?: number): number => {
-  let result = v;
-  if (min !== undefined && result < min) result = min;
-  if (max !== undefined && result > max) result = max;
-  return result;
-};
-
-/** Digits with an optional sign and one decimal point: everything a half-typed number can be. */
-const PARTIAL = /^[-+]?\d*(?:[.,]\d*)?$/;
-
-/** The number a draft stands for, or `undefined` while it isn't one yet (`""`, `"-"`, `"."`). */
-const parseDraft = (text: string): number | undefined => {
-  const n = Number(text.trim().replace(',', '.'));
-  return text.trim() !== '' && Number.isFinite(n) && /\d/.test(text) ? n : undefined;
-};
-
 export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps | NullableNumberInputProps>(
   (
     {
@@ -95,7 +74,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps |
     const messages = useNexubMessages();
     const controlled = value !== undefined;
     const currentValue: number | null = controlled ? value : internalValue;
-    const stepSize = step === 'any' ? 1 : step;
+    const stepSize = numberStepSize(step);
 
     const emit = (next: number | null) => {
       if (readOnly) return;
@@ -107,24 +86,23 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps |
 
     /** Steppers, arrow keys and blur: the value always lands inside min and max. */
     const commit = (next: number) => {
-      const clamped = clampValue(next, min, max);
+      const clamped = clampNumber(next, min, max);
       emit(clamped);
-      if (draft !== null) setDraft(formatValue(clamped, precision));
+      if (draft !== null) setDraft(formatNumberValue(clamped, precision));
     };
 
     const stepBy = (delta: number) => {
       if (readOnly || disabled) return;
-      const base = currentValue ?? clampValue(0, min, max);
-      commit(currentValue === null ? base : base + delta);
+      commit(stepNumber(currentValue, delta, min, max));
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const text = e.target.value;
       if (readOnly) return;
       if (nullable) {
-        if (!PARTIAL.test(text)) return; // a letter or a second point: keep what was there
+        if (!isNumberDraft(text)) return; // a letter or a second point: keep what was there
         setDraft(text);
-        const n = parseDraft(text);
+        const n = parseNumberDraft(text);
         if (n !== undefined) emit(n);
         else if (text.trim() === '') emit(null);
         return;
@@ -133,14 +111,14 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps |
       // the text the user sees instead of writing "" back over it.
       if (text === '' && e.target.validity?.badInput) return;
       setDraft(text);
-      const n = parseDraft(text);
+      const n = parseNumberDraft(text);
       if (n !== undefined) emit(n); // not clamped yet: typing "30" with min 15 must reach the "0"
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setDraft(null);
       if (currentValue !== null && !readOnly) {
-        const clamped = clampValue(currentValue, min, max);
+        const clamped = clampNumber(currentValue, min, max);
         if (clamped !== currentValue) emit(clamped);
       }
       onBlur?.(e);
@@ -150,18 +128,10 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps |
       if (readOnly && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) e.preventDefault();
       // The text input of `nullable` has no native stepping: do what type="number" does.
       if (nullable && !readOnly && !disabled) {
-        const keys: Record<string, () => void> = {
-          ArrowUp: () => stepBy(stepSize),
-          ArrowDown: () => stepBy(-stepSize),
-          PageUp: () => stepBy(stepSize * 10),
-          PageDown: () => stepBy(-stepSize * 10),
-          ...(min !== undefined ? { Home: () => commit(min) } : {}),
-          ...(max !== undefined ? { End: () => commit(max) } : {}),
-        };
-        const action = keys[e.key];
-        if (action) {
+        const target = numberKeyTarget(e.key, currentValue, { min, max, step });
+        if (target !== undefined) {
           e.preventDefault();
-          action();
+          commit(target);
         }
       }
       onKeyDown?.(e);
@@ -174,7 +144,7 @@ export const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps |
       disabledText,
     );
 
-    const display = draft ?? formatValue(currentValue, precision);
+    const display = draft ?? formatNumberValue(currentValue, precision);
 
     return (
       <div className={cn(inputWrapperVariants({ size, invalid }), 'pe-0 gap-0 overflow-hidden', className)}>

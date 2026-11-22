@@ -1,6 +1,6 @@
 // @vitest-environment node
 // Design lint: component source must use Calm Depth tokens (ENHANCEMENTS_PLAN.md
-// B2). Scans @nexub/react and @nexub/patterns components (not tests/stories).
+// B2). Scans @nexub/react, @nexub/patterns and (11.6) @nexub/diagram components (not tests/stories).
 // KNOWN is shrink-only: when you fix a file, lower or delete its entry.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,7 +45,7 @@ const RULES: Record<string, RegExp> = {
 const KNOWN: Record<string, Record<string, number>> = {};
 
 const PACKAGES = path.resolve(__dirname, '../..');
-const ROOTS = ['react/src/components', 'react/src/utils', 'react/src/hooks', 'patterns/src/components'];
+const ROOTS = ['react/src/components', 'react/src/utils', 'react/src/hooks', 'patterns/src/components', 'diagram/src'];
 
 function sourceFiles(): string[] {
   const out: string[] = [];

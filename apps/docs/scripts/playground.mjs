@@ -301,7 +301,8 @@ export async function generate() {
       recipes[slug] = { skip: 'no docs example to build on' };
       continue;
     }
-    const built = buildBase(readFileSync(example, 'utf8'), [key, `${key}root`], slug);
+    // @nexub/elements pages render their custom element (`<nx-number-input>`), not a React component.
+    const built = buildBase(readFileSync(example, 'utf8'), [key, `${key}root`, ...(entry.meta.element ? [entry.meta.element] : [])], slug);
     if (!built) {
       recipes[slug] = { skip: `the first example does not render <${title.replace(/[^A-Za-z0-9]/g, '')}> directly` };
       continue;

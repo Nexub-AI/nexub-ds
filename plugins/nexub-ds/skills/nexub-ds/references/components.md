@@ -224,7 +224,11 @@ Never use a component marked deprecated.
 - [Text](components/text.md) `@nexub/react`: Paragraph text component with size, tone, and weight variants.
 - [Truncate](components/truncate.md) `@nexub/react`: Text clipped to one or more lines, with the full text in a tooltip only while it is clipped.
 
-## Marketing — Marketing
+## Diagram
+
+- [Diagram Canvas](components/diagram-canvas.md) `@nexub/diagram`: Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
+
+## Marketing
 
 - [CTABand](components/cta-band.md) `@nexub/marketing`: The closing call to action on a primary band: the hero gradient in marketing mode. Server component.
 - [FAQ](components/faq.md) `@nexub/marketing`: Questions and answers in an Accordion, one open at a time. Client component.
@@ -280,6 +284,11 @@ Never use a component marked deprecated.
 ## Patterns — People
 
 - [UserCard](components/user-card.md) `@nexub/patterns`: User profile card displaying avatar, name, role, and optional actions.
+
+## Web components
+
+- [Date Picker Element](components/date-picker-element.md) `@nexub/elements`: `<nx-date-picker>`: a typed date field and a calendar as a form-associated web component, for server-rendered pages without React. The value is `YYYY-MM-DD`.
+- [Number Input Element](components/number-input-element.md) `@nexub/elements`: `<nx-number-input>`: the NumberInput rules as a form-associated web component, for server-rendered pages without React. A plain `<form>` posts its value.
 
 ## Exported without a reference page
 

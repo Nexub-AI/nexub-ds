@@ -1,0 +1,115 @@
+<!doctype html>
+<!--
+  @nexub/elements demo: a plain server-rendered style page, no build step beyond `pnpm build`
+  (dist/define.js). Serve the packages/ folder (e.g. `npx serve packages` and open
+  /elements/demo.html) so the token and theme CSS resolve. For the Playwright + axe tests.
+  The theme's own bare @imports (`@nexub/tokens/css`) can't resolve in a browser without a
+  bundler, so the token files are linked directly before it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@nexub/elements demo</title>
+    <link rel="stylesheet" href="../tokens/dist/css/variables.css" />
+    <link rel="stylesheet" href="../tokens/dist/css/roles.css" />
+    <link rel="stylesheet" href="../themes/src/base.css" />
+    <link rel="stylesheet" href="../themes/src/light.css" />
+    <link rel="stylesheet" href="../themes/src/dark.css" />
+    <link rel="stylesheet" href="../themes/src/products.css" />
+    <script type="module" src="./dist/define.js"></script>
+    <style>
+      body { font-family: var(--font-family-sans); color: var(--color-on-surface); }
+      main { max-inline-size: 40rem; margin-inline: auto; padding: 1.5rem 1rem; }
+      form, fieldset { display: grid; gap: 1rem; }
+      fieldset { border: 1px solid var(--color-outline-variant); border-radius: var(--shape-container); padding: 1rem; }
+      label { display: block; margin-block-end: 0.25rem; font-weight: 600; }
+      .row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      output { display: block; white-space: pre-wrap; font-family: var(--font-family-mono); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>@nexub/elements</h1>
+
+      <div class="row" role="group" aria-label="Page settings">
+        <button type="button" data-testid="toggle-theme">Toggle dark</button>
+        <button type="button" data-testid="toggle-product">Toggle data-product="forms"</button>
+        <button type="button" data-testid="toggle-dir">Toggle RTL</button>
+      </div>
+
+      <form id="form" method="post" action="#" data-testid="form">
+        <div>
+          <label for="age">Age</label>
+          <nx-number-input id="age" name="age" min="18" max="120" step="1" required placeholder="18–120" data-testid="age"></nx-number-input>
+        </div>
+
+        <div>
+          <label for="price">Price</label>
+          <nx-number-input id="price" name="price" step="any" value="9.5" size="sm" data-testid="price"></nx-number-input>
+        </div>
+
+        <div>
+          <label for="start">Start date</label>
+          <nx-date-picker id="start" name="start" min="2026-01-01" max="2027-12-31" required data-testid="start"></nx-date-picker>
+        </div>
+
+        <div>
+          <label for="month">Billing month</label>
+          <nx-date-picker id="month" name="month" granularity="month" value="2026-11" size="lg" data-testid="month"></nx-date-picker>
+        </div>
+
+        <div>
+          <label for="year">Year of birth</label>
+          <nx-date-picker id="year" name="year" granularity="year" min="1900" max="2026" locale="de-DE" data-testid="year"></nx-date-picker>
+        </div>
+
+        <fieldset id="extra" data-testid="extra">
+          <legend>Disabled with its fieldset</legend>
+          <label for="seats">Seats</label>
+          <nx-number-input id="seats" name="seats" value="2" data-testid="seats"></nx-number-input>
+          <label for="readonly-date">Read-only date</label>
+          <nx-date-picker id="readonly-date" name="fixed" value="2026-03-05" readonly data-testid="readonly-date"></nx-date-picker>
+        </fieldset>
+
+        <div class="row">
+          <button type="submit" data-testid="submit">Send</button>
+          <button type="reset" data-testid="reset">Reset</button>
+          <button type="button" data-testid="toggle-fieldset">Toggle fieldset disabled</button>
+        </div>
+      </form>
+
+      <h2>Last submit</h2>
+      <output form="form" data-testid="result" aria-live="polite"></output>
+      <h2>Events</h2>
+      <output data-testid="events"></output>
+    </main>
+
+    <script type="module">
+      const form = document.getElementById('form');
+      const result = document.querySelector('[data-testid="result"]');
+      const events = document.querySelector('[data-testid="events"]');
+      const root = document.documentElement;
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        result.textContent = JSON.stringify(Object.fromEntries(new FormData(form)), null, 2);
+      });
+      for (const type of ['input', 'change']) {
+        form.addEventListener(type, (e) => {
+          if (!e.target.localName.startsWith('nx-')) return;
+          events.textContent = `${type} ${e.target.name}=${JSON.stringify(e.target.value)}\n` + events.textContent.split('\n').slice(0, 9).join('\n');
+        });
+      }
+      document.querySelector('[data-testid="toggle-theme"]').onclick = () =>
+        root.setAttribute('data-theme', root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      document.querySelector('[data-testid="toggle-product"]').onclick = () =>
+        root.hasAttribute('data-product') ? root.removeAttribute('data-product') : root.setAttribute('data-product', 'forms');
+      document.querySelector('[data-testid="toggle-dir"]').onclick = () => (root.dir = root.dir === 'rtl' ? 'ltr' : 'rtl');
+      document.querySelector('[data-testid="toggle-fieldset"]').onclick = () => {
+        const fs = document.getElementById('extra');
+        fs.disabled = !fs.disabled;
+      };
+    </script>
+  </body>
+</html>

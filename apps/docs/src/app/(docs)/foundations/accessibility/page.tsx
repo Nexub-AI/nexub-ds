@@ -3,6 +3,7 @@ import { Badge } from '@nexub/react';
 import report from '@nexub/react/accessibility.json';
 import { DocTable, List, Note, PageIntro, Prose, Section } from '@/components/kit';
 import { DocsLink } from '@/components/layout/DocsLink';
+import { docsKind, type DocsPackage } from '@/registry/packages';
 
 export const dynamic = 'force-static';
 
@@ -275,7 +276,7 @@ export default function AccessibilityPage() {
         <DocTable
           head={['Component', 'Automated (axe, light and dark)', 'Keyboard', 'Screen reader']}
           rows={comps.map((c) => [
-            <DocsLink key="n" href={`/${c.package === '@nexub/react' ? 'components' : 'patterns'}/${c.slug}`}>{c.name}</DocsLink>,
+            <DocsLink key="n" href={`/${docsKind(c.package as DocsPackage)}/${c.slug}`}>{c.name}</DocsLink>,
             RESULT[c.automated as keyof typeof RESULT],
             c.keyboard.length ? `${c.keyboard.length} documented` : '—',
             c.screenReader.length ? `${c.screenReader.length} documented` : '—',

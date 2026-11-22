@@ -13,7 +13,9 @@
       "@nexub/brand",
       "@nexub/mcp",
       "@nexub/core",
-      "@nexub/react-native"
+      "@nexub/react-native",
+      "@nexub/diagram",
+      "@nexub/elements"
     ]
   ],
   "linked": [],

@@ -6,6 +6,16 @@ A numeric input with optional steppers. Limits apply when the field loses focus;
 - Import: `import { NumberInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/number-input
 
+## When to use
+
+- A quantity people type or step: seats, limits, percentages.
+- A value that may be empty (`nullable`) and must stay inside `min` and `max`.
+
+## When not to use
+
+- On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-number-input>` from `@nexub/elements`, the same rules as a web component.
+- Money: use MoneyInput. Phone numbers and codes: use a text input.
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -57,3 +67,5 @@ export default function Example() {
   );
 }
 ```
+
+Related: [number-input-element](number-input-element.md), [money-input](money-input.md), [slider](slider.md)

@@ -10,6 +10,14 @@ const entry: ComponentEntry = {
     status: 'stable',
     addedIn: '0.0.1',
     updatedIn: '11.1.0',
+    related: ['number-input-element', 'money-input', 'slider'],
+  },
+  usage: {
+    whenToUse: ['A quantity people type or step: seats, limits, percentages.', 'A value that may be empty (`nullable`) and must stay inside `min` and `max`.'],
+    whenNotToUse: [
+      'On a page without React (server-rendered HTML, a plain `<form>`): use `<nx-number-input>` from `@nexub/elements`, the same rules as a web component.',
+      'Money: use MoneyInput. Phone numbers and codes: use a text input.',
+    ],
   },
   props: [
     { name: 'value', type: 'number | null', required: false, description: 'Controlled value. `null` (with `nullable`) shows an empty field.' },
