@@ -36,11 +36,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: TRUSTED_TYPES_POLICY }} />
         {/* Keys must match ClientProviders' storageKey, BrandSwitcher and ContrastSwitcher. */}
         <ThemeScript productStorageKey="nexub-brand" contrastStorageKey="nexub-contrast" />
+        {/* Hold the first paint until the page body is parsed (Chromium; others ignore it). On a
+            slow CPU the parser yields partway through a long page, and a half-parsed page paints:
+            a centred preview then moves when the code block below it, or the rest of the example,
+            arrives. The marker sits after the visible content, before Next's data scripts. */}
+        <link rel="expect" href="#nx-content-end" blocking="render" />
       </head>
       <body className="m-0" suppressHydrationWarning>
         <ClientProviders searchIndex={searchIndex}>
           {children}
         </ClientProviders>
+        <div id="nx-content-end" hidden />
       </body>
     </html>
   );
