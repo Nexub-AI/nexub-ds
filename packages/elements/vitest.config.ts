@@ -10,6 +10,8 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
+    // styles.test.ts reads the token and theme CSS as text (`?raw`); unprocessed CSS reads as ''.
+    css: { include: [/\/(?:themes\/src|tokens\/dist\/css)\/[^/]+\.css/] },
     // On for `pnpm test` (vitest run --coverage); reports land in coverage/.
     // Thresholds are a ratchet: raise them as tests land, never lower them.
     coverage: {
@@ -18,7 +20,7 @@ export default defineConfig({
       exclude: ['src/**/*.test.ts', 'src/test-setup.ts'],
       reporter: ['text-summary', 'json-summary'],
       // 11.6: set from the first measured run, rounded down; a ratchet from here.
-      thresholds: { lines: 0, functions: 0, branches: 0, statements: 0 },
+      thresholds: { lines: 99, functions: 97, branches: 91, statements: 98 },
     },
   },
 });
