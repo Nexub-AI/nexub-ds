@@ -32,12 +32,13 @@
       "default": "./dist/index.js"
     },
     "./styles.css": "./dist/styles.css",
+    "./theme.css": "./dist/theme.css",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify && tailwindcss -i src/theme.css -o dist/theme.css --minify",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

@@ -25,6 +25,7 @@
   "patterns/styles.css": 5300,
   "marketing/styles.css": 2900,
   "diagram/styles.css": 4900,
+  "diagram/theme.css": 3500,
   "icons": 8100,
   "core": 13000,
   "tokens/native": 6600,

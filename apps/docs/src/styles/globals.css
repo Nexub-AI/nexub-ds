@@ -20,14 +20,17 @@
    the v4 counterpart of the @nexub/tokens/tailwind preset. */
 @import '@nexub/tokens/tailwind.css';
 @import './tailwind-v3-compat.css';
-/* @nexub/diagram (DiagramCanvas pages): React Flow's base styles themed on the tokens,
-   prebuilt with the classes the diagram uses. Its own layers, so docs rules still win. */
-@import '@nexub/diagram/styles.css';
+/* @nexub/diagram (DiagramCanvas pages): React Flow's base styles themed on the tokens, with no
+   utility classes. Its classes come from the @source below, sorted into the docs' own utilities:
+   the prebuilt styles.css repeats utilities after ours and changed other pages' layout. */
+@import '@nexub/diagram/theme.css';
 
 /* Same class sources as the v3 `content` globs. */
 @source '../**/*.{ts,tsx}';
 @source '../../../../packages/react/src/**/*.{ts,tsx}';
 @source '../../../../packages/patterns/src/**/*.{ts,tsx}';
+@source '../../../../packages/diagram/src/**/*.{ts,tsx}';
+@source not '../../../../packages/diagram/src/**/*.{stories,test}.tsx';
 @source '../../../../packages/marketing/src/**/*.{ts,tsx}';
 
 /* Metric-matched fallbacks for the webfonts (font-display: swap). Text is first
