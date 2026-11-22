@@ -20,6 +20,9 @@
    the v4 counterpart of the @nexub/tokens/tailwind preset. */
 @import '@nexub/tokens/tailwind.css';
 @import './tailwind-v3-compat.css';
+/* @nexub/diagram (DiagramCanvas pages): React Flow's base styles themed on the tokens,
+   prebuilt with the classes the diagram uses. Its own layers, so docs rules still win. */
+@import '@nexub/diagram/styles.css';
 
 /* Same class sources as the v3 `content` globs. */
 @source '../**/*.{ts,tsx}';

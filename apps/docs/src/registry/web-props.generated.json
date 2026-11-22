@@ -14085,5 +14085,325 @@
         }
       ]
     }
+  },
+  "@nexub/diagram": {
+    "DiagramCanvas": {
+      "file": "types.ts",
+      "props": [
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": true,
+          "description": "Names the canvas (role=\"application\"). Required."
+        },
+        {
+          "name": "controls",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the zoom in, zoom out and fit view buttons."
+        },
+        {
+          "name": "keyboardStep",
+          "type": "number",
+          "required": false,
+          "description": "Grid step for Alt+Arrow moves, in flow units; Shift moves four steps. Defaults to `snapGrid[0]`, else 16."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<DiagramLabels>",
+          "required": false,
+          "description": "Translated strings (English by default)."
+        },
+        {
+          "name": "layout",
+          "type": "'left-right' | 'mind-map' | 'none'",
+          "required": false,
+          "default": "'none'",
+          "description": "Positions nodes automatically when nodes or edges change (their ids, sizes or links). Moves made since (drag, Alt+Arrow) are kept until the next change. With uncontrolled `defaultNodes`, the layout is applied once."
+        },
+        {
+          "name": "listView",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show the \"Show as list\" text alternative under the canvas."
+        },
+        {
+          "name": "minimap",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Show the minimap."
+        },
+        {
+          "name": "nodeTypes",
+          "type": "NodeTypes",
+          "required": false,
+          "description": "Extra node types; `nexub` (DiagramNode) is always there."
+        },
+        {
+          "name": "readOnly",
+          "type": "boolean",
+          "required": false,
+          "description": "View only: no dragging, connecting, deleting or selecting. Arrow keys still move focus."
+        }
+      ],
+      "inherited": [
+        "ariaLabelConfig",
+        "attributionPosition",
+        "autoPanOnConnect",
+        "autoPanOnNodeDrag",
+        "autoPanOnNodeFocus",
+        "autoPanOnSelection",
+        "autoPanSpeed",
+        "colorMode",
+        "connectOnClick",
+        "connectionDragThreshold",
+        "connectionLineComponent",
+        "connectionLineContainerStyle",
+        "connectionLineStyle",
+        "connectionLineType",
+        "connectionMode",
+        "connectionRadius",
+        "debug",
+        "defaultEdgeOptions",
+        "defaultEdges",
+        "defaultMarkerColor",
+        "defaultNodes",
+        "defaultViewport",
+        "deleteKeyCode",
+        "disableKeyboardA11y",
+        "edgeTypes",
+        "edges",
+        "edgesFocusable",
+        "edgesReconnectable",
+        "elementsSelectable",
+        "elevateEdgesOnSelect",
+        "elevateNodesOnSelect",
+        "fitView",
+        "fitViewOptions",
+        "height",
+        "isValidConnection",
+        "maxZoom",
+        "minZoom",
+        "multiSelectionKeyCode",
+        "noDragClassName",
+        "noPanClassName",
+        "noWheelClassName",
+        "nodeClickDistance",
+        "nodeDragThreshold",
+        "nodeExtent",
+        "nodeOrigin",
+        "nodes",
+        "nodesConnectable",
+        "nodesDraggable",
+        "nodesFocusable",
+        "onBeforeDelete",
+        "onClickConnectEnd",
+        "onClickConnectStart",
+        "onConnect",
+        "onConnectEnd",
+        "onConnectStart",
+        "onDelete",
+        "onEdgeClick",
+        "onEdgeContextMenu",
+        "onEdgeDoubleClick",
+        "onEdgeMouseEnter",
+        "onEdgeMouseLeave",
+        "onEdgeMouseMove",
+        "onEdgesChange",
+        "onEdgesDelete",
+        "onError",
+        "onInit",
+        "onMove",
+        "onMoveEnd",
+        "onMoveStart",
+        "onNodeClick",
+        "onNodeContextMenu",
+        "onNodeDoubleClick",
+        "onNodeDrag",
+        "onNodeDragStart",
+        "onNodeDragStop",
+        "onNodeMouseEnter",
+        "onNodeMouseLeave",
+        "onNodeMouseMove",
+        "onNodesChange",
+        "onNodesDelete",
+        "onPaneClick",
+        "onPaneContextMenu",
+        "onPaneMouseEnter",
+        "onPaneMouseLeave",
+        "onPaneMouseMove",
+        "onPaneScroll",
+        "onReconnect",
+        "onReconnectEnd",
+        "onReconnectStart",
+        "onSelectionChange",
+        "onSelectionContextMenu",
+        "onSelectionDrag",
+        "onSelectionDragStart",
+        "onSelectionDragStop",
+        "onSelectionEnd",
+        "onSelectionStart",
+        "onViewportChange",
+        "onlyRenderVisibleElements",
+        "panActivationKeyCode",
+        "panOnDrag",
+        "panOnScroll",
+        "panOnScrollMode",
+        "panOnScrollSpeed",
+        "paneClickDistance",
+        "preventScrolling",
+        "proOptions",
+        "reconnectRadius",
+        "selectNodesOnDrag",
+        "selectionKeyCode",
+        "selectionMode",
+        "selectionOnDrag",
+        "snapGrid",
+        "snapToGrid",
+        "translateExtent",
+        "viewport",
+        "width",
+        "zIndexMode",
+        "zoomActivationKeyCode",
+        "zoomOnDoubleClick",
+        "zoomOnPinch",
+        "zoomOnScroll"
+      ]
+    }
+  },
+  "@nexub/elements": {
+    "DatePickerElement": {
+      "file": "date-picker.ts",
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "granularity",
+          "type": "'day' | 'month' | 'year'",
+          "required": false,
+          "description": "`day` (default), `month` or `year`."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP 47 locale for month and weekday names and the typed format; `''` follows the nearest `lang`."
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "`sm`, `md` (default) or `lg`."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The `value` attribute: the value the field starts with and goes back to on `form.reset()`."
+        }
+      ]
+    },
+    "NumberInputElement": {
+      "file": "number-input.ts",
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "required": false,
+          "description": "Largest value, applied on blur and steps."
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "required": false,
+          "description": "Smallest value, applied on blur and steps (a number as a string, `''` for none)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "`sm`, `md` (default) or `lg`."
+        },
+        {
+          "name": "step",
+          "type": "string",
+          "required": false,
+          "description": "The step for keys: a positive number, or `any` (any decimal; keys move by 1). Default 1."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The `value` attribute: the value the field starts with and goes back to on `form.reset()`."
+        }
+      ]
+    }
   }
 }

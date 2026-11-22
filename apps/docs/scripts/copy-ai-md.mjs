@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const docs = join(dirname(fileURLToPath(import.meta.url)), '..');
 const from = join(docs, '../../plugins/nexub-ds/skills/nexub-ds/references/components');
-const out = { react: join(docs, 'public/components'), other: join(docs, 'public/patterns') };
+const out = { components: join(docs, 'public/components'), patterns: join(docs, 'public/patterns') };
 
 for (const dir of Object.values(out)) {
   rmSync(dir, { recursive: true, force: true });
@@ -18,9 +18,11 @@ for (const dir of Object.values(out)) {
 if (!existsSync(from)) throw new Error(`copy-ai-md: ${from} is missing. Run \`pnpm ai-docs\` first.`);
 let n = 0;
 for (const file of readdirSync(from).filter((f) => f.endsWith('.md'))) {
-  // Same split as the docs routes: @nexub/react pages live under /components, the rest under /patterns.
-  const isReact = /^- Package: `@nexub\/react`/m.test(readFileSync(join(from, file), 'utf8'));
-  copyFileSync(join(from, file), join(isReact ? out.react : out.other, file));
+  // Same split as the docs routes, read from the page's own "Docs:" URL (src/registry/packages.ts
+  // decides it: @nexub/react, @nexub/diagram and @nexub/elements under /components, the rest under /patterns).
+  const kind = /^- Docs: \S+\/(components|patterns)\/[\w-]+$/m.exec(readFileSync(join(from, file), 'utf8'))?.[1];
+  if (!kind) throw new Error(`copy-ai-md: ${file} has no "- Docs:" line`);
+  copyFileSync(join(from, file), join(out[kind], file));
   n++;
 }
 console.log(`copy-ai-md: ${n} pages`);
