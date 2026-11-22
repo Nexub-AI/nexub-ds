@@ -4,8 +4,242 @@
 @layer theme, base, components, utilities;
 
 @import 'tailwindcss/theme.css' layer(theme);
+@import '@xyflow/react/dist/base.css' layer(base);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 @import '@nexub/tokens/tailwind.css';
 
 @source './**/*.{ts,tsx}';
 @source not './**/*.{stories,test}.tsx';
+
+/* React Flow reads --xy-* first and falls back to its own --xy-*-default values, so
+   setting them here themes every part. Every value is a token role, so light, dark
+   (data-theme), contrast levels and product accents (data-product) follow. */
+@layer components {
+  .nx-diagram-canvas {
+    block-size: 24rem;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--shape-container);
+    overflow: hidden;
+  }
+
+  .nx-diagram .react-flow {
+    --xy-background-color: var(--color-surface);
+    --xy-background-pattern-color: var(--color-outline-variant);
+    --xy-edge-stroke: var(--color-outline);
+    --xy-edge-stroke-width: 1.5;
+    --xy-edge-stroke-selected: var(--color-primary);
+    --xy-connectionline-stroke: var(--color-primary);
+    --xy-connectionline-stroke-width: 2;
+    --xy-node-color: var(--color-on-surface);
+    --xy-node-border: 1px solid var(--color-outline-variant);
+    --xy-node-border-selected: 1px solid var(--color-primary);
+    --xy-handle-background-color: var(--color-outline);
+    --xy-selection-background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    --xy-selection-border: 1px dashed var(--color-primary);
+    --xy-minimap-background-color: var(--color-surface-container-low);
+    --xy-minimap-mask-background-color: color-mix(in srgb, var(--color-scrim) 12%, transparent);
+    --xy-minimap-mask-stroke-color: var(--color-outline);
+    --xy-minimap-node-background-color: var(--color-surface-container-highest);
+    --xy-minimap-node-stroke-color: var(--color-outline-variant);
+    --xy-attribution-background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+    --xy-resize-background-color: var(--color-primary);
+    color: var(--color-on-surface);
+    font-family: inherit;
+  }
+
+  /* The themes' reset caps svg at max-width: 100%; React Flow's edge layer is a
+     zero-width svg that overflows, so the cap would hide every edge. */
+  .nx-diagram .react-flow__edges svg,
+  .nx-diagram svg.react-flow__connectionline {
+    max-width: none;
+    max-height: none;
+  }
+
+  /* Nodes: the card draws the shape; the wrapper carries focus and selection. */
+  .nx-diagram .react-flow__node-nexub {
+    border-radius: var(--shape-container);
+  }
+  .nx-diagram-node {
+    box-shadow: var(--elevation-1);
+  }
+  .nx-diagram .react-flow__node:focus-visible {
+    outline: 3px solid var(--color-ring-default);
+    outline-offset: 2px;
+  }
+  /* Selected: a primary ring outside the card, so the tone stripe stays. */
+  .nx-diagram .react-flow__node-nexub.selected .nx-diagram-node {
+    box-shadow: 0 0 0 2px var(--color-primary), var(--elevation-2);
+  }
+
+  /* Handles: the visible dot is the handle (edges attach to its outer side), and a
+     transparent ::after around it makes the 24px hit area (WCAG 2.5.8). */
+  .nx-diagram .nx-diagram-handle {
+    --nx-handle-dot: 0.625rem;
+    inline-size: var(--nx-handle-dot);
+    block-size: var(--nx-handle-dot);
+    min-inline-size: 0;
+    min-block-size: 0;
+    border: 2px solid var(--color-surface);
+    border-radius: var(--shape-full, 9999px);
+    background: var(--xy-handle-background-color);
+    transition: background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing);
+  }
+  .nx-diagram .nx-diagram-handle::after {
+    content: '';
+    position: absolute;
+    inset: calc((var(--nx-handle-dot) - max(var(--spacing-6, 1.5rem), 24px)) / 2);
+    border-radius: inherit;
+  }
+  .nx-diagram .nx-diagram-handle.connectionindicator:hover,
+  .nx-diagram .nx-diagram-handle.connectingfrom,
+  .nx-diagram .nx-diagram-handle.valid {
+    background: var(--color-primary);
+  }
+  .nx-diagram[data-readonly] .nx-diagram-handle {
+    opacity: 0;
+  }
+  /* Mind maps have a handle on every side: show them only on the node in hand. */
+  .nx-diagram[data-layout='mind-map'] .react-flow__node:not(:hover, :focus-visible, .selected) .nx-diagram-handle:not(.connectingto, .connectingfrom) {
+    opacity: 0;
+  }
+
+  /* The "Connect to…" button shows on the focused, selected or hovered node. */
+  .nx-diagram .nx-diagram-connect {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .nx-diagram .react-flow__node:is(:focus-visible, .selected, :hover) .nx-diagram-connect {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Edges: focus and selection in the primary, thicker. */
+  .nx-diagram .react-flow__edge.selected .react-flow__edge-path,
+  .nx-diagram .react-flow__edge:focus-visible .react-flow__edge-path {
+    stroke-width: 2.5;
+  }
+  .nx-diagram .react-flow__edge-text {
+    fill: var(--color-on-surface-variant);
+  }
+  .nx-diagram .react-flow__edge-textbg {
+    fill: var(--color-surface);
+  }
+
+  /* Controls: capsule buttons on the container surface. */
+  .nx-diagram .react-flow__controls {
+    gap: var(--spacing-1, 0.25rem);
+    padding: var(--spacing-1, 0.25rem);
+    border-radius: var(--shape-container);
+    background: var(--color-surface-container);
+    box-shadow: var(--elevation-1);
+  }
+  .nx-diagram .react-flow__controls-button {
+    inline-size: max(var(--spacing-8, 2rem), 24px);
+    block-size: max(var(--spacing-8, 2rem), 24px);
+    padding: var(--spacing-2, 0.5rem);
+    border: 0;
+    border-radius: var(--shape-control);
+    background: transparent;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+  }
+  .nx-diagram .react-flow__controls-button:hover {
+    background: color-mix(in srgb, var(--color-on-surface) 8%, transparent);
+    color: var(--color-on-surface);
+  }
+  .nx-diagram .react-flow__controls-button:disabled {
+    color: var(--color-text-disabled);
+    cursor: default;
+  }
+  .nx-diagram .react-flow__controls-button:focus-visible {
+    outline: 3px solid var(--color-ring-default);
+    outline-offset: 2px;
+  }
+  .nx-diagram .react-flow__controls-button svg {
+    max-inline-size: 0.875rem;
+    max-block-size: 0.875rem;
+  }
+
+  .nx-diagram .react-flow__minimap {
+    border-radius: var(--shape-container);
+    box-shadow: var(--elevation-1);
+    overflow: hidden;
+  }
+
+  .nx-diagram .react-flow__attribution {
+    font-size: 0.625rem;
+  }
+  .nx-diagram .react-flow__attribution a {
+    color: var(--color-on-surface-variant);
+  }
+
+  .nx-diagram-menu-list:focus-visible {
+    outline: 3px solid var(--color-ring-default);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion: no marching dashes on animated edges or the connection line. */
+  @media (prefers-reduced-motion: reduce) {
+    .nx-diagram .react-flow__edge.animated path,
+    .nx-diagram .react-flow__connection .animated {
+      animation: none;
+    }
+    .nx-diagram .nx-diagram-handle {
+      transition: none;
+    }
+  }
+}
+
+/* Forced colours: system colours throughout; tone shows as a border style. In the
+   utilities layer so it beats the card's own border utilities. */
+@layer utilities {
+  @media (forced-colors: active) {
+    .nx-diagram .react-flow {
+      --xy-edge-stroke: CanvasText;
+      --xy-edge-stroke-selected: Highlight;
+      --xy-connectionline-stroke: Highlight;
+      --xy-handle-background-color: ButtonText;
+      --xy-minimap-node-background-color: Canvas;
+      --xy-minimap-node-stroke-color: CanvasText;
+      --xy-minimap-mask-stroke-color: Highlight;
+    }
+    .nx-diagram .react-flow__edge-path,
+    .nx-diagram .react-flow__connection-path,
+    .nx-diagram .react-flow__arrowhead polyline {
+      forced-color-adjust: none;
+    }
+    .nx-diagram .nx-diagram-node {
+      border-color: CanvasText;
+    }
+    .nx-diagram .react-flow__node-nexub.selected .nx-diagram-node {
+      border-color: Highlight;
+      box-shadow: none;
+      outline: 2px solid Highlight;
+    }
+    .nx-diagram .nx-diagram-node[data-tone='warning'] {
+      border-inline-start-style: dashed;
+    }
+    .nx-diagram .nx-diagram-node[data-tone='danger'] {
+      border-inline-start-style: double;
+      border-inline-start-width: 6px;
+    }
+    .nx-diagram .nx-diagram-handle {
+      forced-color-adjust: none;
+      background: ButtonText;
+      border-color: Canvas;
+    }
+    .nx-diagram .react-flow__node:focus-visible,
+    .nx-diagram .react-flow__controls-button:focus-visible,
+    .nx-diagram-menu-list:focus-visible {
+      outline-color: Highlight;
+    }
+    .nx-diagram .react-flow__controls-button {
+      border: 1px solid ButtonText;
+    }
+    .nx-diagram .nx-diagram-menu [aria-selected='true'] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+  }
+}

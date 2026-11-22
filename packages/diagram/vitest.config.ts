@@ -18,7 +18,7 @@ export default defineConfig({
       exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.stories.tsx', 'src/test-setup.ts'],
       reporter: ['text-summary', 'json-summary'],
       // 11.6: set from the first measured run, rounded down; a ratchet from here.
-      thresholds: { lines: 0, functions: 0, branches: 0, statements: 0 },
+      thresholds: { lines: 99, functions: 97, branches: 91, statements: 97 },
     },
   },
 });
