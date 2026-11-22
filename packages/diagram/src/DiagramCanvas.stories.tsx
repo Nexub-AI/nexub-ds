@@ -111,7 +111,10 @@ export const ReadOnly: Story = {
       layout="left-right"
       nodes={workflowNodes}
       edges={workflowEdges}
-      defaultViewport={{ x: 24, y: 40, zoom: 0.7 }}
+      // Zoom 0.5, not 0.7: read-only hides the handle dots, which elsewhere cover where an edge
+      // starts, so at 0.7 that start sat on a fraction of a pixel and its anti-aliasing varied
+      // between runs (3 pixels, forced colours). At 0.5 every position is a whole or half pixel.
+      defaultViewport={{ x: 24, y: 40, zoom: 0.5 }}
     />
   ),
 };
