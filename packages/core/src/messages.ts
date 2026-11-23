@@ -387,9 +387,14 @@ export interface NexubMessages {
   diagramNoTargets?: string;
   diagramNodeHint?: string;
   diagramNodeHintReadOnly?: string;
+  /** 11.9: an edge's accessible name, from the two node titles. */
+  diagramEdge?: (source: string, target: string) => string;
+  diagramEdgeHint?: string;
+  diagramEdgeHintReadOnly?: string;
   diagramConnected?: (source: string, target: string) => string;
   diagramMoved?: (title: string, x: number, y: number) => string;
-  diagramDeleted?: (count: number) => string;
+  /** 11.9: `nodes` are the deleted nodes' titles, when the delete started on nodes. */
+  diagramDeleted?: (count: number, nodes?: string[]) => string;
   diagramToneGood?: string;
   diagramToneWarning?: string;
   diagramToneDanger?: string;
