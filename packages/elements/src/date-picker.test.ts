@@ -36,6 +36,8 @@ describe('<nx-date-picker>', () => {
     expect(openButton(el)).toHaveAttribute('aria-haspopup', 'dialog');
     expect(openButton(el)).toHaveAttribute('aria-label', 'Pick a date');
     expect(dialog(el)).toHaveAttribute('part', 'calendar');
+    // 11.9: not a Tab stop of its own (Firefox and WebKit made the scrollable box one).
+    expect(dialog(el)).toHaveAttribute('tabindex', '-1');
     expect(el.shadowRoot!.adoptedStyleSheets.length).toBe(2);
   });
 
@@ -214,14 +216,82 @@ describe('<nx-date-picker>', () => {
     expect(el.validity.valid).toBe(true);
   });
 
-  it('closes with Escape (the dialog cancel) and returns focus to the field', () => {
+  it('closes when the dialog closes itself (a close request) and returns focus to the field', async () => {
     const el = mount('<nx-date-picker></nx-date-picker>');
     el.show();
     el.show(); // already open: nothing
-    dialog(el).close(); // what Escape does on a modal dialog
+    dialog(el).close(); // a close request that skips the keydown (Android back)
+    expect(el.open).toBe(false);
+    // The `close` event comes a task later.
+    await new Promise((r) => setTimeout(r));
+    expect(el.shadowRoot!.activeElement).toBe(input(el));
+    expect(openButton(el)).toHaveAttribute('aria-expanded', 'false');
+    el.close(); // already closed: nothing
+  });
+
+  // 11.9 screen-reader pass: the dialog's focus restore put focus on the calendar button, and the
+  // field only got it a task later, on the `close` event, so "Pick a date, button" was read first.
+  it('Escape and a pick put focus on the field in the same task, not a task later', async () => {
+    const el = mount('<nx-date-picker locale="en-US" value="2026-03-05"></nx-date-picker>');
+    const button = openButton(el);
+    button.focus();
+    button.click();
+    expect(el.open).toBe(true);
+    const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, composed: true });
+    active(el)!.dispatchEvent(escape);
+    expect(escape.defaultPrevented).toBe(true);
     expect(el.open).toBe(false);
     expect(el.shadowRoot!.activeElement).toBe(input(el));
-    el.close(); // already closed: nothing
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    // The late close event changes nothing.
+    await new Promise((r) => setTimeout(r));
+    expect(el.shadowRoot!.activeElement).toBe(input(el));
+
+    button.focus();
+    button.click();
+    $<HTMLButtonElement>(el, '[data-value="2026-03-09"]').click();
+    expect(el.value).toBe('2026-03-09');
+    expect(el.shadowRoot!.activeElement).toBe(input(el));
+  });
+
+  it('a late close event does not collapse a calendar opened again', async () => {
+    const el = mount('<nx-date-picker></nx-date-picker>');
+    el.show();
+    dialog(el).close();
+    el.show();
+    await new Promise((r) => setTimeout(r));
+    expect(el.open).toBe(true);
+    expect(openButton(el)).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  // 11.9: the title is the live region that announces a month change; it was rewritten (and so
+  // announced again) on every arrow key.
+  it('changes the live title only when the month changes', async () => {
+    const el = mount('<nx-date-picker locale="en-US" value="2026-03-05"></nx-date-picker>');
+    el.show();
+    const title = $(el, '.title');
+    expect(title).toHaveAttribute('aria-live', 'polite');
+    const changes: string[] = [];
+    new MutationObserver(() => changes.push(title.textContent ?? '')).observe(title, { childList: true, characterData: true, subtree: true });
+    key(el, 'ArrowRight');
+    key(el, 'ArrowDown');
+    await Promise.resolve();
+    expect(changes).toEqual([]);
+    key(el, 'PageDown');
+    await Promise.resolve();
+    expect(changes).toEqual(['April 2026']);
+  });
+
+  // 11.9: two pickers on a form were two "Pick a date" buttons in a screen reader's button list.
+  it('names the calendar button with the field', async () => {
+    document.body.innerHTML =
+      '<label for="s">Start date</label><nx-date-picker id="s"></nx-date-picker><label for="m">Billing month</label><nx-date-picker id="m" granularity="month"></nx-date-picker>';
+    await Promise.resolve();
+    const [start, month] = Array.from(document.querySelectorAll('nx-date-picker'));
+    expect(openButton(start!)).toHaveAttribute('aria-label', 'Pick a date, Start date');
+    expect(openButton(month!)).toHaveAttribute('aria-label', 'Pick a month, Billing month');
+    start!.setAttribute('aria-label', 'First day');
+    expect(openButton(start!)).toHaveAttribute('aria-label', 'Pick a date, First day');
   });
 
   it('closes on a press outside the dialog box', () => {
