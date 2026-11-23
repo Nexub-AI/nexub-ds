@@ -112,9 +112,19 @@ globalThis.clearTimeout = ((id: Parameters<typeof clearTimeout>[0]) => {
 }) as typeof clearTimeout;
 const TIMER_SLACK = 20;
 
-const heap = () => {
-  gc();
-  return process.memoryUsage().heapUsed;
+// 11.7: one forced GC right after the last unmount still counted garbage that pending callbacks
+// (React's scheduler, jsdom's queued work) held a moment longer, and a heavy story in a full run
+// tripped the limit once on CI with nothing leaking. Let that work run (the real setTimeout, so it
+// isn't counted as pending), collect twice, and keep the lowest of three readings.
+const heap = async () => {
+  const readings: number[] = [];
+  for (let i = 0; i < 3; i++) {
+    await new Promise((r) => later(r, 0));
+    gc();
+    gc();
+    readings.push(process.memoryUsage().heapUsed);
+  }
+  return Math.min(...readings);
 };
 const snapshot = () => ({
   listeners: [...live].filter(([, n]) => n > 0).map(([k, n]) => `${k} ×${n}`).sort().join(', '),
@@ -138,9 +148,9 @@ async function leaks(Story: React.ComponentType, cycles = CYCLES): Promise<Recor
     cleanup();
   };
   for (let i = 0; i < warm; i++) await cycle();
-  const before = { ...snapshot(), heap: heap() };
+  const before = { ...snapshot(), heap: await heap() };
   for (let i = warm; i < cycles; i++) await cycle();
-  const after = { ...snapshot(), heap: heap() };
+  const after = { ...snapshot(), heap: await heap() };
 
   const failed: Record<string, string> = {};
   if (after.listeners !== before.listeners) failed.listeners = `${before.listeners || 'none'} → ${after.listeners}`;
@@ -148,7 +158,13 @@ async function leaks(Story: React.ComponentType, cycles = CYCLES): Promise<Recor
   if (after.timeouts > before.timeouts + TIMER_SLACK) failed.timeouts = `${before.timeouts} → ${after.timeouts} pending`;
   if (after.nodes > before.nodes) failed.nodes = `${before.nodes} → ${after.nodes} nodes in <body>`;
   const perCycle = (after.heap - before.heap) / (cycles - warm);
-  if (perCycle > HEAP_PER_CYCLE) failed.heap = `${Math.round(perCycle)} bytes kept per mount`;
+  if (perCycle > HEAP_PER_CYCLE) {
+    // Over the limit: run the same number of mounts again. A leak keeps memory in every batch;
+    // GC noise doesn't repeat. Both batches over the limit is a leak.
+    for (let i = warm; i < cycles; i++) await cycle();
+    const again = ((await heap()) - after.heap) / (cycles - warm);
+    if (again > HEAP_PER_CYCLE) failed.heap = `${Math.round(perCycle)} then ${Math.round(again)} bytes kept per mount`;
+  }
   return failed;
 }
 

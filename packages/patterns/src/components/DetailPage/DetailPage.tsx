@@ -16,7 +16,12 @@ import {
 } from '@nexub/react';
 import { ArrowLeft } from '@nexub/icons';
 import { ErrorSummary } from '../ErrorSummary/index.js';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { detailMessages } from '../PageFrame/messages/detail.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...detailMessages };
 
 export interface DetailField {
   /** The form field name in edit mode. */
@@ -87,7 +92,7 @@ export const DetailPage = React.forwardRef<HTMLElement, DetailPageProps>(functio
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const t = useNexubMessages();
   const [editingState, setEditingState] = React.useState(defaultEditing);
   const editing = editingProp ?? editingState;

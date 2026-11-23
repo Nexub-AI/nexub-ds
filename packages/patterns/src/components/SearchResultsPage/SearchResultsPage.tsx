@@ -1,6 +1,11 @@
 import * as React from 'react';
 import { Badge, Button, EmptyStatePreset, Pagination, SearchInput, SkeletonPreset, Tabs, safeHref, useNexubMessages } from '@nexub/react';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { searchMessages } from '../PageFrame/messages/search.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...searchMessages };
 
 export interface SearchResult {
   id: string;
@@ -106,7 +111,7 @@ export const SearchResultsPage = React.forwardRef<HTMLElement, SearchResultsPage
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const t = useNexubMessages();
   const total = totalProp ?? results.length;
   const text = (s: string) => (highlight ? mark(s, query) : s);

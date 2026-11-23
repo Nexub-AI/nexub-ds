@@ -1,4 +1,5 @@
 export { defaultMessages, directionOf } from './messages.js';
+export { dateFieldMessages } from './date-messages.js';
 export type { NexubMessages, Direction } from './messages.js';
 export { moneyFormatter, fractionDigits, currencySymbol, formatForEditing, formatForDisplay, parseMoney } from './money.js';
 export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS, accentAttrs } from './types.js';

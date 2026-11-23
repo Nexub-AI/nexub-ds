@@ -6,12 +6,17 @@ import type { NotificationCenterItem } from '../NotificationCenter/index.js';
 import {
   PageFrame,
   groupByDay,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
   type PageTemplateMessages,
   type Transaction,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { notificationsMessages } from '../PageFrame/messages/notifications.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...notificationsMessages };
 
 /** NotificationCenter's item, plus the `date` the page groups by. */
 export interface NotificationsPageItem extends NotificationCenterItem {
@@ -89,7 +94,7 @@ export const NotificationsPage = React.forwardRef<HTMLElement, NotificationsPage
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const t = useNexubMessages();
   const locale = useTemplateLocale();
   const unread = notifications.filter((n) => !n.read).length;

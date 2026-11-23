@@ -2,7 +2,12 @@ import * as React from 'react';
 import { Alert, Button, Checkbox, Form, FormField, Input, PasswordInput, PhoneInput, Progress, useForm, type FormErrorItem, type PhoneInputProps } from '@nexub/react';
 import { AuthCard } from '../AuthCard/index.js';
 import { ErrorSummary, type ErrorSummaryItem } from '../ErrorSummary/index.js';
-import { usePageMessages, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { usePageStrings, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { signUpMessages } from '../PageFrame/messages/signUp.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...signUpMessages };
 
 export interface SignUpValues {
   name: string;
@@ -91,7 +96,7 @@ export const SignUpPage = React.forwardRef<HTMLElement, SignUpPageProps>(functio
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const uid = React.useId();
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');

@@ -1,3 +1,5 @@
+import { dateFieldMessages } from './date-messages.js';
+
 // Every user-facing default string, shared by @nexub/react and @nexub/react-native.
 // Explicit component props still win; providers merge partial overrides on top.
 
@@ -365,6 +367,30 @@ export interface NexubMessages {
   deleteViewConfirm: (name: string) => string;
   deleteViewDescription: string;
   deleteLabel: string;
+  /**
+   * 11.7: @nexub/diagram (DiagramCanvas). Optional: the English defaults live in @nexub/diagram,
+   * so apps without the canvas don't ship them. Set them here to translate the canvas with the
+   * rest of the app; its `labels` prop still wins.
+   */
+  diagramShowAsList?: string;
+  diagramConnectsTo?: string;
+  diagramConnectedFrom?: string;
+  diagramNoConnections?: string;
+  diagramConnectTo?: (title: string) => string;
+  diagramNoTargets?: string;
+  diagramNodeHint?: string;
+  diagramNodeHintReadOnly?: string;
+  diagramConnected?: (source: string, target: string) => string;
+  diagramMoved?: (title: string, x: number, y: number) => string;
+  diagramDeleted?: (count: number) => string;
+  diagramToneGood?: string;
+  diagramToneWarning?: string;
+  diagramToneDanger?: string;
+  diagramControls?: string;
+  diagramZoomIn?: string;
+  diagramZoomOut?: string;
+  diagramFitView?: string;
+  diagramMinimap?: string;
 }
 
 export const defaultMessages: NexubMessages = {
@@ -403,19 +429,19 @@ export const defaultMessages: NexubMessages = {
   searchPlaceholder: 'Search…',
   selectPlaceholder: 'Select…',
   noResults: 'No results found.',
-  pickDate: 'Pick a date',
+  pickDate: dateFieldMessages.pickDate,
   pickDateRange: 'Pick a date range',
-  previousMonth: 'Go to previous month',
-  nextMonth: 'Go to next month',
+  previousMonth: dateFieldMessages.previousMonth,
+  nextMonth: dateFieldMessages.nextMonth,
   calendarNavigation: 'Calendar navigation',
-  pickMonth: 'Pick a month',
-  pickYear: 'Pick a year',
-  previousYear: 'Go to previous year',
-  nextYear: 'Go to next year',
-  previousYears: 'Go to previous years',
-  nextYears: 'Go to next years',
-  todayDate: (date) => `Today, ${date}`,
-  selectedDate: (label) => `${label}, selected`,
+  pickMonth: dateFieldMessages.pickMonth,
+  pickYear: dateFieldMessages.pickYear,
+  previousYear: dateFieldMessages.previousYear,
+  nextYear: dateFieldMessages.nextYear,
+  previousYears: dateFieldMessages.previousYears,
+  nextYears: dateFieldMessages.nextYears,
+  todayDate: dateFieldMessages.todayDate,
+  selectedDate: dateFieldMessages.selectedDate,
   commandPalette: 'Command palette',
   notifications: 'Notifications ({hotkey})',
   undo: 'Undo',

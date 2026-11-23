@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { Alert, Button, Progress, Stepper, SuccessCheck } from '@nexub/react';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 import { useWizard, type WizardCheck } from './useWizard.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { onboardingMessages } from '../PageFrame/messages/onboarding.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...onboardingMessages };
 
 export interface OnboardingStepContext {
   index: number;
@@ -73,7 +78,7 @@ export const OnboardingPage = React.forwardRef<HTMLElement, OnboardingPageProps>
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const total = steps.length;
   const wizard = useWizard({
     count: total,

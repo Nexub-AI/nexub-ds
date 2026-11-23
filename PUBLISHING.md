@@ -157,13 +157,15 @@ Follow this list every time a version is done. It covers each hop, the post-rele
 - Merge only when the PR's CI is green. Never merge red. Repo auto-merge is off, so you merge each hop by hand: `gh pr merge <n> --merge`.
 - Watch CI yourself, don't wait for someone to ping you: `gh pr checks <n> --watch --fail-fast`, or `gh run watch <run-id> --exit-status` for a workflow run.
 - A changed PR base does not start CI. Push a commit (for example, merge the base in) to start it.
+- **No rerun to green (11.7).** A check that fails and then passes on a retry or a rerun is a flake, not a pass. CI's *Flake issue* job opens an issue labelled `flake` for it (or comments on the open one). Find the cause and fix it; don't rerun until it passes and move on.
+- **Soak (11.7).** A version stays on `staging` for at least 48 hours, with the Resilience and soak workflows green and no flake, before it goes to `production`. Development of the next version carries on meanwhile.
 
 **1. Promote**
 
 - [ ] **feature → `development`**: changeset included, full CI green (build, typecheck, lint, test, visual, Lighthouse, release rehearsal). Merge.
 - [ ] **Mobile (Maestro) on `development`**: runs after the merge, about an hour. It must pass for the commit you are promoting. If the PR adds native previews or changes the native look (tokens, React Native theme defaults), dispatch the Mobile workflow on the branch *before* merging.
 - [ ] **`development` → `staging`**: build, typecheck and lint run (visual and Lighthouse already passed on `development`). Merge, then watch `staging.yml` deploy the staging docs.
-- [ ] **`staging` → `production`**: confirm the Mobile run from the step above is green. Merge. `release.yml` opens the **Version Packages** PR.
+- [ ] **`staging` → `production`**: confirm the Mobile run from the step above is green, and the PR's **Release gate** check: no open `flake` issue (the owner can label one `waived`), and the staging head is at least 48 hours old (the owner can add `soak-waived` to the PR, for a hotfix). Merge. `release.yml` opens the **Version Packages** PR.
 - [ ] **Version Packages PR**: CI green (it rehearses the publish). Merge. Watch `release.yml` until `publish`, `verify-published` and `deploy-docs` pass.
 - [ ] **Check npm**: `curl -sH 'Cache-Control: no-cache' https://registry.npmjs.org/@nexub/react | jq -r '."dist-tags".latest'` shows the new version. The registry can lag a few minutes.
 - [ ] **Back-merge PR** (`chore(release): back-merge vX into development`): CI green, merge. Do this before the next promotion.
