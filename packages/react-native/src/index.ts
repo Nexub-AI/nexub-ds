@@ -178,6 +178,8 @@ export type {
   CoachmarkProps,
   FABProps,
   DateTimeFieldProps,
+  DateMatcher,
+  DateTimeFieldChangeHandler,
 } from './components/mobile';
 
 export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
