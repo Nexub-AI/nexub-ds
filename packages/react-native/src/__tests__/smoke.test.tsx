@@ -146,6 +146,10 @@ const CASES: Record<string, Case> = {
   MultiSelect: { props: { label: 'Labels', placeholder: 'Choose', options: [{ value: 'a', label: 'A' }] }, a11y: ['button', 'Labels, Choose'] },
   DataList: { props: { data: [{ id: 'a' }], keyExtractor: (x: { id: string }) => x.id, title: (x: { id: string }) => x.id } },
   FileList: { props: { files: [{ id: '1', name: 'scan.pdf', progress: 100 }], onRemove: noop }, a11y: ['button', 'Remove scan.pdf'] },
+  // 11.8
+  ComboboxField: { props: { label: 'Assignee', options: [{ value: 'a', label: 'Ana' }], defaultValue: 'a' }, a11y: ['button', 'Assignee, Ana'] },
+  FileUpload: { props: { pickFiles: async () => [], defaultFiles: [{ uri: 'file:///a.pdf', name: 'a.pdf', size: 10 }] }, a11y: ['button', 'Upload files'] },
+  PromptDialog: { props: { open: true, onOpenChange: noop, title: 'Rename', label: 'Name' }, a11y: ['button', 'Continue'] },
   FilterSheet: {
     props: { open: true, onOpenChange: noop, fields: [{ id: 'n', label: 'Name', type: 'text' }], value: { id: 'r', combinator: 'and', rules: [] }, onValueChange: noop },
     a11y: ['button', 'Add filter'],
