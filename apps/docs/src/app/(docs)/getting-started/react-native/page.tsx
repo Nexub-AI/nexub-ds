@@ -6,6 +6,7 @@ import { CardGrid, DocTable, Guidance, Note, PageIntro, Prose, Section } from '@
 import { componentEntries, patternEntries } from '@/registry/index';
 import { mobileOnly, nativePatternTwins, nativeTwins } from '@/registry/native';
 import parity from '@/registry/parity.generated.json';
+import { essentialAreas, nativeEssentials } from '@/registry/native-essentials';
 import { PhoneFrame } from '@/components/platform/PhoneFrame';
 
 export const dynamic = 'force-static';
@@ -87,6 +88,26 @@ export default function RootLayout() {
           <code>product</code> picks the brand (Leap, Bookub, Payub, Founderub); <code>seed</code> white-labels any other.
           Light/dark, contrast, Reduce Motion and Reduce Transparency follow the OS unless you set them.
         </Prose>
+      </Section>
+
+      <Section
+        id="essentials"
+        title="Native essentials"
+        description={`The ${nativeEssentials.length} components phone screens are built from. @nexub/react-native aims at this list, not at every web component: a web component outside it says on its Mobile tab what to use on phones instead.`}
+      >
+        <DocTable
+          caption="The native essentials list"
+          head={['Area', 'Components']}
+          rows={essentialAreas.map((area) => [
+            area,
+            <span key="n" className="font-mono text-body-sm">
+              {nativeEssentials
+                .filter((x) => x.area === area)
+                .map((x) => (x.since ? `${x.name} (new in ${x.since})` : x.name))
+                .join(', ')}
+            </span>,
+          ])}
+        />
       </Section>
 
       <Section
