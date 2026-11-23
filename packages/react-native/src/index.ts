@@ -58,6 +58,7 @@ export type {
   IconButtonProps,
   ButtonGroupProps,
   LinkProps,
+  ButtonStatus,
 } from './components/actions';
 export { Amount, Badge, Avatar, AvatarGroup, Divider } from './components/display';
 export type {
@@ -184,7 +185,7 @@ export type {
 
 export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
 export { TreeList, StepProgress, SortableList, InlineEdit } from './components/workflow';
-export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps } from './components/workflow';
+export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps, InlineEditSize } from './components/workflow';
 /**
  * `StepIndicator` is `StepProgress` under the name RFC #302 asks for: the twin
  * of web `Stepper`. On native, `Stepper` is the − / + number control.
