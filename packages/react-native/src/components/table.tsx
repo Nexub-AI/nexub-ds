@@ -15,6 +15,8 @@ type Section = 'header' | 'body' | 'footer';
 
 interface TableContext {
   part: Part;
+  /** The sections this pass draws (all when unset): a sticky header is drawn apart from the body. */
+  only?: readonly Section[];
   sticky: boolean;
   compact: boolean;
   striped: boolean;
@@ -62,6 +64,12 @@ export interface TableRootProps extends ViewProps {
   striped?: boolean;
   /** Draws a heavier line under the body row at this index (the cut in a ranked list). */
   dividerAfter?: number;
+  /** Caps the table's height in points; the rows scroll inside it (the caption stays below). */
+  maxHeight?: number;
+  /** Keeps the header row in view while the body scrolls. Set `maxHeight` so there is something to scroll. */
+  stickyHeader?: boolean;
+  /** Names the table's scroll region for screen readers, e.g. "Invoices, scrollable". */
+  scrollLabel?: string;
 }
 
 function Root({
@@ -70,6 +78,9 @@ function Root({
   density = 'comfortable',
   striped = false,
   dividerAfter,
+  maxHeight,
+  stickyHeader = false,
+  scrollLabel,
   children,
   style,
   ...rest
@@ -81,31 +92,70 @@ function Root({
     [],
   );
   const base = { sticky: stickyFirstColumn, compact: density === 'compact', striped, dividerAfter, widths: columns, headers, setHeaders };
-  const pass = (part: Part) => <Ctx.Provider value={{ ...base, part }}>{children}</Ctx.Provider>;
-  const scroller = (part: Part) => (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ minWidth: '100%' }}
-    >
-      <View style={{ flex: 1 }}>{pass(part)}</View>
-    </ScrollView>
+  const pass = (part: Part, only?: readonly Section[]) => (
+    <Ctx.Provider value={{ ...base, part, only }}>{children}</Ctx.Provider>
   );
+  const vertical = maxHeight != null;
+  // A sticky header is drawn apart from the body, and its sideways scroll follows the body's.
+  const apart = vertical && stickyHeader;
+  const headScroll = React.useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const followBody = (x: number) => headScroll.current?.scrollTo({ x, animated: false });
+
+  const grid = (only?: readonly Section[]) => {
+    const head = only?.includes('header');
+    const scroller = (part: Part) => (
+      <ScrollView
+        ref={head ? headScroll : undefined}
+        horizontal
+        scrollEnabled={!head}
+        showsHorizontalScrollIndicator={false}
+        accessibilityLabel={vertical || head ? undefined : scrollLabel}
+        onScroll={apart && !head ? (e) => followBody(e.nativeEvent.contentOffset.x) : undefined}
+        scrollEventThrottle={apart && !head ? 16 : undefined}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ minWidth: '100%' }}
+      >
+        <View style={{ flex: 1 }}>{pass(part, only)}</View>
+      </ScrollView>
+    );
+    return stickyFirstColumn ? (
+      <View style={{ flexDirection: 'row' }}>
+        <View
+          testID={head ? undefined : 'table-sticky-column'}
+          style={{ borderEndWidth: tokens.spacing.px, borderEndColor: roles['outline-variant'] }}
+        >
+          {pass('first', only)}
+        </View>
+        {scroller('rest')}
+      </View>
+    ) : (
+      scroller('all')
+    );
+  };
+
   return (
     <View style={style} {...rest}>
-      {stickyFirstColumn ? (
-        <View style={{ flexDirection: 'row' }}>
-          <View
-            testID="table-sticky-column"
-            style={{ borderEndWidth: tokens.spacing.px, borderEndColor: roles['outline-variant'] }}
-          >
-            {pass('first')}
-          </View>
-          {scroller('rest')}
-        </View>
+      {vertical ? (
+        <ScrollView
+          testID="table-scroll"
+          accessibilityLabel={scrollLabel}
+          style={{ maxHeight }}
+          stickyHeaderIndices={apart ? [0] : undefined}
+          nestedScrollEnabled
+        >
+          {apart ? (
+            [
+              <View key="head" style={{ backgroundColor: roles.surface }}>
+                {grid(['header'])}
+              </View>,
+              <View key="body">{grid(['body', 'footer'])}</View>,
+            ]
+          ) : (
+            grid()
+          )}
+        </ScrollView>
       ) : (
-        scroller('all')
+        grid()
       )}
       {pass('caption')}
     </View>
@@ -115,8 +165,8 @@ function Root({
 function section(name: Section) {
   function TableSection({ children, style, ...rest }: ViewProps) {
     const { roles, tokens } = useTheme();
-    const { part } = useTable();
-    if (part === 'caption') return null;
+    const { part, only } = useTable();
+    if (part === 'caption' || (only && !only.includes(name))) return null;
     const rows = React.Children.toArray(children);
     return (
       <SectionCtx.Provider value={name}>
