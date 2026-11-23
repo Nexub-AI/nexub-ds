@@ -18,18 +18,16 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { currencySymbol, fractionDigits, parseMoney } from '@nexub/core';
-import { Calendar, Delete, Eye, EyeOff, type NativeIconProps } from '@nexub/icons/native';
+import { Delete, Eye, EyeOff, type NativeIconProps } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
-import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { fontStyle } from '../theme/fonts';
 import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
 import { nxExit, nxLayout, nxSpring, useSpringValue } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { Banner } from './feedback';
-import { BottomSheet } from './overlays';
-import { MIN_TARGET } from './shared';
+import { MIN_TARGET, disabledOpacity } from './shared';
 
 // ─── SwipeableRow ────────────────────────────────────────────────────────────
 
@@ -313,17 +311,31 @@ export interface OTPInputProps {
   /** @default 6 */
   length?: number;
   value?: string;
+  /** 11.8: the starting code of an uncontrolled field. */
+  defaultValue?: string;
   onValueChange?: (code: string) => void;
   /** Called once all digits are entered. */
   onComplete?: (code: string) => void;
   /** Dots instead of digits (PIN). Turns off one-time-code autofill. */
   secure?: boolean;
+  /** Error message under the boxes: red outline, announced, read as the field's hint. */
   error?: string;
+  /** 11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too. */
+  invalid?: boolean;
+  /** 11.8: dimmed, takes no input, and read as disabled. */
+  disabled?: boolean;
+  /** 11.8: shows the code but takes no input. Still focusable. */
+  readOnly?: boolean;
+  /** 11.8: box size, as web: `sm` 44pt tall, `md` 52pt, `lg` 56pt (backup: the md, lg and xl field heights). @default 'md' */
+  size?: 'sm' | 'md' | 'lg';
+  /** 11.8: field name, set as the input's `nativeID` so a form library or a test can find it (native has no form submission). */
+  name?: string;
   autoFocus?: boolean;
   style?: StyleProp<ViewStyle>;
   /**
    * 11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to
-   * 12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web.
+   * 12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web. 11.8:
+   * the keyboard is a plain-letters one in capitals, with no suggestions.
    */
   mode?: 'numeric' | 'backup';
 }
@@ -338,19 +350,53 @@ export function OTPInput(props: OTPInputProps) {
 
 const group4 = (v: string) => (v.match(/.{1,4}/g) ?? []).join('-');
 
-function BackupCodeInput({ label, length = 12, value, onValueChange, onComplete, error, autoFocus, style }: OTPInputProps) {
-  const { roles, tokens, fonts } = useTheme();
+// Boxes: sm 32 × 44 (the touch minimum), md 44 × 52 (as before 11.8), lg 48 × 56 (as web lg).
+const otpBox = (control: Record<'sm' | 'lg' | 'xl', number>, size: NonNullable<OTPInputProps['size']>) =>
+  size === 'sm'
+    ? { width: control.sm, height: MIN_TARGET, variant: 'title-md' as const }
+    : size === 'lg'
+      ? { width: control.lg, height: control.xl, variant: 'headline-sm' as const }
+      : { width: MIN_TARGET, height: 52, variant: 'title-lg' as const };
+const BACKUP_HEIGHT = { sm: 'md', md: 'lg', lg: 'xl' } as const;
+const BACKUP_TYPE = { sm: 'body-lg', md: 'title-md', lg: 'title-lg' } as const;
+
+function BackupCodeInput({
+  label,
+  length = 12,
+  value,
+  defaultValue,
+  onValueChange,
+  onComplete,
+  error,
+  invalid = false,
+  disabled = false,
+  readOnly = false,
+  size = 'md',
+  name,
+  autoFocus,
+  style,
+}: OTPInputProps) {
+  const theme = useTheme();
+  const { roles, tokens, fonts } = theme;
   const [focused, setFocused] = React.useState(false);
-  const [code, setCode] = useControllableState({ value, defaultValue: '', onChange: onValueChange });
+  const [code, setCode] = useControllableState({ value, defaultValue: defaultValue ?? '', onChange: onValueChange });
+  const bad = invalid || !!error;
+  const ring = focused && !readOnly;
   return (
-    <View style={[{ gap: tokens.spacing[2] }, style]}>
+    <View style={[{ gap: tokens.spacing[2], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       <TextInput
+        nativeID={name}
         accessibilityLabel={label}
         accessibilityHint={error}
+        accessibilityState={{ disabled }}
+        aria-invalid={bad}
+        editable={!disabled}
+        readOnly={readOnly}
         value={group4(code)}
         placeholder={group4('x'.repeat(length))}
         placeholderTextColor={roles['on-surface-muted']}
         onChangeText={(t) => {
+          if (readOnly || disabled) return;
           const next = (t.match(/[a-z0-9]/gi) ?? []).join('').slice(0, length);
           setCode(next);
           if (next.length === length && next !== code) onComplete?.(next);
@@ -358,21 +404,23 @@ function BackupCodeInput({ label, length = 12, value, onValueChange, onComplete,
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         autoFocus={autoFocus}
-        autoCapitalize="none"
+        // Letters and digits in capitals, no suggestions (Android's visible-password keyboard has none).
+        autoCapitalize="characters"
+        keyboardType={Platform.OS === 'android' ? 'visible-password' : 'ascii-capable'}
         autoCorrect={false}
         spellCheck={false}
         textContentType="oneTimeCode"
         autoComplete="sms-otp"
         style={{
-          height: tokens.size.control.lg,
+          height: tokens.size.control[BACKUP_HEIGHT[size]],
           paddingHorizontal: tokens.spacing[3],
           borderRadius: tokens.shape.field,
-          borderWidth: focused || error ? 2 : 1,
-          borderColor: error ? roles.error : focused ? roles.primary : roles.outline,
-          backgroundColor: roles['surface-container-lowest'],
+          borderWidth: ring || bad ? 2 : 1,
+          borderColor: bad ? roles.error : ring ? roles.primary : roles.outline,
+          backgroundColor: readOnly ? roles['surface-container-low'] : roles['surface-container-lowest'],
           color: roles['on-surface'],
           textAlign: 'center',
-          fontSize: tokens.type['title-md'].size,
+          fontSize: tokens.type[BACKUP_TYPE[size]].size,
           ...fontStyle('mono', 400, fonts),
         }}
       />
@@ -389,25 +437,35 @@ function CodeBoxes({
   label,
   length = 6,
   value,
+  defaultValue,
   onValueChange,
   onComplete,
   secure,
   error,
+  invalid = false,
+  disabled = false,
+  readOnly = false,
+  size = 'md',
+  name,
   autoFocus,
   style,
 }: OTPInputProps) {
-  const { roles, tokens, fonts } = useTheme();
+  const theme = useTheme();
+  const { roles, tokens, fonts } = theme;
   const ref = React.useRef<React.ComponentRef<typeof TextInput>>(null);
   const [focused, setFocused] = React.useState(false);
   const [code, setCode] = useControllableState({
     value,
-    defaultValue: '',
+    defaultValue: defaultValue ?? '',
     onChange: onValueChange,
   });
+  const bad = invalid || !!error;
+  const box = otpBox(tokens.size.control, size);
   return (
-    <View style={[{ gap: tokens.spacing[2] }, style]}>
+    <View style={[{ gap: tokens.spacing[2], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       <Pressable
         onPress={() => ref.current?.focus()}
+        disabled={disabled}
         stateLayer={false}
         pressScale={false}
         accessible={false}
@@ -415,22 +473,22 @@ function CodeBoxes({
       >
         {Array.from({ length }, (_, i) => {
           const ch = code[i];
-          const active = focused && i === Math.min(code.length, length - 1);
+          const active = focused && !readOnly && i === Math.min(code.length, length - 1);
           return (
             <View
               key={i}
               style={{
-                width: MIN_TARGET,
-                height: 52,
+                width: box.width,
+                height: box.height,
                 borderRadius: tokens.shape.field,
-                borderWidth: active || error ? 2 : 1,
-                borderColor: error ? roles.error : active ? roles.primary : roles.outline,
-                backgroundColor: roles['surface-container-lowest'],
+                borderWidth: active || bad ? 2 : 1,
+                borderColor: bad ? roles.error : active ? roles.primary : roles.outline,
+                backgroundColor: readOnly ? roles['surface-container-low'] : roles['surface-container-lowest'],
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Text variant="title-lg" tabular>
+              <Text variant={box.variant} tabular>
                 {ch ? (secure ? '•' : ch) : ''}
               </Text>
             </View>
@@ -439,10 +497,16 @@ function CodeBoxes({
       </Pressable>
       <TextInput
         ref={ref}
+        nativeID={name}
         accessibilityLabel={label}
         accessibilityHint={error}
+        accessibilityState={{ disabled }}
+        aria-invalid={bad}
+        editable={!disabled}
+        readOnly={readOnly}
         value={code}
         onChangeText={(t) => {
+          if (readOnly || disabled) return;
           const next = t.replace(/\D/g, '').slice(0, length);
           setCode(next);
           if (next.length === length) onComplete?.(next);
@@ -853,114 +917,7 @@ export function FAB({
 }
 
 // ─── DateTimeField ───────────────────────────────────────────────────────────
+// 11.8: lives in ./datetime (month / year grid, presets, time zones); re-exported here.
 
-let Picker: typeof import('@react-native-community/datetimepicker') | undefined;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports -- optional peer, must not fail when absent
-  Picker = require('@react-native-community/datetimepicker');
-} catch {
-  Picker = undefined;
-}
-
-export interface DateTimeFieldProps {
-  label: string;
-  value: Date | null;
-  onValueChange: (value: Date) => void;
-  /** @default 'date' */
-  mode?: 'date' | 'time';
-  /** Earliest date the picker allows. */
-  minDate?: Date;
-  /** Latest date the picker allows. */
-  maxDate?: Date;
-  placeholder?: string;
-  style?: StyleProp<ViewStyle>;
-}
-
-/**
- * A field that opens the platform picker (Android dialog, iOS inline calendar
- * in a sheet). Needs @react-native-community/datetimepicker.
- */
-export function DateTimeField({
-  label,
-  value,
-  onValueChange,
-  mode = 'date',
-  minDate,
-  maxDate,
-  placeholder,
-  style,
-}: DateTimeFieldProps) {
-  const theme = useTheme();
-  const { roles, tokens, messages, locale } = theme;
-  const [open, setOpen] = React.useState(false);
-  if (!Picker)
-    throw new Error(
-      '@nexub/react-native: DateTimeField needs @react-native-community/datetimepicker (npx expo install @react-native-community/datetimepicker).',
-    );
-  const { default: RNDateTimePicker, DateTimePickerAndroid } = Picker;
-  const text = value
-    ? new Intl.DateTimeFormat(
-        locale,
-        mode === 'date' ? { dateStyle: 'medium' } : { timeStyle: 'short' },
-      ).format(value)
-    : (placeholder ?? messages.pickDate);
-  const show = () => {
-    if (Platform.OS === 'android') {
-      DateTimePickerAndroid.open({
-        value: value ?? new Date(),
-        mode,
-        minimumDate: minDate,
-        maximumDate: maxDate,
-        onChange: (e, d) => e.type === 'set' && d && onValueChange(d),
-      });
-    } else setOpen(true);
-  };
-  return (
-    <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
-      <Text variant="label-lg" color="on-surface-variant" importantForAccessibility="no">
-        {label}
-      </Text>
-      <Pressable
-        accessibilityLabel={`${label}, ${text}`}
-        onPress={show}
-        pressScale={false}
-        style={{
-          minHeight: tokens.size.control.lg,
-          paddingHorizontal: tokens.spacing['3-5'],
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: tokens.spacing[2],
-          borderRadius: tokens.shape.field,
-          borderWidth: 1,
-          borderColor: roles.outline,
-          backgroundColor: roles['surface-container-lowest'],
-        }}
-      >
-        <Calendar size="sm" color={roles['on-surface-variant']} />
-        <Text variant="body-lg" color={value ? 'on-surface' : 'on-surface-muted'}>
-          {text}
-        </Text>
-      </Pressable>
-      {Platform.OS === 'ios' && (
-        <BottomSheet open={open} onOpenChange={setOpen} title={label}>
-          <Surface tone="surface-elevated">
-            <RNDateTimePicker
-              value={value ?? new Date()}
-              mode={mode}
-              display={mode === 'date' ? 'inline' : 'spinner'}
-              minimumDate={minDate}
-              maximumDate={maxDate}
-              accentColor={roles.primary}
-              themeVariant={theme.scheme}
-              locale={locale}
-              onChange={(_, d) => d && onValueChange(d)}
-            />
-          </Surface>
-          <Button size="lg" fullWidth onPress={() => setOpen(false)}>
-            {messages.close}
-          </Button>
-        </BottomSheet>
-      )}
-    </View>
-  );
-}
+export { DateTimeField } from './datetime';
+export type { DateTimeFieldProps, DateMatcher, DateTimeFieldChangeHandler } from './datetime';
