@@ -14,11 +14,13 @@
       "variant"
     ],
     "webOnly": [
-      "asChild",
       "errorLabel",
-      "magnetic",
       "status",
       "successLabel"
+    ],
+    "onPurpose": [
+      "asChild",
+      "magnetic"
     ],
     "nativeOnly": []
   },
@@ -31,8 +33,10 @@
       "variant"
     ],
     "webOnly": [
+      "loading"
+    ],
+    "onPurpose": [
       "asChild",
-      "loading",
       "tooltip"
     ],
     "nativeOnly": [
@@ -52,6 +56,7 @@
     "webOnly": [
       "attached"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "link": {
@@ -61,9 +66,11 @@
       "children"
     ],
     "webOnly": [
-      "asChild",
       "external",
       "variant"
+    ],
+    "onPurpose": [
+      "asChild"
     ],
     "nativeOnly": []
   },
@@ -80,6 +87,7 @@
       "value"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "badge": {
@@ -97,6 +105,7 @@
       "variant"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "avatar": {
@@ -114,6 +123,7 @@
       "badgeColor",
       "fallback"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "avatar-group": {
@@ -127,6 +137,7 @@
     "webOnly": [
       "spacing"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "icon-chip": {
@@ -139,6 +150,7 @@
       "size"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "number-ticker": {
@@ -150,8 +162,10 @@
       "value"
     ],
     "webOnly": [
-      "aria-live",
       "countOnView"
+    ],
+    "onPurpose": [
+      "aria-live"
     ],
     "nativeOnly": [
       "animate",
@@ -169,6 +183,7 @@
     "webOnly": [
       "tone"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "inset"
     ]
@@ -179,11 +194,13 @@
     "shared": [],
     "webOnly": [
       "accent",
-      "asChild",
-      "effect",
       "surface",
       "tone",
       "variant"
+    ],
+    "onPurpose": [
+      "asChild",
+      "effect"
     ],
     "nativeOnly": [
       "onPress"
@@ -194,6 +211,7 @@
     "native": "Accordion",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "children",
       "defaultExpanded",
@@ -219,6 +237,7 @@
       "trailingAddon",
       "trailingIcon"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "error",
       "helperText",
@@ -238,6 +257,7 @@
       "name",
       "required"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "clearable",
       "error",
@@ -267,6 +287,7 @@
       "trailingAddon",
       "visible"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "search-input": {
@@ -283,6 +304,7 @@
       "size",
       "trailingAddon"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label"
     ]
@@ -307,6 +329,7 @@
       "trailingAddon",
       "trailingIcon"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "number-input": {
@@ -328,6 +351,7 @@
       "showSteppers",
       "size"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label"
     ]
@@ -346,6 +370,7 @@
       "readOnly",
       "size"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "description",
       "label"
@@ -356,6 +381,7 @@
     "native": "RadioGroup",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "children",
       "defaultValue",
@@ -382,6 +408,7 @@
       "size",
       "uncheckedIcon"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label"
     ]
@@ -397,6 +424,7 @@
     "webOnly": [
       "size"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label",
       "options"
@@ -422,8 +450,10 @@
       "onInputChange",
       "onSearch",
       "readOnly",
-      "sheet",
       "size"
+    ],
+    "onPurpose": [
+      "sheet"
     ],
     "nativeOnly": [
       "error",
@@ -437,6 +467,7 @@
     "native": "Tabs",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "defaultValue",
       "onValueChange",
@@ -455,6 +486,7 @@
       "scrollLabel",
       "stickyHeader"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "columns",
       "dividerAfter",
@@ -473,6 +505,7 @@
       "value"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "label"
     ]
@@ -482,6 +515,7 @@
     "native": "Tooltip",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "children",
       "delayDuration",
@@ -502,20 +536,12 @@
     ],
     "webOnly": [
       "caption",
-      "captionHidden",
       "columnFilters",
-      "columnOrder",
-      "columnPinning",
-      "columnSizing",
-      "columnVisibility",
-      "columns",
       "defaultColumnFilters",
       "defaultDensity",
       "defaultExpanded",
       "density",
       "emptyState",
-      "enableColumnReordering",
-      "enableColumnResizing",
       "enableRowSelection",
       "enableSorting",
       "errorState",
@@ -523,17 +549,11 @@
       "getRowId",
       "getRowLabel",
       "getSubRows",
-      "grid",
       "loading",
       "manualFiltering",
       "manualPagination",
       "manualSort",
-      "maxHeight",
       "onColumnFiltersChange",
-      "onColumnOrderChange",
-      "onColumnPinningChange",
-      "onColumnSizingChange",
-      "onColumnVisibilityChange",
       "onDensityChange",
       "onExpandedChange",
       "onPageChange",
@@ -544,9 +564,25 @@
       "pagination",
       "rowCount",
       "rowSelection",
+      "toolbar"
+    ],
+    "onPurpose": [
+      "captionHidden",
+      "columnOrder",
+      "columnPinning",
+      "columnSizing",
+      "columnVisibility",
+      "columns",
+      "enableColumnReordering",
+      "enableColumnResizing",
+      "grid",
+      "maxHeight",
+      "onColumnOrderChange",
+      "onColumnPinningChange",
+      "onColumnSizingChange",
+      "onColumnVisibilityChange",
       "rowWindow",
       "selectionColumn",
-      "toolbar",
       "viewOptions"
     ],
     "nativeOnly": [
@@ -575,6 +611,7 @@
       "defaultValue",
       "maxDepth"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "onOpenChange",
       "open",
@@ -600,6 +637,7 @@
       "readOnly",
       "size"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "error",
       "label",
@@ -611,6 +649,7 @@
     "native": "Select",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "defaultValue",
       "disabled",
@@ -641,8 +680,10 @@
       "locale",
       "presets",
       "readOnly",
+      "size"
+    ],
+    "onPurpose": [
       "sheet",
-      "size",
       "typeable"
     ],
     "nativeOnly": [
@@ -671,6 +712,7 @@
       "trailingAddon",
       "trailingIcon"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label",
       "maxDate",
@@ -700,6 +742,7 @@
       "size",
       "timeZone"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "label",
       "mode"
@@ -729,6 +772,7 @@
       "onSelectedChange",
       "renderActions"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "onSelect",
       "rootTitle"
@@ -742,14 +786,16 @@
       "onReorder"
     ],
     "webOnly": [
-      "children",
       "disabled",
-      "getId",
-      "getLabel",
       "isLocked",
       "layout",
-      "list",
       "variant"
+    ],
+    "onPurpose": [
+      "children",
+      "getId",
+      "getLabel",
+      "list"
     ],
     "nativeOnly": [
       "editing",
@@ -770,6 +816,7 @@
       "onStepChange",
       "orientation"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "current"
     ]
@@ -789,6 +836,7 @@
       "maxLength",
       "size"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "qr-code": {
@@ -804,6 +852,7 @@
       "value"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "description-list": {
@@ -816,6 +865,7 @@
       "size"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "comparison-bar": {
@@ -832,6 +882,7 @@
       "valueFormat"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "phone-input": {
@@ -848,8 +899,10 @@
       "value"
     ],
     "webOnly": [
-      "sheet",
       "size"
+    ],
+    "onPurpose": [
+      "sheet"
     ],
     "nativeOnly": []
   },
@@ -869,6 +922,7 @@
       "now",
       "onExpire"
     ],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "dialog": {
@@ -876,6 +930,7 @@
     "native": "Dialog",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "actions",
       "children",
@@ -891,6 +946,7 @@
     "native": "Dialog",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "actions",
       "children",
@@ -914,29 +970,31 @@
       "activeSnapPoint",
       "autoFocus",
       "closeThreshold",
-      "container",
       "defaultOpen",
-      "direction",
-      "disablePreventScroll",
-      "fadeFromIndex",
-      "fixed",
       "handleOnly",
-      "modal",
       "nested",
-      "noBodyStyles",
       "onAnimationEnd",
       "onClose",
       "onDrag",
       "onRelease",
+      "setActiveSnapPoint",
+      "snapPoints",
+      "snapToSequentialPoint"
+    ],
+    "onPurpose": [
+      "container",
+      "direction",
+      "disablePreventScroll",
+      "fadeFromIndex",
+      "fixed",
+      "modal",
+      "noBodyStyles",
       "preventScrollRestoration",
       "repositionInputs",
       "scrollLock",
       "scrollLockTimeout",
-      "setActiveSnapPoint",
       "setBackgroundColorOnScale",
-      "shouldScaleBackground",
-      "snapPoints",
-      "snapToSequentialPoint"
+      "shouldScaleBackground"
     ],
     "nativeOnly": [
       "detents",
@@ -949,6 +1007,7 @@
     "native": "BottomSheet",
     "shared": [],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": [
       "children",
       "detents",
@@ -971,6 +1030,7 @@
       "animated",
       "shape"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "radius"
     ]
@@ -983,6 +1043,7 @@
       "steps"
     ],
     "webOnly": [],
+    "onPurpose": [],
     "nativeOnly": []
   },
   "activity-feed": {
@@ -995,6 +1056,7 @@
       "loading",
       "loadingRows"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "actions",
       "empty",
@@ -1014,10 +1076,12 @@
       "title"
     ],
     "webOnly": [
-      "children",
       "description",
       "footer",
       "logoAlign"
+    ],
+    "onPurpose": [
+      "children"
     ],
     "nativeOnly": [
       "biometricLabel",
@@ -1039,7 +1103,9 @@
     ],
     "webOnly": [
       "announce",
-      "autoScroll",
+      "autoScroll"
+    ],
+    "onPurpose": [
       "children",
       "composer",
       "maxHeight"
@@ -1055,15 +1121,17 @@
     "native": "PaywallScreen",
     "shared": [],
     "webOnly": [
-      "badge",
-      "cta",
       "ctaHref",
       "description",
-      "features",
       "highlighted",
+      "period"
+    ],
+    "onPurpose": [
+      "badge",
+      "cta",
+      "features",
       "name",
       "onSelect",
-      "period",
       "price"
     ],
     "nativeOnly": [
@@ -1081,8 +1149,10 @@
     "shared": [],
     "webOnly": [
       "actions",
+      "description"
+    ],
+    "onPurpose": [
       "children",
-      "description",
       "title"
     ],
     "nativeOnly": [
@@ -1095,10 +1165,12 @@
     "native": "NotificationsInbox",
     "shared": [],
     "webOnly": [
-      "description",
       "href",
+      "onDismiss"
+    ],
+    "onPurpose": [
+      "description",
       "icon",
-      "onDismiss",
       "onSelect",
       "read",
       "timestamp",
@@ -1135,6 +1207,7 @@
       "size",
       "tone"
     ],
+    "onPurpose": [],
     "nativeOnly": [
       "onPress"
     ]
@@ -1148,11 +1221,13 @@
     "webOnly": [
       "actions",
       "avatarFallback",
-      "avatarSrc",
       "email",
       "loading",
       "role",
       "size"
+    ],
+    "onPurpose": [
+      "avatarSrc"
     ],
     "nativeOnly": [
       "detail",
