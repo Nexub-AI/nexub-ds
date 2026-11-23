@@ -2161,6 +2161,10 @@
       },
       {
         "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
         "name": "readonly"
       },
       {
@@ -2195,6 +2199,10 @@
       },
       {
         "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
         "value": true
       },
       {
@@ -5063,6 +5071,10 @@
       },
       {
         "kind": "switch",
+        "name": "invalid"
+      },
+      {
+        "kind": "switch",
         "name": "readonly"
       },
       {
@@ -5107,6 +5119,10 @@
       },
       {
         "prop": "disabled",
+        "value": true
+      },
+      {
+        "prop": "invalid",
         "value": true
       },
       {
