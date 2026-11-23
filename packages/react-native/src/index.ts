@@ -196,6 +196,14 @@ export type {
   FileListProps,
   FilterSheetProps,
 } from './components/data';
+// 11.8: native catch-up I (fields)
+export { ComboboxField } from './components/combobox';
+export type { ComboboxFieldProps, ComboboxOption } from './components/combobox';
+export { FileUpload, fileAccepted } from './components/fileupload';
+export type { FileUploadProps, PickedFile, FileRejection } from './components/fileupload';
+export { PromptDialog, usePrompt } from './components/prompt';
+export type { PromptDialogProps, PromptOptions } from './components/prompt';
+export type { AsyncSearch } from './hooks/useAsyncSearch';
 export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
 export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
 

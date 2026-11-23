@@ -9,12 +9,13 @@ import {
   type FilterRule,
   isFilterGroup,
 } from '@nexub/core';
-import { ArrowDown, ArrowUp, ChevronsUpDown, X } from '@nexub/icons/native';
+import { ArrowDown, ArrowUp, Plus, X } from '@nexub/icons/native';
+import { useAsyncSearch } from '../hooks/useAsyncSearch';
 import { useControllableState } from '../hooks/useControllableState';
-import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
 import { Button, IconButton } from './actions';
+import { SearchStatus, SheetFieldButton, type FieldSize } from './combobox';
 import { ListItem, ListSection } from './containers';
 import { Progress } from './feedback';
 import { SearchField, SegmentedControl, TextField } from './inputs';
@@ -42,9 +43,58 @@ export interface MultiSelectProps<T extends string> {
   helperText?: string;
   error?: string;
   disabled?: boolean;
-  /** A search field above the options. @default more than 8 options */
+  /** A search field above the options. @default more than 8 options, or always with `onSearch`, `onInputChange` or `onCreate` */
   searchable?: boolean;
+  /** Shown when the search finds nothing. @default 'No results found.' */
+  emptyText?: string;
+  /** The options are loading (when you run the search yourself): shows a loading row instead of the list. */
+  loading?: boolean;
+  /** Controlled search text. */
+  inputValue?: string;
+  /** Called as the user types; options are then shown as given (no built-in filtering). */
+  onInputChange?: (text: string) => void;
+  /**
+   * Async search, called with the typed text after `searchDebounce`. Return a promise of options
+   * and the sheet shows them, with a loading row and a retry row if it rejects; an answer that
+   * arrives after a newer search started is ignored. Return nothing to set `options` and
+   * `loading` yourself, as on web. Picked values keep their labels when they drop out of the list.
+   */
+  onSearch?: (text: string) => Promise<readonly MultiSelectOption<T>[]> | void;
+  /** Milliseconds to wait after the last keystroke before `onSearch` runs. @default 300 */
+  searchDebounce?: number;
+  /** Adds a "Create “text”" row when the search text matches no option exactly; called with the trimmed text. */
+  onCreate?: (text: string) => void;
+  /** Chips shown in the field before the rest collapse into a "+N more" chip. @default 2 */
+  maxVisibleChips?: number;
+  /** Shows the chips but nothing can be added or removed; the sheet doesn't open. */
+  readOnly?: boolean;
+  /** @default 'lg' (48, the mobile field height) */
+  size?: FieldSize;
   style?: StyleProp<ViewStyle>;
+}
+
+/** A picked value in the field: a small capsule, read out as part of the field. */
+function Token({ label, leading }: { label: string; leading?: React.ReactNode }) {
+  const { roles, tokens } = useTheme();
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: tokens.spacing[1],
+        paddingHorizontal: tokens.spacing[2],
+        paddingVertical: tokens.spacing['0-5'],
+        borderRadius: tokens.shape.control,
+        backgroundColor: roles['secondary-container'],
+        maxWidth: '100%',
+      }}
+    >
+      {leading}
+      <Text variant="label-md" color="on-secondary-container" numberOfLines={1}>
+        {label}
+      </Text>
+    </View>
+  );
 }
 
 /** Pick several options in a sheet (web MultiSelect on mobile). The sheet stays open while toggling. */
@@ -59,82 +109,137 @@ export function MultiSelect<T extends string>({
   error,
   disabled,
   searchable,
+  emptyText,
+  loading: loadingProp,
+  inputValue,
+  onInputChange,
+  onSearch,
+  searchDebounce = 300,
+  onCreate,
+  maxVisibleChips = 2,
+  readOnly,
+  size,
   style,
 }: MultiSelectProps<T>) {
   const { roles, tokens, messages } = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [query, setQuery] = React.useState('');
+  const [innerQuery, setInnerQuery] = React.useState('');
+  const query = inputValue ?? innerQuery;
+  const asyncSearch = useAsyncSearch(onSearch, searchDebounce);
+  const setQuery = (text: string) => {
+    setInnerQuery(text);
+    onInputChange?.(text);
+    asyncSearch.search(text);
+  };
   const [v = [], setV] = useControllableState<T[]>({ value, defaultValue: defaultValue ?? [], onChange: onValueChange });
-  const labels = v.map((x) => options.find((o) => o.value === x)?.label ?? x);
-  // "Bug, Design" or "Bug, Design, +3 more": the field stays one line.
-  const summary = labels.length > 2 ? `${labels.slice(0, 2).join(', ')}, +${messages.moreCount(labels.length - 2)}` : labels.join(', ');
-  const search = searchable ?? options.length > 8;
-  const q = query.trim().toLowerCase();
-  const shown = q ? options.filter((o) => o.label.toLowerCase().includes(q) || o.description?.toLowerCase().includes(q)) : options;
+
+  // Labels and avatars for picked values, even ones no longer in the list (async search).
+  const [known, setKnown] = React.useState<ReadonlyMap<string, MultiSelectOption<T>>>(() => new Map());
+  const seen = [...options, ...(asyncSearch.results ?? [])];
+  if (seen.some((o) => known.get(o.value) !== o)) setKnown(new Map([...known, ...seen.map((o) => [o.value, o] as const)]));
+  const optionOf = (x: T) => options.find((o) => o.value === x) ?? known.get(x);
+  const labels = v.map((x) => optionOf(x)?.label ?? x);
+  const visible = Math.max(0, maxVisibleChips);
+  const hidden = Math.max(0, v.length - visible);
+  // "Bug, Design" or "Bug, Design, +3 more": the same text the chips show.
+  const summary = [...labels.slice(0, visible), ...(hidden ? [`+${messages.moreCount(hidden)}`] : [])].join(', ');
+
+  const remote = !!onSearch || !!onInputChange;
+  const search = searchable ?? (remote || !!onCreate || options.length > 8);
+  const text = query.trim();
+  const q = text.toLowerCase();
+  const source = asyncSearch.results ?? options;
+  const shown = remote || !q ? source : source.filter((o) => o.label.toLowerCase().includes(q) || o.description?.toLowerCase().includes(q));
+  const loading = !!loadingProp || asyncSearch.loading;
+  const canCreate = !!onCreate && !loading && text !== '' && !source.some((o) => o.label.toLowerCase() === q);
+  const tall = search || options.length > 6;
 
   return (
     <View style={[{ gap: tokens.spacing['1-5'] }, style]}>
       <Text variant="label-lg" color={error ? 'error' : 'on-surface-variant'} importantForAccessibility="no">
         {label}
       </Text>
-      <Pressable
+      <SheetFieldButton
         accessibilityLabel={`${label}, ${summary || placeholder || ''}`}
         accessibilityHint={error ?? helperText}
         disabled={disabled}
-        onPress={() => setOpen(true)}
-        pressScale={false}
-        style={{
-          minHeight: tokens.size.control.lg,
-          paddingHorizontal: tokens.spacing['3-5'],
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: tokens.shape.field,
-          borderWidth: error ? 2 : 1,
-          borderColor: error ? roles.error : roles.outline,
-          backgroundColor: roles['surface-container-lowest'],
-          opacity: disabled ? tokens.state['disabled-content'] : 1,
+        readOnly={readOnly}
+        invalid={!!error}
+        expanded={open}
+        size={size}
+        onPress={() => {
+          setOpen(true);
+          asyncSearch.search(query, true);
         }}
       >
-        <Text variant="body-lg" color={summary ? 'on-surface' : 'on-surface-muted'} style={{ flex: 1 }} numberOfLines={1}>
-          {summary || placeholder || ''}
-        </Text>
-        <ChevronsUpDown size="sm" color={roles['on-surface-variant']} />
-      </Pressable>
+        {v.length ? (
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing[1] }}>
+            {v.slice(0, visible).map((x, i) => (
+              <Token key={x} label={labels[i]!} leading={optionOf(x)?.avatar} />
+            ))}
+            {hidden > 0 && <Token label={`+${messages.moreCount(hidden)}`} />}
+          </View>
+        ) : (
+          <Text variant="body-lg" color="on-surface-muted" style={{ flex: 1 }} numberOfLines={1}>
+            {placeholder ?? ''}
+          </Text>
+        )}
+      </SheetFieldButton>
       {(error || helperText) && (
         <Text variant="body-sm" color={error ? 'error' : 'on-surface-variant'}>
           {error ?? helperText}
         </Text>
       )}
       <BottomSheet
-        open={open}
+        open={open && !readOnly}
         onOpenChange={(o) => {
           setOpen(o);
-          if (!o) setQuery('');
+          if (!o) {
+            if (query) setQuery('');
+            asyncSearch.reset();
+          }
         }}
         title={label}
-        detents={options.length > 6 ? [0.6, 0.92] : ['content']}
-        scroll={options.length > 6}
+        detents={tall ? [0.6, 0.92] : ['content']}
+        scroll={tall}
       >
         {search && <SearchField value={query} onChangeText={setQuery} style={{ marginBottom: tokens.spacing[2] }} />}
-        <ListSection>
-          {shown.map((o) => (
-            <ListItem
-              key={o.value}
-              variant="checkbox"
-              title={o.label}
-              subtitle={o.description}
-              leading={o.avatar}
-              disabled={o.disabled}
-              checked={v.includes(o.value)}
-              onCheckedChange={(on) => setV(on ? [...v, o.value] : v.filter((x) => x !== o.value))}
-            />
-          ))}
-        </ListSection>
-        {shown.length === 0 && (
-          <Text variant="body-md" color="on-surface-muted" style={{ textAlign: 'center', paddingVertical: tokens.spacing[6] }}>
-            {messages.noResults}
-          </Text>
+        {!loading && !asyncSearch.failed && (shown.length > 0 || canCreate) && (
+          <View accessibilityRole="list" accessibilityLabel={label}>
+            <ListSection>
+              {shown.map((o) => (
+                <ListItem
+                  key={o.value}
+                  variant="checkbox"
+                  title={o.label}
+                  subtitle={o.description}
+                  leading={o.avatar}
+                  disabled={o.disabled}
+                  checked={v.includes(o.value)}
+                  onCheckedChange={(on) => setV(on ? [...v, o.value] : v.filter((x) => x !== o.value))}
+                />
+              ))}
+              {canCreate && (
+                <ListItem
+                  variant="button"
+                  title={messages.createOption(text)}
+                  leading={<Plus size="sm" color={roles.primary} />}
+                  onPress={() => {
+                    onCreate(text);
+                    setQuery('');
+                  }}
+                />
+              )}
+            </ListSection>
+          </View>
         )}
+        <SearchStatus
+          loading={loading}
+          failed={asyncSearch.failed}
+          empty={shown.length === 0 && !canCreate}
+          emptyText={emptyText}
+          onRetry={() => asyncSearch.search(query, true)}
+        />
       </BottomSheet>
     </View>
   );
