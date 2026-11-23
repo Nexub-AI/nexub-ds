@@ -18,7 +18,12 @@ import {
   type DataTableColumn,
 } from '@nexub/react';
 import { UserCard } from '../UserCard/index.js';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageStrings, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { teamMessages } from '../PageFrame/messages/team.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...teamMessages };
 
 export interface TeamMember {
   id: string;
@@ -84,7 +89,7 @@ function InviteDialog({
 }: {
   roles: TeamRole[];
   onInvite: NonNullable<TeamPageProps['onInvite']>;
-  m: PageTemplateMessages;
+  m: PageStrings<'emailAddresses' | 'emailAddressesHint' | 'emailRequired' | 'invalidEmail' | 'inviteDescription' | 'invitePeople' | 'role' | 'sendInvites'>;
 }) {
   const t = useNexubMessages();
   const [open, setOpen] = React.useState(false);
@@ -242,7 +247,7 @@ export const TeamPage = React.forwardRef<HTMLElement, TeamPageProps>(function Te
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const t = useNexubMessages();
   const [removing, setRemoving] = React.useState<TeamMember>();
   const roleLabel = (id?: string) => roles.find((r) => r.id === id)?.label ?? id;

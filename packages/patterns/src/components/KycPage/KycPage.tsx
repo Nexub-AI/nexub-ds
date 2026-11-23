@@ -18,8 +18,13 @@ import {
 } from '@nexub/react';
 import { ErrorSummary, type ErrorSummaryItem } from '../ErrorSummary/index.js';
 import { StatusSteps, type StatusStep } from '../StatusSteps/index.js';
-import { PageFrame, usePageMessages, useTemplateLocale, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, useTemplateLocale, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 import { useWizard } from '../OnboardingPage/useWizard.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { kycMessages } from '../PageFrame/messages/kyc.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...kycMessages };
 
 type Country = NonNullable<PhoneInputProps['defaultCountry']>;
 
@@ -103,7 +108,7 @@ export const KycPage = React.forwardRef<HTMLElement, KycPageProps>(function KycP
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const locale = useTemplateLocale();
   const uid = React.useId();
   const id = (field: Field) => `${uid}-${field}`;

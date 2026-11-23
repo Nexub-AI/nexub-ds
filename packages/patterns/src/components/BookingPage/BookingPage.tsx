@@ -16,11 +16,16 @@ import {
 } from '@nexub/react';
 import {
   PageFrame,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
   type PageTemplateMessages,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { bookingMessages } from '../PageFrame/messages/booking.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...bookingMessages };
 
 /** One bookable time: the shape TimeSlotPicker takes. */
 export interface BookingSlot {
@@ -98,7 +103,7 @@ export const BookingPage = React.forwardRef<HTMLElement, BookingPageProps>(funct
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const locale = useTemplateLocale();
   const [date, setDate] = useControllableState<Date | undefined>({ value: dateProp, defaultValue: defaultDate, onChange: onDateChange });
   const [slot, setSlot] = useControllableState<string | undefined>({ value: slotProp, defaultValue: defaultSlot, onChange: onSlotChange });

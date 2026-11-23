@@ -5,13 +5,18 @@ import { InfoList } from '../InfoList/index.js';
 import {
   PageFrame,
   formatMoney,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
   type PageTemplateMessages,
   type Quote,
   type ReviewRow,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { moneyMessages } from '../PageFrame/messages/money.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...moneyMessages };
 
 export interface CheckoutPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
   from: string;
@@ -60,7 +65,7 @@ export const CheckoutPage = React.forwardRef<HTMLElement, CheckoutPageProps>(fun
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const locale = useTemplateLocale();
   const [step, setStep] = React.useState<Step>('amount');
   const [amount, setAmount] = React.useState<number | null>(null);

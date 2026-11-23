@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { MessageBubble, PromptInput, ThinkingIndicator, cn } from '@nexub/react';
 import { Conversation } from '../Conversation/index.js';
-import { usePageMessages, type ChatMessage, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { usePageStrings, type ChatMessage, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { chatMessages } from '../PageFrame/messages/chat.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...chatMessages };
 
 export interface ChatPageProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   messages: ChatMessage[];
@@ -48,7 +53,7 @@ export const ChatPage = React.forwardRef<HTMLElement, ChatPageProps>(function Ch
   },
   ref,
 ) {
-  const m = usePageMessages(strings);
+  const m = usePageStrings(strings, STRINGS);
   const [draft, setDraft] = React.useState('');
   const streaming = list.at(-1)?.streaming ?? false;
   const headingId = React.useId();

@@ -3,11 +3,16 @@ import { Amount, Badge, Card, DescriptionList, SuccessCheck, Table, cn } from '@
 import {
   PageFrame,
   formatMoney,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
   type PageTemplateMessages,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { invoiceMessages } from '../PageFrame/messages/invoice.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...invoiceMessages };
 
 export interface InvoiceParty {
   name: string;
@@ -122,7 +127,7 @@ export const InvoicePage = React.forwardRef<HTMLElement, InvoicePageProps>(funct
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const providerLocale = useTemplateLocale();
   const locale = localeProp ?? providerLocale;
   const money = (n: number) => formatMoney(n, currency, locale);

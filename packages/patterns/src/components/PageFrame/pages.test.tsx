@@ -12,7 +12,8 @@ import { CheckoutPage } from '../CheckoutPage/index.js';
 import { ChatPage } from '../ChatPage/index.js';
 import { PaywallPage } from '../PaywallPage/index.js';
 import { DashboardPage } from '../DashboardPage/index.js';
-import { PageFrame, groupByDay, usePageMessages, type Transaction } from './PageFrame.js';
+import { PageFrame, groupByDay, type Transaction } from './PageFrame.js';
+import { usePageMessages } from './messages/all.js';
 
 const tx: Transaction[] = [
   { id: '1', title: 'Coffee Lab', amount: -4.5, currency: 'SGD', date: new Date('2026-10-30T09:00:00Z') },

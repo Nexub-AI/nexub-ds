@@ -2,8 +2,13 @@ import * as React from 'react';
 import { Alert, Button, Form, FormField, Input, useForm } from '@nexub/react';
 import { Mail } from '@nexub/icons';
 import { AuthCard } from '../AuthCard/index.js';
-import { usePageMessages, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { usePageStrings, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 import { Resend } from '../VerifyCodePage/Resend.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { resetMessages } from '../PageFrame/messages/reset.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...resetMessages };
 
 export interface ForgotPasswordPageProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'> {
   /** Sends the reset link. When it resolves the page shows "Check your email"; a rejection stays on the form (say why in `error`). */
@@ -66,7 +71,7 @@ export const ForgotPasswordPage = React.forwardRef<HTMLElement, ForgotPasswordPa
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const [email, setEmail] = React.useState(defaultEmail);
   const [sentState, setSentState] = React.useState(false);
   const sent = sentProp ?? sentState;
