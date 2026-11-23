@@ -1,21 +1,10 @@
+import { dateFieldMessages } from '@nexub/core';
+
 /**
- * The few UI strings the elements show, in English. They are the same strings as
- * `defaultMessages` in `@nexub/core` (a test checks), copied rather than imported: the whole
- * message table would add several kB to a page that needs ten strings.
+ * The few UI strings the elements show, in English: `dateFieldMessages` from `@nexub/core`
+ * (11.7), the same source as React's `defaultMessages`, without the rest of the table.
  */
-export const labels = {
-  pickDate: 'Pick a date',
-  pickMonth: 'Pick a month',
-  pickYear: 'Pick a year',
-  previousMonth: 'Go to previous month',
-  nextMonth: 'Go to next month',
-  previousYear: 'Go to previous year',
-  nextYear: 'Go to next year',
-  previousYears: 'Go to previous years',
-  nextYears: 'Go to next years',
-  todayDate: (date: string) => `Today, ${date}`,
-  selectedDate: (label: string) => `${label}, selected`,
-};
+export const labels = dateFieldMessages;
 
 export type ValidityKind = 'valueMissing' | 'rangeUnderflow' | 'rangeOverflow' | 'badInput';
 
