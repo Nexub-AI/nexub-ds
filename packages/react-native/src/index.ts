@@ -96,7 +96,17 @@ export type {
   SegmentedControlProps,
   SliderProps,
   ChipProps,
+  NullableStepperProps,
 } from './components/inputs';
+export { SwitchField, CheckboxField, CheckboxGroupField } from './components/choicefields';
+export type {
+  SwitchFieldProps,
+  CheckboxFieldProps,
+  CheckboxGroupFieldProps,
+  CheckboxGroupOption,
+} from './components/choicefields';
+export { CurrencySelect, currencySelectOptions } from './components/currency';
+export type { CurrencySelectProps } from './components/currency';
 export { Card, ListItem, ListSection, Accordion } from './components/containers';
 export type {
   CardProps,
