@@ -1,3 +1,4 @@
+import type { NexubMessages } from '@nexub/react/NexubProvider';
 import type { DiagramLabels } from './types.js';
 
 /** English defaults for {@link DiagramLabels}. @alpha */
@@ -20,3 +21,16 @@ export const defaultDiagramLabels: DiagramLabels = {
   fitView: 'Fit view',
   minimap: 'Minimap',
 };
+
+/**
+ * 11.7: the labels with `NexubProvider`'s `diagram…` messages on top, so a translated provider
+ * covers the canvas with the rest of the app. DiagramCanvas's `labels` prop goes on top of this.
+ */
+export function diagramLabelsFrom(m: Partial<NexubMessages>): DiagramLabels {
+  // `showAsList` ← `diagramShowAsList`, and so on; tones ← `diagramToneGood`, ….
+  const from = (key: string) => (m as Record<string, unknown>)[`diagram${key[0]!.toUpperCase()}${key.slice(1)}`];
+  const out = { ...defaultDiagramLabels, tones: { ...defaultDiagramLabels.tones } } as Record<string, unknown> & DiagramLabels;
+  for (const key of Object.keys(out)) if (key !== 'tones') out[key] = from(key) ?? out[key];
+  for (const tone of ['good', 'warning', 'danger'] as const) out.tones[tone] = (from(`tone${tone[0]!.toUpperCase()}${tone.slice(1)}`) as string | undefined) ?? out.tones[tone];
+  return out;
+}

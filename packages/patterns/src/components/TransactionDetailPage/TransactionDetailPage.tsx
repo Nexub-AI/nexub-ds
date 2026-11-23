@@ -4,13 +4,17 @@ import { ArrowLeft } from '@nexub/icons';
 import { InfoList } from '../InfoList/index.js';
 import {
   PageFrame,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
   type PageTemplateMessages,
   type ReviewRow,
   type Transaction,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages };
 
 export interface TransactionDetailPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
   /** Optional since 10.5: leave it out while `loading`, or when there is nothing to show. */
@@ -33,7 +37,7 @@ export interface TransactionDetailPageProps extends Omit<PageFrameProps, 'title'
 /** One transaction: hero amount, status and summary rows. Web twin of the native `TransactionDetail`. */
 export const TransactionDetailPage = React.forwardRef<HTMLElement, TransactionDetailPageProps>(
   function TransactionDetailPage({ transaction: t, rows = [], footer, onBack, loading, emptyState, errorState, messages, ...props }, ref) {
-    const m = usePageMessages(messages);
+    const m = usePageStrings(messages, STRINGS);
     const locale = useTemplateLocale();
     const headingId = React.useId();
     const back = onBack && (

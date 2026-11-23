@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Skeleton, cn, safeHref } from '@nexub/react';
 import { ChevronRight } from '@nexub/icons';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages };
 
 export interface SettingsItem {
   title: string;
@@ -92,7 +96,7 @@ export const SettingsPage = React.forwardRef<HTMLElement, SettingsPageProps>(fun
   { groups, header, title, loading, emptyState, errorState, messages, ...props },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const state = errorState ?? (loading ? undefined : groups.length === 0 ? emptyState : undefined);
   const list = 'overflow-hidden rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-elevated)]';
   if (state != null || loading)

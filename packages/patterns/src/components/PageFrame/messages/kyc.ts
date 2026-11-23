@@ -1,0 +1,38 @@
+import type { PageTemplateMessages } from '../PageFrame.js';
+
+/** 11.7: kyc strings of the page templates. */
+export const kycMessages = {
+  verifyIdentity: 'Verify your identity',
+  personalDetails: 'Personal details',
+  legalName: 'Full legal name',
+  legalNameHint: 'As it appears on your document.',
+  dateOfBirth: 'Date of birth',
+  country: 'Country of residence',
+  document: 'Document',
+  documentType: 'Document type',
+  passport: 'Passport',
+  nationalId: 'National ID',
+  drivingLicence: 'Driving licence',
+  documentFront: 'Front of the document',
+  documentBack: 'Back of the document',
+  documentTips: [
+    'Use the original document, not a copy or a screenshot.',
+    'Make sure all four corners are in the photo.',
+    'Check the text is sharp and there is no glare.',
+  ],
+  fileRequirements: 'JPG, PNG or PDF, up to 10 MB each.',
+  review: 'Review',
+  submitVerification: 'Submit for verification',
+  kycSubmitted: 'Submitted',
+  kycUnderReview: 'Under review',
+  kycApproved: 'Approved',
+  kycRejected: 'We could not verify your identity',
+  fixAndResubmit: 'Fix and resubmit',
+  verificationStatus: 'Verification status',
+  enterLegalName: 'Enter your full legal name',
+  enterDateOfBirth: 'Enter your date of birth',
+  chooseCountry: 'Choose your country of residence',
+  chooseDocumentType: 'Choose a document type',
+  uploadFront: 'Upload the front of the document',
+  uploadBack: 'Upload the back of the document',
+} satisfies Partial<PageTemplateMessages>;

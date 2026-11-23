@@ -2,7 +2,11 @@ import * as React from 'react';
 import { Alert, Button, FormField, Input, PasswordInput } from '@nexub/react';
 import { ShieldCheck } from '@nexub/icons';
 import { AuthCard } from '../AuthCard/index.js';
-import { usePageMessages, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { usePageStrings, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages };
 
 export interface SignInPageProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSubmit' | 'title'> {
   onSubmit: (email: string, password: string) => void;
@@ -49,7 +53,7 @@ export const SignInPage = React.forwardRef<HTMLElement, SignInPageProps>(functio
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   return (

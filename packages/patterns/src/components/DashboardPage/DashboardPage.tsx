@@ -4,7 +4,7 @@ import { StatCard, type StatCardProps } from '../StatCard/index.js';
 import { TransactionRow, TransactionRowSkeleton } from '../ActivityPage/ActivityPage.js';
 import {
   PageFrame,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type Insight,
   type PageFrameProps,
@@ -12,6 +12,11 @@ import {
   type QuickAction,
   type Transaction,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { dashboardMessages } from '../PageFrame/messages/dashboard.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...dashboardMessages };
 
 export type DashboardStat = Pick<StatCardProps, 'label' | 'value' | 'delta' | 'deltaType' | 'sentiment' | 'icon' | 'description' | 'category' | 'trend' | 'trendLabel' | 'animate'>;
 
@@ -86,7 +91,7 @@ export const DashboardPage = React.forwardRef<HTMLElement, DashboardPageProps>(f
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const locale = useTemplateLocale();
   const failed = errorState != null;
   const loading = !!isLoading && !failed;

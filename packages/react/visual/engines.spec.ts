@@ -22,7 +22,12 @@ test.beforeEach(async ({ page }) => {
 for (const { id } of stories) {
   test(`${id} renders`, async ({ page }) => {
     const errors: string[] = [];
-    page.on('pageerror', (e) => errors.push(e.message));
+    // A ResizeObserver loop notice is not an exception: the browser reports that some resize
+    // callbacks moved to the next frame (Storybook's own manager ignores it too). WebKit
+    // reports it now and then while React Flow measures diagram nodes.
+    page.on('pageerror', (e) => {
+      if (!/^ResizeObserver loop (completed with undelivered notifications|limit exceeded)/.test(e.message)) errors.push(e.message);
+    });
     await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=theme:light`);
     await page.waitForFunction(() =>
       ['sb-show-main', 'sb-show-errordisplay', 'sb-show-nopreview'].some((c) =>

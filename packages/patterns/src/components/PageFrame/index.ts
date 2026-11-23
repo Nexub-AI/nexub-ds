@@ -1,4 +1,5 @@
-export { PageFrame, defaultPageTemplateMessages, usePageMessages, groupByDay } from './PageFrame.js';
+export { PageFrame, groupByDay } from './PageFrame.js';
+export { defaultPageTemplateMessages, usePageMessages } from './messages/all.js';
 export type {
   PageFrameProps,
   PageTemplateMessages,

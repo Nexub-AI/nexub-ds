@@ -346,15 +346,16 @@ const STORIES = [
 for (const id of STORIES) {
   for (const theme of ['light', 'dark']) {
     test(`axe ${id} ${theme}`, async ({ page }) => {
-      // The OS preference matches the theme, as for a reader who picked dark. With the
-      // config's light preference and data-theme="dark", WebKit resolves the themes'
-      // light-dark() colours inherited through `color` (html/body text, so the story's own
-      // <label>s) to the light value: light text on the dark surface. That is WebKit and the
-      // theme CSS, not the elements (their shadow text resolves correctly); see the report.
-      await page.emulateMedia({ colorScheme: theme as 'light' | 'dark' });
+      // The OS preference stays light (the config's), so dark is the page's own data-theme: the
+      // harder case. 11.7: what looked like WebKit resolving light-dark() to the light value was
+      // the theme switch's colour transitions still running when axe read the text (Chromium
+      // finishes them sooner). WebKit starts the children's transitions a frame after the
+      // parent's end, so wait until none is left, not just for the ones running now. The story's
+      // plain buttons set their own surface, since WebKit keeps a native button's face light grey.
       await open(page, id, theme);
       await page.waitForFunction((t) => document.documentElement.dataset.theme === t, theme);
       await page.evaluate(() => document.fonts.ready);
+      await page.waitForFunction(() => document.getAnimations().every((a) => a.effect?.getComputedTiming().iterations === Infinity));
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
         // @ts-expect-error injected global
