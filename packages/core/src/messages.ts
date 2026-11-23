@@ -1,4 +1,5 @@
 import { dateFieldMessages } from './date-messages.js';
+import { choiceFieldMessages } from './choice-messages.js';
 
 // Every user-facing default string, shared by @nexub/react and @nexub/react-native.
 // Explicit component props still win; providers merge partial overrides on top.
@@ -308,6 +309,8 @@ export interface NexubMessages {
   characterCount: (count: number, max: number) => string;
   /** PhoneInput country picker name ("Country code, India +91"). */
   countryCode: (country: string, code: string) => string;
+  /** 11.9: a phone number that isn't plausible for its country (`<nx-phone-input>` validity). */
+  invalidPhone: string;
   /** Countdown announcements ("2 minutes left", "30 seconds left"). */
   timeLeft: (count: number, unit: 'minute' | 'second') => string;
   /** Countdown at zero. */
@@ -427,8 +430,8 @@ export const defaultMessages: NexubMessages = {
   mainNavigation: 'Main',
   sidebar: 'Sidebar',
   searchPlaceholder: 'Search…',
-  selectPlaceholder: 'Select…',
-  noResults: 'No results found.',
+  selectPlaceholder: choiceFieldMessages.selectPlaceholder,
+  noResults: choiceFieldMessages.noResults,
   pickDate: dateFieldMessages.pickDate,
   pickDateRange: 'Pick a date range',
   previousMonth: dateFieldMessages.previousMonth,
@@ -603,8 +606,8 @@ export const defaultMessages: NexubMessages = {
   keyboardShortcut: (shortcut) => `Keyboard shortcut: ${shortcut}`,
   commandKey: 'Command',
   controlKey: 'Control',
-  searching: 'Searching…',
-  searchFailed: 'Search failed. Try again.',
+  searching: choiceFieldMessages.searching,
+  searchFailed: choiceFieldMessages.searchFailed,
   noResultsFor: (query) => `No results for “${query}”`,
   typeToSearch: 'Type to search',
   switchOrganization: (name) => `${name}, switch organization`,
@@ -642,7 +645,8 @@ export const defaultMessages: NexubMessages = {
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
-  countryCode: (country, code) => `Country code, ${country} +${code}`,
+  countryCode: choiceFieldMessages.countryCode,
+  invalidPhone: choiceFieldMessages.invalidPhone,
   timeLeft: (count, unit) => `${count} ${unit}${count !== 1 ? 's' : ''} left`,
   timeUp: 'Time is up',
   qrCodeFor: (value) => `QR code for ${value}`,
