@@ -19,13 +19,13 @@ import '@nexub/react/styles.css';`} />
       <p>
         It has everything the components need: the light and dark themes, glass, the product brands
         (<code>data-product=&quot;payub&quot;</code> and the rest), the Plus Jakarta Sans font, and the
-        utility classes the components use. It&apos;s about 31 kB gzipped, and browsers download only the font
+        utility classes the components use. It&apos;s about 43 kB gzipped, and browsers download only the font
         subsets a page uses.
       </p>
 
       <p>
         Using <code>@nexub/patterns</code> too? Add its stylesheet after the react one. It only carries the
-        classes the patterns add (about 4 kB gzipped):
+        classes the patterns add (about 5 kB gzipped):
       </p>
       <CodeBlock code={`import '@nexub/react/styles.css';
 import '@nexub/patterns/styles.css';`} />
@@ -38,9 +38,31 @@ import '@nexub/patterns/styles.css';`} />
         <code>!important</code> or extra specificity.
       </p>
 
+      <h2>Opt in to the 12.0 layers</h2>
+      <p>
+        Those are Tailwind&apos;s own layer names. If your app also uses Tailwind v4, your utilities and ours
+        share one <code>utilities</code> layer, so when both set the same property, the stylesheet that loads
+        last wins. Since 11.9, <code>@nexub/react/styles.nexub-layer.css</code> is the same stylesheet with every
+        layer moved under one <code>nexub</code> layer (<code>nexub.theme</code>, <code>nexub.base</code>,{' '}
+        <code>nexub.components</code>, <code>nexub.utilities</code>). Import it before your own CSS and every
+        style of yours beats it: unlayered, in your Tailwind layers or in any other layer.
+      </p>
+      <CodeBlock code={`// app entry, before your own CSS
+import '@nexub/react/styles.nexub-layer.css';`} />
+      <p>
+        A layer ranks by where it is first named, so load this file first, or name it first at the top of
+        your own CSS with <code>@layer nexub;</code>. Named after your layers, <code>nexub</code> would rank
+        above them. <code>@nexub/patterns/styles.css</code> keeps its layer names.
+      </p>
+      <p>
+        RFC 12.0 makes this file <code>@nexub/react/styles.css</code> in 12.0. When you upgrade,{' '}
+        <code>npx nexub-migrate --rules changes-in-12</code> points the import back at{' '}
+        <code>styles.css</code>.
+      </p>
+
       <h2>Already using Tailwind?</h2>
       <p>
-        Keep the preset setup from <a href="/getting-started">Getting Started</a>. Tailwind then generates the
+        Keep the Tailwind v4 setup from <a href="/getting-started">Getting Started</a>. Tailwind then generates the
         classes alongside yours, so you don&apos;t need this stylesheet, and importing both only duplicates CSS.
       </p>
 
