@@ -101,6 +101,8 @@ const OPEN: { id: string; trigger?: string }[] = [
   { id: 'components-autocomplete--default', trigger: '[role=combobox]' },
   { id: 'components-savedviews--default', trigger: 'button' },
   { id: 'forms-daterangepicker--default', trigger: 'button' },
+  // 11.7: the month grid (each cell's name must start with its visible month name).
+  { id: 'forms-datepicker--month-and-year', trigger: 'button' },
   { id: 'navigation-commandpalette--default' }, // story renders it open
   { id: 'overlays-alertdialog--type-to-confirm', trigger: 'button' },
   { id: 'data-display-datatable--selection', trigger: 'button[aria-haspopup=menu]' },
