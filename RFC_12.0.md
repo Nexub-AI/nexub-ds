@@ -29,7 +29,7 @@ So the breaking changes in 12.0 are these:
 
 ### 1. Remove `Stepper current={-1}`
 
-`current={-1}` means "every step is done". It was deprecated in 11.4; give the steps a `status` instead. In 12.0 a negative `current` throws in development and is treated as `0` in production.
+`current={-1}` means "every step is done". It was deprecated in 11.4; give the steps a `status` instead. Until 11.9 it also left the last step "upcoming", which is now fixed as a patch so 11.x apps get the meaning the docs promise. In 12.0 a negative `current` throws in development and is treated as `0` in production.
 
 ### 2. Everything in `@nexub/react/styles.css` goes in one `nexub` layer
 
@@ -40,6 +40,14 @@ Today the prebuilt CSS declares Tailwind's own layer names (`@layer theme, base,
 ```
 
 Declared before the app's CSS, `nexub` is the lowest layer. Every app style beats it without `!important`, whether unlayered, in the app's own Tailwind layers or in any later layer. This is what the 11.x comment in `styles.css` promises, but it only holds for unlayered CSS today.
+
+**Measured in 11.9** (`packages/react/visual/layers.spec.ts`, the same result in Chromium, WebKit and Firefox):
+
+- **Plain `styles.css` today:** an app utility or base rule ties with Nexub's, and whichever file loads last wins.
+- **The layered file loaded first:** app utilities, app base rules and unlayered rules all win.
+- **The layered file loaded after the app's layers:** `nexub` ranks above them and Nexub wins; only unlayered CSS still beats it.
+- **An app that declares `@layer nexub;` at the top of its CSS:** the app wins whatever the order. The guide tells apps to do this. The contrast and axe suites also pass on a Storybook built with the layered file (1,148 passed).
+- **Other stylesheets:** `@nexub/patterns`, `@nexub/marketing` and `@nexub/diagram` ship their own `styles.css` with the generic layer names. 12.0 moves them under `nexub` too, so one `@layer nexub;` covers every package.
 
 - **Opt-in first:** 11.9 ships `@nexub/react/styles.nexub-layer.css`, the 12.0 file, so apps can switch and check before the major.
 - **The `@nexub/themes/*` files** are already imported `layer(base)` by the app (the docs snippet). They are unchanged.
