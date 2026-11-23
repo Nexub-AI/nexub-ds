@@ -152,3 +152,14 @@ export function formatPhone(e164: string, { style = 'international', defaultCoun
 export function isValidPhone(e164: string): boolean {
   return /^\+\d+$/.test(e164) && parsePhone(e164).valid;
 }
+
+/** 11.9: a phone field's first country: the locale's region ("en-IN" → "IN"), else `fallback`. */
+export function phoneCountryOf(locale: string | undefined, fallback: CountryCode = 'US'): CountryCode {
+  try {
+    const region = locale ? new Intl.Locale(locale).maximize().region : undefined;
+    if (region && COUNTRIES[region]) return region;
+  } catch {
+    // Unreadable locale.
+  }
+  return fallback;
+}

@@ -14,38 +14,20 @@ import {
   type DateParts,
 } from '@nexub/core';
 import { NxFieldElement, type FieldError } from './field.js';
-import { labels, validationMessage } from './messages.js';
-import { sheet, fieldCss, pickerCss } from './styles.js';
-import { formatDisplay, formatHint, parseTypedDate, utcDate } from './date-text.js';
+import { validationMessage } from './messages.js';
+import { sheet, fieldCss } from './styles.js';
+import { pickerCss } from './picker-styles.js';
+import { formatDisplay, formatHint, labels, parseTypedDate, utcDate } from './date-text.js';
+import { el, isRtl, localeOf, svg, type Shape } from './dom.js';
 
 const RANK: Record<DateGranularity, number> = { year: 0, month: 1, day: 2 };
 const YEARS_PER_PAGE = 12;
-// Icons are built as DOM nodes, not HTML strings: pages with Trusted Types (`require-trusted-types-for
-// 'script'`) block every innerHTML write, and the elements must work on them.
-type Shape = [tag: 'path' | 'rect', attributes: Record<string, string>];
-const SVG_NS = 'http://www.w3.org/2000/svg';
-const svg = (shapes: Shape[]): SVGSVGElement => {
-  const root = document.createElementNS(SVG_NS, 'svg');
-  const attrs: Record<string, string> = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
-  for (const [k, v] of Object.entries(attrs)) root.setAttribute(k, v);
-  for (const [tag, a] of shapes) {
-    const el = document.createElementNS(SVG_NS, tag);
-    for (const [k, v] of Object.entries(a)) el.setAttribute(k, v);
-    root.append(el);
-  }
-  return root;
-};
 const CALENDAR: Shape[] = [['rect', { x: '3', y: '4', width: '18', height: '18', rx: '2' }], ['path', { d: 'M16 2v4M8 2v4M3 10h18' }]];
 const PREVIOUS: Shape[] = [['path', { d: 'm15 18-6-6 6-6' }]];
 const NEXT: Shape[] = [['path', { d: 'm9 18 6-6-6-6' }]];
 /** Below this width the calendar is a bottom sheet (as `@nexub/react`'s `sheet="auto"`). */
 const SHEET_QUERY = '(max-width: 47.99rem)';
 
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<Record<string, string>> = {}): HTMLElementTagNameMap[K] => {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) if (v !== undefined) node.setAttribute(k, v);
-  return node;
-};
 const pageStart = (year: number) => year - (((year % YEARS_PER_PAGE) + YEARS_PER_PAGE) % YEARS_PER_PAGE);
 
 /** `day`, `month` or `year`: what `<nx-date-picker>` picks. */
@@ -200,20 +182,11 @@ export class NxDatePicker extends NxFieldElement {
   }
 
   get #locale(): string | undefined {
-    const tag = this.getAttribute('locale') || this.closest('[lang]')?.getAttribute('lang') || undefined;
-    try {
-      return tag ? Intl.getCanonicalLocales(tag)[0] : undefined;
-    } catch {
-      return undefined;
-    }
+    return localeOf(this);
   }
 
   get #rtl(): boolean {
-    try {
-      return this.matches(':dir(rtl)');
-    } catch {
-      return this.closest('[dir]')?.getAttribute('dir')?.toLowerCase() === 'rtl';
-    }
+    return isRtl(this);
   }
 
   /** @internal Any of the three forms, cut to the granularity; a coarser one (`2026` for a day) is no value. */

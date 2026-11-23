@@ -28,7 +28,7 @@ export abstract class NxFieldElement extends Base {
   /** @internal */
   protected readonly root: ShadowRoot;
   /** @internal The focusable control: the validation anchor, named from the label. */
-  protected abstract readonly control: HTMLInputElement;
+  protected abstract readonly control: HTMLInputElement | HTMLButtonElement;
   /** @internal The bordered box around the control. */
   protected readonly box: HTMLDivElement;
 
@@ -39,7 +39,7 @@ export abstract class NxFieldElement extends Base {
   #touched = false;
 
   static get observedAttributes(): string[] {
-    return ['value', 'required', 'disabled', 'readonly', 'size', 'aria-label'];
+    return ['value', 'required', 'disabled', 'readonly', 'size', 'aria-label', 'invalid'];
   }
 
   constructor() {
@@ -66,7 +66,7 @@ export abstract class NxFieldElement extends Base {
   protected abstract update(): void;
 
   connectedCallback(): void {
-    if (!this.#dirty) this.#value = this.sanitize(this.getAttribute('value') ?? '');
+    if (!this.#dirty) this.#value = this.sanitize(this.initial());
     this.render();
     // Labels later in the document aren't parsed yet: name the control again once they are.
     queueMicrotask(() => this.nameControl());
@@ -74,7 +74,7 @@ export abstract class NxFieldElement extends Base {
 
   attributeChangedCallback(name: string, old: string | null, next: string | null): void {
     if (old === next) return;
-    if (name === 'value' && !this.#dirty) this.#value = this.sanitize(next ?? '');
+    if (name === 'value' && !this.#dirty) this.#value = this.sanitize(next ?? this.initial());
     if (name === 'aria-label') this.nameControl();
     this.render();
   }
@@ -121,6 +121,13 @@ export abstract class NxFieldElement extends Base {
   set readOnly(v: boolean) {
     this.toggleAttribute('readonly', Boolean(v));
   }
+  /** Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`. */
+  get invalid(): boolean {
+    return this.hasAttribute('invalid');
+  }
+  set invalid(v: boolean) {
+    this.toggleAttribute('invalid', Boolean(v));
+  }
   /** `sm`, `md` (default) or `lg`. */
   get size(): NxFieldSize {
     const s = this.getAttribute('size');
@@ -163,7 +170,7 @@ export abstract class NxFieldElement extends Base {
     this.#dirty = false;
     this.#touched = false;
     this.reset();
-    this.#value = this.sanitize(this.getAttribute('value') ?? '');
+    this.#value = this.sanitize(this.initial());
     this.render();
   }
   formDisabledCallback(disabled: boolean): void {
@@ -174,12 +181,28 @@ export abstract class NxFieldElement extends Base {
     if (typeof state === 'string') this.value = state;
   }
 
+  /** @internal The value the field starts with and resets to: the `value` attribute. */
+  protected initial(): string {
+    return this.getAttribute('value') ?? '';
+  }
+
+  /** @internal A property set on the element before its class was defined goes through the setter. */
+  protected upgrade(...names: string[]): void {
+    const self = this as unknown as Record<string, unknown>;
+    for (const n of names) {
+      if (!Object.prototype.hasOwnProperty.call(this, n)) continue;
+      const v = self[n];
+      delete self[n];
+      self[n] = v;
+    }
+  }
+
   /** @internal Clears typing state on reset. */
   protected reset(): void {}
 
   /** @internal Runs `sanitize` again after an attribute it reads changed (the default when untouched). */
   protected resanitize(): void {
-    this.#value = this.sanitize(this.#dirty ? this.#value : (this.getAttribute('value') ?? ''));
+    this.#value = this.sanitize(this.#dirty ? this.#value : this.initial());
   }
 
   /** @internal Disabled by its own attribute or by a disabled fieldset. */
@@ -213,12 +236,13 @@ export abstract class NxFieldElement extends Base {
     // Native read-only and disabled fields are barred from constraint validation.
     if (error && !this.readOnly && !this.isDisabled) this.internals.setValidity({ [error.kind]: true }, error.message, this.control);
     else this.internals.setValidity({});
-    const showInvalid = Boolean(error) && this.#touched && !this.readOnly;
+    const showInvalid = (Boolean(error) && this.#touched && !this.readOnly) || this.invalid;
     this.box.toggleAttribute('data-invalid', showInvalid);
     this.box.toggleAttribute('data-disabled', this.isDisabled);
     this.box.toggleAttribute('data-readonly', this.readOnly);
     this.control.disabled = this.isDisabled;
-    this.control.readOnly = this.readOnly;
+    if ('readOnly' in this.control) this.control.readOnly = this.readOnly;
+    else this.control.setAttribute('aria-readonly', String(this.readOnly));
     this.control.setAttribute('aria-required', String(this.required));
     this.control.setAttribute('aria-invalid', String(showInvalid));
     this.update();

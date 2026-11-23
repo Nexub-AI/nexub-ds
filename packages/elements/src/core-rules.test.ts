@@ -4,6 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   addDays,
+  phoneCountryOf,
   addMonths,
   clampNumber,
   compareDateParts,
@@ -24,7 +25,8 @@ import {
   todayParts,
   weekdayOf,
 } from '@nexub/core';
-import { labels } from './messages.js';
+import { choiceLabels } from './choice.js';
+import { labels } from './date-text.js';
 
 describe('number rules', () => {
   it('keeps half-typed drafts and rejects letters or a second point', () => {
@@ -178,13 +180,26 @@ describe('date values', () => {
   });
 });
 
+describe('phone rules', () => {
+  it('starts a phone field on the region of the locale', () => {
+    expect(phoneCountryOf('en-IN')).toBe('IN');
+    expect(phoneCountryOf('de')).toBe('DE');
+    expect(phoneCountryOf('ar-AE')).toBe('AE');
+    expect(phoneCountryOf(undefined)).toBe('US');
+    expect(phoneCountryOf('not a locale', 'GB')).toBe('GB');
+    expect(phoneCountryOf('en-001', 'SG')).toBe('SG'); // a region that is no country
+  });
+});
+
 describe('labels', () => {
   it('are the strings of @nexub/core defaultMessages', () => {
-    for (const key of Object.keys(labels) as (keyof typeof labels)[]) {
-      const ours = labels[key];
-      const core = defaultMessages[key];
-      if (typeof ours === 'function') expect(ours('X')).toBe((core as (s: string) => string)('X'));
-      else expect(ours).toBe(core);
+    for (const table of [labels, choiceLabels] as Record<string, unknown>[]) {
+      for (const key of Object.keys(table)) {
+        const ours = table[key];
+        const core = defaultMessages[key as keyof typeof defaultMessages];
+        if (typeof ours === 'function') expect(ours('X', 'Y')).toBe((core as (a: string, b: string) => string)('X', 'Y'));
+        else expect(ours).toBe(core);
+      }
     }
   });
 });
