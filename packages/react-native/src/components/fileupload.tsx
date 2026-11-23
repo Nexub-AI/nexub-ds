@@ -91,7 +91,7 @@ export interface FileUploadProps<F extends PickedFile = PickedFile> {
   progress?: number;
   /** The pick button's text. @default 'Upload files' */
   addLabel?: string;
-  /** The camera button's text, e.g. "Take photo". Pass it with `capture`. @default messages.uploadFile ('Upload file') */
+  /** The camera button's text. Shown with `capture`. @default messages.takePhoto ('Take photo') */
   captureLabel?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -237,7 +237,7 @@ export function FileUpload<F extends PickedFile = PickedFile>({
                 })
               }
             >
-              {captureLabel ?? messages.uploadFile}
+              {captureLabel ?? messages.takePhoto}
             </Button>
           )}
         </View>
