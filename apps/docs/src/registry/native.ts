@@ -355,6 +355,43 @@ import { Send } from '@nexub/icons/native';
     ],
     code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />`,
   },
+  // 11.8
+  combobox: {
+    name: 'ComboboxField',
+    preview: 'combobox-field',
+    differences: [
+      { aspect: 'Menu', web: 'A popover listbox under the field; type to filter.', mobile: 'Opens a BottomSheet with a search box and the results list.' },
+      { aspect: 'Async search', web: '`onSearch` and `loading`; you debounce.', mobile: '`onSearch` may return a promise; the field debounces (`searchDebounce`), ignores stale answers and shows loading, error and empty rows.' },
+    ],
+    code: `<ComboboxField label="City" options={cities} value={city} onValueChange={setCity} onSearch={searchCities} />`,
+  },
+  'currency-select': {
+    name: 'CurrencySelect',
+    preview: 'currency-select',
+    differences: [{ aspect: 'List', web: 'Every currency Intl knows, with search.', mobile: 'The 40 most traded currencies in a sheet; pass `currencies` for others.' }],
+    code: `<CurrencySelect label="Currency" value={currency} onValueChange={setCurrency} />`,
+  },
+  'switch-field': {
+    name: 'SwitchField',
+    preview: 'switch-field',
+    differences: [label],
+    code: `<SwitchField label="Round-ups" description="Save the change from every card payment." checked={on} onCheckedChange={setOn} />`,
+  },
+  'checkbox-field': {
+    name: 'CheckboxField',
+    preview: 'checkbox-field',
+    differences: [{ aspect: 'Groups', web: 'CheckboxGroupField.', mobile: 'CheckboxGroupField too, with `options`.' }],
+    code: `<CheckboxField label="I agree to the terms" checked={agreed} onCheckedChange={setAgreed} />`,
+  },
+  'file-upload': {
+    name: 'FileUpload',
+    preview: 'file-upload',
+    differences: [
+      { aspect: 'Picking', web: 'Click or drop files.', mobile: 'Bring your picker: `pickFiles` (expo-document-picker) and `capture` (expo-image-picker or expo-camera) for a camera button.' },
+      { aspect: 'Checks', web: 'accept, transform, maxSize, validate, maxFiles.', mobile: 'The same checks in the same order; rejected files stay in the list with their error.' },
+    ],
+    code: `<FileUpload accept={['image/*']} multiple maxSize={5_000_000} pickFiles={pickImages} capture={takePhoto} transform={resize} />`,
+  },
   'filter-builder': {
     name: 'FilterSheet',
     preview: 'filter-sheet',

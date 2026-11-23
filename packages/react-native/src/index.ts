@@ -181,6 +181,7 @@ export type {
   DateTimeFieldProps,
   DateMatcher,
   DateTimeFieldChangeHandler,
+  DateTimeFieldPeriodProps,
 } from './components/mobile';
 
 export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';

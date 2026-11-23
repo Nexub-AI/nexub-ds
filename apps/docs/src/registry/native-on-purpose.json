@@ -180,5 +180,16 @@
       "name"
     ],
     "reason": "React Native has no form submission, so a field has no name to submit under."
+  },
+  "currency-select": {
+    "props": [
+      "aria-describedby",
+      "aria-invalid",
+      "aria-required",
+      "name",
+      "sheet",
+      "searchPlaceholder"
+    ],
+    "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box."
   }
 }

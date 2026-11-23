@@ -90,7 +90,7 @@ function flat(entry, seen = new Set()) {
   seen.add(entry);
   const out = [...entry.__own];
   for (const clause of entry.extends) {
-    const m = /^(Omit|Pick)<\s*(\w+)\s*,\s*(.+)>$/.exec(clause);
+    const m = /^(Omit|Pick)<\s*(\w+)(?:<[^>]*>)?\s*,\s*(.+)>$/.exec(clause);
     const base = m ? m[2] : clause.replace(/<.*$/, '');
     const keys = m ? [...m[3].matchAll(/'([^']+)'/g)].map((k) => k[1]) : [];
     const parent = byFullName(base);

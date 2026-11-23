@@ -641,6 +641,146 @@
       "title"
     ]
   },
+  "combobox": {
+    "web": null,
+    "native": "ComboboxField",
+    "shared": [],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": [
+      "defaultValue",
+      "description",
+      "disabled",
+      "emptyText",
+      "error",
+      "helperText",
+      "invalid",
+      "label",
+      "loading",
+      "noneOption",
+      "onSearch",
+      "onValueChange",
+      "options",
+      "placeholder",
+      "readOnly",
+      "required",
+      "searchDebounce",
+      "searchPlaceholder",
+      "selectedOption",
+      "size",
+      "value"
+    ]
+  },
+  "currency-select": {
+    "web": "CurrencySelect",
+    "native": "CurrencySelect",
+    "shared": [
+      "currencies",
+      "defaultValue",
+      "disabled",
+      "locale",
+      "onValueChange",
+      "placeholder",
+      "priority",
+      "value"
+    ],
+    "webOnly": [
+      "emptyText",
+      "invalid",
+      "noneOption",
+      "priorityLabel",
+      "readOnly",
+      "required",
+      "restLabel",
+      "size"
+    ],
+    "onPurpose": [
+      "aria-describedby",
+      "aria-invalid",
+      "aria-required",
+      "name",
+      "searchPlaceholder",
+      "sheet"
+    ],
+    "nativeOnly": [
+      "error",
+      "helperText",
+      "label"
+    ]
+  },
+  "switch-field": {
+    "web": "SwitchField",
+    "native": "SwitchField",
+    "shared": [
+      "checked",
+      "checkedIcon",
+      "defaultChecked",
+      "description",
+      "disabled",
+      "error",
+      "invalid",
+      "label",
+      "layout",
+      "loading",
+      "onCheckedChange",
+      "readOnly",
+      "size",
+      "uncheckedIcon"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "checkbox-field": {
+    "web": "CheckboxField",
+    "native": "CheckboxField",
+    "shared": [
+      "aside",
+      "checked",
+      "defaultChecked",
+      "description",
+      "disabled",
+      "error",
+      "invalid",
+      "label",
+      "onCheckedChange",
+      "readOnly",
+      "size"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "file-upload": {
+    "web": "FileUploadRoot",
+    "native": "FileUpload",
+    "shared": [
+      "accept",
+      "busy",
+      "capture",
+      "defaultFiles",
+      "disabled",
+      "files",
+      "maxFiles",
+      "maxSize",
+      "onFilesChange",
+      "onReject",
+      "progress",
+      "readOnly",
+      "transform",
+      "validate"
+    ],
+    "webOnly": [
+      "invalid"
+    ],
+    "onPurpose": [],
+    "nativeOnly": [
+      "addLabel",
+      "captureLabel",
+      "multiple",
+      "pickFiles"
+    ]
+  },
   "filter-builder": {
     "web": "FilterBuilder",
     "native": "FilterSheet",

@@ -1045,6 +1045,69 @@
         "type": "string",
         "required": false,
         "description": "BCP 47 locale for the names and symbols. Defaults to the provider's locale."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "defaultValue",
+        "type": "T",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: T) => void",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Select"
       }
     ]
   },
@@ -1520,19 +1583,15 @@
   },
   "DateTimeField": {
     "file": "components/datetime.tsx",
-    "extends": [],
+    "extends": [
+      "DateTimeFieldBaseProps"
+    ],
     "props": [
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "Visible label above the field; also its accessible name and the picker sheet's title."
-      },
       {
         "name": "value",
         "type": "Date | string | null",
         "required": false,
-        "description": "The value. A `Date` for the date, time and datetime modes; with `granularity` month or year,\na `'YYYY-MM'` or `'YYYY'` string (a `Date` is read too). `null` is empty. Leave it out for an\nuncontrolled field."
+        "description": "The value; `null` is empty. A `'YYYY-MM-DD'` string is read too. Leave it out for an uncontrolled field."
       },
       {
         "name": "defaultValue",
@@ -1544,158 +1603,393 @@
         "name": "onValueChange",
         "type": "DateTimeFieldChangeHandler",
         "required": false,
-        "description": "Called with the new value: a `Date`, a `'YYYY-MM'` / `'YYYY'` string, or `null` when cleared."
+        "description": "Called with the new `Date`, or `null` when cleared."
+      },
+      {
+        "name": "granularity",
+        "type": "'day'",
+        "required": false,
+        "default": "'day'",
+        "description": "11.8: `'month'` or `'year'` picks a whole month or year instead: see DateTimeFieldPeriodProps."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field; also its accessible name and the picker sheet's title.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "mode",
         "type": "'date' | 'time' | 'datetime'",
         "required": false,
         "default": "'date'",
-        "description": "What the platform picker edits. 11.8: `'datetime'` picks a date and then a time in one field."
-      },
-      {
-        "name": "granularity",
-        "type": "DateGranularity",
-        "required": false,
-        "default": "'day'",
-        "description": "11.8: `'month'` or `'year'` picks a whole month or year from a grid in a sheet (the platform\npicker has no such mode). The value is then a string, `'2026-03'` or `'2026'`, so it never\ncarries a day or a time zone. `mode` is ignored."
+        "description": "What the platform picker edits. 11.8: `'datetime'` picks a date and then a time in one field.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "minDate",
         "type": "Date",
         "required": false,
-        "description": "Earliest date the picker allows. With month or year granularity, earlier months or years are disabled."
+        "description": "Earliest date the picker allows. With month or year granularity, earlier months or years are disabled.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "maxDate",
         "type": "Date",
         "required": false,
-        "description": "Latest date the picker allows. With month or year granularity, later months or years are disabled."
+        "description": "Latest date the picker allows. With month or year granularity, later months or years are disabled.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "placeholder",
         "type": "string",
         "required": false,
         "default": "messages.pickDate (pickMonth / pickYear for those granularities)",
-        "description": "Text shown while empty."
+        "description": "Text shown while empty.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "disabled",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "11.8: dimmed, can't be opened or cleared, and read as disabled."
+        "description": "11.8: dimmed, can't be opened or cleared, and read as disabled.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "readOnly",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "11.8: shows the value, but the picker can't open and the value can't be cleared. Still focusable."
+        "description": "11.8: shows the value, but the picker can't open and the value can't be cleared. Still focusable.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "invalid",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too."
+        "description": "11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "error",
         "type": "string",
         "required": false,
-        "description": "11.8: error message under the field: red outline, announced, read as the field's hint."
+        "description": "11.8: error message under the field: red outline, announced, read as the field's hint.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "size",
         "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
         "required": false,
         "default": "'lg'",
-        "description": "11.8: field height (the TextField sizes)."
+        "description": "11.8: field height (the TextField sizes).",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "locale",
         "type": "string",
         "required": false,
         "default": "the provider's locale",
-        "description": "11.8: BCP 47 locale for the field's text and the iOS picker."
+        "description": "11.8: BCP 47 locale for the field's text and the iOS picker.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "disabledDates",
         "type": "DateMatcher | DateMatcher[]",
         "required": false,
-        "description": "11.8: days that can't be picked: one rule or a list (see `DateMatcher`), as web. The platform\npicker can't grey days out, so picking one keeps the old value and says the day is unavailable.\nPresets on such days are disabled."
+        "description": "11.8: days that can't be picked: one rule or a list (see `DateMatcher`), as web. The platform\npicker can't grey days out, so picking one keeps the old value and says the day is unavailable.\nPresets on such days are disabled.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "presets",
         "type": "{ label: string; date: Date }[]",
         "required": false,
-        "description": "11.8: quick picks shown as chips under the field (Today, Tomorrow…); a tap sets the value.\nIn datetime mode the time of the current value (or `defaultTime`) is kept. Not for time mode\nor month and year granularity."
+        "description": "11.8: quick picks shown as chips under the field (Today, Tomorrow…); a tap sets the value.\nIn datetime mode the time of the current value (or `defaultTime`) is kept. Not for time mode\nor month and year granularity.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "minuteStep",
         "type": "number",
         "required": false,
         "default": "1",
-        "description": "11.8: minutes between choices in time and datetime modes. iOS uses it as the wheel's interval; elsewhere the picked time is rounded to it."
+        "description": "11.8: minutes between choices in time and datetime modes. iOS uses it as the wheel's interval; elsewhere the picked time is rounded to it.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "clearable",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "11.8: a clear button inside the field while it has a value; clearing calls `onValueChange(null)`."
+        "description": "11.8: a clear button inside the field while it has a value; clearing calls `onValueChange(null)`.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "loading",
         "type": "boolean",
         "required": false,
         "default": "false",
-        "description": "11.8: spinner at the end of the field, and busy for screen readers."
+        "description": "11.8: spinner at the end of the field, and busy for screen readers.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "defaultTime",
         "type": "string",
         "required": false,
         "default": "'09:00'",
-        "description": "11.8: 24-hour `\"HH:mm\"` time a date gets when it is picked before any time (date and datetime modes)."
+        "description": "11.8: 24-hour `\"HH:mm\"` time a date gets when it is picked before any time (date and datetime modes).",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "timeZone",
         "type": "string",
         "required": false,
-        "description": "11.8: IANA time zone (`'Europe/Paris'`) the value is shown and picked in, with its name under\nthe field. The value is still an instant (`Date`)."
+        "description": "11.8: IANA time zone (`'Europe/Paris'`) the value is shown and picked in, with its name under\nthe field. The value is still an instant (`Date`).",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "leadingIcon",
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "default": "Calendar (Clock in time mode)",
-        "description": "11.8: icon at the start of the field."
+        "description": "11.8: icon at the start of the field.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "trailingIcon",
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
-        "description": "11.8: icon at the end of the field."
+        "description": "11.8: icon at the end of the field.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "leadingAddon",
         "type": "React.ReactNode",
         "required": false,
-        "description": "11.8: text or a node at the start of the field, e.g. \"From\". A string is read with the value."
+        "description": "11.8: text or a node at the start of the field, e.g. \"From\". A string is read with the value.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "trailingAddon",
         "type": "React.ReactNode",
         "required": false,
-        "description": "11.8: text or a node at the end of the field, e.g. \"local time\". A string is read with the value."
+        "description": "11.8: text or a node at the end of the field, e.g. \"local time\". A string is read with the value.",
+        "inherited": "DateTimeFieldBase"
       },
       {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
-        "description": ""
+        "description": "",
+        "inherited": "DateTimeFieldBase"
+      }
+    ]
+  },
+  "DateTimeFieldPeriod": {
+    "file": "components/datetime.tsx",
+    "extends": [
+      "DateTimeFieldBaseProps"
+    ],
+    "props": [
+      {
+        "name": "granularity",
+        "type": "'month' | 'year'",
+        "required": true,
+        "default": "'day'",
+        "description": "`'2026-03'` for a month, `'2026'` for a year, so it never carries a day or a time zone. `mode` is ignored."
+      },
+      {
+        "name": "value",
+        "type": "string | Date | null",
+        "required": false,
+        "description": "The value as a `'YYYY-MM'` or `'YYYY'` string (a `Date` is read too); `null` is empty."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | Date | null",
+        "required": false,
+        "description": "The starting value of an uncontrolled field, in the same shape as `value`."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: string | null) => void",
+        "required": false,
+        "description": "Called with the new `'YYYY-MM'` / `'YYYY'` string, or `null` when cleared."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field; also its accessible name and the picker sheet's title.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "mode",
+        "type": "'date' | 'time' | 'datetime'",
+        "required": false,
+        "default": "'date'",
+        "description": "What the platform picker edits. 11.8: `'datetime'` picks a date and then a time in one field.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "minDate",
+        "type": "Date",
+        "required": false,
+        "description": "Earliest date the picker allows. With month or year granularity, earlier months or years are disabled.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "maxDate",
+        "type": "Date",
+        "required": false,
+        "description": "Latest date the picker allows. With month or year granularity, later months or years are disabled.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "messages.pickDate (pickMonth / pickYear for those granularities)",
+        "description": "Text shown while empty.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: dimmed, can't be opened or cleared, and read as disabled.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: shows the value, but the picker can't open and the value can't be cleared. Still focusable.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "11.8: error message under the field: red outline, announced, read as the field's hint.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": "11.8: field height (the TextField sizes).",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "default": "the provider's locale",
+        "description": "11.8: BCP 47 locale for the field's text and the iOS picker.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "disabledDates",
+        "type": "DateMatcher | DateMatcher[]",
+        "required": false,
+        "description": "11.8: days that can't be picked: one rule or a list (see `DateMatcher`), as web. The platform\npicker can't grey days out, so picking one keeps the old value and says the day is unavailable.\nPresets on such days are disabled.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "presets",
+        "type": "{ label: string; date: Date }[]",
+        "required": false,
+        "description": "11.8: quick picks shown as chips under the field (Today, Tomorrow…); a tap sets the value.\nIn datetime mode the time of the current value (or `defaultTime`) is kept. Not for time mode\nor month and year granularity.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "minuteStep",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "11.8: minutes between choices in time and datetime modes. iOS uses it as the wheel's interval; elsewhere the picked time is rounded to it.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: a clear button inside the field while it has a value; clearing calls `onValueChange(null)`.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: spinner at the end of the field, and busy for screen readers.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "defaultTime",
+        "type": "string",
+        "required": false,
+        "default": "'09:00'",
+        "description": "11.8: 24-hour `\"HH:mm\"` time a date gets when it is picked before any time (date and datetime modes).",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "timeZone",
+        "type": "string",
+        "required": false,
+        "description": "11.8: IANA time zone (`'Europe/Paris'`) the value is shown and picked in, with its name under\nthe field. The value is still an instant (`Date`).",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "default": "Calendar (Clock in time mode)",
+        "description": "11.8: icon at the start of the field.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": "11.8: icon at the end of the field.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "11.8: text or a node at the start of the field, e.g. \"From\". A string is read with the value.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "11.8: text or a node at the end of the field, e.g. \"local time\". A string is read with the value.",
+        "inherited": "DateTimeFieldBase"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "DateTimeFieldBase"
       }
     ]
   },

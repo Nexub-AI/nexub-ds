@@ -920,4 +920,4 @@ export function FAB({
 // 11.8: lives in ./datetime (month / year grid, presets, time zones); re-exported here.
 
 export { DateTimeField } from './datetime';
-export type { DateTimeFieldProps, DateMatcher, DateTimeFieldChangeHandler } from './datetime';
+export type { DateTimeFieldProps, DateTimeFieldPeriodProps, DateMatcher, DateTimeFieldChangeHandler } from './datetime';

@@ -6,7 +6,6 @@ import {
   parseDateValue,
   todayParts,
   type ControlSize,
-  type DateGranularity,
   type DateParts,
 } from '@nexub/core';
 import { Calendar, ChevronLeft, ChevronRight, Clock, X, type NativeIconProps } from '@nexub/icons/native';
@@ -37,35 +36,19 @@ try {
 export type DateMatcher = Date | ((date: Date) => boolean) | { dayOfWeek: number[] } | { before: Date } | { after: Date };
 
 /**
- * DateTimeField `onValueChange`: a `Date` (date, time and datetime modes), a `'YYYY-MM'` or
- * `'YYYY'` string (month and year granularity), or `null` when cleared. Written so a handler
- * that only takes a `Date` (`(d: Date) => void`) still fits.
+ * DateTimeField `onValueChange` in the date, time and datetime modes: a `Date`, or `null` when
+ * cleared. Written so a handler that only takes a `Date` (`(d: Date) => void`), or a
+ * `useState<Date | null>` setter, still fits.
  */
 export type DateTimeFieldChangeHandler = {
-  bivarianceHack(value: Date | string | null): void;
+  bivarianceHack(value: Date | null): void;
 }['bivarianceHack'];
 
-export interface DateTimeFieldProps {
+interface DateTimeFieldBaseProps {
   /** Visible label above the field; also its accessible name and the picker sheet's title. */
   label: string;
-  /**
-   * The value. A `Date` for the date, time and datetime modes; with `granularity` month or year,
-   * a `'YYYY-MM'` or `'YYYY'` string (a `Date` is read too). `null` is empty. Leave it out for an
-   * uncontrolled field.
-   */
-  value?: Date | string | null;
-  /** 11.8: the starting value of an uncontrolled field, in the same shape as `value`. */
-  defaultValue?: Date | string | null;
-  /** Called with the new value: a `Date`, a `'YYYY-MM'` / `'YYYY'` string, or `null` when cleared. */
-  onValueChange?: DateTimeFieldChangeHandler;
   /** What the platform picker edits. 11.8: `'datetime'` picks a date and then a time in one field. @default 'date' */
   mode?: 'date' | 'time' | 'datetime';
-  /**
-   * 11.8: `'month'` or `'year'` picks a whole month or year from a grid in a sheet (the platform
-   * picker has no such mode). The value is then a string, `'2026-03'` or `'2026'`, so it never
-   * carries a day or a time zone. `mode` is ignored. @default 'day'
-   */
-  granularity?: DateGranularity;
   /** Earliest date the picker allows. With month or year granularity, earlier months or years are disabled. */
   minDate?: Date;
   /** Latest date the picker allows. With month or year granularity, later months or years are disabled. */
@@ -195,6 +178,30 @@ function zoneName(zone: string, locale: string, at: Date): string {
   }
 }
 
+/** The date, time and datetime modes: the value is a `Date`. */
+export interface DateTimeFieldProps extends DateTimeFieldBaseProps {
+  /** The value; `null` is empty. A `'YYYY-MM-DD'` string is read too. Leave it out for an uncontrolled field. */
+  value?: Date | string | null;
+  /** 11.8: the starting value of an uncontrolled field, in the same shape as `value`. */
+  defaultValue?: Date | string | null;
+  /** Called with the new `Date`, or `null` when cleared. */
+  onValueChange?: DateTimeFieldChangeHandler;
+  /** 11.8: `'month'` or `'year'` picks a whole month or year instead: see DateTimeFieldPeriodProps. @default 'day' */
+  granularity?: 'day';
+}
+
+/** 11.8: a whole month or year, picked from a grid in a sheet (the platform picker has no such mode). */
+export interface DateTimeFieldPeriodProps extends DateTimeFieldBaseProps {
+  /** `'2026-03'` for a month, `'2026'` for a year, so it never carries a day or a time zone. `mode` is ignored. */
+  granularity: 'month' | 'year';
+  /** The value as a `'YYYY-MM'` or `'YYYY'` string (a `Date` is read too); `null` is empty. */
+  value?: string | Date | null;
+  /** The starting value of an uncontrolled field, in the same shape as `value`. */
+  defaultValue?: string | Date | null;
+  /** Called with the new `'YYYY-MM'` / `'YYYY'` string, or `null` when cleared. */
+  onValueChange?: (value: string | null) => void;
+}
+
 /**
  * A field that opens the platform picker (Android dialog, iOS inline calendar in a sheet), or a
  * month / year grid in a sheet with `granularity`. The twin of web DatePicker, TimePicker and
@@ -228,7 +235,7 @@ export function DateTimeField({
   leadingAddon,
   trailingAddon,
   style,
-}: DateTimeFieldProps) {
+}: DateTimeFieldProps | DateTimeFieldPeriodProps) {
   const theme = useTheme();
   const { roles, tokens, messages } = theme;
   const locale = localeProp ?? theme.locale;
@@ -238,7 +245,8 @@ export function DateTimeField({
   const [value, setValue] = useControllableState<Date | string | null>({
     value: valueProp,
     defaultValue: defaultValue ?? null,
-    onChange: onValueChange,
+    // Each variant's handler takes what that variant produces (a Date, or a period string).
+    onChange: onValueChange as ((v: Date | string | null) => void) | undefined,
   });
   const period = granularity === 'month' || granularity === 'year' ? granularity : undefined;
   if (!period && !Picker)
