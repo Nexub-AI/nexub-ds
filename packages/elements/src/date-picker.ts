@@ -75,7 +75,9 @@ export class NxDatePicker extends NxFieldElement {
   /** @internal */
   protected readonly control: HTMLInputElement = el('input', { type: 'text', part: 'input', autocomplete: 'off', spellcheck: 'false' });
   readonly #button = el('button', { type: 'button', part: 'button', class: 'open', 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
-  readonly #dialog = el('dialog', { part: 'calendar' });
+  // 11.9: tabindex -1: Firefox and WebKit made the dialog box (a scroll container) a Tab stop of
+  // its own, read as an empty "Pick a date, dialog" between the day grid and the nav buttons.
+  readonly #dialog = el('dialog', { part: 'calendar', tabindex: '-1' });
   readonly #title = el('span', { class: 'title', 'aria-live': 'polite' });
   readonly #prev = el('button', { type: 'button', class: 'nav' });
   readonly #next = el('button', { type: 'button', class: 'nav' });
@@ -118,11 +120,14 @@ export class NxDatePicker extends NxFieldElement {
       if (cell && !cell.disabled) this.#pick(cell.dataset.value!);
     });
     this.#body.addEventListener('keydown', this.#onGridKey);
-    this.#dialog.addEventListener('close', () => {
-      this.#button.setAttribute('aria-expanded', 'false');
-      window.removeEventListener('resize', this.#place);
-      window.removeEventListener('scroll', this.#place, true);
-      this.control.focus();
+    // Other ways the dialog closes (a close request the keydown below doesn't see, such as Android
+    // back) reach the same clean-up through the `close` event, a task later.
+    this.#dialog.addEventListener('close', () => this.#closed());
+    // Escape through close() (above), not the dialog's own cancel, so focus goes straight to the field.
+    this.#dialog.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || e.isComposing) return;
+      e.preventDefault();
+      this.close();
     });
     // A press on the backdrop (outside the dialog's box) closes it, as a popover's outside click.
     this.#dialog.addEventListener('click', (e) => {
@@ -190,7 +195,22 @@ export class NxDatePicker extends NxFieldElement {
 
   /** Closes the calendar; focus goes back to the field. */
   close(): void {
-    if (this.open) this.#dialog.close();
+    if (!this.open) return;
+    this.#dialog.close();
+    // 11.9: straight to the field, in this task. The dialog's own focus restore lands on the
+    // calendar button, and the `close` event (which used to focus the field) comes a task later:
+    // long enough for a screen reader to announce the button first ("Pick a date, button, collapsed").
+    this.#closed();
+  }
+
+  /** After the dialog closed: collapsed, no more placing, focus on the field. Runs once per close. */
+  #closed(): void {
+    // Already done, or open again by the time a late `close` event arrives.
+    if (this.open || this.#button.getAttribute('aria-expanded') === 'false') return;
+    this.#button.setAttribute('aria-expanded', 'false');
+    window.removeEventListener('resize', this.#place);
+    window.removeEventListener('scroll', this.#place, true);
+    this.control.focus();
   }
 
   override attributeChangedCallback(name: string, old: string | null, next: string | null): void {
@@ -258,7 +278,24 @@ export class NxDatePicker extends NxFieldElement {
     if (this.control.value !== text) this.control.value = text;
     this.control.placeholder = formatHint(g, this.#locale);
     this.#button.disabled = this.isDisabled || this.readOnly;
-    this.#button.setAttribute('aria-label', g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear);
+    this.#nameButton();
+  }
+
+  /**
+   * 11.9: the calendar button carries the field's name ("Pick a date, Start date"), so two pickers
+   * on a form don't list as two identical "Pick a date" buttons (a screen reader's button list).
+   */
+  #nameButton(): void {
+    const g = this.granularity;
+    const pick = g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear;
+    const field = this.control.getAttribute('aria-label');
+    this.#button.setAttribute('aria-label', field ? `${pick}, ${field}` : pick);
+  }
+
+  /** @internal */
+  protected override nameControl(): void {
+    super.nameControl();
+    this.#nameButton();
   }
 
   /** Blur and Enter: the typed text becomes the value, or stays as typed and invalid. */
@@ -470,7 +507,8 @@ export class NxDatePicker extends NxFieldElement {
     const [pl, nl] = g === 'day' ? [labels.previousMonth, labels.nextMonth] : g === 'month' ? [labels.previousYear, labels.nextYear] : [labels.previousYears, labels.nextYears];
     this.#prev.setAttribute('aria-label', pl);
     this.#next.setAttribute('aria-label', nl);
-    this.#title.textContent = title;
+    // Only when it changes: the title is a live region, and every arrow key redraws the grid.
+    if (this.#title.textContent !== title) this.#title.textContent = title;
     this.#dialog.setAttribute('aria-label', g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear);
     this.#body.replaceChildren(grid);
   }

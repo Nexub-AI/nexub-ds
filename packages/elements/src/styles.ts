@@ -38,8 +38,10 @@ export const fieldCss = /* css */ `
   cursor: not-allowed; border-color: var(--color-outline-variant);
   background: var(--color-surface-container-low); color: var(--color-text-disabled);
 }
+/* 11.9: inline-size 100% (not the input's own ~20ch width) so the field's narrowest size is its
+   padding and button: at a 20rem viewport (WCAG 1.4.10 reflow) a grid or flex parent no longer overflows. */
 input {
-  flex: 1; min-inline-size: 0; block-size: 100%; margin: 0; padding: 0; border: 0; outline: none;
+  flex: 1; min-inline-size: 0; inline-size: 100%; block-size: 100%; margin: 0; padding: 0; border: 0; outline: none;
   background: transparent; color: inherit; font: inherit; font-variant-numeric: tabular-nums;
 }
 input::placeholder { color: var(--color-on-surface-muted); opacity: 1; }
