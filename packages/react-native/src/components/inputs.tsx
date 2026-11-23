@@ -56,6 +56,8 @@ export interface TextFieldProps extends Omit<TextInputProps, 'style' | 'editable
   helperText?: string;
   /** Error message: red outline, announced, replaces the helper text. */
   error?: string;
+  /** Shows a required marker after the label, like web FormField. Checking the value is up to you. */
+  required?: boolean;
   disabled?: boolean;
   /**
    * Field height, the same names as web Input's `size`: `sm` and `md` are the compact desktop
@@ -149,6 +151,7 @@ function Field({
   onBlur,
   onChangeText,
   chrome = 'field',
+  required,
   ...rest
 }: TextFieldProps & { chrome?: 'field' | 'search' }) {
   const theme = useTheme();
@@ -200,6 +203,7 @@ function Field({
           importantForAccessibility="no"
         >
           {label}
+          {required && <Text color="error">{' *'}</Text>}
         </Text>
       )}
       <Animated.View
@@ -1069,6 +1073,8 @@ export interface SegmentedControlProps<T extends string> {
   value?: T;
   defaultValue?: T;
   onValueChange?: (value: T) => void;
+  /** Segment height: `sm` (the default, 34) or `md` and `lg`, the field heights. */
+  size?: 'sm' | 'md' | 'lg';
   style?: StyleProp<ViewStyle>;
 }
 
@@ -1079,6 +1085,7 @@ export function SegmentedControl<T extends string>({
   value,
   defaultValue,
   onValueChange,
+  size = 'sm',
   style,
 }: SegmentedControlProps<T>) {
   const theme = useTheme();
@@ -1150,7 +1157,7 @@ export function SegmentedControl<T extends string>({
             style={[
               {
                 flex: 1,
-                height: controlHeight(theme, 'sm') + 2,
+                height: controlHeight(theme, size) + (size === 'sm' ? 2 : 0),
                 borderRadius: tokens.shape.control,
                 alignItems: 'center',
                 justifyContent: 'center',

@@ -32,6 +32,7 @@ const aliases = {};
 const resolve = (t) => aliases[t] ?? t;
 
 const result = {};
+const all = {}; // non-exported or non-Props interfaces, by full name
 for (const dir of dirs) {
   for (const file of readdirSync(join(pkg, dir)).filter((f) => f.endsWith('.tsx') && !f.includes('.test.'))) {
     const src = ts.createSourceFile(file, readFileSync(join(pkg, dir, file), 'utf8'), ts.ScriptTarget.Latest, true);
@@ -51,11 +52,13 @@ for (const dir of dirs) {
       ts.forEachChild(node, visit);
     });
     for (const st of src.statements) {
-      if (!ts.isInterfaceDeclaration(st) || !st.name.text.endsWith('Props')) continue;
-      if (!st.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) continue;
-      const name = st.name.text.replace(/Props$/, '');
-      const ext = st.heritageClauses?.flatMap((h) => h.types.map((t) => t.getText(src))) ?? [];
-      result[name] = {
+      if (!ts.isInterfaceDeclaration(st)) continue;
+      const exported = st.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
+      const ext = st.heritageClauses?.flatMap((h) => h.types.map((t) => t.getText(src).replace(/\s+/g, ' '))) ?? [];
+      // Every interface, so `extends StepperBaseProps` or `Omit<TextFieldProps, …>` can be followed below.
+      const target = exported && st.name.text.endsWith('Props') ? result : (all[st.name.text] = {}, all);
+      const name = target === result ? st.name.text.replace(/Props$/, '') : st.name.text;
+      target[name] = {
         file: `${dir}/${file}`,
         extends: ext,
         props: st.members.filter(ts.isPropertySignature).map((m) => {
@@ -77,6 +80,33 @@ for (const dir of dirs) {
     }
   }
 }
+
+// 11.8: add inherited props, so `PasswordInputProps extends Omit<TextFieldProps, …>` lists TextField's
+// props too (own props win; each inherited one names its source). Types outside the package
+// (TextInputProps, ViewProps) aren't followed: they are React Native's, not ours.
+const byFullName = (n) => result[n.replace(/Props$/, '')] && n.endsWith('Props') ? result[n.replace(/Props$/, '')] : all[n];
+function flat(entry, seen = new Set()) {
+  if (seen.has(entry)) return [];
+  seen.add(entry);
+  const out = [...entry.__own];
+  for (const clause of entry.extends) {
+    const m = /^(Omit|Pick)<\s*(\w+)\s*,\s*(.+)>$/.exec(clause);
+    const base = m ? m[2] : clause.replace(/<.*$/, '');
+    const keys = m ? [...m[3].matchAll(/'([^']+)'/g)].map((k) => k[1]) : [];
+    const parent = byFullName(base);
+    if (!parent) continue;
+    for (const p of flat(parent, seen)) {
+      if (m?.[1] === 'Omit' && keys.includes(p.name)) continue;
+      if (m?.[1] === 'Pick' && !keys.includes(p.name)) continue;
+      if (out.some((o) => o.name === p.name)) continue;
+      out.push({ ...p, inherited: p.inherited ?? base.replace(/Props$/, '') });
+    }
+  }
+  return out;
+}
+for (const v of [...Object.values(result), ...Object.values(all)]) Object.defineProperty(v, '__own', { value: v.props, enumerable: false });
+const flattened = Object.fromEntries(Object.entries(result).map(([k, v]) => [k, flat(v)]));
+for (const [k, props] of Object.entries(flattened)) result[k].props = props;
 
 const json = JSON.stringify(result, null, 2) + '\n';
 if (process.argv.includes('--check')) {

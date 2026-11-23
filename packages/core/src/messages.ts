@@ -24,6 +24,8 @@ export interface NexubMessages {
   uploadFile: string;
   /** 11.8: native FileUpload's camera button. */
   takePhoto: string;
+  /** 11.8: native Link's hint when `external`. */
+  opensExternally: string;
   uploading: string;
   clearSearch: string;
   showPassword: string;
@@ -410,6 +412,7 @@ export const defaultMessages: NexubMessages = {
   orDragAndDrop: 'or drag and drop',
   uploadFile: 'Upload file',
   takePhoto: 'Take photo',
+  opensExternally: 'Opens externally',
   uploading: 'Uploading',
   clearSearch: 'Clear search',
   showPassword: 'Show password',

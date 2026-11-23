@@ -35,13 +35,36 @@
         "name": "loading",
         "type": "boolean",
         "required": false,
-        "description": "Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`."
+        "default": "false",
+        "description": "Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`. Same as `status=\"loading\"`."
       },
       {
         "name": "loadingLabel",
         "type": "string",
         "required": false,
-        "description": ""
+        "default": "'Loading…' (the provider's `loading` message)",
+        "description": "Announced while loading."
+      },
+      {
+        "name": "status",
+        "type": "'idle' | 'loading' | 'success' | 'error'",
+        "required": false,
+        "default": "'idle'",
+        "description": "Async feedback, as on web. `loading` shows a spinner and blocks presses, `success`\nshows a check, `error` plays the error haptic. Screen readers hear each change.\nWins over `loading`."
+      },
+      {
+        "name": "successLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Done'",
+        "description": "Announced on success. When given, it also replaces the visible label while `status` is `success`."
+      },
+      {
+        "name": "errorLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Something went wrong'",
+        "description": "Announced on error."
       },
       {
         "name": "fullWidth",
@@ -60,6 +83,36 @@
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
       }
     ]
   },
@@ -112,6 +165,36 @@
         "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "A spinner replaces the icon (the size is kept), presses are blocked and screen readers hear it as busy."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
       }
     ]
   },
@@ -133,6 +216,13 @@
         "description": "'vertical' puts actions full-width in a column (bottom of forms)."
       },
       {
+        "name": "attached",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Joins the buttons into one connected control (M3 Expressive, as on web): capsule\nouter ends, small inner corners and a 2pt seam, so each keeps its own pressed state."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -151,13 +241,496 @@
         "type": "string",
         "required": true,
         "description": ""
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "required": false,
+        "description": "A URL opened with `Linking.openURL` when the link is pressed. `onPress`, when given, runs instead."
+      },
+      {
+        "name": "external",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "The link leaves the app (a website, another app): adds the external-link icon and\ntells screen readers it opens externally. With `href`, the URL opens through `Linking`."
+      },
+      {
+        "name": "variant",
+        "type": "'default' | 'muted' | 'underlined'",
+        "required": false,
+        "default": "'default'",
+        "description": "`default` and `underlined` are the primary colour, `muted` the muted text colour.\nAll stay underlined, since touch screens have no hover to reveal a link."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
+      }
+    ]
+  },
+  "SwitchField": {
+    "file": "components/choicefields.tsx",
+    "extends": [
+      "Omit<SwitchProps, 'accessibilityHint'>"
+    ],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label, also the switch's accessible name. Pressing it toggles the switch."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "Help under the label, read after the label by screen readers."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "The error under the field; also marks the switch invalid."
+      },
+      {
+        "name": "layout",
+        "type": "'start' | 'end'",
+        "required": false,
+        "default": "'end'",
+        "description": "`'end'`: label first, the switch at the row's end (settings lists). `'start'`: the switch\nfirst, then the label, compact for tight rows."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "Switch"
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "",
+        "inherited": "Switch"
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": "",
+        "inherited": "Switch"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "Switch"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner beside the switch and busy for screen readers; it can't toggle while loading.",
+        "inherited": "Switch"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Error colour on the track and announced as invalid.",
+        "inherited": "Switch"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Can be focused and read but not toggled.",
+        "inherited": "Switch"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "`md` is the platform switch's own size; `sm` and `lg` scale it.",
+        "inherited": "Switch"
+      },
+      {
+        "name": "checkedIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Small icon inside the thumb while on. With an icon the Nexub-drawn switch is used, since the\nplatform switch has no room for one.",
+        "inherited": "Switch"
+      },
+      {
+        "name": "uncheckedIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Small icon inside the thumb while off. Uses the Nexub-drawn switch, like `checkedIcon`.",
+        "inherited": "Switch"
+      }
+    ]
+  },
+  "CheckboxField": {
+    "file": "components/choicefields.tsx",
+    "extends": [
+      "Omit<CheckboxProps, 'accessibilityHint'>"
+    ],
+    "props": [
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "The error under the field; also marks the checkbox invalid."
+      },
+      {
+        "name": "aside",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "At the row's end: a price, a count."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "checked",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "defaultChecked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(checked: boolean) => void",
+        "required": false,
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "Box and label size, the same names as web Checkbox: `sm`, `md`, `lg`.",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red box and announced as invalid.",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Can be focused and read but not changed: pressing it does nothing.",
+        "inherited": "Checkbox"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Checkbox"
+      }
+    ]
+  },
+  "CheckboxGroupField": {
+    "file": "components/choicefields.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The question the choices answer; the group's accessible name."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "Help under the label."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "One error for the whole group, under it; also marks every box invalid."
+      },
+      {
+        "name": "options",
+        "type": "CheckboxGroupOption[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "value",
+        "type": "string[]",
+        "required": false,
+        "description": "The picked values (controlled)."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string[]",
+        "required": false,
+        "description": "The values picked at first, when `value` isn't set."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: string[]) => void",
+        "required": false,
+        "description": "Called with the picked values, in the order they were picked."
+      },
+      {
+        "name": "orientation",
+        "type": "'row' | 'column'",
+        "required": false,
+        "default": "'column'",
+        "description": ""
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "Disables every box."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Every box can be read but not changed."
+      },
+      {
+        "name": "size",
+        "type": "CheckboxProps['size']",
+        "required": false,
+        "default": "'md'",
+        "description": "Box and label size of every option."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ComboboxField": {
+    "file": "components/combobox.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field; also the sheet's title and part of the field's accessible name."
+      },
+      {
+        "name": "options",
+        "type": "readonly ComboboxOption[]",
+        "required": true,
+        "description": "The choices. With an async `onSearch`, these show until the first search answers."
+      },
+      {
+        "name": "value",
+        "type": "string | null",
+        "required": false,
+        "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string | null",
+        "required": false,
+        "default": "null",
+        "description": "The value to start with when uncontrolled."
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: string | null) => void",
+        "required": false,
+        "description": "Called with the picked value, or `null` when the \"none\" option is picked."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "'Select…'",
+        "description": "Shown in the field when nothing is picked."
+      },
+      {
+        "name": "searchPlaceholder",
+        "type": "string",
+        "required": false,
+        "default": "'Search…'",
+        "description": "The search box's placeholder."
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "required": false,
+        "default": "'No results found.'",
+        "description": "Shown when the search finds nothing."
+      },
+      {
+        "name": "noneOption",
+        "type": "string",
+        "required": false,
+        "description": "A first option that clears the value (`null`), labelled with this text, e.g. \"No manager\"."
+      },
+      {
+        "name": "onSearch",
+        "type": "AsyncSearch<ComboboxOption>",
+        "required": false,
+        "description": "Async search, called with the typed text after `searchDebounce`. Return a promise of options\nand the sheet shows them, with a loading row while it runs and a retry row if it rejects; an\nanswer that arrives after a newer search started is ignored. Return nothing to set `options`\nand `loading` yourself, as on web. Either way the list is not filtered here."
+      },
+      {
+        "name": "searchDebounce",
+        "type": "number",
+        "required": false,
+        "default": "300",
+        "description": "Milliseconds to wait after the last keystroke before `onSearch` runs."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "The options are loading (when you run the search yourself). Shows the loading row."
+      },
+      {
+        "name": "selectedOption",
+        "type": "ComboboxOption",
+        "required": false,
+        "description": "The picked option when it may not be in `options` (async search: its label before any search has run)."
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "The web name for `helperText`: help under the field."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error under the field: red outline, and read out with the field."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Marks the field invalid without a message (red outline)."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Adds \"required\" to the field's accessible hint."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value; the sheet can't open. Stays focusable for screen readers."
+      },
+      {
+        "name": "size",
+        "type": "FieldSize",
+        "required": false,
+        "default": "'lg'",
+        "description": ""
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
       }
     ]
   },
   "Card": {
     "file": "components/containers.tsx",
     "extends": [
-      "SurfaceProps"
+      "Omit<SurfaceProps, 'tone'>"
     ],
     "props": [
       {
@@ -171,6 +744,50 @@
         "type": "string",
         "required": false,
         "description": "Accessible name when pressable."
+      },
+      {
+        "name": "tone",
+        "type": "SurfaceTone | ToneValue",
+        "required": false,
+        "default": "'surface-container-low'",
+        "description": "A surface tier (`surface-container-low`, …) sets the card's background. A semantic or\nproduct tone (`info`, `danger`, `payub`, …) adds a coloured start edge, as on web."
+      },
+      {
+        "name": "variant",
+        "type": "'flat' | 'surface' | 'interactive'",
+        "required": false,
+        "default": "'flat'",
+        "description": "`flat` sits on its tier with no shadow. `surface` and `interactive` lift the card one\nelevation step on `surface-elevated` (`interactive` is for a card with `onPress`)."
+      },
+      {
+        "name": "surface",
+        "type": "'solid' | 'glass'",
+        "required": false,
+        "default": "'solid'",
+        "description": "The card's material, as on web: `glass` is Liquid Glass on iOS 26+, a solid elevated tier elsewhere."
+      },
+      {
+        "name": "elevation",
+        "type": "0 | 1 | 2 | 3",
+        "required": false,
+        "default": "0",
+        "description": "",
+        "inherited": "Surface"
+      },
+      {
+        "name": "material",
+        "type": "'solid' | 'glass'",
+        "required": false,
+        "default": "'solid'",
+        "description": "'glass' is for the control layer only (bars, floating controls), never content.",
+        "inherited": "Surface"
+      },
+      {
+        "name": "radius",
+        "type": "ShapeName | number",
+        "required": false,
+        "description": "Corner radius: a shape token or dp.",
+        "inherited": "Surface"
       }
     ]
   },
@@ -212,7 +829,7 @@
         "name": "variant",
         "type": "'static' | 'navigation' | 'switch' | 'checkbox' | 'radio' | 'button' | 'value'",
         "required": false,
-        "default": "'navigation' when onPress is set, else 'static'",
+        "default": "'flat'",
         "description": ""
       },
       {
@@ -388,6 +1005,46 @@
         "type": "StyleProp<ViewStyle & TextStyle>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "now",
+        "type": "() => number",
+        "required": false,
+        "description": "The clock, in ms. Defaults to `Date.now`; inject one for tests and static previews.",
+        "inherited": "UseCountdownOptions"
+      },
+      {
+        "name": "onExpire",
+        "type": "() => void",
+        "required": false,
+        "description": "Called once when the deadline is reached (also when it has already passed on mount).",
+        "inherited": "UseCountdownOptions"
+      }
+    ]
+  },
+  "CurrencySelect": {
+    "file": "components/currency.tsx",
+    "extends": [
+      "Omit<SelectProps<string>, 'options'>"
+    ],
+    "props": [
+      {
+        "name": "currencies",
+        "type": "string[]",
+        "required": false,
+        "description": "Only these ISO 4217 codes, in this order. Default: the 40 most traded currencies (web lists\nevery code; the native sheet has no search)."
+      },
+      {
+        "name": "priority",
+        "type": "string[]",
+        "required": false,
+        "description": "Codes listed first."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "description": "BCP 47 locale for the names and symbols. Defaults to the provider's locale."
       }
     ]
   },
@@ -453,8 +1110,72 @@
         "name": "searchable",
         "type": "boolean",
         "required": false,
-        "default": "more than 8 options",
+        "default": "more than 8 options, or always with `onSearch`, `onInputChange` or `onCreate`",
         "description": "A search field above the options."
+      },
+      {
+        "name": "emptyText",
+        "type": "string",
+        "required": false,
+        "default": "'No results found.'",
+        "description": "Shown when the search finds nothing."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "The options are loading (when you run the search yourself): shows a loading row instead of the list."
+      },
+      {
+        "name": "inputValue",
+        "type": "string",
+        "required": false,
+        "description": "Controlled search text."
+      },
+      {
+        "name": "onInputChange",
+        "type": "(text: string) => void",
+        "required": false,
+        "description": "Called as the user types; options are then shown as given (no built-in filtering)."
+      },
+      {
+        "name": "onSearch",
+        "type": "(text: string) => Promise<readonly MultiSelectOption<T>[]> | void",
+        "required": false,
+        "description": "Async search, called with the typed text after `searchDebounce`. Return a promise of options\nand the sheet shows them, with a loading row and a retry row if it rejects; an answer that\narrives after a newer search started is ignored. Return nothing to set `options` and\n`loading` yourself, as on web. Picked values keep their labels when they drop out of the list."
+      },
+      {
+        "name": "searchDebounce",
+        "type": "number",
+        "required": false,
+        "default": "300",
+        "description": "Milliseconds to wait after the last keystroke before `onSearch` runs."
+      },
+      {
+        "name": "onCreate",
+        "type": "(text: string) => void",
+        "required": false,
+        "description": "Adds a \"Create “text”\" row when the search text matches no option exactly; called with the trimmed text."
+      },
+      {
+        "name": "maxVisibleChips",
+        "type": "number",
+        "required": false,
+        "default": "2",
+        "description": "Chips shown in the field before the rest collapse into a \"+N more\" chip."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the chips but nothing can be added or removed; the sheet doesn't open."
+      },
+      {
+        "name": "size",
+        "type": "FieldSize",
+        "required": false,
+        "default": "'lg' (48, the mobile field height)",
+        "description": ""
       },
       {
         "name": "style",
@@ -797,6 +1518,187 @@
       }
     ]
   },
+  "DateTimeField": {
+    "file": "components/datetime.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field; also its accessible name and the picker sheet's title."
+      },
+      {
+        "name": "value",
+        "type": "Date | string | null",
+        "required": false,
+        "description": "The value. A `Date` for the date, time and datetime modes; with `granularity` month or year,\na `'YYYY-MM'` or `'YYYY'` string (a `Date` is read too). `null` is empty. Leave it out for an\nuncontrolled field."
+      },
+      {
+        "name": "defaultValue",
+        "type": "Date | string | null",
+        "required": false,
+        "description": "11.8: the starting value of an uncontrolled field, in the same shape as `value`."
+      },
+      {
+        "name": "onValueChange",
+        "type": "DateTimeFieldChangeHandler",
+        "required": false,
+        "description": "Called with the new value: a `Date`, a `'YYYY-MM'` / `'YYYY'` string, or `null` when cleared."
+      },
+      {
+        "name": "mode",
+        "type": "'date' | 'time' | 'datetime'",
+        "required": false,
+        "default": "'date'",
+        "description": "What the platform picker edits. 11.8: `'datetime'` picks a date and then a time in one field."
+      },
+      {
+        "name": "granularity",
+        "type": "DateGranularity",
+        "required": false,
+        "default": "'day'",
+        "description": "11.8: `'month'` or `'year'` picks a whole month or year from a grid in a sheet (the platform\npicker has no such mode). The value is then a string, `'2026-03'` or `'2026'`, so it never\ncarries a day or a time zone. `mode` is ignored."
+      },
+      {
+        "name": "minDate",
+        "type": "Date",
+        "required": false,
+        "description": "Earliest date the picker allows. With month or year granularity, earlier months or years are disabled."
+      },
+      {
+        "name": "maxDate",
+        "type": "Date",
+        "required": false,
+        "description": "Latest date the picker allows. With month or year granularity, later months or years are disabled."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "default": "messages.pickDate (pickMonth / pickYear for those granularities)",
+        "description": "Text shown while empty."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: dimmed, can't be opened or cleared, and read as disabled."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: shows the value, but the picker can't open and the value can't be cleared. Still focusable."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too."
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "11.8: error message under the field: red outline, announced, read as the field's hint."
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": "11.8: field height (the TextField sizes)."
+      },
+      {
+        "name": "locale",
+        "type": "string",
+        "required": false,
+        "default": "the provider's locale",
+        "description": "11.8: BCP 47 locale for the field's text and the iOS picker."
+      },
+      {
+        "name": "disabledDates",
+        "type": "DateMatcher | DateMatcher[]",
+        "required": false,
+        "description": "11.8: days that can't be picked: one rule or a list (see `DateMatcher`), as web. The platform\npicker can't grey days out, so picking one keeps the old value and says the day is unavailable.\nPresets on such days are disabled."
+      },
+      {
+        "name": "presets",
+        "type": "{ label: string; date: Date }[]",
+        "required": false,
+        "description": "11.8: quick picks shown as chips under the field (Today, Tomorrow…); a tap sets the value.\nIn datetime mode the time of the current value (or `defaultTime`) is kept. Not for time mode\nor month and year granularity."
+      },
+      {
+        "name": "minuteStep",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "11.8: minutes between choices in time and datetime modes. iOS uses it as the wheel's interval; elsewhere the picked time is rounded to it."
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: a clear button inside the field while it has a value; clearing calls `onValueChange(null)`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: spinner at the end of the field, and busy for screen readers."
+      },
+      {
+        "name": "defaultTime",
+        "type": "string",
+        "required": false,
+        "default": "'09:00'",
+        "description": "11.8: 24-hour `\"HH:mm\"` time a date gets when it is picked before any time (date and datetime modes)."
+      },
+      {
+        "name": "timeZone",
+        "type": "string",
+        "required": false,
+        "description": "11.8: IANA time zone (`'Europe/Paris'`) the value is shown and picked in, with its name under\nthe field. The value is still an instant (`Date`)."
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "default": "Calendar (Clock in time mode)",
+        "description": "11.8: icon at the start of the field."
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "description": "11.8: icon at the end of the field."
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "11.8: text or a node at the start of the field, e.g. \"From\". A string is read with the value."
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "11.8: text or a node at the end of the field, e.g. \"local time\". A string is read with the value."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "Amount": {
     "file": "components/display.tsx",
     "extends": [],
@@ -987,6 +1889,19 @@
         "description": "Online/status dot."
       },
       {
+        "name": "badgeColor",
+        "type": "string",
+        "required": false,
+        "default": "the success colour",
+        "description": "Colour of the `badge` dot, any colour string. `status` wins when both are set."
+      },
+      {
+        "name": "fallback",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when there is no image and no `name` to take initials from, e.g. an icon."
+      },
+      {
         "name": "status",
         "type": "'online' | 'away' | 'busy' | 'offline'",
         "required": false,
@@ -1024,6 +1939,13 @@
         "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl'",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "spacing",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "How much the avatars overlap: `sm` is tight, `lg` barely overlaps."
       }
     ]
   },
@@ -1046,6 +1968,13 @@
         "required": false,
         "default": "'horizontal'",
         "description": ""
+      },
+      {
+        "name": "tone",
+        "type": "ToneValue",
+        "required": false,
+        "default": "'neutral'",
+        "description": "Tints the line with a semantic or product colour at 30%, as on web."
       }
     ]
   },
@@ -1208,7 +2137,6 @@
         "name": "width",
         "type": "ViewStyle['width']",
         "required": false,
-        "default": "'100%'",
         "description": ""
       },
       {
@@ -1233,6 +2161,19 @@
         "description": "`pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion."
       },
       {
+        "name": "animated",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "`false` keeps the placeholder still (no pulse or shimmer), e.g. for many skeletons at once."
+      },
+      {
+        "name": "shape",
+        "type": "'line' | 'rect' | 'circle'",
+        "required": false,
+        "description": "Preset form, as on web: `line` is a text line (small corners), `rect` a block\n(container corners), `circle` a round avatar (width follows `height`). `radius` still wins."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -1243,7 +2184,7 @@
   "SkeletonText": {
     "file": "components/feedback.tsx",
     "extends": [
-      "Pick<SkeletonProps, 'animation'>"
+      "Pick<SkeletonProps, 'animation' | 'animated'>"
     ],
     "props": [
       {
@@ -1258,6 +2199,22 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "animation",
+        "type": "'pulse' | 'shimmer'",
+        "required": false,
+        "default": "'pulse'",
+        "description": "`pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion.",
+        "inherited": "Skeleton"
+      },
+      {
+        "name": "animated",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "`false` keeps the placeholder still (no pulse or shimmer), e.g. for many skeletons at once.",
+        "inherited": "Skeleton"
       }
     ]
   },
@@ -1345,6 +2302,159 @@
         "type": "() => void",
         "required": false,
         "description": "Shows a Retry button (messages.retry)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "",
+        "inherited": "EmptyState"
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "EmptyState"
+      },
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": false,
+        "default": "AlertTriangle",
+        "description": "",
+        "inherited": "EmptyState"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Scales spacing, icon and title.",
+        "inherited": "EmptyState"
+      }
+    ]
+  },
+  "FileUpload": {
+    "file": "components/fileupload.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "pickFiles",
+        "type": "(options: { multiple: boolean; accept?: readonly string[] }) => Promise<readonly F[] | null | undefined>",
+        "required": false,
+        "description": "Opens your file picker and resolves to what was picked (`[]` or `null` when cancelled), e.g.\nexpo-document-picker's `getDocumentAsync` or expo-image-picker's `launchImageLibraryAsync`.\nGets `multiple` and `accept` so you can pass them on. No picker, no \"Upload files\" button."
+      },
+      {
+        "name": "capture",
+        "type": "() => Promise<F | null | undefined>",
+        "required": false,
+        "description": "Takes a photo and resolves to it (`null` when cancelled), e.g. expo-image-picker's\n`launchCameraAsync`. Adds a camera button (named by `captureLabel`)."
+      },
+      {
+        "name": "accept",
+        "type": "string[]",
+        "required": false,
+        "description": "Accepted types: MIME types (`image/png`), wildcards (`image/*`) and extensions (`.pdf`)."
+      },
+      {
+        "name": "multiple",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Let the picker return several files at once. Files still add up to `maxFiles`."
+      },
+      {
+        "name": "maxFiles",
+        "type": "number",
+        "required": false,
+        "description": "Most files in the list; extra ones are turned away with a message."
+      },
+      {
+        "name": "maxSize",
+        "type": "number",
+        "required": false,
+        "description": "Largest file in bytes, checked after `transform`. Bigger files are turned away with a message."
+      },
+      {
+        "name": "transform",
+        "type": "(file: F) => F | Promise<F>",
+        "required": false,
+        "description": "Runs on each file after the `accept` check and before `maxSize` and `validate`, e.g. to shrink\na photo with expo-image-manipulator. Resolve to the file to keep. If it throws, the file is\nturned away with the error's message."
+      },
+      {
+        "name": "validate",
+        "type": "(file: F) => string | null | undefined",
+        "required": false,
+        "description": "Your own check, run last: return a message to turn the file away. Validate again on the server."
+      },
+      {
+        "name": "files",
+        "type": "F[]",
+        "required": false,
+        "description": "Controlled list. Pass it with `onFilesChange` to clear or set the list from outside."
+      },
+      {
+        "name": "defaultFiles",
+        "type": "F[]",
+        "required": false,
+        "description": "The starting list when uncontrolled."
+      },
+      {
+        "name": "onFilesChange",
+        "type": "(files: F[]) => void",
+        "required": false,
+        "description": "Called with the whole new list after files are added or removed."
+      },
+      {
+        "name": "onReject",
+        "type": "(rejections: FileRejection<F>[]) => void",
+        "required": false,
+        "description": "Files turned away by `accept`, `transform`, `maxSize`, `maxFiles` or `validate`. They also show in the list with their error until removed."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "Nothing can be picked; the buttons look disabled."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Files stay listed; nothing can be picked or removed."
+      },
+      {
+        "name": "busy",
+        "type": "boolean",
+        "required": false,
+        "description": "An upload is running: picking is blocked and a bar shows `progress`."
+      },
+      {
+        "name": "progress",
+        "type": "number",
+        "required": false,
+        "description": "0–100 while `busy`."
+      },
+      {
+        "name": "addLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Upload files'",
+        "description": "The pick button's text."
+      },
+      {
+        "name": "captureLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.takePhoto ('Take photo')",
+        "description": "The camera button's text. Shown with `capture`."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
       }
     ]
   },
@@ -1379,6 +2489,12 @@
         "description": "Error message: red outline, announced, replaces the helper text."
       },
       {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label, like web FormField. Checking the value is up to you."
+      },
+      {
         "name": "disabled",
         "type": "boolean",
         "required": false,
@@ -1386,28 +2502,70 @@
       },
       {
         "name": "size",
-        "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg' | 'xl'>",
         "required": false,
         "default": "'lg'",
-        "description": ""
+        "description": "Field height, the same names as web Input's `size`: `sm` and `md` are the compact desktop\nheights, `lg` the mobile field height (48), `xl` the large touch height."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red outline and announced as invalid, with or without an `error` message."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value but it can't be changed. The field can still be focused and its text\nselected and copied; it sits on a quieter surface so it doesn't look editable."
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the start, inside the field."
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the end, inside the field, after the clear button."
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment before the field, e.g. \"https://\"."
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment after the field, e.g. \".com\" or \"kg\"."
       },
       {
         "name": "leading",
         "type": "React.ReactNode",
         "required": false,
-        "description": ""
+        "description": "The older name for `leadingIcon`: a node at the start, inside the field."
       },
       {
         "name": "trailing",
         "type": "React.ReactNode",
         "required": false,
-        "description": ""
+        "description": "The older name for `trailingIcon`: a node at the end, inside the field."
       },
       {
         "name": "clearable",
         "type": "boolean",
         "required": false,
         "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\"."
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the clear button empties the field, after `onChangeText(\"\")`."
       },
       {
         "name": "showCount",
@@ -1434,12 +2592,166 @@
     "extends": [
       "Omit<TextFieldProps, 'secureTextEntry' | 'trailing'>"
     ],
-    "props": []
+    "props": [
+      {
+        "name": "visible",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the password as plain text. Controlled: pair it with `onVisibleChange`."
+      },
+      {
+        "name": "defaultVisible",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Whether the password starts out shown, when `visible` isn't set."
+      },
+      {
+        "name": "onVisibleChange",
+        "type": "(visible: boolean) => void",
+        "required": false,
+        "description": "Called with the new state when the show/hide toggle is pressed."
+      },
+      {
+        "name": "ref",
+        "type": "React.Ref<React.ComponentRef<typeof TextInput>>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field (also its accessible name).",
+        "inherited": "TextField"
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error message: red outline, announced, replaces the helper text.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label, like web FormField. Checking the value is up to you.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": "Field height, the same names as web Input's `size`: `sm` and `md` are the compact desktop\nheights, `lg` the mobile field height (48), `xl` the large touch height.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red outline and announced as invalid, with or without an `error` message.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value but it can't be changed. The field can still be focused and its text\nselected and copied; it sits on a quieter surface so it doesn't look editable.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the end, inside the field, after the clear button.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment before the field, e.g. \"https://\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment after the field, e.g. \".com\" or \"kg\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leading",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The older name for `leadingIcon`: a node at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the clear button empties the field, after `onChangeText(\"\")`.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      }
+    ]
   },
   "SearchField": {
     "file": "components/inputs.tsx",
     "extends": [
-      "Omit<TextInputProps, 'style'>"
+      "Omit<TextFieldProps, 'label' | 'clearable'>"
     ],
     "props": [
       {
@@ -1450,17 +2762,137 @@
         "description": "Accessible name."
       },
       {
+        "name": "size",
+        "type": "TextFieldProps['size']",
+        "required": false,
+        "default": "'md'",
+        "description": ""
+      },
+      {
+        "name": "ref",
+        "type": "React.Ref<React.ComponentRef<typeof TextInput>>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error message: red outline, announced, replaces the helper text.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label, like web FormField. Checking the value is up to you.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red outline and announced as invalid, with or without an `error` message.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value but it can't be changed. The field can still be focused and its text\nselected and copied; it sits on a quieter surface so it doesn't look editable.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the end, inside the field, after the clear button.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment before the field, e.g. \"https://\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment after the field, e.g. \".com\" or \"kg\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leading",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The older name for `leadingIcon`: a node at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailing",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The older name for `trailingIcon`: a node at the end, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the clear button empties the field, after `onChangeText(\"\")`.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
-        "description": ""
+        "description": "",
+        "inherited": "TextField"
       }
     ]
   },
   "MoneyInput": {
     "file": "components/inputs.tsx",
     "extends": [
-      "Omit<\n  TextFieldProps,\n  'value' | 'defaultValue' | 'onChange' | 'leading' | 'keyboardType'\n>"
+      "Omit< TextFieldProps, 'value' | 'defaultValue' | 'onChange' | 'leading' | 'keyboardType' >"
     ],
     "props": [
       {
@@ -1492,18 +2924,161 @@
         "type": "string",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "currencySlot",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A node shown before the amount, in the currency's place, so people can change the currency\nnext to it, e.g. `<CurrencySelect label=\"Currency\" value={currency} onValueChange={setCurrency} />`."
+      },
+      {
+        "name": "ref",
+        "type": "React.Ref<React.ComponentRef<typeof TextInput>>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field (also its accessible name).",
+        "inherited": "TextField"
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error message: red outline, announced, replaces the helper text.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label, like web FormField. Checking the value is up to you.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": "Field height, the same names as web Input's `size`: `sm` and `md` are the compact desktop\nheights, `lg` the mobile field height (48), `xl` the large touch height.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red outline and announced as invalid, with or without an `error` message.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value but it can't be changed. The field can still be focused and its text\nselected and copied; it sits on a quieter surface so it doesn't look editable.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the end, inside the field, after the clear button.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment before the field, e.g. \"https://\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment after the field, e.g. \".com\" or \"kg\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailing",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The older name for `trailingIcon`: a node at the end, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the clear button empties the field, after `onChangeText(\"\")`.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
       }
     ]
   },
   "Stepper": {
     "file": "components/inputs.tsx",
-    "extends": [],
+    "extends": [
+      "StepperBaseProps"
+    ],
     "props": [
       {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": "Accessible name of the value, e.g. \"Guests\"."
+        "name": "nullable",
+        "type": "false",
+        "required": false,
+        "default": "false",
+        "description": "Whether the value can be empty (`null`)."
       },
       {
         "name": "value",
@@ -1524,35 +3099,186 @@
         "description": ""
       },
       {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the value, e.g. \"Guests\".",
+        "inherited": "StepperBase"
+      },
+      {
         "name": "min",
         "type": "number",
         "required": false,
-        "description": ""
+        "default": "0",
+        "description": "Applied on a step and when typing ends (blur), never while typing.",
+        "inherited": "StepperBase"
       },
       {
         "name": "max",
         "type": "number",
         "required": false,
-        "description": ""
+        "default": "100",
+        "description": "Applied on a step and when typing ends (blur), never while typing.",
+        "inherited": "StepperBase"
       },
       {
         "name": "step",
         "type": "number",
         "required": false,
         "default": "1",
-        "description": ""
+        "description": "",
+        "inherited": "StepperBase"
       },
       {
         "name": "disabled",
         "type": "boolean",
         "required": false,
-        "description": ""
+        "description": "",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Error colour on the value and announced as invalid.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "Size of the buttons and the value.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "precision",
+        "type": "number",
+        "required": false,
+        "description": "Decimals shown and kept after a step, e.g. 2 shows 1.5 as \"1.50\".",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "showSteppers",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Shows the − and + buttons. Without them the value is a number field typed on the keypad;\nscreen readers can still swipe up and down to step it.",
+        "inherited": "StepperBase"
       },
       {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
+        "description": "",
+        "inherited": "StepperBase"
+      }
+    ]
+  },
+  "NullableStepper": {
+    "file": "components/inputs.tsx",
+    "extends": [
+      "StepperBaseProps"
+    ],
+    "props": [
+      {
+        "name": "nullable",
+        "type": "true",
+        "required": true,
+        "description": "The value can be empty (`null`)."
+      },
+      {
+        "name": "value",
+        "type": "number | null",
+        "required": false,
         "description": ""
+      },
+      {
+        "name": "defaultValue",
+        "type": "number | null",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onValueChange",
+        "type": "(value: number | null) => void",
+        "required": false,
+        "description": "Called with the new value, or `null` when the field is cleared."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the value, e.g. \"Guests\".",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false,
+        "default": "0",
+        "description": "Applied on a step and when typing ends (blur), never while typing.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false,
+        "default": "100",
+        "description": "Applied on a step and when typing ends (blur), never while typing.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false,
+        "default": "1",
+        "description": "",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Error colour on the value and announced as invalid.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "Size of the buttons and the value.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "precision",
+        "type": "number",
+        "required": false,
+        "description": "Decimals shown and kept after a step, e.g. 2 shows 1.5 as \"1.50\".",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "showSteppers",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Shows the − and + buttons. Without them the value is a number field typed on the keypad;\nscreen readers can still swipe up and down to step it.",
+        "inherited": "StepperBase"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "StepperBase"
       }
     ]
   },
@@ -1596,6 +3322,32 @@
         "type": "boolean",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "Box and label size, the same names as web Checkbox: `sm`, `md`, `lg`."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Red box and announced as invalid."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Can be focused and read but not changed: pressing it does nothing."
+      },
+      {
+        "name": "accessibilityHint",
+        "type": "string",
+        "required": false,
+        "default": "description",
+        "description": "What screen readers say after the label."
       },
       {
         "name": "style",
@@ -1723,6 +3475,43 @@
         "type": "boolean",
         "required": false,
         "description": "Spinner beside the switch and busy for screen readers; it can't toggle while loading."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "description": "Error colour on the track and announced as invalid."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Can be focused and read but not toggled."
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'sm' | 'md' | 'lg'>",
+        "required": false,
+        "default": "'md'",
+        "description": "`md` is the platform switch's own size; `sm` and `lg` scale it."
+      },
+      {
+        "name": "checkedIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Small icon inside the thumb while on. With an icon the Nexub-drawn switch is used, since the\nplatform switch has no room for one."
+      },
+      {
+        "name": "uncheckedIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Small icon inside the thumb while off. Uses the Nexub-drawn switch, like `checkedIcon`."
+      },
+      {
+        "name": "accessibilityHint",
+        "type": "string",
+        "required": false,
+        "description": "What screen readers say after the label, e.g. the setting's description."
       }
     ]
   },
@@ -1759,6 +3548,12 @@
         "type": "(value: T) => void",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "description": "Segment height: `sm` (the default, 34) or `md` and `lg`, the field heights."
       },
       {
         "name": "style",
@@ -1800,12 +3595,14 @@
         "name": "min",
         "type": "number",
         "required": false,
+        "default": "0",
         "description": ""
       },
       {
         "name": "max",
         "type": "number",
         "required": false,
+        "default": "100",
         "description": ""
       },
       {
@@ -2028,6 +3825,12 @@
         "description": ""
       },
       {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "description": "11.8: the starting code of an uncontrolled field."
+      },
+      {
         "name": "onValueChange",
         "type": "(code: string) => void",
         "required": false,
@@ -2049,7 +3852,41 @@
         "name": "error",
         "type": "string",
         "required": false,
-        "description": ""
+        "description": "Error message under the boxes: red outline, announced, read as the field's hint."
+      },
+      {
+        "name": "invalid",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: red outline, and the field is marked invalid for screen readers. Give `error` for a message too."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: dimmed, takes no input, and read as disabled."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "11.8: shows the code but takes no input. Still focusable."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "11.8: box size, as web: `sm` 44pt tall, `md` 52pt, `lg` 56pt (backup: the md, lg and xl field heights)."
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "11.8: field name, set as the input's `nativeID` so a form library or a test can find it (native has no form submission)."
       },
       {
         "name": "autoFocus",
@@ -2067,8 +3904,7 @@
         "name": "mode",
         "type": "'numeric' | 'backup'",
         "required": false,
-        "default": "'date'",
-        "description": "11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to\n12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web."
+        "description": "11.2: `backup` is a recovery code: one field of 12 letters and digits (`length` defaults to\n12), shown in groups of four (`abcd-efgh-ijkl`); the value has no dashes. As on web. 11.8:\nthe keyboard is a plain-letters one in capitals, with no suggestions."
       }
     ]
   },
@@ -2311,61 +4147,6 @@
         "required": false,
         "default": "0",
         "description": "Extra bottom offset, e.g. the tab bar."
-      }
-    ]
-  },
-  "DateTimeField": {
-    "file": "components/mobile.tsx",
-    "extends": [],
-    "props": [
-      {
-        "name": "label",
-        "type": "string",
-        "required": true,
-        "description": ""
-      },
-      {
-        "name": "value",
-        "type": "Date | null",
-        "required": true,
-        "description": ""
-      },
-      {
-        "name": "onValueChange",
-        "type": "(value: Date) => void",
-        "required": true,
-        "description": ""
-      },
-      {
-        "name": "mode",
-        "type": "'date' | 'time'",
-        "required": false,
-        "default": "'date'",
-        "description": ""
-      },
-      {
-        "name": "minDate",
-        "type": "Date",
-        "required": false,
-        "description": "Earliest date the picker allows."
-      },
-      {
-        "name": "maxDate",
-        "type": "Date",
-        "required": false,
-        "description": "Latest date the picker allows."
-      },
-      {
-        "name": "placeholder",
-        "type": "string",
-        "required": false,
-        "description": ""
-      },
-      {
-        "name": "style",
-        "type": "StyleProp<ViewStyle>",
-        "required": false,
-        "description": ""
       }
     ]
   },
@@ -2617,6 +4398,239 @@
         "type": "boolean",
         "required": false,
         "description": "Marks the field invalid for screen readers. For the red outline and a message, give `error`."
+      },
+      {
+        "name": "size",
+        "type": "Extract<ControlSize, 'md' | 'lg' | 'xl'>",
+        "required": false,
+        "default": "'lg'",
+        "description": "Field height on the mobile control ladder (web's `sm`/`md`/`lg` are desktop sizes):\n`md` 40, `lg` 48, `xl` 56. The country code text follows it."
+      },
+      {
+        "name": "ref",
+        "type": "React.Ref<React.ComponentRef<typeof TextInput>>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "Visible label above the field (also its accessible name).",
+        "inherited": "TextField"
+      },
+      {
+        "name": "helperText",
+        "type": "string",
+        "required": false,
+        "description": "Hint under the field. Replaced by `error` when set.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error message: red outline, announced, replaces the helper text.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a required marker after the label, like web FormField. Checking the value is up to you.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows the value but it can't be changed. The field can still be focused and its text\nselected and copied; it sits on a quieter surface so it doesn't look editable.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the start, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingIcon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An icon (or any small node) at the end, inside the field, after the clear button.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "leadingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment before the field, e.g. \"https://\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailingAddon",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text or a node in its own segment after the field, e.g. \".com\" or \"kg\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "trailing",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The older name for `trailingIcon`: a node at the end, inside the field.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a clear button while there is a value. Clearing fires `onChangeText` with \"\".",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false,
+        "description": "Called when the clear button empties the field, after `onChangeText(\"\")`.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "showCount",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows a \"12/80\" counter; needs `maxLength`. Announced politely near the limit.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "TextField"
+      }
+    ]
+  },
+  "PromptDialog": {
+    "file": "components/prompt.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": true,
+        "description": "Shows the dialog."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": true,
+        "description": "Called with `false` when it closes: cancelled, dismissed, or after a successful submit."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "The dialog's heading, e.g. \"Reject claim\"."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "A line under the title."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": "The field's label, e.g. \"Reason\"."
+      },
+      {
+        "name": "placeholder",
+        "type": "string",
+        "required": false,
+        "description": "The field's placeholder."
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false,
+        "default": "''",
+        "description": "The answer the field starts with each time the dialog opens."
+      },
+      {
+        "name": "required",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "An empty answer is refused."
+      },
+      {
+        "name": "minLength",
+        "type": "number",
+        "required": false,
+        "description": "Shortest answer allowed (an empty one is left to `required`)."
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "required": false,
+        "description": "Longest answer allowed; typing stops there."
+      },
+      {
+        "name": "validate",
+        "type": "(value: string) => string | null | undefined | void",
+        "required": false,
+        "description": "Return an error message to refuse the answer (checked on submit, after `required` and `minLength`)."
+      },
+      {
+        "name": "multiline",
+        "type": "boolean",
+        "required": false,
+        "description": "A multi-line field instead of a one-line one."
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Continue'",
+        "description": "The confirm button's text."
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Cancel'",
+        "description": "The cancel button's text."
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'destructive'",
+        "required": false,
+        "default": "'default'",
+        "description": "`destructive` for a reason that goes with a delete or a reject: a red confirm button."
+      },
+      {
+        "name": "onSubmit",
+        "type": "(value: string) => unknown",
+        "required": false,
+        "description": "Called with the trimmed answer. While a returned promise runs, the dialog is busy (it cannot\nbe closed); if it rejects, its message is shown and the dialog stays open; when it resolves,\nthe dialog closes."
       }
     ]
   },
@@ -2932,6 +4946,45 @@
         "description": "Makes the whole card one pressable target (opens the detail)."
       },
       {
+        "name": "size",
+        "type": "'md' | 'sm'",
+        "required": false,
+        "default": "'md'",
+        "description": "`sm` is the compact tile: less padding and a smaller value."
+      },
+      {
+        "name": "note",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "An extra line inside the tile, under the change, e.g. \"Includes 2 refunds\"."
+      },
+      {
+        "name": "tone",
+        "type": "'default' | 'bad-when-high'",
+        "required": false,
+        "default": "'default'",
+        "description": "`bad-when-high` flips the derived colour (an increase shows the danger colour), for\ncosts, churn and errors. `sentiment` still wins."
+      },
+      {
+        "name": "change",
+        "type": "number",
+        "required": false,
+        "description": "The change as a number. Sets the arrow from its sign and the text from `changeFormat`\n(ignored when `delta` is set). Percent takes a fraction: 0.125 is \"+12.5%\"."
+      },
+      {
+        "name": "changeFormat",
+        "type": "'percent' | 'absolute' | ((change: number) => string)",
+        "required": false,
+        "default": "'percent'",
+        "description": "How `change` is written. `absolute` adds the sign to the number."
+      },
+      {
+        "name": "changeLabel",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Text after the change, e.g. \"vs last month\"."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -2978,6 +5031,25 @@
         "type": "number",
         "required": false,
         "description": "Draws a heavier line under the body row at this index (the cut in a ranked list)."
+      },
+      {
+        "name": "maxHeight",
+        "type": "number",
+        "required": false,
+        "description": "Caps the table's height in points; the rows scroll inside it (the caption stays below)."
+      },
+      {
+        "name": "stickyHeader",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Keeps the header row in view while the body scrolls. Set `maxHeight` so there is something to scroll."
+      },
+      {
+        "name": "scrollLabel",
+        "type": "string",
+        "required": false,
+        "description": "Names the table's scroll region for screen readers, e.g. \"Invoices, scrollable\"."
       }
     ]
   },
@@ -3076,6 +5148,36 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "A string is set in the tab's type and colour; anything else renders as given."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
       }
     ]
   },
@@ -3158,13 +5260,104 @@
         "name": "selected",
         "type": "string | null",
         "required": false,
-        "description": "The picked leaf."
+        "description": "The picked leaf (controlled). Ignored when `checkable`."
+      },
+      {
+        "name": "defaultSelected",
+        "type": "string | null",
+        "required": false,
+        "description": "The leaf picked at first, when `selected` is not controlled."
+      },
+      {
+        "name": "onSelectedChange",
+        "type": "(id: string | null) => void",
+        "required": false,
+        "description": "Called with the picked leaf's id."
       },
       {
         "name": "onSelect",
         "type": "(id: string) => void",
         "required": false,
-        "description": ""
+        "description": "Called with the picked leaf's id (the same moment as `onSelectedChange`)."
+      },
+      {
+        "name": "expanded",
+        "type": "string[]",
+        "required": false,
+        "description": "The open levels (controlled): ids of the nodes drilled into, from the top. On web\nthese are the expanded nodes; on a phone one branch is open at a time."
+      },
+      {
+        "name": "defaultExpanded",
+        "type": "string[]",
+        "required": false,
+        "description": "The levels open at first, when `expanded` is not controlled, e.g. to start inside a branch."
+      },
+      {
+        "name": "onExpandedChange",
+        "type": "(ids: string[]) => void",
+        "required": false,
+        "description": "Called with the open levels when someone drills in or goes back."
+      },
+      {
+        "name": "checkable",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Checkboxes instead of single selection. A parent is checked when all its children are, mixed when some are."
+      },
+      {
+        "name": "checked",
+        "type": "string[]",
+        "required": false,
+        "description": "Every checked id, parents included (controlled)."
+      },
+      {
+        "name": "defaultChecked",
+        "type": "string[]",
+        "required": false,
+        "description": "The ids checked at first, when `checked` is not controlled."
+      },
+      {
+        "name": "onCheckedChange",
+        "type": "(ids: string[]) => void",
+        "required": false,
+        "description": "Called with every checked id, parents included, after each change."
+      },
+      {
+        "name": "onLoadChildren",
+        "type": "(node: TreeListNode) => Promise<unknown>",
+        "required": false,
+        "description": "Loads a `hasChildren` node's children when it is opened; pass them in through `nodes`.\nA loading row shows until the promise settles."
+      },
+      {
+        "name": "onActivate",
+        "type": "(node: TreeListNode) => void",
+        "required": false,
+        "description": "Called when a leaf is tapped, after it is selected (or checked). On web, Enter or a\ndouble-click opens a node; on a touch screen the tap is the open."
+      },
+      {
+        "name": "renderActions",
+        "type": "(node: TreeListNode) => React.ReactNode",
+        "required": false,
+        "description": "Actions at the end of each row, e.g. an IconButton. They are their own screen-reader elements."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Shows skeleton rows in place of the tree and marks it busy for screen readers."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when `nodes` is empty. Defaults to the \"no data\" message."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the tree when a load failed, e.g. an ErrorState with a retry. Wins over `loading` and empty."
       },
       {
         "name": "style",
@@ -3189,6 +5382,33 @@
         "type": "number",
         "required": true,
         "description": "Index of the step being shown."
+      },
+      {
+        "name": "completed",
+        "type": "number[]",
+        "required": false,
+        "default": "every step before `current`",
+        "description": "Indexes of finished steps."
+      },
+      {
+        "name": "onStepChange",
+        "type": "(index: number) => void",
+        "required": false,
+        "description": "Makes steps tappable, called with the step's index. Linear by default: finished steps\nand the first unfinished one can be reached; the rest wait."
+      },
+      {
+        "name": "nonLinear",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Any step can be reached with `onStepChange`, not only finished ones and the next."
+      },
+      {
+        "name": "orientation",
+        "type": "'horizontal' | 'vertical'",
+        "required": false,
+        "default": "'horizontal'",
+        "description": "`horizontal` is the segmented bar with \"Step 2 of 4: Billing\". `vertical` lists every\nstep with its number (or a check when finished), joined by a line."
       },
       {
         "name": "style",
@@ -3274,6 +5494,26 @@
         "type": "string",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "The text can't be tapped to edit; screen readers hear it as dimmed."
+      },
+      {
+        "name": "maxLength",
+        "type": "number",
+        "required": false,
+        "description": "Caps the field's length and shows a \"12/80\" counter while editing."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg' | 'title' | 'headline'",
+        "required": false,
+        "default": "'lg'",
+        "description": "Type role of the text, from body text up to a headline; the field grows to match."
       },
       {
         "name": "style",
@@ -4000,6 +6240,7 @@
         "name": "loading",
         "type": "boolean",
         "required": false,
+        "default": "false",
         "description": ""
       },
       {
@@ -4068,7 +6309,34 @@
         "name": "empty",
         "type": "React.ReactElement",
         "required": false,
-        "description": ""
+        "description": "Shown when there are no transactions. Same as `emptyState`, which wins."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactElement",
+        "required": false,
+        "default": "\"No activity yet\"",
+        "description": "Shown when there are no transactions, e.g. an EmptyState with a call to action."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactElement",
+        "required": false,
+        "description": "Shown in place of the list when a load failed, e.g. an ErrorState with a retry. Wins over `loading` and the empty state."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Shows skeleton rows in place of the transactions and marks the list busy for screen readers."
+      },
+      {
+        "name": "loadingRows",
+        "type": "number",
+        "required": false,
+        "default": "3",
+        "description": "Skeleton rows while `loading`."
       }
     ]
   },
@@ -4439,6 +6707,37 @@
     "extends": [
       "TextProps"
     ],
-    "props": []
+    "props": [
+      {
+        "name": "variant",
+        "type": "NativeTypeRole",
+        "required": false,
+        "default": "'body-md'",
+        "description": "Type role.",
+        "inherited": "Text"
+      },
+      {
+        "name": "color",
+        "type": "RoleName",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "Colour role.",
+        "inherited": "Text"
+      },
+      {
+        "name": "tabular",
+        "type": "boolean",
+        "required": false,
+        "description": "Tabular figures, for numbers that line up.",
+        "inherited": "Text"
+      },
+      {
+        "name": "family",
+        "type": "'sans' | 'display' | 'mono'",
+        "required": false,
+        "description": "Overrides the role's family (e.g. 'mono' for codes).",
+        "inherited": "Text"
+      }
+    ]
   }
 }

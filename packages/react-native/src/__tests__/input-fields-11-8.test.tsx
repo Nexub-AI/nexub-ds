@@ -11,6 +11,7 @@ import {
   MoneyInput,
   NexubNativeProvider,
   PasswordInput,
+  SegmentedControl,
   SearchField,
   Stepper,
   Switch,
@@ -443,5 +444,19 @@ describe('CheckboxGroupField', () => {
       </Provider>,
     );
     expect(screen.getByRole('checkbox', { name: 'Olives' })).toBeDisabled();
+  });
+});
+
+describe('TextField required and SegmentedControl size (11.8)', () => {
+  it('TextField shows a required marker after the label', async () => {
+    const { getByText } = await wrap(<TextField label="Email" required />);
+    expect(getByText(' *')).toBeTruthy();
+  });
+
+  it('SegmentedControl takes a size', async () => {
+    const { getAllByRole } = await wrap(
+      <SegmentedControl label="View" size="lg" options={[{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }]} />,
+    );
+    expect(getAllByRole('tab')).toHaveLength(2);
   });
 });

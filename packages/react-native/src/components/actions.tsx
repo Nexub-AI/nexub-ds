@@ -402,8 +402,6 @@ export interface LinkProps extends Omit<PressableProps, 'children'> {
   variant?: 'default' | 'muted' | 'underlined';
 }
 
-// ponytail: English until @nexub/core has an "opens externally" message.
-const OPENS_EXTERNALLY = 'Opens externally';
 
 /** Inline text action. Pass `onPress` (e.g. router.push), or `href` to open a URL with Linking. */
 export function Link({
@@ -416,14 +414,14 @@ export function Link({
   style,
   ...rest
 }: LinkProps) {
-  const { roles, tokens } = useTheme();
+  const { roles, tokens, messages } = useTheme();
   const color = variant === 'muted' ? 'on-surface-muted' : 'primary';
   const open = onPress ?? (href ? () => void Linking.openURL(href).catch(() => {}) : undefined);
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={children}
-      accessibilityHint={accessibilityHint ?? (external ? OPENS_EXTERNALLY : undefined)}
+      accessibilityHint={accessibilityHint ?? (external ? messages.opensExternally : undefined)}
       stateLayer={false}
       pressScale={false}
       hitSlop={8}
