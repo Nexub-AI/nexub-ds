@@ -127,6 +127,14 @@ const CASES: Record<string, Case> = {
     props: { label: 'Currency', placeholder: 'Choose', options: [{ value: 'USD', label: 'US dollar' }] },
     a11y: ['button', 'Currency, Choose'],
   },
+  CurrencySelect: { props: { label: 'Currency', value: 'USD' }, a11y: ['button', 'Currency, USD · US Dollar'] },
+  // 11.8 choice fields
+  SwitchField: { props: { label: 'Wi-Fi', description: 'Join known networks' }, a11y: ['switch', 'Wi-Fi'] },
+  CheckboxField: { props: { label: 'Remember me', error: 'Required' }, a11y: ['checkbox', 'Remember me'] },
+  CheckboxGroupField: {
+    props: { label: 'Toppings', options: [{ value: 'a', label: 'Olives' }] },
+    a11y: ['checkbox', 'Olives'],
+  },
   // Mobile
   SwipeableRow: { props: { label: 'Row', onPress: noop, actions: [], children: t('row') }, a11y: ['button', 'Row'] },
   RefreshControl: { props: { refreshing: false, onRefresh: noop } },
