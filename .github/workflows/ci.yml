@@ -161,7 +161,19 @@ jobs:
         run: pnpm --filter @nexub/docs build
 
       - name: Visual regression & contrast
+        env:
+          FLAKE_REPORT_FILE: ${{ github.workspace }}/flake-report.json
         run: pnpm --filter @nexub/react test:visual --project=storybook --project=perf --project=docs --shard=${{ matrix.shard }}/3
+
+      # 11.7: the tests that passed only on retry, for the "Flake issue" job.
+      - name: Upload flake report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: flake-report-visual-${{ matrix.shard }}
+          path: flake-report.json
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload diff report
         if: failure()
@@ -323,7 +335,18 @@ jobs:
         # Firefox refuses to start when $HOME isn't owned by the container user.
         env:
           HOME: /root
+          FLAKE_REPORT_FILE: ${{ github.workspace }}/flake-report.json
         run: pnpm --filter @nexub/react test:visual --project=${{ matrix.engine }} --project=docs-${{ matrix.engine }}
+
+      # 11.7: the tests that passed only on retry, for the "Flake issue" job.
+      - name: Upload flake report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: flake-report-${{ matrix.engine }}
+          path: flake-report.json
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Upload diff report
         if: failure()
@@ -334,3 +357,61 @@ jobs:
             packages/react/playwright-report
             packages/react/test-results
           retention-days: 7
+
+  # 11.7 flake rule: a test that passed only on Playwright's retry, or a run that passed only after
+  # "Re-run failed jobs", opens an issue labelled `flake` (or comments on the open one). An open one
+  # blocks the production release ("Release gate"). Same-repo runs only: fork and Dependabot PRs
+  # get a read-only token.
+  flake-issue:
+    name: Flake issue
+    needs: [ci, visual, browsers, resilience, release-rehearsal]
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download flake reports
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        continue-on-error: true
+        with:
+          pattern: flake-report-*
+          path: flake-reports
+
+      - name: Open or update flake issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          REF_NAME: ${{ github.head_ref || github.ref_name }}
+          REPORT_DIR: flake-reports
+        run: node scripts/flake-issue.mjs
+
+  # 11.7 release rules on every PR into production: no open `flake` issue (unless labelled
+  # `waived`), and the staging head has soaked for 48 hours (unless the PR is labelled
+  # `soak-waived`). Both labels are the owner's call. See PUBLISHING.md, release routine.
+  release-gate:
+    name: Release gate (flakes and 48 h soak)
+    if: github.base_ref == 'production' && github.head_ref == 'staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check flakes and soak
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          SOAK_HOURS: '48'
+        run: node scripts/release-gate.mjs

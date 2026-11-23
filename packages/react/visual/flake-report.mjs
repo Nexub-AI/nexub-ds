@@ -1,4 +1,4 @@
-import { appendFileSync, readFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename } from 'node:path';
 
 // Playwright reporter: per-run flake report + the quarantine.
@@ -75,6 +75,9 @@ export default class FlakeReport {
     const md = toMarkdown(s);
     console.log(`\n${md}\n`);
     if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${md}\n`);
+    // 11.7: CI collects the flaky names (FLAKE_REPORT_FILE) and opens a `flake` issue for them;
+    // an open one blocks the production release (scripts/flake-issue.mjs, scripts/release-gate.mjs).
+    if (process.env.FLAKE_REPORT_FILE) writeFileSync(process.env.FLAKE_REPORT_FILE, JSON.stringify({ flaky: s.flaky }));
     // Only quarantined tests failed (and no global error): the run passes.
     if (result.status === 'failed' && !this.errors && !s.failed.length && s.quarantinedFailed.length) {
       return { status: 'passed' };
