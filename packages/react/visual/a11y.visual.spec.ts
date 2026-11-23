@@ -102,7 +102,8 @@ const OPEN: { id: string; trigger?: string }[] = [
   { id: 'components-savedviews--default', trigger: 'button' },
   { id: 'forms-daterangepicker--default', trigger: 'button' },
   // 11.7: the month grid (each cell's name must start with its visible month name).
-  { id: 'forms-datepicker--month-and-year', trigger: 'button' },
+  // The grid loads lazily behind a placeholder trigger; the real one has aria-haspopup.
+  { id: 'forms-datepicker--month-and-year', trigger: 'button[aria-haspopup=dialog]' },
   { id: 'navigation-commandpalette--default' }, // story renders it open
   { id: 'overlays-alertdialog--type-to-confirm', trigger: 'button' },
   { id: 'data-display-datatable--selection', trigger: 'button[aria-haspopup=menu]' },

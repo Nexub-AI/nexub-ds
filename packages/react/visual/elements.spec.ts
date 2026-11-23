@@ -347,11 +347,15 @@ for (const id of STORIES) {
   for (const theme of ['light', 'dark']) {
     test(`axe ${id} ${theme}`, async ({ page }) => {
       // The OS preference stays light (the config's), so dark is the page's own data-theme: the
-      // harder case. 11.7: the story's plain buttons set their own surface, since WebKit keeps a
-      // native button's face light grey under color-scheme: dark.
+      // harder case. 11.7: what looked like WebKit resolving light-dark() to the light value was
+      // the theme switch's colour transitions still running when axe read the text (Chromium
+      // finishes them sooner). WebKit starts the children's transitions a frame after the
+      // parent's end, so wait until none is left, not just for the ones running now. The story's
+      // plain buttons set their own surface, since WebKit keeps a native button's face light grey.
       await open(page, id, theme);
       await page.waitForFunction((t) => document.documentElement.dataset.theme === t, theme);
       await page.evaluate(() => document.fonts.ready);
+      await page.waitForFunction(() => document.getAnimations().every((a) => a.effect?.getComputedTiming().iterations === Infinity));
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
         // @ts-expect-error injected global
