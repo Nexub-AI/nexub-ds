@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { COUNTRIES, callingCode, formatNational, parsePhone, toE164, type CountryCode } from '@nexub/core';
+import { callingCode, formatNational, parsePhone, phoneCountryOf, toE164, type CountryCode } from '@nexub/core';
 import { ChevronDown } from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import type { Size } from '../../utils/control.js';
@@ -44,16 +44,6 @@ const pickerClass = [
 ].join(' ');
 const pickerText: Record<Size, string> = { sm: 'text-body-sm', md: 'text-body-md', lg: 'text-body-md' };
 
-function localeRegion(locale: string): CountryCode {
-  try {
-    const region = new Intl.Locale(locale).maximize().region;
-    if (region && COUNTRIES[region]) return region;
-  } catch {
-    // Unreadable locale: fall through.
-  }
-  return 'US';
-}
-
 /**
  * A phone field: country picker plus national number, grouped as you type.
  * The value is E.164. Formatting and length checks only: confirm the number on the server.
@@ -66,7 +56,7 @@ export const PhoneInput = React.forwardRef<HTMLInputElement, PhoneInputProps>(
     const { locale } = useLocale();
     const messages = useNexubMessages();
     const [countryState, setCountryState] = React.useState<CountryCode>(() => {
-      const start = countryProp ?? defaultCountry ?? localeRegion(locale);
+      const start = countryProp ?? defaultCountry ?? phoneCountryOf(locale);
       return countries?.length && !countries.includes(start) ? countries[0]! : start;
     });
     const [inner, setInner] = React.useState(defaultValue ?? '');

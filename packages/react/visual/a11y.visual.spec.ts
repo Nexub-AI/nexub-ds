@@ -66,16 +66,28 @@ for (const { id } of stories) {
         .then(() => true, () => false);
       test.skip(!applied, 'story pins its own theme globals');
       await page.evaluate(() => document.fonts.ready);
-      // Measure settled UI: reduced motion keeps short crossfades (nx-motion), so
-      // wait for every finite animation; looping ones (spinners, shimmer) can't end.
-      await page.evaluate(() =>
-        Promise.all(
-          document
+      // Measure settled UI: reduced motion keeps short crossfades (nx-motion), so wait for
+      // every finite animation; looping ones (spinners, shimmer) can't end. Lazy chunks (the
+      // seed-theming stories load @nexub/tokens/seed) and late theme writes can start new
+      // transitions after a single wait: #762 measured the "Seed" label mid light-to-dark
+      // (#1b1b1b on #131313). So wait for the network, then for three quiet frame pairs in a
+      // row with no running finite animation and the requested theme still on <html>.
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(async (t) => {
+        const frame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
+        for (let quiet = 0, i = 0; quiet < 3 && i < 200; i++) {
+          await frame();
+          await frame();
+          const running = document
             .getAnimations()
-            .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
-            .map((a) => a.finished.catch(() => undefined)),
-        ),
-      );
+            .filter((a) => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity);
+          if (running.length === 0 && document.documentElement.dataset.theme === t) quiet++;
+          else {
+            quiet = 0;
+            await Promise.all(running.map((a) => a.finished.catch(() => undefined)));
+          }
+        }
+      }, theme);
 
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
@@ -96,7 +108,8 @@ for (const { id } of stories) {
 // sees them open. Open each one and scan the popup itself (light theme). Scanning the
 // page would flag the trigger behind a modal (aria-hidden by the focus trap, which
 // keeps it unreachable): that's the intended modal pattern, not a defect.
-const OPEN: { id: string; trigger?: string }[] = [
+// `press`: a key to press after the click, for a popup that opens from the keyboard.
+const OPEN: { id: string; trigger?: string; press?: string }[] = [
   { id: 'components-multiselect--default', trigger: '[role=combobox]' },
   { id: 'components-autocomplete--default', trigger: '[role=combobox]' },
   { id: 'components-savedviews--default', trigger: 'button' },
@@ -108,15 +121,19 @@ const OPEN: { id: string; trigger?: string }[] = [
   { id: 'overlays-alertdialog--type-to-confirm', trigger: 'button' },
   { id: 'data-display-datatable--selection', trigger: 'button[aria-haspopup=menu]' },
   { id: 'components-splitbutton--default', trigger: 'button[aria-haspopup=menu]' },
+  // 11.9: the diagram's "Connect to…" menu (the keyboard alternative to dragging a handle),
+  // opened with C on a node (its connect button only takes pointer events on hover).
+  { id: 'components-diagramcanvas--default', trigger: '.react-flow__node', press: 'c' },
 ];
 const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
 
-for (const { id, trigger } of OPEN) {
+for (const { id, trigger, press } of OPEN) {
   test(`a11y ${id} open`, async ({ page }) => {
     await page.goto(`/iframe.html?id=${id}&viewMode=story&globals=theme:light;brand:none`);
     await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
     await page.evaluate(() => document.fonts.ready);
     if (trigger) await page.locator(`#storybook-root ${trigger}`).first().click();
+    if (press) await page.keyboard.press(press);
     await page.locator(POPUP).first().waitFor();
     await page.evaluate(() =>
       Promise.all(

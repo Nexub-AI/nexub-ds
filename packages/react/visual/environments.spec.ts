@@ -96,7 +96,9 @@ for (const { id } of stories) {
     });
     if (moving.length) failed.motion = `still moving: ${[...new Set(moving)].join(', ')}`;
     const blurred = await page.evaluate(
-      () => [...document.querySelectorAll('*')].filter((el) => getComputedStyle(el).backdropFilter !== 'none').length,
+      // An element that isn't rendered (an <option> inside a custom element's light DOM, which its
+      // shadow root doesn't slot) computes no style at all: '' is not a backdrop-filter.
+      () => [...document.querySelectorAll('*')].filter((el) => !['none', ''].includes(getComputedStyle(el).backdropFilter)).length,
     );
     if (blurred) failed.transparency = `${blurred} element(s) keep a backdrop-filter`;
     if (/glass/.test(id)) {

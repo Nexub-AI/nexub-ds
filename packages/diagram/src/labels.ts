@@ -11,9 +11,18 @@ export const defaultDiagramLabels: DiagramLabels = {
   noTargets: 'No other nodes to connect to',
   nodeHint: 'Arrow keys move between nodes. Alt and an arrow key moves the node. Press C to connect it to another node, Delete to remove it.',
   nodeHintReadOnly: 'Arrow keys move between nodes.',
+  edge: (source, target) => `Connection from ${source} to ${target}`,
+  edgeHint: 'Arrow keys move between connections. Press Delete to remove it.',
+  edgeHintReadOnly: 'Arrow keys move between connections.',
   connected: (source, target) => `Connected ${source} to ${target}`,
   moved: (title, x, y) => `Moved ${title} to ${x}, ${y}`,
-  deleted: (count) => (count === 1 ? 'Deleted 1 item' : `Deleted ${count} items`),
+  deleted: (count, nodes = []) => {
+    if (nodes.length === 1) {
+      const rest = count - 1;
+      return rest <= 0 ? `Deleted ${nodes[0]}` : `Deleted ${nodes[0]} and ${rest} ${rest === 1 ? 'connection' : 'connections'}`;
+    }
+    return count === 1 ? 'Deleted 1 item' : `Deleted ${count} items`;
+  },
   tones: { good: 'Good', warning: 'Warning', danger: 'Problem' },
   controls: 'Zoom controls',
   zoomIn: 'Zoom in',

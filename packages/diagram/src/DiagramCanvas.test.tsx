@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { ReactFlow, ReactFlowProvider, addEdge, applyEdgeChanges, applyNodeChanges, useReactFlow, type Connection, type Edge, type Node, type NodeChange } from '@xyflow/react';
 import { NexubProvider } from '@nexub/react/NexubProvider';
-import { DiagramCanvas, DiagramNode, type DiagramCanvasProps, type DiagramFlowNode } from './index.js';
+import { DiagramCanvas, DiagramNode, defaultDiagramLabels, type DiagramCanvasProps, type DiagramFlowNode } from './index.js';
 
 const W = 240;
 const H = 72;
@@ -187,7 +187,8 @@ describe('DiagramCanvas', () => {
       expect(onNodesChange).toHaveBeenCalledWith([{ id: 'a', type: 'remove' }]);
       expect(onEdgesChange).toHaveBeenCalledWith([{ id: 'ab', type: 'remove' }]);
       await waitFor(() => expect(focused()).toBe('b'));
-      expect(screen.getByText('Deleted 2 items')).toBeInTheDocument();
+      // 11.9: the node by name, and its edge, rather than "Deleted 2 items".
+      expect(screen.getByText('Deleted A and 1 connection')).toBeInTheDocument();
     });
 
     it('removes the selection with Backspace (selected edge from the pane)', async () => {
@@ -315,6 +316,141 @@ describe('DiagramCanvas', () => {
       await renderReady(<Controlled initialNodes={[{ ...card('a', 0, 0), connectable: false }, card('b', 300, 0)]} onConnect={() => {}} />);
       fireEvent.keyDown(nodeEl('A'), { key: 'c' });
       expect(screen.queryByRole('listbox')).toBeNull();
+    });
+  });
+
+  // 11.9 screen-reader pass: edges were named by node id ("Edge from a to b") and each one was a
+  // Tab stop of its own, ahead of the nodes.
+  describe('edges (11.9)', () => {
+    const edges: Edge[] = [
+      { id: 'bd', source: 'b', target: 'd' },
+      { id: 'ac', source: 'a', target: 'c' },
+      { id: 'ab', source: 'a', target: 'b' },
+    ];
+    const edgeEl = (name: string) => screen.getByRole('group', { name });
+    const focusedEdge = () => (document.activeElement as Element | null)?.getAttribute('data-id');
+    const live = () => document.querySelector('[data-diagram-live]')!.textContent;
+
+    it('names edges by their nodes’ titles and keeps one edge in the Tab order', async () => {
+      await renderReady(<Controlled initialEdges={[...edges, { id: 'ce', source: 'c', target: 'e', ariaLabel: 'Own name' }]} />);
+      // Node order a, b, e, c, d: edges by source, then target.
+      expect(edgeEl('Connection from A to B')).toHaveAttribute('tabindex', '0');
+      expect(edgeEl('Connection from A to C')).toHaveAttribute('tabindex', '-1');
+      expect(edgeEl('Connection from B to D')).toHaveAttribute('tabindex', '-1');
+      // An edge's own ariaLabel wins.
+      expect(edgeEl('Own name')).toHaveAttribute('tabindex', '-1');
+      // Not an image around each edge.
+      expect(edgeEl('Connection from A to B').parentElement).toHaveAttribute('role', 'none');
+      const describedBy = edgeEl('Connection from A to B').getAttribute('aria-describedby')!;
+      expect(document.getElementById(describedBy)).toHaveTextContent('Arrow keys move between connections. Press Delete to remove it.');
+    });
+
+    it('moves between edges with the arrow keys and Home/End', async () => {
+      await renderReady(<Controlled initialEdges={edges} />);
+      act(() => edgeEl('Connection from A to B').focus());
+      const steps: [string, string][] = [
+        ['ArrowDown', 'ac'],
+        ['ArrowRight', 'bd'],
+        ['ArrowDown', 'bd'],
+        ['Home', 'ab'],
+        ['ArrowUp', 'ab'],
+        ['End', 'bd'],
+        ['ArrowLeft', 'ac'],
+      ];
+      for (const [key, id] of steps) {
+        fireEvent.keyDown(document.activeElement!, { key });
+        expect(focusedEdge(), key).toBe(id);
+      }
+      expect(edgeEl('Connection from A to C')).toHaveAttribute('tabindex', '0');
+      expect(edgeEl('Connection from A to B')).toHaveAttribute('tabindex', '-1');
+      // Focus by other means (Tab, click) moves the stop as well.
+      act(() => edgeEl('Connection from B to D').focus());
+      expect(edgeEl('Connection from B to D')).toHaveAttribute('tabindex', '0');
+    });
+
+    it('deletes the focused edge with Delete, announces each delete, and moves focus on', async () => {
+      const onEdgesChange = vi.fn();
+      await renderReady(<Controlled initialEdges={edges} onEdgesChange={onEdgesChange} />);
+      act(() => edgeEl('Connection from A to B').focus());
+      fireEvent.keyDown(edgeEl('Connection from A to B'), { key: 'Delete' });
+      await waitFor(() => expect(onEdgesChange).toHaveBeenCalledWith([{ id: 'ab', type: 'remove' }]));
+      await waitFor(() => expect(focusedEdge()).toBe('ac'));
+      expect(live()).toBe('Deleted 1 item');
+      // The same message again still changes the live region, so it is read again.
+      fireEvent.keyDown(document.activeElement!, { key: 'Backspace' });
+      await waitFor(() => expect(focusedEdge()).toBe('bd'));
+      expect(live()).toBe('Deleted 1 item ');
+      // The last edge: focus goes to the first node.
+      fireEvent.keyDown(document.activeElement!, { key: 'Delete' });
+      await waitFor(() => expect(focused()).toBe('a'));
+      expect(live()).toBe('Deleted 1 item');
+      expect(document.querySelectorAll('.react-flow__edge')).toHaveLength(0);
+    });
+
+    it('deletes the selection rather than the focused edge', async () => {
+      const onEdgesChange = vi.fn();
+      await renderReady(<Controlled initialEdges={[edges[0]!, { ...edges[1]!, selected: true }, edges[2]!]} onEdgesChange={onEdgesChange} />);
+      fireEvent.keyDown(edgeEl('Connection from A to B'), { key: 'Delete' });
+      await waitFor(() => expect(onEdgesChange).toHaveBeenCalledWith([{ id: 'ac', type: 'remove' }]));
+      expect(edgeEl('Connection from A to B')).toBeInTheDocument();
+    });
+
+    it('read-only: arrows still move between edges; Delete does nothing; the hint says so', async () => {
+      const onEdgesChange = vi.fn();
+      await renderReady(<Controlled readOnly initialEdges={edges} onEdgesChange={onEdgesChange} />);
+      act(() => edgeEl('Connection from A to B').focus());
+      fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+      expect(focusedEdge()).toBe('ac');
+      fireEvent.keyDown(document.activeElement!, { key: 'Delete' });
+      await new Promise((r) => setTimeout(r, 10));
+      expect(onEdgesChange).not.toHaveBeenCalledWith(expect.arrayContaining([expect.objectContaining({ type: 'remove' })]));
+      const describedBy = edgeEl('Connection from A to C').getAttribute('aria-describedby')!;
+      expect(document.getElementById(describedBy)).toHaveTextContent('Arrow keys move between connections.');
+      expect(document.getElementById(describedBy)).not.toHaveTextContent('Delete');
+    });
+
+    it('takes the edge strings from labels', async () => {
+      await renderReady(<Controlled initialEdges={[edges[2]!]} labels={{ edge: (s, t) => `${s} → ${t}`, edgeHint: 'Pfeiltasten' }} />);
+      const edge = edgeEl('A → B');
+      expect(document.getElementById(edge.getAttribute('aria-describedby')!)).toHaveTextContent('Pfeiltasten');
+    });
+  });
+
+  // 11.9: the order Home/End, the Tab stop, the list view and the Connect menu use follows the layout.
+  describe('order follows the layout (11.9)', () => {
+    const tree = [card('root', 0, 0), card('a', 0, 0), card('b', 0, 0), card('c', 0, 0)];
+    const treeEdges: Edge[] = [
+      { id: 'ra', source: 'root', target: 'a' },
+      { id: 'rb', source: 'root', target: 'b' },
+      { id: 'ac', source: 'a', target: 'c' },
+    ];
+    const listOrder = () =>
+      Array.from(document.querySelectorAll('details[data-diagram-list] > ul > li')).map((li) => li.firstChild?.textContent);
+
+    it('left-right: by columns, so the first step comes first (not the one drawn highest)', async () => {
+      await renderReady(<Controlled layout="left-right" initialNodes={tree} initialEdges={treeEdges} />);
+      // ROOT sits lower than A and C (centred on its children); rows would start at A.
+      expect(listOrder()).toEqual(['ROOT', 'A', 'B', 'C']);
+      expect(nodeEl('ROOT')).toHaveAttribute('tabindex', '0');
+      act(() => nodeEl('B').focus());
+      fireEvent.keyDown(nodeEl('B'), { key: 'Home' });
+      expect(focused()).toBe('root');
+      fireEvent.keyDown(nodeEl('ROOT'), { key: 'End' });
+      expect(focused()).toBe('c');
+    });
+
+    it('mind-map: an outline from the root, each branch depth first', async () => {
+      await renderReady(<Controlled layout="mind-map" initialNodes={tree} initialEdges={treeEdges} />);
+      const order = listOrder();
+      expect(order[0]).toBe('ROOT');
+      // C (A's child) follows A directly.
+      expect(order.indexOf('C')).toBe(order.indexOf('A') + 1);
+      expect(nodeEl('ROOT')).toHaveAttribute('tabindex', '0');
+    });
+
+    it('none: rows, as before', async () => {
+      await renderReady(<Controlled initialNodes={[card('x', 0, 200), card('y', 300, 0)]} />);
+      expect(listOrder()).toEqual(['Y', 'X']);
     });
   });
 
@@ -535,5 +671,16 @@ describe('DiagramNode outside DiagramCanvas', () => {
     expect(el.querySelector('.react-flow__handle-left')).not.toBeNull();
     expect(el.querySelector('.react-flow__handle-right')).not.toBeNull();
     expect(el.querySelector('button')).toBeNull();
+  });
+});
+
+describe('defaultDiagramLabels.deleted (11.9)', () => {
+  it('names a single node with its connections, else counts', () => {
+    const { deleted } = defaultDiagramLabels;
+    expect(deleted(1, ['Fetch'])).toBe('Deleted Fetch');
+    expect(deleted(2, ['Fetch'])).toBe('Deleted Fetch and 1 connection');
+    expect(deleted(4, ['Fetch'])).toBe('Deleted Fetch and 3 connections');
+    expect(deleted(1)).toBe('Deleted 1 item');
+    expect(deleted(3, ['A', 'B'])).toBe('Deleted 3 items');
   });
 });

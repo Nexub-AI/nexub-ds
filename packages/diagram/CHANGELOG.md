@@ -1,5 +1,7 @@
 # @nexub/diagram
 
+## 11.8.0
+
 ## 11.7.0
 
 ### Minor Changes

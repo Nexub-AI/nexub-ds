@@ -144,11 +144,18 @@ Object.assign(dialogProto, {
     this.setAttribute('open', '');
   },
   showModal(this: HTMLDialogElement) {
+    // As browsers do: remember what had focus (through shadow roots), to restore it on close.
+    let focused = document.activeElement;
+    while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+    (this as HTMLDialogElement & { previouslyFocused?: Element | null }).previouslyFocused = focused;
     this.setAttribute('open', '');
   },
-  close(this: HTMLDialogElement) {
+  close(this: HTMLDialogElement & { previouslyFocused?: Element | null }) {
     if (!this.hasAttribute('open')) return;
     this.removeAttribute('open');
-    this.dispatchEvent(new Event('close'));
+    // 11.9: as browsers do, focus goes back at once and `close` fires a task later.
+    (this.previouslyFocused as HTMLElement | null | undefined)?.focus?.();
+    this.previouslyFocused = null;
+    setTimeout(() => this.dispatchEvent(new Event('close')));
   },
 });

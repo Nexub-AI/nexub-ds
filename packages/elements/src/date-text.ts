@@ -1,4 +1,10 @@
-import { dateValueGranularity, formatDateValue, parseDateValue, type DateGranularity, type DateParts } from '@nexub/core';
+import { dateFieldMessages, dateValueGranularity, formatDateValue, parseDateValue, type DateGranularity, type DateParts } from '@nexub/core';
+
+/**
+ * The date picker's UI strings, in English: `dateFieldMessages` from `@nexub/core` (11.7), the
+ * same source as React's `defaultMessages`, without the rest of the table.
+ */
+export const labels = dateFieldMessages;
 
 const RANK: Record<DateGranularity, number> = { year: 0, month: 1, day: 2 };
 

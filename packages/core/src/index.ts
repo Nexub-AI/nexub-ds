@@ -1,12 +1,13 @@
 export { defaultMessages, directionOf } from './messages.js';
 export { dateFieldMessages } from './date-messages.js';
+export { choiceFieldMessages } from './choice-messages.js';
 export type { NexubMessages, Direction } from './messages.js';
 export { moneyFormatter, fractionDigits, currencySymbol, formatForEditing, formatForDisplay, parseMoney } from './money.js';
 export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS, accentAttrs } from './types.js';
 export type { ToneValue, CategoryColor, Product, ProductKey, DivisionKey, GlassMode, ContrastLevel, ControlSize } from './types.js';
 export { filterOperators, isFilterGroup, filterId, emptyFilter, newFilterRule, countFilters } from './filters.js';
 export type { FilterFieldType, FilterOperator, FilterField, FilterRule, FilterGroup } from './filters.js';
-export { COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone } from './phone.js';
+export { COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone, phoneCountryOf } from './phone.js';
 export type { CountryCode, ParsedPhone, FormatPhoneOptions } from './phone.js';
 export { encodeQR, qrPath } from './qr.js';
 export type { QRErrorCorrection, QRMatrix } from './qr.js';

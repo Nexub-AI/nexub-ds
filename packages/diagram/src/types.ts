@@ -57,10 +57,23 @@ export interface DiagramLabels {
   nodeHint: string;
   /** Read with every node when `readOnly`. */
   nodeHintReadOnly: string;
+  /**
+   * 11.9: an edge's accessible name, from its nodes' titles ("Connection from Fetch data to
+   * Save"). An edge's own `ariaLabel` wins. Optional in a partial `labels`, as every key.
+   */
+  edge: (source: string, target: string) => string;
+  /** 11.9: read with every edge: how the keyboard works on it. */
+  edgeHint: string;
+  /** 11.9: read with every edge when `readOnly`. */
+  edgeHintReadOnly: string;
   /** Live announcements. */
   connected: (source: string, target: string) => string;
   moved: (title: string, x: number, y: number) => string;
-  deleted: (count: number) => string;
+  /**
+   * `count` is every node and edge removed; `nodes` (11.9) the removed nodes' titles, so one
+   * node with its edges reads "Deleted Fetch data and 2 connections" rather than "3 items".
+   */
+  deleted: (count: number, nodes?: readonly string[]) => string;
   /** Text equivalents of the tones (screen readers and the list view). */
   tones: Record<Exclude<DiagramNodeTone, 'default'>, string>;
   /** The zoom controls. */

@@ -4,6 +4,8 @@ Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 10 releases: thr
 
 **Why it starts at 11.7.** 11.6.0 (2026-11-22) closed the last of the 38 platform gaps and shipped `@nexub/diagram` and `@nexub/elements` at `alpha`. The 11.x plan is finished.
 
+**Shipped.** 11.7.0 (2026-11-24, on `latest`): the quiet release. Its 48-hour soak was removed by the owner the same day; each version now ships on its own once green. 11.8.0 (2026-11-24, on `latest`): native fields.
+
 **Direction.** 10.x made the library look better. 11.x closed the gaps the apps worked around. 12.x is about depth: fewer new parts, more of what exists made stable, fast, native and measurable.
 
 - **11.7 — Quiet release: nothing flaky**
