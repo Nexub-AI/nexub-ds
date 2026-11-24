@@ -118,7 +118,7 @@
   "devDependencies": {
     "@nexub/themes": "workspace:*",
     "@nexub/tokens": "workspace:*",
-    "@playwright/test": "1.65.0",
+    "@playwright/test": "1.65.1",
     "@storybook/react": "10.6.6",
     "@storybook/react-vite": "10.6.6",
     "@tailwindcss/cli": "^4.3.5",
