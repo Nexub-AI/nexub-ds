@@ -2,7 +2,7 @@ import * as React from 'react';
 import type { Decorator } from '@storybook/react';
 // The source, not dist: registers <nx-number-input> and <nx-date-picker> before React renders.
 import '../src/define';
-import type { NxDatePicker, NxNumberInput } from '../src/index';
+import type { NxCombobox, NxDatePicker, NxNumberInput, NxPhoneInput, NxSelect } from '../src/index';
 
 // React 19 sets a prop as a property when the element has one, else as an attribute. Every
 // attribute these elements read has a reflecting property, except `value`: the `value`
@@ -25,6 +25,9 @@ declare module 'react' {
     interface IntrinsicElements {
       'nx-number-input': ElementProps<NxNumberInput> & { step?: string; placeholder?: string };
       'nx-date-picker': ElementProps<NxDatePicker> & { granularity?: 'day' | 'month' | 'year'; locale?: string };
+      'nx-select': ElementProps<NxSelect> & { placeholder?: string; invalid?: boolean };
+      'nx-combobox': ElementProps<NxCombobox> & { placeholder?: string; invalid?: boolean; 'allow-custom'?: boolean };
+      'nx-phone-input': ElementProps<NxPhoneInput> & { 'default-country'?: string; countries?: string; invalid?: boolean };
     }
   }
 }

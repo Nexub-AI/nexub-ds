@@ -6,9 +6,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11', 'deprecated-in-11'];
-// Run only when asked for by --rules: they keep old behaviour instead of moving code forward.
-const OPT_IN = new Set(['keep-5-defaults']);
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11', 'deprecated-in-11', 'changes-in-12'];
+// Run only when asked for by --rules. keep-5-defaults keeps old behaviour instead of moving code
+// forward; changes-in-12 moves code onto 12.0, which on 11.x would undo the 11.9 opt-in stylesheet.
+const OPT_IN = new Set(['keep-5-defaults', 'changes-in-12']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
@@ -587,6 +588,84 @@ function deprecatedIn11(src, report) {
   }
 }
 
+// ─── changes-in-12: what 12.0 removes and flips (RFC 12.0) ────────────────────
+// Flipped: @nexub/react/styles.css moves every layer under one `nexub` layer, which is what the
+// 11.9 opt-in file styles.nexub-layer.css already is, so imports of it go back to styles.css.
+// Removed: Stepper current={-1}. With a literal steps array of object literals it is rewritten
+// to current={n - 1} with status: 'complete' on each step (a step's own status is kept: it
+// already won over current); anything else is reported.
+const LAYERED_SHEET = /(['"(]@nexub\/react\/)styles\.nexub-layer\.css(?=['")])/g;
+const MINUS_ONE = /^\{\s*-\s*1\s*\}$/;
+
+/** Split `[a, b, …]` / `{a, b, …}` text into its top-level items (with offsets into `text`). */
+function splitTopLevel(text) {
+  const items = [];
+  let depth = 0;
+  let start = 1;
+  for (let i = 1; i < text.length - 1; i++) {
+    const c = text[i];
+    if (c === '"' || c === "'" || c === '`') {
+      for (i++; i < text.length && text[i] !== c; i++) if (text[i] === '\\') i++;
+    } else if (text.startsWith('//', i) || text.startsWith('/*', i)) {
+      return null; // comments: leave it to a human
+    } else if ('[{('.includes(c)) depth++;
+    else if (')}]'.includes(c)) depth--;
+    else if (c === ',' && depth === 0) {
+      items.push({ start, end: i });
+      start = i + 1;
+    }
+  }
+  items.push({ start, end: text.length - 1 });
+  return items
+    .map(({ start: s, end: e }) => {
+      const raw = text.slice(s, e);
+      const lead = raw.length - raw.trimStart().length;
+      return { start: s + lead, end: s + raw.trimEnd().length, text: raw.trim() };
+    })
+    .filter((it, i, all) => it.text || i < all.length - 1); // a trailing comma leaves an empty last item
+}
+
+/** `{ label: 'A' }` → `{ label: 'A', status: 'complete' }`; null when the step isn't a plain object literal. */
+function completeStep(step) {
+  if (!/^\{[\s\S]*\}$/.test(step)) return null;
+  const props = splitTopLevel(step);
+  if (!props || props.some((p) => p.text.startsWith('...'))) return null;
+  if (props.some((p) => /^(['"]?)status\1\s*(?::|$)/.test(p.text))) return step;
+  const inner = step.slice(1, -1);
+  const body = inner.trimEnd();
+  const tail = inner.slice(body.length);
+  if (!body.trim()) return `{ status: 'complete' }`;
+  return `{${body}${body.endsWith(',') ? ` status: 'complete',` : `, status: 'complete'`}${tail}}`;
+}
+
+function changesIn12(src, ext, report) {
+  let output = src.replace(LAYERED_SHEET, '$1styles.css');
+  if (!COMPONENT_EXTS.has(ext)) return output;
+  const edits = [];
+  for (const [local] of importedAs(output, '@nexub/react', ['Stepper'])) {
+    for (const m of output.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const tag = readTag(output, m.index + m[0].length);
+      const current = tag?.attrs.find((a) => a.name === 'current' && MINUS_ONE.test(a.value ?? ''));
+      if (!current) continue;
+      const steps = tag.attrs.find((a) => a.name === 'steps');
+      const array = /^\{\s*(\[[\s\S]*\])\s*\}$/.exec(steps?.value ?? '')?.[1];
+      const items = array && splitTopLevel(array);
+      const done = items?.length ? items.map((it) => completeStep(it.text)) : null;
+      if (!done || done.includes(null) || tag.attrs.some((a) => a.name === 'completed')) {
+        // A line, not an offset: earlier rules may have changed lengths (never newlines) on this text.
+        report(output.slice(0, m.index).split('\n').length, '<Stepper current={-1}> is removed in 12.0 and its steps are not a literal array of objects here: give each step status: "complete" and set current={steps.length - 1}');
+        continue;
+      }
+      const arrayAt = steps.end - steps.value.length + steps.value.indexOf('[');
+      items.forEach((it, i) => edits.push({ start: arrayAt + it.start, end: arrayAt + it.end, text: done[i] }));
+      const valueAt = current.end - current.value.length;
+      edits.push({ start: valueAt, end: current.end, text: `{${items.length - 1}}` });
+    }
+  }
+  for (const e of edits.sort((a, b) => b.start - a.start)) output = output.slice(0, e.start) + e.text + output.slice(e.end);
+  return output;
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
@@ -649,6 +728,8 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
     text = changesIn11(text, ext, (at, message) => items.push({ at, rule: 'changes-in-11', message }));
   if (rules.has('deprecated-in-11') && COMPONENT_EXTS.has(ext) && /@nexub\/react['"/]/.test(src))
     deprecatedIn11(src, (at, message) => items.push({ at, rule: 'deprecated-in-11', message }));
+  if (rules.has('changes-in-12') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.scss' || ext === '.html'))
+    text = changesIn12(text, ext, (line, message) => items.push({ line, rule: 'changes-in-12', message }));
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -692,7 +773,7 @@ Options:
   --check            exit 1 if anything fixable or reportable is found (CI)
   --json             print machine-readable results
   --fix              also rewrite opacity-modifier hits (preview, or apply with --write)
-  --rules <a,b>      run only these rules (default: all except keep-5-defaults)
+  --rules <a,b>      run only these rules (default: all except keep-5-defaults and changes-in-12)
   --ignore <glob>    skip paths matching glob (repeatable; supports * and **)
   -h, --help         show this help
 
@@ -733,6 +814,10 @@ Rules:
                      768px; sheet={false} keeps the popover)
   deprecated-in-11   report what an 11.x minor deprecated (removed in 12.0): <Stepper current={-1}>
                      (11.4: give steps a status instead)
+  changes-in-12      opt-in: what 12.0 removes and flips: rewrites @nexub/react/styles.nexub-layer.css
+                     (the 11.9 opt-in) back to @nexub/react/styles.css, which is that file in 12.0;
+                     rewrites <Stepper current={-1}> with a literal steps array to current={n-1}
+                     and status: "complete" on each step; reports the other current={-1} uses
 
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;

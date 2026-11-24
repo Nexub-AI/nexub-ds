@@ -53,7 +53,8 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
   ref,
 ) {
   const t = useNexubMessages();
-  const completed = new Set(completedProp ?? steps.slice(0, current).map((_, i) => i));
+  // current={-1} (deprecated) means every step is done: slice(0, -1) would leave the last one out.
+  const completed = new Set(completedProp ?? steps.slice(0, current < 0 ? steps.length : current).map((_, i) => i));
   // 11.4: an explicit status wins; without one, the 11.3 rules (current / completed) apply.
   const statusOf = (i: number): StepperStatus =>
     steps[i]!.status ?? (i === current ? 'current' : completed.has(i) ? 'complete' : 'upcoming');

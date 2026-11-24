@@ -14275,6 +14275,65 @@
     }
   },
   "@nexub/elements": {
+    "ComboboxElement": {
+      "file": "combobox.ts",
+      "props": [
+        {
+          "name": "allow-custom",
+          "type": "boolean",
+          "required": false,
+          "description": "Free text: the typed text is the value when it names no option."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "`sm`, `md` (default) or `lg`."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The `value` attribute: the value the field starts with and goes back to on `form.reset()`."
+        }
+      ]
+    },
     "DatePickerElement": {
       "file": "date-picker.ts",
       "props": [
@@ -14289,6 +14348,12 @@
           "type": "'day' | 'month' | 'year'",
           "required": false,
           "description": "`day` (default), `month` or `year`."
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`."
         },
         {
           "name": "locale",
@@ -14350,6 +14415,12 @@
           "description": ""
         },
         {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`."
+        },
+        {
           "name": "max",
           "type": "string",
           "required": false,
@@ -14396,6 +14467,136 @@
           "type": "string",
           "required": false,
           "description": "The step for keys: a positive number, or `any` (any decimal; keys move by 1). Default 1."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The `value` attribute: the value the field starts with and goes back to on `form.reset()`."
+        }
+      ]
+    },
+    "PhoneInputElement": {
+      "file": "phone-input.ts",
+      "props": [
+        {
+          "name": "countries",
+          "type": "string",
+          "required": false,
+          "description": "The countries to pick from, in order (`\"IN AE US\"`); empty for every country."
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": false,
+          "description": "The country the number is in (ISO 3166-1 alpha-2). Setting it keeps the national digits."
+        },
+        {
+          "name": "default-country",
+          "type": "string",
+          "required": false,
+          "description": "The country an empty field starts on, and goes back to on `form.reset()`."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "`sm`, `md` (default) or `lg`."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "description": "The `value` attribute: the value the field starts with and goes back to on `form.reset()`."
+        }
+      ]
+    },
+    "SelectElement": {
+      "file": "select.ts",
+      "props": [
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "invalid",
+          "type": "boolean",
+          "required": false,
+          "description": "Shows the field as invalid (`aria-invalid`, the error border) whatever its validity, as `@nexub/react`'s `invalid`."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "readonly",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": "`sm`, `md` (default) or `lg`."
         },
         {
           "name": "value",

@@ -6,10 +6,10 @@ Composite UI patterns for the Nexub Design System, built on `@nexub/react`.
 pnpm add @nexub/patterns @nexub/react @nexub/icons @nexub/themes
 ```
 
-Like `@nexub/react`, the patterns are styled with Tailwind classes your app compiles, on Tailwind 3 or 4. Import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`), then:
+Like `@nexub/react`, the patterns are styled with Tailwind classes. Pick one of two setups:
 
-- **Tailwind 3:** add `node_modules/@nexub/patterns/dist/**/*.js` to your Tailwind `content` and use the `@nexub/tokens/tailwind` preset.
-- **Tailwind 4:** `@import "@nexub/tokens/tailwind.css";` after `@import "tailwindcss";`, add `@source "../node_modules/@nexub/patterns/dist";`, and import the theme CSS with `layer(base)` so Tailwind's utilities still win over it. See [Getting Started](https://nexub-ds-docs.pages.dev/getting-started) for the full snippet.
+- **Tailwind 4:** import `@nexub/themes/base` plus a palette (e.g. `@nexub/themes/light` and `@nexub/themes/dark`) with `layer(base)`, so Tailwind's utilities still win over it, then `@import "@nexub/tokens/tailwind.css";` after `@import "tailwindcss";` and add `@source "../node_modules/@nexub/patterns/dist";`. See [Getting Started](https://nexub-ds-docs.pages.dev/getting-started) for the full snippet.
+- **Tailwind 3, or no Tailwind:** import the prebuilt stylesheets, `@nexub/react/styles.css` and then `@nexub/patterns/styles.css`. They carry the themes, fonts and every class the components and patterns use, so there is nothing to add to your Tailwind `content`. The Tailwind 3 preset (`@nexub/tokens/tailwind`) was removed in 4.0; `npx nexub-migrate --rules tailwind-3-preset` finds what still uses it. See [Use without Tailwind](https://nexub-ds-docs.pages.dev/getting-started/without-tailwind).
 
 ## AppHeader
 
