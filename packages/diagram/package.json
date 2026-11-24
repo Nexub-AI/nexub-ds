@@ -38,7 +38,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify && tailwindcss -i src/theme.css -o dist/theme.css --minify",
+    "build": "tsup && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css && node ../react/scripts/build-nexub-layer.mjs src/theme.css dist/theme.css",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

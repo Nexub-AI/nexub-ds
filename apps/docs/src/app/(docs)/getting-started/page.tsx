@@ -71,7 +71,7 @@ import '@nexub/themes/dark';   // optional: dark comes from light-dark() roles n
         <code>node_modules</code>.
       </p>
       <CodeBlock lang="css" code={`/* app.css: replaces the JS theme imports from Setup */
-@layer theme, base, components, utilities;
+@layer theme, base, nexub, components, utilities;
 
 @import "@nexub/themes/base" layer(base);
 @import "@nexub/themes/light" layer(base);

@@ -3,10 +3,9 @@ import tailwindcss from '@tailwindcss/vite';
 import type { Plugin } from 'vite';
 import { toNexubLayer } from '../scripts/build-nexub-layer.mjs';
 
-// 11.9: NEXUB_LAYER=1 builds the canvas with the 12.0 cascade layers (RFC 12.0, decision 2):
-// preview.css gets the same rename as dist/styles.nexub-layer.css (every layer under `nexub`,
-// the v3 compatibility file inlined), before Tailwind compiles it. The visual contrast and axe
-// suites then run on it: NEXUB_LAYER=1 pnpm build-storybook, then test:visual as usual.
+// 12.0: the canvas uses the cascade layers apps get (RFC 12.0, decision 2): preview.css gets
+// the same rename as dist/styles.css (every layer under `nexub`, the v3 compatibility file
+// inlined) before Tailwind compiles it, so the visual contrast and axe suites test that CSS.
 const nexubLayer: Plugin = {
   name: 'nexub-layer',
   enforce: 'pre',
@@ -14,8 +13,7 @@ const nexubLayer: Plugin = {
     if (id.split('?')[0].endsWith('/.storybook/preview.css')) return toNexubLayer(code, id.split('?')[0]);
   },
   // Tailwind's own `properties` layer (the @property fallbacks) moves under nexub too, as in
-  // dist/styles.nexub-layer.css. (The diagram's prebuilt CSS keeps its own layers: 12.0 scope
-  // is @nexub/react/styles.css.)
+  // dist/styles.css.
   generateBundle(_, bundle) {
     for (const asset of Object.values(bundle)) {
       if (asset.type === 'asset' && asset.fileName.endsWith('.css') && String(asset.source).includes('@layer nexub.'))
@@ -36,7 +34,7 @@ const config: StorybookConfig = {
   // vars resolved once at :root, which breaks nested data-theme surfaces.
   viteFinal: (config) => ({
     ...config,
-    plugins: [...(config.plugins ?? []), ...(process.env.NEXUB_LAYER ? [nexubLayer] : []), tailwindcss()],
+    plugins: [...(config.plugins ?? []), nexubLayer, tailwindcss()],
     // apps/docs (coverage stories render its examples) has jsx: "preserve" for Next;
     // compile JSX here regardless of the nearest tsconfig.
     oxc: { ...(config as { oxc?: object }).oxc, jsx: { runtime: 'automatic' } },
