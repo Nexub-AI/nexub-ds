@@ -200,7 +200,7 @@ appId: ai.nexub.mobile
     env:
       TARGET: "Recipient gets.*"
 - takeScreenshot: 08-send
-- runFlow: subflows/back-home.yaml
+- runFlow: subflows/back.yaml
 # Back on the Payub flows list: open Activity from it. (Deep links are covered
 # by previews/; on the iOS simulator a link sent while the app is open
 # sometimes never navigates.) Scroll up to the section header, not to the row:
