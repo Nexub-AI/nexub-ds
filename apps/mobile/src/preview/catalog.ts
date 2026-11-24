@@ -56,6 +56,14 @@ export const CATALOG = {
   select: { title: 'Select', kind: 'component', web: 'select', examples: ['Opens a sheet'] },
   'date-time-field': { title: 'DateTimeField', kind: 'component', web: 'date-picker', examples: ['Date'] },
   'multi-select': { title: 'MultiSelect', kind: 'component', web: 'multi-select', examples: ['Labels in a sheet'] },
+  // 11.8
+  'combobox-field': { title: 'ComboboxField', kind: 'component', web: 'combobox', examples: ['Searchable sheet'] },
+  'currency-select': { title: 'CurrencySelect', kind: 'component', web: 'currency-select', examples: ['Currencies'] },
+  'switch-field': { title: 'SwitchField', kind: 'component', web: 'switch-field', examples: ['With a description'] },
+  'checkbox-field': { title: 'CheckboxField', kind: 'component', web: 'checkbox-field', examples: ['Terms'] },
+  'checkbox-group-field': { title: 'CheckboxGroupField', kind: 'component', web: 'checkbox-field', examples: ['Notifications'] },
+  'file-upload': { title: 'FileUpload', kind: 'component', web: 'file-upload', examples: ['Images'] },
+  'prompt-dialog': { title: 'PromptDialog', kind: 'component', web: 'alert-dialog', examples: ['usePrompt'] },
   'filter-sheet': { title: 'FilterSheet', kind: 'component', web: 'filter-builder', examples: ['Deal filters'] },
 
   // Lists and containers
@@ -128,6 +136,7 @@ export const SECTIONS = {
   inputs: [
     { heading: 'Fields', slugs: ['search-field', 'text-field', 'password-input', 'money-input'] },
     { heading: 'Selection', slugs: ['segmented-control', 'tabs', 'rating', 'checkbox', 'radio-group', 'switch', 'stepper', 'slider'] },
+    { heading: 'Form fields', slugs: ['combobox-field', 'currency-select', 'switch-field', 'checkbox-field', 'checkbox-group-field', 'file-upload', 'prompt-dialog'] },
   ],
   lists: [
     { heading: 'Cards', slugs: ['card', 'amount'] },

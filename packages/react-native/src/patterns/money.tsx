@@ -5,7 +5,7 @@ import { CheckCircle2, ShieldCheck, type NativeIconProps } from '@nexub/icons/na
 import { Button } from '../components/actions';
 import { ListItem, ListSection } from '../components/containers';
 import { Amount, Avatar, Badge } from '../components/display';
-import { EmptyState, Progress } from '../components/feedback';
+import { EmptyState, Progress, Skeleton } from '../components/feedback';
 import {
   ExpressiveMoneyInput,
   RefreshControl,
@@ -210,7 +210,16 @@ export interface ActivityListProps {
   /** Swipe actions per row (also accessibility actions). */
   actions?: (t: Transaction) => SwipeAction[];
   header?: React.ReactElement;
+  /** Shown when there are no transactions. Same as `emptyState`, which wins. */
   empty?: React.ReactElement;
+  /** Shown when there are no transactions, e.g. an EmptyState with a call to action. @default "No activity yet" */
+  emptyState?: React.ReactElement;
+  /** Shown in place of the list when a load failed, e.g. an ErrorState with a retry. Wins over `loading` and the empty state. */
+  errorState?: React.ReactElement;
+  /** Shows skeleton rows in place of the transactions and marks the list busy for screen readers. */
+  loading?: boolean;
+  /** Skeleton rows while `loading`. @default 3 */
+  loadingRows?: number;
 }
 
 /** Transactions grouped by day, with pull-to-refresh, paging and swipe actions (web ActivityFeed). */
@@ -223,8 +232,15 @@ export function ActivityList({
   actions,
   header,
   empty,
+  emptyState,
+  errorState,
+  loading = false,
+  loadingRows = 3,
 }: ActivityListProps) {
   const { roles, tokens, locale } = useTheme();
+  // One order everywhere (web dataState): error, then loading, then empty, then the data.
+  const busy = loading && !errorState;
+  const replaced = !!errorState || loading;
   const sections = React.useMemo(() => {
     const day = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
     const map = new Map<string, Transaction[]>();
@@ -271,21 +287,47 @@ export function ActivityList({
     );
   };
 
+  const skeleton = (
+    <View
+      testID="activity-loading"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ backgroundColor: roles['surface-container-lowest'], borderRadius: tokens.shape.container, marginTop: tokens.spacing[4] }}
+    >
+      {Array.from({ length: loadingRows }, (_, i) => (
+        <View
+          key={i}
+          style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[3], paddingHorizontal: tokens.spacing[4], paddingVertical: tokens.spacing[3] }}
+        >
+          <Skeleton shape="circle" height={tokens.size.avatar.md} />
+          <View style={{ flex: 1, gap: tokens.spacing[1] }}>
+            <Skeleton width="40%" height={tokens.spacing[3]} shape="line" />
+            <Skeleton width="60%" height={tokens.spacing[3]} shape="line" />
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+
   return (
     <SectionList
-      sections={sections}
+      sections={replaced ? [] : sections}
       keyExtractor={(t) => t.id}
       contentInsetAdjustmentBehavior="automatic"
+      accessibilityState={{ busy }}
       style={{ backgroundColor: roles.surface }}
       contentContainerStyle={{ padding: tokens.spacing[4], gap: 0 }}
       ListHeaderComponent={header}
       ListEmptyComponent={
-        empty ?? (
-          <EmptyState
-            title="No activity yet"
-            description="Your payments and transfers will show up here."
-          />
-        )
+        errorState ??
+        (loading
+          ? skeleton
+          : (emptyState ?? empty ?? (
+              <EmptyState
+                title="No activity yet"
+                description="Your payments and transfers will show up here."
+              />
+            )))
       }
       renderSectionHeader={({ section }) => (
         <Text

@@ -58,6 +58,7 @@ export type {
   IconButtonProps,
   ButtonGroupProps,
   LinkProps,
+  ButtonStatus,
 } from './components/actions';
 export { Amount, Badge, Avatar, AvatarGroup, Divider } from './components/display';
 export type {
@@ -96,7 +97,17 @@ export type {
   SegmentedControlProps,
   SliderProps,
   ChipProps,
+  NullableStepperProps,
 } from './components/inputs';
+export { SwitchField, CheckboxField, CheckboxGroupField } from './components/choicefields';
+export type {
+  SwitchFieldProps,
+  CheckboxFieldProps,
+  CheckboxGroupFieldProps,
+  CheckboxGroupOption,
+} from './components/choicefields';
+export { CurrencySelect, currencySelectOptions } from './components/currency';
+export type { CurrencySelectProps } from './components/currency';
 export { Card, ListItem, ListSection, Accordion } from './components/containers';
 export type {
   CardProps,
@@ -168,11 +179,14 @@ export type {
   CoachmarkProps,
   FABProps,
   DateTimeFieldProps,
+  DateMatcher,
+  DateTimeFieldChangeHandler,
+  DateTimeFieldPeriodProps,
 } from './components/mobile';
 
 export { MultiSelect, DataList, FileList, FilterSheet } from './components/data';
 export { TreeList, StepProgress, SortableList, InlineEdit } from './components/workflow';
-export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps } from './components/workflow';
+export type { TreeListNode, TreeListProps, StepProgressProps, SortableListProps, InlineEditProps, InlineEditSize } from './components/workflow';
 /**
  * `StepIndicator` is `StepProgress` under the name RFC #302 asks for: the twin
  * of web `Stepper`. On native, `Stepper` is the − / + number control.
@@ -196,6 +210,14 @@ export type {
   FileListProps,
   FilterSheetProps,
 } from './components/data';
+// 11.8: native catch-up I (fields)
+export { ComboboxField } from './components/combobox';
+export type { ComboboxFieldProps, ComboboxOption } from './components/combobox';
+export { FileUpload, fileAccepted } from './components/fileupload';
+export type { FileUploadProps, PickedFile, FileRejection } from './components/fileupload';
+export { PromptDialog, usePrompt } from './components/prompt';
+export type { PromptDialogProps, PromptOptions } from './components/prompt';
+export type { AsyncSearch } from './hooks/useAsyncSearch';
 export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
 export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
 

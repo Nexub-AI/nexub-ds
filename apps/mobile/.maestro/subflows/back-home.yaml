@@ -1,0 +1,18 @@
+# Back to the catalogue home (the stack root, which has no back button).
+# The iOS edge swipe in back.yaml sometimes doesn't register: on 2026-11-23
+# (run 45261026829) the app stayed on Mobile patterns and the next scroll
+# looked for "Screens" on the wrong screen. The root shows no back button,
+# so if one is still on screen the swipe missed: tap it instead.
+# Only for screens one level below home; deeper screens use back.yaml.
+appId: ai.nexub.mobile
+---
+- runFlow: back.yaml
+- runFlow:
+    when:
+      platform: iOS
+      visible:
+        id: "BackButton"
+    commands:
+      - tapOn:
+          id: "BackButton"
+      - waitForAnimationToEnd

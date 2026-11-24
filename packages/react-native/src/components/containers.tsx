@@ -10,38 +10,68 @@ import Animated, { LayoutAnimationConfig, useAnimatedStyle } from 'react-native-
 import { Check, ChevronDown, ChevronRight } from '@nexub/icons/native';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
-import { Surface, type SurfaceProps } from '../primitives/Surface';
+import type { ToneValue } from '@nexub/core';
+import { Surface, type SurfaceProps, type SurfaceTone } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
 import { nxEnter, nxExit, nxLayout, useSpringValue } from '../theme/motion';
 import { Divider } from './display';
-import { disabledOpacity } from './shared';
+import { TONE_TEXT, disabledOpacity } from './shared';
 
 // ─── Card ────────────────────────────────────────────────────────────────────
 
-export interface CardProps extends SurfaceProps {
+export interface CardProps extends Omit<SurfaceProps, 'tone'> {
   /** Makes the whole card one pressable target (navigates to detail). */
   onPress?: () => void;
   /** Accessible name when pressable. */
   accessibilityLabel?: string;
+  /**
+   * A surface tier (`surface-container-low`, …) sets the card's background. A semantic or
+   * product tone (`info`, `danger`, `payub`, …) adds a coloured start edge, as on web.
+   * @default 'surface-container-low'
+   */
+  tone?: SurfaceTone | ToneValue;
+  /**
+   * `flat` sits on its tier with no shadow. `surface` and `interactive` lift the card one
+   * elevation step on `surface-elevated` (`interactive` is for a card with `onPress`). @default 'flat'
+   */
+  variant?: 'flat' | 'surface' | 'interactive';
+  /** The card's material, as on web: `glass` is Liquid Glass on iOS 26+, a solid elevated tier elsewhere. @default 'solid' */
+  surface?: 'solid' | 'glass';
 }
+
+const isSurfaceTone = (tone: string): tone is SurfaceTone => tone.startsWith('surface');
 
 /** Content container on a tonal tier. Hierarchy through tone, not shadow (elevation for floating cards only). */
 export function Card({
   onPress,
   accessibilityLabel,
-  tone = 'surface-container-low',
+  tone: toneProp,
+  variant = 'flat',
+  surface: surfaceProp,
+  material,
+  elevation,
   radius = 'container',
   style,
   children,
   ...rest
 }: CardProps) {
-  const { tokens } = useTheme();
+  const { roles, tokens } = useTheme();
+  const raised = variant !== 'flat';
+  const accent = !toneProp || isSurfaceTone(toneProp) || toneProp === 'neutral' ? undefined : TONE_TEXT[toneProp];
+  const tone: SurfaceTone =
+    toneProp && isSurfaceTone(toneProp) ? toneProp : raised ? 'surface-elevated' : 'surface-container-low';
   const surface = (
     <Surface
       tone={tone}
       radius={radius}
-      style={[{ padding: tokens.spacing[4], gap: tokens.spacing[2] }, style]}
+      elevation={elevation ?? (raised ? 1 : 0)}
+      material={surfaceProp ?? material}
+      style={[
+        { padding: tokens.spacing[4], gap: tokens.spacing[2] },
+        accent && { borderStartWidth: tokens.spacing[1], borderStartColor: roles[accent] },
+        style,
+      ]}
       {...rest}
     >
       {children}

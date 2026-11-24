@@ -706,6 +706,111 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
+      - openLink: nexub://preview/combobox-field?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-combobox-field-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: combobox-field--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/currency-select?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-currency-select-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: currency-select--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/switch-field?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-switch-field-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: switch-field--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/checkbox-field?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-checkbox-field-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: checkbox-field--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/checkbox-group-field?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-checkbox-group-field-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: checkbox-group-field--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/file-upload?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-file-upload-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: file-upload--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/prompt-dialog?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-prompt-dialog-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: prompt-dialog--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
       - openLink: nexub://preview/filter-sheet?ex=0
       - runFlow:
           when:

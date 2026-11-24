@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { AccessibilityInfo, ActivityIndicator, Linking, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import type { ControlSize, ToneValue } from '@nexub/core';
-import type { NativeIconProps } from '@nexub/icons/native';
+import { Check, ExternalLink, type NativeIconProps } from '@nexub/icons/native';
 import { Pressable, type PressableProps } from '../primitives/Pressable';
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
-import { useTheme, type RoleName } from '../theme/ThemeProvider';
+import { useHaptics, useTheme, type RoleName } from '../theme/ThemeProvider';
 import type { HapticToken } from '../theme/haptics';
 import { TONE_CONTAINERS, TONE_ROLES, controlHeight, disabledOpacity, hitSlopFor } from './shared';
 
@@ -54,13 +54,27 @@ export interface ButtonProps extends Omit<PressableProps, 'children'> {
   tone?: ToneValue;
   /** The control ladder. Primary actions on mobile use 'lg' (48). @default 'md' */
   size?: ControlSize;
-  /** Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`. */
+  /** Shows a spinner (after 150ms, for at least 400ms), blocks presses at once and announces `loadingLabel`. Same as `status="loading"`. */
   loading?: boolean;
+  /** Announced while loading. @default 'Loading…' (the provider's `loading` message) */
   loadingLabel?: string;
+  /**
+   * Async feedback, as on web. `loading` shows a spinner and blocks presses, `success`
+   * shows a check, `error` plays the error haptic. Screen readers hear each change.
+   * Wins over `loading`. @default 'idle'
+   */
+  status?: ButtonStatus;
+  /** Announced on success. When given, it also replaces the visible label while `status` is `success`. @default 'Done' */
+  successLabel?: string;
+  /** Announced on error. @default 'Something went wrong' */
+  errorLabel?: string;
   fullWidth?: boolean;
   leadingIcon?: React.ComponentType<NativeIconProps>;
   trailingIcon?: React.ComponentType<NativeIconProps>;
 }
+
+/** The async state of a Button, as on web. */
+export type ButtonStatus = 'idle' | 'loading' | 'success' | 'error';
 
 // Spinner timing (web twin): hidden for loads under 150ms, then shown for at least 400ms (no flicker).
 const SPINNER_DELAY = 150;
@@ -90,6 +104,9 @@ export function Button({
   size = 'md',
   loading,
   loadingLabel,
+  status: statusProp,
+  successLabel,
+  errorLabel = 'Something went wrong',
   fullWidth,
   leadingIcon: Leading,
   trailingIcon: Trailing,
@@ -105,7 +122,9 @@ export function Button({
     : VARIANT[variant];
   const height = controlHeight(theme, size);
   const fg = roles[fgRole];
-  const inactive = disabled || loading;
+  const status: ButtonStatus = statusProp ?? (loading ? 'loading' : 'idle');
+  const busy = status === 'loading';
+  const inactive = disabled || busy;
   // Vivid: the untoned main action is a gradient with a soft glow. High contrast
   // keeps the flat fill (the roles already carry the contrast), as does disabled.
   const vivid =
@@ -124,8 +143,26 @@ export function Button({
         ? defaultEnd
         : roles.tertiary;
   const gradientId = React.useId().replace(/\W/g, '');
-  const spinner = useSpinner(!!loading);
-  const label = typeof children === 'string' ? children : undefined;
+  const spinner = useSpinner(busy);
+  const swapLabel = status === 'success' && successLabel !== undefined;
+  const label = swapLabel ? successLabel : typeof children === 'string' ? children : undefined;
+  const loadingText = loadingLabel ?? theme.messages.loading;
+  const play = useHaptics();
+
+  // Each change of status is announced (not the first render), like web's live region.
+  const announced = React.useRef(status);
+  React.useEffect(() => {
+    if (announced.current === status) return;
+    announced.current = status;
+    const text =
+      status === 'loading' ? loadingText
+      : status === 'success' ? (successLabel ?? 'Done')
+      : status === 'error' ? errorLabel
+      : '';
+    if (text) AccessibilityInfo.announceForAccessibility(text);
+    if (status === 'success') play('confirm');
+    else if (status === 'error') play('reject');
+  }, [status, loadingText, successLabel, errorLabel, play]);
 
   const body = (
     <View
@@ -139,22 +176,24 @@ export function Button({
     >
       {spinner ? (
         <ActivityIndicator size="small" color={fg} />
+      ) : status === 'success' ? (
+        <Check size={ICON[size]} color={fg} testID="button-success" />
       ) : (
         Leading && <Leading size={ICON[size]} color={fg} />
       )}
-      {typeof children === 'string' ? (
+      {typeof children === 'string' || swapLabel ? (
         <Text
           variant={LABEL[size]}
           style={{ color: fg }}
           numberOfLines={1}
           maxFontSizeMultiplier={theme.denseMaxFontScale}
         >
-          {children}
+          {swapLabel ? successLabel : children}
         </Text>
       ) : (
         children
       )}
-      {!spinner && Trailing && <Trailing size={ICON[size]} color={fg} />}
+      {!spinner && status !== 'success' && Trailing && <Trailing size={ICON[size]} color={fg} />}
     </View>
   );
 
@@ -176,8 +215,8 @@ export function Button({
 
   return (
     <Pressable
-      accessibilityLabel={accessibilityLabel ?? (loading && loadingLabel ? loadingLabel : label)}
-      accessibilityState={{ disabled: !!inactive, busy: !!loading }}
+      accessibilityLabel={accessibilityLabel ?? (busy && loadingLabel ? loadingLabel : label)}
+      accessibilityState={{ disabled: !!inactive, busy }}
       disabled={inactive}
       hitSlop={hitSlopFor(height)}
       stateLayer={fgRole}
@@ -232,6 +271,8 @@ export interface IconButtonProps extends Omit<PressableProps, 'children'> {
   /** Toggle state for icon toggles (favourite, mute). */
   selected?: boolean;
   haptic?: HapticToken;
+  /** A spinner replaces the icon (the size is kept), presses are blocked and screen readers hear it as busy. */
+  loading?: boolean;
 }
 
 /** Circular icon-only button; always 44pt+ to touch. */
@@ -242,6 +283,7 @@ export function IconButton({
   tone,
   size = 'md',
   selected,
+  loading = false,
   disabled,
   style,
   ...rest
@@ -257,8 +299,8 @@ export function IconButton({
   return (
     <Pressable
       accessibilityLabel={label}
-      accessibilityState={{ disabled: !!disabled, selected }}
-      disabled={disabled}
+      accessibilityState={{ disabled: !!disabled || loading, selected, busy: loading }}
+      disabled={disabled || loading}
       hitSlop={hitSlopFor(height)}
       stateLayer={fgRole}
       style={[
@@ -276,10 +318,14 @@ export function IconButton({
       ]}
       {...rest}
     >
-      <Glyph
-        size={ICON[size] === 'xs' ? 'sm' : size === 'xl' ? 'lg' : 'md'}
-        color={theme.roles[fgSelected]}
-      />
+      {loading ? (
+        <ActivityIndicator size="small" color={theme.roles[fgSelected]} />
+      ) : (
+        <Glyph
+          size={ICON[size] === 'xs' ? 'sm' : size === 'xl' ? 'lg' : 'md'}
+          color={theme.roles[fgSelected]}
+        />
+      )}
     </Pressable>
   );
 }
@@ -288,24 +334,52 @@ export interface ButtonGroupProps {
   children: React.ReactNode;
   /** 'vertical' puts actions full-width in a column (bottom of forms). @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
+  /**
+   * Joins the buttons into one connected control (M3 Expressive, as on web): capsule
+   * outer ends, small inner corners and a 2pt seam, so each keeps its own pressed state.
+   */
+  attached?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
 /** Related actions together. In a stack, put the primary action first. */
-export function ButtonGroup({ children, orientation = 'horizontal', style }: ButtonGroupProps) {
+export function ButtonGroup({ children, orientation = 'horizontal', attached = false, style }: ButtonGroupProps) {
   const { tokens } = useTheme();
+  const vertical = orientation === 'vertical';
+  const items = React.Children.toArray(children);
+  const inner = tokens.radius.md;
+  // Small corners where a button meets its neighbour.
+  const corners = (i: number): ViewStyle => {
+    const first = i === 0;
+    const last = i === items.length - 1;
+    return vertical
+      ? {
+          ...(!first && { borderTopStartRadius: inner, borderTopEndRadius: inner }),
+          ...(!last && { borderBottomStartRadius: inner, borderBottomEndRadius: inner }),
+        }
+      : {
+          ...(!first && { borderTopStartRadius: inner, borderBottomStartRadius: inner }),
+          ...(!last && { borderTopEndRadius: inner, borderBottomEndRadius: inner }),
+        };
+  };
+  const gap = attached ? tokens.spacing['0-5'] : tokens.spacing[vertical ? 3 : 2];
   return (
     <View
       style={[
-        orientation === 'horizontal'
-          ? { flexDirection: 'row', flexWrap: 'wrap', gap: tokens.spacing[2] }
-          : { gap: tokens.spacing[3], alignItems: 'stretch' },
+        vertical
+          ? { gap, alignItems: 'stretch' }
+          : { flexDirection: 'row', flexWrap: attached ? 'nowrap' : 'wrap', gap },
         style,
       ]}
     >
-      {orientation === 'vertical'
-        ? React.Children.map(children, (c) =>
-            React.isValidElement<ButtonProps>(c) ? React.cloneElement(c, { fullWidth: true }) : c,
+      {vertical || attached
+        ? items.map((c, i) =>
+            React.isValidElement<ButtonProps>(c)
+              ? React.cloneElement(c, {
+                  ...(vertical && { fullWidth: true }),
+                  ...(attached && { style: [c.props.style, corners(i)] }),
+                })
+              : c,
           )
         : children}
     </View>
@@ -314,23 +388,51 @@ export function ButtonGroup({ children, orientation = 'horizontal', style }: But
 
 export interface LinkProps extends Omit<PressableProps, 'children'> {
   children: string;
+  /** A URL opened with `Linking.openURL` when the link is pressed. `onPress`, when given, runs instead. */
+  href?: string;
+  /**
+   * The link leaves the app (a website, another app): adds the external-link icon and
+   * tells screen readers it opens externally. With `href`, the URL opens through `Linking`.
+   */
+  external?: boolean;
+  /**
+   * `default` and `underlined` are the primary colour, `muted` the muted text colour.
+   * All stay underlined, since touch screens have no hover to reveal a link. @default 'default'
+   */
+  variant?: 'default' | 'muted' | 'underlined';
 }
 
-/** Inline text action. Opens nothing by itself: pass `onPress` (e.g. router.push / Linking.openURL). */
-export function Link({ children, style, ...rest }: LinkProps) {
+
+/** Inline text action. Pass `onPress` (e.g. router.push), or `href` to open a URL with Linking. */
+export function Link({
+  children,
+  href,
+  external = false,
+  variant = 'default',
+  onPress,
+  accessibilityHint,
+  style,
+  ...rest
+}: LinkProps) {
+  const { roles, tokens, messages } = useTheme();
+  const color = variant === 'muted' ? 'on-surface-muted' : 'primary';
+  const open = onPress ?? (href ? () => void Linking.openURL(href).catch(() => {}) : undefined);
   return (
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={children}
+      accessibilityHint={accessibilityHint ?? (external ? messages.opensExternally : undefined)}
       stateLayer={false}
       pressScale={false}
       hitSlop={8}
-      style={style}
+      onPress={open}
+      style={external ? [{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[1] }, style] : style}
       {...rest}
     >
-      <Text variant="label-lg" color="primary" style={{ textDecorationLine: 'underline' }}>
+      <Text variant="label-lg" color={color} style={{ textDecorationLine: 'underline' }}>
         {children}
       </Text>
+      {external && <ExternalLink size="xs" color={roles[color]} testID="link-external" />}
     </Pressable>
   );
 }
