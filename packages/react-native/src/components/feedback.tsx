@@ -570,6 +570,13 @@ export interface SkeletonProps {
   radius?: 'field' | 'control' | 'container' | number;
   /** `pulse` fades, `shimmer` sweeps a highlight across. Both stop under Reduce Motion. @default 'pulse' */
   animation?: 'pulse' | 'shimmer';
+  /** `false` keeps the placeholder still (no pulse or shimmer), e.g. for many skeletons at once. @default true */
+  animated?: boolean;
+  /**
+   * Preset form, as on web: `line` is a text line (small corners), `rect` a block
+   * (container corners), `circle` a round avatar (width follows `height`). `radius` still wins.
+   */
+  shape?: 'line' | 'rect' | 'circle';
   style?: StyleProp<ViewStyle>;
 }
 
@@ -578,13 +585,22 @@ export interface SkeletonProps {
  * shimmer); static under Reduce Motion. Hidden from screen readers.
  */
 export function Skeleton({
-  width = '100%',
-  height = 16,
-  radius = 'field',
+  width: widthProp,
+  height: heightProp,
+  radius: radiusProp,
   animation = 'pulse',
+  animated: animatedProp = true,
+  shape,
   style,
 }: SkeletonProps) {
-  const { roles, tokens, reducedMotion } = useTheme();
+  const { roles, tokens, reducedMotion: osReduced } = useTheme();
+  const circle = shape === 'circle';
+  const height = heightProp ?? (circle && typeof widthProp === 'number' ? widthProp : tokens.spacing[4]);
+  const width = widthProp ?? (circle ? height : '100%');
+  const radius =
+    radiusProp ?? (circle ? height / 2 : shape === 'line' ? 'min' : shape === 'rect' ? 'container' : 'field');
+  // animated={false} behaves like Reduce Motion: no pulse, no shimmer band.
+  const reducedMotion = osReduced || !animatedProp;
   const shimmer = animation === 'shimmer';
   const pulse = useSharedValue(1);
   // Shimmer: a highlight band crosses the measured width, then pauses off-screen.
@@ -645,14 +661,14 @@ export function Skeleton({
   );
 }
 
-export interface SkeletonTextProps extends Pick<SkeletonProps, 'animation'> {
+export interface SkeletonTextProps extends Pick<SkeletonProps, 'animation' | 'animated'> {
   /** Number of lines; the last is shorter. @default 3 */
   lines?: number;
   style?: StyleProp<ViewStyle>;
 }
 
 /** Placeholder paragraph. Each line is one body-md line tall, so the real text doesn't shift layout. */
-export function SkeletonText({ lines = 3, animation, style }: SkeletonTextProps) {
+export function SkeletonText({ lines = 3, animation, animated, style }: SkeletonTextProps) {
   const { tokens } = useTheme();
   return (
     <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={style}>
@@ -661,6 +677,7 @@ export function SkeletonText({ lines = 3, animation, style }: SkeletonTextProps)
           <Skeleton
             height={12}
             animation={animation}
+            animated={animated}
             width={i === lines - 1 && lines > 1 ? '60%' : '100%'}
           />
         </View>

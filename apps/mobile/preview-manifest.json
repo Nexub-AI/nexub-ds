@@ -323,6 +323,69 @@
       ],
       "path": "/m/preview/multi-select"
     },
+    "combobox-field": {
+      "title": "ComboboxField",
+      "kind": "component",
+      "web": "combobox",
+      "examples": [
+        "Searchable sheet"
+      ],
+      "path": "/m/preview/combobox-field"
+    },
+    "currency-select": {
+      "title": "CurrencySelect",
+      "kind": "component",
+      "web": "currency-select",
+      "examples": [
+        "Currencies"
+      ],
+      "path": "/m/preview/currency-select"
+    },
+    "switch-field": {
+      "title": "SwitchField",
+      "kind": "component",
+      "web": "switch-field",
+      "examples": [
+        "With a description"
+      ],
+      "path": "/m/preview/switch-field"
+    },
+    "checkbox-field": {
+      "title": "CheckboxField",
+      "kind": "component",
+      "web": "checkbox-field",
+      "examples": [
+        "Terms"
+      ],
+      "path": "/m/preview/checkbox-field"
+    },
+    "checkbox-group-field": {
+      "title": "CheckboxGroupField",
+      "kind": "component",
+      "web": "checkbox-field",
+      "examples": [
+        "Notifications"
+      ],
+      "path": "/m/preview/checkbox-group-field"
+    },
+    "file-upload": {
+      "title": "FileUpload",
+      "kind": "component",
+      "web": "file-upload",
+      "examples": [
+        "Images"
+      ],
+      "path": "/m/preview/file-upload"
+    },
+    "prompt-dialog": {
+      "title": "PromptDialog",
+      "kind": "component",
+      "web": "alert-dialog",
+      "examples": [
+        "usePrompt"
+      ],
+      "path": "/m/preview/prompt-dialog"
+    },
     "filter-sheet": {
       "title": "FilterSheet",
       "kind": "component",
@@ -906,6 +969,26 @@
     "multi-select": [
       "multi-select"
     ],
+    "combobox": [
+      "combobox-field"
+    ],
+    "currency-select": [
+      "currency-select"
+    ],
+    "switch-field": [
+      "switch-field"
+    ],
+    "checkbox-field": [
+      "checkbox-field",
+      "checkbox-group-field"
+    ],
+    "file-upload": [
+      "file-upload"
+    ],
+    "alert-dialog": [
+      "prompt-dialog",
+      "dialog"
+    ],
     "filter-builder": [
       "filter-sheet"
     ],
@@ -959,9 +1042,6 @@
     ],
     "toast": [
       "toast"
-    ],
-    "alert-dialog": [
-      "dialog"
     ],
     "progress": [
       "progress"

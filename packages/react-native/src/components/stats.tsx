@@ -165,7 +165,33 @@ export interface StatCardProps extends Omit<ViewProps, 'children'> {
   loading?: boolean;
   /** Makes the whole card one pressable target (opens the detail). */
   onPress?: () => void;
+  /** `sm` is the compact tile: less padding and a smaller value. @default 'md' */
+  size?: 'md' | 'sm';
+  /** An extra line inside the tile, under the change, e.g. "Includes 2 refunds". */
+  note?: React.ReactNode;
+  /**
+   * `bad-when-high` flips the derived colour (an increase shows the danger colour), for
+   * costs, churn and errors. `sentiment` still wins. @default 'default'
+   */
+  tone?: 'default' | 'bad-when-high';
+  /**
+   * The change as a number. Sets the arrow from its sign and the text from `changeFormat`
+   * (ignored when `delta` is set). Percent takes a fraction: 0.125 is "+12.5%".
+   */
+  change?: number;
+  /** How `change` is written. `absolute` adds the sign to the number. @default 'percent' */
+  changeFormat?: 'percent' | 'absolute' | ((change: number) => string);
+  /** Text after the change, e.g. "vs last month". */
+  changeLabel?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+}
+
+const sign = (n: number) => (n > 0 ? '+' : n < 0 ? '−' : '');
+function formatChange(n: number, format: StatCardProps['changeFormat'] = 'percent', locale?: string) {
+  if (typeof format === 'function') return format(n);
+  return format === 'absolute'
+    ? `${sign(n)}${Math.abs(n).toLocaleString(locale)}`
+    : `${sign(n)}${Math.abs(n * 100).toFixed(1)}%`;
 }
 
 const SENTIMENT_ROLE = {
@@ -214,9 +240,15 @@ function Trend({ values, color, label }: { values: number[]; color: string; labe
 export function StatCard({
   label,
   value,
-  delta,
-  deltaType = 'neutral',
+  delta: deltaProp,
+  deltaType: deltaTypeProp,
   sentiment,
+  size = 'md',
+  note,
+  tone: toneProp = 'default',
+  change,
+  changeFormat,
+  changeLabel,
   icon,
   category,
   trend,
@@ -231,13 +263,20 @@ export function StatCard({
 }: StatCardProps) {
   const theme = useTheme();
   const { roles, tokens } = theme;
-  const tone =
-    sentiment ??
-    (deltaType === 'increase' ? 'positive' : deltaType === 'decrease' ? 'negative' : 'neutral');
+  const delta = deltaProp ?? (change === undefined ? undefined : formatChange(change, changeFormat, theme.locale));
+  const deltaType =
+    deltaTypeProp ??
+    (change === undefined || deltaProp !== undefined ? 'neutral' : change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral');
+  const up = toneProp === 'bad-when-high' ? 'negative' : 'positive';
+  const down = toneProp === 'bad-when-high' ? 'positive' : 'negative';
+  const tone = sentiment ?? (deltaType === 'increase' ? up : deltaType === 'decrease' ? down : 'neutral');
   const deltaRole = SENTIMENT_ROLE[tone];
   const DeltaIcon = DELTA_ICON[deltaType];
   const plain = typeof value === 'number' || typeof value === 'string';
-  const valueType = tokens.type['headline-md'];
+  const compact = size === 'sm';
+  const valueVariant = compact ? 'headline-sm' : 'headline-md';
+  const valueType = tokens.type[valueVariant];
+  const shows = (node: React.ReactNode) => node != null && node !== false;
 
   // Vivid: a soft lift while pressed (web lifts stat cards on hover).
   const vivid = theme.expression === 'vivid' && !!onPress;
@@ -257,8 +296,8 @@ export function StatCard({
       accessibilityState={loading ? { busy: true } : undefined}
       style={[
         {
-          padding: tokens.spacing[4],
-          gap: tokens.spacing[3],
+          padding: tokens.spacing[compact ? 3 : 4],
+          gap: tokens.spacing[compact ? 2 : 3],
           borderWidth: 1,
           borderColor: roles['outline-variant'] + '99', // 60%, as web
         },
@@ -288,13 +327,13 @@ export function StatCard({
         {loading ? (
           <Skeleton width={tokens.spacing[24]} height={tokens.spacing[7]} />
         ) : plain ? (
-          <NumberTicker value={value} variant="headline-md" animate={animate} live={animate} />
+          <NumberTicker value={value} variant={valueVariant} animate={animate} live={animate} />
         ) : (
           value
         )}
       </View>
 
-      {(delta || description || trend) && (
+      {(delta || description || shows(changeLabel) || trend) && (
         <View
           style={{
             flexDirection: 'row',
@@ -312,6 +351,14 @@ export function StatCard({
               </Text>
             </View>
           )}
+          {shows(changeLabel) &&
+            (typeof changeLabel === 'string' || typeof changeLabel === 'number' ? (
+              <Text variant="label-sm" color="on-surface-muted" style={{ flexShrink: 1 }}>
+                {changeLabel}
+              </Text>
+            ) : (
+              changeLabel
+            ))}
           {description && (
             <Text variant="label-sm" color="on-surface-muted" style={{ flexShrink: 1 }}>
               {description}
@@ -319,6 +366,18 @@ export function StatCard({
           )}
           {trend && trend.length > 1 && (
             <Trend values={trend} label={trendLabel} color={categoryPalette(theme, category ?? 'blue').color} />
+          )}
+        </View>
+      )}
+
+      {shows(note) && (
+        <View style={{ opacity: loading ? 0 : 1 }}>
+          {typeof note === 'string' || typeof note === 'number' ? (
+            <Text variant="body-sm" color="on-surface-muted">
+              {note}
+            </Text>
+          ) : (
+            note
           )}
         </View>
       )}
@@ -330,7 +389,17 @@ export function StatCard({
     <Animated.View style={[lifted, style]} {...rest}>
       <Pressable
         accessibilityLabel={
-          accessibilityLabel ?? [label, plain ? String(value) : undefined, delta, description].filter(Boolean).join(', ')
+          accessibilityLabel ??
+          [
+            label,
+            plain ? String(value) : undefined,
+            delta,
+            typeof changeLabel === 'string' ? changeLabel : undefined,
+            description,
+            typeof note === 'string' ? note : undefined,
+          ]
+            .filter(Boolean)
+            .join(', ')
         }
         onPress={onPress}
         onPressIn={press(1)}
