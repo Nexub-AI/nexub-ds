@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { Badge, Button, RadioCard, RadioCardGroup } from '@nexub/react';
 import { Check } from '@nexub/icons';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages, type Plan } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages, type Plan } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { paywallMessages } from '../PageFrame/messages/paywall.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...paywallMessages };
 
 export interface PaywallPageProps extends Omit<PageFrameProps, 'title' | 'children'> {
   title: string;
@@ -24,7 +29,7 @@ export const PaywallPage = React.forwardRef<HTMLElement, PaywallPageProps>(funct
   { title, description, plans, defaultPlan, onSubscribe, onRestore, terms, loading, messages, ...props },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const [plan, setPlan] = React.useState(defaultPlan ?? plans[0]?.id);
   return (
     <PageFrame ref={ref} width="sm" title={title} description={description} {...props}>

@@ -4,12 +4,18 @@ import {
   PageFrame,
   StatusBadge,
   groupByDay,
-  usePageMessages,
+  usePageStrings,
   useTemplateLocale,
   type PageFrameProps,
+  type PageStrings,
   type PageTemplateMessages,
   type Transaction,
 } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { activityMessages } from '../PageFrame/messages/activity.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...activityMessages };
 
 export interface ActivityPageProps extends Omit<PageFrameProps, 'title' | 'children' | 'onSelect'> {
   transactions: Transaction[];
@@ -49,7 +55,7 @@ export function TransactionRow({
   t: Transaction;
   onSelect?: (t: Transaction) => void;
   actions?: React.ReactNode;
-  m: PageTemplateMessages;
+  m: PageStrings<'pending' | 'failed'>;
   locale: string;
 }) {
   const body = (
@@ -123,7 +129,7 @@ export const ActivityPage = React.forwardRef<HTMLElement, ActivityPageProps>(fun
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const locale = useTemplateLocale();
   const sections = React.useMemo(() => groupByDay(transactions, locale), [transactions, locale]);
 

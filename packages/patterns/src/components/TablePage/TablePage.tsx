@@ -10,7 +10,12 @@ import {
   type DataTableProps,
 } from '@nexub/react';
 import { FilterBar } from '../FilterBar/index.js';
-import { PageFrame, usePageMessages, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { PageFrame, usePageStrings, type PageFrameProps, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { tableMessages } from '../PageFrame/messages/table.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...tableMessages };
 
 export interface TablePageTab {
   id: string;
@@ -81,7 +86,7 @@ export function TablePage<TData>({
   ref,
   ...props
 }: TablePageProps<TData>) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
 
   const cols = React.useMemo(() => {
     const out = [...columns];

@@ -3,6 +3,7 @@ name: Lighthouse
 # Lighthouse CI quality gate for the docs site: performance, accessibility,
 # best practices and SEO must each score >= 0.95 (median of 3 runs) on five
 # representative pages of the static export. Config: apps/docs/lighthouserc.json.
+# 11.7: a second, warn-only run on mobile emulation (lighthouserc.mobile.json).
 on:
   push:
     branches: [development]
@@ -71,6 +72,20 @@ jobs:
       - name: Lighthouse CI
         working-directory: apps/docs
         run: pnpm exec lhci autorun
+
+      # 11.7: the same pages plus two template pages on Lighthouse's default mobile emulation
+      # (throttled CPU and network). Assertions only warn until 12.1 makes them blocking; the
+      # medians go to the job summary as the baseline. Config: apps/docs/lighthouserc.mobile.json.
+      - name: Lighthouse CI (mobile, warn only)
+        working-directory: apps/docs
+        run: pnpm exec lhci autorun --config=lighthouserc.mobile.json
+
+      - name: Lighthouse summary
+        if: ${{ !cancelled() }}
+        working-directory: apps/docs
+        run: |
+          node scripts/lighthouse-summary.mjs .lighthouseci/reports 'Desktop' >> "$GITHUB_STEP_SUMMARY" || true
+          node scripts/lighthouse-summary.mjs .lighthouseci/mobile 'Mobile' >> "$GITHUB_STEP_SUMMARY" || true
 
       - name: Upload Lighthouse report
         if: ${{ !cancelled() }}

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { ReactFlow, ReactFlowProvider, addEdge, applyEdgeChanges, applyNodeChanges, useReactFlow, type Connection, type Edge, type Node, type NodeChange } from '@xyflow/react';
+import { NexubProvider } from '@nexub/react/NexubProvider';
 import { DiagramCanvas, DiagramNode, type DiagramCanvasProps, type DiagramFlowNode } from './index.js';
 
 const W = 240;
@@ -374,6 +375,17 @@ describe('DiagramCanvas', () => {
       expect(screen.getByText('Keine')).toBeInTheDocument();
       rerender(<Controlled initialNodes={[card('a', 0, 0)]} listView={false} />);
       expect(document.querySelector('details[data-diagram-list]')).toBeNull();
+    });
+
+    it('takes its strings from NexubProvider messages; the labels prop still wins (11.7)', async () => {
+      await renderReady(
+        <NexubProvider messages={{ diagramShowAsList: 'Als Liste', diagramNoConnections: 'Keine' }}>
+          <Controlled initialNodes={[card('a', 0, 0)]} labels={{ noConnections: 'Ohne' }} />
+        </NexubProvider>,
+      );
+      expect(screen.getByText('Als Liste')).toBeInTheDocument();
+      expect(screen.getByText('Ohne')).toBeInTheDocument();
+      expect(screen.queryByText('Keine')).toBeNull();
     });
 
     it('names React Flow built-in nodes by their label', async () => {

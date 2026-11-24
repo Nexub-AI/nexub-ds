@@ -62,8 +62,11 @@ const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProps>(func
   const isMonth = granularity === 'month';
   const now = new Date();
 
-  const monthName = (month: number, style: 'long' | 'short') =>
-    new Intl.DateTimeFormat(intlLocale, { month: style, timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month, 1)));
+  // The full month name, as <nx-date-picker> shows it: the cell's name ("March 2026") then
+  // starts with its visible text (WCAG 2.5.3 Label in Name). A short name ("Mar", or "janv."
+  // in French) isn't always a part of the long one.
+  const monthName = (month: number) =>
+    new Intl.DateTimeFormat(intlLocale, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month, 1)));
   const formatMonth = (year: number, month: number) => formatPeriod('month', year, month, intlLocale);
 
   const display = selected ? formatPeriod(granularity, selected.year, selected.month, intlLocale) : (placeholderProp ?? (isMonth ? messages.pickMonth : messages.pickYear));
@@ -241,13 +244,13 @@ const PeriodPicker = React.forwardRef<HTMLButtonElement, PeriodPickerProps>(func
                     onClick={() => pick(i)}
                     onFocus={() => setActive(i)}
                     className={cn(
-                      'nx-state-layer inline-flex h-10 items-center justify-center rounded-full border border-transparent text-body-sm tabular-nums text-on-surface',
+                      'nx-state-layer inline-flex h-10 min-w-0 items-center justify-center rounded-full border border-transparent px-1 text-body-sm tabular-nums text-on-surface',
                       'disabled:pointer-events-none disabled:text-[var(--color-text-disabled)]',
                       isCurrent && 'border-primary',
                       isSelected && 'bg-primary text-on-primary',
                     )}
                   >
-                    {isMonth ? monthName(i, 'short') : page + i}
+                    {isMonth ? monthName(i) : page + i}
                   </button>
                 );
               })}

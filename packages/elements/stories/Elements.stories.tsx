@@ -20,6 +20,9 @@ const button: React.CSSProperties = {
   border: '1px solid var(--color-outline)',
   borderRadius: 'var(--shape-control, 999rem)',
   color: 'var(--color-on-surface)',
+  // Its own surface: a native button's face is the engine's. WebKit's stays light grey under
+  // color-scheme: dark (11.7), which put dark-theme text on a light face.
+  background: 'var(--color-surface-container-high)',
 };
 
 /** The output shows the submitted `FormData`. */

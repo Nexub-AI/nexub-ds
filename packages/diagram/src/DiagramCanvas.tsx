@@ -19,7 +19,8 @@ import { DiagramContext, type DiagramContextValue } from './context.js';
 import { DiagramListView } from './DiagramListView.js';
 import { DiagramNode } from './DiagramNode.js';
 import { arrowDirections, nearestInDirection, nodeTitle, readingOrder, type NodeBox } from './keyboard.js';
-import { defaultDiagramLabels } from './labels.js';
+import { useNexubMessages } from '@nexub/react/NexubProvider';
+import { diagramLabelsFrom } from './labels.js';
 import { getNodeSize, layoutLayers, layoutTree } from './layout.js';
 import type { DiagramCanvasProps, DiagramLabels, DiagramLayout } from './types.js';
 import { cx } from './cx.js';
@@ -263,7 +264,8 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
     ...flowProps
   } = props;
 
-  const labels = React.useMemo<DiagramLabels>(() => ({ ...defaultDiagramLabels, ...labelOverrides }), [labelOverrides]);
+  const messages = useNexubMessages();
+  const labels = React.useMemo<DiagramLabels>(() => ({ ...diagramLabelsFrom(messages), ...labelOverrides }), [messages, labelOverrides]);
   const store = useStoreApi();
   const { deleteElements } = useReactFlow();
   const storeNodes = useStore((s) => s.nodes);

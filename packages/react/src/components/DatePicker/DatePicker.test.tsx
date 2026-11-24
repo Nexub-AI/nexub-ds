@@ -239,6 +239,20 @@ describe('DatePicker granularity (11.1)', () => {
     expect(onValueChange).toHaveBeenCalledWith('2026-07');
   });
 
+  it('month: every cell shows the full month name, the start of its name (11.7, Label in Name)', async () => {
+    render(
+      <NexubProvider locale="fr">
+        <DatePicker granularity="month" aria-label="Période" value="2026-01" />
+      </NexubProvider>,
+    );
+    await userEvent.click(await trigger(/Période/));
+    const cells = screen.getAllByRole('button', { pressed: false }).concat(screen.getAllByRole('button', { pressed: true }));
+    expect(cells).toHaveLength(12);
+    for (const cell of cells) expect(cell.getAttribute('aria-label')!.startsWith(cell.textContent!)).toBe(true);
+    // French short months ("janv.") are not a part of the long name; the cell shows "janvier".
+    expect(screen.getByRole('button', { name: 'janvier 2026' })).toHaveTextContent(/^janvier$/);
+  });
+
   it('month: the year buttons turn the page and arrow keys move focus', async () => {
     const onValueChange = vi.fn();
     render(<DatePicker granularity="month" aria-label="Period" value="2026-12" onValueChange={onValueChange} />);

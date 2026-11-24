@@ -1,8 +1,13 @@
 import * as React from 'react';
 import { Alert, Button, Countdown, OTPInput } from '@nexub/react';
 import { AuthCard } from '../AuthCard/index.js';
-import { usePageMessages, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
+import { usePageStrings, type PageTemplateMessages } from '../PageFrame/PageFrame.js';
 import { Resend } from './Resend.js';
+import { sharedMessages } from '../PageFrame/messages/shared.js';
+import { verifyMessages } from '../PageFrame/messages/verify.js';
+
+/** The defaults this template shows (11.7: not every template's strings). */
+const STRINGS = { ...sharedMessages, ...verifyMessages };
 
 export interface VerifyMethod {
   id: string;
@@ -73,7 +78,7 @@ export const VerifyCodePage = React.forwardRef<HTMLElement, VerifyCodePageProps>
   },
   ref,
 ) {
-  const m = usePageMessages(messages);
+  const m = usePageStrings(messages, STRINGS);
   const [code, setCode] = React.useState('');
   const boxes = React.useRef<HTMLDivElement>(null);
 
