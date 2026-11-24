@@ -1,5 +1,13 @@
 # @nexub/react
 
+## 11.8.0
+
+### Patch Changes
+
+- Updated dependencies [78896f2]
+  - @nexub/core@11.8.0
+  - @nexub/icons@11.8.0
+
 ## 11.7.0
 
 ### Patch Changes
