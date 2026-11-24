@@ -92,6 +92,9 @@ add('diagram', join(pkgs, 'diagram/dist/index.js'));
 // 11.6: the web components with the bundled @nexub/core rules; define.js is what a CDN page loads.
 add('elements', join(pkgs, 'elements/dist/index.js'));
 add('elements/define', join(pkgs, 'elements/dist/define.js'));
+// 11.9: one element each (define/<name>.js), what a page that uses only that element loads.
+for (const name of ['number-input', 'date-picker', 'select', 'combobox', 'phone-input'])
+  add(`elements/define/${name}`, join(pkgs, `elements/dist/define/${name}.js`));
 for (const dir of ['react', 'patterns', 'marketing']) {
   const comps = join(pkgs, dir, 'dist/components');
   if (!existsSync(comps)) continue;

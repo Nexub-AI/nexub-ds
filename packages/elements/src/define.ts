@@ -1,24 +1,14 @@
 /**
- * Registers `<nx-number-input>` and `<nx-date-picker>` (skipped for a tag that is already
- * defined, so loading this twice is safe).
+ * Registers `<nx-number-input>`, `<nx-date-picker>`, `<nx-select>`, `<nx-combobox>` and
+ * `<nx-phone-input>` (skipped for a tag that is already defined, so loading this twice is safe).
+ * A page that uses only some of them can load `@nexub/elements/define/<name>` for each instead
+ * (`define/number-input`, `define/date-picker`, `define/select`, `define/combobox`,
+ * `define/phone-input`).
  *
  * @alpha
  */
-import { NxDatePicker, NxNumberInput } from './index.js';
-
-const tags: [string, CustomElementConstructor][] = [
-  ['nx-number-input', NxNumberInput],
-  ['nx-date-picker', NxDatePicker],
-];
-if (typeof customElements !== 'undefined') {
-  for (const [tag, ctor] of tags) if (!customElements.get(tag)) customElements.define(tag, ctor);
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'nx-number-input': NxNumberInput;
-    'nx-date-picker': NxDatePicker;
-  }
-}
-
-export { NxDatePicker, NxNumberInput };
+export { NxNumberInput } from './define/number-input.js';
+export { NxDatePicker } from './define/date-picker.js';
+export { NxSelect } from './define/select.js';
+export { NxCombobox } from './define/combobox.js';
+export { NxPhoneInput } from './define/phone-input.js';

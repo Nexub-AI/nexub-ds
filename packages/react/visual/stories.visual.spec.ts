@@ -49,10 +49,13 @@ for (const { id } of stories) {
       test.skip(!applied, 'story pins its own theme/brand globals');
       await page.evaluate(() => document.fonts.ready);
       // Glass is subtle on light backgrounds; the default per-pixel threshold
-      // (0.2) let a whole recipe change through, so compare glass tighter.
+      // (0.2) let a whole recipe change through, so compare glass tighter. Chromium rasters
+      // a blurred panel's rounded edge two ways (#754: 52 edge pixels, at most 14/255 apart,
+      // about 40% of runs on one build), so glass may differ in up to 100 pixels (0.01% of
+      // the page). A recipe change moves thousands; owner-approved on 2026-11-24.
       await expect(page).toHaveScreenshot(`${id}--${v.name}.png`, {
         fullPage: true,
-        ...(/glass/.test(id) && { threshold: 0.05 }),
+        ...(/glass/.test(id) && { threshold: 0.05, maxDiffPixels: 100 }),
       });
     });
   }

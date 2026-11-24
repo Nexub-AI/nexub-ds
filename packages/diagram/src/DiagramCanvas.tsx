@@ -18,7 +18,7 @@ import { ConnectMenu } from './ConnectMenu.js';
 import { DiagramContext, type DiagramContextValue } from './context.js';
 import { DiagramListView } from './DiagramListView.js';
 import { DiagramNode } from './DiagramNode.js';
-import { arrowDirections, nearestInDirection, nodeTitle, readingOrder, type NodeBox } from './keyboard.js';
+import { arrowDirections, flowOrder, nearestInDirection, nodeTitle, type NodeBox } from './keyboard.js';
 import { useNexubMessages } from '@nexub/react/NexubProvider';
 import { diagramLabelsFrom } from './labels.js';
 import { getNodeSize, layoutLayers, layoutTree } from './layout.js';
@@ -28,6 +28,7 @@ import { cx } from './cx.js';
 const builtinNodeTypes: NodeTypes = { nexub: DiagramNode };
 const DEFAULT_STEP = 16;
 const NODE_SELECTOR = '.react-flow__node';
+const EDGE_SELECTOR = '.react-flow__edge';
 
 /* ── Layout ───────────────────────────────────────────────────────────────── */
 
@@ -272,9 +273,13 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
   const storeEdges = useStore((s) => s.edges);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [activeEdgeId, setActiveEdgeId] = React.useState<string | null>(null);
   const [connectFrom, setConnectFrom] = React.useState<string | null>(null);
   const [announcement, setAnnouncement] = React.useState('');
-  const pendingFocus = React.useRef<string | null>(null);
+  /** Where focus goes after the next render: a node, or an edge (a node or edge just went). */
+  const pendingFocus = React.useRef<{ edge?: boolean; id: string } | null>(null);
+  /** Ids passed to deleteElements and not removed yet. */
+  const deleting = React.useRef({ nodes: new Set<string>(), edges: new Set<string>() });
   const reducedMotion = usePrefersReducedMotion();
 
   const canConnect = !readOnly && !!onConnect && nodesConnectable !== false;
@@ -297,28 +302,68 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
     return out;
   }, [store]);
 
-  // storeNodes is the dependency: the order follows the nodes' positions.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const order = React.useMemo(() => readingOrder(boxes(), isRtl()), [boxes, storeNodes]);
+  // storeNodes is the dependency: the order follows the nodes' positions (and, in a mind map, the edges).
+  const order = React.useMemo(
+    () => flowOrder(boxes(), layout, storeEdges, isRtl()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [boxes, storeNodes, storeEdges, layout],
+  );
   const effectiveActive = activeId && order.includes(activeId) ? activeId : order[0];
 
-  const nodeElement = (id: string) =>
-    Array.from(rootRef.current?.querySelectorAll<HTMLElement>(NODE_SELECTOR) ?? []).find((el) => el.getAttribute('data-id') === id);
+  // 11.9: edges in the order of their nodes (source, then target), for the edges' own Tab stop.
+  const edgeOrder = React.useMemo(() => {
+    const rank = new Map(order.map((id, i) => [id, i]));
+    return storeEdges
+      .filter((e) => !e.hidden && rank.has(e.source) && rank.has(e.target))
+      .sort((a, b) => rank.get(a.source)! - rank.get(b.source)! || rank.get(a.target)! - rank.get(b.target)!)
+      .map((e) => e.id);
+  }, [storeEdges, order]);
+  const effectiveEdge = activeEdgeId && edgeOrder.includes(activeEdgeId) ? activeEdgeId : edgeOrder[0];
+
+  const elementOf = (selector: string, id: string) =>
+    Array.from(rootRef.current?.querySelectorAll<HTMLElement>(selector) ?? []).find((el) => el.getAttribute('data-id') === id);
+  const nodeElement = (id: string) => elementOf(NODE_SELECTOR, id);
 
   const focusNode = (id: string) => {
     setActiveId(id);
     nodeElement(id)?.focus();
   };
+  const focusEdge = (id: string) => {
+    setActiveEdgeId(id);
+    elementOf(EDGE_SELECTOR, id)?.focus();
+  };
+
+  const titleOf = (id: string) => nodeTitle(store.getState().nodeLookup.get(id));
 
   // Roving tabindex: one node in the Tab order (the last focused, else the first in reading
-  // order). React Flow renders tabIndex=0 on every node and never rewrites an unchanged prop.
+  // order), and one edge (11.9: every edge used to be a Tab stop of its own, before the nodes).
+  // React Flow renders tabIndex=0 on every node and edge and never rewrites an unchanged prop.
   React.useLayoutEffect(() => {
-    rootRef.current?.querySelectorAll<HTMLElement>(NODE_SELECTOR).forEach((el) => {
+    const root = rootRef.current;
+    if (!root) return;
+    root.querySelectorAll<HTMLElement>(NODE_SELECTOR).forEach((el) => {
       if (el.getAttribute('tabindex') === null) return;
       el.tabIndex = el.getAttribute('data-id') === effectiveActive ? 0 : -1;
     });
-    if (pendingFocus.current) {
-      const el = nodeElement(pendingFocus.current);
+    const edgeById = new Map(storeEdges.map((e) => [e.id, e] as const));
+    root.querySelectorAll<SVGElement>(EDGE_SELECTOR).forEach((el) => {
+      const id = el.getAttribute('data-id');
+      const edge = id === null ? undefined : edgeById.get(id);
+      if (!edge) return;
+      if (el.getAttribute('tabindex') !== null) el.tabIndex = id === effectiveEdge ? 0 : -1;
+      // 11.9: named by the nodes' titles; React Flow's default names them by id ("Edge from n1 to n2").
+      if (edge.ariaLabel === undefined || edge.ariaLabel === '') el.setAttribute('aria-label', labels.edge(titleOf(edge.source), titleOf(edge.target)));
+      // Each edge sits in an <svg> of its own, which browsers expose as an image around it.
+      const svg = el.parentElement;
+      if (svg?.localName === 'svg' && svg.getAttribute('role') !== 'none') svg.setAttribute('role', 'none');
+    });
+    for (const id of deleting.current.edges) if (!edgeById.has(id)) deleting.current.edges.delete(id);
+    for (const id of deleting.current.nodes) if (!order.includes(id)) deleting.current.nodes.delete(id);
+    let pending = pendingFocus.current;
+    // The edge focus was to go to went too (two quick deletes): the first edge left, else the first node.
+    if (pending?.edge && !edgeById.has(pending.id)) pending = pendingFocus.current = edgeOrder[0] ? { edge: true, id: edgeOrder[0] } : order[0] ? { id: order[0] } : null;
+    if (pending) {
+      const el = elementOf(pending.edge ? EDGE_SELECTOR : NODE_SELECTOR, pending.id);
       if (el) {
         pendingFocus.current = null;
         el.focus();
@@ -326,31 +371,83 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
     }
   });
 
-  const announce = (text: string) => setAnnouncement(text);
+  /**
+   * Polite, into the region below. The same text twice in a row (two single deletes) changes
+   * the region all the same, with a trailing no-break space, so it is announced again.
+   */
+  const announce = (text: string) => setAnnouncement((prev) => (prev === text ? `${text}\u00a0` : text));
 
-  const titleOf = (id: string) => nodeTitle(store.getState().nodeLookup.get(id));
+  /** The item after `id` in `list` that `keep` allows, else the one before it. */
+  const neighbour = (list: readonly string[], id: string, keep: (id: string) => boolean) => {
+    const i = list.indexOf(id);
+    return list.slice(i + 1).find(keep) ?? [...list.slice(0, Math.max(0, i))].reverse().find(keep);
+  };
 
-  const deleteSelection = (focusedId: string | null) => {
+  /** Delete: the selection, else the focused node or edge. Focus moves on to a neighbour. */
+  const deleteSelection = (focused: { node?: string; edge?: string } = {}) => {
     const state = store.getState();
     let nodesToDelete = state.nodes.filter((n) => n.selected && n.deletable !== false);
-    const edgesToDelete = state.edges.filter((e) => e.selected && e.deletable !== false);
-    if (!nodesToDelete.length && !edgesToDelete.length && focusedId) {
-      const focused = state.nodes.find((n) => n.id === focusedId && n.deletable !== false);
-      nodesToDelete = focused ? [focused] : [];
+    let edgesToDelete = state.edges.filter((e) => e.selected && e.deletable !== false);
+    if (!nodesToDelete.length && !edgesToDelete.length) {
+      if (focused.node) nodesToDelete = state.nodes.filter((n) => n.id === focused.node && n.deletable !== false);
+      else if (focused.edge) edgesToDelete = state.edges.filter((e) => e.id === focused.edge && e.deletable !== false);
     }
     if (!nodesToDelete.length && !edgesToDelete.length) return;
-    // Focus goes to the next node in reading order (or the previous one at the end).
-    if (focusedId && nodesToDelete.some((n) => n.id === focusedId)) {
-      const gone = new Set(nodesToDelete.map((n) => n.id));
-      const i = order.indexOf(focusedId);
-      const next = order.slice(i + 1).find((id) => !gone.has(id)) ?? [...order.slice(0, i)].reverse().find((id) => !gone.has(id));
-      pendingFocus.current = next ?? null;
+    // Deletes still in flight (a quick second Delete) count as gone.
+    const goneNodes = new Set([...nodesToDelete.map((n) => n.id), ...deleting.current.nodes]);
+    if (focused.node && goneNodes.has(focused.node)) {
+      // The next node in reading order (or the previous one at the end).
+      const next = neighbour(order, focused.node, (id) => !goneNodes.has(id));
+      pendingFocus.current = next ? { id: next } : null;
       if (next) setActiveId(next);
+    } else if (focused.edge && edgesToDelete.some((e) => e.id === focused.edge)) {
+      // The next edge that stays (an edge goes with either of its nodes), else a node.
+      const goneEdges = new Set([...edgesToDelete.map((e) => e.id), ...deleting.current.edges]);
+      const byId = new Map(state.edges.map((e) => [e.id, e] as const));
+      const stays = (id: string) => {
+        const edge = byId.get(id);
+        return !!edge && !goneEdges.has(id) && !goneNodes.has(edge.source) && !goneNodes.has(edge.target);
+      };
+      const next = neighbour(edgeOrder, focused.edge, stays);
+      const node = next ? undefined : order.find((id) => !goneNodes.has(id));
+      pendingFocus.current = next ? { edge: true, id: next } : node ? { id: node } : null;
+      if (next) setActiveEdgeId(next);
     }
+    const inFlight = { nodes: nodesToDelete.map((n) => n.id), edges: edgesToDelete.map((e) => e.id) };
+    inFlight.nodes.forEach((id) => deleting.current.nodes.add(id));
+    inFlight.edges.forEach((id) => deleting.current.edges.add(id));
     void deleteElements({ nodes: nodesToDelete, edges: edgesToDelete }).then(({ deletedNodes, deletedEdges }) => {
+      // What onBeforeDelete kept stays; the rest leaves the set once it is out of the store (the effect).
+      const nodesGone = new Set(deletedNodes.map((n) => n.id));
+      const edgesGone = new Set(deletedEdges.map((e) => e.id));
+      inFlight.nodes.forEach((id) => !nodesGone.has(id) && deleting.current.nodes.delete(id));
+      inFlight.edges.forEach((id) => !edgesGone.has(id) && deleting.current.edges.delete(id));
       const count = deletedNodes.length + deletedEdges.length;
-      if (count) announce(labels.deleted(count));
+      if (count) announce(labels.deleted(count, deletedNodes.map((n) => nodeTitle(n))));
     });
+  };
+
+  const onEdgeKeyDown = (e: React.KeyboardEvent, id: string) => {
+    const direction = arrowDirections[e.key];
+    if ((direction || e.key === 'Home' || e.key === 'End') && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      const i = edgeOrder.indexOf(id);
+      const back = direction === 'up' || direction === 'left';
+      const target =
+        e.key === 'Home'
+          ? edgeOrder[0]
+          : e.key === 'End'
+            ? edgeOrder[edgeOrder.length - 1]
+            : edgeOrder[back ? Math.max(0, i - 1) : Math.min(edgeOrder.length - 1, i + 1)];
+      if (target) focusEdge(target);
+      return;
+    }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && ownDelete) {
+      e.preventDefault();
+      e.stopPropagation();
+      deleteSelection({ edge: id });
+    }
   };
 
   const onNodeKeyDown = (e: React.KeyboardEvent, id: string) => {
@@ -401,7 +498,7 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
     if ((e.key === 'Delete' || e.key === 'Backspace') && ownDelete) {
       e.preventDefault();
       e.stopPropagation();
-      deleteSelection(id);
+      deleteSelection({ node: id });
     }
   };
 
@@ -413,10 +510,16 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
       if (id) onNodeKeyDown(e, id);
       return;
     }
-    // An edge or the pane: Delete removes the selection.
+    const edge = target.closest?.(EDGE_SELECTOR);
+    if (edge && target.closest('.react-flow')) {
+      const id = edge.getAttribute('data-id');
+      if (id) onEdgeKeyDown(e, id);
+      return;
+    }
+    // The pane: Delete removes the selection.
     if ((e.key === 'Delete' || e.key === 'Backspace') && ownDelete && target.closest('.react-flow') && !target.closest('input, textarea, [contenteditable="true"]')) {
       e.preventDefault();
-      deleteSelection(null);
+      deleteSelection();
     }
   };
 
@@ -425,13 +528,16 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
     if (target.matches?.(NODE_SELECTOR)) {
       const id = target.getAttribute('data-id');
       if (id && id !== activeId) setActiveId(id);
+      return;
     }
+    const edgeId = target.closest?.(EDGE_SELECTOR)?.getAttribute('data-id');
+    if (edgeId && edgeId !== activeEdgeId) setActiveEdgeId(edgeId);
   };
 
   const closeConnect = (refocus = true) => {
     const from = connectFrom;
     setConnectFrom(null);
-    if (refocus && from) pendingFocus.current = from;
+    if (refocus && from) pendingFocus.current = { id: from };
   };
 
   const pickTarget = (target: string) => {
@@ -457,6 +563,7 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
 
   const fitOptions = reducedMotion ? { ...fitViewOptions, duration: 0 } : fitViewOptions;
   const hint = readOnly ? labels.nodeHintReadOnly : labels.nodeHint;
+  const edgeHint = readOnly ? labels.edgeHintReadOnly : labels.edgeHint;
 
   return (
     <DiagramContext.Provider value={context}>
@@ -478,6 +585,7 @@ function DiagramCanvasInner(props: DiagramCanvasProps) {
             ariaLabelConfig={{
               'node.a11yDescription.default': hint,
               'node.a11yDescription.keyboardDisabled': hint,
+              'edge.a11yDescription.default': edgeHint,
               'controls.ariaLabel': labels.controls,
               'controls.zoomIn.ariaLabel': labels.zoomIn,
               'controls.zoomOut.ariaLabel': labels.zoomOut,

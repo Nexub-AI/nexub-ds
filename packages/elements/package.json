@@ -1,7 +1,7 @@
 {
   "name": "@nexub/elements",
   "version": "11.8.0",
-  "description": "Web components for Nexub Design System: form-associated <nx-number-input> and <nx-date-picker> for server-rendered pages, with no framework.",
+  "description": "Web components for Nexub Design System: form-associated <nx-number-input>, <nx-date-picker>, <nx-select>, <nx-combobox> and <nx-phone-input> for server-rendered pages, with no framework.",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -25,7 +25,9 @@
   ],
   "sideEffects": [
     "./dist/define.js",
-    "./src/define.ts"
+    "./dist/define/*.js",
+    "./src/define.ts",
+    "./src/define/*.ts"
   ],
   "exports": {
     ".": {
@@ -40,12 +42,16 @@
       "types": "./dist/define.d.ts",
       "default": "./dist/define.js"
     },
+    "./define/*": {
+      "types": "./dist/define/*.d.ts",
+      "default": "./dist/define/*.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsup --config tsup.define.config.ts",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

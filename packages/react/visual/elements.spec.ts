@@ -328,6 +328,131 @@ test.describe('nx-date-picker', () => {
   });
 });
 
+// 11.9: the automated half of the screen-reader pass (packages/elements/A11Y_REVIEW.md). Each test
+// here failed before its fix in at least one engine.
+test.describe('screen-reader pass (11.9)', () => {
+  /** The deep focused element is the calendar button, a microtask after it got focus: logged per focus. */
+  const watchButton = (page: Page, selector: string) =>
+    page.locator(selector).evaluate((host) => {
+      const button = host.shadowRoot!.querySelector('button[part="button"]')!;
+      const log: boolean[] = [];
+      (window as unknown as { buttonLog: boolean[] }).buttonLog = log;
+      button.addEventListener('focus', () =>
+        queueMicrotask(() => {
+          let a = document.activeElement;
+          while (a?.shadowRoot?.activeElement) a = a.shadowRoot.activeElement;
+          log.push(a === button);
+        }),
+      );
+    });
+  const buttonLog = (page: Page) => page.evaluate(() => (window as unknown as { buttonLog: boolean[] }).buttonLog);
+
+  test('Escape and a pick put focus on the field at once: the calendar button is never left focused', async ({ page }) => {
+    await open(page, `${DATE}--default`);
+    await page.getByRole('button', { name: 'Pick a date' }).click();
+    await watchButton(page, '#due');
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('textbox', { name: 'Due date' })).toBeFocused();
+    await page.getByRole('button', { name: 'Pick a date' }).click();
+    // The click's own focus on the button doesn't count: only what closing does.
+    await page.evaluate(() => ((window as unknown as { buttonLog: boolean[] }).buttonLog.length = 0));
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('textbox', { name: 'Due date' })).toBeFocused();
+    expect(await valueOf(page, '#due')).toBe('2024-03-15');
+    // The dialog's own focus restore still touches the button, but it hands on in the same task.
+    expect(await buttonLog(page)).not.toContain(true);
+  });
+
+  test('the month title (a live region) changes only when the month does', async ({ page }) => {
+    await open(page, `${DATE}--default`);
+    await page.getByRole('button', { name: 'Pick a date' }).click();
+    await page.locator('#due').evaluate((host) => {
+      const title = host.shadowRoot!.querySelector('.title')!;
+      const log: string[] = [];
+      (window as unknown as { titleLog: string[] }).titleLog = log;
+      new MutationObserver(() => log.push(title.textContent ?? '')).observe(title, { childList: true, characterData: true, subtree: true });
+    });
+    await expect(page.locator('#due').locator('.title')).toHaveAttribute('aria-live', 'polite');
+    for (const key of ['ArrowRight', 'ArrowDown', 'Home', 'End']) await page.keyboard.press(key);
+    await page.keyboard.press('PageDown');
+    await page.getByRole('button', { name: 'Go to next month' }).click();
+    await expect.poll(() => page.evaluate(() => (window as unknown as { titleLog: string[] }).titleLog)).toEqual(['April 2024', 'May 2024']);
+  });
+
+  test('each calendar button carries its field’s name', async ({ page }) => {
+    await open(page, FORM);
+    await expect(page.getByRole('button', { name: 'Pick a date, Start date', exact: true })).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Pick a month, Billing month', exact: true })).toHaveCount(1);
+  });
+
+  test('Tab inside the calendar moves among its controls, never onto the dialog box itself', async ({ page }) => {
+    await open(page, `${DATE}--default`);
+    await page.getByRole('button', { name: 'Pick a date' }).click();
+    const seen: (string | null)[] = [];
+    for (let i = 0; i < 8; i++) {
+      await page.keyboard.press('Tab');
+      seen.push(await focused(page));
+    }
+    expect(seen).not.toContain('dialog');
+    expect(seen).toContain('2024-03-14');
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('dialog')).toBeHidden();
+  });
+
+  for (const id of [`${DATE}--default`, `${NUMBER}--default`, FORM]) {
+    test(`reflows at 320px with no sideways scroll: ${id}`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 640 });
+      await open(page, id);
+      const { scroll, client } = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
+      expect(scroll).toBeLessThanOrEqual(client);
+    });
+  }
+
+  test('a field in a shrink-to-fit box keeps a usable width', async ({ page }) => {
+    await open(page, FORM);
+    const width = await page.locator('#start').evaluate((el) => {
+      const box = document.createElement('div');
+      box.style.display = 'inline-block';
+      el.parentElement!.append(box);
+      box.append(el);
+      return el.getBoundingClientRect().width;
+    });
+    expect(width).toBeGreaterThan(150);
+  });
+
+  test('reduced motion: the calendar opens without animating', async ({ page }) => {
+    const running = async () => {
+      await page.getByRole('button', { name: 'Pick a date' }).click();
+      const n = await page.locator('#due').evaluate((host) => host.shadowRoot!.querySelector('dialog')!.getAnimations().length);
+      await page.keyboard.press('Escape');
+      return n;
+    };
+    await open(page, `${DATE}--default`);
+    expect(await running()).toBe(0);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    expect(await running()).toBeGreaterThan(0);
+  });
+
+  test('forced colours: the selected day and the field border use system colours', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'forced-colors emulation is Chromium only');
+    await page.emulateMedia({ forcedColors: 'active' });
+    await open(page, `${DATE}--default`);
+    await page.getByRole('button', { name: 'Pick a date' }).click();
+    const colours = await page.locator('#due').evaluate((host) => {
+      const probe = document.createElement('div');
+      probe.style.cssText = 'background: Highlight; color: HighlightText; border: 1px solid FieldText; forced-color-adjust: none';
+      document.body.append(probe);
+      const p = getComputedStyle(probe);
+      const day = getComputedStyle(host.shadowRoot!.querySelector('[aria-selected="true"] > button')!);
+      const field = getComputedStyle(host.shadowRoot!.querySelector('.field')!);
+      return { day: [day.backgroundColor, day.color], want: [p.backgroundColor, p.color], border: field.borderTopColor, fieldText: p.borderTopColor };
+    });
+    expect(colours.day).toEqual(colours.want);
+    expect(colours.border).toBe(colours.fieldText);
+  });
+});
+
 // axe on every element story in every engine (the Chromium per-story scan in
 // a11y.visual.spec.ts covers them too; the RFC asks for all three engines).
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];

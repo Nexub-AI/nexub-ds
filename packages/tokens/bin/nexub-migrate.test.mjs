@@ -452,3 +452,62 @@ test('deprecated-in-11: reports Stepper current={-1}, rewrites nothing', () => {
   assert.deepEqual(r.manual.map((m) => [m.line, m.rule]), [[2, 'deprecated-in-11'], [4, 'deprecated-in-11']]);
   assert.deepEqual(migrateSource("import { Stepper } from 'other';\n<Stepper current={-1} />", { ext: '.tsx', rules: only('deprecated-in-11') }).manual, []);
 });
+
+// ─── changes-in-12 ───
+const c12 = (src, ext = '.tsx') => migrateSource(src, { ext, rules: only('changes-in-12') });
+
+test('changes-in-12: the 11.9 layered stylesheet goes back to styles.css (JS, CSS, url())', () => {
+  const js = c12("import '@nexub/react/styles.nexub-layer.css';\nimport \"@nexub/react/styles.css\";", '.ts');
+  assert.equal(js.output, "import '@nexub/react/styles.css';\nimport \"@nexub/react/styles.css\";");
+  const css = c12("@import '@nexub/react/styles.nexub-layer.css';\n@import url(@nexub/react/styles.nexub-layer.css) layer(x);\n@import '@nexub/react/styles.nexub-layer.css.map';", '.css');
+  assert.equal(css.output, "@import '@nexub/react/styles.css';\n@import url(@nexub/react/styles.css) layer(x);\n@import '@nexub/react/styles.nexub-layer.css.map';");
+  assert.deepEqual(css.manual, []);
+  assert.equal(c12(css.output, '.css').output, css.output);
+});
+
+test('changes-in-12: rewrites Stepper current={-1} with literal steps, reports the rest', () => {
+  const src = [
+    "import { Stepper as Steps } from '@nexub/react';",
+    "<Steps current={-1} steps={[{ label: 'A' }, { label: 'B', status: 'error' }, {label:'C'}]} />",
+    '<Steps steps={[',
+    "  { label: 'A' },",
+    '  {',
+    "    label: 'B',",
+    '  },',
+    ']} current={ - 1 } orientation="vertical" />',
+    '<Steps steps={steps} current={-1} />',
+    "<Steps steps={[{ label: 'A' }, ...more]} current={-1} />",
+    "<Steps steps={[{ label: 'A', ...extra }]} current={-1} />",
+    "<Steps steps={[{ label: 'A' }]} current={-1} completed={[0]} />",
+    '<Steps steps={[]} current={-1} />',
+    "<Steps steps={[{ label: 'A' }]} current={2} />",
+  ].join('\n');
+  const r = c12(src);
+  assert.deepEqual(r.output.split('\n'), [
+    "import { Stepper as Steps } from '@nexub/react';",
+    // A step's own status already won over current={-1}: it is kept.
+    "<Steps current={2} steps={[{ label: 'A', status: 'complete' }, { label: 'B', status: 'error' }, {label:'C', status: 'complete'}]} />",
+    '<Steps steps={[',
+    "  { label: 'A', status: 'complete' },",
+    '  {',
+    "    label: 'B', status: 'complete',",
+    '  },',
+    ']} current={1} orientation="vertical" />',
+    ...src.split('\n').slice(8),
+  ]);
+  assert.deepEqual(r.manual.map((m) => [m.line, m.rule]), [9, 10, 11, 12, 13].map((l) => [l, 'changes-in-12']));
+  // Idempotent: a second run rewrites nothing and reports the same five.
+  assert.equal(c12(r.output).output, r.output);
+  assert.equal(c12(r.output).manual.length, 5);
+  assert.equal(
+    c12("import { Stepper } from '@nexub/react';\n<Stepper current={-1} steps={[{}]} />").output,
+    "import { Stepper } from '@nexub/react';\n<Stepper current={0} steps={[{ status: 'complete' }]} />",
+  );
+  const other = "import { Stepper } from 'other';\n<Stepper current={-1} steps={[{}]} />";
+  assert.deepEqual(c12(other), { output: other, manual: [] });
+});
+
+test('changes-in-12 is opt-in', () => {
+  const src = "import '@nexub/react/styles.nexub-layer.css';";
+  assert.equal(migrateSource(src, { ext: '.ts' }).output, src);
+});

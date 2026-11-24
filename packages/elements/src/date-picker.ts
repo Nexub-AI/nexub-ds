@@ -14,38 +14,20 @@ import {
   type DateParts,
 } from '@nexub/core';
 import { NxFieldElement, type FieldError } from './field.js';
-import { labels, validationMessage } from './messages.js';
-import { sheet, fieldCss, pickerCss } from './styles.js';
-import { formatDisplay, formatHint, parseTypedDate, utcDate } from './date-text.js';
+import { validationMessage } from './messages.js';
+import { sheet, fieldCss } from './styles.js';
+import { pickerCss } from './picker-styles.js';
+import { formatDisplay, formatHint, labels, parseTypedDate, utcDate } from './date-text.js';
+import { el, isRtl, localeOf, svg, type Shape } from './dom.js';
 
 const RANK: Record<DateGranularity, number> = { year: 0, month: 1, day: 2 };
 const YEARS_PER_PAGE = 12;
-// Icons are built as DOM nodes, not HTML strings: pages with Trusted Types (`require-trusted-types-for
-// 'script'`) block every innerHTML write, and the elements must work on them.
-type Shape = [tag: 'path' | 'rect', attributes: Record<string, string>];
-const SVG_NS = 'http://www.w3.org/2000/svg';
-const svg = (shapes: Shape[]): SVGSVGElement => {
-  const root = document.createElementNS(SVG_NS, 'svg');
-  const attrs: Record<string, string> = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' };
-  for (const [k, v] of Object.entries(attrs)) root.setAttribute(k, v);
-  for (const [tag, a] of shapes) {
-    const el = document.createElementNS(SVG_NS, tag);
-    for (const [k, v] of Object.entries(a)) el.setAttribute(k, v);
-    root.append(el);
-  }
-  return root;
-};
 const CALENDAR: Shape[] = [['rect', { x: '3', y: '4', width: '18', height: '18', rx: '2' }], ['path', { d: 'M16 2v4M8 2v4M3 10h18' }]];
 const PREVIOUS: Shape[] = [['path', { d: 'm15 18-6-6 6-6' }]];
 const NEXT: Shape[] = [['path', { d: 'm9 18 6-6-6-6' }]];
 /** Below this width the calendar is a bottom sheet (as `@nexub/react`'s `sheet="auto"`). */
 const SHEET_QUERY = '(max-width: 47.99rem)';
 
-const el = <K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<Record<string, string>> = {}): HTMLElementTagNameMap[K] => {
-  const node = document.createElement(tag);
-  for (const [k, v] of Object.entries(props)) if (v !== undefined) node.setAttribute(k, v);
-  return node;
-};
 const pageStart = (year: number) => year - (((year % YEARS_PER_PAGE) + YEARS_PER_PAGE) % YEARS_PER_PAGE);
 
 /** `day`, `month` or `year`: what `<nx-date-picker>` picks. */
@@ -75,7 +57,9 @@ export class NxDatePicker extends NxFieldElement {
   /** @internal */
   protected readonly control: HTMLInputElement = el('input', { type: 'text', part: 'input', autocomplete: 'off', spellcheck: 'false' });
   readonly #button = el('button', { type: 'button', part: 'button', class: 'open', 'aria-haspopup': 'dialog', 'aria-expanded': 'false' });
-  readonly #dialog = el('dialog', { part: 'calendar' });
+  // 11.9: tabindex -1: Firefox and WebKit made the dialog box (a scroll container) a Tab stop of
+  // its own, read as an empty "Pick a date, dialog" between the day grid and the nav buttons.
+  readonly #dialog = el('dialog', { part: 'calendar', tabindex: '-1' });
   readonly #title = el('span', { class: 'title', 'aria-live': 'polite' });
   readonly #prev = el('button', { type: 'button', class: 'nav' });
   readonly #next = el('button', { type: 'button', class: 'nav' });
@@ -118,11 +102,14 @@ export class NxDatePicker extends NxFieldElement {
       if (cell && !cell.disabled) this.#pick(cell.dataset.value!);
     });
     this.#body.addEventListener('keydown', this.#onGridKey);
-    this.#dialog.addEventListener('close', () => {
-      this.#button.setAttribute('aria-expanded', 'false');
-      window.removeEventListener('resize', this.#place);
-      window.removeEventListener('scroll', this.#place, true);
-      this.control.focus();
+    // Other ways the dialog closes (a close request the keydown below doesn't see, such as Android
+    // back) reach the same clean-up through the `close` event, a task later.
+    this.#dialog.addEventListener('close', () => this.#closed());
+    // Escape through close() (above), not the dialog's own cancel, so focus goes straight to the field.
+    this.#dialog.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || e.isComposing) return;
+      e.preventDefault();
+      this.close();
     });
     // A press on the backdrop (outside the dialog's box) closes it, as a popover's outside click.
     this.#dialog.addEventListener('click', (e) => {
@@ -190,7 +177,22 @@ export class NxDatePicker extends NxFieldElement {
 
   /** Closes the calendar; focus goes back to the field. */
   close(): void {
-    if (this.open) this.#dialog.close();
+    if (!this.open) return;
+    this.#dialog.close();
+    // 11.9: straight to the field, in this task. The dialog's own focus restore lands on the
+    // calendar button, and the `close` event (which used to focus the field) comes a task later:
+    // long enough for a screen reader to announce the button first ("Pick a date, button, collapsed").
+    this.#closed();
+  }
+
+  /** After the dialog closed: collapsed, no more placing, focus on the field. Runs once per close. */
+  #closed(): void {
+    // Already done, or open again by the time a late `close` event arrives.
+    if (this.open || this.#button.getAttribute('aria-expanded') === 'false') return;
+    this.#button.setAttribute('aria-expanded', 'false');
+    window.removeEventListener('resize', this.#place);
+    window.removeEventListener('scroll', this.#place, true);
+    this.control.focus();
   }
 
   override attributeChangedCallback(name: string, old: string | null, next: string | null): void {
@@ -200,20 +202,11 @@ export class NxDatePicker extends NxFieldElement {
   }
 
   get #locale(): string | undefined {
-    const tag = this.getAttribute('locale') || this.closest('[lang]')?.getAttribute('lang') || undefined;
-    try {
-      return tag ? Intl.getCanonicalLocales(tag)[0] : undefined;
-    } catch {
-      return undefined;
-    }
+    return localeOf(this);
   }
 
   get #rtl(): boolean {
-    try {
-      return this.matches(':dir(rtl)');
-    } catch {
-      return this.closest('[dir]')?.getAttribute('dir')?.toLowerCase() === 'rtl';
-    }
+    return isRtl(this);
   }
 
   /** @internal Any of the three forms, cut to the granularity; a coarser one (`2026` for a day) is no value. */
@@ -258,7 +251,24 @@ export class NxDatePicker extends NxFieldElement {
     if (this.control.value !== text) this.control.value = text;
     this.control.placeholder = formatHint(g, this.#locale);
     this.#button.disabled = this.isDisabled || this.readOnly;
-    this.#button.setAttribute('aria-label', g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear);
+    this.#nameButton();
+  }
+
+  /**
+   * 11.9: the calendar button carries the field's name ("Pick a date, Start date"), so two pickers
+   * on a form don't list as two identical "Pick a date" buttons (a screen reader's button list).
+   */
+  #nameButton(): void {
+    const g = this.granularity;
+    const pick = g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear;
+    const field = this.control.getAttribute('aria-label');
+    this.#button.setAttribute('aria-label', field ? `${pick}, ${field}` : pick);
+  }
+
+  /** @internal */
+  protected override nameControl(): void {
+    super.nameControl();
+    this.#nameButton();
   }
 
   /** Blur and Enter: the typed text becomes the value, or stays as typed and invalid. */
@@ -470,7 +480,8 @@ export class NxDatePicker extends NxFieldElement {
     const [pl, nl] = g === 'day' ? [labels.previousMonth, labels.nextMonth] : g === 'month' ? [labels.previousYear, labels.nextYear] : [labels.previousYears, labels.nextYears];
     this.#prev.setAttribute('aria-label', pl);
     this.#next.setAttribute('aria-label', nl);
-    this.#title.textContent = title;
+    // Only when it changes: the title is a live region, and every arrow key redraws the grid.
+    if (this.#title.textContent !== title) this.#title.textContent = title;
     this.#dialog.setAttribute('aria-label', g === 'day' ? labels.pickDate : g === 'month' ? labels.pickMonth : labels.pickYear);
     this.#body.replaceChildren(grid);
   }
