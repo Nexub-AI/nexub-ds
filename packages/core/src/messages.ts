@@ -22,6 +22,10 @@ export interface NexubMessages {
   orDragAndDrop: string;
   /** 11.1: FileUpload.Trigger's name when it shows only an icon, and its busy label. */
   uploadFile: string;
+  /** 11.8: native FileUpload's camera button. */
+  takePhoto: string;
+  /** 11.8: native Link's hint when `external`. */
+  opensExternally: string;
   uploading: string;
   clearSearch: string;
   showPassword: string;
@@ -407,6 +411,8 @@ export const defaultMessages: NexubMessages = {
   clickToUpload: 'Click to upload',
   orDragAndDrop: 'or drag and drop',
   uploadFile: 'Upload file',
+  takePhoto: 'Take photo',
+  opensExternally: 'Opens externally',
   uploading: 'Uploading',
   clearSearch: 'Clear search',
   showPassword: 'Show password',

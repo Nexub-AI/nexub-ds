@@ -72,7 +72,7 @@ No new components. Every later version depends on a CI you can trust.
 
 - **Flakes fixed at the cause.** Picker-page CLS (land `fix/picker-docs-cls`, then prove it with 20 back-to-back runs). DataTableVirtual heap check. Any check that failed and then passed on rerun in 11.x gets an issue and a root cause.
 - **Flake rule.** A check that passes only on rerun opens an issue automatically and blocks the next release until the issue is closed or waived by the owner.
-- **Release routine.** Add the 48-hour soak and the flake rule to the release routine in [PUBLISHING.md](PUBLISHING.md), so every 12.x release follows them.
+- **Release routine.** Add the 48-hour soak (removed by the owner on 2026-11-24) and the flake rule to the release routine in [PUBLISHING.md](PUBLISHING.md), so every 12.x release follows them.
 - **Follow-ups.** PeriodPicker month labels. WebKit dark text colour. Move diagram and elements strings into `@nexub/core` messages (one `NexubMessages` source for every package). Load PageFrame default strings per template, not for all templates. Delete the 61 stale md copies and add a check so they cannot come back. Rebase or replace #656.
 - **Performance gates.** Add a **mobile** Lighthouse preset (throttled CPU and network) beside desktop, on the same pages plus one template page. Record INP and LCP so 12.1 has a baseline. Warn, don't fail, in 11.7.
 
@@ -154,7 +154,7 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 
 ## Release rules for every version
 
-- **Soak.** A version stays on `staging` for at least 48 hours, with the Resilience and soak workflows green and no flake, before it goes to `production` *(decision 1)*. This replaces the "ship as soon as ready" pace of 10.x and 11.x for the release step; development of the next version continues during the soak.
+- **Soak.** ~~A version stays on `staging` for at least 48 hours~~ *(decision 1, reversed by the owner on 2026-11-24)*: each version goes to `production` as soon as staging CI and Mobile are green with no open flake, one version per release. The flake rule stays.
 - **No rerun-to-green.** A check that fails and then passes is a flake: it gets an issue, and the next release waits for it (11.7 rule).
 - All 10.0 / 11.0 gates stay blocking. Baselines in light, dark, RTL and forced colours. Docs page with a playground and the new states on the same PR.
 - Native: a new web prop is ported in the same version or listed as a parity gap in the release notes.
@@ -188,7 +188,7 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 
 Answered by the owner on 2026-11-22, accepting every suggestion:
 
-1. **Pace.** A 48-hour staging soak with no flakes before each production release. Development keeps going during the soak.
+1. **Pace.** A 48-hour staging soak with no flakes before each production release. Development keeps going during the soak. *Changed by the owner on 2026-11-24: no soak; each version is released on its own as soon as it is green, with no open flake.*
 2. **12.0 scope.** Cascade layers on by default in 12.0. The Tailwind v3 preset is frozen and deprecated in 12.0, and removed in 13.0.
 3. **Native ambition.** A "native essentials" list of about 80 components, published in 11.8 from the mobile apps' screens and kept current by the 12.6 scanner. Not full parity.
 4. **Generative UI (12.3).** Schema and renderer in a new `@nexub/genui` package at `alpha`, served by `@nexub/mcp`. RFC opened in 12.2.

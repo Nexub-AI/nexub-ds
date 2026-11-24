@@ -6,6 +6,8 @@ import { CardGrid, DocTable, Guidance, Note, PageIntro, Prose, Section } from '@
 import { componentEntries, patternEntries } from '@/registry/index';
 import { mobileOnly, nativePatternTwins, nativeTwins } from '@/registry/native';
 import parity from '@/registry/parity.generated.json';
+import { essentialAreas, nativeEssentials } from '@/registry/native-essentials';
+import onPurpose from '@/registry/native-on-purpose.json';
 import { PhoneFrame } from '@/components/platform/PhoneFrame';
 
 export const dynamic = 'force-static';
@@ -90,6 +92,26 @@ export default function RootLayout() {
       </Section>
 
       <Section
+        id="essentials"
+        title="Native essentials"
+        description={`The ${nativeEssentials.length} components phone screens are built from. @nexub/react-native aims at this list, not at every web component: a web component outside it says on its Mobile tab what to use on phones instead.`}
+      >
+        <DocTable
+          caption="The native essentials list"
+          head={['Area', 'Components']}
+          rows={essentialAreas.map((area) => [
+            area,
+            <span key="n" className="font-mono text-body-sm">
+              {nativeEssentials
+                .filter((x) => x.area === area)
+                .map((x) => (x.since ? `${x.name} (new in ${x.since})` : x.name))
+                .join(', ')}
+            </span>,
+          ])}
+        />
+      </Section>
+
+      <Section
         id="web-to-native"
         title="Web → native"
         description="Every web component with a native twin. Open one to see both platforms side by side and how they differ."
@@ -110,17 +132,25 @@ export default function RootLayout() {
       <Section
         id="prop-parity"
         title="Prop parity"
-        description="Which props have the same name on both platforms, and which exist on one side only. Generated from the TypeScript types, and CI fails when it goes stale, so a new prop on one platform shows up here in review. Props that differ on purpose are explained under each component's Mobile tab."
+        description="Which props have the same name on both platforms, and which exist on one side only. Web-only props fall in two groups: gaps native has yet to close, and props that mean nothing on a phone, each with the reason. Generated from the TypeScript types, and CI fails when it goes stale, so a new prop on one platform shows up here in review. Props that differ on purpose are explained under each component's Mobile tab."
       >
         <DocTable
           caption="Web and native props per component"
-          head={['Component', 'Same name', 'Web only', 'Native only']}
+          head={['Component', 'Same name', 'Web only', 'Web only, on purpose', 'Native only']}
           rows={Object.entries(parity).map(([slug, p]) => [
             <Link key="w" href={`/${slug in nativePatternTwins ? 'patterns' : 'components'}/${slug}#mobile`} className="font-medium text-primary no-underline hover:underline">
               {titleOf(slug)}
             </Link>,
             p.web ? names(p.shared) : 'Compound on web',
             names(p.webOnly),
+            p.onPurpose.length ? (
+              <span key="o">
+                {names(p.onPurpose)}
+                <span className="block text-body-sm text-on-surface-variant">{(onPurpose as Record<string, { reason?: string }>)[slug]?.reason}</span>
+              </span>
+            ) : (
+              '—'
+            ),
             names(p.nativeOnly),
           ])}
         />

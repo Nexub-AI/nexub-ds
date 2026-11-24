@@ -310,6 +310,10 @@ export interface AvatarProps extends ViewProps {
   size?: AvatarSize;
   /** Online/status dot. */
   badge?: boolean;
+  /** Colour of the `badge` dot, any colour string. `status` wins when both are set. @default the success colour */
+  badgeColor?: string;
+  /** Shown when there is no image and no `name` to take initials from, e.g. an icon. */
+  fallback?: React.ReactNode;
   /** Presence dot; its name is added to the accessible label ("Ada Lovelace, Away"). */
   status?: AvatarStatus;
   /**
@@ -331,7 +335,18 @@ const initials = (name = '') =>
     .map((w) => w[0]?.toUpperCase() ?? '')
     .join('');
 
-export function Avatar({ src, name, size = 'md', badge, status, category: categoryProp, style, ...rest }: AvatarProps) {
+export function Avatar({
+  src,
+  name,
+  size = 'md',
+  badge,
+  badgeColor,
+  fallback,
+  status,
+  category: categoryProp,
+  style,
+  ...rest
+}: AvatarProps) {
   const theme = useTheme();
   const { roles, tokens, messages } = theme;
   const category = categoryProp === 'auto' ? autoCategory(name) : categoryProp;
@@ -364,6 +379,8 @@ export function Avatar({ src, name, size = 'md', badge, status, category: catego
             style={StyleSheet.absoluteFill}
             onError={() => setBroken(true)}
           />
+        ) : !initials(name) && fallback != null ? (
+          fallback
         ) : (
           <Text
             variant={px >= 48 ? 'title-md' : 'label-md'}
@@ -384,7 +401,7 @@ export function Avatar({ src, name, size = 'md', badge, status, category: catego
             width: px / 4,
             height: px / 4,
             borderRadius: px / 8,
-            backgroundColor: roles[status ? STATUS_ROLE[status] : 'success'],
+            backgroundColor: status ? roles[STATUS_ROLE[status]] : (badgeColor ?? roles.success),
             borderWidth: 2,
             borderColor: roles.surface,
           }}
@@ -399,18 +416,24 @@ export interface AvatarGroupProps extends ViewProps {
   /** Avatars shown before "+N". @default 4 */
   max?: number;
   size?: AvatarSize;
+  /** How much the avatars overlap: `sm` is tight, `lg` barely overlaps. @default 'md' */
+  spacing?: 'sm' | 'md' | 'lg';
 }
 
-export function AvatarGroup({ children, max = 4, size = 'sm', style, ...rest }: AvatarGroupProps) {
+// The overlap per `spacing`, as a fraction of the avatar size.
+const OVERLAP = { sm: 0.45, md: 1 / 3, lg: 0.15 } as const;
+
+export function AvatarGroup({ children, max = 4, size = 'sm', spacing = 'md', style, ...rest }: AvatarGroupProps) {
   const { roles, tokens, messages } = useTheme();
   const px = tokens.size.avatar[size];
   const shown = children.slice(0, max);
   const extra = children.length - shown.length;
+  const overlap = -px * OVERLAP[spacing];
   const ring = { borderWidth: 2, borderColor: roles.surface, borderRadius: px / 2 + 2 };
   return (
     <View style={[{ flexDirection: 'row' }, style]} {...rest}>
       {shown.map((child, i) => (
-        <View key={i} style={[ring, i > 0 && { marginStart: -px / 3 }]}>
+        <View key={i} style={[ring, i > 0 && { marginStart: overlap }]}>
           {React.cloneElement(child, { size })}
         </View>
       ))}
@@ -421,7 +444,7 @@ export function AvatarGroup({ children, max = 4, size = 'sm', style, ...rest }: 
           style={[
             ring,
             {
-              marginStart: -px / 3,
+              marginStart: overlap,
               width: px + 4,
               height: px + 4,
               alignItems: 'center',
@@ -446,11 +469,16 @@ export interface DividerProps extends ViewProps {
   inset?: number;
   /** @default 'horizontal' */
   orientation?: 'horizontal' | 'vertical';
+  /** Tints the line with a semantic or product colour at 30%, as on web. @default 'neutral' */
+  tone?: ToneValue;
 }
 
 /** Hairline separator. Prefer spacing and tonal tiers first (Calm Depth: remove dividers before adding them). */
-export function Divider({ inset = 0, orientation = 'horizontal', style, ...rest }: DividerProps) {
+export function Divider({ inset = 0, orientation = 'horizontal', tone = 'neutral', style, ...rest }: DividerProps) {
   const { roles } = useTheme();
+  const tint = roles[TONE_TEXT[tone]];
+  // 30% of the tone, as web's color-mix; a system colour (dynamicColor) is used as it is.
+  const color = tone === 'neutral' ? roles['outline-variant'] : /^#[0-9a-f]{6}$/i.test(tint) ? `${tint}4d` : tint;
   return (
     <View
       accessibilityElementsHidden
@@ -459,7 +487,7 @@ export function Divider({ inset = 0, orientation = 'horizontal', style, ...rest 
         orientation === 'horizontal'
           ? { height: StyleSheet.hairlineWidth, marginStart: inset, alignSelf: 'stretch' }
           : { width: StyleSheet.hairlineWidth, alignSelf: 'stretch' },
-        { backgroundColor: roles['outline-variant'] },
+        { backgroundColor: color },
         style,
       ]}
       {...rest}

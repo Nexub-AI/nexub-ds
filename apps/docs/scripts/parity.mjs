@@ -13,6 +13,9 @@ const native = JSON.parse(read('native-props.generated.json'));
 const webGen = JSON.parse(read('web-props.generated.json'));
 const web = { ...webGen['@nexub/react'], ...webGen['@nexub/patterns'] };
 const out = join(reg, 'parity.generated.json');
+// 11.8: web props a twin leaves out on purpose (native-on-purpose.json), kept apart from real gaps.
+const { $comment, ...onPurposeBySlug } = JSON.parse(read('native-on-purpose.json'));
+const stale = [];
 
 // `slug: {\n    name: 'Native'` in nativeTwins and nativePatternTwins.
 const twins = [...read('native.ts').matchAll(/^ {2}'?([a-z0-9-]+)'?: \{\n {4}name: '(\w+)'/gm)].map((m) => [m[1], m[2]]);
@@ -34,18 +37,28 @@ for (const [slug, nativeName] of twins) {
   // Deprecated names are on their way out (9.0), so they aren't part of the matrix.
   const nNames = n.props.filter((p) => !p.description.startsWith('Deprecated.')).map((p) => p.name).filter((p) => !PLATFORM.has(p));
   if (!w) {
-    result[slug] = { web: null, native: nativeName, shared: [], webOnly: [], nativeOnly: nNames.sort() }; // compound on web (Dialog.Root, …)
+    result[slug] = { web: null, native: nativeName, shared: [], webOnly: [], onPurpose: [], nativeOnly: nNames.sort() }; // compound on web (Dialog.Root, …)
     continue;
   }
   const wNames = new Set(w.props.filter((p) => !p.deprecated).map((p) => p.name).filter((p) => !PLATFORM.has(p)));
   const onWeb = (p) => wNames.has(p) || w.inherited?.includes(p) || DOM.has(p);
+  const missing = [...wNames].filter((p) => !nNames.includes(p));
+  const purpose = onPurposeBySlug[slug]?.props ?? [];
+  // A listed prop that native now has, or web no longer has, is stale: the list must say only what is true.
+  for (const p of purpose) if (!missing.includes(p)) stale.push(`${slug}.${p}`);
   result[slug] = {
     web: webName,
     native: nativeName,
     shared: nNames.filter(onWeb).sort(),
-    webOnly: [...wNames].filter((p) => !nNames.includes(p)).sort(),
+    webOnly: missing.filter((p) => !purpose.includes(p)).sort(),
+    onPurpose: missing.filter((p) => purpose.includes(p)).sort(),
     nativeOnly: nNames.filter((p) => !onWeb(p)).sort(),
   };
+}
+for (const slug of Object.keys(onPurposeBySlug)) if (!result[slug]) stale.push(slug);
+if (stale.length) {
+  console.error(`native-on-purpose.json lists props that are not web-only gaps (any more): ${stale.join(', ')}`);
+  process.exit(1);
 }
 
 const json = JSON.stringify(result, null, 2) + '\n';

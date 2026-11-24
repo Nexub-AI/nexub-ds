@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { COUNTRIES, callingCode, formatNational, parsePhone, toE164, type CountryCode } from '@nexub/core';
+import { COUNTRIES, callingCode, formatNational, parsePhone, toE164, type ControlSize, type CountryCode } from '@nexub/core';
 import { ChevronDown } from '@nexub/icons/native';
 import { Pressable } from '../primitives/Pressable';
 import { Text } from '../primitives/Text';
@@ -25,6 +25,11 @@ export interface PhoneInputProps
   countries?: CountryCode[];
   /** Marks the field invalid for screen readers. For the red outline and a message, give `error`. */
   invalid?: boolean;
+  /**
+   * Field height on the mobile control ladder (web's `sm`/`md`/`lg` are desktop sizes):
+   * `md` 40, `lg` 48, `xl` 56. The country code text follows it. @default 'lg'
+   */
+  size?: Extract<ControlSize, 'md' | 'lg' | 'xl'>;
 }
 
 function localeRegion(locale: string): CountryCode {
@@ -55,6 +60,7 @@ export function PhoneInput({
   onValueChange,
   countries,
   invalid,
+  size = 'lg',
   disabled,
   readOnly,
   error,
@@ -119,10 +125,11 @@ export function PhoneInput({
 
   const single = countries?.length === 1;
   const label = messages.countryCode(nameOf(country), cc);
+  const type = size === 'md' ? 'body-md' : 'body-lg';
   const picked = (
     <>
-      <Text variant="body-lg">{flagOf(country)}</Text>
-      <Text variant="body-lg" tabular color={single ? 'on-surface-variant' : 'on-surface'}>
+      <Text variant={type}>{flagOf(country)}</Text>
+      <Text variant={type} tabular color={single ? 'on-surface-variant' : 'on-surface'}>
         +{cc}
       </Text>
     </>
@@ -137,6 +144,7 @@ export function PhoneInput({
         autoComplete="tel"
         aria-invalid={invalid || !!error}
         {...rest}
+        size={size}
         error={error}
         disabled={disabled}
         readOnly={readOnly}

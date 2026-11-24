@@ -1,8 +1,8 @@
 // 11.7 release rules, checked on every PR into production (CI job "Release gate"):
 //   1. No open `flake` issue unless it carries the `waived` label (scripts/flake-issue.mjs).
-//   2. The 48-hour soak: the staging head (the PR's head commit) is at least SOAK_HOURS old.
-//      The owner can waive it for one PR with the `soak-waived` label (a hotfix, say).
-// Env: GH_TOKEN, GITHUB_REPOSITORY, HEAD_SHA, PR_LABELS (JSON array of names), SOAK_HOURS (48).
+//   2. The soak: the staging head (the PR's head commit) is at least SOAK_HOURS old. CI sets 0
+//      (no soak) since 2026-11-24. The owner can waive a soak for one PR with `soak-waived`.
+// Env: GH_TOKEN, GITHUB_REPOSITORY, HEAD_SHA, PR_LABELS (JSON array of names), SOAK_HOURS (0).
 import { execFileSync } from 'node:child_process';
 
 /** Open flake issues that still block: those without the `waived` label. */
@@ -17,7 +17,7 @@ export function soak(committedAt, now, hours, waived) {
 }
 
 function main() {
-  const { GITHUB_REPOSITORY: repo, HEAD_SHA: sha, PR_LABELS = '[]', SOAK_HOURS = '48' } = process.env;
+  const { GITHUB_REPOSITORY: repo, HEAD_SHA: sha, PR_LABELS = '[]', SOAK_HOURS = '0' } = process.env;
   const labels = JSON.parse(PR_LABELS);
   const gh = (args) => JSON.parse(execFileSync('gh', args, { encoding: 'utf8' }));
   const problems = [];

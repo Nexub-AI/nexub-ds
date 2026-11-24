@@ -6,6 +6,7 @@
 import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ReduceMotion, ReducedMotionConfig } from 'react-native-reanimated';
 import { Stack, useGlobalSearchParams } from 'expo-router';
 import { NexubNativeProvider, ToastProvider, useNexubNavigation, type ContrastLevel } from '@nexub/react-native';
 import { BRANDS, type Brand } from '../../preview/catalog';
@@ -59,6 +60,10 @@ export default function PreviewLayout() {
     // Already under the app root's GestureHandlerRootView; nesting is harmless
     // and keeps the previews self-contained (they bring their own provider too).
     <GestureHandlerRootView style={{ flex: 1 }}>
+      {/* Native previews are screenshot targets: show each one at rest. An entering
+          animation (Banner's nxEnter) that hadn't started yet passed Maestro's settle
+          check and gave a blank banner--0 on Android (run 45309299542). Web keeps motion. */}
+      {Platform.OS !== 'web' && <ReducedMotionConfig mode={ReduceMotion.Always} />}
       <NexubNativeProvider
         scheme={theme.scheme}
         contrast={theme.contrast}

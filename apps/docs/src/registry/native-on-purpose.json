@@ -1,0 +1,195 @@
+{
+  "$comment": "11.8: web props a native twin leaves out on purpose, with the reason. scripts/parity.mjs moves them from webOnly to onPurpose, so webOnly lists only real gaps. A prop listed here that native gains, or that web drops, fails `parity.mjs --check`.",
+  "button": {
+    "props": [
+      "asChild",
+      "magnetic"
+    ],
+    "reason": "asChild renders into another DOM element; magnetic follows the pointer. Neither exists on a touch screen."
+  },
+  "card": {
+    "props": [
+      "asChild",
+      "effect",
+      "accent"
+    ],
+    "reason": "asChild renders into another DOM element; effect is a pointer hover effect; accent is the marketing showcase edge from @nexub/themes, which has no native build."
+  },
+  "icon-button": {
+    "props": [
+      "asChild",
+      "tooltip"
+    ],
+    "reason": "No hover on phones: the label is the accessibility label, and long-press shows it (Tooltip)."
+  },
+  "link": {
+    "props": [
+      "asChild"
+    ],
+    "reason": "asChild renders into another DOM element."
+  },
+  "number-ticker": {
+    "props": [
+      "aria-live"
+    ],
+    "reason": "Native announces with accessibilityLiveRegion, set by the component."
+  },
+  "multi-select": {
+    "props": [
+      "sheet"
+    ],
+    "reason": "On native the options always open in a BottomSheet; web's sheet prop opts into that on small screens."
+  },
+  "phone-input": {
+    "props": [
+      "sheet"
+    ],
+    "reason": "On native the country list always opens in a BottomSheet."
+  },
+  "date-picker": {
+    "props": [
+      "sheet",
+      "typeable"
+    ],
+    "reason": "Native always opens the platform picker or a sheet; typing a date into a phone field is slower than picking it."
+  },
+  "drawer": {
+    "props": [
+      "container",
+      "direction",
+      "disablePreventScroll",
+      "fadeFromIndex",
+      "fixed",
+      "modal",
+      "noBodyStyles",
+      "preventScrollRestoration",
+      "repositionInputs",
+      "scrollLock",
+      "scrollLockTimeout",
+      "setBackgroundColorOnScale",
+      "shouldScaleBackground"
+    ],
+    "reason": "Browser mechanics of the web drawer (DOM container, body scroll lock, background scaling, input repositioning). BottomSheet is always modal, always from the bottom, and keyboard-aware."
+  },
+  "data-table": {
+    "props": [
+      "captionHidden",
+      "columnOrder",
+      "columnPinning",
+      "columnSizing",
+      "columnVisibility",
+      "columns",
+      "enableColumnReordering",
+      "enableColumnResizing",
+      "grid",
+      "maxHeight",
+      "onColumnOrderChange",
+      "onColumnPinningChange",
+      "onColumnSizingChange",
+      "onColumnVisibilityChange",
+      "rowWindow",
+      "selectionColumn",
+      "viewOptions"
+    ],
+    "reason": "DataList shows one row per record with its key fields (title, value accessors), not columns, so column layout does not apply; FlatList virtualizes and the screen scrolls."
+  },
+  "notification-item": {
+    "props": [
+      "title",
+      "description",
+      "timestamp",
+      "read",
+      "icon",
+      "onSelect"
+    ],
+    "reason": "The native twin is the whole inbox: each NotificationEntry carries title, body, time, unread and icon, and onPress selects one."
+  },
+  "plan-card": {
+    "props": [
+      "name",
+      "price",
+      "features",
+      "badge",
+      "onSelect",
+      "cta"
+    ],
+    "reason": "The native twin is the whole paywall: each Plan carries name, price, features and badge, and one Subscribe button (onSubscribe) acts on the chosen plan."
+  },
+  "settings-section": {
+    "props": [
+      "title",
+      "children"
+    ],
+    "reason": "The native twin is the whole settings screen: each group has a header and its items."
+  },
+  "auth-card": {
+    "props": [
+      "children"
+    ],
+    "reason": "SignInScreen builds its own form (email, password, biometrics)."
+  },
+  "conversation": {
+    "props": [
+      "children",
+      "composer",
+      "maxHeight"
+    ],
+    "reason": "ChatScreen is a full screen with its own message list and composer, sized by the screen."
+  },
+  "user-card": {
+    "props": [
+      "avatarSrc"
+    ],
+    "reason": "ProfileHeader names it image."
+  },
+  "sortable": {
+    "props": [
+      "children",
+      "list",
+      "getId",
+      "getLabel"
+    ],
+    "reason": "SortableList takes items with keyExtractor and title, like FlatList, instead of rendered children."
+  },
+  "search-input": {
+    "props": [
+      "clearable"
+    ],
+    "reason": "SearchField always shows the platform clear button while it has text."
+  },
+  "time-picker": {
+    "props": [
+      "showCount"
+    ],
+    "reason": "The time is picked, not typed, so there is nothing to count."
+  },
+  "date-time-picker": {
+    "props": [
+      "sheet"
+    ],
+    "reason": "Native always opens the platform picker or a sheet."
+  },
+  "inline-edit": {
+    "props": [
+      "as"
+    ],
+    "reason": "as picks the HTML element the text renders as; native text has no element type."
+  },
+  "form-field": {
+    "props": [
+      "name"
+    ],
+    "reason": "React Native has no form submission, so a field has no name to submit under."
+  },
+  "currency-select": {
+    "props": [
+      "aria-describedby",
+      "aria-invalid",
+      "aria-required",
+      "name",
+      "sheet",
+      "searchPlaceholder"
+    ],
+    "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box."
+  }
+}

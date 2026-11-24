@@ -109,6 +109,14 @@ import {
   useTheme,
   useToast,
   type SurfaceTone,
+  CheckboxField,
+  CheckboxGroupField,
+  ComboboxField,
+  CurrencySelect,
+  FileUpload,
+  SwitchField,
+  usePrompt,
+  type PickedFile,
 } from '@nexub/react-native';
 import { CATALOG } from './catalog';
 
@@ -536,6 +544,68 @@ export const EXAMPLES: Examples = {
           value={labels}
           onValueChange={setLabels}
         />
+      );
+    },
+  ],
+  'combobox-field': [
+    function ComboboxExample() {
+      const [city, setCity] = useState<string | null>('sg');
+      return (
+        <ComboboxField
+          label="City"
+          options={[
+            { value: 'sg', label: 'Singapore' },
+            { value: 'kl', label: 'Kuala Lumpur' },
+            { value: 'bkk', label: 'Bangkok' },
+            { value: 'jkt', label: 'Jakarta' },
+            { value: 'mnl', label: 'Manila' },
+          ]}
+          value={city}
+          onValueChange={setCity}
+        />
+      );
+    },
+  ],
+  'currency-select': [
+    function CurrencyExample() {
+      const [currency, setCurrency] = useState('SGD');
+      return <CurrencySelect label="Currency" value={currency} onValueChange={setCurrency} />;
+    },
+  ],
+  'switch-field': [
+    () => <SwitchField label="Round-ups" description="Save the change from every card payment." defaultChecked />,
+  ],
+  'checkbox-field': [() => <CheckboxField label="I agree to the terms" description="You can withdraw at any time." />],
+  'checkbox-group-field': [
+    () => (
+      <CheckboxGroupField
+        label="Notify me about"
+        defaultValue={['payments']}
+        options={[
+          { value: 'payments', label: 'Payments' },
+          { value: 'security', label: 'Security alerts' },
+          { value: 'offers', label: 'Offers' },
+        ]}
+      />
+    ),
+  ],
+  'file-upload': [
+    function UploadExample() {
+      // The preview has no file system: the picker returns a sample file.
+      const pickFiles = async (): Promise<PickedFile[]> => [{ name: 'receipt.jpg', size: 182_000, type: 'image/jpeg', uri: 'file:///receipt.jpg' }];
+      return <FileUpload accept={['image/*']} multiple maxSize={5_000_000} pickFiles={pickFiles} />;
+    },
+  ],
+  'prompt-dialog': [
+    function PromptExample() {
+      const [prompt, element] = usePrompt();
+      const [reason, setReason] = useState<string | null>(null);
+      return (
+        <View style={{ gap: 12 }}>
+          <Button onPress={async () => setReason(await prompt({ title: 'Reject claim', label: 'Reason' }))}>Reject claim</Button>
+          {reason ? <Text>Reason: {reason}</Text> : null}
+          {element}
+        </View>
       );
     },
   ],
