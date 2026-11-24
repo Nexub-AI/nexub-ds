@@ -19,6 +19,8 @@ test('the soak needs 48 hours on staging unless waived', () => {
   assert.equal(soak(0, 47 * h, 48, false).ok, false);
   assert.equal(soak(0, 48 * h, 48, false).ok, true);
   assert.equal(soak(0, 1 * h, 48, true).ok, true);
+  // SOAK_HOURS 0 (since 2026-11-24): a fresh staging head passes.
+  assert.equal(soak(0, 0, 0, false).ok, true);
 });
 
 test('flaky tests come from every shard file, once each', () => {
