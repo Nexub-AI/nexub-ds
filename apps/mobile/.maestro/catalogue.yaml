@@ -38,7 +38,7 @@ appId: ai.nexub.mobile
     text: "Press me"
     retryTapIfNoChange: true
 - takeScreenshot: 01-foundations
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - tapOn:
     text: "Actions.*"
@@ -56,7 +56,7 @@ appId: ai.nexub.mobile
     text: "Bank"
     retryTapIfNoChange: true
 - takeScreenshot: 02-actions
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - tapOn:
     text: "Inputs.*"
@@ -74,7 +74,7 @@ appId: ai.nexub.mobile
     text: "Month"
     retryTapIfNoChange: true
 - takeScreenshot: 03-inputs
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - runFlow:
     file: subflows/scroll-to.yaml
@@ -89,7 +89,7 @@ appId: ai.nexub.mobile
       TEXT: "Total balance"
       ROW: "Lists & cards.*"
 - takeScreenshot: 04-lists
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - runFlow:
     file: subflows/scroll-to.yaml
@@ -124,7 +124,7 @@ appId: ai.nexub.mobile
     text: "Keep it"
     retryTapIfNoChange: true
 - assertNotVisible: "Cancel this transfer?"
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - runFlow:
     file: subflows/scroll-to.yaml
@@ -160,7 +160,7 @@ appId: ai.nexub.mobile
     visible: ".*12,480.50"
     timeout: 5000
 - takeScreenshot: 07-mobile
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 
 - runFlow:
     file: subflows/scroll-to.yaml
@@ -200,7 +200,7 @@ appId: ai.nexub.mobile
     env:
       TARGET: "Recipient gets.*"
 - takeScreenshot: 08-send
-- runFlow: subflows/back.yaml
+- runFlow: subflows/back-home.yaml
 # Back on the Payub flows list: open Activity from it. (Deep links are covered
 # by previews/; on the iOS simulator a link sent while the app is open
 # sometimes never navigates.) Scroll up to the section header, not to the row:
