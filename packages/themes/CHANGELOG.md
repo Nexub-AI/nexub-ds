@@ -1,5 +1,12 @@
 # @nexub/themes
 
+## 11.9.0
+
+### Patch Changes
+
+- Updated dependencies [ed69a75]
+  - @nexub/tokens@11.9.0
+
 ## 11.8.0
 
 ### Patch Changes
