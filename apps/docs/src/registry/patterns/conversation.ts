@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.',
     category: 'AI',
     package: '@nexub/patterns',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.8.0',
     related: ['message-bubble', 'prompt-input', 'streaming-text'],
   },

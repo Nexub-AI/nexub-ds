@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Progress through a multi-step flow, with clickable steps that follow the order you allow.',
     category: 'Navigation',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.4.0',
     related: ['form', 'tabs'],
   },

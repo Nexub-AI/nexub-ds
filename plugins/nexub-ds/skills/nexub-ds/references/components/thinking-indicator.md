@@ -2,7 +2,7 @@
 
 Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { ThinkingIndicator } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/thinking-indicator
 

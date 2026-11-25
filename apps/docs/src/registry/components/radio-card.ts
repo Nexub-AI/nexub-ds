@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A radio group where each option is a whole card: title, description and optional icon, one choice.',
     category: 'Form Controls',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.6.0',
     related: ['radio-group', 'checkbox-card', 'card'],
   },

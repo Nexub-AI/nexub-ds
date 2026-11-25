@@ -2,7 +2,7 @@
 
 A radio group where each option is a whole card: title, description and optional icon, one choice.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { RadioCard } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/radio-card
 

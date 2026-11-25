@@ -2,7 +2,7 @@
 
 Progress through a multi-step flow, with clickable steps that follow the order you allow.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { Stepper } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/stepper
 

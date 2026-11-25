@@ -2,7 +2,7 @@
 
 Save and cancel that stay in view at the bottom of a long form.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { ActionBar } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/action-bar
 

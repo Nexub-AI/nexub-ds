@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.',
     category: 'AI',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.8.0',
     related: ['streaming-text', 'spinner', 'conversation'],
   },

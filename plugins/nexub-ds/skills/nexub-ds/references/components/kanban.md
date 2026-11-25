@@ -2,7 +2,7 @@
 
 Columns of cards people move by dragging or with Alt+Arrow keys.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Kanban } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/kanban
 

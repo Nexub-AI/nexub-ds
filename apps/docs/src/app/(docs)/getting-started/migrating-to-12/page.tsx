@@ -9,7 +9,7 @@ export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Migrating to 12.0',
   description:
-    '12.0 puts every prebuilt stylesheet in one nexub cascade layer, so your CSS wins without !important, and removes Stepper current={-1}. Both can be cleared on 11.9 first.',
+    '12.0 puts every prebuilt stylesheet in one nexub cascade layer, so your CSS wins without !important, removes Stepper current={-1}, deprecates the Tailwind v3 compatibility defaults and promotes 27 components to stable. The breaking changes can be cleared on 11.9 first.',
 };
 
 export default function MigratingTo12Page() {
@@ -20,7 +20,8 @@ export default function MigratingTo12Page() {
       </PageIntro>
       <p>
         12.0 changes one default and removes one deprecated value (RFC 12.0). Both can be cleared on 11.9, its release
-        candidate, before you upgrade. Nothing else in the API changes.
+        candidate, before you upgrade. It also deprecates the Tailwind v3 compatibility defaults (removed in 13.0) and
+        promotes 27 components to stable. Nothing else in the API changes.
       </p>
 
       <h2>Upgrade in two steps</h2>
@@ -119,6 +120,27 @@ npx nexub-migrate --rules changes-in-12 --check  # CI: exit 1 while anything is 
         <code>changes-in-12</code> rewrites it when <code>steps</code> is an array of object literals, keeping a
         step&apos;s own <code>status</code>, and reports every other case. Screen readers read each step as
         &ldquo;complete&rdquo;, as before. See <Link href="/components/stepper">Stepper</Link>.
+      </p>
+
+      <h2>Deprecated: the Tailwind v3 compatibility defaults</h2>
+      <p>
+        <code>@nexub/react/styles.css</code> still restores a few Tailwind v3 defaults that v4 changed, so components
+        look the same in a v3 or a v4 app: a bare <code>border</code> takes the hairline colour instead of{' '}
+        <code>currentColor</code>, and placeholders keep the v3 colour. They stay in 12.x, deprecated, and are removed
+        in 13.0. Nothing changes when you upgrade to 12.0. Before 13.0, set any of these defaults your own screens rely
+        on in your own <code>base</code> layer.
+      </p>
+
+      <h2>Promoted to stable</h2>
+      <p>
+        27 components move from beta to stable, because each one is used in production by at least two products (
+        <a href="https://github.com/Nexub-AI/nexub-ds/blob/development/GOVERNANCE.md#status-lifecycle">GOVERNANCE.md</a>). Their API doesn&apos;t change, only the badge:
+      </p>
+      <p>
+        ActionBar, BarChart, CheckboxCard, DateTimePicker, DonutChart, EventCalendar, Funnel, Gauge, Heatmap, Kanban,
+        KpiTile, LineChart, MessageBubble, MoneyInput, MultiSelect, PromptInput, RadioCard, SavedViews, Sortable,
+        SplitButton, Stepper, ThinkingIndicator, TimePicker and TreeView, plus the ErrorSummary, Conversation and
+        ListDetail patterns.
       </p>
 
       <h2>Coming from 10.x</h2>

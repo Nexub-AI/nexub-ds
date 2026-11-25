@@ -2,7 +2,7 @@
 
 Pick several options as chips, with search, "+N more" and an optional create option.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { MultiSelect } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/multi-select
 

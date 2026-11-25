@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.',
     category: 'AI',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.8.0',
     related: ['streaming-text', 'conversation', 'citation'],
   },
