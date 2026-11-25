@@ -66,16 +66,28 @@ for (const { id } of stories) {
         .then(() => true, () => false);
       test.skip(!applied, 'story pins its own theme globals');
       await page.evaluate(() => document.fonts.ready);
-      // Measure settled UI: reduced motion keeps short crossfades (nx-motion), so
-      // wait for every finite animation; looping ones (spinners, shimmer) can't end.
-      await page.evaluate(() =>
-        Promise.all(
-          document
+      // Measure settled UI: reduced motion keeps short crossfades (nx-motion), so wait for
+      // every finite animation; looping ones (spinners, shimmer) can't end. Lazy chunks (the
+      // seed-theming stories load @nexub/tokens/seed) and late theme writes can start new
+      // transitions after a single wait: #762 measured the "Seed" label mid light-to-dark
+      // (#1b1b1b on #131313). So wait for the network, then for three quiet frame pairs in a
+      // row with no running finite animation and the requested theme still on <html>.
+      await page.waitForLoadState('networkidle');
+      await page.evaluate(async (t) => {
+        const frame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
+        for (let quiet = 0, i = 0; quiet < 3 && i < 200; i++) {
+          await frame();
+          await frame();
+          const running = document
             .getAnimations()
-            .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
-            .map((a) => a.finished.catch(() => undefined)),
-        ),
-      );
+            .filter((a) => a.playState === 'running' && a.effect?.getComputedTiming().iterations !== Infinity);
+          if (running.length === 0 && document.documentElement.dataset.theme === t) quiet++;
+          else {
+            quiet = 0;
+            await Promise.all(running.map((a) => a.finished.catch(() => undefined)));
+          }
+        }
+      }, theme);
 
       await page.addScriptTag({ path: axePath });
       const violations = await page.evaluate(async (tags) => {
