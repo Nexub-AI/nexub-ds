@@ -1,6 +1,6 @@
 {
   "name": "@nexub/elements",
-  "version": "11.6.0",
+  "version": "11.9.0",
   "description": "Web components for Nexub Design System: form-associated <nx-number-input>, <nx-date-picker>, <nx-select>, <nx-combobox> and <nx-phone-input> for server-rendered pages, with no framework.",
   "type": "module",
   "license": "MIT",
@@ -62,12 +62,12 @@
     "@nexub/core": "workspace:*",
     "@nexub/tokens": "workspace:*",
     "@testing-library/jest-dom": "^7.0.1",
-    "@testing-library/user-event": "^14.6.8",
+    "@testing-library/user-event": "^14.6.12",
     "@vitest/coverage-v8": "5.1.0",
-    "jsdom": "^31.0.0",
+    "jsdom": "^31.0.1",
     "tsup": "^9.0.0",
     "typescript": "~6.0.3",
-    "vite": "^8.3.6",
+    "vite": "^8.3.8",
     "vitest": "^5.1.0"
   }
 }

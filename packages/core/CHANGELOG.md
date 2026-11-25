@@ -1,5 +1,51 @@
 # @nexub/core
 
+## 11.9.0
+
+### Minor Changes
+
+- ed69a75: 11.9 Alpha → beta prep, and RFC 12.0 (ROADMAP_12.x.md).
+
+  - **`@nexub/elements`, new:** `<nx-select>`, `<nx-combobox>` (async `onsearch`, stale answers dropped, `allow-custom`) and `<nx-phone-input>` (E.164 form value, the same phone rules as React). All form-associated, with `invalid` on every field. One element at a time: `@nexub/elements/define/<name>`.
+  - **Screen-reader pass, automated half** (`A11Y_REVIEW.md` in each package; the human VoiceOver / NVDA pass follows before beta):
+    - **Diagram:** connections are named by their node titles and share one Tab stop. Node order follows the layout. A focused connection can be deleted. Repeated announcements are read again, and a delete names what went.
+    - **`<nx-date-picker>`:** no sideways scroll at 320px. Focus goes back to the field at once. The month is announced only when it changes, and the calendar button carries the field's name.
+  - **`@nexub/react`:** opt-in `@nexub/react/styles.nexub-layer.css`, every style in one `nexub` layer, as RFC 12.0 proposes for `styles.css`. Load it first, or declare `@layer nexub;`, and app CSS always wins. Fix: the deprecated `Stepper current={-1}` marks the last step complete too.
+  - **`@nexub/core`:** `choiceFieldMessages`, `invalidPhone`, `phoneCountryOf(locale)` (React PhoneInput uses it), and the diagram edge messages.
+  - **`@nexub/tokens`:** `nexub-migrate --rules changes-in-12` (opt-in until 12.0).
+  - **`@nexub/patterns`:** the README no longer points Tailwind 3 apps at the preset removed in 4.0.
+  - **RFC 12.0** (`RFC_12.0.md`) is open for comment. Nothing breaking ships until it is accepted.
+
+## 11.8.0
+
+### Minor Changes
+
+- 78896f2: 11.8 Native catch-up I: fields (ROADMAP_12.x.md). The fields 11.1–11.5 fixed on web, on iOS and Android.
+
+  - **`@nexub/react-native`, new:** `ComboboxField` (a searchable sheet; `onSearch` may return a promise, debounced, stale answers ignored), `CurrencySelect`, `FileUpload` (bring your own `pickFiles` and `capture`; `accept`, `maxSize`, `maxFiles`, `transform`, `validate` in web's order), `usePrompt()` / `PromptDialog`, `SwitchField`, `CheckboxField`, `CheckboxGroupField`.
+  - **Fields:** TextField, PasswordInput, SearchField and MoneyInput take `invalid`, `readOnly`, `required`, `leadingIcon` / `trailingIcon`, `leadingAddon` / `trailingAddon`, `onClear` and `size="sm"`. PasswordInput: `visible`, `defaultVisible`, `onVisibleChange`. MoneyInput: `currencySlot`. Checkbox and Switch: `invalid`, `readOnly`, `size` (Switch also `checkedIcon` / `uncheckedIcon`). Stepper (web NumberInput): `nullable` (11.1 rules: empty state, clamp on blur), `precision`, `showSteppers`, `invalid`, `size`. SegmentedControl: `size`.
+  - **DateTimeField:** `granularity="month" | "year"` (a grid in a sheet; values `'2026-03'` / `'2026'`, typed by `DateTimeFieldPeriodProps`), `mode="datetime"`, `disabledDates`, `presets`, `minuteStep`, `clearable`, `defaultValue`, `defaultTime`, `timeZone`, `locale`, `disabled`, `readOnly`, `invalid`, `loading`, `size` and icon / addon slots. Time mode shows a clock icon. The OS day picker can't grey out days, so a pick on a disabled day keeps the old value and says the day is unavailable.
+  - **OTPInput:** `defaultValue`, `disabled`, `invalid`, `readOnly`, `size`, `name`; `mode="backup"` gets a capitals keyboard.
+  - **MultiSelect:** `onSearch` (async), `onCreate`, `inputValue` / `onInputChange`, `emptyText`, `loading`, `maxVisibleChips`, `readOnly`, `size`. The field now shows the picked values as chips.
+  - **Display:** TreeList (checkboxes with tri-state parents, `expanded`, `onLoadChildren`, `renderActions`, loading / empty / error states), StepProgress (`nonLinear`, `onStepChange`, `orientation`, `completed`), ActivityList states, Table `maxHeight` / `stickyHeader`, Button `status` with `successLabel` / `errorLabel`, IconButton `loading`, Link `external` / `variant` / `href`, Card `tone` / `variant` / `surface`, StatCard `change` / `note` / `tone`, Avatar `fallback` / `badgeColor`, AvatarGroup `spacing`, Skeleton `shape` / `animated`, Divider `tone`, ButtonGroup `attached`, InlineEdit `disabled` / `maxLength` / `size`, PhoneInput `size`.
+  - **`@nexub/core`:** `takePhoto` and `opensExternally` messages.
+  - **Parity:** web-only props on the 58 twins went from 283 to 140. 71 of them are web-only on purpose (`asChild`, browser drawer mechanics, DataTable column layout, …), each with its reason in the docs. The 69 real gaps left are listed on the React Native page, the largest DataTable → DataList (30) and Drawer → BottomSheet (13).
+  - **Docs:** the native essentials list (85 components) on the React Native page; native prop tables now include inherited props.
+
+## 11.7.0
+
+### Minor Changes
+
+- 10ed9e3: 11.7 Quiet release: nothing flaky (ROADMAP_12.x.md). No new components; the follow-ups 11.6 left open, and the release rules for 12.x.
+
+  - **`@nexub/react`**: DatePicker `granularity="month"` cells show the full month name ("March", not "Mar"), so each cell's accessible name ("March 2026") starts with its visible text (WCAG 2.5.3 Label in Name). French short months ("janv.") were not a part of the long name at all. Same as `<nx-date-picker>`.
+  - **`@nexub/core`**: `dateFieldMessages`, the date field strings on their own. `NexubMessages` gains optional `diagram…` keys (`diagramShowAsList`, `diagramConnectTo`, … `diagramMinimap`) for `@nexub/diagram`.
+  - **`@nexub/diagram`**: `DiagramCanvas` reads its strings from `NexubProvider` `messages`, so a translated provider covers the canvas with the rest of the app. Its `labels` prop still wins; the English defaults stay in `@nexub/diagram`.
+  - **`@nexub/elements`**: the date picker strings come from `@nexub/core` (`dateFieldMessages`), the same source as React's, instead of a copy. No visible change.
+  - **`@nexub/patterns`**: each page template ships only its own default strings, not every template's: template entries are 1.5–2.1 kB gzip smaller. `defaultPageTemplateMessages` and `usePageMessages` are unchanged.
+  - **Native parity:** none needed. The changed strings and templates are web only.
+  - **Release rules (repo, not packages):** a test that passes only on retry, or a run that passes only after a rerun, opens a `flake` issue; an open one blocks the production release, and so does a staging head under 48 hours old. Lighthouse also runs on mobile emulation (warn only until 12.1).
+
 ## 11.6.0
 
 ### Minor Changes
