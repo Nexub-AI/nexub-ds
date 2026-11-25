@@ -104,7 +104,7 @@ A major is the only chance to change defaults, so it carries removals and promot
   - CSS cascade layers (`@layer nexub`), so app styles win without `!important`.
   - Tailwind v4 as the one supported path. The v3 preset has been gone since 4.0; what remains is the v3 compatibility defaults in `styles.css`, which 12.0 keeps and deprecates and 13.0 removes *(decision 2, corrected 2026-11-25)*.
   - The component token tier on by default (see 12.5).
-- **Promotions.** At least 30 `beta` components to `stable`, chosen by usage in the platform apps (the [GOVERNANCE.md](GOVERNANCE.md) rule: promotion comes from real use, not age).
+- **Promotions.** At least 30 `beta` components to `stable`, chosen by usage in the platform apps (the [GOVERNANCE.md](GOVERNANCE.md) rule: promotion comes from real use, not age). *RFC 12.0 (2026-11-25): 27 meet the rule, and the owner chose to promote those 27.*
 
 ### 12.1 — Performance
 

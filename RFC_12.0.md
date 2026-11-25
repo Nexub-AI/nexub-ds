@@ -6,7 +6,7 @@ Open for comments for at least **3 working days** from the day this issue is ope
 
 ## Decision
 
-**Open, three of four questions answered** by the owner on 2026-11-25: (1) option (a), keep the v3 compatibility defaults in 12.0, deprecate them and remove them in 13.0; (3) yes, correct decision 2; and yes to the Tailwind v4 layer order below. The promotion list waits on the `nexub-usage` reports. `APPROVED_MAJOR` stays at 11 until a maintainer accepts this RFC. Then the acceptance PR raises it to 12 (`scripts/release-version.mjs`), which lets a `major` changeset through for one release.
+**Open, every question answered** by the owner on 2026-11-25: (1) option (a), keep the v3 compatibility defaults in 12.0, deprecate them and remove them in 13.0; (2) promote the 27 components listed under Promotions; (3) yes, correct decision 2; and yes to the Tailwind v4 layer order below. Acceptance is the maintainer's call once the comment period ends (2026-11-26). `APPROVED_MAJOR` stays at 11 until a maintainer accepts this RFC. Then the acceptance PR raises it to 12 (`scripts/release-version.mjs`), which lets a `major` changeset through for one release.
 
 Release candidate: **11.9.x on the npm tag `next`**, once this RFC is accepted. `latest` stays on 11.8.x until 12.0.0.
 
@@ -62,11 +62,15 @@ The v3 compatibility defaults (`tailwind-v3-compat.css`) can either stay or go i
 
 ### Promotions
 
-At least 30 `beta` components move to `stable` (GOVERNANCE.md: promotion comes from real use).
+27 `beta` components move to `stable`: every one that meets the GOVERNANCE.md rule (used in production by at least 2 products). The roadmap's target was at least 30; the owner chose on 2026-11-25 to promote only what meets the rule rather than pad the list.
 
-- **How they're chosen:** by `nexub-usage` reports from the platform apps. The maintainers run them, because the apps' code isn't in this repository.
-- **No API change:** a promotion only changes the docs badge and `accessibility.json`.
-- **List:** added here before acceptance.
+- **How they're chosen:** `nexub-usage` run on 2026-11-25 over the default branches of `nexub-platform` (17 apps, each a product) and `nexub-website-v2`. `matchub` is still in development and doesn't count. Apps that render a component through the platform's `@nexub/admin-ui` wrappers (for example `ListPage` → `ActionBar`, `MoneyField` → `MoneyInput`) count as users.
+- **No API change:** a promotion only changes the docs badge and `accessibility.json`. None of the 27 has an open accessibility issue.
+- **Stepper** is promoted in 12.0 even though 12.0 removes `current={-1}`; the owner accepted that.
+- **List** (products using it in brackets):
+  - `@nexub/react` (24): KpiTile (14), MultiSelect (13), BarChart (11), MoneyInput (11), SavedViews (11), Stepper (10), DonutChart (10), ActionBar (10), Sortable (9), PromptInput (9), RadioCard (7), MessageBubble (7), ThinkingIndicator (7), LineChart (5), DateTimePicker (5), SplitButton (4), Kanban (4), EventCalendar (4), TimePicker (4), Funnel (3), TreeView (3), CheckboxCard (2), Gauge (2), Heatmap (2).
+  - `@nexub/patterns` (3): ErrorSummary (10), Conversation (3), ListDetail (2).
+- **Not promoted:** 11 beta components are used by one product (mostly marketing blocks on the website) and 31 by none. They stay `beta`.
 
 ## API
 
@@ -108,6 +112,6 @@ All three changes are web only. Native has no CSS and no `current={-1}`. Its `St
 ## Open questions for the maintainers
 
 1. The v3 compatibility defaults: (a) or (b) above. **Answered: (a).**
-2. The promotion list: which `nexub-usage` reports to use. **Open: the owner sends the reports.**
+2. The promotion list: which `nexub-usage` reports to use. **Answered: the 27 under Promotions.**
 3. Correct decision 2 in `ROADMAP_12.x.md` to say that the preset has been gone since 4.0. **Answered: yes** (done).
 4. The Tailwind v4 layer order (`@layer theme, base, nexub, components, utilities;`). **Answered: yes.**
