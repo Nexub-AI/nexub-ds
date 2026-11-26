@@ -1,0 +1,12 @@
+/* @nexub/themes — base-lean.css (12.1, opt-in)
+   base.css without the component parts: fonts, the global layer of core.css
+   (tokens, resets, focus ring, motion, density) and the page backdrop. Add the
+   parts your components use from @nexub/themes/parts/<name>.css, or let
+   `npx -p @nexub/tokens nexub-usage <app> --css <file>` write the list for you.
+   base.css stays the default and loads every part. */
+@import './fonts.css';
+@import './core-lean.css';
+
+body {
+  background: var(--gradient-hero-ambient);
+}

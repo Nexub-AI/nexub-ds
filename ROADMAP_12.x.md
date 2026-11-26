@@ -4,7 +4,7 @@ Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 10 releases: thr
 
 **Why it starts at 11.7.** 11.6.0 (2026-11-22) closed the last of the 38 platform gaps and shipped `@nexub/diagram` and `@nexub/elements` at `alpha`. The 11.x plan is finished.
 
-**Shipped.** 11.7.0 (2026-11-24, on `latest`): the quiet release. Its 48-hour soak was removed by the owner the same day; each version now ships on its own once green. 11.8.0 (2026-11-24, on `latest`): native fields. 11.9.0 (2026-11-24, on `latest`): three more elements, the automated screen-reader pass, the opt-in layer file and RFC 12.0.
+**Shipped.** 11.7.0 (2026-11-24, on `latest`): the quiet release. Its 48-hour soak was removed by the owner the same day; each version now ships on its own once green. 11.8.0 (2026-11-24, on `latest`): native fields. 11.9.0 (2026-11-24, on `latest`): three more elements, the automated screen-reader pass, the opt-in layer file and RFC 12.0. 12.0.0 (2026-11-27, on `latest`): the clean break, RFC 12.0 accepted with changes on 2026-11-26.
 
 **Direction.** 10.x made the library look better. 11.x closed the gaps the apps worked around. 12.x is about depth: fewer new parts, more of what exists made stable, fast, native and measurable.
 
@@ -114,7 +114,7 @@ Uses the 11.7 baseline and the 12.0 layering decision.
 - **Large lists.** Virtualize Combobox, MultiSelect, TreeView and CommandList options above a threshold.
 - **React Compiler.** Confirm every component works with it, and add a test build with it on.
 - **Native.** Cut the `react-native` and `react-native/patterns` bundles; lazy-load heavy parts (charts, QR, calendar).
-- **Gates.** Mobile Lighthouse performance ≥ 0.90 becomes blocking. INP under 200 ms on the 3 heaviest template pages. Every size budget at least 10% lower than at 11.6.
+- **Gates.** Mobile Lighthouse performance ≥ 0.90 becomes blocking. INP under 200 ms on the 3 heaviest template pages. *Changed by the owner on 2026-11-27:* "every size budget at least 10% lower than at 11.6" is a 12.x target, met by 12.6 (see How each version is judged). At 12.1, 23 of 241 budgets were 10% lower; `react` was flat and `react-native` 32% higher than at 11.6.
 
 ### 12.2 — Signature moments
 
@@ -175,6 +175,7 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 | Native templates | 0 | 6 |
 | Lighthouse | desktop only | mobile ≥ 0.90, blocking |
 | `react/styles.css` loaded by a typical page | 43.8 kB budget | under half |
+| Size budgets at least 10% below 11.6 *(12.x target, owner 2026-11-27)* | 0 of 241 | all of them, by 12.6 |
 | Apps with a usage scan and health score | 0 | 14 |
 
 ## Why this order

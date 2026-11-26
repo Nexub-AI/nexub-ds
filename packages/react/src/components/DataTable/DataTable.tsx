@@ -26,7 +26,16 @@ import {
   type ExpandedState,
   type Row,
 } from '@tanstack/react-table';
-import { ArrowUp, ArrowDown, ChevronDown, ChevronRight, ChevronsUpDown, Filter, SlidersHorizontal, X } from '@nexub/icons';
+import {
+  ArrowUp,
+  ArrowDown,
+  ChevronDown,
+  ChevronRight,
+  ChevronsUpDown,
+  Filter,
+  SlidersHorizontal,
+  X,
+} from '@nexub/icons';
 import { cn } from '../../utils/cn.js';
 import { disabledContainer, pressable } from '../../utils/control.js';
 import { floatingSurface } from '../../utils/surface.js';
@@ -184,7 +193,10 @@ export interface DataTableRowWindow {
 }
 
 /** A hook choosing the rendered rows. DataTableVirtual passes one; the default renders all. */
-export type DataTableRowWindowHook = (count: number, getScrollElement: () => HTMLElement | null) => DataTableRowWindow;
+export type DataTableRowWindowHook = (
+  count: number,
+  getScrollElement: () => HTMLElement | null,
+) => DataTableRowWindow;
 
 const useAllRows: DataTableRowWindowHook = (count) => ({
   indexes: Array.from({ length: count }, (_, i) => i),
@@ -199,11 +211,19 @@ function TreeCell({
   collapseLabel,
   children,
 }: {
-  row: { depth: number; getCanExpand: () => boolean; getIsExpanded: () => boolean; toggleExpanded: () => void };
+  row: {
+    depth: number;
+    getCanExpand: () => boolean;
+    getIsExpanded: () => boolean;
+    toggleExpanded: () => void;
+  };
   expandLabel: string;
   collapseLabel: string;
   children: React.ReactNode;
 }) {
+  // TanStack Table mutates `row` in place, so the React Compiler would keep a stale
+  // getIsExpanded() for the same row object. Opt out (12.1, `pnpm test:compiler`).
+  'use no memo';
   const open = row.getIsExpanded();
   const ref = React.useCallback(
     (el: HTMLDivElement | null) => {
@@ -222,7 +242,11 @@ function TreeCell({
           onClick={row.toggleExpanded}
           className="-ms-1 inline-flex size-6 shrink-0 items-center justify-center rounded-shape-min text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-container-high)]"
         >
-          {open ? <ChevronDown size="xs" aria-hidden="true" /> : <ChevronRight size="xs" aria-hidden="true" className="rtl:-scale-x-100" />}
+          {open ? (
+            <ChevronDown size="xs" aria-hidden="true" />
+          ) : (
+            <ChevronRight size="xs" aria-hidden="true" className="rtl:-scale-x-100" />
+          )}
         </button>
       ) : (
         <span className="-ms-1 size-6 shrink-0" aria-hidden="true" />
@@ -235,27 +259,42 @@ function TreeCell({
 /** CSSOM, not a style attribute: strict CSP pages block inline styles. */
 const px = (n: number | string) => (typeof n === 'number' ? `${n}px` : n);
 
-const selectFilter: FilterFn<unknown> = (row, id, value: string[]) => value.includes(String(row.getValue(id)));
+const selectFilter: FilterFn<unknown> = (row, id, value: string[]) =>
+  value.includes(String(row.getValue(id)));
 selectFilter.autoRemove = (value?: string[]) => !value?.length;
-const filterFns = { text: 'includesString', select: selectFilter, 'number-range': 'inNumberRange' } as const;
+const filterFns = {
+  text: 'includesString',
+  select: selectFilter,
+  'number-range': 'inNumberRange',
+} as const;
 
 // ponytail: top-level columns only; walk `columns` of group columns if grouped headers ever need filters.
 const withFilterFns = <TData,>(columns: DataTableColumn<TData>[]): DataTableColumn<TData>[] =>
-  columns.map((c) => (c.meta?.filter && !c.filterFn ? { ...c, filterFn: filterFns[c.meta.filter] as FilterFnOption<TData> } : c));
+  columns.map((c) =>
+    c.meta?.filter && !c.filterFn
+      ? { ...c, filterFn: filterFns[c.meta.filter] as FilterFnOption<TData> }
+      : c,
+  );
 
 // Loaded only when a column sets `meta.filter`, so tables without filters don't pull in Radix Popover.
-const ColumnFilter = React.lazy(() => import('./ColumnFilter.js').then((m) => ({ default: m.ColumnFilter })));
+const ColumnFilter = React.lazy(() =>
+  import('./ColumnFilter.js').then((m) => ({ default: m.ColumnFilter })),
+);
 
 // Loaded only with `viewOptions`, so tables without the menu don't pull in Radix DropdownMenu.
-const ViewOptions = React.lazy(() => import('./ViewOptions.js').then((m) => ({ default: m.ViewOptions })));
+const ViewOptions = React.lazy(() =>
+  import('./ViewOptions.js').then((m) => ({ default: m.ViewOptions })),
+);
 
-const placeCell = <TData,>(column: Column<TData, unknown>, resizable: boolean) => (el: HTMLTableCellElement | null) => {
-  if (!el) return;
-  el.style.width = resizable ? px(column.getSize()) : '';
-  const side = column.getIsPinned();
-  el.style.insetInlineStart = side === 'left' ? px(column.getStart('left')) : '';
-  el.style.insetInlineEnd = side === 'right' ? px(column.getAfter('right')) : '';
-};
+const placeCell =
+  <TData,>(column: Column<TData, unknown>, resizable: boolean) =>
+  (el: HTMLTableCellElement | null) => {
+    if (!el) return;
+    el.style.width = resizable ? px(column.getSize()) : '';
+    const side = column.getIsPinned();
+    el.style.insetInlineStart = side === 'left' ? px(column.getStart('left')) : '';
+    el.style.insetInlineEnd = side === 'right' ? px(column.getAfter('right')) : '';
+  };
 
 const pinClass = <TData,>(column: Column<TData, unknown>) => {
   const side = column.getIsPinned();
@@ -264,8 +303,12 @@ const pinClass = <TData,>(column: Column<TData, unknown>) => {
     'sticky z-[1] bg-[var(--color-surface)]',
     '[tr:hover>&]:bg-[color-mix(in_srgb,var(--color-on-surface)_8%,var(--color-surface))]',
     '[tr[data-state=selected]>&]:bg-[color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))]',
-    side === 'left' && column.getIsLastColumn('left') && 'border-e border-[var(--color-outline-variant)]',
-    side === 'right' && column.getIsFirstColumn('right') && 'border-s border-[var(--color-outline-variant)]',
+    side === 'left' &&
+      column.getIsLastColumn('left') &&
+      'border-e border-[var(--color-outline-variant)]',
+    side === 'right' &&
+      column.getIsFirstColumn('right') &&
+      'border-s border-[var(--color-outline-variant)]',
   );
 };
 
@@ -305,6 +348,9 @@ function RowViewImpl<TData>({
   collapseLabel,
   dragProps,
 }: RowViewProps<TData>) {
+  // React.memo with sameRow decides when a row re-renders. Inside, TanStack's row and cells are
+  // mutated in place, so compiler memoization keyed on them would render stale cells.
+  'use no memo';
   return (
     <TableRow
       ref={measure}
@@ -448,7 +494,8 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
-const apply = <T,>(u: Updater<T>, prev: T): T => (typeof u === 'function' ? (u as (p: T) => T)(prev) : u);
+const apply = <T,>(u: Updater<T>, prev: T): T =>
+  typeof u === 'function' ? (u as (p: T) => T)(prev) : u;
 
 const columnLabel = <TData,>(c: { id: string; columnDef: DataTableColumn<TData> }) =>
   typeof c.columnDef.header === 'string' ? c.columnDef.header : c.id;
@@ -562,14 +609,18 @@ export function DataTable<TData>({
   const tableRef = React.useRef<HTMLTableElement>(null);
   const gridNav = React.useMemo(() => createGridNavigation(dir), [dir]);
   const dragged = React.useRef<string | null>(null);
-  const pagination = !!paginationProp || page !== undefined || pageSizeProp !== undefined || manualPagination;
+  const pagination =
+    !!paginationProp || page !== undefined || pageSizeProp !== undefined || manualPagination;
   const [pageIndex = 0, setPageIndex] = useControllableState<number>({
     value: page,
     defaultValue: 0,
     onChange: onPageChange,
   });
   const pageSize = pageSizeProp ?? paginationProp?.pageSize ?? 20;
-  const paginationState = React.useMemo<PaginationState>(() => ({ pageIndex, pageSize }), [pageIndex, pageSize]);
+  const paginationState = React.useMemo<PaginationState>(
+    () => ({ pageIndex, pageSize }),
+    [pageIndex, pageSize],
+  );
 
   const withSelectColumn = enableRowSelection && selectionColumn;
   const reorderRows = Boolean(onRowOrderChange) && sorting.length === 0;
@@ -601,7 +652,8 @@ export function DataTable<TData>({
               enableSorting: false,
               enableHiding: false,
               header: () => null,
-              cell: ({ row }) => (row.depth === 0 ? rowReorderRef.current.handle([0, row.index]) : null),
+              cell: ({ row }) =>
+                row.depth === 0 ? rowReorderRef.current.handle([0, row.index]) : null,
             },
             ...cols,
           ]
@@ -610,33 +662,39 @@ export function DataTable<TData>({
   );
   const allColumns = React.useMemo<DataTableColumn<TData>[]>(
     () =>
-      withRowHandles(withSelectColumn
-        ? [
-            {
-              id: '__select',
-              enableSorting: false,
-              enableHiding: false,
-              header: ({ table }) => (
-                <Checkbox
-                  aria-label={messages.selectAllOnPage}
-                  checked={
-                    table.getIsAllPageRowsSelected() ? true : table.getIsSomePageRowsSelected() ? 'indeterminate' : false
-                  }
-                  onCheckedChange={(v) => table.toggleAllPageRowsSelected(v === true)}
-                />
-              ),
-              cell: ({ row }) => (
-                <Checkbox
-                  aria-label={messages.selectRow}
-                  checked={row.getIsSelected()}
-                  disabled={!row.getCanSelect()}
-                  onCheckedChange={(v) => row.toggleSelected(v === true)}
-                />
-              ),
-            },
-            ...withFilterFns(columns),
-          ]
-        : withFilterFns(columns)),
+      withRowHandles(
+        withSelectColumn
+          ? [
+              {
+                id: '__select',
+                enableSorting: false,
+                enableHiding: false,
+                header: ({ table }) => (
+                  <Checkbox
+                    aria-label={messages.selectAllOnPage}
+                    checked={
+                      table.getIsAllPageRowsSelected()
+                        ? true
+                        : table.getIsSomePageRowsSelected()
+                          ? 'indeterminate'
+                          : false
+                    }
+                    onCheckedChange={(v) => table.toggleAllPageRowsSelected(v === true)}
+                  />
+                ),
+                cell: ({ row }) => (
+                  <Checkbox
+                    aria-label={messages.selectRow}
+                    checked={row.getIsSelected()}
+                    disabled={!row.getCanSelect()}
+                    onCheckedChange={(v) => row.toggleSelected(v === true)}
+                  />
+                ),
+              },
+              ...withFilterFns(columns),
+            ]
+          : withFilterFns(columns),
+      ),
     [withSelectColumn, columns, messages.selectAllOnPage, messages.selectRow, withRowHandles],
   );
 
@@ -679,7 +737,9 @@ export function DataTable<TData>({
     getRowId,
     onSortingChange: enableSorting ? (u) => setSorting(apply(u, sorting)) : undefined,
     manualSorting: manualSort,
-    onRowSelectionChange: enableRowSelection ? (u) => setRowSelection(apply(u, rowSelection)) : undefined,
+    onRowSelectionChange: enableRowSelection
+      ? (u) => setRowSelection(apply(u, rowSelection))
+      : undefined,
     onColumnVisibilityChange: (u) => setColumnVisibility(apply(u, columnVisibility)),
     onColumnSizingChange: (u) => setColumnSizing(apply(u, columnSizing)),
     onColumnOrderChange: (u) => setColumnOrder(apply(u, columnOrder)),
@@ -721,14 +781,18 @@ export function DataTable<TData>({
   const multiSort = sorting.length > 1;
   // Whole page selected but more rows exist on other pages: offer the rest.
   const offerAll =
-    withSelectColumn && !!pagination && table.getIsAllPageRowsSelected() && totalRows > table.getRowModel().rows.length;
+    withSelectColumn &&
+    !!pagination &&
+    table.getIsAllPageRowsSelected() &&
+    totalRows > table.getRowModel().rows.length;
   const clear = () => table.resetRowSelection(true);
 
   const rows = table.getRowModel().rows;
   const useRowWindow = rowWindow ?? useAllRows;
   const rowWin = useRowWindow(rows.length, () => tableRef.current?.parentElement ?? null);
   const pinned = (columnPinning.left?.length ?? 0) + (columnPinning.right?.length ?? 0) > 0;
-  const hasFooter = !hasError && !loading && table.getAllLeafColumns().some((c) => c.columnDef.footer != null);
+  const hasFooter =
+    !hasError && !loading && table.getAllLeafColumns().some((c) => c.columnDef.footer != null);
 
   // Sizes and offsets through the CSSOM (strict CSP: no style attributes).
   useIsomorphicLayoutEffect(() => {
@@ -750,7 +814,9 @@ export function DataTable<TData>({
   // Move a column one step (keyboard) or onto another's place (drag).
   const moveColumn = (id: string, to: number | string) => {
     const ids = table.getAllLeafColumns().map((c) => c.id);
-    const order = (columnOrder.length ? columnOrder : ids).filter((c) => c !== '__select' && ids.includes(c));
+    const order = (columnOrder.length ? columnOrder : ids).filter(
+      (c) => c !== '__select' && ids.includes(c),
+    );
     for (const c of ids) if (c !== '__select' && !order.includes(c)) order.push(c);
     const from = order.indexOf(id);
     const target = typeof to === 'number' ? from + to : order.indexOf(to);
@@ -833,9 +899,13 @@ export function DataTable<TData>({
               {headerGroup.headers.map((header) => {
                 const align = header.column.columnDef.meta?.align ?? 'start';
                 const col = header.column;
-                const reorderable = enableColumnReordering && col.id !== '__select' && !col.getIsPinned();
+                const reorderable =
+                  enableColumnReordering && col.id !== '__select' && !col.getIsPinned();
                 const sortable = enableSorting && col.getCanSort();
-                const filterType = !header.isPlaceholder && col.getCanFilter() ? col.columnDef.meta?.filter : undefined;
+                const filterType =
+                  !header.isPlaceholder && col.getCanFilter()
+                    ? col.columnDef.meta?.filter
+                    : undefined;
                 const filterValue = col.getFilterValue();
                 const filterName = filterType ? messages.filterColumn(columnLabel(col)) : '';
                 const filterButton = filterType && (
@@ -849,16 +919,22 @@ export function DataTable<TData>({
                     data-active={filterValue !== undefined || undefined}
                     className={cn(
                       'relative inline-flex size-6 shrink-0 items-center justify-center rounded-shape-min hover:bg-[var(--color-surface-container-high)]',
-                      filterValue === undefined ? 'text-[var(--color-on-surface-variant)]' : 'text-[var(--color-primary)]',
+                      filterValue === undefined
+                        ? 'text-[var(--color-on-surface-variant)]'
+                        : 'text-[var(--color-primary)]',
                     )}
                   >
                     <Filter size="xs" aria-hidden="true" />
                     {filterValue !== undefined && (
-                      <span aria-hidden="true" className="absolute end-0 top-0 size-1.5 rounded-full bg-[var(--color-primary)]" />
+                      <span
+                        aria-hidden="true"
+                        className="absolute end-0 top-0 size-1.5 rounded-full bg-[var(--color-primary)]"
+                      />
                     )}
                   </button>
                 );
-                const label = header.isPlaceholder ? null : enableSorting && header.column.getCanSort() ? (
+                const label = header.isPlaceholder ? null : enableSorting &&
+                  header.column.getCanSort() ? (
                   <button
                     type="button"
                     onClick={header.column.getToggleSortingHandler()}
@@ -871,7 +947,9 @@ export function DataTable<TData>({
                     {multiSort && header.column.getIsSorted() && (
                       <span className="text-[0.625rem] tabular-nums leading-none">
                         <span aria-hidden="true">{header.column.getSortIndex() + 1}</span>
-                        <span className="sr-only">{messages.sortOrder(header.column.getSortIndex() + 1)}</span>
+                        <span className="sr-only">
+                          {messages.sortOrder(header.column.getSortIndex() + 1)}
+                        </span>
                       </span>
                     )}
                     {header.column.getIsSorted() === 'asc' ? (
@@ -897,7 +975,9 @@ export function DataTable<TData>({
                       (enableColumnResizing || reorderable) && 'relative',
                       maxHeight != null && 'sticky top-0 z-[2] bg-[var(--color-surface)]',
                       pinClass(col),
-                      maxHeight != null && col.getIsPinned() && 'z-[3] [tr:hover>&]:bg-[var(--color-surface)]',
+                      maxHeight != null &&
+                        col.getIsPinned() &&
+                        'z-[3] [tr:hover>&]:bg-[var(--color-surface)]',
                       reorderable && 'cursor-grab',
                     )}
                     tabIndex={reorderable && !sortable ? 0 : undefined}
@@ -916,7 +996,8 @@ export function DataTable<TData>({
                     onKeyDown={
                       reorderable
                         ? (e) => {
-                            if (!e.altKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight')) return;
+                            if (!e.altKey || (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight'))
+                              return;
                             e.preventDefault();
                             const forward = (e.key === 'ArrowRight') === (dir !== 'rtl');
                             moveColumn(col.id, forward ? 1 : -1);
@@ -946,9 +1027,13 @@ export function DataTable<TData>({
                             onChange={col.setFilterValue}
                             getOptions={() =>
                               col.columnDef.meta?.filterOptions ??
-                              [...new Set(table.getCoreRowModel().flatRows.map((r) => String(r.getValue(col.id))))].sort((a, b) =>
-                                a.localeCompare(b, locale, { numeric: true }),
-                              )
+                              [
+                                ...new Set(
+                                  table
+                                    .getCoreRowModel()
+                                    .flatRows.map((r) => String(r.getValue(col.id))),
+                                ),
+                              ].sort((a, b) => a.localeCompare(b, locale, { numeric: true }))
                             }
                           />
                         </React.Suspense>
@@ -976,7 +1061,10 @@ export function DataTable<TData>({
                           const grow = (e.key === 'ArrowRight') === (dir !== 'rtl');
                           const min = col.columnDef.minSize ?? 20;
                           const max = col.columnDef.maxSize ?? 1000;
-                          const size = Math.min(max, Math.max(min, header.getSize() + (grow ? 16 : -16)));
+                          const size = Math.min(
+                            max,
+                            Math.max(min, header.getSize() + (grow ? 16 : -16)),
+                          );
                           table.setColumnSizing((s) => ({ ...s, [col.id]: size }));
                         }}
                         className={cn(
@@ -1031,7 +1119,11 @@ export function DataTable<TData>({
                     measure={rowWin.measure}
                     expandLabel={messages.expandRow}
                     collapseLabel={messages.collapseRow}
-                    dragProps={reorderRows && row.depth === 0 ? rowReorder.itemProps([0, row.index]) : undefined}
+                    dragProps={
+                      reorderRows && row.depth === 0
+                        ? rowReorder.itemProps([0, row.index])
+                        : undefined
+                    }
                   />
                 );
               })}
@@ -1058,7 +1150,11 @@ export function DataTable<TData>({
                   return (
                     <TableCell
                       key={footer.id}
-                      ref={pinned || enableColumnResizing ? placeCell(col, enableColumnResizing) : undefined}
+                      ref={
+                        pinned || enableColumnResizing
+                          ? placeCell(col, enableColumnResizing)
+                          : undefined
+                      }
                       className={cn(
                         alignText[col.columnDef.meta?.align ?? 'start'],
                         compact && 'py-1.5',
@@ -1071,7 +1167,9 @@ export function DataTable<TData>({
                         enableColumnResizing && 'truncate',
                       )}
                     >
-                      {footer.isPlaceholder ? null : flexRender(col.columnDef.footer, footer.getContext())}
+                      {footer.isPlaceholder
+                        ? null
+                        : flexRender(col.columnDef.footer, footer.getContext())}
                     </TableCell>
                   );
                 })}

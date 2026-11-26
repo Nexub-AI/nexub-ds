@@ -1,6 +1,6 @@
 {
   "name": "@nexub/marketing",
-  "version": "11.9.0",
+  "version": "12.0.0",
   "description": "Marketing sections for the Nexub Design System: hero, stats, testimonials, products, pricing, FAQ, CTA, nav and footer, built on @nexub/react in marketing mode. Server components by default.",
   "type": "module",
   "license": "MIT",
@@ -37,12 +37,13 @@
       "types": "./dist/components/*/index.d.ts",
       "default": "./dist/components/*/index.js"
     },
+    "./css-manifest.json": "./dist/css-manifest.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css",
+    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css && node ../../scripts/build-css-manifest.mjs .",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

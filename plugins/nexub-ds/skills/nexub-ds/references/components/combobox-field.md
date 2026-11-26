@@ -23,6 +23,7 @@ A labelled, searchable single choice that looks like a Select. For lists longer 
 | --- | --- | --- | --- |
 | `label` (required) | `ReactNode` |  | The field label. `ComboboxPicker` is the same control without it (name it with `aria-label`). |
 | `options` (required) | `ComboboxOption[]` |  | `{ value, label, description?, keywords?, disabled?, group? }`. `description` is a second line; `keywords` and `description` are searched too; `group` lists the option under a heading. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `value / defaultValue` | `string \| null` |  | The picked value, `null` for none. |
 | `onValueChange` | `(value: string \| null) => void` |  | Called with the picked value, or `null` from the none option. |
 | `noneOption` | `string` |  | A first option that clears the value, e.g. "No manager". |

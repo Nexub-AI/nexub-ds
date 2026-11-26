@@ -495,7 +495,8 @@
     ],
     "webOnly": [],
     "onPurpose": [
-      "sheet"
+      "sheet",
+      "virtualizeAbove"
     ],
     "nativeOnly": [
       "error",
@@ -700,7 +701,8 @@
       "aria-required",
       "name",
       "searchPlaceholder",
-      "sheet"
+      "sheet",
+      "virtualizeAbove"
     ],
     "nativeOnly": [
       "error",

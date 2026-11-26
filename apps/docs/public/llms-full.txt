@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v11.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v12.0.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v11.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v12.0.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -3162,6 +3162,7 @@ A labelled, searchable single choice that looks like a Select. For lists longer 
 | --- | --- | --- | --- |
 | `label` (required) | `ReactNode` |  | The field label. `ComboboxPicker` is the same control without it (name it with `aria-label`). |
 | `options` (required) | `ComboboxOption[]` |  | `{ value, label, description?, keywords?, disabled?, group? }`. `description` is a second line; `keywords` and `description` are searched too; `group` lists the option under a heading. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `value / defaultValue` | `string \| null` |  | The picked value, `null` for none. |
 | `onValueChange` | `(value: string \| null) => void` |  | Called with the picked value, or `null` from the none option. |
 | `noneOption` | `string` |  | A first option that clears the value, e.g. "No manager". |
@@ -3340,6 +3341,7 @@ A search box over a filtered, grouped list you move through with the keyboard. I
 | `emptyText` | `ReactNode` | `'No results found.'` | Shown when the search finds nothing. |
 | `onSearch / loading` | `(text: string) => void / boolean` |  | Server search: while `onSearch` is set the list is not filtered here. `loading` shows a busy row. |
 | `autoFocus` | `boolean` | `true` | Focus the search box on mount. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more items than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `maxHeight` | `string` | `'20rem'` | The list scrolls past this height (any CSS length). |
 
 ## Example: Default
@@ -8663,6 +8665,7 @@ Pick several options as chips, with search, "+N more" and an optional create opt
 | `options` (required) | `{ value: string; label: string }[]` |  | The options to pick from. |
 | `value / defaultValue` | `string[]` |  | Selected values, controlled or not. |
 | `onValueChange` | `(value: string[]) => void` |  | Called with the new selection. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `maxVisibleChips` | `number` | `3` | Chips shown before the rest collapse into "+N more". |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types. When set, options are shown as given, so you can fetch them. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option. |
