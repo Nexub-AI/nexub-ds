@@ -5,7 +5,7 @@
 // Up to 10.0 the minor "rolled over" into the major after 9 (1.9 → 2.0 … 9.9 → 10.0).
 // 10.0 is the last rollover: from 10.x on the minor just keeps counting, and a major
 // happens only by RFC (scripts/check-changesets.mjs rejects `major` in CI until then).
-// 11.0 was accepted by RFC_11.0.md; 12.0 is the accepted one now (RFC_12.0.md, 2026-11-26):
+// 11.0 was accepted by RFC_11.0.md; 12.0 is the accepted one now (RFC_12.0.md, accepted 2026-11-26):
 // APPROVED_MAJOR below lets 11.x → 12.0.0 through.
 //
 // Runs after `changeset version` (root script `version-packages`), which has

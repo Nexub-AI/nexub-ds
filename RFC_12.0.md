@@ -6,7 +6,7 @@ Open for comments for at least **3 working days** from the day this issue is ope
 
 ## Decision
 
-**Accepted with changes** by the owner on 2026-11-26, after the comment period. The answers were given on 2026-11-25:
+**Accepted with changes** by the owner on 2026-11-26. The owner closed the comment period at about 14:15 UTC, about 4.5 hours before the 3 working days were up; no comments came in after the owner's answers on 2026-11-25. The answers were given on 2026-11-25:
 
 1. **The v3 compatibility defaults:** option (a). `tailwind-v3-compat.css` stays in 12.0, deprecated, and goes in 13.0.
 2. **Promotions:** the 27 components listed under Promotions. That's every component that meets the GOVERNANCE.md rule, not the roadmap's 30.
