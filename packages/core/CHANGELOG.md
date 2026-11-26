@@ -1,5 +1,7 @@
 # @nexub/core
 
+## 12.0.0
+
 ## 11.9.0
 
 ### Minor Changes
