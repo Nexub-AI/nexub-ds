@@ -7,7 +7,12 @@ import { OnboardingPage, type OnboardingStep } from './index.js';
 
 const steps = (over: Partial<OnboardingStep>[] = []): OnboardingStep[] =>
   [
-    { id: 'use', title: 'What will you use it for?', description: 'Pick one.', content: <p>Use content</p> },
+    {
+      id: 'use',
+      title: 'What will you use it for?',
+      description: 'Pick one.',
+      content: <p>Use content</p>,
+    },
     { id: 'team', title: 'Invite your team', optional: true, content: <p>Team content</p> },
     { id: 'alerts', title: 'Choose your alerts', content: <p>Alerts content</p> },
   ].map((s, i) => ({ ...s, ...over[i] }));
@@ -65,7 +70,9 @@ describe('OnboardingPage', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Could not save');
     await userEvent.click(next);
     expect(screen.getByRole('alert')).toHaveTextContent('plain');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('What will you use it for?');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'What will you use it for?',
+    );
     await userEvent.click(next);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Invite your team');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
@@ -84,7 +91,13 @@ describe('OnboardingPage', () => {
 
   it('skips without onSkip, and stays on the last step when completing fails', async () => {
     const all = steps([{}, {}, { optional: true }]);
-    render(<OnboardingPage steps={all} defaultStep={2} onComplete={() => Promise.reject(new Error('Try again'))} />);
+    render(
+      <OnboardingPage
+        steps={all}
+        defaultStep={2}
+        onComplete={() => Promise.reject(new Error('Try again'))}
+      />,
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Skip' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Try again');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Choose your alerts');
@@ -92,23 +105,41 @@ describe('OnboardingPage', () => {
 
   it('can be controlled, gives the step its context, and shows outside loading and error', async () => {
     const onStepChange = vi.fn();
-    const content = vi.fn((ctx: { index: number; total: number; next: () => void; goTo: (i: number) => void; back: () => void }) => (
-      <>
-        <button type="button" onClick={ctx.next}>
-          Inner next
-        </button>
-        <button type="button" onClick={() => ctx.goTo(99)}>
-          Jump
-        </button>
-      </>
-    ));
+    const content = vi.fn(
+      (ctx: {
+        index: number;
+        total: number;
+        next: () => void;
+        goTo: (i: number) => void;
+        back: () => void;
+      }) => (
+        <>
+          <button type="button" onClick={ctx.next}>
+            Inner next
+          </button>
+          <button type="button" onClick={() => ctx.goTo(99)}>
+            Jump
+          </button>
+        </>
+      ),
+    );
     const all = steps([{ content }]);
-    const { rerender } = render(<OnboardingPage steps={all} step={0} onStepChange={onStepChange} onComplete={() => {}} error="We are offline" />);
+    const { rerender } = render(
+      <OnboardingPage
+        steps={all}
+        step={0}
+        onStepChange={onStepChange}
+        onComplete={() => {}}
+        error="We are offline"
+      />,
+    );
     expect(content).toHaveBeenCalledWith(expect.objectContaining({ index: 0, total: 3 }));
     expect(screen.getByRole('alert')).toHaveTextContent('We are offline');
     await userEvent.click(screen.getByRole('button', { name: 'Inner next' }));
     expect(onStepChange).toHaveBeenCalledWith(1);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('What will you use it for?');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'What will you use it for?',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Jump' }));
     expect(onStepChange).toHaveBeenLastCalledWith(2);
     rerender(<OnboardingPage steps={all} step={1} onComplete={() => {}} loading />);
@@ -130,13 +161,17 @@ describe('OnboardingPage', () => {
       />,
     );
     await userEvent.click(screen.getByRole('button', { name: 'Finish' }));
-    expect(await screen.findByRole('heading', { level: 1, name: 'Welcome aboard' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Welcome aboard' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Your workspace is ready.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Go to dashboard' })).toBeInTheDocument();
   });
 
   it('renders on the server, and the completion view when there are no steps', () => {
-    expect(renderToString(<OnboardingPage steps={steps()} onComplete={() => {}} />)).toContain('What will you use it for?');
+    expect(renderToString(<OnboardingPage steps={steps()} onComplete={() => {}} />)).toContain(
+      'What will you use it for?',
+    );
     render(<OnboardingPage steps={[]} onComplete={() => {}} />);
     expect(screen.getByRole('status')).toHaveTextContent('You are all set');
   });
