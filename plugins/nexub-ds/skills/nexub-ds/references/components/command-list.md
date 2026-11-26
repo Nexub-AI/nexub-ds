@@ -28,6 +28,7 @@ A search box over a filtered, grouped list you move through with the keyboard. I
 | `emptyText` | `ReactNode` | `'No results found.'` | Shown when the search finds nothing. |
 | `onSearch / loading` | `(text: string) => void / boolean` |  | Server search: while `onSearch` is set the list is not filtered here. `loading` shows a busy row. |
 | `autoFocus` | `boolean` | `true` | Focus the search box on mount. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more items than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `maxHeight` | `string` | `'20rem'` | The list scrolls past this height (any CSS length). |
 
 ## Example: Default

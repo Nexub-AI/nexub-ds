@@ -30,6 +30,7 @@ const entry: ComponentEntry = {
     { name: 'emptyText', type: 'ReactNode', default: "'No results found.'", description: 'Shown when the search finds nothing.' },
     { name: 'onSearch / loading', type: '(text: string) => void / boolean', description: 'Server search: while `onSearch` is set the list is not filtered here. `loading` shows a busy row.' },
     { name: 'autoFocus', type: 'boolean', default: 'true', description: 'Focus the search box on mount.' },
+    { name: 'virtualizeAbove', type: 'number', default: '100', required: false, description: '12.1: with more items than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list.' },
     { name: 'maxHeight', type: 'string', default: "'20rem'", description: 'The list scrolls past this height (any CSS length).' },
   ],
   examples: [{ title: 'Default' }, { title: 'In a dialog' }, { title: 'Server search' }],

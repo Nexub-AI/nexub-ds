@@ -15,6 +15,7 @@ const entry: ComponentEntry = {
     { name: 'options', type: '{ value: string; label: string }[]', required: true, description: 'The options to pick from.' },
     { name: 'value / defaultValue', type: 'string[]', required: false, description: 'Selected values, controlled or not.' },
     { name: 'onValueChange', type: '(value: string[]) => void', required: false, description: 'Called with the new selection.' },
+    { name: 'virtualizeAbove', type: 'number', default: '100', required: false, description: '12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list.' },
     { name: 'maxVisibleChips', type: 'number', default: '3', required: false, description: 'Chips shown before the rest collapse into "+N more".' },
     { name: 'onInputChange', type: '(text: string) => void', required: false, description: 'Called as the user types. When set, options are shown as given, so you can fetch them.' },
     { name: 'onCreate', type: '(text: string) => void', required: false, description: 'Adds a "Create “text”" option when the text matches no option.' },

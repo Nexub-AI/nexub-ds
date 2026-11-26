@@ -91,3 +91,28 @@ describe('ComboboxField (11.1)', () => {
     expect(screen.getByRole('combobox', { name: 'Owner' })).toHaveTextContent('Select…');
   });
 });
+
+describe('ComboboxPicker 12.1: long lists render only the rows in view', () => {
+  const many = Array.from({ length: 400 }, (_, i) => ({ value: `c${i + 1}`, label: `City ${i + 1}` }));
+
+  it('windows the list; End, Home (to the none option) and Enter work over all of it', async () => {
+    const onValueChange = vi.fn();
+    render(<ComboboxPicker options={many} noneOption="No city" aria-label="City" onValueChange={onValueChange} />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'City' }));
+    expect(screen.getAllByRole('option').length).toBeLessThan(40);
+    expect(screen.getAllByRole('option')[0]).toHaveAttribute('aria-setsize', '401');
+    await userEvent.keyboard('{End}');
+    expect(screen.getByRole('option', { name: 'City 400' })).toHaveAttribute('aria-selected', 'true');
+    await userEvent.keyboard('{Home}');
+    expect(screen.getByRole('option', { name: 'No city' })).toHaveAttribute('aria-selected', 'true');
+    await userEvent.keyboard('{End}{Enter}');
+    expect(onValueChange).toHaveBeenLastCalledWith('c400');
+  });
+
+  it('search ranks the whole list', async () => {
+    render(<ComboboxPicker options={many} aria-label="City" />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'City' }));
+    await userEvent.keyboard('City 321');
+    expect(screen.getAllByRole('option')[0]).toHaveAccessibleName('City 321');
+  });
+});

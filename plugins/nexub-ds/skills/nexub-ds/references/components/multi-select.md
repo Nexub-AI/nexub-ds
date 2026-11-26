@@ -13,6 +13,7 @@ Pick several options as chips, with search, "+N more" and an optional create opt
 | `options` (required) | `{ value: string; label: string }[]` |  | The options to pick from. |
 | `value / defaultValue` | `string[]` |  | Selected values, controlled or not. |
 | `onValueChange` | `(value: string[]) => void` |  | Called with the new selection. |
+| `virtualizeAbove` | `number` | `100` | 12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list. |
 | `maxVisibleChips` | `number` | `3` | Chips shown before the rest collapse into "+N more". |
 | `onInputChange` | `(text: string) => void` |  | Called as the user types. When set, options are shown as given, so you can fetch them. |
 | `onCreate` | `(text: string) => void` |  | Adds a "Create “text”" option when the text matches no option. |

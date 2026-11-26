@@ -1827,6 +1827,13 @@
           "type": "string",
           "required": false,
           "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more options than this, only the rows in view render (search, keys and screen readers still see every option)."
         }
       ]
     },
@@ -1988,6 +1995,13 @@
           "type": "string",
           "required": false,
           "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more options than this, only the rows in view render (search, keys and screen readers still see every option)."
         }
       ]
     },
@@ -2058,6 +2072,13 @@
           "required": false,
           "default": "messages.searchPlaceholder",
           "description": "The search box's placeholder."
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more items than this, only the rows in view render (search, keys and screen readers still see every item)."
         }
       ]
     },
@@ -2547,6 +2568,13 @@
           "type": "string",
           "required": false,
           "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more options than this, only the rows in view render (search, keys and screen readers still see every option)."
         }
       ]
     },
@@ -2713,6 +2741,13 @@
           "type": "string",
           "required": false,
           "description": "The picked option's value; `null` (or `undefined` when uncontrolled) for none."
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more options than this, only the rows in view render (search, keys and screen readers still see every option)."
         }
       ]
     },
@@ -6403,6 +6438,13 @@
           "type": "string[]",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "virtualizeAbove",
+          "type": "number",
+          "required": false,
+          "default": "100",
+          "description": "12.1: with more options than this, only the rows in view render (search, keys and screen readers still see every option)."
         }
       ]
     },
