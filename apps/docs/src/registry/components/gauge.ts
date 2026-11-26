@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Progress toward a target on a 270° arc.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '4.5.0',
     related: ['bar-chart', 'line-chart'],
   },

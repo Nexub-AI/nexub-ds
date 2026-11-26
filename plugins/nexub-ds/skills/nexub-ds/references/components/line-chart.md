@@ -2,7 +2,7 @@
 
 Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { LineChart } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/line-chart
 

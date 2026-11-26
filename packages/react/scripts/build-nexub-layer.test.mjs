@@ -59,9 +59,10 @@ describe('compiled', () => {
   });
 
   it.skipIf(!existsSync(new URL('../dist/styles.nexub-layer.css', import.meta.url)))(
-    'the published dist file matches dist/styles.css',
+    '12.0: dist/styles.css is the layered file; the 11.9 name is the same bytes',
     () => {
-      expect(unprefix(read('../dist/styles.nexub-layer.css'))).toBe(read('../dist/styles.css'));
+      expect(read('../dist/styles.nexub-layer.css')).toBe(read('../dist/styles.css'));
+      expect(read('../dist/styles.css')).not.toMatch(/@layer (?!nexub\.)[\w-]+[;{,]/);
     },
   );
 });

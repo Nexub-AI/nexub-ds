@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.',
     category: 'Layout',
     package: '@nexub/patterns',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.5.0',
   },
   props: [

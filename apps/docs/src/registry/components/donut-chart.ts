@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '3.2.0',
     related: ['bar-chart'],
   },

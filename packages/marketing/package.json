@@ -42,7 +42,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

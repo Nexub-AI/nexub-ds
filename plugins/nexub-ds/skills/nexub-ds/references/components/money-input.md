@@ -2,7 +2,7 @@
 
 An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { MoneyInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/money-input
 

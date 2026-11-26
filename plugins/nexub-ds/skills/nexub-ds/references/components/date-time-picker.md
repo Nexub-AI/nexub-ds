@@ -2,7 +2,7 @@
 
 A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { DateTimePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/date-time-picker
 

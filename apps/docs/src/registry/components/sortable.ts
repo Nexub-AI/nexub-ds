@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A list people reorder by dragging or with Alt+Arrow keys on a handle.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.5.0',
     related: ['kanban', 'data-table'],
   },

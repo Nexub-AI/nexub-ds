@@ -2,7 +2,7 @@
 
 One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { MessageBubble } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/message-bubble
 

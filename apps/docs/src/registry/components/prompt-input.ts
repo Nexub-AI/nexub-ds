@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.',
     category: 'AI',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.8.0',
     related: ['message-bubble', 'conversation', 'textarea'],
   },

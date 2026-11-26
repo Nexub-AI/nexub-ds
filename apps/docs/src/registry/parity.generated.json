@@ -1018,6 +1018,7 @@
     "native": "StepProgress",
     "shared": [
       "completed",
+      "current",
       "nonLinear",
       "onStepChange",
       "orientation",
@@ -1025,9 +1026,7 @@
     ],
     "webOnly": [],
     "onPurpose": [],
-    "nativeOnly": [
-      "current"
-    ]
+    "nativeOnly": []
   },
   "inline-edit": {
     "web": "InlineEdit",

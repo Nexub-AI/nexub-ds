@@ -2,7 +2,7 @@
 
 A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { CheckboxCard } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/checkbox-card
 

@@ -2,7 +2,7 @@
 
 A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { TimePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/time-picker
 

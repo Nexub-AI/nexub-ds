@@ -2,7 +2,7 @@
 
 A month or week grid of events. Display only: your app owns the events and what a click does.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { EventCalendar } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/event-calendar
 
