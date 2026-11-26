@@ -9,6 +9,10 @@ import { type ColumnDef } from '@tanstack/react-table';
 import { DataTable, type DataTableColumn } from './DataTable.js';
 import { NexubProvider } from '../NexubProvider/NexubProvider.js';
 
+// ColumnFilter and ViewOptions are React.lazy chunks. A cold import can pass 1 s (the default)
+// under CI load, more so with the React Compiler transform on (`test:compiler`).
+const LAZY = { timeout: 5_000 };
+
 interface Person {
   name: string;
   age: number;
@@ -33,7 +37,14 @@ describe('DataTable', () => {
           grid
           enableSorting
           aria-label="People"
-          columns={[...columns, { id: 'act', header: 'Actions', cell: ({ row }) => <button>Edit {row.original.name}</button> }]}
+          columns={[
+            ...columns,
+            {
+              id: 'act',
+              header: 'Actions',
+              cell: ({ row }) => <button>Edit {row.original.name}</button>,
+            },
+          ]}
           data={data}
         />
         <button>After</button>
@@ -102,7 +113,12 @@ describe('DataTable', () => {
     const user = userEvent.setup();
     let submitted = false;
     render(
-      <form onSubmit={(e) => { e.preventDefault(); submitted = true; }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submitted = true;
+        }}
+      >
         <DataTable columns={columns} data={data} enableSorting />
       </form>,
     );
@@ -111,14 +127,15 @@ describe('DataTable', () => {
   });
 
   it('forwards className', () => {
-    render(
-      <DataTable columns={columns} data={data} className="custom-class" data-testid="dt" />,
-    );
+    render(<DataTable columns={columns} data={data} className="custom-class" data-testid="dt" />);
     expect(screen.getByTestId('dt')).toHaveClass('custom-class');
   });
 
   describe('1.8 adoption', () => {
-    interface Row { name: string; mrr: number }
+    interface Row {
+      name: string;
+      mrr: number;
+    }
     const cols: DataTableColumn<Row>[] = [
       { accessorKey: 'name', header: 'Name' },
       { accessorKey: 'mrr', header: 'MRR', meta: { align: 'end' } },
@@ -169,7 +186,13 @@ describe('DataTable', () => {
 
     it('renders no style attribute (strict CSP)', () => {
       const html = renderToString(
-        <DataTable columns={cols} data={rows} caption="Accounts" enableSorting pagination={{ pageSize: 1 }} />,
+        <DataTable
+          columns={cols}
+          data={rows}
+          caption="Accounts"
+          enableSorting
+          pagination={{ pageSize: 1 }}
+        />,
       );
       expect(html).not.toContain('style=');
     });
@@ -206,7 +229,15 @@ describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
   });
 
   it('offers "Select all N" when a whole page is selected', async () => {
-    render(<DataTable columns={columns} data={many} enableRowSelection selectionColumn pagination={{ pageSize: 2 }} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={many}
+        enableRowSelection
+        selectionColumn
+        pagination={{ pageSize: 2 }}
+      />,
+    );
     await userEvent.click(screen.getByRole('checkbox', { name: 'Select all rows on this page' }));
     await userEvent.click(screen.getByRole('button', { name: 'Select all 5' }));
     expect(screen.getByText('5 selected')).toBeInTheDocument();
@@ -234,7 +265,14 @@ describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
   it('view menu switches density and hides columns', async () => {
     const { container } = render(<DataTable columns={columns} data={data} viewOptions />);
     // The menu loads lazily; the plain button stands in until then.
-    await vi.waitFor(() => expect(screen.getByRole('button', { name: 'View' })).toHaveAttribute('aria-haspopup', 'menu'));
+    await vi.waitFor(
+      () =>
+        expect(screen.getByRole('button', { name: 'View' })).toHaveAttribute(
+          'aria-haspopup',
+          'menu',
+        ),
+      LAZY,
+    );
     await userEvent.click(screen.getByRole('button', { name: 'View' }));
     await userEvent.click(screen.getByRole('menuitemradio', { name: 'Compact' }));
     expect(container.firstElementChild).toHaveAttribute('data-density', 'compact');
@@ -254,11 +292,17 @@ describe('DataTable 5.3: selection, bulk actions, density, view menu', () => {
   });
 });
 
-
 describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
   it('resize handles change a column width with the keyboard', async () => {
     const onSizing = vi.fn();
-    render(<DataTable columns={columns} data={data} enableColumnResizing onColumnSizingChange={onSizing} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableColumnResizing
+        onColumnSizingChange={onSizing}
+      />,
+    );
     const handle = screen.getByRole('separator', { name: 'Resize Name' });
     expect(handle).toHaveAttribute('aria-valuenow', '150');
     handle.focus();
@@ -270,7 +314,14 @@ describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
 
   it('Alt+Arrow moves a column and announces it', async () => {
     const onOrder = vi.fn();
-    render(<DataTable columns={columns} data={data} enableColumnReordering onColumnOrderChange={onOrder} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableColumnReordering
+        onColumnOrderChange={onOrder}
+      />,
+    );
     screen.getByRole('columnheader', { name: 'Name' }).focus();
     await userEvent.keyboard('{Alt>}{ArrowRight}{/Alt}');
     expect(onOrder).toHaveBeenLastCalledWith(['age', 'name']);
@@ -278,7 +329,14 @@ describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
   });
 
   it('pinned columns are sticky at their offset', () => {
-    render(<DataTable columns={columns} data={data} columnPinning={{ left: ['name'] }} enableColumnResizing />);
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        columnPinning={{ left: ['name'] }}
+        enableColumnResizing
+      />,
+    );
     const head = screen.getByRole('columnheader', { name: /Name/ });
     expect(head).toHaveClass('sticky');
     expect(head).not.toHaveClass('relative');
@@ -296,7 +354,10 @@ describe('DataTable 5.4: resize, reorder, pin, sticky header', () => {
 describe('DataTable sub-rows', () => {
   it('indents children under an expand toggle', async () => {
     type Row = { name: string; children?: Row[] };
-    const data: Row[] = [{ name: 'Acme', children: [{ name: 'Acme EU' }, { name: 'Acme US' }] }, { name: 'Globex' }];
+    const data: Row[] = [
+      { name: 'Acme', children: [{ name: 'Acme EU' }, { name: 'Acme US' }] },
+      { name: 'Globex' },
+    ];
     render(
       <DataTable<Row>
         caption="Accounts"
@@ -316,7 +377,9 @@ describe('DataTable sub-rows', () => {
 
 describe('DataTable 7.4: loading and emptyState', () => {
   it('loading shows skeleton rows (pageSize) and sets aria-busy', () => {
-    const { container } = render(<DataTable columns={columns} data={data} loading pagination={{ pageSize: 3 }} />);
+    const { container } = render(
+      <DataTable columns={columns} data={data} loading pagination={{ pageSize: 3 }} />,
+    );
     expect(screen.getByRole('table')).toHaveAttribute('aria-busy', 'true');
     const skel = container.querySelectorAll('tbody tr[data-loading]');
     expect(skel).toHaveLength(3);
@@ -326,7 +389,10 @@ describe('DataTable 7.4: loading and emptyState', () => {
 
   it('renders emptyState in a full-width row when there are no rows', () => {
     render(<DataTable columns={columns} data={[]} emptyState={<p>Nothing here</p>} />);
-    expect(screen.getByText('Nothing here').closest('td')).toHaveAttribute('colspan', String(columns.length));
+    expect(screen.getByText('Nothing here').closest('td')).toHaveAttribute(
+      'colspan',
+      String(columns.length),
+    );
     expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy');
   });
 });
@@ -336,7 +402,10 @@ describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', 
 
   it('selecting one row re-renders only that row', async () => {
     const cell = vi.fn(({ row }: { row: { original: Person } }) => row.original.name);
-    const cols: DataTableColumn<Person>[] = [{ accessorKey: 'name', header: 'Name', cell }, { accessorKey: 'age', header: 'Age' }];
+    const cols: DataTableColumn<Person>[] = [
+      { accessorKey: 'name', header: 'Name', cell },
+      { accessorKey: 'age', header: 'Age' },
+    ];
     render(<DataTable columns={cols} data={many} enableRowSelection />);
     expect(cell).toHaveBeenCalledTimes(5);
     cell.mockClear();
@@ -357,28 +426,58 @@ describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', 
   it('controlled sort: reports header clicks, renders the given sort', async () => {
     const onSortChange = vi.fn();
     const { rerender } = render(
-      <DataTable columns={columns} data={data} enableSorting sort={[]} onSortChange={onSortChange} />,
+      <DataTable
+        columns={columns}
+        data={data}
+        enableSorting
+        sort={[]}
+        onSortChange={onSortChange}
+      />,
     );
     await userEvent.click(screen.getByRole('button', { name: /Age/ }));
     expect(onSortChange).toHaveBeenCalledWith([{ id: 'age', desc: true }]); // numbers sort descending first
     expect(screen.getAllByRole('row')[1]).toHaveTextContent('Alice'); // still unsorted: controlled
-    rerender(<DataTable columns={columns} data={data} enableSorting sort={[{ id: 'age', desc: false }]} onSortChange={onSortChange} />);
+    rerender(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableSorting
+        sort={[{ id: 'age', desc: false }]}
+        onSortChange={onSortChange}
+      />,
+    );
     expect(screen.getAllByRole('row')[1]).toHaveTextContent('Bob');
-    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute('aria-sort', 'ascending');
+    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute(
+      'aria-sort',
+      'ascending',
+    );
   });
 
   it('manualSort: shows the sort but keeps the given row order', async () => {
     const onSortChange = vi.fn();
-    render(<DataTable columns={columns} data={data} enableSorting manualSort onSortChange={onSortChange} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={data}
+        enableSorting
+        manualSort
+        onSortChange={onSortChange}
+      />,
+    );
     await userEvent.click(screen.getByRole('button', { name: /Age/ }));
     expect(onSortChange).toHaveBeenCalledWith([{ id: 'age', desc: true }]); // numbers sort descending first
-    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute('aria-sort', 'descending');
+    expect(screen.getByRole('columnheader', { name: /Age/ })).toHaveAttribute(
+      'aria-sort',
+      'descending',
+    );
     expect(screen.getAllByRole('row')[1]).toHaveTextContent('Alice');
   });
 
   it('controlled page and pageSize', async () => {
     const onPageChange = vi.fn();
-    render(<DataTable columns={columns} data={many} page={1} pageSize={2} onPageChange={onPageChange} />);
+    render(
+      <DataTable columns={columns} data={many} page={1} pageSize={2} onPageChange={onPageChange} />,
+    );
     expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
     expect(screen.getAllByRole('row')[1]).toHaveTextContent('P2');
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
@@ -389,7 +488,14 @@ describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', 
   it('manualPagination: renders data as the page, counts pages from rowCount', async () => {
     const onPageChange = vi.fn();
     render(
-      <DataTable columns={columns} data={many.slice(0, 2)} manualPagination rowCount={50} pageSize={2} onPageChange={onPageChange} />,
+      <DataTable
+        columns={columns}
+        data={many.slice(0, 2)}
+        manualPagination
+        rowCount={50}
+        pageSize={2}
+        onPageChange={onPageChange}
+      />,
     );
     expect(screen.getByText('Page 1 of 25')).toBeInTheDocument();
     expect(screen.getAllByRole('row')).toHaveLength(3);
@@ -401,7 +507,14 @@ describe('DataTable 7.7: memoised rows, controlled and manual sort/pagination', 
 
 describe('DataTable 10.5: errorState', () => {
   it('shows in one full-width row and wins over loading and the rows', () => {
-    const { container } = renderState(<DataTable columns={columns} data={data} loading errorState={<ErrorState title="Failed" />} />);
+    const { container } = renderState(
+      <DataTable
+        columns={columns}
+        data={data}
+        loading
+        errorState={<ErrorState title="Failed" />}
+      />,
+    );
     const cell = stateScreen.getByRole('heading', { name: 'Failed' }).closest('td')!;
     expect(cell.getAttribute('colspan')).toBe(String(columns.length));
     expect(container.querySelectorAll('tbody tr')).toHaveLength(1);
@@ -426,14 +539,18 @@ describe('DataTable 10.7: footer and column filters', () => {
       accessorKey: 'age',
       header: 'Age',
       meta: { align: 'end', filter: 'number-range' },
-      footer: ({ table }) => table.getFilteredRowModel().rows.reduce((sum, r) => sum + r.original.age, 0),
+      footer: ({ table }) =>
+        table.getFilteredRowModel().rows.reduce((sum, r) => sum + r.original.age, 0),
     },
   ];
   const bodyNames = (container: HTMLElement) =>
     Array.from(container.querySelectorAll('tbody tr')).map((r) => r.firstElementChild!.textContent);
   /** The popover loads lazily; the plain button stands in until then. */
   const openFilter = async (name: string | RegExp) => {
-    await vi.waitFor(() => expect(screen.getByRole('button', { name })).toHaveAttribute('aria-haspopup', 'dialog'));
+    await vi.waitFor(
+      () => expect(screen.getByRole('button', { name })).toHaveAttribute('aria-haspopup', 'dialog'),
+      LAZY,
+    );
     await userEvent.click(screen.getByRole('button', { name }));
     return screen.getByRole('dialog');
   };
@@ -456,12 +573,16 @@ describe('DataTable 10.7: footer and column filters', () => {
   });
 
   it('text filter: narrows the rows and the footer sum, marks the button, and Clear restores them', async () => {
-    const { container } = render(<DataTable columns={memberColumns} data={members} emptyState="No members yet" />);
+    const { container } = render(
+      <DataTable columns={memberColumns} data={members} emptyState="No members yet" />,
+    );
     const dialog = await openFilter('Filter Name');
     await userEvent.type(within(dialog).getByRole('textbox', { name: 'Filter Name' }), 'BO');
     expect(bodyNames(container)).toEqual(['Bob']);
     expect(container.querySelector('tfoot td:last-child')).toHaveTextContent('25');
-    expect(screen.getByRole('button', { name: 'Filter Name, 1 filter' })).toHaveAttribute('data-active');
+    expect(screen.getByRole('button', { name: 'Filter Name, 1 filter' })).toHaveAttribute(
+      'data-active',
+    );
     // Filters hid every row: "no results", not the table's empty state.
     await userEvent.type(within(dialog).getByRole('textbox'), 'zz');
     expect(screen.getByText('No results found.')).toBeInTheDocument();
@@ -474,7 +595,11 @@ describe('DataTable 10.7: footer and column filters', () => {
   it('select filter: a checkbox per distinct value', async () => {
     const { container } = render(<DataTable columns={memberColumns} data={members} />);
     const dialog = await openFilter('Filter Role');
-    expect(within(dialog).getAllByRole('checkbox').map((c) => c.closest('label')!.textContent)).toEqual(['Admin', 'Member']);
+    expect(
+      within(dialog)
+        .getAllByRole('checkbox')
+        .map((c) => c.closest('label')!.textContent),
+    ).toEqual(['Admin', 'Member']);
     await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
     expect(bodyNames(container)).toEqual(['Bob', 'Carol']);
     await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Admin' }));
@@ -498,12 +623,19 @@ describe('DataTable 10.7: footer and column filters', () => {
   it('controlled: rows follow `columnFilters`, edits go to onColumnFiltersChange', async () => {
     const onColumnFiltersChange = vi.fn();
     const { container } = render(
-      <DataTable columns={memberColumns} data={members} columnFilters={[{ id: 'role', value: ['Admin'] }]} onColumnFiltersChange={onColumnFiltersChange} />,
+      <DataTable
+        columns={memberColumns}
+        data={members}
+        columnFilters={[{ id: 'role', value: ['Admin'] }]}
+        onColumnFiltersChange={onColumnFiltersChange}
+      />,
     );
     expect(bodyNames(container)).toEqual(['Alice']);
     const dialog = await openFilter(/Filter Role/);
     await userEvent.click(within(dialog).getByRole('checkbox', { name: 'Member' }));
-    expect(onColumnFiltersChange).toHaveBeenCalledWith([{ id: 'role', value: ['Admin', 'Member'] }]);
+    expect(onColumnFiltersChange).toHaveBeenCalledWith([
+      { id: 'role', value: ['Admin', 'Member'] },
+    ]);
     expect(bodyNames(container)).toEqual(['Alice']);
     await userEvent.click(within(dialog).getByRole('button', { name: 'Clear filter' }));
     expect(onColumnFiltersChange).toHaveBeenLastCalledWith([]);
@@ -511,7 +643,9 @@ describe('DataTable 10.7: footer and column filters', () => {
 
   it('manualFiltering: the state changes but rows are left to the server; filterOptions lists the choices', async () => {
     const onColumnFiltersChange = vi.fn();
-    const serverColumns = memberColumns.map((c, i) => (i === 1 ? { ...c, meta: { ...c.meta, filterOptions: ['Admin', 'Member', 'Owner'] } } : c));
+    const serverColumns = memberColumns.map((c, i) =>
+      i === 1 ? { ...c, meta: { ...c.meta, filterOptions: ['Admin', 'Member', 'Owner'] } } : c,
+    );
     const { container } = render(
       <DataTable
         columns={serverColumns}
@@ -532,7 +666,9 @@ describe('DataTable 10.7: footer and column filters', () => {
   });
 
   it('a filter change goes back to the first page; sorting and aria-sort still work beside the filter', async () => {
-    const { container } = render(<DataTable columns={memberColumns} data={members} pageSize={1} enableSorting />);
+    const { container } = render(
+      <DataTable columns={memberColumns} data={members} pageSize={1} enableSorting />,
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Next' }));
     expect(screen.getByText('Page 2 of 3')).toBeInTheDocument();
     const dialog = await openFilter('Filter Role');
@@ -541,14 +677,24 @@ describe('DataTable 10.7: footer and column filters', () => {
     await userEvent.keyboard('{Escape}');
     await userEvent.click(screen.getByRole('button', { name: 'Name' }));
     await userEvent.click(screen.getByRole('button', { name: 'Name' }));
-    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute('aria-sort', 'descending');
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute(
+      'aria-sort',
+      'descending',
+    );
     expect(bodyNames(container)).toEqual(['Carol']);
   });
 
   it('grid: the filter button is a stop in its header cell, and keys inside the popover stay there', async () => {
     const user = userEvent.setup();
     render(<DataTable grid aria-label="Members" columns={memberColumns} data={members} />);
-    await vi.waitFor(() => expect(screen.getByRole('button', { name: 'Filter Name' })).toHaveAttribute('aria-haspopup', 'dialog'));
+    await vi.waitFor(
+      () =>
+        expect(screen.getByRole('button', { name: 'Filter Name' })).toHaveAttribute(
+          'aria-haspopup',
+          'dialog',
+        ),
+      LAZY,
+    );
     await user.tab();
     expect(screen.getByRole('button', { name: 'Filter Name' })).toHaveFocus();
     await user.keyboard('{ArrowRight}');

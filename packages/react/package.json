@@ -60,6 +60,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
+    "test:compiler": "REACT_COMPILER=1 vitest run --coverage=false",
     "test:leaks": "LEAKS=1 vitest run src/leaks.test.tsx --coverage=false --testTimeout=600000",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -117,6 +118,7 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "7.29.13",
     "@nexub/themes": "workspace:*",
     "@nexub/tokens": "workspace:*",
     "@playwright/test": "1.65.1",
@@ -133,6 +135,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "5.1.0",
     "axe-core": "^4.14.1",
+    "babel-plugin-react-compiler": "1.0.0",
     "fast-check": "^4.10.2",
     "jsdom": "^31.0.1",
     "postcss": "^8.5.33",
