@@ -29,3 +29,5 @@ graphify-out/
 screenshots-ios/
 screenshots-android/
 screenshot-diffs/
+packages/react/.css-page/
+packages/react/.measure/

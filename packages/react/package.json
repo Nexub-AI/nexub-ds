@@ -49,12 +49,13 @@
       "default": "./dist/components/*/index.js"
     },
     "./accessibility.json": "./accessibility.json",
+    "./css-manifest.json": "./dist/css-manifest.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && rm -f dist/vendor/*.d.ts && node scripts/check-dts.mjs && node scripts/build-nexub-layer.mjs src/styles.css dist/styles.css dist/styles.nexub-layer.css && cp -R ../themes/src/fonts dist/fonts",
+    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && rm -f dist/vendor/*.d.ts && node scripts/check-dts.mjs && node scripts/build-nexub-layer.mjs src/styles.css dist/styles.css dist/styles.nexub-layer.css && node ../../scripts/build-css-manifest.mjs . && cp -R ../themes/src/fonts dist/fonts",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

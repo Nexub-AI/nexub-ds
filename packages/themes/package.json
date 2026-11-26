@@ -27,7 +27,9 @@
   ],
   "exports": {
     "./base": "./src/base.css",
+    "./base-lean": "./src/base-lean.css",
     "./core": "./src/core.css",
+    "./core-lean": "./src/core-lean.css",
     "./fonts": "./src/fonts.css",
     "./light": "./src/light.css",
     "./dark": "./src/dark.css",
@@ -41,12 +43,15 @@
     "./divisions/autonomous": "./src/divisions/autonomous.css",
     "./products": "./src/products.css",
     "./marketing": "./src/marketing.css",
-    "./vivid": "./src/vivid.css"
+    "./vivid": "./src/vivid.css",
+    "./parts/*.css": "./src/parts/*.css",
+    "./parts/index.json": "./src/parts/index.json"
   },
   "scripts": {
     "build:fonts": "node scripts/build-fonts.mjs",
     "build:products": "node scripts/build-products.mjs",
-    "test": "node --test scripts/*.test.mjs"
+    "test": "node --test scripts/*.test.mjs",
+    "build:parts": "node scripts/build-parts.mjs"
   },
   "browserslist": [
     "last 2 Chrome versions",
