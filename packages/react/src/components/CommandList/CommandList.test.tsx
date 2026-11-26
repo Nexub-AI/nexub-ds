@@ -7,7 +7,14 @@ import { Dialog } from '../Dialog/Dialog.js';
 import { CommandList, type CommandListItem } from './CommandList.js';
 
 const items: CommandListItem[] = [
-  { value: 'new', label: 'New invoice', description: 'Create a draft', keywords: ['bill'], group: 'Actions', shortcut: ['⌘', 'N'] },
+  {
+    value: 'new',
+    label: 'New invoice',
+    description: 'Create a draft',
+    keywords: ['bill'],
+    group: 'Actions',
+    shortcut: ['⌘', 'N'],
+  },
   { value: 'export', label: 'Export CSV', group: 'Actions' },
   { value: 'acme', label: 'Acme Corp', group: 'Customers' },
   { value: 'zeta', label: 'Zeta Holdings', disabled: true, group: 'Customers' },
@@ -22,7 +29,10 @@ describe('CommandList (11.2)', () => {
     const listbox = screen.getByRole('listbox');
     expect(within(listbox).getByText('Actions')).toBeInTheDocument();
     expect(within(listbox).getByText('Customers')).toBeInTheDocument();
-    expect(screen.getByRole('option', { name: /Zeta Holdings/ })).toHaveAttribute('aria-disabled', 'true');
+    expect(screen.getByRole('option', { name: /Zeta Holdings/ })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    );
   });
 
   it('filters by label, description and keywords; shows the empty text', async () => {
@@ -42,7 +52,10 @@ describe('CommandList (11.2)', () => {
     const input = screen.getByRole('combobox');
     const active = () => document.getElementById(input.getAttribute('aria-activedescendant') ?? '');
     // cmdk highlights the first item on mount; aria-activedescendant follows from the first move.
-    expect(screen.getByRole('option', { name: /New invoice/ })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('option', { name: /New invoice/ })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
     await userEvent.keyboard('{ArrowDown}');
     expect(active()).toHaveTextContent('Export CSV');
     await userEvent.keyboard('{End}');
@@ -87,10 +100,55 @@ describe('CommandList (11.2)', () => {
         </Dialog.Content>
       </Dialog.Root>,
     );
-    expect(screen.getByRole('dialog')).toContainElement(screen.getByRole('combobox', { name: 'Folders' }));
+    expect(screen.getByRole('dialog')).toContainElement(
+      screen.getByRole('combobox', { name: 'Folders' }),
+    );
     const { violations } = await axe.run(baseElement, {
       rules: { 'color-contrast': { enabled: false }, region: { enabled: false } },
     });
     expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.html).join(' | ')}`)).toEqual([]);
+  });
+});
+
+describe('CommandList 12.1: long lists render only the rows in view', () => {
+  const groups = ['Files', 'People', 'Settings'];
+  const many = Array.from({ length: 300 }, (_, i) => ({
+    value: `item-${i + 1}`,
+    label: `Item ${i + 1}`,
+    group: groups[Math.floor(i / 100)],
+  }));
+
+  it('renders a window with its group heading; rows know their place in all 300', () => {
+    render(<CommandList items={many} label="Go to" />);
+    const rows = screen.getAllByRole('option');
+    expect(rows.length).toBeLessThan(40);
+    expect(rows[0]).toHaveAccessibleName('Item 1');
+    expect(rows[0]).toHaveAttribute('aria-setsize', '300');
+    expect(rows[0]).toHaveAttribute('aria-posinset', '1');
+    expect(screen.getByText('Files')).toBeInTheDocument();
+    expect(screen.queryByText('Settings')).toBeNull(); // far below the window
+  });
+
+  it('arrows loop over every item; End reaches the last group; Enter picks it', async () => {
+    const onSelect = vi.fn();
+    render(<CommandList items={many} label="Go to" onSelect={onSelect} />);
+    const input = screen.getByRole('combobox');
+    await userEvent.type(input, '{ArrowUp}'); // loops from the first item to the last
+    const last = screen.getByRole('option', { name: 'Item 300' });
+    expect(last).toHaveAttribute('aria-selected', 'true');
+    expect(input).toHaveAttribute('aria-activedescendant', last.id);
+    // Its heading row is out of the window: still the group's name, just not shown.
+    expect(screen.getByRole('group', { name: 'Settings' })).toContainElement(last);
+    await userEvent.keyboard('{Home}{ArrowDown}');
+    expect(screen.getByRole('option', { name: 'Item 2' })).toHaveAttribute('aria-selected', 'true');
+    await userEvent.keyboard('{End}{Enter}');
+    expect(onSelect).toHaveBeenLastCalledWith('item-300', many[299]);
+  });
+
+  it('search ranks across groups the way cmdk does', async () => {
+    render(<CommandList items={many} label="Go to" />);
+    await userEvent.type(screen.getByRole('combobox'), 'Item 250');
+    expect(screen.getAllByRole('option')[0]).toHaveAccessibleName('Item 250');
+    expect(screen.getByText('Settings')).toBeInTheDocument();
   });
 });
