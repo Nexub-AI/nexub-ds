@@ -73,10 +73,14 @@ add('tokens/seed', join(pkgs, 'tokens/dist/js/seed.js'));
 for (const pkg of ['tokens', 'themes', 'react', 'patterns', 'marketing', 'diagram']) {
   const { exports } = JSON.parse(readFileSync(join(pkgs, pkg, 'package.json'), 'utf8'));
   for (const [key, target] of Object.entries(exports)) {
-    if (typeof target === 'string' && target.endsWith('.css'))
+    // Wildcard exports (themes ./parts/*.css) are measured one file each below.
+    if (typeof target === 'string' && target.endsWith('.css') && !key.includes('*'))
       add(`${pkg}${key.slice(1)}`, join(pkgs, pkg, target));
   }
 }
+// 12.1: each component part of @nexub/themes (core.css split, loaded only by the apps that need it).
+for (const f of readdirSync(join(pkgs, 'themes/src/parts')).filter((f) => f.endsWith('.css')).sort())
+  add(`themes/parts/${f.slice(0, -4)}`, join(pkgs, 'themes/src/parts', f));
 add('icons', join(pkgs, 'icons/dist/index.js'));
 add('core', join(pkgs, 'core/dist/index.js'));
 // React Native (Metro bundles the app; these are the library's own bytes).
