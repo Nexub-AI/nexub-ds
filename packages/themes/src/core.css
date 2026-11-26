@@ -364,6 +364,131 @@ code, kbd, pre, samp {
   .nx-tab-panel[data-state='active'] { opacity: 0; }
 }
 
+/* ─── Touch targets ─────────────────────────────────────────────────────────
+   Small controls keep their visual size but get an invisible 44×44 hit area
+   on touch screens (Apple HIG, WCAG 2.5.5). Uses ::after; the state layer
+   uses ::before. */
+@media (pointer: coarse) {
+  .nx-hit { position: relative; }
+  .nx-hit::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    translate: -50% -50%;
+  }
+}
+
+/* ─── Density ────────────────────────────────────────────────────────────────
+   Compact shifts every control one step down the ladder (md 40 → 32px at a 16px root). */
+[data-density='compact'] {
+  --size-control-xs: 1.25rem;
+  --size-control-sm: 1.5rem;
+  --size-control-md: 2rem;
+  --size-control-lg: 2.5rem;
+  --size-control-xl: 3rem;
+  /* 10.4: the sizes that sit outside the control ladder step down too. Each is read
+     with its comfortable value as the fallback, so default density is unchanged. */
+  --pagination-size: 2.25rem;
+  --otp-h: 2.5rem;
+  --otp-w: 2rem;
+  --float-field-h: 3rem;
+  --chip-h-sm: 1.25rem;
+  --chip-h-md: 1.75rem;
+  --badge-h-sm: 1rem;
+  --badge-h-md: 1.25rem;
+  --badge-h-lg: 1.5rem;
+  --table-head-h: 2rem;
+  --table-cell-p: 0.5rem;
+  --day-cell: 1.75rem;
+}
+
+/* 10.4: Firefox has no ::-webkit-scrollbar, so it gets the standard properties.
+   Guarded: setting these in Chromium would switch off the styled scrollbar above. */
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline) var(--color-surface-container-low);
+  }
+}
+
+/* ─── App header (@nexub/patterns AppHeader) ─────────────────────────────────
+   One height for the fixed top header everywhere. Offset layouts with
+   var(--app-header-height); AppHeader's own spacer already does in flow. */
+:root { --app-header-height: 64px; }
+/* condense: scroll-driven, no JS. The page spacer stays 64px; only the bar
+   tightens. Glass keeps its own shadow. */
+@keyframes nx-condense { to { height: 52px; } }
+@keyframes nx-condense-lift { to { height: 52px; box-shadow: var(--elevation-1); } }
+@supports (animation-timeline: scroll()) {
+  [data-condense] {
+    animation: nx-condense-lift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 64px;
+  }
+  [data-condense][data-material='glass'] { animation-name: nx-condense; }
+}
+
+/* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
+   A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
+   instead of injecting a <style> tag. The gutter class keeps the scrollbar's
+   space so the page doesn't shift sideways. */
+html.nexub-scroll-lock { overflow: hidden; }
+html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
+
+/* ─── Radix ScrollArea / Select viewports ────────────────────────────────────
+   Radix renders these rules in a <style> tag, which a strict CSP blocks. The
+   same rules here keep the native scrollbar hidden either way. */
+[data-radix-scroll-area-viewport],[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+[data-radix-scroll-area-viewport]::-webkit-scrollbar,[data-radix-select-viewport]::-webkit-scrollbar{display:none}
+
+/* Shape (4.6): data-shape="squircle" gives every rounded corner inside it the
+   continuous (superellipse) curve where CSS corner-shape is supported; other
+   browsers keep the normal round corners. */
+[data-shape='squircle'],
+[data-shape='squircle'] * {
+  corner-shape: squircle;
+}
+
+/* ── 10.3: lively app surfaces ────────────────────────────────────────────────
+   Spot accent: the one colour a product owns inside an app. Under data-product
+   or data-division it is the product's tertiary family; components read it as
+   var(--color-spot, var(--color-primary)), so without a product it is the
+   primary. Used in fixed places only: the product icon chip, the active
+   navigation item, chart series 1 and illustrations. */
+[data-product], [data-division] {
+  --color-spot: var(--color-tertiary);
+  --color-on-spot: var(--color-on-tertiary);
+  --color-spot-container: var(--color-tertiary-container);
+  --color-on-spot-container: var(--color-on-tertiary-container);
+}
+
+/* Category colours: data-category picks one of the eight generated hues
+   (@nexub/tokens roles.css), or "accent" for the spot accent. IconChip, Badge
+   and Avatar read the three --nx-cat-* values. */
+[data-category='accent'] {
+  --nx-cat: var(--color-spot, var(--color-primary));
+  --nx-cat-container: var(--color-spot-container, var(--color-primary-container));
+  --nx-on-cat-container: var(--color-on-spot-container, var(--color-on-primary-container));
+}
+[data-category='blue'] { --nx-cat: var(--color-category-blue); --nx-cat-container: var(--color-category-blue-container); --nx-on-cat-container: var(--color-on-category-blue-container); }
+[data-category='amber'] { --nx-cat: var(--color-category-amber); --nx-cat-container: var(--color-category-amber-container); --nx-on-cat-container: var(--color-on-category-amber-container); }
+[data-category='emerald'] { --nx-cat: var(--color-category-emerald); --nx-cat-container: var(--color-category-emerald-container); --nx-on-cat-container: var(--color-on-category-emerald-container); }
+[data-category='pink'] { --nx-cat: var(--color-category-pink); --nx-cat-container: var(--color-category-pink-container); --nx-on-cat-container: var(--color-on-category-pink-container); }
+[data-category='violet'] { --nx-cat: var(--color-category-violet); --nx-cat-container: var(--color-category-violet-container); --nx-on-cat-container: var(--color-on-category-violet-container); }
+[data-category='cyan'] { --nx-cat: var(--color-category-cyan); --nx-cat-container: var(--color-category-cyan-container); --nx-on-cat-container: var(--color-on-category-cyan-container); }
+[data-category='red'] { --nx-cat: var(--color-category-red); --nx-cat-container: var(--color-category-red-container); --nx-on-cat-container: var(--color-on-category-red-container); }
+[data-category='lime'] { --nx-cat: var(--color-category-lime); --nx-cat-container: var(--color-category-lime-container); --nx-on-cat-container: var(--color-on-category-lime-container); }
+
+/* The sliding marker beside the active Sidebar item. Hidden unless an
+   expression layer shows it (vivid does). */
+.nx-nav-marker { display: none; }
+
+/* Component parts (12.1): see scripts/build-parts.mjs. Global rules go above. */
+
+/*@part stagger*/
 /* Stagger: children of .nx-stagger rise in one after another (40ms apart, up
    to the 12th; later ones arrive with the 12th). Set --nx-stagger to change
    the step. Re-key the parent to replay. */
@@ -385,7 +510,9 @@ code, kbd, pre, samp {
 .nx-stagger > :nth-child(10) { --nx-i: 9; }
 .nx-stagger > :nth-child(11) { --nx-i: 10; }
 .nx-stagger > :nth-child(n + 12) { --nx-i: 11; }
+/*@end*/
 
+/*@part list-transition*/
 /* ListTransition items: grow in from zero height and fade in; exit collapses
    and fades (quicker, no overshoot). Rows animate via grid-template-rows so
    the item needs no measured height. */
@@ -404,7 +531,9 @@ code, kbd, pre, samp {
     nx-rows-out var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing) forwards,
     nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
 }
+/*@end*/
 
+/*@part skeleton-swap*/
 /* SkeletonSwap: skeleton and content share one grid cell and crossfade. */
 .nx-swap { display: grid; }
 .nx-swap > * { grid-area: 1 / 1; min-width: 0; }
@@ -419,7 +548,9 @@ code, kbd, pre, samp {
   .nx-list-item[data-state='enter'] { animation: nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing); }
   .nx-list-item[data-state='exit'] { animation: nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards; }
 }
+/*@end*/
 
+/*@part sheen*/
 /* ─── Cards: lift, press, sheen ──────────────────────────────────────────────
    Lift: hover raises 2px on the spatial spring with elevation 1 → 2; leaving
    settles faster on the effects spring (a transition uses the *destination*
@@ -494,7 +625,9 @@ code, kbd, pre, samp {
   .nx-sheen { background-image: none; }
   .nx-sheen::after { display: none; }
 }
+/*@end*/
 
+/*@part ai*/
 /* ─── AI: thinking indicator ─────────────────────────────────────────────────
    nx-morph: a small shape that breathes between a circle and a soft squircle
    on the expressive spring. nx-shimmer: a decorative light sweep across label
@@ -539,24 +672,9 @@ code, kbd, pre, samp {
 @media (prefers-reduced-motion: reduce) {
   .nx-caret { animation: none; }
 }
+/*@end*/
 
-/* ─── Touch targets ─────────────────────────────────────────────────────────
-   Small controls keep their visual size but get an invisible 44×44 hit area
-   on touch screens (Apple HIG, WCAG 2.5.5). Uses ::after; the state layer
-   uses ::before. */
-@media (pointer: coarse) {
-  .nx-hit { position: relative; }
-  .nx-hit::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: max(100%, 44px);
-    height: max(100%, 44px);
-    translate: -50% -50%;
-  }
-}
-
+/*@part micro*/
 /* ─── Micro-moments ──────────────────────────────────────────────────────────
    Reveal: content replacing a skeleton crossfades in (no travel). */
 .nx-reveal {
@@ -595,70 +713,17 @@ code, kbd, pre, samp {
     animation: nx-shimmer 2s linear infinite;
   }
 }
+/*@end*/
 
-/* ─── Density ────────────────────────────────────────────────────────────────
-   Compact shifts every control one step down the ladder (md 40 → 32px at a 16px root). */
-[data-density='compact'] {
-  --size-control-xs: 1.25rem;
-  --size-control-sm: 1.5rem;
-  --size-control-md: 2rem;
-  --size-control-lg: 2.5rem;
-  --size-control-xl: 3rem;
-  /* 10.4: the sizes that sit outside the control ladder step down too. Each is read
-     with its comfortable value as the fallback, so default density is unchanged. */
-  --pagination-size: 2.25rem;
-  --otp-h: 2.5rem;
-  --otp-w: 2rem;
-  --float-field-h: 3rem;
-  --chip-h-sm: 1.25rem;
-  --chip-h-md: 1.75rem;
-  --badge-h-sm: 1rem;
-  --badge-h-md: 1.25rem;
-  --badge-h-lg: 1.5rem;
-  --table-head-h: 2rem;
-  --table-cell-p: 0.5rem;
-  --day-cell: 1.75rem;
-}
-
-/* 10.4: Firefox has no ::-webkit-scrollbar, so it gets the standard properties.
-   Guarded: setting these in Chromium would switch off the styled scrollbar above. */
-@supports not selector(::-webkit-scrollbar) {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-outline) var(--color-surface-container-low);
-  }
-}
-
+/*@part marquee*/
 /* Logo-scroll marquee keyframe (used by LogoWall) */
 @keyframes logo-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
+/*@end*/
 
-/* ─── App header (@nexub/patterns AppHeader) ─────────────────────────────────
-   One height for the fixed top header everywhere. Offset layouts with
-   var(--app-header-height); AppHeader's own spacer already does in flow. */
-:root { --app-header-height: 64px; }
-/* condense: scroll-driven, no JS. The page spacer stays 64px; only the bar
-   tightens. Glass keeps its own shadow. */
-@keyframes nx-condense { to { height: 52px; } }
-@keyframes nx-condense-lift { to { height: 52px; box-shadow: var(--elevation-1); } }
-@supports (animation-timeline: scroll()) {
-  [data-condense] {
-    animation: nx-condense-lift linear both;
-    animation-timeline: scroll(root);
-    animation-range: 0 64px;
-  }
-  [data-condense][data-material='glass'] { animation-name: nx-condense; }
-}
-
-/* ─── Scroll lock (Sheet scrollLock="class") ─────────────────────────────────
-   A CSP-safe page scroll lock: @nexub/react toggles these classes on <html>
-   instead of injecting a <style> tag. The gutter class keeps the scrollbar's
-   space so the page doesn't shift sideways. */
-html.nexub-scroll-lock { overflow: hidden; }
-html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
-
+/*@part mark*/
 /* ─── Nexub mark gradient stops (<NexubMark variant="color">, <Logo>) ───────
    Classes instead of style= attributes, which a strict CSP blocks in
    server-rendered HTML. */
@@ -712,13 +777,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 .nxm-s-47{stop-color:var(--color-brand-mark-47)}
 .nxm-o-0{stop-opacity:0}
 /* nexub-mark-stops:end */
+/*@end*/
 
-/* ─── Radix ScrollArea / Select viewports ────────────────────────────────────
-   Radix renders these rules in a <style> tag, which a strict CSP blocks. The
-   same rules here keep the native scrollbar hidden either way. */
-[data-radix-scroll-area-viewport],[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
-[data-radix-scroll-area-viewport]::-webkit-scrollbar,[data-radix-select-viewport]::-webkit-scrollbar{display:none}
-
+/*@part drawer*/
 /* ─── Drawer / Sheet (vaul 1.1.2) ─────────────────────────────────────────────
    vaul's own styles. vaul normally injects these in a <style> tag when
    @nexub/react loads, which strict CSP pages block; @nexub/react strips that
@@ -755,7 +816,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='open'] { animation-name: fadeIn; }
   .nx-drawer[data-vaul-drawer][data-vaul-snap-points='false'][data-state='closed'] { animation-name: fadeOut; }
 }
+/*@end*/
 
+/*@part charts*/
 /* Charts (@nexub/react BarChart / LineChart / Sparkline, 4.1): bars grow from the
    zero line and lines reveal left to right on first paint. Off under reduced motion. */
 @keyframes nx-chart-grow { from { transform: scaleY(0); } }
@@ -770,6 +833,47 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   .nx-chart-line { animation: nx-chart-reveal 900ms var(--motion-spring-spatial-slow-easing, ease-out) both; }
 }
 
+/* Bar gradients: every bar is filled through a two-stop gradient of its own
+   colour. The lower stop stays opaque unless an expression layer sets
+   --nx-chart-fade (vivid does), so the default look is a flat fill. */
+.nx-chart-grad > stop:last-child { stop-opacity: var(--nx-chart-fade, 1); }
+.nx-chart-grad-1 > stop { stop-color: var(--color-chart-1); }
+.nx-chart-grad-2 > stop { stop-color: var(--color-chart-2); }
+.nx-chart-grad-3 > stop { stop-color: var(--color-chart-3); }
+.nx-chart-grad-4 > stop { stop-color: var(--color-chart-4); }
+.nx-chart-grad-5 > stop { stop-color: var(--color-chart-5); }
+.nx-chart-grad-6 > stop { stop-color: var(--color-chart-6); }
+.nx-chart-grad-7 > stop { stop-color: var(--color-chart-7); }
+.nx-chart-grad-8 > stop { stop-color: var(--color-chart-8); }
+
+/* ─── 10.7 interactive charts ─── */
+/* @nexub/react charts with `interactive`: the client layer marks each bar,
+   segment, cell or step with data-pt ('' at rest, 'on' under the pointer,
+   'focus' for the keyboard's point or the one bar under the pointer, 'off'
+   while another point is active). */
+[data-pt='off'] { opacity: 0.45; }
+rect[data-pt='focus'] {
+  stroke: var(--color-on-surface);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+circle[data-pt='on'],
+circle[data-pt='focus'] { stroke-width: 8; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-pt] { transition: opacity var(--motion-spring-effects-fast-duration, 150ms) var(--motion-spring-effects-fast-easing, ease-out); }
+}
+@media (forced-colors: active) {
+  [data-pt='off'] { opacity: 1; }
+  rect[data-pt='on'],
+  rect[data-pt='focus'] {
+    stroke: Highlight;
+    stroke-width: 2px;
+    vector-effect: non-scaling-stroke;
+  }
+}
+/*@end*/
+
+/*@part aurora*/
 /* Aurora (@nexub/react, 4.2): a decorative background of slow-drifting colour
    fields from the accent roles. Subtle by default, richer under
    data-expression="vivid". Still under reduced motion; hidden in forced colours. */
@@ -820,7 +924,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (forced-colors: active) {
   .nx-aurora { display: none; }
 }
+/*@end*/
 
+/*@part interactions*/
 /* Micro-interactions (4.3). Pointer-driven ones read --nx-px/--nx-py (0–1, set
    through the CSSOM by usePointerSheen) and only run for a fine pointer with
    motion allowed; everything else is pure CSS. */
@@ -856,7 +962,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   }
 }
 @keyframes nx-focus-pop { from { outline-offset: 0; } }
+/*@end*/
 
+/*@part celebrate*/
 /* Celebrate (@nexub/react, 4.3): a confetti burst from the centre. */
 .nx-celebrate { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 1; }
 .nx-celebrate > span {
@@ -877,7 +985,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (prefers-reduced-motion: reduce) {
   .nx-celebrate { display: none; }
 }
+/*@end*/
 
+/*@part scroll-progress*/
 /* Transitions (4.4). */
 /* ScrollProgress: a bar that fills with the root scroll, CSS only. */
 .nx-scroll-progress { display: none; }
@@ -899,6 +1009,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   }
 }
 @keyframes nx-scroll-progress { from { scale: 0 1; } to { scale: 1 1; } }
+/*@end*/
+
+/*@part floating-input*/
 /* FloatingInput: the label sits inside the empty, unfocused field and floats
    above the value otherwise. Sibling selectors, so no JavaScript. */
 .nx-float-field > label {
@@ -923,15 +1036,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
     transition: inset-block-start var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), font-size var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing), color 150ms ease;
   }
 }
+/*@end*/
 
-/* Shape (4.6): data-shape="squircle" gives every rounded corner inside it the
-   continuous (superellipse) curve where CSS corner-shape is supported; other
-   browsers keep the normal round corners. */
-[data-shape='squircle'],
-[data-shape='squircle'] * {
-  corner-shape: squircle;
-}
-
+/*@part glass-edge*/
 /* Glass 3.0 edge (4.6): a specular rim that catches light along the top-left
    and fades round the edge, like a lens. Opt in with .nx-glass-edge (on by
    default for glass under data-expression="vivid"). Off for reduced
@@ -953,7 +1060,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
   .nx-glass-edge::after { display: none; }
 }
+/*@end*/
 
+/*@part tick*/
 /* 7.6 Rich surfaces: Badge `count` tick. The number span is keyed on the
    count, so this replays on every change. Reduced motion collapses the
    duration (global rule above). */
@@ -962,7 +1071,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   display: inline-block;
   animation: nx-tick var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
 }
+/*@end*/
 
+/*@part dialog*/
 /* ─── Dialog surfaces (7.6) ──────────────────────────────────────────────────
    Body: with a Dialog.Body, Content becomes a column and only the body
    scrolls; Header and Footer stay put. Their hairlines show only when there is
@@ -1016,7 +1127,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 @media (prefers-reduced-motion: reduce) {
   .nx-dialog[data-nested] { scale: none; }
 }
+/*@end*/
 
+/*@part scroll-fade*/
 /* ─── Tabs overflow fades (7.6) ──────────────────────────────────────────────
    Tabs.List sets data-nx-overflow="start end" (whichever edges hide tabs);
    that edge fades out so the cut-off reads as "more this way". Logical: the
@@ -1032,7 +1145,9 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
 .nx-scroll-fade[data-nx-overflow][data-orientation='vertical'] { --nx-fade-dir: to bottom; }
 .nx-scroll-fade[data-nx-overflow~='start'] { --nx-fade-s: 2rem; }
 .nx-scroll-fade[data-nx-overflow~='end'] { --nx-fade-e: 2rem; }
+/*@end*/
 
+/*@part reorder*/
 /* ─── Reorder (7.7): Sortable, Kanban, DataTable rows ────────────────────────
    Pointer drag (react/src/components/Sortable/reorder.tsx). The dragged item
    follows the pointer (inline translate) lifted above its neighbours;
@@ -1062,7 +1177,9 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
 [data-nx-drop='after']::after { bottom: -0.1875rem; }
 [data-nx-drop='inside'] { outline: 2px dashed var(--color-primary); outline-offset: 2px; }
 [data-nx-drop='inside']::after { content: none; }
+/*@end*/
 
+/*@part controls*/
 /* ─── Signature controls (7.9) ───────────────────────────────────────────────
    Switch: iOS-style full thumb. A filled track (neutral off,
    primary on, no outline), and a surface thumb filling the track's inner
@@ -1105,54 +1222,9 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
 .nx-dot-in {
   animation: nx-dot-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
 }
+/*@end*/
 
-/* ── 10.3: lively app surfaces ────────────────────────────────────────────────
-   Spot accent: the one colour a product owns inside an app. Under data-product
-   or data-division it is the product's tertiary family; components read it as
-   var(--color-spot, var(--color-primary)), so without a product it is the
-   primary. Used in fixed places only: the product icon chip, the active
-   navigation item, chart series 1 and illustrations. */
-[data-product], [data-division] {
-  --color-spot: var(--color-tertiary);
-  --color-on-spot: var(--color-on-tertiary);
-  --color-spot-container: var(--color-tertiary-container);
-  --color-on-spot-container: var(--color-on-tertiary-container);
-}
-
-/* Category colours: data-category picks one of the eight generated hues
-   (@nexub/tokens roles.css), or "accent" for the spot accent. IconChip, Badge
-   and Avatar read the three --nx-cat-* values. */
-[data-category='accent'] {
-  --nx-cat: var(--color-spot, var(--color-primary));
-  --nx-cat-container: var(--color-spot-container, var(--color-primary-container));
-  --nx-on-cat-container: var(--color-on-spot-container, var(--color-on-primary-container));
-}
-[data-category='blue'] { --nx-cat: var(--color-category-blue); --nx-cat-container: var(--color-category-blue-container); --nx-on-cat-container: var(--color-on-category-blue-container); }
-[data-category='amber'] { --nx-cat: var(--color-category-amber); --nx-cat-container: var(--color-category-amber-container); --nx-on-cat-container: var(--color-on-category-amber-container); }
-[data-category='emerald'] { --nx-cat: var(--color-category-emerald); --nx-cat-container: var(--color-category-emerald-container); --nx-on-cat-container: var(--color-on-category-emerald-container); }
-[data-category='pink'] { --nx-cat: var(--color-category-pink); --nx-cat-container: var(--color-category-pink-container); --nx-on-cat-container: var(--color-on-category-pink-container); }
-[data-category='violet'] { --nx-cat: var(--color-category-violet); --nx-cat-container: var(--color-category-violet-container); --nx-on-cat-container: var(--color-on-category-violet-container); }
-[data-category='cyan'] { --nx-cat: var(--color-category-cyan); --nx-cat-container: var(--color-category-cyan-container); --nx-on-cat-container: var(--color-on-category-cyan-container); }
-[data-category='red'] { --nx-cat: var(--color-category-red); --nx-cat-container: var(--color-category-red-container); --nx-on-cat-container: var(--color-on-category-red-container); }
-[data-category='lime'] { --nx-cat: var(--color-category-lime); --nx-cat-container: var(--color-category-lime-container); --nx-on-cat-container: var(--color-on-category-lime-container); }
-
-/* Bar gradients: every bar is filled through a two-stop gradient of its own
-   colour. The lower stop stays opaque unless an expression layer sets
-   --nx-chart-fade (vivid does), so the default look is a flat fill. */
-.nx-chart-grad > stop:last-child { stop-opacity: var(--nx-chart-fade, 1); }
-.nx-chart-grad-1 > stop { stop-color: var(--color-chart-1); }
-.nx-chart-grad-2 > stop { stop-color: var(--color-chart-2); }
-.nx-chart-grad-3 > stop { stop-color: var(--color-chart-3); }
-.nx-chart-grad-4 > stop { stop-color: var(--color-chart-4); }
-.nx-chart-grad-5 > stop { stop-color: var(--color-chart-5); }
-.nx-chart-grad-6 > stop { stop-color: var(--color-chart-6); }
-.nx-chart-grad-7 > stop { stop-color: var(--color-chart-7); }
-.nx-chart-grad-8 > stop { stop-color: var(--color-chart-8); }
-
-/* The sliding marker beside the active Sidebar item. Hidden unless an
-   expression layer shows it (vivid does). */
-.nx-nav-marker { display: none; }
-
+/*@part success-check*/
 /* SuccessCheck: the ring pops in on the expressive spring, then the tick draws
    (.nx-check-draw). Reduced motion shows the finished mark. */
 @keyframes nx-pop { from { scale: 0.6; opacity: 0; } }
@@ -1161,7 +1233,9 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
 @media (prefers-reduced-motion: reduce) {
   .nx-success-check { animation: none; }
 }
+/*@end*/
 
+/*@part sheet*/
 /* ─── 10.6 phone-first overlays ───────────────────────────────────────────────
    Popper content (Select, menus, Popover, date pickers, the Combobox list) with
    data-nx-sheet="true" is a bottom sheet; "auto" is one below md (47.99rem, as
@@ -1274,29 +1348,4 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
     [data-nx-sheet='auto']::before { background: CanvasText; }
   }
 }
-
-/* ─── 10.7 interactive charts ─── */
-/* @nexub/react charts with `interactive`: the client layer marks each bar,
-   segment, cell or step with data-pt ('' at rest, 'on' under the pointer,
-   'focus' for the keyboard's point or the one bar under the pointer, 'off'
-   while another point is active). */
-[data-pt='off'] { opacity: 0.45; }
-rect[data-pt='focus'] {
-  stroke: var(--color-on-surface);
-  stroke-width: 2px;
-  vector-effect: non-scaling-stroke;
-}
-circle[data-pt='on'],
-circle[data-pt='focus'] { stroke-width: 8; }
-@media (prefers-reduced-motion: no-preference) {
-  [data-pt] { transition: opacity var(--motion-spring-effects-fast-duration, 150ms) var(--motion-spring-effects-fast-easing, ease-out); }
-}
-@media (forced-colors: active) {
-  [data-pt='off'] { opacity: 1; }
-  rect[data-pt='on'],
-  rect[data-pt='focus'] {
-    stroke: Highlight;
-    stroke-width: 2px;
-    vector-effect: non-scaling-stroke;
-  }
-}
+/*@end*/

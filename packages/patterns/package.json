@@ -1,6 +1,6 @@
 {
   "name": "@nexub/patterns",
-  "version": "11.9.0",
+  "version": "12.0.0",
   "description": "Composite UI patterns for Nexub Design System — pre-built, production-ready layouts and widgets built on @nexub/react.",
   "type": "module",
   "license": "MIT",
@@ -32,12 +32,13 @@
       "default": "./dist/index.js"
     },
     "./styles.css": "./dist/styles.css",
+    "./css-manifest.json": "./dist/css-manifest.json",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css",
+    "build": "tsup && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css && node ../../scripts/build-css-manifest.mjs .",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

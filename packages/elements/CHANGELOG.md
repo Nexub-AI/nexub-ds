@@ -1,5 +1,7 @@
 # @nexub/elements
 
+## 12.0.0
+
 ## 11.9.0
 
 ### Minor Changes
