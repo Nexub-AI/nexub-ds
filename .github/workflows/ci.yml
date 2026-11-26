@@ -110,6 +110,11 @@ jobs:
       - name: Test
         run: pnpm turbo test
 
+      # 12.1: the same @nexub/react suite on components compiled by the React Compiler, the way
+      # an app with the compiler on builds them. A component that only works uncompiled fails here.
+      - name: Test with the React Compiler
+        run: pnpm --filter @nexub/react test:compiler
+
       - name: Build Storybook
         run: pnpm --filter @nexub/react build-storybook --quiet
 
