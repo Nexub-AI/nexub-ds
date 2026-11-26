@@ -2,7 +2,7 @@
 
 A list people reorder by dragging or with Alt+Arrow keys on a handle.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Sortable } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/sortable
 

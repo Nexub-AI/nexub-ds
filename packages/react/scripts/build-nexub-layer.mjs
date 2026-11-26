@@ -1,8 +1,11 @@
-// 11.9 (RFC 12.0, decision 2): dist/styles.nexub-layer.css, the opt-in 12.0 stylesheet.
-// Built from src/styles.css, the one source: every cascade layer it declares or imports into
-// moves under one `nexub` layer (theme → nexub.theme, base → nexub.base, …), so an app's own
-// layers (Tailwind v4's theme/base/components/utilities included) all come after it and win.
-//   node scripts/build-nexub-layer.mjs     (run by `pnpm build`, after dist/styles.css)
+// 12.0 (RFC 12.0, decision 2): every prebuilt stylesheet in one `nexub` cascade layer.
+// Built from the package's source stylesheet: every cascade layer it declares or imports into
+// moves under `nexub` (theme → nexub.theme, base → nexub.base, …), so an app's own layers
+// (Tailwind v4's theme/base/components/utilities included) all come after it and win.
+//   node <react>/scripts/build-nexub-layer.mjs [input] [output…]
+// Run from the package root (its Tailwind CLI compiles); defaults: src/styles.css →
+// dist/styles.css. @nexub/react also writes dist/styles.nexub-layer.css, the 11.9 opt-in name,
+// kept in 12.x so apps that switched early keep working (`changes-in-12` moves them back).
 // The relative @import of the v3 compatibility file is inlined so its `@layer base` moves too;
 // Tailwind compiles the result from stdin with src/ as its base, so the @source globs and the
 // utilities import's source(none) mean what they mean in styles.css.
@@ -11,8 +14,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const pkg = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const src = resolve(pkg, 'src');
+const reactPkg = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const LAYER_LIST = /@layer\s+([\w.-]+(?:\s*,\s*[\w.-]+)*)(?=\s*[;{])/g;
 const IMPORT_LAYER = /(@import\s+['"][^'"]+['"]\s+)layer\(([\w-]+)\)/g;
@@ -26,7 +28,7 @@ const prefix = (names) =>
     .join(', ');
 
 /** Rename every layer in a stylesheet's source under `nexub` (no nested layers expected). */
-export function toNexubLayer(css, from = resolve(src, 'styles.css')) {
+export function toNexubLayer(css, from = resolve(reactPkg, 'src/styles.css')) {
   const inlined = css.replace(LOCAL_IMPORT, (_, spec) => {
     const file = resolve(dirname(from), spec);
     return toNexubLayer(readFileSync(file, 'utf8'), file).trim();
@@ -43,12 +45,12 @@ export function nexubLayerOutput(css) {
     .flatMap((m) => m[1].split(','))
     .map((n) => n.trim() || '(anonymous)')
     .filter((n) => !n.startsWith('nexub.'));
-  if (stray.length) throw new Error(`styles.nexub-layer.css: layers outside nexub: ${stray.join(', ')}`);
+  if (stray.length) throw new Error(`nexub layer build: layers outside nexub: ${stray.join(', ')}`);
   return out;
 }
 
-/** Compile a stylesheet source with the package's Tailwind CLI, `base` = src/ (as styles.css). */
-export function compile(css, { minify = true } = {}) {
+/** Compile a stylesheet source with a package's Tailwind CLI, `base` = the source's folder. */
+export function compile(css, { minify = true, pkg = reactPkg, src = resolve(pkg, 'src') } = {}) {
   const bin = resolve(pkg, 'node_modules/.bin/tailwindcss');
   const r = spawnSync(bin, ['-i', '-', ...(minify ? ['--minify'] : [])], {
     cwd: src,
@@ -60,12 +62,16 @@ export function compile(css, { minify = true } = {}) {
   return r.stdout.trimEnd();
 }
 
-export function buildNexubLayer() {
-  return nexubLayerOutput(compile(toNexubLayer(readFileSync(resolve(src, 'styles.css'), 'utf8'))));
+export function buildNexubLayer(input = resolve(reactPkg, 'src/styles.css'), pkg = reactPkg) {
+  return nexubLayerOutput(compile(toNexubLayer(readFileSync(input, 'utf8'), input), { pkg, src: dirname(input) }));
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const out = resolve(pkg, 'dist/styles.nexub-layer.css');
-  writeFileSync(out, buildNexubLayer());
-  console.log(`styles.nexub-layer.css: ${readFileSync(out).length} B`);
+  const pkg = process.cwd();
+  const [input = 'src/styles.css', ...outs] = process.argv.slice(2);
+  const css = buildNexubLayer(resolve(pkg, input), pkg);
+  for (const out of outs.length ? outs : ['dist/styles.css']) {
+    writeFileSync(resolve(pkg, out), css);
+    console.log(`${out}: ${Buffer.byteLength(css)} B`);
+  }
 }

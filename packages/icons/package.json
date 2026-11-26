@@ -1,6 +1,6 @@
 {
   "name": "@nexub/icons",
-  "version": "11.8.0",
+  "version": "11.9.0",
   "description": "Icon components for Nexub Design System — tree-shakeable wrappers around Lucide icons with design-system size tokens, for React (web) and React Native (@nexub/icons/native).",
   "type": "module",
   "license": "MIT",
@@ -53,12 +53,12 @@
     "react-native-svg": ">=15.0.0"
   },
   "dependencies": {
-    "lucide-react": "^1.70.0"
+    "lucide-react": "^1.74.0"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "lucide-react-native": "1.70.0",
+    "lucide-react-native": "1.74.0",
     "react-native": "0.88.1",
     "react-native-svg": "15.16.1",
     "tsup": "^9.0.0",

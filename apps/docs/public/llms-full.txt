@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v11.8.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v11.9.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v11.8.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v11.9.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -732,7 +732,7 @@ export default function Example() {
 
 Save and cancel that stay in view at the bottom of a long form.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { ActionBar } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/action-bar
 
@@ -1616,7 +1616,7 @@ Related: [chip](chip.md)
 
 Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { BarChart } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/bar-chart
 
@@ -2569,7 +2569,7 @@ Related: [plan-tracker](plan-tracker.md)
 
 A checkbox drawn as a whole card: title, description and optional icon. Pick any number.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { CheckboxCard } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/checkbox-card
 
@@ -4740,7 +4740,7 @@ export default function Example() {
 
 A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { DateTimePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/date-time-picker
 
@@ -5149,7 +5149,7 @@ Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indi
 
 Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { DonutChart } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/donut-chart
 
@@ -5689,7 +5689,7 @@ export default function Example() {
 
 A month or week grid of events. Display only: your app owns the events and what a click does.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { EventCalendar } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/event-calendar
 
@@ -6487,7 +6487,7 @@ Related: [form-field](form-field.md), [fieldset](fieldset.md)
 
 Drop-off through ordered steps, with conversion from the first step.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Funnel } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/funnel
 
@@ -6575,7 +6575,7 @@ Related: [bar-chart](bar-chart.md), [line-chart](line-chart.md)
 
 Progress toward a target on a 270° arc.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Gauge } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/gauge
 
@@ -6767,7 +6767,7 @@ export default function Example() {
 
 Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Heatmap } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/heatmap
 
@@ -7388,7 +7388,7 @@ Related: [textarea](textarea.md), [number-input](number-input.md), [password-inp
 
 Columns of cards people move by dragging or with Alt+Arrow keys.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Kanban } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/kanban
 
@@ -7615,7 +7615,7 @@ Related: [kbd](kbd.md), [command-palette](command-palette.md)
 
 A headline number with its change versus last period and a trend line.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { KpiTile } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/kpi-tile
 
@@ -7713,7 +7713,7 @@ export default function Example() {
 
 Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { LineChart } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/line-chart
 
@@ -8142,7 +8142,7 @@ Related: [dropdown-menu](dropdown-menu.md), [toolbar](toolbar.md), [context-menu
 
 One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { MessageBubble } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/message-bubble
 
@@ -8264,7 +8264,7 @@ Related: [streaming-text](streaming-text.md), [conversation](conversation.md), [
 
 An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { MoneyInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/money-input
 
@@ -8652,7 +8652,7 @@ export default function Example() {
 
 Pick several options as chips, with search, "+N more" and an optional create option.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { MultiSelect } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/multi-select
 
@@ -9835,7 +9835,7 @@ export default function Example() {
 
 The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { PromptInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/prompt-input
 
@@ -10047,7 +10047,7 @@ Related: [aspect-ratio](aspect-ratio.md), [otp-input](otp-input.md)
 
 A radio group where each option is a whole card: title, description and optional icon, one choice.
 
-- Package: `@nexub/react` · Category: Form Controls · Status: beta
+- Package: `@nexub/react` · Category: Form Controls · Status: stable
 - Import: `import { RadioCard } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/radio-card
 
@@ -10451,7 +10451,7 @@ Related: [event-calendar](event-calendar.md), [data-table](data-table.md)
 
 A menu to switch, save, update and delete saved filter views. Your app stores them.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { SavedViews } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/saved-views
 
@@ -11222,7 +11222,7 @@ export default function Example() {
 
 A list people reorder by dragging or with Alt+Arrow keys on a handle.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Sortable } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/sortable
 
@@ -11471,7 +11471,7 @@ export default function Example() {
 
 A primary action with related secondary actions behind a chevron, as one connected control.
 
-- Package: `@nexub/react` · Category: Actions · Status: beta
+- Package: `@nexub/react` · Category: Actions · Status: stable
 - Import: `import { SplitButton } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/split-button
 
@@ -11680,7 +11680,7 @@ Related: [stat-card](stat-card.md), [segmented-control](segmented-control.md), [
 
 Progress through a multi-step flow, with clickable steps that follow the order you allow.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { Stepper } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/stepper
 
@@ -11739,7 +11739,7 @@ export default function Example() {
 
 ## Example: Statuses and actions
 
-`current={-1}` for "all done" is deprecated in 11.4 (removed in 12.0): use `status`. `nexub-migrate --rules deprecated-in-11` finds it.
+For "all done", give every step `status: 'complete'`. 12.0 removed `current={-1}`; `nexub-migrate --rules changes-in-12` rewrites it.
 
 ```tsx
 import { Button, Stepper } from '@nexub/react';
@@ -12371,7 +12371,7 @@ export default function Example() {
 
 Shows the assistant is working before the first token arrives: a morphing shape and a shimmering label.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { ThinkingIndicator } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/thinking-indicator
 
@@ -12437,7 +12437,7 @@ Related: [streaming-text](streaming-text.md), [spinner](spinner.md), [conversati
 
 A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.
 
-- Package: `@nexub/react` · Category: Form & Input · Status: beta
+- Package: `@nexub/react` · Category: Form & Input · Status: stable
 - Import: `import { TimePicker } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/time-picker
 
@@ -13006,7 +13006,7 @@ Related: [app-shell](app-shell.md), [sidebar](sidebar.md), [navigation-menu](nav
 
 A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { TreeView } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/tree-view
 
@@ -13631,7 +13631,7 @@ Related: [card](card.md), [stat-card](stat-card.md)
 
 Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
 
-- Package: `@nexub/patterns` · Category: AI · Status: beta
+- Package: `@nexub/patterns` · Category: AI · Status: stable
 - Import: `import { Conversation } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/conversation
 
@@ -13865,7 +13865,7 @@ export default function Example() {
 
 Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
 
-- Package: `@nexub/patterns` · Category: Forms · Status: beta
+- Package: `@nexub/patterns` · Category: Forms · Status: stable
 - Import: `import { ErrorSummary } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/error-summary
 
@@ -14224,7 +14224,7 @@ export default function Example() {
 
 The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
 
-- Package: `@nexub/patterns` · Category: Layout · Status: beta
+- Package: `@nexub/patterns` · Category: Layout · Status: stable
 - Import: `import { ListDetail } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/list-detail
 

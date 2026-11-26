@@ -2,7 +2,7 @@
 
 The list-detail layout: side by side at 720px+ of its own width (a container query), one pane at a time below.
 
-- Package: `@nexub/patterns` · Category: Layout · Status: beta
+- Package: `@nexub/patterns` · Category: Layout · Status: stable
 - Import: `import { ListDetail } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/list-detail
 

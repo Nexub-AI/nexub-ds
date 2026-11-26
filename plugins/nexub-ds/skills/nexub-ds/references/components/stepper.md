@@ -2,7 +2,7 @@
 
 Progress through a multi-step flow, with clickable steps that follow the order you allow.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { Stepper } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/stepper
 
@@ -61,7 +61,7 @@ export default function Example() {
 
 ## Example: Statuses and actions
 
-`current={-1}` for "all done" is deprecated in 11.4 (removed in 12.0): use `status`. `nexub-migrate --rules deprecated-in-11` finds it.
+For "all done", give every step `status: 'complete'`. 12.0 removed `current={-1}`; `nexub-migrate --rules changes-in-12` rewrites it.
 
 ```tsx
 import { Button, Stepper } from '@nexub/react';

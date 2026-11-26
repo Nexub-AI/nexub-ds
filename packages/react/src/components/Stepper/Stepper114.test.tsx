@@ -37,9 +37,20 @@ describe('Stepper statuses (11.4)', () => {
     expect(screen.getAllByRole('listitem').some((li) => li.hasAttribute('aria-current'))).toBe(false);
   });
 
-  it('the deprecated current={-1} marks every step complete, the last one included', () => {
-    render(<Stepper current={-1} steps={['A', 'B', 'C'].map((label) => ({ label }))} />);
-    for (const item of screen.getAllByRole('listitem')) expect(item).toHaveTextContent('completed');
+  it('12.0: a negative current throws in development, naming the fix', () => {
+    const quiet = vi.spyOn(console, 'error').mockImplementation(() => {});
+    expect(() => render(<Stepper current={-1} steps={['A', 'B', 'C'].map((label) => ({ label }))} />)).toThrow(/removed in 12\.0.*status: 'complete'/);
+    quiet.mockRestore();
+  });
+
+  it('12.0: a negative current counts as 0 in production', () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      render(<Stepper current={-1} steps={['A', 'B', 'C'].map((label) => ({ label }))} />);
+      expect(screen.getAllByRole('listitem')[0]).toHaveAttribute('aria-current', 'step');
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it('renders step actions, and skipped steps do not block the next one', async () => {

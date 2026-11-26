@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 
-// 11.9 (RFC 12.0, decision 2): who wins between Nexub's prebuilt CSS and the app's own CSS.
+// RFC 12.0, decision 2 (measured in 11.9, the default in 12.0): who wins between Nexub's prebuilt CSS and the app's own CSS.
 // A page loads dist/styles.css or dist/styles.nexub-layer.css (run `pnpm build` first) and
 // app CSS shaped like Tailwind v4's output (its four layers, a rule in `utilities` or `base`)
 // or an unlayered rule, in either order. Each probe sets the property a real Nexub rule sets
@@ -11,6 +11,7 @@ import { expect, test, type Page } from '@playwright/test';
 const dist = (file: string) => readFileSync(new URL(`../dist/${file}`, import.meta.url), 'utf8');
 const PLAIN = dist('styles.css');
 const LAYERED = dist('styles.nexub-layer.css');
+// In the tests below LAYERED stands for styles.css: they are the same file in 12.0.
 
 const APP = 'rgb(1, 2, 3)';
 const NEXUB_BORDER = 'rgb(229, 231, 235)'; // tailwind-v3-compat.css: v3's gray-200
@@ -31,26 +32,13 @@ async function probe(page: Page, sheets: string[]) {
   });
 }
 
-test.describe('styles.css (11.x): Tailwind layer names, shared with the app', () => {
-  test('an app utility ties with a Nexub utility: the later file wins', async ({ page }) => {
-    expect((await probe(page, [PLAIN, appUtility])).background).toBe(APP);
-    // Nexub loaded after the app: Nexub's .bg-primary wins over the app's own class.
-    expect((await probe(page, [appUtility, PLAIN])).background).not.toBe(APP);
-  });
-
-  test('an app base rule ties with a Nexub base rule the same way', async ({ page }) => {
-    expect((await probe(page, [PLAIN, appBase])).border).toBe(APP);
-    expect((await probe(page, [appBase, PLAIN])).border).toBe(NEXUB_BORDER);
-  });
-
-  test('unlayered app CSS wins in either order', async ({ page }) => {
-    for (const sheets of [[PLAIN, appUnlayered], [appUnlayered, PLAIN]]) {
-      expect(await probe(page, sheets)).toEqual({ background: APP, border: APP });
-    }
-  });
+// 12.0: styles.css is the layered file. styles.nexub-layer.css (the 11.9 opt-in name) stays,
+// byte for byte the same, so apps that switched early keep working.
+test('styles.css and styles.nexub-layer.css are the same file', () => {
+  expect(LAYERED).toBe(PLAIN);
 });
 
-test.describe('styles.nexub-layer.css (12.0): one nexub layer', () => {
+test.describe('styles.css (12.0): one nexub layer', () => {
   test('loaded before the app, every app style wins: utilities, base and unlayered', async ({ page }) => {
     expect((await probe(page, [LAYERED, appUtility])).background).toBe(APP);
     expect((await probe(page, [LAYERED, appBase])).border).toBe(APP);
@@ -63,6 +51,17 @@ test.describe('styles.nexub-layer.css (12.0): one nexub layer', () => {
     expect((await probe(page, [`@layer nexub; ${appBase}`, LAYERED])).border).toBe(APP);
   });
 
+  test('a Tailwind app that names nexub after base: its utilities win, its base (preflight) does not', async ({ page }) => {
+    // The Migrating to 12.0 advice for Tailwind v4 apps, in either load order.
+    const order = '@layer theme, base, nexub, components, utilities;';
+    for (const sheets of [[order, appUtility, LAYERED], [order, LAYERED, appUtility]]) {
+      expect((await probe(page, sheets)).background).toBe(APP);
+    }
+    for (const sheets of [[order, appBase, LAYERED], [order, LAYERED, appBase]]) {
+      expect((await probe(page, sheets)).border).toBe(NEXUB_BORDER);
+    }
+  });
+
   test('loaded after the app’s layers (and no `@layer nexub` first), nexub comes last and wins', async ({ page }) => {
     // The caveat the docs state: import the file before the app's CSS. Unlayered CSS still wins.
     expect((await probe(page, [appUtility, LAYERED])).background).not.toBe(APP);
@@ -70,10 +69,9 @@ test.describe('styles.nexub-layer.css (12.0): one nexub layer', () => {
     expect(await probe(page, [appUnlayered, LAYERED])).toEqual({ background: APP, border: APP });
   });
 
-  test('renders like styles.css when there is no app CSS', async ({ page }) => {
+  test('with no app CSS, Nexub styles apply', async ({ page }) => {
     const plain = await probe(page, [PLAIN]);
     expect(plain.background).not.toBe('rgba(0, 0, 0, 0)'); // .bg-primary applies
     expect(plain.border).toBe(NEXUB_BORDER);
-    expect(await probe(page, [LAYERED])).toEqual(plain);
   });
 });

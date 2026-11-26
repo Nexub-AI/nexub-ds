@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.',
     category: 'Forms',
     package: '@nexub/patterns',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.7.0',
     related: ['form-field', 'input', 'alert'],
   },

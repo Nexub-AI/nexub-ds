@@ -2,7 +2,7 @@
 
 Parts of a whole, with an optional total in the hole. Keep it to six slices or fewer.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { DonutChart } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/donut-chart
 

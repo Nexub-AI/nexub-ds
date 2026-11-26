@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Compare values across categories, grouped or stacked. Server-rendered SVG on the chart palette.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '3.2.0',
     related: ['line-chart', 'donut-chart', 'sparkline'],
   },

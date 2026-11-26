@@ -2,7 +2,7 @@
 
 Progress toward a target on a 270° arc.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Gauge } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/gauge
 

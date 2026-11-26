@@ -4,7 +4,7 @@ Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 10 releases: thr
 
 **Why it starts at 11.7.** 11.6.0 (2026-11-22) closed the last of the 38 platform gaps and shipped `@nexub/diagram` and `@nexub/elements` at `alpha`. The 11.x plan is finished.
 
-**Shipped.** 11.7.0 (2026-11-24, on `latest`): the quiet release. Its 48-hour soak was removed by the owner the same day; each version now ships on its own once green. 11.8.0 (2026-11-24, on `latest`): native fields.
+**Shipped.** 11.7.0 (2026-11-24, on `latest`): the quiet release. Its 48-hour soak was removed by the owner the same day; each version now ships on its own once green. 11.8.0 (2026-11-24, on `latest`): native fields. 11.9.0 (2026-11-24, on `latest`): three more elements, the automated screen-reader pass, the opt-in layer file and RFC 12.0.
 
 **Direction.** 10.x made the library look better. 11.x closed the gaps the apps worked around. 12.x is about depth: fewer new parts, more of what exists made stable, fast, native and measurable.
 
@@ -102,9 +102,9 @@ A major is the only chance to change defaults, so it carries removals and promot
 - **Removals.** `Stepper current={-1}` (deprecated 11.4), plus anything else the RFC lists. Each one has a `nexub-migrate` rule and a line in the Upgrading guide.
 - **Default changes, each subject to the RFC:**
   - CSS cascade layers (`@layer nexub`), so app styles win without `!important`.
-  - Tailwind v4 as the one supported path. The v3 preset is **frozen** (kept, no new utilities, marked deprecated) and removed in 13.0 *(decision 2)*.
+  - Tailwind v4 as the one supported path. The v3 preset has been gone since 4.0; what remains is the v3 compatibility defaults in `styles.css`, which 12.0 keeps and deprecates and 13.0 removes *(decision 2, corrected 2026-11-25)*.
   - The component token tier on by default (see 12.5).
-- **Promotions.** At least 30 `beta` components to `stable`, chosen by usage in the platform apps (the [GOVERNANCE.md](GOVERNANCE.md) rule: promotion comes from real use, not age).
+- **Promotions.** At least 30 `beta` components to `stable`, chosen by usage in the platform apps (the [GOVERNANCE.md](GOVERNANCE.md) rule: promotion comes from real use, not age). *RFC 12.0 (2026-11-25): 27 meet the rule, and the owner chose to promote those 27.*
 
 ### 12.1 — Performance
 
@@ -191,7 +191,7 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 Answered by the owner on 2026-11-22, accepting every suggestion:
 
 1. **Pace.** A 48-hour staging soak with no flakes before each production release. Development keeps going during the soak. *Changed by the owner on 2026-11-24: no soak; each version is released on its own as soon as it is green, with no open flake.*
-2. **12.0 scope.** Cascade layers on by default in 12.0. The Tailwind v3 preset is frozen and deprecated in 12.0, and removed in 13.0.
+2. **12.0 scope.** Cascade layers on by default in 12.0. The Tailwind v3 preset is frozen and deprecated in 12.0, and removed in 13.0. *Corrected by the owner on 2026-11-25 (RFC 12.0): the preset was removed in 4.0. The v3 compatibility defaults (`tailwind-v3-compat.css`) take its place: kept and deprecated in 12.0, removed in 13.0.*
 3. **Native ambition.** A "native essentials" list of about 80 components, published in 11.8 from the mobile apps' screens and kept current by the 12.6 scanner. Not full parity.
 4. **Generative UI (12.3).** Schema and renderer in a new `@nexub/genui` package at `alpha`, served by `@nexub/mcp`. RFC opened in 12.2.
 5. **Order.** As listed. Performance stays at 12.1, after the 12.0 layering decision. If the platform reports slow pages before then, a fix ships as a patch, not by reordering the plan.

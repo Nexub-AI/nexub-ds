@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A menu to switch, save, update and delete saved filter views. Your app stores them.',
     category: 'Navigation',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '5.5.0',
     related: ['filter-builder', 'filter-bar', 'data-table'],
   },

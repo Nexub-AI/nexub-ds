@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Pick several options as chips, with search, "+N more" and an optional create option.',
     category: 'Form Controls',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '5.2.0',
     related: ['autocomplete', 'chip', 'select'],
   },

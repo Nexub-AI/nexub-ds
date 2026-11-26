@@ -26,9 +26,8 @@ export interface StepperStep {
 export interface StepperProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   steps: StepperStep[];
   /**
-   * Index of the step being shown.
-   * @deprecated `current={-1}` for "every step done" is deprecated in 11.4 and removed in 12.0
-   * (`nexub-migrate --rules deprecated-in-11` finds it): give the steps a `status` instead.
+   * Index of the step being shown, from 0. For "every step done", give the steps
+   * `status: 'complete'` (12.0 removed `current={-1}`; `nexub-migrate --rules changes-in-12`).
    */
   current: number;
   /** Indexes of finished steps. @default every step before `current` */
@@ -53,8 +52,16 @@ export const Stepper = React.forwardRef<HTMLElement, StepperProps>(function Step
   ref,
 ) {
   const t = useNexubMessages();
-  // current={-1} (deprecated) means every step is done: slice(0, -1) would leave the last one out.
-  const completed = new Set(completedProp ?? steps.slice(0, current < 0 ? steps.length : current).map((_, i) => i));
+  // 12.0 removed current={-1} ("every step done", deprecated in 11.4): a negative index throws in
+  // development and counts as 0 in production.
+  if (current < 0) {
+    if (typeof process !== 'undefined' && process.env.NODE_ENV !== 'production')
+      throw new Error(
+        `Stepper: current={${current}} was removed in 12.0. For "every step done", give the steps status: 'complete' (npx nexub-migrate --rules changes-in-12).`,
+      );
+    current = 0;
+  }
+  const completed = new Set(completedProp ?? steps.slice(0, current).map((_, i) => i));
   // 11.4: an explicit status wins; without one, the 11.3 rules (current / completed) apply.
   const statusOf = (i: number): StepperStatus =>
     steps[i]!.status ?? (i === current ? 'current' : completed.has(i) ? 'complete' : 'upcoming');

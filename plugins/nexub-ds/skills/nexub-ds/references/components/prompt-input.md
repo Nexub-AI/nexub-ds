@@ -2,7 +2,7 @@
 
 The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 
-- Package: `@nexub/react` · Category: AI · Status: beta
+- Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { PromptInput } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/prompt-input
 

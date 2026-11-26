@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Progress through a multi-step flow, with clickable steps that follow the order you allow.',
     category: 'Navigation',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.4.0',
     related: ['form', 'tabs'],
   },
@@ -23,7 +23,7 @@ const entry: ComponentEntry = {
     { name: 'steps[].description', type: 'ReactNode', description: '11.4: any content (a date, a link).' },
     { name: 'steps[].actions', type: 'ReactNode', description: '11.4: actions under the step, e.g. Retry.' },
   ],
-  examples: [{ title: 'Wizard with a form per step' }, { title: 'Statuses and actions', description: '`current={-1}` for "all done" is deprecated in 11.4 (removed in 12.0): use `status`. `nexub-migrate --rules deprecated-in-11` finds it.' }],
+  examples: [{ title: 'Wizard with a form per step' }, { title: 'Statuses and actions', description: 'For "all done", give every step `status: \'complete\'`. 12.0 removed `current={-1}`; `nexub-migrate --rules changes-in-12` rewrites it.' }],
   a11y: {
     notes: [
       'A `nav` with an ordered list; the current step has `aria-current="step"`.',

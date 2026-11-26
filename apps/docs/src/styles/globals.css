@@ -2,8 +2,10 @@
    theme CSS → preflight → utilities → the docs rules below (which v3 emitted
    after the utilities, unlayered). The @nexub/themes files go in the base
    layer *before* preflight, exactly where v3 put them, so preflight still
-   resets their element styles (a, h1–h6, code, img) and utilities still win. */
-@layer theme, base, components, utilities;
+   resets their element styles (a, h1–h6, code, img) and utilities still win.
+   12.0: `nexub` (the prebuilt @nexub/diagram/theme.css below) goes after preflight and
+   before the utilities, so preflight can't reset the diagram's rules and utilities still win. */
+@layer theme, base, nexub, components, utilities;
 
 @import 'tailwindcss/theme.css' layer(theme);
 @import '@nexub/themes/base' layer(base);
