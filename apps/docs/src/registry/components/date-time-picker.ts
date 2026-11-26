@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A DatePicker and a TimePicker that edit one Date, with an optional time-zone label.',
     category: 'Form & Input',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.2.0',
     related: ['date-picker', 'time-picker'],
   },

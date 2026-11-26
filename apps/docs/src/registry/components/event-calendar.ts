@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A month or week grid of events. Display only: your app owns the events and what a click does.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.2.0',
     related: ['date-picker', 'date-time-picker'],
   },

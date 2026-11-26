@@ -2,7 +2,7 @@
 
 Drop-off through ordered steps, with conversion from the first step.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Funnel } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/funnel
 

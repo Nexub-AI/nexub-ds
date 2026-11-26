@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Save and cancel that stay in view at the bottom of a long form.',
     category: 'Form & Input',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.4.0',
     related: ['form', 'data-table'],
   },

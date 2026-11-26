@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '3.2.0',
     related: ['bar-chart', 'sparkline'],
   },

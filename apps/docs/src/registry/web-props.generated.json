@@ -8621,8 +8621,7 @@
           "name": "current",
           "type": "number",
           "required": true,
-          "deprecated": true,
-          "description": "Index of the step being shown."
+          "description": "Index of the step being shown, from 0. For \"every step done\", give the steps `status: 'complete'` (12.0 removed `current={-1}`; `nexub-migrate --rules changes-in-12`)."
         },
         {
           "name": "nonLinear",

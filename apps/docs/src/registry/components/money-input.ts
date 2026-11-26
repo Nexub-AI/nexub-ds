@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.',
     category: 'Form & Input',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.5.0',
     related: ['amount', 'number-input', 'input'],
   },

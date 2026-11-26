@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Intensity over a grid, such as activity by weekday and week, in seven sequential steps.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '4.5.0',
     related: ['bar-chart', 'line-chart'],
   },

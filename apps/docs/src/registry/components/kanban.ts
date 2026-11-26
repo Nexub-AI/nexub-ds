@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Columns of cards people move by dragging or with Alt+Arrow keys.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.5.0',
     related: ['sortable'],
   },

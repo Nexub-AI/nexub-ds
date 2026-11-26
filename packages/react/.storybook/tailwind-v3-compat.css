@@ -1,7 +1,9 @@
 /* Tailwind v3 → v4 compatibility for the Storybook canvas (same file as apps/docs/src/styles).
    Storybook moved to Tailwind v4 but must render as it did on v3 (and as the
    components render for consumers still on v3), so restore the v3 defaults
-   that v4 changed. (The v3 button pointer cursor comes from @nexub/themes/base.) */
+   that v4 changed. (The v3 button pointer cursor comes from @nexub/themes/base.)
+   Deprecated in 12.0 (RFC 12.0, option a): kept through 12.x, removed in 13.0. Apps that rely on
+   these defaults set them in their own base layer (guide: /getting-started/migrating-to-12). */
 
 @layer base {
   /* v3 preflight: unspecified border colour was gray-200 (v4: currentColor). */

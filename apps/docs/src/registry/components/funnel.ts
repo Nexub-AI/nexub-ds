@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'Drop-off through ordered steps, with conversion from the first step.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '4.5.0',
     related: ['bar-chart', 'line-chart'],
   },

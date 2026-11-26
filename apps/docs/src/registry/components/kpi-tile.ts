@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A headline number with its change versus last period and a trend line.',
     category: 'Data Display',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '4.5.0',
     related: ['bar-chart', 'line-chart'],
   },

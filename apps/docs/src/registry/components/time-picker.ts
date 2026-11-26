@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A time field on the native time input: 12 or 24 hours from the reader’s locale, and the platform picker on phones.',
     category: 'Form & Input',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.2.0',
     related: ['date-time-picker', 'date-picker'],
   },

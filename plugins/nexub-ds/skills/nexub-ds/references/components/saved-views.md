@@ -2,7 +2,7 @@
 
 A menu to switch, save, update and delete saved filter views. Your app stores them.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { SavedViews } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/saved-views
 

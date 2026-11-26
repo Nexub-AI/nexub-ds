@@ -2,7 +2,7 @@
 
 A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.
 
-- Package: `@nexub/react` · Category: Navigation · Status: beta
+- Package: `@nexub/react` · Category: Navigation · Status: stable
 - Import: `import { TreeView } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/tree-view
 

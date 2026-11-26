@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A checkbox drawn as a whole card: title, description and optional icon. Pick any number.',
     category: 'Form Controls',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.6.0',
     related: ['checkbox', 'radio-card', 'card'],
   },

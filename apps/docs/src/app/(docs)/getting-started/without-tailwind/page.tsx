@@ -32,33 +32,20 @@ import '@nexub/patterns/styles.css';`} />
 
       <h2>Your CSS still wins</h2>
       <p>
-        Everything in the stylesheet sits in CSS cascade layers (<code>theme</code>, <code>base</code>,{' '}
-        <code>components</code>, <code>utilities</code>). Styles outside a layer always beat layered ones,
-        so your own CSS overrides ours, including the small CSS reset it carries, without{' '}
-        <code>!important</code> or extra specificity.
+        Since 12.0 everything in the stylesheet sits in one <code>nexub</code> cascade layer (
+        <code>nexub.theme</code>, <code>nexub.base</code>, <code>nexub.components</code>,{' '}
+        <code>nexub.utilities</code>). Import it before your own CSS and every style of yours beats it, including
+        the small CSS reset it carries, without <code>!important</code>: unlayered, in your Tailwind layers or in
+        any other layer.
       </p>
-
-      <h2>Opt in to the 12.0 layers</h2>
       <p>
-        Those are Tailwind&apos;s own layer names. If your app also uses Tailwind v4, your utilities and ours
-        share one <code>utilities</code> layer, so when both set the same property, the stylesheet that loads
-        last wins. Since 11.9, <code>@nexub/react/styles.nexub-layer.css</code> is the same stylesheet with every
-        layer moved under one <code>nexub</code> layer (<code>nexub.theme</code>, <code>nexub.base</code>,{' '}
-        <code>nexub.components</code>, <code>nexub.utilities</code>). Import it before your own CSS and every
-        style of yours beats it: unlayered, in your Tailwind layers or in any other layer.
-      </p>
-      <CodeBlock code={`// app entry, before your own CSS
-import '@nexub/react/styles.nexub-layer.css';`} />
-      <p>
-        A layer ranks by where it is first named, so load this file first, or name it first at the top of
+        A layer ranks by where it is first named, so load the stylesheet first, or name it first at the top of
         your own CSS with <code>@layer nexub;</code>. Named after your layers, <code>nexub</code> would rank
-        above them. <code>@nexub/patterns/styles.css</code> keeps its layer names.
+        above them. <code>@nexub/patterns/styles.css</code> uses the same layer, so that one line covers both.
+        Coming from 11.x? See <a href="/getting-started/migrating-to-12">Migrating to 12.0</a>.
       </p>
-      <p>
-        RFC 12.0 makes this file <code>@nexub/react/styles.css</code> in 12.0. When you upgrade,{' '}
-        <code>npx nexub-migrate --rules changes-in-12</code> points the import back at{' '}
-        <code>styles.css</code>.
-      </p>
+      <CodeBlock lang="css" code={`/* your app's CSS, first line */
+@layer nexub;`} />
 
       <h2>Already using Tailwind?</h2>
       <p>

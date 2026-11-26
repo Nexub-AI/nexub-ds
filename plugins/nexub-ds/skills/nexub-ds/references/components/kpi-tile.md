@@ -2,7 +2,7 @@
 
 A headline number with its change versus last period and a trend line.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { KpiTile } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/kpi-tile
 

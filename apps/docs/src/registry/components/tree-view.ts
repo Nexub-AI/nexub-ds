@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A keyboard-friendly hierarchy (ARIA tree) with lazy children and tri-state checkboxes.',
     category: 'Navigation',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '6.3.0',
     related: ['data-table', 'sidebar'],
   },

@@ -2,7 +2,7 @@
 
 Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
 
-- Package: `@nexub/react` · Category: Data Display · Status: beta
+- Package: `@nexub/react` · Category: Data Display · Status: stable
 - Import: `import { Heatmap } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/heatmap
 

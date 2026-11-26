@@ -7,7 +7,7 @@ const entry: ComponentEntry = {
     description: 'A primary action with related secondary actions behind a chevron, as one connected control.',
     category: 'Actions',
     package: '@nexub/react',
-    status: 'beta',
+    status: 'stable',
     addedIn: '1.5.0',
     related: ['button', 'button-group', 'dropdown-menu'],
   },

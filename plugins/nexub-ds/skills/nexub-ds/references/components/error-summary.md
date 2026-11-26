@@ -2,7 +2,7 @@
 
 Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
 
-- Package: `@nexub/patterns` · Category: Forms · Status: beta
+- Package: `@nexub/patterns` · Category: Forms · Status: stable
 - Import: `import { ErrorSummary } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/error-summary
 

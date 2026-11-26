@@ -2,7 +2,7 @@
 
 Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
 
-- Package: `@nexub/patterns` · Category: AI · Status: beta
+- Package: `@nexub/patterns` · Category: AI · Status: stable
 - Import: `import { Conversation } from '@nexub/patterns';`
 - Docs: https://nexub-ds-docs.pages.dev/patterns/conversation
 

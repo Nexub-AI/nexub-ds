@@ -2,7 +2,7 @@
 
 A primary action with related secondary actions behind a chevron, as one connected control.
 
-- Package: `@nexub/react` · Category: Actions · Status: beta
+- Package: `@nexub/react` · Category: Actions · Status: stable
 - Import: `import { SplitButton } from '@nexub/react';`
 - Docs: https://nexub-ds-docs.pages.dev/components/split-button
 
