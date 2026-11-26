@@ -6,9 +6,16 @@ Open for comments for at least **3 working days** from the day this issue is ope
 
 ## Decision
 
-**Open, every question answered** by the owner on 2026-11-25: (1) option (a), keep the v3 compatibility defaults in 12.0, deprecate them and remove them in 13.0; (2) promote the 27 components listed under Promotions; (3) yes, correct decision 2; and yes to the Tailwind v4 layer order below. Acceptance is the maintainer's call once the comment period ends (2026-11-26). `APPROVED_MAJOR` stays at 11 until a maintainer accepts this RFC. Then the acceptance PR raises it to 12 (`scripts/release-version.mjs`), which lets a `major` changeset through for one release.
+**Accepted with changes** by the owner on 2026-11-26. The owner closed the comment period at about 14:15 UTC, about 4.5 hours before the 3 working days were up; no comments came in after the owner's answers on 2026-11-25. The answers were given on 2026-11-25:
 
-Release candidate: **11.9.x on the npm tag `next`**, once this RFC is accepted. `latest` stays on 11.8.x until 12.0.0.
+1. **The v3 compatibility defaults:** option (a). `tailwind-v3-compat.css` stays in 12.0, deprecated, and goes in 13.0.
+2. **Promotions:** the 27 components listed under Promotions. That's every component that meets the GOVERNANCE.md rule, not the roadmap's 30.
+3. **Decision 2 corrected** in `ROADMAP_12.x.md`: the v3 preset has been gone since 4.0.
+4. **Tailwind v4 apps** declare `@layer theme, base, nexub, components, utilities;`. Apps without Tailwind declare `@layer nexub;`.
+
+The acceptance PR raises `APPROVED_MAJOR` to 12 (`scripts/release-version.mjs`), which lets one `major` changeset through, for 12.0.0.
+
+**Release candidate:** this plan is dropped. 11.9.0 already went to `latest` on 2026-11-24, before acceptance. Apps can try the 12.0 layering on 11.9 with `@nexub/react/styles.nexub-layer.css`, so no separate `next` release is needed.
 
 ## Problem
 

@@ -20,15 +20,16 @@ test('no rollover from 10.0 on', () => {
   assert.equal(nextVersion('10.10.0', '10.11.0'), '10.11.0');
 });
 
-test('11.0: the approved major passes from 10.x, and only that one', () => {
-  assert.equal(nextVersion('10.9.0', '11.0.0'), '11.0.0');
-  assert.equal(nextVersion('10.9.3', '11.0.0'), '11.0.0');
-  assert.equal(nextVersion('11.0.0', '11.1.0'), '11.1.0');
-  assert.equal(nextVersion('11.0.0', '11.0.1'), '11.0.1');
-  assert.throws(() => nextVersion('11.0.0', '12.0.0'), /major bump/);
-  assert.throws(() => nextVersion('11.4.0', '12.0.0'), /major bump/);
+test('12.0: the approved major passes from 11.x, and only that one', () => {
+  assert.equal(nextVersion('11.9.0', '12.0.0'), '12.0.0');
+  assert.equal(nextVersion('11.9.3', '12.0.0'), '12.0.0');
+  assert.equal(nextVersion('12.0.0', '12.1.0'), '12.1.0');
+  assert.equal(nextVersion('12.0.0', '12.0.1'), '12.0.1');
+  assert.throws(() => nextVersion('12.0.0', '13.0.0'), /major bump/);
+  assert.throws(() => nextVersion('12.4.0', '13.0.0'), /major bump/);
+  assert.throws(() => nextVersion('11.9.0', '13.0.0'), /major bump/);
   assert.throws(() => nextVersion('10.9.0', '12.0.0'), /major bump/);
-  assert.throws(() => nextVersion('9.9.0', '11.0.0'), /major bump/);
+  assert.throws(() => nextVersion('10.9.0', '11.0.0'), /major bump/);
 });
 
 test('patches stay patches', () => {
