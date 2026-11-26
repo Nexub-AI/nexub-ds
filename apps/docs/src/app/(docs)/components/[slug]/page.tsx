@@ -98,9 +98,7 @@ export default async function ComponentPage({ params }: Props) {
 
           {generatedPlayground && (
             <Section id="playground" title="Playground">
-              <React.Suspense>
-                <GeneratedSection slug={slug} view="playground" />
-              </React.Suspense>
+              <GeneratedSection slug={slug} view="playground" />
             </Section>
           )}
 
@@ -133,9 +131,7 @@ export default async function ComponentPage({ params }: Props) {
 
           {states && (
             <Section id="states" title="States">
-              <React.Suspense>
-                <GeneratedSection slug={slug} view="states" />
-              </React.Suspense>
+              <GeneratedSection slug={slug} view="states" />
             </Section>
           )}
 
