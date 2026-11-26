@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { OnboardingPage, type OnboardingStep } from './index.js';
@@ -29,7 +29,8 @@ describe('OnboardingPage', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(h1()).toHaveTextContent('Invite your team');
-    expect(h1()).toHaveFocus();
+    // The step changes after an async check, and focus follows in an effect: wait for it.
+    await waitFor(() => expect(h1()).toHaveFocus());
     expect(onStepChange).toHaveBeenLastCalledWith(1);
     expect(screen.getByText('Team content')).toBeInTheDocument();
 
@@ -41,7 +42,8 @@ describe('OnboardingPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Finish' }));
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(screen.getByRole('status')).toHaveTextContent('You are all set');
-    expect(h1()).toHaveFocus();
+    // The step changes after an async check, and focus follows in an effect: wait for it.
+    await waitFor(() => expect(h1()).toHaveFocus());
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 
