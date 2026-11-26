@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import recipes from '@/registry/playground.generated.json';
 import type { PlaygroundRecipe } from './playground-code';
 import type { PlaygroundViewProps } from './GeneratedPlayground';
@@ -23,11 +23,5 @@ export async function GeneratedSection({
   const { default: View } = (await import(`./playground/${slug}.tsx`)) as {
     default: React.ComponentType<PlaygroundViewProps>;
   };
-  // 12.1: its own hydration task, like LivePreview. The boundary sits inside, after the await:
-  // around this async component it would stream in after a paint of nothing (a layout shift).
-  return (
-    <React.Suspense>
-      <View view={view} recipe={recipe} />
-    </React.Suspense>
-  );
+  return <View view={view} recipe={recipe} />;
 }
