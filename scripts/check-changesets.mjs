@@ -17,7 +17,7 @@ export function invalidBumps(markdown, allowMajor = false) {
 
 function main() {
   const dir = fileURLToPath(new URL('../.changeset/', import.meta.url));
-  // A `major` is accepted only on the line just before the approved major (10.x for 11.0).
+  // A `major` is accepted only on the line just before the approved major (11.x for 12.0).
   const current = JSON.parse(readFileSync(new URL('../packages/react/package.json', import.meta.url), 'utf8')).version;
   const allowMajor = Number(current.split('.')[0]) === APPROVED_MAJOR - 1;
   const problems = readdirSync(dir)
