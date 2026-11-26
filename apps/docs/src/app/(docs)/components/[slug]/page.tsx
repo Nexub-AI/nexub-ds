@@ -133,7 +133,9 @@ export default async function ComponentPage({ params }: Props) {
 
           {states && (
             <Section id="states" title="States">
-              <GeneratedSection slug={slug} view="states" />
+              <React.Suspense>
+                <GeneratedSection slug={slug} view="states" />
+              </React.Suspense>
             </Section>
           )}
 
