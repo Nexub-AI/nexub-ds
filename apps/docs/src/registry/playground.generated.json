@@ -1555,6 +1555,11 @@
         "kind": "text",
         "name": "placeholder",
         "default": "Select…"
+      },
+      {
+        "kind": "number",
+        "name": "virtualizeAbove",
+        "default": 100
       }
     ],
     "states": [
@@ -1620,6 +1625,11 @@
       {
         "kind": "text",
         "name": "placeholder"
+      },
+      {
+        "kind": "number",
+        "name": "virtualizeAbove",
+        "default": 100
       }
     ],
     "states": [
@@ -2013,6 +2023,11 @@
         "kind": "text",
         "name": "placeholder",
         "default": "Select…"
+      },
+      {
+        "kind": "number",
+        "name": "virtualizeAbove",
+        "default": 100
       }
     ],
     "states": [
@@ -4992,6 +5007,11 @@
         "kind": "number",
         "name": "maxVisibleChips",
         "default": 3
+      },
+      {
+        "kind": "number",
+        "name": "virtualizeAbove",
+        "default": 100
       }
     ],
     "states": [

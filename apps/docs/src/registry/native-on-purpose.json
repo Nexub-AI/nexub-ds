@@ -36,9 +36,10 @@
   },
   "multi-select": {
     "props": [
-      "sheet"
+      "sheet",
+      "virtualizeAbove"
     ],
-    "reason": "On native the options always open in a BottomSheet; web's sheet prop opts into that on small screens."
+    "reason": "On native the options always open in a BottomSheet; web's sheet prop opts into that on small screens. virtualizeAbove (12.1) windows the web list; the native list is a FlatList, which always renders only the rows in view."
   },
   "phone-input": {
     "props": [
@@ -188,8 +189,9 @@
       "aria-required",
       "name",
       "sheet",
-      "searchPlaceholder"
+      "searchPlaceholder",
+      "virtualizeAbove"
     ],
-    "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box."
+    "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box. virtualizeAbove (12.1) windows the web list; the native list is a FlatList, which always renders only the rows in view."
   }
 }
