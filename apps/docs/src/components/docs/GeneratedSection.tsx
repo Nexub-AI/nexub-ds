@@ -11,9 +11,17 @@ export function playgroundRecipe(slug: string): PlaygroundRecipe | undefined {
 
 // Resolved on the server like LivePreview: the page's own base module is in the
 // first HTML and is the only playground module the page loads.
-export async function GeneratedSection({ slug, view }: { slug: string; view: PlaygroundViewProps['view'] }) {
+export async function GeneratedSection({
+  slug,
+  view,
+}: {
+  slug: string;
+  view: PlaygroundViewProps['view'];
+}) {
   const recipe = playgroundRecipe(slug);
   if (!recipe) return null;
-  const { default: View } = (await import(`./playground/${slug}.tsx`)) as { default: React.ComponentType<PlaygroundViewProps> };
+  const { default: View } = (await import(`./playground/${slug}.tsx`)) as {
+    default: React.ComponentType<PlaygroundViewProps>;
+  };
   return <View view={view} recipe={recipe} />;
 }

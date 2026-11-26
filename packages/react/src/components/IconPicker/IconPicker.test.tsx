@@ -10,7 +10,9 @@ beforeEach(() => localStorage.clear());
 describe('IconPicker (11.2)', () => {
   it('opens the @nexub/icons grid, searches and picks a name', async () => {
     const onValueChange = vi.fn();
-    const { container } = render(<IconPicker aria-label="Doc icon" name="icon" onValueChange={onValueChange} />);
+    const { container } = render(
+      <IconPicker aria-label="Doc icon" name="icon" onValueChange={onValueChange} />,
+    );
     const trigger = screen.getByRole('combobox', { name: 'Doc icon' });
     expect(trigger).toHaveTextContent('Pick an icon');
     await userEvent.click(trigger);
@@ -29,11 +31,15 @@ describe('IconPicker (11.2)', () => {
     render(<IconPicker aria-label="Icon" value="Star" />);
     const trigger = screen.getByRole('combobox', { name: 'Icon' });
     expect(trigger).toHaveTextContent('Star');
-    await vi.waitFor(() => expect(trigger.querySelector('svg:not(.lucide-chevron-down)')).not.toBeNull());
+    await vi.waitFor(() =>
+      expect(trigger.querySelector('svg:not(.lucide-chevron-down)')).not.toBeNull(),
+    );
   });
 
   it('icons limits and orders the set; categories add headings and a jump row; recent comes first', async () => {
-    const { rerender } = render(<IconPicker.Panel recent={[]} icons={['Star', 'Heart', 'NotAnIcon']} />);
+    const { rerender } = render(
+      <IconPicker.Panel recent={[]} icons={['Star', 'Heart', 'NotAnIcon']} />,
+    );
     const options = await screen.findAllByRole('option');
     expect(options.map((o) => o.getAttribute('aria-label'))).toEqual(['Star', 'Heart']);
     rerender(
@@ -46,7 +52,11 @@ describe('IconPicker (11.2)', () => {
       />,
     );
     expect(screen.getByRole('group', { name: 'Recently used' })).toBeInTheDocument();
-    await userEvent.click(within(screen.getByRole('group', { name: 'Categories' })).getByRole('button', { name: 'People' }));
+    await userEvent.click(
+      within(screen.getByRole('group', { name: 'Categories' })).getByRole('button', {
+        name: 'People',
+      }),
+    );
     expect(screen.getByRole('option', { name: 'User' })).toHaveFocus();
     await userEvent.keyboard('{ArrowUp}');
     expect(screen.getByRole('option', { name: 'Wallet' })).toHaveFocus();
@@ -62,5 +72,28 @@ describe('IconPicker (11.2)', () => {
     await screen.findByRole('listbox');
     const results = await axe.run(container, { rules: { 'color-contrast': { enabled: false } } });
     expect(results.violations.map((v) => v.id)).toEqual([]);
+  });
+});
+
+describe('IconPicker 12.1: hydration', () => {
+  it('hydrates without a mismatch when the server had the icons cached and the browser not yet', async () => {
+    const { renderToString } = await import('react-dom/server');
+    const { hydrateRoot } = await import('react-dom/client');
+    const server = await import('./IconPicker.js');
+    await server.loadIcons(); // the server process has every icon cached
+    const html = renderToString(<server.IconPicker aria-label="Icon" value="CalendarDays" />);
+    vi.resetModules(); // the browser starts with a fresh module: nothing cached
+    const client = await import('./IconPicker.js');
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.append(container);
+    const onRecoverableError = vi.fn();
+    await React.act(async () => {
+      hydrateRoot(container, <client.IconPicker aria-label="Icon" value="CalendarDays" />, {
+        onRecoverableError,
+      });
+    });
+    expect(onRecoverableError).not.toHaveBeenCalled();
+    container.remove();
   });
 });

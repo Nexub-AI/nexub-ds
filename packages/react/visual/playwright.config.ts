@@ -14,7 +14,7 @@ const storybookOut = fileURLToPath(new URL('../storybook-static/index.json', imp
 // 11.6: and the @nexub/elements form tests (elements.spec.ts), which need every engine.
 // 11.9: and the cascade-layer check (layers.spec.ts): which CSS wins is the browser's call.
 // 11.9: and the @nexub/diagram screen-reader pass (diagram.spec.ts).
-const DOCS = /docs\.(visual|nav|a11y|security)\.spec\.ts/;
+const DOCS = /docs\.(visual|nav|a11y|security|perf)\.spec\.ts/;
 const docsUse = { baseURL: 'http://localhost:6008', viewport: { width: 1280, height: 800 } };
 const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
   const use = {
@@ -24,7 +24,12 @@ const engines = (['webkit', 'firefox'] as const).flatMap((engine) => {
   };
   const snapshotPathTemplate = `{testDir}/__screenshots__/${engine}/{arg}{ext}`;
   return [
-    { name: engine, testMatch: /(engines|states\.visual|interactions|elements|layers|diagram)\.spec\.ts/, use, snapshotPathTemplate },
+    {
+      name: engine,
+      testMatch: /(engines|states\.visual|interactions|elements|layers|diagram)\.spec\.ts/,
+      use,
+      snapshotPathTemplate,
+    },
     { name: `docs-${engine}`, testMatch: DOCS, use: { ...use, ...docsUse }, snapshotPathTemplate },
   ];
 });
@@ -50,9 +55,14 @@ export default defineConfig({
     toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css' },
   },
   projects: [
-    { name: 'storybook', testIgnore: /docs\.(visual|nav|a11y|security)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/ },
+    {
+      name: 'storybook',
+      testIgnore:
+        /docs\.(visual|nav|a11y|security)\.spec\.ts|perf\.spec\.ts|engines\.spec\.ts|soak\.spec\.ts/,
+    },
     // Interaction-latency budgets (perf.spec.ts); serial so its tests don't compete for CPU.
-    { name: 'perf', testMatch: /perf\.spec\.ts/, fullyParallel: false },
+    // perf.spec.ts runs on Storybook; docs.perf.spec.ts (12.1) is a docs suite (DOCS above).
+    { name: 'perf', testMatch: /(?<!docs\.)perf\.spec\.ts/, fullyParallel: false },
     { name: 'docs', testMatch: DOCS, use: docsUse },
     // 9.5: one long docs session (soak.spec.ts); SOAK_MINUTES sets its length.
     { name: 'soak', testMatch: /soak\.spec\.ts/, use: docsUse, retries: 0 },

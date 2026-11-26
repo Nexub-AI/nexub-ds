@@ -3,7 +3,14 @@
 import * as React from 'react';
 import type { IconProps } from '@nexub/icons';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
-import { PickerGrid, PickerShell, useRecent, type PickerFieldProps, type PickerItem, type PickerSection } from '../EmojiPicker/pickerShared.js';
+import {
+  PickerGrid,
+  PickerShell,
+  useRecent,
+  type PickerFieldProps,
+  type PickerItem,
+  type PickerSection,
+} from '../EmojiPicker/pickerShared.js';
 
 type IconComponent = React.ComponentType<IconProps>;
 type IconMap = Record<string, IconComponent>;
@@ -22,9 +29,16 @@ export function loadIcons(): Promise<IconMap> {
     (mod) => {
       const map: IconMap = {};
       for (const [name, value] of Object.entries(mod)) {
-        if (/^[A-Z]/.test(name) && value && (typeof value === 'function' || typeof value === 'object')) map[name] = value as IconComponent;
+        if (
+          /^[A-Z]/.test(name) &&
+          value &&
+          (typeof value === 'function' || typeof value === 'object')
+        )
+          map[name] = value as IconComponent;
       }
-      return (loaded = map);
+      loaded = map;
+      for (const notify of listeners) notify();
+      return map;
     },
     (error: unknown) => {
       iconsPromise = undefined;
@@ -33,18 +47,26 @@ export function loadIcons(): Promise<IconMap> {
   ));
 }
 
+const listeners = new Set<() => void>();
+const subscribe = (notify: () => void) => {
+  listeners.add(notify);
+  return () => listeners.delete(notify);
+};
+
+/**
+ * The icon map once loaded. 12.1: hydration reads the server snapshot (null) whatever this
+ * module has cached, so the server HTML (rendered with or without the icons cached) and the
+ * first client render always match; a picker mounted later shows the cached icons at once.
+ */
 function useIcons(enabled = true): IconMap | null {
-  const [icons, setIcons] = React.useState<IconMap | null>(loaded ?? null);
+  const icons = React.useSyncExternalStore(
+    subscribe,
+    () => loaded ?? null,
+    () => null,
+  );
   React.useEffect(() => {
     if (icons || !enabled) return;
-    let live = true;
-    loadIcons().then(
-      (m) => live && setIcons(m),
-      () => {},
-    );
-    return () => {
-      live = false;
-    };
+    loadIcons().catch(() => {});
   }, [icons, enabled]);
   return icons;
 }
@@ -89,7 +111,17 @@ export interface IconPickerPanelProps {
  * 11.2: the icon grid on its own (search, categories, recent picks) over `@nexub/icons`, for any
  * popover or page. The icon set loads on mount with a dynamic import.
  */
-export function IconPickerPanel({ value, onValueChange, icons: only, categories, recent: recentProp, autoFocus, listId, className, 'aria-label': ariaLabel }: IconPickerPanelProps) {
+export function IconPickerPanel({
+  value,
+  onValueChange,
+  icons: only,
+  categories,
+  recent: recentProp,
+  autoFocus,
+  listId,
+  className,
+  'aria-label': ariaLabel,
+}: IconPickerPanelProps) {
   const messages = useNexubMessages();
   const icons = useIcons();
   const [recent, addRecent] = useRecent(RECENT_KEY, recentProp);
@@ -100,7 +132,14 @@ export function IconPickerPanel({ value, onValueChange, icons: only, categories,
       const Icon = icons[name];
       if (!Icon) return [];
       const label = iconLabel(name);
-      return [{ value: name, label, content: <Icon size="md" />, search: `${label} ${name}`.toLowerCase() }];
+      return [
+        {
+          value: name,
+          label,
+          content: <Icon size="md" />,
+          search: `${label} ${name}`.toLowerCase(),
+        },
+      ];
     };
     const groups: { id: string; label: string; names: string[] }[] = categories
       ? categories.map((c, i) => ({ id: `c${i}`, label: c.label, names: c.icons }))
@@ -113,7 +152,12 @@ export function IconPickerPanel({ value, onValueChange, icons: only, categories,
     const recentItems = recent.flatMap(item);
     if (recentItems.length) {
       const Clock = icons.Clock;
-      out.unshift({ id: 'recent', label: messages.recentlyUsed, icon: Clock ? <Clock size="sm" /> : undefined, items: recentItems });
+      out.unshift({
+        id: 'recent',
+        label: messages.recentlyUsed,
+        icon: Clock ? <Clock size="sm" /> : undefined,
+        items: recentItems,
+      });
     }
     return out;
   }, [icons, only, categories, recent, messages.allIcons, messages.recentlyUsed]);
@@ -134,7 +178,8 @@ export function IconPickerPanel({ value, onValueChange, icons: only, categories,
   );
 }
 
-export interface IconPickerProps extends PickerFieldProps, Pick<IconPickerPanelProps, 'icons' | 'categories' | 'recent'> {
+export interface IconPickerProps
+  extends PickerFieldProps, Pick<IconPickerPanelProps, 'icons' | 'categories' | 'recent'> {
   /** The picked icon's name; `null` (or `undefined` when uncontrolled) for none. */
   value?: string | null;
   defaultValue?: string | null;
@@ -144,7 +189,16 @@ export interface IconPickerProps extends PickerFieldProps, Pick<IconPickerPanelP
 }
 
 const IconPickerRoot = React.forwardRef<HTMLButtonElement, IconPickerProps>(function IconPicker(
-  { value: valueProp, defaultValue = null, onValueChange, placeholder, icons: only, categories, recent, ...field },
+  {
+    value: valueProp,
+    defaultValue = null,
+    onValueChange,
+    placeholder,
+    icons: only,
+    categories,
+    recent,
+    ...field
+  },
   ref,
 ) {
   const messages = useNexubMessages();
