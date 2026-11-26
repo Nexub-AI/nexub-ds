@@ -53,6 +53,16 @@ export default function NextjsPage() {
         </Prose>
       </Section>
 
+      <Section id="react-compiler" title="React Compiler">
+        <Prose>
+          Nexub components work with the React Compiler on (<code>reactCompiler: true</code> in{' '}
+          <code>next.config</code>). From 12.1 CI runs the whole <code>@nexub/react</code> test
+          suite on compiled components. Two DataTable parts read TanStack Table objects that change
+          in place, so they opt out with <code>&apos;use no memo&apos;</code>; everything else
+          compiles.
+        </Prose>
+      </Section>
+
       <Section id="fonts" title="Fonts from next/font">
         <Prose>
           <code>@nexub/themes/base</code> self-hosts Plus Jakarta Sans, the one Nexub typeface;{' '}
