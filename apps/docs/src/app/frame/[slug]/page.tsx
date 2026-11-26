@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { templateEntries, getTemplateEntry } from '@/registry/templates';
@@ -20,7 +21,10 @@ export default async function TemplateFrame({ params }: { params: Promise<{ slug
   return (
     <div className="min-h-screen bg-surface">
       <FrameThemeSync />
-      <TemplatePreview slug={t.slug} />
+      {/* 12.1: the template hydrates in its own task, after the frame shell (mobile TBT). */}
+      <React.Suspense>
+        <TemplatePreview slug={t.slug} />
+      </React.Suspense>
     </div>
   );
 }
