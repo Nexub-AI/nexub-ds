@@ -73,10 +73,10 @@ jobs:
         working-directory: apps/docs
         run: pnpm exec lhci autorun
 
-      # The same pages plus two template pages on Lighthouse's default mobile emulation
-      # (throttled CPU and network). 12.1: performance >= 0.90 (median of 3) is blocking; LCP,
-      # TBT and CLS still warn and go to the job summary. Config: apps/docs/lighthouserc.mobile.json.
-      - name: Lighthouse CI (mobile)
+      # 11.7: the same pages plus two template pages on Lighthouse's default mobile emulation
+      # (throttled CPU and network). Assertions only warn until 12.1 makes them blocking; the
+      # medians go to the job summary as the baseline. Config: apps/docs/lighthouserc.mobile.json.
+      - name: Lighthouse CI (mobile, warn only)
         working-directory: apps/docs
         run: pnpm exec lhci autorun --config=lighthouserc.mobile.json
 
