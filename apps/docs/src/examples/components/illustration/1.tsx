@@ -2,7 +2,7 @@
 
 import { Illustration } from '@nexub/react';
 
-const kinds = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'] as const;
+const kinds = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance', 'success'] as const;
 
 export default function Example() {
   return (

@@ -37,6 +37,16 @@ test('springs convert the damping ratio to Reanimated’s absolute damping', () 
   assert.deepEqual(native.motion.spring.spatial.default, { stiffness: 700, damping: 47.62, mass: 1 });
 });
 
+test('motion presets by intent alias a spring (12.3)', () => {
+  assert.deepEqual(Object.keys(native.motion.preset), ['enter', 'exit', 'emphasis', 'success', 'attention']);
+  for (const p of Object.values(native.motion.preset)) {
+    const { family, speed, ...config } = p;
+    assert.deepEqual(config, native.motion.spring[family][speed]);
+  }
+  assert.equal(native.motion.preset.enter.family, 'spatial');
+  assert.equal(native.motion.preset.exit.family, 'effects');
+});
+
 test('dimensions are numbers and shadows have no CSS-only syntax', () => {
   assert.equal(native.spacing['4'], 16);
   assert.equal(native.shape.control, 9999);

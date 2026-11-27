@@ -65,6 +65,34 @@ export const Stagger: Story = {
   },
 };
 
+/**
+ * 12.3 motion presets by intent: `nx-motion-enter`, `-exit`, `-emphasis`, `-success` and
+ * `-attention` (@nexub/themes), on `--motion-preset-*` (Tailwind `ease-enter duration-enter` …).
+ * Replay re-mounts each box with its class. Exit holds its end state, so it shows its class name only.
+ */
+export const Presets: Story = {
+  render: function Render() {
+    const [run, setRun] = React.useState(0);
+    return (
+      <div style={{ display: 'grid', gap: '1rem' }}>
+        <Button variant="tonal" onClick={() => setRun((n) => n + 1)} style={{ width: 'fit-content' }}>
+          Replay
+        </Button>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', minHeight: 64 }}>
+          {(['enter', 'emphasis', 'success', 'attention'] as const).map((p) => (
+            <div key={`${p}-${run}`} className={`nx-motion-${p}`} style={box}>
+              {p}
+            </div>
+          ))}
+          <div key={`exit-${run}`} className={run ? 'nx-motion-exit' : undefined} style={box}>
+            exit
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
 /** Items grow in and collapse out; removed rows exit in place. */
 export const List: Story = {
   render: function Render() {

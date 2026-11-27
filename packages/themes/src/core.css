@@ -316,7 +316,7 @@ code, kbd, pre, samp {
 .nx-motion:is([data-state='open'], [data-state='delayed-open'], [data-state='instant-open'], [data-motion^='from-']) {
   animation:
     nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing),
-    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+    nx-move-in var(--motion-preset-enter-duration) var(--motion-preset-enter-easing);
   /* The move adds to the element's own translate/scale. A centred dialog is centred with
      the translate property (-50% -50%); replacing it made the dialog fly in from the corner
      by half its size, reduced motion included (9.4). The fade still replaces. */
@@ -325,8 +325,8 @@ code, kbd, pre, samp {
 /* Exit is quicker than enter and never overshoots. */
 .nx-motion:is([data-state='closed'], [data-motion^='to-']) {
   animation:
-    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards,
-    nx-move-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+    nx-fade-out var(--motion-preset-exit-duration) var(--motion-preset-exit-easing) forwards,
+    nx-move-out var(--motion-preset-exit-duration) var(--motion-preset-exit-easing) forwards;
   animation-composition: replace, add;
 }
 
@@ -698,7 +698,7 @@ html.nexub-scroll-lock.nexub-scroll-gutter { scrollbar-gutter: stable; }
   80% { translate: 2px; }
 }
 .nx-shake {
-  animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  animation: nx-shake var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
 }
 @media (prefers-reduced-motion: reduce) {
   .nx-shake { animation: none; }
@@ -954,7 +954,7 @@ circle[data-pt='focus'] { stroke-width: 8; }
   [dir='rtl'] button[role='switch'][data-state='checked']:active:not(:disabled) > span { transform-origin: left center; }
   /* A field shakes once when it becomes invalid (the attribute change restarts it). */
   :is(input, textarea, select, [role='combobox'])[aria-invalid='true'] {
-    animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+    animation: nx-shake var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
   }
   /* The focus ring pops out instead of appearing (controls only, so panels keep their own entrance). */
   :is(a, button, input, textarea, select, summary, [role='combobox'], [role='tab'], [role='switch'], [role='checkbox'], [role='radio'], [role='menuitem']):focus-visible {
@@ -1069,7 +1069,7 @@ circle[data-pt='focus'] { stroke-width: 8; }
 @keyframes nx-tick { from { scale: 0.6; opacity: 0; } }
 .nx-tick {
   display: inline-block;
-  animation: nx-tick var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  animation: nx-tick var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
 }
 /*@end*/
 
@@ -1202,7 +1202,7 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
   translate: 0 !important;
   background-color: var(--switch-thumb, var(--color-surface-container-lowest)) !important;
   transition:
-    translate var(--motion-spring-expressive-fast-duration) var(--motion-spring-expressive-fast-easing),
+    translate var(--motion-preset-emphasis-duration) var(--motion-preset-emphasis-easing),
     background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) !important;
 }
 /* Icon / spinner colour follows the track. */
@@ -1228,7 +1228,7 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
 /* SuccessCheck: the ring pops in on the expressive spring, then the tick draws
    (.nx-check-draw). Reduced motion shows the finished mark. */
 @keyframes nx-pop { from { scale: 0.6; opacity: 0; } }
-.nx-success-check { animation: nx-pop var(--motion-spring-expressive-default-duration, 400ms) var(--motion-spring-expressive-default-easing, ease-out) both; }
+.nx-success-check { animation: nx-pop var(--motion-preset-success-duration, 400ms) var(--motion-preset-success-easing, ease-out) both; }
 .nx-success-check .nx-check-draw { animation-delay: 120ms; animation-fill-mode: both; }
 @media (prefers-reduced-motion: reduce) {
   .nx-success-check { animation: none; }
@@ -1347,5 +1347,30 @@ body:has([data-nx-dragging]) { -webkit-user-select: none; user-select: none; cur
     [data-nx-sheet='auto'] { outline: 1px solid CanvasText !important; outline-offset: -1px; }
     [data-nx-sheet='auto']::before { background: CanvasText; }
   }
+}
+/*@end*/
+
+/*@part motion-presets*/
+/* Motion language (12.3): one class per intent, on --motion-preset-*. Add it when
+   the moment happens; re-mount to replay. Exit holds its end state.
+   Reduced motion: enter/exit land at once, the rest don't move. */
+@keyframes nx-preset-enter { from { opacity: 0; translate: 0 var(--nx-travel, 0.5rem); } }
+@keyframes nx-preset-exit { to { opacity: 0; translate: 0 var(--nx-travel, 0.5rem); } }
+@keyframes nx-preset-emphasis { from { scale: 0.92; } }
+@keyframes nx-preset-success { from { scale: 0.6; opacity: 0; } }
+@keyframes nx-preset-attention {
+  0%, 100% { translate: 0; }
+  20% { translate: -4px; }
+  40% { translate: 4px; }
+  60% { translate: -3px; }
+  80% { translate: 2px; }
+}
+.nx-motion-enter { animation: nx-preset-enter var(--motion-preset-enter-duration) var(--motion-preset-enter-easing) both; }
+.nx-motion-exit { animation: nx-preset-exit var(--motion-preset-exit-duration) var(--motion-preset-exit-easing) forwards; }
+.nx-motion-emphasis { animation: nx-preset-emphasis var(--motion-preset-emphasis-duration) var(--motion-preset-emphasis-easing); }
+.nx-motion-success { animation: nx-preset-success var(--motion-preset-success-duration) var(--motion-preset-success-easing) both; }
+.nx-motion-attention { animation: nx-preset-attention var(--motion-preset-attention-duration) var(--motion-preset-attention-easing); }
+@media (prefers-reduced-motion: reduce) {
+  .nx-motion-emphasis, .nx-motion-success, .nx-motion-attention { animation: none; }
 }
 /*@end*/

@@ -22,7 +22,8 @@
     "reorder",
     "controls",
     "success-check",
-    "sheet"
+    "sheet",
+    "motion-presets"
   ],
   "triggers": {
     "stagger": [
@@ -476,6 +477,23 @@
       [
         "data-nx-sheet",
         "nx-motion"
+      ]
+    ],
+    "motion-presets": [
+      [
+        "nx-motion-attention"
+      ],
+      [
+        "nx-motion-emphasis"
+      ],
+      [
+        "nx-motion-enter"
+      ],
+      [
+        "nx-motion-exit"
+      ],
+      [
+        "nx-motion-success"
       ]
     ]
   }

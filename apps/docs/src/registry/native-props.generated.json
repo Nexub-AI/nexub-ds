@@ -93,7 +93,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -162,7 +162,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": ""
       },
@@ -271,7 +271,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -2308,6 +2308,13 @@
         "type": "() => void",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "haptic",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Play the tone's haptic when the banner appears: success, warning, or the\nerror haptic for danger (12.3). Off when the user turned haptics off in\nNexubNativeProvider, or where the platform has none."
       }
     ]
   },
@@ -2582,6 +2589,12 @@
         "required": false,
         "default": "'md'",
         "description": "Scales spacing, icon and title."
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"noData\" />`."
       }
     ]
   },
@@ -2625,6 +2638,13 @@
         "required": false,
         "default": "'md'",
         "description": "Scales spacing, icon and title.",
+        "inherited": "EmptyState"
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"noData\" />`.",
         "inherited": "EmptyState"
       }
     ]
@@ -2749,6 +2769,33 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      }
+    ]
+  },
+  "Illustration": {
+    "file": "components/illustration.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "kind",
+        "type": "'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline' | 'notFound' | 'maintenance' | 'success'",
+        "required": true,
+        "description": "Which drawing: empty (noData, noResults), noAccess, serverError, offline, notFound, maintenance or success."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "80, 120 or 160 pt wide (5:4)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Names the drawing (an image to screen readers). Without it the drawing is decorative and hidden."
       }
     ]
   },
@@ -5452,7 +5499,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -6705,6 +6752,12 @@
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"success\" size=\"lg\" />`."
       }
     ]
   },
@@ -6839,7 +6892,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes)."
       },

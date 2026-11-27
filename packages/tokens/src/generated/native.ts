@@ -2384,6 +2384,43 @@ export const native = {
           "mass": 1
         }
       }
+    },
+    "preset": {
+      "enter": {
+        "family": "spatial",
+        "speed": "default",
+        "stiffness": 700,
+        "damping": 47.62,
+        "mass": 1
+      },
+      "exit": {
+        "family": "effects",
+        "speed": "fast",
+        "stiffness": 3800,
+        "damping": 123.29,
+        "mass": 1
+      },
+      "emphasis": {
+        "family": "expressive",
+        "speed": "fast",
+        "stiffness": 800,
+        "damping": 39.6,
+        "mass": 1
+      },
+      "success": {
+        "family": "expressive",
+        "speed": "default",
+        "stiffness": 380,
+        "damping": 31.19,
+        "mass": 1
+      },
+      "attention": {
+        "family": "spatial",
+        "speed": "fast",
+        "stiffness": 1400,
+        "damping": 67.35,
+        "mass": 1
+      }
     }
   }
 } as const;

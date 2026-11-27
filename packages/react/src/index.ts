@@ -247,6 +247,7 @@ export { QRCode } from './components/QRCode/index.js';
 export type { QRCodeProps } from './components/QRCode/index.js';
 export type { TimeSlotPickerProps, TimeSlot } from './components/TimeSlotPicker/index.js';
 export type { ChartPoint, ChartInteractiveProps, DonutDatum, HeatmapPoint } from './components/Chart/index.js';
+export type { ChartAnnotation, ChartReferenceLine, ChartChange, ChartStoryProps } from './components/Chart/index.js';
 export { CountryBadge } from './components/CountryBadge/index.js';
 export type { CountryBadgeProps } from './components/CountryBadge/index.js';
 

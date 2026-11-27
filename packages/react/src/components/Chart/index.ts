@@ -4,3 +4,4 @@ export { ChartToggle } from './ChartToggle.js';
 export type { ChartToggleProps } from './ChartToggle.js';
 export type { GaugeProps, GaugeTone, HeatmapProps, FunnelProps, FunnelDatum, FunnelSeries, KpiTileProps, HeatmapPoint } from './MoreCharts.js';
 export type { BarChartProps, LineChartProps, DonutChartProps, SparklineProps, ChartLegendProps, ChartSeries, ChartColor, ChartTone, ChartPaint, ChartPoint, ChartInteractiveProps, DonutDatum } from './Chart.js';
+export type { ChartAnnotation, ChartReferenceLine, ChartChange, ChartStoryProps } from './ChartStory.js';

@@ -4053,6 +4053,7 @@
         "kind": "select",
         "name": "kind",
         "options": [
+          "success",
           "offline",
           "noData",
           "noResults",

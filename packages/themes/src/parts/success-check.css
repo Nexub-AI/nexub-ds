@@ -3,7 +3,7 @@
 /* SuccessCheck: the ring pops in on the expressive spring, then the tick draws
    (.nx-check-draw). Reduced motion shows the finished mark. */
 @keyframes nx-pop { from { scale: 0.6; opacity: 0; } }
-.nx-success-check { animation: nx-pop var(--motion-spring-expressive-default-duration, 400ms) var(--motion-spring-expressive-default-easing, ease-out) both; }
+.nx-success-check { animation: nx-pop var(--motion-preset-success-duration, 400ms) var(--motion-preset-success-easing, ease-out) both; }
 .nx-success-check .nx-check-draw { animation-delay: 120ms; animation-fill-mode: both; }
 @media (prefers-reduced-motion: reduce) {
   .nx-success-check { animation: none; }
