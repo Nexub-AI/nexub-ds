@@ -245,6 +245,8 @@ export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS } from '@nexub/core';
 export type { CategoryColor, ProductKey, DivisionKey } from '@nexub/core';
 
 // 10.9: QR codes, and the native twins of the 10.7/10.8 web components
+export { Illustration } from './components/illustration';
+export type { IllustrationProps, IllustrationKind } from './components/illustration';
 export { QRCode, QRScanner } from './components/qr';
 export type { QRCodeProps, QRScannerProps } from './components/qr';
 export { DescriptionList, ComparisonBar } from './components/datadisplay';

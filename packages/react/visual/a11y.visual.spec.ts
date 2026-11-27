@@ -414,3 +414,15 @@ test('a11y 12.3 chart notes and change callout are text', async ({ page }) => {
   await expect(page.getByRole('figure', { name: 'Revenue' })).toHaveAccessibleDescription('Up 18% (+$1,800) since March');
   await expect(page.getByRole('figure', { name: 'Costs' })).toHaveAccessibleDescription('Down 6% (−$300) since January');
 });
+
+// 12.3: a spot illustration is decorative (out of the tree) unless titled, then one named image.
+test('a11y Illustration: decorative by default, one named image with a title', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-illustration--kinds&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.locator('svg[data-nx="illustration"][aria-hidden="true"]')).toHaveCount(8);
+  await expect(root.getByRole('img')).toHaveCount(0);
+  await page.goto('/iframe.html?id=components-illustration--titled&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.locator('#storybook-root').getByRole('img', { name: 'You are offline', exact: true })).toHaveCount(1);
+});

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Illustration, type IllustrationKind } from './Illustration.js';
 
-const kinds: IllustrationKind[] = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'];
+const kinds: IllustrationKind[] = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance', 'success'];
 
 describe('Illustration', () => {
   it.each(kinds)('%s is decorative, small and drawn with colour roles only', (kind) => {

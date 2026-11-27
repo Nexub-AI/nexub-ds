@@ -430,6 +430,8 @@ export interface ResultScreenProps {
   primary: { label: string; onPress: () => void };
   secondary?: { label: string; onPress: () => void };
   icon?: React.ComponentType<NativeIconProps>;
+  /** 12.3: art in place of the icon disc, e.g. `<Illustration kind="success" size="lg" />`. */
+  illustration?: React.ReactNode;
 }
 
 /** Full-screen outcome: success, error, offline, maintenance, or "update required". */
@@ -441,6 +443,7 @@ export function ResultScreen({
   primary,
   secondary,
   icon,
+  illustration,
 }: ResultScreenProps) {
   const { roles, tokens, locale } = useTheme();
   // The largest avatar plus a ring of breathing room.
@@ -472,18 +475,20 @@ export function ResultScreen({
           padding: tokens.spacing[6],
         }}
       >
-        <View
-          style={{
-            width: disc,
-            height: disc,
-            borderRadius: disc / 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: roles[`${tone}-container`],
-          }}
-        >
-          <Glyph size={44} color={roles[tone]} />
-        </View>
+        {illustration ?? (
+          <View
+            style={{
+              width: disc,
+              height: disc,
+              borderRadius: disc / 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: roles[`${tone}-container`],
+            }}
+          >
+            <Glyph size={44} color={roles[tone]} />
+          </View>
+        )}
         <Heading variant="headline-md" style={{ textAlign: 'center' }}>
           {title}
         </Heading>

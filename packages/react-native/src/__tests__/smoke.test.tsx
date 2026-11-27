@@ -118,6 +118,7 @@ const CASES: Record<string, Case> = {
   SkeletonText: { props: {} },
   SkeletonSwap: { props: { loading: true, skeleton: <Lib.Skeleton />, children: t('done') } },
   EmptyState: { props: { title: 'Nothing yet' } },
+  Illustration: { props: { kind: 'success', title: 'Done' }, a11y: ['image', 'Done'] },
   ErrorState: { props: { title: 'Failed', onRetry: noop }, a11y: ['button', 'Retry'] },
   // Overlays
   BottomSheet: { props: { open: true, onOpenChange: noop, title: 'Sheet', children: t('body') }, a11y: ['header', 'Sheet'] },

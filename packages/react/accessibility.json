@@ -938,7 +938,10 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
-      "screenReader": []
+      "screenReader": [
+        "Decorative by default: the svg has `aria-hidden`, so the state is read from its title and description alone.",
+        "With `title` it is one image named by the title (`role=\"img\"`, `aria-label`)."
+      ]
     },
     {
       "slug": "inline-edit",

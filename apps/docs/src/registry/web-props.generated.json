@@ -5593,9 +5593,9 @@
       "props": [
         {
           "name": "kind",
-          "type": "'offline' | 'noData' | 'noResults' | 'noAccess' | 'serverError' | 'notFound' | 'maintenance'",
+          "type": "'success' | 'offline' | 'noData' | 'noResults' | 'noAccess' | 'serverError' | 'notFound' | 'maintenance'",
           "required": true,
-          "description": "Which drawing: one per EmptyState preset, plus notFound and maintenance for full pages."
+          "description": "Which drawing: one per EmptyState preset, notFound and maintenance for full pages, and success (12.3)."
         },
         {
           "name": "size",

@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { cn } from '../../utils/cn.js';
 
-export type IllustrationKind = 'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline' | 'notFound' | 'maintenance';
+export type IllustrationKind =
+  | 'noData'
+  | 'noResults'
+  | 'noAccess'
+  | 'serverError'
+  | 'offline'
+  | 'notFound'
+  | 'maintenance'
+  | 'success';
 
 export interface IllustrationProps extends Omit<React.SVGAttributes<SVGSVGElement>, 'children'> {
-  /** Which drawing: one per EmptyState preset, plus notFound and maintenance for full pages. */
+  /** Which drawing: one per EmptyState preset, notFound and maintenance for full pages, and success (12.3). */
   kind: IllustrationKind;
   /** 80, 120 or 160 CSS px wide (5:4). @default 'md' */
   size?: 'sm' | 'md' | 'lg';
@@ -100,12 +108,22 @@ const art: Record<IllustrationKind, React.ReactNode> = {
       <path d="M28 44l-7-2M30 33l-5-5M92 44l7-2M90 33l5-5" className={line} />
     </>
   ),
+  // A tick in a disc, with two sparkles (12.3).
+  success: (
+    <>
+      {backdrop}
+      <circle cx="60" cy="48" r="24" className={accent} />
+      <path d="M49 48l8 8 15-16" strokeWidth="4" className={detail} />
+      <path d="M26 24v10M21 29h10M92 62v8M88 66h8" className={line} />
+      <circle cx="92" cy="26" r="2.5" className={dot} />
+    </>
+  ),
 };
 
 const sizes = { sm: 'h-16 w-20', md: 'h-24 w-[7.5rem]', lg: 'h-32 w-40' };
 
 /**
- * A spot illustration for an empty, error or full-page state (10.5). Drawn in code with the
+ * A spot illustration for an empty, error, offline, success or full-page state (10.5; success 12.3). Drawn in code with the
  * colour roles, so it needs no asset and follows the theme. Decorative unless given a `title`.
  */
 export const Illustration = React.forwardRef<SVGSVGElement, IllustrationProps>(
