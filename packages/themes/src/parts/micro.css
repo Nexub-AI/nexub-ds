@@ -23,7 +23,7 @@
   80% { translate: 2px; }
 }
 .nx-shake {
-  animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  animation: nx-shake var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
 }
 @media (prefers-reduced-motion: reduce) {
   .nx-shake { animation: none; }

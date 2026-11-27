@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v12.1.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v12.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v12.1.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v12.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -397,7 +397,7 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
-- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
+- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error, offline, success or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.
@@ -1688,6 +1688,9 @@ Compare values across categories, grouped or stacked. Server-rendered SVG on the
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | 11.3: categories down the side for long names and ranked lists. |
 | `variant / totalKey` | `'default' \| 'waterfall' / keyof T` |  | 11.3: a waterfall of the first series from a running total; `totalKey` marks rows drawn from zero. |
 | `colorOf` | `(row, series, index) => colour \| tone \| undefined` |  | 11.3: a colour per bar (e.g. over budget in danger). |
+| `annotations` | `ChartAnnotation[]` |  | 12.3: labelled notes on the plot. `{ at, label }` marks one category with a dashed guide (add `series` to dot that series' value); `{ at, to, label }` shades a range. Notes on categories not in `data` are skipped. These three props apply to vertical bars. |
+| `referenceLines` | `ChartReferenceLine[]` |  | 12.3: labelled straight lines. `{ value: 5000, label: 'Target' }` is horizontal and widens the axis to stay in view; `{ value: 'Mar', axis: 'category', label }` is vertical. `tone` (`good`, `warning`, `danger`, default `neutral`) colours the line only; labels stay neutral text. |
+| `change` | `ChartChange` |  | 12.3: a callout above the plot, e.g. "Up 12% (+$1,200) since March": `{ from, to?, series?, invert?, locale?, label?, text? }`. The amount uses the series' `valueFormat`, then the chart's; the percentage uses `Intl` in `locale`. Rises are success, falls error (`invert` for costs and churn), no change is neutral. `text` replaces the sentence (translation). |
 
 ## Example: Grouped
 
@@ -1828,10 +1831,46 @@ export default function Example() {
 }
 ```
 
+## Example: Change and reference lines
+
+A fall shown as good with `invert`, an average line and a vertical marker (12.3).
+
+```tsx
+import { BarChart } from '@nexub/react';
+
+const months = [
+  { month: 'Jan', cost: 5000 },
+  { month: 'Feb', cost: 5200 },
+  { month: 'Mar', cost: 5100 },
+  { month: 'Apr', cost: 4800 },
+  { month: 'May', cost: 4600 },
+  { month: 'Jun', cost: 4700 },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+
+export default function Example() {
+  return (
+    <BarChart
+      className="w-full max-w-2xl"
+      title="Costs"
+      data={months}
+      index="month"
+      valueFormat={usd}
+      series={[{ key: 'cost', label: 'Cost', color: 2 }]}
+      // Down is good for costs: `invert` shows the fall in the success colour.
+      change={{ from: 'Jan', label: 'January', invert: true }}
+      referenceLines={[{ value: 4900, label: 'Average' }, { value: 'Apr', axis: 'category', label: 'New supplier' }]}
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
 - Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+- 12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden "Chart notes" list that describes the figure too.
+- 12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad.
 
 Related: [line-chart](line-chart.md), [donut-chart](donut-chart.md), [sparkline](sparkline.md)
 
@@ -7282,7 +7321,7 @@ Related: [emoji-picker](emoji-picker.md), [icon](icon.md), [combobox-field](comb
 
 # Illustration
 
-A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
+A spot illustration for an empty, error, offline, success or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 
 - Package: `@nexub/react` · Category: Data Display · Status: alpha
 - Import: `import { Illustration } from '@nexub/react';`
@@ -7292,7 +7331,7 @@ A spot illustration for an empty, error or full-page state, drawn in code so it 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `kind` (required) | `'noData' \| 'noResults' \| 'noAccess' \| 'serverError' \| 'offline' \| 'notFound' \| 'maintenance'` |  | Which drawing to show. |
+| `kind` (required) | `'noData' \| 'noResults' \| 'noAccess' \| 'serverError' \| 'offline' \| 'notFound' \| 'maintenance' \| 'success'` |  | Which drawing to show. Empty: noData or noResults; error: serverError, noAccess or notFound; offline; success (12.3). |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | 80, 120 or 160 CSS px wide. |
 | `title` | `string` |  | Names the drawing for assistive technology. Without it the drawing is decorative. |
 
@@ -7311,7 +7350,7 @@ export default function Example() {
 ```tsx
 import { Illustration } from '@nexub/react';
 
-const kinds = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'] as const;
+const kinds = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance', 'success'] as const;
 
 export default function Example() {
   return (
@@ -7323,6 +7362,37 @@ export default function Example() {
   );
 }
 ```
+
+## Example: In a state
+
+Opt in on the surfaces that already exist: put it in `EmptyState.Illustration`, set `illustrated` on `EmptyStatePreset`, or pass it as `illustration` to `StatusPage`. On native, `EmptyState`, `ErrorState` and `ResultScreen` take it as `illustration`.
+
+```tsx
+import { Button, EmptyState, Illustration } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <EmptyState.Root>
+      <EmptyState.Illustration>
+        <Illustration kind="success" />
+      </EmptyState.Illustration>
+      <EmptyState.Title>Payment sent</EmptyState.Title>
+      <EmptyState.Description>We emailed the receipt to you.</EmptyState.Description>
+      <EmptyState.Actions>
+        <Button variant="tonal">View receipt</Button>
+      </EmptyState.Actions>
+    </EmptyState.Root>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: img (only with a `title`)
+- Decorative by default: the svg has `aria-hidden`, so the state is read from its title and description alone.
+- With `title` it is one image named by the title (`role="img"`, `aria-label`).
+- Colours are roles only, so light, dark and product themes recolour it. Under forced colours every shape takes a system colour (Canvas / CanvasText), so the outline stays legible.
+- Each drawing is a handful of shapes, well under 1 kB gzipped; no asset is fetched.
 
 Related: [empty-state](empty-state.md), [error-state](error-state.md)
 
@@ -7860,6 +7930,9 @@ Show a trend over ordered categories such as time. Server-rendered SVG on the ch
 | `series[].valueFormat` | `(value: number) => string` |  | 11.3: formats this series in the tooltip and table (one currency per series). |
 | `integerTicks` | `boolean` |  | 11.3: gridlines on whole numbers only (counts). Also 11.3: a `null` or missing value is drawn as a gap (no bar, a break in the line) and listed as "—", not counted as 0. |
 | `tableView` | `boolean \| string` |  | 11.3: a visible "Show as table" disclosure with the same data. Works without JS. |
+| `annotations` | `ChartAnnotation[]` |  | 12.3: labelled notes on the plot. `{ at, label }` marks one category with a dashed guide (add `series` to dot that series' value); `{ at, to, label }` shades a range. Notes on categories not in `data` are skipped. |
+| `referenceLines` | `ChartReferenceLine[]` |  | 12.3: labelled straight lines. `{ value: 5000, label: 'Target' }` is horizontal and widens the axis to stay in view; `{ value: 'Mar', axis: 'category', label }` is vertical. `tone` (`good`, `warning`, `danger`, default `neutral`) colours the line only; labels stay neutral text. |
+| `change` | `ChartChange` |  | 12.3: a callout above the plot, e.g. "Up 12% (+$1,200) since March": `{ from, to?, series?, invert?, locale?, label?, text? }`. The amount uses the series' `valueFormat`, then the chart's; the percentage uses `Intl` in `locale`. Rises are success, falls error (`invert` for costs and churn), no change is neutral. `text` replaces the sentence (translation). |
 
 ## Example: Two series
 
@@ -7945,10 +8018,46 @@ export default function Example() {
 }
 ```
 
+## Example: Telling a story
+
+A change callout, a point and a range annotation, and a target line (12.3).
+
+```tsx
+import { LineChart } from '@nexub/react';
+
+const months = [
+  { month: 'Jan', revenue: 9000 },
+  { month: 'Feb', revenue: 9500 },
+  { month: 'Mar', revenue: 10000 },
+  { month: 'Apr', revenue: 10600 },
+  { month: 'May', revenue: 11200 },
+  { month: 'Jun', revenue: 11800 },
+];
+const usd = (v: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(v);
+
+export default function Example() {
+  return (
+    <LineChart
+      className="w-full max-w-2xl"
+      title="Revenue against target"
+      data={months}
+      index="month"
+      valueFormat={usd}
+      series={[{ key: 'revenue', label: 'Revenue' }]}
+      change={{ from: 'Mar', label: 'March' }}
+      annotations={[{ at: 'Feb', label: 'Launch', series: 'revenue' }, { at: 'Apr', to: 'May', label: 'Spring promo' }]}
+      referenceLines={[{ value: 11000, label: 'Target', tone: 'good' }]}
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.
 - Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".
+- 12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden "Chart notes" list that describes the figure too.
+- 12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad.
 
 Related: [bar-chart](bar-chart.md), [sparkline](sparkline.md)
 

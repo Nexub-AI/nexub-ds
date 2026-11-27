@@ -3,7 +3,8 @@ import { Button } from '@nexub/react';
 import { CodeBlock } from '@/components/docs/CodeBlock';
 import { DocTable, Guidance, PageIntro, Prose, Section } from '@/components/kit';
 import { PhoneFrame } from '@/components/platform/PhoneFrame';
-import { MotionGallery, SpringCurves, WebDemos } from './MotionGallery';
+import { MotionGallery, PresetDemos, SpringCurves, WebDemos } from './MotionGallery';
+import { MOTION_PRESETS, PRESET_HAPTIC } from './presets';
 import { readSprings } from './springs';
 
 export const dynamic = 'force-static';
@@ -50,6 +51,49 @@ export default function MotionPage() {
                       var(--motion-spring-spatial-default-easing);
 /* Tailwind: duration-spatial-default ease-spatial-default */`}
           />
+        </Section>
+
+        <Section
+          id="presets"
+          title="Presets by intent"
+          description="Five named presets say why something moves. Each aliases one spring, so components and your own views share one vocabulary on web and native. Press Play on a card, or Replay all."
+        >
+          <PresetDemos />
+          <DocTable
+            caption="Motion presets"
+            head={['Preset', 'Spring', 'Use', 'Native haptic']}
+            mono={[0, 1, 3]}
+            rows={MOTION_PRESETS.map((p) => [p.name, `${p.family} ${p.speed}`, p.use, PRESET_HAPTIC[p.name]])}
+          />
+          <CodeBlock
+            lang="css"
+            code={`/* Custom properties (@nexub/tokens) */
+transition: transform var(--motion-preset-enter-duration) var(--motion-preset-enter-easing);
+/* Tailwind: duration-enter ease-enter, duration-success ease-success … */
+
+/* Utility classes (@nexub/themes): add one when the moment happens, re-mount to replay */
+<div class="nx-motion-success">…</div>`}
+          />
+          <CodeBlock
+            lang="tsx"
+            code={`// React Native: the same presets as withSpring configs, paired with a haptic
+import { withSpring } from 'react-native-reanimated';
+import { nxPreset, presetHaptic, useHaptics } from '@nexub/react-native';
+
+const play = useHaptics(); // silent when the user turned haptics off
+scale.value = withSpring(1, nxPreset('success'));
+play(presetHaptic.success);
+
+// Opt-in on components that already mark the moment
+<Banner tone="success" title="Payment sent" haptic />
+toast({ message: 'Saved', tone: 'success', haptic: true });`}
+          />
+          <Prose>
+            Under reduced motion <code>enter</code> and <code>exit</code> land at once, and <code>emphasis</code>,{' '}
+            <code>success</code> and <code>attention</code> don’t move (CSS <code>prefers-reduced-motion</code>; Reanimated
+            follows the OS Reduce Motion setting). Haptics are separate: they follow the provider’s <code>haptics</code> setting
+            and do nothing where the platform has none.
+          </Prose>
         </Section>
 
         <Section id="gallery" title="Gallery: web" description="Every motion in @nexub/react, live. Replay, slow it down, or preview the reduced-motion fallback with the bar above.">

@@ -6,5 +6,5 @@
 @keyframes nx-tick { from { scale: 0.6; opacity: 0; } }
 .nx-tick {
   display: inline-block;
-  animation: nx-tick var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+  animation: nx-tick var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
 }

@@ -24,11 +24,28 @@ import { native } from '@nexub/tokens/native';
 // setting (ReduceMotion.System): the change lands without travel.
 
 export type SpringFamily = keyof typeof native.motion.spring;
+/** 12.3 motion presets by intent (the same names as --motion-preset-* on the web). */
+export type MotionPreset = keyof typeof native.motion.preset;
 export type SpringSpeed = keyof (typeof native.motion.spring)['spatial'];
 
 /** `withSpring` config for a spring token, honouring Reduce Motion. */
 export function nxSpring(family: SpringFamily = 'spatial', speed: SpringSpeed = 'default') {
   return { ...native.motion.spring[family][speed], reduceMotion: ReduceMotion.System };
+}
+
+/**
+ * `withSpring` config for a motion preset, honouring Reduce Motion (12.3).
+ * `enter` spatial default, `exit` effects fast, `emphasis` expressive fast,
+ * `success` expressive default, `attention` spatial fast. Pair a moment with
+ * its haptic through `presetHaptic[intent]` and `useHaptics()`.
+ *
+ * ```tsx
+ * scale.value = withSpring(1, nxPreset('success'));
+ * ```
+ */
+export function nxPreset(intent: MotionPreset) {
+  const { stiffness, damping, mass } = native.motion.preset[intent];
+  return { stiffness, damping, mass, reduceMotion: ReduceMotion.System };
 }
 
 /**

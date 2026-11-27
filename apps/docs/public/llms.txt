@@ -2,7 +2,7 @@
 
 > Token-driven React design system for SaaS products: @nexub/react components, @nexub/patterns composites, @nexub/tokens, @nexub/themes, @nexub/icons. Calm Depth visual language with an optional Liquid Glass material layer.
 
-Version 12.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
+Version 12.2.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes @nexub/tokens @nexub/icons`. Full reference for LLMs: https://nexub-ds-docs.pages.dev/llms-full.txt
 
 ## Docs
 
@@ -93,7 +93,7 @@ Version 12.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Icon Button](https://nexub-ds-docs.pages.dev/components/icon-button.md): A square button designed to hold a single icon, with an accessible label.
 - [Icon Chip](https://nexub-ds-docs.pages.dev/components/icon-chip.md): An icon on a tinted tile, in one of the category colours or the product accent.
 - [Icon Picker](https://nexub-ds-docs.pages.dev/components/icon-picker.md): Pick an icon from @nexub/icons in a searchable grid with recent picks and optional categories. A popover, a bottom sheet on phones.
-- [Illustration](https://nexub-ds-docs.pages.dev/components/illustration.md): A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
+- [Illustration](https://nexub-ds-docs.pages.dev/components/illustration.md): A spot illustration for an empty, error, offline, success or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Inline Edit](https://nexub-ds-docs.pages.dev/components/inline-edit.md): Text that becomes an input on click, for renaming things in place.
 - [Input](https://nexub-ds-docs.pages.dev/components/input.md): Text input field for forms. Supports size variants, icons, addons, and validation states.
 - [Kanban](https://nexub-ds-docs.pages.dev/components/kanban.md): Columns of cards people move by dragging or with Alt+Arrow keys.

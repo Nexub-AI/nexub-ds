@@ -399,3 +399,30 @@ test('a11y 12.2 collapsible sidebar group: a named toggle with aria-expanded hid
   await expect(nav.getByRole('button')).toHaveCount(0);
   await expect(nav.getByRole('link', { name: 'Team' })).toHaveCount(1);
 });
+
+// 12.3: chart storytelling. The change callout, annotations and reference lines are text, not only
+// drawn: the figure keeps its name and is described by the callout and a visually hidden notes list.
+test('a11y 12.3 chart notes and change callout are text', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-chart-storytelling-12-3--annotations-and-reference-lines&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const figure = page.getByRole('figure', { name: 'Revenue against target' });
+  await expect(figure).toHaveAccessibleDescription('Launch: Feb Spring promo: Apr–May Target: $11,000');
+  const notes = figure.getByRole('list', { name: 'Chart notes' });
+  await expect(notes.getByRole('listitem')).toHaveText(['Launch: Feb', 'Spring promo: Apr–May', 'Target: $11,000']);
+  await page.goto('/iframe.html?id=components-chart-storytelling-12-3--change&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.getByRole('figure', { name: 'Revenue' })).toHaveAccessibleDescription('Up 18% (+$1,800) since March');
+  await expect(page.getByRole('figure', { name: 'Costs' })).toHaveAccessibleDescription('Down 6% (−$300) since January');
+});
+
+// 12.3: a spot illustration is decorative (out of the tree) unless titled, then one named image.
+test('a11y Illustration: decorative by default, one named image with a title', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-illustration--kinds&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.locator('svg[data-nx="illustration"][aria-hidden="true"]')).toHaveCount(8);
+  await expect(root.getByRole('img')).toHaveCount(0);
+  await page.goto('/iframe.html?id=components-illustration--titled&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.locator('#storybook-root').getByRole('img', { name: 'You are offline', exact: true })).toHaveCount(1);
+});

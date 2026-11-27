@@ -18,10 +18,10 @@ export type {
 } from './theme/ThemeProvider';
 export { nexubFonts, fontStyle } from './theme/fonts';
 export type { FontFamily, FontSource } from './theme/fonts';
-export { playHaptic } from './theme/haptics';
+export { playHaptic, presetHaptic } from './theme/haptics';
 export type { HapticToken } from './theme/haptics';
-export { nxSpring, nxEnter, nxExit, nxLayout } from './theme/motion';
-export type { SpringFamily, SpringSpeed, EnterKind, ExitKind } from './theme/motion';
+export { nxSpring, nxPreset, nxEnter, nxExit, nxLayout } from './theme/motion';
+export type { SpringFamily, SpringSpeed, EnterKind, ExitKind, MotionPreset } from './theme/motion';
 export { useControllableState } from './hooks/useControllableState';
 
 // Primitives
@@ -245,6 +245,8 @@ export { CATEGORY_COLORS, DIVISIONS, PRODUCT_KEYS } from '@nexub/core';
 export type { CategoryColor, ProductKey, DivisionKey } from '@nexub/core';
 
 // 10.9: QR codes, and the native twins of the 10.7/10.8 web components
+export { Illustration } from './components/illustration';
+export type { IllustrationProps, IllustrationKind } from './components/illustration';
 export { QRCode, QRScanner } from './components/qr';
 export type { QRCodeProps, QRScannerProps } from './components/qr';
 export { DescriptionList, ComparisonBar } from './components/datadisplay';

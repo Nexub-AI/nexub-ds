@@ -1,5 +1,5 @@
 {
-  "version": "12.1.0",
+  "version": "12.2.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -185,7 +185,9 @@
       "keyboard": [],
       "screenReader": [
         "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
-        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\".",
+        "12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden \"Chart notes\" list that describes the figure too.",
+        "12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad."
       ]
     },
     {
@@ -936,7 +938,10 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
-      "screenReader": []
+      "screenReader": [
+        "Decorative by default: the svg has `aria-hidden`, so the state is read from its title and description alone.",
+        "With `title` it is one image named by the title (`role=\"img\"`, `aria-label`)."
+      ]
     },
     {
       "slug": "inline-edit",
@@ -1026,7 +1031,9 @@
       "keyboard": [],
       "screenReader": [
         "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
-        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\".",
+        "12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden \"Chart notes\" list that describes the figure too.",
+        "12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad."
       ]
     },
     {
