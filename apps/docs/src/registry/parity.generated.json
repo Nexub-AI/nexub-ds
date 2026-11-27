@@ -1257,6 +1257,18 @@
       "radius"
     ]
   },
+  "illustration": {
+    "web": "Illustration",
+    "native": "Illustration",
+    "shared": [
+      "kind",
+      "size",
+      "title"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
   "status-steps": {
     "web": "StatusSteps",
     "native": "StatusSteps",

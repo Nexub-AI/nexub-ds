@@ -740,6 +740,8 @@ export interface EmptyStateProps extends ViewProps {
   action?: React.ReactNode;
   /** Scales spacing, icon and title. @default 'md' */
   size?: 'sm' | 'md' | 'lg';
+  /** 12.3: art in place of the icon disc, e.g. `<Illustration kind="noData" />`. */
+  illustration?: React.ReactNode;
 }
 
 // `pad` and `gap` are spacing token keys, not points.
@@ -757,6 +759,7 @@ export function EmptyState({
   tone = 'neutral',
   action,
   size = 'md',
+  illustration,
   style,
   ...rest
 }: EmptyStateProps) {
@@ -776,18 +779,20 @@ export function EmptyState({
       ]}
       {...rest}
     >
-      <View
-        style={{
-          width: sz.disc,
-          height: sz.disc,
-          borderRadius: sz.disc / 2,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: roles[bg],
-        }}
-      >
-        <Glyph size={sz.icon} color={roles[TONE_TEXT[tone]]} />
-      </View>
+      {illustration ?? (
+        <View
+          style={{
+            width: sz.disc,
+            height: sz.disc,
+            borderRadius: sz.disc / 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: roles[bg],
+          }}
+        >
+          <Glyph size={sz.icon} color={roles[TONE_TEXT[tone]]} />
+        </View>
+      )}
       <Text variant={sz.title} accessibilityRole="header" style={{ textAlign: 'center' }}>
         {title}
       </Text>
