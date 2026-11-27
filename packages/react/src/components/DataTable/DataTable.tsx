@@ -331,6 +331,10 @@ interface RowViewProps<TData> {
   collapseLabel: string;
   /** Row-reorder drag props: new every render, so reorderable rows always re-render. */
   dragProps: Record<string, unknown> | undefined;
+  /** 12.4: the table is streaming; read once, when the row mounts. */
+  streaming: boolean;
+  /** 12.4: ids of rows the table has already shown (a stable Set). A row not in it enters. */
+  seen: Set<string>;
 }
 
 function RowViewImpl<TData>({
@@ -347,16 +351,29 @@ function RowViewImpl<TData>({
   expandLabel,
   collapseLabel,
   dragProps,
+  streaming,
+  seen,
 }: RowViewProps<TData>) {
   // React.memo with sameRow decides when a row re-renders. Inside, TanStack's row and cells are
   // mutated in place, so compiler memoization keyed on them would render stale cells.
   'use no memo';
+  // 12.4: a row that arrives while streaming enters with the 12.3 preset (instant under reduced
+  // motion). The class goes once it has played, so a later move (sorting) doesn't replay it.
+  const [entering, setEntering] = React.useState(() => streaming && !seen.has(row.id));
   return (
     <TableRow
       ref={measure}
       data-index={index}
       aria-rowindex={virtual ? index + 2 : undefined}
       data-state={selectable && selected ? 'selected' : undefined}
+      className={entering ? 'nx-motion-enter' : undefined}
+      onAnimationEnd={
+        entering
+          ? (e: React.AnimationEvent) => {
+              if (e.target === e.currentTarget) setEntering(false);
+            }
+          : undefined
+      }
       {...dragProps}
     >
       {row.getVisibleCells().map((cell, _i, cells) => (
@@ -386,7 +403,9 @@ function RowViewImpl<TData>({
 // Skip rows whose own props didn't change: a new row object (e.g. the parent
 // filtered `data`) for the same original at the same place renders the same.
 const sameRow = <TData,>(a: RowViewProps<TData>, b: RowViewProps<TData>) =>
-  (Object.keys(a) as (keyof RowViewProps<TData>)[]).every((k) => k === 'row' || a[k] === b[k]) &&
+  (Object.keys(a) as (keyof RowViewProps<TData>)[]).every(
+    (k) => k === 'row' || k === 'streaming' || a[k] === b[k],
+  ) &&
   a.row.id === b.row.id &&
   a.row.original === b.row.original &&
   a.row.index === b.row.index &&
@@ -487,10 +506,67 @@ export interface DataTableProps<TData> extends React.HTMLAttributes<HTMLDivEleme
   getRowLabel?: (row: TData) => string;
   /** Shows skeleton rows (one page's worth) and sets aria-busy on the table. */
   loading?: boolean;
+  /**
+   * 12.4: rows are still arriving (an agent is producing them). Shows a skeleton row after the
+   * last row, sets aria-busy, announces the row count every few seconds and "done" when it turns
+   * off. Rows that arrive meanwhile enter with the motion preset. Sorting and selection keep working.
+   */
+  streaming?: boolean;
   /** Shown in a full-width row when there are no rows. @default messages.noResults */
   emptyState?: React.ReactNode;
   /** Shown in a full-width row when a load failed, e.g. `<ErrorState title="…" onRetry={…} />`. Wins over loading and empty. */
   errorState?: React.ReactNode;
+}
+
+/** 12.4: how often, at most, a streaming table announces its row count. */
+const STREAM_ANNOUNCE_MS = 3000;
+
+/**
+ * 12.4: while `streaming`, announce the count at most every STREAM_ANNOUNCE_MS (not once per
+ * row), starting one interval after the stream begins; when it stops, announce "done".
+ */
+function useStreamingAnnouncements(
+  streaming: boolean,
+  count: number,
+  say: (count: number, done: boolean) => void,
+) {
+  const latest = React.useRef({ count, say });
+  const state = React.useRef<{ on: boolean; last: number; timer?: ReturnType<typeof setTimeout> }>(
+    { on: false, last: 0 },
+  );
+  React.useEffect(() => {
+    latest.current = { count, say };
+  });
+  React.useEffect(() => {
+    const s = state.current;
+    if (streaming && !s.on) {
+      s.on = true;
+      s.last = Date.now();
+    } else if (!streaming && s.on) {
+      s.on = false;
+      clearTimeout(s.timer);
+      s.timer = undefined;
+      say(count, true);
+    } else if (streaming && s.timer === undefined) {
+      s.timer = setTimeout(
+        () => {
+          s.timer = undefined;
+          s.last = Date.now();
+          latest.current.say(latest.current.count, false);
+        },
+        Math.max(0, s.last + STREAM_ANNOUNCE_MS - Date.now()),
+      );
+    }
+    // `say` is read through `latest`; only the stream and the count drive announcements.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [streaming, count]);
+  React.useEffect(() => {
+    const s = state.current;
+    return () => {
+      clearTimeout(s.timer);
+      s.timer = undefined;
+    };
+  }, []);
 }
 
 /** TanStack hands back updaters; apply one to the current value. */
@@ -548,6 +624,7 @@ export function DataTable<TData>({
   onRowOrderChange,
   getRowLabel,
   loading = false,
+  streaming = false,
   emptyState,
   errorState,
   caption,
@@ -606,6 +683,7 @@ export function DataTable<TData>({
     onChange: onColumnFiltersChange,
   });
   const [announcement, setAnnouncement] = React.useState('');
+  const [seenRows] = React.useState(() => new Set<string>());
   const tableRef = React.useRef<HTMLTableElement>(null);
   const gridNav = React.useMemo(() => createGridNavigation(dir), [dir]);
   const dragged = React.useRef<string | null>(null);
@@ -778,6 +856,19 @@ export function DataTable<TData>({
   const selectedRows = enableRowSelection ? table.getSelectedRowModel().rows : [];
   const totalRows = table.getCoreRowModel().rows.length;
   const fmt = (n: number) => new Intl.NumberFormat(locale).format(n);
+
+  // 12.4 streaming: remember the rows already shown, so only arrivals enter.
+  React.useEffect(() => {
+    if (!streaming) {
+      seenRows.clear();
+      return;
+    }
+    for (const r of table.getCoreRowModel().flatRows) seenRows.add(r.id);
+  });
+  useStreamingAnnouncements(streaming, data.length, (count, done) =>
+    setAnnouncement(done ? messages.rowsDone(fmt(count)) : messages.rowsSoFar(fmt(count))),
+  );
+
   const multiSort = sorting.length > 1;
   // Whole page selected but more rows exist on other pages: offer the rest.
   const offerAll =
@@ -804,6 +895,17 @@ export function DataTable<TData>({
     if (grid) gridNav.sync(t);
   });
   const visibleColumns = table.getVisibleLeafColumns();
+  // 12.4: the skeleton row after the last row while more arrive. Hidden from screen readers:
+  // aria-busy and the live count say it instead.
+  const streamingTail = (
+    <TableRow aria-hidden="true" data-streaming="" className="hover:bg-transparent">
+      {visibleColumns.map((c) => (
+        <TableCell key={c.id} className={cn(compact && 'py-1.5')}>
+          <Skeleton />
+        </TableCell>
+      ))}
+    </TableRow>
+  );
   const viewButton = (
     <Button variant="outlined" size="sm" className="ms-auto">
       <SlidersHorizontal size="sm" aria-hidden="true" />
@@ -884,7 +986,7 @@ export function DataTable<TData>({
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledBy}
         aria-rowcount={rowWin.virtual ? rows.length + 1 + (hasFooter ? 1 : 0) : undefined}
-        aria-busy={(loading && !hasError) || undefined}
+        aria-busy={((loading || streaming) && !hasError) || undefined}
         role={grid ? 'grid' : undefined}
         onKeyDown={grid ? gridNav.onKeyDown : undefined}
         onFocus={grid ? gridNav.onFocus : undefined}
@@ -1124,11 +1226,17 @@ export function DataTable<TData>({
                         ? rowReorder.itemProps([0, row.index])
                         : undefined
                     }
+                    streaming={streaming}
+                    seen={seenRows}
                   />
                 );
               })}
               {rowWin.after > 0 && <Spacer height={rowWin.after} />}
+              {streaming && streamingTail}
             </>
+          ) : streaming ? (
+            // Nothing yet, more on the way: the skeleton row, not the empty state.
+            streamingTail
           ) : (
             <TableRow>
               <TableCell

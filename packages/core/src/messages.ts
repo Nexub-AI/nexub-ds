@@ -124,6 +124,13 @@ export interface NexubMessages {
   resizeColumn: (column: string) => string;
   /** Announced after a keyboard column move, e.g. "Email moved to position 2 of 4". */
   columnMoved: (column: string, position: number, total: number) => string;
+  /** DataTable `streaming` (12.4): the throttled row count while rows arrive, and the count once they stop. `count` is already formatted. */
+  rowsSoFar: (count: string) => string;
+  rowsDone: (count: string) => string;
+  /** FormField `generated` (12.4): the mark on a value an agent filled in, and its accept / clear buttons. */
+  suggested: string;
+  acceptSuggestion: string;
+  clearSuggestion: string;
   /** DateRangePicker presets. */
   today: string;
   last7Days: string;
@@ -527,6 +534,11 @@ export const defaultMessages: NexubMessages = {
   sortOrder: (index) => `sort ${index}`,
   resizeColumn: (column) => `Resize ${column}`,
   columnMoved: (column, position, total) => `${column} moved to position ${position} of ${total}`,
+  rowsSoFar: (count) => `${count} ${count === '1' ? 'row' : 'rows'} so far`,
+  rowsDone: (count) => `Done. ${count} ${count === '1' ? 'row' : 'rows'}`,
+  suggested: 'Suggested',
+  acceptSuggestion: 'Accept suggestion',
+  clearSuggestion: 'Clear suggestion',
   today: 'Today',
   last7Days: 'Last 7 days',
   last30Days: 'Last 30 days',
