@@ -58,8 +58,8 @@ export { BentoGrid, BentoTile } from './components/BentoGrid/index.js';
 export type { BentoGridProps, BentoTileProps, BentoTileSize } from './components/BentoGrid/index.js';
 export { ErrorSummary, useFormErrors } from './components/ErrorSummary/index.js';
 export type { ErrorSummaryProps, ErrorSummaryItem, FormErrorMap } from './components/ErrorSummary/index.js';
-export { Conversation } from './components/Conversation/index.js';
-export type { ConversationProps, ConversationMessages } from './components/Conversation/index.js';
+export { Conversation, DateSeparator } from './components/Conversation/index.js';
+export type { ConversationProps, ConversationMessages, DateSeparatorProps, DateSeparatorMessages } from './components/Conversation/index.js';
 
 // Page templates: web twins of the @nexub/react-native/patterns screens.
 export { PageFrame, defaultPageTemplateMessages, usePageMessages, groupByDay } from './components/PageFrame/index.js';

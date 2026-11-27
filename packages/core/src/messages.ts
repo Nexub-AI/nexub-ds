@@ -92,6 +92,12 @@ export interface NexubMessages {
   source: (index: number) => string;
   jumpToLatest: string;
   conversation: string;
+  /** 12.2 Conversation: the jump button once messages arrived while scrolled up. */
+  jumpToNewest: string;
+  /** 12.2 Conversation: announced once when messages arrive while scrolled up. */
+  newMessages: string;
+  /** 12.2 DateSeparator (with `today`). */
+  yesterday: string;
   // DataTable pager
   pageOf: (page: number, total: number) => string;
   /** DataTable selection column. */
@@ -477,6 +483,9 @@ export const defaultMessages: NexubMessages = {
   source: (n) => `Source ${n}`,
   jumpToLatest: 'Jump to latest',
   conversation: 'Conversation',
+  jumpToNewest: 'Jump to newest',
+  newMessages: 'New messages',
+  yesterday: 'Yesterday',
   pageOf: (page, total) => `Page ${page} of ${total}`,
   selectRow: 'Select row',
   selectAllOnPage: 'Select all rows on this page',

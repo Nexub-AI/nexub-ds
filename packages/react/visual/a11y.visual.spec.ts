@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 // axe-core (WCAG 2.2 A/AA, no best-practice) over every story in light and dark.
 // Story list comes from the built Storybook, loaded the same way as stories.visual.spec.ts.
@@ -154,3 +154,53 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2 Conversation: what a screen reader gets from DateSeparator, the thinking slot and the
+// "New messages" announcement.
+test.describe('a11y Conversation 12.2', () => {
+  const open = async (page: Page, story: string) => {
+    await page.goto(`/iframe.html?id=patterns-conversation--${story}&viewMode=story&globals=theme:light;brand:none`);
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  };
+
+  test('DateSeparator reads as its day, in order, not as a bare separator', async ({ page }) => {
+    await open(page, 'day-grouped-with-date-separators');
+    const list = page.getByRole('region', { name: 'Conversation' });
+    await expect(list.getByRole('separator')).toHaveCount(0);
+    const days = list.locator('time');
+    await expect(days).toHaveText(['Nov 22, 2026', 'Yesterday', 'Today']);
+    await expect(days.nth(1)).toHaveAttribute('datetime', '2026-11-26');
+    // Each separator: two hidden hairlines around a visible, readable label.
+    const sep = days.nth(1).locator('..');
+    await expect(sep.locator('> [aria-hidden="true"]')).toHaveCount(2);
+    await expect(days.nth(1)).toBeVisible();
+  });
+
+  test('the thinking slot is a polite status after the messages', async ({ page }) => {
+    await open(page, 'thinking');
+    const status = page.locator('[data-conversation-thinking]');
+    await expect(status).toHaveAttribute('role', 'status');
+    await expect(status).toHaveAttribute('aria-live', 'polite');
+    await expect(status).toContainText('Thinking');
+    await page.getByRole('button', { name: 'Stop thinking' }).click();
+    await expect(status).toBeEmpty();
+  });
+
+  test('messages arriving while scrolled up: "Jump to newest" and one polite "New messages"', async ({ page }) => {
+    await open(page, 'jump-to-newest');
+    const list = page.getByRole('region', { name: 'Conversation' });
+    const live = page.locator('#storybook-root .sr-only[aria-live="polite"]');
+    await expect(live).toHaveText('');
+    await list.evaluate((el) => {
+      el.scrollTop = 0;
+    });
+    await expect(page.getByRole('button', { name: 'Jump to latest' })).toBeVisible();
+    await page.getByRole('button', { name: /Start new messages/ }).click();
+    await expect(page.getByRole('button', { name: 'Jump to newest' })).toBeVisible({ timeout: 5000 });
+    await expect(live).toHaveText('New messages');
+    await page.getByRole('button', { name: 'Stop new messages' }).click();
+    await page.getByRole('button', { name: 'Jump to newest' }).click();
+    await expect(page.getByRole('button', { name: /Jump to/ })).toHaveCount(0);
+    await expect(live).toHaveText('');
+  });
+});

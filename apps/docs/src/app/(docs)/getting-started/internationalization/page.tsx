@@ -59,6 +59,9 @@ const messageKeys: [key: string, value: string][] = [
   ['source', '(n) => `Source ${n}`'],
   ['jumpToLatest', "'Jump to latest'"],
   ['conversation', "'Conversation'"],
+  ['jumpToNewest', "'Jump to newest'"],
+  ['newMessages', "'New messages'"],
+  ['yesterday', "'Yesterday'"],
 ];
 
 export default function InternationalizationPage() {
