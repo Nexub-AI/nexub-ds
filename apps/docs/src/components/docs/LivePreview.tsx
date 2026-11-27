@@ -17,12 +17,16 @@ export async function LivePreview({
   const { default: Example } = (await import(`../../examples/${kind}/${slug}/${idx}.tsx`)) as {
     default: React.ComponentType;
   };
-  // 12.1: its own Suspense boundary, so React hydrates each example as a separate task and
+  // 12.1: its own hydration boundary, so React hydrates each example as a separate task and
   // yields between them, instead of one long task for the whole page (mobile Lighthouse TBT).
-  // The example doesn't suspend, so the server HTML and the first paint are unchanged.
+  // 12.2 (#815): an Activity, not a Suspense. The client module suspends while the server
+  // renders, so a Suspense boundary was exported out of order: an empty placeholder in the
+  // page, the example near the end of the file, and a script that swapped it in. When the
+  // browser painted before the swap, everything below moved. An Activity hydrates the same
+  // deferred way, but the server never streams it: its HTML stays in place.
   return (
-    <React.Suspense>
+    <React.Activity>
       <Example />
-    </React.Suspense>
+    </React.Activity>
   );
 }

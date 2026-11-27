@@ -21,10 +21,11 @@ export default async function TemplateFrame({ params }: { params: Promise<{ slug
   return (
     <div className="min-h-screen bg-surface">
       <FrameThemeSync />
-      {/* 12.1: the template hydrates in its own task, after the frame shell (mobile TBT). */}
-      <React.Suspense>
+      {/* 12.1: the template hydrates in its own task, after the frame shell (mobile TBT).
+          An Activity, not a Suspense: a Suspense was exported out of order (see LivePreview). */}
+      <React.Activity>
         <TemplatePreview slug={t.slug} />
-      </React.Suspense>
+      </React.Activity>
     </div>
   );
 }
