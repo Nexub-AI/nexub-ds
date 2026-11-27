@@ -49,3 +49,41 @@ export const CustomCard: Story = {
     />
   ),
 };
+
+const names = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Katherine', 'Emmy', 'Mary', 'Barbara', 'Dennis', 'Ken', 'Radia', 'Frances', 'Hedy'];
+const wideTeam: OrgChartNode[] = [
+  {
+    id: 'lead',
+    label: 'Sophie Wilson',
+    description: 'Head of Engineering',
+    children: [
+      {
+        id: 'eng-mgr',
+        label: 'Tim Berners-Lee',
+        description: 'Engineering manager',
+        children: names.map((n, i) => ({ id: `eng-${i}`, label: `${n} ${String.fromCharCode(65 + i)}.`, description: i % 2 ? 'Engineer' : 'Senior engineer' })),
+      },
+      { id: 'design', label: 'Susan Kare', description: 'Design lead', children: [{ id: 'd1', label: 'Jony Ive', description: 'Designer' }] },
+      { id: 'qa', label: 'Edsger Dijkstra', description: 'QA lead' },
+    ],
+  },
+];
+
+/** `stackAbove={4}`: the 14 reports stack in a column instead of one row; the tree and arrow keys stay the same. */
+export const WideTeamStacked: Story = {
+  render: () => <OrgChart aria-label="Engineering" nodes={wideTeam} defaultExpanded={['lead', 'eng-mgr', 'design']} stackAbove={4} />,
+};
+
+/** `zoomable`: zoom out, in and fit; pinch or ctrl/⌘ + wheel; drag to pan; + / - / 0 with a card focused. */
+export const Zoom: Story = {
+  render: () => (
+    <OrgChart
+      aria-label="Engineering"
+      nodes={wideTeam}
+      defaultExpanded={['lead', 'eng-mgr', 'design']}
+      zoomable
+      defaultZoom={0.4}
+      className="h-[32rem] rounded-shape-container border border-[var(--color-outline-variant)] p-2"
+    />
+  ),
+};

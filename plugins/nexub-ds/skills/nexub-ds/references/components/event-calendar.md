@@ -10,7 +10,7 @@ A month or week grid of events. Display only: your app owns the events and what 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `events` (required) | `CalendarEvent[]` |  | `{ id, title, start, end?, allDay?, tone? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. |
+| `events` (required) | `CalendarEvent[]` |  | `{ id, title, start, end?, allDay?, tone?, color? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. 12.2: `color` takes any brand colour (hex, rgb(), hsl(), oklab(), oklch()) and wins over `tone`: the container is mixed from it into the surface and the text picked for 4.5:1 contrast, in light and dark. A colour that can’t be read keeps the tone and warns in development. |
 | `date / defaultDate / onDateChange` | `Date` |  | Any day in the shown month or week; Today and the arrows change it. |
 | `view / defaultView / onViewChange` | `'month' \| 'week'` | `'month'` | Week shows every event; month shows `maxEventsPerDay` then "N more". |
 | `onEventClick` | `(event) => void` |  | Makes events buttons. |
@@ -20,7 +20,7 @@ A month or week grid of events. Display only: your app owns the events and what 
 | `onEventMove` | `(event, { start, end }) => void` |  | 11.4. Makes events movable: drag one to another day (month, week) or time (day view, 15-minute steps), or press Alt+Arrow on it, pick with the arrows and press Enter (Escape cancels). The duration is kept. Events with `editable: false` stay put. |
 | `renderDayAction` | `(date) => ReactNode` |  | 11.4. A per-day slot, e.g. a small add button: in each day’s header (month, week), above the day view and beside each agenda day. |
 | `eventActions` | `(event) => ReactNode` |  | 11.4. Controls for one event, e.g. a menu: beside it in day and agenda views, over its end on hover or focus in month and week cells (always shown on touch screens). |
-| `legend` | `{ label, tone }[]` |  | 11.4. A row under the toolbar naming what each tone means. Colour is never the only signal: titles still say what an event is. |
+| `legend` | `{ label, tone, color? }[]` |  | 11.4. A row under the toolbar naming what each tone means (12.2: or each `color`). Colour is never the only signal: titles still say what an event is. |
 
 ## Example: Team calendar
 
@@ -136,6 +136,46 @@ export default function Example() {
 }
 ```
 
+## Example: Company colours
+
+12.2. `color` per event: six brand colours in different syntaxes, readable in light and dark.
+
+```tsx
+'use client';
+
+import { EventCalendar, type CalendarEvent } from '@nexub/react';
+
+const today = new Date();
+const on = (day: number, hour?: number) => new Date(today.getFullYear(), today.getMonth(), day, hour ?? 0);
+
+// One brand colour per company, in any CSS colour syntax.
+const companies = [
+  { label: 'Acme', color: '#ffd400' },
+  { label: 'Globex', color: '#0b1f4d' },
+  { label: 'Initech', color: 'rgb(228, 0, 43)' },
+  { label: 'Umbrella', color: 'hsl(160 100% 33%)' },
+  { label: 'Hooli', color: 'oklch(0.62 0.2 300)' },
+  { label: 'Stark', color: '#ff7a00' },
+];
+
+const events: CalendarEvent[] = companies.flatMap((c, i) => [
+  { id: `${c.label}-board`, title: `${c.label} board`, start: on(14 + (i % 3), 9 + i), color: c.color },
+  { id: `${c.label}-payroll`, title: `${c.label} payroll`, start: on(2 + i * 4), allDay: true, color: c.color },
+]);
+
+export default function Example() {
+  return (
+    <EventCalendar
+      events={events}
+      onEventClick={() => {}}
+      maxEventsPerDay={4}
+      legend={companies.map((c) => ({ ...c, tone: 'primary' as const }))}
+      className="w-full"
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - `Alt + Arrow keys`: With `onEventMove`, on an event: starts a move and takes the first step.
@@ -143,6 +183,7 @@ export default function Example() {
 - `Enter / Escape`: Drops the event there, or cancels the move.
 - A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.
 - The title is a polite live region, so Today and the arrows announce the new month or week.
+- `color` changes only the paint: the event’s accessible name is still its title (and time).
 - Movable events describe the keyboard move (Alt+Arrow, then arrows, Enter or Escape); each step and the drop are announced in a polite live region.
 
 Related: [date-picker](date-picker.md), [date-time-picker](date-time-picker.md)

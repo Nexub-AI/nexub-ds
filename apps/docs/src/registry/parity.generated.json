@@ -1321,7 +1321,8 @@
     "native": "ChatScreen",
     "shared": [
       "messages",
-      "placeholder"
+      "placeholder",
+      "thinking"
     ],
     "webOnly": [
       "announce",
@@ -1334,8 +1335,7 @@
     ],
     "nativeOnly": [
       "empty",
-      "onSend",
-      "thinking"
+      "onSend"
     ]
   },
   "plan-card": {

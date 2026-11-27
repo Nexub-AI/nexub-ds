@@ -12,7 +12,7 @@ const entry: ComponentEntry = {
     related: ['date-picker', 'date-time-picker'],
   },
   props: [
-    { name: 'events', type: 'CalendarEvent[]', required: true, description: '`{ id, title, start, end?, allDay?, tone? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info.' },
+    { name: 'events', type: 'CalendarEvent[]', required: true, description: '`{ id, title, start, end?, allDay?, tone?, color? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. 12.2: `color` takes any brand colour (hex, rgb(), hsl(), oklab(), oklch()) and wins over `tone`: the container is mixed from it into the surface and the text picked for 4.5:1 contrast, in light and dark. A colour that can’t be read keeps the tone and warns in development.' },
     { name: 'date / defaultDate / onDateChange', type: 'Date', required: false, description: 'Any day in the shown month or week; Today and the arrows change it.' },
     { name: 'view / defaultView / onViewChange', type: "'month' | 'week'", default: "'month'", required: false, description: 'Week shows every event; month shows `maxEventsPerDay` then "N more".' },
     { name: 'onEventClick', type: '(event) => void', required: false, description: 'Makes events buttons.' },
@@ -22,12 +22,13 @@ const entry: ComponentEntry = {
     { name: 'onEventMove', type: '(event, { start, end }) => void', required: false, description: '11.4. Makes events movable: drag one to another day (month, week) or time (day view, 15-minute steps), or press Alt+Arrow on it, pick with the arrows and press Enter (Escape cancels). The duration is kept. Events with `editable: false` stay put.' },
     { name: 'renderDayAction', type: '(date) => ReactNode', required: false, description: '11.4. A per-day slot, e.g. a small add button: in each day’s header (month, week), above the day view and beside each agenda day.' },
     { name: 'eventActions', type: '(event) => ReactNode', required: false, description: '11.4. Controls for one event, e.g. a menu: beside it in day and agenda views, over its end on hover or focus in month and week cells (always shown on touch screens).' },
-    { name: 'legend', type: '{ label, tone }[]', required: false, description: '11.4. A row under the toolbar naming what each tone means. Colour is never the only signal: titles still say what an event is.' },
+    { name: 'legend', type: '{ label, tone, color? }[]', required: false, description: '11.4. A row under the toolbar naming what each tone means (12.2: or each `color`). Colour is never the only signal: titles still say what an event is.' },
   ],
   examples: [
     { title: 'Team calendar' },
     { title: 'Day and agenda views', description: '`views` adds Day (an hour grid with a "now" line) and Agenda (the month as a list) to the switcher.' },
     { title: 'Move, add and act on events', description: 'Drag an event, or press Alt+Arrow on it, to move it; a "+" per day, a menu per event and a legend.' },
+    { title: 'Company colours', description: '12.2. `color` per event: six brand colours in different syntaxes, readable in light and dark.' },
   ],
   a11y: {
     keyboard: [
@@ -38,6 +39,7 @@ const entry: ComponentEntry = {
     notes: [
       'A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.',
       'The title is a polite live region, so Today and the arrows announce the new month or week.',
+      '`color` changes only the paint: the event’s accessible name is still its title (and time).',
       'Movable events describe the keyboard move (Alt+Arrow, then arrows, Enter or Escape); each step and the drop are announced in a polite live region.',
     ],
   },

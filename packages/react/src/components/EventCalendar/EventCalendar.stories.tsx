@@ -117,3 +117,37 @@ export const Editable: Story = {
     );
   },
 };
+
+// One brand colour per company, in four colour syntaxes; `color` wins over `tone`.
+const companies = [
+  { label: 'Acme', color: '#ffd400' },
+  { label: 'Globex', color: '#0b1f4d' },
+  { label: 'Initech', color: 'rgb(228, 0, 43)' },
+  { label: 'Umbrella', color: 'hsl(160 100% 33%)' },
+  { label: 'Hooli', color: 'oklch(0.62 0.2 300)' },
+  { label: 'Stark', color: '#ff7a00' },
+];
+const companyEvents: CalendarEvent[] = companies.flatMap((c, i) => [
+  { id: `${c.label}-a`, title: `${c.label} board`, start: new Date(2026, 10, 16 + (i % 3), 9 + i), color: c.color, tone: 'error' as const },
+  { id: `${c.label}-b`, title: `${c.label} payroll`, start: new Date(2026, 10, 3 + i * 4), allDay: true, color: c.color },
+]);
+
+/** `color`: arbitrary brand colours stay readable. The container mixes into the surface; the text is picked for 4.5:1. */
+export const CompanyColors: Story = {
+  render: () => (
+    <div className="grid gap-4 xl:grid-cols-2">
+      {(['light', 'dark'] as const).map((theme) => (
+        <div key={theme} data-theme={theme} className="rounded-xl bg-[var(--color-surface)] p-4 text-[var(--color-on-surface)]">
+          <EventCalendar
+            events={companyEvents}
+            defaultDate={new Date(2026, 10, 16)}
+            weekStartsOn={1}
+            onEventClick={() => {}}
+            legend={companies.map((c) => ({ ...c, tone: 'primary' as const }))}
+            maxEventsPerDay={4}
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};

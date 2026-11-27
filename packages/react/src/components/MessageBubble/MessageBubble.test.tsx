@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { renderToString } from 'react-dom/server';
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import axe from 'axe-core';
 import { MessageActions, MessageBubble } from './MessageBubble.js';
 
@@ -144,6 +144,112 @@ describe('MessageBubble 11.5', () => {
           <MessageActions actions={[{ label: 'Pin', icon: <span aria-hidden="true">*</span>, onSelect: () => {} }]} />
         </MessageBubble>
       </>,
+    );
+    const { violations } = await axe.run(container);
+    expect(violations).toEqual([]);
+  });
+});
+
+describe('MessageBubble 12.2', () => {
+  // jsdom has no layout: heights come from these, and ResizeObserver is a manual stub.
+  const sizes = { scrollHeight: 0, clientHeight: 0 };
+  const observers: { cb: ResizeObserverCallback }[] = [];
+  const realRO = globalThis.ResizeObserver;
+  beforeEach(() => {
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(() => sizes.scrollHeight);
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(() => sizes.clientHeight);
+    observers.length = 0;
+    globalThis.ResizeObserver = class {
+      cb: ResizeObserverCallback;
+      constructor(cb: ResizeObserverCallback) {
+        this.cb = cb;
+        observers.push(this);
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof ResizeObserver;
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    globalThis.ResizeObserver = realRO;
+  });
+  const resize = () => act(() => observers.forEach((o) => o.cb([], o as unknown as ResizeObserver)));
+
+  it('user avatar sits at the inline-end, mirroring the assistant', () => {
+    render(
+      <MessageBubble from="user" avatar={<span data-testid="me">S</span>}>
+        Hi
+      </MessageBubble>,
+    );
+    const article = screen.getByRole('article', { name: 'You said' });
+    expect(article).toHaveClass('items-start', 'justify-end', 'gap-3');
+    expect(article.lastElementChild).toContainElement(screen.getByTestId('me'));
+    expect(article.lastElementChild).toHaveClass('shrink-0');
+    expect(screen.getByText('Hi')).toHaveClass('bg-[var(--color-primary-container)]');
+  });
+
+  it('collapse: no toggle when the content fits', () => {
+    Object.assign(sizes, { scrollHeight: 48, clientHeight: 48 });
+    render(<MessageBubble from="assistant" collapse={3}>Short</MessageBubble>);
+    expect(screen.getByText('Short')).toHaveClass('line-clamp-3');
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('collapse: Read more / Show less with aria-expanded and aria-controls', () => {
+    Object.assign(sizes, { scrollHeight: 48, clientHeight: 48 });
+    render(<MessageBubble from="user" collapse={2}>Long text</MessageBubble>);
+    expect(screen.queryByRole('button')).toBeNull();
+    // The content grows past the clamp: the observer re-measures.
+    sizes.scrollHeight = 200;
+    resize();
+    const content = screen.getByText('Long text');
+    const toggle = screen.getByRole('button', { name: 'Read more' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(toggle).toHaveAttribute('aria-controls', content.id);
+    expect(content).toHaveClass('line-clamp-2');
+    expect(content.className).toContain('mask-image');
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(toggle).toHaveAccessibleName('Show less');
+    expect(content).not.toHaveClass('line-clamp-2');
+    fireEvent.click(toggle);
+    expect(screen.getByRole('button', { name: 'Read more' })).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('collapse beyond 6 lines clamps through the CSSOM; strings are overridable', () => {
+    Object.assign(sizes, { scrollHeight: 400, clientHeight: 160 });
+    render(
+      <MessageBubble from="other" name="Ada" collapse={8} messages={{ readMore: 'Mehr' }}>
+        Long text
+      </MessageBubble>,
+    );
+    const content = screen.getByText('Long text');
+    expect(content.style.getPropertyValue('-webkit-line-clamp')).toBe('8');
+    expect(screen.getByRole('button', { name: 'Mehr' })).toBeInTheDocument();
+  });
+
+  it('collapse works without ResizeObserver', () => {
+    // @ts-expect-error simulate an environment without it
+    globalThis.ResizeObserver = undefined;
+    Object.assign(sizes, { scrollHeight: 200, clientHeight: 48 });
+    render(<MessageBubble from="assistant" collapse={2}>Long text</MessageBubble>);
+    expect(screen.getByRole('button', { name: 'Read more' })).toBeInTheDocument();
+  });
+
+  it('collapse={false} (default) renders the children as before', () => {
+    render(<MessageBubble from="user">Hi</MessageBubble>);
+    expect(screen.getByText('Hi')).toHaveClass('max-w-[85%]');
+    expect(screen.queryByRole('button')).toBeNull();
+  });
+
+  it('12.2 is axe-clean', async () => {
+    Object.assign(sizes, { scrollHeight: 200, clientHeight: 48 });
+    const { container } = render(
+      <MessageBubble from="user" avatar={<span aria-hidden="true">S</span>} collapse={2}>
+        Long text
+      </MessageBubble>,
     );
     const { violations } = await axe.run(container);
     expect(violations).toEqual([]);

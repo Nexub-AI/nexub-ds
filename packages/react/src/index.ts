@@ -26,6 +26,10 @@ export { StreamingText } from './components/StreamingText/index.js';
 export type { StreamingTextProps } from './components/StreamingText/index.js';
 export { MessageBubble, MessageActions, defaultMessageStrings } from './components/MessageBubble/index.js';
 export type { MessageBubbleProps, MessageActionsProps, MessageFrom, MessageStrings, Feedback, MessageAction } from './components/MessageBubble/index.js';
+export { MessageCard } from './components/MessageCard/index.js';
+export type { MessageCardProps, MessageCardAction, MessageCardField } from './components/MessageCard/index.js';
+export { Highlight } from './components/Highlight/index.js';
+export type { HighlightProps, HighlightTone } from './components/Highlight/index.js';
 export { Citation, SourceChip, SourceList, safeUrl } from './components/Citation/index.js';
 export type { CitationProps, CitationSource, CitationMessages, SourceChipProps, SourceListProps } from './components/Citation/index.js';
 
@@ -101,6 +105,8 @@ export type { FormFieldRootProps, FormFieldContextValue } from './components/For
 // Components — Labels & Badges
 export { Badge, badgeVariants } from './components/Badge/index.js';
 export type { BadgeProps } from './components/Badge/index.js';
+export { AgentBadge } from './components/Badge/index.js';
+export type { AgentBadgeProps } from './components/Badge/index.js';
 
 export { FilterChip } from './components/FilterChip/index.js';
 export type { FilterChipProps } from './components/FilterChip/index.js';
@@ -114,6 +120,8 @@ export type { EyebrowChipProps } from './components/EyebrowChip/index.js';
 // Components — Avatar
 export { Avatar, avatarVariants } from './components/Avatar/index.js';
 export type { AvatarProps, AvatarStatus } from './components/Avatar/index.js';
+export { AgentAvatar } from './components/Avatar/index.js';
+export type { AgentAvatarProps } from './components/Avatar/index.js';
 
 export { AvatarGroup, avatarGroupVariants } from './components/AvatarGroup/index.js';
 export type { AvatarGroupProps } from './components/AvatarGroup/index.js';
@@ -256,6 +264,7 @@ export { HoverCard } from './components/HoverCard/index.js';
 
 // Components — Navigation / Menus
 export { DropdownMenu } from './components/DropdownMenu/index.js';
+export type { DropdownMenuCheckboxItemProps, DropdownMenuRadioItemProps } from './components/DropdownMenu/index.js';
 export { ContextMenu } from './components/ContextMenu/index.js';
 export { Menubar } from './components/Menubar/index.js';
 export { NavigationMenu } from './components/NavigationMenu/index.js';

@@ -252,4 +252,29 @@ describe('EventCalendar 11.4: moves, day actions, event actions, legend', () => 
     expect(screen.getByRole('button', { name: 'More Standup' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add' })).toBeInTheDocument();
   });
+
+  it('color wins over tone, keeps the accessible name, and an unreadable colour keeps the tone', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const coloured: CalendarEvent[] = [
+      { id: 'x', title: 'Acme board', start: new Date(2026, 10, 9, 10), tone: 'error', color: '#00a86b' },
+      { id: 'y', title: 'Globex sync', start: new Date(2026, 10, 10, 10), tone: 'success', color: 'not-a-colour' },
+    ];
+    const plain = renderCal({ events: [{ ...coloured[0]!, color: undefined }], onEventClick: () => {} });
+    const name = screen.getByRole('button', { name: /Acme board/ }).textContent;
+    plain.unmount();
+    renderCal({ events: coloured, onEventClick: () => {}, legend: [{ label: 'Acme', tone: 'primary', color: '#00a86b' }] });
+    const acme = screen.getByRole('button', { name: /Acme board/ });
+    expect(acme.textContent).toBe(name);
+    expect(acme).not.toHaveAttribute('aria-label');
+    expect(acme.className).toContain('bg-[var(--nx-event-bg)]');
+    expect(acme.className).not.toContain('error-container');
+    expect(acme.style.getPropertyValue('--nx-event-bg')).toContain('#00a86b');
+    expect(acme.style.getPropertyValue('--nx-event-fg')).toMatch(/^light-dark\(/);
+    const globex = screen.getByRole('button', { name: /Globex sync/ });
+    expect(globex.className).toContain('success-container');
+    expect(warn).toHaveBeenCalled();
+    const dot = within(screen.getByRole('list', { name: 'Legend' })).getByText('Acme').firstElementChild as HTMLElement;
+    expect(dot.className).toContain('bg-[var(--nx-event-dot)]');
+    warn.mockRestore();
+  });
 });

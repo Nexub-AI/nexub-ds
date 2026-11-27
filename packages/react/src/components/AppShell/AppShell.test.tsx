@@ -4,6 +4,12 @@ import { describe, it, expect, vi } from 'vitest';
 import { AppShell } from './AppShell.js';
 
 describe('AppShell', () => {
+  it('Main is a positioning context, so absolute children and sr-only labels stay inside it (12.2)', () => {
+    render(<AppShell.Main className="p-4">Page</AppShell.Main>);
+    const main = screen.getByRole('main');
+    expect(main).toHaveClass('relative', 'flex-1', 'overflow-y-auto', 'p-4');
+  });
+
   it('renders root element', () => {
     render(<AppShell.Root data-testid="root" />);
     expect(screen.getByTestId('root')).toBeInTheDocument();

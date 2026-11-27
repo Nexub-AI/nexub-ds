@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 // axe-core (WCAG 2.2 A/AA, no best-practice) over every story in light and dark.
 // Story list comes from the built Storybook, loaded the same way as stories.visual.spec.ts.
@@ -42,6 +42,8 @@ const KNOWN: Record<string, string[]> = {
   'patterns-settingslayout--with-app-header-phone': MONOGRAM,
   'components-orgchart--default': TREE_ROW,
   'components-orgchart--custom-card': TREE_ROW,
+  'components-orgchart--wide-team-stacked': TREE_ROW,
+  'components-orgchart--zoom': TREE_ROW,
   'components-treeview--actions-and-links': TREE_ROW,
 };
 
@@ -124,6 +126,12 @@ const OPEN: { id: string; trigger?: string; press?: string }[] = [
   // 11.9: the diagram's "Connect to…" menu (the keyboard alternative to dragging a handle),
   // opened with C on a node (its connect button only takes pointer events on hover).
   { id: 'components-diagramcanvas--default', trigger: '.react-flow__node', press: 'c' },
+  // 12.2: PromptInput's slash commands, opened by typing "/" in the field.
+  { id: 'ai-promptinput--slash-commands', trigger: 'textarea', press: '/' },
+  // 12.2: MessageCard's "More actions" menu.
+  { id: 'ai-messagebubble--card-overflow', trigger: 'button[aria-haspopup=menu]' },
+  // 12.2: RadioItem indicator="end" (icon at the start, tick at the inline end).
+  { id: 'navigation-dropdownmenu--theme-menu', trigger: 'button' },
 ];
 const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
 
@@ -154,3 +162,240 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2: OrgChart zoom toolbar. A named group of named buttons, a polite live level that follows
+// the + key from a focused card, and the tree (names, levels) unchanged around it.
+test('a11y components-orgchart--zoom toolbar', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-orgchart--zoom&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const toolbar = page.getByRole('group', { name: 'Zoom' });
+  for (const name of ['Zoom out', 'Zoom in', 'Fit to screen']) await expect(toolbar.getByRole('button', { name })).toBeVisible();
+  const level = toolbar.locator('output');
+  await expect(level).toHaveAttribute('aria-live', 'polite');
+  await expect(level).toHaveText('40%');
+  const lead = page.getByRole('treeitem', { name: /^Sophie Wilson Head of Engineering/ });
+  await expect(lead).toHaveAttribute('aria-level', '1');
+  await lead.focus();
+  await page.keyboard.press('+');
+  await expect(level).toHaveText('50%');
+  await expect(lead).toBeFocused();
+  await page.keyboard.press('0');
+  await expect(level).toHaveText('100%');
+  await toolbar.getByRole('button', { name: 'Zoom out' }).click();
+  await expect(level).toHaveText('90%');
+});
+
+// 12.2: OrgChart stacking keeps the tree semantics: a stacked report still says its level and place in the set.
+test('a11y components-orgchart--wide-team-stacked tree', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-orgchart--wide-team-stacked&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const third = page.getByRole('treeitem', { name: /^Grace C\./ });
+  await expect(third).toHaveAttribute('aria-level', '3');
+  await expect(third).toHaveAttribute('aria-setsize', '14');
+  await expect(third).toHaveAttribute('aria-posinset', '3');
+});
+
+// 12.2: EventCalendar `color` keeps each event's accessible name (its title, with the time when shown).
+test('a11y components-eventcalendar--company-colors names', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-eventcalendar--company-colors&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.getByRole('button', { name: /Acme payroll$/ }).first()).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Legend' }).first().getByRole('listitem')).toHaveText(['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Stark']);
+});
+
+// 12.2: what a screen reader hears from PromptInput's slash commands. Closed, the field is a
+// plain multiline textbox; "/" turns it into an expanded combobox that controls a listbox named
+// "Commands", with the active option announced through aria-activedescendant as ↑/↓ move.
+test('a11y PromptInput slash commands announce as a combobox and listbox', async ({ page }) => {
+  await page.goto('/iframe.html?id=ai-promptinput--slash-commands&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const field = page.locator('#storybook-root textarea');
+  await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+  await expect(field).not.toHaveAttribute('aria-expanded');
+  await field.click();
+  await page.keyboard.press('/');
+  const combo = page.getByRole('combobox', { name: 'Message' });
+  const list = page.getByRole('listbox', { name: 'Commands' });
+  await expect(combo).toHaveAttribute('aria-expanded', 'true');
+  await expect(combo).toHaveAttribute('aria-controls', (await list.getAttribute('id'))!);
+  const options = list.getByRole('option');
+  await expect(options.first()).toHaveAccessibleName('/remind Remind me Remind me later, e.g. /remind tomorrow 9am');
+  await expect(options.first()).toHaveAttribute('aria-selected', 'true');
+  await expect(combo).toHaveAttribute('aria-activedescendant', (await options.first().getAttribute('id'))!);
+  await page.keyboard.press('ArrowDown');
+  await expect(combo).toHaveAttribute('aria-activedescendant', (await options.nth(1).getAttribute('id'))!);
+  await expect(options.nth(1)).toHaveAccessibleName('/summarize Summarize Summarize this thread');
+  await expect(options.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Escape');
+  await expect(list).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Message' })).toHaveValue('/');
+});
+
+// 12.2: the quick-reply row is a group named "Suggestions" and each reply is reachable with Tab.
+test('a11y PromptInput quick replies are a labelled group in the tab order', async ({ page }) => {
+  await page.goto('/iframe.html?id=ai-promptinput--quick-reply-chips&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const row = page.getByRole('group', { name: 'Suggestions' });
+  await expect(row.getByRole('button')).toHaveCount(5);
+  await page.keyboard.press('Tab');
+  await expect(row.getByRole('button', { name: 'Approve' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(row.getByRole('button', { name: 'Reject' })).toBeFocused();
+});
+
+// 12.2 MessageBubble: what a screen reader gets from the new parts, in the real browser.
+const story = (id: string) => `/iframe.html?id=${id}&viewMode=story&globals=theme:light;brand:none`;
+
+test('sr ai-messagebubble--user-avatar: the own message keeps "You said"', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--user-avatar'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.getByRole('article', { name: 'You said' })).toHaveCount(1);
+});
+
+test('sr ai-messagebubble--collapse: the toggle exposes its expanded state', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--collapse'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await page.evaluate(() => document.fonts.ready);
+  const root = page.locator('#storybook-root');
+  // Two long messages get a toggle; the short one fits and gets none.
+  await expect(root.getByRole('button', { name: 'Read more' })).toHaveCount(2);
+  const toggle = root.getByRole('button', { name: 'Read more' }).first();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  const controls = await toggle.getAttribute('aria-controls');
+  await expect(page.locator(`[id="${controls}"]`)).toHaveCount(1);
+  await toggle.click();
+  const expanded = root.getByRole('button', { name: 'Show less' });
+  await expect(expanded).toHaveAttribute('aria-expanded', 'true');
+  await expect(expanded).toBeFocused();
+});
+
+test('sr ai-messagebubble--card-overflow: fields are term/definition pairs; the menu button is named', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--card-overflow'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  const dl = root.locator('dl');
+  await expect(dl.getByRole('term')).toHaveText(['Amount', 'Vendor', 'Submitted by', 'Due']);
+  await expect(dl.getByRole('definition')).toHaveCount(4);
+  const more = root.getByRole('button', { name: 'More actions' });
+  await expect(more).toHaveAttribute('aria-haspopup', 'menu');
+  await expect(more).toHaveAttribute('aria-expanded', 'false');
+  await expect(root.getByRole('button', { name: 'Show all' })).toHaveAttribute('aria-expanded', 'false');
+  await more.click();
+  await expect(page.getByRole('menu').getByRole('menuitem')).toHaveText(['Duplicate', 'Delete']);
+});
+
+// 12.2 Conversation: what a screen reader gets from DateSeparator, the thinking slot and the
+// "New messages" announcement.
+test.describe('a11y Conversation 12.2', () => {
+  const open = async (page: Page, story: string) => {
+    await page.goto(`/iframe.html?id=patterns-conversation--${story}&viewMode=story&globals=theme:light;brand:none`);
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  };
+
+  test('DateSeparator reads as its day, in order, not as a bare separator', async ({ page }) => {
+    await open(page, 'day-grouped-with-date-separators');
+    const list = page.getByRole('region', { name: 'Conversation' });
+    await expect(list.getByRole('separator')).toHaveCount(0);
+    const days = list.locator('time');
+    await expect(days).toHaveText(['Nov 22, 2026', 'Yesterday', 'Today']);
+    await expect(days.nth(1)).toHaveAttribute('datetime', '2026-11-26');
+    // Each separator: two hidden hairlines around a visible, readable label.
+    const sep = days.nth(1).locator('..');
+    await expect(sep.locator('> [aria-hidden="true"]')).toHaveCount(2);
+    await expect(days.nth(1)).toBeVisible();
+  });
+
+  test('the thinking slot is a polite status after the messages', async ({ page }) => {
+    await open(page, 'thinking');
+    const status = page.locator('[data-conversation-thinking]');
+    await expect(status).toHaveAttribute('role', 'status');
+    await expect(status).toHaveAttribute('aria-live', 'polite');
+    await expect(status).toContainText('Thinking');
+    await page.getByRole('button', { name: 'Stop thinking' }).click();
+    await expect(status).toBeEmpty();
+  });
+
+  test('messages arriving while scrolled up: "Jump to newest" and one polite "New messages"', async ({ page }) => {
+    await open(page, 'jump-to-newest');
+    const list = page.getByRole('region', { name: 'Conversation' });
+    const live = page.locator('#storybook-root .sr-only[aria-live="polite"]');
+    await expect(live).toHaveText('');
+    await list.evaluate((el) => {
+      el.scrollTop = 0;
+    });
+    await expect(page.getByRole('button', { name: 'Jump to latest' })).toBeVisible();
+    await page.getByRole('button', { name: /Start new messages/ }).click();
+    await expect(page.getByRole('button', { name: 'Jump to newest' })).toBeVisible({ timeout: 5000 });
+    await expect(live).toHaveText('New messages');
+    await page.getByRole('button', { name: 'Stop new messages' }).click();
+    await page.getByRole('button', { name: 'Jump to newest' }).click();
+    await expect(page.getByRole('button', { name: /Jump to/ })).toHaveCount(0);
+    await expect(live).toHaveText('');
+  });
+});
+
+// 12.2: an agent never reads as a person. Every AgentAvatar is one image whose
+// accessible name says "AI agent"; its glyph and sparkle are not in the tree.
+test('a11y AgentAvatar name says AI agent', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-avatar--agent-sizes&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.getByRole('img', { name: 'Payhub agent, AI agent', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img', { name: 'Ada Lovelace', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img')).toHaveCount(10);
+});
+
+// 12.2: names, roles and states a screen reader gets from the new menu and sidebar behaviour.
+test('a11y 12.2 theme menu: radio items keep role, name and checked state with indicator="end"', async ({ page }) => {
+  await page.goto('/iframe.html?id=navigation-dropdownmenu--theme-menu&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const trigger = page.getByRole('button', { name: 'Theme' });
+  await trigger.focus();
+  await page.keyboard.press('Enter'); // opens with focus on the first item (Light)
+  const menu = page.getByRole('menu');
+  await expect(menu.getByRole('menuitemradio')).toHaveCount(3);
+  await expect(menu.getByRole('menuitemradio', { name: 'System' })).toHaveAttribute('aria-checked', 'true');
+  await expect(menu.getByRole('menuitemradio', { name: 'Light' })).toHaveAttribute('aria-checked', 'false');
+  await expect(menu.getByRole('menuitemradio', { name: 'Light' })).toBeFocused();
+  await page.keyboard.press('Enter'); // picks Light and closes
+  await expect(menu).toHaveCount(0);
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menuitemradio', { name: 'Light' })).toHaveAttribute('aria-checked', 'true');
+});
+
+test('a11y 12.2 collapsible sidebar group: a named toggle with aria-expanded hides its items', async ({ page }) => {
+  await page.goto('/iframe.html?id=navigation-sidebar--collapsible-groups&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const nav = page.getByRole('navigation');
+  const workspace = nav.getByRole('button', { name: 'Workspace' });
+  const admin = nav.getByRole('button', { name: 'Admin' });
+  await expect(workspace).toHaveAttribute('aria-expanded', 'true');
+  await expect(admin).toHaveAttribute('aria-expanded', 'false');
+  // Closed: the items are inert, so Tab skips them.
+  await expect(page.locator(`[id="${await admin.getAttribute('aria-controls')}"]`)).toHaveAttribute('inert', '');
+  await admin.focus();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Collapse to icon rail' })).toBeFocused();
+  await admin.focus();
+  await page.keyboard.press('Enter');
+  await expect(admin).toHaveAttribute('aria-expanded', 'true');
+  await expect(nav.getByRole('link', { name: 'Team' })).toBeVisible();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await expect(nav.getByRole('link', { name: 'Settings' })).toBeFocused();
+  await admin.focus();
+  await page.keyboard.press('Space');
+  await expect(admin).toHaveAttribute('aria-expanded', 'false');
+  await page.addScriptTag({ path: axePath });
+  const violations = await page.evaluate(async (tags) => {
+    // @ts-expect-error injected global
+    const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: tags } });
+    return (r.violations as { id: string }[]).map((v) => v.id);
+  }, TAGS);
+  expect(violations).toEqual([]);
+  // Icon rail: every group open, toggles hidden.
+  await page.getByRole('button', { name: 'Collapse to icon rail' }).click();
+  await expect(nav.getByRole('button')).toHaveCount(0);
+  await expect(nav.getByRole('link', { name: 'Team' })).toHaveCount(1);
+});

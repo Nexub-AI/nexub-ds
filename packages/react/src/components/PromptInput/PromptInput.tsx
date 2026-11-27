@@ -10,6 +10,9 @@ import { useMergedRefs } from '../../hooks/useMergedRefs.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { IconButton } from '../IconButton/IconButton.js';
 import { Button } from '../Button/Button.js';
+import type { CommandListItem } from '../CommandList/CommandList.js';
+
+type CommandsModule = typeof import('./PromptCommands.js');
 
 export interface PromptInputMessages {
   promptLabel: string;
@@ -18,6 +21,10 @@ export interface PromptInputMessages {
   promptHint: string;
   /** 11.5: the visible hint with `submitOn="mod-enter"`; `mod` is "⌘" or "Ctrl". */
   promptHintModEnter: (mod: string) => string;
+  /** 12.2: the accessible name of the `chips` row. */
+  promptSuggestions: string;
+  /** 12.2: the accessible name of the slash-command list. */
+  promptCommands: string;
 }
 
 const fallbackMessages: PromptInputMessages = {
@@ -26,7 +33,16 @@ const fallbackMessages: PromptInputMessages = {
   stopGenerating: 'Stop generating',
   promptHint: 'Press Enter to send, Shift+Enter for a new line',
   promptHintModEnter: (mod) => `Press ${mod}+Enter to send, Enter for a new line`,
+  promptSuggestions: 'Suggestions',
+  promptCommands: 'Commands',
 };
+
+/** `/remind tomorrow 9am` → id `remind`, args `tomorrow 9am`; null without a leading slash. */
+export function parseSlashCommand(text: string): { id: string; args: string; hasArgs: boolean } | null {
+  const m = /^\/(\S*)(\s+)?([\s\S]*)$/.exec(text);
+  if (!m) return null;
+  return { id: m[1]!, args: (m[3] ?? '').trim(), hasArgs: !!m[2] };
+}
 
 export type PromptInputStatus = 'idle' | 'submitting' | 'streaming';
 
@@ -68,6 +84,24 @@ export interface PromptInputProps
   hint?: React.ReactNode;
   /** 11.5: an error under the field; marks it invalid. */
   error?: React.ReactNode;
+  /**
+   * 12.2: slash commands. When the text starts with `/`, a list opens above the field, filtered
+   * by what follows the slash (cmdk's scorer, as CommandList). ↑/↓ move, Enter or Tab picks,
+   * Esc closes and keeps the text. `shortcut` keys show at the end of a row.
+   */
+  commands?: CommandListItem[];
+  /**
+   * 12.2: called when a command is picked, with its `value` and the text after the command's id
+   * (`/remind tomorrow 9am` → `('remind', 'tomorrow 9am')`). Uncontrolled input then clears, as
+   * after a submit; controlled input leaves that to you. Enter on text with no matching
+   * command submits as usual.
+   */
+  onCommand?: (value: string, args: string) => void;
+  /**
+   * 12.2: quick replies above the field, e.g. `Button size="sm" variant="tonal"` or Chips. One
+   * row that scrolls sideways when narrow (wraps from 480px wide), labelled "Suggestions".
+   */
+  chips?: React.ReactNode;
 }
 
 const stopIcon = <span aria-hidden="true" className="size-3.5 rounded-shape-min bg-current" />;
@@ -97,6 +131,10 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       submitOn = 'enter',
       hint,
       error,
+      commands,
+      onCommand,
+      chips,
+      onBlur,
       ...props
     },
     ref,
@@ -129,6 +167,49 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       growRef.current?.style.setProperty('--nx-max-rows', String(maxRows));
     }, [maxRows]);
 
+    // 12.2 slash commands: the list part loads on the first "/" (apps without commands never load it).
+    const slash = commands?.length ? parseSlashCommand(value) : null;
+    const [commandsModule, setCommandsModule] = React.useState<CommandsModule | null>(null);
+    React.useEffect(() => {
+      if (!slash || commandsModule) return;
+      let live = true;
+      void import('./PromptCommands.js').then((mod) => live && setCommandsModule(mod));
+      return () => {
+        live = false;
+      };
+    }, [!!slash, commandsModule]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Esc (or blur, or a pick) closes the list for this exact text; typing reopens it.
+    const [dismissed, setDismissed] = React.useState<string | null>(null);
+    // Any change of text forgets the dismissal (so retyping the same "/" after a pick reopens).
+    if (dismissed !== null && dismissed !== value) setDismissed(null);
+    // The highlighted command, for the query it was chosen under: a new query starts at the top.
+    const [active, setActive] = React.useState<{ query: string; value: string } | null>(null);
+    const setActiveValue = (v: string) => setActive({ query: slash?.id ?? '', value: v });
+    const activeValue = active && active.query === slash?.id ? active.value : null;
+    const commandItems =
+      slash && commandsModule && value !== dismissed && !disabled
+        ? commandsModule.filterCommands(commands!, slash.id, slash.hasArgs)
+        : [];
+    const enabledAt = (i: number) => !!commandItems[i] && !commandItems[i]!.disabled;
+    let activeIndex = commandItems.findIndex((c) => c.value === activeValue && !c.disabled);
+    if (activeIndex < 0) activeIndex = commandItems.findIndex((c) => !c.disabled);
+    const listOpen = commandItems.length > 0;
+    const listId = `${hintId}-commands`;
+
+    const pickCommand = (item: CommandListItem) => {
+      onCommand?.(item.value, slash?.hasArgs ? slash.args : '');
+      setDismissed(value);
+      if (valueProp === undefined) setValue('');
+    };
+
+    const moveActive = (step: 1 | -1) => {
+      const n = commandItems.length;
+      for (let k = 1; k <= n; k++) {
+        const i = (activeIndex + step * k + n) % n;
+        if (enabledAt(i)) return setActiveValue(commandItems[i]!.value);
+      }
+    };
+
     const streaming = status === 'streaming';
     const canSubmit = !disabled && status === 'idle' && value.trim() !== '';
 
@@ -141,6 +222,24 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       onKeyDown?.(e);
       if (e.defaultPrevented) return;
+      if (listOpen) {
+        const composing = e.nativeEvent.isComposing || e.keyCode === 229;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          moveActive(e.key === 'ArrowDown' ? 1 : -1);
+          return;
+        }
+        if (((e.key === 'Enter' && !e.shiftKey) || (e.key === 'Tab' && !e.shiftKey)) && !composing && activeIndex >= 0) {
+          e.preventDefault();
+          pickCommand(commandItems[activeIndex]!);
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          setDismissed(value);
+          return;
+        }
+      }
       if (e.key === 'Enter' && !e.shiftKey && (!modEnter || e.metaKey || e.ctrlKey)) {
         // Enter that confirms an IME composition (CJK input) must not send.
         if ((e.nativeEvent.isComposing || e.keyCode === 229)) return;
@@ -168,11 +267,22 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
           fieldDisabledWithin,
           surface === 'glass' && glassSurfaceClass,
           invalid && fieldInvalid,
+          commands && 'relative',
           className,
         )}
         data-material={surface === 'glass' ? 'glass' : undefined}
         data-status={status}
       >
+        {listOpen && commandsModule && (
+          <commandsModule.CommandListbox
+            id={listId}
+            label={m.promptCommands}
+            items={commandItems}
+            active={activeIndex}
+            onActive={(i) => setActiveValue(commandItems[i]!.value)}
+            onPick={pickCommand}
+          />
+        )}
         {attachments && <div className="flex flex-wrap gap-2">{attachments}</div>}
         {/* Auto-grow: the mirror and the textarea share one grid cell (see Textarea). */}
         <div ref={growRef} className="grid">
@@ -186,10 +296,24 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            onBlur={(e) => {
+              onBlur?.(e);
+              if (listOpen) setDismissed(value);
+            }}
             disabled={disabled}
             aria-label={label ?? m.promptLabel}
             aria-describedby={describedByIds}
             aria-invalid={invalid || undefined}
+            {...(listOpen && commandsModule
+              ? {
+                  role: 'combobox',
+                  'aria-expanded': true,
+                  'aria-controls': listId,
+                  'aria-autocomplete': 'list' as const,
+                  'aria-activedescendant':
+                    activeIndex >= 0 ? commandsModule.optionId(listId, activeIndex) : undefined,
+                }
+              : null)}
             className={cn(
               textClass,
               'w-full resize-none overflow-y-auto bg-transparent border-0 text-inherit',
@@ -246,10 +370,11 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
       </div>
     );
 
-    // Without hint, error or the mod-enter hint, the DOM is exactly as before 11.5.
-    if (!invalid && !hint && !modEnter) return box;
+    // Without hint, error, the mod-enter hint or chips, the DOM is exactly as before 11.5.
+    if (!invalid && !hint && !modEnter && !chips) return box;
     return (
       <div className="flex min-w-0 flex-col gap-1.5">
+        {chips && <ChipsRow label={m.promptSuggestions}>{chips}</ChipsRow>}
         {box}
         {invalid && (
           <p id={errorId} className="px-3 text-body-sm text-[var(--color-error)]">
@@ -272,3 +397,48 @@ export const PromptInput = React.forwardRef<HTMLTextAreaElement, PromptInputProp
 );
 
 PromptInput.displayName = 'PromptInput';
+
+/**
+ * 12.2: the quick-reply row. Narrow: one row that scrolls sideways with snap, no scrollbar, and
+ * edge fades (nx-scroll-fade) while replies hide past an edge. From 480px wide it wraps.
+ */
+function ChipsRow({ label, children }: { label: string; children: React.ReactNode }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    const row = ref.current;
+    if (!row) return;
+    const sync = () => {
+      // abs(): scrollLeft is negative in RTL.
+      const pos = Math.abs(row.scrollLeft);
+      const max = row.scrollWidth - row.clientWidth;
+      const edges = [pos > 1 && 'start', pos < max - 1 && 'end'].filter(Boolean).join(' ');
+      if (edges) row.dataset.nxOverflow = edges;
+      else delete row.dataset.nxOverflow;
+    };
+    sync();
+    row.addEventListener('scroll', sync, { passive: true });
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(sync);
+    ro?.observe(row);
+    return () => {
+      row.removeEventListener('scroll', sync);
+      ro?.disconnect();
+    };
+  }, []);
+  return (
+    <div className="[container-type:inline-size]">
+      <div
+        ref={ref}
+        role="group"
+        aria-label={label}
+        className={cn(
+          // p-1 keeps focus rings inside the scroller; -m-1 lines the replies up with the field.
+          'nx-scroll-fade -m-1 flex snap-x snap-mandatory scroll-px-1 gap-2 overflow-x-auto p-1',
+          '[scrollbar-width:none] [&::-webkit-scrollbar]:hidden [&>*]:shrink-0 [&>*]:snap-start',
+          '[@container(min-width:480px)]:flex-wrap [@container(min-width:480px)]:overflow-x-visible',
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
