@@ -294,6 +294,263 @@
       }
     ]
   },
+  "ToolCall": {
+    "file": "components/agent.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "Tool name, e.g. \"search_invoices\"."
+      },
+      {
+        "name": "status",
+        "type": "'running' | 'done' | 'failed'",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "input",
+        "type": "unknown",
+        "required": false,
+        "description": "Arguments, shown as JSON."
+      },
+      {
+        "name": "output",
+        "type": "unknown",
+        "required": false,
+        "description": "Result, shown as given (string) or as JSON."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "required": false,
+        "description": "How long the call took, in milliseconds; shown formatted (\"1.2 s\") beside the status."
+      },
+      {
+        "name": "error",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Why the call failed, shown in the failed state. A failed call with an `error` starts open."
+      },
+      {
+        "name": "onRetry",
+        "type": "() => void",
+        "required": false,
+        "description": "Shows a Retry button in the failed state."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Open on first render."
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false,
+        "description": "Controlled open state; pair it with `onOpenChange`."
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "messages",
+        "type": "Partial<NexubMessages>",
+        "required": false,
+        "description": "Strings for this card, over the provider's messages."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "ApprovalCard": {
+    "file": "components/agent.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "What the agent wants to do, e.g. \"Send 3 invoices to Acme\"."
+      },
+      {
+        "name": "children",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Details: who, how much, what changes. A string is set as text."
+      },
+      {
+        "name": "onApprove",
+        "type": "() => Result",
+        "required": false,
+        "description": "Called once with the choice. Return a promise to show the pending state until it settles (a rejection returns to the choice)."
+      },
+      {
+        "name": "onDeny",
+        "type": "() => Result",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "approveLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "denyLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "args",
+        "type": "unknown",
+        "required": false,
+        "description": "The action's arguments, shown as JSON (or as given, for a string). With `onEdit` they can be edited before approving."
+      },
+      {
+        "name": "onEdit",
+        "type": "(args: string) => Result",
+        "required": false,
+        "description": "Adds Edit. Called with the edited arguments text when the user approves with changes."
+      },
+      {
+        "name": "editLabel",
+        "type": "string",
+        "required": false,
+        "default": "'Edit'",
+        "description": "Label for the Edit button."
+      },
+      {
+        "name": "outcome",
+        "type": "ApprovalOutcome | null",
+        "required": false,
+        "description": "Controlled outcome. `null` keeps the choice open; omit it to let the card track the choice."
+      },
+      {
+        "name": "pending",
+        "type": "boolean",
+        "required": false,
+        "description": "The action is being carried out: the buttons are blocked and \"Working…\" is announced."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "DiffView": {
+    "file": "components/agent.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "diff",
+        "type": "string",
+        "required": true,
+        "description": "A unified diff (lines starting with \"+\", \"-\" or \" \"); \"@@\" lines become headers."
+      },
+      {
+        "name": "file",
+        "type": "string",
+        "required": false,
+        "description": "File name shown above the diff."
+      },
+      {
+        "name": "lineNumbers",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Old and new line numbers in the gutter, counted from each `@@ -a,b +c,d"
+      },
+      {
+        "name": "messages",
+        "type": "Partial<NexubMessages>",
+        "required": false,
+        "description": "Strings for this diff (\"Added: \", \"Removed: \"), over the provider's messages."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "DiffReview": {
+    "file": "components/agent.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "files",
+        "type": "DiffReviewFile[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "decisions",
+        "type": "Record<string, DiffDecision>",
+        "required": false,
+        "description": "Controlled decisions, keyed by file path. A file with no entry is still to review."
+      },
+      {
+        "name": "defaultDecisions",
+        "type": "Record<string, DiffDecision>",
+        "required": false,
+        "description": "Starting decisions when uncontrolled."
+      },
+      {
+        "name": "onAccept",
+        "type": "(file: DiffReviewFile) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onReject",
+        "type": "(file: DiffReviewFile) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onDecisionsChange",
+        "type": "(decisions: Record<string, DiffDecision>) => void",
+        "required": false,
+        "description": "Called with the whole record after each decision."
+      },
+      {
+        "name": "lineNumbers",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Show old and new line numbers in each diff."
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false,
+        "default": "true",
+        "description": "Files start expanded."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "SwitchField": {
     "file": "components/choicefields.tsx",
     "extends": [
@@ -1347,6 +1604,13 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "Shown when `data` is empty."
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "12.5: rows can keep arriving (an agent is producing the data). A skeleton row trails the last\nrow (hidden from screen readers), the list is busy, the row count is announced at most every\n3 seconds and \"Done. N rows\" when `streaming` turns off. Rows that arrive meanwhile fade in\n(instant under Reduce Motion). Before the first row, the skeleton row shows instead of `empty`."
       },
       {
         "name": "style",
@@ -2921,6 +3185,30 @@
         "description": "Spinner in the trailing slot and busy for screen readers."
       },
       {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the\nfield (none under Reduce Motion); it stays editable. Pass the value as it arrives."
+      },
+      {
+        "name": "generated",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the value came from an agent. Shows a \"Suggested\" mark beside the label, read as part\nof the field's hint. Typing in the field clears the mark; so do accept and clear."
+      },
+      {
+        "name": "onAcceptSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows an accept button beside the mark."
+      },
+      {
+        "name": "onClearSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows a clear button beside the mark. Clear the value here."
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -3081,6 +3369,34 @@
         "inherited": "TextField"
       },
       {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the\nfield (none under Reduce Motion); it stays editable. Pass the value as it arrives.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "generated",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the value came from an agent. Shows a \"Suggested\" mark beside the label, read as part\nof the field's hint. Typing in the field clears the mark; so do accept and clear.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onAcceptSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows an accept button beside the mark.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClearSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows a clear button beside the mark. Clear the value here.",
+        "inherited": "TextField"
+      },
+      {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
         "required": false,
@@ -3092,7 +3408,7 @@
   "SearchField": {
     "file": "components/inputs.tsx",
     "extends": [
-      "Omit<TextFieldProps, 'label' | 'clearable'>"
+      "Omit<TextFieldProps, 'label' | 'clearable' | 'generated' | 'onAcceptSuggestion' | 'onClearSuggestion'>"
     ],
     "props": [
       {
@@ -3219,6 +3535,13 @@
         "type": "boolean",
         "required": false,
         "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the\nfield (none under Reduce Motion); it stays editable. Pass the value as it arrives.",
         "inherited": "TextField"
       },
       {
@@ -3397,6 +3720,34 @@
         "type": "boolean",
         "required": false,
         "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the\nfield (none under Reduce Motion); it stays editable. Pass the value as it arrives.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "generated",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the value came from an agent. Shows a \"Suggested\" mark beside the label, read as part\nof the field's hint. Typing in the field clears the mark; so do accept and clear.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onAcceptSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows an accept button beside the mark.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClearSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows a clear button beside the mark. Clear the value here.",
         "inherited": "TextField"
       },
       {
@@ -4857,6 +5208,34 @@
         "type": "boolean",
         "required": false,
         "description": "Spinner in the trailing slot and busy for screen readers.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "streaming",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the\nfield (none under Reduce Motion); it stays editable. Pass the value as it arrives.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "generated",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the value came from an agent. Shows a \"Suggested\" mark beside the label, read as part\nof the field's hint. Typing in the field clears the mark; so do accept and clear.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onAcceptSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows an accept button beside the mark.",
+        "inherited": "TextField"
+      },
+      {
+        "name": "onClearSuggestion",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: with `generated`, shows a clear button beside the mark. Clear the value here.",
         "inherited": "TextField"
       },
       {

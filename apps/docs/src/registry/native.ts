@@ -210,8 +210,12 @@ import { Send } from '@nexub/icons/native';
   'form-field': {
     name: 'TextField',
     preview: 'text-field',
-    differences: [label],
-    code: `<TextField label="Full name" helperText="As on your NRIC" />`,
+    differences: [
+      label,
+      { aspect: 'Agent states', web: '`streaming` shimmers the control; `generated` adds a "Suggested" mark read through `aria-describedby`.', mobile: 'The same props on TextField (12.5): busy with a calm wash (none under Reduce Motion); the mark is read as part of the field\'s hint, and accept / clear move the screen reader to the field.' },
+    ],
+    code: `<TextField label="Full name" helperText="As on your NRIC" />
+<TextField label="Title" value={title} onChangeText={setTitle} generated={fromAgent} onAcceptSuggestion={keep} onClearSuggestion={() => setTitle('')} />`,
   },
   'password-input': {
     name: 'PasswordInput',
@@ -352,8 +356,41 @@ import { Send } from '@nexub/icons/native';
       { aspect: 'Layout', web: 'Columns: resize, reorder, pin, virtualize.', mobile: 'One row per record with its key fields: no horizontal scrolling.' },
       { aspect: 'Sort', web: 'Click headers; Shift+click for more.', mobile: 'A Sort button opens a sheet: one sort and a direction.' },
       { aspect: 'Selection', web: 'Checkbox column and a floating bulk bar.', mobile: 'Checkbox rows; the bar above the list shows the count and your actions.' },
+      { aspect: 'Streaming', web: 'A skeleton row, `aria-busy` and a polite live region.', mobile: 'The same `streaming` prop (12.5): a skeleton row, a busy list, and the count announced at most every 3 seconds, then "Done. N rows".' },
     ],
-    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />`,
+    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />
+<DataList data={rows} keyExtractor={(r) => r.id} title={(r) => r.name} streaming={agentRunning} />`,
+  },
+  // 12.5: AI parts
+  'tool-call': {
+    name: 'ToolCall',
+    preview: 'tool-call',
+    differences: [
+      { aspect: 'Disclosure', web: 'A native `<details>`; `open` is the DOM attribute.', mobile: 'A pressable header with `expanded` state; `open` + `onOpenChange` to control it.' },
+      { aspect: 'Status', web: 'A polite live region.', mobile: 'Each change is announced (iOS has no live regions); focus never moves.' },
+      { aspect: 'Strings', web: '`messages` only (server component).', mobile: 'The provider\'s messages, with `messages` on top.' },
+    ],
+    code: `<ToolCall name="send_reminders" status="failed" duration={30000} error="The mail server timed out." onRetry={retry} />`,
+  },
+  'approval-card': {
+    name: 'ApprovalCard',
+    preview: 'approval-card',
+    differences: [
+      { aspect: 'Focus', web: 'Keyboard focus moves to the card when the choice resolves.', mobile: 'The screen reader\'s focus moves to the announced outcome.' },
+      { aspect: 'Edit', web: 'A textarea.', mobile: 'A multiline TextInput, left to right in every language.' },
+    ],
+    code: `<ApprovalCard title="Send 3 invoices to Acme" args={args} onApprove={send} onEdit={sendEdited} onDeny={cancel} />`,
+  },
+  'diff-view': {
+    name: 'DiffView',
+    preview: 'diff-view',
+    differences: [
+      { aspect: 'Screen readers', web: 'Visually hidden "Added: " / "Removed: " prefixes.', mobile: 'Each line is one element labelled "Added: …"; the gutter and sign are not read.' },
+      { aspect: 'Long lines', web: 'The block scrolls sideways.', mobile: 'The same, in a horizontal ScrollView.' },
+      { aspect: 'Review', web: 'DiffReview, a list of collapsible diffs with Accept / Reject.', mobile: 'DiffReview too, with the same props and summary (announced on each change).' },
+    ],
+    code: `<DiffView file="src/fees.ts" diff={patch} lineNumbers />
+<DiffReview files={files} onAccept={apply} onReject={discard} />`,
   },
   // 11.8
   combobox: {

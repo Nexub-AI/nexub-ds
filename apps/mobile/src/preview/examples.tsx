@@ -41,8 +41,12 @@ import {
   Chip,
   Coachmark,
   ContextMenu,
+  ApprovalCard,
   DataList,
   DateTimeField,
+  DiffReview,
+  DiffView,
+  ToolCall,
   Dialog,
   Divider,
   EmptyState,
@@ -882,6 +886,48 @@ export const EXAMPLES: Examples = {
       const [code, setCode] = useState('');
       return <QRScanner onScan={setCode} fallback={<TextField label="Code" placeholder="NX-0000" value={code} onChangeText={setCode} autoCapitalize="characters" />} />;
     },
+  ],
+  'tool-call': [
+    () => (
+      <View style={{ gap: 12 }}>
+        <ToolCall name="search_invoices" status="done" duration={1240} input={{ customer: 'Acme' }} output="3 invoices" />
+        <ToolCall name="send_reminders" status="failed" duration={30000} error="The mail server timed out." onRetry={() => {}} />
+      </View>
+    ),
+  ],
+  'approval-card': [
+    () => (
+      <ApprovalCard
+        title="Send 3 invoices to Acme"
+        args={{ to: 'billing@acme.example', invoices: ['INV-2041', 'INV-2042', 'INV-2044'] }}
+        onApprove={() => {}}
+        onEdit={() => {}}
+        onDeny={() => {}}
+      >
+        Total 4,210.00 USD, due in 14 days.
+      </ApprovalCard>
+    ),
+  ],
+  'diff-view': [
+    () => (
+      <DiffView
+        file="src/fees.ts"
+        lineNumbers
+        diff={'@@ -12,4 +12,4 @@\n export function fee(amount: number) {\n-  return amount * 0.02;\n+  return Math.max(1, amount * 0.015);\n }'}
+      />
+    ),
+  ],
+  'diff-review': [
+    () => (
+      <DiffReview
+        defaultDecisions={{ 'src/fees.ts': 'accepted' }}
+        defaultOpen={false}
+        files={[
+          { file: 'src/fees.ts', diff: '@@ -12,1 +12,1 @@\n-  return amount * 0.02;\n+  return Math.max(1, amount * 0.015);' },
+          { file: 'src/limits.ts', diff: '@@ -3,1 +3,2 @@\n const DAILY = 5000;\n+const MONTHLY = 50000;' },
+        ]}
+      />
+    ),
   ],
   'phone-input': [() => <PhoneInput label="Mobile number" defaultCountry="SG" defaultValue="+6581234567" helperText="We’ll text you a code." />],
   countdown: [

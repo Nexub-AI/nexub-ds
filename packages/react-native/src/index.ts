@@ -218,6 +218,17 @@ export type { FileUploadProps, PickedFile, FileRejection } from './components/fi
 export { PromptDialog, usePrompt } from './components/prompt';
 export type { PromptDialogProps, PromptOptions } from './components/prompt';
 export type { AsyncSearch } from './hooks/useAsyncSearch';
+// 12.5: AgentKit parts (web 4.8 / 12.4)
+export { ToolCall, ApprovalCard, DiffView, DiffReview } from './components/agent';
+export type {
+  ToolCallProps,
+  ApprovalCardProps,
+  ApprovalOutcome,
+  DiffViewProps,
+  DiffReviewProps,
+  DiffReviewFile,
+  DiffDecision,
+} from './components/agent';
 export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
 export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
 

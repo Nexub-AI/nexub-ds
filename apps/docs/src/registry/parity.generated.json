@@ -247,11 +247,15 @@
     "onPurpose": [],
     "nativeOnly": [
       "error",
+      "generated",
       "helperText",
       "label",
       "leading",
+      "onAcceptSuggestion",
       "onClear",
+      "onClearSuggestion",
       "readOnly",
+      "streaming",
       "trailing"
     ]
   },
@@ -260,15 +264,14 @@
     "native": "TextField",
     "shared": [
       "disabled",
-      "invalid",
-      "required"
-    ],
-    "webOnly": [
       "generated",
+      "invalid",
       "onAcceptSuggestion",
       "onClearSuggestion",
+      "required",
       "streaming"
     ],
+    "webOnly": [],
     "onPurpose": [
       "name"
     ],
@@ -312,11 +315,15 @@
     "onPurpose": [],
     "nativeOnly": [
       "error",
+      "generated",
       "helperText",
       "label",
       "leading",
+      "onAcceptSuggestion",
       "onClear",
+      "onClearSuggestion",
       "readOnly",
+      "streaming",
       "trailingIcon"
     ]
   },
@@ -345,6 +352,7 @@
       "leading",
       "leadingIcon",
       "readOnly",
+      "streaming",
       "trailing",
       "trailingIcon"
     ]
@@ -373,12 +381,16 @@
     "onPurpose": [],
     "nativeOnly": [
       "error",
+      "generated",
       "helperText",
       "label",
       "leadingAddon",
       "leadingIcon",
+      "onAcceptSuggestion",
       "onClear",
+      "onClearSuggestion",
       "readOnly",
+      "streaming",
       "trailing"
     ]
   },
@@ -580,6 +592,7 @@
       "data",
       "onSortChange",
       "sort",
+      "streaming",
       "value"
     ],
     "webOnly": [
@@ -612,7 +625,6 @@
       "pagination",
       "rowCount",
       "rowSelection",
-      "streaming",
       "toolbar"
     ],
     "onPurpose": [
@@ -647,6 +659,60 @@
       "subtitle",
       "title"
     ]
+  },
+  "tool-call": {
+    "web": "ToolCall",
+    "native": "ToolCall",
+    "shared": [
+      "defaultOpen",
+      "duration",
+      "error",
+      "input",
+      "messages",
+      "name",
+      "onRetry",
+      "output",
+      "status"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": [
+      "onOpenChange",
+      "open"
+    ]
+  },
+  "approval-card": {
+    "web": "ApprovalCard",
+    "native": "ApprovalCard",
+    "shared": [
+      "approveLabel",
+      "args",
+      "children",
+      "denyLabel",
+      "editLabel",
+      "onApprove",
+      "onDeny",
+      "onEdit",
+      "outcome",
+      "pending",
+      "title"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "diff-view": {
+    "web": "DiffView",
+    "native": "DiffView",
+    "shared": [
+      "diff",
+      "file",
+      "lineNumbers",
+      "messages"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
   },
   "combobox": {
     "web": null,
@@ -1123,14 +1189,18 @@
     "nativeOnly": [
       "clearable",
       "error",
+      "generated",
       "helperText",
       "label",
       "leadingAddon",
       "leadingIcon",
       "loading",
+      "onAcceptSuggestion",
       "onClear",
+      "onClearSuggestion",
       "readOnly",
       "showCount",
+      "streaming",
       "trailing",
       "trailingAddon",
       "trailingIcon"
