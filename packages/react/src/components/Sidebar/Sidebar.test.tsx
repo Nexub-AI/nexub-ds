@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import axe from 'axe-core';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { Sidebar } from './Sidebar.js';
 
 describe('Sidebar', () => {
@@ -194,5 +196,91 @@ describe('Sidebar 10.3', () => {
     expect(nav.style.getPropertyValue('--nx-ind-o')).toBe('1');
     const marker = nav.querySelector('.nx-nav-marker')!;
     expect(marker).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  describe('collapsible Group (12.2)', () => {
+    it('without collapsible the label stays a plain heading text (unchanged)', () => {
+      render(
+        <Sidebar.Root>
+          <Sidebar.Group label="Main"><Sidebar.Item href="#">Home</Sidebar.Item></Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      expect(screen.queryByRole('button')).toBeNull();
+      expect(screen.getByText('Main').tagName).toBe('P');
+    });
+
+    it('the label is a button with aria-expanded / aria-controls; Enter and Space toggle it', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(
+        <Sidebar.Root>
+          <Sidebar.Group label="Admin" collapsible onOpenChange={onOpenChange}>
+            <Sidebar.Item href="#">Team</Sidebar.Item>
+          </Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      const toggle = screen.getByRole('button', { name: 'Admin' });
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      const region = document.getElementById(toggle.getAttribute('aria-controls')!)!;
+      expect(region).toContainElement(screen.getByRole('link', { name: 'Team' }));
+      expect(region).not.toHaveAttribute('inert');
+
+      toggle.focus();
+      await user.keyboard('{Enter}');
+      expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      expect(onOpenChange).toHaveBeenLastCalledWith(false);
+      expect(region).toHaveAttribute('inert');
+      expect(region).toHaveClass('grid-rows-[0fr]');
+
+      await user.keyboard(' ');
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      expect(onOpenChange).toHaveBeenLastCalledWith(true);
+      expect(region).toHaveClass('grid-rows-[1fr]', 'motion-reduce:transition-none');
+    });
+
+    it('defaultOpen={false} starts shut; open is controlled', async () => {
+      const user = userEvent.setup();
+      const { rerender } = render(
+        <Sidebar.Root>
+          <Sidebar.Group label="Admin" collapsible defaultOpen={false}><Sidebar.Item href="#">Team</Sidebar.Item></Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      expect(screen.getByRole('button', { name: 'Admin' })).toHaveAttribute('aria-expanded', 'false');
+
+      const onOpenChange = vi.fn();
+      rerender(
+        <Sidebar.Root>
+          <Sidebar.Group label="Admin" collapsible open onOpenChange={onOpenChange}><Sidebar.Item href="#">Team</Sidebar.Item></Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      const toggle = screen.getByRole('button', { name: 'Admin' });
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await user.click(toggle);
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+      // Controlled: stays open until the parent says otherwise.
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('in the icon rail the group stays open and the toggle is hidden', () => {
+      render(
+        <Sidebar.Root collapsed>
+          <Sidebar.Group label="Admin" collapsible defaultOpen={false}><Sidebar.Item href="#" icon={<svg />}>Team</Sidebar.Item></Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      const toggle = screen.getByRole('button', { name: 'Admin', hidden: true });
+      expect(toggle).toHaveClass('group-data-[collapsed=true]/sidebar:hidden');
+      expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      expect(document.getElementById(toggle.getAttribute('aria-controls')!)).not.toHaveAttribute('inert');
+    });
+
+    it('has no axe violations', async () => {
+      const { container } = render(
+        <Sidebar.Root>
+          <Sidebar.Group label="Admin" collapsible defaultOpen={false}><Sidebar.Item href="#">Team</Sidebar.Item></Sidebar.Group>
+        </Sidebar.Root>,
+      );
+      const { violations } = await axe.run(container, { rules: { 'color-contrast': { enabled: false }, region: { enabled: false } } });
+      expect(violations).toEqual([]);
+    });
   });
 });

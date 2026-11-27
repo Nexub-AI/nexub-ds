@@ -88,49 +88,82 @@ const Separator = React.forwardRef<HTMLDivElement, RadixDropdownMenu.DropdownMen
 );
 Separator.displayName = 'DropdownMenu.Separator';
 
-const CheckboxItem = React.forwardRef<
-  HTMLDivElement,
-  RadixDropdownMenu.DropdownMenuCheckboxItemProps
->(function DropdownMenuCheckboxItem({ className, children, checked, ...props }, ref) {
+export interface DropdownMenuIndicatorProps {
+  /**
+   * 12.2: where the selected mark sits. `'start'` (the default, unchanged) reserves a leading
+   * slot for it. `'end'` draws a tick at the inline end (mirrors in RTL) and drops the leading
+   * slot, so a leading icon sits flush at the start, e.g. a Light / Dark / System theme menu.
+   * @default 'start'
+   */
+  indicator?: 'start' | 'end';
+}
+
+/** The tick at the inline end, after the label. */
+function EndIndicator() {
   return (
-    <RadixDropdownMenu.CheckboxItem
-      ref={ref}
-      className={cn(itemBaseClasses, 'ps-8', className)}
-      checked={checked}
-      {...props}
-    >
-      <span className="absolute start-2 flex h-4 w-4 items-center justify-center">
-        <RadixDropdownMenu.ItemIndicator>
-          <Check className="h-4 w-4" />
-        </RadixDropdownMenu.ItemIndicator>
-      </span>
-      {children}
-    </RadixDropdownMenu.CheckboxItem>
+    <span data-nx-indicator="end" className="ms-auto flex h-4 w-4 shrink-0 items-center justify-center">
+      <RadixDropdownMenu.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </RadixDropdownMenu.ItemIndicator>
+    </span>
   );
-});
+}
+
+export interface DropdownMenuCheckboxItemProps
+  extends RadixDropdownMenu.DropdownMenuCheckboxItemProps, DropdownMenuIndicatorProps {}
+
+const CheckboxItem = React.forwardRef<HTMLDivElement, DropdownMenuCheckboxItemProps>(
+  function DropdownMenuCheckboxItem({ className, children, checked, indicator = 'start', ...props }, ref) {
+    const end = indicator === 'end';
+    return (
+      <RadixDropdownMenu.CheckboxItem
+        ref={ref}
+        className={cn(itemBaseClasses, !end && 'ps-8', className)}
+        checked={checked}
+        {...props}
+      >
+        {!end && (
+          <span data-nx-indicator="start" className="absolute start-2 flex h-4 w-4 items-center justify-center">
+            <RadixDropdownMenu.ItemIndicator>
+              <Check className="h-4 w-4" />
+            </RadixDropdownMenu.ItemIndicator>
+          </span>
+        )}
+        {children}
+        {end && <EndIndicator />}
+      </RadixDropdownMenu.CheckboxItem>
+    );
+  },
+);
 CheckboxItem.displayName = 'DropdownMenu.CheckboxItem';
 
-const RadioItem = React.forwardRef<
-  HTMLDivElement,
-  RadixDropdownMenu.DropdownMenuRadioItemProps
->(function DropdownMenuRadioItem({ className, children, ...props }, ref) {
-  return (
-    <RadixDropdownMenu.RadioItem
-      ref={ref}
-      className={cn(itemBaseClasses, 'ps-8', className)}
-      {...props}
-    >
-      <span className="absolute start-2 flex h-4 w-4 items-center justify-center">
-        <RadixDropdownMenu.ItemIndicator>
-          <svg className="h-2 w-2 fill-current" viewBox="0 0 8 8" aria-hidden="true">
-            <circle cx="4" cy="4" r="4" />
-          </svg>
-        </RadixDropdownMenu.ItemIndicator>
-      </span>
-      {children}
-    </RadixDropdownMenu.RadioItem>
-  );
-});
+export interface DropdownMenuRadioItemProps
+  extends RadixDropdownMenu.DropdownMenuRadioItemProps, DropdownMenuIndicatorProps {}
+
+const RadioItem = React.forwardRef<HTMLDivElement, DropdownMenuRadioItemProps>(
+  function DropdownMenuRadioItem({ className, children, indicator = 'start', ...props }, ref) {
+    const end = indicator === 'end';
+    return (
+      <RadixDropdownMenu.RadioItem
+        ref={ref}
+        className={cn(itemBaseClasses, !end && 'ps-8', className)}
+        {...props}
+      >
+        {!end && (
+          <span data-nx-indicator="start" className="absolute start-2 flex h-4 w-4 items-center justify-center">
+            <RadixDropdownMenu.ItemIndicator>
+              <svg className="h-2 w-2 fill-current" viewBox="0 0 8 8" aria-hidden="true">
+                <circle cx="4" cy="4" r="4" />
+              </svg>
+            </RadixDropdownMenu.ItemIndicator>
+          </span>
+        )}
+        {children}
+        {end && <EndIndicator />}
+      </RadixDropdownMenu.RadioItem>
+    );
+  },
+);
 RadioItem.displayName = 'DropdownMenu.RadioItem';
 
 const SubTrigger = React.forwardRef<

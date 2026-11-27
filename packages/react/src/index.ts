@@ -260,6 +260,7 @@ export { HoverCard } from './components/HoverCard/index.js';
 
 // Components — Navigation / Menus
 export { DropdownMenu } from './components/DropdownMenu/index.js';
+export type { DropdownMenuCheckboxItemProps, DropdownMenuRadioItemProps } from './components/DropdownMenu/index.js';
 export { ContextMenu } from './components/ContextMenu/index.js';
 export { Menubar } from './components/Menubar/index.js';
 export { NavigationMenu } from './components/NavigationMenu/index.js';
