@@ -1,6 +1,6 @@
 {
   "name": "@nexub/elements",
-  "version": "12.2.0",
+  "version": "12.3.0",
   "description": "Web components for Nexub Design System: form-associated <nx-number-input>, <nx-date-picker>, <nx-select>, <nx-combobox> and <nx-phone-input> for server-rendered pages, with no framework.",
   "type": "module",
   "license": "MIT",
