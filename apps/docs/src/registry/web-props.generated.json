@@ -325,8 +325,13 @@
           "name": "approveLabel",
           "type": "string",
           "required": false,
-          "default": "'Approve'",
           "description": ""
+        },
+        {
+          "name": "args",
+          "type": "unknown",
+          "required": false,
+          "description": "12.4: the action's arguments, shown as JSON (or as given, for a string). With `onEdit` they can be edited before approving."
         },
         {
           "name": "children",
@@ -338,20 +343,44 @@
           "name": "denyLabel",
           "type": "string",
           "required": false,
-          "default": "'Deny'",
           "description": ""
+        },
+        {
+          "name": "editLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Edit'",
+          "description": "12.4: label for the Edit button."
         },
         {
           "name": "onApprove",
-          "type": "(() => void)",
+          "type": "(() => Result)",
+          "required": false,
+          "description": "Called once with the choice. 12.4: return a promise to show the pending state until it settles (a rejection returns to the choice)."
+        },
+        {
+          "name": "onDeny",
+          "type": "(() => Result)",
           "required": false,
           "description": ""
         },
         {
-          "name": "onDeny",
-          "type": "(() => void)",
+          "name": "onEdit",
+          "type": "((args: string) => Result)",
           "required": false,
-          "description": ""
+          "description": "12.4: adds Edit. Called with the edited arguments text when the user approves with changes."
+        },
+        {
+          "name": "outcome",
+          "type": "'approved' | 'edited' | 'denied'",
+          "required": false,
+          "description": "12.4: controlled outcome. `null` keeps the choice open (e.g. while your request runs); omit it to let the card track the choice."
+        },
+        {
+          "name": "pending",
+          "type": "boolean",
+          "required": false,
+          "description": "12.4: the action is being carried out: the buttons are disabled and \"Working…\" is announced."
         },
         {
           "name": "title",
@@ -3710,6 +3739,61 @@
         }
       ]
     },
+    "DiffReview": {
+      "file": "components/AgentKit/DiffReview.tsx",
+      "props": [
+        {
+          "name": "decisions",
+          "type": "Record<string, DiffDecision>",
+          "required": false,
+          "description": "Controlled decisions, keyed by file path. A file with no entry is still to review."
+        },
+        {
+          "name": "defaultDecisions",
+          "type": "Record<string, DiffDecision>",
+          "required": false,
+          "description": "Starting decisions when uncontrolled."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Files start expanded."
+        },
+        {
+          "name": "files",
+          "type": "DiffReviewFile[]",
+          "required": true,
+          "description": ""
+        },
+        {
+          "name": "lineNumbers",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "Show old and new line numbers in each diff."
+        },
+        {
+          "name": "onAccept",
+          "type": "((file: DiffReviewFile) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "onDecisionsChange",
+          "type": "((decisions: Record<string, DiffDecision>) => void)",
+          "required": false,
+          "description": "Called with the whole record after each decision."
+        },
+        {
+          "name": "onReject",
+          "type": "((file: DiffReviewFile) => void)",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "DiffView": {
       "file": "components/AgentKit/AgentKit.tsx",
       "props": [
@@ -3724,6 +3808,18 @@
           "type": "string",
           "required": false,
           "description": "File name shown above the diff."
+        },
+        {
+          "name": "lineNumbers",
+          "type": "boolean",
+          "required": false,
+          "description": "12.4: old and new line numbers in the gutter, counted from each `@@ -a,b +c,d"
+        },
+        {
+          "name": "messages",
+          "type": "Partial<Pick<NexubMessages, 'diffAdded' | 'diffRemoved'>>",
+          "required": false,
+          "description": "12.4: the screen-reader prefixes (\"Added: \", \"Removed: \"). DiffView renders on the server, so translate here."
         }
       ]
     },
@@ -9721,16 +9817,46 @@
       "file": "components/AgentKit/AgentKit.tsx",
       "props": [
         {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "description": "12.4: open on first render (`open` still wins)."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "description": "12.4: how long the call took, in milliseconds; shown formatted (\"1.2 s\") beside the status."
+        },
+        {
+          "name": "error",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "12.4: why the call failed, shown as text in the failed state. A failed call with an `error` starts open."
+        },
+        {
           "name": "input",
           "type": "unknown",
           "required": false,
           "description": "Arguments, shown as JSON."
         },
         {
+          "name": "messages",
+          "type": "Partial<AgentKitMessages>",
+          "required": false,
+          "description": "12.4: strings for this card. ToolCall renders on the server, so it reads the English defaults from `@nexub/core`, not NexubProvider; pass translations here."
+        },
+        {
           "name": "name",
           "type": "string",
           "required": true,
           "description": "Tool name, e.g. \"search_invoices\"."
+        },
+        {
+          "name": "onRetry",
+          "type": "(() => void)",
+          "required": false,
+          "description": "12.4: shows a Retry button in the failed state (a small client island). Without it ToolCall renders no client code and stays server-safe."
         },
         {
           "name": "output",

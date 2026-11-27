@@ -1115,7 +1115,11 @@ The agent asks before it acts: what will happen, then Approve or Deny.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` (required) | `string` |  | What the agent wants to do. |
-| `onApprove / onDeny` | `() => void` |  | Called once with the choice. |
+| `onApprove / onDeny` | `() => void \| Promise` |  | Called once with the choice. Return a promise to show the pending state until it settles (12.4). |
+| `args` | `unknown` |  | The action’s arguments, shown as JSON (12.4). |
+| `onEdit` | `(args: string) => void \| Promise` |  | Adds Edit: the user edits `args`, then approves with changes; called with the edited text (12.4). |
+| `outcome` | `'approved' \| 'edited' \| 'denied' \| null` |  | Controlled outcome; `null` keeps the choice open (12.4). |
+| `pending` | `boolean` |  | The action is running: buttons disabled, "Working…" announced (12.4). |
 
 ## Example: Before sending
 
@@ -1133,11 +1137,35 @@ export default function Example() {
 }
 ```
 
+## Example: Edit before approving
+
+With `args` and `onEdit` the user can approve, edit the arguments then approve, or deny. A promise from the callback shows the pending state.
+
+```tsx
+'use client';
+
+import { ApprovalCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ApprovalCard
+      title="Send a payment reminder"
+      args={{ to: 'ap@acme.example', amount: 4120, currency: 'USD' }}
+      onEdit={() => new Promise((resolve) => setTimeout(resolve, 1000))}
+      onApprove={() => new Promise((resolve) => setTimeout(resolve, 1000))}
+    >
+      The agent will email Acme&apos;s billing contact.
+    </ApprovalCard>
+  );
+}
+```
+
 ## Accessibility
 
-- The outcome is announced in a polite live region and replaces the buttons.
+- Edit moves focus to the arguments field; Cancel returns it to Edit. Once the choice resolves, focus moves to the card, so it is never lost with the buttons.
+- The outcome ("Approved", "Approved with changes", "Denied") and "Working…" are announced in a polite live region; the card is a group named by its title.
 
-Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md), [diff-view](diff-view.md)
 
 
 ---
@@ -5278,6 +5306,13 @@ A unified diff with added and removed lines, for agent changes.
 | --- | --- | --- | --- |
 | `diff` (required) | `string` |  | Unified diff text. |
 | `file` | `string` |  | File name above the diff. |
+| `lineNumbers` | `boolean` |  | Old and new line numbers, counted from each `@@ -a,b +c,d @@` header (12.4). |
+| `messages` | `Partial<{ diffAdded, diffRemoved }>` |  | Screen-reader prefixes. DiffView renders on the server, so translate here (12.4). |
+| `DiffReview files` (required) | `{ file: string; diff: string }[]` |  | DiffReview (beta, 12.4): the files to review, each a collapsible DiffView. |
+| `DiffReview decisions / defaultDecisions` | `Record<string, 'accepted' \| 'rejected'>` |  | Per-file decisions keyed by path, controlled or starting values. A file with no entry is still to review. |
+| `DiffReview onAccept / onReject` | `(file) => void` |  | Called with the file when its Accept or Reject is pressed. |
+| `DiffReview onDecisionsChange` | `(decisions) => void` |  | The whole record after each decision. |
+| `DiffReview lineNumbers / defaultOpen` | `boolean` | `true` | Line numbers in each diff; files start expanded. |
 
 ## Example: Proposed change
 
@@ -5296,11 +5331,48 @@ export default function Example() {
 }
 ```
 
+## Example: DiffReview: review file by file
+
+DiffReview (beta, 12.4) lists an agent’s changed files. Each file collapses, shows its added and removed line counts, and has its own Accept and Reject; the summary counts what is accepted, rejected and still to review.
+
+```tsx
+import * as React from 'react';
+import { DiffReview, type DiffDecision } from '@nexub/react';
+
+const files = [
+  {
+    file: 'templates/reminder.ts',
+    diff: `@@ -3,4 +3,4 @@
+ export const reminder = {
+-  subject: 'Invoice overdue',
++  subject: 'A friendly reminder about your invoice',
+   tone: 'polite',
+ };`,
+  },
+  {
+    file: 'jobs/schedule.ts',
+    diff: `@@ -10,3 +10,4 @@
+ export const schedule = {
+-  cadence: 'daily',
++  cadence: 'weekly',
++  skipWeekends: true,
+ };`,
+  },
+];
+
+export default function Example() {
+  const [decisions, setDecisions] = React.useState<Record<string, DiffDecision>>({});
+  return <DiffReview className="w-full" files={files} decisions={decisions} onDecisionsChange={setDecisions} />;
+}
+```
+
 ## Accessibility
 
-- Added and removed lines are spelled out for screen readers; colour is not the only cue.
+- `Enter / Space`: DiffReview: expands or collapses a file, or presses Accept / Reject.
+- Added and removed lines are spelled out for screen readers; colour is not the only cue. Line numbers are hidden from screen readers.
+- DiffReview: each file toggle reports aria-expanded and its line counts; Accept and Reject are toggle buttons named with the file ("Accept src/billing.ts") with aria-pressed; the summary is a polite status.
 
-Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md), [approval-card](approval-card.md), [tool-call](tool-call.md)
 
 
 ---
@@ -13422,6 +13494,11 @@ One tool call: its name and status, expandable to input and output.
 | `status` (required) | `'running' \| 'done' \| 'failed'` |  | Shown as a badge. |
 | `input` | `unknown` |  | Arguments, shown as JSON. |
 | `output` | `unknown` |  | Result, as text or JSON. |
+| `duration` | `number` |  | Run time in milliseconds, shown formatted ("1.2 s") (12.4). |
+| `error` | `ReactNode` |  | Why it failed, shown as text in the failed state; a failed call with an error starts open (12.4). |
+| `onRetry` | `() => void` |  | A Retry button in the failed state. Without it ToolCall stays a server component (12.4). |
+| `defaultOpen` | `boolean` |  | Open on first render; `open` still wins (12.4). |
+| `messages` | `Partial<NexubMessages>` |  | Status words and headings. ToolCall renders on the server, so translate here (12.4). |
 
 ## Example: Tool call
 
@@ -13438,9 +13515,27 @@ export default function Example() {
 }
 ```
 
+## Example: Run time, error and Retry
+
+A finished call shows how long it took; a failed one opens on its error and offers Retry.
+
+```tsx
+import { ToolCall } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <ToolCall name="draft_email" status="done" duration={1240} input={{ to: 'ap@acme.example' }} output="Draft saved" />
+      <ToolCall name="send_email" status="failed" duration={30000} input={{ to: 'ap@acme.example' }} error="SMTP timeout after 30 s" onRetry={() => {}} />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - A native `<details>` disclosure: opens with Enter or Space.
+- The status badge is a polite live region, so Running → Done is announced without moving focus. The error is plain text, not an alert.
 
 Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
 
