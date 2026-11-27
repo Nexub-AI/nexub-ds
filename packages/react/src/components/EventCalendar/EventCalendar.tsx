@@ -27,6 +27,7 @@ import { useControllableState } from '../../hooks/useControllableState.js';
 import { useIntlLocale, useLocale, useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Skeleton } from '../Skeleton/Skeleton.js';
 import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.js';
+import { eventColorVars } from './eventColor.js';
 
 export type EventCalendarView = 'month' | 'week' | 'day' | 'agenda';
 export type EventTone = 'primary' | 'success' | 'warning' | 'error' | 'info';
@@ -41,6 +42,12 @@ export interface CalendarEvent {
   allDay?: boolean;
   /** @default 'primary' */
   tone?: EventTone;
+  /**
+   * Any brand colour (hex, rgb(), hsl(), oklab(), oklch()), e.g. one per company. The event's container is
+   * mixed from it into the surface and its text picked for 4.5:1, in light and dark. Wins over `tone`;
+   * a colour that can't be read keeps the tone (with a warning in development).
+   */
+  color?: string;
   /** `false` keeps it in place when `onEventMove` is set. @default true */
   editable?: boolean;
 }
@@ -48,6 +55,8 @@ export interface CalendarEvent {
 export interface EventCalendarLegendItem {
   label: string;
   tone: EventTone;
+  /** Matches events with the same `color`; wins over `tone`. */
+  color?: string;
 }
 
 export interface EventCalendarProps extends DataStateProps {
@@ -107,6 +116,17 @@ const markers: Record<EventTone, string> = {
   warning: 'bg-[var(--color-warning)]',
   error: 'bg-[var(--color-error)]',
   info: 'bg-[var(--color-info)]',
+};
+
+// `color` events: CSS variables set per element (see eventColor.ts), light-dark() so they follow the theme.
+const colorTone = 'bg-[var(--nx-event-bg)] text-[var(--nx-event-fg)]';
+const colorMarker = 'bg-[var(--nx-event-dot)]';
+const toneOf = (e: { tone?: EventTone; color?: string }) => (e.color && eventColorVars(e.color) ? colorTone : tones[e.tone ?? 'primary']);
+const markerOf = (e: { tone?: EventTone; color?: string }) => (e.color && eventColorVars(e.color) ? colorMarker : markers[e.tone ?? 'primary']);
+/** CSSOM, not a style attribute (strict CSP); children such as the agenda dot inherit the variables. */
+const paint = (color: string | undefined) => (el: HTMLElement | null) => {
+  const vars = color && eventColorVars(color);
+  if (el && vars) for (const [k, v] of Object.entries(vars)) el.style.setProperty(k, v);
 };
 
 /** Keyboard and drag steps in day view (minutes). */
@@ -372,6 +392,7 @@ export function EventCalendar({
     const c = cn(cls, moving?.id === e.id && 'outline-2 outline-offset-1 outline-dashed outline-[var(--color-primary)]', movable && 'cursor-grab touch-none');
     return onEventClick || movable ? (
       <button
+        ref={paint(e.color)}
         type="button"
         data-nx-event={e.id}
         aria-describedby={movable ? hintId : undefined}
@@ -385,7 +406,9 @@ export function EventCalendar({
         {body}
       </button>
     ) : (
-      <span className={c}>{body}</span>
+      <span ref={paint(e.color)} className={c}>
+        {body}
+      </span>
     );
   };
   /**
@@ -453,7 +476,7 @@ export function EventCalendar({
         <ul aria-label={t.calendarLegend} className="flex flex-wrap gap-x-4 gap-y-1 text-label-md text-[var(--color-on-surface-variant)]">
           {legend.map((l) => (
             <li key={l.label} className="flex items-center gap-1.5">
-              <span aria-hidden="true" className={cn('size-2.5 rounded-full', markers[l.tone])} />
+              <span ref={paint(l.color)} aria-hidden="true" className={cn('size-2.5 rounded-full', markerOf(l))} />
               {l.label}
             </li>
           ))}
@@ -484,7 +507,7 @@ export function EventCalendar({
             hourFmt={fmt({ hour: 'numeric' })}
             timeFmt={timeFmt}
             renderEvent={(e, time, cls) =>
-              withActions(e, eventNode(e, cn(cls, tones[e.tone ?? 'primary']), <span className="block truncate">{timed(time, e.title)}</span>), time ? 'corner' : 'inline')
+              withActions(e, eventNode(e, cn(cls, toneOf(e)), <span className="block truncate">{timed(time, e.title)}</span>), time ? 'corner' : 'inline')
             }
           />
           {state != null && <div className="flex flex-col">{state}</div>}
@@ -517,7 +540,7 @@ export function EventCalendar({
                             e,
                             'flex min-h-10 w-full items-center gap-3 rounded-shape-min px-1 py-1 text-start text-body-sm text-[var(--color-on-surface)]',
                             <>
-                              <span aria-hidden="true" className={cn('size-2 shrink-0 rounded-full', markers[e.tone ?? 'primary'])} />
+                              <span aria-hidden="true" className={cn('size-2 shrink-0 rounded-full', markerOf(e))} />
                               <span className="w-16 shrink-0 tabular-nums text-[var(--color-on-surface-variant)]">
                                 {e.allDay || !isSameDay(e.start, d) ? t.allDay : timeFmt.format(e.start)}
                               </span>
@@ -587,7 +610,7 @@ export function EventCalendar({
                         <ul className="mt-1 flex flex-col gap-0.5">
                           {shown.map((e) => {
                             const time = e.allDay || !isSameDay(e.start, day) ? '' : timeFmt.format(e.start);
-                            return <li key={e.id}>{withActions(e, eventNode(e, cn(chip, tones[e.tone ?? 'primary']), timed(time, e.title)))}</li>;
+                            return <li key={e.id}>{withActions(e, eventNode(e, cn(chip, toneOf(e)), timed(time, e.title)))}</li>;
                           })}
                         </ul>
                         {hidden > 0 &&

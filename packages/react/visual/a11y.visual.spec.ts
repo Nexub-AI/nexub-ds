@@ -42,6 +42,8 @@ const KNOWN: Record<string, string[]> = {
   'patterns-settingslayout--with-app-header-phone': MONOGRAM,
   'components-orgchart--default': TREE_ROW,
   'components-orgchart--custom-card': TREE_ROW,
+  'components-orgchart--wide-team-stacked': TREE_ROW,
+  'components-orgchart--zoom': TREE_ROW,
   'components-treeview--actions-and-links': TREE_ROW,
 };
 
@@ -154,3 +156,44 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2: OrgChart zoom toolbar. A named group of named buttons, a polite live level that follows
+// the + key from a focused card, and the tree (names, levels) unchanged around it.
+test('a11y components-orgchart--zoom toolbar', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-orgchart--zoom&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const toolbar = page.getByRole('group', { name: 'Zoom' });
+  for (const name of ['Zoom out', 'Zoom in', 'Fit to screen']) await expect(toolbar.getByRole('button', { name })).toBeVisible();
+  const level = toolbar.locator('output');
+  await expect(level).toHaveAttribute('aria-live', 'polite');
+  await expect(level).toHaveText('40%');
+  const lead = page.getByRole('treeitem', { name: /^Sophie Wilson Head of Engineering/ });
+  await expect(lead).toHaveAttribute('aria-level', '1');
+  await lead.focus();
+  await page.keyboard.press('+');
+  await expect(level).toHaveText('50%');
+  await expect(lead).toBeFocused();
+  await page.keyboard.press('0');
+  await expect(level).toHaveText('100%');
+  await toolbar.getByRole('button', { name: 'Zoom out' }).click();
+  await expect(level).toHaveText('90%');
+});
+
+// 12.2: OrgChart stacking keeps the tree semantics: a stacked report still says its level and place in the set.
+test('a11y components-orgchart--wide-team-stacked tree', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-orgchart--wide-team-stacked&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const third = page.getByRole('treeitem', { name: /^Grace C\./ });
+  await expect(third).toHaveAttribute('aria-level', '3');
+  await expect(third).toHaveAttribute('aria-setsize', '14');
+  await expect(third).toHaveAttribute('aria-posinset', '3');
+});
+
+// 12.2: EventCalendar `color` keeps each event's accessible name (its title, with the time when shown).
+test('a11y components-eventcalendar--company-colors names', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-eventcalendar--company-colors&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.getByRole('button', { name: /Acme payroll$/ }).first()).toBeVisible();
+  await expect(page.getByRole('list', { name: 'Legend' }).first().getByRole('listitem')).toHaveText(['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Stark']);
+});
+
