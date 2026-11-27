@@ -345,6 +345,58 @@ test('a11y AgentAvatar name says AI agent', async ({ page }) => {
   await expect(root.getByRole('img')).toHaveCount(10);
 });
 
+// 12.4 AgentKit: tool-call states, the approval gate's edit path and the diff review.
+test.describe('a11y AgentKit 12.4', () => {
+  const go = async (page: Page, id: string) => {
+    await page.goto(story(id));
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    return page.locator('#storybook-root');
+  };
+
+  test('ToolCall status is a polite live region; a failed call shows its error as text and a named Retry', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--tool-call-states');
+    for (const word of ['Running', 'Done', 'Failed']) await expect(root.getByText(word, { exact: true })).toHaveAttribute('aria-live', 'polite');
+    await expect(root.getByRole('alert')).toHaveCount(0);
+    await expect(root.locator('details').nth(2)).toHaveAttribute('open', '');
+    await expect(root.getByText('SMTP timeout after 30 s')).toBeVisible();
+    await expect(root.getByRole('button', { name: 'Retry' })).toHaveCount(1);
+  });
+
+  test('ApprovalCard edit path: Edit focuses the arguments; approving moves focus to the card and announces the outcome', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--approval-edit');
+    const card = root.getByRole('group', { name: 'Send a payment reminder' });
+    await card.getByRole('button', { name: 'Edit' }).focus();
+    await page.keyboard.press('Enter');
+    const args = card.getByRole('textbox', { name: 'Arguments' });
+    await expect(args).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(card.getByRole('button', { name: 'Approve with changes' })).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(card.getByRole('status').first()).toHaveText('Approved with changes');
+    await expect(card.getByRole('button')).toHaveCount(0);
+    await expect(card).toBeFocused();
+  });
+
+  test('DiffReview: named toggles with aria-expanded, pressed Accept / Reject per file and a polite summary', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--review');
+    const summary = root.getByRole('status').first();
+    await expect(summary).toHaveText('1 accepted, 0 rejected, 2 to review');
+    await expect(summary).toHaveAttribute('aria-live', 'polite');
+    await expect(root.getByRole('button', { name: 'Accept README.md' })).toHaveAttribute('aria-pressed', 'true');
+    const reject = root.getByRole('button', { name: 'Reject src/billing.ts' });
+    await reject.focus();
+    await page.keyboard.press('Space');
+    await expect(reject).toHaveAttribute('aria-pressed', 'true');
+    await expect(summary).toHaveText('1 accepted, 1 rejected, 1 to review');
+    const toggle = root.getByRole('button', { name: /^src\/billing\.ts/ });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(`[id="${await toggle.getAttribute('aria-controls')}"]`)).toBeHidden();
+  });
+});
+
 // 12.2: names, roles and states a screen reader gets from the new menu and sidebar behaviour.
 test('a11y 12.2 theme menu: radio items keep role, name and checked state with indicator="end"', async ({ page }) => {
   await page.goto('/iframe.html?id=navigation-dropdownmenu--theme-menu&viewMode=story&globals=theme:light;brand:none');

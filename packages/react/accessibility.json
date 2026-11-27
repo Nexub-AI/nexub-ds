@@ -109,7 +109,8 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
-        "The outcome is announced in a polite live region and replaces the buttons."
+        "The outcome (\"Approved\", \"Approved with changes\", \"Denied\") and \"Working…\" are announced in a polite live region; the card is a group named by its title.",
+        "Edit moves focus to the arguments field; Cancel returns it to Edit. Once the choice resolves, focus moves to the card, so it is never lost with the buttons."
       ]
     },
     {
@@ -621,9 +622,12 @@
       "package": "@nexub/react",
       "automated": "pass",
       "exceptions": [],
-      "keyboard": [],
+      "keyboard": [
+        "Enter / Space: DiffReview: expands or collapses a file, or presses Accept / Reject."
+      ],
       "screenReader": [
-        "Added and removed lines are spelled out for screen readers; colour is not the only cue."
+        "Added and removed lines are spelled out for screen readers; colour is not the only cue. Line numbers are hidden from screen readers.",
+        "DiffReview: each file toggle reports aria-expanded and its line counts; Accept and Reject are toggle buttons named with the file (\"Accept src/billing.ts\") with aria-pressed; the summary is a polite status."
       ]
     },
     {
@@ -1803,7 +1807,8 @@
       "exceptions": [],
       "keyboard": [],
       "screenReader": [
-        "A native `<details>` disclosure: opens with Enter or Space."
+        "A native `<details>` disclosure: opens with Enter or Space.",
+        "The status badge is a polite live region, so Running → Done is announced without moving focus. The error is plain text, not an alert."
       ]
     },
     {
