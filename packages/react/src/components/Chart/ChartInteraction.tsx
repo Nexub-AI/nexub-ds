@@ -16,6 +16,7 @@ import {
 } from './Chart.js';
 import { FunnelView, HeatmapView, type FunnelProps, type HeatmapProps } from './MoreCharts.js';
 import { SeriesToggles, useSeriesToggle } from './ChartToggle.js';
+import { referenceValues } from './ChartStory.js';
 
 type Active = NonNullable<ChartIx['active']>;
 const fmt = (n: number) => n.toLocaleString();
@@ -213,7 +214,7 @@ export function InteractiveCartesian<T extends object>({
   const n = data.length;
   // The data can shrink under an open tooltip (ChartZoom, a hidden series).
   const act = active && active.i < n && (active.s ?? 0) < series.length ? active : null;
-  const [lo, hi] = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))), props.integerTicks);
+  const [lo, hi] = niceDomain([...data.flatMap((row) => series.map((s) => valueOf(row, s.key))), ...referenceValues(props.referenceLines)], props.integerTicks);
   const name = (j: number) => series[j]!.label ?? series[j]!.key;
   const text = (i: number, j: number) => formatSeriesValue(data[i]!, series[j]!, valueFormat);
   // One series is named by the keyboard, by a grouped bar under the pointer, or by being the only one.

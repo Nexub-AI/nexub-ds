@@ -27,6 +27,9 @@ const entry: ComponentEntry = {
     { name: 'orientation', type: "'vertical' | 'horizontal'", default: "'vertical'", description: '11.3: categories down the side for long names and ranked lists.' },
     { name: 'variant / totalKey', type: "'default' | 'waterfall' / keyof T", description: '11.3: a waterfall of the first series from a running total; `totalKey` marks rows drawn from zero.' },
     { name: 'colorOf', type: '(row, series, index) => colour | tone | undefined', description: '11.3: a colour per bar (e.g. over budget in danger).' },
+    { name: 'annotations', type: 'ChartAnnotation[]', description: "12.3: labelled notes on the plot. `{ at, label }` marks one category with a dashed guide (add `series` to dot that series' value); `{ at, to, label }` shades a range. Notes on categories not in `data` are skipped. These three props apply to vertical bars." },
+    { name: 'referenceLines', type: 'ChartReferenceLine[]', description: "12.3: labelled straight lines. `{ value: 5000, label: 'Target' }` is horizontal and widens the axis to stay in view; `{ value: 'Mar', axis: 'category', label }` is vertical. `tone` (`good`, `warning`, `danger`, default `neutral`) colours the line only; labels stay neutral text." },
+    { name: 'change', type: 'ChartChange', description: "12.3: a callout above the plot, e.g. \"Up 12% (+$1,200) since March\": `{ from, to?, series?, invert?, locale?, label?, text? }`. The amount uses the series' `valueFormat`, then the chart's; the percentage uses `Intl` in `locale`. Rises are success, falls error (`invert` for costs and churn), no change is neutral. `text` replaces the sentence (translation)." },
   ],
   examples: [
     { title: 'Grouped' },
@@ -34,11 +37,14 @@ const entry: ComponentEntry = {
     { title: 'Interactive', description: 'A crosshair and tooltip, keyboard point navigation, a toggle legend and `onPointClick`.' },
     { title: 'Waterfall', description: 'Rises in the good tone, falls in danger, totals from zero.' },
     { title: 'Horizontal and per-bar tones' },
+    { title: 'Change and reference lines', description: 'A fall shown as good with `invert`, an average line and a vertical marker (12.3).' },
   ],
   a11y: {
     screenReader: [
       'The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.',
       'Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as "Other".',
+      '12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden "Chart notes" list that describes the figure too.',
+      '12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad.',
     ],
   },
 };
