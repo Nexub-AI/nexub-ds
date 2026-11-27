@@ -88,10 +88,20 @@ export interface NexubMessages {
   goodResponse: string;
   badResponse: string;
   regenerate: string;
+  /** 12.2: MessageBubble `collapse` and MessageCard `maxHeight` toggles. */
+  readMore: string;
+  showLess: string;
+  showAll: string;
   sources: string;
   source: (index: number) => string;
   jumpToLatest: string;
   conversation: string;
+  /** 12.2 Conversation: the jump button once messages arrived while scrolled up. */
+  jumpToNewest: string;
+  /** 12.2 Conversation: announced once when messages arrive while scrolled up. */
+  newMessages: string;
+  /** 12.2 DateSeparator (with `today`). */
+  yesterday: string;
   // DataTable pager
   pageOf: (page: number, total: number) => string;
   /** DataTable selection column. */
@@ -307,6 +317,8 @@ export interface NexubMessages {
   moreActions: string;
   /** Avatar `status` dot, read after the name ("Ada Lovelace, Away"). */
   presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
+  /** AgentAvatar (12.2): the tile's accessible name, so an agent never reads as a person ("Payhub agent, AI agent"). */
+  aiAgent: (name: string) => string;
   /** Input `clearable` button. */
   clear: string;
   /** Input `showCount`, read near the limit ("72 of 80 characters"). */
@@ -476,10 +488,16 @@ export const defaultMessages: NexubMessages = {
   goodResponse: 'Good response',
   badResponse: 'Bad response',
   regenerate: 'Regenerate',
+  readMore: 'Read more',
+  showLess: 'Show less',
+  showAll: 'Show all',
   sources: 'Sources',
   source: (n) => `Source ${n}`,
   jumpToLatest: 'Jump to latest',
   conversation: 'Conversation',
+  jumpToNewest: 'Jump to newest',
+  newMessages: 'New messages',
+  yesterday: 'Yesterday',
   pageOf: (page, total) => `Page ${page} of ${total}`,
   selectRow: 'Select row',
   selectAllOnPage: 'Select all rows on this page',
@@ -657,6 +675,7 @@ export const defaultMessages: NexubMessages = {
   page: (index, total) => `Page ${index} of ${total}`,
   moreActions: 'More actions',
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
+  aiAgent: (name) => (name ? `${name}, AI agent` : 'AI agent'),
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
   countryCode: choiceFieldMessages.countryCode,

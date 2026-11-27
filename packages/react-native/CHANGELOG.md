@@ -1,5 +1,14 @@
 # @nexub/react-native
 
+## 12.1.0
+
+### Patch Changes
+
+- Updated dependencies [b3bc381]
+  - @nexub/tokens@12.1.0
+  - @nexub/icons@12.1.0
+  - @nexub/core@12.1.0
+
 ## 12.0.0
 
 ### Patch Changes

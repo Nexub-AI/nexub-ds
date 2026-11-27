@@ -176,3 +176,33 @@ export const CollapseBelow: Story = {
     </div>
   ),
 };
+
+/**
+ * 12.2: `collapsible` groups. The label is a button that folds the items away (Enter or Space);
+ * `defaultOpen={false}` starts it shut, `open` / `onOpenChange` control it. In the icon rail every
+ * group stays open and the toggles are hidden.
+ */
+export const CollapsibleGroups: Story = {
+  render: function CollapsibleGroupsStory() {
+    const [rail, setRail] = React.useState(false);
+    return (
+      <div style={{ height: '480px', display: 'flex' }}>
+        <Sidebar.Root collapsed={rail}>
+          <Sidebar.Group label="Workspace" collapsible>
+            <Sidebar.Item href="#" active icon={<DashboardIcon />}>Dashboard</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<BarChartIcon />}>Analytics</Sidebar.Item>
+          </Sidebar.Group>
+          <Sidebar.Group label="Admin" collapsible defaultOpen={false}>
+            <Sidebar.Item href="#" icon={<UsersIcon />}>Team</Sidebar.Item>
+            <Sidebar.Item href="#" icon={<SettingsIcon />}>Settings</Sidebar.Item>
+          </Sidebar.Group>
+        </Sidebar.Root>
+        <div className="p-4">
+          <button type="button" onClick={() => setRail((r) => !r)}>
+            {rail ? 'Expand sidebar' : 'Collapse to icon rail'}
+          </button>
+        </div>
+      </div>
+    );
+  },
+};
