@@ -478,3 +478,42 @@ test('a11y Illustration: decorative by default, one named image with a title', a
   await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
   await expect(page.locator('#storybook-root').getByRole('img', { name: 'You are offline', exact: true })).toHaveCount(1);
 });
+
+// 12.4: a streaming table is busy, its skeleton tail is not a row, and the count is announced
+// politely at a throttled pace (not per row), then "done".
+test('a11y 12.4 streaming DataTable: aria-busy, hidden tail, throttled count then done', async ({ page }) => {
+  await page.goto('/iframe.html?id=data-display-datatable--streaming&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const table = page.getByRole('table', { name: 'Users an agent found' });
+  await expect(table).toHaveAttribute('aria-busy', 'true');
+  await expect(table.locator('tbody tr[data-streaming]')).toHaveAttribute('aria-hidden', 'true');
+  // Header + 3 rows: the tail is out of the tree.
+  await expect(table.getByRole('row')).toHaveCount(4);
+  const live = page.locator('#storybook-root .sr-only[aria-live="polite"]').first();
+  await page.getByRole('button', { name: 'Replay stream' }).click();
+  await expect(live).toHaveText(/^\d rows? so far$/, { timeout: 5000 });
+  await expect(live).toHaveText('Done. 5 rows', { timeout: 10000 });
+  await expect(table).not.toHaveAttribute('aria-busy');
+  await expect(table.locator('tr[data-streaming]')).toHaveCount(0);
+  await expect(table.getByRole('row')).toHaveCount(6);
+});
+
+// 12.4: a field an agent fills is busy; a generated value is described as "Suggested" (no live
+// region), its accept / clear buttons are named, and editing drops the mark.
+test('a11y 12.4 FormField agent states: busy, "Suggested" in the description, named buttons', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-formfield--agent-states&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.getByRole('textbox', { name: 'Title' })).toHaveAttribute('aria-busy', 'true');
+  await expect(root.getByRole('textbox', { name: 'Title' })).toBeEditable();
+  const summary = root.getByRole('textbox', { name: 'Summary' });
+  await expect(summary).toHaveAccessibleDescription('Shown to the customer. Suggested');
+  await expect(root.locator('[aria-live]')).toHaveCount(0);
+  await expect(root.getByRole('button', { name: 'Accept suggestion' })).toBeVisible();
+  await expect(root.getByRole('button', { name: 'Clear suggestion' })).toBeVisible();
+  await summary.focus();
+  await page.keyboard.press('End');
+  await page.keyboard.type('.');
+  await expect(summary).toHaveAccessibleDescription('Shown to the customer.');
+  await expect(root.getByRole('button', { name: /suggestion/ })).toHaveCount(0);
+});

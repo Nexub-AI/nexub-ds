@@ -33,6 +33,33 @@ const cases: [string, React.ReactElement][] = [
       </N.FormField.Control>
     </N.FormField.Root>,
   ],
+  [
+    'FormField generated (12.4)',
+    <N.FormField.Root id="summary" generated onAcceptSuggestion={() => {}} onClearSuggestion={() => {}}>
+      <N.FormField.Label>Summary</N.FormField.Label>
+      <N.FormField.Control>
+        <N.Textarea defaultValue="Refund approved" />
+      </N.FormField.Control>
+    </N.FormField.Root>,
+  ],
+  [
+    'FormField streaming (12.4)',
+    <N.FormField.Root id="title" streaming>
+      <N.FormField.Label>Title</N.FormField.Label>
+      <N.FormField.Control>
+        <N.Input defaultValue="Quarterly" />
+      </N.FormField.Control>
+    </N.FormField.Root>,
+  ],
+  [
+    'DataTable streaming (12.4)',
+    <N.DataTable
+      aria-label="Invoices"
+      streaming
+      columns={[{ accessorKey: 'id', header: 'Invoice' }]}
+      data={[{ id: 'INV-1' }]}
+    />,
+  ],
   ['NumberInput', <N.NumberInput aria-label="Quantity" showSteppers />],
   ['SearchInput', <N.SearchInput aria-label="Search" />],
   ['PasswordInput', <N.PasswordInput aria-label="Password" />],
