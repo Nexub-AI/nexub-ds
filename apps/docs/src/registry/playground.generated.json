@@ -6544,9 +6544,9 @@
         "kind": "select",
         "name": "color",
         "options": [
-          1,
           "neutral",
           "warning",
+          1,
           "danger",
           2,
           3,
@@ -7228,9 +7228,9 @@
         "kind": "select",
         "name": "tone",
         "options": [
-          "subtle",
           "success",
           "warning",
+          "subtle",
           "danger",
           "default",
           "muted",
@@ -7303,15 +7303,15 @@
       },
       {
         "prop": "tone",
-        "value": "subtle"
-      },
-      {
-        "prop": "tone",
         "value": "success"
       },
       {
         "prop": "tone",
         "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "subtle"
       },
       {
         "prop": "tone",

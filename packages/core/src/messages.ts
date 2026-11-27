@@ -88,6 +88,10 @@ export interface NexubMessages {
   goodResponse: string;
   badResponse: string;
   regenerate: string;
+  /** 12.2: MessageBubble `collapse` and MessageCard `maxHeight` toggles. */
+  readMore: string;
+  showLess: string;
+  showAll: string;
   sources: string;
   source: (index: number) => string;
   jumpToLatest: string;
@@ -481,6 +485,9 @@ export const defaultMessages: NexubMessages = {
   goodResponse: 'Good response',
   badResponse: 'Bad response',
   regenerate: 'Regenerate',
+  readMore: 'Read more',
+  showLess: 'Show less',
+  showAll: 'Show all',
   sources: 'Sources',
   source: (n) => `Source ${n}`,
   jumpToLatest: 'Jump to latest',

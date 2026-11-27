@@ -21,6 +21,8 @@ const cases: Record<string, () => React.ReactElement> = {
   StreamingText: () => <N.StreamingText text="Hello" />,
   MessageBubble: () => <N.MessageBubble from="assistant">Hi</N.MessageBubble>,
   MessageActions: () => <N.MessageActions text="Hi" onFeedback={noop} onRegenerate={noop} />,
+  MessageCard: () => <N.MessageCard title="Expense" fields={[{ label: 'Amount', value: '€10' }]} actions={[{ label: 'Approve', onSelect: noop }]} />,
+  Highlight: () => <N.Highlight tone="success">€10</N.Highlight>,
   Citation: () => <N.Citation index={1} source={{ title: 'T', url: 'https://example.com' }} />,
   SourceChip: () => <N.SourceChip source={{ title: 'T', url: 'https://example.com' }} />,
   SourceList: () => <N.SourceList sources={[{ title: 'T', url: 'https://example.com' }]} />,

@@ -5269,6 +5269,18 @@
         }
       ]
     },
+    "Highlight": {
+      "file": "components/Highlight/Highlight.tsx",
+      "props": [
+        {
+          "name": "tone",
+          "type": "'error' | 'neutral' | 'primary' | 'info' | 'success' | 'warning'",
+          "required": false,
+          "default": "'neutral'",
+          "description": ""
+        }
+      ]
+    },
     "IconButton": {
       "file": "components/IconButton/IconButton.tsx",
       "props": [
@@ -6255,7 +6267,14 @@
           "name": "avatar",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Assistant and other: shown at the inline-start."
+          "description": "Assistant and other: shown at the inline-start. User (12.2): at the inline-end, same size and spacing."
+        },
+        {
+          "name": "collapse",
+          "type": "number | false",
+          "required": false,
+          "default": "false",
+          "description": "12.2: clamp the content to this many lines. When it is taller, a \"Read more\" / \"Show less\" toggle appears and the clamped edge fades out."
         },
         {
           "name": "from",
@@ -6290,6 +6309,59 @@
         {
           "name": "status",
           "type": "'sending' | 'error'",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
+    "MessageCard": {
+      "file": "components/MessageCard/MessageCard.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode | MessageCardAction[]",
+          "required": false,
+          "description": "A list renders as buttons: one `filled` at most, and past two the rest go into a \"More actions\" menu. Any other node renders as given, in the action row."
+        },
+        {
+          "name": "body",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Free content under the fields."
+        },
+        {
+          "name": "done",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Replaces the actions with one line and a check, e.g. \"Approved by you · 2:14 pm\"."
+        },
+        {
+          "name": "fields",
+          "type": "MessageCardField[]",
+          "required": false,
+          "description": "Label and value pairs, as a `dl`: two columns, one when the card is narrow."
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Clip the fields and body to this height (a number is px), with a \"Show all\" toggle."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<MessageStrings>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "status",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the title, usually a `Badge`."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
           "required": false,
           "description": ""
         }
@@ -8518,7 +8590,7 @@
         },
         {
           "name": "color",
-          "type": "1 | 'neutral' | 'warning' | 'danger' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'good'",
+          "type": "'neutral' | 'warning' | 1 | 'danger' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'good'",
           "required": false,
           "default": "1",
           "description": "Palette colour or (11.3) a tone."
@@ -9088,7 +9160,7 @@
         },
         {
           "name": "tone",
-          "type": "'subtle' | 'success' | 'warning' | 'danger' | 'default' | 'muted' | 'inverse' | 'secondary'",
+          "type": "'success' | 'warning' | 'subtle' | 'danger' | 'default' | 'muted' | 'inverse' | 'secondary'",
           "required": false,
           "default": "'default'",
           "description": ""

@@ -1085,12 +1085,17 @@
       "exceptions": [],
       "keyboard": [
         "Tab: Moves through the action buttons; focusing one reveals the row.",
-        "Space / Enter: Activates an action. Feedback buttons toggle."
+        "Space / Enter: Activates an action. Feedback buttons toggle.",
+        "Arrow keys / Escape: In the MessageCard \"More actions\" menu: move between items; Escape closes it and returns focus."
       ],
       "screenReader": [
         "Each message is an `article` named \"You said\" or \"Assistant said\", so users can jump between messages.",
         "Feedback buttons expose `aria-pressed`. Copy announces \"Copied\" through a status region.",
-        "The action row is only visually hidden until hover; it stays in the tab order and accessibility tree."
+        "The action row is only visually hidden until hover; it stays in the tab order and accessibility tree.",
+        "Your own message keeps the name \"You said\" with an avatar; the avatar adds nothing to it.",
+        "The collapse toggle is a button with `aria-expanded` and `aria-controls` pointing at the content. The clamped text stays in the accessibility tree.",
+        "MessageCard fields are a description list, read as term and value pairs. The overflow button is named \"More actions\" and opens a menu.",
+        "Highlight is a plain span: its text is read as part of the sentence. Say any meaning the colour adds in words."
       ]
     },
     {
