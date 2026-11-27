@@ -368,7 +368,7 @@ Never use a component marked deprecated.
 - [Approval Card](components/approval-card.md) `@nexub/react`: The agent asks before it acts: what will happen, then Approve or Deny.
 - [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
 - [Diff View](components/diff-view.md) `@nexub/react`: A unified diff with added and removed lines, for agent changes.
-- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate; MessageCard and Highlight structure what a message says.
 - [Plan Tracker](components/plan-tracker.md) `@nexub/react`: An agent plan: ordered steps with done, active, pending or failed status.
 - [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 - [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
@@ -598,7 +598,7 @@ Never use a component marked deprecated.
 
 ## Patterns — AI
 
-- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 
 ## Patterns — Auth
 
@@ -646,7 +646,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Highlight, Marquee, MessageCard, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage
 
 
@@ -1061,7 +1061,7 @@ Full-height application frame: a header row over a body with a sidebar slot and 
 | `AppShell.Header` | `compound` |  | First row, e.g. a `TopNav.Root`. |
 | `AppShell.Body` | `compound` |  | Second row: lays out the sidebar and main side by side. |
 | `AppShell.Sidebar` | `compound` |  | Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`. |
-| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. |
+| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it. |
 | `...props` | `React.HTMLAttributes<HTMLDivElement>` |  | Every part forwards its ref and HTML attributes. |
 
 ## Example: Header, sidebar and main
@@ -1461,6 +1461,11 @@ Displays a user's profile picture with initials fallback.
 | `badge` | `boolean` |  | Shows a status badge on the avatar. |
 | `badgeColor` | `string` |  | Colour of the status badge. |
 | `fallback` | `ReactNode` |  | Custom fallback rendered when the image fails to load and no name is provided. |
+| `AgentAvatar icon` | `ReactNode` |  | AgentAvatar (12.2, beta): the app glyph inside the tile, e.g. an `@nexub/icons` icon. Default: a bot. |
+| `AgentAvatar src` | `string` |  | AgentAvatar: an image for the tile instead of `icon` (e.g. an `@nexub/brand` app tile). Falls back to `icon` if it fails. |
+| `AgentAvatar name` | `string` |  | AgentAvatar: who the agent is ("Payhub agent"). Read as "Payhub agent, AI agent" (`messages.aiAgent`). |
+| `AgentAvatar size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | AgentAvatar: the same size scale as Avatar. |
+| `AgentAvatar category` | `CategoryColor` |  | AgentAvatar: a category colour for the tile. Default: the brand tile look, a primary glyph on a surface tile. |
 
 ## Example: Default
 
@@ -1513,6 +1518,32 @@ export default function Example() {
 }
 ```
 
+## Example: Agent avatar
+
+AgentAvatar (12.2, beta) is for AI agents, so an agent never looks like a colleague: a rounded-square app tile, like the `@nexub/brand` tiles, with a sparkle in the bottom inline-end corner. Same sizes as Avatar. Screen readers hear "Payhub agent, AI agent".
+
+```tsx
+import { AgentAvatar, Avatar } from '@nexub/react';
+import { CreditCard, Terminal } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      <Avatar name="Ada Lovelace" size="lg" />
+      <AgentAvatar name="Payhub agent" icon={<CreditCard />} size="lg" />
+      <AgentAvatar name="devX agent" icon={<Terminal />} category="blue" size="lg" />
+      <AgentAvatar name="Nexub agent" size="lg" />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: img (when named)
+- Avatar reads its `name`, plus the `status` ("Ada Lovelace, Away"). Without a name it is decorative and hidden.
+- AgentAvatar is always `role="img"` and its name says it is an AI agent ("Payhub agent, AI agent", from `messages.aiAgent`). The glyph and the sparkle are hidden.
+
 
 ---
 
@@ -1546,6 +1577,7 @@ Small status indicator or label. Communicates state, category, or count.
 | `tone` | `'success' \| 'danger' \| 'warning' \| 'info' \| 'neutral'` | `'neutral'` | Semantic color tone. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size. |
 | `leadingIcon` | `React.ReactNode` |  | Icon or dot rendered before the label. |
+| `AgentBadge icon` | `ReactNode` |  | AgentBadge (12.2, beta): the leading icon. Default: a sparkle. AgentBadge is always `variant="soft"` and takes Badge's `tone`, `category` and `size`. |
 
 ## Example: Tones
 
@@ -1594,6 +1626,23 @@ export default function Example() {
           {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
         </Badge>
       ))}
+    </div>
+  );
+}
+```
+
+## Example: Agent badge
+
+AgentBadge (12.2, beta) labels an AI agent in a chat header ("AI on your own key", "Buttons only"): a soft Badge with a leading sparkle. Pair it with `AgentAvatar`.
+
+```tsx
+import { AgentBadge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <AgentBadge>AI on your own key</AgentBadge>
+      <AgentBadge tone="info">Buttons only</AgentBadge>
     </div>
   );
 }
@@ -5361,6 +5410,7 @@ A menu of actions opened from a button, built on Radix.
 | `DropdownMenu.Portal / Content` | `compound` |  | Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4). |
 | `DropdownMenu.Item` | `compound` |  | An action (`onSelect`, `disabled`). |
 | `DropdownMenu.CheckboxItem / RadioGroup / RadioItem` | `compound` |  | Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`). |
+| `RadioItem / CheckboxItem indicator` | `'start' \| 'end'` | `'start'` | 12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu). |
 | `DropdownMenu.Label / Group / Separator` | `compound` |  | Section heading, grouping and divider. |
 | `DropdownMenu.Sub / SubTrigger / SubContent` | `compound` |  | A nested submenu. |
 
@@ -5416,6 +5466,40 @@ export default function Example() {
             <DropdownMenu.RadioItem value="updated">Last updated</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="name">Name</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="owner">Owner</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+## Example: Theme menu (tick at the end)
+
+```tsx
+import * as React from 'react';
+import { Button, DropdownMenu } from '@nexub/react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
+
+export default function Example() {
+  const [theme, setTheme] = React.useState('system');
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outlined">Theme</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content>
+          <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+            <DropdownMenu.RadioItem value="light" indicator="end">
+              <Sun size="sm" /> Light
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="dark" indicator="end">
+              <Moon size="sm" /> Dark
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="system" indicator="end">
+              <Monitor size="sm" /> System
+            </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
@@ -5699,7 +5783,7 @@ A month or week grid of events. Display only: your app owns the events and what 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `events` (required) | `CalendarEvent[]` |  | `{ id, title, start, end?, allDay?, tone? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. |
+| `events` (required) | `CalendarEvent[]` |  | `{ id, title, start, end?, allDay?, tone?, color? }`. Events spanning days show on each day; `tone` is primary, success, warning, error or info. 12.2: `color` takes any brand colour (hex, rgb(), hsl(), oklab(), oklch()) and wins over `tone`: the container is mixed from it into the surface and the text picked for 4.5:1 contrast, in light and dark. A colour that can’t be read keeps the tone and warns in development. |
 | `date / defaultDate / onDateChange` | `Date` |  | Any day in the shown month or week; Today and the arrows change it. |
 | `view / defaultView / onViewChange` | `'month' \| 'week'` | `'month'` | Week shows every event; month shows `maxEventsPerDay` then "N more". |
 | `onEventClick` | `(event) => void` |  | Makes events buttons. |
@@ -5709,7 +5793,7 @@ A month or week grid of events. Display only: your app owns the events and what 
 | `onEventMove` | `(event, { start, end }) => void` |  | 11.4. Makes events movable: drag one to another day (month, week) or time (day view, 15-minute steps), or press Alt+Arrow on it, pick with the arrows and press Enter (Escape cancels). The duration is kept. Events with `editable: false` stay put. |
 | `renderDayAction` | `(date) => ReactNode` |  | 11.4. A per-day slot, e.g. a small add button: in each day’s header (month, week), above the day view and beside each agenda day. |
 | `eventActions` | `(event) => ReactNode` |  | 11.4. Controls for one event, e.g. a menu: beside it in day and agenda views, over its end on hover or focus in month and week cells (always shown on touch screens). |
-| `legend` | `{ label, tone }[]` |  | 11.4. A row under the toolbar naming what each tone means. Colour is never the only signal: titles still say what an event is. |
+| `legend` | `{ label, tone, color? }[]` |  | 11.4. A row under the toolbar naming what each tone means (12.2: or each `color`). Colour is never the only signal: titles still say what an event is. |
 
 ## Example: Team calendar
 
@@ -5825,6 +5909,46 @@ export default function Example() {
 }
 ```
 
+## Example: Company colours
+
+12.2. `color` per event: six brand colours in different syntaxes, readable in light and dark.
+
+```tsx
+'use client';
+
+import { EventCalendar, type CalendarEvent } from '@nexub/react';
+
+const today = new Date();
+const on = (day: number, hour?: number) => new Date(today.getFullYear(), today.getMonth(), day, hour ?? 0);
+
+// One brand colour per company, in any CSS colour syntax.
+const companies = [
+  { label: 'Acme', color: '#ffd400' },
+  { label: 'Globex', color: '#0b1f4d' },
+  { label: 'Initech', color: 'rgb(228, 0, 43)' },
+  { label: 'Umbrella', color: 'hsl(160 100% 33%)' },
+  { label: 'Hooli', color: 'oklch(0.62 0.2 300)' },
+  { label: 'Stark', color: '#ff7a00' },
+];
+
+const events: CalendarEvent[] = companies.flatMap((c, i) => [
+  { id: `${c.label}-board`, title: `${c.label} board`, start: on(14 + (i % 3), 9 + i), color: c.color },
+  { id: `${c.label}-payroll`, title: `${c.label} payroll`, start: on(2 + i * 4), allDay: true, color: c.color },
+]);
+
+export default function Example() {
+  return (
+    <EventCalendar
+      events={events}
+      onEventClick={() => {}}
+      maxEventsPerDay={4}
+      legend={companies.map((c) => ({ ...c, tone: 'primary' as const }))}
+      className="w-full"
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - `Alt + Arrow keys`: With `onEventMove`, on an event: starts a move and takes the first step.
@@ -5832,6 +5956,7 @@ export default function Example() {
 - `Enter / Escape`: Drops the event there, or cancels the move.
 - A table with weekday column headers; today has `aria-current="date"` and each day reads its full date.
 - The title is a polite live region, so Today and the arrows announce the new month or week.
+- `color` changes only the paint: the event’s accessible name is still its title (and time).
 - Movable events describe the keyboard move (Alt+Arrow, then arrows, Enter or Escape); each step and the drop are announced in a polite live region.
 
 Related: [date-picker](date-picker.md), [date-time-picker](date-time-picker.md)
@@ -8142,7 +8267,7 @@ Related: [dropdown-menu](dropdown-menu.md), [toolbar](toolbar.md), [context-menu
 
 # Message Bubble
 
-One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate; MessageCard and Highlight structure what a message says.
 
 - Package: `@nexub/react` · Category: AI · Status: stable
 - Import: `import { MessageBubble } from '@nexub/react';`
@@ -8152,6 +8277,8 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 
 - Each turn in a chat or assistant thread, inside Conversation.
 - MessageActions under assistant replies the user may want to copy, rate or retry.
+- MessageCard for something the user can act on inside a reply: an approval, a record, a booking.
+- Highlight for the few values a reader scans for (an amount, a date, a status), not for whole sentences.
 
 ## When not to use
 
@@ -8163,17 +8290,25 @@ One message in a conversation. User messages sit in a bubble at the end; assista
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `from` (required) | `'user' \| 'assistant' \| 'system' \| 'other'` |  | Who sent it. Sets layout and the default accessible name. `other` (11.5) is a third party in a group conversation. |
-| `avatar` | `ReactNode` |  | Assistant and other: shown at the inline start. |
+| `avatar` | `ReactNode` |  | Assistant and other: shown at the inline start. User (12.2): at the inline end, with the same size and spacing. |
 | `name` | `string` |  | Accessible name of the message. Defaults to "You said" or "Assistant said". With `from="other"` it is also shown as the header. |
 | `meta` | `ReactNode` |  | 11.5: header text beside the name, e.g. the time. |
 | `status` | `'sending' \| 'error'` |  | `sending` sets `aria-busy`; `error` shows "Failed to send". |
 | `onRetry` | `() => void` |  | With `status="error"`, adds a Retry button. |
-| `messages` | `Partial<MessageStrings>` |  | Local string overrides. |
+| `collapse` | `number \| false` | `false` | 12.2: clamp the content to this many lines. Only when it is taller does a "Read more" / "Show less" toggle appear, with a fade at the clamped edge. Keep MessageActions outside a collapsed bubble, or the clamp hides it. |
+| `messages` | `Partial<MessageStrings>` |  | Local string overrides, including `readMore`, `showLess`, `showAll` and `moreActions` (12.2). |
 | `MessageActions text` | `string` |  | Text Copy puts on the clipboard. |
 | `MessageActions copy` | `boolean` | `true` | Set false to hide Copy. |
 | `MessageActions feedback / defaultFeedback / onFeedback` | `'up' \| 'down' \| null` |  | Thumbs up/down appear when `onFeedback` is set. Pressing the active one clears it. |
 | `MessageActions onRegenerate` | `() => void` |  | Shows Regenerate when set. |
 | `MessageActions actions` | `{ label: string; icon: ReactNode; onSelect: () => void; disabled?: boolean }[]` |  | 11.5: your own icon buttons after the built-in ones. `children` render after these. |
+| `MessageCard title / status` | `ReactNode` |  | 12.2 (beta): a bordered block inside a bubble. The title, and a status beside it (usually a `Badge`). |
+| `MessageCard fields` | `{ label: ReactNode; value: ReactNode }[]` |  | Label and value pairs as a `dl`: two columns, one when the card is narrow (container query). |
+| `MessageCard body` | `ReactNode` |  | Free content under the fields. |
+| `MessageCard actions` | `{ label: string; onSelect: () => void; variant?: 'filled' \| 'tonal' \| 'text'; icon?: ReactNode; disabled?: boolean }[] \| ReactNode` |  | At most one `filled` button (the first asked for, or else the first without a variant); the rest are `tonal` or `text`. Past two, the extras go into a "More actions" menu. Any other node renders as given. Warns in development for more than one `filled`. |
+| `MessageCard maxHeight` | `number \| string` |  | Clip the fields and body to this height (a number is px), with a "Show all" toggle when they are taller. |
+| `MessageCard done` | `ReactNode` |  | Replaces the actions with one line and a `SuccessCheck`, e.g. "Approved by you · 2:14 pm". Announced politely. |
+| `Highlight tone` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'error' \| 'info'` | `'neutral'` | 12.2 (beta): an amount, date or status picked out in running text, on its tone's container colours (AA in both themes). |
 
 ## Example: Conversation
 
@@ -8248,14 +8383,109 @@ export default function Example() {
 }
 ```
 
+## Example: Your avatar and long messages
+
+12.2: `avatar` on your own messages sits at the inline end. `collapse={3}` clamps a long message with a Read more toggle; a short one gets none.
+
+```tsx
+import { MessageBubble, Avatar } from '@nexub/react';
+import { Sparkles } from '@nexub/icons';
+
+const OUTLINE =
+  'Here is the outline. 1. Revenue summary: totals by region, with the quarter-on-quarter change. 2. Costs against the budget. 3. Churn: the rates, the reasons customers gave and what we changed. 4. Hiring plan: open roles by team and the budget impact. 5. Risks and asks for the board.';
+
+export default function Example() {
+  return (
+    <div className="flex flex-col gap-4 items-stretch w-full max-w-140">
+      <MessageBubble from="user" avatar={<Avatar size="sm" fallback="SL" />}>
+        Can you outline the quarterly report for me?
+      </MessageBubble>
+      <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />} collapse={3}>
+        <p className="m-0">{OUTLINE}</p>
+      </MessageBubble>
+    </div>
+  );
+}
+```
+
+## Example: MessageCard
+
+12.2 (beta): a request inside a reply, with a status, fields and actions. Approve to see the done line; the third action goes into the More actions menu.
+
+```tsx
+import * as React from 'react';
+import { MessageBubble, MessageCard, Avatar, Badge, toast } from '@nexub/react';
+import { Sparkles } from '@nexub/icons';
+
+export default function Example() {
+  const [done, setDone] = React.useState<string>();
+  return (
+    <div className="w-full max-w-140">
+      <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+        <p>Ada sent an expense report for your approval.</p>
+        <MessageCard
+          title="Expense report"
+          status={
+            <Badge variant="soft" tone={done ? 'success' : 'warning'}>
+              {done ? 'Approved' : 'Pending'}
+            </Badge>
+          }
+          fields={[
+            { label: 'Amount', value: '€1,240.00' },
+            { label: 'Vendor', value: 'Acme GmbH' },
+            { label: 'Submitted by', value: 'Ada Lovelace' },
+            { label: 'Due', value: '28 Nov 2026' },
+          ]}
+          body="Team offsite, Berlin. Receipts attached."
+          done={done}
+          actions={[
+            { label: 'Approve', onSelect: () => setDone('Approved by you · 2:14 pm') },
+            { label: 'Reject', onSelect: () => toast.info('Rejected') },
+            { label: 'Ask a question', onSelect: () => toast.info('Question sent') },
+          ]}
+        />
+      </MessageBubble>
+    </div>
+  );
+}
+```
+
+## Example: Highlight
+
+12.2 (beta): amounts, dates and statuses in running text. A plain span, not `<mark>`, so screen readers do not announce a search highlight.
+
+```tsx
+import { MessageBubble, Highlight, Avatar } from '@nexub/react';
+import { Sparkles } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-140">
+      <MessageBubble from="assistant" avatar={<Avatar size="sm" fallback={<Sparkles />} />}>
+        <p>
+          The invoice for <Highlight tone="primary">€1,240.00</Highlight> is due on <Highlight>28 Nov 2026</Highlight>.
+          Payment is <Highlight tone="success">confirmed</Highlight>, the receipt is{' '}
+          <Highlight tone="warning">missing</Highlight> and the refund <Highlight tone="error">failed</Highlight>.
+        </p>
+      </MessageBubble>
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
-- Roles: article (each message), alert (send error), button (actions)
+- Roles: article (each message), alert (send error), button (actions, Read more, Show all), menu (MessageCard extra actions), status (MessageCard done line)
 - `Tab`: Moves through the action buttons; focusing one reveals the row.
 - `Space / Enter`: Activates an action. Feedback buttons toggle.
+- `Arrow keys / Escape`: In the MessageCard "More actions" menu: move between items; Escape closes it and returns focus.
 - Each message is an `article` named "You said" or "Assistant said", so users can jump between messages.
 - Feedback buttons expose `aria-pressed`. Copy announces "Copied" through a status region.
 - The action row is only visually hidden until hover; it stays in the tab order and accessibility tree.
+- Your own message keeps the name "You said" with an avatar; the avatar adds nothing to it.
+- The collapse toggle is a button with `aria-expanded` and `aria-controls` pointing at the content. The clamped text stays in the accessibility tree.
+- MessageCard fields are a description list, read as term and value pairs. The overflow button is named "More actions" and opens a menu.
+- Highlight is a plain span: its text is read as part of the sentence. Say any meaning the colour adds in words.
 
 Related: [streaming-text](streaming-text.md), [conversation](conversation.md), [citation](citation.md)
 
@@ -9250,7 +9480,11 @@ People top-down as cards joined by lines, keyboard navigable as a tree. A TreeVi
 | `expanded / defaultExpanded / onExpandedChange` | `string[]` |  | Open node ids. Shared with the narrow-screen TreeView. |
 | `onActivate` | `(node) => void` |  | Click or Enter on a card, e.g. to open the profile. |
 | `renderCard` | `(node) => ReactNode` |  | Replaces the card content; it also names the item. The reports control stays. |
-| `className` | `string` |  | On the scroll box. Wide charts scroll sideways inside it. |
+| `zoomable` | `boolean` | `false` | 12.2. Adds zoom: a toolbar (zoom out, level, zoom in, fit), pinch on touch, ctrl/⌘ + wheel or a trackpad pinch, drag to pan, and + / = / - / 0 while focus is in the chart. A plain wheel still scrolls. One finger pans the chart rather than the page. |
+| `zoom / defaultZoom / onZoomChange` | `number` | `1` | 12.2. The scale, 0.25–2, clamped to `minZoom`–`maxZoom`. Needs `zoomable`. |
+| `minZoom / maxZoom` | `number` | `0.25 / 2` | 12.2. Limits inside 0.25–2. The buttons disable at the limits. |
+| `stackAbove` | `number` |  | 12.2. A node with more direct reports than this shows them as a vertical stack (a compact column with the connector on its start side) instead of one wide row. Off by default. |
+| `className` | `string` |  | On the scroll box (with `zoomable`, on the box holding the toolbar and the scroller; give it a height for a fixed viewport). Wide charts scroll sideways inside it. |
 
 ## Example: Default
 
@@ -9332,6 +9566,49 @@ export default function Example() {
 }
 ```
 
+## Example: Wide team: stacking and zoom
+
+`stackAbove={4}` stacks the 12 reports in a column; `zoomable` adds the zoom toolbar, pinch and drag to pan.
+
+```tsx
+'use client';
+
+import { OrgChart, type OrgChartNode } from '@nexub/react';
+
+const engineers = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Katherine', 'Emmy', 'Mary', 'Barbara', 'Dennis', 'Ken', 'Radia'];
+
+const team: OrgChartNode[] = [
+  {
+    id: 'lead',
+    label: 'Sophie Wilson',
+    description: 'Head of Engineering',
+    children: [
+      {
+        id: 'mgr',
+        label: 'Tim Berners-Lee',
+        description: 'Engineering manager',
+        children: engineers.map((name, i) => ({ id: `e${i}`, label: name, description: i % 2 ? 'Engineer' : 'Senior engineer' })),
+      },
+      { id: 'design', label: 'Susan Kare', description: 'Design lead' },
+      { id: 'qa', label: 'Edsger Dijkstra', description: 'QA lead' },
+    ],
+  },
+];
+
+export default function Example() {
+  return (
+    <OrgChart
+      aria-label="Engineering"
+      nodes={team}
+      defaultExpanded={['lead', 'mgr']}
+      stackAbove={4}
+      zoomable
+      className="h-[28rem] w-full"
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: tree, treeitem with aria-level, aria-setsize, aria-posinset, aria-expanded, group
@@ -9341,11 +9618,17 @@ export default function Example() {
 - `Home / End`: First or last visible card.
 - `Enter`: Calls `onActivate`.
 - `Space`: Opens or closes the card’s reports.
+- `+ / = and -`: With `zoomable`, while focus is in the chart: zoom in or out a step. Ctrl/⌘ combinations stay the browser’s page zoom.
+- `0`: With `zoomable`: back to 100%.
 - The chart is one tab stop (roving tabindex); focus scrolls the card into view.
+- With `zoomable`, the toolbar buttons come before the chart in tab order, and the focused card is scrolled into view after a zoom.
 - Each item is named by its name and role only, not by its reports.
 - The "3 reports" control is a pointer shortcut; keyboard and screen readers use the item’s expanded state.
 - Below 768px the same nodes render as a TreeView (photo, name and role on one row).
 - Connectors are CSS borders on logical sides, so RTL mirrors and forced colours keep them.
+- The zoom toolbar is a group named "Zoom" with named buttons (messages `orgChartZoomIn`, `orgChartZoomOut`, `orgChartZoomFit`); the level is a polite live region.
+- Zoom is a CSS transform with no animation, so reduced motion needs nothing extra.
+- Stacked reports keep the tree: their level, set size and position are the same, and the arrows follow the tree, not the column.
 
 Related: [tree-view](tree-view.md), [avatar](avatar.md), [diagram-canvas](diagram-canvas.md)
 
@@ -9865,11 +10148,14 @@ The composer for a chat: an auto-growing text field with Send, which turns into 
 | `actions` | `ReactNode` |  | Rendered bottom-start, e.g. an attach IconButton or a model picker. |
 | `surface` | `'solid' \| 'glass'` | `'solid'` | Glass material for composers floating over content. |
 | `label` | `string` | `messages.promptLabel ('Message')` | Accessible name of the text field. |
-| `messages` | `Partial<PromptInputMessages>` |  | Local overrides for `promptLabel`, `sendMessage`, `stopGenerating`, `promptHint`. |
+| `messages` | `Partial<PromptInputMessages>` |  | Local overrides for `promptLabel`, `sendMessage`, `stopGenerating`, `promptHint`, `promptHintModEnter`, `promptSuggestions` and `promptCommands`. |
 | `sendLabel` | `ReactNode` |  | 11.5: a visible text label on Send, beside the arrow. Without it, Send is an icon button. |
 | `submitOn` | `'enter' \| 'mod-enter'` | `'enter'` | 11.5: `mod-enter` sends on Cmd/Ctrl+Enter, makes Enter add a line and shows that hint under the field. |
 | `hint` | `ReactNode` |  | 11.5: helper text under the field, linked with `aria-describedby`. |
 | `error` | `ReactNode` |  | 11.5: an error under the field. Marks the field invalid (`aria-invalid`) and links it. |
+| `commands` | `CommandListItem[]` |  | 12.2: slash commands. Typing `/` opens them in a list above the field, filtered by what follows the slash (as CommandList: value, label, description and keywords). `shortcut` keys show at the end of a row. The list part loads on the first `/`. |
+| `onCommand` | `(value: string, args: string) => void` |  | 12.2: called when a command is picked (Enter, Tab or click) with its `value` and the text after the command id: `/remind tomorrow 9am` → `("remind", "tomorrow 9am")`. Uncontrolled input then clears, as after a submit; controlled input leaves that to you. Enter on `/text` that matches no command submits as usual. |
+| `chips` | `ReactNode` |  | 12.2: quick replies above the field, e.g. `Button size="sm" variant="tonal"` or Chips. One row that scrolls sideways with snap and edge fades when narrow, and wraps from 480px wide. Named by `messages.promptSuggestions` ("Suggestions"). |
 | `textareaClassName` | `string` |  | Class for the textarea; `className` goes to the outer container. |
 
 ## Example: Default
@@ -9983,17 +10269,82 @@ export default function Example() {
 }
 ```
 
+## Example: Slash commands
+
+Type `/` to open the commands above the field. ↑/↓ move, Enter or Tab picks, Esc closes and keeps the text. Type `/remind tomorrow 9am` and press Enter to pass the arguments. The field clears after a pick.
+
+```tsx
+import { PromptInput, toast, type CommandListItem } from '@nexub/react';
+
+const commands: CommandListItem[] = [
+  { value: 'remind', label: 'Remind me', description: 'e.g. /remind tomorrow 9am', shortcut: ['⌘', 'R'] },
+  { value: 'summarize', label: 'Summarize', description: 'Summarize this thread', keywords: ['tldr'] },
+  { value: 'translate', label: 'Translate', description: 'Translate the last reply' },
+];
+
+export default function Example() {
+  return (
+    <div className="w-full max-w-130 pt-48">
+      <PromptInput
+        placeholder="Type / for commands"
+        commands={commands}
+        onCommand={(value, args) => toast.info(args ? `/${value} with “${args}”` : `/${value}`)}
+        onSubmit={(text) => toast.success(`Sent: ${text}`)}
+      />
+    </div>
+  );
+}
+```
+
+## Example: Quick replies
+
+The `chips` row above the field. On a phone it scrolls sideways instead of wrapping.
+
+```tsx
+import * as React from 'react';
+import { Button, PromptInput, toast } from '@nexub/react';
+
+const replies = ['Approve', 'Reject', 'Ask for details', 'Remind me tomorrow'];
+
+export default function Example() {
+  const [value, setValue] = React.useState('');
+  return (
+    <div className="w-full max-w-130">
+      <PromptInput
+        placeholder="Reply"
+        value={value}
+        onValueChange={setValue}
+        onSubmit={(text) => {
+          toast.success(`Sent: ${text}`);
+          setValue('');
+        }}
+        chips={replies.map((r) => (
+          <Button key={r} size="sm" variant="tonal" onClick={() => setValue(r)}>
+            {r}
+          </Button>
+        ))}
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
-- Roles: textbox (multiline), button (Send / Stop)
+- Roles: textbox (multiline), button (Send / Stop), combobox + listbox (slash commands, while open), group (quick replies)
 - `Enter`: Sends. Ignored while an IME composition is open.
 - `Shift + Enter`: New line.
 - `Cmd/Ctrl + Enter`: Sends with `submitOn="mod-enter"`, where Enter adds a line.
-- `Escape`: Stops the reply while streaming.
+- `Escape`: Stops the reply while streaming. With the command list open, closes the list first and keeps the text.
+- `/`: At the start of the text, opens the command list (with `commands`).
+- `↑ / ↓`: Moves the active command, wrapping at the ends and skipping disabled ones.
+- `Enter / Tab`: Picks the active command while the list is open (Shift+Tab still moves focus back).
 - Focus stays in the field after sending, so the user can type the next message straight away.
 - An empty field keeps Send focusable with `aria-disabled`, rather than removing it from the tab order.
 - The field is named by `label` (default "Message") and described by the Enter/Shift+Enter hint.
 - Send and Stop are icon buttons with their own names; the swap does not move focus.
+- While the command list is open the field is a combobox (`aria-expanded`, `aria-controls`, `aria-autocomplete="list"`) and the active option is announced through `aria-activedescendant`; focus never leaves the field. Options are named "/id label" and described by their description. Closed, the field is the plain textbox again.
+- The quick replies are a group named "Suggestions"; each reply is a button in the tab order before the field.
 
 Related: [message-bubble](message-bubble.md), [conversation](conversation.md), [textarea](textarea.md)
 
@@ -11053,6 +11404,8 @@ Vertical app navigation: a header, grouped items with icons, and a pinned footer
 | `aria-label` | `string` |  | Name of the nav landmark. Defaults to the localised "Sidebar". |
 | `SidebarHeader status` | `ReactNode` |  | Trailing element next to the logo (`Sidebar.Header` children), e.g. a `Badge`. Moves under the logo when they don’t fit. |
 | `SidebarGroup label` | `string` |  | Heading above a group of items. |
+| `SidebarGroup collapsible` | `boolean` | `false` | 12.2: the label becomes a button (`aria-expanded`, `aria-controls`) with a chevron that folds the items away. Stays open, toggle hidden, in the icon rail. |
+| `SidebarGroup defaultOpen / open / onOpenChange` | `boolean / boolean / (open: boolean) => void` | `true` | 12.2: uncontrolled start state, or controlled open state, of a `collapsible` group. |
 | `SidebarItem icon` | `ReactNode` |  | Leading icon; the only thing shown when collapsed. |
 | `SidebarItem active` | `boolean` |  | Marks the current page (`aria-current="page"`). |
 | `SidebarItem asChild` | `boolean` |  | Use your router `<Link>` as the item; pass it as the only child. |
@@ -11109,6 +11462,30 @@ export default function Example() {
       <Button variant="outlined" onClick={() => setCollapsed((c) => !c)} aria-pressed={!collapsed}>
         {collapsed ? 'Expand' : 'Collapse'}
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Collapsible groups
+
+```tsx
+import { Sidebar } from '@nexub/react';
+import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex h-70 items-start">
+      <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
+        <Sidebar.Group label="Work" collapsible>
+          <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Folder size="sm" />}>Projects</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group label="Admin" collapsible defaultOpen={false}>
+          <Sidebar.Item href="#" icon={<BarChart3 size="sm" />}>Reports</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Root>
     </div>
   );
 }
@@ -13632,7 +14009,7 @@ Related: [card](card.md), [stat-card](stat-card.md)
 
 # Conversation
 
-Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 
 - Package: `@nexub/patterns` · Category: AI · Status: stable
 - Import: `import { Conversation } from '@nexub/patterns';`
@@ -13641,6 +14018,7 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 ## When to use
 
 - A full chat or assistant view: messages above, composer below.
+- DateSeparator between messages from different days, in any message list.
 
 ## When not to use
 
@@ -13653,10 +14031,16 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | The messages, usually MessageBubbles. |
 | `composer` | `ReactNode` |  | Sticky slot under the list, usually a PromptInput. |
-| `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". |
+| `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". 12.2: if messages arrive while scrolled up, it reads "Jump to newest" and "New messages" is announced once. |
 | `announce` | `boolean` | `false` | Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk. |
 | `maxHeight` | `number \| string` |  | 11.5: cap the height so it works in normal flow without a fixed-height parent. It grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent (`h-full`). |
-| `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest` and `conversation`. |
+| `thinking` | `ReactNode` |  | 12.2: slot at the end of the list for a `<ThinkingIndicator />`, in a polite `role="status"` region. It never moves the scroll or counts as a new message. Keep the prop set (`busy ? <ThinkingIndicator /> : null`) so the live region exists before the indicator appears. |
+| `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest`, `conversation`, and (12.2) `jumpToNewest`, `newMessages`. |
+| `DateSeparator date` | `Date \| string \| number` |  | 12.2: the day it starts. Shows "Today", "Yesterday" or a medium date in the provider’s locale ("25 Nov 2026" in en-GB). A date-only string ("2026-11-25") is a local day. |
+| `DateSeparator children` | `ReactNode` |  | Replaces the computed label. |
+| `DateSeparator now` | `Date \| string \| number` |  | "Now" for the Today / Yesterday check; defaults to the current time. Pass one in tests and stories. |
+| `DateSeparator locale` | `string` |  | Overrides the NexubProvider locale for the date. |
+| `DateSeparator messages` | `Partial<{ today: string; yesterday: string }>` |  | Local overrides; otherwise `today` / `yesterday` from NexubProvider. |
 
 ## Example: Mini chat
 
@@ -13777,13 +14161,65 @@ export default function Example() {
 }
 ```
 
+## Example: Days and thinking
+
+12.2: a `DateSeparator` wherever the day changes, and a `ThinkingIndicator` in the `thinking` slot while a reply is on its way. Send a message to see it.
+
+```tsx
+import * as React from 'react';
+import { PromptInput, MessageBubble, ThinkingIndicator } from '@nexub/react';
+import { Conversation, DateSeparator } from '@nexub/patterns';
+
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string; at: Date };
+
+const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000);
+const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+
+export default function Example() {
+  const [busy, setBusy] = React.useState(false);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    { id: 1, from: 'user', text: 'Can you total last week’s invoices?', at: daysAgo(3) },
+    { id: 2, from: 'assistant', text: 'Twelve invoices, £8,420 in all.', at: daysAgo(3) },
+    { id: 3, from: 'user', text: 'Which ones are still unpaid?', at: daysAgo(1) },
+    { id: 4, from: 'assistant', text: 'Three: Acme, Globex and Initech.', at: daysAgo(1) },
+  ]);
+  const send = (text: string) => {
+    setMessages((m) => [...m, { id: Date.now(), from: 'user', text, at: new Date() }]);
+    setBusy(true);
+    setTimeout(() => {
+      setMessages((m) => [...m, { id: Date.now(), from: 'assistant', text: 'On it: reminders drafted.', at: new Date() }]);
+      setBusy(false);
+    }, 1500);
+  };
+  return (
+    <div className="w-full">
+      <Conversation
+        maxHeight="24rem"
+        thinking={busy ? <ThinkingIndicator /> : null}
+        composer={<PromptInput placeholder="Ask about your invoices" onSubmit={send} />}
+      >
+        {messages.map((msg, i) => (
+          <React.Fragment key={msg.id}>
+            {(i === 0 || !sameDay(messages[i - 1]!.at, msg.at)) && <DateSeparator date={msg.at} />}
+            <MessageBubble from={msg.from}>{msg.text}</MessageBubble>
+          </React.Fragment>
+        ))}
+      </Conversation>
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
-- Roles: region (default) or log (with `announce`)
+- Roles: region (default) or log (with `announce`), status (polite) around the `thinking` slot, DateSeparator: plain text, not `role="separator"`
 - `Tab`: The message list is focusable so keyboard users can scroll it.
 - Keep focus in the composer while a reply streams; don’t move it to the new message.
 - The list is named "Conversation". Leave `announce` off while streaming tokens and announce the finished reply once instead.
 - With reduced motion, "Jump to latest" scrolls instantly.
+- Messages arriving while the reader is scrolled up announce "New messages" once per batch (a hidden polite live region); the batch ends when they are back at the bottom. With `announce` the log speaks instead.
+- The `thinking` slot is a polite status, so a ThinkingIndicator placed in it is read once when it appears.
+- DateSeparator is read as its text ("Yesterday") in order with the messages. It is not `role="separator"`: a separator’s children are presentational, and screen readers announce a non-focusable one as just "separator" or skip it, which would lose the day. The hairlines are hidden.
 
 Related: [message-bubble](message-bubble.md), [prompt-input](prompt-input.md), [streaming-text](streaming-text.md)
 

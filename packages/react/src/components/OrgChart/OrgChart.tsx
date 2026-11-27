@@ -8,6 +8,7 @@ import { useMediaQuery } from '../../hooks/useMediaQuery.js';
 import { Avatar } from '../Avatar/Avatar.js';
 import { TreeView, type TreeNode } from '../TreeView/TreeView.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
+import { ZoomFrame } from './ZoomFrame.js';
 
 /** A TreeView node with a role line and a photo. */
 export interface OrgChartNode extends TreeNode {
@@ -29,6 +30,25 @@ export interface OrgChartProps {
   onActivate?: (node: OrgChartNode) => void;
   /** Replaces the card's content (photo, name, role). The expand control stays. */
   renderCard?: (node: OrgChartNode) => React.ReactNode;
+  /**
+   * Adds zoom: a toolbar (zoom out, level, zoom in, fit), pinch on touch, ctrl/⌘ + wheel or a trackpad pinch,
+   * drag to pan, and + / = / - / 0 while focus is in the chart. Plain wheel still scrolls. @default false
+   */
+  zoomable?: boolean;
+  /** Controlled scale, 0.25–2 (clamped to `minZoom`–`maxZoom`). Needs `zoomable`. */
+  zoom?: number;
+  /** @default 1 */
+  defaultZoom?: number;
+  onZoomChange?: (zoom: number) => void;
+  /** @default 0.25 */
+  minZoom?: number;
+  /** @default 2 */
+  maxZoom?: number;
+  /**
+   * A node with more direct reports than this shows them as a vertical stack (a compact column with the
+   * connector on one side) instead of one wide row. The tree semantics and arrow keys don't change. Off by default.
+   */
+  stackAbove?: number;
   className?: string;
 }
 
@@ -50,6 +70,19 @@ const CHILD = cn(
 );
 const GROUP =
   "relative m-0 flex list-none p-0 pt-5 before:absolute before:top-0 before:start-1/2 before:h-5 before:border-s before:border-[var(--color-outline-variant)] before:content-['']";
+// Stacked reports: the parent's drop turns to the column's start side (::before down, ::after across and down);
+// each child continues the spine on its start side and joins its card at the avatar's height. The elbow runs to
+// the middle of the item, behind the card (raised with z-[1], so it paints over the line).
+const STACK = cn(
+  "relative m-0 flex list-none flex-col p-0 pt-5 before:absolute before:top-0 before:start-1/2 before:h-2.5 before:border-s before:content-['']",
+  "after:absolute after:top-2.5 after:start-2 after:h-2.5 after:w-[calc(50%-0.5rem)] after:border-s after:border-t after:content-['']",
+  LINE,
+);
+const STACK_CHILD = cn(
+  "pb-3 last:pb-0 before:absolute before:top-0 before:start-2 before:h-full before:border-s before:content-[''] last:before:h-8",
+  "after:absolute after:top-8 after:start-2 after:w-[calc(50%-0.5rem)] after:border-t after:content-['']",
+  LINE,
+);
 
 const toTree = (n: OrgChartNode): TreeNode => ({
   id: n.id,
@@ -76,6 +109,13 @@ export function OrgChart({
   onExpandedChange,
   onActivate,
   renderCard,
+  zoomable = false,
+  zoom,
+  defaultZoom,
+  onZoomChange,
+  minZoom,
+  maxZoom,
+  stackAbove,
   className,
   ...aria
 }: OrgChartProps) {
@@ -171,9 +211,10 @@ export function OrgChart({
     e.preventDefault();
   };
 
-  const render = (list: OrgChartNode[], level: number, parent: string | null): React.ReactNode =>
+  const render = (list: OrgChartNode[], level: number, parent: string | null, stacked = false): React.ReactNode =>
     list.map((node, index) => {
       const count = node.children?.length ?? 0;
+      const stack = stackAbove != null && count > stackAbove;
       const isOpen = open.has(node.id);
       const labelId = `${uid}-${encodeURIComponent(node.id)}`;
       return (
@@ -196,7 +237,12 @@ export function OrgChart({
           onFocus={(e) => {
             if (e.target === e.currentTarget) setFocused(node.id);
           }}
-          className={cn('relative flex flex-col items-center px-2 outline-none', OUTLINE, level > 1 && CHILD)}
+          className={cn(
+            'relative flex flex-col items-center outline-none',
+            stacked ? 'ps-6 pe-2' : 'px-2',
+            OUTLINE,
+            level > 1 && (stacked ? STACK_CHILD : CHILD),
+          )}
         >
           <div
             onClick={() => {
@@ -204,7 +250,8 @@ export function OrgChart({
               if (!node.disabled) onActivate?.(node);
             }}
             className={cn(
-              'flex w-52 flex-col items-center gap-2 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-3 text-center text-[var(--color-on-surface)]',
+              stacked && 'z-[1]',
+              'relative flex w-52 flex-col items-center gap-2 rounded-shape-container border border-[var(--color-outline-variant)] bg-[var(--color-surface-container-low)] p-3 text-center text-[var(--color-on-surface)]',
               onActivate && !node.disabled && 'cursor-pointer hover:bg-[var(--color-surface-container-high)]',
               node.disabled && 'text-[var(--color-text-disabled)]',
             )}
@@ -245,20 +292,35 @@ export function OrgChart({
             )}
           </div>
           {count > 0 && isOpen && (
-            <ul role="group" className={GROUP}>
-              {render(node.children!, level + 1, node.id)}
+            <ul role="group" data-stacked={stack || undefined} className={stack ? STACK : GROUP}>
+              {render(node.children!, level + 1, node.id, stack)}
             </ul>
           )}
         </li>
       );
     });
 
+  const tree = (
+    <ul role="tree" className={cn('m-0 flex w-max list-none justify-center gap-6 p-2', !zoomable && 'min-w-full')} {...aria}>
+      {render(nodes, 1, null)}
+    </ul>
+  );
+  if (zoomable)
+    return (
+      <ZoomFrame
+        zoom={zoom}
+        defaultZoom={defaultZoom}
+        onZoomChange={onZoomChange}
+        minZoom={minZoom}
+        maxZoom={maxZoom}
+        focusTarget={() => (tabStop ? (refs.current.get(tabStop)?.firstElementChild as HTMLElement | null) : null)}
+        className={className}
+      >
+        {tree}
+      </ZoomFrame>
+    );
   return (
     // relative: keeps absolutely placed descendants (sr-only text in custom cards) inside the scroller, so they can't widen the page.
-    <div className={cn('relative overflow-x-auto', className)}>
-      <ul role="tree" className="m-0 flex w-max min-w-full list-none justify-center gap-6 p-2" {...aria}>
-        {render(nodes, 1, null)}
-      </ul>
-    </div>
+    <div className={cn('relative overflow-x-auto', className)}>{tree}</div>
   );
 }

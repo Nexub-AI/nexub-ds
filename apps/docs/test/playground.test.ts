@@ -98,7 +98,7 @@ test('the generated files are up to date and the generator is deterministic', as
 const NO_PLAYGROUND = [
   'action-bar', 'alert-dialog', 'app-shell', 'aspect-ratio', 'aurora', 'box', 'breadcrumb', 'check-list', 'combobox',
   'context-menu', 'dropdown-menu', 'filter-builder', 'form', 'form-field', 'keyboard-shortcut', 'menubar', 'motion-reveal',
-  'navigation-menu', 'org-chart', 'plan-tracker', 'scroll-progress', 'shared-element', 'streaming-text', 'toast',
+  'navigation-menu', 'plan-tracker', 'scroll-progress', 'shared-element', 'streaming-text', 'toast',
 ];
 
 test('every component has a playground base module or is on the explicit list', () => {

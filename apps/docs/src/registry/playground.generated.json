@@ -5251,7 +5251,40 @@
     "states": []
   },
   "org-chart": {
-    "skip": "no controllable props and no states"
+    "tag": "OrgChart",
+    "children": "none",
+    "fixed": [
+      "aria-label=\"Company\"",
+      "nodes={people}",
+      "defaultExpanded={['ada', 'alan']}",
+      "onActivate={(p) => setOpened(String(p.label))}"
+    ],
+    "controls": [
+      {
+        "kind": "switch",
+        "name": "zoomable",
+        "default": false
+      },
+      {
+        "kind": "number",
+        "name": "maxZoom",
+        "default": 2
+      },
+      {
+        "kind": "number",
+        "name": "minZoom",
+        "default": 0.25
+      },
+      {
+        "kind": "number",
+        "name": "stackAbove"
+      },
+      {
+        "kind": "number",
+        "name": "zoom"
+      }
+    ],
+    "states": []
   },
   "otp-input": {
     "tag": "OTPInput",
@@ -6544,9 +6577,9 @@
         "kind": "select",
         "name": "color",
         "options": [
-          1,
           "neutral",
           "warning",
+          1,
           "danger",
           2,
           3,
@@ -7228,9 +7261,9 @@
         "kind": "select",
         "name": "tone",
         "options": [
-          "subtle",
           "success",
           "warning",
+          "subtle",
           "danger",
           "default",
           "muted",
@@ -7303,15 +7336,15 @@
       },
       {
         "prop": "tone",
-        "value": "subtle"
-      },
-      {
-        "prop": "tone",
         "value": "success"
       },
       {
         "prop": "tone",
         "value": "warning"
+      },
+      {
+        "prop": "tone",
+        "value": "subtle"
       },
       {
         "prop": "tone",

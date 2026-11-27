@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 // Docs navigation over the static export (project "docs"): sidebar links must
@@ -97,6 +97,23 @@ const CLS_KNOWN: Record<string, number> = {}; // empty since 10.5
 
 test('CLS_KNOWN only lists docs pages', () => {
   expect(Object.keys(CLS_KNOWN).filter((p) => !docsPages.includes(p))).toEqual([]);
+});
+
+// 12.2 (#815): no page is exported out of order. A Suspense boundary whose content isn't
+// ready when the server sends the page shell is written as an empty placeholder, with the
+// content near the end of the file and a script that swaps it in. If the browser paints
+// before the swap, everything below moves: the CLS tests below caught that only on some
+// loads. This check sees it on every build, /frame pages included. (Boundaries with a
+// same-size fallback, like the Sidebar's nav items, are not empty and are fine.)
+test('no docs page streams content into an empty placeholder', () => {
+  test.skip(!existsSync(out), 'needs the docs export');
+  const streamed = readdirSync(out, { recursive: true, encoding: 'utf8' }).filter(
+    (f) =>
+      f.endsWith('.html') &&
+      !/^(_next|m)\//.test(f) &&
+      /<!--\$\?--><template id="B:\d+"><\/template><!--\/\$-->/.test(readFileSync(new URL(f, out), 'utf8')),
+  );
+  expect(streamed, 'use React.Activity, not Suspense, for a boundary that only splits hydration').toEqual([]);
 });
 
 for (const path of docsPages) {

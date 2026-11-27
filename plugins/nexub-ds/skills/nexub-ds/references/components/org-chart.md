@@ -25,7 +25,11 @@ People top-down as cards joined by lines, keyboard navigable as a tree. A TreeVi
 | `expanded / defaultExpanded / onExpandedChange` | `string[]` |  | Open node ids. Shared with the narrow-screen TreeView. |
 | `onActivate` | `(node) => void` |  | Click or Enter on a card, e.g. to open the profile. |
 | `renderCard` | `(node) => ReactNode` |  | Replaces the card content; it also names the item. The reports control stays. |
-| `className` | `string` |  | On the scroll box. Wide charts scroll sideways inside it. |
+| `zoomable` | `boolean` | `false` | 12.2. Adds zoom: a toolbar (zoom out, level, zoom in, fit), pinch on touch, ctrl/⌘ + wheel or a trackpad pinch, drag to pan, and + / = / - / 0 while focus is in the chart. A plain wheel still scrolls. One finger pans the chart rather than the page. |
+| `zoom / defaultZoom / onZoomChange` | `number` | `1` | 12.2. The scale, 0.25–2, clamped to `minZoom`–`maxZoom`. Needs `zoomable`. |
+| `minZoom / maxZoom` | `number` | `0.25 / 2` | 12.2. Limits inside 0.25–2. The buttons disable at the limits. |
+| `stackAbove` | `number` |  | 12.2. A node with more direct reports than this shows them as a vertical stack (a compact column with the connector on its start side) instead of one wide row. Off by default. |
+| `className` | `string` |  | On the scroll box (with `zoomable`, on the box holding the toolbar and the scroller; give it a height for a fixed viewport). Wide charts scroll sideways inside it. |
 
 ## Example: Default
 
@@ -107,6 +111,49 @@ export default function Example() {
 }
 ```
 
+## Example: Wide team: stacking and zoom
+
+`stackAbove={4}` stacks the 12 reports in a column; `zoomable` adds the zoom toolbar, pinch and drag to pan.
+
+```tsx
+'use client';
+
+import { OrgChart, type OrgChartNode } from '@nexub/react';
+
+const engineers = ['Ada', 'Alan', 'Grace', 'Linus', 'Margaret', 'Katherine', 'Emmy', 'Mary', 'Barbara', 'Dennis', 'Ken', 'Radia'];
+
+const team: OrgChartNode[] = [
+  {
+    id: 'lead',
+    label: 'Sophie Wilson',
+    description: 'Head of Engineering',
+    children: [
+      {
+        id: 'mgr',
+        label: 'Tim Berners-Lee',
+        description: 'Engineering manager',
+        children: engineers.map((name, i) => ({ id: `e${i}`, label: name, description: i % 2 ? 'Engineer' : 'Senior engineer' })),
+      },
+      { id: 'design', label: 'Susan Kare', description: 'Design lead' },
+      { id: 'qa', label: 'Edsger Dijkstra', description: 'QA lead' },
+    ],
+  },
+];
+
+export default function Example() {
+  return (
+    <OrgChart
+      aria-label="Engineering"
+      nodes={team}
+      defaultExpanded={['lead', 'mgr']}
+      stackAbove={4}
+      zoomable
+      className="h-[28rem] w-full"
+    />
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: tree, treeitem with aria-level, aria-setsize, aria-posinset, aria-expanded, group
@@ -116,10 +163,16 @@ export default function Example() {
 - `Home / End`: First or last visible card.
 - `Enter`: Calls `onActivate`.
 - `Space`: Opens or closes the card’s reports.
+- `+ / = and -`: With `zoomable`, while focus is in the chart: zoom in or out a step. Ctrl/⌘ combinations stay the browser’s page zoom.
+- `0`: With `zoomable`: back to 100%.
 - The chart is one tab stop (roving tabindex); focus scrolls the card into view.
+- With `zoomable`, the toolbar buttons come before the chart in tab order, and the focused card is scrolled into view after a zoom.
 - Each item is named by its name and role only, not by its reports.
 - The "3 reports" control is a pointer shortcut; keyboard and screen readers use the item’s expanded state.
 - Below 768px the same nodes render as a TreeView (photo, name and role on one row).
 - Connectors are CSS borders on logical sides, so RTL mirrors and forced colours keep them.
+- The zoom toolbar is a group named "Zoom" with named buttons (messages `orgChartZoomIn`, `orgChartZoomOut`, `orgChartZoomFit`); the level is a polite live region.
+- Zoom is a CSS transform with no animation, so reduced motion needs nothing extra.
+- Stacked reports keep the tree: their level, set size and position are the same, and the arrows follow the tree, not the column.
 
 Related: [tree-view](tree-view.md), [avatar](avatar.md), [diagram-canvas](diagram-canvas.md)

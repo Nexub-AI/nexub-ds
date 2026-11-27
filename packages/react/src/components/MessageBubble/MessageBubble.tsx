@@ -6,6 +6,7 @@ import { cn } from '../../utils/cn.js';
 import { IconButton } from '../IconButton/IconButton.js';
 import { Provider as TooltipProvider, Tooltip } from '../Tooltip/Tooltip.js';
 import { useControllableState } from '../../hooks/useControllableState.js';
+import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 
 export interface MessageStrings {
@@ -18,6 +19,14 @@ export interface MessageStrings {
   goodResponse: string;
   badResponse: string;
   regenerate: string;
+  /** 12.2: the `collapse` toggle while the message is clamped. */
+  readMore: string;
+  /** 12.2: the `collapse` (and MessageCard `maxHeight`) toggle while expanded. */
+  showLess: string;
+  /** 12.2: MessageCard's toggle while its `maxHeight` clips the content. */
+  showAll: string;
+  /** 12.2: MessageCard's overflow menu button. */
+  moreActions: string;
 }
 
 // ponytail: local English fallbacks until these keys land in NexubMessages.
@@ -31,6 +40,10 @@ export const defaultMessageStrings: MessageStrings = {
   goodResponse: 'Good response',
   badResponse: 'Bad response',
   regenerate: 'Regenerate',
+  readMore: 'Read more',
+  showLess: 'Show less',
+  showAll: 'Show all',
+  moreActions: 'More actions',
 };
 
 /** 11.5: `other` is a third party in a group conversation (another person or agent). */
@@ -39,7 +52,7 @@ export type MessageFrom = 'user' | 'assistant' | 'system' | 'other';
 export interface MessageBubbleProps extends React.HTMLAttributes<HTMLElement> {
   /** Who sent it. (Not `role`, which is the ARIA attribute.) */
   from: MessageFrom;
-  /** Assistant and other: shown at the inline-start. */
+  /** Assistant and other: shown at the inline-start. User (12.2): at the inline-end, same size and spacing. */
   avatar?: React.ReactNode;
   /**
    * Accessible label for the message; defaults to "You said" / "Assistant said".
@@ -52,11 +65,83 @@ export interface MessageBubbleProps extends React.HTMLAttributes<HTMLElement> {
   /** With status="error": renders a Retry text button. */
   onRetry?: () => void;
   messages?: Partial<MessageStrings>;
+  /**
+   * 12.2: clamp the content to this many lines. When it is taller, a "Read more" / "Show less"
+   * toggle appears and the clamped edge fades out. @default false
+   */
+  collapse?: number | false;
 }
 
+// Classes for 1–6 lines (strict-CSP safe, as Truncate and Text); larger counts set the clamp
+// through the CSSOM, which a strict CSP allows.
+const LINE_CLAMP: Record<number, string> = {
+  1: 'line-clamp-1', 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4', 5: 'line-clamp-5', 6: 'line-clamp-6',
+};
+// The fade is a mask (alpha only), so it shows the bubble's own surface in either theme.
+const FADE = '[mask-image:linear-gradient(to_bottom,var(--color-surface)_calc(100%-1.5em),transparent)]';
+
+const USER_BUBBLE =
+  'whitespace-pre-wrap break-words rounded-shape-container rounded-ee-[0.375rem] bg-[var(--color-primary-container)] px-4 py-2.5 text-body-md text-[var(--color-on-primary-container)]';
+
 export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
-  ({ from, avatar, name, meta, status, onRetry, messages, className, children, ...props }, ref) => {
-    const m = { ...useNexubMessages(), ...messages };
+  ({ from, avatar, name, meta, status, onRetry, messages, collapse = false, className, children, ...props }, ref) => {
+    const m = { ...defaultMessageStrings, ...useNexubMessages(), ...messages };
+    const lines = typeof collapse === 'number' && collapse > 0 ? Math.floor(collapse) : 0;
+    const contentId = React.useId();
+    const [expanded, setExpanded] = React.useState(false);
+    const [overflows, setOverflows] = React.useState(false);
+    const [contentEl, setContentEl] = React.useState<HTMLDivElement | null>(null);
+    const clamped = lines > 0 && !expanded;
+
+    useIsomorphicLayoutEffect(() => {
+      if (!contentEl || !lines || LINE_CLAMP[lines]) return;
+      const css = contentEl.style;
+      if (clamped) {
+        css.setProperty('display', '-webkit-box');
+        css.setProperty('-webkit-box-orient', 'vertical');
+        css.setProperty('-webkit-line-clamp', String(lines));
+        css.setProperty('overflow', 'hidden');
+      } else {
+        for (const k of ['display', '-webkit-box-orient', '-webkit-line-clamp', 'overflow']) css.removeProperty(k);
+      }
+    }, [contentEl, lines, clamped]);
+
+    React.useEffect(() => {
+      if (!contentEl || !lines) return;
+      const measure = () => {
+        if (!expanded) {
+          setOverflows(contentEl.scrollHeight > contentEl.clientHeight + 1);
+          return;
+        }
+        // Expanded: compare the full height with the clamp's height.
+        const lineHeight = parseFloat(getComputedStyle(contentEl).lineHeight);
+        if (lineHeight > 0) setOverflows(contentEl.scrollHeight > lineHeight * lines + 1);
+      };
+      measure();
+      if (typeof ResizeObserver === 'undefined') return;
+      const ro = new ResizeObserver(measure);
+      ro.observe(contentEl);
+      return () => ro.disconnect();
+    }, [contentEl, lines, expanded, children]);
+
+    const content = lines ? (
+      <div id={contentId} ref={setContentEl} className={cn(clamped && LINE_CLAMP[lines], clamped && overflows && FADE)}>
+        {children}
+      </div>
+    ) : (
+      children
+    );
+    const toggle = lines > 0 && (overflows || expanded) && (
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={contentId}
+        onClick={() => setExpanded((e) => !e)}
+        className="nx-state-layer -mx-1 mt-1 block rounded-shape-min px-1 text-label-md font-medium underline underline-offset-2"
+      >
+        {expanded ? m.showLess : m.readMore}
+      </button>
+    );
     const label = name ?? (from === 'user' ? m.youSaid : from === 'assistant' ? m.assistantSaid : undefined);
 
     const error = status === 'error' && (
@@ -90,18 +175,32 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
         data-from={from}
         className={cn(
           'group flex w-full',
-          from === 'user' && 'flex-col items-end',
+          from === 'user' && (avatar ? 'items-start justify-end gap-3' : 'flex-col items-end'),
           (from === 'assistant' || from === 'other') && 'items-start gap-3',
           from === 'system' && 'justify-center text-center text-label-sm text-[var(--color-on-surface-muted)]',
           className,
         )}
         {...props}
       >
-        {from === 'user' ? (
+        {from === 'user' && avatar ? (
+          // 12.2: the avatar mirrors the assistant's, at the inline-end.
+          <>
+            <div className="flex min-w-0 max-w-[85%] flex-col items-end">
+              {header}
+              <div className={cn(USER_BUBBLE, 'max-w-full')}>
+                {content}
+                {toggle}
+              </div>
+              {error}
+            </div>
+            <div className="shrink-0">{avatar}</div>
+          </>
+        ) : from === 'user' ? (
           <>
             {header}
-            <div className="max-w-[85%] whitespace-pre-wrap break-words rounded-shape-container rounded-ee-[0.375rem] bg-[var(--color-primary-container)] px-4 py-2.5 text-body-md text-[var(--color-on-primary-container)]">
-              {children}
+            <div className={cn(USER_BUBBLE, 'max-w-[85%]')}>
+              {content}
+              {toggle}
             </div>
             {error}
           </>
@@ -110,7 +209,8 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
             {avatar && <div className="shrink-0">{avatar}</div>}
             <div className="min-w-0 flex-1 text-body-md text-[var(--color-on-surface)]">
               {header}
-              {children}
+              {content}
+              {toggle}
               {error}
             </div>
           </>
@@ -120,14 +220,16 @@ export const MessageBubble = React.forwardRef<HTMLElement, MessageBubbleProps>(
             <div className="flex min-w-0 max-w-[85%] flex-col items-start">
               {header}
               <div className="whitespace-pre-wrap break-words rounded-shape-container rounded-es-[0.375rem] bg-[var(--color-surface-container-high)] px-4 py-2.5 text-body-md text-[var(--color-on-surface)]">
-                {children}
+                {content}
+                {toggle}
               </div>
               {error}
             </div>
           </>
         ) : (
           <div>
-            {children}
+            {content}
+            {toggle}
             {error}
           </div>
         )}

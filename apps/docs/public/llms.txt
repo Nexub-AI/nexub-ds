@@ -106,7 +106,7 @@ Version 12.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [Logo](https://nexub-ds-docs.pages.dev/components/logo.md): The Nexub mark and wordmark, with an optional product name.
 - [Media Card](https://nexub-ds-docs.pages.dev/components/media-card.md): An image card with a glass caption over a soft scrim. With `href`, the whole card is one link.
 - [Menubar](https://nexub-ds-docs.pages.dev/components/menubar.md): A horizontal bar of menus, like a desktop app’s File / Edit / View, built on Radix.
-- [Message Bubble](https://nexub-ds-docs.pages.dev/components/message-bubble.md): One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Message Bubble](https://nexub-ds-docs.pages.dev/components/message-bubble.md): One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate; MessageCard and Highlight structure what a message says.
 - [Money Input](https://nexub-ds-docs.pages.dev/components/money-input.md): An amount field: locale-aware parsing as you type, grouped on blur, the currency symbol leading.
 - [Collapse](https://nexub-ds-docs.pages.dev/components/motion-collapse.md): Expands and collapses content along the block axis.
 - [Fade](https://nexub-ds-docs.pages.dev/components/motion-fade.md): Animates opacity between 0 and 1 based on the `in` prop.
@@ -186,7 +186,7 @@ Version 12.1.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 - [ActivityFeed](https://nexub-ds-docs.pages.dev/patterns/activity-feed.md): Chronological list of activity events with avatar, description, and timestamp.
 - [AuthCard](https://nexub-ds-docs.pages.dev/patterns/auth-card.md): Authentication layout pattern. Wraps sign-in, sign-up, and reset flows in a centered card.
 - [Bento Grid](https://nexub-ds-docs.pages.dev/patterns/bento-grid.md): A grid of card tiles in mixed sizes. Responds to its own width: 1 column, 2 at 480px, 4 at 768px.
-- [Conversation](https://nexub-ds-docs.pages.dev/patterns/conversation.md): Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+- [Conversation](https://nexub-ds-docs.pages.dev/patterns/conversation.md): Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 - [Error Summary](https://nexub-ds-docs.pages.dev/patterns/error-summary.md): Lists a form’s errors after a failed submit, with a link to each field. useFormErrors wires the fields to their messages.
 - [FilterBar](https://nexub-ds-docs.pages.dev/patterns/filter-bar.md): Search + filter toolbar pattern for data-heavy list or table views.
 - [InfoList](https://nexub-ds-docs.pages.dev/patterns/info-list.md): Key–value list for displaying structured metadata or details.

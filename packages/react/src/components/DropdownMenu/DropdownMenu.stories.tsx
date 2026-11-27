@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
 import { DropdownMenu } from './DropdownMenu.js';
 
 const meta: Meta = {
@@ -48,4 +49,33 @@ export const SheetAuto: Story = {
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
   ),
+};
+
+/** 12.2: `indicator="end"`: an icon at the start of each label, the tick at the inline end. */
+export const ThemeMenu: Story = {
+  render: function ThemeMenuStory() {
+    const [theme, setTheme] = React.useState('system');
+    return (
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <button>Theme</button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content>
+            <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+              <DropdownMenu.RadioItem value="light" indicator="end">
+                <Sun size="sm" /> Light
+              </DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="dark" indicator="end">
+                <Moon size="sm" /> Dark
+              </DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="system" indicator="end">
+                <Monitor size="sm" /> System
+              </DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+    );
+  },
 };
