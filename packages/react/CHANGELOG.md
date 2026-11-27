@@ -1,5 +1,32 @@
 # @nexub/react
 
+## 12.1.0
+
+### Minor Changes
+
+- b3bc381: 12.1 Performance: load only the CSS your components use (opt-in). Guide: `/getting-started/css-size`.
+
+  - **`@nexub/themes/base-lean` and `/core-lean`:** `base` and `core` without the CSS of particular components (drawer, charts, Aurora, Celebrate, dialog surfaces, sheet, reorder and 16 more). Each of those is now `@nexub/themes/parts/<name>.css`. `base` and `core` still load every part, in a new order: global rules first, then the parts. Nothing else changes for apps that keep them.
+  - **`nexub-usage --css <file>`** (`@nexub/tokens`): writes the parts and the `@source` lines for the components an app imports from `@nexub/react`, `@nexub/patterns` and `@nexub/marketing`, following each one to the files it uses. `--check` fails CI when the file is stale.
+  - **`nexub-usage --prune <css> --js <code>`:** after the build, removes the Nexub custom properties that no stylesheet or script names. Only Nexub's own properties, never the app's.
+  - **`dist/css-manifest.json`** in `@nexub/react`, `@nexub/patterns` and `@nexub/marketing` (exported as `./css-manifest.json`): what `--css` reads.
+  - A typical page (15 components) goes from 43.5 kB to 21.2 kB gzip. CI checks it stays under 21.9 kB (`pnpm check:css-page`).
+
+- 1195dd9: Fix: `IconPicker` caused a hydration mismatch (React error #418) when a server-rendered page showed a value. The server had the icon set cached, but the browser hadn't loaded it yet. Hydration now matches the server HTML, and the icon appears as soon as the set loads. A picker mounted later still shows cached icons at once.
+- 09ea8df: 12.1 Performance: every component works with the React Compiler. CI runs the full `@nexub/react` suite on compiled components (`pnpm --filter @nexub/react test:compiler`). Fix: with the compiler on, a DataTable row kept its old cells after selection, and a tree row its old expand state, because TanStack Table changes its row objects in place. The two functions that read them now opt out with `'use no memo'`.
+- 47befaa: 12.1 Performance: long option lists render only the rows in view. `MultiSelect`, `CommandList` (so `CommandPalette` too) and `ComboboxField` / `ComboboxPicker` (so `CurrencySelect` too) window their options above 100 (`virtualizeAbove` sets the threshold). Nothing else changes for the user:
+
+  - Search uses cmdk's own ranking, and groups stay in the order cmdk gives them.
+  - Arrow keys, Home, End and Page Up/Down move over the whole list. CommandList still loops.
+  - Screen readers hear each option's place in the whole list (`aria-setsize`, `aria-posinset`) and the active option (`aria-activedescendant`).
+  - A group whose heading has scrolled out keeps its name for screen readers.
+  - Native lists are FlatLists already, so the native twins don't take the prop.
+
+### Patch Changes
+
+- @nexub/icons@12.1.0
+- @nexub/core@12.1.0
+
 ## 12.0.0
 
 ### Major Changes
