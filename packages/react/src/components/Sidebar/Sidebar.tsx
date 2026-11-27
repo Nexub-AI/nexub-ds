@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { ChevronDown } from '@nexub/icons';
 import { accentAttrs } from '@nexub/core';
 import type { DivisionKey, ProductKey } from '@nexub/core';
 import { cn } from '../../utils/cn.js';
@@ -103,19 +104,78 @@ Header.displayName = 'Sidebar.Header';
 
 export interface SidebarGroupProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: string;
+  /** 12.2: the label becomes a button that folds the group's items away. Needs `label`.
+   *  In the icon rail (collapsed sidebar) the group stays open and the toggle is hidden. */
+  collapsible?: boolean;
+  /** 12.2: uncontrolled start state of a `collapsible` group. @default true */
+  defaultOpen?: boolean;
+  /** 12.2: controlled open state of a `collapsible` group. */
+  open?: boolean;
+  /** 12.2: called when a `collapsible` group is toggled. */
+  onOpenChange?: (open: boolean) => void;
 }
 
 const Group = React.forwardRef<HTMLDivElement, SidebarGroupProps>(
-  ({ className, label, children, ...props }, ref) => (
-    <div ref={ref} className={cn('flex flex-col gap-0.5 p-2', className)} {...props}>
-      {label && (
-        <p className="px-2 py-1 text-label-sm font-semibold uppercase tracking-wider text-[var(--color-on-surface-muted)]">
-          {label}
-        </p>
-      )}
-      {children}
-    </div>
-  ),
+  ({ className, label, collapsible, defaultOpen = true, open: openProp, onOpenChange, children, ...props }, ref) => {
+    const [openState, setOpenState] = React.useState(defaultOpen);
+    // The icon rail has no room for group labels: every group stays open there.
+    const rail = React.useContext(CollapsedContext);
+    const open = rail || (openProp ?? openState);
+    // Clip only while closed or sliding, so the items' focus rings aren't cut off once open.
+    const [settled, setSettled] = React.useState(true);
+    const contentId = `${React.useId()}-items`;
+    const labelClass = 'px-2 py-1 text-label-sm font-semibold uppercase tracking-wider text-[var(--color-on-surface-muted)]';
+    if (!collapsible || !label) {
+      return (
+        <div ref={ref} className={cn('flex flex-col gap-0.5 p-2', className)} {...props}>
+          {label && <p className={labelClass}>{label}</p>}
+          {children}
+        </div>
+      );
+    }
+    return (
+      <div ref={ref} data-state={open ? 'open' : 'closed'} className={cn('flex flex-col gap-0.5 p-2', className)} {...props}>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={contentId}
+          onClick={() => {
+            setSettled(false);
+            setOpenState(!open);
+            onOpenChange?.(!open);
+          }}
+          className={cn(
+            'nx-state-layer flex w-full items-center gap-2 rounded-shape-control text-start group-data-[collapsed=true]/sidebar:hidden',
+            labelClass,
+          )}
+        >
+          <span className="min-w-0 flex-1 truncate">{label}</span>
+          <ChevronDown
+            size="sm"
+            aria-hidden="true"
+            className={cn(
+              'shrink-0 transition-transform duration-spatial-fast ease-spatial-fast motion-reduce:transition-none',
+              !open && '-rotate-90 rtl:rotate-90',
+            )}
+          />
+        </button>
+        {/* Rows 1fr -> 0fr: the items slide shut, then leave the tab order and the a11y tree (inert). */}
+        <div
+          id={contentId}
+          inert={!open}
+          onTransitionEnd={(e) => e.target === e.currentTarget && setSettled(true)}
+          className={cn(
+            'grid transition-[grid-template-rows] duration-spatial-default ease-spatial-default motion-reduce:transition-none',
+            open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+          )}
+        >
+          <div className={cn('flex min-h-0 flex-col gap-0.5', open ? !settled && 'overflow-hidden motion-reduce:overflow-visible' : 'overflow-hidden')}>
+            {children}
+          </div>
+        </div>
+      </div>
+    );
+  },
 );
 Group.displayName = 'Sidebar.Group';
 

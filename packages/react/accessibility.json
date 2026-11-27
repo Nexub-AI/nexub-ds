@@ -157,7 +157,10 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
-      "screenReader": []
+      "screenReader": [
+        "Avatar reads its `name`, plus the `status` (\"Ada Lovelace, Away\"). Without a name it is decorative and hidden.",
+        "AgentAvatar is always `role=\"img\"` and its name says it is an AI agent (\"Payhub agent, AI agent\", from `messages.aiAgent`). The glyph and the sparkle are hidden."
+      ]
     },
     {
       "slug": "badge",
@@ -1918,6 +1921,9 @@
       "screenReader": [
         "The list is named \"Conversation\". Leave `announce` off while streaming tokens and announce the finished reply once instead.",
         "With reduced motion, \"Jump to latest\" scrolls instantly.",
+        "Messages arriving while the reader is scrolled up announce \"New messages\" once per batch (a hidden polite live region); the batch ends when they are back at the bottom. With `announce` the log speaks instead.",
+        "The `thinking` slot is a polite status, so a ThinkingIndicator placed in it is read once when it appears.",
+        "DateSeparator is read as its text (\"Yesterday\") in order with the messages. It is not `role=\"separator\"`: a separator’s children are presentational, and screen readers announce a non-focusable one as just \"separator\" or skip it, which would lose the day. The hairlines are hidden.",
         "Keep focus in the composer while a reply streams; don’t move it to the new message."
       ]
     },

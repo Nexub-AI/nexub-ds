@@ -1,7 +1,8 @@
 import type { Meta } from '@storybook/react';
 import * as React from 'react';
-import { Textarea } from '@nexub/react';
+import { Textarea, ThinkingIndicator } from '@nexub/react';
 import { Conversation } from './Conversation.js';
+import { DateSeparator } from './DateSeparator.js';
 
 const meta: Meta = { title: 'Patterns/Conversation' };
 export default meta;
@@ -81,3 +82,90 @@ function InFlow() {
 }
 
 export const MaxHeightInFlow = { render: () => <InFlow /> };
+
+const frame = {
+  height: 480,
+  border: '1px solid var(--color-outline-variant)',
+  borderRadius: 16,
+  overflow: 'hidden',
+} as const;
+
+// A fixed "now" so the Today / Yesterday labels don't depend on the day the story runs.
+const NOW = new Date(2026, 10, 27, 12, 0);
+const day = (offset: number, h: number) => new Date(2026, 10, 27 + offset, h, 0);
+
+/** 12.2: messages grouped by day with `DateSeparator` ("Today", "Yesterday" or a medium date). */
+function DayGrouped() {
+  const days = [
+    { date: day(-5, 9), lines: script.slice(0, 2) },
+    { date: day(-1, 18), lines: script.slice(2, 4) },
+    { date: day(0, 8), lines: script.slice(4, 6) },
+  ];
+  return (
+    <div style={frame}>
+      <Conversation composer={<Textarea aria-label="Message" placeholder="Ask anything…" rows={2} />}>
+        {days.map(({ date, lines }) => (
+          <React.Fragment key={date.toISOString()}>
+            <DateSeparator date={date} now={NOW} />
+            {lines.map((l, i) => (
+              <Bubble key={i} {...l} />
+            ))}
+          </React.Fragment>
+        ))}
+      </Conversation>
+    </div>
+  );
+}
+
+export const DayGroupedWithDateSeparators = { render: () => <DayGrouped /> };
+
+/** 12.2: the `thinking` slot at the end of the list, announced politely; it never moves the scroll. */
+function ThinkingSlot() {
+  const [busy, setBusy] = React.useState(true);
+  return (
+    <div className="flex flex-col gap-4">
+      <button type="button" className="self-start text-body-md underline" onClick={() => setBusy((b) => !b)}>
+        {busy ? 'Stop thinking' : 'Start thinking'}
+      </button>
+      <div style={frame}>
+        <Conversation thinking={busy ? <ThinkingIndicator /> : null}>
+          {script.map((l, i) => (
+            <Bubble key={i} {...l} />
+          ))}
+        </Conversation>
+      </div>
+    </div>
+  );
+}
+
+export const Thinking = { render: () => <ThinkingSlot /> };
+
+/**
+ * 12.2: start the timer, then scroll up. Each new message while you're scrolled up turns
+ * "Jump to latest" into "Jump to newest" and announces "New messages" once per batch.
+ */
+function JumpToNewestDemo() {
+  const [count, setCount] = React.useState(10);
+  const [running, setRunning] = React.useState(false);
+  React.useEffect(() => {
+    if (!running) return;
+    const t = setInterval(() => setCount((c) => c + 1), 2000);
+    return () => clearInterval(t);
+  }, [running]);
+  return (
+    <div className="flex flex-col gap-4">
+      <button type="button" className="self-start text-body-md underline" onClick={() => setRunning((r) => !r)}>
+        {running ? 'Stop new messages' : 'Start new messages (one every 2 s)'}
+      </button>
+      <div style={frame}>
+        <Conversation composer={<Textarea aria-label="Message" placeholder="Ask anything…" rows={2} />}>
+          {Array.from({ length: count }, (_, i) => (
+            <Bubble key={i} {...script[i % script.length]!} />
+          ))}
+        </Conversation>
+      </div>
+    </div>
+  );
+}
+
+export const JumpToNewest = { render: () => <JumpToNewestDemo /> };

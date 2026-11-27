@@ -246,7 +246,7 @@ Never use a component marked deprecated.
 
 ## Patterns — AI
 
-- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 
 ## Patterns — Auth
 

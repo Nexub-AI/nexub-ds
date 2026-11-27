@@ -69,7 +69,7 @@ SidebarSlot.displayName = 'AppShell.Sidebar';
 
 const Main = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLElement>>(
   ({ className, ...props }, ref) => (
-    <main ref={ref} className={cn('flex-1 overflow-y-auto p-6', className)} {...props} />
+    <main ref={ref} className={cn('relative flex-1 overflow-y-auto p-6', className)} {...props} />
   ),
 );
 Main.displayName = 'AppShell.Main';

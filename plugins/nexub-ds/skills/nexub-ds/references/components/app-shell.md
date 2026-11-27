@@ -23,7 +23,7 @@ Full-height application frame: a header row over a body with a sidebar slot and 
 | `AppShell.Header` | `compound` |  | First row, e.g. a `TopNav.Root`. |
 | `AppShell.Body` | `compound` |  | Second row: lays out the sidebar and main side by side. |
 | `AppShell.Sidebar` | `compound` |  | Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`. |
-| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. |
+| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it. |
 | `...props` | `React.HTMLAttributes<HTMLDivElement>` |  | Every part forwards its ref and HTML attributes. |
 
 ## Example: Header, sidebar and main

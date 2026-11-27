@@ -16,7 +16,7 @@ const entry: ComponentEntry = {
     { name: 'AppShell.Header', type: 'compound', required: false, description: 'First row, e.g. a `TopNav.Root`.' },
     { name: 'AppShell.Body', type: 'compound', required: false, description: 'Second row: lays out the sidebar and main side by side.' },
     { name: 'AppShell.Sidebar', type: 'compound', required: false, description: 'Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`.' },
-    { name: 'AppShell.Main', type: 'compound', required: false, description: 'The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default.' },
+    { name: 'AppShell.Main', type: 'compound', required: false, description: 'The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it.' },
     { name: '...props', type: 'React.HTMLAttributes<HTMLDivElement>', required: false, description: 'Every part forwards its ref and HTML attributes.' },
   ],
   examples: [{ title: 'Header, sidebar and main' }],

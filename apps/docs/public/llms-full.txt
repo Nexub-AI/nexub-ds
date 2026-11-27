@@ -598,7 +598,7 @@ Never use a component marked deprecated.
 
 ## Patterns — AI
 
-- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+- [Conversation](components/conversation.md) `@nexub/patterns`: Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 
 ## Patterns — Auth
 
@@ -1061,7 +1061,7 @@ Full-height application frame: a header row over a body with a sidebar slot and 
 | `AppShell.Header` | `compound` |  | First row, e.g. a `TopNav.Root`. |
 | `AppShell.Body` | `compound` |  | Second row: lays out the sidebar and main side by side. |
 | `AppShell.Sidebar` | `compound` |  | Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`. |
-| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. |
+| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it. |
 | `...props` | `React.HTMLAttributes<HTMLDivElement>` |  | Every part forwards its ref and HTML attributes. |
 
 ## Example: Header, sidebar and main
@@ -1461,6 +1461,11 @@ Displays a user's profile picture with initials fallback.
 | `badge` | `boolean` |  | Shows a status badge on the avatar. |
 | `badgeColor` | `string` |  | Colour of the status badge. |
 | `fallback` | `ReactNode` |  | Custom fallback rendered when the image fails to load and no name is provided. |
+| `AgentAvatar icon` | `ReactNode` |  | AgentAvatar (12.2, beta): the app glyph inside the tile, e.g. an `@nexub/icons` icon. Default: a bot. |
+| `AgentAvatar src` | `string` |  | AgentAvatar: an image for the tile instead of `icon` (e.g. an `@nexub/brand` app tile). Falls back to `icon` if it fails. |
+| `AgentAvatar name` | `string` |  | AgentAvatar: who the agent is ("Payhub agent"). Read as "Payhub agent, AI agent" (`messages.aiAgent`). |
+| `AgentAvatar size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | AgentAvatar: the same size scale as Avatar. |
+| `AgentAvatar category` | `CategoryColor` |  | AgentAvatar: a category colour for the tile. Default: the brand tile look, a primary glyph on a surface tile. |
 
 ## Example: Default
 
@@ -1513,6 +1518,32 @@ export default function Example() {
 }
 ```
 
+## Example: Agent avatar
+
+AgentAvatar (12.2, beta) is for AI agents, so an agent never looks like a colleague: a rounded-square app tile, like the `@nexub/brand` tiles, with a sparkle in the bottom inline-end corner. Same sizes as Avatar. Screen readers hear "Payhub agent, AI agent".
+
+```tsx
+import { AgentAvatar, Avatar } from '@nexub/react';
+import { CreditCard, Terminal } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      <Avatar name="Ada Lovelace" size="lg" />
+      <AgentAvatar name="Payhub agent" icon={<CreditCard />} size="lg" />
+      <AgentAvatar name="devX agent" icon={<Terminal />} category="blue" size="lg" />
+      <AgentAvatar name="Nexub agent" size="lg" />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: img (when named)
+- Avatar reads its `name`, plus the `status` ("Ada Lovelace, Away"). Without a name it is decorative and hidden.
+- AgentAvatar is always `role="img"` and its name says it is an AI agent ("Payhub agent, AI agent", from `messages.aiAgent`). The glyph and the sparkle are hidden.
+
 
 ---
 
@@ -1546,6 +1577,7 @@ Small status indicator or label. Communicates state, category, or count.
 | `tone` | `'success' \| 'danger' \| 'warning' \| 'info' \| 'neutral'` | `'neutral'` | Semantic color tone. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size. |
 | `leadingIcon` | `React.ReactNode` |  | Icon or dot rendered before the label. |
+| `AgentBadge icon` | `ReactNode` |  | AgentBadge (12.2, beta): the leading icon. Default: a sparkle. AgentBadge is always `variant="soft"` and takes Badge's `tone`, `category` and `size`. |
 
 ## Example: Tones
 
@@ -1594,6 +1626,23 @@ export default function Example() {
           {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
         </Badge>
       ))}
+    </div>
+  );
+}
+```
+
+## Example: Agent badge
+
+AgentBadge (12.2, beta) labels an AI agent in a chat header ("AI on your own key", "Buttons only"): a soft Badge with a leading sparkle. Pair it with `AgentAvatar`.
+
+```tsx
+import { AgentBadge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <AgentBadge>AI on your own key</AgentBadge>
+      <AgentBadge tone="info">Buttons only</AgentBadge>
     </div>
   );
 }
@@ -5361,6 +5410,7 @@ A menu of actions opened from a button, built on Radix.
 | `DropdownMenu.Portal / Content` | `compound` |  | Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4). |
 | `DropdownMenu.Item` | `compound` |  | An action (`onSelect`, `disabled`). |
 | `DropdownMenu.CheckboxItem / RadioGroup / RadioItem` | `compound` |  | Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`). |
+| `RadioItem / CheckboxItem indicator` | `'start' \| 'end'` | `'start'` | 12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu). |
 | `DropdownMenu.Label / Group / Separator` | `compound` |  | Section heading, grouping and divider. |
 | `DropdownMenu.Sub / SubTrigger / SubContent` | `compound` |  | A nested submenu. |
 
@@ -5416,6 +5466,40 @@ export default function Example() {
             <DropdownMenu.RadioItem value="updated">Last updated</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="name">Name</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="owner">Owner</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+## Example: Theme menu (tick at the end)
+
+```tsx
+import * as React from 'react';
+import { Button, DropdownMenu } from '@nexub/react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
+
+export default function Example() {
+  const [theme, setTheme] = React.useState('system');
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outlined">Theme</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content>
+          <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+            <DropdownMenu.RadioItem value="light" indicator="end">
+              <Sun size="sm" /> Light
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="dark" indicator="end">
+              <Moon size="sm" /> Dark
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="system" indicator="end">
+              <Monitor size="sm" /> System
+            </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
@@ -11158,6 +11242,8 @@ Vertical app navigation: a header, grouped items with icons, and a pinned footer
 | `aria-label` | `string` |  | Name of the nav landmark. Defaults to the localised "Sidebar". |
 | `SidebarHeader status` | `ReactNode` |  | Trailing element next to the logo (`Sidebar.Header` children), e.g. a `Badge`. Moves under the logo when they don’t fit. |
 | `SidebarGroup label` | `string` |  | Heading above a group of items. |
+| `SidebarGroup collapsible` | `boolean` | `false` | 12.2: the label becomes a button (`aria-expanded`, `aria-controls`) with a chevron that folds the items away. Stays open, toggle hidden, in the icon rail. |
+| `SidebarGroup defaultOpen / open / onOpenChange` | `boolean / boolean / (open: boolean) => void` | `true` | 12.2: uncontrolled start state, or controlled open state, of a `collapsible` group. |
 | `SidebarItem icon` | `ReactNode` |  | Leading icon; the only thing shown when collapsed. |
 | `SidebarItem active` | `boolean` |  | Marks the current page (`aria-current="page"`). |
 | `SidebarItem asChild` | `boolean` |  | Use your router `<Link>` as the item; pass it as the only child. |
@@ -11214,6 +11300,30 @@ export default function Example() {
       <Button variant="outlined" onClick={() => setCollapsed((c) => !c)} aria-pressed={!collapsed}>
         {collapsed ? 'Expand' : 'Collapse'}
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Collapsible groups
+
+```tsx
+import { Sidebar } from '@nexub/react';
+import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex h-70 items-start">
+      <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
+        <Sidebar.Group label="Work" collapsible>
+          <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Folder size="sm" />}>Projects</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group label="Admin" collapsible defaultOpen={false}>
+          <Sidebar.Item href="#" icon={<BarChart3 size="sm" />}>Reports</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Root>
     </div>
   );
 }
@@ -13737,7 +13847,7 @@ Related: [card](card.md), [stat-card](stat-card.md)
 
 # Conversation
 
-Chat layout: a scrolling message list that follows new content, with a sticky composer underneath.
+Chat layout: a scrolling message list that follows new content, with a sticky composer underneath. DateSeparator labels the days between messages.
 
 - Package: `@nexub/patterns` · Category: AI · Status: stable
 - Import: `import { Conversation } from '@nexub/patterns';`
@@ -13746,6 +13856,7 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 ## When to use
 
 - A full chat or assistant view: messages above, composer below.
+- DateSeparator between messages from different days, in any message list.
 
 ## When not to use
 
@@ -13758,10 +13869,16 @@ Chat layout: a scrolling message list that follows new content, with a sticky co
 | --- | --- | --- | --- |
 | `children` | `ReactNode` |  | The messages, usually MessageBubbles. |
 | `composer` | `ReactNode` |  | Sticky slot under the list, usually a PromptInput. |
-| `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". |
+| `autoScroll` | `boolean` | `true` | Follow new content while the reader is at the bottom. Scrolling up stops following and shows "Jump to latest". 12.2: if messages arrive while scrolled up, it reads "Jump to newest" and "New messages" is announced once. |
 | `announce` | `boolean` | `false` | Make the list a polite `role="log"`. Only for whole-message updates: with token streaming it announces every chunk. |
 | `maxHeight` | `number \| string` |  | 11.5: cap the height so it works in normal flow without a fixed-height parent. It grows with its messages up to this, then the list scrolls and follows. Without it, it fills its parent (`h-full`). |
-| `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest` and `conversation`. |
+| `thinking` | `ReactNode` |  | 12.2: slot at the end of the list for a `<ThinkingIndicator />`, in a polite `role="status"` region. It never moves the scroll or counts as a new message. Keep the prop set (`busy ? <ThinkingIndicator /> : null`) so the live region exists before the indicator appears. |
+| `messages` | `Partial<ConversationMessages>` |  | Overrides for `jumpToLatest`, `conversation`, and (12.2) `jumpToNewest`, `newMessages`. |
+| `DateSeparator date` | `Date \| string \| number` |  | 12.2: the day it starts. Shows "Today", "Yesterday" or a medium date in the provider’s locale ("25 Nov 2026" in en-GB). A date-only string ("2026-11-25") is a local day. |
+| `DateSeparator children` | `ReactNode` |  | Replaces the computed label. |
+| `DateSeparator now` | `Date \| string \| number` |  | "Now" for the Today / Yesterday check; defaults to the current time. Pass one in tests and stories. |
+| `DateSeparator locale` | `string` |  | Overrides the NexubProvider locale for the date. |
+| `DateSeparator messages` | `Partial<{ today: string; yesterday: string }>` |  | Local overrides; otherwise `today` / `yesterday` from NexubProvider. |
 
 ## Example: Mini chat
 
@@ -13882,13 +13999,65 @@ export default function Example() {
 }
 ```
 
+## Example: Days and thinking
+
+12.2: a `DateSeparator` wherever the day changes, and a `ThinkingIndicator` in the `thinking` slot while a reply is on its way. Send a message to see it.
+
+```tsx
+import * as React from 'react';
+import { PromptInput, MessageBubble, ThinkingIndicator } from '@nexub/react';
+import { Conversation, DateSeparator } from '@nexub/patterns';
+
+type ChatMessage = { id: number; from: 'user' | 'assistant'; text: string; at: Date };
+
+const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000);
+const sameDay = (a: Date, b: Date) => a.toDateString() === b.toDateString();
+
+export default function Example() {
+  const [busy, setBusy] = React.useState(false);
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
+    { id: 1, from: 'user', text: 'Can you total last week’s invoices?', at: daysAgo(3) },
+    { id: 2, from: 'assistant', text: 'Twelve invoices, £8,420 in all.', at: daysAgo(3) },
+    { id: 3, from: 'user', text: 'Which ones are still unpaid?', at: daysAgo(1) },
+    { id: 4, from: 'assistant', text: 'Three: Acme, Globex and Initech.', at: daysAgo(1) },
+  ]);
+  const send = (text: string) => {
+    setMessages((m) => [...m, { id: Date.now(), from: 'user', text, at: new Date() }]);
+    setBusy(true);
+    setTimeout(() => {
+      setMessages((m) => [...m, { id: Date.now(), from: 'assistant', text: 'On it: reminders drafted.', at: new Date() }]);
+      setBusy(false);
+    }, 1500);
+  };
+  return (
+    <div className="w-full">
+      <Conversation
+        maxHeight="24rem"
+        thinking={busy ? <ThinkingIndicator /> : null}
+        composer={<PromptInput placeholder="Ask about your invoices" onSubmit={send} />}
+      >
+        {messages.map((msg, i) => (
+          <React.Fragment key={msg.id}>
+            {(i === 0 || !sameDay(messages[i - 1]!.at, msg.at)) && <DateSeparator date={msg.at} />}
+            <MessageBubble from={msg.from}>{msg.text}</MessageBubble>
+          </React.Fragment>
+        ))}
+      </Conversation>
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
-- Roles: region (default) or log (with `announce`)
+- Roles: region (default) or log (with `announce`), status (polite) around the `thinking` slot, DateSeparator: plain text, not `role="separator"`
 - `Tab`: The message list is focusable so keyboard users can scroll it.
 - Keep focus in the composer while a reply streams; don’t move it to the new message.
 - The list is named "Conversation". Leave `announce` off while streaming tokens and announce the finished reply once instead.
 - With reduced motion, "Jump to latest" scrolls instantly.
+- Messages arriving while the reader is scrolled up announce "New messages" once per batch (a hidden polite live region); the batch ends when they are back at the bottom. With `announce` the log speaks instead.
+- The `thinking` slot is a polite status, so a ThinkingIndicator placed in it is read once when it appears.
+- DateSeparator is read as its text ("Yesterday") in order with the messages. It is not `role="separator"`: a separator’s children are presentational, and screen readers announce a non-focusable one as just "separator" or skip it, which would lose the day. The hairlines are hidden.
 
 Related: [message-bubble](message-bubble.md), [prompt-input](prompt-input.md), [streaming-text](streaming-text.md)
 

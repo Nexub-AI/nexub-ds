@@ -111,10 +111,12 @@ const cases: Record<string, () => React.ReactElement> = {
 
   // Labels, badges, avatars
   Badge: () => <N.Badge>New</N.Badge>,
+  AgentBadge: () => <N.AgentBadge>Buttons only</N.AgentBadge>,
   FilterChip: () => <N.FilterChip onRemove={noop}>Open</N.FilterChip>,
   Chip: () => <N.Chip>Design</N.Chip>,
   EyebrowChip: () => <N.EyebrowChip>New</N.EyebrowChip>,
   Avatar: () => <N.Avatar name="Ada Lovelace" />,
+  AgentAvatar: () => <N.AgentAvatar name="Payhub agent" />,
   AvatarGroup: () => <N.AvatarGroup max={1}><N.Avatar name="A B" /><N.Avatar name="C D" /></N.AvatarGroup>,
   Flag: () => <N.Flag code="SG" />,
   CountryBadge: () => <N.CountryBadge code="SG" label="Singapore" />,

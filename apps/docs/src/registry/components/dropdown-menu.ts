@@ -17,10 +17,11 @@ const entry: ComponentEntry = {
     { name: 'DropdownMenu.Portal / Content', type: 'compound', required: false, description: 'Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4).' },
     { name: 'DropdownMenu.Item', type: 'compound', required: false, description: 'An action (`onSelect`, `disabled`).' },
     { name: 'DropdownMenu.CheckboxItem / RadioGroup / RadioItem', type: 'compound', required: false, description: 'Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`).' },
+    { name: 'RadioItem / CheckboxItem indicator', type: "'start' | 'end'", required: false, default: "'start'", description: '12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu).' },
     { name: 'DropdownMenu.Label / Group / Separator', type: 'compound', required: false, description: 'Section heading, grouping and divider.' },
     { name: 'DropdownMenu.Sub / SubTrigger / SubContent', type: 'compound', required: false, description: 'A nested submenu.' },
   ],
-  examples: [{ title: 'Default' }, { title: 'Checkbox and radio items' }],
+  examples: [{ title: 'Default' }, { title: 'Checkbox and radio items' }, { title: 'Theme menu (tick at the end)' }],
   usage: {
     whenToUse: ['Secondary actions behind a "More" button', 'A short set of options that change a view'],
     whenNotToUse: ['Picking a form value: use `Select`', 'Site navigation: use `NavigationMenu` or `TopNav`'],
