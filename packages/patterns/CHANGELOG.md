@@ -1,5 +1,7 @@
 # @nexub/patterns
 
+## 12.3.0
+
 ## 12.2.0
 
 ### Minor Changes
