@@ -89,10 +89,10 @@ export default async function ComponentPage({ params }: Props) {
         <PlatformPanel platform="web">
           {playground && (
             <Section id="playground" title="Playground">
-              {/* 12.1: hydrates as its own task (see LivePreview). */}
-              <React.Suspense>
+              {/* 12.1: hydrates as its own task. An Activity, not a Suspense (#815, see LivePreview). */}
+              <React.Activity>
                 <Playground slug={slug} componentName={meta.title} def={playground} />
-              </React.Suspense>
+              </React.Activity>
             </Section>
           )}
 
