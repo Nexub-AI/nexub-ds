@@ -1,5 +1,33 @@
 # @nexub/react
 
+## 12.3.0
+
+### Minor Changes
+
+- 5b010e4: **Charts that tell a story** (12.3) on `LineChart` and vertical `BarChart`. All three props are optional; without them a chart renders exactly as before.
+
+  - `annotations`: a labelled point (`{ at: 'Feb', label: 'Launch' }`, add `series` to dot that value) or a shaded range (`{ at: 'Apr', to: 'May', label: 'Promo' }`).
+  - `change`: a callout above the plot such as "Up 12% (+$1,200) since March", comparing two points. The amount goes through the series' `valueFormat` (then the chart's), the percentage through `Intl` in `change.locale`. Rises are shown in the success colour and falls in the error colour (`invert` for costs and churn); `text` replaces the sentence for translation.
+  - `referenceLines`: a labelled horizontal line at a value (target, average), which widens the axis to stay in view, or a vertical line at a category (`axis: 'category'`). `tone` colours the line only.
+  - Every note is also text: the callout and a visually hidden "Chart notes" list describe the figure (`aria-describedby`). Labels read correctly in RTL and use theme tokens in light and dark. The product accent still stays out of charts.
+  - `@nexub/core`: new English messages `chartChange`, `chartNotes`, `chartAnnotation` and `chartReferenceLine`.
+
+  **Parity gap:** `@nexub/react-native` has no chart components yet (the native Chart twin is planned for 12.5), so `annotations`, `change` and `referenceLines` are web-only for now.
+
+- 5f4db9c: `Illustration` gets a `success` kind, so the spot illustrations now cover empty, error, offline and success states. It follows the theme, dark mode and forced colours, and stays decorative unless you give it a `title`.
+  `Illustration` for React Native: the same eight kinds, `size` and `title` as on the web, drawn with react-native-svg in the theme's colour roles. It is hidden from VoiceOver and TalkBack unless you give it a `title`.
+  React Native `EmptyState`, `ErrorState` and `ResultScreen` take an optional `illustration` (for example `<Illustration kind="success" />`) that replaces the icon disc. Without it they look the same as before.
+- c9a48cb: Motion presets by intent: `enter`, `exit`, `emphasis`, `success` and `attention`, each an alias of a spring token. `@nexub/tokens` adds `--motion-preset-<intent>-easing` / `-duration`, Tailwind `ease-<intent>` / `duration-<intent>`, `tokens.motion.preset` and `native.motion.preset`.
+  `@nexub/themes` adds utility classes `nx-motion-enter`, `nx-motion-exit`, `nx-motion-emphasis`, `nx-motion-success` and `nx-motion-attention` (part `motion-presets`); under `prefers-reduced-motion` enter and exit land at once and the rest don't move. Overlays, the shake, the count tick, the success check and the signature Switch thumb now read their preset (same springs, no visible change).
+  `@nexub/react`: Switch and Toast now use the matching presets (same springs, no visible change).
+  `@nexub/react-native` adds `nxPreset(intent)` (a `withSpring` config that follows Reduce Motion), the `MotionPreset` type, a `success` haptic token and `presetHaptic` (emphasis → selection, success → success, attention → warning). New opt-in `haptic` on `Banner` and on `toast({ … })` plays the tone's haptic (success, warning, or the error haptic for danger), off by default and silent when the user turned haptics off or the platform has none. Toast and Dialog springs now read `nxPreset('enter' | 'exit')` (same values).
+
+### Patch Changes
+
+- Updated dependencies [5b010e4]
+  - @nexub/core@12.3.0
+  - @nexub/icons@12.3.0
+
 ## 12.2.0
 
 ### Minor Changes
