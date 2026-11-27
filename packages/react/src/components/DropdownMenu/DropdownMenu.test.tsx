@@ -116,3 +116,64 @@ describe('DropdownMenu sheet (10.6)', () => {
     expect((await screen.findByText('Sheet item')).closest('[data-nx-sheet]')).toHaveAttribute('data-nx-sheet', 'auto');
   });
 });
+
+describe('indicator (12.2)', () => {
+  function ThemeMenu({ indicator }: { indicator?: 'start' | 'end' }) {
+    const [theme, setTheme] = React.useState('dark');
+    return (
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>Theme</DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content>
+            <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+              <DropdownMenu.RadioItem value="light" indicator={indicator}><svg data-testid="icon-light" />Light</DropdownMenu.RadioItem>
+              <DropdownMenu.RadioItem value="dark" indicator={indicator}><svg data-testid="icon-dark" />Dark</DropdownMenu.RadioItem>
+            </DropdownMenu.RadioGroup>
+            <DropdownMenu.CheckboxItem checked indicator={indicator}>Compact</DropdownMenu.CheckboxItem>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+    );
+  }
+
+  it('defaults to the leading indicator slot (unchanged)', async () => {
+    render(<ThemeMenu />);
+    await userEvent.setup().click(screen.getByText('Theme'));
+    const dark = await screen.findByRole('menuitemradio', { name: 'Dark' });
+    expect(dark).toHaveClass('ps-8');
+    expect(dark.firstElementChild).toHaveAttribute('data-nx-indicator', 'start');
+    expect(dark.querySelector('[data-nx-indicator="end"]')).toBeNull();
+  });
+
+  it('indicator="end" puts the tick after the label at the inline end, with no leading slot', async () => {
+    render(<ThemeMenu indicator="end" />);
+    await userEvent.setup().click(screen.getByText('Theme'));
+    const light = await screen.findByRole('menuitemradio', { name: 'Light' });
+    const dark = screen.getByRole('menuitemradio', { name: 'Dark' });
+    expect(light).toHaveAttribute('aria-checked', 'false');
+    expect(dark).toHaveAttribute('aria-checked', 'true');
+    expect(dark).not.toHaveClass('ps-8');
+    // The icon comes first, the tick last (ms-auto pushes it to the inline end).
+    expect(dark.firstElementChild).toBe(screen.getByTestId('icon-dark'));
+    const tick = dark.lastElementChild!;
+    expect(tick).toHaveAttribute('data-nx-indicator', 'end');
+    expect(tick).toHaveClass('ms-auto');
+    expect(tick.querySelector('svg')).not.toBeNull();
+    expect(light.lastElementChild!.querySelector('svg')).toBeNull();
+    expect(dark.querySelector('[data-nx-indicator="start"]')).toBeNull();
+
+    const compact = screen.getByRole('menuitemcheckbox', { name: 'Compact' });
+    expect(compact).toHaveAttribute('aria-checked', 'true');
+    expect(compact.lastElementChild).toHaveAttribute('data-nx-indicator', 'end');
+  });
+
+  it('indicator="end" still selects with the keyboard', async () => {
+    const user = userEvent.setup();
+    render(<ThemeMenu indicator="end" />);
+    await user.click(screen.getByText('Theme'));
+    await screen.findByRole('menuitemradio', { name: 'Light' });
+    await user.keyboard('{ArrowDown}{Enter}');
+    await user.click(screen.getByText('Theme'));
+    expect(await screen.findByRole('menuitemradio', { name: 'Light' })).toHaveAttribute('aria-checked', 'true');
+  });
+});

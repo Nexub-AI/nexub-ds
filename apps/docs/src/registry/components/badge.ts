@@ -16,6 +16,7 @@ const entry: ComponentEntry = {
     { name: 'tone', type: "'success' | 'danger' | 'warning' | 'info' | 'neutral'", default: "'neutral'", required: false, description: 'Semantic color tone.' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", required: false, description: 'Badge size.' },
     { name: 'leadingIcon', type: 'React.ReactNode', required: false, description: 'Icon or dot rendered before the label.' },
+    { name: 'AgentBadge icon', type: 'ReactNode', required: false, description: 'AgentBadge (12.2, beta): the leading icon. Default: a sparkle. AgentBadge is always `variant="soft"` and takes Badge\'s `tone`, `category` and `size`.' },
   ],
   examples: [
     {
@@ -26,6 +27,11 @@ const entry: ComponentEntry = {
     },
     {
       title: 'With leading dot',
+    },
+    {
+      title: 'Agent badge',
+      description:
+        'AgentBadge (12.2, beta) labels an AI agent in a chat header ("AI on your own key", "Buttons only"): a soft Badge with a leading sparkle. Pair it with `AgentAvatar`.',
     },
   ],
   usage: {

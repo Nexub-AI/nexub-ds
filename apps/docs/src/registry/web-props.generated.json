@@ -18,6 +18,71 @@
         }
       ]
     },
+    "AgentAvatar": {
+      "file": "components/Avatar/AgentAvatar.tsx",
+      "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "A category colour for the tile. Default: the brand tile look, primary glyph on a surface tile."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The app's glyph, drawn inside the tile (e.g. an `@nexub/icons` icon)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Who the agent is (\"Payhub agent\"). Read as \"Payhub agent, AI agent\" (`messages.aiAgent`)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'xs' | 'lg' | 'xl'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "required": false,
+          "description": "An image for the tile instead of `icon` (e.g. an `@nexub/brand` app tile). Falls back to `icon` if it fails."
+        }
+      ]
+    },
+    "AgentBadge": {
+      "file": "components/Badge/AgentBadge.tsx",
+      "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "10.3: a category colour for tags and labels (e.g. one per project or team). Wins over `tone`. It carries no meaning by itself: status still uses `tone`."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The leading icon. Default: a sparkle."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'leap' | 'bookub' | 'payub' | 'founderub'",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "Alert": {
       "file": "components/Alert/Alert.tsx",
       "props": [
@@ -3908,6 +3973,45 @@
         }
       ]
     },
+    "DropdownMenuCheckboxItem": {
+      "file": "components/DropdownMenu/DropdownMenu.tsx",
+      "props": [
+        {
+          "name": "indicator",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'start'",
+          "description": "12.2: where the selected mark sits. `'start'` (the default, unchanged) reserves a leading slot for it. `'end'` draws a tick at the inline end (mirrors in RTL) and drops the leading slot, so a leading icon sits flush at the start, e.g. a Light / Dark / System theme menu."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "checked",
+        "disabled",
+        "onCheckedChange",
+        "onSelect",
+        "textValue"
+      ]
+    },
+    "DropdownMenuRadioItem": {
+      "file": "components/DropdownMenu/DropdownMenu.tsx",
+      "props": [
+        {
+          "name": "indicator",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'start'",
+          "description": "12.2: where the selected mark sits. `'start'` (the default, unchanged) reserves a leading slot for it. `'end'` draws a tick at the inline end (mirrors in RTL) and drops the leading slot, so a leading icon sits flush at the start, e.g. a Light / Dark / System theme menu."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "disabled",
+        "onSelect",
+        "textValue",
+        "value"
+      ]
+    },
     "EmojiPicker": {
       "file": "components/EmojiPicker/EmojiPicker.tsx",
       "props": [
@@ -5165,6 +5269,18 @@
         }
       ]
     },
+    "Highlight": {
+      "file": "components/Highlight/Highlight.tsx",
+      "props": [
+        {
+          "name": "tone",
+          "type": "'error' | 'neutral' | 'primary' | 'info' | 'success' | 'warning'",
+          "required": false,
+          "default": "'neutral'",
+          "description": ""
+        }
+      ]
+    },
     "IconButton": {
       "file": "components/IconButton/IconButton.tsx",
       "props": [
@@ -6151,7 +6267,14 @@
           "name": "avatar",
           "type": "React.ReactNode",
           "required": false,
-          "description": "Assistant and other: shown at the inline-start."
+          "description": "Assistant and other: shown at the inline-start. User (12.2): at the inline-end, same size and spacing."
+        },
+        {
+          "name": "collapse",
+          "type": "number | false",
+          "required": false,
+          "default": "false",
+          "description": "12.2: clamp the content to this many lines. When it is taller, a \"Read more\" / \"Show less\" toggle appears and the clamped edge fades out."
         },
         {
           "name": "from",
@@ -6186,6 +6309,59 @@
         {
           "name": "status",
           "type": "'sending' | 'error'",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
+    "MessageCard": {
+      "file": "components/MessageCard/MessageCard.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "React.ReactNode | MessageCardAction[]",
+          "required": false,
+          "description": "A list renders as buttons: one `filled` at most, and past two the rest go into a \"More actions\" menu. Any other node renders as given, in the action row."
+        },
+        {
+          "name": "body",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Free content under the fields."
+        },
+        {
+          "name": "done",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Replaces the actions with one line and a check, e.g. \"Approved by you · 2:14 pm\"."
+        },
+        {
+          "name": "fields",
+          "type": "MessageCardField[]",
+          "required": false,
+          "description": "Label and value pairs, as a `dl`: two columns, one when the card is narrow."
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false,
+          "description": "Clip the fields and body to this height (a number is px), with a \"Show all\" toggle."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<MessageStrings>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "status",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Beside the title, usually a `Badge`."
+        },
+        {
+          "name": "title",
+          "type": "React.ReactNode",
           "required": false,
           "description": ""
         }
@@ -7255,6 +7431,18 @@
           "description": "Rendered above the text, e.g. removable Chips."
         },
         {
+          "name": "chips",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "12.2: quick replies above the field, e.g. `Button size=\"sm\" variant=\"tonal\"` or Chips. One row that scrolls sideways when narrow (wraps from 480px wide), labelled \"Suggestions\"."
+        },
+        {
+          "name": "commands",
+          "type": "CommandListItem[]",
+          "required": false,
+          "description": "12.2: slash commands. When the text starts with `/`, a list opens above the field, filtered by what follows the slash (cmdk's scorer, as CommandList). ↑/↓ move, Enter or Tab picks, Esc closes and keeps the text. `shortcut` keys show at the end of a row."
+        },
+        {
           "name": "defaultValue",
           "type": "string",
           "required": false,
@@ -7292,6 +7480,12 @@
           "type": "Partial<PromptInputMessages>",
           "required": false,
           "description": "Local overrides for this component's strings."
+        },
+        {
+          "name": "onCommand",
+          "type": "((value: string, args: string) => void)",
+          "required": false,
+          "description": "12.2: called when a command is picked, with its `value` and the text after the command's id (`/remind tomorrow 9am` → `('remind', 'tomorrow 9am')`). Uncontrolled input then clears, as after a submit; controlled input leaves that to you. Enter on text with no matching command submits as usual."
         },
         {
           "name": "onStop",
@@ -7967,10 +8161,35 @@
       "file": "components/Sidebar/Sidebar.tsx",
       "props": [
         {
+          "name": "collapsible",
+          "type": "boolean",
+          "required": false,
+          "description": "12.2: the label becomes a button that folds the group's items away. Needs `label`. In the icon rail (collapsed sidebar) the group stays open and the toggle is hidden."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "12.2: uncontrolled start state of a `collapsible` group."
+        },
+        {
           "name": "label",
           "type": "string",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean) => void)",
+          "required": false,
+          "description": "12.2: called when a `collapsible` group is toggled."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "description": "12.2: controlled open state of a `collapsible` group."
         }
       ]
     },
@@ -8435,7 +8654,7 @@
         },
         {
           "name": "color",
-          "type": "1 | 'neutral' | 'warning' | 'danger' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'good'",
+          "type": "'neutral' | 'warning' | 1 | 'danger' | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 'good'",
           "required": false,
           "default": "1",
           "description": "Palette colour or (11.3) a tone."
@@ -9005,7 +9224,7 @@
         },
         {
           "name": "tone",
-          "type": "'subtle' | 'success' | 'warning' | 'danger' | 'default' | 'muted' | 'inverse' | 'secondary'",
+          "type": "'success' | 'warning' | 'subtle' | 'danger' | 'default' | 'muted' | 'inverse' | 'secondary'",
           "required": false,
           "default": "'default'",
           "description": ""
@@ -10674,6 +10893,12 @@
           "type": "Partial<ConversationMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "thinking",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "12.2: a slot at the end of the list, after the messages, for a `<ThinkingIndicator />`. It sits in a polite `role=\"status\"` region and never moves the scroll: while the reader is at the bottom it stays in view, and while they're scrolled up it neither scrolls nor counts as a new message. Pass the prop (even as `null`) for as long as the slot may be used, so the live region exists before the indicator appears."
         }
       ]
     },
@@ -10811,6 +11036,41 @@
           "required": false,
           "default": "'md'",
           "description": "Content width."
+        }
+      ]
+    },
+    "DateSeparator": {
+      "file": "components/Conversation/DateSeparator.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Replaces the computed label."
+        },
+        {
+          "name": "date",
+          "type": "string | number | Date",
+          "required": false,
+          "description": "The day this separator starts. A date-only string (\"2026-11-25\") is read as a local day."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP 47 locale for the date. Defaults to the NexubProvider's locale."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<DateSeparatorMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "now",
+          "type": "string | number | Date",
+          "required": false,
+          "description": "\"Now\" for the Today / Yesterday check. Defaults to the current time; pass one in tests."
         }
       ]
     },

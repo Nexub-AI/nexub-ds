@@ -55,10 +55,16 @@ const messageKeys: [key: string, value: string][] = [
   ['goodResponse', "'Good response'"],
   ['badResponse', "'Bad response'"],
   ['regenerate', "'Regenerate'"],
+  ['readMore', "'Read more'"],
+  ['showLess', "'Show less'"],
+  ['showAll', "'Show all'"],
   ['sources', "'Sources'"],
   ['source', '(n) => `Source ${n}`'],
   ['jumpToLatest', "'Jump to latest'"],
   ['conversation', "'Conversation'"],
+  ['jumpToNewest', "'Jump to newest'"],
+  ['newMessages', "'New messages'"],
+  ['yesterday', "'Yesterday'"],
 ];
 
 export default function InternationalizationPage() {

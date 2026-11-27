@@ -1,5 +1,5 @@
 {
-  "version": "12.0.0",
+  "version": "12.1.0",
   "standard": "WCAG 2.2 Level AA",
   "method": {
     "automated": "axe-core rules tagged wcag2a, wcag2aa, wcag21a, wcag21aa and wcag22aa, run on every Storybook story in light and dark, and on open popups (menus, listboxes, dialogs), on every pull request; a new violation fails the build.",
@@ -157,7 +157,10 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
-      "screenReader": []
+      "screenReader": [
+        "Avatar reads its `name`, plus the `status` (\"Ada Lovelace, Away\"). Without a name it is decorative and hidden.",
+        "AgentAvatar is always `role=\"img\"` and its name says it is an AI agent (\"Payhub agent, AI agent\", from `messages.aiAgent`). The glyph and the sparkle are hidden."
+      ]
     },
     {
       "slug": "badge",
@@ -1082,12 +1085,17 @@
       "exceptions": [],
       "keyboard": [
         "Tab: Moves through the action buttons; focusing one reveals the row.",
-        "Space / Enter: Activates an action. Feedback buttons toggle."
+        "Space / Enter: Activates an action. Feedback buttons toggle.",
+        "Arrow keys / Escape: In the MessageCard \"More actions\" menu: move between items; Escape closes it and returns focus."
       ],
       "screenReader": [
         "Each message is an `article` named \"You said\" or \"Assistant said\", so users can jump between messages.",
         "Feedback buttons expose `aria-pressed`. Copy announces \"Copied\" through a status region.",
-        "The action row is only visually hidden until hover; it stays in the tab order and accessibility tree."
+        "The action row is only visually hidden until hover; it stays in the tab order and accessibility tree.",
+        "Your own message keeps the name \"You said\" with an avatar; the avatar adds nothing to it.",
+        "The collapse toggle is a button with `aria-expanded` and `aria-controls` pointing at the content. The clamped text stays in the accessibility tree.",
+        "MessageCard fields are a description list, read as term and value pairs. The overflow button is named \"More actions\" and opens a menu.",
+        "Highlight is a plain span: its text is read as part of the sentence. Say any meaning the colour adds in words."
       ]
     },
     {
@@ -1356,11 +1364,16 @@
         "Enter: Sends. Ignored while an IME composition is open.",
         "Shift + Enter: New line.",
         "Cmd/Ctrl + Enter: Sends with `submitOn=\"mod-enter\"`, where Enter adds a line.",
-        "Escape: Stops the reply while streaming."
+        "Escape: Stops the reply while streaming. With the command list open, closes the list first and keeps the text.",
+        "/: At the start of the text, opens the command list (with `commands`).",
+        "↑ / ↓: Moves the active command, wrapping at the ends and skipping disabled ones.",
+        "Enter / Tab: Picks the active command while the list is open (Shift+Tab still moves focus back)."
       ],
       "screenReader": [
         "The field is named by `label` (default \"Message\") and described by the Enter/Shift+Enter hint.",
         "Send and Stop are icon buttons with their own names; the swap does not move focus.",
+        "While the command list is open the field is a combobox (`aria-expanded`, `aria-controls`, `aria-autocomplete=\"list\"`) and the active option is announced through `aria-activedescendant`; focus never leaves the field. Options are named \"/id label\" and described by their description. Closed, the field is the plain textbox again.",
+        "The quick replies are a group named \"Suggestions\"; each reply is a button in the tab order before the field.",
         "Focus stays in the field after sending, so the user can type the next message straight away.",
         "An empty field keeps Send focusable with `aria-disabled`, rather than removing it from the tab order."
       ]
@@ -1916,6 +1929,9 @@
       "screenReader": [
         "The list is named \"Conversation\". Leave `announce` off while streaming tokens and announce the finished reply once instead.",
         "With reduced motion, \"Jump to latest\" scrolls instantly.",
+        "Messages arriving while the reader is scrolled up announce \"New messages\" once per batch (a hidden polite live region); the batch ends when they are back at the bottom. With `announce` the log speaks instead.",
+        "The `thinking` slot is a polite status, so a ThinkingIndicator placed in it is read once when it appears.",
+        "DateSeparator is read as its text (\"Yesterday\") in order with the messages. It is not `role=\"separator\"`: a separator’s children are presentational, and screen readers announce a non-focusable one as just \"separator\" or skip it, which would lose the day. The hairlines are hidden.",
         "Keep focus in the composer while a reply streams; don’t move it to the new message."
       ]
     },
