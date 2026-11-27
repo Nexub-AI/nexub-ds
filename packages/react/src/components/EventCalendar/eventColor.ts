@@ -61,15 +61,20 @@ function num(token: string, full = 1): number {
 /** sRGB (0–1 per channel) for hex, rgb(), hsl(), oklab() or oklch(); `null` for anything else. Alpha is ignored. */
 export function parseColor(input: string): Rgb | null {
   const text = input.trim().toLowerCase();
+  // No colour is this long; the cap also bounds every regex below.
+  if (text.length > 64) return null;
   const hex = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/.exec(text);
   if (hex) {
     const h = hex[1]!.length <= 4 ? hex[1]!.replace(/./g, '$&$&') : hex[1]!;
     return hexToRgb('#' + h.slice(0, 6));
   }
-  const fn = /^(rgba?|hsla?|oklab|oklch)\(\s*([^)]*)\)$/.exec(text);
-  if (!fn) return null;
-  const parts = fn[2]!.split(/[\s,/]+/).filter(Boolean);
-  if (parts.length < 3 || parts.slice(0, 3).some((p) => !/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?(%|deg|grad|rad|turn)?$/.test(p))) return null;
+  // Name and parentheses by hand, not one regex: overlapping \s* and [^)]* backtrack badly (ReDoS).
+  const fn = /^(rgba?|hsla?|oklab|oklch)\(/.exec(text);
+  if (!fn || !text.endsWith(')')) return null;
+  const inner = text.slice(fn[0].length, -1);
+  if (inner.includes('(') || inner.includes(')')) return null;
+  const parts = inner.split(/[\s,/]+/).filter(Boolean);
+  if (parts.length < 3 || parts.slice(0, 3).some((p) => !/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?(?:%|deg|grad|rad|turn)?$/.test(p))) return null;
   const [a, b, c] = parts as [string, string, string];
   switch (fn[1]) {
     case 'rgb':

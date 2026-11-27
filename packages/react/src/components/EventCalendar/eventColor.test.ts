@@ -37,6 +37,9 @@ describe('eventColor', () => {
     // oklch(62.8% 0.2577 29.23) is sRGB red.
     expect(bytes('oklch(62.8% 0.2577 29.23deg)')).toEqual([255, 0, 0]);
     for (const bad of ['red', 'var(--x)', '#12', 'rgb(1, 2)', 'url(x)', 'rgb(a b c)']) expect(parseColor(bad)).toBeNull();
+    // Long or hostile input is rejected quickly (no regex backtracking).
+    expect(parseColor('rgb(' + ' '.repeat(50_000))).toBeNull();
+    expect(parseColor('rgb(1 2 ' + '1'.repeat(50_000) + 'x)')).toBeNull();
   });
 
   it.each(brands)('%s reaches AA text on its container in light and dark', (color) => {
