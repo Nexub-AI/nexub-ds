@@ -16233,7 +16233,8 @@ Icons: `import { Search } from '@nexub/icons/native'`. These are the same names 
 
 `import { SignInScreen, AmountStep, ActivityList } from '@nexub/react-native/patterns'`. Each pattern is a screen template that takes data and callbacks, so it works with any router.
 
-- **Auth:** `AuthScreen`, `SignInScreen`, `VerifyCodeScreen`, `LockScreen`.
+- **Auth:** `AuthScreen`, `SignInScreen`, `SignUpScreen`, `VerifyCodeScreen`, `LockScreen`.
+- **Status:** `StatusScreen` (not found, server error, maintenance, offline, no access), `StatusSteps`.
 - **Money:** `FlowStep`, `AmountStep`, `ReviewStep`, `ActivityList`, `TransactionDetail`, `ResultScreen`.
 - **App:** `OnboardingScreen`, `PermissionPrimer`, `SettingsScreen`, `ProfileHeader`, `AppearanceSection`, `NotificationsInbox`, `SearchScreen`, `ChatScreen`, `PaywallScreen`, `AppSwitcherSheet`.
 

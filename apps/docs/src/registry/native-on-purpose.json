@@ -123,6 +123,14 @@
     ],
     "reason": "The native twin is the whole settings screen: each group has a header and its items."
   },
+  "status-page": {
+    "props": [
+      "as",
+      "fullScreen",
+      "homeHref"
+    ],
+    "reason": "A screen is always the whole screen and has no landmark element; links become onHome, which navigates with the app's router."
+  },
   "auth-card": {
     "props": [
       "children"

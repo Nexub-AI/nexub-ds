@@ -6215,7 +6215,6 @@
         "name": "title",
         "type": "string",
         "required": true,
-        "default": "'Sign in'",
         "description": ""
       },
       {
@@ -6300,15 +6299,122 @@
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Sign in'",
         "description": "Copy overrides."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "12.5: a line under the title, as web."
       },
       {
         "name": "submitLabel",
         "type": "string",
         "required": false,
-        "default": "'Sign in'",
         "description": ""
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "12.5: string overrides, keyed as web (`email`, `password`, `forgotPassword`, `createAccount` …)."
+      }
+    ]
+  },
+  "SignUpScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "onSubmit",
+        "type": "(values: SignUpValues) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "termsLabel",
+        "type": "string",
+        "required": true,
+        "description": "The terms checkbox label, e.g. \"I agree to the Terms and Privacy Policy\"."
+      },
+      {
+        "name": "termsAction",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Native only: at the end of the terms row, e.g. a \"Read\" text button that opens the terms."
+      },
+      {
+        "name": "phone",
+        "type": "boolean",
+        "required": false,
+        "description": "Adds an optional phone number field."
+      },
+      {
+        "name": "defaultCountry",
+        "type": "PhoneInputProps['defaultCountry']",
+        "required": false,
+        "description": "Country the phone field starts on (ISO 3166-1 alpha-2)."
+      },
+      {
+        "name": "onSignIn",
+        "type": "() => void",
+        "required": false,
+        "description": "Renders \"Already have an account? Sign in\" under the primary button."
+      },
+      {
+        "name": "social",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Above the form, followed by an \"or\" divider: \"Continue with …\" buttons."
+      },
+      {
+        "name": "passwordRules",
+        "type": "PasswordRule[]",
+        "required": false,
+        "default": "defaultPasswordRules",
+        "description": "Checks behind the strength meter. The share that passes fills four segments;\nthree or more segments is accepted. Say what you ask for in `messages.passwordHint`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error from the last attempt (announced)."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "String overrides, keyed as web (`signUp`, `name`, `passwordHint`, `acceptTerms` …)."
       }
     ]
   },
@@ -6326,13 +6432,13 @@
         "name": "onComplete",
         "type": "(code: string) => void",
         "required": true,
-        "description": ""
+        "description": "Called as soon as every box is filled, and from the Continue button."
       },
       {
         "name": "onResend",
         "type": "() => void",
-        "required": true,
-        "description": ""
+        "required": false,
+        "description": "Renders \"Resend code\" behind a cooldown. 12.5: optional, as web."
       },
       {
         "name": "resendAfter",
@@ -6353,6 +6459,73 @@
         "type": "string",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "onChangeDestination",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: renders \"Use a different number\" (rename it with `messages.changeDestination`)."
+      },
+      {
+        "name": "methods",
+        "type": "VerifyMethod[]",
+        "required": false,
+        "description": "12.5: other second factors, as a short list of buttons under the code."
+      },
+      {
+        "name": "onMethodChange",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "expiresAt",
+        "type": "number | Date",
+        "required": false,
+        "description": "12.5: when the code stops working: shows the time left."
+      },
+      {
+        "name": "now",
+        "type": "() => number",
+        "required": false,
+        "default": "Date.now",
+        "description": "12.5: clock for the expiry countdown (tests, previews)."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the code is being checked: the boxes are read-only and Continue shows progress."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.5: brand mark above the title."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "12.5: copy overrides."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "required": false,
+        "description": "12.5: adds a Continue button that submits the code, with this label. Without `onResend`\nthe button shows anyway, labelled `messages.continue`."
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "12.5: string overrides, keyed as web (`enterCode`, `codeSentTo`, `resendCode` …)."
       }
     ]
   },
@@ -6758,6 +6931,66 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"success\" size=\"lg\" />`."
+      }
+    ]
+  },
+  "StatusScreen": {
+    "file": "patterns/status-screen.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "kind",
+        "type": "'notFound' | 'serverError' | 'maintenance' | 'offline' | 'noAccess'",
+        "required": true,
+        "description": "notFound (404), serverError (500), maintenance, offline or noAccess (403)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Overrides the localised title (`messages.emptyStates[kind]`); the description too."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "required": false,
+        "description": "A small line above the title, e.g. \"404\"."
+      },
+      {
+        "name": "actions",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Buttons pinned at the bottom. Replaces the default Retry or Back to home."
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Art above the text. Defaults to the `Illustration` for the kind; `null` hides it."
+      },
+      {
+        "name": "onRetry",
+        "type": "() => void",
+        "required": false,
+        "description": "serverError and offline: shows a Retry button (when no `actions` are given)."
+      },
+      {
+        "name": "onHome",
+        "type": "() => void",
+        "required": false,
+        "description": "notFound and noAccess: shows a \"Back to home\" button (when no `actions` are given). Native for web `homeHref`."
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": ""
       }
     ]
   },

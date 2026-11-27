@@ -38,7 +38,7 @@ export default function MobileDashboardPage() {
 
       <div className="grid items-start gap-10 lg:grid-cols-[auto_minmax(0,1fr)]">
         <div className="flex justify-center">
-          <PhoneFrame path={`preview/${native.preview}`} title="Mobile dashboard" height={680} />
+          <PhoneFrame path={`preview/${native.preview ?? 'pattern/home'}`} title="Mobile dashboard" height={680} />
         </div>
         <div className="flex min-w-0 flex-col">
           <Section id="code" title="Code" className="!mt-0">

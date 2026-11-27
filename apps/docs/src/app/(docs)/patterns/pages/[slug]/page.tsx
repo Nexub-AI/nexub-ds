@@ -60,7 +60,7 @@ export default async function TemplatePage({ params }: Props) {
             <MobilePanel
               name={t.native.name}
               title={t.title}
-              preview={`preview/${t.native.preview}`}
+              preview={t.native.preview && `preview/${t.native.preview}`}
               code={t.native.code}
               differences={t.native.differences}
               pkg="@nexub/react-native/patterns"
