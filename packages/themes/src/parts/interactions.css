@@ -27,7 +27,7 @@
   [dir='rtl'] button[role='switch'][data-state='checked']:active:not(:disabled) > span { transform-origin: left center; }
   /* A field shakes once when it becomes invalid (the attribute change restarts it). */
   :is(input, textarea, select, [role='combobox'])[aria-invalid='true'] {
-    animation: nx-shake var(--motion-spring-spatial-fast-duration) var(--motion-spring-spatial-fast-easing);
+    animation: nx-shake var(--motion-preset-attention-duration) var(--motion-preset-attention-easing);
   }
   /* The focus ring pops out instead of appearing (controls only, so panels keep their own entrance). */
   :is(a, button, input, textarea, select, summary, [role='combobox'], [role='tab'], [role='switch'], [role='checkbox'], [role='radio'], [role='menuitem']):focus-visible {

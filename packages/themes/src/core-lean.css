@@ -318,7 +318,7 @@ code, kbd, pre, samp {
 .nx-motion:is([data-state='open'], [data-state='delayed-open'], [data-state='instant-open'], [data-motion^='from-']) {
   animation:
     nx-fade-in var(--motion-spring-effects-default-duration) var(--motion-spring-effects-default-easing),
-    nx-move-in var(--motion-spring-spatial-default-duration) var(--motion-spring-spatial-default-easing);
+    nx-move-in var(--motion-preset-enter-duration) var(--motion-preset-enter-easing);
   /* The move adds to the element's own translate/scale. A centred dialog is centred with
      the translate property (-50% -50%); replacing it made the dialog fly in from the corner
      by half its size, reduced motion included (9.4). The fade still replaces. */
@@ -327,8 +327,8 @@ code, kbd, pre, samp {
 /* Exit is quicker than enter and never overshoots. */
 .nx-motion:is([data-state='closed'], [data-motion^='to-']) {
   animation:
-    nx-fade-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards,
-    nx-move-out var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) forwards;
+    nx-fade-out var(--motion-preset-exit-duration) var(--motion-preset-exit-easing) forwards,
+    nx-move-out var(--motion-preset-exit-duration) var(--motion-preset-exit-easing) forwards;
   animation-composition: replace, add;
 }
 

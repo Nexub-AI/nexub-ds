@@ -4,7 +4,7 @@ import { Platform } from 'react-native';
 // never the only feedback. Android uses the platform constants, not the
 // vibrator-based impact API.
 export type HapticToken =
-  'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap';
+  'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap';
 
 // Optional peer: without expo-haptics every haptic is a no-op.
 let H: typeof import('expo-haptics') | undefined;
@@ -20,6 +20,7 @@ const ANDROID = {
   toggleOn: 'Toggle_On',
   toggleOff: 'Toggle_Off',
   confirm: 'Confirm',
+  success: 'Confirm',
   reject: 'Reject',
   warning: 'Reject',
   snap: 'Gesture_End',
@@ -45,6 +46,7 @@ export function playHaptic(token: HapticToken): void {
       H.impactAsync(H.ImpactFeedbackStyle.Medium).catch(done);
       break;
     case 'confirm':
+    case 'success':
       H.notificationAsync(H.NotificationFeedbackType.Success).catch(done);
       break;
     case 'reject':
@@ -55,3 +57,16 @@ export function playHaptic(token: HapticToken): void {
       break;
   }
 }
+
+/**
+ * The haptic that pairs with each motion preset (12.3): a task landing feels
+ * like success, a "look here" like a warning, a state landing like a selection
+ * tick. Enter and exit stay silent: arrivals and departures are not moments.
+ */
+export const presetHaptic = {
+  enter: undefined,
+  exit: undefined,
+  emphasis: 'selection',
+  success: 'success',
+  attention: 'warning',
+} as const satisfies Record<string, HapticToken | undefined>;

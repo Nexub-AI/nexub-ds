@@ -377,6 +377,23 @@ export const SPRINGS = {
   expressive: { fast: [0.7, 800], default: [0.8, 380], slow: [0.8, 200] },
 };
 
+// 12.3 motion language: named presets by intent, each an alias of one spring
+// above (web: --motion-preset-<intent>-easing/-duration, ease-<intent> /
+// duration-<intent>; native: native.motion.preset.<intent>). They choose a
+// spring, never a new curve, so a theme that retunes a spring moves its presets.
+//   enter     something arrives (overlays, rows, toasts): spatial, a hair of settle
+//   exit      something leaves: effects fast, quicker than enter, no overshoot
+//   emphasis  a state lands (switch thumb, selected dot): expressive fast
+//   success   a task completed (success check): expressive default
+//   attention look here / that didn't work (shake, count tick): spatial fast
+export const MOTION_PRESETS = {
+  enter: ['spatial', 'default'],
+  exit: ['effects', 'fast'],
+  emphasis: ['expressive', 'fast'],
+  success: ['expressive', 'default'],
+  attention: ['spatial', 'fast'],
+};
+
 // rem by default (opt-in layer in 2.6, the default since 3.0): spacing, radius,
 // shape, type sizes, line heights and control heights in rem at a 16px root, so
 // they follow the user's browser font size together. Hairlines (1px) and capsules

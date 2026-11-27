@@ -93,7 +93,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -162,7 +162,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": ""
       },
@@ -271,7 +271,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -2308,6 +2308,13 @@
         "type": "() => void",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "haptic",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Play the tone's haptic when the banner appears: success, warning, or the\nerror haptic for danger (12.3). Off when the user turned haptics off in\nNexubNativeProvider, or where the platform has none."
       }
     ]
   },
@@ -5492,7 +5499,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
         "inherited": "Pressable"
@@ -6885,7 +6892,7 @@
       },
       {
         "name": "haptic",
-        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'reject' | 'warning' | 'snap'",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
         "required": false,
         "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes)."
       },

@@ -22,7 +22,7 @@
   translate: 0 !important;
   background-color: var(--switch-thumb, var(--color-surface-container-lowest)) !important;
   transition:
-    translate var(--motion-spring-expressive-fast-duration) var(--motion-spring-expressive-fast-easing),
+    translate var(--motion-preset-emphasis-duration) var(--motion-preset-emphasis-easing),
     background-color var(--motion-spring-effects-fast-duration) var(--motion-spring-effects-fast-easing) !important;
 }
 /* Icon / spinner colour follows the track. */

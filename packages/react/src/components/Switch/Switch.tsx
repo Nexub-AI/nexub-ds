@@ -35,10 +35,10 @@ export const switchVariants = cva(
 );
 
 export const thumbVariants = cva(
-  // The thumb slides on the expressive spring (a toggle is a key moment).
+  // The thumb slides on the emphasis preset (expressive fast: a toggle is a key moment).
   [
     'pointer-events-none block rounded-full shadow-elevation-1',
-    'transition-[transform,background-color] duration-expressive-fast ease-expressive-fast',
+    'transition-[transform,background-color] duration-emphasis ease-emphasis',
     'translate-x-0.5 rtl:-translate-x-0.5 data-[state=unchecked]:bg-[var(--color-outline)] data-[state=checked]:bg-[var(--color-on-primary)] data-[disabled]:data-[state=unchecked]:bg-[var(--color-outline-variant)]',
   ],
   {

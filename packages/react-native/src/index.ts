@@ -18,10 +18,10 @@ export type {
 } from './theme/ThemeProvider';
 export { nexubFonts, fontStyle } from './theme/fonts';
 export type { FontFamily, FontSource } from './theme/fonts';
-export { playHaptic } from './theme/haptics';
+export { playHaptic, presetHaptic } from './theme/haptics';
 export type { HapticToken } from './theme/haptics';
-export { nxSpring, nxEnter, nxExit, nxLayout } from './theme/motion';
-export type { SpringFamily, SpringSpeed, EnterKind, ExitKind } from './theme/motion';
+export { nxSpring, nxPreset, nxEnter, nxExit, nxLayout } from './theme/motion';
+export type { SpringFamily, SpringSpeed, EnterKind, ExitKind, MotionPreset } from './theme/motion';
 export { useControllableState } from './hooks/useControllableState';
 
 // Primitives
