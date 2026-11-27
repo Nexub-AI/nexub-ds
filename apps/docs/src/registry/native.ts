@@ -565,6 +565,16 @@ toast({ message: 'Payment sent', action: { label: 'Undo', onPress: undo } });`,
   },
   'empty-state': { name: 'EmptyState', preview: 'empty-state', differences: [], code: `<EmptyState title="No transactions yet" action={<Button onPress={topUp}>Add money</Button>} />` },
   'error-state': { name: 'ErrorState', preview: 'error-state', differences: [], code: `<ErrorState onRetry={refetch} />` },
+  illustration: {
+    name: 'Illustration',
+    preview: 'empty-state',
+    differences: [
+      { aspect: 'Colour', web: 'CSS colour roles; system colours under forced colours.', mobile: 'Theme roles via react-native-svg; follows scheme, contrast (high contrast) and the product accent.' },
+      { aspect: 'Decorative', web: '`aria-hidden` without a `title`.', mobile: 'Hidden from VoiceOver and TalkBack without a `title`; with one it is an image.' },
+    ],
+    code: `<EmptyState title="All done" illustration={<Illustration kind="success" />} />`,
+    notes: ['`EmptyState`, `ErrorState` and `ResultScreen` take the art through their `illustration` prop (12.3); without it they keep the icon disc.'],
+  },
   'dropdown-menu': {
     name: 'ContextMenu / ActionSheet',
     preview: 'context-menu',

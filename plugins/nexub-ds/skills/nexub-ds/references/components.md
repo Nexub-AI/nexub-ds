@@ -45,7 +45,7 @@ Never use a component marked deprecated.
 - [Funnel](components/funnel.md) `@nexub/react`: Drop-off through ordered steps, with conversion from the first step.
 - [Gauge](components/gauge.md) `@nexub/react`: Progress toward a target on a 270° arc.
 - [Heatmap](components/heatmap.md) `@nexub/react`: Intensity over a grid, such as activity by weekday and week, in seven sequential steps.
-- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
+- [Illustration](components/illustration.md) `@nexub/react`: A spot illustration for an empty, error, offline, success or full-page state, drawn in code so it follows the theme, dark mode and the product accent.
 - [Kanban](components/kanban.md) `@nexub/react`: Columns of cards people move by dragging or with Alt+Arrow keys.
 - [KPI Tile](components/kpi-tile.md) `@nexub/react`: A headline number with its change versus last period and a trend line.
 - [Line Chart](components/line-chart.md) `@nexub/react`: Show a trend over ordered categories such as time. Server-rendered SVG on the chart palette.

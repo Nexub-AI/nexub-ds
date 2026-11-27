@@ -6,7 +6,7 @@ const meta: Meta<typeof Illustration> = { title: 'Components/Illustration', comp
 export default meta;
 type Story = StoryObj<typeof Illustration>;
 
-const kinds: IllustrationKind[] = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance'];
+const kinds: IllustrationKind[] = ['noData', 'noResults', 'noAccess', 'serverError', 'offline', 'notFound', 'maintenance', 'success'];
 
 export const Default: Story = { args: { kind: 'noData' } };
 
