@@ -154,3 +154,14 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2: an agent never reads as a person. Every AgentAvatar is one image whose
+// accessible name says "AI agent"; its glyph and sparkle are not in the tree.
+test('a11y AgentAvatar name says AI agent', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-avatar--agent-sizes&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.getByRole('img', { name: 'Payhub agent, AI agent', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img', { name: 'Ada Lovelace', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img')).toHaveCount(10);
+});

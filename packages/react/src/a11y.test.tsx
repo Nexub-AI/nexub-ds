@@ -49,8 +49,10 @@ const cases: [string, React.ReactElement][] = [
   ['Rating', <N.Rating value={3} />],
   ['Progress', <N.Progress value={40} aria-label="Upload" />],
   ['Avatar', <N.Avatar name="Ada Lovelace" />],
+  ['AgentAvatar', <N.AgentAvatar name="Payhub agent" />],
   ['Alert', <N.Alert>Saved</N.Alert>],
   ['Badge', <N.Badge>New</N.Badge>],
+  ['AgentBadge', <N.AgentBadge>AI on your own key</N.AgentBadge>],
   ['Link', <N.Link href="/x">Docs</N.Link>],
   [
     'Breadcrumb',

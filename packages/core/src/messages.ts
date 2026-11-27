@@ -307,6 +307,8 @@ export interface NexubMessages {
   moreActions: string;
   /** Avatar `status` dot, read after the name ("Ada Lovelace, Away"). */
   presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
+  /** AgentAvatar (12.2): the tile's accessible name, so an agent never reads as a person ("Payhub agent, AI agent"). */
+  aiAgent: (name: string) => string;
   /** Input `clearable` button. */
   clear: string;
   /** Input `showCount`, read near the limit ("72 of 80 characters"). */
@@ -654,6 +656,7 @@ export const defaultMessages: NexubMessages = {
   page: (index, total) => `Page ${index} of ${total}`,
   moreActions: 'More actions',
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
+  aiAgent: (name) => (name ? `${name}, AI agent` : 'AI agent'),
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
   countryCode: choiceFieldMessages.countryCode,

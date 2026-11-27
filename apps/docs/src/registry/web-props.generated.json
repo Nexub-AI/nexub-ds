@@ -18,6 +18,71 @@
         }
       ]
     },
+    "AgentAvatar": {
+      "file": "components/Avatar/AgentAvatar.tsx",
+      "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "A category colour for the tile. Default: the brand tile look, primary glyph on a surface tile."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The app's glyph, drawn inside the tile (e.g. an `@nexub/icons` icon)."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": false,
+          "description": "Who the agent is (\"Payhub agent\"). Read as \"Payhub agent, AI agent\" (`messages.aiAgent`)."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'xs' | 'lg' | 'xl'",
+          "required": false,
+          "default": "'md'",
+          "description": ""
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "required": false,
+          "description": "An image for the tile instead of `icon` (e.g. an `@nexub/brand` app tile). Falls back to `icon` if it fails."
+        }
+      ]
+    },
+    "AgentBadge": {
+      "file": "components/Badge/AgentBadge.tsx",
+      "props": [
+        {
+          "name": "category",
+          "type": "'accent' | 'blue' | 'amber' | 'emerald' | 'pink' | 'violet' | 'cyan' | 'red' | 'lime'",
+          "required": false,
+          "description": "10.3: a category colour for tags and labels (e.g. one per project or team). Wins over `tone`. It carries no meaning by itself: status still uses `tone`."
+        },
+        {
+          "name": "icon",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "The leading icon. Default: a sparkle."
+        },
+        {
+          "name": "size",
+          "type": "'sm' | 'md' | 'lg'",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "tone",
+          "type": "'neutral' | 'info' | 'success' | 'warning' | 'danger' | 'leap' | 'bookub' | 'payub' | 'founderub'",
+          "required": false,
+          "description": ""
+        }
+      ]
+    },
     "Alert": {
       "file": "components/Alert/Alert.tsx",
       "props": [
