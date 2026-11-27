@@ -294,6 +294,402 @@
       }
     ]
   },
+  "EventCalendar": {
+    "file": "components/calendar.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "events",
+        "type": "CalendarEvent[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "date",
+        "type": "Date",
+        "required": false,
+        "description": "Any day inside the shown day or month."
+      },
+      {
+        "name": "defaultDate",
+        "type": "Date",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onDateChange",
+        "type": "(date: Date) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "view",
+        "type": "'day' | 'agenda'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultView",
+        "type": "'day' | 'agenda'",
+        "required": false,
+        "default": "'agenda'",
+        "description": ""
+      },
+      {
+        "name": "onViewChange",
+        "type": "(view: EventCalendarView) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "views",
+        "type": "EventCalendarView[]",
+        "required": false,
+        "default": "['day', 'agenda']",
+        "description": "Views offered in the switcher; the current view is always offered. One view hides the switcher."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "required": false,
+        "default": "new Date()",
+        "description": "The current time: marks today and draws the \"now\" line in day view. Pass a fixed date in tests and screenshots."
+      },
+      {
+        "name": "onEventClick",
+        "type": "(event: CalendarEvent) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onDayClick",
+        "type": "(date: Date) => void",
+        "required": false,
+        "description": "A day's heading in agenda view."
+      },
+      {
+        "name": "renderDayAction",
+        "type": "(date: Date) => React.ReactNode",
+        "required": false,
+        "description": "A per-day slot, e.g. a small add button: above the day view and beside each agenda day."
+      },
+      {
+        "name": "eventActions",
+        "type": "(event: CalendarEvent) => React.ReactNode",
+        "required": false,
+        "description": "Controls for one event, e.g. a menu button, beside it."
+      },
+      {
+        "name": "legend",
+        "type": "EventCalendarLegendItem[]",
+        "required": false,
+        "description": "A row under the toolbar naming what each tone means."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Placeholders in place of the events while they load."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when no event falls in the shown day (or month, in agenda view)."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the events when set (a failed load)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "LineChart": {
+    "file": "components/charts.tsx",
+    "extends": [
+      "CartesianProps<T>"
+    ],
+    "props": [
+      {
+        "name": "area",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Fill the area under each line (down to the zero line)."
+      },
+      {
+        "name": "data",
+        "type": "T[]",
+        "required": true,
+        "description": "One row per category, in order.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "index",
+        "type": "keyof T & string",
+        "required": true,
+        "description": "Key of the category label in each row (the x axis).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "series",
+        "type": "ChartSeries[]",
+        "required": true,
+        "description": "The values to plot, one entry per series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the chart, e.g. \"Revenue by month\".",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "valueFormat",
+        "type": "(value: number) => string",
+        "required": false,
+        "default": "(n: number) => n.toLocaleString()",
+        "description": "Formats axis labels and the summary.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Height of the plot: 128, 192 or 256 pt.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "required": false,
+        "description": "Show the legend above the chart. Defaults to on for more than one series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "integerTicks",
+        "type": "boolean",
+        "required": false,
+        "description": "Gridlines and axis labels on whole numbers only (counts).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "annotations",
+        "type": "ChartAnnotation[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled points or ranges on the plot (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "referenceLines",
+        "type": "ChartReferenceLine[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "change",
+        "type": "ChartChange",
+        "required": false,
+        "description": "A callout above the plot with the change between two points, its delta computed and formatted (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "A placeholder the size of the plot while the data loads.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when `data` is empty.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the plot when set (a failed load).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      }
+    ]
+  },
+  "BarChart": {
+    "file": "components/charts.tsx",
+    "extends": [
+      "CartesianProps<T>"
+    ],
+    "props": [
+      {
+        "name": "stacked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Stack the series in one bar per category instead of side by side."
+      },
+      {
+        "name": "colorOf",
+        "type": "(row: T, series: ChartSeries, index: number) => ChartPaint | undefined",
+        "required": false,
+        "description": "A colour per bar, e.g. red for the months over budget. Return undefined for the series colour."
+      },
+      {
+        "name": "data",
+        "type": "T[]",
+        "required": true,
+        "description": "One row per category, in order.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "index",
+        "type": "keyof T & string",
+        "required": true,
+        "description": "Key of the category label in each row (the x axis).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "series",
+        "type": "ChartSeries[]",
+        "required": true,
+        "description": "The values to plot, one entry per series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the chart, e.g. \"Revenue by month\".",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "valueFormat",
+        "type": "(value: number) => string",
+        "required": false,
+        "default": "(n: number) => n.toLocaleString()",
+        "description": "Formats axis labels and the summary.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Height of the plot: 128, 192 or 256 pt.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "required": false,
+        "description": "Show the legend above the chart. Defaults to on for more than one series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "integerTicks",
+        "type": "boolean",
+        "required": false,
+        "description": "Gridlines and axis labels on whole numbers only (counts).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "annotations",
+        "type": "ChartAnnotation[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled points or ranges on the plot (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "referenceLines",
+        "type": "ChartReferenceLine[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "change",
+        "type": "ChartChange",
+        "required": false,
+        "description": "A callout above the plot with the change between two points, its delta computed and formatted (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "A placeholder the size of the plot while the data loads.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when `data` is empty.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the plot when set (a failed load).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      }
+    ]
+  },
   "SwitchField": {
     "file": "components/choicefields.tsx",
     "extends": [
@@ -4016,6 +4412,125 @@
       {
         "name": "style",
         "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "Kanban": {
+    "file": "components/kanban.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "columns",
+        "type": "KanbanColumn<T>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "getId",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "getLabel",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": "The card's name, read by screen readers and used in the move sheet's title."
+      },
+      {
+        "name": "onChange",
+        "type": "(columns: KanbanColumn<T>[], move: KanbanMove<T>) => void",
+        "required": true,
+        "description": "Called with the columns after a move; store them to apply it. The second argument names the\ncard and where it moved. A moved card goes to the end of its new column."
+      },
+      {
+        "name": "renderCard",
+        "type": "(item: T) => React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "columnEmptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown inside a column that has no cards (while other columns have some)."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Cards can't be moved: no move button, no move actions."
+      },
+      {
+        "name": "canMove",
+        "type": "(move: KanbanMove<T>) => boolean",
+        "required": false,
+        "description": "Refuse a move before it lands (a WIP limit, a rule): a refused column is left out of the sheet and the actions."
+      },
+      {
+        "name": "dropTargets",
+        "type": "KanbanDropTarget<T>[]",
+        "required": false,
+        "default": "[]",
+        "description": "Places outside the columns, e.g. Archive: listed after the columns in the move sheet."
+      },
+      {
+        "name": "renderColumnHeader",
+        "type": "(column: KanbanColumn<T>, count: number) => React.ReactNode",
+        "required": false,
+        "description": "Replaces a column's header (title, count, a WIP badge)."
+      },
+      {
+        "name": "renderColumnFooter",
+        "type": "(column: KanbanColumn<T>) => React.ReactNode",
+        "required": false,
+        "description": "A slot at the end of each column, e.g. a quick-add button."
+      },
+      {
+        "name": "getTone",
+        "type": "(item: T) => KanbanCardTone | undefined",
+        "required": false,
+        "description": "A coloured start edge on a card (for priority or status; the card should say it in text too)."
+      },
+      {
+        "name": "columnWidth",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Column width: 240, 288 or 352 pt."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Placeholder columns and cards while the board loads."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when no column has a card."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the board when set (a failed load)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "testID",
+        "type": "string",
         "required": false,
         "description": ""
       }

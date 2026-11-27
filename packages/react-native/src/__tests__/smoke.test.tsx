@@ -7,6 +7,8 @@ import { act, render, screen, waitFor } from '@testing-library/react-native';
 import { Plus } from '@nexub/icons/native';
 import * as Lib from '../index';
 import * as Patterns from '../patterns';
+import * as Calendar from '../calendar';
+import * as Charts from '../charts';
 
 // The OS colour scheme, driven by the test at the bottom of this file.
 const mockColorScheme = jest.fn(() => 'light');
@@ -176,6 +178,14 @@ const CASES: Record<string, Case> = {
   ComparisonBar: { props: { label: 'Orders', left: { label: 'A', value: 3 }, right: { label: 'B', value: 1 } }, a11y: ['image', 'Orders: A 3, B 1'] },
   PhoneInput: { props: { label: 'Phone', defaultCountry: 'IN' }, a11y: ['button', 'Country code, India +91'] },
   Countdown: { props: { to: 272_000, now: () => 0 }, a11y: ['timer', '4:32'] },
+  // 12.5 twins
+  Kanban: {
+    props: { columns: [{ id: 'todo', title: 'To do', items: ['Alpha'] }, { id: 'done', title: 'Done', items: [] }], getId: (x: string) => x, getLabel: (x: string) => x, onChange: noop, renderCard: (x: string) => t(x) },
+    a11y: 'Alpha, To do',
+  },
+  EventCalendar: { props: { events: [], now: new Date(2026, 10, 2, 9), defaultDate: new Date(2026, 10, 2) }, a11y: ['button', 'Today'] },
+  LineChart: { props: { title: 'Visits', data: [{ m: 'Jan', v: 1 }], index: 'm', series: [{ key: 'v' }] }, a11y: ['image', 'Visits. Jan: v 1'] },
+  BarChart: { props: { title: 'Sales', data: [{ m: 'Jan', v: 2 }], index: 'm', series: [{ key: 'v', label: 'Sales' }] }, a11y: ['image', 'Sales. Jan: Sales 2'] },
   // Patterns
   HomeScreen: { props: { greeting: 'Hi', balance: { value: 1, currency: 'USD' } } },
   AuthScreen: { props: { title: 'Welcome', children: t('form'), footer: <Lib.Button onPress={noop}>Go</Lib.Button> }, a11y: ['header', 'Welcome'] },
@@ -208,7 +218,7 @@ const isComponent = (name: string, v: unknown) =>
   /^[A-Z]/.test(name) &&
   (typeof v === 'function' || (typeof v === 'object' && v !== null && '$$typeof' in v));
 
-const exported = Object.entries({ ...Lib, ...Patterns }).filter(([n, v]) => isComponent(n, v)) as [
+const exported = Object.entries({ ...Lib, ...Patterns, ...Calendar, ...Charts }).filter(([n, v]) => isComponent(n, v)) as [
   string,
   React.ComponentType<Props>,
 ][];

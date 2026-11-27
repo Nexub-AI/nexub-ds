@@ -193,5 +193,12 @@
       "virtualizeAbove"
     ],
     "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box. virtualizeAbove (12.1) windows the web list; the native list is a FlatList, which always renders only the rows in view."
+  },
+  "event-calendar": {
+    "props": [
+      "maxEventsPerDay",
+      "weekStartsOn"
+    ],
+    "reason": "Both shape the month and week grids, which native leaves out: a phone shows the day and agenda views."
   }
 }

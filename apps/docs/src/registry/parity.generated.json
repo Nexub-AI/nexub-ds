@@ -1154,6 +1154,131 @@
     "onPurpose": [],
     "nativeOnly": []
   },
+  "kanban": {
+    "web": "Kanban",
+    "native": "Kanban",
+    "shared": [
+      "canMove",
+      "columnEmptyState",
+      "columnWidth",
+      "columns",
+      "dropTargets",
+      "emptyState",
+      "errorState",
+      "getId",
+      "getLabel",
+      "getTone",
+      "loading",
+      "onChange",
+      "readOnly",
+      "renderCard",
+      "renderColumnFooter",
+      "renderColumnHeader"
+    ],
+    "webOnly": [
+      "getLane",
+      "lanes"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "event-calendar": {
+    "web": "EventCalendar",
+    "native": "EventCalendar",
+    "shared": [
+      "date",
+      "defaultDate",
+      "defaultView",
+      "emptyState",
+      "errorState",
+      "eventActions",
+      "events",
+      "legend",
+      "loading",
+      "now",
+      "onDateChange",
+      "onDayClick",
+      "onEventClick",
+      "onViewChange",
+      "renderDayAction",
+      "view",
+      "views"
+    ],
+    "webOnly": [
+      "onEventMove"
+    ],
+    "onPurpose": [
+      "maxEventsPerDay",
+      "weekStartsOn"
+    ],
+    "nativeOnly": []
+  },
+  "line-chart": {
+    "web": "LineChart",
+    "native": "LineChart",
+    "shared": [
+      "annotations",
+      "area",
+      "change",
+      "data",
+      "emptyState",
+      "errorState",
+      "index",
+      "integerTicks",
+      "legend",
+      "loading",
+      "referenceLines",
+      "series",
+      "size",
+      "title",
+      "valueFormat"
+    ],
+    "webOnly": [
+      "defaultHiddenSeries",
+      "hiddenSeries",
+      "interactive",
+      "onHiddenSeriesChange",
+      "onPointClick",
+      "tableView"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "bar-chart": {
+    "web": "BarChart",
+    "native": "BarChart",
+    "shared": [
+      "annotations",
+      "change",
+      "colorOf",
+      "data",
+      "emptyState",
+      "errorState",
+      "index",
+      "integerTicks",
+      "legend",
+      "loading",
+      "referenceLines",
+      "series",
+      "size",
+      "stacked",
+      "title",
+      "valueFormat"
+    ],
+    "webOnly": [
+      "defaultHiddenSeries",
+      "hiddenSeries",
+      "interactive",
+      "onHiddenSeriesChange",
+      "onPointClick",
+      "orientation",
+      "tableView",
+      "totalKey",
+      "variant"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
   "dialog": {
     "web": null,
     "native": "Dialog",

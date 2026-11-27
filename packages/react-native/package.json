@@ -38,6 +38,16 @@
       "types": "./lib/typescript/patterns/index.d.ts",
       "default": "./lib/module/patterns/index.js"
     },
+    "./calendar": {
+      "source": "./src/calendar.ts",
+      "types": "./lib/typescript/calendar.d.ts",
+      "default": "./lib/module/calendar.js"
+    },
+    "./charts": {
+      "source": "./src/charts.ts",
+      "types": "./lib/typescript/charts.d.ts",
+      "default": "./lib/module/charts.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

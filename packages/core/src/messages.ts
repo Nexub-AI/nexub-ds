@@ -258,6 +258,9 @@ export interface NexubMessages {
   /** Sortable (11.4): a locked item's disabled handle; a keyboard move a `canMove` rule refuses. */
   itemLocked: (label: string) => string;
   cannotMoveHere: string;
+  /** Native Kanban (12.5): the card's move button and sheet title, and one entry per column. */
+  moveCardTo: string;
+  moveToColumn: (column: string) => string;
   /** NotificationCenter (@nexub/patterns). */
   notificationCenter: string;
   unreadNotifications: (count: number) => string;
@@ -672,6 +675,8 @@ export const defaultMessages: NexubMessages = {
   itemMovedToColumn: (label, column, position, total) => `${label} moved to ${column}, position ${position} of ${total}`,
   itemLocked: (label) => `${label} is locked`,
   cannotMoveHere: "Can't move here",
+  moveCardTo: 'Move to…',
+  moveToColumn: (column) => `Move to ${column}`,
   notificationCenter: 'Notifications',
   unreadNotifications: (count) => `${count} unread`,
   newBadge: 'New',
