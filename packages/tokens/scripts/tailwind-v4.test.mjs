@@ -33,6 +33,9 @@ const EXPECT = {
   'font-display': ['font-family: var(--font-family-display)'],
   'duration-spatial-default': ['transition-duration: var(--motion-spring-spatial-default-duration)'],
   'ease-spatial-default': ['transition-timing-function: var(--motion-spring-spatial-default-easing)'],
+  // 12.3 motion presets by intent
+  'ease-enter': ['transition-timing-function: var(--motion-preset-enter-easing)'],
+  'duration-success': ['transition-duration: var(--motion-preset-success-duration)'],
   'p-control-md': ['padding: var(--size-control-md)'],
   'h-control-md': ['height: var(--size-control-md)'],
   'ms-4': ['margin-inline-start: var(--spacing-4)'],

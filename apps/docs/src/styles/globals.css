@@ -607,6 +607,8 @@ html, body {
 .docs-reduce-motion .nx-lift:active,
 .docs-reduce-motion .nx-press:active { translate: none; scale: none; transform: none; }
 .docs-reduce-motion .docs-spring-dot { animation: none; translate: var(--docs-dot-end); }
+.docs-reduce-motion :is(.nx-motion-emphasis, .nx-motion-success, .nx-motion-attention) { animation: none; }
+.docs-reduce-motion :is(.nx-motion-enter, .nx-motion-exit) { --nx-travel: 0px; }
 } /* @layer utilities */
 
 /* 11.0 playground + states */

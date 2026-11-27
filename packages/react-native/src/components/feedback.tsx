@@ -35,8 +35,9 @@ import {
 import { Surface } from '../primitives/Surface';
 import { Text } from '../primitives/Text';
 import { useLatest } from '../hooks/useLatest';
-import { useTheme } from '../theme/ThemeProvider';
-import { nxEnter, nxExit, nxLayout, nxSpring, useSpringValue } from '../theme/motion';
+import { useHaptics, useTheme } from '../theme/ThemeProvider';
+import type { HapticToken } from '../theme/haptics';
+import { nxEnter, nxExit, nxLayout, nxPreset, useSpringValue } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { TONE_CONTAINERS, TONE_TEXT } from './shared';
 
@@ -45,6 +46,13 @@ const TONE_ICON: Partial<Record<ToneValue, React.ComponentType<NativeIconProps>>
   success: CheckCircle2,
   warning: AlertTriangle,
   danger: AlertCircle,
+};
+
+/** 12.3: the haptic a tone's moment plays when `haptic` is on (info and neutral stay silent). */
+const TONE_HAPTIC: Partial<Record<ToneValue, HapticToken>> = {
+  success: 'success',
+  warning: 'warning',
+  danger: 'reject',
 };
 
 // ─── Banner ──────────────────────────────────────────────────────────────────
@@ -57,6 +65,12 @@ export interface BannerProps extends ViewProps {
   /** One action, e.g. <Button variant="text">Review</Button>. */
   action?: React.ReactNode;
   onDismiss?: () => void;
+  /**
+   * Play the tone's haptic when the banner appears: success, warning, or the
+   * error haptic for danger (12.3). Off when the user turned haptics off in
+   * NexubNativeProvider, or where the platform has none. @default false
+   */
+  haptic?: boolean;
 }
 
 /** Persistent in-page message (web Banner / Alert / Callout). */
@@ -66,10 +80,17 @@ export function Banner({
   tone = 'info',
   action,
   onDismiss,
+  haptic = false,
   style,
   ...rest
 }: BannerProps) {
   const { roles, tokens, messages } = useTheme();
+  const play = useHaptics();
+  React.useEffect(() => {
+    const token = haptic ? TONE_HAPTIC[tone] : undefined;
+    if (token) play(token);
+    // Once per appearance (a new tone is a new moment), not on every render.
+  }, [haptic, tone, play]);
   const [bg, fg] = TONE_CONTAINERS[tone];
   const Glyph = TONE_ICON[tone] ?? Info;
   return (
@@ -129,6 +150,11 @@ export interface ToastOptions {
   tone?: ToneValue;
   /** 'short' 4 s, 'long' 10 s (Material snackbar timings). @default 'long' with an action (time to reach it, WCAG 2.2.1), else 'short' */
   duration?: 'short' | 'long';
+  /**
+   * Play the tone's haptic when the toast shows: success, warning, or the
+   * error haptic for danger (12.3). Honours the user's haptics setting. @default false
+   */
+  haptic?: boolean;
 }
 
 const ToastCtx = React.createContext<(t: ToastOptions) => void>(() => {});
@@ -152,9 +178,9 @@ export function toastRelease(dx: number, vx: number): -1 | 0 | 1 {
 
 /** How far the toast rises into place (and sinks on its way out). */
 const TOAST_RISE = 24;
-const TOAST_EXIT = nxSpring('effects', 'fast');
-// Captured by the swipe worklets (nxSpring itself is not a worklet).
-const TOAST_SETTLE = nxSpring('spatial', 'default');
+const TOAST_EXIT = nxPreset('exit');
+// Captured by the swipe worklets (nxPreset itself is not a worklet).
+const TOAST_SETTLE = nxPreset('enter');
 
 type LiveToast = ToastOptions & { id: number; leaving?: boolean };
 
@@ -166,10 +192,16 @@ type LiveToast = ToastOptions & { id: number; leaving?: boolean };
 export function ToastProvider({ children, bottomOffset = 0 }: ToastProviderProps) {
   const insets = useSafeAreaInsets();
   const [toast, setToast] = React.useState<LiveToast | null>(null);
-  const show = React.useCallback((t: ToastOptions) => {
-    setToast({ ...t, id: Date.now() });
-    AccessibilityInfo.announceForAccessibility(t.message);
-  }, []);
+  const play = useHaptics();
+  const show = React.useCallback(
+    (t: ToastOptions) => {
+      setToast({ ...t, id: Date.now() });
+      AccessibilityInfo.announceForAccessibility(t.message);
+      const token = t.haptic && t.tone ? TONE_HAPTIC[t.tone] : undefined;
+      if (token) play(token);
+    },
+    [play],
+  );
   // Leaving plays the exit spring; the toast unmounts when it lands (onGone).
   const leave = React.useCallback(() => setToast((t) => t && { ...t, leaving: true }), []);
   const gone = React.useCallback(
@@ -223,7 +255,7 @@ function ToastSurface({
       ? withSpring(TOAST_RISE, TOAST_EXIT, (finished) => {
           if (finished) runOnJS(onGone)(id);
         })
-      : withSpring(0, nxSpring('spatial', 'default'));
+      : withSpring(0, TOAST_SETTLE);
   }, [leaving, y, id, onGone]);
   // Swipe to dismiss, on the UI thread; JS hears only that the toast is gone.
   const swipe = usePanGesture(
@@ -326,7 +358,7 @@ export interface DialogProps {
   dismissible?: boolean;
 }
 
-const DIALOG_EXIT = nxSpring('effects', 'fast');
+const DIALOG_EXIT = nxPreset('exit');
 /** The panel grows from this scale as it fades in. */
 const DIALOG_SCALE = 0.94;
 
@@ -348,7 +380,7 @@ export function Dialog({
   const toggle = useLatest(() => {
     if (open) {
       setVisible(true);
-      shown.value = withSpring(1, nxSpring('spatial', 'default'));
+      shown.value = withSpring(1, nxPreset('enter'));
     } else if (visible) {
       // An interrupted spring (reopened mid-close) reports finished=false and keeps it up.
       shown.value = withSpring(0, DIALOG_EXIT, (finished) => {

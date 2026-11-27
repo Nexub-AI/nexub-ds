@@ -5,7 +5,7 @@ import { Hct, argbFromHex, hexFromArgb } from '@material/material-color-utilitie
 import { fileURLToPath } from 'node:url';
 import { compose, swift } from './platforms.mjs';
 import { writeFigma } from './figma.mjs';
-import { APP_ALIASES, CHART_KEYS, DIVISIONS, DIVISION_APPS, LEVELS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, categoryColors, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
+import { APP_ALIASES, CHART_KEYS, DIVISIONS, DIVISION_APPS, LEVELS, MOTION_PRESETS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, categoryColors, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -97,6 +97,10 @@ function presetExtend(dictionary) {
       const key = `${rest[1]}-${rest[2]}`; // ease-spatial-fast / duration-spatial-fast
       if (rest[3] === 'easing') transitionTimingFunction[key] = `var(${varName})`;
       if (rest[3] === 'duration') transitionDuration[key] = `var(${varName})`;
+    } else if (ns === 'motion' && rest[0] === 'preset') {
+      // 12.3: ease-enter / duration-enter … (the preset aliases a spring).
+      if (rest[2] === 'easing') transitionTimingFunction[rest[1]] = `var(${varName})`;
+      if (rest[2] === 'duration') transitionDuration[rest[1]] = `var(${varName})`;
     }
   }
 
@@ -366,6 +370,16 @@ export function nativeTokens(t) {
           ),
         ]),
       ),
+      // 12.3 presets by intent: the spring they alias, resolved (nxPreset() in @nexub/react-native).
+      preset: Object.fromEntries(
+        Object.entries(MOTION_PRESETS).map(([intent, [kind, speed]]) => {
+          const [ratio, stiffness] = SPRINGS[kind][speed];
+          return [
+            intent,
+            { family: kind, speed, stiffness, damping: +(2 * ratio * Math.sqrt(stiffness)).toFixed(2), mass: 1 },
+          ];
+        }),
+      ),
     },
   };
 }
@@ -422,6 +436,16 @@ const generated = {
         ),
       ]),
     ),
+    // 12.3: presets reference their spring, so the CSS keeps var() aliases (outputReferences below).
+    preset: Object.fromEntries(
+      Object.entries(MOTION_PRESETS).map(([intent, [kind, speed]]) => [
+        intent,
+        {
+          easing: { $value: `{motion.spring.${kind}.${speed}.easing}`, $type: 'other' },
+          duration: { $value: `{motion.spring.${kind}.${speed}.duration}`, $type: 'other' },
+        },
+      ]),
+    ),
   },
 };
 
@@ -438,7 +462,7 @@ const sd = new StyleDictionary({
         {
           destination: 'variables.css',
           format: 'css/variables',
-          options: { selector: ':root', outputReferences: false },
+          options: { selector: ':root', outputReferences: (token) => token.path[0] === 'motion' && token.path[1] === 'preset' },
         },
       ],
     },

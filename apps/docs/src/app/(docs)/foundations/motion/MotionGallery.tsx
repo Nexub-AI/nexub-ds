@@ -20,7 +20,8 @@ import {
   Switch,
   Text,
 } from '@nexub/react';
-import { Play, Plus, X } from '@nexub/icons';
+import { Check, Play, Plus, X } from '@nexub/icons';
+import { MOTION_PRESETS, PRESET_HAPTIC, type MotionPresetName } from './presets';
 import type { SpringToken } from './springs';
 
 /* ── Controls: replay, slow motion, reduced motion ─────────────────────────── */
@@ -40,6 +41,11 @@ export function MotionGallery({ springs, children }: { springs: SpringToken[]; c
     if (!slow) return undefined;
     const v: Record<string, string> = {};
     for (const s of springs) v[`--motion-spring-${s.family}-${s.speed}-duration`] = `${s.durationMs * 4}ms`;
+    // The presets alias a spring at :root, so they resolve there: slow them down here too.
+    for (const p of MOTION_PRESETS) {
+      const s = springs.find((x) => x.family === p.family && x.speed === p.speed);
+      if (s) v[`--motion-preset-${p.name}-duration`] = `${s.durationMs * 4}ms`;
+    }
     return v as React.CSSProperties;
   }, [slow, springs]);
 
@@ -290,6 +296,81 @@ export function WebDemos() {
           </Button>
         </div>
       </Demo>
+    </div>
+  );
+}
+
+/* ── Presets by intent (12.3) ──────────────────────────────────────────────── */
+
+function PresetStage({ name }: { name: MotionPresetName }) {
+  switch (name) {
+    case 'enter':
+    case 'exit':
+      return (
+        <div className="flex h-12 w-40 items-center gap-2 rounded-shape-control bg-surface-container-high px-3">
+          <div className="h-6 w-6 rounded-full bg-tertiary-container" />
+          <Text size="body-sm">New message</Text>
+        </div>
+      );
+    case 'emphasis':
+      return (
+        <div className="grid h-12 w-12 place-items-center rounded-full bg-primary text-on-primary">
+          <Check size={20} />
+        </div>
+      );
+    case 'success':
+      return (
+        <div className="grid h-14 w-14 place-items-center rounded-full bg-success-container text-on-success-container">
+          <Check size={26} />
+        </div>
+      );
+    case 'attention':
+      return (
+        <div className="flex h-10 w-44 items-center rounded-shape-field border-2 border-error px-3">
+          <Text size="body-sm" className="text-error">
+            Wrong code
+          </Text>
+        </div>
+      );
+  }
+}
+
+/** One card per preset: Play (or Replay all) re-mounts the element with its class, which runs it. */
+export function PresetDemos() {
+  const run = useRun();
+  const [local, setLocal] = React.useState<Record<string, number>>({});
+  // Exit holds its end state, so it plays from a visible element and comes back after a beat.
+  const exitRun = run + (local.exit ?? 0);
+  const [leaving, setLeaving] = React.useState(false);
+  React.useEffect(() => {
+    if (!exitRun) return;
+    setLeaving(true);
+    const t = setTimeout(() => setLeaving(false), 1200);
+    return () => clearTimeout(t);
+  }, [exitRun]);
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {MOTION_PRESETS.map((p) => (
+        <Demo key={p.name} title={p.name} token={`nx-motion-${p.name} · ${p.family} ${p.speed}`} code={`native haptic: ${PRESET_HAPTIC[p.name]}`}>
+          <div className="flex flex-col items-center gap-4">
+            <div
+              key={`${run}-${local[p.name] ?? 0}-${p.name === 'exit' && leaving}`}
+              className={p.name !== 'exit' ? `nx-motion-${p.name}` : leaving ? 'nx-motion-exit' : undefined}
+            >
+              <PresetStage name={p.name} />
+            </div>
+            <Button
+              size="sm"
+              variant="text"
+              leadingIcon={<Play size={14} />}
+              aria-label={`Play ${p.name}`}
+              onClick={() => setLocal((l) => ({ ...l, [p.name]: (l[p.name] ?? 0) + 1 }))}
+            >
+              Play
+            </Button>
+          </div>
+        </Demo>
+      ))}
     </div>
   );
 }
