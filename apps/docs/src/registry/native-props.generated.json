@@ -2582,6 +2582,12 @@
         "required": false,
         "default": "'md'",
         "description": "Scales spacing, icon and title."
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"noData\" />`."
       }
     ]
   },
@@ -2625,6 +2631,13 @@
         "required": false,
         "default": "'md'",
         "description": "Scales spacing, icon and title.",
+        "inherited": "EmptyState"
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"noData\" />`.",
         "inherited": "EmptyState"
       }
     ]
@@ -2749,6 +2762,33 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      }
+    ]
+  },
+  "Illustration": {
+    "file": "components/illustration.tsx",
+    "extends": [
+      "Omit<ViewProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "kind",
+        "type": "'noData' | 'noResults' | 'noAccess' | 'serverError' | 'offline' | 'notFound' | 'maintenance' | 'success'",
+        "required": true,
+        "description": "Which drawing: empty (noData, noResults), noAccess, serverError, offline, notFound, maintenance or success."
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "80, 120 or 160 pt wide (5:4)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Names the drawing (an image to screen readers). Without it the drawing is decorative and hidden."
       }
     ]
   },
@@ -6705,6 +6745,12 @@
         "type": "React.ComponentType<NativeIconProps>",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"success\" size=\"lg\" />`."
       }
     ]
   },
