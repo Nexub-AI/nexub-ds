@@ -124,6 +124,8 @@ const OPEN: { id: string; trigger?: string; press?: string }[] = [
   // 11.9: the diagram's "Connect to…" menu (the keyboard alternative to dragging a handle),
   // opened with C on a node (its connect button only takes pointer events on hover).
   { id: 'components-diagramcanvas--default', trigger: '.react-flow__node', press: 'c' },
+  // 12.2: RadioItem indicator="end" (icon at the start, tick at the inline end).
+  { id: 'navigation-dropdownmenu--theme-menu', trigger: 'button' },
 ];
 const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
 
@@ -203,4 +205,70 @@ test.describe('a11y Conversation 12.2', () => {
     await expect(page.getByRole('button', { name: /Jump to/ })).toHaveCount(0);
     await expect(live).toHaveText('');
   });
+});
+
+// 12.2: an agent never reads as a person. Every AgentAvatar is one image whose
+// accessible name says "AI agent"; its glyph and sparkle are not in the tree.
+test('a11y AgentAvatar name says AI agent', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-avatar--agent-sizes&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.getByRole('img', { name: 'Payhub agent, AI agent', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img', { name: 'Ada Lovelace', exact: true })).toHaveCount(5);
+  await expect(root.getByRole('img')).toHaveCount(10);
+});
+
+// 12.2: names, roles and states a screen reader gets from the new menu and sidebar behaviour.
+test('a11y 12.2 theme menu: radio items keep role, name and checked state with indicator="end"', async ({ page }) => {
+  await page.goto('/iframe.html?id=navigation-dropdownmenu--theme-menu&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const trigger = page.getByRole('button', { name: 'Theme' });
+  await trigger.focus();
+  await page.keyboard.press('Enter'); // opens with focus on the first item (Light)
+  const menu = page.getByRole('menu');
+  await expect(menu.getByRole('menuitemradio')).toHaveCount(3);
+  await expect(menu.getByRole('menuitemradio', { name: 'System' })).toHaveAttribute('aria-checked', 'true');
+  await expect(menu.getByRole('menuitemradio', { name: 'Light' })).toHaveAttribute('aria-checked', 'false');
+  await expect(menu.getByRole('menuitemradio', { name: 'Light' })).toBeFocused();
+  await page.keyboard.press('Enter'); // picks Light and closes
+  await expect(menu).toHaveCount(0);
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menuitemradio', { name: 'Light' })).toHaveAttribute('aria-checked', 'true');
+});
+
+test('a11y 12.2 collapsible sidebar group: a named toggle with aria-expanded hides its items', async ({ page }) => {
+  await page.goto('/iframe.html?id=navigation-sidebar--collapsible-groups&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const nav = page.getByRole('navigation');
+  const workspace = nav.getByRole('button', { name: 'Workspace' });
+  const admin = nav.getByRole('button', { name: 'Admin' });
+  await expect(workspace).toHaveAttribute('aria-expanded', 'true');
+  await expect(admin).toHaveAttribute('aria-expanded', 'false');
+  // Closed: the items are inert, so Tab skips them.
+  await expect(page.locator(`[id="${await admin.getAttribute('aria-controls')}"]`)).toHaveAttribute('inert', '');
+  await admin.focus();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Collapse to icon rail' })).toBeFocused();
+  await admin.focus();
+  await page.keyboard.press('Enter');
+  await expect(admin).toHaveAttribute('aria-expanded', 'true');
+  await expect(nav.getByRole('link', { name: 'Team' })).toBeVisible();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await expect(nav.getByRole('link', { name: 'Settings' })).toBeFocused();
+  await admin.focus();
+  await page.keyboard.press('Space');
+  await expect(admin).toHaveAttribute('aria-expanded', 'false');
+  await page.addScriptTag({ path: axePath });
+  const violations = await page.evaluate(async (tags) => {
+    // @ts-expect-error injected global
+    const r = await window.axe.run('#storybook-root', { runOnly: { type: 'tag', values: tags } });
+    return (r.violations as { id: string }[]).map((v) => v.id);
+  }, TAGS);
+  expect(violations).toEqual([]);
+  // Icon rail: every group open, toggles hidden.
+  await page.getByRole('button', { name: 'Collapse to icon rail' }).click();
+  await expect(nav.getByRole('button')).toHaveCount(0);
+  await expect(nav.getByRole('link', { name: 'Team' })).toHaveCount(1);
 });

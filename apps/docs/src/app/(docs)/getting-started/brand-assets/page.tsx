@@ -13,6 +13,7 @@ const apps = [
   ['', 'Nexub (hub)'], ['account', 'Account'], ['command-hub', 'Command Hub'], ['admin', 'Admin'],
   ['people', 'People'], ['payhub', 'PayHub'], ['commerce', 'Commerce'], ['contracts', 'Contracts'],
   ['leap', 'Leap'], ['founder-hub', 'Founder Hub'], ['mind', 'Mind'], ['go', 'Go'], ['verify', 'Verify'], ['forms', 'Forms'], ['crm', 'CRM'],
+  ['devx', 'devX'], ['partnerhub', 'PartnerHub'], ['book-hub', 'Book Hub'], ['audit-hub', 'Audit Hub'],
 ] as const;
 
 // Read at build time and inline, so the docs need no copy of the brand assets.

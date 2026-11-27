@@ -1061,7 +1061,7 @@ Full-height application frame: a header row over a body with a sidebar slot and 
 | `AppShell.Header` | `compound` |  | First row, e.g. a `TopNav.Root`. |
 | `AppShell.Body` | `compound` |  | Second row: lays out the sidebar and main side by side. |
 | `AppShell.Sidebar` | `compound` |  | Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`. |
-| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. |
+| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it. |
 | `...props` | `React.HTMLAttributes<HTMLDivElement>` |  | Every part forwards its ref and HTML attributes. |
 
 ## Example: Header, sidebar and main
@@ -1461,6 +1461,11 @@ Displays a user's profile picture with initials fallback.
 | `badge` | `boolean` |  | Shows a status badge on the avatar. |
 | `badgeColor` | `string` |  | Colour of the status badge. |
 | `fallback` | `ReactNode` |  | Custom fallback rendered when the image fails to load and no name is provided. |
+| `AgentAvatar icon` | `ReactNode` |  | AgentAvatar (12.2, beta): the app glyph inside the tile, e.g. an `@nexub/icons` icon. Default: a bot. |
+| `AgentAvatar src` | `string` |  | AgentAvatar: an image for the tile instead of `icon` (e.g. an `@nexub/brand` app tile). Falls back to `icon` if it fails. |
+| `AgentAvatar name` | `string` |  | AgentAvatar: who the agent is ("Payhub agent"). Read as "Payhub agent, AI agent" (`messages.aiAgent`). |
+| `AgentAvatar size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | AgentAvatar: the same size scale as Avatar. |
+| `AgentAvatar category` | `CategoryColor` |  | AgentAvatar: a category colour for the tile. Default: the brand tile look, a primary glyph on a surface tile. |
 
 ## Example: Default
 
@@ -1513,6 +1518,32 @@ export default function Example() {
 }
 ```
 
+## Example: Agent avatar
+
+AgentAvatar (12.2, beta) is for AI agents, so an agent never looks like a colleague: a rounded-square app tile, like the `@nexub/brand` tiles, with a sparkle in the bottom inline-end corner. Same sizes as Avatar. Screen readers hear "Payhub agent, AI agent".
+
+```tsx
+import { AgentAvatar, Avatar } from '@nexub/react';
+import { CreditCard, Terminal } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-4">
+      <Avatar name="Ada Lovelace" size="lg" />
+      <AgentAvatar name="Payhub agent" icon={<CreditCard />} size="lg" />
+      <AgentAvatar name="devX agent" icon={<Terminal />} category="blue" size="lg" />
+      <AgentAvatar name="Nexub agent" size="lg" />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Roles: img (when named)
+- Avatar reads its `name`, plus the `status` ("Ada Lovelace, Away"). Without a name it is decorative and hidden.
+- AgentAvatar is always `role="img"` and its name says it is an AI agent ("Payhub agent, AI agent", from `messages.aiAgent`). The glyph and the sparkle are hidden.
+
 
 ---
 
@@ -1546,6 +1577,7 @@ Small status indicator or label. Communicates state, category, or count.
 | `tone` | `'success' \| 'danger' \| 'warning' \| 'info' \| 'neutral'` | `'neutral'` | Semantic color tone. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size. |
 | `leadingIcon` | `React.ReactNode` |  | Icon or dot rendered before the label. |
+| `AgentBadge icon` | `ReactNode` |  | AgentBadge (12.2, beta): the leading icon. Default: a sparkle. AgentBadge is always `variant="soft"` and takes Badge's `tone`, `category` and `size`. |
 
 ## Example: Tones
 
@@ -1594,6 +1626,23 @@ export default function Example() {
           {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
         </Badge>
       ))}
+    </div>
+  );
+}
+```
+
+## Example: Agent badge
+
+AgentBadge (12.2, beta) labels an AI agent in a chat header ("AI on your own key", "Buttons only"): a soft Badge with a leading sparkle. Pair it with `AgentAvatar`.
+
+```tsx
+import { AgentBadge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <AgentBadge>AI on your own key</AgentBadge>
+      <AgentBadge tone="info">Buttons only</AgentBadge>
     </div>
   );
 }
@@ -5361,6 +5410,7 @@ A menu of actions opened from a button, built on Radix.
 | `DropdownMenu.Portal / Content` | `compound` |  | Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4). |
 | `DropdownMenu.Item` | `compound` |  | An action (`onSelect`, `disabled`). |
 | `DropdownMenu.CheckboxItem / RadioGroup / RadioItem` | `compound` |  | Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`). |
+| `RadioItem / CheckboxItem indicator` | `'start' \| 'end'` | `'start'` | 12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu). |
 | `DropdownMenu.Label / Group / Separator` | `compound` |  | Section heading, grouping and divider. |
 | `DropdownMenu.Sub / SubTrigger / SubContent` | `compound` |  | A nested submenu. |
 
@@ -5416,6 +5466,40 @@ export default function Example() {
             <DropdownMenu.RadioItem value="updated">Last updated</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="name">Name</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="owner">Owner</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+## Example: Theme menu (tick at the end)
+
+```tsx
+import * as React from 'react';
+import { Button, DropdownMenu } from '@nexub/react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
+
+export default function Example() {
+  const [theme, setTheme] = React.useState('system');
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outlined">Theme</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content>
+          <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+            <DropdownMenu.RadioItem value="light" indicator="end">
+              <Sun size="sm" /> Light
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="dark" indicator="end">
+              <Moon size="sm" /> Dark
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="system" indicator="end">
+              <Monitor size="sm" /> System
+            </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
@@ -11053,6 +11137,8 @@ Vertical app navigation: a header, grouped items with icons, and a pinned footer
 | `aria-label` | `string` |  | Name of the nav landmark. Defaults to the localised "Sidebar". |
 | `SidebarHeader status` | `ReactNode` |  | Trailing element next to the logo (`Sidebar.Header` children), e.g. a `Badge`. Moves under the logo when they don’t fit. |
 | `SidebarGroup label` | `string` |  | Heading above a group of items. |
+| `SidebarGroup collapsible` | `boolean` | `false` | 12.2: the label becomes a button (`aria-expanded`, `aria-controls`) with a chevron that folds the items away. Stays open, toggle hidden, in the icon rail. |
+| `SidebarGroup defaultOpen / open / onOpenChange` | `boolean / boolean / (open: boolean) => void` | `true` | 12.2: uncontrolled start state, or controlled open state, of a `collapsible` group. |
 | `SidebarItem icon` | `ReactNode` |  | Leading icon; the only thing shown when collapsed. |
 | `SidebarItem active` | `boolean` |  | Marks the current page (`aria-current="page"`). |
 | `SidebarItem asChild` | `boolean` |  | Use your router `<Link>` as the item; pass it as the only child. |
@@ -11109,6 +11195,30 @@ export default function Example() {
       <Button variant="outlined" onClick={() => setCollapsed((c) => !c)} aria-pressed={!collapsed}>
         {collapsed ? 'Expand' : 'Collapse'}
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Collapsible groups
+
+```tsx
+import { Sidebar } from '@nexub/react';
+import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex h-70 items-start">
+      <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
+        <Sidebar.Group label="Work" collapsible>
+          <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Folder size="sm" />}>Projects</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group label="Admin" collapsible defaultOpen={false}>
+          <Sidebar.Item href="#" icon={<BarChart3 size="sm" />}>Reports</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Root>
     </div>
   );
 }

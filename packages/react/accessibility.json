@@ -157,7 +157,10 @@
       "automated": "pass",
       "exceptions": [],
       "keyboard": [],
-      "screenReader": []
+      "screenReader": [
+        "Avatar reads its `name`, plus the `status` (\"Ada Lovelace, Away\"). Without a name it is decorative and hidden.",
+        "AgentAvatar is always `role=\"img\"` and its name says it is an AI agent (\"Payhub agent, AI agent\", from `messages.aiAgent`). The glyph and the sparkle are hidden."
+      ]
     },
     {
       "slug": "badge",
