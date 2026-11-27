@@ -3193,6 +3193,13 @@
           "description": "Controlled sort (with `enableSorting`): `[{ id: 'name', desc: false }]`."
         },
         {
+          "name": "streaming",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "12.4: rows are still arriving (an agent is producing them). Shows a skeleton row after the last row, sets aria-busy, announces the row count every few seconds and \"done\" when it turns off. Rows that arrive meanwhile enter with the motion preset. Sorting and selection keep working."
+        },
+        {
           "name": "toolbar",
           "type": "React.ReactNode",
           "required": false,
@@ -4958,6 +4965,12 @@
           "description": ""
         },
         {
+          "name": "generated",
+          "type": "boolean",
+          "required": false,
+          "description": "12.4: the value came from an agent. Shows a \"Suggested\" mark beside the label, read as part of the control's description. Editing the value clears the mark; so do accept and clear."
+        },
+        {
           "name": "id",
           "type": "string",
           "required": false,
@@ -4976,10 +4989,28 @@
           "description": ""
         },
         {
+          "name": "onAcceptSuggestion",
+          "type": "(() => void)",
+          "required": false,
+          "description": "12.4: with `generated`, shows an accept button beside the mark."
+        },
+        {
+          "name": "onClearSuggestion",
+          "type": "(() => void)",
+          "required": false,
+          "description": "12.4: with `generated`, shows a clear button beside the mark. Clear the value here."
+        },
+        {
           "name": "required",
           "type": "boolean",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "required": false,
+          "description": "12.4: an agent is filling this field. Sets `aria-busy` and a calm shimmer on the control; pass the value as it arrives. The control stays editable."
         }
       ]
     },

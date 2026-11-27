@@ -517,6 +517,7 @@
       "screenReader": [
         "Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.",
         "Sorting, selection counts and column moves are announced from a polite live region.",
+        "12.4 `streaming`: the table is aria-busy, the skeleton tail row is hidden from assistive tech, and the polite region announces the row count at most every 3 seconds, then \"Done. N rows\".",
         "DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.",
         "With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none."
       ]
