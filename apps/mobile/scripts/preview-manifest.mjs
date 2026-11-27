@@ -102,8 +102,17 @@ const READY_TEXT = { 'pattern/apps': 'Nexub apps' };
 // preview-ready-pattern-<name>). A shared marker matched the previous preview
 // when a link never navigated, so the retry never fired and the wrong screen
 // was captured (iOS, banner--0 showing divider, 2026-11-04).
+// Patterns that focus a field on mount, so the keyboard is up in their shot. On iOS the next
+// deep link dismisses it, and Maestro's status-bar lookup can hit the keyboard's own status bar
+// (the InputUI process) as it goes away: kAXErrorInvalidUIElement kills the test driver and the
+// flow fails on the next screen (pattern-lock--rtl, 2026-11-26). Stopping the app is one command
+// with no hierarchy polling, so the keyboard is gone before Maestro looks at the screen again; the
+// next link cold-starts the app.
+const KEYBOARD_UP = ['pattern/verify'];
+const STOP_ON_IOS = ['- runFlow:', '    when:', '      platform: iOS', '    commands:', '      - stopApp'];
 const open = (link, shot, marker, to = flow) => {
-  const text = READY_TEXT[link.replace(/^preview\//, '').replace(/\?.*$/, '')];
+  const name = link.replace(/^preview\//, '').replace(/\?.*$/, '');
+  const text = READY_TEXT[name];
   to.push(
     '- retry:',
     '    maxRetries: 1',
@@ -119,6 +128,7 @@ const open = (link, shot, marker, to = flow) => {
     '          timeout: 15000',
     '- waitForAnimationToEnd',
     `- takeScreenshot: ${shot}--\${maestro.platform}`,
+    ...(KEYBOARD_UP.includes(name) ? STOP_ON_IOS : []),
   );
 };
 for (const [slug, e] of Object.entries(CATALOG)) {
