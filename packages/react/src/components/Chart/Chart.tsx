@@ -20,6 +20,7 @@ import { dataBusy, dataState, type DataStateProps } from '../../utils/dataState.
 import { Skeleton } from '../Skeleton/Skeleton.js';
 import { InteractiveCartesian, InteractiveDonut, InteractiveSparkline } from './ChartInteraction.js';
 import { ChartTableView } from './ChartTable.js';
+import { chartStory, referenceValues, type ChartStoryProps } from './ChartStory.js';
 
 /** A colour from the categorical chart palette, 1–8. */
 export type ChartColor = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -181,7 +182,7 @@ export function ChartLegend({ items, className, ...props }: ChartLegendProps) {
   );
 }
 
-interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps, ChartInteractiveProps<ChartPoint<T>> {
+interface CartesianProps<T> extends Omit<React.HTMLAttributes<HTMLElement>, 'title'>, DataStateProps, ChartInteractiveProps<ChartPoint<T>>, ChartStoryProps {
   /** One row per category, in order. */
   data: T[];
   /** Key of the category label in each row (the x axis). */
@@ -240,10 +241,12 @@ function Frame<T>({
   data, index, series, title, valueFormat = defaultFormat, size = 'md', legend, domain, className, children,
   loading, emptyState, errorState, ix, tableView,
   interactive: _interactive, onPointClick: _onPointClick, hiddenSeries: _hidden, defaultHiddenSeries: _defaultHidden, onHiddenSeriesChange: _onHidden,
-  integerTicks: _integer,
+  integerTicks: _integer, annotations, referenceLines, change,
   ...props
 }: CartesianProps<T> & { domain: [number, number]; children: React.ReactNode; ix?: ChartIx }) {
   const labels = series.map((s) => s.label ?? s.key);
+  // 12.3: annotations, reference lines and the change callout, each also given as text.
+  const storyId = React.useId();
   const states = { loading, emptyState, errorState };
   const state = chartState(states, data.length === 0, cn('flex-1', PLOT_MIN[size]));
   if (state) {
@@ -266,8 +269,10 @@ function Frame<T>({
   // With the client layer the plot holds a focusable group, so the drawing is hidden piece by piece.
   const live = ix?.overlay != null;
   const piece = live ? 'true' : undefined;
+  const story = chartStory({ annotations, referenceLines, change }, { data, index, series, valueFormat, domain, w: VB_W, h: VB_H }, storyId);
   return (
-    <figure aria-label={title} className={cn('m-0 flex flex-col gap-3', className)} {...props}>
+    <figure aria-label={title} aria-describedby={story.describedBy} className={cn('m-0 flex flex-col gap-3', className)} {...props}>
+      {story.callout}
       {ix?.legend ?? ((legend ?? series.length > 1) && (
         <ChartLegend aria-hidden="true" items={series.map((s, i) => ({ label: labels[i]!, color: s.color }))} />
       ))}
@@ -287,7 +292,9 @@ function Frame<T>({
               ))}
               <line x1="0" x2={VB_W} y1={zero} y2={zero} strokeWidth="1" vectorEffect="non-scaling-stroke" className="stroke-[var(--color-outline)]" />
               {children}
+              {story.plot}
             </svg>
+            {story.marks}
             {/* Hover tooltip: one column per category over the plot, CSS only. The client layer (10.7) replaces it. */}
             {live ? ix.overlay : <div className="absolute inset-0 grid auto-cols-fr grid-flow-col">
               {data.map((row, i) => (
@@ -340,6 +347,7 @@ function Frame<T>({
           ))}
         </tbody>
       </table>
+      {story.summary}
       {tableView && (
         <ChartTableView
           caption={title}
@@ -406,7 +414,7 @@ export function BarChartView<T extends object>({ stacked = false, variant = 'def
         const vals = series.map((s) => valueOf(row, s.key));
         return [vals.filter((v) => v > 0).reduce((a, b) => a + b, 0), vals.filter((v) => v < 0).reduce((a, b) => a + b, 0)];
       });
-  const domain = niceDomain(totals, integerTicks);
+  const domain = niceDomain([...totals, ...referenceValues(props.referenceLines)], integerTicks);
   const [lo, hi] = domain;
   const y = (v: number) => VB_H - ((v - lo) / (hi - lo)) * VB_H;
   const slot = VB_W / Math.max(1, data.length);
@@ -484,6 +492,7 @@ export function BarChartView<T extends object>({ stacked = false, variant = 'def
 function HorizontalBars<T extends object>({
   data, index, series, title, valueFormat = defaultFormat, legend, className, loading, emptyState, errorState, tableView, colorOf, integerTicks,
   stacked: _stacked, variant: _variant, totalKey: _totalKey, orientation: _orientation, size: _size,
+  annotations: _annotations, referenceLines: _referenceLines, change: _change,
   interactive: _interactive, onPointClick: _onPointClick, hiddenSeries: _hidden, defaultHiddenSeries: _defaultHidden, onHiddenSeriesChange: _onHidden,
   ...props
 }: BarChartProps<T>) {
@@ -582,7 +591,7 @@ function runs<T>(data: T[], key: string): number[][] {
 /** Internal: the drawing. */
 export function LineChartView<T extends object>({ area = false, ...props }: LineChartProps<T> & { ix?: ChartIx }) {
   const { data, series, integerTicks } = props;
-  const domain = niceDomain(data.flatMap((row) => series.map((s) => valueOf(row, s.key))), integerTicks);
+  const domain = niceDomain([...data.flatMap((row) => series.map((s) => valueOf(row, s.key))), ...referenceValues(props.referenceLines)], integerTicks);
   const [lo, hi] = domain;
   const slot = VB_W / Math.max(1, data.length);
   const x = (i: number) => i * slot + slot / 2;

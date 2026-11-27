@@ -182,6 +182,15 @@ export interface NexubMessages {
   checkDone: string;
   checkPending: string;
   chartShare: string;
+  /**
+   * Charts `change` (12.3): the callout comparing two points, e.g. "Up 12% (+$1,200) since March".
+   * `percent` is undefined when the starting value is 0.
+   */
+  chartChange: (direction: 'up' | 'down' | 'flat', amount: string, percent: string | undefined, from: string) => string;
+  /** Charts `annotations` and `referenceLines` (12.3): the visually hidden list's name, and one entry each. */
+  chartNotes: string;
+  chartAnnotation: (label: string, at: string) => string;
+  chartReferenceLine: (label: string, value: string) => string;
   /** OTPInput `mode="backup"` (11.2). */
   backupCode: string;
   /** FileUpload per-file progress and cancel. */
@@ -576,6 +585,13 @@ export const defaultMessages: NexubMessages = {
   checkDone: 'Done',
   checkPending: 'Pending',
   chartShare: 'Share',
+  chartChange: (direction, amount, percent, from) =>
+    direction === 'flat'
+      ? `No change since ${from}`
+      : `${direction === 'up' ? 'Up' : 'Down'} ${percent ? `${percent} (${amount})` : amount} since ${from}`,
+  chartNotes: 'Chart notes',
+  chartAnnotation: (label, at) => `${label}: ${at}`,
+  chartReferenceLine: (label, value) => `${label}: ${value}`,
   backupCode: 'Backup code',
   uploadProgress: (fileName, percent) => `${fileName}, ${percent}% uploaded`,
   cancelUpload: (fileName) => `Cancel upload of ${fileName}`,

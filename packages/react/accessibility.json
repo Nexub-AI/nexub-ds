@@ -185,7 +185,9 @@
       "keyboard": [],
       "screenReader": [
         "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
-        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\".",
+        "12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden \"Chart notes\" list that describes the figure too.",
+        "12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad."
       ]
     },
     {
@@ -1029,7 +1031,9 @@
       "keyboard": [],
       "screenReader": [
         "The chart is a `figure` named by `title`. The drawing is hidden from assistive tech; a visually hidden table carries every value.",
-        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\"."
+        "Colour is never the only cue: the legend and table name each series. Past six series, label directly or group the rest as \"Other\".",
+        "12.3: the change callout is visible text and describes the figure (`aria-describedby`). Annotations and reference lines are drawn and also listed in a visually hidden \"Chart notes\" list that describes the figure too.",
+        "12.3: the product accent stays out of charts, notes included: guides and labels use the outline and on-surface tokens, and only the change callout and a reference line `tone` take success or error, where the colour means good or bad."
       ]
     },
     {

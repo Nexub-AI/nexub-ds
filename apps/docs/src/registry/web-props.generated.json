@@ -734,6 +734,18 @@
       "file": "components/Chart/Chart.tsx",
       "props": [
         {
+          "name": "annotations",
+          "type": "ChartAnnotation[]",
+          "required": false,
+          "description": "Labelled points or ranges on the plot."
+        },
+        {
+          "name": "change",
+          "type": "ChartChange",
+          "required": false,
+          "description": "A callout above the plot with the change between two points, its delta computed and formatted."
+        },
+        {
           "name": "colorOf",
           "type": "((row: T, series: ChartSeries, index: number) => ChartPaint)",
           "required": false,
@@ -817,6 +829,12 @@
           "type": "'horizontal' | 'vertical'",
           "required": false,
           "description": "11.3: `horizontal` lays the categories down the side and the bars across, for long category names and ranked lists. Drawn without the pointer layer: `interactive` and `onPointClick` apply to vertical bars."
+        },
+        {
+          "name": "referenceLines",
+          "type": "ChartReferenceLine[]",
+          "required": false,
+          "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view."
         },
         {
           "name": "series",
@@ -1124,6 +1142,29 @@
           "type": "{ label: string; color?: ChartPaint; }[]",
           "required": true,
           "description": ""
+        }
+      ]
+    },
+    "ChartStory": {
+      "file": "components/Chart/ChartStory.tsx",
+      "props": [
+        {
+          "name": "annotations",
+          "type": "ChartAnnotation[]",
+          "required": false,
+          "description": "Labelled points or ranges on the plot."
+        },
+        {
+          "name": "change",
+          "type": "ChartChange",
+          "required": false,
+          "description": "A callout above the plot with the change between two points, its delta computed and formatted."
+        },
+        {
+          "name": "referenceLines",
+          "type": "ChartReferenceLine[]",
+          "required": false,
+          "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view."
         }
       ]
     },
@@ -5922,11 +5963,23 @@
       "file": "components/Chart/Chart.tsx",
       "props": [
         {
+          "name": "annotations",
+          "type": "ChartAnnotation[]",
+          "required": false,
+          "description": "Labelled points or ranges on the plot."
+        },
+        {
           "name": "area",
           "type": "boolean",
           "required": false,
           "default": "false",
           "description": "Fill the area under each line (down to the zero line)."
+        },
+        {
+          "name": "change",
+          "type": "ChartChange",
+          "required": false,
+          "description": "A callout above the plot with the change between two points, its delta computed and formatted."
         },
         {
           "name": "data",
@@ -6000,6 +6053,12 @@
           "type": "((point: ChartPoint<T>) => void)",
           "required": false,
           "description": "Click, tap, or Enter/Space on a point. Turns `interactive` on unless it is set to false."
+        },
+        {
+          "name": "referenceLines",
+          "type": "ChartReferenceLine[]",
+          "required": false,
+          "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view."
         },
         {
           "name": "series",
