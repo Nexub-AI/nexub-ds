@@ -1061,7 +1061,7 @@ Full-height application frame: a header row over a body with a sidebar slot and 
 | `AppShell.Header` | `compound` |  | First row, e.g. a `TopNav.Root`. |
 | `AppShell.Body` | `compound` |  | Second row: lays out the sidebar and main side by side. |
 | `AppShell.Sidebar` | `compound` |  | Fixed-width column that scrolls on its own, e.g. a `Sidebar.Root`. |
-| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. |
+| `AppShell.Main` | `compound` |  | The `<main>` landmark: takes the remaining width, scrolls on its own, padded by default. 12.2: a positioning context (`relative`), so absolutely positioned children and sr-only labels stay inside it. |
 | `...props` | `React.HTMLAttributes<HTMLDivElement>` |  | Every part forwards its ref and HTML attributes. |
 
 ## Example: Header, sidebar and main
@@ -5361,6 +5361,7 @@ A menu of actions opened from a button, built on Radix.
 | `DropdownMenu.Portal / Content` | `compound` |  | Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4). |
 | `DropdownMenu.Item` | `compound` |  | An action (`onSelect`, `disabled`). |
 | `DropdownMenu.CheckboxItem / RadioGroup / RadioItem` | `compound` |  | Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`). |
+| `RadioItem / CheckboxItem indicator` | `'start' \| 'end'` | `'start'` | 12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu). |
 | `DropdownMenu.Label / Group / Separator` | `compound` |  | Section heading, grouping and divider. |
 | `DropdownMenu.Sub / SubTrigger / SubContent` | `compound` |  | A nested submenu. |
 
@@ -5416,6 +5417,40 @@ export default function Example() {
             <DropdownMenu.RadioItem value="updated">Last updated</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="name">Name</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="owner">Owner</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+## Example: Theme menu (tick at the end)
+
+```tsx
+import * as React from 'react';
+import { Button, DropdownMenu } from '@nexub/react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
+
+export default function Example() {
+  const [theme, setTheme] = React.useState('system');
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outlined">Theme</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content>
+          <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+            <DropdownMenu.RadioItem value="light" indicator="end">
+              <Sun size="sm" /> Light
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="dark" indicator="end">
+              <Moon size="sm" /> Dark
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="system" indicator="end">
+              <Monitor size="sm" /> System
+            </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
@@ -11053,6 +11088,8 @@ Vertical app navigation: a header, grouped items with icons, and a pinned footer
 | `aria-label` | `string` |  | Name of the nav landmark. Defaults to the localised "Sidebar". |
 | `SidebarHeader status` | `ReactNode` |  | Trailing element next to the logo (`Sidebar.Header` children), e.g. a `Badge`. Moves under the logo when they don’t fit. |
 | `SidebarGroup label` | `string` |  | Heading above a group of items. |
+| `SidebarGroup collapsible` | `boolean` | `false` | 12.2: the label becomes a button (`aria-expanded`, `aria-controls`) with a chevron that folds the items away. Stays open, toggle hidden, in the icon rail. |
+| `SidebarGroup defaultOpen / open / onOpenChange` | `boolean / boolean / (open: boolean) => void` | `true` | 12.2: uncontrolled start state, or controlled open state, of a `collapsible` group. |
 | `SidebarItem icon` | `ReactNode` |  | Leading icon; the only thing shown when collapsed. |
 | `SidebarItem active` | `boolean` |  | Marks the current page (`aria-current="page"`). |
 | `SidebarItem asChild` | `boolean` |  | Use your router `<Link>` as the item; pass it as the only child. |
@@ -11109,6 +11146,30 @@ export default function Example() {
       <Button variant="outlined" onClick={() => setCollapsed((c) => !c)} aria-pressed={!collapsed}>
         {collapsed ? 'Expand' : 'Collapse'}
       </Button>
+    </div>
+  );
+}
+```
+
+## Example: Collapsible groups
+
+```tsx
+import { Sidebar } from '@nexub/react';
+import { BarChart3, Folder, Home, Settings } from '@nexub/icons';
+
+export default function Example() {
+  return (
+    <div className="flex h-70 items-start">
+      <Sidebar.Root aria-label="Workspace" className="rounded-shape-container">
+        <Sidebar.Group label="Work" collapsible>
+          <Sidebar.Item href="#" icon={<Home size="sm" />} active>Overview</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Folder size="sm" />}>Projects</Sidebar.Item>
+        </Sidebar.Group>
+        <Sidebar.Group label="Admin" collapsible defaultOpen={false}>
+          <Sidebar.Item href="#" icon={<BarChart3 size="sm" />}>Reports</Sidebar.Item>
+          <Sidebar.Item href="#" icon={<Settings size="sm" />}>Settings</Sidebar.Item>
+        </Sidebar.Group>
+      </Sidebar.Root>
     </div>
   );
 }

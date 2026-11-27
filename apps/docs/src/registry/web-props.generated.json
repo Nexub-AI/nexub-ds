@@ -3908,6 +3908,45 @@
         }
       ]
     },
+    "DropdownMenuCheckboxItem": {
+      "file": "components/DropdownMenu/DropdownMenu.tsx",
+      "props": [
+        {
+          "name": "indicator",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'start'",
+          "description": "12.2: where the selected mark sits. `'start'` (the default, unchanged) reserves a leading slot for it. `'end'` draws a tick at the inline end (mirrors in RTL) and drops the leading slot, so a leading icon sits flush at the start, e.g. a Light / Dark / System theme menu."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "checked",
+        "disabled",
+        "onCheckedChange",
+        "onSelect",
+        "textValue"
+      ]
+    },
+    "DropdownMenuRadioItem": {
+      "file": "components/DropdownMenu/DropdownMenu.tsx",
+      "props": [
+        {
+          "name": "indicator",
+          "type": "'start' | 'end'",
+          "required": false,
+          "default": "'start'",
+          "description": "12.2: where the selected mark sits. `'start'` (the default, unchanged) reserves a leading slot for it. `'end'` draws a tick at the inline end (mirrors in RTL) and drops the leading slot, so a leading icon sits flush at the start, e.g. a Light / Dark / System theme menu."
+        }
+      ],
+      "inherited": [
+        "asChild",
+        "disabled",
+        "onSelect",
+        "textValue",
+        "value"
+      ]
+    },
     "EmojiPicker": {
       "file": "components/EmojiPicker/EmojiPicker.tsx",
       "props": [
@@ -7921,10 +7960,35 @@
       "file": "components/Sidebar/Sidebar.tsx",
       "props": [
         {
+          "name": "collapsible",
+          "type": "boolean",
+          "required": false,
+          "description": "12.2: the label becomes a button that folds the group's items away. Needs `label`. In the icon rail (collapsed sidebar) the group stays open and the toggle is hidden."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "default": "true",
+          "description": "12.2: uncontrolled start state of a `collapsible` group."
+        },
+        {
           "name": "label",
           "type": "string",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean) => void)",
+          "required": false,
+          "description": "12.2: called when a `collapsible` group is toggled."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "description": "12.2: controlled open state of a `collapsible` group."
         }
       ]
     },

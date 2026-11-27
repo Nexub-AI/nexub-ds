@@ -25,6 +25,7 @@ A menu of actions opened from a button, built on Radix.
 | `DropdownMenu.Portal / Content` | `compound` |  | Renders the floating menu in a portal (`side`, `align`, `sideOffset` default 4). |
 | `DropdownMenu.Item` | `compound` |  | An action (`onSelect`, `disabled`). |
 | `DropdownMenu.CheckboxItem / RadioGroup / RadioItem` | `compound` |  | Toggle and single-choice items (`checked`, `onCheckedChange`; `value`, `onValueChange`). |
+| `RadioItem / CheckboxItem indicator` | `'start' \| 'end'` | `'start'` | 12.2: where the selected mark sits. `end` draws a tick at the inline end and drops the leading slot, so a leading icon sits flush at the start (a Light / Dark / System theme menu). |
 | `DropdownMenu.Label / Group / Separator` | `compound` |  | Section heading, grouping and divider. |
 | `DropdownMenu.Sub / SubTrigger / SubContent` | `compound` |  | A nested submenu. |
 
@@ -80,6 +81,40 @@ export default function Example() {
             <DropdownMenu.RadioItem value="updated">Last updated</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="name">Name</DropdownMenu.RadioItem>
             <DropdownMenu.RadioItem value="owner">Owner</DropdownMenu.RadioItem>
+          </DropdownMenu.RadioGroup>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+```
+
+## Example: Theme menu (tick at the end)
+
+```tsx
+import * as React from 'react';
+import { Button, DropdownMenu } from '@nexub/react';
+import { Monitor, Moon, Sun } from '@nexub/icons';
+
+export default function Example() {
+  const [theme, setTheme] = React.useState('system');
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="outlined">Theme</Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content>
+          <DropdownMenu.RadioGroup value={theme} onValueChange={setTheme}>
+            <DropdownMenu.RadioItem value="light" indicator="end">
+              <Sun size="sm" /> Light
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="dark" indicator="end">
+              <Moon size="sm" /> Dark
+            </DropdownMenu.RadioItem>
+            <DropdownMenu.RadioItem value="system" indicator="end">
+              <Monitor size="sm" /> System
+            </DropdownMenu.RadioItem>
           </DropdownMenu.RadioGroup>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
