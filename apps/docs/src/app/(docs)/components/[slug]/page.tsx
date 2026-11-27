@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { componentEntries, getComponentEntry } from '@/registry/index';
@@ -57,10 +58,13 @@ export default async function ComponentPage({ params }: Props) {
   // already exposes it right under the title.
   const toc: TocItem[] = [];
   if (usage) toc.push({ id: 'usage', label: 'Usage', level: 2 });
-  if (playground || generatedPlayground) toc.push({ id: 'playground', label: 'Playground', level: 2 });
+  if (playground || generatedPlayground)
+    toc.push({ id: 'playground', label: 'Playground', level: 2 });
   if (examples.length) {
     toc.push({ id: 'examples', label: 'Examples', level: 2 });
-    examples.forEach((ex, i) => toc.push({ id: exampleId(ex.title, i), label: ex.title, level: 3 }));
+    examples.forEach((ex, i) =>
+      toc.push({ id: exampleId(ex.title, i), label: ex.title, level: 3 }),
+    );
   }
   if (states) toc.push({ id: 'states', label: 'States', level: 2 });
   if (matrix) toc.push({ id: 'matrix', label: 'Variant matrix', level: 2 });
@@ -85,7 +89,10 @@ export default async function ComponentPage({ params }: Props) {
         <PlatformPanel platform="web">
           {playground && (
             <Section id="playground" title="Playground">
-              <Playground slug={slug} componentName={meta.title} def={playground} />
+              {/* 12.1: hydrates as its own task (see LivePreview). */}
+              <React.Suspense>
+                <Playground slug={slug} componentName={meta.title} def={playground} />
+              </React.Suspense>
             </Section>
           )}
 
@@ -100,8 +107,20 @@ export default async function ComponentPage({ params }: Props) {
               {examples.map((ex, i) => {
                 const a11ySlot = a11y && i === 0 ? <A11yPanel a11y={a11y} /> : undefined;
                 return (
-                  <Section key={ex.title} id={exampleId(ex.title, i)} title={ex.title} description={ex.description} level={3}>
-                    <ComponentPreview code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} codeSlot={<CodeBlock code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} />} a11ySlot={a11ySlot}>
+                  <Section
+                    key={ex.title}
+                    id={exampleId(ex.title, i)}
+                    title={ex.title}
+                    description={ex.description}
+                    level={3}
+                  >
+                    <ComponentPreview
+                      code={exampleCode(EXAMPLES_DIR, 'components', slug, i)}
+                      codeSlot={
+                        <CodeBlock code={exampleCode(EXAMPLES_DIR, 'components', slug, i)} />
+                      }
+                      a11ySlot={a11ySlot}
+                    >
                       <LivePreview slug={slug} idx={i} />
                     </ComponentPreview>
                   </Section>

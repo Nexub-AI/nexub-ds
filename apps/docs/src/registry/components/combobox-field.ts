@@ -18,6 +18,7 @@ const entry: ComponentEntry = {
   props: [
     { name: 'label', type: 'ReactNode', required: true, description: 'The field label. `ComboboxPicker` is the same control without it (name it with `aria-label`).' },
     { name: 'options', type: 'ComboboxOption[]', required: true, description: '`{ value, label, description?, keywords?, disabled?, group? }`. `description` is a second line; `keywords` and `description` are searched too; `group` lists the option under a heading.' },
+    { name: 'virtualizeAbove', type: 'number', default: '100', required: false, description: '12.1: with more options than this, only the rows in view render. Search (cmdk ranking), arrow keys, Home, End, Page Up/Down and screen readers (aria-setsize, aria-posinset) still cover the whole list.' },
     { name: 'value / defaultValue', type: 'string | null', description: 'The picked value, `null` for none.' },
     { name: 'onValueChange', type: '(value: string | null) => void', description: 'Called with the picked value, or `null` from the none option.' },
     { name: 'noneOption', type: 'string', description: 'A first option that clears the value, e.g. "No manager".' },

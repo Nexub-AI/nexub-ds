@@ -82,6 +82,11 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-verify--dark--${maestro.platform}
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - stopApp
 - retry:
     maxRetries: 1
     commands:
@@ -352,6 +357,11 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-verify--hc--${maestro.platform}
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - stopApp
 - retry:
     maxRetries: 1
     commands:
@@ -622,6 +632,11 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-verify--rtl--${maestro.platform}
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - stopApp
 - retry:
     maxRetries: 1
     commands:

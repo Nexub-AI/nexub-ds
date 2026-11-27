@@ -7,6 +7,7 @@ import { cn } from '../../utils/cn.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Combobox } from '../Combobox/Combobox.js';
 import { Kbd } from '../Kbd/Kbd.js';
+import { VIRTUALIZE_ABOVE, useWindowedOptions } from '../Combobox/optionWindow.js';
 
 /** One row in a CommandList. */
 export interface CommandListItem {
@@ -44,6 +45,11 @@ export interface CommandListProps {
   onSearch?: (text: string) => void;
   /** Focus the search box on mount. @default true */
   autoFocus?: boolean;
+  /**
+   * 12.1: with more items than this, only the rows in view render (search, keys and screen
+   * readers still see every item). @default 100
+   */
+  virtualizeAbove?: number;
   /** The list's maximum height (any CSS length). @default 20rem */
   maxHeight?: string;
   className?: string;
@@ -71,13 +77,94 @@ function groupItems(items: CommandListItem[]) {
  * End move the highlight while focus stays in the search box (aria-activedescendant); Enter picks.
  */
 export const CommandList = React.forwardRef<HTMLDivElement, CommandListProps>(function CommandList(
-  { items, onSelect, label, placeholder, emptyText, loading, onSearch, autoFocus = true, maxHeight, className },
+  {
+    items,
+    onSelect,
+    label,
+    placeholder,
+    emptyText,
+    loading,
+    onSearch,
+    autoFocus = true,
+    maxHeight,
+    virtualizeAbove = VIRTUALIZE_ABOVE,
+    className,
+  },
   ref,
 ) {
   const messages = useNexubMessages();
   const [search, setSearch] = React.useState('');
+
+  // 12.1: long lists rank here (cmdk's own scorer) and render only the rows in view.
+  const list = useWindowedOptions({
+    items,
+    threshold: virtualizeAbove,
+    search,
+    filter: !onSearch,
+    text: (item) => ({
+      value: item.value,
+      keywords: [
+        item.label,
+        ...(item.description ? [item.description] : []),
+        ...(item.keywords ?? []),
+      ],
+    }),
+    valueOf: (item) => item.value,
+    groupOf: (item) => item.group,
+    disabled: (item) => !!item.disabled,
+    loop: true,
+    active: !loading,
+  });
+
+  const renderItem = (
+    item: CommandListItem,
+    aria?: { 'aria-setsize': number; 'aria-posinset': number },
+  ) => (
+    <Combobox.Item
+      key={item.value}
+      value={item.value}
+      keywords={[
+        item.label,
+        ...(item.description ? [item.description] : []),
+        ...(item.keywords ?? []),
+      ]}
+      disabled={item.disabled}
+      onSelect={() => onSelect?.(item.value, item)}
+      className="gap-2"
+      {...aria}
+    >
+      {item.icon && (
+        <span aria-hidden="true" className="flex shrink-0 text-on-surface-variant">
+          {item.icon}
+        </span>
+      )}
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate">{item.label}</span>
+        {item.description && (
+          <span className="truncate text-label-sm font-normal text-on-surface-muted">
+            {item.description}
+          </span>
+        )}
+      </span>
+      {item.shortcut?.length ? (
+        <span aria-hidden="true" className="flex shrink-0 gap-1">
+          {item.shortcut.map((key, i) => (
+            <Kbd key={i}>{key}</Kbd>
+          ))}
+        </span>
+      ) : null}
+    </Combobox.Item>
+  );
+
   return (
-    <Combobox.Root ref={ref} label={label ?? messages.search} shouldFilter={!onSearch} loop className={cn('bg-transparent', className)}>
+    <Combobox.Root
+      ref={ref}
+      label={label ?? messages.search}
+      shouldFilter={!onSearch && !list.windowed}
+      loop
+      className={cn('bg-transparent', className)}
+      {...list.rootProps}
+    >
       <div className="flex items-center gap-2 border-b border-outline-variant px-3">
         <Search size="sm" className="shrink-0 opacity-50" aria-hidden="true" />
         <Command.Input
@@ -86,49 +173,31 @@ export const CommandList = React.forwardRef<HTMLDivElement, CommandListProps>(fu
             setSearch(text);
             onSearch?.(text);
           }}
+          onKeyDown={list.onKeyDown}
           placeholder={placeholder ?? messages.searchPlaceholder}
           autoFocus={autoFocus}
           className="flex h-control-lg w-full bg-transparent text-body-md outline-none placeholder:text-on-surface-muted"
         />
       </div>
-      <Combobox.List loading={loading} className="max-h-80" style={maxHeight ? { maxHeight } : undefined}>
+      <Combobox.List
+        ref={list.listRef}
+        loading={loading}
+        className="max-h-80"
+        style={maxHeight ? { maxHeight } : undefined}
+      >
         <Combobox.Empty>{emptyText ?? messages.noResults}</Combobox.Empty>
-        {groupItems(items).map((group, gi) => {
-          const rows = group.items.map((item) => (
-            <Combobox.Item
-              key={item.value}
-              value={item.value}
-              keywords={[item.label, ...(item.description ? [item.description] : []), ...(item.keywords ?? [])]}
-              disabled={item.disabled}
-              onSelect={() => onSelect?.(item.value, item)}
-              className="gap-2"
-            >
-              {item.icon && (
-                <span aria-hidden="true" className="flex shrink-0 text-on-surface-variant">
-                  {item.icon}
-                </span>
-              )}
-              <span className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate">{item.label}</span>
-                {item.description && <span className="truncate text-label-sm font-normal text-on-surface-muted">{item.description}</span>}
-              </span>
-              {item.shortcut?.length ? (
-                <span aria-hidden="true" className="flex shrink-0 gap-1">
-                  {item.shortcut.map((key, i) => (
-                    <Kbd key={i}>{key}</Kbd>
-                  ))}
-                </span>
-              ) : null}
-            </Combobox.Item>
-          ));
-          return group.heading ? (
-            <Combobox.Group key={group.heading} heading={group.heading}>
-              {rows}
-            </Combobox.Group>
-          ) : (
-            <React.Fragment key={`ungrouped-${gi}`}>{rows}</React.Fragment>
-          );
-        })}
+        {list.windowed && !loading && list.render(renderItem)}
+        {!list.windowed &&
+          groupItems(items).map((group, gi) => {
+            const rows = group.items.map((item) => renderItem(item));
+            return group.heading ? (
+              <Combobox.Group key={group.heading} heading={group.heading}>
+                {rows}
+              </Combobox.Group>
+            ) : (
+              <React.Fragment key={`ungrouped-${gi}`}>{rows}</React.Fragment>
+            );
+          })}
       </Combobox.List>
     </Combobox.Root>
   );

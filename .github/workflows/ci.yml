@@ -65,6 +65,10 @@ jobs:
         env:
           SIZE_BASE_BUDGETS: ${{ runner.temp }}/base-budgets.json
           PR_BODY: ${{ github.event.pull_request.body }}
+      # 12.1: a typical app page, built with @nexub/themes/base-lean, `nexub-usage --css` and
+      # `--prune`, must stay under half of the 11.6 react/styles.css budget (21.9 kB gzip).
+      - name: CSS of a typical page
+        run: pnpm check:css-page
 
       # 10.1: a fresh Next 15 app renders the marketing sections as server components
       # and hands the browser no @nexub client module except the NumberTicker island.
@@ -109,6 +113,11 @@ jobs:
 
       - name: Test
         run: pnpm turbo test
+
+      # 12.1: the same @nexub/react suite on components compiled by the React Compiler, the way
+      # an app with the compiler on builds them. A component that only works uncompiled fails here.
+      - name: Test with the React Compiler
+        run: pnpm --filter @nexub/react test:compiler
 
       - name: Build Storybook
         run: pnpm --filter @nexub/react build-storybook --quiet

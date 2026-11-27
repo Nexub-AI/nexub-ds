@@ -1618,6 +1618,11 @@ appId: ai.nexub.mobile
           timeout: 15000
 - waitForAnimationToEnd
 - takeScreenshot: pattern-verify--${maestro.platform}
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - stopApp
 - retry:
     maxRetries: 1
     commands:

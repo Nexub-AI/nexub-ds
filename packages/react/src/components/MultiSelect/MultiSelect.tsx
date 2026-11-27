@@ -10,6 +10,7 @@ import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { Chip } from '../Chip/Chip.js';
 import { Combobox } from '../Combobox/Combobox.js';
 import { ComboboxLoading, ComboboxPopover } from '../Combobox/ComboboxPopover.js';
+import { VIRTUALIZE_ABOVE, useWindowedOptions } from '../Combobox/optionWindow.js';
 
 export interface MultiSelectOption {
   value: string;
@@ -42,6 +43,11 @@ export interface MultiSelectProps {
   onSearch?: (text: string) => void;
   /** Adds a "Create “text”" option when the text matches no option exactly. */
   onCreate?: (text: string) => void;
+  /**
+   * 12.1: with more options than this, only the rows in view render (search, keys and screen
+   * readers still see every option). @default 100
+   */
+  virtualizeAbove?: number;
   /** Chips shown before the rest collapse into "+N more". Default 3. */
   maxVisibleChips?: number;
   disabled?: boolean;
@@ -74,6 +80,7 @@ export function MultiSelect({
   onSearch,
   onCreate,
   maxVisibleChips = 3,
+  virtualizeAbove = VIRTUALIZE_ABOVE,
   disabled,
   readOnly,
   size,
@@ -111,13 +118,68 @@ export function MultiSelect({
   const optionOf = (v: string) => options.find((o) => o.value === v) ?? known.get(v);
   const labelOf = (v: string) => optionOf(v)?.label ?? v;
 
-  const toggle = (v: string) => setValue(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
+  const toggle = (v: string) =>
+    setValue(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
   const remove = (v: string) => setValue(value.filter((x) => x !== v));
 
   const text = search.trim();
   const canCreate =
-    !!onCreate && !loading && text !== '' && !options.some((o) => o.label.toLowerCase() === text.toLowerCase());
+    !!onCreate &&
+    !loading &&
+    text !== '' &&
+    !options.some((o) => o.label.toLowerCase() === text.toLowerCase());
   const hiddenCount = Math.max(0, value.length - maxVisibleChips);
+
+  // 12.1: long lists rank here (cmdk's own scorer) and render only the rows in view.
+  const list = useWindowedOptions({
+    items: options,
+    threshold: virtualizeAbove,
+    search,
+    filter: !onInputChange,
+    text: (o) => ({
+      value: o.label,
+      keywords: o.description ? [o.value, o.description] : [o.value],
+    }),
+    valueOf: (o) => o.value,
+    disabled: (o) => !!o.disabled,
+    active: open && !loading,
+  });
+
+  const renderOption = (
+    opt: MultiSelectOption,
+    aria?: { 'aria-setsize': number; 'aria-posinset': number },
+  ) => {
+    const checked = value.includes(opt.value);
+    return (
+      <Combobox.Item
+        key={opt.value}
+        // A windowed row is found by its value (unique); otherwise cmdk filters on the label.
+        value={list.windowed ? opt.value : opt.label}
+        keywords={opt.description ? [opt.value, opt.description] : [opt.value]}
+        disabled={opt.disabled}
+        aria-checked={checked}
+        {...aria}
+        onSelect={() => {
+          toggle(opt.value);
+          if (search) setSearch('');
+        }}
+        className="gap-2"
+      >
+        <Check size="sm" aria-hidden="true" className={cn('shrink-0', !checked && 'invisible')} />
+        {opt.avatar}
+        {opt.description ? (
+          <span className="flex min-w-0 flex-1 flex-col">
+            <span className="truncate">{opt.label}</span>
+            <span className="truncate text-label-sm font-normal text-on-surface-muted">
+              {opt.description}
+            </span>
+          </span>
+        ) : (
+          opt.label
+        )}
+      </Combobox.Item>
+    );
+  };
 
   const chips = (
     <>
@@ -146,7 +208,8 @@ export function MultiSelect({
     <Combobox.Root
       label={ariaLabel}
       className={cn('overflow-visible rounded-none bg-transparent', className)}
-      shouldFilter={!onInputChange}
+      shouldFilter={!onInputChange && !list.windowed}
+      {...list.rootProps}
     >
       <ComboboxPopover
         open={open && !disabled}
@@ -167,44 +230,25 @@ export function MultiSelect({
             setOpen(true);
           },
           onKeyDown: (e) => {
-            if (e.key === 'Backspace' && !readOnly && !(e.nativeEvent.isComposing || e.keyCode === 229) && search === '' && value.length) remove(value[value.length - 1]!);
+            if (open) list.onKeyDown(e);
+            if (
+              e.key === 'Backspace' &&
+              !readOnly &&
+              !(e.nativeEvent.isComposing || e.keyCode === 229) &&
+              search === '' &&
+              value.length
+            )
+              remove(value[value.length - 1]!);
           },
         }}
       >
-        <Combobox.List aria-multiselectable="true">
+        <Combobox.List aria-multiselectable="true" ref={list.listRef}>
           {loading ? (
             <ComboboxLoading />
           ) : (
             <>
               {!canCreate && <Combobox.Empty>{emptyText ?? messages.noResults}</Combobox.Empty>}
-              {options.map((opt) => {
-                const checked = value.includes(opt.value);
-                return (
-                  <Combobox.Item
-                    key={opt.value}
-                    value={opt.label}
-                    keywords={opt.description ? [opt.value, opt.description] : [opt.value]}
-                    disabled={opt.disabled}
-                    aria-checked={checked}
-                    onSelect={() => {
-                      toggle(opt.value);
-                      if (search) setSearch('');
-                    }}
-                    className="gap-2"
-                  >
-                    <Check size="sm" aria-hidden="true" className={cn('shrink-0', !checked && 'invisible')} />
-                    {opt.avatar}
-                    {opt.description ? (
-                      <span className="flex min-w-0 flex-1 flex-col">
-                        <span className="truncate">{opt.label}</span>
-                        <span className="truncate text-label-sm font-normal text-on-surface-muted">{opt.description}</span>
-                      </span>
-                    ) : (
-                      opt.label
-                    )}
-                  </Combobox.Item>
-                );
-              })}
+              {list.windowed ? list.render(renderOption) : options.map((opt) => renderOption(opt))}
               {canCreate && (
                 <Combobox.Item
                   forceMount
