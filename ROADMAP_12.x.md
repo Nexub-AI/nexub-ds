@@ -1,6 +1,6 @@
-# Roadmap 11.7 → 12.6 — depth after breadth
+# Roadmap 11.7 → 12.7 — depth after breadth
 
-Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 10 releases: three 11.x minors, the 12.0 major, then six 12.x minors. **Approved by the owner on 2026-11-22**, with the suggested answer to every decision (see "Decisions" at the end). Development starts with 11.7.
+Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 11 releases: three 11.x minors, the 12.0 major, then seven 12.x minors. *12.2 was inserted by the owner on 2026-11-27 for the nexub-platform requests; the planned 12.2–12.6 each moved down one number.* **Approved by the owner on 2026-11-22**, with the suggested answer to every decision (see "Decisions" at the end). Development starts with 11.7.
 
 **Why it starts at 11.7.** 11.6.0 (2026-11-22) closed the last of the 38 platform gaps and shipped `@nexub/diagram` and `@nexub/elements` at `alpha`. The 11.x plan is finished.
 
@@ -13,11 +13,12 @@ Drafted 2026-11-22. Follows [ROADMAP_11.x.md](ROADMAP_11.x.md). 10 releases: thr
 - **11.9 — Alpha → beta, and the 12.0 RFC**
 - **12.0 — The clean break**
 - **12.1 — Performance**
-- **12.2 — Signature moments**
-- **12.3 — AI-native UI 2.0**
-- **12.4 — Native catch-up II: screens**
-- **12.5 — Theming studio and tokens**
-- **12.6 — Adoption and proof**
+- **12.2 — Platform requests: chat, menus and charts**
+- **12.3 — Signature moments**
+- **12.4 — AI-native UI 2.0**
+- **12.5 — Native catch-up II: screens**
+- **12.6 — Theming studio and tokens**
+- **12.7 — Adoption and proof**
 
 ## How this plan was made
 
@@ -62,11 +63,12 @@ Limits. The counts come from folder names and generated JSON, not from a running
 | **11.9** | Alpha → beta, and the 12.0 RFC (RC on `next`) | L |
 | **12.0** | The clean break | XL |
 | **12.1** | Performance | L |
-| **12.2** | Signature moments (+ RFC for `@nexub/genui`) | L |
-| **12.3** | AI-native UI 2.0 | L |
-| **12.4** | Native catch-up II: screens | XL |
-| **12.5** | Theming studio and tokens | L |
-| **12.6** | Adoption and proof | M |
+| **12.2** | Platform requests: chat, menus and charts | L |
+| **12.3** | Signature moments (+ RFC for `@nexub/genui`) | L |
+| **12.4** | AI-native UI 2.0 | L |
+| **12.5** | Native catch-up II: screens | XL |
+| **12.6** | Theming studio and tokens | L |
+| **12.7** | Adoption and proof | M |
 
 ### 11.7 — Quiet release: nothing flaky
 
@@ -82,7 +84,7 @@ No new components. Every later version depends on a CI you can trust.
 
 The fields that 11.1–11.5 fixed on web are the ones mobile apps need most.
 
-- **Native essentials list.** Native targets an essentials list of about 80 components, not full parity *(decision 3)*. 11.8 publishes the list in the docs, chosen from the mobile apps' screens; from 12.6 the usage scanner keeps it current. Parts outside the list show their web alternative, as BottomSheet does today.
+- **Native essentials list.** Native targets an essentials list of about 80 components, not full parity *(decision 3)*. 11.8 publishes the list in the docs, chosen from the mobile apps' screens; from 12.7 the usage scanner keeps it current. Parts outside the list show their web alternative, as BottomSheet does today.
 - **Port to `@nexub/react-native`:** ComboboxField (with async search), nullable NumberInput (11.1 rules: empty state, clamp on blur), CurrencySelect and MoneyInput currency slot, DatePicker `granularity="month" | "year"`, FileUpload with camera capture and `transform`, `usePrompt()`, OTPInput `mode="backup"`, SwitchField / CheckboxField / CheckboxGroupField.
 - **Shared rules in `@nexub/core`.** Where web and native share logic (number parsing, phone parsing, date granularity), it lives in core once.
 - **Parity target.** Cut the 283 missing props on the 51 twins by at least half, and list the rest in the release notes as parity gaps (the existing 11.x rule).
@@ -103,7 +105,7 @@ A major is the only chance to change defaults, so it carries removals and promot
 - **Default changes, each subject to the RFC:**
   - CSS cascade layers (`@layer nexub`), so app styles win without `!important`.
   - Tailwind v4 as the one supported path. The v3 preset has been gone since 4.0; what remains is the v3 compatibility defaults in `styles.css`, which 12.0 keeps and deprecates and 13.0 removes *(decision 2, corrected 2026-11-25)*.
-  - The component token tier on by default (see 12.5).
+  - The component token tier on by default (see 12.6).
 - **Promotions.** At least 30 `beta` components to `stable`, chosen by usage in the platform apps (the [GOVERNANCE.md](GOVERNANCE.md) rule: promotion comes from real use, not age). *RFC 12.0 (2026-11-25): 27 meet the rule, and the owner chose to promote those 27.*
 
 ### 12.1 — Performance
@@ -114,39 +116,55 @@ Uses the 11.7 baseline and the 12.0 layering decision.
 - **Large lists.** Virtualize Combobox, MultiSelect, TreeView and CommandList options above a threshold.
 - **React Compiler.** Confirm every component works with it, and add a test build with it on.
 - **Native.** Cut the `react-native` and `react-native/patterns` bundles; lazy-load heavy parts (charts, QR, calendar).
-- **Gates.** Mobile Lighthouse performance ≥ 0.90 becomes blocking. INP under 200 ms on the 3 heaviest template pages. *Changed by the owner on 2026-11-27:* "every size budget at least 10% lower than at 11.6" is a 12.x target, met by 12.6 (see How each version is judged). At 12.1, 23 of 241 budgets were 10% lower; `react` was flat and `react-native` 32% higher than at 11.6.
+- **Gates.** Mobile Lighthouse performance ≥ 0.90 becomes blocking. INP under 200 ms on the 3 heaviest template pages. *Changed by the owner on 2026-11-27:* "every size budget at least 10% lower than at 11.6" is a 12.x target, met by 12.6, which is 12.7 after the 12.2 insertion (see How each version is judged). At 12.1, 23 of 241 budgets were 10% lower; `react` was flat and `react-native` 32% higher than at 11.6.
 
-### 12.2 — Signature moments
+### 12.2 — Platform requests: chat, menus and charts
+
+*Inserted by the owner on 2026-11-27, ahead of the planned 12.2 (now 12.3), so the platform gets these first.* Source: nexub-platform `docs/go-agents-design-system.md` and the owner's list of 2026-11-27. All additive, so a minor.
+
+- **DropdownMenu.RadioItem** `indicator="start" | "end"` (default `start`): with `end`, the tick sits at the inline end, so a theme menu can show icons on the left.
+- **Conversation** (`@nexub/patterns`): `relative` on the scroller (sr-only labels stay inside it); `DateSeparator` ("Today", "Yesterday", "25 Nov 2026"); "Jump to newest" when scrolled up and new messages arrive; a `thinking` slot for `ThinkingIndicator`, announced politely, that never moves the scroll.
+- **MessageBubble:** `avatar` for `from="user"` at the inline end (the label stays "You said"); `collapse?: number | false` with Read more / Show less, a fade and `aria-expanded`, shown only when the content overflows; `MessageCard` (title, status, fields, body, actions, `done`); an inline `Highlight` for amounts, dates and statuses.
+- **PromptInput:** slash `commands` with `onCommand(value, args)`, and a `chips` slot for quick replies.
+- **Agent identity:** `AgentAvatar` and `AgentBadge`. They sit beside the 12.4 agent parts (tool-call cards, approval gate) and ship here first.
+- **OrgChart:** zoom (pinch, buttons, keyboard) and stacking for wide teams, so People can drop its own chart.
+- **EventCalendar:** a `color` per event on top of the tones, readable in both themes, with a contrast check.
+- **AppShell.Main:** `relative`.
+- **@nexub/brand:** app-icon tiles (dark and `-light`) for devX, partnerhub, book-hub and audit-hub.
+- **Sidebar.Group:** collapsible (low priority).
+- Each with stories, tests, the screen-reader check and size budgets, as every version.
+
+### 12.3 — Signature moments
 
 The creative layer: what makes a Nexub app recognisable without slowing anyone down. The 10.x rule stays: colour and motion on landmarks and moments, calm on working surfaces.
 
 - **Motion language.** Named spring presets by intent (`enter`, `exit`, `emphasis`, `success`, `attention`) used by every component, documented as one page with live examples. Reduced motion respected everywhere.
 - **Illustration system.** A small set of spot illustrations for empty, error, success and offline states, themed by tokens, light and dark, on web and native.
 - **Haptics.** Native success, warning and selection haptics paired with the motion presets.
-- **RFC for `@nexub/genui`.** Open the RFC for the 12.3 package, so its comment period runs in parallel with 12.2.
+- **RFC for `@nexub/genui`.** Open the RFC for the 12.4 package, so its comment period runs in parallel with 12.3.
 - **Charts that tell a story.** Annotations, a highlighted change ("up 12% since March"), and a reference line, without breaking the 10.3 rule that product accent stays out of charts.
 
-### 12.3 — AI-native UI 2.0
+### 12.4 — AI-native UI 2.0
 
 - **Agent parts.** Tool-call cards (running, done, failed), an approval gate (approve / edit / reject before an action runs), a diff and review view, and streaming table and form states. Built on the existing AgentKit, PromptInput, Conversation and StreamingText.
-- **Generative UI schema in a new `@nexub/genui` package, at `alpha`** *(decision 4)*. A versioned JSON schema an LLM can return and the DS renders safely: an allow-list of components and props, no raw HTML, validation before render. `@nexub/mcp` serves the schema and its docs to agents. New package, so it needs an RFC (opened in 12.2, like `@nexub/elements` in 11.3), a `dependency-policy.json` entry, a trusted-publisher placeholder on npm and its own size budget.
+- **Generative UI schema in a new `@nexub/genui` package, at `alpha`** *(decision 4)*. A versioned JSON schema an LLM can return and the DS renders safely: an allow-list of components and props, no raw HTML, validation before render. `@nexub/mcp` serves the schema and its docs to agents. New package, so it needs an RFC (opened in 12.3, like `@nexub/elements` in 11.3), a `dependency-policy.json` entry, a trusted-publisher placeholder on npm and its own size budget.
 - XSS corpus tests extended to the schema renderer.
 
-### 12.4 — Native catch-up II: screens
+### 12.5 — Native catch-up II: screens
 
 - **Templates on native.** Sign in, sign up, verify code, settings, dashboard, status pages: the 10.5 full-page states that are web only today.
 - **Larger screens.** Tablet and foldable layouts for AppShell, ListDetail and NavigationRail.
 - **Native twins** for Kanban (read-only and move), EventCalendar (day, agenda) and Chart.
 - Move to the Expo SDK that is current when the version starts.
 
-### 12.5 — Theming studio and tokens
+### 12.6 — Theming studio and tokens
 
 - **Token tiers complete.** Reference → semantic → component, with the component tier documented per component (closes R3).
 - **Brand builder in the docs.** Pick a seed colour, see contrast checked live, preview components, export tokens (CSS, Tailwind v4, native). Built on `@nexub/tokens/seed`.
 - **APCA** contrast reported beside WCAG 2 in the contrast tests and the builder.
 - **Design-tool sync.** Tokens exported in a format the design team's tool imports, so design and code read the same source *(check which tool the design team uses)*.
 
-### 12.6 — Adoption and proof
+### 12.7 — Adoption and proof
 
 - **Usage scanner** (closes R6). A script, run against the 14 platform apps, that counts DS component and prop use, local overrides, and copies of DS parts.
 - **admin-ui tracker.** The stopgaps that 11.x made redundant, and whether each app has deleted them.
@@ -160,13 +178,13 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 - **No rerun-to-green.** A check that fails and then passes is a flake: it gets an issue, and the next release waits for it (11.7 rule).
 - All 10.0 / 11.0 gates stay blocking. Baselines in light, dark, RTL and forced colours. Docs page with a playground and the new states on the same PR.
 - Native: a new web prop is ported in the same version or listed as a parity gap in the release notes.
-- 11.7–11.9 and 12.1–12.6 are minors: additive and opt-in, no default change. Only 12.0 breaks, and only for what RFC 12.0 lists.
+- 11.7–11.9 and 12.1–12.7 are minors: additive and opt-in, no default change. Only 12.0 breaks, and only for what RFC 12.0 lists.
 - [PUBLISHING.md](PUBLISHING.md) release routine for each version.
 - **Overrun rule.** A version ships its stability, accessibility and parity items on time. A creative or new-part item that is not ready moves to the next version instead of holding the release.
 
 ## How each version is judged
 
-| Measure | After 11.6 | Target after 12.6 |
+| Measure | After 11.6 | Target after 12.7 |
 |---|---|---|
 | Flaky checks cleared only by rerun | at least 3 in 11.x | 0 |
 | Components `stable` / `beta` / `alpha` | 99 / 69 / 29 | 130+ stable, alpha only for parts under 6 months old |
@@ -175,7 +193,7 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 | Native templates | 0 | 6 |
 | Lighthouse | desktop only | mobile ≥ 0.90, blocking |
 | `react/styles.css` loaded by a typical page | 43.8 kB budget | under half |
-| Size budgets at least 10% below 11.6 *(12.x target, owner 2026-11-27)* | 0 of 241 | all of them, by 12.6 |
+| Size budgets at least 10% below 11.6 *(12.x target, owner 2026-11-27)* | 0 of 241 | all of them, by 12.7 (was 12.6 before the 12.2 insertion) |
 | Apps with a usage scan and health score | 0 | 14 |
 
 ## Why this order
@@ -193,8 +211,8 @@ Answered by the owner on 2026-11-22, accepting every suggestion:
 
 1. **Pace.** A 48-hour staging soak with no flakes before each production release. Development keeps going during the soak. *Changed by the owner on 2026-11-24: no soak; each version is released on its own as soon as it is green, with no open flake.*
 2. **12.0 scope.** Cascade layers on by default in 12.0. The Tailwind v3 preset is frozen and deprecated in 12.0, and removed in 13.0. *Corrected by the owner on 2026-11-25 (RFC 12.0): the preset was removed in 4.0. The v3 compatibility defaults (`tailwind-v3-compat.css`) take its place: kept and deprecated in 12.0, removed in 13.0.*
-3. **Native ambition.** A "native essentials" list of about 80 components, published in 11.8 from the mobile apps' screens and kept current by the 12.6 scanner. Not full parity.
-4. **Generative UI (12.3).** Schema and renderer in a new `@nexub/genui` package at `alpha`, served by `@nexub/mcp`. RFC opened in 12.2.
+3. **Native ambition.** A "native essentials" list of about 80 components, published in 11.8 from the mobile apps' screens and kept current by the 12.7 scanner. Not full parity.
+4. **Generative UI (12.4).** Schema and renderer in a new `@nexub/genui` package at `alpha`, served by `@nexub/mcp`. RFC opened in 12.3.
 5. **Order.** As listed. Performance stays at 12.1, after the 12.0 layering decision. If the platform reports slow pages before then, a fix ships as a patch, not by reordering the plan.
 
 The plan as a whole was approved on 2026-11-22. 11.7 starts next.
