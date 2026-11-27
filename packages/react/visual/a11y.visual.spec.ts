@@ -203,8 +203,6 @@ test('a11y components-eventcalendar--company-colors names', async ({ page }) => 
   await expect(page.getByRole('list', { name: 'Legend' }).first().getByRole('listitem')).toHaveText(['Acme', 'Globex', 'Initech', 'Umbrella', 'Hooli', 'Stark']);
 });
 
-});
-
 // 12.2: what a screen reader hears from PromptInput's slash commands. Closed, the field is a
 // plain multiline textbox; "/" turns it into an expanded combobox that controls a listbox named
 // "Commands", with the active option announced through aria-activedescendant as ↑/↓ move.
