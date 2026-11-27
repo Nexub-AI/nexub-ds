@@ -28,6 +28,7 @@ Small status indicator or label. Communicates state, category, or count.
 | `tone` | `'success' \| 'danger' \| 'warning' \| 'info' \| 'neutral'` | `'neutral'` | Semantic color tone. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge size. |
 | `leadingIcon` | `React.ReactNode` |  | Icon or dot rendered before the label. |
+| `AgentBadge icon` | `ReactNode` |  | AgentBadge (12.2, beta): the leading icon. Default: a sparkle. AgentBadge is always `variant="soft"` and takes Badge's `tone`, `category` and `size`. |
 
 ## Example: Tones
 
@@ -76,6 +77,23 @@ export default function Example() {
           {t === 'success' ? 'Online' : t === 'danger' ? 'Offline' : 'Away'}
         </Badge>
       ))}
+    </div>
+  );
+}
+```
+
+## Example: Agent badge
+
+AgentBadge (12.2, beta) labels an AI agent in a chat header ("AI on your own key", "Buttons only"): a soft Badge with a leading sparkle. Pair it with `AgentAvatar`.
+
+```tsx
+import { AgentBadge } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex gap-2 flex-wrap items-center justify-center">
+      <AgentBadge>AI on your own key</AgentBadge>
+      <AgentBadge tone="info">Buttons only</AgentBadge>
     </div>
   );
 }

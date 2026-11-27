@@ -101,6 +101,8 @@ export type { FormFieldRootProps, FormFieldContextValue } from './components/For
 // Components — Labels & Badges
 export { Badge, badgeVariants } from './components/Badge/index.js';
 export type { BadgeProps } from './components/Badge/index.js';
+export { AgentBadge } from './components/Badge/index.js';
+export type { AgentBadgeProps } from './components/Badge/index.js';
 
 export { FilterChip } from './components/FilterChip/index.js';
 export type { FilterChipProps } from './components/FilterChip/index.js';
@@ -114,6 +116,8 @@ export type { EyebrowChipProps } from './components/EyebrowChip/index.js';
 // Components — Avatar
 export { Avatar, avatarVariants } from './components/Avatar/index.js';
 export type { AvatarProps, AvatarStatus } from './components/Avatar/index.js';
+export { AgentAvatar } from './components/Avatar/index.js';
+export type { AgentAvatarProps } from './components/Avatar/index.js';
 
 export { AvatarGroup, avatarGroupVariants } from './components/AvatarGroup/index.js';
 export type { AvatarGroupProps } from './components/AvatarGroup/index.js';
