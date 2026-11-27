@@ -1264,10 +1264,13 @@
         "ArrowLeft: Closes an open card, or moves to its manager. Mirrored in RTL.",
         "Home / End: First or last visible card.",
         "Enter: Calls `onActivate`.",
-        "Space: Opens or closes the card’s reports."
+        "Space: Opens or closes the card’s reports.",
+        "+ / = and -: With `zoomable`, while focus is in the chart: zoom in or out a step. Ctrl/⌘ combinations stay the browser’s page zoom.",
+        "0: With `zoomable`: back to 100%."
       ],
       "screenReader": [
-        "The chart is one tab stop (roving tabindex); focus scrolls the card into view."
+        "The chart is one tab stop (roving tabindex); focus scrolls the card into view.",
+        "With `zoomable`, the toolbar buttons come before the chart in tab order, and the focused card is scrolled into view after a zoom."
       ]
     },
     {

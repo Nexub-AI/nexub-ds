@@ -6953,9 +6953,30 @@
           "description": ""
         },
         {
+          "name": "defaultZoom",
+          "type": "number",
+          "required": false,
+          "default": "1",
+          "description": ""
+        },
+        {
           "name": "expanded",
           "type": "string[]",
           "required": false,
+          "description": ""
+        },
+        {
+          "name": "maxZoom",
+          "type": "number",
+          "required": false,
+          "default": "2",
+          "description": ""
+        },
+        {
+          "name": "minZoom",
+          "type": "number",
+          "required": false,
+          "default": "0.25",
           "description": ""
         },
         {
@@ -6977,10 +6998,35 @@
           "description": ""
         },
         {
+          "name": "onZoomChange",
+          "type": "((zoom: number) => void)",
+          "required": false,
+          "description": ""
+        },
+        {
           "name": "renderCard",
           "type": "((node: OrgChartNode) => React.ReactNode)",
           "required": false,
           "description": "Replaces the card's content (photo, name, role). The expand control stays."
+        },
+        {
+          "name": "stackAbove",
+          "type": "number",
+          "required": false,
+          "description": "A node with more direct reports than this shows them as a vertical stack (a compact column with the connector on one side) instead of one wide row. The tree semantics and arrow keys don't change. Off by default."
+        },
+        {
+          "name": "zoom",
+          "type": "number",
+          "required": false,
+          "description": "Controlled scale, 0.25–2 (clamped to `minZoom`–`maxZoom`). Needs `zoomable`."
+        },
+        {
+          "name": "zoomable",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "Adds zoom: a toolbar (zoom out, level, zoom in, fit), pinch on touch, ctrl/⌘ + wheel or a trackpad pinch, drag to pan, and + / = / - / 0 while focus is in the chart. Plain wheel still scrolls."
         }
       ]
     },

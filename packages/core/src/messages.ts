@@ -378,6 +378,12 @@ export interface NexubMessages {
   recent: string;
   /** OrgChart (11.5): the expand control on a card, e.g. "3 reports". */
   orgChartReports: (count: number) => string;
+  /** OrgChart `zoomable` (12.2): the zoom controls' group name, its buttons and the live level (e.g. "125%"). */
+  orgChartZoom: string;
+  orgChartZoomIn: string;
+  orgChartZoomOut: string;
+  orgChartZoomFit: string;
+  orgChartZoomLevel: (percent: number) => string;
   /** PromptInput `submitOn="mod-enter"` (11.5); `mod` is "⌘" on Apple devices, else "Ctrl". */
   promptHintModEnter: (mod: string) => string;
   /** PromptInput (12.2): the `chips` quick-reply row and the slash-command list. */
@@ -729,6 +735,11 @@ export const defaultMessages: NexubMessages = {
   failedCount: (count) => `${count} failed`,
   recent: 'Recent',
   orgChartReports: (count) => `${count} ${count === 1 ? 'report' : 'reports'}`,
+  orgChartZoom: 'Zoom',
+  orgChartZoomIn: 'Zoom in',
+  orgChartZoomOut: 'Zoom out',
+  orgChartZoomFit: 'Fit to screen',
+  orgChartZoomLevel: (percent) => `${percent}%`,
   promptHintModEnter: (mod) => `Press ${mod}+Enter to send, Enter for a new line`,
   promptSuggestions: 'Suggestions',
   promptCommands: 'Commands',
