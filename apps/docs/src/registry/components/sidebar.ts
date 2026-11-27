@@ -16,12 +16,14 @@ const entry: ComponentEntry = {
     { name: 'aria-label', type: 'string', required: false, description: 'Name of the nav landmark. Defaults to the localised "Sidebar".' },
     { name: 'SidebarHeader status', type: 'ReactNode', description: 'Trailing element next to the logo (`Sidebar.Header` children), e.g. a `Badge`. Moves under the logo when they don’t fit.' },
     { name: 'SidebarGroup label', type: 'string', description: 'Heading above a group of items.' },
+    { name: 'SidebarGroup collapsible', type: 'boolean', required: false, default: 'false', description: '12.2: the label becomes a button (`aria-expanded`, `aria-controls`) with a chevron that folds the items away. Stays open, toggle hidden, in the icon rail.' },
+    { name: 'SidebarGroup defaultOpen / open / onOpenChange', type: 'boolean / boolean / (open: boolean) => void', required: false, default: 'true', description: '12.2: uncontrolled start state, or controlled open state, of a `collapsible` group.' },
     { name: 'SidebarItem icon', type: 'ReactNode', description: 'Leading icon; the only thing shown when collapsed.' },
     { name: 'SidebarItem active', type: 'boolean', description: 'Marks the current page (`aria-current="page"`).' },
     { name: 'SidebarItem asChild', type: 'boolean', description: 'Use your router `<Link>` as the item; pass it as the only child.' },
     { name: 'Sidebar.Separator / Footer', type: 'compound', required: false, description: 'A divider, and a footer that stays pinned while the items scroll.' },
   ],
-  examples: [{ title: 'Default' }, { title: 'Collapsed' }],
+  examples: [{ title: 'Default' }, { title: 'Collapsed' }, { title: 'Collapsible groups' }],
 };
 
 export default entry;
