@@ -380,6 +380,9 @@ export interface NexubMessages {
   orgChartReports: (count: number) => string;
   /** PromptInput `submitOn="mod-enter"` (11.5); `mod` is "⌘" on Apple devices, else "Ctrl". */
   promptHintModEnter: (mod: string) => string;
+  /** PromptInput (12.2): the `chips` quick-reply row and the slash-command list. */
+  promptSuggestions: string;
+  promptCommands: string;
   /** SavedViews (11.5): rename, the default view's tag and the delete confirm. */
   renameView: (name: string) => string;
   defaultViewTag: string;
@@ -727,6 +730,8 @@ export const defaultMessages: NexubMessages = {
   recent: 'Recent',
   orgChartReports: (count) => `${count} ${count === 1 ? 'report' : 'reports'}`,
   promptHintModEnter: (mod) => `Press ${mod}+Enter to send, Enter for a new line`,
+  promptSuggestions: 'Suggestions',
+  promptCommands: 'Commands',
   renameView: (name) => `Rename “${name}”`,
   defaultViewTag: 'Default',
   deleteViewConfirm: (name) => `Delete “${name}”?`,

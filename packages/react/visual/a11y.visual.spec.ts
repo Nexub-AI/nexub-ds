@@ -124,6 +124,8 @@ const OPEN: { id: string; trigger?: string; press?: string }[] = [
   // 11.9: the diagram's "Connect to…" menu (the keyboard alternative to dragging a handle),
   // opened with C on a node (its connect button only takes pointer events on hover).
   { id: 'components-diagramcanvas--default', trigger: '.react-flow__node', press: 'c' },
+  // 12.2: PromptInput's slash commands, opened by typing "/" in the field.
+  { id: 'ai-promptinput--slash-commands', trigger: 'textarea', press: '/' },
   // 12.2: MessageCard's "More actions" menu.
   { id: 'ai-messagebubble--card-overflow', trigger: 'button[aria-haspopup=menu]' },
   // 12.2: RadioItem indicator="end" (icon at the start, tick at the inline end).
@@ -158,6 +160,46 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2: what a screen reader hears from PromptInput's slash commands. Closed, the field is a
+// plain multiline textbox; "/" turns it into an expanded combobox that controls a listbox named
+// "Commands", with the active option announced through aria-activedescendant as ↑/↓ move.
+test('a11y PromptInput slash commands announce as a combobox and listbox', async ({ page }) => {
+  await page.goto('/iframe.html?id=ai-promptinput--slash-commands&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const field = page.locator('#storybook-root textarea');
+  await expect(page.getByRole('textbox', { name: 'Message' })).toBeVisible();
+  await expect(field).not.toHaveAttribute('aria-expanded');
+  await field.click();
+  await page.keyboard.press('/');
+  const combo = page.getByRole('combobox', { name: 'Message' });
+  const list = page.getByRole('listbox', { name: 'Commands' });
+  await expect(combo).toHaveAttribute('aria-expanded', 'true');
+  await expect(combo).toHaveAttribute('aria-controls', (await list.getAttribute('id'))!);
+  const options = list.getByRole('option');
+  await expect(options.first()).toHaveAccessibleName('/remind Remind me Remind me later, e.g. /remind tomorrow 9am');
+  await expect(options.first()).toHaveAttribute('aria-selected', 'true');
+  await expect(combo).toHaveAttribute('aria-activedescendant', (await options.first().getAttribute('id'))!);
+  await page.keyboard.press('ArrowDown');
+  await expect(combo).toHaveAttribute('aria-activedescendant', (await options.nth(1).getAttribute('id'))!);
+  await expect(options.nth(1)).toHaveAccessibleName('/summarize Summarize Summarize this thread');
+  await expect(options.nth(1)).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Escape');
+  await expect(list).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Message' })).toHaveValue('/');
+});
+
+// 12.2: the quick-reply row is a group named "Suggestions" and each reply is reachable with Tab.
+test('a11y PromptInput quick replies are a labelled group in the tab order', async ({ page }) => {
+  await page.goto('/iframe.html?id=ai-promptinput--quick-reply-chips&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const row = page.getByRole('group', { name: 'Suggestions' });
+  await expect(row.getByRole('button')).toHaveCount(5);
+  await page.keyboard.press('Tab');
+  await expect(row.getByRole('button', { name: 'Approve' })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(row.getByRole('button', { name: 'Reject' })).toBeFocused();
+});
 
 // 12.2 MessageBubble: what a screen reader gets from the new parts, in the real browser.
 const story = (id: string) => `/iframe.html?id=${id}&viewMode=story&globals=theme:light;brand:none`;
