@@ -26,6 +26,8 @@ export { StreamingText } from './components/StreamingText/index.js';
 export type { StreamingTextProps } from './components/StreamingText/index.js';
 export { MessageBubble, MessageActions, defaultMessageStrings } from './components/MessageBubble/index.js';
 export type { MessageBubbleProps, MessageActionsProps, MessageFrom, MessageStrings, Feedback, MessageAction } from './components/MessageBubble/index.js';
+export { MessageCard, Highlight } from './components/MessageBubble/index.js';
+export type { MessageCardProps, MessageCardAction, MessageCardField, HighlightProps, HighlightTone } from './components/MessageBubble/index.js';
 export { Citation, SourceChip, SourceList, safeUrl } from './components/Citation/index.js';
 export type { CitationProps, CitationSource, CitationMessages, SourceChipProps, SourceListProps } from './components/Citation/index.js';
 

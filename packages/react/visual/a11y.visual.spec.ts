@@ -124,6 +124,8 @@ const OPEN: { id: string; trigger?: string; press?: string }[] = [
   // 11.9: the diagram's "Connect to…" menu (the keyboard alternative to dragging a handle),
   // opened with C on a node (its connect button only takes pointer events on hover).
   { id: 'components-diagramcanvas--default', trigger: '.react-flow__node', press: 'c' },
+  // 12.2: MessageCard's "More actions" menu.
+  { id: 'ai-messagebubble--card-overflow', trigger: 'button[aria-haspopup=menu]' },
 ];
 const POPUP = '[role=listbox],[role=menu],[role=dialog],[role=alertdialog],[role=grid]:not(table)';
 
@@ -154,3 +156,44 @@ for (const { id, trigger, press } of OPEN) {
     expect(violations, JSON.stringify(violations, null, 2)).toEqual([]);
   });
 }
+
+// 12.2 MessageBubble: what a screen reader gets from the new parts, in the real browser.
+const story = (id: string) => `/iframe.html?id=${id}&viewMode=story&globals=theme:light;brand:none`;
+
+test('sr ai-messagebubble--user-avatar: the own message keeps "You said"', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--user-avatar'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await expect(page.getByRole('article', { name: 'You said' })).toHaveCount(1);
+});
+
+test('sr ai-messagebubble--collapse: the toggle exposes its expanded state', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--collapse'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  await page.evaluate(() => document.fonts.ready);
+  const root = page.locator('#storybook-root');
+  // Two long messages get a toggle; the short one fits and gets none.
+  await expect(root.getByRole('button', { name: 'Read more' })).toHaveCount(2);
+  const toggle = root.getByRole('button', { name: 'Read more' }).first();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  const controls = await toggle.getAttribute('aria-controls');
+  await expect(page.locator(`[id="${controls}"]`)).toHaveCount(1);
+  await toggle.click();
+  const expanded = root.getByRole('button', { name: 'Show less' });
+  await expect(expanded).toHaveAttribute('aria-expanded', 'true');
+  await expect(expanded).toBeFocused();
+});
+
+test('sr ai-messagebubble--card-overflow: fields are term/definition pairs; the menu button is named', async ({ page }) => {
+  await page.goto(story('ai-messagebubble--card-overflow'));
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  const dl = root.locator('dl');
+  await expect(dl.getByRole('term')).toHaveText(['Amount', 'Vendor', 'Submitted by', 'Due']);
+  await expect(dl.getByRole('definition')).toHaveCount(4);
+  const more = root.getByRole('button', { name: 'More actions' });
+  await expect(more).toHaveAttribute('aria-haspopup', 'menu');
+  await expect(more).toHaveAttribute('aria-expanded', 'false');
+  await expect(root.getByRole('button', { name: 'Show all' })).toHaveAttribute('aria-expanded', 'false');
+  await more.click();
+  await expect(page.getByRole('menu').getByRole('menuitem')).toHaveText(['Duplicate', 'Delete']);
+});

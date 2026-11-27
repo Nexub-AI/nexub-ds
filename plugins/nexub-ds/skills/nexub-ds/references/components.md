@@ -16,7 +16,7 @@ Never use a component marked deprecated.
 - [Approval Card](components/approval-card.md) `@nexub/react`: The agent asks before it acts: what will happen, then Approve or Deny.
 - [Citation](components/citation.md) `@nexub/react`: Numbered source markers for running text, with a hover preview, plus SourceChip and SourceList for the sources under a reply.
 - [Diff View](components/diff-view.md) `@nexub/react`: A unified diff with added and removed lines, for agent changes.
-- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate.
+- [Message Bubble](components/message-bubble.md) `@nexub/react`: One message in a conversation. User messages sit in a bubble at the end; assistant replies run full width. MessageActions adds copy, feedback and regenerate; MessageCard and Highlight structure what a message says.
 - [Plan Tracker](components/plan-tracker.md) `@nexub/react`: An agent plan: ordered steps with done, active, pending or failed status.
 - [Prompt Input](components/prompt-input.md) `@nexub/react`: The composer for a chat: an auto-growing text field with Send, which turns into Stop while a reply streams.
 - [Streaming Text](components/streaming-text.md) `@nexub/react`: Assistant text as it arrives: new chunks fade in, text already shown stays still, and a caret marks the end.
