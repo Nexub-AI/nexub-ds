@@ -10,7 +10,7 @@ import { DescriptionList } from '../DescriptionList/DescriptionList.js';
 import { SuccessCheck } from '../SuccessCheck/SuccessCheck.js';
 import { useNexubMessages } from '../NexubProvider/NexubProvider.js';
 import { useIsomorphicLayoutEffect } from '../../hooks/useIsomorphicLayoutEffect.js';
-import { defaultMessageStrings, type MessageStrings } from './MessageBubble.js';
+import type { MessageStrings } from '../MessageBubble/MessageBubble.js';
 
 export interface MessageCardAction {
   /** The button text (and the menu item's). */
@@ -81,7 +81,7 @@ function planActions(actions: MessageCardAction[]) {
  */
 export const MessageCard = React.forwardRef<HTMLDivElement, MessageCardProps>(
   ({ title, status, fields, body, actions, maxHeight, done, messages, className, ...props }, ref) => {
-    const m = { ...defaultMessageStrings, ...useNexubMessages(), ...messages };
+    const m = { ...useNexubMessages(), ...messages };
     const contentId = React.useId();
     const [contentEl, setContentEl] = React.useState<HTMLDivElement | null>(null);
     const [expanded, setExpanded] = React.useState(false);

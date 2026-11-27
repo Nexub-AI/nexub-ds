@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, it, expect, vi } from 'vitest';
 import axe from 'axe-core';
 import { MessageCard } from './MessageCard.js';
-import { MessageBubble } from './MessageBubble.js';
+import { MessageBubble } from '../MessageBubble/MessageBubble.js';
 
 const fields = [
   { label: 'Amount', value: '€1,240.00' },

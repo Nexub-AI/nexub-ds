@@ -646,7 +646,7 @@ Never use a component marked deprecated.
 
 These exist; read their TypeScript props in `node_modules/<package>/dist/index.d.ts`.
 
-- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Marquee, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
+- `@nexub/react`: AgentKit, Chart, ChoiceFields, Code, DataTableVirtual, Highlight, Marquee, MessageCard, Motion, NexubProvider, OTPInput, QRCode, ThemeProvider, Usage
 - `@nexub/patterns`: ActivityPage, AppHeader, AppLauncher, BookingPage, ChatPage, CheckoutPage, DashboardPage, DetailPage, ForgotPasswordPage, InvoicePage, KycPage, NotificationsPage, OnboardingPage, PageFrame, PaywallPage, SearchResultsPage, SettingsLayout, SettingsPage, SignInPage, SignUpPage, TablePage, TeamPage, TransactionDetailPage, VerifyCodePage
 
 

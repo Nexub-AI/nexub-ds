@@ -5166,7 +5166,7 @@
       ]
     },
     "Highlight": {
-      "file": "components/MessageBubble/Highlight.tsx",
+      "file": "components/Highlight/Highlight.tsx",
       "props": [
         {
           "name": "tone",
@@ -6211,7 +6211,7 @@
       ]
     },
     "MessageCard": {
-      "file": "components/MessageBubble/MessageCard.tsx",
+      "file": "components/MessageCard/MessageCard.tsx",
       "props": [
         {
           "name": "actions",

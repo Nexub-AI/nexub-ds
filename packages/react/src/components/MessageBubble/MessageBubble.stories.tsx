@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react';
 import * as React from 'react';
 import { Pencil, Pin, Trash2 } from '@nexub/icons';
 import { MessageActions, MessageBubble } from './MessageBubble.js';
-import { MessageCard } from './MessageCard.js';
-import { Highlight } from './Highlight.js';
+import { MessageCard } from '../MessageCard/MessageCard.js';
+import { Highlight } from '../Highlight/Highlight.js';
 import { Avatar } from '../Avatar/Avatar.js';
 import { Badge } from '../Badge/Badge.js';
 
