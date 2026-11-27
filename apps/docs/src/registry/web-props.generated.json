@@ -10757,6 +10757,12 @@
           "type": "Partial<ConversationMessages>",
           "required": false,
           "description": ""
+        },
+        {
+          "name": "thinking",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "12.2: a slot at the end of the list, after the messages, for a `<ThinkingIndicator />`. It sits in a polite `role=\"status\"` region and never moves the scroll: while the reader is at the bottom it stays in view, and while they're scrolled up it neither scrolls nor counts as a new message. Pass the prop (even as `null`) for as long as the slot may be used, so the live region exists before the indicator appears."
         }
       ]
     },
@@ -10894,6 +10900,41 @@
           "required": false,
           "default": "'md'",
           "description": "Content width."
+        }
+      ]
+    },
+    "DateSeparator": {
+      "file": "components/Conversation/DateSeparator.tsx",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "Replaces the computed label."
+        },
+        {
+          "name": "date",
+          "type": "string | number | Date",
+          "required": false,
+          "description": "The day this separator starts. A date-only string (\"2026-11-25\") is read as a local day."
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": false,
+          "description": "BCP 47 locale for the date. Defaults to the NexubProvider's locale."
+        },
+        {
+          "name": "messages",
+          "type": "Partial<DateSeparatorMessages>",
+          "required": false,
+          "description": ""
+        },
+        {
+          "name": "now",
+          "type": "string | number | Date",
+          "required": false,
+          "description": "\"Now\" for the Today / Yesterday check. Defaults to the current time; pass one in tests."
         }
       ]
     },
