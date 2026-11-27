@@ -3,7 +3,8 @@ import { renderToString } from 'react-dom/server';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import axe from 'axe-core';
-import { PromptInput } from './PromptInput.js';
+import { PromptInput, parseSlashCommand } from './PromptInput.js';
+import type { CommandListItem } from '../CommandList/CommandList.js';
 
 const field = () => screen.getByRole('textbox', { name: 'Message' });
 
@@ -132,5 +133,200 @@ describe('PromptInput', () => {
     const { container } = render(<PromptInput sendLabel="Send" submitOn="mod-enter" hint="Hint" error="Error" defaultValue="x" />);
     const { violations } = await axe.run(container);
     expect(violations).toEqual([]);
+  });
+
+  describe('12.2 slash commands', () => {
+    const commands: CommandListItem[] = [
+      { value: 'remind', label: 'Remind me', description: 'Set a reminder', shortcut: ['⌘', 'R'] },
+      { value: 'summarize', label: 'Summarize', keywords: ['tldr'] },
+      { value: 'archive', label: 'Archive', disabled: true },
+      { value: 'translate', label: 'Translate' },
+    ];
+    const input = () => screen.getByLabelText('Message');
+    const type = (text: string) => fireEvent.change(input(), { target: { value: text } });
+    const options = () => screen.getAllByRole('option');
+    const activeOption = () => document.getElementById(input().getAttribute('aria-activedescendant')!);
+
+    it('parses the id and the args', () => {
+      expect(parseSlashCommand('hello')).toBeNull();
+      expect(parseSlashCommand('/')).toEqual({ id: '', args: '', hasArgs: false });
+      expect(parseSlashCommand('/rem')).toEqual({ id: 'rem', args: '', hasArgs: false });
+      expect(parseSlashCommand('/remind ')).toEqual({ id: 'remind', args: '', hasArgs: true });
+      expect(parseSlashCommand('/remind  tomorrow 9am ')).toEqual({ id: 'remind', args: 'tomorrow 9am', hasArgs: true });
+      expect(parseSlashCommand('/remind\nline two')).toEqual({ id: 'remind', args: 'line two', hasArgs: true });
+    });
+
+    it('without the list open the field is a plain textbox (no combobox ARIA)', () => {
+      render(<PromptInput commands={commands} defaultValue="hello" />);
+      expect(field()).not.toHaveAttribute('aria-expanded');
+      expect(field()).not.toHaveAttribute('aria-controls');
+      expect(screen.queryByRole('listbox')).toBeNull();
+    });
+
+    it('opens on "/" with combobox/listbox ARIA, filters, and ↑/↓ move the active option', async () => {
+      render(<PromptInput commands={commands} />);
+      type('/');
+      const list = await screen.findByRole('listbox', { name: 'Commands' });
+      const box = screen.getByRole('combobox', { name: 'Message' });
+      expect(box).toHaveAttribute('aria-expanded', 'true');
+      expect(box).toHaveAttribute('aria-controls', list.id);
+      expect(box).toHaveAttribute('aria-autocomplete', 'list');
+      expect(options()).toHaveLength(4);
+      expect(activeOption()).toBe(options()[0]);
+      expect(options()[0]).toHaveAttribute('aria-selected', 'true');
+      expect(options()[2]).toHaveAttribute('aria-disabled', 'true');
+      // ↓ skips the disabled option; ↓ from the last wraps to the first, ↑ back.
+      fireEvent.keyDown(box, { key: 'ArrowDown' });
+      expect(activeOption()).toHaveTextContent('summarize');
+      fireEvent.keyDown(box, { key: 'ArrowDown' });
+      expect(activeOption()).toHaveTextContent('translate');
+      fireEvent.keyDown(box, { key: 'ArrowDown' });
+      expect(activeOption()).toHaveTextContent('remind');
+      fireEvent.keyDown(box, { key: 'ArrowUp' });
+      expect(activeOption()).toHaveTextContent('translate');
+      // Filtering by id, label or keywords; a new query starts at the top.
+      type('/tld');
+      expect(options()).toHaveLength(1);
+      expect(activeOption()).toHaveTextContent('summarize');
+      // Shortcut keys are shown but hidden from the accessible name.
+      type('/rem');
+      expect(options()[0]).toHaveTextContent('⌘R');
+      expect(options()[0]).toHaveAccessibleName('/remind Remind me Set a reminder');
+    });
+
+    it('Enter picks the active command with no args and clears the field', async () => {
+      const onCommand = vi.fn();
+      const onSubmit = vi.fn();
+      render(<PromptInput commands={commands} onCommand={onCommand} onSubmit={onSubmit} />);
+      type('/su');
+      await screen.findByRole('listbox');
+      fireEvent.keyDown(input(), { key: 'Enter' });
+      expect(onCommand).toHaveBeenCalledWith('summarize', '');
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(input()).toHaveValue('');
+      expect(screen.queryByRole('listbox')).toBeNull();
+    });
+
+    it('Tab picks; a click on an option picks; Shift+Tab is left alone', async () => {
+      const onCommand = vi.fn();
+      render(<PromptInput commands={commands} onCommand={onCommand} />);
+      type('/');
+      await screen.findByRole('listbox');
+      fireEvent.keyDown(input(), { key: 'ArrowDown' });
+      fireEvent.keyDown(input(), { key: 'Tab' });
+      expect(onCommand).toHaveBeenLastCalledWith('summarize', '');
+      type('/');
+      fireEvent.click(screen.getByRole('option', { name: /translate/ }));
+      expect(onCommand).toHaveBeenLastCalledWith('translate', '');
+      type('/');
+      fireEvent.keyDown(input(), { key: 'Tab', shiftKey: true });
+      expect(onCommand).toHaveBeenCalledTimes(2);
+    });
+
+    it('a full command with args: Enter passes the text after the id', async () => {
+      const onCommand = vi.fn();
+      render(<PromptInput commands={commands} onCommand={onCommand} />);
+      type('/remind tomorrow 9am');
+      await screen.findByRole('listbox');
+      expect(options()).toHaveLength(1);
+      fireEvent.keyDown(input(), { key: 'Enter' });
+      expect(onCommand).toHaveBeenCalledWith('remind', 'tomorrow 9am');
+      expect(input()).toHaveValue('');
+    });
+
+    it('with no matching command, Enter submits as usual', async () => {
+      const onCommand = vi.fn();
+      const onSubmit = vi.fn();
+      render(<PromptInput commands={commands} onCommand={onCommand} onSubmit={onSubmit} />);
+      type('/');
+      await screen.findByRole('listbox');
+      type('/unknown thing');
+      expect(screen.queryByRole('listbox')).toBeNull();
+      expect(screen.getByRole('textbox', { name: 'Message' })).toBeInTheDocument();
+      fireEvent.keyDown(input(), { key: 'Enter' });
+      expect(onCommand).not.toHaveBeenCalled();
+      expect(onSubmit).toHaveBeenCalledWith('/unknown thing');
+    });
+
+    it('Esc closes the list and keeps the text; typing reopens it; Shift+Enter does not pick', async () => {
+      const onSubmit = vi.fn();
+      const onCommand = vi.fn();
+      render(<PromptInput commands={commands} onSubmit={onSubmit} onCommand={onCommand} />);
+      type('/re');
+      await screen.findByRole('listbox');
+      fireEvent.keyDown(input(), { key: 'Enter', shiftKey: true });
+      expect(onCommand).not.toHaveBeenCalled();
+      fireEvent.keyDown(input(), { key: 'Escape' });
+      expect(screen.queryByRole('listbox')).toBeNull();
+      expect(input()).toHaveValue('/re');
+      expect(input()).not.toHaveAttribute('aria-expanded');
+      // Closed: Enter submits the text.
+      fireEvent.keyDown(input(), { key: 'Enter' });
+      expect(onSubmit).toHaveBeenCalledWith('/re');
+      type('/rem');
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('controlled: the pick is reported and the value is left to the parent', async () => {
+      const onCommand = vi.fn();
+      const onValueChange = vi.fn();
+      const { rerender } = render(
+        <PromptInput commands={commands} value="/" onValueChange={onValueChange} onCommand={onCommand} />,
+      );
+      await screen.findByRole('listbox');
+      fireEvent.keyDown(input(), { key: 'Enter' });
+      expect(onCommand).toHaveBeenCalledWith('remind', '');
+      expect(onValueChange).not.toHaveBeenCalled();
+      expect(screen.queryByRole('listbox')).toBeNull();
+      rerender(<PromptInput commands={commands} value="/t" onValueChange={onValueChange} onCommand={onCommand} />);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('normal typing and submit are unaffected by commands', () => {
+      const onSubmit = vi.fn();
+      render(<PromptInput commands={commands} defaultValue="hi /remind" onSubmit={onSubmit} />);
+      fireEvent.keyDown(field(), { key: 'ArrowDown' });
+      fireEvent.keyDown(field(), { key: 'Enter' });
+      expect(onSubmit).toHaveBeenCalledWith('hi /remind');
+      expect(screen.queryByRole('listbox')).toBeNull();
+    });
+
+    it('is axe-clean with the list open', async () => {
+      const { container } = render(<PromptInput commands={commands} />);
+      type('/');
+      await screen.findByRole('listbox');
+      // role="combobox" on a <textarea> is what the ARIA combobox pattern asks for while the list
+      // is open; axe's HTML best-practice rule (aria-allowed-role) only lists it for <input>.
+      const { violations } = await axe.run(container, { rules: { 'aria-allowed-role': { enabled: false } } });
+      expect(violations).toEqual([]);
+    });
+  });
+
+  describe('12.2 chips', () => {
+    it('renders a labelled, Tab-reachable row above the field', () => {
+      render(
+        <PromptInput
+          chips={
+            <>
+              <button type="button">Yes</button>
+              <button type="button">No</button>
+            </>
+          }
+        />,
+      );
+      const row = screen.getByRole('group', { name: 'Suggestions' });
+      expect(row).toContainElement(screen.getByRole('button', { name: 'Yes' }));
+      expect(row.compareDocumentPosition(field()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      screen.getByRole('button', { name: 'Yes' }).focus();
+      expect(screen.getByRole('button', { name: 'Yes' })).toHaveFocus();
+      expect(row).not.toHaveAttribute('data-nx-overflow');
+    });
+
+    it('takes a custom label; without chips the DOM is as before', () => {
+      const { container, rerender } = render(<PromptInput />);
+      expect(container.firstElementChild).toHaveAttribute('data-status', 'idle');
+      rerender(<PromptInput chips={<button type="button">Hi</button>} messages={{ promptSuggestions: 'Quick replies' }} />);
+      expect(screen.getByRole('group', { name: 'Quick replies' })).toBeInTheDocument();
+    });
   });
 });

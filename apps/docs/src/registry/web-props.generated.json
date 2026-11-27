@@ -7209,6 +7209,18 @@
           "description": "Rendered above the text, e.g. removable Chips."
         },
         {
+          "name": "chips",
+          "type": "React.ReactNode",
+          "required": false,
+          "description": "12.2: quick replies above the field, e.g. `Button size=\"sm\" variant=\"tonal\"` or Chips. One row that scrolls sideways when narrow (wraps from 480px wide), labelled \"Suggestions\"."
+        },
+        {
+          "name": "commands",
+          "type": "CommandListItem[]",
+          "required": false,
+          "description": "12.2: slash commands. When the text starts with `/`, a list opens above the field, filtered by what follows the slash (cmdk's scorer, as CommandList). ↑/↓ move, Enter or Tab picks, Esc closes and keeps the text. `shortcut` keys show at the end of a row."
+        },
+        {
           "name": "defaultValue",
           "type": "string",
           "required": false,
@@ -7246,6 +7258,12 @@
           "type": "Partial<PromptInputMessages>",
           "required": false,
           "description": "Local overrides for this component's strings."
+        },
+        {
+          "name": "onCommand",
+          "type": "((value: string, args: string) => void)",
+          "required": false,
+          "description": "12.2: called when a command is picked, with its `value` and the text after the command's id (`/remind tomorrow 9am` → `('remind', 'tomorrow 9am')`). Uncontrolled input then clears, as after a submit; controlled input leaves that to you. Enter on text with no matching command submits as usual."
         },
         {
           "name": "onStop",
