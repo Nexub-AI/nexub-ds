@@ -1,5 +1,33 @@
 # @nexub/core
 
+## 12.2.0
+
+### Minor Changes
+
+- 37bb587: `AgentAvatar` (beta): an AI agent's avatar, so an agent never looks like a colleague. A rounded-square app tile with a small sparkle in the bottom inline-end corner, in the same sizes as `Avatar`. Takes `icon` (the app glyph) or `src`, `name`, `size` and an optional `category` colour; screen readers hear "Payhub agent, AI agent" (new `aiAgent` message).
+
+  `AgentBadge` (beta): a soft `Badge` with a leading sparkle for an agent's chat header ("AI on your own key", "Buttons only"). Takes `icon`, `tone`, `category` and `size`.
+
+- f275efa: Conversation: new `DateSeparator` shows "Today", "Yesterday" or a medium date ("25 Nov 2026") between messages, in the provider's locale.
+  Conversation: when messages arrive while you're scrolled up, "Jump to latest" becomes "Jump to newest" and "New messages" is announced once per batch.
+  Conversation: new `thinking` slot at the end of the list for a `ThinkingIndicator`, announced politely and never moving the scroll.
+  Conversation: the scroller itself is now `relative`, so MessageBubble's screen-reader labels stay inside it (no more `[&>div>div:first-child]:relative` workaround).
+  Core messages: new `jumpToNewest`, `newMessages` and `yesterday` strings (DateSeparator also uses the existing `today`).
+- 605f865: MessageBubble: `avatar` now works on your own messages (`from="user"`) and sits at the inline end, mirroring the assistant's. The accessible name stays "You said".
+  MessageBubble: `collapse={lines}` clamps a long message with a fade and a built-in "Read more" / "Show less" toggle (`aria-expanded`), shown only when the content is taller than the clamp.
+  New `MessageCard` (beta): a bordered block inside a bubble with `title`, `status`, `fields` (label/value pairs, two columns on wide cards), `body`, `actions` (one filled button at most, extras in a "More actions" menu past two), `maxHeight` with "Show all", and a `done` line with a `SuccessCheck`.
+  New `Highlight` (beta): an inline span for amounts, dates and statuses in running text, in six tones (`neutral`, `primary`, `success`, `warning`, `error`, `info`), AA in both themes.
+  New messages `readMore`, `showLess` and `showAll` (English defaults) in `NexubMessages`.
+- 9a3459e: `OrgChart`: `zoomable` adds a zoom toolbar (zoom out, level, zoom in, fit), pinch, ctrl/⌘ + wheel, drag to pan and + / - / 0 keys (`zoom`/`defaultZoom`/`onZoomChange`, `minZoom`/`maxZoom`, 0.25–2), and `stackAbove={n}` stacks a node's reports in a compact column when it has more than `n`, so wide teams fit without changing the tree semantics. New messages: `orgChartZoom`, `orgChartZoomIn`, `orgChartZoomOut`, `orgChartZoomFit`, `orgChartZoomLevel`.
+
+  `EventCalendar`: `color` on an event (and on a legend item) takes any brand colour (hex, rgb(), hsl(), oklab(), oklch()) and stays readable in light and dark: the container is mixed into the surface and the text picked for 4.5:1 contrast. It wins over `tone`; an unreadable colour keeps the tone and warns in development.
+
+- 69613f1: 12.2 PromptInput: slash commands and quick replies.
+
+  - **`commands` and `onCommand(value, args)`:** typing `/` opens the commands (`CommandListItem[]`, with `shortcut` keys) in a list above the field, filtered as you type. ↑/↓ move, Enter or Tab picks, Esc closes and keeps the text. `/remind tomorrow 9am` + Enter calls `onCommand('remind', 'tomorrow 9am')`; uncontrolled input then clears. Text that matches no command submits as usual. The field is a combobox only while the list is open, and the list loads on the first `/`.
+  - **`chips`:** a quick-reply row above the field (e.g. `Button size="sm" variant="tonal"`), labelled "Suggestions". On a phone it scrolls sideways with snap and edge fades instead of wrapping.
+  - **Messages:** `promptSuggestions` ("Suggestions") and `promptCommands` ("Commands") in `NexubMessages`.
+
 ## 12.1.0
 
 ## 12.0.0
