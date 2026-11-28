@@ -12,6 +12,8 @@ const PAGES = [
   '/',
   '/getting-started/react-native',
   '/foundations/colors',
+  // 12.6: the brand builder (form controls, live region, scoped dark preview, tables).
+  '/foundations/theme-builder',
   '/components/button',
   '/components/data-table',
   '/patterns/stat-card',
@@ -93,4 +95,43 @@ test('search opens from the keyboard, is labelled, and Escape returns focus', as
   await page.keyboard.press('Escape');
   await expect(dialog).toBeHidden();
   await expect(trigger).toBeFocused();
+});
+
+// 12.6: the brand builder works from the keyboard and reads its contrast result politely,
+// once the seed holds still (not on load, not per keystroke).
+test('brand builder: labelled controls, polite debounced contrast result', async ({ page }) => {
+  await page.goto('/foundations/theme-builder');
+  await page.waitForLoadState('networkidle');
+  await page.waitForFunction(() =>
+    Object.keys(document.querySelector('main') ?? {}).some((k) => k.startsWith('__reactFiber')),
+  );
+  const hex = page.getByRole('textbox', { name: 'Brand colour', exact: true });
+  await expect(hex).toHaveAccessibleDescription('Hex, #rgb or #rrggbb.');
+  await expect(page.getByLabel('Brand colour picker')).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Product preset' })).toBeVisible();
+  const status = page.locator('#tb-contrast-status');
+  await expect(status).toHaveAttribute('role', 'status');
+  await expect(status).toHaveAttribute('aria-live', 'polite');
+  await expect(status).toHaveText('');
+
+  await hex.fill('');
+  await hex.pressSequentially('#7b1f');
+  await expect(hex).toHaveAttribute('aria-invalid', 'true');
+  await expect(hex).toHaveAccessibleDescription(/Not a hex colour/);
+  await hex.pressSequentially('a2');
+  await expect(hex).toHaveAttribute('aria-invalid', 'false');
+  // Nothing is read while typing; the summary arrives once the value holds still.
+  await expect(status).toHaveText('');
+  await expect(status).toHaveText(/^#7b1fa2, light, standard contrast: \d+ of \d+ pairs pass WCAG 2\./);
+
+  // The scheme toggle is a radio group on the keyboard; the preview and the result follow it.
+  const scheme = page.getByRole('radiogroup', { name: 'Scheme' });
+  await scheme.getByRole('radio', { name: 'Light', exact: true }).focus();
+  await page.keyboard.press('ArrowRight');
+  const dark = scheme.getByRole('radio', { name: 'Dark', exact: true });
+  await expect(dark).toBeFocused();
+  await page.keyboard.press('Space');
+  await expect(dark).toHaveAttribute('aria-checked', 'true');
+  await expect(page.locator('[data-theme-builder-pane]')).toHaveAttribute('data-theme', 'dark');
+  await expect(status).toHaveText(/^#7b1fa2, dark, standard contrast:/);
 });

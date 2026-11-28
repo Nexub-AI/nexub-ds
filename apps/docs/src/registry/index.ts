@@ -550,7 +550,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'foundations-accessibility', label: 'Accessibility conformance', description: 'WCAG 2.2 AA report per component: automated, documented and not yet covered', href: '/foundations/accessibility', category: 'Foundations' },
   { id: 'foundations-expression', label: 'Expression: Calm and Vivid', description: 'The opt-in Vivid layer: accent gradients, glow, tinted depth and aurora', href: '/foundations/expression', category: 'Foundations' },
   { id: 'foundations-marketing-mode', label: 'Marketing mode', description: 'The nexub.com look, opt-in under data-mode="marketing"', href: '/foundations/marketing-mode', category: 'Foundations' },
-  { id: 'foundations-theme-builder', label: 'Theme builder', description: 'One brand colour to a contrast-checked theme, exported as CSS, React, React Native or tokens', href: '/foundations/theme-builder', category: 'Foundations' },
+  { id: 'foundations-theme-builder', label: 'Theme builder', description: 'Brand builder: one colour to a live contrast-checked theme with a component preview, exported as CSS, Tailwind v4, React Native or tokens', href: '/foundations/theme-builder', category: 'Foundations' },
   { id: 'content-tone', label: 'Tone of Voice', description: 'How Nexub products sound', href: '/content/tone-of-voice', category: 'Content' },
   { id: 'content-grammar', label: 'Grammar & Style', description: 'UI copy conventions and rules', href: '/content/grammar-style', category: 'Content' },
   { id: 'content-vocabulary', label: 'Vocabulary', description: 'Approved terms and words to avoid', href: '/content/vocabulary', category: 'Content' },
