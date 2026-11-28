@@ -532,8 +532,9 @@ test('text-weight: moves a bare weight class into the prop, keeps the rest', () 
 });
 
 test('text-weight: reports dynamic, doubled, conflicting, already-set and spread cases, rewrites none', () => {
+  const interp = ['$', '{x}'].join(''); // a template literal with an interpolation, in the fixture
   const src = `${REACT}<Text className={cn('font-medium', x && 'a')} />
-<Text className={\`font-bold \${x}\`} />
+<Text className={\`font-bold ${interp}\`} />
 <Text className="font-medium font-bold" />
 <Text className="font-light font-medium" />
 <Text weight="bold" className="font-medium" />
