@@ -43,7 +43,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && tsup && tsc -p tsconfig.build.json && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css && node ../../scripts/build-css-manifest.mjs .",
+    "build": "rm -rf dist && tsup && node ../../scripts/minify-dist.mjs && tsc -p tsconfig.build.json && node ../react/scripts/build-nexub-layer.mjs src/styles.css dist/styles.css && node ../../scripts/build-css-manifest.mjs .",
     "dev": "tsup --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

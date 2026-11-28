@@ -9,5 +9,11 @@ export default defineConfig({
   format: ['esm'],
   bundle: false,
   clean: false,
+  sourcemap: true, // 12.8: for ../../scripts/minify-dist.mjs, which minifies dist/ after the build
+  // 12.8: no @__PURE__ on JSX calls: nearly all sit inside components, where they don't help
+  // tree-shaking, and minify-dist keeps every annotation, so they would only add bytes.
+  esbuildOptions(options) {
+    options.jsxSideEffects = true;
+  },
   silent: true, // one line per file otherwise
 });

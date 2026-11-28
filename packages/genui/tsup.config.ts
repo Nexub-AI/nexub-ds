@@ -9,6 +9,7 @@ export default defineConfig([
     format: ['esm'],
     dts: true,
     splitting: false,
+    sourcemap: true, // 12.8: for ../../scripts/minify-dist.mjs, which minifies dist/ after the build
     external,
   },
   // The renderer: one file. It imports the schema entry above instead of bundling a second copy,
@@ -18,6 +19,7 @@ export default defineConfig([
     format: ['esm'],
     dts: true,
     splitting: false,
+    sourcemap: true, // 12.8: for ../../scripts/minify-dist.mjs, which minifies dist/ after the build
     external,
     banner: { js: "'use client';" },
     esbuildPlugins: [

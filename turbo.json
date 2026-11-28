@@ -2,7 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": [
     "eslint.config.mjs",
-    "tsconfig.base.json"
+    "tsconfig.base.json",
+    "scripts/minify-dist.mjs"
   ],
   "tasks": {
     "build": {
