@@ -269,3 +269,8 @@ export { Countdown, useCountdown } from './components/countdown';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/countdown';
 export { encodeQR, qrPath, COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone } from '@nexub/core';
 export type { QRErrorCorrection, QRMatrix, CountryCode, ParsedPhone } from '@nexub/core';
+
+// 12.5: the native Kanban twin (read-only and move). EventCalendar and the charts are heavier and
+// have their own entry points: @nexub/react-native/calendar and @nexub/react-native/charts.
+export { Kanban } from './components/kanban';
+export type { KanbanProps, KanbanColumn, KanbanPlace, KanbanMove, KanbanDropTarget, KanbanCardTone } from './components/kanban';

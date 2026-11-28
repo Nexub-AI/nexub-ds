@@ -88,6 +88,9 @@ add('tokens/native', join(pkgs, 'tokens/dist/js/native.js'));
 add('icons/native', join(pkgs, 'icons/dist/native/index.js'));
 add('react-native', join(pkgs, 'react-native/lib/module/index.js'));
 add('react-native/patterns', join(pkgs, 'react-native/lib/module/patterns/index.js'));
+// 12.5: the heavier native twins, each its own entry point.
+add('react-native/calendar', join(pkgs, 'react-native/lib/module/calendar.js'));
+add('react-native/charts', join(pkgs, 'react-native/lib/module/charts.js'));
 add('react', join(pkgs, 'react/dist/index.js'));
 add('patterns', join(pkgs, 'patterns/dist/index.js'));
 add('marketing', join(pkgs, 'marketing/dist/index.js'));

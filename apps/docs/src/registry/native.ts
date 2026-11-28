@@ -551,6 +551,55 @@ import { Send } from '@nexub/icons/native';
     ],
     code: `<Countdown to={expiresAt} onExpire={resend} />`,
   },
+  kanban: {
+    name: 'Kanban',
+    preview: 'sortable-list',
+    differences: [
+      { aspect: 'Moving', web: 'Drag a card’s handle, or Alt+Arrow keys.', mobile: 'A “Move to…” sheet on each card lists the columns and drop targets; VoiceOver and TalkBack get the same moves as actions (“Move to Done”). No drag yet.' },
+      { aspect: 'Layout', web: 'Columns side by side; swimlanes with `lanes`.', mobile: 'Columns in a horizontal scroll; no swimlanes yet. A moved card goes to the end of its new column.' },
+    ],
+    code: `<Kanban columns={columns} getId={(t) => t.id} getLabel={(t) => t.title} renderCard={(t) => <Text>{t.title}</Text>} onChange={(next) => setColumns(next)} />`,
+    notes: ['The live preview shows SortableList, the closest native list with moves; the board has no preview of its own yet (12.5).'],
+  },
+  'event-calendar': {
+    name: 'EventCalendar',
+    preview: 'date-time-field',
+    differences: [
+      { aspect: 'Views', web: 'month, week, day and agenda.', mobile: '`day` (one day by the hour) and `agenda` (the month as a list, the default). Month and week grids are too dense for a phone.' },
+      { aspect: 'Moving events', web: '`onEventMove`: drag, or Alt+Arrow keys.', mobile: 'Not yet; events open with `onEventClick`.' },
+      { aspect: '`color`', web: 'Mixed into the surface token with CSS `color-mix()`.', mobile: 'Mixed into the theme’s surface role in JavaScript, with the same 4.5:1 text rule.' },
+    ],
+    code: `import { EventCalendar } from '@nexub/react-native/calendar';
+
+<EventCalendar events={events} views={['day', 'agenda']} onEventClick={(e) => open(e.id)} />`,
+    notes: ['Its own entry point, `@nexub/react-native/calendar`, so apps without a calendar don’t ship it.', 'The live preview shows DateTimeField; the calendar has no preview of its own yet (12.5).'],
+  },
+  'line-chart': {
+    name: 'LineChart',
+    preview: 'stat-card',
+    differences: [
+      { aspect: 'Drawing', web: 'Inline SVG on the `--color-chart-*` palette.', mobile: 'react-native-svg (already a peer). Series take the category hues, one per chart colour; the product accent stays out.' },
+      { aspect: 'Text alternative', web: 'A visually hidden data table, and the notes as a hidden list.', mobile: 'One image whose label reads the title, the change, every row and the notes.' },
+      { aspect: 'Pointer', web: '`interactive`, `onPointClick`, toggle legend, `tableView`.', mobile: 'Not yet: the chart is static.' },
+    ],
+    code: `import { LineChart } from '@nexub/react-native/charts';
+
+<LineChart title="Revenue" data={months} index="month" series={[{ key: 'revenue', label: 'Revenue' }]} change={{ from: 'Jan' }} />`,
+    notes: ['Its own entry point, `@nexub/react-native/charts`, so apps without charts don’t ship them.', '`annotations`, `referenceLines` and `change` (12.3) work as on the web.', 'The live preview shows StatCard; the chart has no preview of its own yet (12.5).'],
+  },
+  'bar-chart': {
+    name: 'BarChart',
+    preview: 'stat-card',
+    differences: [
+      { aspect: 'Orientation', web: 'Vertical or horizontal; `variant="waterfall"`.', mobile: 'Vertical, grouped or `stacked`. Horizontal and waterfall are web only for now.' },
+      { aspect: 'Text alternative', web: 'A visually hidden data table, and the notes as a hidden list.', mobile: 'One image whose label reads the title, the change, every row and the notes.' },
+      { aspect: 'Pointer', web: '`interactive`, `onPointClick`, toggle legend, `tableView`.', mobile: 'Not yet: the chart is static.' },
+    ],
+    code: `import { BarChart } from '@nexub/react-native/charts';
+
+<BarChart title="Spending by month" data={spending} index="month" series={[{ key: 'spent' }]} referenceLines={[{ value: 500, label: 'Budget', tone: 'danger' }]} />`,
+    notes: ['Its own entry point, `@nexub/react-native/charts`, so apps without charts don’t ship them.', '`annotations`, `referenceLines` and `change` (12.3) work as on the web.', 'The live preview shows StatCard; the chart has no preview of its own yet (12.5).'],
+  },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {
     name: 'ToastProvider + useToast',
