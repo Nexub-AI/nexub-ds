@@ -511,6 +511,32 @@
       "searchable"
     ]
   },
+  "navigation-rail": {
+    "web": "NavigationRailRoot",
+    "native": "NavigationRail",
+    "shared": [
+      "header",
+      "orientation"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "app-shell": {
+    "web": "AppShellRoot",
+    "native": "AppShell",
+    "shared": [],
+    "webOnly": [],
+    "onPurpose": [
+      "onOpenChange",
+      "open"
+    ],
+    "nativeOnly": [
+      "header",
+      "navigation",
+      "railFrom"
+    ]
+  },
   "tabs": {
     "web": null,
     "native": "Tabs",
@@ -1411,6 +1437,28 @@
     "onPurpose": [],
     "nativeOnly": []
   },
+  "status-page": {
+    "web": "StatusPage",
+    "native": "StatusScreen",
+    "shared": [
+      "actions",
+      "code",
+      "description",
+      "illustration",
+      "kind",
+      "onRetry",
+      "title"
+    ],
+    "webOnly": [],
+    "onPurpose": [
+      "as",
+      "fullScreen",
+      "homeHref"
+    ],
+    "nativeOnly": [
+      "onHome"
+    ]
+  },
   "activity-feed": {
     "web": "ActivityFeedRoot",
     "native": "ActivityList",
@@ -1437,11 +1485,11 @@
     "web": "AuthCard",
     "native": "SignInScreen",
     "shared": [
+      "description",
       "logo",
       "title"
     ],
     "webOnly": [
-      "description",
       "footer",
       "logoAlign"
     ],
@@ -1452,6 +1500,7 @@
       "biometricLabel",
       "error",
       "loading",
+      "messages",
       "onBiometric",
       "onCreateAccount",
       "onForgotPassword",
@@ -1523,6 +1572,28 @@
     "nativeOnly": [
       "groups",
       "header"
+    ]
+  },
+  "list-detail": {
+    "web": "ListDetail",
+    "native": "ListDetail",
+    "shared": [
+      "backLabel",
+      "detail",
+      "detailLabel",
+      "emptyState",
+      "errorState",
+      "list",
+      "listLabel",
+      "listWidth",
+      "loading",
+      "onBack",
+      "showDetail"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": [
+      "splitRatio"
     ]
   },
   "notification-item": {

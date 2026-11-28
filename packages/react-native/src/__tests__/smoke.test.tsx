@@ -190,6 +190,8 @@ const CASES: Record<string, Case> = {
   HomeScreen: { props: { greeting: 'Hi', balance: { value: 1, currency: 'USD' } } },
   AuthScreen: { props: { title: 'Welcome', children: t('form'), footer: <Lib.Button onPress={noop}>Go</Lib.Button> }, a11y: ['header', 'Welcome'] },
   SignInScreen: { props: { onSubmit: noop }, a11y: ['button', 'Sign in'] },
+  SignUpScreen: { props: { onSubmit: noop, termsLabel: 'I agree' }, a11y: ['button', 'Create an account'] },
+  StatusScreen: { props: { kind: 'serverError', onRetry: noop }, a11y: ['button', 'Retry'] },
   VerifyCodeScreen: { props: { destination: '+65 4821', onComplete: noop, onResend: noop }, a11y: 'Verification code' },
   LockScreen: { props: { unlockLabel: 'Unlock with Face ID', onUnlock: noop }, a11y: ['button', 'Unlock with Face ID'] },
   FlowStep: { props: { step: 1, total: 3, title: 'Who to?', children: t('body'), footer: t('f') }, a11y: ['progressbar', 'Page 1 of 3'] },
@@ -212,6 +214,9 @@ const CASES: Record<string, Case> = {
   PaywallScreen: { props: { title: 'Go Pro', plans: [{ id: 'm', name: 'Monthly', price: '$9', features: [] }], onSubscribe: noop }, a11y: ['radio', 'Monthly, $9'] },
   AppSwitcherSheet: { props: { open: true, onOpenChange: noop, apps: [{ id: 'leap', name: 'Leap' }], onOpenApp: noop }, a11y: ['button', 'Leap'] },
   StatusSteps: { props: { accessibilityLabel: 'Status', steps: [{ title: 'Sent', status: 'done' }] }, a11y: 'Status' },
+  // 12.5: larger screens
+  AppShell: { props: { navigation: <Lib.NavigationRail.Root><Lib.NavigationRail.Item icon={Plus} label="Home" active /></Lib.NavigationRail.Root>, children: t('content') }, a11y: ['tab', 'Home'] },
+  ListDetail: { props: { list: t('list'), detail: t('detail') }, a11y: 'List' },
 };
 
 const isComponent = (name: string, v: unknown) =>

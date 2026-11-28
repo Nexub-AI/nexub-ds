@@ -30,8 +30,11 @@ export interface PlatformDifference {
 export interface NativeTwin {
   /** Export name in @nexub/react-native. */
   name: string;
-  /** Live-preview slug (apps/mobile preview manifest). */
-  preview: PreviewSlug;
+  /**
+   * Live-preview slug (apps/mobile preview manifest). 12.5: left out for a screen the showcase
+   * app doesn't show yet; the panel then has the code and props without a phone frame.
+   */
+  preview?: PreviewSlug;
   differences: PlatformDifference[];
   code: string;
   notes?: string[];
@@ -275,6 +278,45 @@ import { Send } from '@nexub/icons/native';
       label,
     ],
     code: `<MultiSelect label="Labels" options={labels} value={picked} onValueChange={setPicked} />`,
+  },
+  'navigation-rail': {
+    name: 'NavigationRail',
+    preview: 'tabs',
+    differences: [
+      { aspect: 'Orientation', web: '`vertical` (default) or `bottom`, chosen by you.', mobile: '`auto` (default): a rail at the start edge on medium and expanded windows (≥ 600dp), a bottom bar on compact ones. `vertical` and `bottom` fix it.' },
+      { aspect: 'Icon', web: 'Any icon element.', mobile: 'An icon component from @nexub/icons/native (`icon={Home}`).' },
+      { aspect: 'Navigation', web: 'Links (`href`, or your router link with `asChild`).', mobile: '`onPress` on each item; your navigator changes the screen.' },
+      { aspect: 'Screen readers', web: 'A nav landmark; the active link is `aria-current="page"`.', mobile: 'A tab list; the active item is selected. Badges are read after the label, as on web.' },
+    ],
+    code: `<NavigationRail.Root>
+  <NavigationRail.Item icon={Home} label="Home" active onPress={goHome} />
+  <NavigationRail.Item icon={Bell} label="Inbox" badge={3} onPress={goInbox} />
+</NavigationRail.Root>`,
+    notes: ['12.5. Safe-area insets are applied: the bottom bar clears the home indicator, the rail clears the status bar and a landscape notch.'],
+  },
+  'app-shell': {
+    name: 'AppShell',
+    preview: 'pattern/home',
+    differences: [
+      { aspect: 'Structure', web: 'Compound: AppShell.Root, Header, Body, Sidebar, Main and NavTrigger.', mobile: 'One component with `navigation`, `header` and the content as children.' },
+      { aspect: 'Narrow screens', web: 'The sidebar moves into a drawer opened by NavTrigger (`open`, `onOpenChange`).', mobile: 'The navigation becomes a bottom bar under the content; no drawer.' },
+      { aspect: 'Breakpoint', web: 'The sidebar shows from the lg breakpoint.', mobile: 'The rail shows from the medium window size class (600dp); `railFrom="expanded"` waits for 840dp.' },
+    ],
+    code: `<AppShell
+  header={topBar}
+  navigation={
+    <NavigationRail.Root>
+      <NavigationRail.Item icon={Home} label="Home" active onPress={goHome} />
+      <NavigationRail.Item icon={Bell} label="Inbox" onPress={goInbox} />
+    </NavigationRail.Root>
+  }
+>
+  <ListDetail list={list} detail={detail} showDetail={!!selected} onBack={clear} />
+</AppShell>`,
+    notes: [
+      '12.5. Layout follows `useWindowSizeClass()` (compact < 600, medium < 840, expanded), which updates on rotation, split view and folding.',
+      'Foldables are handled by window size: React Native exposes no hinge or posture without a native module, so an unfolded foldable is a medium or expanded window like a tablet.',
+    ],
   },
   tabs: {
     name: 'Tabs',
@@ -686,6 +728,17 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
 
 <StatusSteps accessibilityLabel="Application status" steps={steps} />`,
   },
+  'status-page': {
+    name: 'StatusScreen',
+    differences: [
+      { aspect: 'Home', web: '`homeHref` renders a "Back to home" link.', mobile: '`onHome` renders a "Back to home" button; navigate in it.' },
+      { aspect: 'Actions', web: 'Under the text.', mobile: 'Pinned above the home indicator, as on ResultScreen.' },
+      { aspect: 'Size', web: '`fullScreen` and `as` set the height and landmark.', mobile: 'Always the whole screen.' },
+    ],
+    code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen kind="serverError" onRetry={refetch} />`,
+  },
   'activity-feed': {
     name: 'ActivityList',
     preview: 'pattern/activity',
@@ -733,12 +786,24 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
 <SettingsScreen groups={[{ header: 'Security', items: [{ title: 'Face ID', variant: 'switch', checked: faceId, onCheckedChange: setFaceId }] }]} />`,
   },
   'list-detail': {
-    name: 'ActivityList + TransactionDetail',
+    name: 'ListDetail',
     preview: 'pattern/detail',
-    differences: [{ aspect: 'Layout', web: 'List and detail side by side; stacks on narrow screens.', mobile: 'The list pushes the detail screen onto the navigation stack.' }],
-    code: `import { TransactionDetail } from '@nexub/react-native/patterns';
+    differences: [
+      { aspect: 'When it splits', web: 'At 720px of its own width (a container query).', mobile: 'From the medium window size class (600dp): tablets, unfolded foldables, phones in landscape.' },
+      { aspect: 'Pane width', web: '`listWidth` (sm, md, lg).', mobile: '`listWidth`, or `splitRatio` (0.2–0.8) for a share of the width.' },
+      { aspect: 'Back', web: 'The back button when narrow.', mobile: 'The back button and Android’s back gesture, on compact windows while the detail shows.' },
+      { aspect: 'Scrolling', web: 'Each pane scrolls.', mobile: 'Each pane fills its height; bring a FlatList (e.g. ActivityList) or ScrollView.' },
+    ],
+    code: `import { ListDetail, ActivityList, TransactionDetail } from '@nexub/react-native/patterns';
 
-<TransactionDetail transaction={tx} actions={<Button variant="tonal">Split bill</Button>} />`,
+<ListDetail
+  list={<ActivityList transactions={txs} onPress={(t) => setSelected(t)} />}
+  detail={selected ? <TransactionDetail transaction={selected} /> : <EmptyState title="Pick a payment" />}
+  showDetail={!!selected}
+  onBack={() => setSelected(null)}
+  splitRatio={0.4}
+/>`,
+    notes: ['12.5. On a phone in portrait it shows one pane, as before; you can still push TransactionDetail onto your stack instead.'],
   },
   'notification-item': {
     name: 'NotificationsInbox',

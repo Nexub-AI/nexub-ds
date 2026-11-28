@@ -25,8 +25,8 @@ export function MobilePanel({
   /** Export name(s) in @nexub/react-native, e.g. "Button" or "ToastProvider + useToast". */
   name: string;
   title: string;
-  /** Preview path under /m, e.g. `preview/button`. */
-  preview: string;
+  /** Preview path under /m, e.g. `preview/button`. Without it: no phone frame or device shots. */
+  preview?: string;
   code: string;
   differences?: PlatformDifference[];
   webAlternative?: string;
@@ -65,12 +65,14 @@ export function MobilePanel({
             </Section>
           )}
         </div>
-        <div className="flex justify-center lg:sticky lg:top-24">
-          <PhoneFrame path={preview} title={title} />
-        </div>
+        {preview && (
+          <div className="flex justify-center lg:sticky lg:top-24">
+            <PhoneFrame path={preview} title={title} />
+          </div>
+        )}
       </div>
 
-      <DeviceShots preview={preview} title={title} />
+      {preview && <DeviceShots preview={preview} title={title} />}
 
       {props.length > 0 && (
         <Section id="native-props" title={`${primary} props`} level={3}>
