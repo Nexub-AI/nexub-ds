@@ -147,7 +147,7 @@ export function ToolCall({
             {time}
           </Text>
         )}
-        <Badge tone={failed ? 'danger' : status === 'done' ? 'success' : 'neutral'} size="sm">
+        <Badge tone={failed ? 'danger' : status === 'done' ? 'success' : 'neutral'} size="sm" style={{ alignSelf: 'center' }}>
           {statusText}
         </Badge>
       </Pressable>
@@ -594,11 +594,13 @@ function FileRow({
       >
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`${f.file}, ${m.diffLineCounts(added, removed)}`}
+          accessibilityLabel={[f.file, m.diffLineCounts(added, removed), decision && m.diffDecision[decision]].filter(Boolean).join(', ')}
           accessibilityState={{ expanded: open }}
           onPress={onToggle}
           pressScale={false}
-          style={{ flex: 1, minHeight: tokens.size.control.lg, flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[2] }}
+          // The file line takes the full width; Accept and Reject wrap to the line below, so a
+          // phone never squeezes the file name, counts and decision into one row.
+          style={{ flexBasis: '100%', minHeight: tokens.size.control.lg, flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[2] }}
         >
           <View style={{ transform: [{ rotate: open ? '0deg' : dir === 'rtl' ? '90deg' : '-90deg' }] }}>
             <ChevronDown size="sm" color={roles['on-surface-variant']} />
@@ -608,13 +610,13 @@ function FileRow({
           </Text>
           <Text variant="label-sm" family="mono" tabular color="success">{`+${added}`}</Text>
           <Text variant="label-sm" family="mono" tabular color="error">{`−${removed}`}</Text>
+          {decision && (
+            <Text variant="label-sm" color="on-surface-variant" style={{ marginStart: 'auto' }}>
+              {m.diffDecision[decision]}
+            </Text>
+          )}
         </Pressable>
-        {decision && (
-          <Text variant="label-sm" color="on-surface-variant">
-            {m.diffDecision[decision]}
-          </Text>
-        )}
-        <View style={{ flexDirection: 'row', gap: tokens.spacing[1] }}>
+        <View style={{ flexDirection: 'row', gap: tokens.spacing[1], marginStart: 'auto' }}>
           {toggle('accepted')}
           {toggle('rejected')}
         </View>
