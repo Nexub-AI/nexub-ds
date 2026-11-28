@@ -3,6 +3,7 @@ import * as React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable, type DataTableColumn } from './DataTable.js';
 import { ErrorState } from '../ErrorState/ErrorState.js';
+import { Button } from '../Button/Button.js';
 
 const meta: Meta = {
   title: 'Data Display/DataTable',
@@ -310,4 +311,48 @@ export const ColumnFilters: Story = {
       defaultColumnFilters={[{ id: 'status', value: ['Paid'] }]}
     />
   ),
+};
+
+/**
+ * 12.4 `streaming`: an agent is still producing rows. A skeleton row trails the last row,
+ * aria-busy is set, the count is announced every few seconds and "done" at the end.
+ * Replay streams the rows in again; sorting and selection keep working meanwhile.
+ */
+export const Streaming: Story = {
+  render: function Streaming() {
+    const [rows, setRows] = React.useState(data.slice(0, 3));
+    const [streaming, setStreaming] = React.useState(true);
+    const timer = React.useRef<ReturnType<typeof setInterval>>(undefined);
+    React.useEffect(() => () => clearInterval(timer.current), []);
+    const replay = () => {
+      clearInterval(timer.current);
+      setRows([]);
+      setStreaming(true);
+      let n = 0;
+      timer.current = setInterval(() => {
+        n += 1;
+        setRows(data.slice(0, n));
+        if (n >= data.length) {
+          clearInterval(timer.current);
+          setStreaming(false);
+        }
+      }, 900);
+    };
+    return (
+      <div className="space-y-3">
+        <Button variant="outlined" size="sm" onClick={replay}>
+          Replay stream
+        </Button>
+        <DataTable
+          caption="Users an agent found"
+          columns={columns}
+          data={rows}
+          getRowId={(r) => r.id}
+          streaming={streaming}
+          enableSorting
+          enableRowSelection
+        />
+      </div>
+    );
+  },
 };

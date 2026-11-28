@@ -263,7 +263,12 @@
       "invalid",
       "required"
     ],
-    "webOnly": [],
+    "webOnly": [
+      "generated",
+      "onAcceptSuggestion",
+      "onClearSuggestion",
+      "streaming"
+    ],
     "onPurpose": [
       "name"
     ],
@@ -607,6 +612,7 @@
       "pagination",
       "rowCount",
       "rowSelection",
+      "streaming",
       "toolbar"
     ],
     "onPurpose": [

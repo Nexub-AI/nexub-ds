@@ -2,7 +2,7 @@ import { render as renderState, screen as stateScreen } from '@testing-library/r
 import { ErrorState } from '../ErrorState/ErrorState.js';
 import { renderToString } from 'react-dom/server';
 import * as React from 'react';
-import { render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -704,5 +704,120 @@ describe('DataTable 10.7: footer and column filters', () => {
     first.focus();
     await user.keyboard('{ArrowDown}{End}');
     expect(first).toHaveFocus();
+  });
+});
+
+describe('DataTable 12.4: streaming', () => {
+  const more: Person[] = [
+    ...data,
+    { name: 'Cara', age: 41 },
+    { name: 'Dev', age: 19 },
+  ];
+
+  it('is off by default: no tail row, no aria-busy', () => {
+    const { container } = render(<DataTable columns={columns} data={data} />);
+    expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy');
+    expect(container.querySelector('tr[data-streaming]')).toBeNull();
+    expect(container.querySelector('.nx-motion-enter')).toBeNull();
+  });
+
+  it('shows a hidden skeleton tail row and sets aria-busy while streaming', () => {
+    const { container } = render(<DataTable columns={columns} data={data} streaming />);
+    expect(screen.getByRole('table')).toHaveAttribute('aria-busy', 'true');
+    const tail = container.querySelector('tbody tr[data-streaming]')!;
+    expect(tail).toHaveAttribute('aria-hidden', 'true');
+    expect(tail.children).toHaveLength(columns.length);
+    expect(tail).toBe(container.querySelector('tbody tr:last-child'));
+    // The tail is not a row to assistive tech: header + 2 data rows.
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+  });
+
+  it('shows the tail, not the empty state, before the first row arrives', () => {
+    const { container } = render(
+      <DataTable columns={columns} data={[]} streaming emptyState={<p>Nothing here</p>} />,
+    );
+    expect(container.querySelector('tr[data-streaming]')).not.toBeNull();
+    expect(screen.queryByText('Nothing here')).not.toBeInTheDocument();
+  });
+
+  it('rows that arrive while streaming enter once; rows already shown do not', () => {
+    const { rerender } = render(
+      <DataTable columns={columns} data={data} getRowId={(r) => r.name} />,
+    );
+    rerender(<DataTable columns={columns} data={data} streaming getRowId={(r) => r.name} />);
+    rerender(<DataTable columns={columns} data={more} streaming getRowId={(r) => r.name} />);
+    const row = (name: string) => screen.getByText(name).closest('tr')!;
+    expect(row('Alice')).not.toHaveClass('nx-motion-enter');
+    expect(row('Cara')).toHaveClass('nx-motion-enter');
+    expect(row('Dev')).toHaveClass('nx-motion-enter');
+    // Once the enter has played the class goes, so a later move (sorting) doesn't replay it.
+    // jsdom has no AnimationEvent, so React may listen for the webkit-prefixed name.
+    fireEvent(row('Cara'), new Event('animationend', { bubbles: true }));
+    fireEvent(row('Cara'), new Event('webkitAnimationEnd', { bubbles: true }));
+    expect(row('Cara')).not.toHaveClass('nx-motion-enter');
+    expect(row('Dev')).toHaveClass('nx-motion-enter');
+  });
+
+  it('announces the count at a throttled pace, then "done"', () => {
+    vi.useFakeTimers();
+    try {
+      const view = (rows: Person[], streaming: boolean) => (
+        <DataTable columns={columns} data={rows} streaming={streaming} />
+      );
+      const { container, rerender } = render(view([], true));
+      const live = container.querySelector('[aria-live="polite"]')!;
+      rerender(view(data.slice(0, 1), true));
+      rerender(view(data, true));
+      rerender(view(more.slice(0, 3), true));
+      expect(live).toHaveTextContent('');
+      act(() => vi.advanceTimersByTime(3000));
+      expect(live).toHaveTextContent('3 rows so far');
+      rerender(view(more, true));
+      act(() => vi.advanceTimersByTime(1000));
+      expect(live).toHaveTextContent('3 rows so far');
+      act(() => vi.advanceTimersByTime(2000));
+      expect(live).toHaveTextContent('4 rows so far');
+      rerender(view(more, false));
+      expect(live).toHaveTextContent('Done. 4 rows');
+      expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy');
+      expect(container.querySelector('tr[data-streaming]')).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('announcements go through messages', () => {
+    const view = (streaming: boolean) => (
+      <NexubProvider messages={{ rowsSoFar: (n) => `${n} filas`, rowsDone: (n) => `Listo: ${n}` }}>
+        <DataTable columns={columns} data={streaming ? data.slice(0, 1) : data} streaming={streaming} />
+      </NexubProvider>
+    );
+    const { container, rerender } = render(view(true));
+    rerender(view(false));
+    expect(container.querySelector('[aria-live="polite"]')).toHaveTextContent('Listo: 2');
+  });
+
+  it('sorting and selection keep working while streaming', async () => {
+    const user = userEvent.setup();
+    const onRowSelectionChange = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={more}
+        streaming
+        enableSorting
+        enableRowSelection
+        onRowSelectionChange={onRowSelectionChange}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Age' }));
+    const names = screen
+      .getAllByRole('row')
+      .slice(1)
+      .map((r) => within(r).getAllByRole('cell')[1]!.textContent);
+    // Numbers sort descending first.
+    expect(names).toEqual(['Cara', 'Alice', 'Bob', 'Dev']);
+    await user.click(screen.getAllByRole('checkbox', { name: 'Select row' })[0]!);
+    expect(onRowSelectionChange).toHaveBeenCalled();
   });
 });
