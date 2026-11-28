@@ -41,5 +41,5 @@ test('@nexub/core DivisionKey / ProductKey list the same keys as the token map',
 
 test('package.json exports every generated file', () => {
   const { exports } = JSON.parse(read('../package.json'));
-  for (const name of Object.keys(files())) assert.equal(exports[`./${name.replace('.css', '')}`], `./src/${name}`);
+  for (const name of Object.keys(files())) assert.equal(exports[`./${name.replace('.css', '')}`], `./dist/${name}`);
 });
