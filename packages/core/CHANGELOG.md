@@ -1,5 +1,25 @@
 # @nexub/core
 
+## 12.5.0
+
+### Minor Changes
+
+- de6e21f: Larger screens (12.5): tablet and foldable layouts on React Native.
+
+  - `useWindowSizeClass()` returns the Material 3 window size class (`compact` < 600dp, `medium` < 840dp, `expanded`) and updates on rotation, split view and folding; `windowSizeClass(width)` and `EXPANDED_MIN` come with it.
+  - New `NavigationRail` (`NavigationRail.Root`, `NavigationRail.Item`): with the default `orientation="auto"` it is a rail at the start edge on medium and expanded windows and a bottom bar on compact ones. Items take `icon`, `label`, `active`, `badge` (a count or a dot, read after the label) and `badgeLabel`; the rail takes a `header`.
+  - New `AppShell`: lays out `navigation`, an optional `header` and the content for the window: a bottom bar under the content on compact windows, a rail beside it from `railFrom` (`'medium'` by default, or `'expanded'`).
+  - New `ListDetail` in `@nexub/react-native/patterns`, with the web props: both panes side by side from the medium size class, one pane at a time on compact windows with a back button and Android back calling `onBack`. `splitRatio` (0.2–0.8) sets the list's share of the width instead of `listWidth`.
+  - `@nexub/core` messages gain `back`, `listPane` and `detailPane` (English defaults) for ListDetail.
+
+  Foldables are handled through window size only: React Native and Expo expose no hinge or posture API without a new native module, so an unfolded foldable lays out like a tablet. Hinge-aware splits are left for later. Existing phone layouts don't change.
+
+- 2ad26d7: `Kanban` for React Native: the web board's `columns`, `getId`, `getLabel`, `renderCard` and `onChange(columns, move)`, drawn as horizontally scrolling columns. Each card has a "Move to…" sheet listing the columns (and `dropTargets`), and VoiceOver and TalkBack get the same moves as actions ("Move to Done"), so no drag is needed. `readOnly`, `canMove`, `getTone`, `columnWidth`, `columnEmptyState`, `renderColumnHeader`, `renderColumnFooter` and `loading` / `emptyState` / `errorState` work as on the web.
+  `EventCalendar` for React Native, from its own entry point `@nexub/react-native/calendar`, with the `day` (one day by the hour, with the now line) and `agenda` (the month as a list, the default) views. Same event shape and prop names as the web, including the 12.2 `color` prop: any brand colour becomes a readable container in light and dark.
+  `LineChart` and `BarChart` (vertical, grouped or `stacked`) for React Native, from their own entry point `@nexub/react-native/charts`, drawn with react-native-svg. They take the same `data`, `index` and `series`, plus the 12.3 storytelling props `annotations`, `referenceLines` and `change`. Each chart is one image whose label reads the title, the change, every row and the notes. The product accent stays out of charts.
+  `@nexub/core` messages gain `moveCardTo` ("Move to…") and `moveToColumn` ("Move to Done") for the native Kanban's move sheet and actions.
+  Still web only, for a later release: Kanban `lanes` / `getLane` and drag; EventCalendar `onEventMove` (the month and week views stay web only on purpose); chart `interactive`, `onPointClick`, `hiddenSeries`, `tableView`, and BarChart `orientation="horizontal"` and `variant="waterfall"`. The three have no live preview in the mobile app yet.
+
 ## 12.4.0
 
 ### Minor Changes

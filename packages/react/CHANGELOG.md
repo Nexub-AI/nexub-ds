@@ -1,5 +1,14 @@
 # @nexub/react
 
+## 12.5.0
+
+### Patch Changes
+
+- Updated dependencies [de6e21f]
+- Updated dependencies [2ad26d7]
+  - @nexub/core@12.5.0
+  - @nexub/icons@12.5.0
+
 ## 12.4.0
 
 ### Minor Changes
