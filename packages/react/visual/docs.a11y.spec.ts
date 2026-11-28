@@ -18,6 +18,8 @@ const PAGES = [
   '/components/data-table',
   '/patterns/stat-card',
   '/changelog',
+  // 12.7: the adoption scorecard (wide data tables, grade badges).
+  '/components/adoption',
 ];
 
 // `path theme` → rule ids that fail today. Shrink-only, like a11y.visual.spec.ts.
