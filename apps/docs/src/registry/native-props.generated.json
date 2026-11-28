@@ -294,6 +294,130 @@
       }
     ]
   },
+  "NavigationRailRoot": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "'auto' | NavOrientation",
+        "required": false,
+        "default": "'auto'",
+        "description": "`auto`: a rail at the start edge on medium and expanded windows (≥ 600dp),\na bottom bar on compact ones. Inside AppShell it follows the shell.\n`vertical` and `bottom` fix it, as on web."
+      },
+      {
+        "name": "header",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Slot above the items in the rail, e.g. a FAB. Not shown in the bottom bar."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.mainNavigation ('Main')",
+        "description": "Name of the navigation."
+      }
+    ]
+  },
+  "NavigationRailItem": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": true,
+        "description": "An icon component from"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the current destination (selected for screen readers)."
+      },
+      {
+        "name": "badge",
+        "type": "number | boolean",
+        "required": false,
+        "description": "A count on the icon (99+ above 99, nothing at 0), or `true` for a dot. Read after the label."
+      },
+      {
+        "name": "badgeLabel",
+        "type": "string",
+        "required": false,
+        "description": "Other wording for the badge, e.g. \"2 failed builds\"."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
+      }
+    ]
+  },
+  "AppShell": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "navigation",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The app's NavigationRail.Root. A bottom bar on compact windows, a rail at the start edge from medium up."
+      },
+      {
+        "name": "header",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A top bar above the content (e.g. an AppBar)."
+      },
+      {
+        "name": "railFrom",
+        "type": "'medium' | 'expanded'",
+        "required": false,
+        "default": "'medium'",
+        "description": "Window size class from which the navigation becomes a rail.\n`expanded` keeps the bottom bar on medium windows (small tablets, unfolded foldables in portrait)."
+      }
+    ]
+  },
   "SwitchField": {
     "file": "components/choicefields.tsx",
     "extends": [
@@ -6632,6 +6756,94 @@
         "type": "Partial<{ totalBalance: string; recentActivity: string; seeAll: string; insights: string }>",
         "required": false,
         "description": "Copy overrides."
+      }
+    ]
+  },
+  "ListDetail": {
+    "file": "patterns/layout.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "list",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "detail",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "showDetail",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "On compact windows (one pane at a time), show the detail instead of the list.\nSet it when an item is selected. Ignored when both panes show."
+      },
+      {
+        "name": "onBack",
+        "type": "() => void",
+        "required": false,
+        "description": "Called by the back button and by Android's back gesture, on compact windows\nwhile the detail shows. Omit it to hide the button (e.g. when your stack header has one)."
+      },
+      {
+        "name": "backLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.back ('Back')",
+        "description": ""
+      },
+      {
+        "name": "listWidth",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Fixed list width when both panes show: sm 288, md 320, lg 400."
+      },
+      {
+        "name": "splitRatio",
+        "type": "number",
+        "required": false,
+        "description": "The list pane's share of the width when both panes show, from 0.2 to 0.8\n(e.g. 0.4). Wins over `listWidth`."
+      },
+      {
+        "name": "listLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.listPane / messages.detailPane",
+        "description": "Accessible names for the two panes."
+      },
+      {
+        "name": "detailLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Skeleton rows in the list pane, which reads as busy."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in the list pane in place of `list`. Pass it when the list has no items."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in the list pane in place of `list`; wins over `loading` and `emptyState`."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
       }
     ]
   },

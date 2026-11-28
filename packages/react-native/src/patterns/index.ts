@@ -72,5 +72,7 @@ export type {
   NexubApp,
   AppSwitcherSheetProps,
 } from './app';
+export { ListDetail } from './layout';
+export type { ListDetailProps } from './layout';
 export { StatusSteps } from './status';
 export type { StatusStepsProps, StatusStep, StatusStepStatus } from './status';

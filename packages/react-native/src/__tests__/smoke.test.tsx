@@ -204,6 +204,9 @@ const CASES: Record<string, Case> = {
   PaywallScreen: { props: { title: 'Go Pro', plans: [{ id: 'm', name: 'Monthly', price: '$9', features: [] }], onSubscribe: noop }, a11y: ['radio', 'Monthly, $9'] },
   AppSwitcherSheet: { props: { open: true, onOpenChange: noop, apps: [{ id: 'leap', name: 'Leap' }], onOpenApp: noop }, a11y: ['button', 'Leap'] },
   StatusSteps: { props: { accessibilityLabel: 'Status', steps: [{ title: 'Sent', status: 'done' }] }, a11y: 'Status' },
+  // 12.5: larger screens
+  AppShell: { props: { navigation: <Lib.NavigationRail.Root><Lib.NavigationRail.Item icon={Plus} label="Home" active /></Lib.NavigationRail.Root>, children: t('content') }, a11y: ['tab', 'Home'] },
+  ListDetail: { props: { list: t('list'), detail: t('detail') }, a11y: 'List' },
 };
 
 const isComponent = (name: string, v: unknown) =>

@@ -237,6 +237,12 @@ export { dynamicPrimary, DENSE_MAX_FONT_SCALE } from './theme/ThemeProvider';
 export type { Expression, ThemeColors } from './theme/ThemeProvider';
 export { useBreakpoint, useResponsive, TABLET_MIN } from './theme/layout';
 export type { Breakpoint } from './theme/layout';
+
+// 12.5: larger screens (window size classes, rail, shell)
+export { useWindowSizeClass, windowSizeClass, EXPANDED_MIN } from './theme/layout';
+export type { WindowSizeClass } from './theme/layout';
+export { NavigationRail, AppShell } from './components/adaptive';
+export type { NavigationRailRootProps, NavigationRailItemProps, AppShellProps } from './components/adaptive';
 export { IconChip, categoryPalette, autoCategory } from './components/display';
 export type { IconChipProps, CategoryPalette } from './components/display';
 export { NumberTicker, StatCard } from './components/stats';

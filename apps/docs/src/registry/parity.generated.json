@@ -511,6 +511,32 @@
       "searchable"
     ]
   },
+  "navigation-rail": {
+    "web": "NavigationRailRoot",
+    "native": "NavigationRail",
+    "shared": [
+      "header",
+      "orientation"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "app-shell": {
+    "web": "AppShellRoot",
+    "native": "AppShell",
+    "shared": [],
+    "webOnly": [],
+    "onPurpose": [
+      "onOpenChange",
+      "open"
+    ],
+    "nativeOnly": [
+      "header",
+      "navigation",
+      "railFrom"
+    ]
+  },
   "tabs": {
     "web": null,
     "native": "Tabs",
@@ -1421,6 +1447,28 @@
     "nativeOnly": [
       "groups",
       "header"
+    ]
+  },
+  "list-detail": {
+    "web": "ListDetail",
+    "native": "ListDetail",
+    "shared": [
+      "backLabel",
+      "detail",
+      "detailLabel",
+      "emptyState",
+      "errorState",
+      "list",
+      "listLabel",
+      "listWidth",
+      "loading",
+      "onBack",
+      "showDetail"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": [
+      "splitRatio"
     ]
   },
   "notification-item": {

@@ -81,6 +81,7 @@ Names and props match `@nexub/react` where a web twin exists.
 - **Feedback:** `Banner`, `ToastProvider` / `useToast`, `Progress`, `LoadingIndicator`, `Skeleton`, `SkeletonSwap`, `EmptyState`, `ErrorState`, `OfflineBanner`, `Coachmark`.
 - **Mobile:** `SwipeableRow`, `RefreshControl`, `Carousel`, `PageIndicator`, `StickyFooter`, `SensitiveValue`, `PrivacyShield`, `FAB` (Android only by default).
 - **Navigation helpers:** `nexubStackOptions`, `nexubNavigationTheme`, `nexubTabsOptions`.
+- **Larger screens:** `useWindowSizeClass()` (`compact` < 600, `medium` < 840, `expanded`), `NavigationRail` (a rail from medium up, a bottom bar on compact windows) and `AppShell` (navigation, header and content laid out for the window). Foldables are handled by window size: React Native has no hinge or posture API without a native module.
 
 - **Motion:** `nxEnter`, `nxExit`, `nxLayout` (Reanimated layout animations) and `nxSpring` (a `withSpring` config), built from the same spring tokens as the web. `<Animated.View entering={nxEnter('up')} exiting={nxExit('down')} layout={nxLayout()} />`. Toast, Banner, `ListSection` rows, `SwipeableRow`, `Chip`, the `SegmentedControl` pill and `Amount` (`animate`) already use them. In a `FlatList`, pass `nxLayout()` as `itemLayoutAnimation`.
 
@@ -93,6 +94,7 @@ Icons: `import { Search } from '@nexub/icons/native'`. These are the same names 
 - **Auth:** `AuthScreen`, `SignInScreen`, `SignUpScreen`, `VerifyCodeScreen`, `LockScreen`.
 - **Status:** `StatusScreen` (not found, server error, maintenance, offline, no access), `StatusSteps`.
 - **Money:** `FlowStep`, `AmountStep`, `ReviewStep`, `ActivityList`, `TransactionDetail`, `ResultScreen`.
+- **Layout:** `ListDetail` (list and detail side by side from medium up, one pane at a time on phones, `splitRatio`).
 - **App:** `OnboardingScreen`, `PermissionPrimer`, `SettingsScreen`, `ProfileHeader`, `AppearanceSection`, `NotificationsInbox`, `SearchScreen`, `ChatScreen`, `PaywallScreen`, `AppSwitcherSheet`.
 
 ## Rules the components follow
