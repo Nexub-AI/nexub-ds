@@ -1,5 +1,22 @@
 # @nexub/tokens
 
+## 12.6.0
+
+### Minor Changes
+
+- d5dd83a: APCA contrast and Figma variables with aliases (12.6).
+
+  - `apcaContrast(text, background)` from `@nexub/tokens/seed` returns the APCA lightness contrast (Lc, APCA-W3 0.1.9): positive for dark text on light, negative for light on dark. It sits beside `contrastRatio` (WCAG 2), which stays the gate; the token contrast tests now report APCA Lc next to each WCAG ratio.
+  - New `@nexub/tokens/figma/variables/*.tokens.json`: W3C Design Tokens (DTCG) files for Figma's native variables import, as three collections. Primitives holds the reference palette, spacing, radius, shape, sizes and type scale. Product has a mode per `data-product` (default, leap, bookub, payub, founderub). Color has light and dark modes at each contrast level, and its roles alias the primitives with DTCG `{ref}` syntax. The Figma page in the docs covers importing and updating them.
+
+  The existing `@nexub/tokens/figma/*.tokens.json` files, the CSS, the Tailwind theme and the native tokens are unchanged.
+
+- 0f3c2d9: **Token tiers complete** (12.6, closes R3): reference tokens → semantic roles → component tokens, each tier aliasing the one before it. No token value changes.
+
+  - Chip joins the component tier: `--chip-neutral-bg`, `--chip-neutral-fg`, `--chip-neutral-border` (the neutral tone) and `--chip-radius`. Like every component token they are unset by default and fall back to the role Chip used before, so nothing changes until you set one.
+  - `@nexub/tokens/json/component` now names the docs pages that read each group (`$extensions["dev.nexub"].docs`), and each covered component's docs page has a generated "Design tokens" section listing its tokens and the role each one aliases. The Tokens foundations page explains the three tiers.
+  - Native parity gap: `@nexub/tokens/native` has no component tier yet (native components read the semantic roles directly); its output is unchanged.
+
 ## 12.5.0
 
 ## 12.4.0
