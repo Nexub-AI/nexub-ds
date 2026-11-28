@@ -1,5 +1,7 @@
 # @nexub/tokens
 
+## 12.4.0
+
 ## 12.3.0
 
 ### Minor Changes

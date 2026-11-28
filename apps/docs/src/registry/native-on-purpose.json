@@ -123,6 +123,14 @@
     ],
     "reason": "The native twin is the whole settings screen: each group has a header and its items."
   },
+  "status-page": {
+    "props": [
+      "as",
+      "fullScreen",
+      "homeHref"
+    ],
+    "reason": "A screen is always the whole screen and has no landmark element; links become onHome, which navigates with the app's router."
+  },
   "auth-card": {
     "props": [
       "children"
@@ -193,5 +201,19 @@
       "virtualizeAbove"
     ],
     "reason": "DOM attributes and form names have no native meaning (the label, error and hint are accessibility props); the list always opens in a sheet, which has no search box. virtualizeAbove (12.1) windows the web list; the native list is a FlatList, which always renders only the rows in view."
+  },
+  "event-calendar": {
+    "props": [
+      "maxEventsPerDay",
+      "weekStartsOn"
+    ],
+    "reason": "Both shape the month and week grids, which native leaves out: a phone shows the day and agenda views."
+  },
+  "app-shell": {
+    "props": [
+      "onOpenChange",
+      "open"
+    ],
+    "reason": "They control the web drawer that holds the sidebar on narrow screens. Native has no drawer: on compact windows the navigation is a bottom bar."
   }
 }

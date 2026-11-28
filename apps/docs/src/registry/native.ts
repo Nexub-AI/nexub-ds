@@ -30,8 +30,11 @@ export interface PlatformDifference {
 export interface NativeTwin {
   /** Export name in @nexub/react-native. */
   name: string;
-  /** Live-preview slug (apps/mobile preview manifest). */
-  preview: PreviewSlug;
+  /**
+   * Live-preview slug (apps/mobile preview manifest). 12.5: left out for a screen the showcase
+   * app doesn't show yet; the panel then has the code and props without a phone frame.
+   */
+  preview?: PreviewSlug;
   differences: PlatformDifference[];
   code: string;
   notes?: string[];
@@ -210,8 +213,12 @@ import { Send } from '@nexub/icons/native';
   'form-field': {
     name: 'TextField',
     preview: 'text-field',
-    differences: [label],
-    code: `<TextField label="Full name" helperText="As on your NRIC" />`,
+    differences: [
+      label,
+      { aspect: 'Agent states', web: '`streaming` shimmers the control; `generated` adds a "Suggested" mark read through `aria-describedby`.', mobile: 'The same props on TextField (12.5): busy with a calm wash (none under Reduce Motion); the mark is read as part of the field\'s hint, and accept / clear move the screen reader to the field.' },
+    ],
+    code: `<TextField label="Full name" helperText="As on your NRIC" />
+<TextField label="Title" value={title} onChangeText={setTitle} generated={fromAgent} onAcceptSuggestion={keep} onClearSuggestion={() => setTitle('')} />`,
   },
   'password-input': {
     name: 'PasswordInput',
@@ -275,6 +282,45 @@ import { Send } from '@nexub/icons/native';
       label,
     ],
     code: `<MultiSelect label="Labels" options={labels} value={picked} onValueChange={setPicked} />`,
+  },
+  'navigation-rail': {
+    name: 'NavigationRail',
+    preview: 'tabs',
+    differences: [
+      { aspect: 'Orientation', web: '`vertical` (default) or `bottom`, chosen by you.', mobile: '`auto` (default): a rail at the start edge on medium and expanded windows (≥ 600dp), a bottom bar on compact ones. `vertical` and `bottom` fix it.' },
+      { aspect: 'Icon', web: 'Any icon element.', mobile: 'An icon component from @nexub/icons/native (`icon={Home}`).' },
+      { aspect: 'Navigation', web: 'Links (`href`, or your router link with `asChild`).', mobile: '`onPress` on each item; your navigator changes the screen.' },
+      { aspect: 'Screen readers', web: 'A nav landmark; the active link is `aria-current="page"`.', mobile: 'A tab list; the active item is selected. Badges are read after the label, as on web.' },
+    ],
+    code: `<NavigationRail.Root>
+  <NavigationRail.Item icon={Home} label="Home" active onPress={goHome} />
+  <NavigationRail.Item icon={Bell} label="Inbox" badge={3} onPress={goInbox} />
+</NavigationRail.Root>`,
+    notes: ['12.5. Safe-area insets are applied: the bottom bar clears the home indicator, the rail clears the status bar and a landscape notch.'],
+  },
+  'app-shell': {
+    name: 'AppShell',
+    preview: 'pattern/home',
+    differences: [
+      { aspect: 'Structure', web: 'Compound: AppShell.Root, Header, Body, Sidebar, Main and NavTrigger.', mobile: 'One component with `navigation`, `header` and the content as children.' },
+      { aspect: 'Narrow screens', web: 'The sidebar moves into a drawer opened by NavTrigger (`open`, `onOpenChange`).', mobile: 'The navigation becomes a bottom bar under the content; no drawer.' },
+      { aspect: 'Breakpoint', web: 'The sidebar shows from the lg breakpoint.', mobile: 'The rail shows from the medium window size class (600dp); `railFrom="expanded"` waits for 840dp.' },
+    ],
+    code: `<AppShell
+  header={topBar}
+  navigation={
+    <NavigationRail.Root>
+      <NavigationRail.Item icon={Home} label="Home" active onPress={goHome} />
+      <NavigationRail.Item icon={Bell} label="Inbox" onPress={goInbox} />
+    </NavigationRail.Root>
+  }
+>
+  <ListDetail list={list} detail={detail} showDetail={!!selected} onBack={clear} />
+</AppShell>`,
+    notes: [
+      '12.5. Layout follows `useWindowSizeClass()` (compact < 600, medium < 840, expanded), which updates on rotation, split view and folding.',
+      'Foldables are handled by window size: React Native exposes no hinge or posture without a native module, so an unfolded foldable is a medium or expanded window like a tablet.',
+    ],
   },
   tabs: {
     name: 'Tabs',
@@ -352,8 +398,41 @@ import { Send } from '@nexub/icons/native';
       { aspect: 'Layout', web: 'Columns: resize, reorder, pin, virtualize.', mobile: 'One row per record with its key fields: no horizontal scrolling.' },
       { aspect: 'Sort', web: 'Click headers; Shift+click for more.', mobile: 'A Sort button opens a sheet: one sort and a direction.' },
       { aspect: 'Selection', web: 'Checkbox column and a floating bulk bar.', mobile: 'Checkbox rows; the bar above the list shows the count and your actions.' },
+      { aspect: 'Streaming', web: 'A skeleton row, `aria-busy` and a polite live region.', mobile: 'The same `streaming` prop (12.5): a skeleton row, a busy list, and the count announced at most every 3 seconds, then "Done. N rows".' },
     ],
-    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />`,
+    code: `<DataList data={invoices} keyExtractor={(i) => i.id} title={(i) => i.customer} value={(i) => i.total} sorts={sorts} selectable />
+<DataList data={rows} keyExtractor={(r) => r.id} title={(r) => r.name} streaming={agentRunning} />`,
+  },
+  // 12.5: AI parts
+  'tool-call': {
+    name: 'ToolCall',
+    preview: 'tool-call',
+    differences: [
+      { aspect: 'Disclosure', web: 'A native `<details>`; `open` is the DOM attribute.', mobile: 'A pressable header with `expanded` state; `open` + `onOpenChange` to control it.' },
+      { aspect: 'Status', web: 'A polite live region.', mobile: 'Each change is announced (iOS has no live regions); focus never moves.' },
+      { aspect: 'Strings', web: '`messages` only (server component).', mobile: 'The provider\'s messages, with `messages` on top.' },
+    ],
+    code: `<ToolCall name="send_reminders" status="failed" duration={30000} error="The mail server timed out." onRetry={retry} />`,
+  },
+  'approval-card': {
+    name: 'ApprovalCard',
+    preview: 'approval-card',
+    differences: [
+      { aspect: 'Focus', web: 'Keyboard focus moves to the card when the choice resolves.', mobile: 'The screen reader\'s focus moves to the announced outcome.' },
+      { aspect: 'Edit', web: 'A textarea.', mobile: 'A multiline TextInput, left to right in every language.' },
+    ],
+    code: `<ApprovalCard title="Send 3 invoices to Acme" args={args} onApprove={send} onEdit={sendEdited} onDeny={cancel} />`,
+  },
+  'diff-view': {
+    name: 'DiffView',
+    preview: 'diff-view',
+    differences: [
+      { aspect: 'Screen readers', web: 'Visually hidden "Added: " / "Removed: " prefixes.', mobile: 'Each line is one element labelled "Added: …"; the gutter and sign are not read.' },
+      { aspect: 'Long lines', web: 'The block scrolls sideways.', mobile: 'The same, in a horizontal ScrollView.' },
+      { aspect: 'Review', web: 'DiffReview, a list of collapsible diffs with Accept / Reject.', mobile: 'DiffReview too, with the same props and summary (announced on each change).' },
+    ],
+    code: `<DiffView file="src/fees.ts" diff={patch} lineNumbers />
+<DiffReview files={files} onAccept={apply} onReject={discard} />`,
   },
   // 11.8
   combobox: {
@@ -509,6 +588,55 @@ import { Send } from '@nexub/icons/native';
     ],
     code: `<Countdown to={expiresAt} onExpire={resend} />`,
   },
+  kanban: {
+    name: 'Kanban',
+    preview: 'sortable-list',
+    differences: [
+      { aspect: 'Moving', web: 'Drag a card’s handle, or Alt+Arrow keys.', mobile: 'A “Move to…” sheet on each card lists the columns and drop targets; VoiceOver and TalkBack get the same moves as actions (“Move to Done”). No drag yet.' },
+      { aspect: 'Layout', web: 'Columns side by side; swimlanes with `lanes`.', mobile: 'Columns in a horizontal scroll; no swimlanes yet. A moved card goes to the end of its new column.' },
+    ],
+    code: `<Kanban columns={columns} getId={(t) => t.id} getLabel={(t) => t.title} renderCard={(t) => <Text>{t.title}</Text>} onChange={(next) => setColumns(next)} />`,
+    notes: ['The live preview shows SortableList, the closest native list with moves; the board has no preview of its own yet (12.5).'],
+  },
+  'event-calendar': {
+    name: 'EventCalendar',
+    preview: 'date-time-field',
+    differences: [
+      { aspect: 'Views', web: 'month, week, day and agenda.', mobile: '`day` (one day by the hour) and `agenda` (the month as a list, the default). Month and week grids are too dense for a phone.' },
+      { aspect: 'Moving events', web: '`onEventMove`: drag, or Alt+Arrow keys.', mobile: 'Not yet; events open with `onEventClick`.' },
+      { aspect: '`color`', web: 'Mixed into the surface token with CSS `color-mix()`.', mobile: 'Mixed into the theme’s surface role in JavaScript, with the same 4.5:1 text rule.' },
+    ],
+    code: `import { EventCalendar } from '@nexub/react-native/calendar';
+
+<EventCalendar events={events} views={['day', 'agenda']} onEventClick={(e) => open(e.id)} />`,
+    notes: ['Its own entry point, `@nexub/react-native/calendar`, so apps without a calendar don’t ship it.', 'The live preview shows DateTimeField; the calendar has no preview of its own yet (12.5).'],
+  },
+  'line-chart': {
+    name: 'LineChart',
+    preview: 'stat-card',
+    differences: [
+      { aspect: 'Drawing', web: 'Inline SVG on the `--color-chart-*` palette.', mobile: 'react-native-svg (already a peer). Series take the category hues, one per chart colour; the product accent stays out.' },
+      { aspect: 'Text alternative', web: 'A visually hidden data table, and the notes as a hidden list.', mobile: 'One image whose label reads the title, the change, every row and the notes.' },
+      { aspect: 'Pointer', web: '`interactive`, `onPointClick`, toggle legend, `tableView`.', mobile: 'Not yet: the chart is static.' },
+    ],
+    code: `import { LineChart } from '@nexub/react-native/charts';
+
+<LineChart title="Revenue" data={months} index="month" series={[{ key: 'revenue', label: 'Revenue' }]} change={{ from: 'Jan' }} />`,
+    notes: ['Its own entry point, `@nexub/react-native/charts`, so apps without charts don’t ship them.', '`annotations`, `referenceLines` and `change` (12.3) work as on the web.', 'The live preview shows StatCard; the chart has no preview of its own yet (12.5).'],
+  },
+  'bar-chart': {
+    name: 'BarChart',
+    preview: 'stat-card',
+    differences: [
+      { aspect: 'Orientation', web: 'Vertical or horizontal; `variant="waterfall"`.', mobile: 'Vertical, grouped or `stacked`. Horizontal and waterfall are web only for now.' },
+      { aspect: 'Text alternative', web: 'A visually hidden data table, and the notes as a hidden list.', mobile: 'One image whose label reads the title, the change, every row and the notes.' },
+      { aspect: 'Pointer', web: '`interactive`, `onPointClick`, toggle legend, `tableView`.', mobile: 'Not yet: the chart is static.' },
+    ],
+    code: `import { BarChart } from '@nexub/react-native/charts';
+
+<BarChart title="Spending by month" data={spending} index="month" series={[{ key: 'spent' }]} referenceLines={[{ value: 500, label: 'Budget', tone: 'danger' }]} />`,
+    notes: ['Its own entry point, `@nexub/react-native/charts`, so apps without charts don’t ship them.', '`annotations`, `referenceLines` and `change` (12.3) work as on the web.', 'The live preview shows StatCard; the chart has no preview of its own yet (12.5).'],
+  },
   alert: { name: 'Banner', preview: 'banner', differences: [{ aspect: 'Name', web: 'Alert.', mobile: 'Banner.' }], code: `<Banner tone="info">Transfers over S$5,000 take one working day.</Banner>` },
   toast: {
     name: 'ToastProvider + useToast',
@@ -637,6 +765,17 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
 
 <StatusSteps accessibilityLabel="Application status" steps={steps} />`,
   },
+  'status-page': {
+    name: 'StatusScreen',
+    differences: [
+      { aspect: 'Home', web: '`homeHref` renders a "Back to home" link.', mobile: '`onHome` renders a "Back to home" button; navigate in it.' },
+      { aspect: 'Actions', web: 'Under the text.', mobile: 'Pinned above the home indicator, as on ResultScreen.' },
+      { aspect: 'Size', web: '`fullScreen` and `as` set the height and landmark.', mobile: 'Always the whole screen.' },
+    ],
+    code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen kind="serverError" onRetry={refetch} />`,
+  },
   'activity-feed': {
     name: 'ActivityList',
     preview: 'pattern/activity',
@@ -684,12 +823,24 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
 <SettingsScreen groups={[{ header: 'Security', items: [{ title: 'Face ID', variant: 'switch', checked: faceId, onCheckedChange: setFaceId }] }]} />`,
   },
   'list-detail': {
-    name: 'ActivityList + TransactionDetail',
+    name: 'ListDetail',
     preview: 'pattern/detail',
-    differences: [{ aspect: 'Layout', web: 'List and detail side by side; stacks on narrow screens.', mobile: 'The list pushes the detail screen onto the navigation stack.' }],
-    code: `import { TransactionDetail } from '@nexub/react-native/patterns';
+    differences: [
+      { aspect: 'When it splits', web: 'At 720px of its own width (a container query).', mobile: 'From the medium window size class (600dp): tablets, unfolded foldables, phones in landscape.' },
+      { aspect: 'Pane width', web: '`listWidth` (sm, md, lg).', mobile: '`listWidth`, or `splitRatio` (0.2–0.8) for a share of the width.' },
+      { aspect: 'Back', web: 'The back button when narrow.', mobile: 'The back button and Android’s back gesture, on compact windows while the detail shows.' },
+      { aspect: 'Scrolling', web: 'Each pane scrolls.', mobile: 'Each pane fills its height; bring a FlatList (e.g. ActivityList) or ScrollView.' },
+    ],
+    code: `import { ListDetail, ActivityList, TransactionDetail } from '@nexub/react-native/patterns';
 
-<TransactionDetail transaction={tx} actions={<Button variant="tonal">Split bill</Button>} />`,
+<ListDetail
+  list={<ActivityList transactions={txs} onPress={(t) => setSelected(t)} />}
+  detail={selected ? <TransactionDetail transaction={selected} /> : <EmptyState title="Pick a payment" />}
+  showDetail={!!selected}
+  onBack={() => setSelected(null)}
+  splitRatio={0.4}
+/>`,
+    notes: ['12.5. On a phone in portrait it shows one pane, as before; you can still push TransactionDetail onto your stack instead.'],
   },
   'notification-item': {
     name: 'NotificationsInbox',

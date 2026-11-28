@@ -1,6 +1,6 @@
 {
   "name": "@nexub/react-native",
-  "version": "12.3.0",
+  "version": "12.4.0",
   "description": "React Native components for Nexub Design System — native chrome, Nexub content. Same tokens, brands and prop names as @nexub/react, for Expo and bare React Native apps.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -37,6 +37,16 @@
       "source": "./src/patterns/index.ts",
       "types": "./lib/typescript/patterns/index.d.ts",
       "default": "./lib/module/patterns/index.js"
+    },
+    "./calendar": {
+      "source": "./src/calendar.ts",
+      "types": "./lib/typescript/calendar.d.ts",
+      "default": "./lib/module/calendar.js"
+    },
+    "./charts": {
+      "source": "./src/charts.ts",
+      "types": "./lib/typescript/charts.d.ts",
+      "default": "./lib/module/charts.js"
     },
     "./package.json": "./package.json"
   },

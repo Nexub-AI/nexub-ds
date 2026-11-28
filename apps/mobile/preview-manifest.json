@@ -571,6 +571,42 @@
       ],
       "path": "/m/preview/divider"
     },
+    "tool-call": {
+      "title": "ToolCall",
+      "kind": "component",
+      "web": "tool-call",
+      "examples": [
+        "Run time, error and Retry"
+      ],
+      "path": "/m/preview/tool-call"
+    },
+    "approval-card": {
+      "title": "ApprovalCard",
+      "kind": "component",
+      "web": "approval-card",
+      "examples": [
+        "Approve, edit or deny"
+      ],
+      "path": "/m/preview/approval-card"
+    },
+    "diff-view": {
+      "title": "DiffView",
+      "kind": "component",
+      "web": "diff-view",
+      "examples": [
+        "Line numbers"
+      ],
+      "path": "/m/preview/diff-view"
+    },
+    "diff-review": {
+      "title": "DiffReview",
+      "kind": "component",
+      "web": "diff-view",
+      "examples": [
+        "Accept or reject"
+      ],
+      "path": "/m/preview/diff-review"
+    },
     "banner": {
       "title": "Banner",
       "kind": "component",
@@ -1036,6 +1072,16 @@
     ],
     "separator": [
       "divider"
+    ],
+    "tool-call": [
+      "tool-call"
+    ],
+    "approval-card": [
+      "approval-card"
+    ],
+    "diff-view": [
+      "diff-view",
+      "diff-review"
     ],
     "banner": [
       "banner"

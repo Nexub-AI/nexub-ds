@@ -218,6 +218,17 @@ export type { FileUploadProps, PickedFile, FileRejection } from './components/fi
 export { PromptDialog, usePrompt } from './components/prompt';
 export type { PromptDialogProps, PromptOptions } from './components/prompt';
 export type { AsyncSearch } from './hooks/useAsyncSearch';
+// 12.5: AgentKit parts (web 4.8 / 12.4)
+export { ToolCall, ApprovalCard, DiffView, DiffReview } from './components/agent';
+export type {
+  ToolCallProps,
+  ApprovalCardProps,
+  ApprovalOutcome,
+  DiffViewProps,
+  DiffReviewProps,
+  DiffReviewFile,
+  DiffDecision,
+} from './components/agent';
 export { filterOperators, isFilterGroup, emptyFilter, newFilterRule, countFilters } from '@nexub/core';
 export type { FilterField, FilterFieldType, FilterGroup, FilterOperator, FilterRule } from '@nexub/core';
 
@@ -237,6 +248,12 @@ export { dynamicPrimary, DENSE_MAX_FONT_SCALE } from './theme/ThemeProvider';
 export type { Expression, ThemeColors } from './theme/ThemeProvider';
 export { useBreakpoint, useResponsive, TABLET_MIN } from './theme/layout';
 export type { Breakpoint } from './theme/layout';
+
+// 12.5: larger screens (window size classes, rail, shell)
+export { useWindowSizeClass, windowSizeClass, EXPANDED_MIN } from './theme/layout';
+export type { WindowSizeClass } from './theme/layout';
+export { NavigationRail, AppShell } from './components/adaptive';
+export type { NavigationRailRootProps, NavigationRailItemProps, AppShellProps } from './components/adaptive';
 export { IconChip, categoryPalette, autoCategory } from './components/display';
 export type { IconChipProps, CategoryPalette } from './components/display';
 export { NumberTicker, StatCard } from './components/stats';
@@ -263,3 +280,8 @@ export { Countdown, useCountdown } from './components/countdown';
 export type { CountdownProps, CountdownState, UseCountdownOptions } from './components/countdown';
 export { encodeQR, qrPath, COUNTRIES, callingCode, formatNational, formatPhone, toE164, parsePhone, isValidPhone } from '@nexub/core';
 export type { QRErrorCorrection, QRMatrix, CountryCode, ParsedPhone } from '@nexub/core';
+
+// 12.5: the native Kanban twin (read-only and move). EventCalendar and the charts are heavier and
+// have their own entry points: @nexub/react-native/calendar and @nexub/react-native/charts.
+export { Kanban } from './components/kanban';
+export type { KanbanProps, KanbanColumn, KanbanPlace, KanbanMove, KanbanDropTarget, KanbanCardTone } from './components/kanban';
