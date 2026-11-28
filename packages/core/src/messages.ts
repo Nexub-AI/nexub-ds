@@ -124,6 +124,13 @@ export interface NexubMessages {
   resizeColumn: (column: string) => string;
   /** Announced after a keyboard column move, e.g. "Email moved to position 2 of 4". */
   columnMoved: (column: string, position: number, total: number) => string;
+  /** DataTable `streaming` (12.4): the throttled row count while rows arrive, and the count once they stop. `count` is already formatted. */
+  rowsSoFar: (count: string) => string;
+  rowsDone: (count: string) => string;
+  /** FormField `generated` (12.4): the mark on a value an agent filled in, and its accept / clear buttons. */
+  suggested: string;
+  acceptSuggestion: string;
+  clearSuggestion: string;
   /** DateRangePicker presets. */
   today: string;
   last7Days: string;
@@ -328,6 +335,30 @@ export interface NexubMessages {
   presence: Record<'online' | 'away' | 'busy' | 'offline', string>;
   /** AgentAvatar (12.2): the tile's accessible name, so an agent never reads as a person ("Payhub agent, AI agent"). */
   aiAgent: (name: string) => string;
+  /** AgentKit (12.4): ToolCall status words, its section headings and the run time ("1.2 s"). */
+  toolCallStatus: Record<'running' | 'done' | 'failed', string>;
+  toolCallInput: string;
+  toolCallOutput: string;
+  toolCallError: string;
+  toolCallDuration: (ms: number) => string;
+  /** ApprovalCard (12.4): default button labels, the edit path, the wait after a choice and the outcome. */
+  approvalApprove: string;
+  approvalDeny: string;
+  approvalEdit: string;
+  approvalApproveEdited: string;
+  approvalArgs: string;
+  approvalPending: string;
+  approvalOutcome: Record<'approved' | 'edited' | 'denied', string>;
+  /** DiffView / DiffReview (12.4): screen-reader line prefixes, a file's line counts, per-file decisions and the summary. */
+  diffAdded: string;
+  diffRemoved: string;
+  diffLineCounts: (added: number, removed: number) => string;
+  diffAccept: string;
+  diffReject: string;
+  diffAcceptFile: (file: string) => string;
+  diffRejectFile: (file: string) => string;
+  diffDecision: Record<'accepted' | 'rejected', string>;
+  diffReviewSummary: (accepted: number, rejected: number, pending: number) => string;
   /** Input `clearable` button. */
   clear: string;
   /** Input `showCount`, read near the limit ("72 of 80 characters"). */
@@ -527,6 +558,11 @@ export const defaultMessages: NexubMessages = {
   sortOrder: (index) => `sort ${index}`,
   resizeColumn: (column) => `Resize ${column}`,
   columnMoved: (column, position, total) => `${column} moved to position ${position} of ${total}`,
+  rowsSoFar: (count) => `${count} ${count === '1' ? 'row' : 'rows'} so far`,
+  rowsDone: (count) => `Done. ${count} ${count === '1' ? 'row' : 'rows'}`,
+  suggested: 'Suggested',
+  acceptSuggestion: 'Accept suggestion',
+  clearSuggestion: 'Clear suggestion',
   today: 'Today',
   last7Days: 'Last 7 days',
   last30Days: 'Last 30 days',
@@ -698,6 +734,27 @@ export const defaultMessages: NexubMessages = {
   moreActions: 'More actions',
   presence: { online: 'Online', away: 'Away', busy: 'Busy', offline: 'Offline' },
   aiAgent: (name) => (name ? `${name}, AI agent` : 'AI agent'),
+  toolCallStatus: { running: 'Running', done: 'Done', failed: 'Failed' },
+  toolCallInput: 'Input',
+  toolCallOutput: 'Output',
+  toolCallError: 'Error',
+  toolCallDuration: (ms) => (ms < 1000 ? `${Math.round(ms)} ms` : ms < 60000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.floor(ms / 60000)} min ${Math.round((ms % 60000) / 1000)} s`),
+  approvalApprove: 'Approve',
+  approvalDeny: 'Deny',
+  approvalEdit: 'Edit',
+  approvalApproveEdited: 'Approve with changes',
+  approvalArgs: 'Arguments',
+  approvalPending: 'Working…',
+  approvalOutcome: { approved: 'Approved', edited: 'Approved with changes', denied: 'Denied' },
+  diffAdded: 'Added: ',
+  diffRemoved: 'Removed: ',
+  diffLineCounts: (added, removed) => `${added} added, ${removed} removed`,
+  diffAccept: 'Accept',
+  diffReject: 'Reject',
+  diffAcceptFile: (file) => `Accept ${file}`,
+  diffRejectFile: (file) => `Reject ${file}`,
+  diffDecision: { accepted: 'Accepted', rejected: 'Rejected' },
+  diffReviewSummary: (accepted, rejected, pending) => `${accepted} accepted, ${rejected} rejected, ${pending} to review`,
   clear: 'Clear',
   characterCount: (count, max) => `${count} of ${max} characters`,
   countryCode: choiceFieldMessages.countryCode,

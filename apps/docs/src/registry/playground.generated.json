@@ -203,9 +203,21 @@
     "fixed": [],
     "controls": [
       {
+        "kind": "select",
+        "name": "outcome",
+        "options": [
+          "approved",
+          "edited",
+          "denied"
+        ]
+      },
+      {
+        "kind": "switch",
+        "name": "pending"
+      },
+      {
         "kind": "text",
         "name": "approveLabel",
-        "default": "Approve",
         "initial": "Send reminders"
       },
       {
@@ -2620,6 +2632,10 @@
       "diff={diff}"
     ],
     "controls": [
+      {
+        "kind": "switch",
+        "name": "lineNumbers"
+      },
       {
         "kind": "text",
         "name": "file",
@@ -7760,6 +7776,10 @@
         "kind": "text",
         "name": "name",
         "initial": "search_invoices"
+      },
+      {
+        "kind": "number",
+        "name": "duration"
       }
     ],
     "states": []

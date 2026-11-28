@@ -30,6 +30,7 @@ const cases: Record<string, () => React.ReactElement> = {
   ToolCall: () => <N.ToolCall name="search" status="done" input={{ q: 'a' }} output="1 found" />,
   DiffView: () => <N.DiffView file="a.ts" diff={'-old\n+new'} />,
   ApprovalCard: () => <N.ApprovalCard title="Send 3 invoices" onApprove={noop} />,
+  DiffReview: () => <N.DiffReview files={[{ file: 'a.ts', diff: '-old\n+new' }]} onAccept={noop} />,
   NexubProvider: () => <N.NexubProvider locale="en">x</N.NexubProvider>,
 
   // Form & input

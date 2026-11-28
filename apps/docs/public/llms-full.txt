@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v12.2.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v12.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v12.2.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v12.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -1115,7 +1115,11 @@ The agent asks before it acts: what will happen, then Approve or Deny.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `title` (required) | `string` |  | What the agent wants to do. |
-| `onApprove / onDeny` | `() => void` |  | Called once with the choice. |
+| `onApprove / onDeny` | `() => void \| Promise` |  | Called once with the choice. Return a promise to show the pending state until it settles (12.4). |
+| `args` | `unknown` |  | The action’s arguments, shown as JSON (12.4). |
+| `onEdit` | `(args: string) => void \| Promise` |  | Adds Edit: the user edits `args`, then approves with changes; called with the edited text (12.4). |
+| `outcome` | `'approved' \| 'edited' \| 'denied' \| null` |  | Controlled outcome; `null` keeps the choice open (12.4). |
+| `pending` | `boolean` |  | The action is running: buttons disabled, "Working…" announced (12.4). |
 
 ## Example: Before sending
 
@@ -1133,11 +1137,35 @@ export default function Example() {
 }
 ```
 
+## Example: Edit before approving
+
+With `args` and `onEdit` the user can approve, edit the arguments then approve, or deny. A promise from the callback shows the pending state.
+
+```tsx
+'use client';
+
+import { ApprovalCard } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <ApprovalCard
+      title="Send a payment reminder"
+      args={{ to: 'ap@acme.example', amount: 4120, currency: 'USD' }}
+      onEdit={() => new Promise((resolve) => setTimeout(resolve, 1000))}
+      onApprove={() => new Promise((resolve) => setTimeout(resolve, 1000))}
+    >
+      The agent will email Acme&apos;s billing contact.
+    </ApprovalCard>
+  );
+}
+```
+
 ## Accessibility
 
-- The outcome is announced in a polite live region and replaces the buttons.
+- Edit moves focus to the arguments field; Cancel returns it to Edit. Once the choice resolves, focus moves to the card, so it is never lost with the buttons.
+- The outcome ("Approved", "Approved with changes", "Denied") and "Working…" are announced in a polite live region; the card is a group named by its title.
 
-Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md), [diff-view](diff-view.md)
 
 
 ---
@@ -4124,6 +4152,7 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `maxHeight` | `number \| string` |  | Caps the height: rows scroll and the header sticks (5.4). |
 | `grid` | `boolean` | `false` | ARIA grid keyboard model for tables whose cells hold actions (5.8): the table is one tab stop; Arrow keys move between cells and the controls in them, Home/End to the row ends, Ctrl+Home/End to the corners. |
 | `DataTableVirtual` | `import from '@nexub/react/DataTableVirtual'` |  | Same props plus `maxHeight` (required), `estimateRowHeight` and `overscan`: renders only the rows in view, for thousands of rows. Needs `@tanstack/react-virtual` installed (5.4). No pagination. |
+| `streaming` | `boolean` | `false` | Rows are still arriving, e.g. from an agent (12.4). A skeleton row trails the last row, `aria-busy` is set, the row count is announced every few seconds (not per row) and "done" when it turns off. New rows enter with the motion preset; sorting and selection keep working. |
 | `pagination.pageSize` | `number` | `20` | Rows per page; pagination is on when `pagination` is set. |
 
 ## Example: Default
@@ -4468,6 +4497,74 @@ export default function Example() {
 }
 ```
 
+## Example: Streaming rows
+
+Set `streaming` while an agent produces rows and pass `data` as it grows. The table stays usable: sort or select while rows arrive. Screen readers hear "busy", a count every few seconds and "Done" at the end. Announcements come from `rowsSoFar` and `rowsDone` in messages.
+
+```tsx
+import * as React from 'react';
+import { Button, DataTable, type DataTableColumn } from '@nexub/react';
+
+type Lead = { id: string; company: string; industry: string; seats: number };
+
+const found: Lead[] = [
+  { id: '1', company: 'Acme', industry: 'Manufacturing', seats: 120 },
+  { id: '2', company: 'Globex', industry: 'Energy', seats: 85 },
+  { id: '3', company: 'Initech', industry: 'Software', seats: 40 },
+  { id: '4', company: 'Umbrella', industry: 'Health', seats: 310 },
+  { id: '5', company: 'Hooli', industry: 'Software', seats: 760 },
+  { id: '6', company: 'Stark', industry: 'Manufacturing', seats: 220 },
+];
+
+const columns: DataTableColumn<Lead>[] = [
+  { accessorKey: 'company', header: 'Company' },
+  { accessorKey: 'industry', header: 'Industry' },
+  { accessorKey: 'seats', header: 'Seats', meta: { align: 'end' } },
+];
+
+export default function Example() {
+  const [rows, setRows] = React.useState<Lead[]>(found.slice(0, 2));
+  const [streaming, setStreaming] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setInterval>>(undefined);
+  React.useEffect(() => () => clearInterval(timer.current), []);
+
+  // Stand-in for an agent: one row every 700 ms.
+  const run = () => {
+    clearInterval(timer.current);
+    setRows([]);
+    setStreaming(true);
+    let n = 0;
+    timer.current = setInterval(() => {
+      n += 1;
+      setRows(found.slice(0, n));
+      if (n >= found.length) {
+        clearInterval(timer.current);
+        setStreaming(false);
+      }
+    }, 700);
+  };
+
+  return (
+    <div className="flex w-full flex-col items-start gap-3">
+      <Button variant="outlined" size="sm" onClick={run} disabled={streaming}>
+        Find leads
+      </Button>
+      <DataTable
+        className="w-full"
+        caption="Leads"
+        captionHidden
+        columns={columns}
+        data={rows}
+        getRowId={(r) => r.id}
+        streaming={streaming}
+        enableSorting
+        enableRowSelection
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: table (default), grid (with `grid`), columnheader with aria-sort when sortable
@@ -4479,6 +4576,7 @@ export default function Example() {
 - With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none.
 - Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.
 - Sorting, selection counts and column moves are announced from a polite live region.
+- 12.4 `streaming`: the table is aria-busy, the skeleton tail row is hidden from assistive tech, and the polite region announces the row count at most every 3 seconds, then "Done. N rows".
 - DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.
 - Use `grid` when rows hold actions (edit, menus); plain tables of text read better as a table.
 
@@ -5208,6 +5306,13 @@ A unified diff with added and removed lines, for agent changes.
 | --- | --- | --- | --- |
 | `diff` (required) | `string` |  | Unified diff text. |
 | `file` | `string` |  | File name above the diff. |
+| `lineNumbers` | `boolean` |  | Old and new line numbers, counted from each `@@ -a,b +c,d @@` header (12.4). |
+| `messages` | `Partial<{ diffAdded, diffRemoved }>` |  | Screen-reader prefixes. DiffView renders on the server, so translate here (12.4). |
+| `DiffReview files` (required) | `{ file: string; diff: string }[]` |  | DiffReview (beta, 12.4): the files to review, each a collapsible DiffView. |
+| `DiffReview decisions / defaultDecisions` | `Record<string, 'accepted' \| 'rejected'>` |  | Per-file decisions keyed by path, controlled or starting values. A file with no entry is still to review. |
+| `DiffReview onAccept / onReject` | `(file) => void` |  | Called with the file when its Accept or Reject is pressed. |
+| `DiffReview onDecisionsChange` | `(decisions) => void` |  | The whole record after each decision. |
+| `DiffReview lineNumbers / defaultOpen` | `boolean` | `true` | Line numbers in each diff; files start expanded. |
 
 ## Example: Proposed change
 
@@ -5226,11 +5331,48 @@ export default function Example() {
 }
 ```
 
+## Example: DiffReview: review file by file
+
+DiffReview (beta, 12.4) lists an agent’s changed files. Each file collapses, shows its added and removed line counts, and has its own Accept and Reject; the summary counts what is accepted, rejected and still to review.
+
+```tsx
+import * as React from 'react';
+import { DiffReview, type DiffDecision } from '@nexub/react';
+
+const files = [
+  {
+    file: 'templates/reminder.ts',
+    diff: `@@ -3,4 +3,4 @@
+ export const reminder = {
+-  subject: 'Invoice overdue',
++  subject: 'A friendly reminder about your invoice',
+   tone: 'polite',
+ };`,
+  },
+  {
+    file: 'jobs/schedule.ts',
+    diff: `@@ -10,3 +10,4 @@
+ export const schedule = {
+-  cadence: 'daily',
++  cadence: 'weekly',
++  skipWeekends: true,
+ };`,
+  },
+];
+
+export default function Example() {
+  const [decisions, setDecisions] = React.useState<Record<string, DiffDecision>>({});
+  return <DiffReview className="w-full" files={files} decisions={decisions} onDecisionsChange={setDecisions} />;
+}
+```
+
 ## Accessibility
 
-- Added and removed lines are spelled out for screen readers; colour is not the only cue.
+- `Enter / Space`: DiffReview: expands or collapses a file, or presses Accept / Reject.
+- Added and removed lines are spelled out for screen readers; colour is not the only cue. Line numbers are hidden from screen readers.
+- DiffReview: each file toggle reports aria-expanded and its line counts; Accept and Reject are toggle buttons named with the file ("Accept src/billing.ts") with aria-pressed; the summary is a polite status.
 
-Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
+Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md), [approval-card](approval-card.md), [tool-call](tool-call.md)
 
 
 ---
@@ -6555,6 +6697,10 @@ Wraps Label, Input, HelperText and FormError into a single accessible group.
 | `name` (required) | `string` |  | Name attribute forwarded to the underlying input. |
 | `id` | `string` |  | Explicit id for the input; defaults to the name value. |
 | `required` | `boolean` |  | Marks the field as required and renders a required indicator on the label. |
+| `streaming` | `boolean` | `false` | An agent is filling the field (12.4): `aria-busy` and a calm shimmer on the control. Pass the value as text arrives; the control stays editable. |
+| `generated` | `boolean` | `false` | The value came from an agent (12.4): a "Suggested" mark beside the label, read as part of the control's description. Editing the value clears it; turning `generated` off and on shows it again. |
+| `onAcceptSuggestion` | `() => void` |  | With `generated`: an accept button beside the mark. Clears the mark and keeps the value. |
+| `onClearSuggestion` | `() => void` |  | With `generated`: a clear button beside the mark. Clear the value here; the mark goes too. |
 
 ## Example: Default
 
@@ -6567,6 +6713,67 @@ export default function Example() {
       <Label htmlFor="field-name" required>Full name</Label>
       <Input id="field-name" placeholder="Jane Smith" />
       <HelperText>Enter your legal name.</HelperText>
+    </div>
+  );
+}
+```
+
+## Example: Agent states
+
+`streaming` while an agent types into the field, then `generated` with accept and clear. The person can edit at any time; editing drops the "Suggested" mark. Strings come from `suggested`, `acceptSuggestion` and `clearSuggestion` in messages.
+
+```tsx
+import * as React from 'react';
+import { Button, FormField, Input } from '@nexub/react';
+
+const draft = 'Refund approved for order 1042';
+
+export default function Example() {
+  const [value, setValue] = React.useState('');
+  const [streaming, setStreaming] = React.useState(false);
+  const [generated, setGenerated] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setInterval>>(undefined);
+  React.useEffect(() => () => clearInterval(timer.current), []);
+
+  // Stand-in for an agent typing the value a few characters at a time.
+  const fill = () => {
+    clearInterval(timer.current);
+    setGenerated(false);
+    setStreaming(true);
+    let n = 0;
+    timer.current = setInterval(() => {
+      n += 3;
+      setValue(draft.slice(0, n));
+      if (n >= draft.length) {
+        clearInterval(timer.current);
+        setStreaming(false);
+        setGenerated(true);
+      }
+    }, 80);
+  };
+
+  return (
+    <div className="flex w-80 flex-col items-start gap-4">
+      <FormField.Root
+        id="agent-summary"
+        streaming={streaming}
+        generated={generated}
+        onAcceptSuggestion={() => setGenerated(false)}
+        onClearSuggestion={() => {
+          setValue('');
+          setGenerated(false);
+        }}
+        className="w-full"
+      >
+        <FormField.Label>Summary</FormField.Label>
+        <FormField.Control>
+          <Input value={value} onChange={(e) => setValue(e.target.value)} />
+        </FormField.Control>
+        <FormField.Description>Shown to the customer.</FormField.Description>
+      </FormField.Root>
+      <Button variant="outlined" size="sm" onClick={fill} disabled={streaming}>
+        Draft with AI
+      </Button>
     </div>
   );
 }
@@ -13287,6 +13494,11 @@ One tool call: its name and status, expandable to input and output.
 | `status` (required) | `'running' \| 'done' \| 'failed'` |  | Shown as a badge. |
 | `input` | `unknown` |  | Arguments, shown as JSON. |
 | `output` | `unknown` |  | Result, as text or JSON. |
+| `duration` | `number` |  | Run time in milliseconds, shown formatted ("1.2 s") (12.4). |
+| `error` | `ReactNode` |  | Why it failed, shown as text in the failed state; a failed call with an error starts open (12.4). |
+| `onRetry` | `() => void` |  | A Retry button in the failed state. Without it ToolCall stays a server component (12.4). |
+| `defaultOpen` | `boolean` |  | Open on first render; `open` still wins (12.4). |
+| `messages` | `Partial<NexubMessages>` |  | Status words and headings. ToolCall renders on the server, so translate here (12.4). |
 
 ## Example: Tool call
 
@@ -13303,9 +13515,27 @@ export default function Example() {
 }
 ```
 
+## Example: Run time, error and Retry
+
+A finished call shows how long it took; a failed one opens on its error and offers Retry.
+
+```tsx
+import { ToolCall } from '@nexub/react';
+
+export default function Example() {
+  return (
+    <div className="flex w-full flex-col gap-2">
+      <ToolCall name="draft_email" status="done" duration={1240} input={{ to: 'ap@acme.example' }} output="Draft saved" />
+      <ToolCall name="send_email" status="failed" duration={30000} input={{ to: 'ap@acme.example' }} error="SMTP timeout after 30 s" onRetry={() => {}} />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - A native `<details>` disclosure: opens with Enter or Space.
+- The status badge is a polite live region, so Running → Done is announced without moving focus. The error is plain text, not an alert.
 
 Related: [message-bubble](message-bubble.md), [thinking-indicator](thinking-indicator.md)
 

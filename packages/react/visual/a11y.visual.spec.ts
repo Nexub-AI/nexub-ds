@@ -345,6 +345,58 @@ test('a11y AgentAvatar name says AI agent', async ({ page }) => {
   await expect(root.getByRole('img')).toHaveCount(10);
 });
 
+// 12.4 AgentKit: tool-call states, the approval gate's edit path and the diff review.
+test.describe('a11y AgentKit 12.4', () => {
+  const go = async (page: Page, id: string) => {
+    await page.goto(story(id));
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    return page.locator('#storybook-root');
+  };
+
+  test('ToolCall status is a polite live region; a failed call shows its error as text and a named Retry', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--tool-call-states');
+    for (const word of ['Running', 'Done', 'Failed']) await expect(root.getByText(word, { exact: true })).toHaveAttribute('aria-live', 'polite');
+    await expect(root.getByRole('alert')).toHaveCount(0);
+    await expect(root.locator('details').nth(2)).toHaveAttribute('open', '');
+    await expect(root.getByText('SMTP timeout after 30 s')).toBeVisible();
+    await expect(root.getByRole('button', { name: 'Retry' })).toHaveCount(1);
+  });
+
+  test('ApprovalCard edit path: Edit focuses the arguments; approving moves focus to the card and announces the outcome', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--approval-edit');
+    const card = root.getByRole('group', { name: 'Send a payment reminder' });
+    await card.getByRole('button', { name: 'Edit' }).focus();
+    await page.keyboard.press('Enter');
+    const args = card.getByRole('textbox', { name: 'Arguments' });
+    await expect(args).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(card.getByRole('button', { name: 'Approve with changes' })).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(card.getByRole('status').first()).toHaveText('Approved with changes');
+    await expect(card.getByRole('button')).toHaveCount(0);
+    await expect(card).toBeFocused();
+  });
+
+  test('DiffReview: named toggles with aria-expanded, pressed Accept / Reject per file and a polite summary', async ({ page }) => {
+    const root = await go(page, 'ai-agentkit--review');
+    const summary = root.getByRole('status').first();
+    await expect(summary).toHaveText('1 accepted, 0 rejected, 2 to review');
+    await expect(summary).toHaveAttribute('aria-live', 'polite');
+    await expect(root.getByRole('button', { name: 'Accept README.md' })).toHaveAttribute('aria-pressed', 'true');
+    const reject = root.getByRole('button', { name: 'Reject src/billing.ts' });
+    await reject.focus();
+    await page.keyboard.press('Space');
+    await expect(reject).toHaveAttribute('aria-pressed', 'true');
+    await expect(summary).toHaveText('1 accepted, 1 rejected, 1 to review');
+    const toggle = root.getByRole('button', { name: /^src\/billing\.ts/ });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(`[id="${await toggle.getAttribute('aria-controls')}"]`)).toBeHidden();
+  });
+});
+
 // 12.2: names, roles and states a screen reader gets from the new menu and sidebar behaviour.
 test('a11y 12.2 theme menu: radio items keep role, name and checked state with indicator="end"', async ({ page }) => {
   await page.goto('/iframe.html?id=navigation-dropdownmenu--theme-menu&viewMode=story&globals=theme:light;brand:none');
@@ -425,4 +477,43 @@ test('a11y Illustration: decorative by default, one named image with a title', a
   await page.goto('/iframe.html?id=components-illustration--titled&viewMode=story&globals=theme:light;brand:none');
   await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
   await expect(page.locator('#storybook-root').getByRole('img', { name: 'You are offline', exact: true })).toHaveCount(1);
+});
+
+// 12.4: a streaming table is busy, its skeleton tail is not a row, and the count is announced
+// politely at a throttled pace (not per row), then "done".
+test('a11y 12.4 streaming DataTable: aria-busy, hidden tail, throttled count then done', async ({ page }) => {
+  await page.goto('/iframe.html?id=data-display-datatable--streaming&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const table = page.getByRole('table', { name: 'Users an agent found' });
+  await expect(table).toHaveAttribute('aria-busy', 'true');
+  await expect(table.locator('tbody tr[data-streaming]')).toHaveAttribute('aria-hidden', 'true');
+  // Header + 3 rows: the tail is out of the tree.
+  await expect(table.getByRole('row')).toHaveCount(4);
+  const live = page.locator('#storybook-root .sr-only[aria-live="polite"]').first();
+  await page.getByRole('button', { name: 'Replay stream' }).click();
+  await expect(live).toHaveText(/^\d rows? so far$/, { timeout: 5000 });
+  await expect(live).toHaveText('Done. 5 rows', { timeout: 10000 });
+  await expect(table).not.toHaveAttribute('aria-busy');
+  await expect(table.locator('tr[data-streaming]')).toHaveCount(0);
+  await expect(table.getByRole('row')).toHaveCount(6);
+});
+
+// 12.4: a field an agent fills is busy; a generated value is described as "Suggested" (no live
+// region), its accept / clear buttons are named, and editing drops the mark.
+test('a11y 12.4 FormField agent states: busy, "Suggested" in the description, named buttons', async ({ page }) => {
+  await page.goto('/iframe.html?id=components-formfield--agent-states&viewMode=story&globals=theme:light;brand:none');
+  await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+  const root = page.locator('#storybook-root');
+  await expect(root.getByRole('textbox', { name: 'Title' })).toHaveAttribute('aria-busy', 'true');
+  await expect(root.getByRole('textbox', { name: 'Title' })).toBeEditable();
+  const summary = root.getByRole('textbox', { name: 'Summary' });
+  await expect(summary).toHaveAccessibleDescription('Shown to the customer. Suggested');
+  await expect(root.locator('[aria-live]')).toHaveCount(0);
+  await expect(root.getByRole('button', { name: 'Accept suggestion' })).toBeVisible();
+  await expect(root.getByRole('button', { name: 'Clear suggestion' })).toBeVisible();
+  await summary.focus();
+  await page.keyboard.press('End');
+  await page.keyboard.type('.');
+  await expect(summary).toHaveAccessibleDescription('Shown to the customer.');
+  await expect(root.getByRole('button', { name: /suggestion/ })).toHaveCount(0);
 });

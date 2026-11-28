@@ -37,6 +37,7 @@ const entry: ComponentEntry = {
     { name: 'maxHeight', type: 'number | string', required: false, description: 'Caps the height: rows scroll and the header sticks (5.4).' },
     { name: 'grid', type: 'boolean', default: 'false', required: false, description: 'ARIA grid keyboard model for tables whose cells hold actions (5.8): the table is one tab stop; Arrow keys move between cells and the controls in them, Home/End to the row ends, Ctrl+Home/End to the corners.' },
     { name: 'DataTableVirtual', type: "import from '@nexub/react/DataTableVirtual'", required: false, description: 'Same props plus `maxHeight` (required), `estimateRowHeight` and `overscan`: renders only the rows in view, for thousands of rows. Needs `@tanstack/react-virtual` installed (5.4). No pagination.' },
+    { name: 'streaming', type: 'boolean', default: 'false', required: false, description: 'Rows are still arriving, e.g. from an agent (12.4). A skeleton row trails the last row, `aria-busy` is set, the row count is announced every few seconds (not per row) and "done" when it turns off. New rows enter with the motion preset; sorting and selection keep working.' },
     { name: 'pagination.pageSize', type: 'number', default: '20', required: false, description: 'Rows per page; pagination is on when `pagination` is set.' },
   ],
   examples: [
@@ -70,6 +71,10 @@ const entry: ComponentEntry = {
       title: 'Footer and column filters',
       description: '`footer` on a column adds a totals row; a render function gets the table, so a sum can follow the filtered rows. `meta.filter` (`text`, `select` or `number-range`) adds a filter button to the header. Control it with `columnFilters` / `onColumnFiltersChange`; `manualFiltering` leaves the rows to the server.',
     },
+    {
+      title: 'Streaming rows',
+      description: 'Set `streaming` while an agent produces rows and pass `data` as it grows. The table stays usable: sort or select while rows arrive. Screen readers hear "busy", a count every few seconds and "Done" at the end. Announcements come from `rowsSoFar` and `rowsDone` in messages.',
+    },
   ],
   a11y: {
     roles: ['table (default)', 'grid (with `grid`)', 'columnheader with aria-sort when sortable'],
@@ -84,6 +89,7 @@ const entry: ComponentEntry = {
     screenReader: [
       'Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.',
       'Sorting, selection counts and column moves are announced from a polite live region.',
+      '12.4 `streaming`: the table is aria-busy, the skeleton tail row is hidden from assistive tech, and the polite region announces the row count at most every 3 seconds, then "Done. N rows".',
       'DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.',
     ],
     notes: ['Use `grid` when rows hold actions (edit, menus); plain tables of text read better as a table.'],

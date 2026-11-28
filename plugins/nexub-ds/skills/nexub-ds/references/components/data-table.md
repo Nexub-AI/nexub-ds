@@ -35,6 +35,7 @@ Feature-rich data table with sorting and row selection powered by TanStack Table
 | `maxHeight` | `number \| string` |  | Caps the height: rows scroll and the header sticks (5.4). |
 | `grid` | `boolean` | `false` | ARIA grid keyboard model for tables whose cells hold actions (5.8): the table is one tab stop; Arrow keys move between cells and the controls in them, Home/End to the row ends, Ctrl+Home/End to the corners. |
 | `DataTableVirtual` | `import from '@nexub/react/DataTableVirtual'` |  | Same props plus `maxHeight` (required), `estimateRowHeight` and `overscan`: renders only the rows in view, for thousands of rows. Needs `@tanstack/react-virtual` installed (5.4). No pagination. |
+| `streaming` | `boolean` | `false` | Rows are still arriving, e.g. from an agent (12.4). A skeleton row trails the last row, `aria-busy` is set, the row count is announced every few seconds (not per row) and "done" when it turns off. New rows enter with the motion preset; sorting and selection keep working. |
 | `pagination.pageSize` | `number` | `20` | Rows per page; pagination is on when `pagination` is set. |
 
 ## Example: Default
@@ -379,6 +380,74 @@ export default function Example() {
 }
 ```
 
+## Example: Streaming rows
+
+Set `streaming` while an agent produces rows and pass `data` as it grows. The table stays usable: sort or select while rows arrive. Screen readers hear "busy", a count every few seconds and "Done" at the end. Announcements come from `rowsSoFar` and `rowsDone` in messages.
+
+```tsx
+import * as React from 'react';
+import { Button, DataTable, type DataTableColumn } from '@nexub/react';
+
+type Lead = { id: string; company: string; industry: string; seats: number };
+
+const found: Lead[] = [
+  { id: '1', company: 'Acme', industry: 'Manufacturing', seats: 120 },
+  { id: '2', company: 'Globex', industry: 'Energy', seats: 85 },
+  { id: '3', company: 'Initech', industry: 'Software', seats: 40 },
+  { id: '4', company: 'Umbrella', industry: 'Health', seats: 310 },
+  { id: '5', company: 'Hooli', industry: 'Software', seats: 760 },
+  { id: '6', company: 'Stark', industry: 'Manufacturing', seats: 220 },
+];
+
+const columns: DataTableColumn<Lead>[] = [
+  { accessorKey: 'company', header: 'Company' },
+  { accessorKey: 'industry', header: 'Industry' },
+  { accessorKey: 'seats', header: 'Seats', meta: { align: 'end' } },
+];
+
+export default function Example() {
+  const [rows, setRows] = React.useState<Lead[]>(found.slice(0, 2));
+  const [streaming, setStreaming] = React.useState(false);
+  const timer = React.useRef<ReturnType<typeof setInterval>>(undefined);
+  React.useEffect(() => () => clearInterval(timer.current), []);
+
+  // Stand-in for an agent: one row every 700 ms.
+  const run = () => {
+    clearInterval(timer.current);
+    setRows([]);
+    setStreaming(true);
+    let n = 0;
+    timer.current = setInterval(() => {
+      n += 1;
+      setRows(found.slice(0, n));
+      if (n >= found.length) {
+        clearInterval(timer.current);
+        setStreaming(false);
+      }
+    }, 700);
+  };
+
+  return (
+    <div className="flex w-full flex-col items-start gap-3">
+      <Button variant="outlined" size="sm" onClick={run} disabled={streaming}>
+        Find leads
+      </Button>
+      <DataTable
+        className="w-full"
+        caption="Leads"
+        captionHidden
+        columns={columns}
+        data={rows}
+        getRowId={(r) => r.id}
+        streaming={streaming}
+        enableSorting
+        enableRowSelection
+      />
+    </div>
+  );
+}
+```
+
 ## Accessibility
 
 - Roles: table (default), grid (with `grid`), columnheader with aria-sort when sortable
@@ -390,5 +459,6 @@ export default function Example() {
 - With `grid`, focus goes to a cell’s first control, or to the cell itself when it has none.
 - Name the table with `caption` (or `aria-label`); `captionHidden` keeps it for screen readers only.
 - Sorting, selection counts and column moves are announced from a polite live region.
+- 12.4 `streaming`: the table is aria-busy, the skeleton tail row is hidden from assistive tech, and the polite region announces the row count at most every 3 seconds, then "Done. N rows".
 - DataTableVirtual sets aria-rowcount and aria-rowindex so readers report the full row count.
 - Use `grid` when rows hold actions (edit, menus); plain tables of text read better as a table.
