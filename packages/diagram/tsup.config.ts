@@ -7,6 +7,12 @@ export default defineConfig({
   format: ['esm'],
   dts: true,
   splitting: false,
+  sourcemap: true, // 12.8: for ../../scripts/minify-dist.mjs, which minifies dist/ after the build
+  // 12.8: no @__PURE__ on JSX calls: nearly all sit inside components, where they don't help
+  // tree-shaking, and minify-dist keeps every annotation, so they would only add bytes.
+  esbuildOptions(options) {
+    options.jsxSideEffects = true;
+  },
   clean: true,
   // React Flow is a peer: apps that draw diagrams install it; the size budget measures our code only.
   external: ['react', 'react-dom', '@nexub/react', '@nexub/icons', '@nexub/tokens', '@xyflow/react'],

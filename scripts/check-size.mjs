@@ -8,6 +8,9 @@
 // Run after `pnpm turbo build --filter='./packages/*'`. Each JS entry is measured with every
 // local file it imports (followed recursively, each file counted once); bare imports are
 // peer/third-party and not counted. Each CSS entry includes its local @import graph.
+// 12.8: published JS is minified with a source map beside each file. A file's last-line
+// `//# sourceMappingURL=` comment is not counted: an app's bundler drops it (and writes its own),
+// so it never reaches a browser. The .map files are not counted either.
 import { readFileSync, readdirSync, writeFileSync, appendFileSync, existsSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +23,7 @@ const budgetFile = join(root, 'size-budgets.json');
 const JS_IMPORT =
   /(?:\bimport|\bexport)\s*(?:[^'";]*?\bfrom\s*)?['"](\.{1,2}\/[^'"]+)['"]|\bimport\(\s*['"](\.{1,2}\/[^'"]+)['"]\s*\)/g;
 const CSS_IMPORT = /@import\s+(?:url\()?['"]([^'"]+)['"]/g;
+const MAP_URL = /\n\/\/# sourceMappingURL=\S+\s*$/;
 
 // '@nexub/tokens/css' → packages/tokens/<exports['./css']>; relative → file path.
 function resolveCss(spec, from) {
@@ -52,7 +56,7 @@ function measure(entry) {
   let gzip = 0;
   let brotli = 0;
   for (const f of files) {
-    const buf = readFileSync(f);
+    const buf = f.endsWith('.js') ? Buffer.from(readFileSync(f, 'utf8').replace(MAP_URL, '\n')) : readFileSync(f);
     gzip += gzipSync(buf, { level: 9 }).length;
     brotli += brotliCompressSync(buf, { params: { [constants.BROTLI_PARAM_QUALITY]: 11 } }).length;
   }

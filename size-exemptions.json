@@ -1,0 +1,108 @@
+{
+  "//": "12.8: entries exempt from the 12.x size target (every budget at least 10% below v11.6.0; ROADMAP_12.x.md, owner Decision 7). Keyed like size-budgets.json. Each names the feature and PRs that raised the budget after v11.6.0 (git log -p size-budgets.json); no feature was removed to meet the target. scripts/size-vs-baseline.mjs reports these as exempt. An entry that meets the target again should be removed from here.",
+  "tokens (js)": {
+    "release": "12.3",
+    "prs": [827],
+    "feature": "motion presets by intent (the preset tokens)"
+  },
+  "tokens/css": {
+    "release": "12.3",
+    "prs": [827],
+    "feature": "motion presets by intent (the preset variables)"
+  },
+  "tokens/tailwind.css": {
+    "release": "12.3",
+    "prs": [827],
+    "feature": "motion presets by intent (the preset theme keys)"
+  },
+  "react/styles.css": {
+    "release": "12.1–12.6",
+    "prs": [795, 802, 806, 807, 808, 826, 827, 845],
+    "feature": "windowed option lists, agent identity, MessageBubble collapse, PromptInput slash commands, OrgChart zoom, chart annotations, motion presets, token tiers"
+  },
+  "core": {
+    "release": "12.4",
+    "prs": [833, 834],
+    "feature": "messages for the agent parts (ToolCall states, approval edit path, DiffReview) and the streaming table and form states"
+  },
+  "react-native": {
+    "release": "12.3, 12.5",
+    "prs": [825, 827, 835, 836, 838],
+    "feature": "native Illustration and haptics; larger screens (NavigationRail, AppShell, ListDetail), native AI parts, Kanban, EventCalendar and chart twins (11.8 native fields, #751, also raised it)"
+  },
+  "react-native/patterns": {
+    "release": "12.3, 12.5",
+    "prs": [827, 835, 836, 837],
+    "feature": "haptics; native AppShell and ListDetail, AI parts and the SignUpScreen, StatusScreen and VerifyCodeScreen templates (11.8 native fields, #751, also raised it)"
+  },
+  "react": {
+    "release": "12.1–12.4",
+    "prs": [795, 802, 804, 806, 807, 808, 826, 833, 834],
+    "feature": "the 12.1–12.4 component work: windowed option lists, agent identity, collapsible Sidebar.Group, MessageCard and Highlight, PromptInput slash commands, OrgChart zoom, chart annotations, streaming states, agent parts"
+  },
+  "elements": {
+    "release": "11.9",
+    "prs": [752],
+    "feature": "three new web components: <nx-select>, <nx-combobox> and <nx-phone-input> (after v11.6.0, before 12.x)"
+  },
+  "elements/define": {
+    "release": "11.9",
+    "prs": [752],
+    "feature": "registers the three 11.9 web components: <nx-select>, <nx-combobox> and <nx-phone-input> (after v11.6.0, before 12.x)"
+  },
+  "react/AgentKit": {
+    "release": "12.4",
+    "prs": [834],
+    "feature": "agent parts: ToolCall states, approval edit path, DiffReview"
+  },
+  "react/AppShell": {
+    "release": "12.2",
+    "prs": [804],
+    "feature": "AppShell.Main relative and collapsible Sidebar.Group"
+  },
+  "react/Avatar": { "release": "12.2", "prs": [802], "feature": "AgentAvatar (agent identity)" },
+  "react/Badge": { "release": "12.2", "prs": [802], "feature": "AgentBadge (agent identity)" },
+  "react/Chart": {
+    "release": "12.3",
+    "prs": [826],
+    "feature": "chart annotations, highlighted change and reference lines"
+  },
+  "react/ComboboxField": {
+    "release": "12.1, 12.4",
+    "prs": [795, 833],
+    "feature": "windowed long option lists; streaming form states"
+  },
+  "react/CommandList": { "release": "12.1", "prs": [795], "feature": "windowed long option lists" },
+  "react/CurrencySelect": {
+    "release": "12.1, 12.4",
+    "prs": [795, 833],
+    "feature": "windowed long option lists; streaming form states"
+  },
+  "react/EventCalendar": {
+    "release": "12.2",
+    "prs": [808],
+    "feature": "EventCalendar brand colours"
+  },
+  "react/FormField": { "release": "12.4", "prs": [833], "feature": "streaming form states" },
+  "react/MessageBubble": {
+    "release": "12.2",
+    "prs": [806],
+    "feature": "MessageBubble user avatar and collapse"
+  },
+  "react/MultiSelect": {
+    "release": "12.1, 12.6",
+    "prs": [795, 845],
+    "feature": "windowed long option lists; token tiers"
+  },
+  "react/OrgChart": { "release": "12.2", "prs": [808], "feature": "OrgChart zoom and stacking" },
+  "react/PromptInput": {
+    "release": "12.2",
+    "prs": [807],
+    "feature": "PromptInput slash commands and quick-reply chips"
+  },
+  "patterns/Conversation": {
+    "release": "12.2",
+    "prs": [803],
+    "feature": "Conversation DateSeparator, \"Jump to newest\" and a thinking slot"
+  }
+}

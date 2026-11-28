@@ -422,5 +422,6 @@ export function applyRem(css, groups) {
   return css.replace(/^(\s*)(--[\w-]+): [^;]+;/gm, (m, indent, name) => (values.has(name) ? `${indent}${name}: ${values.get(name)};` : m));
 }
 
-// @nexub/tokens/css/rem stays importable so 2.x setups keep working; it is a no-op now.
-export const REM_COMPAT_CSS = '/* @nexub/tokens/css/rem: since 3.0 @nexub/tokens/css is in rem by default, so this file is empty. Kept so existing imports keep working. */\n';
+// @nexub/tokens/css/rem stays importable so 2.x setups keep working; it is a no-op now. One short
+// comment (12.8), so the file stays within a 100 B budget.
+export const REM_COMPAT_CSS = '/* Empty: @nexub/tokens/css is in rem since 3.0. Kept for old imports. */\n';
