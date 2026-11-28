@@ -45,8 +45,33 @@ test('components read each token with the documented fallback', () => {
 
 test('components read no undocumented component token', () => {
   const documented = new Set(entries.map(([n]) => n));
-  const used = new Set([...source.matchAll(/var\(--((?:button|field|card|badge|dialog|popover|menu|tooltip|toast|tabs|avatar|alert|nav)-[\w-]+),/g)].map((m) => m[1]));
+  const used = new Set([...source.matchAll(/var\(--((?:button|field|card|badge|dialog|popover|menu|tooltip|toast|tabs|avatar|alert|nav|chip)-[\w-]+),/g)].map((m) => m[1]));
   // Density knobs ([data-density] in @nexub/themes core.css), not component tokens.
-  const density = /^badge-h-(sm|md|lg)$/;
+  const density = /^(badge-h-(sm|md|lg)|chip-h-(sm|md))$/;
   assert.deepEqual([...used].filter((n) => !documented.has(n) && !density.test(n)), []);
+});
+
+test("every default is the role it aliases (today's value)", () => {
+  for (const [name, token] of entries) {
+    const css = token.$extensions['dev.nexub'].css;
+    const [, ns, key] = token.$value.match(/^\{(color|shape)\.([\w-]+)\}$/) ?? [];
+    if (ns) {
+      // The fallback reads the aliased role (card-border mixes it; chip-radius lets --shape-pill win first).
+      assert.ok(css.includes(`var(--${ns}-${key})`), `${name}: ${css} does not read --${ns}-${key}`);
+    } else if (token.$value.endsWith('px') && css.endsWith('rem')) {
+      assert.equal(parseFloat(css) * 16, parseFloat(token.$value), `${name}: ${css} is not ${token.$value}`);
+    } else {
+      assert.equal(css, token.$value, name);
+    }
+  }
+});
+
+test('each group names the docs pages that document it', () => {
+  const registry = join(root, '../../apps/docs/src/registry/components');
+  const slugs = new Set(readdirSync(registry).map((f) => f.replace(/\.ts$/, '')));
+  for (const [comp, group] of Object.entries(component).filter(([k]) => !k.startsWith('$'))) {
+    const docs = group.$extensions?.['dev.nexub']?.docs;
+    assert.ok(Array.isArray(docs) && docs.length, `${comp}: no docs slugs`);
+    for (const slug of docs) assert.ok(slugs.has(slug), `${comp}: no docs page ${slug}`);
+  }
 });

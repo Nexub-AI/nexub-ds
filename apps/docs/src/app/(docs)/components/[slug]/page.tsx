@@ -19,6 +19,9 @@ import { Section } from '@/components/kit';
 import { PlatformPanel, PlatformSwitch } from '@/components/platform/PlatformTabs';
 import { MobilePanel, NoMobileTwin } from '@/components/platform/MobilePanel';
 import { exampleCode } from '@/examples/code';
+import component from '@nexub/tokens/json/component';
+import { DesignTokens } from '@/components/docs/DesignTokens';
+import { componentTokensFor } from '@/lib/component-tokens';
 import { join } from 'node:path';
 
 const EXAMPLES_DIR = join(process.cwd(), 'src/examples');
@@ -52,6 +55,8 @@ export default async function ComponentPage({ params }: Props) {
   const recipe = playgroundRecipe(slug);
   const generatedPlayground = !playground && !!recipe?.controls.length;
   const states = !!recipe?.states.length;
+  // 12.6: the component tier, from @nexub/tokens/json/component.
+  const tokenGroups = componentTokensFor(slug, component as Record<string, unknown>);
 
   // Build TOC from the sections actually rendered on this page.
   // Import is intentionally not in the TOC — the hero copy-import strip
@@ -69,6 +74,7 @@ export default async function ComponentPage({ params }: Props) {
   if (states) toc.push({ id: 'states', label: 'States', level: 2 });
   if (matrix) toc.push({ id: 'matrix', label: 'Variant matrix', level: 2 });
   if (props.length) toc.push({ id: 'props', label: 'Props', level: 2 });
+  if (tokenGroups.length) toc.push({ id: 'design-tokens', label: 'Design tokens', level: 2 });
   if (a11y) toc.push({ id: 'accessibility', label: 'Accessibility', level: 2 });
   toc.push({ id: 'mobile', label: twin ? `Mobile: ${twin.name}` : 'Mobile', level: 2 });
   if (meta.related?.length) toc.push({ id: 'related', label: 'Related', level: 2 });
@@ -144,6 +150,12 @@ export default async function ComponentPage({ params }: Props) {
           {props.length > 0 && (
             <Section id="props" title="Props">
               <PropsTable props={props} />
+            </Section>
+          )}
+
+          {tokenGroups.length > 0 && (
+            <Section id="design-tokens" title="Design tokens">
+              <DesignTokens groups={tokenGroups} title={meta.title} />
             </Section>
           )}
 
