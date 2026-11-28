@@ -37,3 +37,27 @@ export function useResponsive(): <T>(options: { phone: T; tablet?: T }) => T {
   const { isTablet } = useBreakpoint();
   return (o) => (isTablet && o.tablet !== undefined ? o.tablet : o.phone);
 }
+
+/** Width at or above this is the expanded window size class (Material 3: 840dp). */
+export const EXPANDED_MIN = 840;
+
+/**
+ * Material 3 window size classes by width: compact (< 600, phones in portrait),
+ * medium (600–839, small tablets, unfolded foldables in portrait) and expanded (≥ 840).
+ */
+export type WindowSizeClass = 'compact' | 'medium' | 'expanded';
+
+/** The window size class for a width in dp. */
+export function windowSizeClass(width: number): WindowSizeClass {
+  return width < TABLET_MIN ? 'compact' : width < EXPANDED_MIN ? 'medium' : 'expanded';
+}
+
+/**
+ * 12.5: the window size class, live across rotation, split view, Stage Manager
+ * and folding or unfolding a foldable. React Native reports the new window size;
+ * it exposes no hinge or posture without a native module, so foldables are
+ * handled by width alone.
+ */
+export function useWindowSizeClass(): WindowSizeClass {
+  return windowSizeClass(useWindowDimensions().width);
+}

@@ -276,6 +276,10 @@ export interface NexubMessages {
   moveUp: string;
   moveDown: string;
   backTo: (label: string) => string;
+  /** React Native ListDetail (12.5): the back button and the names of the two panes. */
+  back: string;
+  listPane: string;
+  detailPane: string;
   /** Mobile DataList sort sheet. */
   sortBy: string;
   sortDirection: string;
@@ -685,6 +689,9 @@ export const defaultMessages: NexubMessages = {
   moveUp: 'Move up',
   moveDown: 'Move down',
   backTo: (label) => `Back to ${label}`,
+  back: 'Back',
+  listPane: 'List',
+  detailPane: 'Detail',
   sortBy: 'Sort',
   sortDirection: 'Direction',
   ascending: 'Ascending',
