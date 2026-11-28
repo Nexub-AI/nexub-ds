@@ -156,6 +156,11 @@ const CASES: Record<string, Case> = {
   // Data + workflow
   MultiSelect: { props: { label: 'Labels', placeholder: 'Choose', options: [{ value: 'a', label: 'A' }] }, a11y: ['button', 'Labels, Choose'] },
   DataList: { props: { data: [{ id: 'a' }], keyExtractor: (x: { id: string }) => x.id, title: (x: { id: string }) => x.id } },
+  // 12.5: AI parts
+  ToolCall: { props: { name: 'search', status: 'done' }, a11y: ['button', 'search, Done'] },
+  ApprovalCard: { props: { title: 'Send', onApprove: noop }, a11y: ['button', 'Approve'] },
+  DiffView: { props: { diff: '+a' } },
+  DiffReview: { props: { files: [{ file: 'a.ts', diff: '+a' }] }, a11y: ['button', 'Accept a.ts'] },
   FileList: { props: { files: [{ id: '1', name: 'scan.pdf', progress: 100 }], onRemove: noop }, a11y: ['button', 'Remove scan.pdf'] },
   // 11.8
   ComboboxField: { props: { label: 'Assignee', options: [{ value: 'a', label: 'Ana' }], defaultValue: 'a' }, a11y: ['button', 'Assignee, Ana'] },

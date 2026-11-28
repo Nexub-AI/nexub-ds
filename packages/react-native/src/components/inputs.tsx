@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {
+  AccessibilityInfo,
   ActivityIndicator,
+  findNodeHandle,
   Switch as RNSwitch,
   TextInput,
   View,
@@ -26,6 +28,7 @@ import {
   Minus,
   Plus,
   Search,
+  Sparkles,
   X,
   type NativeIconProps,
 } from '@nexub/icons/native';
@@ -33,9 +36,12 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import Animated, {
   LayoutAnimationConfig,
   runOnJS,
+  ReduceMotion,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { useControllableState } from '../hooks/useControllableState';
 import { Pressable } from '../primitives/Pressable';
@@ -91,7 +97,44 @@ export interface TextFieldProps extends Omit<TextInputProps, 'style' | 'editable
   showCount?: boolean;
   /** Spinner in the trailing slot and busy for screen readers. */
   loading?: boolean;
+  /**
+   * 12.5: an agent is filling this field. Busy for screen readers, with a calm shimmer on the
+   * field (none under Reduce Motion); it stays editable. Pass the value as it arrives.
+   */
+  streaming?: boolean;
+  /**
+   * 12.5: the value came from an agent. Shows a "Suggested" mark beside the label, read as part
+   * of the field's hint. Typing in the field clears the mark; so do accept and clear.
+   */
+  generated?: boolean;
+  /** 12.5: with `generated`, shows an accept button beside the mark. */
+  onAcceptSuggestion?: () => void;
+  /** 12.5: with `generated`, shows a clear button beside the mark. Clear the value here. */
+  onClearSuggestion?: () => void;
   style?: StyleProp<ViewStyle>;
+}
+
+const STREAM_PULSE_MS = 1000;
+
+/** 12.5: the streaming field's calm shimmer: a faint primary wash that breathes. Static under Reduce Motion. */
+function StreamingWash({ radius }: { radius: number }) {
+  const { roles, reducedMotion } = useTheme();
+  const level = useSharedValue(0);
+  React.useEffect(() => {
+    if (reducedMotion) return;
+    level.value = withRepeat(withTiming(1, { duration: STREAM_PULSE_MS, reduceMotion: ReduceMotion.System }), -1, true);
+  }, [reducedMotion, level]);
+  const wash = useAnimatedStyle(() => ({ opacity: 0.04 + level.value * 0.08 }));
+  return (
+    <Animated.View
+      testID="field-streaming"
+      pointerEvents="none"
+      style={[
+        { position: 'absolute', top: 0, bottom: 0, start: 0, end: 0, borderRadius: radius, backgroundColor: roles.primary },
+        wash,
+      ]}
+    />
+  );
 }
 
 // Near the limit = the last 10% (at least 1 character).
@@ -152,6 +195,10 @@ function Field({
   onChangeText,
   chrome = 'field',
   required,
+  streaming,
+  generated,
+  onAcceptSuggestion,
+  onClearSuggestion,
   ...rest
 }: TextFieldProps & { chrome?: 'field' | 'search' }) {
   const theme = useTheme();
@@ -170,9 +217,26 @@ function Field({
     if (typeof ref === 'function') ref(node);
     else if (ref) (ref as React.RefObject<typeof node>).current = node;
   };
+  // 12.5: the "Suggested" mark settles when the person acts on the value; a new suggestion
+  // (`generated` turning on again) shows it again. The agent's own updates arrive through `value`.
+  const [settled, setSettled] = React.useState(false);
+  const [prevGenerated, setPrevGenerated] = React.useState(generated);
+  if (prevGenerated !== generated) {
+    setPrevGenerated(generated);
+    if (generated) setSettled(false);
+  }
+  const suggested = !!generated && !settled && !search;
   const changeText = (text: string) => {
     setLength(text.length);
+    if (suggested) setSettled(true);
     onChangeText?.(text);
+  };
+  // Accept and clear go with the mark, so the screen reader moves on to the field.
+  const settle = (then: () => void) => () => {
+    setSettled(true);
+    then();
+    const tag = inner.current && findNodeHandle(inner.current);
+    if (tag) AccessibilityInfo.setAccessibilityFocus(tag);
   };
   const clear = () => {
     inner.current?.clear();
@@ -193,18 +257,44 @@ function Field({
   const lead =
     leadingIcon ?? leading ?? (search ? <Search size="sm" color={roles['on-surface-variant']} /> : null);
   const trail = trailingIcon ?? trailing;
-  const busy = !!loading;
+  const busy = !!loading || !!streaming;
+  const hint = [error ?? helperText, suggested ? messages.suggested : undefined].filter(Boolean).join('. ') || undefined;
+  const radius = search ? tokens.shape.control : tokens.shape.field;
   return (
     <View style={[{ gap: tokens.spacing['1-5'], opacity: disabled ? disabledOpacity(theme) : 1 }, style]}>
       {!search && (
-        <Text
-          variant="label-lg"
-          color={bad ? 'error' : 'on-surface-variant'}
-          importantForAccessibility="no"
-        >
-          {label}
-          {required && <Text color="error">{' *'}</Text>}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[2] }}>
+          <Text
+            variant="label-lg"
+            color={bad ? 'error' : 'on-surface-variant'}
+            importantForAccessibility="no"
+            style={suggested ? { flexShrink: 1 } : undefined}
+          >
+            {label}
+            {required && <Text color="error">{' *'}</Text>}
+          </Text>
+          {suggested && (
+            <>
+              {/* Read as part of the field's hint, so the mark itself is hidden from screen readers. */}
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                style={{ flexDirection: 'row', alignItems: 'center', gap: tokens.spacing[1] }}
+              >
+                <Sparkles size="xs" color={roles['on-surface-variant']} />
+                <Text variant="label-sm" color="on-surface-variant">
+                  {messages.suggested}
+                </Text>
+              </View>
+              {onAcceptSuggestion && (
+                <IconButton icon={Check} label={messages.acceptSuggestion} size="xs" variant="text" onPress={settle(onAcceptSuggestion)} />
+              )}
+              {onClearSuggestion && (
+                <IconButton icon={X} label={messages.clearSuggestion} size="xs" variant="text" onPress={settle(onClearSuggestion)} />
+              )}
+            </>
+          )}
+        </View>
       )}
       <Animated.View
         style={[
@@ -212,7 +302,7 @@ function Field({
             minHeight: controlHeight(theme, size),
             flexDirection: 'row',
             overflow: 'hidden',
-            borderRadius: search ? tokens.shape.control : tokens.shape.field,
+            borderRadius: radius,
             backgroundColor: search
               ? roles['surface-container-high']
               : readOnly
@@ -222,6 +312,7 @@ function Field({
           outline,
         ]}
       >
+        {streaming && <StreamingWash radius={radius} />}
         {leadingAddon != null && <Addon side="leading">{leadingAddon}</Addon>}
         <View
           style={{
@@ -239,7 +330,7 @@ function Field({
             accessibilityLabel={label}
             accessibilityRole={search ? 'search' : undefined}
             accessibilityState={busy || disabled ? { busy, disabled: !!disabled } : undefined}
-            accessibilityHint={error ?? helperText}
+            accessibilityHint={hint}
             aria-invalid={bad}
             editable={!disabled && !readOnly}
             readOnly={readOnly}
@@ -354,7 +445,8 @@ export function PasswordInput({
   );
 }
 
-export interface SearchFieldProps extends Omit<TextFieldProps, 'label' | 'clearable'> {
+export interface SearchFieldProps
+  extends Omit<TextFieldProps, 'label' | 'clearable' | 'generated' | 'onAcceptSuggestion' | 'onClearSuggestion'> {
   /** Accessible name. @default messages.search */
   label?: string;
   /** @default 'md' */
