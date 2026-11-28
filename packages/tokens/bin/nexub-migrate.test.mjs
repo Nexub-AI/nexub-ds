@@ -511,3 +511,181 @@ test('changes-in-12 is opt-in', () => {
   const src = "import '@nexub/react/styles.nexub-layer.css';";
   assert.equal(migrateSource(src, { ext: '.ts' }).output, src);
 });
+
+// ─── 12.7 codemods ───
+const mod = (src, ...r) => tsx(src, { rules: only(...r) });
+const REACT = "import { Button, Text } from '@nexub/react';\n";
+
+test('text-weight: moves a bare weight class into the prop, keeps the rest', () => {
+  const src = `${REACT}<Text className="font-medium text-sm">a</Text>
+<Text size="caption" className='font-normal'>b</Text>
+<Text className={"truncate font-bold"} />
+<Text className={\`font-semibold md:font-bold\`}>c</Text>
+<Text className="font-mono">d</Text>`;
+  const { output, manual } = mod(src, 'text-weight');
+  assert.equal(output, `${REACT}<Text weight="medium" className="text-sm">a</Text>
+<Text size="caption" weight="regular">b</Text>
+<Text weight="bold" className={"truncate"} />
+<Text weight="semibold" className={\`md:font-bold\`}>c</Text>
+<Text className="font-mono">d</Text>`);
+  assert.deepEqual(manual, []);
+});
+
+test('text-weight: reports dynamic, doubled, conflicting, already-set and spread cases, rewrites none', () => {
+  const src = `${REACT}<Text className={cn('font-medium', x && 'a')} />
+<Text className={\`font-bold \${x}\`} />
+<Text className="font-medium font-bold" />
+<Text className="font-light font-medium" />
+<Text weight="bold" className="font-medium" />
+<Text {...p} className="font-medium" />
+<Text className={cn('text-sm', x)} />`;
+  const { output, manual } = mod(src, 'text-weight');
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => m.line), [2, 3, 4, 5, 6, 7]);
+  assert.ok(manual.every((m) => m.rule === 'text-weight'));
+});
+
+test('text-weight: only Text from @nexub/react, aliases followed', () => {
+  const other = "import { Text } from 'ui';\n<Text className=\"font-medium\" />";
+  assert.equal(mod(other, 'text-weight').output, other);
+  const aliased = "import { Text as T } from '@nexub/react';\n<T className=\"font-medium\" />";
+  assert.equal(mod(aliased, 'text-weight').output, "import { Text as T } from '@nexub/react';\n<T weight=\"medium\" />");
+});
+
+test('text-truncate: moves truncate, reports conflicts and an existing prop', () => {
+  const src = `${REACT}<Text className="min-w-0 truncate">a</Text>
+<Text className="truncate whitespace-normal" />
+<Text truncate={false} className="truncate" />
+<Text className={cn(a && 'truncate')} />`;
+  const { output, manual } = mod(src, 'text-truncate');
+  assert.equal(output.split('\n')[1], '<Text truncate className="min-w-0">a</Text>');
+  assert.deepEqual(output.split('\n').slice(2), src.split('\n').slice(2));
+  assert.deepEqual(manual.map((m) => m.line), [3, 4, 5]);
+});
+
+test('text-weight + text-truncate together; multi-line className keeps its lines', () => {
+  const src = `${REACT}<Text\n  className="font-medium\n    truncate text-sm"\n/>`;
+  const { output } = mod(src, 'text-weight', 'text-truncate');
+  assert.equal(output, `${REACT}<Text weight="medium" truncate\n  className="\n    text-sm"\n/>`);
+  assert.equal(output.split('\n').length, src.split('\n').length);
+});
+
+test('button-full-width: moves w-full, leaves other w- classes and other components', () => {
+  const src = `${REACT}import { IconButton } from '@nexub/react';
+<Button className="w-full" type="submit">Go</Button>
+<Button variant="tonal" className="mt-4 w-full sm:w-auto">Go</Button>
+<Button className="w-full max-w-xs w-32" />
+<Button fullWidth className="w-full" />
+<IconButton className="w-full" />`;
+  const { output, manual } = mod(src, 'button-full-width');
+  const lines = output.split('\n');
+  assert.equal(lines[2], '<Button fullWidth type="submit">Go</Button>');
+  assert.equal(lines[3], '<Button variant="tonal" fullWidth className="mt-4 sm:w-auto">Go</Button>');
+  assert.deepEqual(lines.slice(4), src.split('\n').slice(4));
+  assert.deepEqual(manual.map((m) => m.line), [5, 6]);
+});
+
+test('codemods are opt-in', () => {
+  const src = `${REACT}<Text className="font-medium truncate" /><Button className="w-full" />`;
+  assert.equal(tsx(src).output, src);
+});
+
+// admin-ui-wrappers
+const wrap = (src, opts = {}) => tsx(src, { rules: only('admin-ui-wrappers'), ...opts });
+
+test('admin-ui-wrappers: CheckboxField and SwitchField move to @nexub/react, props renamed', () => {
+  const src = `import { CheckboxField, SwitchField, Page } from '@nexub/admin-ui';
+import { Button } from '@nexub/react';
+<CheckboxField label="A" hint="h" checked={a} onChange={v => setA(v)} />
+<CheckboxField label="B" checked={b} onChange={(x) => setB(x)} error={err} />
+<CheckboxField label="C" checked={c} onChange={setC} aside="$4" />
+<CheckboxField label="D" checked={d} onChange={toggle('d')} disabled />
+<SwitchField label="E" hint="h" checked={e} onChange={v => setE(v)} size="sm" />`;
+  const { output, manual } = wrap(src);
+  assert.deepEqual(manual, []);
+  assert.equal(output, `import { Page } from '@nexub/admin-ui';
+import { Button, CheckboxField, SwitchField } from '@nexub/react';
+<CheckboxField label="A" description="h" checked={a} onCheckedChange={(v: boolean) => setA(v)} />
+<CheckboxField label="B" checked={b} onCheckedChange={(x: boolean) => setB(x)} error={err} />
+<CheckboxField label="C" checked={c} onCheckedChange={setC} aside="$4" />
+<CheckboxField label="D" checked={d} onCheckedChange={toggle('d')} disabled />
+<SwitchField label="E" description="h" checked={e} onCheckedChange={v => setE(v)} size="sm" />`);
+});
+
+test('admin-ui-wrappers: Metric becomes StatCard from @nexub/patterns', () => {
+  const src = `import { Metric, MetricRow } from '@nexub/admin-ui';
+<MetricRow>
+  <Metric label="Revenue" value={v} change={0.1} />
+  <Metric label="Churn" value={c} note="30 days" invert className="col-span-2" />
+  <Metric label="Cost" value={x} trend={t} invert={isCost} />
+  <Metric label="Flat" value={y} note="n" invert={false}></Metric>
+</MetricRow>`;
+  const { output, manual } = wrap(src);
+  assert.deepEqual(manual, []);
+  assert.equal(output, `import { MetricRow } from '@nexub/admin-ui'; import { StatCard } from '@nexub/patterns';
+<MetricRow>
+  <StatCard className="h-full" label="Revenue" value={v} change={0.1} />
+  <StatCard label="Churn" value={c} note="30 days" tone="bad-when-high" className="h-full col-span-2" />
+  <StatCard className="h-full" label="Cost" value={x} trend={t} tone={isCost ? 'bad-when-high' : 'default'} />
+  <StatCard className="h-full" label="Flat" value={y} note="n"></StatCard>
+</MetricRow>`);
+});
+
+test('admin-ui-wrappers: a fully moved import is replaced in place; aliases kept', () => {
+  const src = `import { CheckboxField as Check } from "@nexub/admin-ui";\n<Check label="A" checked={a} onChange={setA} />`;
+  assert.equal(wrap(src).output, `import { CheckboxField as Check } from "@nexub/react";\n<Check label="A" checked={a} onCheckedChange={setA} />`);
+  const multi = `import {\n  Metric,\n  SwitchField,\n} from '@nexub/admin-ui';\nimport { StatCard } from '@nexub/patterns';\n<Metric label="A" value={1} note="n" />\n<SwitchField label="B" checked={b} onChange={setB} />`;
+  assert.equal(wrap(multi).output, `import { SwitchField } from '@nexub/react';\n\n\n\nimport { StatCard } from '@nexub/patterns';\n<StatCard className="h-full" label="A" value={1} note="n" />\n<SwitchField label="B" checked={b} onCheckedChange={setB} />`);
+});
+
+test('admin-ui-wrappers: skips a component whose uses do not all map, and says why', () => {
+  const src = `import { CheckboxField, Metric, SwitchField } from '@nexub/admin-ui';
+<CheckboxField label="A" checked={a} onChange={setA} />
+<CheckboxField label="B" {...rest} />
+<Metric label="M" value={1} note="n" onClick={open} />
+<SwitchField label="S" checked={s} onChange={setS} required />
+<CheckboxField label="C" checked={c} onChange={function (v) { setC(v); }} />
+const Same = CheckboxField;`;
+  const { output, manual } = wrap(src);
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => m.line), [3, 4, 5, 6, 7]);
+  assert.match(manual.find((m) => m.line === 4).message, /onClick/);
+});
+
+test('admin-ui-wrappers: ComboboxField and askText are report-only; other packages untouched', () => {
+  const src = `import { ComboboxField, askText } from '@nexub/admin-ui';
+<ComboboxField label="A" value={v} onChange={setV} options={o} />
+const r = await askText({ title: 'Why?', label: 'Reason' });`;
+  const { output, manual } = wrap(src);
+  assert.equal(output, src);
+  assert.deepEqual(manual.map((m) => m.line), [2, 3]);
+  const other = "import { CheckboxField } from 'elsewhere';\n<CheckboxField label=\"A\" onChange={f} />";
+  assert.deepEqual(wrap(other), { output: other, manual: [] });
+});
+
+test('admin-ui-wrappers: the wrapper package is a flag; a taken StatCard name blocks Metric', () => {
+  const src = "import { SwitchField } from '@acme/ui';\n<SwitchField label=\"A\" checked={a} onChange={setA} />";
+  assert.equal(wrap(src, { wrapperPackage: '@acme/ui' }).output, "import { SwitchField } from '@nexub/react';\n<SwitchField label=\"A\" checked={a} onCheckedChange={setA} />");
+  assert.equal(wrap(src).output, src);
+  const taken = "import { Metric } from '@nexub/admin-ui';\nimport { StatCard } from './local';\n<Metric label=\"A\" value={1} note=\"n\" />";
+  const r = wrap(taken);
+  assert.equal(r.output, taken);
+  assert.match(r.manual[0].message, /already a name/);
+});
+
+test('cli: --codemod runs only codemods, --dry writes nothing, unknown ids are usage errors', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'nexub-codemod-'));
+  mkdirSync(path.join(dir, 'src'));
+  const file = path.join(dir, 'src/A.tsx');
+  const src = `import { Text } from '@nexub/react';\nexport const A = () => <Text className="ml-2 font-medium">a</Text>;\n`;
+  writeFileSync(file, src);
+  const dry = cli(['--codemod', 'text-weight', '--dry', '--json'], dir);
+  assert.equal(dry.code, 0);
+  assert.equal(JSON.parse(dry.out).results[0].changes[0].after, 'export const A = () => <Text weight="medium" className="ml-2">a</Text>;');
+  assert.equal(readFileSync(file, 'utf8'), src);
+  assert.match(cli(['--codemod', 'all'], dir).out, /^\+export const A = \(\) => <Text weight="medium" className="ml-2">a<\/Text>;$/m);
+  assert.equal(cli(['--codemod', 'nope'], dir).code, 2);
+  assert.equal(cli(['--codemod', 'text-weight', '--dry', '--write'], dir).code, 2);
+  cli(['--codemod', 'text-weight', '--write'], dir);
+  assert.match(readFileSync(file, 'utf8'), /<Text weight="medium" className="ml-2">/);
+});
