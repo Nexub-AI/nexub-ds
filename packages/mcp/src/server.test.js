@@ -75,3 +75,38 @@ test('prompt text is fenced with a fence longer than any backtick run in it', ()
   // Only the first and last lines start with the fence.
   assert.deepEqual(out.flatMap((l, i) => (l.startsWith('`````') ? [i] : [])), [0, out.length - 1]);
 });
+
+// 12.8: the generative UI schema, catalog and validator from @nexub/genui/schema.
+test('genui tools serve the schema, the catalog and the validator', async () => {
+  const schema = await call('get_genui_schema');
+  assert.match(schema, /^# Nexub generative UI, schema version 1\.0/);
+  assert.match(schema, /"\$schema": "https:\/\/json-schema\.org\/draft\/2020-12\/schema"/);
+  for (const name of ['Card', 'DescriptionList', 'Table', 'Badge', 'Alert', 'StreamingText', 'Button']) assert.match(schema, new RegExp(`"${name}"`));
+  const narrow = await call('get_genui_schema', { components: ['Card', 'Badge', 'Input'] });
+  assert.match(narrow, /Components: Card, Badge\./);
+  assert.doesNotMatch(narrow, /"Table"/);
+
+  assert.match(await call('get_genui_component', { name: 'table' }), /^# Table\n[\s\S]*`columns` \(list; required\)[\s\S]*## Example\n```json/);
+  assert.match(await call('get_genui_component', { name: 'Form' }), /not in the generative UI catalog\. Components: Card, /);
+
+  const ok = JSON.stringify({ version: '1.0', root: { type: 'Badge', props: { text: 'Paid' } } });
+  assert.equal(await call('validate_genui', { document: ok }), 'Valid: every node will render.');
+  const dropped = JSON.stringify({ version: '1.0', root: { type: 'Card', children: [{ type: 'Button', props: { label: 'Go', action: { name: 'refund' } } }] } });
+  assert.match(await call('validate_genui', { document: dropped, actions: ['choosePlan'] }), /^Renders, but these parts will be removed:\n- \/root\/children\/0\/props\/action \(unknown-action\)/);
+  assert.match(await call('validate_genui', { document: '{"version":"1.0","root":{"__proto__":{}}}' }), /^Rejected: nothing will render\.\n- \/root\/__proto__ \(forbidden-key\)/);
+});
+
+test('genui tools refuse over-long input', async () => {
+  const [a, b] = InMemoryTransport.createLinkedPair();
+  const client = new Client({ name: 'test', version: '0' });
+  await Promise.all([createServer().connect(a), client.connect(b)]);
+  for (const [name, args] of [
+    ['validate_genui', { document: 'x'.repeat(256 * 1024 + 1) }],
+    ['get_genui_component', { name: 'a'.repeat(201) }],
+    ['get_genui_schema', { components: Array.from({ length: 21 }, () => 'Card') }],
+  ]) {
+    const res = await client.callTool({ name, arguments: args }).catch((e) => ({ isError: true, content: [{ text: String(e) }] }));
+    assert.equal(res.isError, true, name);
+  }
+  await client.close();
+});

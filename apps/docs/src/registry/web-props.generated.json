@@ -15169,5 +15169,85 @@
         }
       ]
     }
+  },
+  "@nexub/genui": {
+    "GenUI": {
+      "file": "GenUI.tsx",
+      "props": [
+        {
+          "name": "actions",
+          "type": "readonly string[]",
+          "required": false,
+          "default": "[] (no buttons)",
+          "description": "Action names the host accepts. A Button with any other action is removed."
+        },
+        {
+          "name": "aria-label",
+          "type": "string",
+          "required": false,
+          "default": "the document's `title`, else 'Generated answer'",
+          "description": "The region's name."
+        },
+        {
+          "name": "catalog",
+          "type": "GenUICatalog",
+          "required": false,
+          "default": "the whole v1 catalog",
+          "description": "Narrow the allow-list: `catalog.only(['Card', 'Badge'])`."
+        },
+        {
+          "name": "document",
+          "type": "unknown",
+          "required": true,
+          "description": "A document object, or its JSON text (partial while `streaming`). Validated before anything renders."
+        },
+        {
+          "name": "fallback",
+          "type": "React.ReactNode",
+          "required": false,
+          "default": "an ErrorState with 'This answer couldn't be shown'",
+          "description": "Shown when the document is rejected."
+        },
+        {
+          "name": "headingLevel",
+          "type": "1 | 2 | 3 | 4 | 5 | 6",
+          "required": false,
+          "default": "3",
+          "description": "Heading level of a top-level Card title; nested cards go one level down, up to 6."
+        },
+        {
+          "name": "limits",
+          "type": "Partial<GenUILimits>",
+          "required": false,
+          "description": "Lower the limits (depth 16, 500 nodes, 256 kB); higher values are ignored."
+        },
+        {
+          "name": "onAction",
+          "type": "((action: GenUIActionEvent) => void | Promise<unknown>)",
+          "required": false,
+          "description": "Called once per press with the action's name and payload. Return a promise to show the button busy."
+        },
+        {
+          "name": "onInvalid",
+          "type": "'drop' | 'reject'",
+          "required": false,
+          "default": "'drop'",
+          "description": "`drop` removes invalid parts and renders the rest; `reject` shows `fallback` on any issue."
+        },
+        {
+          "name": "onIssues",
+          "type": "((issues: GenUIIssue[]) => void)",
+          "required": false,
+          "description": "Validation issues of a finished document, to log or send back to the agent."
+        },
+        {
+          "name": "streaming",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "More text is coming: the region is aria-busy, nodes still arriving show skeletons, buttons wait."
+        }
+      ]
+    }
   }
 }

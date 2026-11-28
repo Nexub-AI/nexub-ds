@@ -14,6 +14,7 @@
   "dependencies": {
     "@nexub/diagram": "workspace:*",
     "@nexub/elements": "workspace:*",
+    "@nexub/genui": "workspace:*",
     "@nexub/icons": "workspace:*",
     "@nexub/marketing": "workspace:*",
     "@nexub/patterns": "workspace:*",

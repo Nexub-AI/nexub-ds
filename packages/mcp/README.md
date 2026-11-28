@@ -36,6 +36,9 @@ claude plugin install nexub-ds@nexub
 | `get_component` | Props, import, examples, when to use and accessibility for one component (`name: "DatePicker"`) |
 | `get_tokens` | Color roles, typography, spacing, shape, elevation, motion, with Tailwind utilities (`section: "Motion"`) |
 | `get_react_native` | Mobile apps: `@nexub/react-native` setup, components, screen patterns and mobile rules |
+| `get_genui_schema` | 12.8: the JSON Schema and rules for UI answers rendered by `<GenUI>` from `@nexub/genui` (alpha); `components` narrows it |
+| `get_genui_component` | One generative UI catalog component: props, types, defaults and an example node |
+| `validate_genui` | Checks a generative UI document the way `<GenUI>` will, and lists each issue with its JSON Pointer path |
 
 ## Prompts
 

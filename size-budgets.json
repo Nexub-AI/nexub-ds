@@ -65,6 +65,8 @@
   "patterns": 74300,
   "marketing": 11000,
   "diagram": 12000,
+  "genui": 11600,
+  "genui/schema": 8700,
   "elements": 17500,
   "elements/define": 17600,
   "elements/define/number-input": 4000,

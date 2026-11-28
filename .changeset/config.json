@@ -15,7 +15,8 @@
       "@nexub/core",
       "@nexub/react-native",
       "@nexub/diagram",
-      "@nexub/elements"
+      "@nexub/elements",
+      "@nexub/genui"
     ]
   ],
   "linked": [],

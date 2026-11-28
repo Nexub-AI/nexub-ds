@@ -97,6 +97,10 @@ add('patterns', join(pkgs, 'patterns/dist/index.js'));
 add('marketing', join(pkgs, 'marketing/dist/index.js'));
 // 11.6: React Flow is a peer of @nexub/diagram and stays external; this is our own code.
 add('diagram', join(pkgs, 'diagram/dist/index.js'));
+// 12.8: @nexub/genui. The renderer (@nexub/react external) with the schema entry it imports, and
+// the schema entry alone (what a server or @nexub/mcp loads).
+add('genui', join(pkgs, 'genui/dist/index.js'));
+add('genui/schema', join(pkgs, 'genui/dist/schema/index.js'));
 // 11.6: the web components with the bundled @nexub/core rules; define.js is what a CDN page loads.
 add('elements', join(pkgs, 'elements/dist/index.js'));
 add('elements/define', join(pkgs, 'elements/dist/define.js'));

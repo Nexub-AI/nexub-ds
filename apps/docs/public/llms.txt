@@ -223,6 +223,10 @@ Version 12.7.0. Install: `npm install @nexub/react @nexub/patterns @nexub/themes
 
 - [Diagram Canvas](https://nexub-ds-docs.pages.dev/components/diagram-canvas.md): Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
 
+## Generative UI (@nexub/genui, alpha: UI answers from agents, validated and rendered safely)
+
+- [GenUI](https://nexub-ds-docs.pages.dev/components/genui.md): Renders the UI an agent returns as JSON (cards, tables, badges, alerts, buttons) with Nexub components, safely: validated before render, an allow-list of components and props, no HTML, actions by name. From `@nexub/genui`.
+
 ## Web components (@nexub/elements, for pages without React)
 
 - [Date Picker Element](https://nexub-ds-docs.pages.dev/components/date-picker-element.md): `<nx-date-picker>`: a typed date field and a calendar as a form-associated web component, for server-rendered pages without React. The value is `YYYY-MM-DD`.

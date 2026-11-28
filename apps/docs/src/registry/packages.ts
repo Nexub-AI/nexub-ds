@@ -3,7 +3,7 @@
 // docs and llms.txt, and the setup lines its page shows. No imports, so the docs tests
 // and scripts/build-ai-docs.mjs can load it with type stripping alone.
 
-export type DocsPackage = '@nexub/react' | '@nexub/patterns' | '@nexub/marketing' | '@nexub/diagram' | '@nexub/elements';
+export type DocsPackage = '@nexub/react' | '@nexub/patterns' | '@nexub/marketing' | '@nexub/diagram' | '@nexub/elements' | '@nexub/genui';
 
 export interface PackageInfo {
   /** URL kind: /components/<slug> or /patterns/<slug>, and the examples folder. */
@@ -19,6 +19,8 @@ export const PACKAGES: Record<DocsPackage, PackageInfo> = {
   // Optional packages with their own install: component pages, listed apart in the AI docs.
   '@nexub/diagram': { kind: 'components', group: 'Diagram' },
   '@nexub/elements': { kind: 'components', group: 'Web components' },
+  // 12.8: generative UI, documented on one page under AI.
+  '@nexub/genui': { kind: 'components', group: 'Generative UI' },
 };
 
 export const docsKind = (pkg: DocsPackage): PackageInfo['kind'] => PACKAGES[pkg]?.kind ?? 'components';
@@ -53,6 +55,14 @@ export function setupSnippet(meta: { title: string; package: DocsPackage; elemen
       lines: [`import { ${name} } from '@nexub/diagram';`, `import '@nexub/diagram/styles.css';`],
       install: 'npm install @nexub/diagram @xyflow/react',
       note: '`@xyflow/react` (React Flow) is a peer dependency: install it next to `@nexub/diagram`. Load the stylesheet after `@nexub/react`’s.',
+    };
+  }
+  if (meta.package === '@nexub/genui') {
+    return {
+      lang: 'tsx',
+      lines: [`import { ${name} } from '@nexub/genui';`],
+      install: 'npm install @nexub/genui',
+      note: '`@nexub/react` is a peer dependency, and its stylesheet styles the answer. Servers import `validate` and the schema from `@nexub/genui/schema` (no React).',
     };
   }
   return { lang: 'tsx', lines: [`import { ${name} } from '${meta.package}';`] };

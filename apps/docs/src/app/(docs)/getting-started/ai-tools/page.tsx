@@ -52,6 +52,7 @@ export default function AiToolsPage() {
             ['get_component', 'Props, import, examples, when to use and accessibility for one component, e.g. name "BarChart"'],
             ['get_tokens', 'Colour roles, type, spacing, shape, elevation and motion, with the Tailwind utilities'],
             ['get_react_native', 'Mobile: @nexub/react-native setup, components, screen patterns and rules'],
+            ['get_genui_schema / get_genui_component / validate_genui', 'Generative UI (12.8, alpha): the schema for UI answers that <GenUI> renders, one catalog component, and a validator agents run before answering'],
           ]}
         />
       </Section>

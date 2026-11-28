@@ -517,3 +517,35 @@ test('a11y 12.4 FormField agent states: busy, "Suggested" in the description, na
   await expect(summary).toHaveAccessibleDescription('Shown to the customer.');
   await expect(root.getByRole('button', { name: /suggestion/ })).toHaveCount(0);
 });
+
+// 12.8 @nexub/genui: the answer is one named region; while it streams it is busy, buttons wait,
+// and one polite "Answer ready" is announced when it completes.
+test.describe('a11y GenUI 12.8', () => {
+  test('a named region with headings, a captioned table and named buttons', async ({ page }) => {
+    await page.goto(story('ai-genui--table'));
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    await expect(page.getByRole('region', { name: 'Open invoices' })).toHaveCount(1);
+    await expect(page.getByRole('table', { name: 'Open invoices' })).toBeVisible();
+    await page.goto(story('ai-genui--button'));
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    const region = page.getByRole('region', { name: 'Plans that fit your team' });
+    await expect(region.getByRole('heading', { level: 3, name: 'Team' })).toBeVisible();
+    // Only the accepted action renders: "Delete account" is removed.
+    await expect(region.getByRole('button')).toHaveCount(2);
+    await expect(region.getByRole('button', { name: 'Choose Team' })).toBeEnabled();
+  });
+
+  test('streaming: aria-busy and disabled buttons, then one polite "Answer ready"', async ({ page }) => {
+    await page.goto(story('ai-genui--streaming'));
+    await page.waitForFunction(() => document.body.classList.contains('sb-show-main'));
+    const region = page.getByRole('region', { name: 'Plans' });
+    const live = region.locator('[data-genui-announce]');
+    await expect(region).toHaveAttribute('aria-busy', 'true');
+    await expect(live).toHaveAttribute('aria-live', 'polite');
+    await expect(live).toHaveText('');
+    await page.getByRole('button', { name: 'Finish streaming' }).click();
+    await expect(live).toHaveText('Answer ready', { timeout: 10000 });
+    await expect(region).not.toHaveAttribute('aria-busy');
+    await expect(region.getByRole('button', { name: 'Choose Team' })).toBeEnabled();
+  });
+});

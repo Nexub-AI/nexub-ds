@@ -228,6 +228,7 @@ import orgChartEntry from './components/org-chart';
 
 // ─── Component entries — optional packages (11.6) ─────────────────────────────
 import diagramCanvasEntry from './components/diagram-canvas';
+import genuiEntry from './components/genui';
 import numberInputElementEntry from './components/number-input-element';
 import datePickerElementEntry from './components/date-picker-element';
 import switchFieldEntry from './components/switch-field';
@@ -439,6 +440,7 @@ export const componentEntries: ComponentEntry[] = [
   streamingTextEntry,
   thinkingIndicatorEntry,
   citationEntry,
+  genuiEntry, // @nexub/genui (12.8)
   // Diagram (@nexub/diagram)
   diagramCanvasEntry,
   // Web Components (@nexub/elements)
