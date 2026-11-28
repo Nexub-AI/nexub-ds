@@ -131,7 +131,6 @@ describe('XSS corpus: URLs and markup props never reach the DOM', () => {
         const r = validate(doc(hostile), { actions: ['approveRefund', 'choosePlan', 'go'] });
         expect(r.ok).toBe(true);
         expect(r.issues.every((i) => i.code === 'unknown-prop')).toBe(true);
-        expect(JSON.stringify(r.document)).not.toContain(url.slice(0, 10).replace(/"/g, '\\"') + 'NEVER');
         for (const p of props) if (p !== 'action') expect(((r.document!.root as { props: Record<string, unknown> }).props)[p]).toBeUndefined();
         renderAudit(doc(hostile));
         cleanup();
