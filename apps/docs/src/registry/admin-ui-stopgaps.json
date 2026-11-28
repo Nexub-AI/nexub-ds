@@ -1,0 +1,22 @@
+{
+  "$comment": "12.7 admin-ui tracker: the platform's @nexub/admin-ui stopgaps that an 11.x minor made redundant, from each release note's 'The platform can delete' line. `name` is an admin-ui export (counted from imports) or, with `pattern`, a code pattern (counted by regex). Read by `nexub-usage --apps --stopgaps` and apps/docs/scripts/adoption.mjs.",
+  "stopgaps": [
+    { "pkg": "@nexub/admin-ui", "name": "NumberField", "replacement": "NumberInput (value: number | null)", "since": "11.1.0", "note": "The nullable path; a plain NumberField is a thin field wrapper." },
+    { "pkg": "@nexub/admin-ui", "name": "FileField", "replacement": "FileUpload.Trigger, controlled files", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "ComboboxField", "replacement": "ComboboxField", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "ComboboxPicker", "replacement": "ComboboxPicker", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "PickField", "replacement": "ComboboxField", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "SwitchField", "replacement": "SwitchField", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "CheckboxField", "replacement": "CheckboxField", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "CheckboxGroupField", "replacement": "CheckboxGroupField", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "MonthField", "replacement": "DatePicker granularity=\"month\"", "since": "11.1.0" },
+    { "name": "<input type=\"month\">", "pattern": "<input\\b[^>]*\\btype=[{]?[\"']month[\"']", "replacement": "DatePicker granularity=\"month\"", "since": "11.1.0" },
+    { "pkg": "@nexub/admin-ui", "name": "CurrencyField", "replacement": "CurrencyField / CurrencySelect", "since": "11.2.0" },
+    { "pkg": "@nexub/admin-ui", "name": "CURRENCY_OPTIONS", "replacement": "currencyOptions(locale)", "since": "11.2.0" },
+    { "pkg": "@nexub/admin-ui", "name": "askText", "replacement": "usePrompt() / AlertDialog.Prompt", "since": "11.2.0" },
+    { "name": "window.prompt", "pattern": "\\bwindow\\.prompt\\(", "replacement": "usePrompt() / AlertDialog.Prompt", "since": "11.2.0" },
+    { "pkg": "@nexub/admin-ui", "name": "SearchField", "replacement": "Autocomplete (label, clearOnSelect)", "since": "11.2.0" },
+    { "pkg": "@nexub/admin-ui", "name": "Metric", "replacement": "StatCard (size, note, tone=\"bad-when-high\")", "since": "11.3.0" },
+    { "pkg": "@nexub/admin-ui", "name": "UsageMetric", "replacement": "UsageTile", "since": "11.3.0" }
+  ]
+}

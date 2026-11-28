@@ -462,7 +462,13 @@ const sd = new StyleDictionary({
         {
           destination: 'variables.css',
           format: 'css/variables',
-          options: { selector: ':root', outputReferences: (token) => token.path[0] === 'motion' && token.path[1] === 'preset' },
+          // 12.7: no per-token description comments in the shipped CSS (they stay in tokens/*.json
+          // and dist/json); the variables and their values are unchanged.
+          options: {
+            selector: ':root',
+            outputReferences: (token) => token.path[0] === 'motion' && token.path[1] === 'preset',
+            formatting: { commentStyle: 'none' },
+          },
         },
       ],
     },

@@ -8,6 +8,10 @@
 //   npx -p @nexub/tokens nexub-usage ./src --css src/nexub.css --check   CI: exit 1 if it is stale
 //   npx -p @nexub/tokens nexub-usage --prune .next/static/css --js .next/static   12.1: after the build,
 //       drop Nexub custom properties that nothing uses (see pruneCss)
+//   npx -p @nexub/tokens nexub-usage --apps apps/crm apps/payhub [--wrapper packages/admin-ui]
+//       [--stopgaps stopgaps.json] [--parts parts.json] [--tests] [--json]
+//       12.7: one report per app: components and props, overrides, copies of Nexub parts,
+//       deprecated APIs, @nexub versions, use through a wrapper package (see nexub-usage-apps.mjs)
 //
 // ponytail: regex over import statements, not a TS parse. It misses
 // `import * as N` member use and re-exports; switch to the TS API if those matter.
@@ -15,6 +19,9 @@
 import { readFileSync, readdirSync, statSync, existsSync, writeFileSync } from 'node:fs';
 import { join, extname, dirname, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { scanApp, summarize, wrapperMap, cssVarNames } from './nexub-usage-apps.mjs';
+
+export * from './nexub-usage-apps.mjs';
 
 const SKIP = new Set([
   'node_modules',
@@ -240,6 +247,71 @@ function nexubNamesFrom(from) {
   return names;
 }
 
+/**
+ * Nexub component names, for spotting copies: from a --parts file ({ pkg: [names] } or the docs'
+ * web-props.generated.json shape), else from the installed packages' css-manifest.json exports.
+ */
+function partNames(file, from) {
+  const names = new Set();
+  const add = (list) => list.filter((n) => /^[A-Z]/.test(n)).forEach((n) => names.add(n));
+  if (file) {
+    for (const v of Object.values(JSON.parse(readFileSync(file, 'utf8'))))
+      add(Array.isArray(v) ? v : Object.keys(v));
+    return names;
+  }
+  for (const pkg of ['@nexub/react', '@nexub/patterns', '@nexub/marketing', '@nexub/diagram']) {
+    for (const dir of from) {
+      const root = findPackage(pkg, dir);
+      const manifest = root && join(root, 'dist/css-manifest.json');
+      if (manifest && existsSync(manifest)) {
+        add(Object.keys(JSON.parse(readFileSync(manifest, 'utf8')).exports));
+        break;
+      }
+    }
+  }
+  return names;
+}
+
+/** 12.7: `--apps`, one adoption report per app folder. */
+function appsCli(args) {
+  const roots = valuesOf(args, '--apps');
+  if (!roots.length) {
+    console.error(
+      'usage: nexub-usage --apps <app-dir>... [--wrapper <package-dir>]... [--stopgaps <file>] [--parts <file>] [--tests] [--json]',
+    );
+    return 1;
+  }
+  const wrappers = valuesOf(args, '--wrapper').map((dir) => wrapperMap(dir));
+  const stopgapsFile = valuesOf(args, '--stopgaps')[0];
+  const stopgaps = stopgapsFile ? JSON.parse(readFileSync(stopgapsFile, 'utf8')).stopgaps : [];
+  const here = dirname(fileURLToPath(import.meta.url));
+  const themes = findPackage('@nexub/themes', here) ?? findPackage('@nexub/themes', roots[0]);
+  const dsVars = cssVarNames([
+    join(here, '../dist/css'),
+    themes ? join(themes, 'src') : join(here, '../../themes/src'),
+  ]);
+  const parts = partNames(valuesOf(args, '--parts')[0], [...roots, here]);
+  if (!parts.size)
+    console.error('nexub-usage --apps: no Nexub component list found (pass --parts); copies are not counted.');
+  const apps = {};
+  for (const root of roots)
+    apps[root] = scanApp(root, { wrappers, stopgaps, dsVars, parts, tests: args.includes('--tests') });
+  if (args.includes('--json')) {
+    console.log(JSON.stringify({ wrappers, apps }, null, 2));
+    return 0;
+  }
+  console.log(
+    '| App | Nexub version | Components (with wrappers) | Uses | Overrides | Copies | Deprecated | Stopgaps |\n|---|---|---|---|---|---|---|---|',
+  );
+  for (const [root, app] of Object.entries(apps)) {
+    const s = summarize(app);
+    console.log(
+      `| ${root} | ${s.version ?? '—'} | ${s.componentsDirect} (${s.componentsWithWrappers}) | ${s.componentUses} | ${s.overrides} | ${s.copies} | ${s.deprecated} | ${s.stopgaps} |`,
+    );
+  }
+  return 0;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const args = process.argv.slice(2);
   if (args.includes('--prune')) {
@@ -272,11 +344,16 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     }
     process.exit(0);
   }
+  if (args.includes('--apps')) {
+    process.exit(appsCli(args));
+  }
   const cssAt = args.indexOf('--css');
   const outFile = cssAt >= 0 ? args[cssAt + 1] : undefined;
   const roots = args.filter((a, i) => !a.startsWith('--') && !(cssAt >= 0 && i === cssAt + 1));
   if (!roots.length || (cssAt >= 0 && !outFile)) {
-    console.error('usage: nexub-usage <repo-dir>... [--json] | [--css <out.css> [--check]]');
+    console.error(
+      'usage: nexub-usage <repo-dir>... [--json] | [--css <out.css> [--check]] | --apps <app-dir>... [--json]',
+    );
     process.exit(1);
   }
   if (outFile) {

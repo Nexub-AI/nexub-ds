@@ -64,7 +64,8 @@
       [
         "module",
         {
-          "esm": true
+          "esm": true,
+          "configFile": "./babel.build.config.js"
         }
       ],
       [
