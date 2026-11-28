@@ -1,5 +1,53 @@
 # @nexub/react-native
 
+## 12.5.0
+
+### Minor Changes
+
+- de6e21f: Larger screens (12.5): tablet and foldable layouts on React Native.
+
+  - `useWindowSizeClass()` returns the Material 3 window size class (`compact` < 600dp, `medium` < 840dp, `expanded`) and updates on rotation, split view and folding; `windowSizeClass(width)` and `EXPANDED_MIN` come with it.
+  - New `NavigationRail` (`NavigationRail.Root`, `NavigationRail.Item`): with the default `orientation="auto"` it is a rail at the start edge on medium and expanded windows and a bottom bar on compact ones. Items take `icon`, `label`, `active`, `badge` (a count or a dot, read after the label) and `badgeLabel`; the rail takes a `header`.
+  - New `AppShell`: lays out `navigation`, an optional `header` and the content for the window: a bottom bar under the content on compact windows, a rail beside it from `railFrom` (`'medium'` by default, or `'expanded'`).
+  - New `ListDetail` in `@nexub/react-native/patterns`, with the web props: both panes side by side from the medium size class, one pane at a time on compact windows with a back button and Android back calling `onBack`. `splitRatio` (0.2–0.8) sets the list's share of the width instead of `listWidth`.
+  - `@nexub/core` messages gain `back`, `listPane` and `detailPane` (English defaults) for ListDetail.
+
+  Foldables are handled through window size only: React Native and Expo expose no hinge or posture API without a new native module, so an unfolded foldable lays out like a tablet. Hinge-aware splits are left for later. Existing phone layouts don't change.
+
+- ac44e7a: **Native AI parts** (12.5): the 12.4 agent parts and streaming states on iOS and Android. Every new prop is optional; without them each component renders as before.
+
+  - New `ToolCall`: a tool call's name, status badge and run time (`duration`, shown as "1.2 s"), expandable to its input and output. `error` is shown in the failed state (a failed call with an error starts open), `onRetry` adds Retry, and `defaultOpen` / `open` + `onOpenChange` set the disclosure. Status changes are announced without moving focus.
+  - New `ApprovalCard`: Approve / Deny, plus an edit path (`args` shown as JSON and `onEdit(args)` for Edit, then "Approve with changes"), a pending state while a promise from `onApprove` / `onDeny` / `onEdit` runs (or while `pending` is set), and a controlled `outcome`. The outcome is announced and the screen reader moves to it.
+  - New `DiffView`: a unified diff with `lineNumbers` (old and new, counted from each `@@` header, not read aloud). Each line is read as "Added: …" or "Removed: …". Code always reads left to right, also in RTL.
+  - New `DiffReview`: a list of files, each a collapsible diff with Accept / Reject (`onAccept`, `onReject`, controlled `decisions` or `defaultDecisions`, `onDecisionsChange`) and a summary that is announced on each change ("1 accepted, 0 rejected, 2 to review").
+  - `DataList` `streaming`: rows can keep arriving. A skeleton row trails the last row (hidden from screen readers) and shows instead of `empty` before the first row. The list is busy, the row count is announced at most every 3 seconds, and "Done. N rows" is announced when `streaming` turns off. New rows fade in (instantly under Reduce Motion).
+  - `TextField` `streaming`: an agent is filling the field. It is busy for screen readers and shows a calm wash (none under Reduce Motion), and it stays editable. `generated`, with optional `onAcceptSuggestion` and `onClearSuggestion`, shows a "Suggested" mark beside the label that is read as part of the field's hint. Typing, accept or clear removes the mark.
+
+  This closes the 12.4 parity gaps for ToolCall, ApprovalCard, DiffView, DiffReview, DataTable `streaming` and FormField `streaming` / `generated`.
+
+- 89b3390: **Templates on native** (12.5) in `@nexub/react-native/patterns`. Every new prop is optional; without them each screen renders as before.
+
+  - New `SignUpScreen` (alpha), the twin of the web `SignUpPage`: name, email, a password with a four-step strength meter that is also said in words, an optional phone number (`phone`, `defaultCountry`), the terms (`termsLabel`, plus native-only `termsAction`), `social` above an "or" divider and `onSignIn`. Fields are checked on blur and on submit, and a failed submit lists every problem in a danger Banner. The password field asks for a new password (`textContentType="newPassword"`, `autoComplete="new-password"`) so iCloud Keychain and Android Autofill can suggest one. Also exported: `SignUpValues`, `PasswordRule` and `defaultPasswordRules` (the same rules as web).
+  - New `StatusScreen` (alpha), the twin of the web `StatusPage`: `kind` (`notFound`, `serverError`, `maintenance`, `offline`, `noAccess`) with the localised `messages.emptyStates` words and Illustration, `code`, `title`, `description`, `illustration` (`null` hides it), `actions`, `onRetry` and `onHome` (native for `homeHref`). Server error and offline are announced. Buttons sit above the home indicator, as on ResultScreen.
+  - `VerifyCodeScreen`: the rest of the web `VerifyCodePage` props: `methods` + `onMethodChange` (other ways to verify), `onChangeDestination`, `expiresAt` + `now` (a Countdown of the code's lifetime), `loading` (read-only boxes), `logo`, `title`, `description`, `submitLabel` (adds a Continue button) and `messages`. `onResend` is now optional; without it a Continue button shows.
+  - `SignInScreen`: `description` and `messages`.
+  - New `AuthScreenMessages` and `defaultAuthScreenMessages`: the auth screens' strings, keyed as the web templates' `PageTemplateMessages` so one translation file can serve both.
+  - Left for later: the web-only `as` and `fullScreen` (a screen is always the whole screen). Settings and dashboard already had native twins (`SettingsScreen`, `HomeScreen`). The showcase app does not show `SignUpScreen` or `StatusScreen` yet, so their docs pages have code and props without a phone frame.
+
+- 2ad26d7: `Kanban` for React Native: the web board's `columns`, `getId`, `getLabel`, `renderCard` and `onChange(columns, move)`, drawn as horizontally scrolling columns. Each card has a "Move to…" sheet listing the columns (and `dropTargets`), and VoiceOver and TalkBack get the same moves as actions ("Move to Done"), so no drag is needed. `readOnly`, `canMove`, `getTone`, `columnWidth`, `columnEmptyState`, `renderColumnHeader`, `renderColumnFooter` and `loading` / `emptyState` / `errorState` work as on the web.
+  `EventCalendar` for React Native, from its own entry point `@nexub/react-native/calendar`, with the `day` (one day by the hour, with the now line) and `agenda` (the month as a list, the default) views. Same event shape and prop names as the web, including the 12.2 `color` prop: any brand colour becomes a readable container in light and dark.
+  `LineChart` and `BarChart` (vertical, grouped or `stacked`) for React Native, from their own entry point `@nexub/react-native/charts`, drawn with react-native-svg. They take the same `data`, `index` and `series`, plus the 12.3 storytelling props `annotations`, `referenceLines` and `change`. Each chart is one image whose label reads the title, the change, every row and the notes. The product accent stays out of charts.
+  `@nexub/core` messages gain `moveCardTo` ("Move to…") and `moveToColumn` ("Move to Done") for the native Kanban's move sheet and actions.
+  Still web only, for a later release: Kanban `lanes` / `getLane` and drag; EventCalendar `onEventMove` (the month and week views stay web only on purpose); chart `interactive`, `onPointClick`, `hiddenSeries`, `tableView`, and BarChart `orientation="horizontal"` and `variant="waterfall"`. The three have no live preview in the mobile app yet.
+
+### Patch Changes
+
+- Updated dependencies [de6e21f]
+- Updated dependencies [2ad26d7]
+  - @nexub/core@12.5.0
+  - @nexub/tokens@12.5.0
+  - @nexub/icons@12.5.0
+
 ## 12.4.0
 
 ### Patch Changes
