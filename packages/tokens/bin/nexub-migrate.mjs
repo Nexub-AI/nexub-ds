@@ -6,10 +6,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
-export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11', 'deprecated-in-11', 'changes-in-12'];
-// Run only when asked for by --rules. keep-5-defaults keeps old behaviour instead of moving code
+export const RULES = ['legacy-tokens', 'logical-classes', 'tw-animate', 'opacity-modifier', 'deprecated-components', 'tailwind-3-preset', 'keep-5-defaults', 'removed-in-7', 'changes-in-8', 'button-aliases', 'changes-in-9', 'changes-in-11', 'deprecated-in-11', 'changes-in-12', 'text-weight', 'text-truncate', 'button-full-width', 'admin-ui-wrappers'];
+// Run only when asked for by --rules (or --codemod). keep-5-defaults keeps old behaviour instead of moving code
 // forward; changes-in-12 moves code onto 12.0, which on 11.x would undo the 11.9 opt-in stylesheet.
-const OPT_IN = new Set(['keep-5-defaults', 'changes-in-12']);
+// The 12.7 codemods (text-weight …, see CODEMODS) move app workarounds onto DS props: opt-in too.
+const OPT_IN = new Set(['keep-5-defaults', 'changes-in-12', 'text-weight', 'text-truncate', 'button-full-width', 'admin-ui-wrappers']);
 export const DEFAULT_RULES = RULES.filter((r) => !OPT_IN.has(r));
 const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.scss', '.html', '.mdx']);
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '.next', 'out', 'coverage']);
@@ -666,12 +667,279 @@ function changesIn12(src, ext, report) {
   return output;
 }
 
+// ─── codemods (12.7, opt-in): the workarounds nexub-usage --apps finds most ───
+// Each rewrites only the unambiguous case and reports the rest. Text edits never add or remove
+// a newline (a new import goes on the line of the one it replaces), so lines stay stable.
+export const CODEMODS = ['text-weight', 'text-truncate', 'button-full-width', 'admin-ui-wrappers'];
+export const DEFAULT_WRAPPER_PACKAGE = '@nexub/admin-ui';
+const reEscape = (s) => s.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+const lineAt = (text, at) => text.slice(0, at).split('\n').length;
+const applyEdits = (text, edits) => {
+  let out = text;
+  for (const e of edits.sort((a, b) => b.start - a.start || b.end - a.end)) out = out.slice(0, e.start) + e.text + out.slice(e.end);
+  return out;
+};
+
+/** `"a b"`, `'a b'`, `{"a b"}`, `{`a b`}` (no `${}`) → { at: offset of the text in value, text }; else null. */
+function staticString(value) {
+  const m = /^(\{\s*)?(["'`])([\s\S]*)\2(\s*\})?$/.exec(value ?? '');
+  if (!m || !m[1] !== !m[4] || (m[2] === '`' && !m[1])) return null;
+  if (m[3].includes(m[2]) || m[3].includes('\\') || (m[2] === '`' && m[3].includes('${'))) return null;
+  return { at: (m[1]?.length ?? 0) + 1, text: m[3] };
+}
+
+/** Remove one whitespace-separated token from a class string, with the spaces on one side (never a newline). */
+function dropToken(text, token) {
+  const m = new RegExp(`(^|\\s)${reEscape(token)}(?=\\s|$)`).exec(text);
+  if (!m) return text;
+  const start = m.index + m[1].length;
+  const end = start + token.length;
+  const before = /[ \t]+$/.exec(text.slice(0, start))?.[0].length ?? 0;
+  const after = /^[ \t]+/.exec(text.slice(end))?.[0].length ?? 0;
+  return after ? text.slice(0, start) + text.slice(end + after) : text.slice(0, start - before) + text.slice(end);
+}
+
+// Text's weight variant is font-normal/medium/semibold/bold (regular, not normal, for 400).
+const TEXT_WEIGHTS = { 'font-normal': 'regular', 'font-medium': 'medium', 'font-semibold': 'semibold', 'font-bold': 'bold' };
+const CLASS_PROPS = {
+  'text-weight': {
+    comp: 'Text', prop: 'weight',
+    toProp: (t) => (TEXT_WEIGHTS[t] ? `weight="${TEXT_WEIGHTS[t]}"` : null),
+    // Another weight in the same string: which one wins depends on order, so leave it.
+    conflict: (t) => /^font-(thin|extralight|light|extrabold|black|\[.+\])$/.test(t),
+  },
+  'text-truncate': {
+    comp: 'Text', prop: 'truncate',
+    toProp: (t) => (t === 'truncate' ? 'truncate' : null),
+    conflict: (t) => /^(whitespace-|overflow-(?!hidden$)|text-(clip|ellipsis)$|line-clamp-|text-wrap$)/.test(t),
+  },
+  'button-full-width': {
+    comp: 'Button', prop: 'fullWidth',
+    toProp: (t) => (t === 'w-full' ? 'fullWidth' : null),
+    conflict: (t) => /^w-/.test(t),
+  },
+};
+
+/** <Text className="font-medium x"> → <Text weight="medium" className="x">, and the like. */
+function classToProp(src, rule, report) {
+  const { comp, prop, toProp, conflict } = CLASS_PROPS[rule];
+  const edits = [];
+  for (const [local] of importedAs(src, '@nexub/react', [comp])) {
+    for (const m of src.matchAll(new RegExp(`<${local}(?![\\w.$-])`, 'g'))) {
+      const tag = readTag(src, m.index + m[0].length);
+      const cls = tag?.attrs.find((a) => a.name === 'className');
+      if (!cls?.value) continue;
+      const say = (why) => report(lineAt(src, m.index), `<${local} className>: ${why}; move it to the ${prop} prop by hand`);
+      const str = staticString(cls.value);
+      if (!str) {
+        const hit = (cls.value.match(/[\w:![\]./-]+/g) ?? []).find((t) => toProp(t));
+        if (hit) say(`"${hit}" is in a dynamic className (an expression, cn(…) or a template with \${})`);
+        continue;
+      }
+      const tokens = str.text.split(/\s+/).filter(Boolean);
+      const hits = tokens.filter((t) => toProp(t));
+      if (!hits.length) continue;
+      const clash = tokens.filter((t) => !toProp(t) && conflict(t));
+      if (hits.length > 1) { say(`more than one ${prop} class (${hits.join(' ')})`); continue; }
+      if (tag.attrs.some((a) => a.name === prop)) { say(`it already has a ${prop} prop and "${hits[0]}"`); continue; }
+      if (src.slice(m.index, tag.end).includes('{...')) { say(`"${hits[0]}" with a {...spread} that may pass ${prop}`); continue; }
+      if (clash.length) { say(`"${hits[0]}" next to ${clash.join(' ')}, which the order decides between`); continue; }
+      const rest = dropToken(str.text, hits[0]);
+      const propText = ` ${toProp(hits[0])}`;
+      if (!rest.trim()) {
+        edits.push({ start: cls.start, end: cls.end, text: propText + keepLines(src.slice(cls.start, cls.end)) });
+      } else {
+        const at = cls.end - cls.value.length + str.at;
+        edits.push({ start: at, end: at + str.text.length, text: rest });
+        edits.push({ start: cls.start, end: cls.start, text: propText });
+      }
+    }
+  }
+  return applyEdits(src, edits);
+}
+
+// admin-ui wrappers that are thin wrappers of a DS component now (the 11.x "platform can delete" list).
+// keep: props passed as they are; rename: wrapper prop → DS prop. Anything else is reported.
+const WRAPPERS = {
+  CheckboxField: {
+    pkg: '@nexub/react', to: 'CheckboxField',
+    keep: ['key', 'label', 'checked', 'disabled', 'error', 'id', 'title', 'aside'],
+    rename: { hint: 'description', onChange: 'onCheckedChange' },
+    // The DS calls back with boolean | 'indeterminate' (a click always gives a boolean): an inline
+    // handler's parameter gets `: boolean` so it still type-checks.
+    booleanHandler: true,
+  },
+  SwitchField: {
+    pkg: '@nexub/react', to: 'SwitchField',
+    keep: ['key', 'label', 'checked', 'disabled', 'loading', 'id', 'size', 'aria-label'],
+    rename: { hint: 'description', onChange: 'onCheckedChange' },
+  },
+  Metric: {
+    pkg: '@nexub/patterns', to: 'StatCard',
+    keep: ['key', 'label', 'value', 'change', 'trend', 'note'],
+    rename: {},
+    // invert → tone="bad-when-high"; the wrapper adds h-full; onClick wraps it in a button (reported).
+    metric: true,
+  },
+};
+const REPORT_ONLY = {
+  ComboboxField: 'it takes value: string and onChange(string) with options { hint }, the DS one value: string | null, onValueChange and options { description } (noneOption for allowNone): move it by hand',
+  askText: 'askText() is a module function; usePrompt() is a hook that returns [prompt, element] and the element must be rendered: move it by hand',
+};
+
+/** Rewrite a handler for an API that passes boolean | 'indeterminate'. Null when it can't be done safely. */
+function booleanHandler(value) {
+  const inner = /^\{\s*([\s\S]*?)\s*\}$/.exec(value ?? '')?.[1];
+  if (inner === undefined) return null;
+  if (/^[\w$.]+(\([^()]*\))?$/.test(inner)) return value; // a name, a member, or f(…) returning a handler
+  const m = /^(async\s+)?(?:\(\s*\)|\(\s*([\w$]+)\s*(:\s*boolean\s*)?\)|([\w$]+))\s*=>/.exec(inner);
+  if (!m) return null;
+  const name = m[2] ?? m[4];
+  if (!name || m[3]) return value;
+  const at = value.indexOf(inner);
+  return `${value.slice(0, at)}${m[1] ?? ''}(${name}: boolean) =>${inner.slice(m[0].length)}${value.slice(at + inner.length)}`;
+}
+
+function adminUiWrappers(src, pkg, report) {
+  const edits = [];
+  const importRe = new RegExp(`\\bimport\\s+(type\\s+)?\\{([^}]*)\\}\\s*from\\s*(['"])${reEscape(pkg)}\\3[ \\t]*;?`, 'dg');
+  const decls = [...src.matchAll(importRe)].filter((m) => !m[1]);
+  if (!decls.length) return src;
+  const allImports = [...src.matchAll(/\bimport\s+([\s\S]*?)\s+from\s*['"]([^'"]+)['"]/g)];
+  const boundElsewhere = (local, except) =>
+    allImports.some((m) => m.index !== except && new RegExp(`(?:^|[{,\\s])(?:\\w+\\s+as\\s+)?${reEscape(local)}(?=\\s*[,}]|\\s*$)`).test(m[1])) ||
+    new RegExp(`\\b(?:function|const|let|var|class)\\s+${reEscape(local)}\\b`).test(src);
+  const inImport = (at) => allImports.some((m) => m.index <= at && at < m.index + m[0].length);
+  // Only to ignore a name in a comment; a tag is always handled. ponytail: '//' in a string counts.
+  const comments = [...src.matchAll(/\/\/[^\n]*|\/\*[\s\S]*?\*\//g)].map((m) => [m.index, m.index + m[0].length]);
+  const inComment = (at) => comments.some(([a, b]) => a <= at && at < b);
+  const added = { '@nexub/react': [], '@nexub/patterns': [] };
+  const removed = new Map(); // decl index -> Set of specifier offsets removed
+
+  for (const decl of decls) {
+    const base = decl.indices[2][0];
+    for (const s of decl[2].matchAll(/(type\s+)?\b(\w+)(?:\s+as\s+(\w+))?/dg)) {
+      const [, isType, name, alias] = s;
+      if (isType) continue;
+      const local = alias ?? name;
+      const uses = [...src.matchAll(new RegExp(`(?<![\\w.$])${reEscape(local)}(?![\\w$])`, 'g'))].filter((u) => !inImport(u.index));
+      if (REPORT_ONLY[name]) {
+        for (const u of uses) report(lineAt(src, u.index), `${name} (${pkg}): ${REPORT_ONLY[name]}`);
+        continue;
+      }
+      const w = WRAPPERS[name];
+      if (!w || !uses.length) continue;
+      const tagLocal = alias ?? w.to;
+      const fail = [];
+      const mine = [];
+      // The DS name must be free in this file (or already be the same DS import).
+      if (tagLocal !== local && importedAs(src, w.pkg, [w.to]).get(tagLocal) !== w.to && boundElsewhere(tagLocal, decl.index))
+        fail.push([uses[0].index, `${w.to} is already a name in this file`]);
+      for (const u of uses) {
+        const open = src[u.index - 1] === '<';
+        const close = src.slice(u.index - 2, u.index) === '</';
+        if (close) { if (tagLocal !== local) mine.push({ start: u.index, end: u.index + local.length, text: tagLocal }); continue; }
+        if (!open) { if (!inComment(u.index)) fail.push([u.index, `${local} is used outside JSX`]); continue; }
+        const tag = readTag(src, u.index + local.length);
+        if (!tag) { fail.push([u.index, 'could not parse the tag']); continue; }
+        if (src.slice(u.index, tag.end).includes('{...')) { fail.push([u.index, 'a {...spread} may pass props the DS component names differently']); continue; }
+        if (tagLocal !== local) mine.push({ start: u.index, end: u.index + local.length, text: tagLocal });
+        let hasClass = false;
+        for (const a of tag.attrs) {
+          const nameAt = src.indexOf(a.name, a.start);
+          if (w.keep.includes(a.name)) continue;
+          if (w.metric && a.name === 'invert') {
+            const v = a.value === null ? '{true}' : a.value.replace(/\s+/g, '');
+            const expr = /^\{([\s\S]+)\}$/.exec(a.value ?? '')?.[1]?.trim();
+            const text = v === '{true}' ? 'tone="bad-when-high"' : v === '{false}' ? null : expr ? `tone={${expr} ? 'bad-when-high' : 'default'}` : undefined;
+            if (text === undefined) { fail.push([u.index, `invert=${a.value}`]); continue; }
+            mine.push(text === null
+              ? { start: a.start, end: a.end, text: keepLines(src.slice(a.start, a.end)) }
+              : { start: nameAt, end: a.end, text });
+            continue;
+          }
+          if (w.metric && a.name === 'className') {
+            hasClass = true;
+            const str = staticString(a.value);
+            if (!str) { fail.push([u.index, 'className={…}: Metric adds h-full to it; merge by hand']); continue; }
+            if (!str.text.split(/\s+/).includes('h-full')) {
+              const at = a.end - a.value.length + str.at;
+              mine.push({ start: at, end: at, text: str.text.trim() ? 'h-full ' : 'h-full' });
+            }
+            continue;
+          }
+          if (w.rename[a.name]) {
+            let value = a.value;
+            if (w.booleanHandler && a.name === 'onChange') {
+              value = booleanHandler(a.value);
+              if (value === null) { fail.push([u.index, 'onChange: a handler this codemod can not retype (use (v: boolean) => …)']); continue; }
+            }
+            mine.push({ start: nameAt, end: a.end, text: `${w.rename[a.name]}${a.value === null ? '' : src.slice(nameAt + a.name.length, a.end - a.value.length)}${value ?? ''}` });
+            continue;
+          }
+          fail.push([u.index, a.name === 'onClick' && w.metric ? 'onClick: Metric wraps the tile in a button; StatCard has no onClick, so wrap it yourself' : `${a.name}: no 1:1 prop on ${w.to}`]);
+        }
+        if (w.metric && !hasClass) mine.push({ start: u.index + local.length, end: u.index + local.length, text: ' className="h-full"' });
+      }
+      if (fail.length) {
+        for (const [at, why] of fail) report(lineAt(src, at), `<${local}> (${pkg}) → ${w.to} (${w.pkg}): ${why}; left as it is`);
+        continue;
+      }
+      edits.push(...mine);
+      if (!removed.has(decl.index)) removed.set(decl.index, []);
+      removed.get(decl.index).push({ start: base + s.index, end: base + s.index + s[0].length });
+      const spec = alias ? `${w.to} as ${alias}` : w.to;
+      if (importedAs(src, w.pkg, [w.to]).get(tagLocal) !== w.to && !added[w.pkg].includes(spec)) added[w.pkg].push(spec);
+    }
+  }
+  if (!removed.size) return applyEdits(src, edits);
+
+  // Imports: drop the moved names from the wrapper import; add them to an existing DS import, or
+  // put a new one on the same line (the wrapper import itself, when nothing is left in it).
+  const pending = { ...added };
+  for (const target of Object.keys(pending)) {
+    if (!pending[target].length) continue;
+    const existing = new RegExp(`\\bimport\\s+\\{([^}]*)\\}\\s*from\\s*(['"])${reEscape(target)}\\2`, 'd').exec(src);
+    if (!existing) continue;
+    const inner = existing[1];
+    const body = inner.trimEnd();
+    const at = existing.indices[1][0] + body.length;
+    edits.push({ start: at, end: at, text: body.endsWith(',') ? ` ${pending[target].join(', ')},` : `${body.trim() ? ', ' : ' '}${pending[target].join(', ')}${body.trim() ? '' : ' '}` });
+    pending[target] = [];
+  }
+  let placed = false;
+  for (const decl of decls) {
+    const gone = removed.get(decl.index);
+    if (!gone) continue;
+    const q = decl[3];
+    const fresh = placed ? [] : Object.entries(pending).filter(([, specs]) => specs.length).map(([t, specs]) => `import { ${specs.join(', ')} } from ${q}${t}${q};`);
+    placed = true;
+    const base = decl.indices[2][0];
+    const left = applyEdits(decl[2], gone.map((g) => ({ start: g.start - base, end: g.end - base, text: '' })));
+    if (!left.replace(/[\s,]/g, '')) {
+      edits.push({ start: decl.index, end: decl.index + decl[0].length, text: fresh.join(' ') + keepLines(decl[0]) });
+      continue;
+    }
+    let floor = base;
+    for (const g of gone.sort((a, b) => a.start - b.start)) {
+      // Take the comma after the name (or the one before, for the last name) with it.
+      const after = /^\s*,[ \t]*/.exec(src.slice(g.end));
+      const before = /,\s*$/.exec(src.slice(floor, g.start));
+      const e = after ? { start: g.start, end: g.end + after[0].length } : before ? { start: floor + before.index, end: g.end } : g;
+      edits.push({ ...e, text: keepLines(src.slice(e.start, e.end)) });
+      floor = e.end;
+    }
+    if (fresh.length) edits.push({ start: decl.index + decl[0].length, end: decl.index + decl[0].length, text: ` ${fresh.join(' ')}` });
+  }
+  return applyEdits(src, edits);
+}
+
 // ─── per-file migration ──────────────────────────────────────────────────────
 /**
  * Migrate one file's text. Returns { output, manual: [{ line, rule, message }] }.
- * opts: { ext, rules: Set, fix: boolean, aliasMap: { aliases, mix } }
+ * opts: { ext, rules: Set, fix: boolean, aliasMap: { aliases, mix }, wrapperPackage: string }
  */
-export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = false, aliasMap = SNAPSHOT }) {
+export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = false, aliasMap = SNAPSHOT, wrapperPackage = DEFAULT_WRAPPER_PACKAGE }) {
   const items = [];
   let text = src;
   if (['logical-classes', 'tw-animate', 'opacity-modifier', 'legacy-tokens'].some((r) => rules.has(r))) {
@@ -730,6 +998,13 @@ export function migrateSource(src, { ext, rules = new Set(DEFAULT_RULES), fix = 
     deprecatedIn11(src, (at, message) => items.push({ at, rule: 'deprecated-in-11', message }));
   if (rules.has('changes-in-12') && (COMPONENT_EXTS.has(ext) || ext === '.css' || ext === '.scss' || ext === '.html'))
     text = changesIn12(text, ext, (line, message) => items.push({ line, rule: 'changes-in-12', message }));
+  if (COMPONENT_EXTS.has(ext)) {
+    for (const rule of ['text-weight', 'text-truncate', 'button-full-width']) {
+      if (rules.has(rule) && /@nexub\/react['"/]/.test(text)) text = classToProp(text, rule, (line, message) => items.push({ line, rule, message }));
+    }
+    if (rules.has('admin-ui-wrappers') && text.includes(wrapperPackage))
+      text = adminUiWrappers(text, wrapperPackage, (line, message) => items.push({ line, rule: 'admin-ui-wrappers', message }));
+  }
   // Rewrites never add or remove newlines, so offsets in src and text share line numbers.
   const lineOf = (at) => src.slice(0, at).split('\n').length;
   const manual = items.map(({ at, line, rule, message }) => ({ line: line ?? lineOf(at), rule, message })).sort((a, b) => a.line - b.line);
@@ -773,7 +1048,11 @@ Options:
   --check            exit 1 if anything fixable or reportable is found (CI)
   --json             print machine-readable results
   --fix              also rewrite opacity-modifier hits (preview, or apply with --write)
-  --rules <a,b>      run only these rules (default: all except keep-5-defaults and changes-in-12)
+  --rules <a,b>      run only these rules (default: all except the opt-in ones)
+  --codemod <a,b>    run only these codemods (or all); they are opt-in rules, see Codemods
+  --dry              dry run (the default): print the diff, write nothing
+  --wrapper-package <name>
+                     the app's wrapper package for admin-ui-wrappers (default @nexub/admin-ui)
   --ignore <glob>    skip paths matching glob (repeatable; supports * and **)
   -h, --help         show this help
 
@@ -819,6 +1098,22 @@ Rules:
                      rewrites <Stepper current={-1}> with a literal steps array to current={n-1}
                      and status: "complete" on each step; reports the other current={-1} uses
 
+Codemods (12.7, opt-in: --codemod <ids> or --rules <ids>), for the workarounds nexub-usage --apps
+finds most. Each rewrites only the unambiguous case and reports the rest:
+  text-weight        <Text className="font-medium …"> -> <Text weight="medium" className="…">
+                     (font-normal -> regular, medium, semibold, bold)
+  text-truncate      <Text className="truncate …"> -> <Text truncate className="…">
+  button-full-width  <Button className="w-full …"> -> <Button fullWidth className="…">
+                     These three take only the bare class from a static className (@nexub/react
+                     Text/Button). Reported: a dynamic className (cn(…), \${…}), two such classes,
+                     a class the order decides against (w-32, font-light, whitespace-normal …),
+                     the prop already set, a {...spread}
+  admin-ui-wrappers  wrapper package -> DS: CheckboxField and SwitchField (@nexub/react; hint ->
+                     description, onChange -> onCheckedChange), Metric -> StatCard (@nexub/patterns;
+                     invert -> tone="bad-when-high", keeps the wrapper's h-full). Reported: a prop
+                     with no 1:1 match (Metric onClick …), a {...spread}, a use outside JSX;
+                     ComboboxField and askText (-> usePrompt) are report-only
+
 Ignored: node_modules, dist, build, .next, out, coverage, files over 1 MB.
 Exit codes: 0 ok, 1 --check found something, 2 usage error.`;
 
@@ -831,6 +1126,7 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
       options: {
         write: { type: 'boolean' }, check: { type: 'boolean' }, json: { type: 'boolean' }, fix: { type: 'boolean' },
         rules: { type: 'string' }, ignore: { type: 'string', multiple: true }, help: { type: 'boolean', short: 'h' },
+        codemod: { type: 'string' }, dry: { type: 'boolean' }, 'wrapper-package': { type: 'string' },
       },
     });
   } catch (e) {
@@ -839,14 +1135,21 @@ export function run(argv, { cwd = process.cwd(), stdout = (s) => process.stdout.
   }
   const { values: o, positionals } = args;
   if (o.help) { stdout(`${USAGE}\n`); return 0; }
-  const rules = new Set(o.rules ? o.rules.split(',').map((r) => r.trim()).filter(Boolean) : DEFAULT_RULES);
+  if (o.dry && o.write) { stderr('--dry and --write together: pick one\n'); return 2; }
+  const list = (s) => s.split(',').map((r) => r.trim()).filter(Boolean);
+  const codemods = o.codemod ? list(o.codemod).flatMap((c) => (c === 'all' ? CODEMODS : [c])) : [];
+  const badMod = codemods.filter((c) => !CODEMODS.includes(c));
+  if (badMod.length) { stderr(`Unknown codemod(s): ${badMod.join(', ')}. Known: ${CODEMODS.join(', ')}, all\n`); return 2; }
+  // --codemod alone runs only those codemods; with --rules, both.
+  const rules = new Set([...(o.rules ? list(o.rules) : codemods.length ? [] : DEFAULT_RULES), ...codemods]);
   const unknown = [...rules].filter((r) => !RULES.includes(r));
   if (unknown.length) { stderr(`Unknown rule(s): ${unknown.join(', ')}. Known: ${RULES.join(', ')}\n`); return 2; }
+  const wrapperPackage = o['wrapper-package'] ?? DEFAULT_WRAPPER_PACKAGE;
 
   const results = [];
   for (const abs of collectFiles(positionals.length ? positionals : ['src'], { cwd, ignore: o.ignore ?? [] })) {
     const src = readFileSync(abs, 'utf8');
-    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix });
+    const { output, manual } = migrateSource(src, { ext: path.extname(abs), rules, fix: !!o.fix, wrapperPackage });
     const a = src.split('\n');
     const b = output.split('\n');
     const changes = a.flatMap((line, i) => (line === b[i] ? [] : [{ line: i + 1, before: line, after: b[i] }]));
