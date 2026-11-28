@@ -172,6 +172,15 @@ The creative layer: what makes a Nexub app recognisable without slowing anyone d
 - **Codemods** for the top workarounds the scanner finds.
 - The scanner's results feed the 13.x plan.
 
+### 12.8 — Generative UI alpha and the size target
+
+Added by the owner on 2026-11-28, after 12.7, from the four decisions below (Decisions 6–9).
+
+- **`@nexub/genui` at `alpha`** (RFC #823, accepted with changes). v1 renders only components that show data: `Card`, `DescriptionList`, `Table`, `Badge`, `Alert` and `StreamingText`, plus `Button` with named actions. Forms and fields come in v1.1, after their own review. The XSS corpus is a required CI check from the first PR. Served by `@nexub/mcp`.
+- **Size target met by minifying, with named exemptions.** Published JavaScript is minified, with source maps. Each entry that still misses "10% below 11.6" gets an exemption in the repo naming the 12.x feature that grew it. No feature is removed to meet the number.
+- **Figma export marked beta** in the docs until a designer has imported the variables into a real Figma file.
+- The Expo 58.1 move follows from 2026-12-03 (once 58.1 is 7 days old), in 12.8 if 12.8 is still open, otherwise in 12.9.
+
 ## Release rules for every version
 
 - **Soak.** ~~A version stays on `staging` for at least 48 hours~~ *(decision 1, reversed by the owner on 2026-11-24)*: each version goes to `production` as soon as staging CI and Mobile are green with no open flake, one version per release. The flake rule stays.
@@ -216,3 +225,10 @@ Answered by the owner on 2026-11-22, accepting every suggestion:
 5. **Order.** As listed. Performance stays at 12.1, after the 12.0 layering decision. If the platform reports slow pages before then, a fix ships as a patch, not by reordering the plan.
 
 The plan as a whole was approved on 2026-11-22. 11.7 starts next.
+
+Answered by the owner on 2026-11-28, after 12.7, accepting every suggestion:
+
+6. **Generative UI.** RFC #823 accepted with changes: a display-only v1 catalog, with forms in v1.1, and the XSS corpus as a required check. Ships at `alpha` in 12.8.
+7. **The 10% size target.** Met by minifying the published code, with source maps. Entries that still miss it get a documented exemption naming the feature that grew them. No features are removed for it.
+8. **Figma CI check** ("Figma variables up to date", added in #844). Approved as a required check.
+9. **Designer import test.** One designer imports the variables into a blank Figma file and checks that aliases resolve, light and dark switch, and the product modes appear. Until then the Figma page says beta.
