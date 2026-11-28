@@ -1,5 +1,31 @@
 # @nexub/tokens
 
+## 12.7.0
+
+### Minor Changes
+
+- b3450fe: **Codemods for the top app workarounds** (12.7): `nexub-migrate --codemod <ids>` (or `all`), opt-in, a dry run with a diff by default (`--dry`), `--write` to apply. Each rewrites only the unambiguous case and reports the rest.
+
+  - `text-weight`: `<Text className="font-medium …">` → `<Text weight="medium">` (`font-normal` → `regular`).
+  - `text-truncate`: `<Text className="truncate">` → `<Text truncate>`.
+  - `button-full-width`: `<Button className="w-full">` → `<Button fullWidth>`.
+  - `admin-ui-wrappers`: `CheckboxField` and `SwitchField` from your wrapper package (`--wrapper-package`, default `@nexub/admin-ui`) → `@nexub/react` (`hint` → `description`, `onChange` → `onCheckedChange`), `Metric` → `StatCard` from `@nexub/patterns` (`invert` → `tone="bad-when-high"`). `ComboboxField` and `askText` (→ `usePrompt()`) are reported, not rewritten.
+  - Dynamic classNames (`cn(…)`, `${…}`), spreads, a prop already set and props with no 1:1 match are reported with the reason. No default rule changes.
+
+- d0f305c: Smaller published files, with no change to any style, value or component:
+
+  - `@nexub/themes`: the exports now point at `dist/`, a copy of `src/` without comments (src/ is still published, comments included). The same import paths work; `@nexub/themes/core` is 31% smaller gzipped, `@nexub/themes/base` 32%.
+  - `@nexub/tokens`: `css` drops the per-token description comments (they stay in `dist/json`), and the JavaScript token objects ship on one line. Same variables and values.
+  - `@nexub/react-native`: `lib/` is compiled without comments or indentation; source maps still point at `src/`, which keeps every comment. The main entry is 30% smaller gzipped.
+
+- ca33f98: **Usage scanner per app** (12.7, closes R6): `nexub-usage --apps <app-dir>…` prints one adoption report per app. The existing table, `--json`, `--css` and `--prune` are unchanged.
+
+  - Counts the Nexub components each app renders and the props it passes to each, the `@nexub` versions its `package.json` files ask for, and deprecated or removed APIs (from the `nexub-migrate` rules).
+  - Counts local overrides: a `className` that restyles a Nexub component (classes that only place it, such as margin, width or flex, are left out), `style` on one, CSS or Tailwind that targets `.nx-*` classes, and app code that redefines a Nexub custom property.
+  - Flags likely copies of Nexub parts (a heuristic): a local component with a Nexub component's name that draws its own markup, or one that sets an ARIA role a Nexub part owns.
+  - `--wrapper <package-dir>` reads a workspace package that wraps Nexub parts (such as an app's own admin kit) and counts its users as indirect users of the parts each wrapper renders. `--stopgaps <file>` lists wrapper exports Nexub has replaced and reports which apps still import them. `--parts <file>` gives the component list for copies when the Nexub packages are not installed; `--tests` includes test and story files; `--json` prints the full reports.
+  - The docs have a new Components › Adoption page: a health scorecard for each Nexub app (version, coverage, overrides, copies, deprecated APIs, admin-ui stopgaps left, and a grade whose rule is on the page), the admin-ui tracker, and the scan's findings for 13.x.
+
 ## 12.6.0
 
 ### Minor Changes
