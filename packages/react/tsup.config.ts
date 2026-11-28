@@ -45,6 +45,12 @@ export default defineConfig([
     format: ['esm'],
     bundle: false,
     clean: false,
+    sourcemap: true, // 12.8: for ../../scripts/minify-dist.mjs, which minifies dist/ after the build
+    // 12.8: no @__PURE__ on JSX calls: nearly all sit inside components, where they don't help
+    // tree-shaking, and minify-dist keeps every annotation, so they would only add bytes.
+    esbuildOptions(options) {
+      options.jsxSideEffects = true;
+    },
     silent: true, // one line per file otherwise
   },
   // vaul is bundled (it isn't a dependency) with its style injection removed.
@@ -54,8 +60,8 @@ export default defineConfig([
     clean: false,
     external: ['react', 'react-dom'],
     noExternal: ['vaul'],
-    // Third-party code nobody reads in dist: ship it minified (8.7, B1). Our own
-    // modules stay readable, one file per source file.
+    // Third-party code: minified here, with no source map (8.7, B1). Our own modules are
+    // minified after the build with maps (12.8, minify-dist), one file per source file.
     minify: true,
     esbuildPlugins: [vaulWithoutStyleInjection],
     banner: { js: "'use client';" },

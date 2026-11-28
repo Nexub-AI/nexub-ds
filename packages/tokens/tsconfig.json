@@ -5,7 +5,8 @@
     "allowJs": true,
     "outDir": "dist/js",
     "declarationDir": "dist/js",
-    "sourceMap": false,
+    "sourceMap": true,
+    "inlineSources": true,
     "declarationMap": false
   },
   "include": [

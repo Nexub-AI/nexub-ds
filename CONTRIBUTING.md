@@ -65,6 +65,26 @@ pnpm ci:local          # audit, build, bundle size, docs build, release policy, 
 pnpm ci:local:visual   # Storybook + docs screenshots, axe and contrast (needs Docker, e.g. Colima)
 ```
 
+## Bundle size
+
+`pnpm check:size` measures every published entry point (gzip) against its budget in
+[`size-budgets.json`](./size-budgets.json); CI fails an entry over budget. Budgets only go down:
+`pnpm check:size --update` lowers each one to the current size, rounded up to 100 B. A raise is a
+hand edit, explained in the PR under `## Budget raises`.
+
+Published JavaScript is minified, with a source map beside each file (12.8). tsup builds with
+`sourcemap: true`, then `scripts/minify-dist.mjs` minifies `dist/` with terser and composes the
+maps, so they still point at `src/` and include it: stack traces and debuggers show the source.
+Exports, `'use client'`, `/* @__PURE__ */` annotations, property and function names, and the
+type declarations stay as they were. A new package that publishes JavaScript does the same
+(`@nexub/elements` minifies in its own build; `@nexub/react-native` compiles `lib/` without
+comments or indentation, with maps to the published `src/`). The trailing
+`sourceMappingURL` comment is not counted: apps' bundlers drop it.
+
+The 12.x target is every budget at least 10% below v11.6.0. `node scripts/size-vs-baseline.mjs`
+reports met, exempt and unmet entries; an exempt entry is in
+[`size-exemptions.json`](./size-exemptions.json) with the feature and PRs that grew it.
+
 ## Visual regression & contrast
 
 CI screenshots every Storybook story (light, dark, payub) and checks WCAG AA contrast for theme token pairs (`packages/react/visual/`). Baselines must be rendered in the pinned Playwright Linux image, so run them through Docker:

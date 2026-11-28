@@ -58,7 +58,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "node scripts/build.mjs && tsc -p tsconfig.json && node scripts/compact-generated.mjs",
+    "build": "node scripts/build.mjs && tsc -p tsconfig.json && node ../../scripts/minify-dist.mjs dist/js",
     "dev": "node scripts/build.mjs --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
