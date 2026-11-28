@@ -87,6 +87,11 @@ export const CATALOG = {
   accordion: { title: 'Accordion', kind: 'component', web: 'accordion', examples: ['FAQ'] },
   amount: { title: 'Amount', kind: 'component', web: 'amount', examples: ['Display size', 'Signed tones'] },
   divider: { title: 'Divider', kind: 'component', web: 'separator', examples: ['Inset'] },
+  // 12.5: AI parts
+  'tool-call': { title: 'ToolCall', kind: 'component', web: 'tool-call', examples: ['Run time, error and Retry'] },
+  'approval-card': { title: 'ApprovalCard', kind: 'component', web: 'approval-card', examples: ['Approve, edit or deny'] },
+  'diff-view': { title: 'DiffView', kind: 'component', web: 'diff-view', examples: ['Line numbers'] },
+  'diff-review': { title: 'DiffReview', kind: 'component', web: 'diff-view', examples: ['Accept or reject'] },
 
   // Feedback
   banner: { title: 'Banner', kind: 'component', web: 'banner', examples: ['Tones', 'Action and dismiss'] },
@@ -146,6 +151,7 @@ export const SECTIONS = {
     { heading: 'Details', slugs: ['description-list', 'comparison-bar', 'countdown'] },
     { heading: 'Codes and phone', slugs: ['qr-code', 'qr-scanner', 'phone-input'] },
     { heading: 'FAQ', slugs: ['accordion'] },
+    { heading: 'AI', slugs: ['tool-call', 'approval-card', 'diff-view', 'diff-review'] },
   ],
   feedback: [
     { heading: 'Banners', slugs: ['banner'] },

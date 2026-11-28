@@ -90,7 +90,7 @@ export default async function PatternPage({ params }: Props) {
             <MobilePanel
               name={twin.name}
               title={meta.title}
-              preview={`preview/${twin.preview}`}
+              preview={twin.preview && `preview/${twin.preview}`}
               code={twin.code}
               differences={twin.differences}
               status={twin.status}

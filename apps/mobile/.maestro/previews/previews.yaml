@@ -1186,6 +1186,66 @@ appId: ai.nexub.mobile
 - retry:
     maxRetries: 1
     commands:
+      - openLink: nexub://preview/tool-call?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-tool-call-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: tool-call--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/approval-card?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-approval-card-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: approval-card--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/diff-view?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-diff-view-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: diff-view--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
+      - openLink: nexub://preview/diff-review?ex=0
+      - runFlow:
+          when:
+            visible: "Open"
+          commands:
+            - tapOn: "Open"
+      - extendedWaitUntil:
+          visible:
+            id: "preview-ready-diff-review-0"
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: diff-review--0--${maestro.platform}
+- retry:
+    maxRetries: 1
+    commands:
       - openLink: nexub://preview/banner?ex=0
       - runFlow:
           when:

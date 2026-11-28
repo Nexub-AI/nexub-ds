@@ -19,6 +19,25 @@ export const gettingInTemplates = [
   onSignIn={() => router.push('/sign-in')}
   error={error}
 />`,
+    native: {
+      name: 'SignUpScreen',
+      differences: [
+        { aspect: 'Autofill', web: '`autocomplete="new-password"`.', mobile: '`textContentType="newPassword"`: iCloud Keychain and Android Autofill suggest a strong password.' },
+        { aspect: 'Terms', web: '`termsLabel` can hold links.', mobile: '`termsLabel` is text; put a "Read" button in `termsAction`.' },
+        { aspect: 'Errors', web: 'An ErrorSummary with links to each field.', mobile: 'A danger Banner listing each problem, and the error under each field.' },
+        { aspect: 'Submit', web: 'At the end of the form.', mobile: 'Pinned above the keyboard, with "Already have an account?" under it.' },
+      ],
+      code: `import { SignUpScreen } from '@nexub/react-native/patterns';
+
+<SignUpScreen
+  termsLabel="I agree to the Terms and Privacy Policy"
+  termsAction={<Button variant="text" size="sm" onPress={openTerms}>Read</Button>}
+  phone
+  onSubmit={({ name, email, password, phone }) => signUp({ name, email, password, phone })}
+  onSignIn={() => router.push('/sign-in')}
+  error={error}
+/>`,
+    },
   },
   {
     slug: 'forgot-password',
@@ -54,11 +73,21 @@ export const gettingInTemplates = [
       differences: [
         { aspect: 'Autofill', web: '`autocomplete="one-time-code"` on the first box.', mobile: 'SMS code autofill from the keyboard.' },
         { aspect: 'Resend', web: 'A countdown line that becomes a "Resend code" link.', mobile: 'A full-width Resend button, disabled while it counts down.' },
-        { aspect: 'Other methods', web: '`methods`, `expiresAt` and `onChangeDestination`.', mobile: 'Code entry and resend only.' },
+        { aspect: 'Continue', web: 'Always shown.', mobile: 'Shown with `submitLabel`, or when there is no `onResend`; the code also submits when full.' },
       ],
       code: `import { VerifyCodeScreen } from '@nexub/react-native/patterns';
 
-<VerifyCodeScreen destination="+65 •••• 4821" onComplete={verify} onResend={resend} />`,
+<VerifyCodeScreen
+  destination="+65 •••• 4821"
+  onComplete={verify}
+  onResend={resend}
+  expiresAt={expiresAt}
+  onChangeDestination={changeNumber}
+  methods={[{ id: 'app', label: 'Use an authenticator app' }, { id: 'recovery', label: 'Use a recovery code' }]}
+  onMethodChange={setMethod}
+  loading={checking}
+  error={error}
+/>`,
     },
   },
   {

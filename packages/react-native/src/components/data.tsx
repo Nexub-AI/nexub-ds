@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FlatList, View, type StyleProp, type ViewStyle } from 'react-native';
+import { AccessibilityInfo, FlatList, View, type StyleProp, type ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
 import {
   filterOperators,
   newFilterRule,
@@ -14,10 +15,11 @@ import { useAsyncSearch } from '../hooks/useAsyncSearch';
 import { useControllableState } from '../hooks/useControllableState';
 import { Text } from '../primitives/Text';
 import { useTheme } from '../theme/ThemeProvider';
+import { nxEnter } from '../theme/motion';
 import { Button, IconButton } from './actions';
 import { SearchStatus, SheetFieldButton, type FieldSize } from './combobox';
 import { ListItem, ListSection } from './containers';
-import { Progress } from './feedback';
+import { Progress, Skeleton } from './feedback';
 import { SearchField, SegmentedControl, TextField } from './inputs';
 import { BottomSheet, Select } from './overlays';
 
@@ -274,7 +276,70 @@ export interface DataListProps<T> {
   bulkActions?: (keys: string[], clear: () => void) => React.ReactNode;
   /** Shown when `data` is empty. */
   empty?: React.ReactNode;
+  /**
+   * 12.5: rows can keep arriving (an agent is producing the data). A skeleton row trails the last
+   * row (hidden from screen readers), the list is busy, the row count is announced at most every
+   * 3 seconds and "Done. N rows" when `streaming` turns off. Rows that arrive meanwhile fade in
+   * (instant under Reduce Motion). Before the first row, the skeleton row shows instead of `empty`.
+   */
+  streaming?: boolean;
   style?: StyleProp<ViewStyle>;
+}
+
+/** 12.5: how often, at most, a streaming list announces its row count. */
+const STREAM_ANNOUNCE_MS = 3000;
+
+/**
+ * 12.5 (web DataTable's twin): while `streaming`, announce the count at most every
+ * STREAM_ANNOUNCE_MS, starting one interval after the stream begins; when it stops, announce "done".
+ */
+function useStreamingAnnouncements(streaming: boolean, count: number, say: (count: number, done: boolean) => void) {
+  const latest = React.useRef({ count, say });
+  const state = React.useRef<{ on: boolean; last: number; timer?: ReturnType<typeof setTimeout> }>({ on: false, last: 0 });
+  React.useEffect(() => {
+    latest.current = { count, say };
+  });
+  React.useEffect(() => {
+    const s = state.current;
+    if (streaming && !s.on) {
+      s.on = true;
+      s.last = Date.now();
+    } else if (!streaming && s.on) {
+      s.on = false;
+      clearTimeout(s.timer);
+      s.timer = undefined;
+      latest.current.say(count, true);
+    } else if (streaming && s.timer === undefined) {
+      s.timer = setTimeout(
+        () => {
+          s.timer = undefined;
+          s.last = Date.now();
+          latest.current.say(latest.current.count, false);
+        },
+        Math.max(0, s.last + STREAM_ANNOUNCE_MS - Date.now()),
+      );
+    }
+  }, [streaming, count]);
+  React.useEffect(() => {
+    const s = state.current;
+    return () => clearTimeout(s.timer);
+  }, []);
+}
+
+/** 12.5: the placeholder row that trails a streaming list. */
+function StreamingRow() {
+  const { tokens } = useTheme();
+  return (
+    <View
+      testID="data-list-streaming"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      style={{ minHeight: tokens.size.control.xl, justifyContent: 'center', gap: tokens.spacing[2], paddingHorizontal: tokens.spacing[4] }}
+    >
+      <Skeleton shape="line" width="60%" />
+      <Skeleton shape="line" width="35%" height={tokens.spacing[3]} />
+    </View>
+  );
 }
 
 /**
@@ -298,9 +363,26 @@ export function DataList<T>({
   onSelectedChange,
   bulkActions,
   empty,
+  streaming = false,
   style,
 }: DataListProps<T>) {
-  const { roles, tokens, messages } = useTheme();
+  const { roles, tokens, messages, locale } = useTheme();
+  // 12.5 streaming: remember the rows already shown, so only arrivals fade in. A list that has
+  // streamed keeps its row wrappers, so rows don't remount when the stream ends.
+  const seen = React.useRef<Set<string> | null>(null);
+  const streamed = React.useRef(false);
+  if (!streaming) seen.current = null;
+  else {
+    streamed.current = true;
+    seen.current ??= new Set(data.map(keyExtractor));
+  }
+  React.useEffect(() => {
+    if (streaming) for (const item of data) seen.current?.add(keyExtractor(item));
+  });
+  useStreamingAnnouncements(streaming, data.length, (count, done) => {
+    const n = new Intl.NumberFormat(locale).format(count);
+    AccessibilityInfo.announceForAccessibility(done ? messages.rowsDone(n) : messages.rowsSoFar(n));
+  });
   const [sortOpen, setSortOpen] = React.useState(false);
   const [sort, setSort] = useControllableState<{ id: string; desc: boolean } | undefined>({
     value: sortProp,
@@ -352,10 +434,13 @@ export function DataList<T>({
         data={rows}
         keyExtractor={keyExtractor}
         ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: roles['outline-variant'] }} />}
-        ListEmptyComponent={empty ? () => <>{empty}</> : undefined}
+        ListEmptyComponent={empty && !streaming ? () => <>{empty}</> : undefined}
+        ListFooterComponent={streaming ? StreamingRow : undefined}
+        accessibilityState={streaming ? { busy: true } : undefined}
         renderItem={({ item }) => {
           const key = keyExtractor(item);
-          return selectable ? (
+          const arrived = !!seen.current && !seen.current.has(key);
+          const row = selectable ? (
             <ListItem
               variant="checkbox"
               title={title(item)}
@@ -373,6 +458,8 @@ export function DataList<T>({
               onPress={onPressItem ? () => onPressItem(item) : undefined}
             />
           );
+          // `entering` only plays when a row mounts, so it is safe to pass on later renders.
+          return streamed.current ? <Animated.View entering={arrived ? nxEnter('fade') : undefined}>{row}</Animated.View> : row;
         }}
       />
       {sorts && (
