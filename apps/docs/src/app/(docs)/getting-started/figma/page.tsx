@@ -28,6 +28,12 @@ export default function FigmaPage() {
         }
       />
 
+      <Note title="Beta">
+        The variables follow the W3C Design Tokens format, but a designer has not yet tried importing them into a real
+        Figma file. Until that test passes, treat this import as beta, and report anything that does not import
+        cleanly (an alias that does not resolve, a missing mode) as an issue.
+      </Note>
+
       <Section id="files" title="The files">
         <DocTable
           head={['File', 'Becomes', 'Holds']}
