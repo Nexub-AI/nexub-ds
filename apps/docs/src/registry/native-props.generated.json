@@ -294,6 +294,130 @@
       }
     ]
   },
+  "NavigationRailRoot": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "orientation",
+        "type": "'auto' | NavOrientation",
+        "required": false,
+        "default": "'auto'",
+        "description": "`auto`: a rail at the start edge on medium and expanded windows (≥ 600dp),\na bottom bar on compact ones. Inside AppShell it follows the shell.\n`vertical` and `bottom` fix it, as on web."
+      },
+      {
+        "name": "header",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Slot above the items in the rail, e.g. a FAB. Not shown in the bottom bar."
+      },
+      {
+        "name": "accessibilityLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.mainNavigation ('Main')",
+        "description": "Name of the navigation."
+      }
+    ]
+  },
+  "NavigationRailItem": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "Omit<PressableProps, 'children'>"
+    ],
+    "props": [
+      {
+        "name": "icon",
+        "type": "React.ComponentType<NativeIconProps>",
+        "required": true,
+        "description": "An icon component from"
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Marks the current destination (selected for screen readers)."
+      },
+      {
+        "name": "badge",
+        "type": "number | boolean",
+        "required": false,
+        "description": "A count on the icon (99+ above 99, nothing at 0), or `true` for a dot. Read after the label."
+      },
+      {
+        "name": "badgeLabel",
+        "type": "string",
+        "required": false,
+        "description": "Other wording for the badge, e.g. \"2 failed builds\"."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "haptic",
+        "type": "'selection' | 'toggleOn' | 'toggleOff' | 'confirm' | 'success' | 'reject' | 'warning' | 'snap'",
+        "required": false,
+        "description": "Haptic played on press (Apple: not for plain taps — toggles, selections, outcomes).",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "stateLayer",
+        "type": "RoleName | false",
+        "required": false,
+        "default": "'on-surface'",
+        "description": "On-colour of the state layer, or false for none.",
+        "inherited": "Pressable"
+      },
+      {
+        "name": "pressScale",
+        "type": "number | false",
+        "required": false,
+        "default": "0.97",
+        "description": "Press-scale target, or false for none.",
+        "inherited": "Pressable"
+      }
+    ]
+  },
+  "AppShell": {
+    "file": "components/adaptive.tsx",
+    "extends": [
+      "ViewProps"
+    ],
+    "props": [
+      {
+        "name": "navigation",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "The app's NavigationRail.Root. A bottom bar on compact windows, a rail at the start edge from medium up."
+      },
+      {
+        "name": "header",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "A top bar above the content (e.g. an AppBar)."
+      },
+      {
+        "name": "railFrom",
+        "type": "'medium' | 'expanded'",
+        "required": false,
+        "default": "'medium'",
+        "description": "Window size class from which the navigation becomes a rail.\n`expanded` keeps the bottom bar on medium windows (small tablets, unfolded foldables in portrait)."
+      }
+    ]
+  },
   "ToolCall": {
     "file": "components/agent.tsx",
     "extends": [],
@@ -548,6 +672,402 @@
         "type": "StyleProp<ViewStyle>",
         "required": false,
         "description": ""
+      }
+    ]
+  },
+  "EventCalendar": {
+    "file": "components/calendar.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "events",
+        "type": "CalendarEvent[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "date",
+        "type": "Date",
+        "required": false,
+        "description": "Any day inside the shown day or month."
+      },
+      {
+        "name": "defaultDate",
+        "type": "Date",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onDateChange",
+        "type": "(date: Date) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "view",
+        "type": "'day' | 'agenda'",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "defaultView",
+        "type": "'day' | 'agenda'",
+        "required": false,
+        "default": "'agenda'",
+        "description": ""
+      },
+      {
+        "name": "onViewChange",
+        "type": "(view: EventCalendarView) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "views",
+        "type": "EventCalendarView[]",
+        "required": false,
+        "default": "['day', 'agenda']",
+        "description": "Views offered in the switcher; the current view is always offered. One view hides the switcher."
+      },
+      {
+        "name": "now",
+        "type": "Date",
+        "required": false,
+        "default": "new Date()",
+        "description": "The current time: marks today and draws the \"now\" line in day view. Pass a fixed date in tests and screenshots."
+      },
+      {
+        "name": "onEventClick",
+        "type": "(event: CalendarEvent) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "onDayClick",
+        "type": "(date: Date) => void",
+        "required": false,
+        "description": "A day's heading in agenda view."
+      },
+      {
+        "name": "renderDayAction",
+        "type": "(date: Date) => React.ReactNode",
+        "required": false,
+        "description": "A per-day slot, e.g. a small add button: above the day view and beside each agenda day."
+      },
+      {
+        "name": "eventActions",
+        "type": "(event: CalendarEvent) => React.ReactNode",
+        "required": false,
+        "description": "Controls for one event, e.g. a menu button, beside it."
+      },
+      {
+        "name": "legend",
+        "type": "EventCalendarLegendItem[]",
+        "required": false,
+        "description": "A row under the toolbar naming what each tone means."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Placeholders in place of the events while they load."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown when no event falls in the shown day (or month, in agenda view)."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the events when set (a failed load)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
+  "LineChart": {
+    "file": "components/charts.tsx",
+    "extends": [
+      "CartesianProps<T>"
+    ],
+    "props": [
+      {
+        "name": "area",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Fill the area under each line (down to the zero line)."
+      },
+      {
+        "name": "data",
+        "type": "T[]",
+        "required": true,
+        "description": "One row per category, in order.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "index",
+        "type": "keyof T & string",
+        "required": true,
+        "description": "Key of the category label in each row (the x axis).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "series",
+        "type": "ChartSeries[]",
+        "required": true,
+        "description": "The values to plot, one entry per series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the chart, e.g. \"Revenue by month\".",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "valueFormat",
+        "type": "(value: number) => string",
+        "required": false,
+        "default": "(n: number) => n.toLocaleString()",
+        "description": "Formats axis labels and the summary.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Height of the plot: 128, 192 or 256 pt.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "required": false,
+        "description": "Show the legend above the chart. Defaults to on for more than one series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "integerTicks",
+        "type": "boolean",
+        "required": false,
+        "description": "Gridlines and axis labels on whole numbers only (counts).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "annotations",
+        "type": "ChartAnnotation[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled points or ranges on the plot (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "referenceLines",
+        "type": "ChartReferenceLine[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "change",
+        "type": "ChartChange",
+        "required": false,
+        "description": "A callout above the plot with the change between two points, its delta computed and formatted (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "A placeholder the size of the plot while the data loads.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when `data` is empty.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the plot when set (a failed load).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      }
+    ]
+  },
+  "BarChart": {
+    "file": "components/charts.tsx",
+    "extends": [
+      "CartesianProps<T>"
+    ],
+    "props": [
+      {
+        "name": "stacked",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Stack the series in one bar per category instead of side by side."
+      },
+      {
+        "name": "colorOf",
+        "type": "(row: T, series: ChartSeries, index: number) => ChartPaint | undefined",
+        "required": false,
+        "description": "A colour per bar, e.g. red for the months over budget. Return undefined for the series colour."
+      },
+      {
+        "name": "data",
+        "type": "T[]",
+        "required": true,
+        "description": "One row per category, in order.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "index",
+        "type": "keyof T & string",
+        "required": true,
+        "description": "Key of the category label in each row (the x axis).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "series",
+        "type": "ChartSeries[]",
+        "required": true,
+        "description": "The values to plot, one entry per series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true,
+        "description": "Accessible name of the chart, e.g. \"Revenue by month\".",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "valueFormat",
+        "type": "(value: number) => string",
+        "required": false,
+        "default": "(n: number) => n.toLocaleString()",
+        "description": "Formats axis labels and the summary.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "size",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Height of the plot: 128, 192 or 256 pt.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "legend",
+        "type": "boolean",
+        "required": false,
+        "description": "Show the legend above the chart. Defaults to on for more than one series.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "integerTicks",
+        "type": "boolean",
+        "required": false,
+        "description": "Gridlines and axis labels on whole numbers only (counts).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "annotations",
+        "type": "ChartAnnotation[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled points or ranges on the plot (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "referenceLines",
+        "type": "ChartReferenceLine[]",
+        "required": false,
+        "default": "[]",
+        "description": "Labelled horizontal (value) or vertical (category) lines. A value line widens the axis to stay in view (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "change",
+        "type": "ChartChange",
+        "required": false,
+        "description": "A callout above the plot with the change between two points, its delta computed and formatted (12.3).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "A placeholder the size of the plot while the data loads.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when `data` is empty.",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the plot when set (a failed load).",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": "",
+        "inherited": "Cartesian"
       }
     ]
   },
@@ -4372,6 +4892,125 @@
       }
     ]
   },
+  "Kanban": {
+    "file": "components/kanban.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "columns",
+        "type": "KanbanColumn<T>[]",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "getId",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "getLabel",
+        "type": "(item: T) => string",
+        "required": true,
+        "description": "The card's name, read by screen readers and used in the move sheet's title."
+      },
+      {
+        "name": "onChange",
+        "type": "(columns: KanbanColumn<T>[], move: KanbanMove<T>) => void",
+        "required": true,
+        "description": "Called with the columns after a move; store them to apply it. The second argument names the\ncard and where it moved. A moved card goes to the end of its new column."
+      },
+      {
+        "name": "renderCard",
+        "type": "(item: T) => React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "columnEmptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown inside a column that has no cards (while other columns have some)."
+      },
+      {
+        "name": "readOnly",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Cards can't be moved: no move button, no move actions."
+      },
+      {
+        "name": "canMove",
+        "type": "(move: KanbanMove<T>) => boolean",
+        "required": false,
+        "description": "Refuse a move before it lands (a WIP limit, a rule): a refused column is left out of the sheet and the actions."
+      },
+      {
+        "name": "dropTargets",
+        "type": "KanbanDropTarget<T>[]",
+        "required": false,
+        "default": "[]",
+        "description": "Places outside the columns, e.g. Archive: listed after the columns in the move sheet."
+      },
+      {
+        "name": "renderColumnHeader",
+        "type": "(column: KanbanColumn<T>, count: number) => React.ReactNode",
+        "required": false,
+        "description": "Replaces a column's header (title, count, a WIP badge)."
+      },
+      {
+        "name": "renderColumnFooter",
+        "type": "(column: KanbanColumn<T>) => React.ReactNode",
+        "required": false,
+        "description": "A slot at the end of each column, e.g. a quick-add button."
+      },
+      {
+        "name": "getTone",
+        "type": "(item: T) => KanbanCardTone | undefined",
+        "required": false,
+        "description": "A coloured start edge on a card (for priority or status; the card should say it in text too)."
+      },
+      {
+        "name": "columnWidth",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Column width: 240, 288 or 352 pt."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "Placeholder columns and cards while the board loads."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "default": "the \"Nothing here yet\" text",
+        "description": "Shown when no column has a card."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in place of the board when set (a failed load)."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": ""
+      }
+    ]
+  },
   "SwipeableRow": {
     "file": "components/mobile.tsx",
     "extends": [],
@@ -6594,7 +7233,6 @@
         "name": "title",
         "type": "string",
         "required": true,
-        "default": "'Sign in'",
         "description": ""
       },
       {
@@ -6679,15 +7317,122 @@
         "name": "title",
         "type": "string",
         "required": false,
-        "default": "'Sign in'",
         "description": "Copy overrides."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": "12.5: a line under the title, as web."
       },
       {
         "name": "submitLabel",
         "type": "string",
         "required": false,
-        "default": "'Sign in'",
         "description": ""
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "12.5: string overrides, keyed as web (`email`, `password`, `forgotPassword`, `createAccount` …)."
+      }
+    ]
+  },
+  "SignUpScreen": {
+    "file": "patterns/auth.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "onSubmit",
+        "type": "(values: SignUpValues) => void",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "termsLabel",
+        "type": "string",
+        "required": true,
+        "description": "The terms checkbox label, e.g. \"I agree to the Terms and Privacy Policy\"."
+      },
+      {
+        "name": "termsAction",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Native only: at the end of the terms row, e.g. a \"Read\" text button that opens the terms."
+      },
+      {
+        "name": "phone",
+        "type": "boolean",
+        "required": false,
+        "description": "Adds an optional phone number field."
+      },
+      {
+        "name": "defaultCountry",
+        "type": "PhoneInputProps['defaultCountry']",
+        "required": false,
+        "description": "Country the phone field starts on (ISO 3166-1 alpha-2)."
+      },
+      {
+        "name": "onSignIn",
+        "type": "() => void",
+        "required": false,
+        "description": "Renders \"Already have an account? Sign in\" under the primary button."
+      },
+      {
+        "name": "social",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Above the form, followed by an \"or\" divider: \"Continue with …\" buttons."
+      },
+      {
+        "name": "passwordRules",
+        "type": "PasswordRule[]",
+        "required": false,
+        "default": "defaultPasswordRules",
+        "description": "Checks behind the strength meter. The share that passes fills four segments;\nthree or more segments is accepted. Say what you ask for in `messages.passwordHint`."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "error",
+        "type": "string",
+        "required": false,
+        "description": "Error from the last attempt (announced)."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "String overrides, keyed as web (`signUp`, `name`, `passwordHint`, `acceptTerms` …)."
       }
     ]
   },
@@ -6705,13 +7450,13 @@
         "name": "onComplete",
         "type": "(code: string) => void",
         "required": true,
-        "description": ""
+        "description": "Called as soon as every box is filled, and from the Continue button."
       },
       {
         "name": "onResend",
         "type": "() => void",
-        "required": true,
-        "description": ""
+        "required": false,
+        "description": "Renders \"Resend code\" behind a cooldown. 12.5: optional, as web."
       },
       {
         "name": "resendAfter",
@@ -6732,6 +7477,73 @@
         "type": "string",
         "required": false,
         "description": ""
+      },
+      {
+        "name": "onChangeDestination",
+        "type": "() => void",
+        "required": false,
+        "description": "12.5: renders \"Use a different number\" (rename it with `messages.changeDestination`)."
+      },
+      {
+        "name": "methods",
+        "type": "VerifyMethod[]",
+        "required": false,
+        "description": "12.5: other second factors, as a short list of buttons under the code."
+      },
+      {
+        "name": "onMethodChange",
+        "type": "(id: string) => void",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "expiresAt",
+        "type": "number | Date",
+        "required": false,
+        "description": "12.5: when the code stops working: shows the time left."
+      },
+      {
+        "name": "now",
+        "type": "() => number",
+        "required": false,
+        "default": "Date.now",
+        "description": "12.5: clock for the expiry countdown (tests, previews)."
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "12.5: the code is being checked: the boxes are read-only and Continue shows progress."
+      },
+      {
+        "name": "logo",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "12.5: brand mark above the title."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "12.5: copy overrides."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "submitLabel",
+        "type": "string",
+        "required": false,
+        "description": "12.5: adds a Continue button that submits the code, with this label. Without `onResend`\nthe button shows anyway, labelled `messages.continue`."
+      },
+      {
+        "name": "messages",
+        "type": "Partial<AuthScreenMessages>",
+        "required": false,
+        "description": "12.5: string overrides, keyed as web (`enterCode`, `codeSentTo`, `resendCode` …)."
       }
     ]
   },
@@ -6838,6 +7650,94 @@
         "type": "Partial<{ totalBalance: string; recentActivity: string; seeAll: string; insights: string }>",
         "required": false,
         "description": "Copy overrides."
+      }
+    ]
+  },
+  "ListDetail": {
+    "file": "patterns/layout.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "list",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "detail",
+        "type": "React.ReactNode",
+        "required": true,
+        "description": ""
+      },
+      {
+        "name": "showDetail",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "On compact windows (one pane at a time), show the detail instead of the list.\nSet it when an item is selected. Ignored when both panes show."
+      },
+      {
+        "name": "onBack",
+        "type": "() => void",
+        "required": false,
+        "description": "Called by the back button and by Android's back gesture, on compact windows\nwhile the detail shows. Omit it to hide the button (e.g. when your stack header has one)."
+      },
+      {
+        "name": "backLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.back ('Back')",
+        "description": ""
+      },
+      {
+        "name": "listWidth",
+        "type": "'sm' | 'md' | 'lg'",
+        "required": false,
+        "default": "'md'",
+        "description": "Fixed list width when both panes show: sm 288, md 320, lg 400."
+      },
+      {
+        "name": "splitRatio",
+        "type": "number",
+        "required": false,
+        "description": "The list pane's share of the width when both panes show, from 0.2 to 0.8\n(e.g. 0.4). Wins over `listWidth`."
+      },
+      {
+        "name": "listLabel",
+        "type": "string",
+        "required": false,
+        "default": "messages.listPane / messages.detailPane",
+        "description": "Accessible names for the two panes."
+      },
+      {
+        "name": "detailLabel",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false,
+        "description": "Skeleton rows in the list pane, which reads as busy."
+      },
+      {
+        "name": "emptyState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in the list pane in place of `list`. Pass it when the list has no items."
+      },
+      {
+        "name": "errorState",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Shown in the list pane in place of `list`; wins over `loading` and `emptyState`."
+      },
+      {
+        "name": "style",
+        "type": "StyleProp<ViewStyle>",
+        "required": false,
+        "description": ""
       }
     ]
   },
@@ -7137,6 +8037,66 @@
         "type": "React.ReactNode",
         "required": false,
         "description": "12.3: art in place of the icon disc, e.g. `<Illustration kind=\"success\" size=\"lg\" />`."
+      }
+    ]
+  },
+  "StatusScreen": {
+    "file": "patterns/status-screen.tsx",
+    "extends": [],
+    "props": [
+      {
+        "name": "kind",
+        "type": "'notFound' | 'serverError' | 'maintenance' | 'offline' | 'noAccess'",
+        "required": true,
+        "description": "notFound (404), serverError (500), maintenance, offline or noAccess (403)."
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "Overrides the localised title (`messages.emptyStates[kind]`); the description too."
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "code",
+        "type": "string",
+        "required": false,
+        "description": "A small line above the title, e.g. \"404\"."
+      },
+      {
+        "name": "actions",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Buttons pinned at the bottom. Replaces the default Retry or Back to home."
+      },
+      {
+        "name": "illustration",
+        "type": "React.ReactNode",
+        "required": false,
+        "description": "Art above the text. Defaults to the `Illustration` for the kind; `null` hides it."
+      },
+      {
+        "name": "onRetry",
+        "type": "() => void",
+        "required": false,
+        "description": "serverError and offline: shows a Retry button (when no `actions` are given)."
+      },
+      {
+        "name": "onHome",
+        "type": "() => void",
+        "required": false,
+        "description": "notFound and noAccess: shows a \"Back to home\" button (when no `actions` are given). Native for web `homeHref`."
+      },
+      {
+        "name": "testID",
+        "type": "string",
+        "required": false,
+        "description": ""
       }
     ]
   },

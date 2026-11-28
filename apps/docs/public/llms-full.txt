@@ -111,7 +111,7 @@ Copy is clear, direct, human and confident. Use sentence case, active voice, con
 
 # Tokens
 
-Nexub DS v12.3.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
+Nexub DS v12.4.0. Every token is a CSS custom property from `@nexub/tokens/css` (loaded by `@nexub/themes/base`).
 The Tailwind preset (`@nexub/tokens/tailwind`) maps them to utilities. Never hardcode a hex, px spacing or shadow that a token covers.
 
 ## Color roles
@@ -352,7 +352,7 @@ Use springs, not durations. Each spring has a paired easing and duration:
 
 # Component index
 
-Nexub DS v12.3.0. Open `components/<slug>.md` for props, examples and accessibility notes.
+Nexub DS v12.4.0. Open `components/<slug>.md` for props, examples and accessibility notes.
 Never use a component marked deprecated.
 
 ## Components — Actions
@@ -16224,6 +16224,7 @@ Names and props match `@nexub/react` where a web twin exists.
 - **Feedback:** `Banner`, `ToastProvider` / `useToast`, `Progress`, `LoadingIndicator`, `Skeleton`, `SkeletonSwap`, `EmptyState`, `ErrorState`, `OfflineBanner`, `Coachmark`.
 - **Mobile:** `SwipeableRow`, `RefreshControl`, `Carousel`, `PageIndicator`, `StickyFooter`, `SensitiveValue`, `PrivacyShield`, `FAB` (Android only by default).
 - **Navigation helpers:** `nexubStackOptions`, `nexubNavigationTheme`, `nexubTabsOptions`.
+- **Larger screens:** `useWindowSizeClass()` (`compact` < 600, `medium` < 840, `expanded`), `NavigationRail` (a rail from medium up, a bottom bar on compact windows) and `AppShell` (navigation, header and content laid out for the window). Foldables are handled by window size: React Native has no hinge or posture API without a native module.
 
 - **Motion:** `nxEnter`, `nxExit`, `nxLayout` (Reanimated layout animations) and `nxSpring` (a `withSpring` config), built from the same spring tokens as the web. `<Animated.View entering={nxEnter('up')} exiting={nxExit('down')} layout={nxLayout()} />`. Toast, Banner, `ListSection` rows, `SwipeableRow`, `Chip`, the `SegmentedControl` pill and `Amount` (`animate`) already use them. In a `FlatList`, pass `nxLayout()` as `itemLayoutAnimation`.
 
@@ -16233,8 +16234,10 @@ Icons: `import { Search } from '@nexub/icons/native'`. These are the same names 
 
 `import { SignInScreen, AmountStep, ActivityList } from '@nexub/react-native/patterns'`. Each pattern is a screen template that takes data and callbacks, so it works with any router.
 
-- **Auth:** `AuthScreen`, `SignInScreen`, `VerifyCodeScreen`, `LockScreen`.
+- **Auth:** `AuthScreen`, `SignInScreen`, `SignUpScreen`, `VerifyCodeScreen`, `LockScreen`.
+- **Status:** `StatusScreen` (not found, server error, maintenance, offline, no access), `StatusSteps`.
 - **Money:** `FlowStep`, `AmountStep`, `ReviewStep`, `ActivityList`, `TransactionDetail`, `ResultScreen`.
+- **Layout:** `ListDetail` (list and detail side by side from medium up, one pane at a time on phones, `splitRatio`).
 - **App:** `OnboardingScreen`, `PermissionPrimer`, `SettingsScreen`, `ProfileHeader`, `AppearanceSection`, `NotificationsInbox`, `SearchScreen`, `ChatScreen`, `PaywallScreen`, `AppSwitcherSheet`.
 
 ## Rules the components follow

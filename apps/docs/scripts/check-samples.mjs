@@ -91,6 +91,8 @@ const options = {
     // Not a docs dependency; native twins' samples resolve to the package source.
     '@nexub/react-native': ['../../packages/react-native/src/index.ts'],
     '@nexub/react-native/patterns': ['../../packages/react-native/src/patterns/index.ts'],
+    '@nexub/react-native/calendar': ['../../packages/react-native/src/calendar.ts'],
+    '@nexub/react-native/charts': ['../../packages/react-native/src/charts.ts'],
   },
 };
 const host = ts.createCompilerHost(options);

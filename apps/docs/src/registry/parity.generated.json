@@ -523,6 +523,32 @@
       "searchable"
     ]
   },
+  "navigation-rail": {
+    "web": "NavigationRailRoot",
+    "native": "NavigationRail",
+    "shared": [
+      "header",
+      "orientation"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "app-shell": {
+    "web": "AppShellRoot",
+    "native": "AppShell",
+    "shared": [],
+    "webOnly": [],
+    "onPurpose": [
+      "onOpenChange",
+      "open"
+    ],
+    "nativeOnly": [
+      "header",
+      "navigation",
+      "railFrom"
+    ]
+  },
   "tabs": {
     "web": null,
     "native": "Tabs",
@@ -1224,6 +1250,131 @@
     "onPurpose": [],
     "nativeOnly": []
   },
+  "kanban": {
+    "web": "Kanban",
+    "native": "Kanban",
+    "shared": [
+      "canMove",
+      "columnEmptyState",
+      "columnWidth",
+      "columns",
+      "dropTargets",
+      "emptyState",
+      "errorState",
+      "getId",
+      "getLabel",
+      "getTone",
+      "loading",
+      "onChange",
+      "readOnly",
+      "renderCard",
+      "renderColumnFooter",
+      "renderColumnHeader"
+    ],
+    "webOnly": [
+      "getLane",
+      "lanes"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "event-calendar": {
+    "web": "EventCalendar",
+    "native": "EventCalendar",
+    "shared": [
+      "date",
+      "defaultDate",
+      "defaultView",
+      "emptyState",
+      "errorState",
+      "eventActions",
+      "events",
+      "legend",
+      "loading",
+      "now",
+      "onDateChange",
+      "onDayClick",
+      "onEventClick",
+      "onViewChange",
+      "renderDayAction",
+      "view",
+      "views"
+    ],
+    "webOnly": [
+      "onEventMove"
+    ],
+    "onPurpose": [
+      "maxEventsPerDay",
+      "weekStartsOn"
+    ],
+    "nativeOnly": []
+  },
+  "line-chart": {
+    "web": "LineChart",
+    "native": "LineChart",
+    "shared": [
+      "annotations",
+      "area",
+      "change",
+      "data",
+      "emptyState",
+      "errorState",
+      "index",
+      "integerTicks",
+      "legend",
+      "loading",
+      "referenceLines",
+      "series",
+      "size",
+      "title",
+      "valueFormat"
+    ],
+    "webOnly": [
+      "defaultHiddenSeries",
+      "hiddenSeries",
+      "interactive",
+      "onHiddenSeriesChange",
+      "onPointClick",
+      "tableView"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
+  "bar-chart": {
+    "web": "BarChart",
+    "native": "BarChart",
+    "shared": [
+      "annotations",
+      "change",
+      "colorOf",
+      "data",
+      "emptyState",
+      "errorState",
+      "index",
+      "integerTicks",
+      "legend",
+      "loading",
+      "referenceLines",
+      "series",
+      "size",
+      "stacked",
+      "title",
+      "valueFormat"
+    ],
+    "webOnly": [
+      "defaultHiddenSeries",
+      "hiddenSeries",
+      "interactive",
+      "onHiddenSeriesChange",
+      "onPointClick",
+      "orientation",
+      "tableView",
+      "totalKey",
+      "variant"
+    ],
+    "onPurpose": [],
+    "nativeOnly": []
+  },
   "dialog": {
     "web": null,
     "native": "Dialog",
@@ -1356,6 +1507,28 @@
     "onPurpose": [],
     "nativeOnly": []
   },
+  "status-page": {
+    "web": "StatusPage",
+    "native": "StatusScreen",
+    "shared": [
+      "actions",
+      "code",
+      "description",
+      "illustration",
+      "kind",
+      "onRetry",
+      "title"
+    ],
+    "webOnly": [],
+    "onPurpose": [
+      "as",
+      "fullScreen",
+      "homeHref"
+    ],
+    "nativeOnly": [
+      "onHome"
+    ]
+  },
   "activity-feed": {
     "web": "ActivityFeedRoot",
     "native": "ActivityList",
@@ -1382,11 +1555,11 @@
     "web": "AuthCard",
     "native": "SignInScreen",
     "shared": [
+      "description",
       "logo",
       "title"
     ],
     "webOnly": [
-      "description",
       "footer",
       "logoAlign"
     ],
@@ -1397,6 +1570,7 @@
       "biometricLabel",
       "error",
       "loading",
+      "messages",
       "onBiometric",
       "onCreateAccount",
       "onForgotPassword",
@@ -1468,6 +1642,28 @@
     "nativeOnly": [
       "groups",
       "header"
+    ]
+  },
+  "list-detail": {
+    "web": "ListDetail",
+    "native": "ListDetail",
+    "shared": [
+      "backLabel",
+      "detail",
+      "detailLabel",
+      "emptyState",
+      "errorState",
+      "list",
+      "listLabel",
+      "listWidth",
+      "loading",
+      "onBack",
+      "showDetail"
+    ],
+    "webOnly": [],
+    "onPurpose": [],
+    "nativeOnly": [
+      "splitRatio"
     ]
   },
   "notification-item": {

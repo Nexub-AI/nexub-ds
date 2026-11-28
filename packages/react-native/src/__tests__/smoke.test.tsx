@@ -7,6 +7,8 @@ import { act, render, screen, waitFor } from '@testing-library/react-native';
 import { Plus } from '@nexub/icons/native';
 import * as Lib from '../index';
 import * as Patterns from '../patterns';
+import * as Calendar from '../calendar';
+import * as Charts from '../charts';
 
 // The OS colour scheme, driven by the test at the bottom of this file.
 const mockColorScheme = jest.fn(() => 'light');
@@ -181,10 +183,20 @@ const CASES: Record<string, Case> = {
   ComparisonBar: { props: { label: 'Orders', left: { label: 'A', value: 3 }, right: { label: 'B', value: 1 } }, a11y: ['image', 'Orders: A 3, B 1'] },
   PhoneInput: { props: { label: 'Phone', defaultCountry: 'IN' }, a11y: ['button', 'Country code, India +91'] },
   Countdown: { props: { to: 272_000, now: () => 0 }, a11y: ['timer', '4:32'] },
+  // 12.5 twins
+  Kanban: {
+    props: { columns: [{ id: 'todo', title: 'To do', items: ['Alpha'] }, { id: 'done', title: 'Done', items: [] }], getId: (x: string) => x, getLabel: (x: string) => x, onChange: noop, renderCard: (x: string) => t(x) },
+    a11y: 'Alpha, To do',
+  },
+  EventCalendar: { props: { events: [], now: new Date(2026, 10, 2, 9), defaultDate: new Date(2026, 10, 2) }, a11y: ['button', 'Today'] },
+  LineChart: { props: { title: 'Visits', data: [{ m: 'Jan', v: 1 }], index: 'm', series: [{ key: 'v' }] }, a11y: ['image', 'Visits. Jan: v 1'] },
+  BarChart: { props: { title: 'Sales', data: [{ m: 'Jan', v: 2 }], index: 'm', series: [{ key: 'v', label: 'Sales' }] }, a11y: ['image', 'Sales. Jan: Sales 2'] },
   // Patterns
   HomeScreen: { props: { greeting: 'Hi', balance: { value: 1, currency: 'USD' } } },
   AuthScreen: { props: { title: 'Welcome', children: t('form'), footer: <Lib.Button onPress={noop}>Go</Lib.Button> }, a11y: ['header', 'Welcome'] },
   SignInScreen: { props: { onSubmit: noop }, a11y: ['button', 'Sign in'] },
+  SignUpScreen: { props: { onSubmit: noop, termsLabel: 'I agree' }, a11y: ['button', 'Create an account'] },
+  StatusScreen: { props: { kind: 'serverError', onRetry: noop }, a11y: ['button', 'Retry'] },
   VerifyCodeScreen: { props: { destination: '+65 4821', onComplete: noop, onResend: noop }, a11y: 'Verification code' },
   LockScreen: { props: { unlockLabel: 'Unlock with Face ID', onUnlock: noop }, a11y: ['button', 'Unlock with Face ID'] },
   FlowStep: { props: { step: 1, total: 3, title: 'Who to?', children: t('body'), footer: t('f') }, a11y: ['progressbar', 'Page 1 of 3'] },
@@ -207,13 +219,16 @@ const CASES: Record<string, Case> = {
   PaywallScreen: { props: { title: 'Go Pro', plans: [{ id: 'm', name: 'Monthly', price: '$9', features: [] }], onSubscribe: noop }, a11y: ['radio', 'Monthly, $9'] },
   AppSwitcherSheet: { props: { open: true, onOpenChange: noop, apps: [{ id: 'leap', name: 'Leap' }], onOpenApp: noop }, a11y: ['button', 'Leap'] },
   StatusSteps: { props: { accessibilityLabel: 'Status', steps: [{ title: 'Sent', status: 'done' }] }, a11y: 'Status' },
+  // 12.5: larger screens
+  AppShell: { props: { navigation: <Lib.NavigationRail.Root><Lib.NavigationRail.Item icon={Plus} label="Home" active /></Lib.NavigationRail.Root>, children: t('content') }, a11y: ['tab', 'Home'] },
+  ListDetail: { props: { list: t('list'), detail: t('detail') }, a11y: 'List' },
 };
 
 const isComponent = (name: string, v: unknown) =>
   /^[A-Z]/.test(name) &&
   (typeof v === 'function' || (typeof v === 'object' && v !== null && '$$typeof' in v));
 
-const exported = Object.entries({ ...Lib, ...Patterns }).filter(([n, v]) => isComponent(n, v)) as [
+const exported = Object.entries({ ...Lib, ...Patterns, ...Calendar, ...Charts }).filter(([n, v]) => isComponent(n, v)) as [
   string,
   React.ComponentType<Props>,
 ][];
