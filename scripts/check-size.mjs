@@ -79,8 +79,9 @@ for (const pkg of ['tokens', 'themes', 'react', 'patterns', 'marketing', 'diagra
   }
 }
 // 12.1: each component part of @nexub/themes (core.css split, loaded only by the apps that need it).
-for (const f of readdirSync(join(pkgs, 'themes/src/parts')).filter((f) => f.endsWith('.css')).sort())
-  add(`themes/parts/${f.slice(0, -4)}`, join(pkgs, 'themes/src/parts', f));
+// 12.7: measured in dist/, where the ./parts/*.css export resolves.
+for (const f of readdirSync(join(pkgs, 'themes/dist/parts')).filter((f) => f.endsWith('.css')).sort())
+  add(`themes/parts/${f.slice(0, -4)}`, join(pkgs, 'themes/dist/parts', f));
 add('icons', join(pkgs, 'icons/dist/index.js'));
 add('core', join(pkgs, 'core/dist/index.js'));
 // React Native (Metro bundles the app; these are the library's own bytes).

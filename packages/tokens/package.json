@@ -1,6 +1,6 @@
 {
   "name": "@nexub/tokens",
-  "version": "12.5.0",
+  "version": "12.6.0",
   "description": "Design tokens for Nexub Design System — colours, typography, spacing, radii, shadows, and motion as CSS variables, a Tailwind 4 theme, Figma variables and native (React Native, SwiftUI, Compose) tokens.",
   "type": "module",
   "license": "MIT",
@@ -58,7 +58,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "node scripts/build.mjs && tsc -p tsconfig.json",
+    "build": "node scripts/build.mjs && tsc -p tsconfig.json && node scripts/compact-generated.mjs",
     "dev": "node scripts/build.mjs --watch",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

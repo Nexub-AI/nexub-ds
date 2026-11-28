@@ -538,6 +538,7 @@ export const searchIndex: SearchEntry[] = [
   { id: 'migrating-to-3', label: 'Migrating to 3.0', description: 'What 3.0 removes (Banner, Callout, Tag, StatusPill, legacy colour names) and the codemod that moves you off it', href: '/getting-started/migrating-to-3', category: 'Docs' },
   { id: 'example-dashboard', label: 'Example: Dashboard', description: 'A product dashboard built only from public @nexub/react and @nexub/patterns exports', href: '/examples/dashboard', category: 'Examples' },
   { id: 'components-status', label: 'Component status', description: 'Lifecycle status of every component and pattern on web and native', href: '/components/status', category: 'Docs' },
+  { id: 'components-adoption', label: 'Adoption', description: '12.7: health scorecard per app, admin-ui stopgaps still in use, and the usage scan findings for 13.x', href: '/components/adoption', category: 'Docs' },
   { id: 'foundations-principles', label: 'Principles', description: 'Calm Depth: the six principles behind the design language', href: '/foundations/principles', category: 'Foundations' },
   { id: 'foundations-tokens', label: 'Tokens', description: 'Every design token in one searchable table: roles with light and dark values, component tokens, reference scales', href: '/foundations/tokens', category: 'Foundations' },
   { id: 'foundations-colors', label: 'Colors', description: 'Color roles, tonal palettes and contrast levels', href: '/foundations/colors', category: 'Foundations' },
@@ -639,7 +640,7 @@ export const navGroups: NavGroup[] = [
   },
   {
     title: 'Components',
-    items: [{ title: 'Overview', href: '/components' }, { title: 'Status', href: '/components/status' }],
+    items: [{ title: 'Overview', href: '/components' }, { title: 'Status', href: '/components/status' }, { title: 'Adoption', href: '/components/adoption' }],
     children: [
       { title: 'Actions',        items: componentsByCategory('Actions') },
       { title: 'Form & Input',   items: componentsByCategory('Form & Input') },

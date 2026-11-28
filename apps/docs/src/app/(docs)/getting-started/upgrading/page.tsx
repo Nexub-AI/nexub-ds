@@ -225,6 +225,55 @@ npx nexub-migrate src --check   # CI: exit 1 if anything is left`} />
         </tbody>
       </table>
       <p>Run your tests after <code>--write</code>, and review the diff: it rewrites class strings, not logic.</p>
+
+      <h2 id="codemods">Codemods</h2>
+      <p>
+        Since <code>@nexub/tokens</code> 12.7, <code>nexub-migrate</code> also has codemods for the workarounds the
+        usage scan (<code>nexub-usage --apps</code>) finds most often in apps: a class doing what a prop already does,
+        and wrapper components that now only pass props through to a Nexub part. They are opt-in, so you name the ones
+        you want. Each rewrites only the unambiguous case and lists the rest for you to do by hand.
+      </p>
+      <CodeBlock lang="bash" code={`npx nexub-migrate src --codemod text-weight,text-truncate,button-full-width,admin-ui-wrappers --dry
+npx nexub-migrate src --codemod all --write
+npx nexub-migrate src --codemod admin-ui-wrappers --wrapper-package @acme/ui`} />
+      <table>
+        <thead>
+          <tr><th>Codemod</th><th>Rewrites</th><th>Leaves alone and reports</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>text-weight</code></td>
+            <td><code>&lt;Text className=&quot;font-medium …&quot;&gt;</code> → <code>&lt;Text weight=&quot;medium&quot; className=&quot;…&quot;&gt;</code>. <code>font-normal</code> becomes <code>regular</code>; <code>medium</code>, <code>semibold</code> and <code>bold</code> keep their names.</td>
+            <td rowSpan={3}>A dynamic <code>className</code> (<code>cn(…)</code>, a variable, a template with <code>{'${…}'}</code>); two such classes; a class the order decides against (<code>font-light</code>, <code>w-32</code>, <code>whitespace-normal</code> …); the prop already set; a <code>{'{...spread}'}</code>. Variant classes (<code>md:font-bold</code>) stay in <code>className</code>.</td>
+          </tr>
+          <tr>
+            <td><code>text-truncate</code></td>
+            <td><code>&lt;Text className=&quot;truncate …&quot;&gt;</code> → <code>&lt;Text truncate className=&quot;…&quot;&gt;</code>.</td>
+          </tr>
+          <tr>
+            <td><code>button-full-width</code></td>
+            <td><code>&lt;Button className=&quot;w-full …&quot;&gt;</code> → <code>&lt;Button fullWidth className=&quot;…&quot;&gt;</code>.</td>
+          </tr>
+          <tr>
+            <td><code>admin-ui-wrappers</code></td>
+            <td>
+              Imports from the app&rsquo;s wrapper package (<code>--wrapper-package</code>, default <code>@nexub/admin-ui</code>) move to Nexub:
+              <code>CheckboxField</code> and <code>SwitchField</code> to <code>@nexub/react</code> (<code>hint</code> → <code>description</code>,{' '}
+              <code>onChange</code> → <code>onCheckedChange</code>; an inline checkbox handler&rsquo;s parameter gets <code>: boolean</code>), and{' '}
+              <code>Metric</code> to <code>StatCard</code> from <code>@nexub/patterns</code> (<code>invert</code> → <code>tone=&quot;bad-when-high&quot;</code>, keeping the wrapper&rsquo;s <code>h-full</code>).
+            </td>
+            <td>
+              A component is moved only when every use in the file maps one to one. Reported: a prop with no match (<code>Metric onClick</code>, which wraps the tile in a button), a{' '}
+              <code>{'{...spread}'}</code>, a use outside JSX, a name already taken. <code>ComboboxField</code> (its value, <code>onChange</code> and option shapes differ) and{' '}
+              <code>askText</code> (<code>usePrompt()</code> is a hook whose element you render) are report-only.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The codemods match text rather than parsing your code, so <code>--dry</code> first, read the diff, and run your
+        type check after <code>--write</code>. They never add or remove a line: a new import goes on the line of the one it replaces, so run your formatter after.
+      </p>
     </div>
   );
 }

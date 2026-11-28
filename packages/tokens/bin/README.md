@@ -39,3 +39,19 @@ pass); a single-token string such as a TS union member `'text-left'` is treated 
 mention legacy token names in prose get rewritten too — `--ignore` them.
 
 Skips `node_modules`, `dist`, `build`, `.next`, `out`, `coverage` and files over 1 MB.
+
+## Codemods (12.7)
+
+Opt-in (`--codemod <ids>`, or `all`; they are also rules, so `--rules` takes them too). For the workarounds `nexub-usage --apps` finds most. Each rewrites only the unambiguous case and reports the rest. `--dry` (the default) prints the diff.
+
+```sh
+npx nexub-migrate src --codemod text-weight,text-truncate,button-full-width,admin-ui-wrappers --dry
+npx nexub-migrate src --codemod admin-ui-wrappers --wrapper-package @acme/ui --write
+```
+
+| Codemod | Rewrites | Reports |
+| --- | --- | --- |
+| `text-weight` | `<Text className="font-medium …">` → `<Text weight="medium" className="…">` (`font-normal` → `regular`, `medium`, `semibold`, `bold`) | for these three: a dynamic `className` (`cn(…)`, an expression, `${…}`), two such classes, a class the order decides against (`font-light`, `w-32`, `whitespace-normal` …), the prop already set, a `{...spread}`. Only the bare class moves; `md:font-bold` stays. Only `Text`/`Button` imported from `@nexub/react`. |
+| `text-truncate` | `<Text className="truncate …">` → `<Text truncate className="…">` | |
+| `button-full-width` | `<Button className="w-full …">` → `<Button fullWidth className="…">` | |
+| `admin-ui-wrappers` | From the wrapper package (`--wrapper-package`, default `@nexub/admin-ui`): `CheckboxField`, `SwitchField` → `@nexub/react` (`hint` → `description`, `onChange` → `onCheckedChange`; an inline checkbox handler's parameter gets `: boolean`, since the DS passes `boolean \| 'indeterminate'`); `Metric` → `StatCard` from `@nexub/patterns` (`invert` → `tone="bad-when-high"`, `invert={x}` → `tone={x ? 'bad-when-high' : 'default'}`, and the wrapper's `h-full` class kept). The import moves into an existing DS import, or onto the same line. | A component moves only when every use in the file maps 1:1. Reported: a prop with no match (`Metric onClick`), a `{...spread}`, a use outside JSX, a name already taken. `ComboboxField` and `askText` (→ `usePrompt()`) are report-only. |

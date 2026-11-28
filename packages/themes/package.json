@@ -1,6 +1,6 @@
 {
   "name": "@nexub/themes",
-  "version": "12.5.0",
+  "version": "12.6.0",
   "description": "CSS theme files for Nexub Design System — light, dark, and brand themes (the five Nexub divisions and every app) as importable CSS.",
   "license": "MIT",
   "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
@@ -20,34 +20,37 @@
     "access": "public"
   },
   "files": [
-    "src"
+    "src",
+    "dist"
   ],
   "sideEffects": [
-    "./src/**/*.css"
+    "./src/**/*.css",
+    "./dist/**/*.css"
   ],
   "exports": {
-    "./base": "./src/base.css",
-    "./base-lean": "./src/base-lean.css",
-    "./core": "./src/core.css",
-    "./core-lean": "./src/core-lean.css",
-    "./fonts": "./src/fonts.css",
-    "./light": "./src/light.css",
-    "./dark": "./src/dark.css",
-    "./glass": "./src/glass.css",
-    "./view-transitions": "./src/view-transitions.css",
-    "./divisions": "./src/divisions.css",
-    "./divisions/os": "./src/divisions/os.css",
-    "./divisions/commerce": "./src/divisions/commerce.css",
-    "./divisions/fintech": "./src/divisions/fintech.css",
-    "./divisions/intelligence": "./src/divisions/intelligence.css",
-    "./divisions/autonomous": "./src/divisions/autonomous.css",
-    "./products": "./src/products.css",
-    "./marketing": "./src/marketing.css",
-    "./vivid": "./src/vivid.css",
-    "./parts/*.css": "./src/parts/*.css",
-    "./parts/index.json": "./src/parts/index.json"
+    "./base": "./dist/base.css",
+    "./base-lean": "./dist/base-lean.css",
+    "./core": "./dist/core.css",
+    "./core-lean": "./dist/core-lean.css",
+    "./fonts": "./dist/fonts.css",
+    "./light": "./dist/light.css",
+    "./dark": "./dist/dark.css",
+    "./glass": "./dist/glass.css",
+    "./view-transitions": "./dist/view-transitions.css",
+    "./divisions": "./dist/divisions.css",
+    "./divisions/os": "./dist/divisions/os.css",
+    "./divisions/commerce": "./dist/divisions/commerce.css",
+    "./divisions/fintech": "./dist/divisions/fintech.css",
+    "./divisions/intelligence": "./dist/divisions/intelligence.css",
+    "./divisions/autonomous": "./dist/divisions/autonomous.css",
+    "./products": "./dist/products.css",
+    "./marketing": "./dist/marketing.css",
+    "./vivid": "./dist/vivid.css",
+    "./parts/*.css": "./dist/parts/*.css",
+    "./parts/index.json": "./dist/parts/index.json"
   },
   "scripts": {
+    "build": "node scripts/build-dist.mjs",
     "build:fonts": "node scripts/build-fonts.mjs",
     "build:products": "node scripts/build-products.mjs",
     "test": "node --test scripts/*.test.mjs",
