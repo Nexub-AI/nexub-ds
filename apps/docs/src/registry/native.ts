@@ -30,8 +30,11 @@ export interface PlatformDifference {
 export interface NativeTwin {
   /** Export name in @nexub/react-native. */
   name: string;
-  /** Live-preview slug (apps/mobile preview manifest). */
-  preview: PreviewSlug;
+  /**
+   * Live-preview slug (apps/mobile preview manifest). 12.5: left out for a screen the showcase
+   * app doesn't show yet; the panel then has the code and props without a phone frame.
+   */
+  preview?: PreviewSlug;
   differences: PlatformDifference[];
   code: string;
   notes?: string[];
@@ -675,6 +678,17 @@ export const nativePatternTwins: Record<string, NativeTwin> = {
     code: `import { StatusSteps } from '@nexub/react-native/patterns';
 
 <StatusSteps accessibilityLabel="Application status" steps={steps} />`,
+  },
+  'status-page': {
+    name: 'StatusScreen',
+    differences: [
+      { aspect: 'Home', web: '`homeHref` renders a "Back to home" link.', mobile: '`onHome` renders a "Back to home" button; navigate in it.' },
+      { aspect: 'Actions', web: 'Under the text.', mobile: 'Pinned above the home indicator, as on ResultScreen.' },
+      { aspect: 'Size', web: '`fullScreen` and `as` set the height and landmark.', mobile: 'Always the whole screen.' },
+    ],
+    code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen kind="serverError" onRetry={refetch} />`,
   },
   'activity-feed': {
     name: 'ActivityList',

@@ -180,6 +180,8 @@ const CASES: Record<string, Case> = {
   HomeScreen: { props: { greeting: 'Hi', balance: { value: 1, currency: 'USD' } } },
   AuthScreen: { props: { title: 'Welcome', children: t('form'), footer: <Lib.Button onPress={noop}>Go</Lib.Button> }, a11y: ['header', 'Welcome'] },
   SignInScreen: { props: { onSubmit: noop }, a11y: ['button', 'Sign in'] },
+  SignUpScreen: { props: { onSubmit: noop, termsLabel: 'I agree' }, a11y: ['button', 'Create an account'] },
+  StatusScreen: { props: { kind: 'serverError', onRetry: noop }, a11y: ['button', 'Retry'] },
   VerifyCodeScreen: { props: { destination: '+65 4821', onComplete: noop, onResend: noop }, a11y: 'Verification code' },
   LockScreen: { props: { unlockLabel: 'Unlock with Face ID', onUnlock: noop }, a11y: ['button', 'Unlock with Face ID'] },
   FlowStep: { props: { step: 1, total: 3, title: 'Who to?', children: t('body'), footer: t('f') }, a11y: ['progressbar', 'Page 1 of 3'] },

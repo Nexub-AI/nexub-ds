@@ -1,13 +1,28 @@
 // @nexub/react-native/patterns — screen templates built only from public components.
 export { HomeScreen } from './home';
 export type { HomeScreenProps, QuickAction, Insight } from './home';
-export { AuthScreen, SignInScreen, VerifyCodeScreen, LockScreen } from './auth';
+export {
+  AuthScreen,
+  SignInScreen,
+  SignUpScreen,
+  VerifyCodeScreen,
+  LockScreen,
+  defaultAuthScreenMessages,
+  defaultPasswordRules,
+} from './auth';
 export type {
   AuthScreenProps,
+  AuthScreenMessages,
   SignInScreenProps,
+  SignUpScreenProps,
+  SignUpValues,
+  PasswordRule,
   VerifyCodeScreenProps,
+  VerifyMethod,
   LockScreenProps,
 } from './auth';
+export { StatusScreen } from './status-screen';
+export type { StatusScreenProps, StatusScreenKind } from './status-screen';
 export {
   FlowStep,
   AmountStep,

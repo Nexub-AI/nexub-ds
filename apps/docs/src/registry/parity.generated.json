@@ -1312,6 +1312,28 @@
     "onPurpose": [],
     "nativeOnly": []
   },
+  "status-page": {
+    "web": "StatusPage",
+    "native": "StatusScreen",
+    "shared": [
+      "actions",
+      "code",
+      "description",
+      "illustration",
+      "kind",
+      "onRetry",
+      "title"
+    ],
+    "webOnly": [],
+    "onPurpose": [
+      "as",
+      "fullScreen",
+      "homeHref"
+    ],
+    "nativeOnly": [
+      "onHome"
+    ]
+  },
   "activity-feed": {
     "web": "ActivityFeedRoot",
     "native": "ActivityList",
@@ -1338,11 +1360,11 @@
     "web": "AuthCard",
     "native": "SignInScreen",
     "shared": [
+      "description",
       "logo",
       "title"
     ],
     "webOnly": [
-      "description",
       "footer",
       "logoAlign"
     ],
@@ -1353,6 +1375,7 @@
       "biometricLabel",
       "error",
       "loading",
+      "messages",
       "onBiometric",
       "onCreateAccount",
       "onForgotPassword",

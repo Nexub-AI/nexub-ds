@@ -183,13 +183,23 @@ export const templateEntries: TemplateEntry[] = [
 <PaywallScreen title="Payub Plus" plans={plans} onSubscribe={buy} onRestore={restore} />`,
     },
   },
-  // 10.5: full-page states, built on StatusPage. Web only: there is no native screen yet.
+  // 10.5: full-page states, built on StatusPage. 12.5: StatusScreen on native.
   {
     slug: 'not-found',
     title: 'Not found (404)',
     web: 'StatusPage',
     description: 'The page for a wrong or old link: what happened, and a way back home.',
     code: `<StatusPage kind="notFound" code="404" homeHref="/" fullScreen />`,
+    native: {
+      name: 'StatusScreen',
+      differences: [
+        { aspect: 'Home', web: '`homeHref` renders a "Back to home" link.', mobile: '`onHome` renders a "Back to home" button pinned above the home indicator.' },
+        { aspect: 'When', web: 'A wrong or old URL.', mobile: 'A deep link to something that no longer exists.' },
+      ],
+      code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen kind="notFound" code="404" onHome={() => router.replace('/')} />`,
+    },
   },
   {
     slug: 'server-error',
@@ -197,6 +207,16 @@ export const templateEntries: TemplateEntry[] = [
     web: 'StatusPage',
     description: 'The page for a failed load, announced to assistive technology, with Retry.',
     code: `<StatusPage kind="serverError" code="500" onRetry={() => router.refresh()} fullScreen />`,
+    native: {
+      name: 'StatusScreen',
+      differences: [
+        { aspect: 'Announced', web: '`role="alert"` on the text.', mobile: 'An alert to VoiceOver, an assertive live region on Android.' },
+        { aspect: 'Retry', web: 'Under the text.', mobile: 'Pinned above the home indicator.' },
+      ],
+      code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen kind="serverError" onRetry={refetch} />`,
+    },
   },
   {
     slug: 'maintenance',
@@ -209,6 +229,17 @@ export const templateEntries: TemplateEntry[] = [
   actions={<Button variant="tonal" asChild><a href="https://status.example.com">Status page</a></Button>}
   fullScreen
 />`,
+    native: {
+      name: 'StatusScreen',
+      differences: [{ aspect: 'Actions', web: 'A link to your status page.', mobile: '`actions` are pinned above the home indicator; open the status page with `Linking.openURL`.' }],
+      code: `import { StatusScreen } from '@nexub/react-native/patterns';
+
+<StatusScreen
+  kind="maintenance"
+  description="We’re making some improvements. We expect to be back by 6:00 pm."
+  actions={<Button size="lg" fullWidth variant="tonal" onPress={() => Linking.openURL(statusUrl)}>Status page</Button>}
+/>`,
+    },
   },
   ...(gettingInTemplates as unknown as TemplateEntry[]),
   ...(dailyWorkTemplates as unknown as TemplateEntry[]),
