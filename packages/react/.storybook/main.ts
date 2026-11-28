@@ -23,7 +23,7 @@ const nexubLayer: Plugin = {
 };
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.tsx', '../../patterns/src/**/*.stories.tsx', '../../diagram/src/**/*.stories.tsx', '../../elements/stories/*.stories.tsx', '../../../apps/docs/src/stories/*.stories.tsx'],
+  stories: ['../src/**/*.stories.tsx', '../../patterns/src/**/*.stories.tsx', '../../diagram/src/**/*.stories.tsx', '../../genui/src/**/*.stories.tsx', '../../elements/stories/*.stories.tsx', '../../../apps/docs/src/stories/*.stories.tsx'],
   framework: {
     name: '@storybook/react-vite',
     options: {},

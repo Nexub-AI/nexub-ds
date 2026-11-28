@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",
+    "@nexub/genui": "workspace:^",
     "zod": "^4.6.7"
   }
 }

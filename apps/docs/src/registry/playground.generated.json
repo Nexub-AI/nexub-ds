@@ -3516,6 +3516,36 @@
       }
     ]
   },
+  "genui": {
+    "tag": "GenUI",
+    "children": "none",
+    "fixed": [
+      "document={answer}",
+      "actions={['choosePlan']}",
+      "onAction={onAction}"
+    ],
+    "controls": [
+      {
+        "kind": "select",
+        "name": "headingLevel",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "default": 3
+      },
+      {
+        "kind": "switch",
+        "name": "streaming",
+        "default": false
+      }
+    ],
+    "states": []
+  },
   "gradient-divider": {
     "tag": "GradientDivider",
     "children": "none",

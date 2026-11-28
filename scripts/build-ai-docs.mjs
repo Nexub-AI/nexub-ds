@@ -65,8 +65,8 @@ function a11yReport() {
     known[comp] = [...new Set([...(known[comp] ?? []), ...(lists[list] ?? [])])];
   }
   // A component is covered when any story renders it (Fade lives in Motion.stories, Amount in NumberTicker's).
-  // Storybook (packages/react/.storybook/main.ts) also loads packages/diagram/src and packages/elements/stories.
-  const stories = ['react/src/components', 'patterns/src/components', 'marketing/src/components', 'diagram/src', 'elements/stories']
+  // Storybook (packages/react/.storybook/main.ts) also loads packages/diagram/src, packages/genui/src (12.8) and packages/elements/stories.
+  const stories = ['react/src/components', 'patterns/src/components', 'marketing/src/components', 'diagram/src', 'genui/src', 'elements/stories']
     .map((p) => join(root, `packages/${p}`))
     .filter(existsSync)
     .flatMap((dir) =>
@@ -331,6 +331,10 @@ function llmsTxt() {
     '## Diagram (@nexub/diagram, with the @xyflow/react peer)',
     '',
     ...entries.filter((e) => e.meta.package === '@nexub/diagram').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
+    '',
+    '## Generative UI (@nexub/genui, alpha: UI answers from agents, validated and rendered safely)',
+    '',
+    ...entries.filter((e) => e.meta.package === '@nexub/genui').map((e) => `- [${e.meta.title}](${mdUrl(e)}): ${e.meta.description}`),
     '',
     '## Web components (@nexub/elements, for pages without React)',
     '',

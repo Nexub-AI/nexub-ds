@@ -3,6 +3,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
+import { catalog as genuiCatalog, toolSchema, validate as validateGenui, DEFAULT_LIMITS, GENUI_VERSION } from '@nexub/genui/schema';
 
 const skillDir = new URL('../dist/skill/', import.meta.url);
 const { version } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
@@ -111,6 +112,83 @@ export function createServer() {
         'Mobile apps (Expo / React Native): install, NexubNativeProvider, every @nexub/react-native component and @nexub/react-native/patterns screen, and the mobile rules. Call this instead of the web references when building a mobile app.',
     },
     async () => text(read('references/react-native.md')),
+  );
+
+  // 12.8: generative UI (@nexub/genui, alpha, RFC #823). The schema, the catalog and the validator
+  // come from @nexub/genui/schema (no React), so agents see exactly what the renderer accepts.
+  const genuiNames = () => genuiCatalog.names.join(', ');
+  server.registerTool(
+    'get_genui_schema',
+    {
+      title: 'Nexub generative UI schema',
+      description:
+        'The JSON Schema (2020-12) for UI answers that Nexub renders with <GenUI> from @nexub/genui, plus the rules. Call this before returning UI instead of text. Optional components narrows the schema to the ones the host renders.',
+      inputSchema: {
+        components: z.array(short()).max(20).optional().describe(`Catalog names to keep, e.g. ["Card", "Table"]. Catalog: ${genuiCatalog.names.join(', ')}`),
+      },
+    },
+    async ({ components }) => {
+      const narrowed = components ? genuiCatalog.only(components) : genuiCatalog;
+      return text(
+        [
+          `# Nexub generative UI, schema version ${GENUI_VERSION} (@nexub/genui ${version}, alpha)`,
+          '',
+          `Components: ${narrowed.names.join(', ') || '(none matched)'}. Only these render, with only the props in the schema.`,
+          '',
+          'Rules:',
+          '- A document is `{ "version": "1.0", "title"?, "root": node }`; a node is `{ "type", "key"?, "props", "children"? }`. Only Card takes children (nodes or plain strings).',
+          '- Every string is plain text: no HTML, no Markdown, no URLs that do anything. Unknown components and props are removed.',
+          '- A Button sends `action: { "name", "payload"? }` to the host. Use only action names the host told you; others are removed. Buttons never navigate.',
+          `- Limits: depth ${DEFAULT_LIMITS.maxDepth}, ${DEFAULT_LIMITS.maxNodes} nodes, ${DEFAULT_LIMITS.maxBytes / 1024} kB of JSON. Keys "__proto__", "constructor" and "prototype" reject the document.`,
+          '- Call validate_genui with your document before returning it, and fix every issue it lists.',
+          '',
+          fenced(JSON.stringify(toolSchema(narrowed), null, 2), 'json'),
+        ].join('\n'),
+      );
+    },
+  );
+
+  server.registerTool(
+    'get_genui_component',
+    {
+      title: 'Get a Nexub generative UI component',
+      description: 'One component of the generative UI catalog: its props, their types and defaults, and an example node.',
+      inputSchema: { name: short().describe(`Catalog name: ${genuiCatalog.names.join(', ')}`) },
+    },
+    async ({ name }) => {
+      const hit = genuiCatalog.names.find((n) => normalize(n) === normalize(name));
+      if (!hit) return text(`"${name}" is not in the generative UI catalog. Components: ${genuiNames()}.`);
+      const spec = genuiCatalog.get(hit);
+      const props = Object.entries(spec.props).map(([k, p]) => {
+        const type = p.type === 'enum' ? p.values.map((v) => JSON.stringify(v)).join(' | ') : p.type;
+        const extra = [p.required && 'required', p.default !== undefined && `default ${JSON.stringify(p.default)}`].filter(Boolean).join(', ');
+        return `- \`${k}\` (${type}${extra ? `; ${extra}` : ''}): ${p.description}`;
+      });
+      return text(
+        [`# ${hit}`, '', spec.description, spec.container ? 'Takes children: nodes or plain strings.' : 'Takes no children.', '', '## Props', ...props, '', '## Example', fenced(JSON.stringify(spec.example, null, 2), 'json')].join('\n'),
+      );
+    },
+  );
+
+  server.registerTool(
+    'validate_genui',
+    {
+      title: 'Validate a Nexub generative UI document',
+      description:
+        'Checks a generative UI document (JSON text) the way <GenUI> will before rendering it, and lists each issue with its JSON Pointer path. Pass the host\'s action names to check buttons too.',
+      inputSchema: {
+        document: z.string().max(DEFAULT_LIMITS.maxBytes).describe('The document, as JSON text'),
+        actions: z.array(short()).max(50).optional().describe('Action names the host accepts'),
+      },
+    },
+    async ({ document, actions }) => {
+      const result = validateGenui(document, { actions });
+      if (result.ok && !result.issues.length) return text('Valid: every node will render.');
+      const lines = result.issues.map((i) => `- ${i.path || '/'} (${i.code}): ${i.message}`);
+      return text(
+        `${result.ok ? 'Renders, but these parts will be removed:' : 'Rejected: nothing will render.'}\n${lines.join('\n')}`,
+      );
+    },
   );
 
   // Prompts: ready-made starting points the user picks in their MCP client

@@ -1,6 +1,6 @@
 // Generates src/registry/web-props.generated.json: the own props (not inherited
 // DOM attributes) of every exported `XProps` type in @nexub/react, @nexub/patterns,
-// @nexub/marketing and @nexub/diagram, keyed by package, resolved by the
+// @nexub/marketing, @nexub/diagram and (12.8) @nexub/genui, keyed by package, resolved by the
 // TypeScript checker so cva `VariantProps` and intersections are included.
 // @nexub/elements has custom elements, not props: each exported element class
 // (`NxNumberInput`) gives `NumberInputElement`, whose rows are its attributes.
@@ -65,7 +65,7 @@ function elementAttributes(cls, sf) {
 }
 
 const all = {};
-for (const pkg of ['react', 'patterns', 'marketing', 'diagram', 'elements']) {
+for (const pkg of ['react', 'patterns', 'marketing', 'diagram', 'elements', 'genui']) {
   const root = join(here, '../../../packages', pkg);
   src = join(root, 'src/');
   const cfg = ts.getParsedCommandLineOfConfigFile(join(root, 'tsconfig.json'), {}, { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => {} });

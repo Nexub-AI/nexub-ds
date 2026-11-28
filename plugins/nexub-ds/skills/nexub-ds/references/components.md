@@ -228,6 +228,10 @@ Never use a component marked deprecated.
 
 - [Diagram Canvas](components/diagram-canvas.md) `@nexub/diagram`: Nodes and edges on a themed, keyboard-accessible canvas: workflows and mind maps, with automatic layout and a "Show as list" text alternative. From `@nexub/diagram`, on React Flow.
 
+## Generative UI — AI
+
+- [GenUI](components/genui.md) `@nexub/genui`: Renders the UI an agent returns as JSON (cards, tables, badges, alerts, buttons) with Nexub components, safely: validated before render, an allow-list of components and props, no HTML, actions by name. From `@nexub/genui`.
+
 ## Marketing
 
 - [CTABand](components/cta-band.md) `@nexub/marketing`: The closing call to action on a primary band: the hero gradient in marketing mode. Server component.

@@ -7,6 +7,7 @@
     },
     "@nexub/mcp": {
       "@modelcontextprotocol/sdk": "the MCP protocol implementation (pinned exactly: it runs with the user's permissions)",
+      "@nexub/genui": "the generative UI schema, catalog and validator (the React-free @nexub/genui/schema entry only) for the get_genui_* and validate_genui tools",
       "zod": "argument schemas the SDK requires"
     },
     "@nexub/react": {

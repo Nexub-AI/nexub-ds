@@ -471,6 +471,15 @@ export interface NexubMessages {
   diagramZoomOut?: string;
   diagramFitView?: string;
   diagramMinimap?: string;
+  /**
+   * 12.8: @nexub/genui (GenUI). Optional: the English defaults live in @nexub/genui. The name of
+   * the answer region when the document has no title.
+   */
+  genuiRegion?: string;
+  /** 12.8: announced once when a streamed answer is complete. */
+  genuiReady?: string;
+  /** 12.8: shown when a document is rejected. */
+  genuiFallback?: string;
 }
 
 export const defaultMessages: NexubMessages = {

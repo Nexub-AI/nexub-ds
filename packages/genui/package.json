@@ -1,0 +1,70 @@
+{
+  "name": "@nexub/genui",
+  "version": "12.7.0",
+  "description": "Generative UI for Nexub Design System: a versioned JSON schema agents return, a validator, and a React renderer that draws it safely with @nexub/react (a peer dependency).",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/Nexub-AI/nexub-ds#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nexub-AI/nexub-ds.git",
+    "directory": "packages/genui"
+  },
+  "keywords": [
+    "react",
+    "generative-ui",
+    "llm",
+    "json-schema",
+    "design-system",
+    "nexub"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./schema": {
+      "types": "./dist/schema/index.d.ts",
+      "default": "./dist/schema/index.js"
+    },
+    "./schema/v1.json": "./dist/schema/v1.json",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsup && node ../../scripts/minify-dist.mjs && node scripts/write-schema.mjs",
+    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "lint": "eslint src"
+  },
+  "peerDependencies": {
+    "@nexub/react": "workspace:^",
+    "react": ">=19 <20",
+    "react-dom": ">=19 <20"
+  },
+  "devDependencies": {
+    "@nexub/react": "workspace:*",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.12",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "5.1.0",
+    "axe-core": "^4.14.1",
+    "jsdom": "^31.0.1",
+    "tsup": "^9.0.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.0"
+  }
+}

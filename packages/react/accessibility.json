@@ -847,6 +847,23 @@
       ]
     },
     {
+      "slug": "genui",
+      "name": "GenUI",
+      "package": "@nexub/genui",
+      "automated": "pass",
+      "exceptions": [],
+      "keyboard": [
+        "Tab / Enter / Space: Buttons are ordinary Nexub buttons; GenUI adds no keyboard handling of its own."
+      ],
+      "screenReader": [
+        "While streaming the region is `aria-busy`; when it ends, one polite \"Answer ready\" replaces per-token chatter.",
+        "Labels the components need are required by the schema (Button `label`, Table column headers); a node without one is removed, never rendered unlabelled.",
+        "Card titles are headings, shifted by `headingLevel` and clamped to 1–6 so they fit the page’s outline.",
+        "Rendering and streaming never move focus.",
+        "Keyed nodes keep their identity while later siblings stream in, so nothing remounts or loses focus."
+      ]
+    },
+    {
       "slug": "gradient-divider",
       "name": "Gradient Divider",
       "package": "@nexub/react",
