@@ -1,5 +1,22 @@
 # @nexub/themes
 
+## 12.7.0
+
+### Minor Changes
+
+- d0f305c: Smaller published files, with no change to any style, value or component:
+
+  - `@nexub/themes`: the exports now point at `dist/`, a copy of `src/` without comments (src/ is still published, comments included). The same import paths work; `@nexub/themes/core` is 31% smaller gzipped, `@nexub/themes/base` 32%.
+  - `@nexub/tokens`: `css` drops the per-token description comments (they stay in `dist/json`), and the JavaScript token objects ship on one line. Same variables and values.
+  - `@nexub/react-native`: `lib/` is compiled without comments or indentation; source maps still point at `src/`, which keeps every comment. The main entry is 30% smaller gzipped.
+
+### Patch Changes
+
+- Updated dependencies [b3450fe]
+- Updated dependencies [d0f305c]
+- Updated dependencies [ca33f98]
+  - @nexub/tokens@12.7.0
+
 ## 12.6.0
 
 ### Patch Changes

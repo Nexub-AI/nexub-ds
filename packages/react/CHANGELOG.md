@@ -1,5 +1,12 @@
 # @nexub/react
 
+## 12.7.0
+
+### Patch Changes
+
+- @nexub/icons@12.7.0
+- @nexub/core@12.7.0
+
 ## 12.6.0
 
 ### Minor Changes
