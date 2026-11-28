@@ -6,6 +6,7 @@
 // passes their resolved hex in (from @nexub/tokens/native, at build time) and
 // every ratio here is arithmetic: no DOM measuring, same numbers on the server.
 import {
+  apcaContrast,
   contrastRatio,
   createSeedRoles,
   createSeedStylesheet,
@@ -57,16 +58,11 @@ export function pickNeutrals(roles: Record<Level, Record<Scheme, Record<string, 
 export const longHex = (hex: string) =>
   (hex.length === 4 ? `#${[...hex.slice(1)].map((c) => c + c).join('')}` : hex).toLowerCase();
 
-// ── APCA slot ────────────────────────────────────────────────────────────────
-// 12.6: `apcaContrast` is being added to @nexub/tokens/seed in a parallel PR.
-// When it is on development, import it above and return `apcaContrast(fg, bg)`
-// here: the contrast table shows an "APCA Lc" column as soon as this returns a
-// number, and the tests in apps/docs/test/brand-builder.test.ts say what to add.
-// Until then the builder reports WCAG 2 only.
+// ── APCA ─────────────────────────────────────────────────────────────────────
+// APCA Lc (APCA-W3 0.1.9) from @nexub/tokens/seed, reported beside WCAG 2. Report
+// only: WCAG 2 stays the pass/fail rule, as in the contrast tests.
 export function apca(fg: string, bg: string): number | null {
-  void fg;
-  void bg;
-  return null;
+  return apcaContrast(fg, bg);
 }
 
 export interface PairCheck {
@@ -81,7 +77,7 @@ export interface PairCheck {
   /** The minimum the pair needs (4.5 for text, 3 for inverse-primary on inverse-surface). */
   min: number;
   pass: boolean;
-  /** APCA Lc, once the seed entry has it (see `apca`). */
+  /** APCA Lc (signed; report only). */
   apca: number | null;
 }
 
