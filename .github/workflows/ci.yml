@@ -101,6 +101,9 @@ jobs:
       # Web ↔ native prop parity matrix (8.5): drift on either platform shows up as a diff.
       - name: Parity matrix up to date
         run: node apps/docs/scripts/parity.mjs --check
+      # 12.6: the Figma variables (DTCG collections with aliases) match the tokens build.
+      - name: Figma variables up to date
+        run: node packages/tokens/scripts/figma.mjs --check
       # Every TSX/TS code sample in the docs typechecks against the built packages (8.4).
       - name: Docs code samples typecheck
         run: node apps/docs/scripts/check-samples.mjs
