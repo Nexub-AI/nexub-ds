@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 const CDN = 'https://unpkg.com/@nexub/tokens@latest/dist/figma';
 const modes = ['light.standard', 'dark.standard', 'light.medium', 'dark.medium', 'light.high', 'dark.high'];
+const products = ['default', 'leap', 'bookub', 'payub', 'founderub'];
 
 export default function FigmaPage() {
   return (
@@ -61,6 +62,51 @@ export default function FigmaPage() {
         />
         <Prose>
           Using Tokens Studio instead? Load the same files as token sets, one set per mode.
+        </Prose>
+      </Section>
+
+      <Section id="variables" title="Collections with aliases">
+        <Prose>
+          Since 12.6, <code>@nexub/tokens/figma/variables/</code> holds the same tokens as three collections that
+          reference each other the way the CSS does: a role such as <code>color/primary</code> is an alias of a
+          reference palette tone (<code>palette/primary/40</code>), not a copied hex. Change a primitive and every role
+          that uses it follows. Values are the shipped (signature) ones, the same as <code>@nexub/tokens/native</code>.
+        </Prose>
+        <DocTable
+          head={['Files', 'Collection', 'Holds']}
+          mono={[0]}
+          rows={[
+            ['primitives.tokens.json', 'Primitives (one mode)', 'The reference palette (palette/<name>/<tone>), spacing, radius, shape, sizes and the type scale, in px'],
+            ['product.<product>.tokens.json', 'Product (five modes: default, leap, bookub, payub, founderub)', 'The tertiary palette for each data-product, as aliases of Primitives'],
+            ['color.<scheme>.<level>.tokens.json', 'Color (six modes: light and dark × standard, medium, high)', 'Every colour role as an alias of Primitives; the tertiary roles alias Product'],
+          ]}
+        />
+        <List
+          items={[
+            <a key="p" href={`${CDN}/variables/primitives.tokens.json`}>variables/primitives.tokens.json</a>,
+            ...products.map((p) => (
+              <a key={p} href={`${CDN}/variables/product.${p}.tokens.json`}>variables/product.{p}.tokens.json</a>
+            )),
+            ...modes.map((m) => (
+              <a key={m} href={`${CDN}/variables/color.${m}.tokens.json`}>variables/color.{m}.tokens.json</a>
+            )),
+          ]}
+        />
+        <List
+          ordered
+          items={[
+            <>Open the <strong>Variables</strong> view, create a collection named exactly <strong>Primitives</strong> and drag <code>primitives.tokens.json</code> into it.</>,
+            <>Create a collection named <strong>Product</strong> and drag in the five <code>product.*</code> files together: Figma makes one mode per file. Rename the modes after the products.</>,
+            <>Create a collection named <strong>Color</strong> and drag in the six <code>color.*</code> files. Aliases link by collection and variable name, so import in this order and keep the three names.</>,
+            <>Bind components to <code>color/*</code>. A frame&apos;s Color mode picks light, dark and contrast; its Product mode picks the brand.</>,
+          ]}
+        />
+        <Prose>
+          <strong>Updating.</strong> After a new <code>@nexub/tokens</code> release, right-click each mode, choose{' '}
+          <strong>Import mode</strong> and pick the matching file from the new version: variables with the same name and
+          type update in place and keep their bindings. When the changelog lists new tokens, import the files into fresh
+          collections instead. Figma&apos;s native import needs a paid plan; on other plans, or if you already use Tokens
+          Studio, load the resolved files above as token sets.
         </Prose>
       </Section>
 

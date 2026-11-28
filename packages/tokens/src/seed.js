@@ -89,6 +89,34 @@ export function contrastRatio(a, b) {
 }
 
 /**
+ * APCA lightness contrast (Lc) of text on a background: APCA-W3 0.1.9 with the
+ * SA98G constants. Signed and order-dependent: positive for dark text on a light
+ * background, negative for light text on dark; |Lc| 60 ≈ body text, 75 ≈ fluent
+ * reading, 45 ≈ large text and UI. Reported beside WCAG 2 (`contrastRatio`),
+ * which stays the conformance gate.
+ * @param {string} text `#rgb` or `#rrggbb` (foreground)
+ * @param {string} background `#rgb` or `#rrggbb`
+ * @returns {number} about -108 to 106
+ */
+export function apcaContrast(text, background) {
+  /** @param {string} hex */
+  const y = (hex) => {
+    const h = hex.length === 4 ? hex.replace(/[0-9a-f]/gi, '$&$&') : hex;
+    const c = (/** @type {number} */ i) => (parseInt(h.slice(i, i + 2), 16) / 255) ** 2.4;
+    const v = 0.2126729 * c(1) + 0.7151522 * c(3) + 0.072175 * c(5);
+    return v > 0.022 ? v : v + (0.022 - v) ** 1.414; // soft black clamp
+  };
+  const [t, b] = [y(text), y(background)];
+  if (Math.abs(b - t) < 0.0005) return 0;
+  if (b > t) {
+    const s = (b ** 0.56 - t ** 0.57) * 1.14;
+    return s < 0.1 ? 0 : (s - 0.027) * 100;
+  }
+  const s = (b ** 0.65 - t ** 0.62) * 1.14;
+  return s > -0.1 ? 0 : (s + 0.027) * 100;
+}
+
+/**
  * The full seeded theme as a stylesheet: standard contrast on `selector`, then
  * `data-contrast="medium"` and `"high"`, and high for `prefers-contrast: more`
  * when no `data-contrast` is set. Same layering as the built-in roles.css, so a
