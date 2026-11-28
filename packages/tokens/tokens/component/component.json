@@ -1,6 +1,7 @@
 {
-  "$description": "Component tier. Unset by default: each component reads var(--<name>, <css>), so the default resolves where the component sits and nested data-contrast / data-product / data-theme keep working. Set one on any element to restyle that component below it. Kept out of variables.css on purpose (a :root declaration would freeze the role at :root).",
+  "$description": "Component tier, the third of three: reference tokens (palettes and scales, tokens.json) → semantic roles (--color-*, --shape-*) → component tokens, which alias a role. $extensions.dev.nexub.docs on each group lists the docs pages (component slugs) that read it. Unset by default: each component reads var(--<name>, <css>), so the default resolves where the component sits and nested data-contrast / data-product / data-theme keep working. Set one on any element to restyle that component below it. Kept out of variables.css on purpose (a :root declaration would freeze the role at :root).",
   "button": {
+    "$extensions": { "dev.nexub": { "docs": ["button"] } },
     "filled-bg":       { "$type": "color", "$value": "{color.primary}",                 "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
     "filled-fg":       { "$type": "color", "$value": "{color.on-primary}",              "$extensions": { "dev.nexub": { "css": "var(--color-on-primary)" } } },
     "tonal-bg":        { "$type": "color", "$value": "{color.secondary-container}",     "$extensions": { "dev.nexub": { "css": "var(--color-secondary-container)" } } },
@@ -10,6 +11,7 @@
     "text-fg":         { "$type": "color", "$value": "{color.on-surface}",              "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } }
   },
   "field": {
+    "$extensions": { "dev.nexub": { "docs": ["input", "textarea", "select", "combobox", "combobox-field", "multi-select", "date-picker", "date-range-picker", "otp-input", "color-picker", "emoji-picker", "icon-picker"] } },
     "$description": "Input, Textarea, Select and Combobox triggers.",
     "bg":     { "$type": "color",     "$value": "{color.surface-container-lowest}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-container-lowest)" } } },
     "fg":     { "$type": "color",     "$value": "{color.on-surface}",               "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
@@ -17,70 +19,92 @@
     "radius": { "$type": "dimension", "$value": "{shape.field}",                    "$extensions": { "dev.nexub": { "css": "var(--shape-field)" } } }
   },
   "card": {
+    "$extensions": { "dev.nexub": { "docs": ["card"] } },
     "bg":     { "$type": "color",     "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
     "fg":     { "$type": "color",     "$value": "{color.on-surface}",       "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
     "border": { "$type": "color",     "$value": "{color.outline-variant}",  "$description": "At 60% opacity.", "$extensions": { "dev.nexub": { "css": "color-mix(in srgb,var(--color-outline-variant) 60%,transparent)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.container}",        "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
   },
   "badge": {
+    "$extensions": { "dev.nexub": { "docs": ["badge"] } },
     "radius": { "$type": "dimension", "$value": "{shape.control}", "$extensions": { "dev.nexub": { "css": "var(--shape-control)" } } }
   },
+  "chip": {
+    "$extensions": { "dev.nexub": { "docs": ["chip"] } },
+    "$description": "The neutral tone; the other tones keep their container colours.",
+    "neutral-bg":     { "$type": "color",     "$value": "{color.surface-container-low}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-container-low)" } } },
+    "neutral-fg":     { "$type": "color",     "$value": "{color.on-surface-variant}",    "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-variant)" } } },
+    "neutral-border": { "$type": "color",     "$value": "{color.outline-variant}",       "$extensions": { "dev.nexub": { "css": "var(--color-outline-variant)" } } },
+    "radius":         { "$type": "dimension", "$value": "{shape.control}",               "$description": "The signature theme's --shape-pill comes first when it is set.", "$extensions": { "dev.nexub": { "css": "var(--shape-pill,var(--shape-control))" } } }
+  },
   "dialog": {
+    "$extensions": { "dev.nexub": { "docs": ["dialog", "alert-dialog"] } },
     "$description": "Dialog and AlertDialog.",
     "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
     "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.overlay}", "$extensions": { "dev.nexub": { "css": "var(--shape-overlay)" } } }
   },
   "popover": {
+    "$extensions": { "dev.nexub": { "docs": ["popover"] } },
     "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
     "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
   },
   "menu": {
+    "$extensions": { "dev.nexub": { "docs": ["dropdown-menu", "context-menu", "menubar"] } },
     "$description": "DropdownMenu, ContextMenu and Menubar content (and submenus). fg colours the items.",
     "bg": { "$type": "color", "$value": "{color.surface-elevated}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-elevated)" } } },
     "fg": { "$type": "color", "$value": "{color.on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
   },
   "tooltip": {
+    "$extensions": { "dev.nexub": { "docs": ["tooltip"] } },
     "bg": { "$type": "color", "$value": "{color.inverse-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-surface)" } } },
     "fg": { "$type": "color", "$value": "{color.inverse-on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-on-surface)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.tooltip}", "$extensions": { "dev.nexub": { "css": "var(--shape-tooltip)" } } }
   },
   "toast": {
+    "$extensions": { "dev.nexub": { "docs": ["toast"] } },
     "bg": { "$type": "color", "$value": "{color.inverse-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-surface)" } } },
     "fg": { "$type": "color", "$value": "{color.inverse-on-surface}", "$extensions": { "dev.nexub": { "css": "var(--color-inverse-on-surface)" } } },
     "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
   },
   "tabs": {
+    "$extensions": { "dev.nexub": { "docs": ["tabs"] } },
     "fg": { "$type": "color", "$value": "{color.on-surface-variant}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-variant)" } } },
     "active-fg": { "$type": "color", "$value": "{color.primary}", "$description": "Line variant; the pill variant keeps on-surface.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
     "indicator": { "$type": "color", "$value": "{color.primary}", "$description": "The sliding bar of the line variant.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } }
   },
   "table": {
+    "$extensions": { "dev.nexub": { "docs": ["table", "data-table"] } },
     "head-bg": { "$type": "color", "$value": "transparent", "$extensions": { "dev.nexub": { "css": "transparent" } } },
     "head-fg": { "$type": "color", "$value": "{color.on-surface-muted}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-muted)" } } },
     "border": { "$type": "color", "$value": "{color.outline-variant}", "$description": "Row rules.", "$extensions": { "dev.nexub": { "css": "var(--color-outline-variant)" } } }
   },
   "switch": {
+    "$extensions": { "dev.nexub": { "docs": ["switch", "switch-field"] } },
     "track-on": { "$type": "color", "$value": "{color.primary}", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } }
   },
   "checkbox": {
+    "$extensions": { "dev.nexub": { "docs": ["checkbox", "checkbox-field"] } },
     "checked-bg": { "$type": "color", "$value": "{color.primary}", "$description": "Also the indeterminate fill.", "$extensions": { "dev.nexub": { "css": "var(--color-primary)" } } },
     "checked-fg": { "$type": "color", "$value": "{color.on-primary}", "$extensions": { "dev.nexub": { "css": "var(--color-on-primary)" } } },
     "border": { "$type": "color", "$value": "{color.outline}", "$extensions": { "dev.nexub": { "css": "var(--color-outline)" } } },
     "radius": { "$type": "dimension", "$value": "5px", "$extensions": { "dev.nexub": { "css": "0.3125rem" } } }
   },
   "avatar": {
+    "$extensions": { "dev.nexub": { "docs": ["avatar", "avatar-group"] } },
     "bg": { "$type": "color", "$value": "{color.surface-container-high}", "$extensions": { "dev.nexub": { "css": "var(--color-surface-container-high)" } } },
     "fg": { "$type": "color", "$value": "{color.on-surface-muted}", "$extensions": { "dev.nexub": { "css": "var(--color-on-surface-muted)" } } },
     "radius": { "$type": "dimension", "$value": "9999px", "$description": "A circle.", "$extensions": { "dev.nexub": { "css": "9999px" } } }
   },
   "alert": {
+    "$extensions": { "dev.nexub": { "docs": ["alert"] } },
     "$description": "Colours follow the variant, so only the radius is a token.",
     "radius": { "$type": "dimension", "$value": "{shape.container}", "$extensions": { "dev.nexub": { "css": "var(--shape-container)" } } }
   },
   "nav": {
+    "$extensions": { "dev.nexub": { "docs": ["sidebar", "navigation-rail"] } },
     "$description": "The active item of Sidebar and NavigationRail.",
     "active-bg": { "$type": "color", "$value": "{color.secondary-container}", "$extensions": { "dev.nexub": { "css": "var(--color-secondary-container)" } } },
     "active-fg": { "$type": "color", "$value": "{color.on-secondary-container}", "$extensions": { "dev.nexub": { "css": "var(--color-on-secondary-container)" } } }

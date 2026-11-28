@@ -4,6 +4,9 @@ import { expect, test } from '@playwright/test';
 // WCAG 2.2 AA contrast for token pairs, resolved by the browser through the real
 // theme cascade (light/dark × brand), so it keeps working when tokens move to
 // OKLCH / color-mix in Phase 1.
+// 12.6: APCA Lc (APCA-W3 0.1.9, same as apcaContrast in @nexub/tokens/seed) is
+// computed beside each ratio and attached to the test as apca.txt. Report only:
+// WCAG 2 stays the gate.
 
 const index = JSON.parse(
   readFileSync(new URL('../storybook-static/index.json', import.meta.url), 'utf8'),
@@ -66,7 +69,7 @@ for (const { theme, contrast, brand } of contexts) {
       [theme, contrast, brand],
     );
 
-    const ratios = await page.evaluate((pairs) => {
+    const results = await page.evaluate((pairs) => {
       // Canvas resolves any CSS color (rgba, oklch, color-mix) to composited sRGB.
       const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
       const probe = document.createElement('div');
@@ -91,16 +94,36 @@ for (const { theme, contrast, brand } of contexts) {
         });
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
       };
+      // APCA-W3 0.1.9 (SA98G): text on background, signed Lc.
+      const apca = (text: number[], bg: number[]) => {
+        const y = (rgb: number[]) => {
+          const v = 0.2126729 * (rgb[0] / 255) ** 2.4 + 0.7151522 * (rgb[1] / 255) ** 2.4 + 0.072175 * (rgb[2] / 255) ** 2.4;
+          return v > 0.022 ? v : v + (0.022 - v) ** 1.414;
+        };
+        const [t, b] = [y(text), y(bg)];
+        if (Math.abs(b - t) < 0.0005) return 0;
+        if (b > t) {
+          const s = (b ** 0.56 - t ** 0.57) * 1.14;
+          return s < 0.1 ? 0 : (s - 0.027) * 100;
+        }
+        const s = (b ** 0.65 - t ** 0.62) * 1.14;
+        return s > -0.1 ? 0 : (s + 0.027) * 100;
+      };
       const page = css('--color-surface');
       const out = pairs.map(([fg, bg]) => {
         const b = paint(page, css(bg));
         const f = paint(page, css(bg), css(fg));
         const [hi, lo] = [lum(f), lum(b)].sort((x, y) => y - x);
-        return (hi + 0.05) / (lo + 0.05);
+        return { ratio: (hi + 0.05) / (lo + 0.05), lc: apca(f, b) };
       });
       probe.remove();
       return out;
     }, PAIRS);
+    await test.info().attach('apca.txt', {
+      contentType: 'text/plain',
+      body: PAIRS.map(([fg, bg, min], i) => `${fg} on ${bg}: WCAG ${results[i].ratio.toFixed(2)} (min ${min}) · APCA Lc ${results[i].lc.toFixed(1)}`).join('\n'),
+    });
+    const ratios = results.map((r) => r.ratio);
 
     const failing = PAIRS.flatMap(([fg, bg, min], i) =>
       ratios[i] < min ? [`${theme}/${contrast}/${brand} ${fg} on ${bg}: ${ratios[i].toFixed(2)} < ${min}`] : [],

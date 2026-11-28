@@ -44,10 +44,17 @@ export function CodeFrame({ code, title, lang, lineNumbers, className, children 
 }
 
 /** A plain (un-highlighted) snippet on the same surface, for client components. */
-export function CodeSnippet({ code, ...rest }: Omit<CodeFrameProps, 'children'>) {
+export function CodeSnippet({
+  code,
+  scrollLabel,
+  ...rest
+}: Omit<CodeFrameProps, 'children'> & {
+  /** Caps the height (scrolls past 20rem) and makes the scroll box a labelled tab stop, so keyboard users can scroll it. */
+  scrollLabel?: string;
+}) {
   return (
     <CodeFrame code={code} {...rest}>
-      <pre>
+      <pre {...(scrollLabel && { tabIndex: 0, role: 'region', 'aria-label': scrollLabel, className: 'max-h-80 overflow-auto' })}>
         <code>{code}</code>
       </pre>
     </CodeFrame>
