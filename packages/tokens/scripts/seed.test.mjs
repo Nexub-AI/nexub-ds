@@ -105,6 +105,20 @@ test('contrastRatio matches the WCAG formula', async () => {
   assert.equal(contrastRatio('#ffffff', '#ffffff'), 1);
 });
 
+// Reference values from the APCA-W3 0.1.9 README (Myndex/apca-w3), to full precision.
+test('apcaContrast matches the published APCA-W3 0.1.9 reference values', async () => {
+  const { apcaContrast } = await import('../src/seed.js');
+  const close = (got, want) => assert.ok(Math.abs(got - want) < 1e-9, `${got} ≠ ${want}`);
+  close(apcaContrast('#888', '#fff'), 63.056469930209424);
+  close(apcaContrast('#fff', '#888'), -68.54146436644962);
+  close(apcaContrast('#000', '#aaa'), 58.146262578561334);
+  close(apcaContrast('#aaa', '#000'), -56.24113336839742);
+  close(apcaContrast('#112233', '#ddeeff'), 91.66830811481631);
+  close(apcaContrast('#ddeeff', '#112233'), -93.06770049484275);
+  assert.equal(apcaContrast('#777777', '#777777'), 0);
+  assert.ok(apcaContrast('#000000', '#ffffff') > 106 && apcaContrast('#ffffff', '#000000') < -107);
+});
+
 test('createSeedStylesheet layers every contrast level like roles.css', async () => {
   const { createSeedStylesheet } = await import('../src/seed.js');
   const css = createSeedStylesheet('#e4572e');

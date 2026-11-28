@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { Hct, argbFromHex, hexFromArgb } from '@material/material-color-utilities';
 import { fileURLToPath } from 'node:url';
 import { compose, swift } from './platforms.mjs';
-import { writeFigma } from './figma.mjs';
+import { writeFigma, writeFigmaVariables } from './figma.mjs';
 import { APP_ALIASES, CHART_KEYS, DIVISIONS, DIVISION_APPS, LEVELS, MOTION_PRESETS, PRODUCTS, ROLES, REM_COMPAT_CSS, SIGNATURE, SPRINGS, applyRem, categoryColors, divisionPalettes, palettes, rolesCss, signaturePalettes, signatureRoles, spring, tertiary, tonesAt } from './generate.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -515,6 +515,7 @@ await sd.buildAllPlatforms();
   const src = readFileSync(`${root}/src/generated/native.ts`, 'utf8');
   const native = JSON.parse(src.slice(src.indexOf('{'), src.lastIndexOf('}') + 1));
   writeFigma(native, `${root}/dist/figma`);
+  writeFigmaVariables(native, `${root}/dist/figma/variables`); // 12.6: collections with aliases
   mkdirSync(`${root}/dist/swift`, { recursive: true });
   mkdirSync(`${root}/dist/compose`, { recursive: true });
   writeFileSync(`${root}/dist/swift/NexubTokens.swift`, swift(native));

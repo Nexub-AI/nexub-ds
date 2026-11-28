@@ -53,6 +53,35 @@ test('every role pair meets WCAG AA in light/dark × standard/medium/high × eve
   assert.deepEqual(aaFailures(palettes()), []);
 });
 
+// APCA (12.6): reported beside WCAG 2, not a gate. For each pair, the lowest
+// WCAG ratio and the lowest |Lc| over every brand × level × scheme, on the
+// shipped (signature) palettes. Read it in the test output (node --test).
+test('report: APCA Lc beside the WCAG 2 ratio for every role pair', async (t) => {
+  const { apcaContrast } = await import('../src/seed.js');
+  const pal = { ...palettes(), ...signaturePalettes() };
+  const rows = PAIRS.map(([fg, bg, min]) => {
+    let wcag = Infinity;
+    let lc = Infinity;
+    for (const brand of ['primary', ...PRODUCTS]) {
+      const roles = { ...ROLES, ...tertiary(brand) };
+      for (const level of LEVELS)
+        for (const col of [1, 2]) {
+          const hex = (role) => {
+            const tn = tonesAt(roles[role], level);
+            return pal[tn[0]][tn[col]];
+          };
+          wcag = Math.min(wcag, ratio(hex(fg), hex(bg)));
+          lc = Math.min(lc, Math.abs(apcaContrast(hex(fg), hex(bg))));
+        }
+    }
+    return { fg, bg, min, wcag, lc };
+  });
+  t.diagnostic('pair · WCAG 2 min (gate) · APCA |Lc| min (report)');
+  for (const r of rows) t.diagnostic(`${r.fg} on ${r.bg} · ${r.wcag.toFixed(2)} ≥ ${r.min} · Lc ${r.lc.toFixed(1)}`);
+  assert.equal(rows.length, PAIRS.length);
+  assert.ok(rows.every((r) => Number.isFinite(r.lc)));
+});
+
 // ─── Signature style (data-style="signature") ───────────────────────────────
 
 test('signature: every role pair meets WCAG AA in light/dark × standard/medium/high × every brand', () => {
