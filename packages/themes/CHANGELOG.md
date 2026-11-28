@@ -1,5 +1,13 @@
 # @nexub/themes
 
+## 12.6.0
+
+### Patch Changes
+
+- Updated dependencies [d5dd83a]
+- Updated dependencies [0f3c2d9]
+  - @nexub/tokens@12.6.0
+
 ## 12.5.0
 
 ### Patch Changes
