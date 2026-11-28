@@ -8,7 +8,7 @@ import type { ToneValue } from '../Button/Button.js';
 
 export const chipVariants = cva(
   // 10.5: a tone change crossfades.
-  'inline-flex items-center gap-1 rounded-[var(--shape-pill,var(--shape-control))] select-none transition-colors duration-effects-fast ease-effects-fast',
+  'inline-flex items-center gap-1 rounded-[var(--chip-radius,var(--shape-pill,var(--shape-control)))] select-none transition-colors duration-effects-fast ease-effects-fast',
   {
     variants: {
       size: {
@@ -17,7 +17,8 @@ export const chipVariants = cva(
       },
       // Containers + on-container text (WCAG AA by construction).
       tone: {
-        neutral: 'bg-[var(--color-surface-container-low)] text-[var(--color-on-surface-variant)] border border-[var(--color-outline-variant)]',
+        // 12.6: component tokens (--chip-neutral-*), unset by default.
+        neutral: 'bg-[var(--chip-neutral-bg,var(--color-surface-container-low))] text-[var(--chip-neutral-fg,var(--color-on-surface-variant))] border border-[var(--chip-neutral-border,var(--color-outline-variant))]',
         info: 'bg-[var(--color-info-container)] text-[var(--color-on-info-container)]',
         success: 'bg-[var(--color-success-container)] text-[var(--color-on-success-container)]',
         warning: 'bg-[var(--color-warning-container)] text-[var(--color-on-warning-container)]',
